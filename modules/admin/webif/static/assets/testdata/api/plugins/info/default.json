@@ -1,0 +1,352 @@
+[
+  {
+    "pluginname": "avm",
+    "configname": "willy_tel",
+    "version": "1.5.4",
+    "smartplugin": true,
+    "multiinstance": true,
+    "instancename": "willy_tel",
+    "webif_url": "http://smarthomeng.local:1234/avm_willy_tel/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/avm.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/avm/user_doc.html",
+    "blog_url": "https://www.smarthomeng.de/tag/avm",
+    "parameters": [
+      {
+        "name": "username",
+        "type": "str",
+        "value": "",
+        "default": ""
+      },
+      {
+        "name": "password",
+        "type": "str",
+        "value": "1234",
+        "default": ""
+      },
+      {
+        "name": "host",
+        "type": "str",
+        "value": "10.0.0.4",
+        "default": "0.0.0.0"
+      },
+      {
+        "name": "port",
+        "type": "int",
+        "value": 49443,
+        "default": 0
+      },
+      {
+        "name": "cycle",
+        "type": "int",
+        "value": 300,
+        "default": 300
+      },
+      {
+        "name": "ssl",
+        "type": "bool",
+        "value": "True",
+        "default": "True"
+      },
+      {
+        "name": "verify",
+        "type": "bool",
+        "value": "False",
+        "default": "False"
+      }
+    ],
+    "attributes": [
+      {
+        "name": "avm_data_type",
+        "type": "str"
+      },
+      {
+        "name": "avm_incoming_allowed",
+        "type": "str"
+      },
+      {
+        "name": "avm_target_number",
+        "type": "str"
+      },
+      {
+        "name": "mac",
+        "type": "str"
+      },
+      {
+        "name": "ain",
+        "type": "str"
+      }
+    ],
+    "metadata": {
+      "type": "interface",
+      "description": "",
+      "description_long": "",
+      "documentation": "http://smarthomeng.de/user/plugins/avm/user_doc.html",
+      "support": "https://knx-user-forum.de/forum/supportforen/smarthome-py/934835-avm-plugin",
+      "keywords": "",
+      "maintainer": "psilo",
+      "tester": "msinn",
+      "classpath": "plugins.homematic",
+      "classname": "Homematic",
+      "sh_minversion": "",
+      "sh_maxversion": ""
+    },
+    "stoppable": false,
+    "stopped": false,
+    "triggers": []
+  },
+  {
+    "pluginname": "avm",
+    "configname": "Fritzbox_wz",
+    "version": "1.5.4",
+    "smartplugin": true,
+    "multiinstance": true,
+    "instancename": "fritz_wz",
+    "webif_url": "http://smarthomeng.fritz.box:1234/avm_fritz_wz/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/avm.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/avm/user_doc.html",
+    "blog_url": "",
+    "parameters": [
+      {
+        "name": "username",
+        "type": "str",
+        "value": "",
+        "default": ""
+      },
+      {
+        "name": "password",
+        "type": "str",
+        "value": "1234",
+        "default": ""
+      },
+      {
+        "name": "host",
+        "type": "str",
+        "value": "10.0.0.6",
+        "default": "0.0.0.0"
+      },
+      {
+        "name": "port",
+        "type": "int",
+        "value": 49443,
+        "default": 0
+      },
+      {
+        "name": "cycle",
+        "type": "int",
+        "value": 300,
+        "default": 300
+      },
+      {
+        "name": "ssl",
+        "type": "bool",
+        "value": "True",
+        "default": "True"
+      },
+      {
+        "name": "verify",
+        "type": "bool",
+        "value": "False",
+        "default": "False"
+      }
+    ],
+    "attributes": [
+      {
+        "name": "avm_data_type",
+        "type": "str"
+      },
+      {
+        "name": "avm_incoming_allowed",
+        "type": "str"
+      },
+      {
+        "name": "avm_target_number",
+        "type": "str"
+      },
+      {
+        "name": "mac",
+        "type": "str"
+      },
+      {
+        "name": "ain",
+        "type": "str"
+      }
+    ],
+    "metadata": {
+      "type": "interface",
+      "description": "",
+      "description_long": "",
+      "documentation": "http://smarthomeng.de/user/plugins_doc/config/avm.html",
+      "support": "https://knx-user-forum.de/forum/supportforen/smarthome-py/934835-avm-plugin",
+      "keywords": "",
+      "maintainer": "psilo",
+      "tester": "Sandman60, msinn",
+      "classpath": "plugins.homematic",
+      "classname": "Homematic",
+      "sh_minversion": "",
+      "sh_maxversion": ""
+    }
+  },
+  {
+    "pluginname": "backend",
+    "configname": "backend",
+    "version": "1.4.13",
+    "smartplugin": true,
+    "state": "deprecated",
+    "multiinstance": false,
+    "instancename": "",
+    "webif_url": "http://smarthomeng.fritz.box:1234/backend/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/backend.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/backend/user_doc.html",
+    "blog_url": "https://www.smarthomeng.de/tag/backend",
+    "parameters": [],
+    "metadata": {
+      "type": "system",
+      "description": "",
+      "description_long": "Dieses Plugin liefert Informationen über die aktuell laufende SmartHomeNG Installation. Bisher dient es vorwiegend als Support Tool um Anwendern zu helfen, deren Installation nicht richtig läuft.\n \n Einige Highlights:\n \n - eine Liste der installierten Python Module wird angezeigt und die Versionen werden gegenüber den Requirements und den verfügbaren Versions von PyPI abgeglichen\n - eine Liste der Items und ihrer Attribute wird angezeigt. Für diverse Item Typen ist der Wert änderbar\n - eine Liste der Logiken mit nächster Ausführungszeit wird angezeit\n - Logiken können aktiviert/deaktiviert oder getriggert werden\n - Logiken können erstellt und editiert werden\n - eine Liste der aktuellen Scheduler und ihr nächster Ausführungszeitpunkt wird angezeigt\n - Ein direktes Download der Sqlite Datenbank (nutzt das sqlite Plugins) und der SmartHomeNG Log-Dateien ist möglich\n - Einige Informationen über häufig genutzte Daemons wie knxd bzw. eibd werden angezeigt\n - Unterstützt Basic Authentication bei Web-Browser Zugriff\n - Unterstützt mehrere Sprachen\n \n Es gibt bisher nur eine Basic Absicherung gegen nicht-authorisierten Zugriff oder Nutzung des Plugins. Deshalb ist Vorsicht geboten, wenn das Plugin im Netzwerk (evtl. sogar über WAN) zugreifbar ist.\n \n Der Aufruf des Backend-Webservers erfolgt standardmäßig durch: http://<ip of your SmartHomeNG server>:8383",
+      "documentation": "http://smarthomeng.de/user/plugins/backend/user_doc.html",
+      "support": "https://knx-user-forum.de/forum/supportforen/smarthome-py/959964-support-thread-für-das-backend-plugin",
+      "keywords": "",
+      "maintainer": "psilo",
+      "tester": "Sandman60, msinn",
+      "classpath": "plugins.homematic",
+      "classname": "Homematic",
+      "sh_minversion": "",
+      "sh_maxversion": ""
+    },
+    "stoppable": false,
+    "stopped": true
+  },
+  {
+    "pluginname": "cli",
+    "configname": "cli",
+    "version": "1.4.2",
+    "smartplugin": true,
+    "multiinstance": true,
+    "instancename": "",
+    "webif_url": "",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/cli.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/cli/user_doc.html",
+    "parameters": [
+      {
+        "name": "update",
+        "type": "bool",
+        "value": "True",
+        "default": "False"
+      },
+      {
+        "name": "ip",
+        "type": "ip",
+        "value": "0.0.0.0",
+        "default": "0.0.0.0"
+      },
+      {
+        "name": "port",
+        "type": "int",
+        "value": 2323,
+        "default": 2323
+      },
+      {
+        "name": "hashed_password",
+        "type": "str",
+        "value": "None",
+        "default": "None"
+      },
+      {
+        "name": "webif_pagelength",
+        "type": "int",
+        "value": 25,
+        "default": 0
+      }
+    ],
+    "metadata": {
+      "type": "system",
+      "description": "",
+      "description_long": "",
+      "keywords": "",
+      "maintainer": "msinn",
+      "tester": "Sandman60",
+      "classpath": "plugins.homematic",
+      "classname": "Homematic",
+      "sh_minversion": "",
+      "sh_maxversion": ""
+    },
+    "stoppable": true,
+    "stopped": false
+  },
+  {
+    "pluginname": "database",
+    "configname": "database",
+    "version": "1.4.1",
+    "smartplugin": true,
+    "multiinstance": true,
+    "instancename": "",
+    "webif_url": "http://smarthomeng.fritz.box:1234/database/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/database.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/database/user_doc.html",
+    "parameters": [],
+    "metadata": {
+      "type": "system",
+      "description": "",
+      "description_long": "",
+      "keywords": "",
+      "maintainer": "psilo",
+      "tester": "ohinckel",
+      "classpath": "plugins.homematic",
+      "classname": "Homematic",
+      "sh_minversion": "",
+      "sh_maxversion": ""
+    }
+  },
+  {
+    "pluginname": "homematic",
+    "configname": "homematic1",
+    "version": "1.5.0",
+    "smartplugin": true,
+    "multiinstance": true,
+    "instancename": "hm1",
+    "webif_url": "http://smarthomeng.fritz.box:1234/homematic_hm1/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/homematic/avm.html",
+    "documentation_user_doc": "",
+    "parameters": [],
+    "metadata": {
+      "type": "system",
+      "description": "",
+      "description_long": "",
+      "keywords": "",
+      "maintainer": "msinn",
+      "tester": "",
+      "classpath": "plugins.homematic",
+      "classname": "Homematic",
+      "sh_minversion": "",
+      "sh_maxversion": ""
+    }
+  },
+  {
+    "pluginname": "visu_smartvisu",
+    "configname": "smartvisu",
+    "version": "1.3.4",
+    "smartplugin": true,
+    "multiinstance": true,
+    "instancename": "",
+    "webif_url": "",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/visu_smartvisu.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/visu_smartvisu/user_doc.html",
+    "parameters": [],
+    "metadata": {
+      "type": "system",
+      "description": "",
+      "description_long": "",
+      "keywords": "",
+      "maintainer": "msinn",
+      "tester": "",
+      "classpath": "plugins.visu_smartvisu",
+      "classname": "SmartVisu",
+      "sh_minversion": "",
+      "sh_maxversion": ""
+    },
+    "stoppable": true,
+    "stopped": true
+  }
+]
+
+

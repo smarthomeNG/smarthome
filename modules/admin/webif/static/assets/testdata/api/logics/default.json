@@ -1,0 +1,897 @@
+{
+  "logics_new": [
+    {
+      "logictype": "None",
+      "filename": "",
+      "userlogic": true,
+      "name": "testlogik_neu"
+    },
+    {
+      "logictype": "None",
+      "filename": "testlogik_neu2.py",
+      "userlogic": true,
+      "group": ["Group 4"],
+      "name": "testlogik_neu2"
+    }
+  ],
+
+  "logics":[
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 05:00:00+0100",
+      "pathname":"/python/smarthome/logics/automatic_gate_control_day.py",
+      "logictype":"Python",
+      "crontab":"0 6 * 0,1,2,3,4",
+      "cycle":"",
+      "group": ["Group 4"],
+      "name":"AutomaticGateControlLogicDay",
+      "description": "",
+      "visu_acl":"",
+      "knx_listen":"1/2/3",
+      "next_exec":"2019-01-16 05:00:00+0100",
+      "watch_item_list":[
+        "avm.monitor.newest.event"
+      ],
+      "watch_item":"avm.monitor.newest.event",
+      "userlogic":true,
+      "filename":"automatic_gate_control_day.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 04:30:00+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/temperature_control_day.py",
+      "logictype":"Python",
+      "crontab":"30 04 * *",
+      "cycle":"",
+      "group": ["Group 1"],
+      "name":"AutomaticTemperatureControlLogicDay",
+      "visu_acl":"",
+      "next_exec":"2019-01-16 04:30:00+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"temperature_control_day.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-14 19:00:00+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/temperature_control_night.py",
+      "logictype":"Python",
+      "crontab":"0 19 * *",
+      "cycle":"",
+      "group": [],
+      "name":"AutomaticTemperatureControlLogicNight",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 19:00:00+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"temperature_control_night.py"
+    },
+    {
+      "enabled":false,
+      "last_run":"2019-01-15 16:44:09+0100",
+      "watch_item_list":[
+        "avm.monitor.newest.event"
+      ],
+      "pathname":"/python/smarthome/logics/calllist_csv_logic.py",
+      "logictype":"Python",
+      "crontab":"init",
+      "cycle":"",
+      "group": ["Group 2"],
+      "name":"CallListCSVLogic",
+      "visu_acl":"false",
+      "next_exec":"",
+      "watch_item":"avm.monitor.newest.event",
+      "userlogic":true,
+      "filename":"calllist_csv_logic.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"",
+      "watch_item_list":[
+        "general.communication.pushbullet_note"
+      ],
+      "pathname":"/python/smarthome/logics/communication.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "group": ["Group 2"],
+      "name":"CommunicationLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"general.communication.pushbullet_note",
+      "userlogic":true,
+      "filename":"communication.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"",
+      "watch_item_list":[
+        "dashbuttons.db1"
+      ],
+      "pathname":"/python/smarthome/logics/dashbuttons.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"DashbuttonLogics",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"dashbuttons.db1",
+      "userlogic":true,
+      "filename":"dashbuttons.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 00:01:00+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/date_specific.py",
+      "logictype":"Python",
+      "crontab":"1 0 * *",
+      "cycle":"",
+      "group": ["Group 2"],
+      "name":"DateSpecifc",
+      "visu_acl":"",
+      "next_exec":"2019-01-16 00:01:00+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"date_specific.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/gateopenlogics.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "group": ["Group 4"],
+      "name":"GateOpenLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"gateopenlogics.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/geozone_entry.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"GeoZoneEntry",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"geozone_entry.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/geozone_exit.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"GeoZoneExit",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"geozone_exit.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:51:26+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/hosts_list.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"300",
+      "name":"HostsList",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 18:56:23+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"hosts_list.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 08:04:32+0100",
+      "watch_item_list":[
+        "knx.light_all"
+      ],
+      "pathname":"/python/smarthome/logics/lightallaction.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"LightAllAction",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"knx.light_all",
+      "userlogic":true,
+      "filename":"lightallaction.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:36:28+0100",
+      "watch_item_list":[
+        "avm.dect.socket_living",
+        "avm.dect.socket_corridor",
+        "knx.garage.light.devices",
+        "knx.garage.light.garage",
+        "knx.garage.light.attic",
+        "knx.outside.light.wooden_terrace",
+        "knx.outside.light.carport",
+        "knx.outside.light.back_door",
+        "knx.outside.light.terrace",
+        "knx.cellar.corridor_cellar.light",
+        "knx.cellar.hobby_room.light.light1",
+        "knx.cellar.hobby_room.light.light2",
+        "knx.cellar.utility_room.light",
+        "knx.cellar.technical_room.light",
+        "knx.gf.bathroom_gf.light.ceiling",
+        "knx.gf.bathroom_gf.light.mirror",
+        "knx.gf.office.light",
+        "knx.gf.kitchen.light.wall_cupboard",
+        "knx.gf.kitchen.light.sink",
+        "knx.gf.kitchen.light.bar",
+        "knx.gf.kitchen.light.ceiling",
+        "knx.gf.corridor_gf.light.hall",
+        "knx.gf.corridor_gf.light.stairs",
+        "knx.gf.living_room.light.couch",
+        "knx.gf.living_room.light.eating",
+        "knx.uf.parents.light.ceiling",
+        "knx.uf.parents.light.clothes_closet",
+        "knx.uf.child1.light",
+        "knx.uf.child2.light",
+        "knx.uf.bathroom_uf.light.ceiling",
+        "knx.uf.bathroom_uf.light.mirror",
+        "knx.uf.gallery.light.light1",
+        "knx.uf.gallery.light.light2",
+        "knx.uf.gallery.light.attic"
+      ],
+      "pathname":"/python/smarthome/logics/light_check.py",
+      "logictype":"Python",
+      "crontab":"init",
+      "cycle":"",
+      "name":"LightCheckLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"avm.dect.socket_living, avm.dect.socket_corridor, knx.garage.light.devices, knx.garage.light.garage, knx.garage.light.attic, knx.outside.light.wooden_terrace, knx.outside.light.carport, knx.outside.light.back_door, knx.outside.light.terrace, knx.cellar.corridor_cellar.light, knx.cellar.hobby_room.light.light1, knx.cellar.hobby_room.light.light2, knx.cellar.utility_room.light, knx.cellar.technical_room.light, knx.gf.bathroom_gf.light.ceiling, knx.gf.bathroom_gf.light.mirror, knx.gf.office.light, knx.gf.kitchen.light.wall_cupboard, knx.gf.kitchen.light.sink, knx.gf.kitchen.light.bar, knx.gf.kitchen.light.ceiling, knx.gf.corridor_gf.light.hall, knx.gf.corridor_gf.light.stairs, knx.gf.living_room.light.couch, knx.gf.living_room.light.eating, knx.uf.parents.light.ceiling, knx.uf.parents.light.clothes_closet, knx.uf.child1.light, knx.uf.child2.light, knx.uf.bathroom_uf.light.ceiling, knx.uf.bathroom_uf.light.mirror, knx.uf.gallery.light.light1, knx.uf.gallery.light.light2, knx.uf.gallery.light.attic",
+      "userlogic":true,
+      "filename":"light_check.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"",
+      "watch_item_list":[
+        "general.travel_info.mvg_station.search",
+        "general.travel_info.mvg_station.search.refresh"
+      ],
+      "pathname":"/python/smarthome/logics/mvg_info.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"MVG_Info",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"general.travel_info.mvg_station.search, general.travel_info.mvg_station.search.refresh",
+      "userlogic":true,
+      "filename":"mvg_info.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:06:04+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/odlinfo_logic.py",
+      "logictype":"Python",
+      "crontab":"init",
+      "cycle":"3600",
+      "name":"ODLInfoLogic",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 19:06:04+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"odlinfo_logic.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:54:14+0100",
+      "watch_item_list":[
+        "avm.dect.socket_office.power"
+      ],
+      "pathname":"/python/smarthome/logics/pcswitch.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"PCSwitchAction",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"avm.dect.socket_office.power",
+      "userlogic":true,
+      "filename":"pcswitch.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:54:51+0100",
+      "watch_item_list":[
+        "sma.smaem.surplus",
+        "sma.smaem.regard"
+      ],
+      "pathname":"/python/smarthome/logics/pv_status.py",
+      "logictype":"Python",
+      "crontab":"init",
+      "cycle":"",
+      "name":"PVStatusLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"sma.smaem.surplus, sma.smaem.regard",
+      "userlogic":true,
+      "filename":"pv_status.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:46:11+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/petrol_station_csv_logic.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"1200",
+      "name":"PetrolStationCSVLogic",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 19:06:11+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"petrol_station_csv_logic.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 08:42:09+0100",
+      "watch_item_list":[
+        "avm.number_search_string"
+      ],
+      "pathname":"/python/smarthome/logics/phone_book_search.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"PhoneBookLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"avm.number_search_string",
+      "userlogic":true,
+      "filename":"phone_book_search.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-14 15:09:25+0100",
+      "watch_item_list":[
+        "avm.monitor.trigger1",
+        "avm.monitor.trigger2",
+        "avm.monitor.trigger3",
+        "avm.monitor.trigger4",
+        "avm.monitor.is_call_incoming"
+      ],
+      "pathname":"/python/smarthome/logics/phone_call.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"PhoneCallLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"avm.monitor.trigger1, avm.monitor.trigger2, avm.monitor.trigger3, avm.monitor.trigger4, avm.monitor.is_call_incoming",
+      "userlogic":true,
+      "filename":"phone_call.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"",
+      "watch_item_list":[
+        "mm.tv.samsung_tv_4k.intelligent_power"
+      ],
+      "pathname":"/python/smarthome/logics/power_samsung4k.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"PowerSamsung4kLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"mm.tv.samsung_tv_4k.intelligent_power",
+      "userlogic":true,
+      "filename":"power_samsung4k.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 15:54:13+0100",
+      "watch_item_list":[
+        "avm.devices.wlan_repeater_1750_galerie.iPhoneNori",
+        "avm.devices.wlan_repeater_1750_galerie.HTC_U11",
+        "avm.devices.wlan_repeater_1750_garage.iPhoneNori",
+        "avm.devices.wlan_repeater_1750_garage.HTC_U11",
+        "avm.devices.wlan_repeater_300.iPhoneNori",
+        "avm.devices.wlan_repeater_300.HTC_U11",
+        "avm.devices.fritzbox_7590.iPhoneNori",
+        "avm.devices.fritzbox_7590.HTC_U11"
+      ],
+      "pathname":"/python/smarthome/logics/presence.py",
+      "logictype":"Python",
+      "crontab":"init",
+      "cycle":"",
+      "name":"PresenceLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"avm.devices.wlan_repeater_1750_galerie.iPhoneNori, avm.devices.wlan_repeater_1750_galerie.HTC_U11, avm.devices.wlan_repeater_1750_garage.iPhoneNori, avm.devices.wlan_repeater_1750_garage.HTC_U11, avm.devices.wlan_repeater_300.iPhoneNori, avm.devices.wlan_repeater_300.HTC_U11, avm.devices.fritzbox_7590.iPhoneNori, avm.devices.fritzbox_7590.HTC_U11",
+      "userlogic":true,
+      "filename":"presence.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 15:50:14+0100",
+      "watch_item_list":[
+        "general.presence.state"
+      ],
+      "pathname":"/python/smarthome/logics/presence_state.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"PresenceStateLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"general.presence.state",
+      "userlogic":true,
+      "filename":"presence_state.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-14 22:00:00+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/shutdown_night.py",
+      "logictype":"Python",
+      "crontab":"0 22 * *",
+      "cycle":"",
+      "name":"ShutdownNight",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 22:00:00+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"shutdown_night.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:54:14+0100",
+      "watch_item_list":[
+        "env.location.sun_position.azimut.degrees"
+      ],
+      "pathname":"/python/smarthome/logics/sun_position.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"SunPositionLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"env.location.sun_position.azimut.degrees",
+      "userlogic":true,
+      "filename":"sun_position.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 07:45:10+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/sunrise.py",
+      "logictype":"Python",
+      "crontab":"06:00<sunrise-15m",
+      "cycle":"",
+      "name":"SunriseLogic",
+      "visu_acl":"",
+      "next_exec":"2019-01-16 07:44:29+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"sunrise.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 17:03:19+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/sunset.py",
+      "logictype":"Python",
+      "crontab":"sunset+15m<21:00",
+      "cycle":"",
+      "name":"SunsetLogic",
+      "visu_acl":"",
+      "next_exec":"2019-01-16 17:04:42+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"sunset.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:45:00+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/traffic_info.py",
+      "logictype":"Python",
+      "crontab":"5,15,25,35,45,55 * * *",
+      "cycle":"",
+      "name":"TrafficInfo",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 18:55:00+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"traffic_info.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 14:31:10+0100",
+      "watch_item_list":[
+        "weather.darksky.home.currently.uvIndex"
+      ],
+      "pathname":"/python/smarthome/logics/uv.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"UVLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"weather.darksky.home.currently.uvIndex",
+      "userlogic":true,
+      "filename":"uv.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 17:00:00+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/ventilation_before_sleep.py",
+      "logictype":"Python",
+      "crontab":"0 17 * *",
+      "cycle":"",
+      "name":"VentilationLogicBeforeSleep",
+      "visu_acl":"",
+      "next_exec":"2019-01-16 17:00:00+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"ventilation_before_sleep.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:46:11+0100",
+      "watch_item_list":[
+        "knx.gf.office.temperature.humidity",
+        "knx.uf.bathroom_uf.temperature.humidity",
+        "knx.gf.bathroom_gf.temperature.humidity",
+        "knx.gf.kitchen.temperature.humidity"
+      ],
+      "pathname":"/python/smarthome/logics/ventilation_humidity.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"VentilationLogicHumidity",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"knx.gf.office.temperature.humidity, knx.uf.bathroom_uf.temperature.humidity, knx.gf.bathroom_gf.temperature.humidity, knx.gf.kitchen.temperature.humidity",
+      "userlogic":true,
+      "filename":"ventilation_humidity.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-13 12:06:01+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/ventilation_init.py",
+      "logictype":"Python",
+      "crontab":"init",
+      "cycle":"",
+      "name":"VentilationLogicInit",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"ventilation_init.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:50:02+0100",
+      "watch_item_list":[
+        "knx.cellar.utility_room.lift_station_status",
+        "knx.cellar.technical_room.smoke_detector_status",
+        "eta_unit.error",
+        "eta_unit.ashes_box.amount_is.value",
+        "eta_unit.boiler.heating_pressure.value",
+        "plants.sensor_gallery.moisture",
+        "plants.sensor_kitchen.moisture",
+        "plants.sensor_office.moisture",
+        "plants.sensor_living.moisture",
+        "general.mail_status",
+        "online_status.bluetoothpi",
+        "nuki.backdoor.battery",
+        "nuki.backdoor.state",
+        "nuki.frontdoor.battery",
+        "nuki.frontdoor.state"
+      ],
+      "pathname":"/python/smarthome/logics/warning_mail.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"WarningMailLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"knx.cellar.utility_room.lift_station_status, knx.cellar.technical_room.smoke_detector_status, eta_unit.error, eta_unit.ashes_box.amount_is.value, eta_unit.boiler.heating_pressure.value, plants.sensor_gallery.moisture, plants.sensor_kitchen.moisture, plants.sensor_office.moisture, plants.sensor_living.moisture, general.mail_status, online_status.bluetoothpi, nuki.backdoor.battery, nuki.backdoor.state, nuki.frontdoor.battery, nuki.frontdoor.state",
+      "userlogic":true,
+      "filename":"warning_mail.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:51:11+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/warnings.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"300",
+      "name":"Weather_Warnings",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 18:56:11+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"warnings.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:51:11+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/wetter_com.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"900",
+      "name":"WetterCOM",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 19:06:11+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"wetter_com.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-13 12:06:03+0100",
+      "watch_item_list":[
+        "avm.wlan.gf_wlan_1",
+        "avm.wlan.gf_wlan_2"
+      ],
+      "pathname":"/python/smarthome/logics/wifi_dependencies.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"WifiLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"avm.wlan.gf_wlan_1, avm.wlan.gf_wlan_2",
+      "userlogic":true,
+      "filename":"wifi_dependencies.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:54:50+0100",
+      "watch_item_list":[
+        "knx.weather.wind"
+      ],
+      "pathname":"/python/smarthome/logics/wind.py",
+      "logictype":"Python",
+      "crontab":"init",
+      "cycle":"",
+      "name":"WindLogic",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"knx.weather.wind",
+      "userlogic":true,
+      "filename":"wind.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 17:46:24+0100",
+      "watch_item_list":[
+        "nuki.backdoor",
+        "nuki.backdoor.state",
+        "nuki.frontdoor",
+        "nuki.frontdoor.state"
+      ],
+      "pathname":"/python/smarthome/logics/entrydoor.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"entrydoor",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"nuki.backdoor, nuki.backdoor.state, nuki.frontdoor, nuki.frontdoor.state",
+      "userlogic":true,
+      "filename":"entrydoor.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 02:11:00+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/lib/env/daily.py",
+      "logictype":"Python",
+      "crontab":"0 6 * * = init",
+      "cycle":"",
+      "name":"env_daily",
+      "visu_acl":"",
+      "next_exec":"2019-01-16 02:11:00+0100",
+      "watch_item":"",
+      "userlogic":false,
+      "filename":"daily.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-13 12:06:00+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/lib/env/init.py",
+      "logictype":"Python",
+      "crontab":"init",
+      "cycle":"",
+      "name":"env_init",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"",
+      "userlogic":false,
+      "filename":"init.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:30:06+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/lib/env/location.py",
+      "logictype":"Python",
+      "crontab":"init | sunrise+1m | sunset+1m | sunrise-5 | sunset-7",
+      "cycle":"1800",
+      "name":"env_loc",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 19:00:06+0100",
+      "watch_item":"",
+      "userlogic":false,
+      "filename":"location.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:51:23+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/lib/env/stat.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"300",
+      "name":"env_stat",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 18:56:23+0100",
+      "watch_item":"",
+      "userlogic":false,
+      "filename":"stat.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:54:14+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/lib/env/sunpos.py",
+      "logictype":"Python",
+      "crontab":"init",
+      "cycle":"240",
+      "name":"env_sunpos",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 18:58:14+0100",
+      "watch_item":"",
+      "userlogic":false,
+      "filename":"sunpos.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 17:46:24+0100",
+      "watch_item_list":[
+        "nuki.backdoor.state",
+        "nuki.frontdoor.state"
+      ],
+      "pathname":"/python/smarthome/logics/nuki.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "name":"nuki",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"nuki.backdoor.state, nuki.frontdoor.state",
+      "userlogic":true,
+      "filename":"nuki.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"",
+      "watch_item_list":[
+        "avm",
+        "avm.dect"
+      ],
+      "pathname":"/python/smarthome/logics/test.py",
+      "logictype":"Python",
+      "crontab":"",
+      "cycle":"",
+      "group": ["test", "Group 2"],
+      "name":"test",
+      "description": "Dieses ist die Beschreibung der Funktion der Logik 'test'",
+      "visu_acl":"",
+      "next_exec":"",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"test.py"
+    },
+    {
+      "enabled":true,
+      "last_run":"2019-01-15 18:54:00+0100",
+      "watch_item_list":[
+
+      ],
+      "pathname":"/python/smarthome/logics/zeit.py",
+      "logictype":"Python",
+      "crontab":"init | * * * *",
+      "cycle":"",
+      "name":"zeitberechnung",
+      "visu_acl":"",
+      "next_exec":"2019-01-15 18:55:00+0100",
+      "watch_item":"",
+      "userlogic":true,
+      "filename":"zeit.py"
+    }
+  ],
+
+  "groups": {
+    "raeume": {
+      "title": "Logiken, die sich auf bestimmte Räume beziehen"
+    },
+    "test": {
+      "title": "Test-Logiken",
+      "description": "In diesem Abschnitt sind alle Testlogiken zusammengefast."
+    },
+    "Group 2": {
+      "title": "Logiken der Gruppe 2",
+      "description": ""
+    }
+
+  }
+}

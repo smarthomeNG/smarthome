@@ -1,0 +1,354 @@
+# q21_09Bad.yaml
+
+wohnung:
+
+    bad:
+
+        deckenlicht_waschbecken:
+            name: Downlights Waschbecken
+            type: bool
+            visu: 'yes'
+            comment: sv_widget = "{{ device.dimmer('item', 'item.name', 'item', 'item.level') }}"
+            knx_dpt: 1
+            knx_send: 1/1/22
+            knx_cache: 1/2/22
+
+            level:
+                type: num
+                visu: 'yes'
+                knx_dpt: 5
+                knx_cache: 1/5/22
+                knx_send: 1/4/22
+
+        deckenlicht_wanne:
+            name: Downlights Wanne
+            type: bool
+            visu: 'yes'
+            comment: sv_widget = "{{ device.dimmer('item', 'item.name', 'item', 'item.level') }}"
+            knx_dpt: 1
+            knx_send: 1/1/23
+            knx_cache: 1/2/23
+
+            level:
+                type: num
+                visu: 'yes'
+                knx_dpt: 5
+                knx_cache: 1/5/23
+                knx_send: 1/4/23
+
+        deckenlicht_flacons:
+            name: Downlights Flacons
+            type: bool
+            visu: 'yes'
+            comment: sv_widget = "{{ device.dimmer('item', 'item.name', 'item', 'item.level') }}"
+            knx_dpt: 1
+            knx_send: 1/1/24
+            knx_cache: 1/2/24
+
+            level:
+                type: num
+                visu: 'yes'
+                knx_dpt: 5
+                knx_listen: 1/5/24
+                knx_send: 1/4/24
+
+        deckenlicht_wc:
+            name: Downlight WC
+            type: bool
+            visu: 'yes'
+            comment: sv_widget = "{{ device.dimmer('item', 'item.name', 'item', 'item.level') }}"
+            knx_dpt: 1
+            knx_send: 1/1/25
+            knx_cache: 1/2/25
+
+            level:
+                type: num
+                visu: 'yes'
+                knx_dpt: 5
+                knx_cache: 1/5/25
+                knx_send: 1/4/25
+
+        deckenlicht_dusche:
+            name: Downlight Dusche
+            type: bool
+            visu: 'yes'
+            comment: sv_widget = "{{ device.dimmer('item', 'item.name', 'item', 'item.level') }}"
+            knx_dpt: 1
+            knx_send: 1/1/26
+            knx_cache: 1/2/26
+
+            level:
+                type: num
+                visu: 'yes'
+                knx_dpt: 5
+                knx_cache: 1/5/26
+                knx_send: 1/4/26
+
+        spiegelleuchten:
+            name: Spiegelleuchten
+            type: bool
+            visu: 'yes'
+            comment: sv_widget = "{{ device.dimmer('item', 'item.name', 'item', 'item.level') }}"
+            knx_dpt: 1
+            knx_send: 1/1/27
+            knx_cache: 1/2/27
+
+            level:
+                type: num
+                visu: 'yes'
+                knx_dpt: 5
+                knx_cache: 1/5/27
+                knx_send: 1/4/27
+                comment: Abluft
+
+        abluft:
+
+            stufe1:
+                comment: 'Abluft Stufe 1, KNX Schaltaktor
+                    schaltet sofort ein und sofort aus, wird von Stufe 2=EIN übersteuert'
+                name: Abluft BAD Stufe 1
+                type: bool
+                visu: 'yes'
+                knx_dpt: 1
+                knx_send: 4/4/4
+                knx_init: 4/5/4
+                log_change: q21-items
+
+            stufe2:
+                comment: 'Abluft Stufe 2, KNX Schaltaktor
+                    schaltet verzögert ein und sofort aus, unabhängig von Stufe 1'
+                name: Abluft BAD Stufe 2
+                type: bool
+                visu: 'yes'
+                knx_dpt: 1
+                knx_send: 4/4/9
+                knx_init: 4/5/9
+                log_change: q21-items
+                comment1: '[[[[automatik]]]]
+                    Abluft Automatik des Lüftungsbausteins, KNX Schaltaktor
+                    !!! Für Bad Lüftungsbaustein nicht implementiert
+                    name = Abluft BAD Automatik
+                    type = bool
+                    visu = yes
+                    knx_dpt = 1
+                    knx_send = 4/4/14
+                    knx_init = 4/5/14
+                    log_change = q21-items'
+
+            status:
+                comment: 0=AUS, 1=EIN (Stufe 1), 2=EIN (Stufe 2)
+                name: Abluft BAD Status
+                type: num
+                eval: 2 if sh.wohnung.bad.abluft.stufe2() == 1 else (1 if sh.wohnung.bad.abluft.stufe1() == 1 else 0)
+                eval_trigger:
+                - wohnung.bad.abluft.stufe1
+                - wohnung.bad.abluft.stufe2
+                log_change: q21-items
+
+        fenster:
+            nord:
+                griff:
+                    # Stati: 0=geschlossen, 1=gekippt, 2=offen
+                    type: num
+                    hm_address@hm1: 0007D7099D04D5
+    #                enforce_updates: true
+                    visu: 'yes'
+
+    #                text:
+    #                    type: str
+    #                    eval: "'geschlossen' if sh...() == 0 else 'gekippt' if sh...() == 1 else 'offen'"
+    #                    eval_trigger: ..
+    #                    visu: 'yes'
+
+                    sabotage:
+                        type: bool
+                        hm_address@hm1: ..:.
+                        hm_function@hm1: SABOTAGE
+
+                        memory:
+                            type: bool
+                            cache: true
+                            eval_trigger:
+                              - ..
+                            eval: value if sh...() else None
+
+                    #duty_cycle:
+                    #    type: bool
+                    #    hm_address@hm1: ..:.
+                    #    hm_function@hm1: DUTY_CYCLE
+
+                    lowbat:
+                        type: bool
+                        hm_address@hm1: ..:.
+                        hm_function@hm1: LOW_BAT
+
+    #                unreach:
+    #                    type: bool
+    #                    hm_address@hm1: ..:.
+    #                    hm_function@hm1: UNREACH
+
+    #                rssi_device:
+    #                    type: num
+    #                    hm_address@hm1: ..:.
+    #                    hm_function@hm1: RSSI_DEVICE
+
+                    #operating_voltage:
+                    #    type: num
+                    #    hm_address@hm1: ..:.
+                    #    hm_function@hm1: OPERATING_VOLTAGE
+
+    #                rssi_peer:
+    #                    type: num
+    #                    hm_address@hm1: ..:.
+    #                    hm_function@hm1: RSSI_PEER
+
+                    #error_code:
+                    #    type: num
+                    #    hm_address@hm1: ..:.
+                    #    hm_function@hm1: ERROR_CODE
+
+                kontakt:
+                    type: bool
+                    enforce_updates: 'True'
+                    eval_trigger:
+                    - .knx
+                    - .sensor_error
+                    eval: False if sh..sensor_error() else sh..knx()
+
+                    knx:
+                        type: bool
+                        knx_dpt: 1
+                        knx_cache: 7/2/8
+                        enforce_updates: 'True'
+
+                    sensor_error:
+                        type: bool
+                        eval: (shtime.now() - sh...knx.last_update()).total_seconds() > 240
+                        eval_trigger: config.fenster.check_sensor_error
+                        log_change: q21-items
+                        enforce_updates: 'True'
+
+
+        tuer:
+            kontakt:
+                # Stati: 0=geschlossen, 1=offen
+                type: num
+                hm_address@hm1: 0000D569A3968F
+                visu: 'yes'
+
+
+        heizung:
+            #===========================================================
+            # Items zur Visualisierung des MDT Heizungsaktor Kanals
+            # Verriegelung von ''komfort'' und ''nacht'' gegeneinander
+            # erfolgt durch die Logik ''heizung.py'''
+
+            ist:
+                name: Temperatur Tür
+                type: num
+                sqlite: 'yes'
+                database: yes
+                visu: 'yes'
+                knx_dpt: 9
+                knx_init: 11/3/17
+
+            ist_decke:
+                name: Temperatur Decke
+                type: num
+                sqlite: 'yes'
+                database: yes
+                visu: 'yes'
+                knx_dpt: 9
+                knx_init: 11/3/5
+
+            ist_estrich:
+                name: Temperatur Estrich
+                type: num
+                sqlite: 'yes'
+                database: yes
+                visu: 'yes'
+                knx_dpt: 9
+                knx_init: 11/3/18
+
+            soll:
+                type: num
+                visu: 'yes'
+                sqlite: 'yes'
+                database: init
+                knx_dpt: 9
+                knx_init: 4/2/6
+
+            sollwertverschiebung:
+                type: num
+                cache: true
+                visu: 'true'
+                knx_dpt: 9
+                knx_send: 4/2/14
+
+            stellwert:
+                type: num
+                visu: 'true'
+                sqlite: 'yes'
+                database: init
+                knx_dpt: 5001
+                comment: 'knx_init: Stellwert in %'
+                knx_init: 4/2/22
+
+            modus:
+                type: num
+                cache: true
+                knx_dpt: 20
+                knx_send: 4/1/39
+                knx_init: 4/1/39
+
+            komfort:
+                type: bool
+                cache: true
+                visu: 'yes'
+                knx_dpt: 1
+                knx_send: 4/1/7
+                knx_init: 4/1/7
+
+            standby:
+                type: bool
+                visu: 'true'
+
+            nacht:
+                type: bool
+                cache: true
+                visu: 'yes'
+                knx_dpt: 1
+                knx_send: 4/1/15
+                knx_init: 4/1/15
+
+            frostschutz:
+                type: bool
+                cache: true
+                visu: 'yes'
+                knx_dpt: 1
+                knx_send: 4/1/47
+                knx_init: 4/1/47
+
+            heizen:
+                type: bool
+                visu: 'true'
+                eval: 0 if sh.wohnung.bad.heizung.stellwert() == 0 else 1
+                eval_trigger: wohnung.bad.heizung.stellwert
+
+        bewegung:
+            name: Bewegung
+            type: bool
+            sqlite: 'yes'
+            database: yes
+            visu: 'yes'
+            knx_dpt: 1
+            knx_init: 7/0/4
+
+        helligkeit:
+            name: Helligkeit Decke
+            type: num
+            sqlite: 'yes'
+            database: yes
+            visu: 'yes'
+            knx_dpt: 9
+            knx_init: 11/4/4

@@ -1,0 +1,19 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 800 800" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+    <g transform="matrix(1.74664,0,0,1.74642,-252.1,-60.7251)">
+        <g id="Ebene1">
+            <g>
+                <g transform="matrix(3.48575,0,0,3.48575,-650.368,-420.328)">
+                    <circle cx="293.685" cy="196.267" r="65.165" style="fill:rgb(120,155,190);"/>
+                </g>
+                <g transform="matrix(3.08698,0,0,3.08698,-779.162,-550.57)">
+                    <path d="M383.686,244.808L383.686,311.2L393.411,311.2L393.411,318.84L354.496,318.84L354.496,311.2L363.406,311.2L363.406,255.222L354.496,251.655L354.496,244.808L383.686,244.808Z" style="fill:white;"/>
+                </g>
+                <g transform="matrix(3.22886,0,0,3.22886,-797.323,-547.116)">
+                    <circle cx="362.95" cy="211.755" r="11.84" style="fill:white;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

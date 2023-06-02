@@ -1,0 +1,1514 @@
+[
+  179,
+  [
+    {
+      "label": "test",
+      "nodename": "test",
+      "name": "test",
+      "tags": [
+        2
+      ],
+      "children": [
+        {
+          "label": "test.string",
+          "nodename": "string",
+          "name": "beschattung.config",
+          "tags": [
+            3
+          ]
+        },
+        {
+          "label": "test.number",
+          "nodename": "number",
+          "name": "Test-Nummer",
+          "tags": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "label": "beoremote",
+      "nodename": "beoremote",
+      "name": "beoremote",
+      "tags": [
+        11
+      ],
+      "children": [
+        {
+          "label": "beoremote.beo4command",
+          "path": "beoremote.beo4command",
+          "nodename": "beo4command",
+          "name": "beoremote.beo4command",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4commandnum",
+          "nodename": "beo4commandnum",
+          "name": "beoremote.beo4commandnum",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4mode",
+          "nodename": "beo4mode",
+          "name": "beoremote.beo4mode",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4modenum",
+          "nodename": "beo4modenum",
+          "name": "beoremote.beo4modenum",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4tvcommand",
+          "nodename": "beo4tvcommand",
+          "name": "beoremote.beo4tvcommand",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4TVcommandnum",
+          "nodename": "beo4tvcommandnum",
+          "name": "beoremote.beo4tvcommandnum",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4radiocommand",
+          "nodename": "beo4radiocommand",
+          "name": "beoremote.beo4radiocommand",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4radiocommandnum",
+          "nodename": "beo4radiocommandnum",
+          "name": "beoremote.beo4radiocommandnum",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4dvdcommand",
+          "nodename": "beo4dvdcommand",
+          "name": "beoremote.beo4dvdcommand",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4dvdcommandnum",
+          "nodename": "beo4dvdcommandnum",
+          "name": "beoremote.beo4dvdcommandnum",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "beoremote.beo4dvdchannel",
+          "nodename": "beo4dvdchannel",
+          "name": "beoremote.beo4dvdchannel",
+          "tags": [
+            0
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "beschattung",
+      "nodename": "beschattung",
+      "name": "beschattung",
+      "tags": [
+        3
+      ],
+      "children": [
+        {
+          "label": "beschattung.config",
+          "nodename": "config",
+          "name": "beschattung.config",
+          "tags": [
+            3
+          ],
+          "children": [
+            {
+              "label": "beschattung.config.maxbeschattung",
+              "nodename": ".maxbeschattung",
+              "name": "beschattung.config.maxbeschattung",
+              "tags": [
+                4
+              ],
+              "children": [
+                {
+                  "label": "beschattung.config.maxbeschattung.gz_einbeziehen",
+                  "nodename": "gz_einbeziehen",
+                  "name": "beschattung.config.maxbeschattung.gz_einbeziehen",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "beschattung.config.maxbeschattung.az_einbeziehen",
+                  "nodename": "az_einbeziehen",
+                  "name": "beschattung.config.maxbeschattung.az_einbeziehen",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "beschattung.config.maxbeschattung.sz_einbeziehen",
+                  "nodename": "sz_einbeziehen",
+                  "name": "beschattung.config.maxbeschattung.sz_einbeziehen",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "beschattung.config.maxbeschattung.bad_einbeziehen",
+                  "nodename": "bad_einbeziehen",
+                  "name": "beschattung.config.maxbeschattung.bad_einbeziehen",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "label": "beschattung.config.automatik_maxbeschattung",
+              "nodename": "automatik_maxbeschattung",
+              "name": "beschattung.config.automatik_maxbeschattung",
+              "tags": [
+                3
+              ],
+              "children": [
+                {
+                  "label": "beschattung.config.automatik_maxbeschattung.onoff",
+                  "nodename": "onoff",
+                  "name": "beschattung.config.automatik_maxbeschattung.onoff",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "beschattung.config.automatik_maxbeschattung.ab_maxtemp",
+                  "nodename": "ab_maxtemp",
+                  "name": "beschattung.config.automatik_maxbeschattung.ab_maxtemp",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "beschattung.config.automatik_maxbeschattung.ab_mintemp",
+                  "nodename": "ab_mintemp",
+                  "name": "beschattung.config.automatik_maxbeschattung.ab_mintemp",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "label": "beschattung.config.automatik_nachtbeschattung_sz",
+              "nodename": "automatik_nachtbeschattung_sz",
+              "name": "beschattung.config.automatik_nachtbeschattung_sz",
+              "tags": [
+                3
+              ],
+              "children": [
+                {
+                  "label": "beschattung.config.automatik_nachtbeschattung_sz.onoff",
+                  "nodename": "onoff",
+                  "name": "beschattung.config.automatik_nachtbeschattung_sz.onoff",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "beschattung.config.automatik_nachtbeschattung_sz.raffstorepos_ost",
+                  "nodename": "raffstorepos_ost",
+                  "name": "beschattung.config.automatik_nachtbeschattung_sz.raffstorepos_ost",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "beschattung.config.automatik_nachtbeschattung_sz.raffstorepos_west",
+                  "nodename": "raffstorepos_west",
+                  "name": "beschattung.config.automatik_nachtbeschattung_sz.raffstorepos_west",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "beschattung.beschattungsautomatik",
+          "nodename": "beschattungsautomatik",
+          "name": "beschattung.beschattungsautomatik",
+          "tags": [
+            2
+          ],
+          "children": [
+            {
+              "label": "beschattung.beschattungsautomatik.sued",
+              "nodename": "sued",
+              "name": "beschattung.beschattungsautomatik.sued",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "beschattung.beschattungsautomatik.west",
+              "nodename": "west",
+              "name": "beschattung.beschattungsautomatik.west",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "beschattung.maximalbeschattung",
+          "nodename": "maximalbeschattung",
+          "name": "Maximalbeschattung",
+          "tags": [
+            6
+          ],
+          "children": [
+            {
+              "label": "beschattung.maximalbeschattung.bei_abwesenheit",
+              "nodename": "bei_abwesenheit",
+              "name": "beschattung.maximalbeschattung.bei_abwesenheit",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "beschattung.maximalbeschattung.automatik_max_temp",
+              "nodename": "automatik_max_temp",
+              "name": "Status nach Auswertung der Automatik Temperatur für Tages-Höchsttemperatur",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "beschattung.maximalbeschattung.automatik_min_temp",
+              "nodename": "automatik_min_temp",
+              "name": "Status nach Auswertung der Automatik Temperatur für Tages-Höchsttemperatur",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "beschattung.maximalbeschattung.automatik",
+              "nodename": "automatik",
+              "name": "Status nach Auswertung der Automatik Temperaturen",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "beschattung.maximalbeschattung.manuell",
+              "nodename": "manuell",
+              "name": "Status nach Auswertung der manuellen Konfigurationsschalter",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "beschattung.maximalbeschattung.aktiv",
+              "nodename": "aktiv",
+              "name": "Status nach Auswertung von Automatik & man. Config",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "config",
+      "nodename": "config",
+      "name": "config",
+      "tags": [
+        21
+      ],
+      "children": [
+        {
+          "label": "config.konfiguration",
+          "nodename": "konfiguration",
+          "name": "Konfiguration",
+          "tags": [
+            4
+          ],
+          "children": [
+            {
+              "label": "config.konfiguration.wohnungsmodus",
+              "nodename": "wohnungsmodus",
+              "name": "Wohnungsmodus",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.konfiguration.Beleuchtungsautomatiken",
+              "nodename": "Beleuchtungsautomatiken",
+              "name": "Beleuchtungsautomatiken",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.konfiguration.wohnungsstatus",
+              "nodename": "wohnungsstatus",
+              "name": "Wohnungsstatus",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.konfiguration.Wohnungsmodus2",
+              "nodename": "Wohnungsmodus2",
+              "name": "Wohnungsmodus 2",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.beschattung",
+          "nodename": "beschattung",
+          "name": "Beschattung",
+          "tags": [
+            5
+          ],
+          "children": [
+            {
+              "label": "config.beschattung.visu_maximalbeschattung",
+              "nodename": "visu_maximalbeschattung",
+              "name": "Konfiguration: Maximalbeschattung",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.beschattung.maxbeschattung",
+              "nodename": "maxbeschattung",
+              "name": "Konfiguration: Maximalbeschattung (Räume)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.beschattung.automatik_maxbeschattung",
+              "nodename": "automatik_maxbeschattung",
+              "name": "Konfiguration: Automatik 'Maximalbeschattung'",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.beschattung.automatik_nachtbeschattung_sz",
+              "nodename": "automatik_nachtbeschattung_sz",
+              "name": "Konfiguration: Automatik 'Nachtbeschattung Schlafz.'",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.beschattung.beschattungsautomatik",
+              "nodename": "beschattungsautomatik",
+              "name": "Beschattungsautomatik",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.belueftung",
+          "nodename": "belueftung",
+          "name": "Lüftung / Fenster",
+          "tags": [
+            4
+          ],
+          "children": [
+            {
+              "label": "config.belueftung.visu_fenster1",
+              "nodename": "visu_fenster1",
+              "name": "Fenster Status Wohnbereich",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.belueftung.visu_fenster2",
+              "nodename": "visu_fenster2",
+              "name": "Fenster Status",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.belueftung.visu_fensterc1",
+              "nodename": "visu_fensterc1",
+              "name": "Fenster Wohnbereich",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.belueftung.visu_fensterc2",
+              "nodename": "visu_fensterc2",
+              "name": "Fenster",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.fenster",
+          "nodename": "fenster",
+          "name": "config.fenster",
+          "tags": [
+            1
+          ],
+          "children": [
+            {
+              "label": "config.fenster.check_sensor_error",
+              "nodename": "check_sensor_error",
+              "name": "config.fenster.check_sensor_error",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.beleuchtung",
+          "nodename": "beleuchtung",
+          "name": "Beleuchtungsautomatik",
+          "tags": [
+            1
+          ],
+          "children": [
+            {
+              "label": "config.beleuchtung.automatik_wuerfel",
+              "nodename": "automatik_wuerfel",
+              "name": "Konfiguration: Automatik 'Terrassen-Würfel'",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.temp",
+          "nodename": "temp",
+          "name": "Temperaturen / Feuchte",
+          "tags": [
+            4
+          ],
+          "children": [
+            {
+              "label": "config.temp.visu_1",
+              "nodename": "visu_1",
+              "name": "Kochen",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.temp.visu_2",
+              "nodename": "visu_2",
+              "name": "Wohnbereich",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.temp.visu_3",
+              "nodename": "visu_3",
+              "name": "Gast und Büro",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.temp.visu_4",
+              "nodename": "visu_4",
+              "name": "Schlafbereich",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.verteilung",
+          "nodename": "verteilung",
+          "name": "Verteilung",
+          "tags": [
+            6
+          ],
+          "children": [
+            {
+              "label": "config.verteilung.wirkenergie",
+              "nodename": "wirkenergie",
+              "name": "aktueller Verbrauch / Spannung",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.verteilung.plot_wirkleistung",
+              "nodename": "plot_wirkleistung",
+              "name": "Verbrauch",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.verteilung.plot_spannung_max",
+              "nodename": "plot_spannung_max",
+              "name": "Spannung (max)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.verteilung.plot_spannung_avg",
+              "nodename": "plot_spannung_avg",
+              "name": "Spannung (avg)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.verteilung.plot_spannung_min",
+              "nodename": "plot_spannung_min",
+              "name": "Spannung (min)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.verteilung.router",
+              "nodename": "router",
+              "name": "Enertex Router (10.0.0.135)",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.seperator_category",
+          "nodename": "seperator_category",
+          "name": "Kategorien",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "config.wetter",
+          "nodename": "wetter",
+          "name": "Wetter",
+          "tags": [
+            8
+          ],
+          "children": [
+            {
+              "label": "config.wetter.visu_1",
+              "nodename": "visu_1",
+              "name": "Wetter aktuell (Wunderground)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.wetter.visu_2",
+              "nodename": "visu_2",
+              "name": "Wetter aktuell (Wunderground)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.wetter.visu_vorhersage",
+              "nodename": "visu_vorhersage",
+              "name": "Wetter Vorhersage (heute)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.wetter.visu_vorhersage1",
+              "nodename": "visu_vorhersage1",
+              "name": "Wetter Vorhersage (morgen)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.wetter.visu_vorhersage2",
+              "nodename": "visu_vorhersage2",
+              "name": "Wetter Vorhersage (übermorgen)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.wetter.visu_vorhersage3",
+              "nodename": "visu_vorhersage3",
+              "name": "Wetter Vorhersage (...)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.wetter.visu_bos_1",
+              "nodename": "visu_bos_1",
+              "name": "Boston: Wetter aktuell (Wunderground)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.wetter.visu_bos_2",
+              "nodename": "visu_bos_2",
+              "name": "Boston: Wetter aktuell (Wunderground)",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.sun_moon",
+          "nodename": "sun_moon",
+          "name": "Sonne & Mond",
+          "tags": [
+            4
+          ],
+          "children": [
+            {
+              "label": "config.sun_moon.sun_visu",
+              "nodename": "sun_visu",
+              "name": "Sonne",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.sun_moon.sun_visu2",
+              "name": "Sonne: Dämmerung",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.sun_moon.moon_visu",
+              "name": "Mond",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.sun_moon.sun_moon_visu",
+              "name": "Allgemeines",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.helligkeiten",
+          "name": "Wohnungs-Helligkeiten",
+          "tags": [
+            5
+          ],
+          "children": [
+            {
+              "label": "config.helligkeiten.Helligkeiten",
+              "name": "akt. Helligkeiten",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.helligkeiten.plot_helligkeit_woko",
+              "name": "Wohnen & Kochen: Helligkeit in Lux",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.helligkeiten.plot_helligkeit_fl",
+              "name": "Flur: Helligkeit in Lux",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.helligkeiten.plot_helligkeit_bad",
+              "name": "Bad: Helligkeit in Lux",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.helligkeiten.plot_helligkeit_aussen",
+              "name": "Außen: Helligkeit in Lux",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.seperator_test",
+          "name": "Tests",
+          "tags": [
+            0
+          ],
+          "children": []
+        },
+        {
+          "label": "config.tankstellen",
+          "name": "Tankstellen: Benzinpreise",
+          "tags": [
+            2
+          ],
+          "children": [
+            {
+              "label": "config.tankstellen.visu_e5",
+              "name": "Tankstellen in der Umgebung - Super",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.tankstellen.visu_e10",
+              "name": "Tankstellen in der Umgebung - Super E10",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.icontests",
+          "name": "Dynamic Icon Tests",
+          "tags": [
+            5
+          ],
+          "children": [
+            {
+              "label": "config.icontests.visu_test1",
+              "name": "Test Slider",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.icontests.visu_test2",
+              "name": "Test Iconset 2",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.icontests.visu_test3",
+              "name": "Test Iconset 3",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.icontests.visu_test4",
+              "name": "Test Iconset 4",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.icontests.visu_test5",
+              "name": "Test Iconset 5",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.tests",
+          "name": "config.tests",
+          "tags": [
+            3
+          ],
+          "children": [
+            {
+              "label": "config.tests.numeric",
+              "name": "Test numeric",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.tests.nonzero",
+              "name": "numeric constant non-zero",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.tests.zero",
+              "name": "numeric constant non-zero",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.fritzboxen",
+          "name": "Fritzboxen",
+          "tags": [
+            13
+          ],
+          "children": [
+            {
+              "label": "config.fritzboxen.visu_wt1",
+              "name": "Fritzbox Willy.Tel: System",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wz1",
+              "name": "Fitzbox Wohnzimmer: System",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wt2",
+              "name": "Fitzbox Willy.Tel: WLAN",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wz2",
+              "name": "Fitzbox Wohnzimmer: WLAN",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wt3",
+              "name": "Fritzbox Willy.Tel: WAN",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wz3",
+              "name": "Fritzbox Wohnzimmer: WAN",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wt4",
+              "name": "Fritzbox Willy.Tel Callmonitor Incoming",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wt5",
+              "name": "Fritzbox Willy.Tel Callmonitor Outgoing",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_iPhone_M",
+              "name": "Martins iPhoneX: Accesspoints",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wt7",
+              "name": "Stephans iPhone7: Accesspoints",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wt71",
+              "name": "Fritzbox Willy.Tel: Devices",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wz8",
+              "name": "Martins-ipad-Air2: Accesspoints",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.fritzboxen.visu_wt8",
+              "name": "Fritzbox Willy.Tel: Devices",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.knx",
+          "name": "KNX Bus",
+          "tags": [
+            15
+          ],
+          "children": [
+            {
+              "label": "config.knx.visu_spv",
+              "name": "KNX Spannungsversorgung",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.visu_busverkehr",
+              "name": "config.knx.visu_busverkehr",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.visu_stati",
+              "name": "config.knx.visu_stati",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.reset_min_max",
+              "name": "config.knx.reset_min_max",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.busspannung",
+              "name": "config.knx.busspannung",
+              "tags": [
+                2
+              ],
+              "children": [
+                {
+                  "label": "config.knx.busspannung.minimum",
+                  "name": "config.knx.busspannung.minimum",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "config.knx.busspannung.maximum",
+                  "name": "config.knx.busspannung.maximum",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "label": "config.knx.busstrom",
+              "name": "config.knx.busstrom",
+              "tags": [
+                2
+              ],
+              "children": [
+                {
+                  "label": "config.knx.busstrom.minimum",
+                  "name": "config.knx.busstrom.minimum",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "config.knx.busstrom.maximum",
+                  "name": "config.knx.busstrom.maximum",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "label": "config.knx.busverkehr",
+              "name": "config.knx.busverkehr",
+              "tags": [
+                2
+              ],
+              "children": [
+                {
+                  "label": "config.knx.busverkehr.minimum",
+                  "name": "config.knx.busverkehr.minimum",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                },
+                {
+                  "label": "config.knx.busverkehr.maximum",
+                  "name": "config.knx.busverkehr.maximum",
+                  "tags": [
+                    0
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "label": "config.knx.temperaturalarm",
+              "name": "config.knx.temperaturalarm",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.netzteil1_status",
+              "name": "config.knx.netzteil1_status",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.netzteil2_status",
+              "name": "config.knx.netzteil2_status",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.betriebsstunden",
+              "name": "config.knx.betriebsstunden",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.betriebsstunden_seit_neustart",
+              "name": "config.knx.betriebsstunden_seit_neustart",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.reset_ergebnisspeicher",
+              "name": "config.knx.reset_ergebnisspeicher",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.status_letztes_event",
+              "name": "config.knx.status_letztes_event",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.knx.bus_reset",
+              "name": "config.knx.bus_reset",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.dreamboxen",
+          "name": "Dreamboxen",
+          "tags": [
+            14
+          ],
+          "children": [
+            {
+              "label": "config.dreamboxen.visu_wz_config2",
+              "name": "Dreambox Wohnzimmer - Konfiguration",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_wz_status2",
+              "name": "Dreambox Wohnzimmer",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_wz_test1",
+              "name": "Dreambox Wohnzimmer (neue Felder)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_wz_test2",
+              "name": "Dreambox Wohnzimmer (eventdescriptionextended)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_sz_config2",
+              "name": "Dreambox Schlafzimmer - Konfiguration",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_sz_status2",
+              "name": "Dreambox Schlafzimmer",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_sz_test1",
+              "name": "Dreambox Schlafzimmer (neue Felder)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_sz_test2",
+              "name": "Dreambox Schlafzimmer (eventdescriptionextended)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_az_config2",
+              "name": "Dreambox Büro - Konfiguration",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_az_status2",
+              "name": "Dreambox Büro",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_az_test1",
+              "name": "Dreambox Büro (neue Felder)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_az_test2",
+              "name": "Dreambox Büro (eventdescriptionextended)",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_az_remote2",
+              "name": "Dreambox Büro",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.dreamboxen.visu_az_remote2midi",
+              "name": "Dreambox Büro",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.mlgw",
+          "name": "Masterlink Gateway",
+          "tags": [
+            5
+          ],
+          "children": [
+            {
+              "label": "config.mlgw.visualisierung2",
+              "name": "BeoPlay V1 / BV9 - LIGHT & CONTROL commands",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.mlgw.visualisierung",
+              "name": "BeoPlay V1 - Tasten",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.mlgw.visualisierung3",
+              "name": "BeoVision 9",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.mlgw.visualisierung4",
+              "name": "BeoVision 9 - Tasten",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.mlgw.visualisierung5",
+              "name": "BeoVision 10",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.lintronic",
+          "name": "Lintronic - Beo4 Remote",
+          "tags": [
+            1
+          ],
+          "children": [
+            {
+              "label": "config.lintronic.beo4status",
+              "name": "Beo4 Status",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "config.sonos_bo",
+          "name": "Sonos Musiksystem",
+          "tags": [
+            6
+          ],
+          "children": [
+            {
+              "label": "config.sonos_bo.sonos_widget",
+              "name": "Sonos Control",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.sonos_bo.myradio_visu",
+              "name": "Radio Stationen",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.sonos_bo.myradio_visu2",
+              "name": "Radio Stationen",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.sonos_bo.myradio_visu3",
+              "name": "Radio Stationen",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.sonos_bo.myradio_visu21",
+              "name": "Now playing...",
+              "tags": [
+                0
+              ],
+              "children": []
+            },
+            {
+              "label": "config.sonos_bo.myradio_visu22",
+              "name": "Now playing...",
+              "tags": [
+                0
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+
+]
