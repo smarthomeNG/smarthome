@@ -886,7 +886,16 @@ class Logics():
         return count
 
 
-    def delete_logic(self, name):
+    def filename_used_count(self, filename):
+        # load /etc/logic.yaml
+        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
+        conf = shyaml.yaml_load_roundtrip(conf_filename)
+
+        count = self._count_filename_uses(conf, filename)
+        return count
+
+
+    def delete_logic(self, name, with_code=False):
         """
         Deletes a complete logic
 
@@ -903,11 +912,11 @@ class Logics():
         :return: True, if deletion fas successful
         :rtype: bool
         """
-        logger.warning("delete_logic: This routine implements the deletion of logic '{}' (still in testing)".format(name))
+        logger.notice(f"delete_logic: This routine implements the deletion of logic '{name}' with_code={with_code} (still in testing)")
 
         # Logik entladen
         if self.is_logic_loaded(name):
-            logger.notice("delete_logic: Logic '{}' unloaded".format(name))
+            logger.notice(f"delete_logic: Logic '{name}' unloaded")
             self.unload_logic(name)
 
         # load /etc/logic.yaml
@@ -916,13 +925,13 @@ class Logics():
 
         section = conf.get(name, None)
         if section is None:
-            logger.warning("delete_logic: Section '{}' not found in logic configuration.".format(name))
+            logger.warning(f"delete_logic: Section '{name}' not found in logic configuration.")
             return False
 
         # delete code file in ../logics
         filename = section.get('filename', None)
         if filename is None:
-            logger.warning("delete_logic: Filename of logic is not defined in section '{}' of logic configuration.".format(name))
+            logger.warning(f"delete_logic: Filename of logic is not defined in section '{name}' of logic configuration.")
         else:
             count = self._count_filename_uses(conf, filename)
             blocklyname = os.path.join(self.get_logics_dir(), os.path.splitext(os.path.basename(filename))[0]+'.blockly')
@@ -930,19 +939,20 @@ class Logics():
 
             if count < 2:
                 # Deletion of the parts of the logic
-                if os.path.isfile(blocklyname):
-                    os.remove(blocklyname)
-                    logger.warning("delete_logic: Blockly-Logic file '{}' deleted".format(blocklyname))
-                if os.path.isfile(filename):
-                    os.remove(filename)
-                    logger.notice("delete_logic: Logic file '{}' deleted".format(filename))
+                if with_code:
+                    if os.path.isfile(blocklyname):
+                        os.remove(blocklyname)
+                        logger.warning(f"delete_logic: Blockly-Logic file '{blocklyname}' deleted")
+                    if os.path.isfile(filename):
+                        os.remove(filename)
+                        logger.notice(f"delete_logic: Logic file '{filename}' deleted")
             else:
-                logger.warning("delete_logic: Skipped deletion of logic file '{}' because it is used by {} other logic(s)".format(filename, count-1))
+                logger.warning(f"delete_logic: Skipped deletion of logic file '{filename}' because it is used by {count-1} other logic(s)")
 
         # delete logic configuration from ../etc/logic.yaml
         if conf.get(name, None) is not None:
             del conf[name]
-            logger.notice("delete_logic: Section '{}' from configuration deleted".format(name))
+            logger.notice(f"delete_logic: Section '{name}' from configuration deleted")
 
         # save /etc/logic.yaml
         shyaml.yaml_save_roundtrip(conf_filename, conf, True)

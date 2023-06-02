@@ -267,10 +267,11 @@ class LogicsController(RESTResource):
         self.logger.info("get_logic: logicname = '{}', logic_conf = '{}'".format(logicname, logic_conf))
 
         mylogic = self.fill_logicdict(logicname)
-        logic_conf['name'] = mylogic['name']
-        logic_conf['group'] = mylogic['group']
-        logic_conf['next_exec'] = mylogic['next_exec']
-        logic_conf['last_run'] = mylogic['last_run']
+        if mylogic.get('name', None) is not None:
+            logic_conf['name'] = mylogic['name']
+            logic_conf['group'] = mylogic['group']
+            logic_conf['next_exec'] = mylogic['next_exec']
+            logic_conf['last_run'] = mylogic['last_run']
 
         # self.logger.warning("type = {}, mylogic = {}".format(type(mylogic), mylogic))
         # self.logger.warning("type = {}, logic_conf = {}".format(type(logic_conf), logic_conf))
@@ -341,27 +342,37 @@ class LogicsController(RESTResource):
                 self.logger.info("LogicsController.set_logic_state(relaod): Triggering logic because crontab contains 'init' - crontab = '{}'".format(crontab))
                 self.logics.trigger_logic(logicname, by='Admin')
             return json.dumps({"result": "ok"})
+        elif action == 'delete_with_code':
+            self.logger.info(f"set_logic_state: action={action}")
+            self.logics.delete_logic(logicname, with_code=True)
+            return json.dumps({"result": "ok"})
         elif action == 'delete':
-            self.logger.notice(f"set_logic_state: action={action}")
+            self.logger.info(f"set_logic_state: action={action}")
             self.logics.delete_logic(logicname)
             return json.dumps({"result": "ok"})
         elif action == 'create':
-            self.logger.notice(f"set_logic_state: action={action} filename={filename}, logicname={logicname}")
+            self.logger.info(f"set_logic_state: action={action} filename={filename}, logicname={logicname}")
             filename = filename.lower() + '.py'
 
             if logicname in self.logics.return_defined_logics():
                 self.logger.warning("LogicsController.set_logic_state(create): Logic name {} is already used".format(logicname))
                 return json.dumps({"result": "error", "description": "Logic name {} is already used".format(logicname)})
             else:
-                logics_code = '#!/usr/bin/env python3\n' + '# ' + filename + '\n\n'
-                if self.logic_create_codefile(filename, logics_code):
-                    self.logic_create_config(logicname, filename)
-                    if not self.logics.load_logic(logicname):
-                        self.logger.error("Could not load logic '{}', syntax error".format(logicname))
-                    return json.dumps( {"result": "ok"} )
-                else:
-                    self.logger.warning("LogicsController.set_logic_state(create): Logic file {} already exists".format(filename))
-                    return json.dumps({"result": "error", "description": "Logic file {} already exists".format(filename)})
+                if not os.path.isfile(os.path.join(self.logics.get_logics_dir(), filename)):
+                    #create new logic code file, if none is found
+                    logics_code = '#!/usr/bin/env python3\n' + '# ' + filename + '\n\n'
+                    if not self.logic_create_codefile(filename, logics_code):
+                        self.logger.error(f"Could not create code-file '{filename}'")
+                        return json.dumps({"result": "error", "description": f"Could not create code-file '{filename}'"})
+
+                if self.logics.filename_used_count(filename) > 0:
+                    self.logger.error(f"code-file '{filename}' already exists and is used by another logic configuration")
+                    return json.dumps({"result": "error", "description": f"code-file '{filename}' already exists and is used by another logic configuration"})
+
+                self.logic_create_config(logicname, filename)
+                if not self.logics.load_logic(logicname):
+                    self.logger.warning(f"Could not load logic '{logicname}', syntax error")
+                return json.dumps( {"result": "ok"} )
 
         else:
             self.logger.warning("LogicsController.set_logic_state(): logic '"+logicname+"', action '"+action+"' is not supported")
@@ -445,7 +456,7 @@ class LogicsController(RESTResource):
         """
         Handle PUT requests for logics API
         """
-        self.logger.info("LogicsController.update(logicname='{}', action='{}')".format(logicname, action))
+        self.logger.info(f"LogicsController.update(logicname='{logicname}', action='{action}')")
 
         if self.plugins is None:
             self.plugins = Plugins.get_instance()
@@ -458,7 +469,7 @@ class LogicsController(RESTResource):
 
         if (action == 'saveparameters') and (logicname != ''):
             return self.save_logic_parameters(logicname)
-        elif not action in ['create', 'load', 'delete']:
+        elif not action in ['create', 'load', 'delete', 'delete_with_code']:
             mylogic = self.logics.return_logic(logicname)
             if mylogic is None:
                 return json.dumps({'result': 'Error', 'description': "No logic with name '" + logicname + "' found"})
