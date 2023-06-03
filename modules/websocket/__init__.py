@@ -152,6 +152,10 @@ class Websocket(Module):
         from . import smartvisu
         self.initialize_payload_protocol(smartvisu.Protocol)
 
+        # parameters and class instance for smartVISU protocol
+        from . import admin
+        self.initialize_payload_protocol(admin.Protocol)
+
         return
 
 
