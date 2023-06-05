@@ -8,12 +8,16 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
 
   - **Structs**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch auf Unterebenen
     einer stuct eingebunden werden.
-  - **Items**: Es gibt neue Attribute, die es ermöglichen ein Item als **Hysterese**-Glied mit optionalem Zeitlied
-    zu konfigurieren.
-  - **Items**: In den Attributen **autotimer** und **cycle** können nun eval Ausdrücke in der Konfiguration genutzt
-    werden. Bisher waren nur konstante Werte und alternativ Item Referenzen möglich
-  - **Admin GUI**: Die Liste der Logiken kann nun gruppiert angezeigt werden. Logiken können einer oder mehreren
-    Gruppen zugeordnet werden.
+  - **Items**:
+    - Es gibt neue Attribute, die es ermöglichen ein Item als **Hysterese**-Glied mit optionalem Zeitlied
+      zu konfigurieren.
+    - In den Attributen **autotimer** und **cycle** können nun eval Ausdrücke in der Konfiguration genutzt
+      werden. Bisher waren nur konstante Werte und alternativ Item Referenzen möglich
+  - **Admin GUI**:
+    - **Logiken**: Die Liste der Logiken kann nun gruppiert angezeigt werden. Logiken können einer oder mehreren
+      Gruppen zugeordnet werden.
+    - **Systemeigenschaften**: Die Resource Graphen der Systemdaten funktionieren jetzt auch, ohne dass das smartvisu
+      Plugin konfiguriert sein muss.
 
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.

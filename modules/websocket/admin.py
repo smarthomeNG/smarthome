@@ -214,9 +214,10 @@ class Protocol():
                         else:
                             self.adm_monitor_items[client_addr] = []   # stop monitoring of items
 
-                    elif command == 'logic':
-                        answer = {}
-                        await self.request_logic(data, client_addr)
+                    # Kein 'logic' command für die admin GUI
+                    # elif command == 'logic':
+                    #     answer = {}
+                    #     await self.request_logic(data, client_addr)
 
                     elif command == 'series':
                         path = data['item']
@@ -271,19 +272,21 @@ class Protocol():
                         self.logger.info(f"Client {self.build_client_info(client_addr)} identified as {self.build_sw_info(client_addr)}")
                         answer = {}
 
-                    elif command == 'list_items':
-                        answer = {}
-                        if self.adm_querydef:
-                            path = data.get('path', '')
-                            answer = await self.request_list_items(path, client_addr)
-                        self.logger.warning(f"{protocol} <CMD  not yet tested: '{data}'   -   from {self.build_log_info(client_addr)}")
+                    # Kein 'list_items' command für die admin GUI
+                    # elif command == 'list_items':
+                    #     answer = {}
+                    #     if self.adm_querydef:
+                    #         path = data.get('path', '')
+                    #         answer = await self.request_list_items(path, client_addr)
+                    #     self.logger.warning(f"{protocol} <CMD  not yet tested: '{data}'   -   from {self.build_log_info(client_addr)}")
 
-                    elif command == 'list_logics':
-                        answer = {}
-                        if self.adm_querydef:
-                            enabled = data.get('enabled', 0)
-                            answer = await self.request_list_logics((enabled == 1), client_addr)
-                        self.logger.warning(f"{protocol} <CMD  not yet tested: '{data}'   -   from {self.build_log_info(client_addr)}")
+                    # Kein 'list_logics' command für die admin GUI
+                    # elif command == 'list_logics':
+                    #     answer = {}
+                    #     if self.adm_querydef:
+                    #         enabled = data.get('enabled', 0)
+                    #         answer = await self.request_list_logics((enabled == 1), client_addr)
+                    #     self.logger.warning(f"{protocol} <CMD  not yet tested: '{data}'   -   from {self.build_log_info(client_addr)}")
 
                     else:
                         self.logger.error("unsupported event: '{}'", data)
@@ -853,87 +856,87 @@ class Protocol():
 
         return
 
-    async def request_logic(self, data, client_addr):
-        """
-        Request logic (trigger, enable, disable)
-        """
-        if 'name' not in data:
-            return
-        name = data['name']
-        mylogic = self.logics.return_logic(name)
-        if mylogic is not None:
-            linfo = self.logics.get_logic_info(name)
-            if linfo['visu_access']:
-                if 'val' in data:
-                    value = data['val']
-                    self.logger.info(f"Client {self.build_log_info(client_addr)} triggerd logic {name} with '{value}'")
-                    mylogic.trigger(by="'some_visu'", value=value, source=client_addr)
-                if 'enabled' in data:
-                    if data['enabled']:
-                        self.logger.info(f"Client {self.build_log_info(client_addr)} enabled logic {name}")
-                        self.logics.enable_logic(name)
-                        # non-persistant enable
-                        # self.visu_logics[name].enable()
-                    else:
-                        self.logger.info(f"Client {self.build_log_info(client_addr)} disabled logic {name}")
-                        self.logics.disable_logic(name)
-                        # non-persistant disable
-                        # self.visu_logics[name].disable()
-            else:
-                self.logger.warning(f"Client {self.build_log_info(client_addr)} requested logic without adm-access: {name}")
-        else:
-            self.logger.warning(f"Client {self.build_log_info(client_addr)} requested invalid logic: {name}")
-        return
-
-    async def request_list_items(self, path, client_addr):
-        """
-        Build the requested list of logics
-        """
-        self.logger.info(f"Client {self.build_log_info(client_addr)} requested a list of defined items.")
-        myitems = []
-        for i in self._sh.return_items():
-            include = False
-            #            if i.get('visu_acl', '').lower() != 'no':
-            if (path == '') and ('.' not in i._path):
-                include = True
-            else:
-                if i._path.startswith(path + '.'):
-                    p = i._path[len(path + '.'):]
-                    if '.' not in p:
-                        include = True
-            if include:
-                myitem = collections.OrderedDict()
-                myitem['path'] = i._path
-                myitem['name'] = i._name
-                myitem['type'] = i.type()
-                myitems.append(myitem)
-
-        response = collections.OrderedDict([('cmd', 'list_items'), ('items', myitems)])
-        self.logger.info(f"Requested a list of defined items: {response}")
-        return response
-
-    async def request_list_logics(self, enabled, client_addr):
-        """
-        Build the requested list of logics
-        """
-        self.logger.info(f"Client {self.build_log_info(client_addr)} requested a list of defined logics.")
-        logiclist = []
-        for l in self.logics.return_loaded_logics():
-            linfo = self.logics.get_logic_info(l)
-            if linfo['visu_access']:
-                if linfo['userlogic']:
-                    logic_def = collections.OrderedDict()
-                    logic_def['name'] = l
-                    logic_def['desc'] = linfo['description']
-                    logic_def['enabled'] = 1
-                    if not linfo['enabled']:
-                        logic_def['enabled'] = 0
-                    if (not enabled) or (logic_def['enabled'] == 1):
-                        logiclist.append(logic_def)
-
-        response = collections.OrderedDict([('cmd', 'list_logics'), ('logics', logiclist)])
-        self.logger.info(f"Requested a list of defined logics: {response}")
-        return response
+    # async def request_logic(self, data, client_addr):
+    #     """
+    #     Request logic (trigger, enable, disable)
+    #     """
+    #     if 'name' not in data:
+    #         return
+    #     name = data['name']
+    #     mylogic = self.logics.return_logic(name)
+    #     if mylogic is not None:
+    #         linfo = self.logics.get_logic_info(name)
+    #         if linfo['visu_access']:
+    #             if 'val' in data:
+    #                 value = data['val']
+    #                 self.logger.info(f"Client {self.build_log_info(client_addr)} triggerd logic {name} with '{value}'")
+    #                 mylogic.trigger(by="'some_visu'", value=value, source=client_addr)
+    #             if 'enabled' in data:
+    #                 if data['enabled']:
+    #                     self.logger.info(f"Client {self.build_log_info(client_addr)} enabled logic {name}")
+    #                     self.logics.enable_logic(name)
+    #                     # non-persistant enable
+    #                     # self.visu_logics[name].enable()
+    #                 else:
+    #                     self.logger.info(f"Client {self.build_log_info(client_addr)} disabled logic {name}")
+    #                     self.logics.disable_logic(name)
+    #                     # non-persistant disable
+    #                     # self.visu_logics[name].disable()
+    #         else:
+    #             self.logger.warning(f"Client {self.build_log_info(client_addr)} requested logic without adm-access: {name}")
+    #     else:
+    #         self.logger.warning(f"Client {self.build_log_info(client_addr)} requested invalid logic: {name}")
+    #     return
+    #
+    # async def request_list_items(self, path, client_addr):
+    #     """
+    #     Build the requested list of logics
+    #     """
+    #     self.logger.info(f"Client {self.build_log_info(client_addr)} requested a list of defined items.")
+    #     myitems = []
+    #     for i in self._sh.return_items():
+    #         include = False
+    #         #            if i.get('visu_acl', '').lower() != 'no':
+    #         if (path == '') and ('.' not in i._path):
+    #             include = True
+    #         else:
+    #             if i._path.startswith(path + '.'):
+    #                 p = i._path[len(path + '.'):]
+    #                 if '.' not in p:
+    #                     include = True
+    #         if include:
+    #             myitem = collections.OrderedDict()
+    #             myitem['path'] = i._path
+    #             myitem['name'] = i._name
+    #             myitem['type'] = i.type()
+    #             myitems.append(myitem)
+    #
+    #     response = collections.OrderedDict([('cmd', 'list_items'), ('items', myitems)])
+    #     self.logger.info(f"Requested a list of defined items: {response}")
+    #     return response
+    #
+    # async def request_list_logics(self, enabled, client_addr):
+    #     """
+    #     Build the requested list of logics
+    #     """
+    #     self.logger.info(f"Client {self.build_log_info(client_addr)} requested a list of defined logics.")
+    #     logiclist = []
+    #     for l in self.logics.return_loaded_logics():
+    #         linfo = self.logics.get_logic_info(l)
+    #         if linfo['visu_access']:
+    #             if linfo['userlogic']:
+    #                 logic_def = collections.OrderedDict()
+    #                 logic_def['name'] = l
+    #                 logic_def['desc'] = linfo['description']
+    #                 logic_def['enabled'] = 1
+    #                 if not linfo['enabled']:
+    #                     logic_def['enabled'] = 0
+    #                 if (not enabled) or (logic_def['enabled'] == 1):
+    #                     logiclist.append(logic_def)
+    #
+    #     response = collections.OrderedDict([('cmd', 'list_logics'), ('logics', logiclist)])
+    #     self.logger.info(f"Requested a list of defined logics: {response}")
+    #     return response
 
     # ===============================================================================
     # Thread based (sync) methods of admin support
