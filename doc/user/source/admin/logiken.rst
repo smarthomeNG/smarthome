@@ -37,7 +37,7 @@ Auf einem 2. Tab kann eine Liste der Systemlogiken eingesehen werden.
 
 .. index:: Logiken; Editor
 
-Ab SmartHomeNG v1.10 können die Logiken in dieser Ansicht gruppiert werden. Wenn mindestens eine Logik einer Gruppe
+Ab **SmartHomeNG v1.10** können die Logiken in dieser Ansicht gruppiert werden. Wenn mindestens eine Logik einer Gruppe
 zugeordnet wird, ändert sich die Ansicht von einer flachen Liste, in eine Liste aufklappbarer Gruppen.
 
 .. image:: assets/logics-grouped.jpg
@@ -62,7 +62,7 @@ Das Tab mit dem Code Editor ermöglicht den Python Code der Logik zu erfassen/zu
 .. image:: assets/logics-codeeditor.jpg
    :class: screenshot
 
-Ab SmartHomeNG v1.10 sind Buttons zum Aktivieren/Deaktivieren und zum neu Laden der Logik hinzugekommen.
+Ab **SmartHomeNG v1.10** sind Buttons zum Aktivieren/Deaktivieren und zum neu Laden der Logik hinzugekommen.
 
 
 Parameter Editor
@@ -74,8 +74,8 @@ für die Logik konfiguriert werden.
 .. image:: assets/logics-parametereditor.jpg
    :class: screenshot
 
-Ab SmartHomeNG v1.10 sind Felder für die Beschreibung der Logik und zur Zuordnung zu einer bzz. mehreren Gruppen hinzu
-gekommen.
+Ab **SmartHomeNG v1.10** sind Felder für die Beschreibung der Logik und zur Zuordnung zu einer bzw. mehreren Gruppen
+hinzu gekommen.
 
 Beschreibung
 ~~~~~~~~~~~~

@@ -17,9 +17,9 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 24. Mai 2023
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 4. Juni 2023
            (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 19. Mai 2023
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 3. Juni 2023
            (...)
 
 
@@ -93,6 +93,10 @@ Updates im CORE
 
     * Improvements to logging configuration
 
+  * lib.logic:
+
+    * Logic list can now be grouped. Logics can be assigned to one or more groups
+
   * lib.model:
 
     * Added SmartDevicePlugin and documentation
@@ -125,11 +129,14 @@ Updates im CORE
         'list of loggers' page
       * v0.7.2: Added "Modify Handlers" to loggers configuration page
       * v0.7.3: Added hysteresis attributes to shngadmin
-
+      * shngadmin 0.7.8: Logic list can now be grouped. Logics can be assigned to one or more groups
+      * shngadmin 0.7.12, modules.admin.api_logics, lib.logic: Added description for groups; Small fixes
+      * shngadmin v0.8.1.: First version using the adm payload protocol for websocket communication
 
   * websocket:
 
     * Fix for smartvisu payload protocol
+    * Implementation of first version of the adm payload protocol
 
 * Plugins:
 
@@ -184,6 +191,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Replace README with user_doc
   * Adjust requirements to work with Python 3.10
   * Fix module imports for web interface
+  * Added requirement to circumvent problematic requirements of pyatv package under Python 3.11
 
 * avm:
 
