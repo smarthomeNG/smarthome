@@ -185,7 +185,7 @@ class Protocol():
                 command = data.get("cmd", '')
                 protocol = 'wss' if websocket.secure else 'ws '
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
-                self.logger.dbgmed(f"{self.build_log_info(client_addr)} sent '{data}'")
+                self.logger.info(f"{self.build_log_info(client_addr)} sent '{data}'")
                 answer = {"error": "unhandled command"}
 
                 try:
@@ -298,7 +298,7 @@ class Protocol():
                     # if an answer should be sent, it is done here
                     try:
                         await websocket.send(reply)
-                        self.logger.dbgmed(f"adm >REPLY: '{answer}'   -   to {self.build_log_info(websocket.remote_address)}")
+                        self.logger.info(f"adm >REPLY: '{answer}'   -   to {self.build_log_info(websocket.remote_address)}")
                     #except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
                         self.logger.warning(f"Exception in 'await websocket.send(reply)': {e} - reply = {reply} to {self.build_log_info(websocket.remote_address)}")
@@ -788,17 +788,28 @@ class Protocol():
 
                 try:
                     # self.logger.debug("Send update to Client {0} for candidate {1} and item_name {2}?".format(client_addr, candidate, item_name))
+                    self.logger.info(f"update_item:")
                     path_parts = candidate.split('.property.')
                     if path_parts[0] != item_name:
                         continue
 
                     if len(path_parts) == 1 and client_addr != source:
-                        self.logger.debug(f"Send update to Client {self.build_log_info(client_addr)} for item {path_parts[0]}")
-                        items.append([path_parts[0], item_value])
+                        self.logger.info(f"Send update to Client {self.build_log_info(client_addr)} for item {path_parts[0]}")
+                        # items.append([path_parts[0], item_value])
+                        item = self.items.return_item(item_name)
+                        monitor_data = {'value': item(),
+                                        'last_change': str(item.property.last_change),
+                                        'last_change_by': item.property.last_change_by,
+                                        'last_update': str(item.property.last_update),
+                                        'last_update_by': item.property.last_update_by,
+                                        'last_value': item.property.last_value
+                                        }
+                        items.append([path_parts[0], monitor_data])
+                        self.logger.info(f"update_item: monitor_data={monitor_data}")
                         continue
 
                     if len(path_parts) == 2:
-                        self.logger.debug(f"Send update to Client {self.build_log_info(client_addr)} for item {path_parts[0]} with property {path_parts[1]}")
+                        self.logger.info(f"Send update to Client {self.build_log_info(client_addr)} for item {path_parts[0]} with property {path_parts[1]}")
                         prop = self.items[path_parts[0]]['item'].property
                         prop_attr = getattr(prop,path_parts[1])
                         items.append([candidate, prop_attr])
@@ -816,7 +827,7 @@ class Protocol():
                 data = {'cmd': 'item', 'items': items}
                 msg = json.dumps(data, default=self.json_serial)
                 try:
-                    self.logger.dbgmed(f"adm >MONIT: '{msg}'   -   to {self.build_log_info(self.client_address(websocket))}")
+                    self.logger.info(f"adm >MONIT: '{msg}'   -   to {self.build_log_info(self.client_address(websocket))}")
                     await websocket.send(msg)
                 except Exception as e:
                     if str(e).startswith(('code = 1001', 'code = 1005', 'code = 1006')):

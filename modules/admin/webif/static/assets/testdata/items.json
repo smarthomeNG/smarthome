@@ -11,6 +11,7 @@
       "children": [
         {
           "label": "test.string",
+          "path": "test.string",
           "nodename": "string",
           "name": "beschattung.config",
           "tags": [
@@ -19,6 +20,7 @@
         },
         {
           "label": "test.number",
+          "path": "test.number",
           "nodename": "number",
           "name": "Test-Nummer",
           "tags": [
@@ -47,6 +49,7 @@
         },
         {
           "label": "beoremote.beo4commandnum",
+          "path": "beoremote.beo4commandnum",
           "nodename": "beo4commandnum",
           "name": "beoremote.beo4commandnum",
           "tags": [
@@ -56,6 +59,7 @@
         },
         {
           "label": "beoremote.beo4mode",
+          "path": "beoremote.beo4mode",
           "nodename": "beo4mode",
           "name": "beoremote.beo4mode",
           "tags": [
