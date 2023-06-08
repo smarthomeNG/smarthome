@@ -37,6 +37,24 @@ auch eingestellt werden, ab wieviel eingegebenen Zeichen die Suche beginnen soll
 In den rechts angezeigten Item Informationen kann der Wert des Items live angepasst werden.
 
 
+Item Monitoring
+---------------
+
+Auf dem Tab **Überwachte Items** können die Item Werte und deren Veränderungen gemonitored werden. Dazu werden vorher
+die Items im Item-Tree ausgewählt und mit dem Button **Überwachen** über den Items Details die Überwachung aktiviert
+bzw. deaktiviert.
+
+Diese Überwachung kann bei der Entwicklung von Logiken, eval-Ausdrücken oder User-Functions hilfreich sein, da die
+Veränderung von Items, welche an völlig unterschiedlichen Stellen im Item-Tree definiert sind, übersichtlich in einer
+Tabelle dargestellt wird.
+
+
+.. image:: assets/items-item-monitoring.jpg
+   :class: screenshot
+
+
+|
+
 Item Konfiguration
 ==================
 

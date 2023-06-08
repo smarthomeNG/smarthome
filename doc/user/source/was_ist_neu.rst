@@ -20,6 +20,8 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       Gruppen zugeordnet werden.
     - **Systemeigenschaften**: Die Resource Graphen der Systemdaten funktionieren jetzt auch, ohne dass das smartvisu
       Plugin konfiguriert sein muss.
+    - **Items**: Es ist jetzt möglich die Veränderung des Werte von mehreren Items in einer Tabelle live zu
+      überwachen.
 
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.
