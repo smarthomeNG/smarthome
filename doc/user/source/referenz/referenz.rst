@@ -28,6 +28,6 @@ können.
    netzwerk
    plugins/plugins
    userfunctions/userfunctions
-   virtual_environments/virtual_environments
+   python/python
    libraries_plugins_logics
    APIs

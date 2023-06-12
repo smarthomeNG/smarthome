@@ -6,9 +6,9 @@
 .. role:: greensup
 .. role:: redsup
 
-===========================================
-Virtuelle Python Environments :redsup:`Neu`
-===========================================
+===============================================
+Virtuelle Python Environments :bluesup:`Update`
+===============================================
 
 Virtual Environments sind isolierte und unabhängige Umgebungen, die den Code und die Abhängigkeiten eines Projekts
 enthalten. Mit virtuellen Environments kann man parallel Umgebungen schaffen, in denen zum Beispiel Python Packages in
@@ -23,11 +23,33 @@ Es gibt eine Reihe von Tools, um virtuelle Environments zu erstellen. Die verbre
 und **venv**.
 
 **venv** gibt es seit Python 3.3. Es ist Bestandteil der Python Installation. Allerdings ist es in
-einigen Umgebungen (z.B. Debian) nicht in der Standard Python Installation enthalten und muss dann separat installiert
-werden.
+einigen Umgebungen (z.B. älteren Debian Distributionen) nicht in der Standard Python Installation enthalten
+und muss dann separat installiert werden.
 
 **virtualenv** bietet eine größere Funktionalität als **venv**. Die Funktionalität von **venv** ist eine Untermenge
 der Funktionalität von **virtualenv**. **virtualenv** ist Vergleich zu **venv** schneller und es ist erweiterbar.
+
+Da **venv** Teil der Python Distribution ist, wird empfohlen diesem den Vorzug vor **virtualenv** zu geben.
+
+|
+
+Die virtuellen Environments sollten in einem Unterverzeichnis zum Home Verzeichnis des Users **smarthome**
+gespeichert werden. Dieses Verzeichnis sollte zur einfacheren Handhabung der virtuellen Environments in
+den PATH aufgenommen werden.
+
+Empfohlen  wird das Verzeichnis **environments** zu nennen.
+
+
+.. code-block:: bash
+
+    $ mkdir ~/environments
+
+Zur Anlage eines Environments muss diese Verzeichnis das aktuelle Arbeitsverzeichnis sein.
+
+
+.. code-block:: bash
+
+    $ cd ~/environments
 
 |
 
