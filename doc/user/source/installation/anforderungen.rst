@@ -195,8 +195,6 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
 .. csv-table:: Zur Verdeutlichung
   :header: "SmartHomeNG", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen", "minimale Python Version"
 
-  "v1.2 und davor",  "diverse",     "Python 3.2, 3.3, 3.4", "Python 3.2"
-  "v1.3",            "Python 3.5",  "Python 3.3, 3.4, 3.5", "Python 3.2"
   "v1.4",            "Python 3.6",  "Python 3.4, 3.5, 3.6", "Python 3.3"
   "v1.5",            "Python 3.6",  "Python 3.4, 3.5, 3.6", "Python 3.4"
   "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7", "Python 3.4"
@@ -229,19 +227,26 @@ ist in der folgenden Tabelle aufgelistet:
   "3.12",  "prerelease",   "2\. Oktober 2023",     "Oktober 2028"
 
 
-Python Versionen unter Linux
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Python (und PHP) Versionen unter Linux
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Linux Distributionen bringen eine installierte Version von Python mit. Die installierte Python Version ist abhängig
-von der Linux Distribution.
+von der Linux Distribution. Diese Version sollte nicht mit einer neuen Python Version aktialisiert werden, da einige
+Tools der Distribution darauf aufsetzen und dann evtl. nicht mehr funktionieren. Es ist aber möglich zusätzliche
+Python Versionen zu installieren (Sies Abschnitt Referenz).
 
 Hier sind einige Beispiele für Linux-System und mitgeliefere Software Versionen:
 
-   * Debian 10 (Buster) beinhaltet Python 3.7 und PHP 7.3
-   * Debian 11 (Bullseye) beinhaltet Python 3.9 und PHP 7.4
-   * Debian 12 (Bookworm) beinhaltet Python 3.11 und PHP 8.2
-   * Ubuntu 18.04 LTS (Bionic Beaver) beinhaltet Python 3.6 und PHP 7.2
-   * Ubuntu 20.04 LTS (Focal Fossa) beinhaltet Python 3.8 und PHP 7.4
+.. csv-table:: Distributionen und enthaltene Python und PHP Versionen
+  :header: "Distribution", "Python Version", "PHP Version"
+
+   "Debian 10 (Buster)",                  "Python 3.7",   "PHP 7.3"
+   "Debian 11 (Bullseye)",                "Python 3.9",   "PHP 7.4"
+   "Debian 12 (Bookworm)",                "Python 3.11",  "PHP 8.2"
+   "Ubuntu 18.04 LTS (Bionic Beaver)",    "Python 3.6",   "PHP 7.2"
+   "Ubuntu 20.04 LTS (Focal Fossa)",      "Python 3.8",   "PHP 7.4"
+   "Ubuntu 22.04 LTS (Jammy Jellyfish)",  "Python 3.10",  "PHP 8.1"
+
 
 Aus den Beispielen ist ersichtlich, das Debian Stretch nicht mehr für Neuinstallationen verwendet werden sollte.
 Bei Ubuntu sollte man die LTS (Long Term Support) Varianten bevorzugen um nicht andauern mit Systemänderungen konfrontiert zu werden

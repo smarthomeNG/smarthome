@@ -87,6 +87,15 @@ Jetzt kann mit dem folgenden Befehl ein virtual Environment erstellt werden, wel
 
 |
 
+Das Environment wird mit dem Kommande
+
+.. code-block:: bash
+
+    $ source /home/smarthome/environments/py_310/bin/activate
+    (py_310) $
+
+aktiviert. Eine Vereinfachung des Aufrufes ist weiter unten beschrieben.
+
 In dem Environment sind nun nur die Packages **pip**, **setuptools** und evtl. **wheel** installiert. Weitere benötigte
 Packages können ganz normal mit **pip3** nachinstalliert werden. (SmartHomeNG installiert wie bei einer kompletten
 Neuinstallation die benötigten Packages).
@@ -95,7 +104,7 @@ Der Aufruf von
 
 .. code-block:: bash
 
-    (py_310) smarthome:~$ python3
+    (py_310) $ python3
 
 führt nun dazu, dass Python 3.10 gestartet wird.
 
@@ -103,7 +112,8 @@ Um das virtuelle Environment zu deaktivieren, muss nur
 
 .. code-block:: bash
 
-    $ deactivate
+    (py_310) $ deactivate
+    $
 
 eingegeben werden.
 
