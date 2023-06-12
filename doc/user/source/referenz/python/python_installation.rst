@@ -88,5 +88,5 @@ Dieses kann mit
 
     python3.10 --version
 
-überprüft werden. Als Ausgabe sollte **Python 3.10.12** angezeicgt werden.
+überprüft werden. Als Ausgabe sollte **Python 3.10.12** angezeigt werden.
 
