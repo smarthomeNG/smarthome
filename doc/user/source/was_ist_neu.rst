@@ -6,7 +6,9 @@ Neuerungen im Release v1.10
 Hier ist eine Kurzübersicht über größere Neuerungen im aktuellen Release. Eine vollständige Übersicht der Änderungen in
 diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/release>` zu finden.
 
-  - **Structs**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch auf Unterebenen
+  - **Structs**:
+
+    - Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch auf Unterebenen
     einer stuct eingebunden werden.
   - **Items**:
 

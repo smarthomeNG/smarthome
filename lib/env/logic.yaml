@@ -22,6 +22,7 @@ env_loc:
     cycle: 1800
 
 env_sunpos:
+    logic_description: Diese Logik setzt die Environment Variablen für Azimuth und Elevation der Sonnenposition
     filename: sunpos.py
     crontab:
       - init
@@ -32,4 +33,4 @@ env_sunpos:
     # which is sufficient
     # increase it if it is needed. But be aware that calculation of sun position with ephem takes time
     # especially on raspi 1 or 2
-    cycle: 240
+    cycle: 120

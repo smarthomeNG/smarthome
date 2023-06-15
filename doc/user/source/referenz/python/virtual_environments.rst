@@ -134,16 +134,15 @@ Die Aktivierung der eingerichteten virtuellen Environments kann vereinfacht werd
 
     if [ "$sourced" -eq "0" ]; then
         echo
-        echo ERROR: The script MUST be called with 'source', like: source act $1
+        echo ERROR: The script MUST be called with \'source\', like: \'source act $1\'
         echo
         exit
     fi
 
     if test -f "/home/smarthome/environments/py_$1/bin/activate"; then
         echo
-        echo "Activating virtual environment py_$1"
         source /home/smarthome/environments/py_$1/bin/activate
-        python3 -V
+        echo "Activating virtual environment py_$1 (`python3 -V`)"
         echo
         echo To deactivate the virtual environment simply type the command \'deactivate\'
     else
