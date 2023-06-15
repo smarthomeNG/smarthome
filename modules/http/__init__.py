@@ -71,13 +71,20 @@ class Http(Module):
     _port = None
     _servicesport = None
 
+    _visu_plugin = None
+    _visuport = None
+
     _hostmap = {}
     _hostmap_webifs = {}
     _hostmap_services = {}
+    _hostmap_visu = {}
 
     _gstatic_dir = ''
     gtemplates_dir = ''
     gstatic_dir = ''
+
+    _server1 = None     # cherrypy server object for web interfaces of plugins
+    _server2 = None     # cherrypy server object for services of plugins
 
     webif_mount_prefix = '/plugin'  # changes <ip>:<port>/<plugin_name> to <ip>:<port>/plugin/<plugin_name>
 
@@ -119,6 +126,8 @@ class Http(Module):
             self._service_hashed_password = self._parameters['service_hashed_password']
             self._service_realm = 'shng_http_service'
             self._servicesport = self._parameters['servicesport']
+
+            #self._visuport = self._parameters['visuport']
 
             self.threads = self._parameters['threads']
             self._showpluginlist = self._parameters['showpluginlist']
@@ -612,10 +621,6 @@ class Http(Module):
         """
         Build hostmaps for working with two different ports for web interfaces and services
         """
-        self._hostmap = {}
-        self._hostmap_webifs = {}
-        self._hostmap_services = {}
-
         self.dom1 = self.get_local_ip_address()+':'+str(self._port)
         self.dom2 = self.get_local_hostname()+':'+str(self._port)
         self.dom3 = self.get_local_hostname().split('.')[0]+'.local'+':'+str(self._port)
@@ -625,28 +630,31 @@ class Http(Module):
         self.dom6 = self.get_local_hostname().split('.')[0]+'.local'+':'+str(self._servicesport)
 
         self._hostmap = {}
+        self._hostmap[self.dom1] = '/plugins'
+        self._hostmap[self.dom2] = '/plugins'
+        self._hostmap[self.dom3] = '/plugins'
+
         if self._port != self._servicesport:
-            self._hostmap[self.dom1] = '/plugins'
-            self._hostmap[self.dom2] = '/plugins'
-            self._hostmap[self.dom3] = '/plugins'
             self._hostmap[self.dom4] = '/services'
             self._hostmap[self.dom5] = '/services'
             self._hostmap[self.dom6] = '/services'
+
 #        self.logger.info("_hostmap = {}".format(self._hostmap))
 
         self._hostmap_webifs = {}
+        self._hostmap_webifs[self.dom1] = '/msg'
+        self._hostmap_webifs[self.dom2] = '/msg'
+        self._hostmap_webifs[self.dom3] = '/msg'
+
         self._hostmap_services = {}
         if self._port != self._servicesport:
-            self._hostmap_webifs[self.dom1] = '/msg'
-            self._hostmap_webifs[self.dom2] = '/msg'
-            self._hostmap_webifs[self.dom3] = '/msg'
-
             self._hostmap_services[self.dom4] = '/msg'
             self._hostmap_services[self.dom5] = '/msg'
             self._hostmap_services[self.dom6] = '/msg'
 
-            self.logger.info("_hostmap_webifs = {}".format(self._hostmap_webifs))
-            self.logger.info("_hostmap_services = {}".format(self._hostmap_services))
+        self.logger.info(f"_hostmap = {self._hostmap}")
+        self.logger.info(f"_hostmap_webifs = {self._hostmap_webifs}")
+        self.logger.info(f"_hostmap_services = {self._hostmap_services}")
 
 
     def get_webifs_for_plugin(self, pluginname):
@@ -656,13 +664,13 @@ class Http(Module):
         The information is returned as a list of dicts. One listentry for each registered webinterface.
         The dict for each registered webinterface has the following structure:
 
-        webif_dict = {'mount': mount,
-                      'pluginclass': pluginclass,
-                      'webifname': webifname,
-                      'pluginname': pluginname,
-                      'instance': instance,
-                      'conf': conf,
-                      'description': description}
+        webif_dict = {'Mount': mount,
+                      'Pluginclass': pluginclass,
+                      'Webifname': webifname,
+                      'Pluginname': pluginname,
+                      'Instance': instance,
+                      'Conf': conf,
+                      'Description': description}
 
 
         :param pluginname: Shortname of the plugin
@@ -767,8 +775,10 @@ class Http(Module):
         conf['/gstatic']['tools.staticdir.on'] = True
         conf['/gstatic']['tools.staticdir.dir'] = self._gstatic_dir
 
-        self.logger.info("Module http: Registering webinterface '{}' of plugin '{}' from pluginclass '{}' instance '{}'".format( webifname, pluginname, pluginclass, instance ) )
-        self.logger.info(" - conf dict: '{}'".format( conf ) )
+        plugin_fullname = pluginname
+        if instance != '':
+            plugin_fullname += '_' + instance
+        self.logger.info(f"Registering webinterface '{webifname}' of plugin '{plugin_fullname}'  -  conf dict: '{conf}'" )
         if pluginclass != '':
             webif_key = webifname
             # statt:
@@ -777,9 +787,9 @@ class Http(Module):
 #            else:
 #                webif_key = instance + '@' + webifname
             self._applications[webif_key] = {'Mount': mount, 'Pluginclass': pluginclass, 'Webifname': webifname, 'Pluginname': pluginname, 'Instance': instance, 'Conf': conf, 'Description': description}
-            self.logger.info("self._applications['{}'] = {}".format(webif_key, self._applications[webif_key]))
-        if len(self._hostmap_services) > 0:
-            conf['/']['request.dispatch'] = cherrypy.dispatch.VirtualHost(**self._hostmap_services)
+            #self.logger.info("self._applications['{}'] = {}".format(webif_key, self._applications[webif_key]))
+        if len(self._hostmap_webifs) > 0:
+            conf['/']['request.dispatch'] = cherrypy.dispatch.VirtualHost(**self._hostmap_webifs)
 
         cherrypy.tree.mount(app, mount, config = conf)
         return
@@ -829,28 +839,108 @@ class Http(Module):
 
         mount = '/' + servicename
         if description == '':
-           description = 'Service {} of plugin {}'.format(servicename, pluginname)
+            description = 'Service {} of plugin {}'.format(servicename, pluginname)
 
         if use_global_basic_auth:
             conf['/']['tools.auth_basic.on'] = self._service_basic_auth
             conf['/']['tools.auth_basic.realm'] = self._service_realm
             conf['/']['tools.auth_basic.checkpassword'] = self.validate_service_password
 
-        self.logger.info("Module http: Registering service '{}' of plugin '{}' from pluginclass '{}' instance '{}'".format( servicename, pluginname, pluginclass, instance ) )
-        self.logger.info(" - conf dict: '{}'".format( conf ) )
+        plugin_fullname = pluginname
+        if instance != '':
+            plugin_fullname += '_' + instance
+        self.logger.info(f"Registering service '{servicename}' of plugin '{plugin_fullname}'  -  conf dict: '{conf}'" )
         if pluginclass != '':
             service_key = servicename
             # statt:
-#            if instance == '':
-#                service_key = servicename
-#            else:
-#                service_key = instance + '@' + servicename
-            self._services[servicename] = {'Mount': mount, 'Pluginclass': pluginclass, 'Servicename': servicename, 'Pluginname': pluginname, 'Instance': instance, 'Conf': conf, 'Description': description}
+            #            if instance == '':
+            #                service_key = servicename
+            #            else:
+            #                service_key = instance + '@' + servicename
+            self._services[servicename] = {'Mount': mount, 'Pluginclass': pluginclass, 'Servicename': servicename,
+                                           'Pluginname': pluginname, 'Instance': instance, 'Conf': conf,
+                                           'Description': description}
             self.logger.info("self._services['{}'] = {}".format(service_key, self._services[service_key]))
-        if len(self._hostmap_webifs) > 0:
-            conf['/']['request.dispatch'] = cherrypy.dispatch.VirtualHost(**self._hostmap_webifs)
+        if len(self._hostmap_services) > 0:
+            conf['/']['request.dispatch'] = cherrypy.dispatch.VirtualHost(**self._hostmap_services)
 
-        cherrypy.tree.mount(app, mount, config = conf)
+        cherrypy.tree.mount(app, mount, config=conf)
+        return
+
+
+    def register_visu(self, pluginname, conf, visu_port=None, use_global_basic_auth=True):
+        """
+        Register a service for CherryPy
+
+        This method is called by a plugin to register a webservice.
+
+        It should be called like this:
+
+            self.mod_http.register_service(self.get_shortname(), config, use_global_basic_auth)
+
+
+        :param pluginname: Mount point for the service
+        :param conf: Cherrypy application configuration dictionary
+        :param use_global_basic_auth: if True, global basic_auth settings from the http module are used. If False, registering plugin provides its own basic_auth
+        :type pluginname: str
+        :type conf: dict
+        :type: use_global_basic_auth: bool
+
+        """
+        pluginname = pluginname.lower()
+
+        if self._visu_plugin is None:
+            self._visu_plugin = pluginname
+        else:
+            self.logger.error(f"Cannot initialize visu for plugin '{pluginname}' - visu is already active for plugin '{self._visu_plugin}'")
+
+        if visu_port is None or visu_port < 1024:
+            self.logger.error(f"Visu port is missing o given port is < 1024")
+            return
+
+        self._visu_user = 'visuuser'
+        self._visu_password = ''
+        self._visu_hashed_password = ''
+
+        self._visu_basic_auth = self._is_set(self._visu_hashed_password)
+        self._visu_realm = 'shng_http_visu'
+        self._visuport = visu_port
+
+        mount = '/'
+        description = f'Visu of plugin {pluginname}'
+
+        if use_global_basic_auth:
+            conf['/']['tools.auth_basic.on'] = self._visu_basic_auth
+            conf['/']['tools.auth_basic.realm'] = self._visu_realm
+            conf['/']['tools.auth_basic.checkpassword'] = self.validate_service_password
+
+        plugin_fullname = pluginname
+        self.logger.info(f"Registering visu of plugin '{plugin_fullname}'  -  conf dict: '{conf}'" )
+
+        self._server3 = cherrypy._cpserver.Server()
+        self._server3.socket_port = int(self._visuport)
+        self._server3.socket_host = self._ip
+        self._server3.thread_pool = self.threads
+        self._server3.subscribe()
+
+        #cherrypy.engine.start()
+
+        # build hostmap for visu
+        dom1 = self.get_local_ip_address()+':'+str(self._visuport)
+        dom2 = self.get_local_hostname()+':'+str(self._visuport)
+        dom3 = self.get_local_hostname().split('.')[0]+'.local'+':'+str(self._visuport)
+        self._hostmap_visu[dom1] = '/msg'
+        self._hostmap_visu[dom2] = '/msg'
+        self._hostmap_visu[dom3] = '/msg'
+        self.logger.info(f"_hostmap_visu = {self._hostmap_visu}")
+
+        if len(self._hostmap_visu) > 0:
+            conf['/']['request.dispatch'] = cherrypy.dispatch.VirtualHost(**self._hostmap_visu)
+
+        cherrypy.engine.stop()
+        #cherrypy.tree.mount(app, mount, config = conf)
+        cherrypy.tree.mount(_PluginsApp(self), '/', config = conf)
+        cherrypy.engine.start()
         return
 
 
@@ -880,6 +970,35 @@ class Http(Module):
         self.logger.debug("{}: CherryPy engine exited".format(self._shortname))
 
 
+    def log_server_info(self, server_nr):
+        """
+        Log the information of a cherrypy server object
+
+        :return:
+        """
+        if server_nr == 1:
+            server = self._server1
+        elif server_nr == 2:
+            server = self._server2
+        elif server_nr == 3:
+            server = self._server3
+        else:
+            self.logger.notice(f"log_server_info: Invalid server number {server_nr} specified")
+            return
+
+        if server is None:
+            self.logger.notice(f"log_server_info: Server object for server number {server_nr} does not exist")
+            return
+
+        self.logger.notice(f"log_server_info: Information for server number {server_nr}")
+        self.logger.notice(f" - socket {server.socket_host}:{server.socket_port}")
+        self.logger.notice(f" - httpserver {server.httpserver}  description {server.description}")
+        self.logger.notice(f" - running {server.running}  description {server.wsgi_version}")
+        self.logger.notice(f" - socketfile {server.socket_file}  base {server.base}")
+        self.logger.notice(f" - bound_addr {server.bound_addr}  base {server.statistics}")
+        return
+
+
 class ModuleApp:
     """
     The module http implements it's own webinterface.
@@ -901,7 +1020,7 @@ class ModuleApp:
         """
         This method is exposed to CherryPy. It implements the page 'index.html'
         """
-        self.mod.logger.info("ModuleApp: local.name '{}', local.port '{}'".format(cherrypy.request.local.name, cherrypy.request.local.port))
+        self.mod.logger.info(f"ModuleApp: local.name '{cherrypy.request.local.name}', local.port '{cherrypy.request.local.port}'")
         if cherrypy.request.local.port == self.mod._port:
             if self.starturl in self.mod._applications.keys():
                 result = self.starturl
