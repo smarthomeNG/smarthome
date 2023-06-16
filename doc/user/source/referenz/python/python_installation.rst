@@ -26,6 +26,8 @@ vorinstalliert.
 
     sudo apt install build-essential
     sudo apt install libssl-dev
+    sudo apt install libffi-dev
+    sudo apt install libsqlite3-dev
 
 |
 

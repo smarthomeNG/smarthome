@@ -85,6 +85,18 @@ Jetzt kann mit dem folgenden Befehl ein virtual Environment erstellt werden, wel
     $ cd ~/environments
     $ python3.10 -m venv py_310
 
+Anschließend muss für ein Environment das Environment aktiviert werden, um einige norwendige Python
+Packages in das Environment zu installieren bzw. aktualisieren.
+
+.. code-block:: bash
+
+    $ cd ~/environments
+    $ source py_310/bin/activate
+    (py_310) $ pip install --upgrade pip
+    (py_310) $ pip install wheel
+    (py_310) $ deactivate
+    $
+
 |
 
 Das Environment wird mit dem Kommande
@@ -160,6 +172,23 @@ Verzeichnis heraus aufgerufen werden kann, ohne den vollständigen Pfad angeben 
 Das ``source`` im Aufruf ist wichtig, weil das Environment sonst bei Beendigung der Skriptes ``act`` wieder beendet wird.
 
 Der geänderte Prompt zeigt an, dass das Virtual Environment **py_39** aktiv ist.
+
+|
+
+Löschen eines virtuellen Environment
+====================================
+
+Wenn ein virtuelles Environment nicht mehr benötigt wird, wird einfach das entsprechende Verzeichnis rekirsiv gelöscht.
+Bitte darauf achten, dass das Environment nicht aktiv ist. Bei Bedarf vor dem Löschen mit dem Befehl ``deactivate``
+deaktivieren.
+
+.. code-block:: bash
+
+    $ cd ~/environments
+    $ rm -r py_310
+
+Wenn ein jungfräuliches virtuelles Environment benötigt wird, so ist es zuerst zu löschen und anschließend neu zu
+erstellen.
 
 |
 
