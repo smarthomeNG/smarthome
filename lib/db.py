@@ -332,8 +332,10 @@ class Database():
                 result = cur.execute(stmt, args)
             return result
         except Exception as e:
-            self.logger.error("Can not execute query: {} (args {}): {}".format(stmt, args, e))
-            raise
+            if str(e).find('no such table: database_version') == -1:
+                # log error only, if query not executed on a new and empty database
+                self.logger.error(f"Can not execute query: {stmt} (args {args}): {e}")
+                raise
         finally:
             if c is not None:
                 c.close()
