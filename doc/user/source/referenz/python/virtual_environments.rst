@@ -78,12 +78,12 @@ bzw.
 Erstellung von virtuellen Environments
 ======================================
 
-Jetzt kann mit dem folgenden Befehl ein virtual Environment erstellt werden, welches den Namen **py_310** trägt:
+Jetzt kann mit dem folgenden Befehl ein virtual Environment erstellt werden, welches den Namen **py_3.10** trägt:
 
 .. code-block:: bash
 
     $ cd ~/environments
-    $ python3.10 -m venv py_310
+    $ python3.10 -m venv py_3.10
 
 Anschließend muss für ein Environment das Environment aktiviert werden, um einige norwendige Python
 Packages in das Environment zu installieren bzw. aktualisieren.
@@ -91,10 +91,10 @@ Packages in das Environment zu installieren bzw. aktualisieren.
 .. code-block:: bash
 
     $ cd ~/environments
-    $ source py_310/bin/activate
-    (py_310) $ pip install --upgrade pip
-    (py_310) $ pip install wheel
-    (py_310) $ deactivate
+    $ source py_3.10/bin/activate
+    (py_3.10) $ pip install --upgrade pip
+    (py_3.10) $ pip install wheel
+    (py_3.10) $ deactivate
     $
 
 |
@@ -103,8 +103,8 @@ Das Environment wird mit dem Kommande
 
 .. code-block:: bash
 
-    $ source /home/smarthome/environments/py_310/bin/activate
-    (py_310) $
+    $ source /home/smarthome/environments/py_3.10/bin/activate
+    (py_3.10) $
 
 aktiviert. Eine Vereinfachung des Aufrufes ist weiter unten beschrieben.
 
@@ -116,7 +116,7 @@ Der Aufruf von
 
 .. code-block:: bash
 
-    (py_310) $ python3
+    (py_3.10) $ python3
 
 führt nun dazu, dass Python 3.10 gestartet wird.
 
@@ -124,7 +124,7 @@ Um das virtuelle Environment zu deaktivieren, muss nur
 
 .. code-block:: bash
 
-    (py_310) $ deactivate
+    (py_3.10) $ deactivate
     $
 
 eingegeben werden.
@@ -165,13 +165,13 @@ Die Aktivierung der eingerichteten virtuellen Environments kann vereinfacht werd
 
 Anschließend nicht vergessen das Skript mit ``chmod 775 act`` ausführbar zu machen.
 
-Nun kann ein existierendes Environment (z.B, py_39) einfach mit dem Befehl ``source act 39`` aktiviert werden.
+Nun kann ein existierendes Environment (z.B, py_3.9) einfach mit dem Befehl ``source act 3.9`` aktiviert werden.
 Das Verzeichnis ``/home/smarthome/environments`` sollte in den Pfad aufgenommen werden, damit ``act`` aus jedem
 Verzeichnis heraus aufgerufen werden kann, ohne den vollständigen Pfad angeben zu müssen.
 
 Das ``source`` im Aufruf ist wichtig, weil das Environment sonst bei Beendigung der Skriptes ``act`` wieder beendet wird.
 
-Der geänderte Prompt zeigt an, dass das Virtual Environment **py_39** aktiv ist.
+Der geänderte Prompt zeigt an, dass das Virtual Environment **py_3.9** aktiv ist.
 
 |
 
@@ -185,7 +185,7 @@ deaktivieren.
 .. code-block:: bash
 
     $ cd ~/environments
-    $ rm -r py_310
+    $ rm -r py_3.10
 
 Wenn ein jungfräuliches virtuelles Environment benötigt wird, so ist es zuerst zu löschen und anschließend neu zu
 erstellen.

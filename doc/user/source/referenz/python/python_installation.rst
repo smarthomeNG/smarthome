@@ -27,7 +27,10 @@ vorinstalliert.
     sudo apt install build-essential
     sudo apt install libssl-dev
     sudo apt install libffi-dev
+    sudo apt install python3-dev
     sudo apt install libsqlite3-dev
+
+    sudo apt install wget build-essential libreadline-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
 
 |
 
