@@ -187,6 +187,8 @@ class Shpypi:
 
         req_dict = self.parse_requirementsfile(filepath)
         inst_dict = self.get_installed_packages()
+        #self.logger.info(f"test_requirements: inst_dict={inst_dict}")
+        #self.logger.info(f"test_requirements: req_dict={req_dict}")
 
         requirements_met = True
         for req_pkg in req_dict:
@@ -207,25 +209,25 @@ class Shpypi:
                 if logging:
                     if hard_requirement:
                         if inst_vers == '-' and min == '*':
-                            self.logger.error("test_requirements: '{}' not installed, any version needed".format(req_pkg))
+                            self.logger.error(f"test_requirements: '{req_pkg}' not installed, any version needed")
                         elif inst_vers == '-':
-                            self.logger.error("test_requirements: '{}' not installed. Minimum v{} needed".format(req_pkg, min))
+                            self.logger.error(f"test_requirements: '{req_pkg}' not installed. Minimum v{min} needed")
                         elif not min_met:
-                            self.logger.error("test_requirements: '{}' v{} too old. Minimum v{} needed".format(req_pkg, inst_vers, min))
+                            self.logger.error(f"test_requirements: '{req_pkg}' v{inst_vers} too old. Minimum v{min} needed")
                         else:
-                            self.logger.error("test_requirements: '{}' v{} too new. Maximum v{} needed".format(req_pkg, inst_vers, max))
+                            self.logger.error(f"test_requirements: '{req_pkg}' v{inst_vers} too new. Maximum v{max} needed")
                 else:
                     if not self._error:
                         print()
                         self._error = True
                     if inst_vers == '-' and min == '*':
-                        print("test_requirements: '{}' not installed, any version needed".format(req_pkg))
+                        print(f"test_requirements: '{req_pkg}' not installed, any version needed")
                     elif inst_vers == '-':
-                        print("test_requirements: '{}' not installed. Minimum v{} needed".format(req_pkg, min))
+                        print(f"test_requirements: '{req_pkg}' not installed. Minimum v{min} needed")
                     elif not min_met:
-                        print("test_requirements: '{}' v{} too old. Minimum v{} needed".format(req_pkg, inst_vers, min))
+                        print(f"test_requirements: '{req_pkg}' v{inst_vers} too old. Minimum v{min} needed")
                     else:
-                        print("test_requirements: '{}' v{} too new. Maximum v{} needed".format(req_pkg, inst_vers, max))
+                        print(f"test_requirements: '{req_pkg}' v{inst_vers} too new. Maximum v{max} needed")
 
         return requirements_met
 
@@ -397,9 +399,9 @@ class Shpypi:
         else:
             pip_command = self.get_pip_command()
         try:
-            self.logger.notice("> using PIP command: '{}'".format(pip_command))
+            self.logger.notice(f"Using PIP command: '{pip_command}'")
         except:
-            self.logger.warning("> using PIP command: '{}'".format(pip_command))
+            self.logger.warning(f"Using PIP command: '{pip_command}'")
 
         req_filepath = os.path.join(self._sh_dir, 'requirements', req_type+'.txt')
         command_line = pip_command +' install -r ' + req_filepath + ' --user --no-warn-script-location'
