@@ -6,17 +6,17 @@
 check_items:
     logic_description: "Logik die prüft, ob Items durch fehlerhafte Zuweisungen überschrieben wurden"
     filename: check_items.py
-    # logic_groupname: tools
+    logic_groupname: tools
 
 ex_logging:
     logic_description: "Beispiel-Logik welche zeigt, wie Logeinträge verschiedener Levels in die Logdateien eingetragen werden"
     filename: example_logging.py
-    # logic_groupname: beispiele
+    logic_groupname: beispiele
 
 ex_persist:
     logic_description: "Beispiel-Logik welche zeigt, wie Variablen definiert werden müssen, um den Lauf einer Logik zu überdauern"
     filename: example_persistance.py
-    # logic_groupname: beispiele
+    logic_groupname: beispiele
 
 # ----------------------------------------------------------------------
 
@@ -24,7 +24,9 @@ _groups:
 
     beispiele:
         title: Beispiel Logiken für SmartHomeNG
+        description: In dieser Gruppe sind die Beispiel Logiken zusammengefasst, die mit SmartHomeNG installiert werden.
 
     tools:
         title: Logiken, die als Tools für SmartHomeNG dienen
+        description: In dieser Gruppe sind Logiken zusammengefasst, die als Tools mit SmartHomeNG ausgeliefert wurden.
 
