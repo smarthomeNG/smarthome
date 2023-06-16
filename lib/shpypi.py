@@ -209,13 +209,13 @@ class Shpypi:
                 if logging:
                     if hard_requirement:
                         if inst_vers == '-' and min == '*':
-                            self.logger.error(f"test_requirements: '{req_pkg}' not installed, any version needed")
+                            self.logger.warning(f"test_requirements: '{req_pkg}' not installed, any version needed")
                         elif inst_vers == '-':
-                            self.logger.error(f"test_requirements: '{req_pkg}' not installed. Minimum v{min} needed")
+                            self.logger.warning(f"test_requirements: '{req_pkg}' not installed. Minimum v{min} needed")
                         elif not min_met:
-                            self.logger.error(f"test_requirements: '{req_pkg}' v{inst_vers} too old. Minimum v{min} needed")
+                            self.logger.warning(f"test_requirements: '{req_pkg}' v{inst_vers} too old. Minimum v{min} needed")
                         else:
-                            self.logger.error(f"test_requirements: '{req_pkg}' v{inst_vers} too new. Maximum v{max} needed")
+                            self.logger.warning(f"test_requirements: '{req_pkg}' v{inst_vers} too new. Maximum v{max} needed")
                 else:
                     if not self._error:
                         print()
@@ -428,13 +428,13 @@ class Shpypi:
             if 'virtualenv' in stderr and '--user' in stderr:
                 if logging:
                     try:
-                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtual environment, please wait...")
                     except:
-                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtual environment, please wait...")
                 else:
                     print()
-                    print("Running in a virtualenv environment,")
-                    print("installing "+req_type_display+" requirements only to actual virtualenv, please wait...")
+                    print("Running in a virtual environment environment,")
+                    print("installing "+req_type_display+" requirements only to actual virtual environment, please wait...")
                 stdout, stderr = Utils.execute_subprocess('pip3 install -r '+req_filepath)
         if logging:
             self.logger.debug("stdout = 'Output from PIP command:\n{}'".format(stdout))
@@ -458,10 +458,13 @@ class Shpypi:
                 # result on windows nt:
                 # WARNING: You are using pip version 19.2.3, however version 20.2.1 is available.
                 # You should consider upgrading via the 'python -m pip install --upgrade pip' command.
-                if stderr.find("You should consider upgrading via") > -1 and stderr.find("pip install --upgrade pip") > -1:
+                if (stderr.find("You should consider upgrading via") > -1 or stderr.find("[notice] A new release of pip") > -1) \
+                    and stderr.find("pip install --upgrade pip") > -1:
                     #if logging:
                     #    self.logger.warning(stderr)
                     return True
+            #if stdout.find("[notice] A new release of pip") > -1:
+            #
             if logging:
                 self.logger.error(stderr)
             else:
