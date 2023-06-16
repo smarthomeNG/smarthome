@@ -249,7 +249,7 @@ class RESTResource:
 
     @cherrypy.expose
     def index(self, *vpath, **params):
-        # self.logger.info("RESTResource.index {}".format(self.__class__.__name__))
+        self.logger.notice("RESTResource.index {}".format(self.__class__.__name__))
         return self.default(*vpath, **params)
 
 
@@ -387,6 +387,7 @@ class RESTResource:
 
     @cherrypy.expose
     def default(self, *vpath, **params):
+        self.logger.notice(f"rest.py: default() *vpath={vpath}, **params={params}")
         if not vpath:
             resource = None
             # self.logger.info("RESTResource.default: vpath = '{}',  params = '{}'".format(list(vpath), dict(**params)))
@@ -417,7 +418,8 @@ class RESTResource:
                 c.parent = resource
                 return c.default(*vpath, **params)
             method = getattr(self, a, None)
-            if method and getattr(method, "expose_resource"):
+            #self.logger.notice(f"dir(method): {dir(method)}")
+            if method and getattr(method, "expose_resource", False):
                 return method(resource, *vpath, **params)
             else:
                 # path component was specified but doesn't
