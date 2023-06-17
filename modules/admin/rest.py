@@ -249,7 +249,7 @@ class RESTResource:
 
     @cherrypy.expose
     def index(self, *vpath, **params):
-        self.logger.notice("RESTResource.index {}".format(self.__class__.__name__))
+        self.logger.notice(f"RESTResource.index for class {self.__class__.__name__}")
         return self.default(*vpath, **params)
 
 
@@ -330,15 +330,15 @@ class RESTResource:
             public_root = False
             if root:
                 public_root = getattr(m, "public_root", False)
-                self.logger.info("REST_dispatch_execute(): public_root = '{}'".format(public_root))
+                self.logger.info(f"REST_dispatch_execute(): public_root = '{public_root}'")
             if not public_root:
                 auth_needed = getattr(m, "authentication_needed", False)
-                self.logger.debug("REST_dispatch_execute(): {}Authentication needed for {} ({})".format(('' if auth_needed else 'No '), method, str(m).split()[2]))
+                self.logger.info(f"REST_dispatch_execute(): {('' if auth_needed else 'No ')}Authentication needed for {method} ({str(m).split()[2]})")
                 if auth_needed:
                     # self.logger.info("REST_dispatch: Authentication needed for {} ({})".format(method, str(m).split()[2]))
                     token_valid, error_text = self.REST_test_jwt_token()
                     if not token_valid:
-                        self.logger.info("REST_dispatch_execute(): Authentication failed for {} ({})".format(method, str(m).split()[2]))
+                        self.logger.info("REST_dispatch_execute(): Authentication failed for {method} ({str(m).split()[2]})")
                         response = {'result': 'error', 'description': error_text}
                         return json.dumps(response)
 
@@ -387,14 +387,14 @@ class RESTResource:
 
     @cherrypy.expose
     def default(self, *vpath, **params):
-        self.logger.notice(f"rest.py: default() *vpath={vpath}, **params={params}")
+        self.logger.notice(f"RESTResource.default: *vpath={vpath}, **params={params}")
         if not vpath:
             resource = None
             # self.logger.info("RESTResource.default: vpath = '{}',  params = '{}'".format(list(vpath), dict(**params)))
 
             return self.REST_dispatch(True, resource, **params)
             # return list(**params)
-        # self.logger.info("RESTResource.default: vpath = '{}',  params = '{}'".format(list(vpath), dict(**params)))
+        self.logger.info(f"RESTResource.default: vpath = '{list(vpath)}',  params = '{dict(**params)}'")
         # Make a copy of vpath in a list
         vpath = list(vpath)
         atom = vpath.pop(0)
