@@ -1,5 +1,5 @@
 #cheroot<=8.4.1
-cheroot>=8.6.0,<10.0.0
+cheroot>=8.6.0,<=9.0.0
 cherrypy>=8.1.2;python_version<'3.11'
 cherrypy>=18.8.0;python_version>='3.11'
 jinja2>=2.9
