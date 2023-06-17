@@ -1,16 +1,20 @@
 env_init:
+    logic_description: Diese Logik füllt einige env Items mit Werten, die sich nach dem Start von SmartHomeNG nicht mehr ändern
     filename: init.py
     crontab: init
 
 env_daily:
+    logic_description: Diese Logik führt täglich Systempflegen durch
     filename: daily.py
     crontab: 0 6 * * = init
 
 env_stat:
+    logic_description: Diese Logik regelmäßig setzt Statuswerte wie Scheduler Nutzung und System Auslasting (Memory und Disk)
     filename: stat.py
     cycle: 300
 
 env_loc:
+    logic_description: Diese Logik setzt die Aufgangs- und Untergangs-Werte für die Sonne und den Mond an der Lokation der SmartHomeNG Installation
     filename: location.py
     crontab:
       - init
