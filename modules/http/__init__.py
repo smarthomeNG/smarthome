@@ -61,7 +61,7 @@ class CherryPyFilter(logging.Filter):
 
 class Http(Module):
 
-    version = '1.7.1'
+    version = '1.7.2'
     _shortname = ''
     _longname = 'CherryPy http module for SmartHomeNG'
 
@@ -642,15 +642,15 @@ class Http(Module):
 #        self.logger.info("_hostmap = {}".format(self._hostmap))
 
         self._hostmap_webifs = {}
-        self._hostmap_webifs[self.dom1] = '/msg'
-        self._hostmap_webifs[self.dom2] = '/msg'
-        self._hostmap_webifs[self.dom3] = '/msg'
+        self._hostmap_webifs[self.dom1] = ''       # früher: '/msg'
+        self._hostmap_webifs[self.dom2] = ''
+        self._hostmap_webifs[self.dom3] = ''
 
         self._hostmap_services = {}
         if self._port != self._servicesport:
-            self._hostmap_services[self.dom4] = '/msg'
-            self._hostmap_services[self.dom5] = '/msg'
-            self._hostmap_services[self.dom6] = '/msg'
+            self._hostmap_services[self.dom4] = '/msgS'
+            self._hostmap_services[self.dom5] = '/msgS'
+            self._hostmap_services[self.dom6] = '/msgS'
 
         self.logger.info(f"_hostmap = {self._hostmap}")
         self.logger.info(f"_hostmap_webifs = {self._hostmap_webifs}")
@@ -929,9 +929,9 @@ class Http(Module):
         dom1 = self.get_local_ip_address()+':'+str(self._visuport)
         dom2 = self.get_local_hostname()+':'+str(self._visuport)
         dom3 = self.get_local_hostname().split('.')[0]+'.local'+':'+str(self._visuport)
-        self._hostmap_visu[dom1] = '/msg'
-        self._hostmap_visu[dom2] = '/msg'
-        self._hostmap_visu[dom3] = '/msg'
+        self._hostmap_visu[dom1] = '/msgV'
+        self._hostmap_visu[dom2] = '/msgV'
+        self._hostmap_visu[dom3] = '/msgV'
         self.logger.info(f"_hostmap_visu = {self._hostmap_visu}")
 
         if len(self._hostmap_visu) > 0:

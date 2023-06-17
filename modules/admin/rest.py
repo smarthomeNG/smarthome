@@ -249,7 +249,7 @@ class RESTResource:
 
     @cherrypy.expose
     def index(self, *vpath, **params):
-        self.logger.notice(f"RESTResource.index for class {self.__class__.__name__}")
+        self.logger.info(f"RESTResource.index for class {self.__class__.__name__}")
         return self.default(*vpath, **params)
 
 
@@ -387,7 +387,7 @@ class RESTResource:
 
     @cherrypy.expose
     def default(self, *vpath, **params):
-        self.logger.notice(f"RESTResource.default: *vpath={vpath}, **params={params}")
+        self.logger.info(f"RESTResource.default: *vpath={vpath}, **params={params}")
         if not vpath:
             resource = None
             # self.logger.info("RESTResource.default: vpath = '{}',  params = '{}'".format(list(vpath), dict(**params)))
