@@ -363,7 +363,7 @@ class Shpypi:
             python_bin_path = os.path.split(self.sh.python_bin)[0]
         else:
             python_bin_path = os.path.split(sys.executable)[0]
-        print("python_bin_path={}".format(python_bin_path))
+        #print("python_bin_path={}".format(python_bin_path))
 
         if not os.name == 'nt':
             pip_command = os.path.join(python_bin_path, 'pip3')
@@ -396,12 +396,14 @@ class Shpypi:
 
         if pip3_command:
             pip_command = pip3_command
+            msg = 'auto-determined'
         else:
             pip_command = self.get_pip_command()
+            msg = 'configured'
         try:
-            self.logger.notice(f"Using PIP command: '{pip_command}'")
+            self.logger.notice(f"Using {msg} PIP command: '{pip_command}'")
         except:
-            self.logger.warning(f"Using PIP command: '{pip_command}'")
+            self.logger.warning(f"Using {msg} PIP command: '{pip_command}'")
 
         req_filepath = os.path.join(self._sh_dir, 'requirements', req_type+'.txt')
         command_line = pip_command +' install -r ' + req_filepath + ' --user --no-warn-script-location'
