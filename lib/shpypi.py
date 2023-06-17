@@ -396,10 +396,10 @@ class Shpypi:
 
         if pip3_command:
             pip_command = pip3_command
-            msg = 'auto-determined'
+            msg = 'configured'
         else:
             pip_command = self.get_pip_command()
-            msg = 'configured'
+            msg = 'auto-determined'
         try:
             self.logger.notice(f"Using {msg} PIP command: '{pip_command}'")
         except:
