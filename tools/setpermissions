@@ -4,6 +4,9 @@ cd ..
 
 chmod +x bin/smarthome.py
 
+chmod +x venvs/make_venv
+chmod +x venvs/act
+
 chmod +x tools/build_requirements.py
 chmod +x tools/check_plugin.py
 chmod +x tools/conf_to_yaml_converter.py
