@@ -1,5 +1,21 @@
 #!/bin/bash
-cd "$(dirname "$0")"
+
+#########################################################################
+# Copyright 2023-       Martin Sinn                         m.sinn@gmx.de
+#########################################################################
+#  This file is part of SmartHomeNG
+#
+#  SmartHomeNG is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#########################################################################
+
+# get directory where this script is stored
+DIR=$(dirname "$0")
+
+cd $DIR
 cd ..
 
 chmod +x bin/smarthome.py

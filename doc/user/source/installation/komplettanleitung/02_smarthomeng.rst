@@ -36,6 +36,10 @@ SmartHomeNG Dateien vom github holen:
 Die folgenden Kommandos mit dem User Account (smarthome) durchführen
 unter dem später SmartHomeNG laufen soll, **nicht als root**.
 
+**WICHTIG**: Das Skript ``tools/postinstall`` setzt die Dateiberechtigungen. Anschluießend prüft es, welche Python
+Version(en) auf dem System installiert sind und erstellt mit einer geeigneten Python Version ein virtuelles
+Environment in dem SmartHomeNG später laufen soll.
+
 .. code-block:: bash
 
    cd /usr/local
@@ -46,10 +50,11 @@ unter dem später SmartHomeNG laufen soll, **nicht als root**.
    git clone https://github.com/smarthomeNG/smarthome.git .
    git clone https://github.com/smarthomeNG/plugins.git plugins
 
-   bash tools/setpermissions
+   bash tools/postinstall
 
 Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
 
+|
 
 Weitere Python Bibliotheken installieren
 ========================================
