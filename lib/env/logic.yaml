@@ -9,7 +9,7 @@ env_daily:
     crontab: 0 6 * * = init
 
 env_stat:
-    logic_description: Diese Logik regelmäßig setzt Statuswerte wie Scheduler Nutzung und System Auslasting (Memory und Disk)
+    logic_description: Diese Logik regelmäßig setzt Statuswerte wie Scheduler Nutzung und System Auslastung (Memory und Disk)
     filename: stat.py
     cycle: 300
 

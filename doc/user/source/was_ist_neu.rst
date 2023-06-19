@@ -6,16 +6,25 @@ Neuerungen im Release v1.10
 Hier ist eine Kurzübersicht über größere Neuerungen im aktuellen Release. Eine vollständige Übersicht der Änderungen in
 diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/release>` zu finden.
 
+  - **Python Environment**: SmartHomeNG sollte/muss in einem virtuellen Python Environment laufen. Ab
+
+    - **postinstall Skript**: Debian 12/Python 3.11 können in die systemseitige Installation nicht mehr beliebig
+      Python Packages installiert werden. Es gibt jetzt ein neues Skript ``tools/postinstall`` welches ein Standard
+      Environment anlegt, in dem SmartHomeNG später läuft/laufen soll.
+      (Siehe auch :doc:`Komplettanleitung </installation/komplettanleitung/02_smarthomeng>`)
+
+    - **virtuelle Environments**: Skripte zum Anlegen und Aktivieren von virtuellen Python Environments
   - **Structs**:
 
     - Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch auf Unterebenen
-    einer stuct eingebunden werden.
+      einer stuct eingebunden werden.
   - **Items**:
 
-    - Es gibt neue Attribute, die es ermöglichen ein Item als **Hysterese**-Glied mit optionalem Zeitlied
+    - **Hysterese**: Es gibt neue Attribute, die es ermöglichen ein Item als Hysterese-Glied mit optionalem Zeitlied
       zu konfigurieren.
-    - In den Attributen **autotimer** und **cycle** können nun eval Ausdrücke in der Konfiguration genutzt
-      werden. Bisher waren nur konstante Werte und alternativ Item Referenzen möglich
+    - **Attribute**: In den Attributen **autotimer** und **cycle** können nun eval Ausdrücke
+      in der Konfiguration genutzt werden. Bisher waren nur konstante Werte und alternativ Item Referenzen
+      möglich
   - **Admin GUI**:
 
     - **Logiken**: Die Liste der Logiken kann nun gruppiert angezeigt werden. Logiken können einer oder mehreren
