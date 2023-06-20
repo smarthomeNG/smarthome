@@ -200,7 +200,8 @@ def _reload_logics():
 
 if __name__ == '__main__':
     try:
-        if locale.getdefaultlocale() == (None, None):
+        #if locale.getdefaultlocale() == (None, None):   # getdefaultlocale() is deprecated since Python 3.11
+        if locale.getlocale() == (None, None):
             locale.setlocale(locale.LC_ALL, 'C')
         else:
             locale.setlocale(locale.LC_ALL, '')
