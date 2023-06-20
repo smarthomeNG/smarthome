@@ -143,7 +143,7 @@ class SmartDevicePlugin(SmartPlugin):
         # "standby" mode properties
         self.standby = False
         self._standby_item = None
-        self._standby_item_path = self.get_parameter_value('standby_item_path', '')
+        self._standby_item_path = self.get_parameter_value('standby_item_path')
 
         # connection instance
         self._connection = None
