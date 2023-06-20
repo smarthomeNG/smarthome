@@ -93,17 +93,19 @@ echo
 # ---------------------------------------------------------------
 
 # Adding SmartHomeNG to .bashrc
-WRK=`grep shng-additions ~/.bashrc`
-if [ "$WRK" == "" ]; then
-    echo --- Adding SmartHomeNG path to .bashrc
-    WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:\$PATH:."
-    echo >>~/.bashrc
-    echo "# shng-additions" >>~/.bashrc
-    echo export $WRK >>~/.bashrc
-    echo cd $SHNG_BASEDIR >>~/.bashrc
-    echo source act shng >>~/.bashrc
+if [ -f "$HOME/.bashrc" ]; then
+    WRK=`grep shng-additions ~/.bashrc`
+    if [ "$WRK" == "" ]; then
+        echo --- Adding SmartHomeNG path to .bashrc
+        WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:\$PATH:."
+        echo >>~/.bashrc
+        echo "# shng-additions" >>~/.bashrc
+        echo export $WRK >>~/.bashrc
+        echo cd $SHNG_BASEDIR >>~/.bashrc
+        echo source act shng >>~/.bashrc
 
-    WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
+        WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
+    fi
 fi
 
 # Adding path to actual running shell
