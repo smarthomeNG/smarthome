@@ -60,6 +60,19 @@ SmartHomeNG Quellcode laden
 
         Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
 
+        Das Skript postinstall erzeugt ein virtuelles Environment **py_shng**, welches vor dem Start von SmartHomeNG
+        mit folgendem Befeht aktiviert werden muss:
+
+        .. code-block:: bash
+
+            cd /usr/local/smarthome
+            source venvs/act shng
+
+        Ausführlichere Informationen zu den virtuellen Python Environments sind im Abschnitt Referenz unter
+        :doc:`Python/Virtuelle Python Environments </referenz/referenz/python/virtual_environments>` zu finden.
+
+
+
     .. tab:: SmartHomeNG vor v1.10
 
         SmartHomeNG Dateien vom github holen:

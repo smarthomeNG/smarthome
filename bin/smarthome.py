@@ -29,8 +29,10 @@
 #####################################################################
 import sys
 if sys.hexversion < 0x03070000:
+    print()
     print("Sorry your python interpreter ({0}.{1}) is too old. Please update to 3.7 or newer.".format(sys.version_info[0], sys.version_info[1]))
-    exit()
+    print()
+    exit(1)
 
 
 #####################################################################
@@ -127,11 +129,11 @@ if core_reqs == 0:
     # if started with parameter to stay in foreground, don't fork
     if args.foreground or args.interactive or args.debug:
         try:
-            print(f"os.execv: python_bin={python_bin}, sys.argv={sys.argv}")
+            print("os.execv: python_bin={}, sys.argv={}".format(python_bin, sys.argv))
             # function call doesn't return; this process is replaced by the new one
             os.execv(python_bin, [python_bin] + sys.argv)
         except OSError as e:
-            print(f'Restart command {command} failed with error {e}')
+            print('Restart command {command} failed with error {}'.format(e))
             exit(0)
 
     try:

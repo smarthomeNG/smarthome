@@ -89,3 +89,26 @@ source venvs/make_venv $VERS shng
 
 echo "Use command 'source $SHNG_BASEDIR/venvs/act shng' to activate environment"
 echo
+
+# ---------------------------------------------------------------
+
+# Adding SmartHomeNG to .bashrc
+WRK=`grep shng-additions ~/.bashrc`
+if [ "$WRK" == "" ]; then
+    echo --- Adding SmartHomeNG path to .bashrc
+    WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:\$PATH:."
+    echo >>~/.bashrc
+    echo "# shng-additions" >>~/.bashrc
+    echo export $WRK >>~/.bashrc
+    echo cd $SHNG_BASEDIR >>~/.bashrc
+    echo source act shng >>~/.bashrc
+
+    WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
+fi
+
+# Adding path to actual running shell
+if [ "$SHNG_ADDITIONS" != "1" ]; then
+    WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
+    export $WRK
+    SHNG_ADDITIONS=1
+fi

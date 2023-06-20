@@ -44,16 +44,16 @@ if [ $# -eq 2 ]; then
 fi
 
 # deactivate an active virtual environment
-deactivate 2>nul
+deactivate 2>/dev/null
 #echo Ergebnis: $?
 
-rm -r py_$VENV_NAME 2>nul
+rm -r py_$VENV_NAME 2>/dev/null
 
 python$1 -m venv py_$VENV_NAME
 
-source $DIR/act $VENV_NAME >nul
-pip install --upgrade pip >nul
-pip install wheel >nul
+source $DIR/act $VENV_NAME >/dev/null
+pip install --upgrade pip >/dev/null
+pip install wheel >/dev/null
 
 echo
 echo "Virtual environment created: py_$VENV_NAME (`python3 -V`)"
