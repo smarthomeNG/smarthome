@@ -207,8 +207,11 @@ installieren sein aber sicher ist sicher.
 Restarbeiten am System
 ======================
 
+sudo für User smarthome
+-----------------------
+
 Falls kein Passwort für root vergeben wurde, dann wird der bei der Installation erstellte User (hier: smarthome)
-automatisch in die Gruppe für sudo aufgenommen.
+automatisch in die Gruppe für sudo aufgenommen. Dann ist hier nichts weiter zu tun.
 
 Falls man einen anderen Benutzernamen bei der Installation gewählt hat, muss man den User smarthome zunächst erstellen:
 
@@ -216,17 +219,44 @@ Falls man einen anderen Benutzernamen bei der Installation gewählt hat, muss ma
 
    sudo  adduser smarthome --disabled-password --gecos "First Last,RoomNumber,WorkPhone,HomePhone"
 
-Den Benutzer **smarthome** in die **www-data** und **sudo** Gruppe hinzufügen:
+Den Benutzer **smarthome** in die **sudo** Gruppe hinzufügen:
 
 .. code-block:: bash
 
-   sudo usermod -aG www-data,sudo smarthome
+    sudo usermod -aG sudo smarthome
 
-Auch wenn der Benutzer smarthome schon existiert muss er in die Gruppe www-data mit folgendem Befehl eingetragen werden.
+
+Standby/Energiesparmodus abschalten
+-----------------------------------
+
+Standardmäßig gehen Debian Installationen nach einiger Zeit in den Energiesparmodus. Zur Nutzung für SmartHomeNG
+ist das natürlich wenig hilfreich. Durch Editieren der Datei ``/etc/systemd/sleep.conf`` können der Sleep- und der
+Hybernate Moduls abgeschaltet werden:
+
+.. code-block:: ini
+
+    [Sleep]
+    AllowSuspend=no
+    AllowHibernation=no
+    AllowSuspendThenHibernate=no
+    AllowHybridSleep=no
+
+Damit diese Änderung wirksam wird, muss das System neu gestartet werden.
+
+
+Anpassung für die smartVISU
+---------------------------
+
+Auch wenn der Benutzer smarthome schon existiert muss er für die Nutzung der smartVISU in die Gruppe www-data mit
+folgendem Befehl eingetragen werden.
 
 .. code-block:: bash
 
    sudo usermod -aG www-data smarthome
+
+
+Anpassung der Userumgebung
+--------------------------
 
 Vor dem Neustart wird jetzt noch die Datei ``.bashrc`` bearbeitet um einige Befehle auf der Shell
 (Kommandozeile bzw. Konsole) abzukürzen:
@@ -243,6 +273,10 @@ Dort an am Ende anfügen oder wenn bereits vorhanden das Kommentarzeichen ``#`` 
    alias la='ls -A'
    alias ll='ls -l'
    alias ..='cd ..'
+
+
+System abschalten
+-----------------
 
 Der Benutzer **smarthome** muß nun abgemeldet und neu angemeldet werden, damit die Rechte neu eingelesen werden.
 Dies ist eine gute Gelegenheit um einen alternativen Snapshot zu erstellen. Dazu dann wiederum das

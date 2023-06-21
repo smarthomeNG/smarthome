@@ -401,9 +401,9 @@ class Shpypi:
             pip_command = self.get_pip_command()
             msg = 'auto-determined'
         try:
-            self.logger.notice(f"Using {msg} PIP command: '{pip_command}'")
+            self.logger.notice(f"Using {msg} PIP: '{pip_command}'")
         except:
-            self.logger.warning(f"Using {msg} PIP command: '{pip_command}'")
+            self.logger.warning(f"Using {msg} PIP: '{pip_command}'")
 
         req_filepath = os.path.join(self._sh_dir, 'requirements', req_type+'.txt')
         command_line = pip_command +' install -r ' + req_filepath + ' --user --no-warn-script-location'

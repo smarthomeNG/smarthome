@@ -2,10 +2,15 @@
 ---
 # etc/smarthome.yaml
 
-# Airport Berlin Tegel
-lat: 52.5588327          # latitude
-lon: 13.2884374          # longitude
-elev: 35                 # elevation
+# Ort: 'Airport Berlin Tegel'
+#lat: 52.5588327          # latitude
+#lon: 13.2884374          # longitude
+#elev: 35                 # elevation
+
+# Ort: 'Weitewelt'
+lat: 54.0621869293091    # latitude
+lon: 10.4431106741905    # longitude
+elev: 30                 # elevation
 
 tz: 'Europe/Berlin'      # timezone, the example will be fine for most parts of central Europe
 

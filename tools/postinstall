@@ -26,6 +26,31 @@ echo
 
 # ---------------------------------------------------------------
 
+# Adding SmartHomeNG to .bashrc
+if [ -f "$HOME/.bashrc" ]; then
+    WRK=`grep shng-additions ~/.bashrc`
+    if [ "$WRK" == "" ]; then
+        echo --- Adding SmartHomeNG path to .bashrc
+        WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:\$PATH:."
+        echo >>~/.bashrc
+        echo "# shng-additions" >>~/.bashrc
+        echo export $WRK >>~/.bashrc
+        echo cd $SHNG_BASEDIR >>~/.bashrc
+        echo source act shng >>~/.bashrc
+
+        WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
+    fi
+fi
+
+# Adding path to actual running shell
+if [ "$SHNG_ADDITIONS" != "1" ]; then
+    WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
+    export $WRK
+    SHNG_ADDITIONS=1
+fi
+
+# ---------------------------------------------------------------
+
 function print_pythonversion() {
     PY_PATHNAME=`which python$1`
     if [ "$PY_PATHNAME" != "" ]; then
@@ -87,30 +112,13 @@ echo
 echo "Creating virtual environment 'shng' with Python $VERS"
 source venvs/make_venv $VERS shng
 
-echo "Use command 'source $SHNG_BASEDIR/venvs/act shng' to activate environment"
+echo $PATH>$HOME/postinstall_tst
+WRK=`grep /venvs $HOME/postinstall_tst`
+if [ "$WRK" == "" ]; then
+    echo "Use command 'source $SHNG_BASEDIR/venvs/act shng' to activate environment"
+else
+    echo "Use command 'source act shng' to activate environment"
+fi
+rm $HOME/postinstall_tst
 echo
 
-# ---------------------------------------------------------------
-
-# Adding SmartHomeNG to .bashrc
-if [ -f "$HOME/.bashrc" ]; then
-    WRK=`grep shng-additions ~/.bashrc`
-    if [ "$WRK" == "" ]; then
-        echo --- Adding SmartHomeNG path to .bashrc
-        WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:\$PATH:."
-        echo >>~/.bashrc
-        echo "# shng-additions" >>~/.bashrc
-        echo export $WRK >>~/.bashrc
-        echo cd $SHNG_BASEDIR >>~/.bashrc
-        echo source act shng >>~/.bashrc
-
-        WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
-    fi
-fi
-
-# Adding path to actual running shell
-if [ "$SHNG_ADDITIONS" != "1" ]; then
-    WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
-    export $WRK
-    SHNG_ADDITIONS=1
-fi
