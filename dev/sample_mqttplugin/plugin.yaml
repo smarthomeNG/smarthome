@@ -3,13 +3,13 @@ plugin:
     # Global plugin attributes
     type: unknown                   # plugin type (gateway, interface, protocol, system, web)
     description:
-        de: 'Beispiel Plugin mit MQTT Protokoll Nutzung für SmartHomeNG v1.7 und höher'
-        en: 'Sample plugin using MQTT protocol for SmartHomeNG v1.7 and up'
+        de: 'Beispiel Plugin mit MQTT Protokoll Nutzung für SmartHomeNG v1.8 und höher'
+        en: 'Sample plugin using MQTT protocol for SmartHomeNG v1.8 and up'
     maintainer: msinn
 #    tester:                         # Who tests this plugin?
     state: develop                  # change to ready when done with development
 #    keywords: iot xyz
-#    documentation: https://github.com/smarthomeNG/smarthome/wiki/CLI-Plugin        # url of documentation (wiki) page
+#    documentation: ''               # An url to optional plugin doc - NOT the url to user_doc!!!
 #    support: https://knx-user-forum.de/forum/supportforen/smarthome-py
 
     version: 1.0.0                  # Plugin version
@@ -23,27 +23,6 @@ plugin:
 
 parameters:
     # Definition of parameters to be configured in etc/plugin.yaml (enter 'parameters: NONE', if section should be empty)
-    # This parameter should be included if plugin provides a web interface. It lets users configure the standard number of entries per page
-    webif_pagelength:
-        type: int
-        valid_list:
-          - -1
-          - 0
-          - 25
-          - 50
-          - 100
-        description:
-            de: 'Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
-                 0 = automatisch, -1 = alle'
-            en: 'Amount of items being listed in a web interface table per page by default.
-                 0 = automatic, -1 = all'
-        description_long:
-            de: 'Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.\n
-                 Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.\n
-                 Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.'
-            en: 'Amount of items being listed in a web interface table per page by default.\n
-                 0 adjusts the table height automatically based on the height of the browser windows.\n
-                 -1 shows all table entries on one page.'
 
 item_attributes:
     # Definition of item attributes defined by this plugin (enter 'item_attributes: NONE', if section should be empty)

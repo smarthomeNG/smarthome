@@ -187,6 +187,8 @@ class Shpypi:
 
         req_dict = self.parse_requirementsfile(filepath)
         inst_dict = self.get_installed_packages()
+        #self.logger.info(f"test_requirements: inst_dict={inst_dict}")
+        #self.logger.info(f"test_requirements: req_dict={req_dict}")
 
         requirements_met = True
         for req_pkg in req_dict:
@@ -207,25 +209,25 @@ class Shpypi:
                 if logging:
                     if hard_requirement:
                         if inst_vers == '-' and min == '*':
-                            self.logger.error("test_requirements: '{}' not installed, any version needed".format(req_pkg))
+                            self.logger.warning(f"test_requirements: '{req_pkg}' not installed, any version needed")
                         elif inst_vers == '-':
-                            self.logger.error("test_requirements: '{}' not installed. Minimum v{} needed".format(req_pkg, min))
+                            self.logger.warning(f"test_requirements: '{req_pkg}' not installed. Minimum v{min} needed")
                         elif not min_met:
-                            self.logger.error("test_requirements: '{}' v{} too old. Minimum v{} needed".format(req_pkg, inst_vers, min))
+                            self.logger.warning(f"test_requirements: '{req_pkg}' v{inst_vers} too old. Minimum v{min} needed")
                         else:
-                            self.logger.error("test_requirements: '{}' v{} too new. Maximum v{} needed".format(req_pkg, inst_vers, max))
+                            self.logger.warning(f"test_requirements: '{req_pkg}' v{inst_vers} too new. Maximum v{max} needed")
                 else:
                     if not self._error:
                         print()
                         self._error = True
                     if inst_vers == '-' and min == '*':
-                        print("test_requirements: '{}' not installed, any version needed".format(req_pkg))
+                        print(f"test_requirements: '{req_pkg}' not installed, any version needed")
                     elif inst_vers == '-':
-                        print("test_requirements: '{}' not installed. Minimum v{} needed".format(req_pkg, min))
+                        print(f"test_requirements: '{req_pkg}' not installed. Minimum v{min} needed")
                     elif not min_met:
-                        print("test_requirements: '{}' v{} too old. Minimum v{} needed".format(req_pkg, inst_vers, min))
+                        print(f"test_requirements: '{req_pkg}' v{inst_vers} too old. Minimum v{min} needed")
                     else:
-                        print("test_requirements: '{}' v{} too new. Maximum v{} needed".format(req_pkg, inst_vers, max))
+                        print(f"test_requirements: '{req_pkg}' v{inst_vers} too new. Maximum v{max} needed")
 
         return requirements_met
 
@@ -308,6 +310,14 @@ class Shpypi:
                     plugin = plugin_name
 
                 filename = os.path.join(plugins_dir, plugin, 'requirements.txt')
+
+                if not os.path.isdir(os.path.join(plugins_dir, plugin)):
+                    if plugin != plugin.lower():
+                        self.logger.warning(f"There is no plugin '{plugin}' - Change the configuration parameter 'plugin_name: {plugin}' to lowercase 'plugin_name: {plugin.lower()}'")
+                        filename = os.path.join(plugins_dir, plugin.lower(), 'requirements.txt')
+                    else:
+                        self.logger.error(f"There is no plugin {plugin}")
+
                 if not os.path.isfile(filename):
                     filename = ''
                 else:
@@ -353,7 +363,7 @@ class Shpypi:
             python_bin_path = os.path.split(self.sh.python_bin)[0]
         else:
             python_bin_path = os.path.split(sys.executable)[0]
-        print("python_bin_path={}".format(python_bin_path))
+        #print("python_bin_path={}".format(python_bin_path))
 
         if not os.name == 'nt':
             pip_command = os.path.join(python_bin_path, 'pip3')
@@ -386,19 +396,24 @@ class Shpypi:
 
         if pip3_command:
             pip_command = pip3_command
+            msg = 'configured'
         else:
             pip_command = self.get_pip_command()
+            msg = 'auto-determined'
         try:
-            self.logger.notice("> using PIP command: '{}'".format(pip_command))
+            self.logger.notice(f"Using {msg} PIP: '{pip_command}'")
         except:
-            self.logger.warning("> using PIP command: '{}'".format(pip_command))
-        if logging:
-            self.logger.info('> '+pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
-        else:
-            #print('> ' + pip_command + ' install -r requirements/' + req_type + '.txt --user --no-warn-script-location')
-            pass
+            self.logger.warning(f"Using {msg} PIP: '{pip_command}'")
 
-        stdout, stderr = Utils.execute_subprocess(pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
+        req_filepath = os.path.join(self._sh_dir, 'requirements', req_type+'.txt')
+        command_line = pip_command +' install -r ' + req_filepath + ' --user --no-warn-script-location'
+        if logging:
+            self.logger.info('> '+command_line)
+        else:
+            #print('> ' + command_line)
+            pass
+        stdout, stderr = Utils.execute_subprocess(command_line)
+
         # ToDo
         # create_directories is available in lib.smarthome.py but shpypi.py might be started prior to SH object creation
         # thus it is needed to create the var/log directory here
@@ -415,14 +430,14 @@ class Shpypi:
             if 'virtualenv' in stderr and '--user' in stderr:
                 if logging:
                     try:
-                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtual environment, please wait...")
                     except:
-                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtual environment, please wait...")
                 else:
                     print()
-                    print("Running in a virtualenv environment,")
-                    print("installing "+req_type_display+" requirements only to actual virtualenv, please wait...")
-                stdout, stderr = Utils.execute_subprocess('pip3 install -r requirements/'+req_type+'.txt')
+                    print("Running in a virtual environment environment,")
+                    print("installing "+req_type_display+" requirements only to actual virtual environment, please wait...")
+                stdout, stderr = Utils.execute_subprocess('pip3 install -r '+req_filepath)
         if logging:
             self.logger.debug("stdout = 'Output from PIP command:\n{}'".format(stdout))
         if not logging:
@@ -445,10 +460,13 @@ class Shpypi:
                 # result on windows nt:
                 # WARNING: You are using pip version 19.2.3, however version 20.2.1 is available.
                 # You should consider upgrading via the 'python -m pip install --upgrade pip' command.
-                if stderr.find("You should consider upgrading via") > -1 and stderr.find("pip install --upgrade pip") > -1:
+                if (stderr.find("You should consider upgrading via") > -1 or stderr.find("[notice] A new release of pip") > -1) \
+                    and stderr.find("pip install --upgrade pip") > -1:
                     #if logging:
                     #    self.logger.warning(stderr)
                     return True
+            #if stdout.find("[notice] A new release of pip") > -1:
+            #
             if logging:
                 self.logger.error(stderr)
             else:
@@ -676,8 +694,9 @@ class Shpypi:
                         package['is_required_for_docbuild'] = True
                         package['sort'] = self._build_sortstring(package)
 
-                    if package['vers_req_min'] == '' and package['vers_req_max'] == '':
+                    if package['vers_req_min'] == '':
                         package['vers_req_min'] = required_packages[pkg_name].get('min', '*')
+                    if package['vers_req_max'] == '':
                         package['vers_req_max'] = required_packages[pkg_name].get('max', '*')
                     package['vers_req_msg'] = ''
                     package['vers_req_source'] = ''
@@ -748,7 +767,10 @@ class Shpypi:
                     package['pypi_version_not_available_msg'] = 'PyPI nicht erreichbar'
 
             # check if installed version is ok and recent
-            self.check_package_version_data(package)
+            try:
+                self.check_package_version_data(package)
+            except Exception as e:
+                self.logger.exception(f"lookup_pypi_releasedata: Package {package} - Exception: {e}")
         return
 
 
@@ -759,11 +781,13 @@ class Shpypi:
             max = package['vers_req_max']
             recent = package['pypi_version']
             inst_vers = package['vers_installed']
-            if min == '*':
+            if min is None or min == '*':
+                min = '*'
                 min_met = True
             else:
                 min_met = self._compare_versions(min, inst_vers, '<=')
-            if max == '*':
+            if max is None or max == '*':
+                max = '*'
                 max_met = True
             else:
                 max_met = self._compare_versions(inst_vers, max, '<=')
@@ -1390,8 +1414,9 @@ class Requirements_files():
                                       1])
                             packagelist_consolidated.append(p)
                     elif p['req'][0][0] == '==':
-                        print("p Gleichheit p['key']=" + p['key'] + ': >' + package_consolidated['req'][0][1] + '< / >' + p['req'][0][1] + '<')
-                        print('p=' + p)
+                        # p Gleichheit p['key']=py-vapid+: >< / >1.8.2<
+                        print(f"p Gleichheit p['key']='{p['key']}': package_consolidated >{package_consolidated['req'][0][1]}< / p['req'] >{p['req'][0][1]}<")
+                        print(f"p = {p}")
                     elif package_consolidated['req'][0][0] == '':
                         # if consolidated version has no special requirements
                         self.logger.debug("_consolidate_requirements: package_consolidated requirement w/o version - pkg={}".format(package_consolidated['pkg']))

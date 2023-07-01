@@ -43,7 +43,7 @@ class PluginController(RESTResource):
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
         self.logger.info("PluginController(): __init__")
         self.plugins = Plugins.get_instance()
 
@@ -117,7 +117,7 @@ class PluginController(RESTResource):
         if id is not None:
             for confplg in _conf:
                 if (confplg == id) or (id == None):
-                    self.logger.info("PluginController(): index('{}') - confplg {}".format(id, confplg))
+                    self.logger.info(f"PluginController(): index('{id}') - confplg {confplg}")
                     info['config'] = _conf[confplg]
                     plg_found = True
 

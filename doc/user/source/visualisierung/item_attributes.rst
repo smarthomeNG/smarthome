@@ -131,14 +131,14 @@ Example
         sleeping:
             name: Sleeping Room
             sv_page: room
-            sv_img: scene_sleeping.png
-            sv_nav_aside: "{{ basic.float('sleep_temp_id', 'second.sleeping.temp', '°') }}"
+            sv_img: scene_sleeping.svg
+            sv_nav_aside: "{{ basic.print('sleep_temp_id', 'second.sleeping.temp', '°') }}"
 
             light:
                 name: Light
                 type: bool
                 visu_acl: rw
-                sv_widget: "&    ## 123;{ device.dimmer('second.sleeping.light', 'Light', 'second.sleeping.light', 'second.sleeping.light.level') }}"
+                sv_widget: "{{ device.dimmer('second.sleeping.light', 'Light', 'second.sleeping.light', 'second.sleeping.light.level') }}"
                 knx_dpt: 1
                 knx_listen: 3/2/12
                 knx_send: 3/2/12
@@ -162,7 +162,7 @@ The page generator will replace it with the current path. This way you could eas
         sleeping:
             name: Sleeping Room
             sv_page: room
-            sv_img: scene_sleeping.png
+            sv_img: scene_sleeping.svg
 
             light:
                 name: Light

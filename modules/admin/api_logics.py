@@ -45,7 +45,7 @@ class LogicsController(RESTResource):
         self._sh = module._sh
         self.module = module
         self.base_dir = self._sh.get_basedir()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.etc_dir = self._sh._etc_dir
 
@@ -125,7 +125,10 @@ class LogicsController(RESTResource):
         mylogic = dict()
         loaded_logic = self.logics.return_logic(logicname)
         if loaded_logic is not None:
+            mylogic['group'] = loaded_logic.groupnames
+
             mylogic['name'] = loaded_logic.name
+            mylogic['description'] = loaded_logic.description
             try:
                 mylogic['enabled'] = loaded_logic._enabled
             except Exception as e:
@@ -198,29 +201,31 @@ class LogicsController(RESTResource):
         self.logger.info("logic_findnew: _config = '{}'".format(_config))
         newlogics = []
         for configlogic in _config:
-            found = False
-            for l in loadedlogics:
-                if configlogic == str(l['name']):
-                    found = True
-            if not found:
-                self.logger.info("LogicsController (logic_findnew): name = {}".format(configlogic))
-                if _config[configlogic] != 'None':
-                    mylogic = {}
-                    mylogic['name'] = configlogic
-                    mylogic['userlogic'] = True
-                    mylogic['logictype'] = self.logics.return_logictype(mylogic['name'])
-                    if mylogic['logictype'] == 'Python':
-                        mylogic['filename'] = _config[configlogic]['filename']
-                        mylogic['pathname'] = self.logics.get_logics_dir() + mylogic['filename']
-                    elif mylogic['logictype'] == 'Blockly':
-                        mylogic['filename'] = _config[configlogic]['filename']
-                        mylogic['pathname'] = \
-                        os.path.splitext(self.logics.get_logics_dir() + _config[configlogic]['filename'])[
-                            0] + '.blockly'
-                    else:
-                        mylogic['filename'] = ''
+            if configlogic != '_groups':
+                found = False
+                for l in loadedlogics:
+                    if configlogic == str(l['name']):
+                        found = True
+                if not found:
+                    self.logger.info("LogicsController (logic_findnew): name = {}".format(configlogic))
+                    if _config[configlogic] != 'None':
+                        mylogic = {}
+                        mylogic['name'] = configlogic
+                        mylogic['userlogic'] = True
+                        mylogic['logictype'] = self.logics.return_logictype(mylogic['name'])
+                        if mylogic['logictype'] == 'Python':
+                            mylogic['filename'] = _config[configlogic]['filename']
+                            mylogic['pathname'] = self.logics.get_logics_dir() + mylogic['filename']
+                        elif mylogic['logictype'] == 'Blockly':
+                            mylogic['filename'] = _config[configlogic]['filename']
+                            mylogic['pathname'] = \
+                            os.path.splitext(self.logics.get_logics_dir() + _config[configlogic]['filename'])[
+                                0] + '.blockly'
+                        else:
+                            mylogic['filename'] = ''
 
-                    newlogics.append(mylogic)
+                        newlogics.append(mylogic)
+
         return newlogics
 
 
@@ -243,7 +248,7 @@ class LogicsController(RESTResource):
 
         logics_new = sorted(self.logic_findnew(logics_list), key=lambda k: k['name'])
         logics_sorted = sorted(logics_list, key=lambda k: k['name'])
-        self.logics_data = {'logics_new': logics_new, 'logics': logics_sorted}
+        self.logics_data = {'logics_new': logics_new, 'logics': logics_sorted, 'groups': self.logics._groups}
         return json.dumps(self.logics_data)
 
 
@@ -262,9 +267,11 @@ class LogicsController(RESTResource):
         self.logger.info("get_logic: logicname = '{}', logic_conf = '{}'".format(logicname, logic_conf))
 
         mylogic = self.fill_logicdict(logicname)
-        logic_conf['name'] = mylogic['name']
-        logic_conf['next_exec'] = mylogic['next_exec']
-        logic_conf['last_run'] = mylogic['last_run']
+        if mylogic.get('name', None) is not None:
+            logic_conf['name'] = mylogic['name']
+            logic_conf['group'] = mylogic['group']
+            logic_conf['next_exec'] = mylogic['next_exec']
+            logic_conf['last_run'] = mylogic['last_run']
 
         # self.logger.warning("type = {}, mylogic = {}".format(type(mylogic), mylogic))
         # self.logger.warning("type = {}, logic_conf = {}".format(type(logic_conf), logic_conf))
@@ -305,7 +312,7 @@ class LogicsController(RESTResource):
     def set_logic_state(self, logicname, action, filename):
         """
 
-        :param logic_name:
+        :param logicname:
         :param action:
         :return:
 
@@ -335,25 +342,37 @@ class LogicsController(RESTResource):
                 self.logger.info("LogicsController.set_logic_state(relaod): Triggering logic because crontab contains 'init' - crontab = '{}'".format(crontab))
                 self.logics.trigger_logic(logicname, by='Admin')
             return json.dumps({"result": "ok"})
+        elif action == 'delete_with_code':
+            self.logger.info(f"set_logic_state: action={action}")
+            self.logics.delete_logic(logicname, with_code=True)
+            return json.dumps({"result": "ok"})
         elif action == 'delete':
+            self.logger.info(f"set_logic_state: action={action}")
             self.logics.delete_logic(logicname)
             return json.dumps({"result": "ok"})
         elif action == 'create':
+            self.logger.info(f"set_logic_state: action={action} filename={filename}, logicname={logicname}")
             filename = filename.lower() + '.py'
 
             if logicname in self.logics.return_defined_logics():
                 self.logger.warning("LogicsController.set_logic_state(create): Logic name {} is already used".format(logicname))
                 return json.dumps({"result": "error", "description": "Logic name {} is already used".format(logicname)})
             else:
-                logics_code = '#!/usr/bin/env python3\n' + '# ' + filename + '\n\n'
-                if self.logic_create_codefile(filename, logics_code):
-                    self.logic_create_config(logicname, filename)
-                    if not self.logics.load_logic(logicname):
-                        self.logger.error("Could not load logic '{}', syntax error".format(logicname))
-                    return json.dumps( {"result": "ok"} )
-                else:
-                    self.logger.warning("LogicsController.set_logic_state(create): Logic file {} already exists".format(filename))
-                    return json.dumps({"result": "error", "description": "Logic file {} already exists".format(filename)})
+                if not os.path.isfile(os.path.join(self.logics.get_logics_dir(), filename)):
+                    #create new logic code file, if none is found
+                    logics_code = '#!/usr/bin/env python3\n' + '# ' + filename + '\n\n'
+                    if not self.logic_create_codefile(filename, logics_code):
+                        self.logger.error(f"Could not create code-file '{filename}'")
+                        return json.dumps({"result": "error", "description": f"Could not create code-file '{filename}'"})
+
+                if self.logics.filename_used_count(filename) > 0:
+                    self.logger.error(f"code-file '{filename}' already exists and is used by another logic configuration")
+                    return json.dumps({"result": "error", "description": f"code-file '{filename}' already exists and is used by another logic configuration"})
+
+                self.logic_create_config(logicname, filename)
+                if not self.logics.load_logic(logicname):
+                    self.logger.warning(f"Could not load logic '{logicname}', syntax error")
+                return json.dumps( {"result": "ok"} )
 
         else:
             self.logger.warning("LogicsController.set_logic_state(): logic '"+logicname+"', action '"+action+"' is not supported")
@@ -374,10 +393,20 @@ class LogicsController(RESTResource):
         else:
             self.logger.info("LogicsController.save_logic_parameters: logic = {}, alte params = {}".format(logicname, dict(sect)))
             for param, value in params.items():
+                if param == 'group':
+                    param = 'logic_groupname'
+                    # change group(s) for the running logic too
+                    self._sh.logics.return_logic(logicname).groupnames = value
+                    # if only one group is specified, make it a string
+                    if isinstance(value, list) and len(value) == 1:
+                        value = value[0]
+                if param == 'logic_description':
+                    # change descriptipn for the running logic too
+                    self._sh.logics.return_logic(logicname).description = value
                 if value == None:
                     sect.pop(param, None)
                 else:
-                    self.logger.info("- param = {}, value = {}, type(value) = {}".format(param, value, Utils.get_type(value)))
+                    self.logger.info(f"- param = {param}, value = {value}, type(value) = {Utils.get_type(value)}")
                     if (Utils.get_type(value) == 'str') and (value == ''):
                         sect.pop(param, None)
                     elif (Utils.get_type(value) == 'list') and (value == []):
@@ -427,7 +456,7 @@ class LogicsController(RESTResource):
         """
         Handle PUT requests for logics API
         """
-        self.logger.info("LogicsController.update(logicname='{}', action='{}')".format(logicname, action))
+        self.logger.info(f"LogicsController.update(logicname='{logicname}', action='{action}')")
 
         if self.plugins is None:
             self.plugins = Plugins.get_instance()
@@ -440,7 +469,7 @@ class LogicsController(RESTResource):
 
         if (action == 'saveparameters') and (logicname != ''):
             return self.save_logic_parameters(logicname)
-        elif not action in ['create', 'load', 'delete']:
+        elif not action in ['create', 'load', 'delete', 'delete_with_code']:
             mylogic = self.logics.return_logic(logicname)
             if mylogic is None:
                 return json.dumps({'result': 'Error', 'description': "No logic with name '" + logicname + "' found"})

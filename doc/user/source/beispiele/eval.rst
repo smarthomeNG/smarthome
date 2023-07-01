@@ -80,11 +80,11 @@ Hier wird aus den 3 Werten der Unteritems ein formatierter String gebildet. Dies
 
     HSB:
         type: str
-        eval: "'{0},{1},{2}'.format(sh...Hue(), sh...Sat(), sh...Bright())"
+        eval: f"{sh...Hue()},{sh...Sat()},{sh...Bright()}"
         eval_trigger:
-          - .Hue
-          - .Sat
-          - .Bright
+          - ..Hue
+          - ..Sat
+          - ..Bright
 
         Hue:
             type: num

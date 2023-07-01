@@ -63,17 +63,6 @@ class SamplePlugin(SmartPlugin):
         # Call init code of parent class (SmartPlugin)
         super().__init__()
 
-        # get the parameters for the plugin (as defined in metadata plugin.yaml):
-        try:
-            # webif_pagelength should be included in all plugins using a web interface
-            # It is used to overwrite the default max number of entries per page in the tables
-            self.webif_pagelength = self.get_parameter_value('webif_pagelength')
-            # self.param1 = self.get_parameter_value('param1')
-        except KeyError as e:
-            self.logger.critical("Plugin '{}': Inconsistent plugin (invalid metadata definition: {} not defined)".format(self.get_shortname(), e))
-            self._init_complete = False
-            return
-
         # cycle time in seconds, only needed, if hardware/interface needs to be
         # polled for value changes by adding a scheduler entry in the run method of this plugin
         # (maybe you want to make it a plugin parameter?)
@@ -85,7 +74,6 @@ class SamplePlugin(SmartPlugin):
         #   self._init_complete = False
         #   return
 
-        # if plugin should start even without web interface
         self.init_webinterface(WebInterface)
         # if plugin should not start without web interface
         # if not self.init_webinterface():

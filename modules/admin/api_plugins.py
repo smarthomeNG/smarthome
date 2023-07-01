@@ -46,7 +46,7 @@ class PluginsController(RESTResource):
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugin_data = {}
         return
@@ -96,7 +96,7 @@ class PluginsInstalledController(RESTResource):
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugin_data = {}
         return
@@ -118,7 +118,7 @@ class PluginsInstalledController(RESTResource):
 
         if self.plugin_data == {}:
             plugins_list = sorted(os.listdir(self.plugins_dir))
-            self.logger.warning("PluginsInstalledController.read(): plugin_list (sollte sortiert sein) = '{}'".format(plugins_list))
+            self.logger.info("PluginsInstalledController.read(): plugin_list (sollte sortiert sein) = '{}'".format(plugins_list))
 
             self.logger.info("- plugins_list_sorted = {}".format(plugins_list))
             for p in plugins_list:
@@ -152,7 +152,7 @@ class PluginsInstalledController(RESTResource):
                                 self.plugin_data[p]['configuration_needed'] = plg_data.get('configuration_needed', True)
                     else:
                         self.logger.info("- no plugin.yaml: {}".format(p))
-        self.logger.warning("PluginsInstalledController.read(): Plugin Liste (sollte sortiert sein), json.dumps(self.plugin_data) = '{}'".format(json.dumps(self.plugin_data)))
+        self.logger.info("PluginsInstalledController.read(): Plugin Liste (sollte sortiert sein), json.dumps(self.plugin_data) = '{}'".format(json.dumps(self.plugin_data)))
         return json.dumps(self.plugin_data, sort_keys=True)
 
     read.expose_resource = True
@@ -165,7 +165,7 @@ class PluginsConfigController(RESTResource):
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugins = Plugins.get_instance()
 
@@ -231,7 +231,6 @@ class PluginsConfigController(RESTResource):
         # get path to plugin configuration file, withou extension
         _conf = lib.config.parse_basename(os.path.splitext(config_filename)[0], configtype='plugin')
 
-
         for confplg in _conf:
             plg = _conf[confplg].get('plugin_name', '?')
             if plg == '?':
@@ -284,7 +283,7 @@ class PluginsInfoController(RESTResource):
 
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugins = Plugins.get_instance()
 
@@ -336,7 +335,8 @@ class PluginsInfoController(RESTResource):
                     if isinstance(plugin, SmartPlugin):
                         plugin_name = plugin.get_shortname()
                         if temp_blog_urls.get(plugin_name, None) is None:
-                            # add link to blog, if articles exist, that have the pluginname as a tag
+                            # Link to Blog:
+                            #   add link to blog, if articles exist, that have the pluginname as a tag
                             #   example: Blog articles with tag 'backend'
                             #   - https://www.smarthomeng.de/tag/backend
                             #   alternative example: Blog articles with category 'plugins' and tag 'backend'
@@ -387,6 +387,12 @@ class PluginsInfoController(RESTResource):
         for plugin in _conf:
             conf_plugins[plugin] = {}
             conf_plugins[plugin] = _conf[plugin]
+
+        # Determine the base url for documentation (config and user_doc)
+        if self._sh.branch == 'develop':
+            documentation_base_url = 'https://smarthomeng.github.io/dev_doc/'
+        else:
+            documentation_base_url = 'https://smarthomeng.github.io/smarthome/'
 
         #self._test_for_blog_articles()
         plugin_list = []
@@ -458,10 +464,25 @@ class PluginsInfoController(RESTResource):
             plugin['metadata']['description'] = x._metadata.get_mlstring('description')
             plugin['metadata']['description_long'] = x._metadata.get_mlstring('description_long')
             plugin['metadata']['keywords'] = x._metadata.get_string('keywords')
+            # documentation link from metadata
             plugin['metadata']['documentation'] = x._metadata.get_string('documentation')
+            if plugin['metadata']['documentation'] is None:
+                plugin['metadata']['documentation'] = ''
+            if plugin['metadata']['documentation'].endswith(f"plugins/{plugin['pluginname']}/user_doc.html"):
+                plugin['metadata']['documentation'] = ''
+            elif plugin['metadata']['documentation'].endswith(f"plugins_doc/config/{plugin['pluginname']}.html"):
+                plugin['metadata']['documentation'] = ''
             plugin['metadata']['support'] = x._metadata.get_string('support')
             plugin['metadata']['maintainer'] = x._metadata.get_string('maintainer')
             plugin['metadata']['tester'] = x._metadata.get_string('tester')
+
+            # construct urls to config page and user_doc page
+            plugin['documentation_config_doc'] = ''
+            plugin['documentation_user_doc'] = ''
+            if plugin['smartplugin'] and not(plugin['pluginname'].startswith('priv_')):
+                plugin['documentation_config_doc'] = documentation_base_url + f"plugins_doc/config/{plugin['pluginname']}.html"
+                if os.path.isfile(os.path.join(self.plugins_dir, plugin['pluginname'], 'user_doc.rst')):
+                    plugin['documentation_user_doc'] = documentation_base_url + f"plugins/{plugin['pluginname']}/user_doc.html"
 
             try:
                 plugin['stopped'] = not x.alive
@@ -490,7 +511,7 @@ class PluginsAPIController(RESTResource):
 
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugins = Plugins.get_instance()
 
@@ -533,7 +554,7 @@ class PluginsLogicParametersController(RESTResource):
 
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugins = Plugins.get_instance()
 

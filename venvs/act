@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#########################################################################
+# Copyright 2023-       Martin Sinn                         m.sinn@gmx.de
+#########################################################################
+#  This file is part of SmartHomeNG
+#
+#  SmartHomeNG is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#########################################################################
+
+# test if the right number of parameters is given
+if [ $# -eq 0 ]; then
+    echo
+    echo "ERROR: Parameter is missing. The script MUST be called like this:"
+    echo "       source act <Python version/venv name>"
+    echo
+    exit
+fi
+
+# get directory where this script is stored
+SOURCE=${BASH_SOURCE[0]}
+DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+
+# test if script is called with 'source'
+(return 0 2>/dev/null) && sourced=1 || sourced=0
+
+if [ "$sourced" -eq "0" ]; then
+    echo
+    echo ERROR: The script MUST be called with \'source\', like: \'source act $1\'
+    echo
+    exit
+fi
+
+if test -f "$DIR/py_$1/bin/activate"; then
+    echo
+    source $DIR/py_$1/bin/activate
+    echo "Activating virtual environment py_$1 (`python3 -V`)"
+    echo
+    echo To deactivate the virtual environment simply type the command \'deactivate\'
+else
+    echo
+    echo "ERROR: Virtual environment 'py_$1' does not exist"
+    echo "       in directory '$DIR'"
+fi
+echo

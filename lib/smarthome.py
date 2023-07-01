@@ -100,6 +100,7 @@ from lib.shpypi import Shpypi
 from lib.triggertimes import TriggerTimes
 from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
 import lib.userfunctions as uf
+from lib.systeminfo import Systeminfo
 
 #import bin.shngversion
 #MODE = 'default'
@@ -146,7 +147,7 @@ class SmartHome():
         self._smarthome_conf_basename = None
         self.__event_listeners = {}
         self.__all_listeners = []
-        self.modules = []
+        self.modules = None
         self.__children = []
 
 
@@ -193,10 +194,9 @@ class SmartHome():
         """
         Initialization of main smarthome object
         """
-        self.shng_status = {'code': 0, 'text': 'Initalizing'}
+        self.shng_status = {'code': 0, 'text': 'Initializing'}
         self._logger = logging.getLogger(__name__)
         self._logger_main = logging.getLogger(__name__)
-        self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
         # keep for checking on restart command
         self._mode = MODE
@@ -205,17 +205,18 @@ class SmartHome():
         self.initialize_dir_vars()
         self.create_directories()
 
+        self.logs = lib.log.Logs(self)   # initialize object for memory logs
+
         os.chdir(self._base_dir)
 
         self.PYTHON_VERSION = lib.utils.get_python_version()
-
-        if os.name != 'nt':
-            self.python_bin = os.environ.get('_','')
-        else:
-            self.python_bin = sys.executable
+        self.python_bin = sys.executable
 
         if extern_conf_dir != '':
             self._extern_conf_dir = extern_conf_dir
+
+        # get systeminfo closs
+        self.systeminfo = Systeminfo
 
         # set default timezone to UTC
         self.shtime = Shtime(self)
@@ -223,11 +224,13 @@ class SmartHome():
         threading.current_thread().name = 'Main'
         self.alive = True
 
-        import bin.shngversion
-        VERSION = bin.shngversion.get_shng_version()
-        self.version = VERSION
-        self.connections = []
+        # import bin.shngversion as shngversion
+        # VERSION = shngversion.get_shng_version()
+        # self.branch = shngversion.get_shng_branch()
+        # self.version = shngversion.get_shng_version()
+        self.connections = None
 
+        #reinitialize dir vars with path to extern configuration directory
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
         self._items_dir = os.path.join(self._extern_conf_dir, 'items'+os.path.sep)
         self._functions_dir = os.path.join(self._extern_conf_dir, 'functions'+os.path.sep)
@@ -290,7 +293,17 @@ class SmartHome():
         # setup logging
         self.init_logging(self._log_conf_basename, MODE)
 
-        self.shng_status = {'code': 1, 'text': 'Initalizing: Logging initalized'}
+
+        #############################################################
+        # get shng version information
+        # shngversion.get_plugins_version() may only be called after logging is initialized
+        import bin.shngversion as shngversion
+        #VERSION = shngversion.get_shng_version()
+        self.branch = shngversion.get_shng_branch()
+        self.version = shngversion.get_shng_version()
+        self.plugins_version = shngversion.get_plugins_version()
+
+        self.shng_status = {'code': 1, 'text': 'Initializing: Logging initialized'}
 
         if hasattr(self, '_tz'):
             # set _tz again (now with logging enabled),
@@ -314,7 +327,12 @@ class SmartHome():
             virtual_text = ' in virtual environment'
         self._logger_main.notice("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
         self._logger_main.notice(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
-        self._logger_main.notice(f" - on {platform.platform()} (pid={pid})")
+        #self._logger_main.notice(f" - on {platform.platform()} (pid={pid})")
+        self._logger_main.notice(f" - operating system '{self.systeminfo.get_osname()}' (pid={pid})")
+        if self.systeminfo.get_rasppi_info() == '':
+            self._logger_main.notice(f" - on '{self.systeminfo.get_cpubrand()}'")
+        else:
+            self._logger_main.notice(f" - on '{self.systeminfo.get_rasppi_info()}'")
         if logging.getLevelName('NOTICE') == 31:
             self._logger_main.notice(f" - Loglevel NOTICE is set to value {logging.getLevelName('NOTICE')} because handler of root logger is set to level WARNING or higher  -  Set level of handler '{self.logs.root_handler_name}' to 'NOTICE'!")
 
@@ -323,7 +341,7 @@ class SmartHome():
             self._logger.warning("Encoding should be UTF8 but is instead {}".format(default_encoding))
 
         if self._extern_conf_dir != BASE:
-            self._logger.warning("Using config dir {}".format(self._extern_conf_dir))
+            self._logger.notice("Using config dir {}".format(self._extern_conf_dir))
 
         #############################################################
         # Initialize multi-language support
@@ -343,6 +361,7 @@ class SmartHome():
             self._logger.critical("No plugins found in folder '{}'. Please install plugins.".format(self._plugins_dir))
             self._logger.critical("Aborting")
             exit(1)
+
 
         #############################################################
         # test if needed Python packages for configured plugins
@@ -374,11 +393,7 @@ class SmartHome():
             self._logger.critical("Aborting")
             exit(1)
 
-        self.shng_status = {'code': 2, 'text': 'Initalizing: Requirements checked'}
-
-
-        self.shtime._initialize_holidays()
-        self._logger_main.notice(" - " + self.shtime.log_msg)
+        self.shng_status = {'code': 2, 'text': 'Initializing: Requirements checked'}
 
         # Add Signal Handling
 #        signal.signal(signal.SIGHUP, self.reload_logics)
@@ -395,6 +410,19 @@ class SmartHome():
         # Catching Exceptions
         sys.excepthook = self._excepthook
 
+        #############################################################
+        # Initialize holidays
+        self.shtime._initialize_holidays()
+        self._logger_main.notice(" - " + self.shtime.log_msg)
+
+        #############################################################
+        # check processor speed (if not done before)
+        self.cpu_speed_class = self.systeminfo.get_cpu_speed(self._var_dir)
+        if self.cpu_speed_class is None:
+            self.shng_status = {'code': 3, 'text': 'Checking processor speed'}
+            self.cpu_speed_class = self.systeminfo.check_cpu_speed(self._var_dir)
+
+        #############################################################
         # test if a valid locale is set in the operating system
         if os.name != 'nt':
             try:
@@ -404,6 +432,7 @@ class SmartHome():
                 self._logger.error("Locale for the enviroment is not set. Defaulting to en_US.UTF-8")
                 os.environ["LANG"] = 'en_US.UTF-8'
                 os.environ["LC_ALL"] = 'en_US.UTF-8'
+
 
         #############################################################
         # Link Tools
@@ -524,15 +553,15 @@ class SmartHome():
         """
         if conf_basename == '':
             conf_basename = self._log_conf_basename
-        conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+        #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
 
-        if not self.logs.configure_logging(conf_dict):
-            #conf_basename = self._log_conf_basename + YAML_FILE + '.default'
+        if not self.logs.configure_logging():
+            conf_basename = self._log_conf_basename + YAML_FILE + '.default'
             print(f"       Trying default logging configuration from:")
-            print(f"       {conf_basename + YAML_FILE + '.default'}")
+            print(f"       {conf_basename}")
             print()
-            conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
-            if not self.logs.configure_logging(conf_dict, 'logging.yaml.default'):
+            #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
+            if not self.logs.configure_logging('logging.yaml.default'):
                 print("ABORTING")
                 print()
                 exit(1)
@@ -578,6 +607,15 @@ class SmartHome():
         self.trigger = self.scheduler.trigger
         self.scheduler.start()
 
+        # set warn level to a higher number of workers on fast cpus
+        if self.cpu_speed_class == 'fast':
+            self.scheduler.set_worker_warn_count(60)
+        elif self.cpu_speed_class == 'medium':
+            self.scheduler.set_worker_warn_count(35)
+        else:
+            #leave it on standard (20 workers)
+            pass
+
         #############################################################
         # Init Connections
         #############################################################
@@ -588,7 +626,7 @@ class SmartHome():
         #############################################################
         # Init and start loadable Modules
         #############################################################
-        self.shng_status = {'code': 11, 'text': 'Starting: Initalizing and starting loadable modules'}
+        self.shng_status = {'code': 11, 'text': 'Starting: Initializing and starting loadable modules'}
 
         self._logger.info("Init loadable Modules")
         self.modules = lib.module.Modules(self, configfile=self._module_conf_basename)
@@ -607,9 +645,10 @@ class SmartHome():
         #############################################################
         # Init Plugins
         #############################################################
-        self.shng_status = {'code': 12, 'text': 'Starting: Initalizing plugins'}
+        self.shng_status = {'code': 12, 'text': 'Starting: Initializing plugins'}
+        os.chdir(self._base_dir)
 
-        self._logger.info("Init Plugins")
+        self._logger.info("Start initialization of plugins")
         self.plugins = lib.plugin.Plugins(self, configfile=self._plugin_conf_basename)
         self.plugin_load_complete = True
 
@@ -687,13 +726,16 @@ class SmartHome():
         self.alive = False
         self._logger.info(f"stop: Number of Threads: {threading.activeCount()}")
 
-        self.items.stop()
-        self.scheduler.stop()
+        if self.items is not None:
+            self.items.stop()
+        if self.scheduler is not None:
+            self.scheduler.stop()
         if self.plugins is not None:
             self.plugins.stop()
         if self.modules is not None:
             self.modules.stop()
-        self.connections.close()
+        if self.connections is not None:
+            self.connections.close()
 
         self.shng_status = {'code': 32, 'text': 'Stopping: Stopping threads'}
 
@@ -838,7 +880,7 @@ class SmartHome():
 
     def _excepthook(self, typ, value, tb):
         mytb = "".join(traceback.format_tb(tb))
-        self._logger.error("Unhandled exception: {1}\n{0}\n{2}".format(typ, value, mytb))
+        self._logger.error(f"Unhandled exception: {value}\n{typ}\nrunning SmartHomeNG {self.version}\nException: {mytb}")
 
     def _garbage_collection(self):
         c = gc.collect()

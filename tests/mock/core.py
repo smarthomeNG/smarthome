@@ -129,10 +129,50 @@ class MockSmartHome():
         self._default_language = language
 
     def get_basedir(self):
+        """
+        Function to return the base directory of the running SmartHomeNG installation
+
+        :return: Base directory as an absolute path
+        :rtype: str
+        """
         return self._base_dir
 
+    def get_confdir(self):
+        """
+        Function to return the config directory (that contain 'etc', 'logics' and 'items' subdirectories)
+
+        :return: Config directory as an absolute path
+        :rtype: str
+        """
+        return self._extern_conf_dir
+
+    def get_etcdir(self):
+        """
+        Function to return the etc config directory
+
+        :return: Config directory as an absolute path
+        :rtype: str
+        """
+        return self._etc_dir
+
+    def get_vardir(self):
+        """
+        Function to return the var directory used by SmartHomeNG
+
+        :return: var directory as an absolute path
+        :rtype: str
+        """
+        return self._var_dir
+
     def getBaseDir(self):
-        """ Deprecated """
+        """
+        Function to return the base directory of the running SmartHomeNG installation
+
+        **getBaseDir()** is deprecated. Use method get_basedir() instead.
+
+        :return: Base directory as an absolute path
+        :rtype: str
+        """
         return self._base_dir
 
     def trigger(self, name, obj=None, by='Logic', source=None, value=None, dest=None, prio=3, dt=None):

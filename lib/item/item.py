@@ -43,7 +43,10 @@ from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_
                            KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_REMARK, KEY_INSTANCE,
                            KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE, KEY_RATE_LIMIT,
                            KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT, KEY_LOG_MAPPING, KEY_LOG_RULES,
-                           KEY_THRESHOLD, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST)
+                           KEY_THRESHOLD, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
+                           KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD,
+                           ATTRIBUTE_SEPARATOR)
+
 from lib.utils import Utils
 
 from .property import Property
@@ -52,7 +55,8 @@ from .helpers import *
 _items_instance = None
 
 
-ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_V12
+#ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_V12
+ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_LATEST
 ATTRIB_COMPAT_DEFAULT = ''
 
 logger = logging.getLogger(__name__)
@@ -106,7 +110,10 @@ class Item():
             self._sh.shng_status['details'] = str(items_count)  # Item Zähler übertragen
 
         self._filename = None
-        self._autotimer = False
+        self._autotimer_time = None
+        self._autotimer_value = None
+        self._cycle_time = None
+        self._cycle_value = None
         self._cache = False
         self.cast = cast_bool
         self.__changed_by = 'Init:None'
@@ -115,9 +122,9 @@ class Item():
         self.__children = []
         self.conf = {}
         self._crontab = None
-        self._cycle = None
         self._enforce_updates = False
         self._enforce_change = False
+
         self._eval = None				    # -> KEY_EVAL
         self._eval_unexpanded = ''
         self._eval_trigger = False
@@ -125,10 +132,21 @@ class Item():
         self._trigger_unexpanded = []
         self._trigger_condition_raw = []
         self._trigger_condition = None
+
+        self._hysteresis_input = None
+        self._hysteresis_input_unexpanded = None
+        self._hysteresis_upper_threshold = None
+        self._hysteresis_lower_threshold = None
+        self._hysteresis_upper_timer = None
+        self._hysteresis_lower_timer = None
+        self._hysteresis_upper_timer_active = False
+        self._hysteresis_lower_timer_active = False
+        self._hysteresis_items_to_trigger = []
+
         self._on_update = None				# -> KEY_ON_UPDATE eval expression
         self._on_change = None				# -> KEY_ON_CHANGE eval expression
-        self._on_update_dest_var = None		# -> KEY_ON_UPDATE destination var
-        self._on_change_dest_var = None		# -> KEY_ON_CHANGE destination var
+        self._on_update_dest_var = None		# -> KEY_ON_UPDATE destination var (list: only filled if '=' syntax is used)
+        self._on_change_dest_var = None		# -> KEY_ON_CHANGE destination var (list: only filled if '=' syntax is used)
         self._on_update_unexpanded = [] 	# -> KEY_ON_UPDATE eval expression (with unexpanded item references)
         self._on_change_unexpanded = [] 	# -> KEY_ON_CHANGE eval expression (with unexpanded item references)
         self._on_update_dest_var_unexp = []	# -> KEY_ON_UPDATE destination var (with unexpanded item reference)
@@ -203,19 +221,29 @@ class Item():
             if ATTRIB_COMPAT_DEFAULT == '':
                 ATTRIB_COMPAT_DEFAULT = ATTRIB_COMPAT_DEFAULT_FALLBACK
 
+        self._filename = dict(config.items()).get('_filename', None)
+
+        #############################################################
+        # Item Attribute 'Type'
+        #############################################################
+        setattr(self, '_type', dict(config.items()).get(KEY_TYPE))
+        if self._type is None:
+            self._type = FOO  # Every item has a type, type is FOO, if not defined in item
+        #__defaults = {'num': 0, 'str': '', 'bool': False, 'list': [], 'dict': {}, 'foo': None, 'scene': 0}
+        if self._type not in ITEM_DEFAULTS:
+            logger.error(f"Item {self._path}: type '{self._type}' unknown. Please use one of: {', '.join(list(ITEM_DEFAULTS.keys()))}.")
+            raise AttributeError
+        self.cast = globals()['cast_' + self._type]
+
         #############################################################
         # Item Attributes
         #############################################################
-        self._filename = dict(config.items()).get('_filename', None)
-        setattr(self, '_type', dict(config.items()).get(KEY_TYPE))
         for attr, value in config.items():
             if not isinstance(value, dict):
-                if attr in [KEY_CYCLE, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
+                if attr in [KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
                     setattr(self, '_' + attr, value)
-                elif attr in [KEY_EVAL]:
-                    self._process_eval(value)
                 elif attr in [KEY_RATE_LIMIT]:  # cast to num
                     setattr(self, '_' + attr, cast_num(value))
                 elif attr in [KEY_CACHE, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE]:  # cast to bool
@@ -228,8 +256,12 @@ class Item():
                     if isinstance(value, str):
                         value = [value, ]
                     setattr(self, '_' + attr, value)
+
+                elif attr in [KEY_EVAL]:
+                    self._parse_eval_attribute(attr, value)
                 elif attr in [KEY_EVAL_TRIGGER] or (self._use_conditional_triggers and attr in [KEY_TRIGGER]):  # cast to list
-                    self._process_trigger_list(attr, value)
+                    self._parse_eval_trigger_list_attribute(attr, value)
+
                 elif (attr in [KEY_CONDITION]) and self._use_conditional_triggers:  # cast to list
                     if isinstance(value, list):
                         cond_list = []
@@ -238,9 +270,15 @@ class Item():
                         self._trigger_condition = self._build_trigger_condition_eval(cond_list)
                         self._trigger_condition_raw = cond_list
                     else:
-                        logger.warning("Item __init__: {}: Invalid trigger_condition specified! Must be a list".format(self._path))
+                        logger.warning(f"Item __init__: {self._path}: Invalid trigger_condition specified! Must be a list")
+
+                elif attr in [KEY_HYSTERESIS_INPUT]:
+                    self._parse_hysteresis_input_attribute(attr, value)
+                elif attr in [KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD]:
+                    self._parse_hysteresis_xx_threshold_attribute(attr, value)
+
                 elif attr in [KEY_ON_CHANGE, KEY_ON_UPDATE]:
-                    self._process_on_xx_list(attr, value)
+                    self._parse_on_xx_list_attribute(attr, value)
 
                 elif attr in [KEY_LOG_LEVEL]:
                     if value != '':
@@ -288,17 +326,11 @@ class Item():
                         setattr(self, '_log_text', value)
 
                 elif attr == KEY_AUTOTIMER:
-                    time, value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
-                    timeitem = None
-                    valueitem = None
-                    if time.lower().startswith('sh.') and time.endswith('()'):
-                        timeitem = self.get_absolutepath(time[3:-2], KEY_AUTOTIMER)
-                        time = 0
-                    if value.lower().startswith('sh.') and value.endswith('()'):
-                        valueitem = self.get_absolutepath(value[3:-2], KEY_AUTOTIMER)
-                        value = ''
-                    value = self._castvalue_to_itemtype(value, compat)
-                    self._autotimer = [ (self._cast_duration(time), value), compat, timeitem, valueitem]
+                    self._parse_autotimer_attribute(attr, value)
+
+                elif attr == KEY_CYCLE:
+                    self._parse_cycle_attribute(attr, value)
+
                 elif attr == KEY_THRESHOLD:
                     low, __, high = value.rpartition(':')
                     if not low:
@@ -345,8 +377,9 @@ class Item():
 
                     # Test if the plugin-specific attribute contains a valid value
                     # and set the default value, if needed
-                    value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
-                    self.conf[attr] = value
+                    if hasattr(self.plugins, 'meta'):
+                        value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
+                        self.conf[attr] = value
 
         self.property.init_dynamic_properties()
 
@@ -364,17 +397,6 @@ class Item():
                     vars(self)[attr] = child
                     _items_instance.add_item(child_path, child)
                     self.__children.append(child)
-
-        #############################################################
-        # Type
-        #############################################################
-        #__defaults = {'num': 0, 'str': '', 'bool': False, 'list': [], 'dict': {}, 'foo': None, 'scene': 0}
-        if self._type is None:
-            self._type = FOO  # Every item has a type, type is FOO, if not defined in item
-        if self._type not in ITEM_DEFAULTS:
-            logger.error("Item {}: type '{}' unknown. Please use one of: {}.".format(self._path, self._type, ', '.join(list(ITEM_DEFAULTS.keys()))))
-            raise AttributeError
-        self.cast = globals()['cast_' + self._type]
 
         #############################################################
         # Value
@@ -402,7 +424,7 @@ class Item():
         # Cache
         #############################################################
         if self._cache:
-            self._cache = self._sh._cache_dir + self._path
+            self._cache = os.path.join(self._sh._cache_dir, self._path)
             try:
                 self.__changed_by = 'Init:Cache'
                 self.__last_change, self._value = cache_read(self._cache, self.shtime.tzinfo())
@@ -416,9 +438,13 @@ class Item():
                 self._log_on_change(self._value, self.__changed_by, 'Cache', None)
             except Exception as e:
                 if str(e).startswith('[Errno 2]'):
-                    logger.info("Item {}: No cached value: {}".format(self._path, e))
+                    logger.info(f"Item {self._path}: No cached value: {e}")
                 else:
-                    logger.warning("Item {}: Problem reading cache: {}".format(self._path, e))
+                    if os.stat(self._cache).st_size == 0:
+                        logger.warning(f"Item {self._path}: Problem reading cache: Filesize is 0 bytes. Deleting invalid cache file")
+                        os.remove(self._cache)
+                    else:
+                        logger.warning(f"Item {self._path}: Problem reading cache: {e}")
 
         #############################################################
         # Cache write/init
@@ -426,7 +452,7 @@ class Item():
         if self._cache:
             if not os.path.isfile(self._cache):
                 cache_write(self._cache, self._value)
-                logger.notice("Created cache for item: {} in file {}".format(self._cache, self._cache))
+                logger.notice(f"Created cache for item {self._cache} in file {self._cache}")
 
         #############################################################
         # Plugins
@@ -437,7 +463,7 @@ class Item():
                 update = plugin.parse_item(self)
                 if update:
                     try:
-                        plugin._append_to_itemlist(self)
+                        plugin.add_item(self, updating=True)
                     except:
                         pass
                     self.add_method_trigger(update)
@@ -471,7 +497,7 @@ class Item():
         return dest_item, value
 
 
-    def _castvalue_to_itemtype(self, value, compat):
+    def _castvalue_to_itemtype(self, value, compat=ATTRIB_COMPAT_LATEST):
         """
         casts the value to the type of the item, if backward compatibility
         to version 1.2 (ATTRIB_COMPAT_V12) is not enabled
@@ -489,7 +515,7 @@ class Item():
                 try:
                     value = mycast(value)
                 except:
-                    logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type))
+                    logger.warning(f"Item {self._path}: Unable to cast '{str(value)}' to {self._type}")
                     if isinstance(value, list):
                         value = []
                     elif isinstance(value, dict):
@@ -497,7 +523,7 @@ class Item():
                     else:
                         value = mycast('')
             else:
-                logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type))
+                logger.warning(f"Item {self._path}: Unable to cast '{str(value)}' to {self._type}")
         return value
 
 
@@ -563,14 +589,131 @@ class Item():
         result = cycle
         return result
 
+
     """
+    --------------------------------------------------------------------------------------------
+    The following methods are used to process attributes during parsing of standard attributes
     --------------------------------------------------------------------------------------------
     """
 
+    def _parse_eval_attribute(self, attribute_name, value):
+        """
+        Parsing eval attribute during parsing of standard attributes
+
+        :param value: attribute from item configuration
+        :param attribute_name: attribute name from item configuration
+
+        :return: None
+        """
+
+        if value == '':
+            self._eval_unexpanded = ''
+            self._eval = None
+        else:
+            self._eval_unexpanded = value
+            value = self.get_stringwithabsolutepathes(value, 'sh.', '(', attribute_name)
+            #value = self.get_stringwithabsolutepathes(value, 'sh.', '.property', KEY_EVAL)
+            self._eval = value
+
+
+    def _parse_eval_trigger_list_attribute(self, attribute_name, value):
+        """
+        Parsing eval_trigger attribute during parsing of standard attributes
+
+        :param value: attribute from item configuration
+        :param attribute_name: attribute name from item configuration
+
+        :return: None
+        """
+        if isinstance(value, str):
+            value = [value, ]
+        self._trigger_unexpanded = value
+        expandedvalue = []
+        for path in value:
+            expandedvalue.append(self.get_absolutepath(path, attribute_name))
+        self._trigger = expandedvalue
+
+
+    def _parse_hysteresis_input_attribute(self, attribute_name, value):
+
+        self._hysteresis_input_unexpanded = value
+        self._hysteresis_input = self.get_absolutepath(value, attribute_name)
+
+
+    def _parse_hysteresis_xx_threshold_attribute(self, attr, value):
+
+        if value.find(ATTRIBUTE_SEPARATOR) == -1:
+            threshold = self.get_stringwithabsolutepathes(value, 'sh.', '(', attr)
+            timer = None
+        else:
+            threshold_unex, __, timer_unex = value.rpartition(ATTRIBUTE_SEPARATOR)
+            threshold = self.get_stringwithabsolutepathes(threshold_unex.strip(), 'sh.', '(', attr)
+            timer = self.get_stringwithabsolutepathes(timer_unex.strip(), 'sh.', '(', attr)
+
+        if attr == KEY_HYSTERESIS_UPPER_THRESHOLD:
+            self._hysteresis_upper_threshold = threshold
+            self._hysteresis_upper_timer = timer
+        elif attr == KEY_HYSTERESIS_LOWER_THRESHOLD:
+            self._hysteresis_lower_threshold = threshold
+            self._hysteresis_lower_timer = timer
+
+
+    def _parse_on_xx_list_attribute(self, attr, value):
+
+        if isinstance(value, str):
+            value = [value]
+        val_list = []
+        val_list_unexpanded = []
+        dest_var_list = []
+        dest_var_list_unexp = []
+        for val in value:
+            # separate destination item (if it exists)
+            dest_item, val = self._split_destitem_from_value(val)
+            dest_item = dest_item.strip()
+            if dest_item.startswith('sh.'):
+                dest_item = dest_item[3:]
+            dest_var_list_unexp.append(dest_item.strip())
+            # expand relative item paths
+            dest_item = self.get_absolutepath(dest_item.strip()).strip()
+            #                        val = 'sh.'+dest_item+'( '+ self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE) +' )'
+            val_list_unexpanded.append(val)
+            val = self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE)
+            #val = self.get_stringwithabsolutepathes(val, 'sh.', '.property', KEY_ON_CHANGE)
+            #                        logger.warning("Item __init__: {}: for attr '{}', dest_item '{}', val '{}'".format(self._path, attr, dest_item, val))
+            val_list.append(val)
+            dest_var_list.append(dest_item)
+        setattr(self, '_' + attr + '_unexpanded', val_list_unexpanded)
+        setattr(self, '_' + attr, val_list)
+        setattr(self, '_' + attr + '_dest_var', dest_var_list)
+        setattr(self, '_' + attr + '_dest_var_unexp', dest_var_list_unexp)
+        return
+
+
+    def _parse_cycle_attribute(self, attr, value):
+
+        cycle_time, cycle_value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
+        self._cycle_time = self.get_stringwithabsolutepathes(cycle_time, 'sh.', '(', attr)
+        self._cycle_value = self.get_stringwithabsolutepathes(cycle_value, 'sh.', '(', attr)
+        #logger.notice(f"_parse_cycle_attribute: {self._path} - value={value} -> _cycle_time={self._cycle_time}, _cycle_value={self._cycle_value}")
+
+
+    def _parse_autotimer_attribute(self, attr, value):
+
+        auto_time, auto_value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
+        self._autotimer_time = self.get_stringwithabsolutepathes(auto_time, 'sh.', '(', attr)
+        self._autotimer_value = self.get_stringwithabsolutepathes(auto_value, 'sh.', '(', attr)
+        #logger.notice(f"_parse_autotimer_attribute: {self._path} - value={value} -> _autotimer_time={self._autotimer_time}, _autotimer_value={self._autotimer_value}")
+
+
+    """
+    --------------------------------------------------------------------------------------------
+    END of methods to process attributes during parsing of standard attributes
+    --------------------------------------------------------------------------------------------
+    """
 
     def _build_on_xx_list(self, on_dest_list, on_eval_list):
         """
-        build on_xx data
+        build on_xx data   (seens to be never called???)
         """
         on_list = []
         if on_dest_list is not None:
@@ -586,57 +729,6 @@ class Item():
                 else:
                     on_list.append(on_eval_list)
         return on_list
-
-
-    def _process_eval(self, value):
-
-        if value == '':
-            self._eval_unexpanded = ''
-            self._eval = None
-        else:
-            self._eval_unexpanded = value
-            value = self.get_stringwithabsolutepathes(value, 'sh.', '(', KEY_EVAL)
-            value = self.get_stringwithabsolutepathes(value, 'sh.', '.property', KEY_EVAL)
-            self._eval = value
-
-
-    def _process_trigger_list(self, attr, value):
-
-        if isinstance(value, str):
-            value = [value, ]
-        self._trigger_unexpanded = value
-        expandedvalue = []
-        for path in value:
-            expandedvalue.append(self.get_absolutepath(path, attr))
-        self._trigger = expandedvalue
-
-
-    def _process_on_xx_list(self, attr, value):
-
-        if isinstance(value, str):
-            value = [value]
-        val_list = []
-        val_list_unexpanded = []
-        dest_var_list = []
-        dest_var_list_unexp = []
-        for val in value:
-            # separate destination item (if it exists)
-            dest_item, val = self._split_destitem_from_value(val)
-            dest_var_list_unexp.append(dest_item)
-            # expand relative item paths
-            dest_item = self.get_absolutepath(dest_item, KEY_ON_CHANGE).strip()
-            #                        val = 'sh.'+dest_item+'( '+ self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE) +' )'
-            val_list_unexpanded.append(val)
-            val = self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE)
-            val = self.get_stringwithabsolutepathes(val, 'sh.', '.property', KEY_ON_CHANGE)
-            #                        logger.warning("Item __init__: {}: for attr '{}', dest_item '{}', val '{}'".format(self._path, attr, dest_item, val))
-            val_list.append(val)
-            dest_var_list.append(dest_item)
-        setattr(self, '_' + attr + '_unexpanded', val_list_unexpanded)
-        setattr(self, '_' + attr, val_list)
-        setattr(self, '_' + attr + '_dest_var', dest_var_list)
-        setattr(self, '_' + attr + '_dest_var_unexp', dest_var_list_unexp)
-        return
 
 
     def _get_last_change(self):
@@ -1000,6 +1092,7 @@ class Item():
         :return: string with the statement containing absolute item paths
         """
         def __checkfortags(evalstr, begintag, endtag):
+
             pref = ''
             rest = evalstr
             while (rest.find(begintag+'.') != -1):
@@ -1012,11 +1105,15 @@ class Item():
                     rel = rest[:rest.find(endtag)]
                 rest = rest[rest.find(endtag):]
                 pref += self.get_absolutepath(rel, attribute)
+                # Re-combine string for next loop
+                rest = pref+rest
+                pref = ''
 
             pref += rest
             logger.debug("{}.get_stringwithabsolutepathes('{}') with begintag = '{}', endtag = '{}': result = '{}'".format(
                 self._path, evalstr, begintag, endtag, pref))
-            return pref
+            return pref # end of __checkfortags(...)
+
 
         if not isinstance(evalstr, str):
             return evalstr
@@ -1110,7 +1207,7 @@ class Item():
 
                         # expand relative item paths
                         wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '(', KEY_CONDITION)
-                        wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '.property', KEY_CONDITION)
+                        #wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '.property', KEY_CONDITION)
 
                         and_cond.append(wrk)
 
@@ -1187,7 +1284,7 @@ class Item():
             _items = []
             for trigger in self._trigger:
                 if _items_instance.match_items(trigger) == [] and self._eval:
-                    logger.warning("item '{}': trigger item '{}' not found for function '{}'".format(self._path, trigger, self._eval))
+                    logger.warning(f"item '{self._path}': trigger item '{trigger}' not found for function '{self._eval}'")
                 _items.extend(_items_instance.match_items(trigger))
             for item in _items:
                 if item != self:  # prevent loop
@@ -1208,6 +1305,17 @@ class Item():
                 elif self._eval == 'min':
                     self._eval = 'min({0})'.format(','.join(items))
 
+        if self._hysteresis_input:
+            # Only if item has a hysteresis_input attribute
+            triggering_item = _items_instance.return_item(self._hysteresis_input)
+            if triggering_item is None: # triggering item was not found
+                logger.error(f"item '{self._path}': trigger item '{self._hysteresis_input}' not found for function 'hysteresis'")
+            #elif self._hysteresis_upper_threshold < self._hysteresis_lower_threshold:
+            #    logger.error(f"item '{self._path}': Hysteresis upper threshod is lower than lower threshod")
+            else:
+                if triggering_item != self:  # prevent loop
+                    triggering_item._hysteresis_items_to_trigger.append(self)
+
 
     def _init_start_scheduler(self):
         """
@@ -1221,10 +1329,14 @@ class Item():
         #############################################################
         # Crontab/Cycle
         #############################################################
-        if self._crontab is not None or self._cycle is not None:
-            cycle = self._cycle
-            if cycle is not None:
-                cycle = self._build_cycledict(cycle)
+        if self._crontab is not None or self._cycle_time is not None:
+            cycle = None
+            if self._cycle_time is not None:
+                #cycle = self._build_cycledict(cycle)
+                if self._cycle_value is None:
+                    cycle = {self._cast_duration(self._cycle_time): self._value}
+                else:
+                    cycle = {self._cast_duration(self._cycle_time): self._cycle_value}
             self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle)
 
         return
@@ -1243,6 +1355,84 @@ class Item():
                 self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', value={'value': self._value, 'caller': 'Init:Eval'})
                 return True
         return False
+
+
+    def __run_attribute_eval(self, eval_expression, result_type='num'):
+        """
+        Evaluates an expression string for item attributes like
+         - autotimer
+         - cycle
+         - hysteresis_upper_threshold
+         - hysteresis_lower_threshold
+
+        :param eval_expression: string to evaluate
+        :param result_type: type for the result (num | str)
+        :return:
+        """
+
+        # set up environment for calculating eval-expression
+        sh = self._sh
+        shtime = self.shtime
+        items = _items_instance
+        import math
+        import lib.userfunctions as uf
+
+        eval_expression = str(eval_expression)
+        try:
+            result = eval(eval_expression)
+        except Exception as e:
+            logger.error(f"Item {self._path}: __run_attribute_eval(): Problem evaluating {eval_expression} - Exception {e}")
+            result = ''
+        if result_type == 'num':
+            if not isinstance(result, (int, float)):
+                logger.error(f"Item '{self._path}': __run_attribute_eval(): Attribute expression '{eval_expression}' evaluated to a non-numeric value '{result}', using 0 instead")
+                result = 0
+
+        return result
+
+
+    def __run_hysteresis(self, value=None, caller='Hysteresis', source=None, dest=None):
+        """
+        evaluate the 'hysteresis' entry of the actual item
+        """
+        upper = self.__run_attribute_eval(self._hysteresis_upper_threshold)
+        lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
+
+        if self._hysteresis_upper_timer_active and (value <= upper):
+            self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-UpTimer')
+            self._hysteresis_upper_timer_active = False
+        if self._hysteresis_lower_timer_active and (value >= lower):
+            self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-LoTimer')
+            self._hysteresis_lower_timer_active = False
+
+        if value > upper:
+            if self._hysteresis_upper_timer is None:
+                self.__update(True, caller, source, dest)
+            else:
+                if not self._hysteresis_upper_timer_active:
+                    timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
+                    if timer < 0:
+                        logger.warning(f"Item '{self._path}': Hysteresis upper-timer evaluated to an value less than zero ({timer}), using 0 instead")
+                        timer = 0
+                    next = self.shtime.now() + datetime.timedelta(seconds=timer)
+                    #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_upper_timer)
+                    self._sh.scheduler.add(self._itemname_prefix+self.id() + '-UpTimer', self.__call__, value={'value': True, 'caller': 'Hysteresis'}, next=next)
+                    self._hysteresis_upper_timer_active = True
+
+        if value < lower:
+            if self._hysteresis_lower_timer is None:
+                self.__update(False, caller, source, dest)
+            else:
+                if not self._hysteresis_lower_timer_active:
+                    timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
+                    if timer < 0:
+                        logger.warning(f"Item '{self._path}': Hysteresis lower-timer evaluated to an value less than zero ({timer}), using 0 instead")
+                        timer = 0
+                    next = self.shtime.now() + datetime.timedelta(seconds=timer)
+                    #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_lower_timer)
+                    self._sh.scheduler.add(self._itemname_prefix + self.id() + '-LoTimer', self.__call__, value={'value': False, 'caller': 'Hysteresis'}, next=next)
+                    self._hysteresis_lower_timer_active = True
+        return
 
 
     def __run_eval(self, value=None, caller='Eval', source=None, dest=None):
@@ -1265,9 +1455,9 @@ class Item():
                     # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
 
                     cond = eval(self._trigger_condition)
-                    logger.warning("Item {}: Condition result '{}' evaluating trigger condition {}".format(self._path, cond, self._trigger_condition))
+                    logger.warning(f"Item {self._path}: Condition result '{cond}' evaluating trigger condition {self._trigger_condition}")
                 except Exception as e:
-                    log_msg = "Item {}: Problem evaluating trigger condition '{}': {}".format(self._path, self._trigger_condition, e)
+                    log_msg = f"Item {self._path}: Problem evaluating trigger condition '{self._trigger_condition}': {e}"
                     if (self._sh.shng_status['code'] != 20) and (caller != 'Init'):
                         logger.debug(log_msg)
                     else:
@@ -1294,13 +1484,11 @@ class Item():
                     self.__last_trigger = self.shtime.now()
 
                     logger.debug("Item {}: Eval triggered by: {}. Evaluating item with value {}. Eval expression: {}".format(self._path, self.__triggered_by, value, self._eval))
-                    #value = eval(self._eval)
 
                     # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
                     try:
                        value = eval(self._eval)
                     except:
-                        #value = float(value)
                         value = self._value = self.cast(value)
                         value = eval(self._eval)
                     # ms end
@@ -1366,7 +1554,7 @@ class Item():
         try:
             dest_value = eval(on_eval)       # calculate to test if expression computes and see if it computes to None
         except Exception as e:
-            logger.warning("Item {}: '{}' item-value='{}' problem evaluating {}: {}".format(self._path, attr, value, on_eval, e))
+            logger.warning(f"Item {self._path}: '{attr}' item-value='{value}' problem evaluating {on_eval}: {e}")
         else:
             if dest_value is not None:
                 # expression computes and does not result in None
@@ -1376,7 +1564,7 @@ class Item():
                         dest_item.__update(dest_value, caller=attr, source=self._path)
                         logger.debug(" - : '{}' finally evaluating {} = {}, result={}".format(attr, on_dest, on_eval, dest_value))
                     else:
-                        logger.error("Item {}: '{}' has not found dest_item '{}' = {}, result={}".format(self._path, attr, on_dest, on_eval, dest_value))
+                        logger.error(f"Item {self._path}: '{attr}' has not found dest_item '{on_dest}' = {on_eval}, result={dest_value}")
                 else:
                     dummy = eval(on_eval)
                     logger.debug(" - : '{}' finally evaluating {}, result={}".format(attr, on_eval, dest_value))
@@ -1543,7 +1731,7 @@ class Item():
             value = self.cast(value)
         except:
             try:
-                logger.warning('Item {}: value "{}" does not match type {}. Via {} {}'.format(self._path, value, self._type, caller, source))
+                logger.warning(f'Item {self._path}: value "{value}" does not match type {self._type}. Via caller {caller}, source {source}')
             except:
                 pass
             return
@@ -1600,6 +1788,9 @@ class Item():
             for item in self._items_to_trigger:
                 args = {'value': value, 'source': self._path}
                 self._sh.trigger(name='items.' + item.id(), obj=item.__run_eval, value=args, by=caller, source=source, dest=dest)
+            for item in self._hysteresis_items_to_trigger:
+                args = {'value': value, 'source': self._path}
+                self._sh.trigger(name='items.' + item.id(), obj=item.__run_hysteresis, value=args, by=caller, source=source, dest=dest)
             # ms: call run_on_change() from here - after eval is run
             self.__run_on_change(value)
 
@@ -1608,21 +1799,13 @@ class Item():
                 cache_write(self._cache, self._value)
             except Exception as e:
                 logger.warning("Item: {}: could update cache {}".format(self._path, e))
-        if self._autotimer and caller != 'Autotimer' and not self._fading:
 
-            _time, _value = self._autotimer[0]
-            compat = self._autotimer[1]
-            if self._autotimer[2]:
-                try:
-                    _time = eval('self._sh.'+self._autotimer[2]+'()')
-                except:
-                    logger.warning("Item '{}': Attribute 'autotimer': Item '{}' does not exist".format(self._path, self._autotimer[2]))
-            if self._autotimer[3]:
-                try:
-                    _value = self._castvalue_to_itemtype(eval('self._sh.'+self._autotimer[3]+'()'), compat)
-                except:
-                    logger.warning("Item '{}': Attribute 'autotimer': Item '{}' does not exist".format(self._path, self._autotimer[3]))
-            self._autotimer[0] = (_time, _value)     # for display of active/last timer configuration in backend
+        if self._autotimer_time and caller != 'Autotimer' and not self._fading:
+            _time = self.__run_attribute_eval(self._cast_duration(self._autotimer_time))
+            if self._autotimer_value is None:
+                _value = self._value
+            else:
+                _value = self.__run_attribute_eval(self._autotimer_value)
 
             next = self.shtime.now() + datetime.timedelta(seconds=_time)
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': _value, 'caller': 'Autotimer'}, next=next)
@@ -1658,7 +1841,7 @@ class Item():
 
     def get_method_triggers(self):
         """
-        Returns a list of item methods to trigger, if this item gets changed
+        Returns a list of plugin methods to trigger, if this item gets changed
 
         :return: methods to trigger
         :rtype: list
@@ -1666,31 +1849,79 @@ class Item():
         return self.__methods_to_trigger
 
 
-    def timer(self, time, value, auto=False, compat=ATTRIB_COMPAT_DEFAULT, caller=None, source=None):
+    def get_item_triggers(self):
+        """
+        Returns a list of items to trigger, if this item gets changed
+
+        :return: methods to trigger
+        :rtype: list
+        """
+        return self._items_to_trigger
+
+
+    def get_hysteresis_item_triggers(self):
+        """
+        Returns a list of items to trigger, if this item gets changed
+
+        :return: methods to trigger
+        :rtype: list
+        """
+        return self._hysteresis_items_to_trigger
+
+
+    def timer(self, time, value, auto=False, caller=None, source=None, compat=ATTRIB_COMPAT_LATEST):
+        """
+        Starts a timer for this item
+
+        :param time: Duration till the value of the item is set
+        :param value: Value the item should be set to
+        :param auto: Optional: If False a single timer is started, else the duration/value information is set as an autotimer
+        :param caller: Optional: The caller of this function
+        :param source: Optional: The source of the timer-request
+        :param compat: Not used anymore, only defined for backward compatibility
+        """
         time = self._cast_duration(time)
         value = self._castvalue_to_itemtype(value, compat)
-        if auto:
-            caller = 'Autotimer'
-            self._autotimer = [(time, value), compat, None, None]
-        else:
-            caller = 'Timer'
+        if caller is None:
+            if auto:
+                caller = 'Autotimer'
+                self._autotimer_time = time
+                self._autotimer_value = value
+            else:
+                caller = 'Timer'
         next = self.shtime.now() + datetime.timedelta(seconds=time)
         if source is None:
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller}, next=next)
         else:
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller, 'source': source}, next=next)
+        return
 
 
     def remove_timer(self):
+        """
+        Remove a running timer for this item from the scheduler
+        """
         self._sh.scheduler.remove(self._itemname_prefix+self.id() + '-Timer')
+        return
 
 
-    def autotimer(self, time=None, value=None, compat=ATTRIB_COMPAT_V12):
+    def autotimer(self, time=None, value=None, compat=ATTRIB_COMPAT_LATEST):
+        """
+        Defines or removes an autotimer for the item
+
+        If time and value are not given (or None), an existing autotimer is removed
+
+        :param time: Time until the value is set
+        :param value: Value to set the item to
+        :param compat: Not used anymore, only defined for backward compatibility
+        """
         if time is not None and value is not None:
             time = self._cast_duration(time)
-            self._autotimer = [(time, value), compat, None, None]
+            self._autotimer_time = time
+            self._autotimer_value = value
         else:
-            self._autotimer = False
+            self._autotimer_time = None
+            self._autotimer_value = None
 
 
     def fade(self, dest, step=1, delta=1):

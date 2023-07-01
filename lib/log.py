@@ -28,6 +28,7 @@ import datetime
 
 import collections
 
+import lib.shyaml as shyaml
 
 logs_instance = None
 
@@ -35,12 +36,17 @@ logs_instance = None
 class Logs():
 
     _logs = {}
+    logging_levels = {}
     root_handler_name = ''
 
     NOTICE_level = 29
     DBGHIGH_level = 13
     DBGMED_level = 12
     DBGLOW_level = 11
+
+    _all_handlers_logger_name = '_shng_all_handlers_logger'
+    _all_handlers = {}
+
 
     def __init__(self, sh):
 
@@ -53,17 +59,21 @@ class Logs():
             self.logger.error(f"Another instance of Logs class already exists: {logs_instance}")
 
         self._sh = sh
-
+        self.etc_dir = self._sh.get_etcdir()
         return
 
 
-    def configure_logging(self, config_dict, config_filename='logging.yaml'):
+    def configure_logging(self, config_filename='logging.yaml'):
+
+        config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
 
         if config_dict == None:
             print()
-            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
+            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
             print()
             exit(1)
+
+        config_dict = self.add_all_handlers_logger(config_dict)
 
         # Default loglevels are:
         #  - CRITICAL     50
@@ -77,6 +87,20 @@ class Logs():
         #  - DBGHIGH      13   Debug high level
         #  - DBGMED       12   Debug medium level
         #  - DBGLOW       11   Debug low level
+
+        self.logging_levels = {}
+        self.logging_levels[50] = 'CRITICAL'
+        self.logging_levels[40] = 'ERROR'
+        self.logging_levels[30] = 'WARNING'
+        self.logging_levels[20] = 'INFO'
+        self.logging_levels[10] = 'DEBUG'
+        self.logging_levels[0]  = 'NOTSET'
+
+        # # self.logging_levels[31] = 'NOTICE'
+        # self.logging_levels[29] = 'NOTICE'
+        # self.logging_levels[13] = 'DBGHIGH'
+        # self.logging_levels[12] = 'DBGMED'
+        # self.logging_levels[11] = 'DBGLOW'
 
         # adjust config dict from logging.yaml:
         # if logger 'lib.smarthome' is not defined or no level is defined for it,
@@ -113,7 +137,7 @@ class Logs():
         except Exception as e:
             #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
             print()
-            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
+            print(f"ERROR: dictConfig: Invalid logging configuration in file '{config_filename}'")
             print(f"       Exception: {e}")
             print()
             return False
@@ -151,7 +175,19 @@ class Logs():
         setattr(logging, description, value)
         setattr(logging.getLoggerClass(), description.lower(), logForLevel)
         setattr(logging, description.lower(), logToRoot)
+        self.logging_levels[value] = description
         return
+
+
+    def get_shng_logging_levels(self):
+        """
+        Returns a dict of the logging levels, that are defined in SmartHomeNG (key=numeric log level, value=name od loa level)
+
+        It is used e.g. by the admin module
+
+        :return: dict
+        """
+        return self.logging_levels
 
 
     def initMemLog(self):
@@ -195,6 +231,85 @@ class Logs():
         :rtype: list
         """
         return self._logs
+
+    # ---------------------------------------------------------------------------
+
+    def load_logging_config(self, filename='logging', ignore_notfound=False):
+        """
+        Load config from logging.yaml to a dict
+
+        If logging.yaml does not contain a 'shng_version' key, a backup is created
+        """
+        conf_filename = os.path.join(self.etc_dir, filename)
+        if not conf_filename.endswith('.yaml') and not conf_filename.endswith('.default'):
+            conf_filename += '.yaml'
+        result = shyaml.yaml_load(conf_filename, ignore_notfound)
+
+        return result
+
+
+    def save_logging_config(self, logging_config, create_backup=False):
+        """
+        Save dict to logging.yaml
+        """
+        if logging_config is not None:
+            logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
+            conf_filename = os.path.join(self.etc_dir, 'logging')
+            shyaml.yaml_save_roundtrip(conf_filename, logging_config, create_backup=create_backup)
+        return
+
+
+    def load_logging_config_for_edit(self):
+        """
+        Load config from logging.yaml to a dict
+
+        If logging.yaml does not contain a 'shng_version' key, a backup is created
+        """
+        #self.etc_dir = self._sh.get_etcdir()
+        conf_filename = os.path.join(self.etc_dir, 'logging')
+        logging_config = shyaml.yaml_load_roundtrip(conf_filename)
+        self.logger.info("load_logging_config_for_edit: shng_version={}".format(logging_config.get('shng_version', None)))
+
+        if logging_config.get('shng_version', None) is None:
+            logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
+            self.save_logging_config(logging_config, create_backup=True)
+
+        return logging_config
+
+
+    def add_all_handlers_logger(self, logging_config):
+
+        lg = logging_config['loggers'].get(self._all_handlers_logger_name, None)
+        if lg is None:
+            logging_config['loggers'][self._all_handlers_logger_name] = {}
+            lg = logging_config['loggers'].get(self._all_handlers_logger_name, None)
+
+        hd = logging_config['loggers'][self._all_handlers_logger_name].get('handlers', None)
+        if hd is None:
+            logging_config['loggers'][self._all_handlers_logger_name]['handlers'] = []
+            hd = logging_config['loggers'][self._all_handlers_logger_name].get('handlers', None)
+
+        all_hdlrs = sorted(logging_config['handlers'].keys())
+        logging_config['loggers'][self._all_handlers_logger_name]['handlers'] = all_hdlrs
+
+        return logging_config
+
+
+    def get_all_handlernames(self):
+        if self._all_handlers == {}:
+            l = logging.getLogger(self._all_handlers_logger_name)
+            for h in l.handlers:
+                self._all_handlers[h.name] = h
+
+        return sorted(self._all_handlers.keys())
+
+
+    def get_handler_by_name(self, handlername):
+
+        if self._all_handlers == {}:
+            self.get_all_handlernames()
+        return self._all_handlers[handlername]
+
 
 # -------------------------------------------------------------------------------
 

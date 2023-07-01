@@ -1,0 +1,69 @@
+#!/bin/bash
+
+#########################################################################
+# Copyright 2023-       Martin Sinn                         m.sinn@gmx.de
+#########################################################################
+#  This file is part of SmartHomeNG
+#
+#  SmartHomeNG is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#########################################################################
+
+# test if the right number of parameters is given
+if [ $# -eq 0 ]; then
+    echo
+    echo "ERROR: Parameter is missing. The script MUST be called like this:"
+    echo "       make_env <Python version> [<venv name>]"
+    echo
+    exit
+fi
+
+# get directory where this script is stored
+SOURCE=${BASH_SOURCE[0]}
+DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+
+# test if script is called with 'source'
+#(return 0 2>/dev/null) && sourced=1 || sourced=0
+#
+#if [ "$sourced" -eq "0" ]; then
+#    echo
+#    echo ERROR: The script MUST be called with \'source\', like: \'source make_venv $1 $2\'
+#    echo
+#    exit
+#fi
+
+
+cd $DIR
+cd ..
+SHNG_BASEDIR=`pwd`
+cd $DIR
+
+VENV_NAME=$1
+if [ $# -eq 2 ]; then
+    VENV_NAME=$2
+fi
+
+# deactivate an active virtual environment
+deactivate 2>/dev/null
+#echo Ergebnis: $?
+
+rm -r py_$VENV_NAME 2>/dev/null
+
+python$1 -m venv py_$VENV_NAME
+
+source $DIR/act $VENV_NAME >/dev/null
+pip install --upgrade pip >/dev/null
+pip install wheel >/dev/null
+
+echo
+#echo "Virtual environment created in SmartHomeNG installation $SHNG_BASEDIR"
+echo "Python virtual environment 'py_$VENV_NAME' (`python3 -V`) created"
+echo "in SmartHomeNG installation '$SHNG_BASEDIR'"
+echo
+pip list
+echo
+
+deactivate

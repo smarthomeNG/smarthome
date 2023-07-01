@@ -110,11 +110,12 @@
       }
     },
     "cli": {
-      "class_path": "plugins.cli",
+      "plugin_name": "cli",
       "ip": "0.0.0.0",
       "port": "2323",
       "update": "True",
       "hashed_password": "none",
+      "webif_pagelength": "25",
       "_meta": {
         "plugin": {
           "type": "system",
@@ -128,7 +129,7 @@
           "state": "qa-passed",
           "version": "1.4.2",
           "sh_minversion": 1.4,
-          "multi_instance": false,
+          "multi_instance": true,
           "restartable": "unknown",
           "classname": "CLI"
         },
@@ -176,6 +177,30 @@
             "description": {
               "de": "Hash (SHA-512) des Passwortes zum Login. Hashes können durch das backend Plugin erzeugt werden. Wenn kein Passwort verwendet werden soll wird eine Warnung geloggt. Soll dieses Log unterbleiben, muss für diesen Parameter 'none' eingegeben werden.",
               "en": "password that needs to be entered on login. SHA-512 hashed. Hashes can be created via the backend plugin. If you don't use a password, a warning will be logged. If you don't want that log entry, this parameter must be set to 'none'."
+            },
+            "listtype": [
+              "foo"
+            ],
+            "listlen": 0
+          },
+          "webif_pagelength": {
+            "type": "int",
+            "default": 0,
+            "valid_list": [-1, 0, 25, 50, 100],
+            "description": {
+              "de": "... [webif_pagelength] ...",
+              "en": "... [webif_pagelength] ..."
+            },
+            "listtype": [
+              "foo"
+            ],
+            "listlen": 0
+          },
+          "instance": {
+            "type": "str",
+            "description": {
+              "de": "... [instance] ...",
+              "en": "... [instance] ..."
             },
             "listtype": [
               "foo"

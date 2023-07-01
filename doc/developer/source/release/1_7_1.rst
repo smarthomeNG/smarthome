@@ -1,9 +1,0 @@
-================================
-Release 1.7.1 - April 14th, 2020
-================================
-
-There are some bugfixes and new features for the core of SmartHomeNG and the plugins.
-
-The detailed release notes can be found in the user documentation under
-`https://www.smarthomeNG.de/user/release <../../user/release/1_7_1.html>`_.
-

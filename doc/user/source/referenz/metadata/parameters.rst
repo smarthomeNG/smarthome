@@ -42,6 +42,11 @@ zur Dokumentation und zur Konfiguration in der Admin GUI benutzt.
             type: ...
 
 
+.. hint::
+
+    Der Parameter ``webif_pagelength`` wird jedem Plugin automatisch hinzugefügt und sollte
+    daher NICHT manuell im plugin.yaml File hinterlegt werden.
+
 .. include:: /referenz/metadata/parameter_keys.rst
 
 

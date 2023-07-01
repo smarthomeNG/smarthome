@@ -35,7 +35,7 @@ class SchedulersController(RESTResource):
         self._sh = module._sh
         self.module = module
         self.base_dir = self._sh.get_basedir()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         return
 
