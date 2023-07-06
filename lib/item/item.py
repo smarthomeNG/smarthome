@@ -39,11 +39,12 @@ from math import *
 from lib.shtime import Shtime
 from lib.plugin import Plugins
 
-from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
-                           KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_REMARK, KEY_INSTANCE,
-                           KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
-                           KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT, KEY_LOG_MAPPING, KEY_LOG_RULES,
-                           KEY_THRESHOLD, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
+from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB,
+                           KEY_EVAL, KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_DESCRIPTION, KEY_TYPE,
+                           KEY_STRUCT, KEY_REMARK, KEY_INSTANCE, KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM,
+                           KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE, KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT,
+                           KEY_LOG_MAPPING, KEY_LOG_RULES, KEY_THRESHOLD,
+                           KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
                            KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD,
                            ATTRIBUTE_SEPARATOR)
 
@@ -178,6 +179,7 @@ class Item():
         self._sh = smarthome
         self._threshold = False
         self._threshold_data = [0,0,False]
+        self._description = None
         self._type = None
         self._struct = None
         self._value = None
@@ -238,7 +240,7 @@ class Item():
         #############################################################
         for attr, value in config.items():
             if not isinstance(value, dict):
-                if attr in [KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
+                if attr in [KEY_NAME, KEY_DESCRIPTION, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
                     setattr(self, '_' + attr, value)
@@ -548,14 +550,14 @@ class Item():
                 else:
                     time = int(time)
             except Exception as e:
-                logger.warning("Item {}: _cast_duration ({}) problem: {}".format(self._path, time, e))
+                logger.warning(f"Item {self._path}: _cast_duration (time={time}) - problem: {e}")
                 time = False
         elif isinstance(time, int):
             time = int(time)
         elif isinstance(time, float):
             time = int(time)
         else:
-            logger.warning("Item {}: _cast_duration ({}) problem: unable to convert to int".format(self._path, time))
+            logger.warning(f"Item {self._path}: _cast_duration (time={time}) problem: unable to convert to int")
             time = False
         return(time)
 
@@ -1786,11 +1788,11 @@ class Item():
                 logger.warning("Item: {}: could update cache {}".format(self._path, e))
 
         if self._autotimer_time and caller != 'Autotimer' and not self._fading:
-            _time = self.__run_attribute_eval(self._cast_duration(self._autotimer_time))
+            _time = self._cast_duration(self.__run_attribute_eval(self._autotimer_time, 'str'))
             if self._autotimer_value is None:
                 _value = self._value
             else:
-                _value = self.__run_attribute_eval(self._autotimer_value)
+                _value = self.__run_attribute_eval(self._autotimer_value, 'str')
 
             next = self.shtime.now() + datetime.timedelta(seconds=_time)
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': _value, 'caller': 'Autotimer'}, next=next)

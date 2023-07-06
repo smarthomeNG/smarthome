@@ -407,6 +407,40 @@ class Property:
         return
 
     @property
+    def description(self):
+        """
+        Read-Only Property: description
+
+        Available in SmartHomeNG v1.6 and above
+
+        :return: type of the item
+        :rtype: str
+        """
+        return self._item._description
+
+    @description.setter
+    def description(self, value):
+        self._ro_error()
+        return
+
+    @property
+    def type(self):
+        """
+        Read-Only Property: type
+
+        Available in SmartHomeNG v1.6 and above
+
+        :return: type of the item
+        :rtype: str
+        """
+        return self._item._type
+
+    @type.setter
+    def type(self, value):
+        self._ro_error()
+        return
+
+    @property
     def on_change(self):
         """
         Read-Only Property: on_update
@@ -757,23 +791,6 @@ class Property:
         else:
             self._type_error('non-list')
             return
-
-    @property
-    def type(self):
-        """
-        Read-Only Property: type
-
-        Available in SmartHomeNG v1.6 and above
-
-        :return: type of the item
-        :rtype: str
-        """
-        return self._item._type
-
-    @type.setter
-    def type(self, value):
-        self._ro_error()
-        return
 
     @property
     def value(self):
