@@ -205,6 +205,7 @@
 
     "PATH": "Item Path",
     "NAME": "Item Name",
+    "DESCRIPTION": "Description",
     "TYPE": "Datatype",
     "STRUCT": "Contains structure(s)",
     "UPDATE INFORMATION": "Update Information",

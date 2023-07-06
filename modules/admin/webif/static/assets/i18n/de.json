@@ -207,6 +207,7 @@
 
     "PATH": "Item Pfad",
     "NAME": "Item Name",
+    "DESCRIPTION": "Beschreibung",
     "TYPE": "Datentyp",
     "STRUCT": "Beinhaltet Struktur(en)",
     "UPDATE INFORMATION": "Änderungsinformationen",
