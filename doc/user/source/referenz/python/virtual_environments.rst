@@ -102,7 +102,6 @@ Um das virtuelle Environment zu deaktivieren, muss nur
 .. code-block:: bash
 
     (py_3.10) $ deactivate
-    $
 
 eingegeben werden.
 

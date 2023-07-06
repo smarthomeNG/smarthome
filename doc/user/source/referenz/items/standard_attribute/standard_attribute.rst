@@ -52,6 +52,10 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | Logik oder Eval-Funktion). Ab SmartHomeNG v1.3 wurden die                              |
 |                            | Konfigurationsmöglichkeiten erweitert  (siehe :doc:`cycle <./cycle>`).                 |
 +----------------------------+----------------------------------------------------------------------------------------+
+| description                | Eine optionale Beschreibung für das Item. Hier können zum Besipiel Bedeutungen der     |
+|                            | Werte des Items erläutert werden. Diese Beschreibung wird in der Admin GUI oberhalb    |
+|                            | des Item-Wertes angezeigt.                                                             |
++----------------------------+----------------------------------------------------------------------------------------+
 | enforce_updates            | Wenn das Attribut auf **True** gesetzt wird, führt jede Wertzuweisung ans Item         |
 |                            | dazu, das abhängige Logiken und item Evaluationen getriggert werden, auch              |
 |                            | wenn sich der Wert des Items bei der Zuweisung nicht ändert.                           |
