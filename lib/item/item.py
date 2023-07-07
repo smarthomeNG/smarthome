@@ -525,10 +525,12 @@ class Item():
         return value
 
 
-    def _cast_duration(self, time):
+    def _cast_duration(self, time, test=False):
         """
         casts a time value string (e.g. '5m') to an duration integer
         used for autotimer, timer, cycle
+
+        if 'test' is set to True the warning log message is suppressed
 
         supported formats for time parameter:
         - seconds as integer (45)
@@ -543,23 +545,46 @@ class Item():
         if isinstance(time, str):
             try:
                 time = time.strip()
-                if time.endswith('m'):
-                    time = int(time.strip('m')) * 60
-                elif time.endswith('s'):
-                    time = int(time.strip('s'))
-                else:
-                    time = int(time)
+                time_in_sec = 0
+
+                wrk = time.split('h')
+                if len(wrk) > 1:
+                    time_in_sec += int(wrk[0]) * 60 * 60
+                    time = wrk[1].strip()
+
+                wrk = time.split('m')
+                if len(wrk) > 1:
+                    time_in_sec += int(wrk[0]) * 60
+                    time = wrk[1].strip()
+
+                wrk = time.split('s')
+                if len(wrk) > 1:
+                    time_in_sec += int(wrk[0])
+                    #time = wrk[1].strip()
+                elif wrk[0] != '':
+                    time_in_sec += int(wrk[0])
+
+#                if time.endswith('h'):
+#                    time_in_sec = int(time.strip('h')) * 60 * 60
+#                elif time.endswith('m'):
+#                    time_in_sec = int(time.strip('m')) * 60
+#                elif time.endswith('s'):
+#                    time_in_sec = int(time.strip('s'))
+#                else:
+#                    time_in_sec = int(time)
             except Exception as e:
-                logger.warning(f"Item {self._path}: _cast_duration (time={time}) - problem: {e}")
-                time = False
+                if not test:
+                    logger.warning(f"Item {self._path} - _cast_duration: (time={time}) - problem: {e}")
+                time_in_sec = False
         elif isinstance(time, int):
-            time = int(time)
+            time_in_sec = int(time)
         elif isinstance(time, float):
-            time = int(time)
+            time_in_sec = int(time)
         else:
-            logger.warning(f"Item {self._path}: _cast_duration (time={time}) problem: unable to convert to int")
-            time = False
-        return(time)
+            if not test:
+                logger.warning(f"Item {self._path} - _cast_duration: (time={time}) problem: unable to convert to int")
+            time_in_sec = False
+        return(time_in_sec)
 
 
     def _build_cycledict(self, value):
@@ -1379,7 +1404,7 @@ class Item():
         try:
             result = eval(eval_expression)
         except Exception as e:
-            logger.error(f"Item {self._path}: __run_attribute_eval(): Problem evaluating {eval_expression} - Exception {e}")
+            logger.error(f"Item {self._path}: __run_attribute_eval(): Problem evaluating '{eval_expression}' - Exception {e}")
             result = ''
         if result_type == 'num':
             if not isinstance(result, (int, float)):
@@ -1622,6 +1647,13 @@ class Item():
         lowlimit = self._log_rules.get('lowlimit', None)
         highlimit = self._log_rules.get('highlimit', None)
 
+
+        sh = self._sh
+        shtime = self.shtime
+        items = _items_instance
+        import math
+        import lib.userfunctions as uf
+
         try:
             #logger.warning(f"self._log_text: {self._log_text}, type={type(self._log_text)}")
             txt = eval(f"f'{self._log_text}'")
@@ -1788,11 +1820,18 @@ class Item():
                 logger.warning("Item: {}: could update cache {}".format(self._path, e))
 
         if self._autotimer_time and caller != 'Autotimer' and not self._fading:
-            _time = self._cast_duration(self.__run_attribute_eval(self._autotimer_time, 'str'))
+            # cast_duration for fixed attribute
+            _time = self._cast_duration(self._autotimer_time, test=True)
+            if _time == False:
+                _time = self._autotimer_time
+            # cast_duration for result of eval expression
+            _time = self._cast_duration(self.__run_attribute_eval(_time, 'str'))
             if self._autotimer_value is None:
                 _value = self._value
             else:
                 _value = self.__run_attribute_eval(self._autotimer_value, 'str')
+
+            logger.notice(f"Item {self._path} __update: _time={_time}, _value={_value}")
 
             next = self.shtime.now() + datetime.timedelta(seconds=_time)
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': _value, 'caller': 'Autotimer'}, next=next)
