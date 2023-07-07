@@ -1831,7 +1831,7 @@ class Item():
             else:
                 _value = self.__run_attribute_eval(self._autotimer_value, 'str')
 
-            logger.notice(f"Item {self._path} __update: _time={_time}, _value={_value}")
+            #logger.notice(f"Item {self._path} __update: _time={_time}, _value={_value}")
 
             next = self.shtime.now() + datetime.timedelta(seconds=_time)
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': _value, 'caller': 'Autotimer'}, next=next)

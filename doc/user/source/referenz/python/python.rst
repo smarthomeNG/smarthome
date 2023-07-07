@@ -8,9 +8,9 @@
 .. role:: blacksup
 
 
-========================
-Python :bluesup:`Update`
-========================
+====================================
+Python Environment :bluesup:`Update`
+====================================
 
 In diesem Abschnitt sind vertiefende Informationen zu Python zu finden.
 
@@ -18,5 +18,6 @@ In diesem Abschnitt sind vertiefende Informationen zu Python zu finden.
 .. toctree::
    :maxdepth: 4
 
-   python_installation
+   support_skripte
    virtual_environments
+   python_installation
