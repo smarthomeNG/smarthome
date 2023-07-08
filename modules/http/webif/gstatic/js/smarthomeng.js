@@ -373,6 +373,7 @@ function timer() {
       },
       set_interval : function(iv,sd){
           clearInterval(this.timeout);
+          window.update_interval = iv;
 					if (iv == 0)
 						{
 							console.log("Stopping timer " + this.name + " because interval is set to " + iv);

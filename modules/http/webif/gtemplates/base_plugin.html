@@ -33,6 +33,7 @@
 		{%- if initial_update is defined %}
 		  window.initial_update = '{{ initial_update|lower }}';
 		{%- endif %}
+		window.pluginname = '{{ p.get_fullname() }}';
 		{%- if dataSet is defined %}
 		  window.dataSet = '{{ dataSet }}';
 		{%- endif %}

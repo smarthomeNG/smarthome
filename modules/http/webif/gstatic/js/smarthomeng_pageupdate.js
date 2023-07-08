@@ -63,7 +63,8 @@ function set_update_interval() {
     window.update_interval = document.getElementById("update_interval").value * 1000;
   if (window.update_active)
   {
-    refresh.set_interval(update_interval, true);
+    refresh.set_interval(update_interval, false);
+    setCookie("update_interval", update_interval, 30, window.pluginname);
     console.log("Set Refresh Interval to " + update_interval + ", active " + update_active);
   }
   else {
@@ -71,10 +72,19 @@ function set_update_interval() {
   }
 }
 
+
 /**
  * initialize form values correctly and update active checkbox based on interval value (disabled on 0)
 */
 $(window).on('load', function (e) {
+  let update_interval = getCookie("update_interval");
+  if (update_interval != "")
+  {
+    refresh.set_interval(update_interval, false);
+    if ( document.body.contains(document.getElementById("update_interval")) )
+      document.getElementById("update_interval").value = update_interval;
+  }
+
   if ( document.body.contains(document.getElementById("update_active")) )
     document.getElementById("update_active").checked = window.update_active;
   if ( document.body.contains(document.getElementById("update_interval")) )
