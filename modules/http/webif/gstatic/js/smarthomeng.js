@@ -188,6 +188,9 @@ function shngGetUpdatedData(dataSet=null, update_params=null) {
 * calculates the optimal width of the headtable if no min-width css attribute is defined
 */
 function calculateHeadtable() {
+  if ( $( "#webif-headtable").length == 0){
+    return;
+  }
   // try to get min-width from style attribute. If not available, calculate it
   let headminwidth = parseFloat($( "#webif-headtable > table:first" ).css('min-width'));
   if (headminwidth > 0)
