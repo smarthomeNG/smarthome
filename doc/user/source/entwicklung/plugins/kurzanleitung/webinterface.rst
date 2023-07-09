@@ -30,6 +30,26 @@ Ein leeres Webinterface sieht wie folgt aus:
 
 .. image:: assets/sample_plugin_webIf.jpg
 
+popper.js kann genutzt werden, um (aktuell pro Seite maximal zehn) "stabile"
+und ansprechende Tooltips zu integrieren. Alle nötigen
+Dateien sind hierbei schon automatisch integriert. Um Buttons mit Tooltips auszustatten,
+muss ihnen die CSS Klasse ``button-tooltip`` zugewiesen werden. Außerdem sind
+folgende Codezeilen in der index.html Datei notwendig:
+
+.. code-block:: HTML
+
+  {% block pluginscripts %}
+    <script>
+      $(document).ready(function(){
+        const tooltipList = ['Tooltip 1', 'Tooltip 2', 'Tooltip 3'];
+        createTooltips(tooltipList);
+      }
+    </script>
+  {% endblock pluginscripts %}
+  {% block content -%}
+    <button onclick="" type="button" class="button-tooltip">Button</button>
+  {%- endblock content %}
+
 
 Detaillierte Informationen zur Erstellung von Webinterfaces finden sich auf den folgenden Seiten:
 
@@ -43,4 +63,3 @@ Detaillierte Informationen zur Erstellung von Webinterfaces finden sich auf den 
    webinterface_automatic_update
    webinterface_plugin_interaction
    webinterface_3rdparty_components
-
