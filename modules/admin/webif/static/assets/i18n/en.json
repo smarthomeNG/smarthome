@@ -311,6 +311,7 @@
     "NEXT EXECUTION": "Next Execution",
     "PRIO": "Prio",
     "VALUE": "Value",
+    "PARAMETERS": "Parameters",
     "CYCLE": "Cycle",
     "CRONTAB": "Crontab",
     "TRIGGERED_BY": "Triggered by",
