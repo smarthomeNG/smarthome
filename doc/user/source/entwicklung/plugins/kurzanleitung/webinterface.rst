@@ -31,7 +31,7 @@ Auf den Kopfteil folgt der Rest der Seite mit bis zu 4 Tabs, abhängig von den a
 
 Ein leeres Webinterface sieht wie folgt aus:
 
-.. image:: assets/sample_plugin_webIf.jpg
+.. image:: ../assets/sample_plugin_webIf.jpg
 
 
 Tooltips
