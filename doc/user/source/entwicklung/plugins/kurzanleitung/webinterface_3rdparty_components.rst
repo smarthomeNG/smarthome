@@ -21,11 +21,12 @@ SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul a
 
      * CSS: <link rel="stylesheet" href="/gstatic/datatables/datatables.min.css" type="text/css"/>
      * JS:
-        * <script src="/gstatic/datatables/datatables.min.js"></script>
-        * <script src="/gstatic/datatables/datatables.defaults.js"></script>
-        * <script src="/gstatic/datatables/dataTables.pageResize.min.js"></script>
-        * <script src="/gstatic/datatables/datetime-moment.min.js"></script>
-        * <script src="/gstatic/datatables/moment.min.js"></script>
+
+       * <script src="/gstatic/datatables/datatables.min.js"></script>
+       * <script src="/gstatic/datatables/datatables.defaults.js"></script>
+       * <script src="/gstatic/datatables/dataTables.pageResize.min.js"></script>
+       * <script src="/gstatic/datatables/datetime-moment.min.js"></script>
+       * <script src="/gstatic/datatables/moment.min.js"></script>
    * Bootstrap :
 
      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap/css/bootstrap.min.css" type="text/css"/>
@@ -38,14 +39,16 @@ SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul a
 
       * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" type="text/css"/>
       * JS:
-         * <script src="/gstatic/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-         * <script src="/gstatic/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"></script>
+
+        * <script src="/gstatic/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+        * <script src="/gstatic/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"></script>
    * Popper 2.11.8 (Tooltips):
 
       * CSS: <link rel="stylesheet" href="/gstatic/popper.js/popper.css"/>
       * JS:
-          * <script src="/gstatic/popper.js/popper.min.js"></script>
-          * <script src="/gstatic/popper.js/popper_functions.js"></script>
+
+        * <script src="/gstatic/popper.js/popper.min.js"></script>
+        * <script src="/gstatic/popper.js/popper_functions.js"></script>
    * CodeMirror 5.46.0:
 
       * CSS: <link rel="stylesheet" href="/gstatic/codemirror/lib/codemirror.css"/>
