@@ -19,12 +19,19 @@
     {%- endblock metas %}
 
     {%- block styles %}
+
     <link rel="icon" href="/gstatic/img/favicon.ico" type="image/png">
-    <link rel="apple-touch-icon" href="static/img/logo_small_32x32">
-    <link rel="apple-touch-icon" sizes="76x76" href="static/img/logo_small_76x76.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="static/img/logo_small_120x120.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="static/img/logo_small_152x152.png">
-    <link rel="apple-touch-startup-image" href="static/img/logo_big.png">
+    {% if isfile("static/img/plugin_logo.png") %}
+      <link rel="apple-touch-icon" href="static/img/plugin_logo.png">
+      {% if isfile("static/img/plugin_logo_big.png") %}
+      <link rel="apple-touch-startup-image" href="static/img/plugin_logo_big.png">
+      {% else %}
+      <link rel="apple-touch-startup-image" href="static/img/plugin_logo.png">
+      {% endif %}
+    {% else %}
+      <link rel="apple-touch-icon" href="/gstatic/img/logo_small_152x152.png">
+      <link rel="apple-touch-startup-image" href="/gstatic/img/logo_big.png">
+    {% endif %}
 
     <link rel="stylesheet" href="/gstatic/fontawesome/css/all.css" type="text/css"/>
     <link rel="stylesheet" href="/gstatic/bootstrap/css/bootstrap.min.css" type="text/css"/>
@@ -37,6 +44,7 @@
     <link rel="stylesheet" href="/gstatic/bootstrap-treeview/bootstrap-treeview.css" type="text/css"/>
 	  <link rel="stylesheet" href="/gstatic/datatables/datatables.min.css"/>
     <link rel="stylesheet" href="/gstatic/css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="/gstatic/popper.js/popper.css"/>
 
     <link rel="stylesheet" href="/gstatic/css/smarthomeng.css" type="text/css"/>
 
@@ -45,20 +53,23 @@
     {%- endblock styles %}
 
     {% block scripts %}
-    <script src="/gstatic/js/jquery-3.6.0.min.js"></script>
+    <script src="/gstatic/js/jquery-3.7.0.min.js"></script>
     <script src="/gstatic/js/jquery-ui.min.js"></script>
     <script src="/gstatic/popper.js/popper.min.js"></script>
+    <script src="/gstatic/popper.js/popper_functions.js"></script>
     <script src="/gstatic/bootstrap/js/bootstrap.min.js"></script>
     <script src="/gstatic/codemirror/lib/codemirror.js"></script>
     <script src="/gstatic/codemirror/mode/python/python.js"></script>
     <script src="/gstatic/codemirror/mode/yaml/yaml.js"></script>
     <script src="/gstatic/codemirror/mode/xml/xml.js"></script>
+    <script src="/gstatic/codemirror/mode/javascript/javascript.js"></script>
     <script src="/gstatic/codemirror/addon/fold/foldcode.js"></script>
     <script src="/gstatic/codemirror/addon/fold/foldgutter.js"></script>
     <script src="/gstatic/codemirror/addon/fold/comment-fold.js"></script>
     <script src="/gstatic/codemirror/addon/fold/brace-fold.js"></script>
     <script src="/gstatic/codemirror/addon/fold/xml-fold.js"></script>
     <script src="/gstatic/codemirror/addon/fold/indent-fold.js"></script>
+    <script src="/gstatic/codemirror/addon/display/autorefresh.js"></script>
     <script src="/gstatic/codemirror/addon/display/fullscreen.js"></script>
     <script src="/gstatic/codemirror/addon/display/rulers.js"></script>
     <script src="/gstatic/codemirror/addon/hint/show-hint.js"></script>

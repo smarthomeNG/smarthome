@@ -125,10 +125,10 @@ handlers:
     #    filename: ./var/log/item-value-change.log
     #    encoding: utf8
 
-    console:
-        class: logging.StreamHandler
-        formatter: shng_simple
-        stream: ext://sys.stdout
+    #console:
+    #    class: logging.StreamHandler
+    #    formatter: shng_simple
+    #    stream: ext://sys.stdout
 
 loggers:
     # The following default loggers should not be changed. If additional logging
@@ -136,7 +136,7 @@ loggers:
     #
     functions:
         handlers: [shng_details_file]
-        level: INFO
+        level: NOTICE
 
     lib:
         # Default logger for SmartHomeNG libraries
@@ -170,37 +170,17 @@ loggers:
         handlers: [shng_details_file]
         level: NOTICE
 
-    # ------------------------------------------
-
-    # plugins.cli:
-    #     # Example for changing the loglevel for a specific plugin (cli plugin)
-    #     # a handler should only be specified, if logging should be done to
-    #     # another destination, otherwise duplicate log entries could be produced.
-    #     level: INFO
-
-    # ------------------------------------------
-
     logics:
         # Default logger for SmartHomeNG logics
-        # to change the loglevel for all logics, the level can be changed.
-        # Alternatively individual loggers for certain logics can be added.
         handlers: [shng_details_file]
-        level: WARNING
-
-    # logics.ex_logging:
-    #     # Example of a logger for a specific logic (configured as ex_logging in logics.yaml)
-    #     #
-    #     level: INFO
-
-    # logics.ex_logging2:
-    #     # Example of a logger for a specific logic (configured as ex_logging2 in logics.yaml)
-    #     # This logger logs info for the logic to another file (logics_file). (WARNINGs will still be
-    #     # logged to shng_details_file.
-    #     #
-    #     handlers: [logics_file]
-    #     level: INFO
+        level: NOTICE
 
     # ------------------------------------------
+
+    items:
+        # Default logger for SmartHomeNG logics
+        handlers: [shng_details_file]
+        level: NOTICE
 
     # items.temperatures:
     #     # Logging items with configuration: log_change: temperatures
@@ -244,10 +224,6 @@ loggers:
     # ================
     # special loggers
     # ----------------
-
-    __main__:
-        handlers: [shng_details_file]
-        level: WARNING
 
 
 root:

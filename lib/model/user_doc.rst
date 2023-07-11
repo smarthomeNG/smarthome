@@ -9,7 +9,8 @@ Ziel der Änderungen ist es,
 
 zu ermöglichen. Sofern das Plugin die notwendigen Konventionen einhält,
 kann es im Betrieb gestoppt und wieder gestartet werden sowie Items neu
-laden, die zur Laufzeit angelegt oder geändert wurden.
+laden bzw. entfernen, die zur Laufzeit angelegt, geändert oder entfernt
+wurden.
 
 Überlegungen
 ------------
@@ -151,22 +152,22 @@ Felder
        self._plg_item_dict[item.path()] = {
            'item': item,               # das Item (Objektreferenz)
            'is_updating': True,        # wurde das Item in shng über update_item registriert?
-           'device_command': dev_cmd,  # ggf. Kommando/Opcode für das Item
+           'mapping': mapping,         # ggf. "Aktionsbezeichner" für das Item
            'config_data': {}           # dict mit Item-spezifischen Konfigurationsdaten
        }
 
 -   ``_item_lookup_dict``:
 
     Es gibt weiterhin ein “Rückwärtssuch”-dict ``_item_lookup_dict``, in
-    dem die Items nach ihren jeweiligen ``device_commands`` gelistet
+    dem die Items nach ihren jeweiligen ``mappings`` gelistet
     werden:
 
 .. code:: python
 
-       self._item_lookup_dict[device_command] = [item1, item2, ...]
+       self._item_lookup_dict[mapping] = [item1, item2, ...]
 
     Damit wird ein schneller Zugriff auf die entsprechenden Items
-    möglich, wenn ``device_command`` aktiviert wird (üblicherweise über
+    möglich, wenn ``mapping`` aktiviert wird (üblicherweise über
     ein durch das Plugin verwaltetes Gerät/Netzwerkverbindung).
 
 Methoden
@@ -186,7 +187,7 @@ Methoden
 -   ``add_item()``:
 
     Ehemals ``_append_to_itemlist``. Das übergebene Item wird in
-    ``_plg_item_dict`` eingetragen, und falls ein ``device_command``
+    ``_plg_item_dict`` eingetragen, und falls ein ``mapping``
     übergeben wurde, wird ``_item_lookup_dict`` ebenfalls ergänzt.
 
     Diese Methode muss in ``parse_item()`` aufgerufen werden, wenn das
@@ -220,10 +221,16 @@ Methoden
     ``remove_item()`` aufgerufen.
 
 -   verschiedene Getter-Methoden (``get_items()``,
-    ``get_trigger_items()``, ``get_items_for_command()``,
-    ``get_item_path_list``):
+    ``get_trigger_items()``, ``get_items_for_mapping()``,
+    ``get_item_path_list()``):
 
-    Geben Listen von Items bzw. Item-Pfaden zurück
+    Geben Listen von Items bzw. Item-Pfaden zurück.
+
+    ``get_items()`` und ``get_item_path_list()`` können optional gefiltert werden.
+    Das Filtern geschieht über einen anzugebenen filter_key des config_data_dicts und einen anzugebenen filter_value.
+    Wenn filter_key und filter_value angegeben sind, wird ein Item nur in die Ergebnisliste eingeschlossen,
+    wenn der value im config_data_dict zu dem angegebenen filter_key dem filter_value entspricht.
+
 
 TODO
 ====

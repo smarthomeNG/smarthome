@@ -323,18 +323,18 @@ class Items():
             return self.__item_dict[string]
 
 
-    def return_items(self, sorted=False):
+    def return_items(self, ordered=False):
         """
         Function to return a list with all defined items
 
-        :param sorted: return list sorted alphabetically, defaults to False
-        :type sorted: bool
+        :param ordered: return list sorted alphabetically, defaults to False
+        :type ordered: bool
 
         :return: List of all items
         :rtype: list
         """
 
-        if sorted:
+        if ordered:
             for item in sorted(self.__items):
                 yield self.__item_dict[item]
         else:

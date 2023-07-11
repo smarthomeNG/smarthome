@@ -58,6 +58,7 @@ except:
 
 
 logger = logging.getLogger(__name__)
+tasks_logger = logging.getLogger(__name__ + '.tasks')
 
 _scheduler_instance = None    # Pointer to the initialized instance of the scheduler class  (for use by static methods)
 
@@ -131,6 +132,7 @@ class Scheduler(threading.Thread):
     _worker_num = 5
     _worker_max = 20
     _worker_delta = 60  # wait 60 seconds before adding another worker thread
+
     _scheduler = {}                     # holder schedulers, key is the scheduler name. Each scheduler is stored in a dict
                                         # (keys are 'obj', 'active', 'prio', 'next', 'value', 'cycle', 'cron')
     _runq = _PriorityQueue()            # holds priority and a tuple of (name, obj, by, source, dest, value) for immediate execution
@@ -188,6 +190,12 @@ class Scheduler(threading.Thread):
             return None
         else:
             return _scheduler_instance
+
+
+    def set_worker_warn_count(self, count):
+
+        self._worker_max = count
+        logger.info(f"Warn Level for maximum number of workers set to {self._worker_max}")
 
 
     def get_worker_count(self):
@@ -308,7 +316,12 @@ class Scheduler(threading.Thread):
                 self._lock.release()
             time.sleep(0.5)
 
-        logger.warning("scheduler leaves run method")
+        if self._sh.shng_status['code'] > 20:
+            logger.info("scheduler leaves run method")
+        else:
+            logger.warning("scheduler leaves run method")
+        return
+
 
     def stop(self):
         self.alive = False
@@ -374,6 +387,7 @@ class Scheduler(threading.Thread):
         finally:
             self._lock.release()
 
+
     def check_caller(self, name, from_smartplugin=False):
         """
         Checks the calling stack if the calling function (one of get, change, remove, trigger) itself was called by
@@ -386,11 +400,20 @@ class Scheduler(threading.Thread):
         """
         try:
             stack = inspect.stack()
+        except IndexError:
+            return name
         except Exception as e:
-            logger.exception(f"check_caller('{name}'): Exception in inspect.stack(): {e}")
+            logger.exception(f"check_caller('{name}') *1: Exception in inspect.stack(): {e}")
 
         try:
             obj = stack[2][0].f_locals["self"]
+        except KeyError:
+            return name
+        except Exception as e:
+            pass
+            logger.exception(f"check_caller('{name}') *2: Exception in inspect.stack(): {e}")
+
+        try:
             if isinstance(obj, SmartPlugin):
                 iname = obj.get_instance_name()
                 if iname != '':
@@ -398,9 +421,11 @@ class Scheduler(threading.Thread):
                     if not from_smartplugin:
                         if not str(name).endswith('_' + iname):
                             name = name + '_' + obj.get_instance_name()
-        except:
+        except Exception as e:
             pass
+            logger.exception(f"check_caller('{name}') *3: Exception in inspect.stack(): {e}")
         return name
+
 
     def return_next(self, name, from_smartplugin=False):
         # name = self.check_caller(name, from_smartplugin)   # ms
@@ -618,10 +643,12 @@ class Scheduler(threading.Thread):
                     next_time = ct
                     job['source'] = {'source': 'cron', 'details': str(entry)}
                     value = job['cron'][entry]
+
         self._scheduler[name]['next'] = next_time
-        self._scheduler[name]['value'] = value
-        #if name not in ['Connections', 'series', 'SQLite dump']:
-        #    logger.debug(f"{name} next time: {next_time}")
+
+        if value is not None:
+            self._scheduler[name]['value'] = value
+
         logger.debug(f"{name} next time: {next_time}")
 
     def __iter__(self):
@@ -655,7 +682,8 @@ class Scheduler(threading.Thread):
 
     def _task(self, name, obj, by, source, dest, value):
         threading.current_thread().name = name
-        logger = logging.getLogger(name)
+        #logger = logging.getLogger('_task.' + name)
+
         if obj.__class__.__name__ == 'Logic':
             self._execute_logic_task(obj, by, source, dest, value)
 
@@ -670,7 +698,7 @@ class Scheduler(threading.Thread):
                 if value is not None:
                     obj(value, caller=("Scheduler"+scheduler_source))
             except Exception as e:
-                logger.exception(f"Item {name} exception: {e}")
+                tasks_logger.exception(f"Item {name} exception: {e}")
 
         else:  # method
             try:
@@ -679,7 +707,7 @@ class Scheduler(threading.Thread):
                 else:
                     obj(**value)
             except Exception as e:
-                logger.exception(f"Method {name} exception: {e}")
+                tasks_logger.exception(f"Method {name} exception: {e}")
 
         threading.current_thread().name = 'idle'
 
@@ -691,8 +719,10 @@ class Scheduler(threading.Thread):
         :param logic:
         :return:
         """
+        # get logger for the logic
         name = 'logics.' + logic.name
         logger = logging.getLogger(name)
+
         source_details = None
         if isinstance(source, dict):
             source_details = source.get('details', '')

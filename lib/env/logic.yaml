@@ -1,16 +1,20 @@
 env_init:
+    logic_description: Diese Logik füllt einige env Items mit Werten, die sich nach dem Start von SmartHomeNG nicht mehr ändern
     filename: init.py
     crontab: init
 
 env_daily:
+    logic_description: Diese Logik führt täglich Systempflegen durch
     filename: daily.py
     crontab: 0 6 * * = init
 
 env_stat:
+    logic_description: Diese Logik regelmäßig setzt Statuswerte wie Scheduler Nutzung und System Auslastung (Memory und Disk)
     filename: stat.py
     cycle: 300
 
 env_loc:
+    logic_description: Diese Logik setzt die Aufgangs- und Untergangs-Werte für die Sonne und den Mond an der Lokation der SmartHomeNG Installation
     filename: location.py
     crontab:
       - init
@@ -22,6 +26,7 @@ env_loc:
     cycle: 1800
 
 env_sunpos:
+    logic_description: Diese Logik setzt die Environment Variablen für Azimuth und Elevation der Sonnenposition
     filename: sunpos.py
     crontab:
       - init
@@ -32,4 +37,4 @@ env_sunpos:
     # which is sufficient
     # increase it if it is needed. But be aware that calculation of sun position with ephem takes time
     # especially on raspi 1 or 2
-    cycle: 240
+    cycle: 120

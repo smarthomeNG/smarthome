@@ -212,6 +212,9 @@ class Utils(object):
         :return: True if a groupaddress can be recognized, false otherwise.
         :rtype: bool
         """
+        if not isinstance(groupaddress, str):
+            return False
+
         if groupaddress == '':
             return True
 

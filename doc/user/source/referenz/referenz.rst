@@ -28,5 +28,6 @@ können.
    netzwerk
    plugins/plugins
    userfunctions/userfunctions
+   python/python
    libraries_plugins_logics
    APIs

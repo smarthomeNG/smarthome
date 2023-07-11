@@ -10,22 +10,22 @@ Ein `Log <https://de.wikipedia.org/wiki/Log>`_ zeichnet Ergebnisse von Vorgänge
 und dient der Dokumentation. Anhand eines Logs kann man Programmfehlern auf die Spur kommen oder bestimmte
 Situationen können im Nachhinein untersucht werden. Je detaillierter ein Log geführt wird, desto einfacher
 ist die Untersuchung bestimmter Sachverhalte.
-Je nachdem, was man untersuchen möchte, kann man mit einem **Logging Level** im Programm vorgeben wie ernst
+Je nachdem, was man untersuchen möchte, kann man mit einem **Logging Level** im Programm vorgeben, wie ernst
 oder wie wichtig ein bestimmter Logeintrag ist.
-Innerhalb des Kerns von SmartHomeNG finden sich zum Beispiel Einträge im Programm mit dem Log Level **NOTICE**
+Innerhalb des Kerns von SmartHomeNG finden sich zum Beispiel Einträge im Programm mit dem Log Level **NOTICE**,
 die in einer Logdatei dann im Ergebnis so aufgezeichnet werden:
 
 ``2021-04-16  21:56:31 NOTICE   lib.smarthome     --------------------   Init SmartHomeNG 1.8.2c.4e0938c2.develop   --------------------``
 
-Das ist als Information zu sehen um bei Problemen Hilfe zu erhalten. Es deutet hier nichts auf Fehler oder Probleme hin.
+Das ist als Information zu sehen, um bei Problemen Hilfe zu erhalten. Es deutet hier nichts auf Fehler oder Probleme hin.
 Ein anderer Logging Befehl im Core mit dem Log Level **WARNING** erzeugt hingehen folgendes:
 
 ``2021-04-16  21:56:32 WARNING  lib.module        Not loading module Mqtt from section 'mqtt': Module is disabled``
 
-Das ist als Warnung gedacht um darauf hinzuweisen, das ein Module nicht geladen wird und in dieser Folge eventuell
+Das ist als Warnung gedacht, um darauf hinzuweisen, dass ein Modul nicht geladen wird und in dieser Folge eventuell
 weitere Fehler oder Probleme auftauchen könnten. Steigerungen von Warnungen sind Log Level **ERROR** oder **CRITICAL**.
-Während ein **ERROR** also ein Fehler durchaus bedeuten kann das SmartHomeNG weiterarbeiten kann, bedeutet ein **CRITICAL**
-also ein kritischer Fehler das das Programm beendet werden muss.
+Während ein **ERROR** also ein Fehler durchaus bedeuten kann, dass SmartHomeNG weiterarbeiten kann, bedeutet ein **CRITICAL**,
+also ein kritischer Fehler, dass das Programm beendet werden muss.
 Fehlt ein für den Kern von SmartHomeNG benötigtes Modul, so stell das einen kritischen Fehler dar.
 
 Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmablauf:
@@ -36,33 +36,44 @@ Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmab
    * - Level
      - Numerischer Wert
      - Anmerkung
-   * - 50
-     - CRITICAL
+   * - CRITICAL
+     - 50
      - kritisch, führt zumeist zum Programmabbruch
-   * - 40
-     - ERROR
+   * - ERROR
+     - 40
      - Fehler im Programmablauf, Programm kann zumeist weiterlaufen, Funktionalität möglicherweise eingeschränkt
-   * - 31
-     - NOTICE
+   * - WARNING
+     - 30
+     - Warnung, dass etwas Unerwartetes passiert ist aber trotzdem weitergearbeitet werden kann.
+   * - NOTICE
+     - 29
+
+       (31 falls der Level des FileHandler des root Loggers nicht auf NOTICE sondern WARNING konfiguriert ist.)
      - Ein Hinweis der zur grundlegenden Information dient und nicht als Warnung verstanden werden soll.
        Dieser Log Level ist spezifisch für SmartHomeNG und ist im Standard Logging von Python nicht vordefiniert.
-   * - 30
-     - WARNING
-     - Warnung das etwas unerwartetes passiert ist aber trotzdem weitergearbeitet werden kann
-   * - 20
-     - INFO
-     - Eine Ablaufinformation die nicht unbedingt wichtig ist
+   * - INFO
+     - 20
+     - Eine Ablaufinformation, die nicht unbedingt wichtig ist
+   * - DBGHIGH
+     - 13
+     - Informationen für die Fehlersuche, die normalerweise nicht benötigt werden
+   * - DBGMED
+     - 12
+     - Informationen für die Fehlersuche, die normalerweise nicht benötigt werden
+   * - DBGLOW
+     - 11
+     - Informationen für die Fehlersuche, die normalerweise nicht benötigt werden
    * - DEBUG
      - 10
-     - Informationen für die Fehlersuche die normalerweise nicht benötigt werden
+     - Informationen für die Fehlersuche, die normalerweise nicht benötigt werden
    * - NOTSET
      - 0
      - Es wird kein Logeintrag erzeugt
 
-Es können prinzipiell auch weitere eigene Log Level definiert werden die dann für besondere Situationen benutzt werden können.
-Ein Beispiel wäre ein Log Level **VERBOSE** mit dem Wert **8** der für die Fehlersuche in einem bestimmten Bereich eines Plugins
+Es können prinzipiell auch weitere eigene Log Level definiert werden, die dann für besondere Situationen benutzt werden können.
+Ein Beispiel wäre ein Log Level **VERBOSE** mit dem Wert **8**, der für die Fehlersuche in einem bestimmten Bereich eines Plugins
 Verwendung finden könnte.
-Für SmartHomeNG ist derzeit nur **NOTICE** vordefiniert um informelle Logging Einträge zu erzeugen, die nicht als Warnung
+Für SmartHomeNG ist derzeit nur **NOTICE** vordefiniert, um informelle Logging Einträge zu erzeugen, die nicht als Warnung
 verstanden werden sollen.
 
 Konfiguration des Loggings
@@ -72,7 +83,7 @@ Auf der Seite `Python Logging <https://docs.python.org/3.6/library/logging.html#
 sind die Konfigurationsmöglichkeiten detailliert beschrieben.
 
 SmartHomeNG lädt beim Start die Konfiguration des Logging aus der Datei **etc/logging.yaml**. Ist diese Datei nicht vorhanden,
-so versucht SmartHomeNG die Datei **etc/logging.yaml.default** zu kopieren nach **etc/logging.yaml** und dann daraus
+so versucht SmartHomeNG, die Datei **etc/logging.yaml.default** nach **etc/logging.yaml** zu kopieren und dann daraus
 die Konfiguration des Loggings zu laden.
 
 Wenn bei der Konfiguration des Loggings etwas schief geht, kann also jederzeit die Datei **etc/logging.yaml** gelöscht oder
@@ -94,19 +105,19 @@ Die einzelnen Konfigurationseinträge haben die folgende Bedeutung:
 | **Abschnitte**  | **Bedeutung**                                                                                      |
 +=================+====================================================================================================+
 | **formatters:** | Definiert das Ausgabeformat der einzelnen Loggingeinträge. Mehrere unterschiedliche                |
-|                 | **formatter** können dazu verwendet werden um unterschiedlich aussehende Logdateien                |
+|                 | **formatter** können dazu verwendet werden, um unterschiedlich aussehende Logdateien               |
 |                 | zu erzeugen. In der Konfigurationsdatei **etc/logging.yaml** sind die Formatter                    |
 |                 | **`simple`** und **`detail`** vorkonfiguriert. Weitere Formatter können bei Bedarf                 |
 |                 | hinzugefügt werden.                                                                                |
 +-----------------+----------------------------------------------------------------------------------------------------+
 | **handlers:**   | Handler definieren die Log-Behandlungsroutinen/Ausgabekanäle die verwendet werden.                 |
-|                 | In Python gibt es bereits mehrere vorimplementierte und mächtige Handler-Typen die in der          |
+|                 | In Python gibt es bereits mehrere vorimplementierte und mächtige Handler-Typen, die in der         |
 |                 | `Python Doku <https://docs.python.org/3.4/library/logging.handlers.html#module-logging.handlers>`_ |
 |                 | beschrieben sind. Als eigentliche Handler sind in der Konfigurationsdatei **etc/logging.yaml**     |
 |                 | die Handler **`console`** und **`file`** vordefiniert. Wenn Log-Einträge z.B. in eine andere       |
 |                 | Datei geschrieben werden sollen, muss ein weiterer Handler definiert werden.                       |
 |                 | Sollen Filter angewendet werden, so sind diese im entsprechenden Handler durch                     |
-|                 | filters: [`filtername1`, `filtername2`] anzugeben (siehe filters)                                  |
+|                 | filters: [`filtername1`, `filtername2`] anzugeben (siehe filters).                                 |
 +-----------------+----------------------------------------------------------------------------------------------------+
 | **filters:**    | Filter bestimmen durch Angabe des Loggernamen, -moduls und -eintrags, welche Zeilen aus dem Log    |
 |                 | angezeigt bzw. versteckt werden sollen. Der Eintrag (z.B. loggerfilter) kann bei den Handlers      |
@@ -123,15 +134,15 @@ Die einzelnen Konfigurationseinträge haben die folgende Bedeutung:
 |                 | Durch die Angabe von invert: True werden NUR die passenden Messages geloggt und sonst nichts.      |
 |                 | Ein Beispiel ist unter :doc:`Logging - Best Practices <logging_best_practices>` zu finden.         |
 +-----------------+----------------------------------------------------------------------------------------------------+
-| **loggers:**    | Hier werden die einzelnen Logger definiert und was mit diesen Einträgen passiert,                  |
-|                 | welche Handler und formatter verwendet werden. Das Level konfiguriert dabei die                    |
-|                 | Logtiefe für die einzelne Komponente. Bei den Loggern ist es nun möglich einzelne                  |
+| **loggers:**    | Hier werden die einzelnen Logger definiert, was mit diesen Einträgen passiert,                     |
+|                 | und welche Handler und formatter verwendet werden. Das Level konfiguriert dabei die                |
+|                 | Logtiefe für die einzelne Komponente. Bei den Loggern ist es nun möglich, einzelne                 |
 |                 | Plugins oder Libs im Debug protokollieren zu lassen. Dazu sind in der Konfiguration                |
 |                 | bereits einige Beispiele.                                                                          |
 +-----------------+----------------------------------------------------------------------------------------------------+
-| **root:**       | Hier ist die Konfiguration des root Loggers der für die ganze Anwendung gilt. Dieser               |
-|                 | root Logger wird für alle Komponenten verwendet, auch die die nicht unter loggers: konfiguriert    |
-|                 | sind. Da der root Logger ALLE Logeinträge empfängt sollte der level: unbedingt auf WARNING stehen. |
+| **root:**       | Hier ist die Konfiguration des root Loggers, der für die ganze Anwendung gilt. Dieser              |
+|                 | root Logger wird für alle Komponenten verwendet auch die, die nicht unter loggers: konfiguriert    |
+|                 | sind. Da der root Logger ALLE Logeinträge empfängt, sollte der level: unbedingt auf WARNING stehen.|
 +-----------------+----------------------------------------------------------------------------------------------------+
 
 Wenn man **Logger** definiert, welche die Log-Einträge über zusätzliche **Handler** ausgeben, ist
@@ -203,7 +214,7 @@ muss in der config auch dieser Name verwendet werden. Ohne `plugin.` oder `logic
            level: DEBUG
 
 Standardmäßig haben Logiken bereits einen Logger, der in der ``etc/logging.yaml`` konfiguriert werden kann/muss.
-Der Name des Loggers ist ``logics.<Name der Logik>``, wobei der Name der Logik, der in der Konfiguration festgelegte
+Der Name des Loggers ist ``logics.<Name der Logik>``, wobei der Name der Logik der in der Konfiguration festgelegte
 Name ist und nicht der Name des Python Skriptes.
 
 
@@ -218,7 +229,7 @@ beschrieben ist.
 Best Practices
 ==============
 
-Wer eine brauchbare leicht konfigurierbare Logging Konfiguration oder Beispiele zum Nutzen
+Wer eine brauchbare und leicht konfigurierbare Logging Konfiguration oder Beispiele zum Nutzen
 von RegEx Ausdrücken sucht, der wird hier :doc:`Logging - Best Practices <logging_best_practices>` fündig.
 
 

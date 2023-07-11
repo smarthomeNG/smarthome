@@ -10,34 +10,39 @@
 -->
 {% block pluginscripts %}
 <script>
-  $(document).ready( function () {
-    $(window).trigger('datatables_defaults');
-    try {
-      {% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
-      if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
-        resize = true;
-        webif_pagelength = -1;
-      }
-      else {
-        resize = false;
-      }
-      console.log("Using page length from http module/plugin " + webif_pagelength + ", pageResize: " + resize);
-    }
-    catch (e) {
-      webif_pagelength = 100;
-      resize = false;
-      console.log("Using default values for page length " + webif_pagelength + ", pageResize: " + resize);
-    }
+    $(document).ready( function () {
+		/*
+		loading defaults from /modules/http/webif/gstatic/datatables/datatables.defaults.js
+		You can copy that file, put it in your plugin directory, rename the "bind" function and
+		trigger that function here instead of datatables_defaults if you want to change the behaviour.
+		Of course you can also overwrite defaults by putting the option declarations in {} below.
+		*/
+		$(window).trigger('datatables_defaults');
+		{% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
+		if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
+			resize = true;
+			webif_pagelength = -1;
+			console.log('Activating automatic table resize ' + webif_pagelength);
+		}
+		else {
+			resize = false;
+		}
 		try {
-      table = $('#maintable').DataTable( {
-        pageLength: webif_pagelength,
-        pageResize: resize});
+			/*
+			Copy this part for every datatable on your page. Adjust options if necessary.
+			pageLength and pageResize should be included as they are to adjust it based on the plugin settings
+			*/
+			table = $('#maintable').DataTable( {
+			  /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
+			  */
+			  columnDefs: [{ "targets": [2], "className": "value"}].concat($.fn.dataTable.defaults.columnDefs),
+			  pageLength: webif_pagelength,
+			  pageResize: resize});
 		}
 		catch (e) {
-			console.warn("Datatable JS not loaded, showing standard table without reorder option " +e);
-    }
-
-  });
+			console.warn("Datatable JS not loaded, showing standard table without reorder option " + e);
+		}
+	});
 </script>
 <script>
 	function handleUpdatedData(response, dataSet=null) {
@@ -50,6 +55,7 @@
 				shngInsertText (device+'_powerState', objResponse[device]['powerState'], 'maintable', 10));
 				-->
 			}
+      $('#maintable').DataTable().draw(false);
 		}
 	}
 </script>
@@ -118,9 +124,13 @@
 -->
 {% set tab1title = "<strong>" ~ p.get_shortname() ~ " Items</strong> (" ~ item_count ~ ")" %}
 {% block bodytab1 %}
-<div class="container-fluid m-2 table-resize">
-	{{ _('Hier kommt der Inhalt des Webinterfaces hin.') }}
-	<table id="maintable">
+
+  <!-- remove this div if not needed -->
+  <div class="mb-2">
+    {{ _('Hier kommt der Inhalt des Webinterfaces hin.') }} (optional)
+  </div>
+
+	<table id="maintable" class="dataTableAdditional">
 		<thead>
 		<tr>
       <th></th>
@@ -147,7 +157,11 @@
 			{% endif %}
 		{% endfor %}
 	</table>
-</div>
+  <!-- remove this div if not needed -->
+  <div class="mb-2">
+    Etwaige Informationen unterhalb der Tabelle (optional)
+  </div>
+
 {% endblock bodytab1 %}
 
 

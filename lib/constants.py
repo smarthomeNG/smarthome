@@ -41,6 +41,7 @@ KEY_ENFORCE_CHANGE = 'enforce_change'
 KEY_CACHE = 'cache'
 KEY_CYCLE = 'cycle'
 KEY_NAME = 'name'
+KEY_DESCRIPTION = 'description'
 KEY_TYPE = 'type'
 KEY_VALUE = 'value'
 KEY_INITVALUE = 'initial_value'
@@ -60,11 +61,18 @@ KEY_LOG_TEXT =    'log_text'
 KEY_LOG_MAPPING = 'log_mapping'
 KEY_LOG_RULES =   'log_rules'
 
+KEY_HYSTERESIS_INPUT = 'hysteresis_input'
+KEY_HYSTERESIS_UPPER_THRESHOLD = 'hysteresis_upper_threshold'
+KEY_HYSTERESIS_LOWER_THRESHOLD = 'hysteresis_lower_threshold'
+
+ATTRIBUTE_SEPARATOR = ';'
+
 KEY_STRUCT = 'struct'
 KEY_REMARK = 'remark'
 
-#config params for plugins
-KEY_INSTANCE = 'instance'
+#global config params for plugins
+KEY_INSTANCE =         'instance'
+KEY_WEBIF_PAGELENGTH = 'webif_pagelength'
 KEY_CLASS_PATH = 'class_path'
 KEY_CLASS_NAME = 'class_name'
 

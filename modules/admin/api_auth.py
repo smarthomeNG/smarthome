@@ -42,10 +42,13 @@ class AuthController(RESTResource):
         self._sh = module._sh
         self.module = module
         self.base_dir = self._sh.get_basedir()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.etc_dir = self._sh._etc_dir
         self.modules_dir = os.path.join(self.base_dir, 'modules')
+
+        if self.module.rest_dispatch_force_exception:
+            self.logger.notice(f"REST_dispatch_execute warnlevel is set to EXCEPTION")
 
         #self._user_dict = user_dict
         self.send_hash = module.send_hash
@@ -158,7 +161,10 @@ class AuthController(RESTResource):
         if self.module.login_autorenew:
             new_token['iat'] = self.module.shtime.now()
             new_token['exp'] = self.module.shtime.now() + timedelta(hours=self.module.login_expiration)
-            response['token'] = jwt.encode(new_token, self.jwt_secret, algorithm='HS256').decode('utf-8')
+            try:
+                response['token'] = jwt.encode(new_token, self.jwt_secret, algorithm='HS256').decode('utf-8')
+            except:
+                response['token'] = jwt.encode(new_token, self.jwt_secret, algorithm='HS256')
             decoded = jwt.decode(response['token'], self.jwt_secret, verify=True, algorithms='HS256')
             self.logger.debug("- renew_token(): re-decoded  token = {}".format(decoded))
 

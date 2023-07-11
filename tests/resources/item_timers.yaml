@@ -6,7 +6,7 @@ item_tree:
 
         test_item01:
             type: str
-            autotimer: 5m = 42 = compat_1.2
+            autotimer: 5m = 41 = compat_1.2
 
         test_item02:
             type: foo
@@ -30,7 +30,7 @@ item_tree:
 
         test_item21:
             type: num
-            autotimer: 5m = 42 = latest
+            autotimer: 5m = 43 = latest
 
         test_item22:
             type: num

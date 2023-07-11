@@ -2,6 +2,7 @@
   {
     "path": "test.string",
     "name": "test.string",
+    "description": "Dieses ist ein Test-Item ohne wirklichen Verwendungszweck",
     "type": "str",
     "value": "ein wirklich, wirklich, wirklich sehr laaaaanger String",
     "change_age": 247402,
@@ -24,6 +25,9 @@
     "trigger": "-",
     "trigger_condition": "-",
     "trigger_condition_raw": "",
+    "hysteresis_input": "test.hysteresis.item_threshold",
+    "hysteresis_upper_threshold": "4 % 60",
+    "hysteresis_lower_threshold": "2",
     "on_update": "-",
     "on_change": "-",
     "log_change": "-",
@@ -35,7 +39,9 @@
     "crontab": "-",
     "autotimer": "-",
     "threshold": "-",
-    "config": {"lin_mode": "ALL"},
+    "config": {
+      "lin_mode": "ALL"
+    },
     "logics": ["test"],
     "triggers": ["bound method WebSocket.update_item of plugins.visu_websocket.WebSocket"],
     "filename": "q21_c26lintronic.yaml"
@@ -67,6 +73,9 @@
     "trigger": "-",
     "trigger_condition": "-",
     "trigger_condition_raw": "",
+    "hysteresis_input": "test.hysteresis.item_threshold",
+    "hysteresis_upper_threshold": "4 % 60",
+    "hysteresis_lower_threshold": "2",
     "on_update": "-",
     "on_change": "-",
     "log_change": "-",

@@ -2,13 +2,13 @@ name: "Unittests Core"
 #on: [workflow_dispatch, push]
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - 'develop'
   push:
     branches:
       - '*'
       - '!release_doc'
+  pull_request:
+    branches:
+      - 'develop'
 
 jobs:
   build:
@@ -27,21 +27,42 @@ jobs:
           sudo apt-get install gcc --only-upgrade
 
       - name: Get branch name
-        run: |
-          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-          echo ${GITHUB_REF#refs/heads/}
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
         id: extract_branch
 
-      - name: Checkout core from ${{steps.extract_branch.outputs.branch}} branch
+      - name: Workflow Information
+        run: |
+          echo github.event_name             '${{ github.event_name }}'
+          echo github.workflow               '${{ github.workflow }}'
+          echo github.action_repository      '${{ github.action_repository }}'
+          echo github.actor                  '${{ github.actor }}'
+          echo github.ref_name               '${{ github.ref_name }}'
+          echo github.ref                    '${{ github.ref }}'
+          echo github.base_ref               '${{ github.base_ref }}'
+          echo github.head_ref               '${{ github.head_ref }}'
+          echo github.pull_request.base.ref  '${{ github.pull_request.base.ref }}'
+          echo steps.extract_branch.outputs.branch '${{ steps.extract_branch.outputs.branch }}'
+
+      - name: Checkout core from branch '${{ github.base_ref }} branch'
         uses: actions/checkout@v3
         with:
           repository: smarthomeNG/smarthome
-          ref: ${{steps.extract_branch.outputs.branch}}
-      - name: Checkout plugins from ${{steps.extract_branch.outputs.branch}} branch
+          ref: ${{ github.base_ref }}
+
+      - name: Checkout plugins from branch '${{steps.extract_branch.outputs.branch}}' (for push)
+        if: github.event_name != 'pull_request'
         uses: actions/checkout@v3
         with:
           repository: smarthomeNG/plugins
           ref: ${{steps.extract_branch.outputs.branch}}
+          path: plugins
+
+      - name: Checkout plugins from branch 'develop' (for pull request)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v3
+        with:
+          repository: smarthomeNG/plugins
+          ref: develop
           path: plugins
 
       - name: Set up Python

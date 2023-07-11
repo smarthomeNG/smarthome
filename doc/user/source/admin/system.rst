@@ -1,5 +1,6 @@
 
-.. index:: System
+.. index:: Admin GUI; System
+.. index:: System; Admin GUI
 
 ######
 System

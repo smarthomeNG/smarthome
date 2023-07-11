@@ -31,6 +31,10 @@ plusIconlist-group-item.py-2.node-tree.node-selected {
   background-color: #ecf3f8;
 }
 
+#datepicker > div.datepicker {
+  margin-left: auto;
+  margin-right: auto;
+}
 table td.truncate {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -52,7 +56,7 @@ table th.datatable-responsive {
 }
 table.dataTableAdditional {
   display: none;
-  table-layout: fixed;
+  table-layout: auto;
 }
 
 tr.even td.sorting_1 {

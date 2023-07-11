@@ -118,10 +118,11 @@ zur Vefügung:
     - **shtime** - die SmartHomeNG Library mit Zeit- und Datumsfunktionen
     - **items** - die SmartHomeNG Library mit Funktionen zum Umgang mit Items
     - **math** - das Python Package mit mathematischen Funktionen
+    - **uf** - geladene Userfunctions
 
 
-Seit SmartHomeNG v1.3 können für **eval** auch :doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>`
-genutzt werden. Dann müssen Bezüge auf andere Items nicht mehr absolut angegeben werden sondern können sich relative
+Für **eval** Ausdrücke können auch :doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>`
+genutzt werden. Dann müssen Bezüge auf andere Items nicht mehr absolut angegeben werden, sondern können sich relativ
 auf andere Items beziehen.
 
 
@@ -136,6 +137,17 @@ auf andere Items beziehen.
 
    Im Abschnitt **Beispiele** sind auf der Seite :doc:`eval und eval_trigger Beispiele </beispiele/eval>`
    weitere ausführliche Beispiele zu finden.
+
+
+Nutzung von Userfunctions
+-------------------------
+
+Bei komplexeren Berechnungen kann es sinnvoll sein, diese in eine :doc:`Userfunction </referenz/userfunctions/userfunctions>`
+auszulagern und im eval Ausdruck nur die :doc:`Userfunction </referenz/userfunctions/userfunctions>` aufzurufen.
+Das bietet sich besonders an, wenn die gleiche Berechnung in mehreren Items durchgeführt werden soll.
+
+Ein weiterer Vorteil von Userfunctions ist, dass Userfunctions modifiziert und neu geladen werden können, ohne SmartHomeNG
+komplett neu starten zu müssen. Das hilft besonders während der Entwicklung.
 
 
 Eval Syntax

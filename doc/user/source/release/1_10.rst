@@ -1,0 +1,372 @@
+=============================
+Release 1.10.x - tt. mmm 2023
+=============================
+
+Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
+sowie einige neue Plugins.
+
+.. only: comment
+
+    Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+|
+
+    .. only:: comment
+
+    .. note::
+
+        Diese Release Notes sind ein Arbeitsstand.
+
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 4. Juni 2023
+           (...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 3. Juni 2023
+           (...)
+
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.9.5 sind im
+folgenden in diesen Release Notes beschrieben.
+
+
+Minimum Python Version
+----------------------
+
+Die absolute Minimum Python Version in der SmartHomeNG startet, ist **Python 3.7**.
+
+Für das SmartHomeNG Release 1.10 wird die absolute Minimum Python Version auf **Python 3.8** angehoben, da der
+Community Support für Python 3.7 am 27. Juni 2023 endete.
+
+Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Versionen (3.9 oder 3.10) aufzusetzen.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.10.x ist **Python 3.8**.
+Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
+(Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
+zu unterstützten Python Versionen)
+
+|
+
+Änderungen am Core
+==================
+
+Allgmein
+--------
+
+* Workflows:
+
+  * ...
+
+
+Updates im CORE
+---------------
+
+* ...
+
+* Items:
+
+  * ...
+
+* Logics:
+
+  * ...
+
+* Libs:
+
+  * lib.item:
+
+    * Implementation of the hysteresis attributes for items
+    * Documentation of hysteresis attributes
+    * Implemented timer for hysteresis items
+    * Implemented multi level nesting of structs, if they are included on the top level of a struct
+    * Implemented multi level nesting of structs, even they are included on a deeper level of a struct
+    * Hysteresis Items can be configured with eval expressions instead of absolute numeric values or item references
+    * Attribute autotimer now supports eval expressions; Attribute autotimer is working without specification of
+      a value (again)
+    * Attribute cycle now supports eval expressions; Attribute cylce is working without specification of a value (again)
+
+  * lib.log:
+
+    * Improvements to logging configuration
+
+  * lib.logic:
+
+    * Logic list can now be grouped. Logics can be assigned to one or more groups
+
+  * lib.model:
+
+    * Added SmartDevicePlugin and documentation
+
+  * lib.network:
+
+    * Fix name reference
+
+  * lib.plugin:
+
+    * Added get method to plugins class
+    * Bumped core version to 1.9.5.2
+
+  * lib.scheduler:
+
+    * Implemented a single logger for tasks (before, each task created it's own logger, resulting
+      in hundreds or thousands of active loggers)
+    * Added some error handling
+
+
+* Modules:
+
+  * admin:
+
+    * Bugfix for new loglevels in list of loggers
+    * api_loggers: Converting all entries of filters list of loggers to strings to be JSON serializable
+    * shngadmin:
+      * v0.6.7: Added "Add Logger" and "Remove Logger" for plugins to list of loggers page
+      * v0.7.0: Added "Add Logger" and "Remove Logger" for logics, items and advanced loggers to
+        'list of loggers' page
+      * v0.7.2: Added "Modify Handlers" to loggers configuration page
+      * v0.7.3: Added hysteresis attributes to shngadmin
+      * shngadmin 0.7.8: Logic list can now be grouped. Logics can be assigned to one or more groups
+      * shngadmin 0.7.12, modules.admin.api_logics, lib.logic: Added description for groups; Small fixes
+      * shngadmin v0.8.1.: First version using the adm payload protocol for websocket communication
+
+  * websocket:
+
+    * Fix for smartvisu payload protocol
+    * Implementation of first version of the adm payload protocol
+
+* Plugins:
+
+  * ...
+
+* tests:
+
+  * ...
+
+|
+
+Änderungen bei Plugins
+======================
+
+Allgmein
+--------
+
+* Workflows:
+
+  * ...
+
+
+.. _releasenotes_1_10_neue_plugins:
+
+Neue Plugins
+------------
+
+Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* denon: For Denon AV Receivers, based on SmartDevicePlugin
+* lms: Logitech Mediaserver / Squeezebox, based on SmartDevicePlugin
+* pioneer: for Pioneer AV Receivers, based on SmartDevicePlugin
+* oppo: First version of SmartDevicePlugin based plugin for Oppo UHD players
+
+
+.. _releasenotes_1_10_updates_plugins:
+
+Plugin Updates
+--------------
+
+Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* appletv:
+
+  * Use separate webif/init for web interface integration
+  * Integrate external webif file
+  * Introduce some error handling if no "real" AppleTV is found
+  * Introduce item attributes in metadata, fix struct (item should not be named type - renamed to media_type)
+  * Bump to version 1.6.2
+  * Replace README with user_doc
+  * Adjust requirements to work with Python 3.10
+  * Fix module imports for web interface
+  * Added requirement to circumvent problematic requirements of pyatv package under Python 3.11
+
+* avm:
+
+  * raise exception if no connection to fritzdevice, fritzhome or callmonitor is possible
+  * make plugin parameter 'host' mandatory
+  * Catch exception if node value returns empty value (e.g. happens if plugin tries to read in color temperature
+    value of RGB light when beeing in RGB not white mode)
+  * Improved plugin shutdown fixing "Thread *.poll_tr064, still alive" warning
+  * Improve exception handling during init of devices
+  * Disable tab5 (Logs) for Devices without AHA-Interface
+  * Improve stop of plugin
+  * Bugfix setting Fritzdevice like start_call'
+  * Optimize "get_logs" to prevent older fritz-devices from timeout
+  * Use get_logs_from tr-064 as backup solution
+  * Increase request timeout if timeout occurred
+  * Trying to fix yet another regression in avm RGB support introduced with release v1.9.5
+  * Removed 'optional' text in mandatory plugin host attribute
+  * Automate creation of item_attributes.py and update of valid_list of avm_data_type in plugin.yaml by scripts
+    included in item_attributes_master.py
+  * Bugfix of update of valid_list of avm_data_type in plugin.yaml by
+  * Create valid_list_description in metadata
+
+* db_addon:
+
+  * Lock database for query and release if afterwards
+  * Item parameter'db_addon_startup' can now be used also directly at database_item; 'db_addon_startup' will be
+    set for all child items
+  * new item parameter 'db_addon_ignore_value_list' to allow list of comparision operators to be used for database query
+  * Improve coding für _handle_waermesumme and _handle_gruenlandtemperatursumme since calculation is almost the same
+  * Fix deleting item value cache from webif
+  * Bugfix _handle_zaehlerstand
+  * Ease queries at _query_log_timestamp (do round in plugin)
+  * Add new plugin parameter to define list of comparison operators to be used during database query per
+    substring of item_path
+  * Bugfix _handle_onchange
+  * Bugfix in parse_item
+  * Allow to define database_item_path to be defined up to 3 level above db_addon_item
+  * Allow to define database_item_path to be defined up to 3 level above db_addon_item (bugfix)
+  * Add plugin parameter to enable/disable optimizing defined value filters
+
+* executor:
+
+  * Extending base_plugin.html instead of extending base.html in webinterface
+
+* gpio:
+
+  * Fix user_doc reference to configuration
+
+* hue2:
+
+  * Adjusted requirements for zeroconf package
+
+* piratewthr:
+
+  * Adjusted log mesages
+  * Bumped version to 1.1.2
+  * piratewthr: Improved log messages in case of piratewther server errors
+  * Added windDirectionString to struct
+  * Minimum core version is now 1.9.5.2
+  * Removed 'database_maxage: 731' from struct items to use default of database plugin
+  * Bumped version to 1.2.0
+  * Added locals.location to struct
+
+* rpi_info:
+
+  * Update and fix web interface
+
+* smartvisu:
+
+  * Changed default value for generate_pages to False
+
+* stateengine:
+
+  * Keep variables after state evaluation so they can be used in enter Conditions
+  * Fix major problem with internal structs
+  * Temporarily set state_name and state_id on init
+  * Adjust docu accordingly regarding current.state_name variable
+  * Bump version to 1.9.6
+
+* tankerkoenig:
+
+  * Fix for get_petrol_stations(), if tankerkoenig.de did not return any information
+  * Added check for Nonetype results
+
+* tasmota:
+
+  * Change item handling to new smartplugin method using  _plg_item_dict
+  * Bugfix item handling to new smartplugin method using  _plg_item_dict
+  * Bugfix interview_all_devices
+  * Improve RF-Bridge
+  * Allow send of learned keys
+  * Improve of using ZigbeeDevice Shortname
+  * Improve handling of received messages and taking info from dicts
+  * Bugfix update item with relay
+  * Improve exception handling
+  * Improve clearing retained messages
+
+* telegram:
+
+  * New package, use async
+  * Revised stop method
+  * Bumped version to v1.8.0
+  * New_event_loop for multi-instance
+  * V2.0.0 Additions in locale; evaluate if debugging
+  * Retry sending in case of error (with parameters)
+  * Attempt to catch the exception in the updater
+
+
+Outdated Plugins
+----------------
+
+Die folgenden Plugins wurden bereits in v1.6 als *deprecated* (veraltet) markiert. Das bedeutet, dass diese
+Plugins zwar noch funktionsfähig sind, aber nicht mehr weiter entwickelt werden. Sie werden in einem kommenden
+Release von SmartHomeNG entfernt werden. Anwender dieser Plugins sollten auf geeignete Nachfolge-Plugins
+wechseln.
+
+* System Plugins
+
+  * sqlite_visu2_8 - switch to the **database** plugin
+
+* Web Plugins
+
+  * wunderground - the free API is not provided anymore by Wunderground - switch to the **piratewthr** or
+    **openweathermap** plugin
+
+Außerdem wurden folgende Plugins als *deprecated* markiert:
+
+* Web Plugins
+
+  * darksky - the free API is not provided anymore - switch to the **piratewthr** or **openweathermap** plugin
+
+
+.. _releasenotes_1_10_retired_plugins:
+
+Retired Plugins
+---------------
+
+Die folgenden Plugins wurden *retired* (in den RUhestand geschickt). Sie waren in einem der vorangegangenen
+Releases von SmartHomeNG als *deprecated* markiert worden. Diese Plugins wurden aus dem **plugins** Repository
+entfernt, stehen jedoch als Referenz weiterhin zur Verfügung. Diese Plugins wurden in das **plugin_archive**
+Repositiory aufgenommen.
+
+* Gateway Plugins
+
+  * ecmd
+  * elro
+  * iaqstick
+  * snom
+  * tellstick
+
+* Interface Plugins
+
+  * easymeter
+  * smawb
+  * vr100
+
+* Web Plugins
+
+  * nma
+
+|
+
+Weitere Änderungen
+==================
+
+Tools
+-----
+
+* ...
+
+
+Dokumentation
+-------------
+
+* ...
+* ...
+
+

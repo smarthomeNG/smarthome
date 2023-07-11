@@ -14,6 +14,10 @@ Die folgenden Parameter können für eine Logik in der Konfigurationsdatei im Ve
 | filename         | Dateiname des Logik-Codes. Diese Datei muss im Verzeichnis **../logics**  liegen. Dieser      |
 |                  | Parameter muss angegeben werden.                                                              |
 +------------------+-----------------------------------------------------------------------------------------------+
+| logic_groupname  | **Optional**: Logiken können mit diesem Parameter einer oder mehreren Gruppen zugeordnet      |
+|                  | werden. Sobald mindestens eine Logik einer Gruppe zugeordnet wurde, wird die Liste der        |
+|                  | Logiken in der Admin GUI gruppiert dargestellt.                                               |
++------------------+-----------------------------------------------------------------------------------------------+
 | watch_item       | **Optional**: String oder Liste von Strings, die jeweils einen Item-Pfad repräsentieren.      |
 |                  | Eine Veränderung eines der hier aufgeführten Items führt dazu, dass die Logik ausgeführt      |
 |                  | wird. Details dazu stehen :ref:`hier <logik_parameter_watch_item>` .                          |

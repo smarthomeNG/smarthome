@@ -2,7 +2,7 @@
 module:
     # Global module attributes
     classname: Admin
-    version: 1.8.0
+    version: 1.8.1
     sh_minversion: 1.7.2c
 #    sh_maxversion: 1.3             # maximum shNG version to use this plugin (leave empty if latest)
     description:
@@ -83,6 +83,13 @@ parameters:
         default: False
         description:
             de: 'Entwickler Modus aktivieren'
+            en: 'Activate developer mode'
+
+    rest_dispatch_force_exception:
+        type: bool
+        default: False
+        description:
+            de: 'Sollen WARNINGs aus REST_dispatch_execute als EXECPTION geloggt werden?'
             en: 'Activate developer mode'
 
     click_dropdown_header:

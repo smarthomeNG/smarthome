@@ -18,7 +18,7 @@ Der vom Module http zur Verfügung gestellte Webserver wird genutzt um die Admin
 Weiterhin erlaubt es dieses Modul in Plugins eine Webschnittstelle zu implementieren. Die API wird weiter
 unten beschrieben. Es implementiert auch die Basisauthentifizierung für den Zugriff auf Webinterfaces und Webservices.
 
-Über Webinterfaces können Plugins Webseiten zur Verfügung stellen, um bei Befarf eine GUI für
+Über Webinterfaces können Plugins Webseiten zur Verfügung stellen, um bei Bedarf eine GUI für
 bestimmte Features anzubieten.
 
 Über Webservices können Plugins Dienste zu Verfügung stellen, welche die Kommunikation mit anderen
@@ -44,7 +44,8 @@ Datei *../etc/module.yaml*
    #    threads: 8
    #    showtraceback: False
    #    showpluginlist: True
-
+   #    webif_pagelength: 0
+   
    #    port: 8383
    #    user: admin
    #    password: geheim
@@ -120,6 +121,12 @@ Datei *../etc/module.yaml*
 |                         | das Passwort zu erstellen, kann die Funktion **Passwort-Hash erzeugen** auf der Seite                |
 |                         | **Dienste** im Backend verwendet werden.                                                             |
 +-------------------------+------------------------------------------------------------------------------------------------------+
+| webif_pagelength        | **Optional**: Anzahl an Tabellenreihen, die in den Plugin Webinterfaces standardmäßig pro Seite      |
+|                         | angezeigt werden sollen. Bei **-1** werden alle Einträge auf einer Seite gezeigt, bei **0** (default)|
+|                         | so viele, dass sie genau auf die Seite ohne Scrolling passen. Weitere mögliche Werte sind 25, 50, 100|
+|                         | Der hier angegebene Wert kann pro Plugin im /etc/plugin.yaml File über den gleichnamigen Parameter   |
+|                         | überschrieben werden.                                                                                |
++-------------------------+------------------------------------------------------------------------------------------------------+
 
 
 .. note::
@@ -128,5 +135,3 @@ Datei *../etc/module.yaml*
    kann trotzdem die Übersichtsseite mit der Liste aller geledenen Plugins, die ein Webinterface registriert
    haben über **http://smarthomeNG.local:8383/plugins** angezeigt werden. Außer, man hat über
    ``showpluginlist: False`` diese Übersichtsseite deaktiviert.
-
-

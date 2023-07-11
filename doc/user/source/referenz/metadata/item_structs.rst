@@ -93,11 +93,11 @@ Wenn Attribute die redefiniert werden Listen sind, findet kein überschreiben de
 die Listen aneinander gehängt. Das geschieht in der Reihenfolge in der die Attribut Definitionen eingelesen werden.
 
 
-Definitions for multi-instance plugins
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Definitionen für multi-instance Plugins
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein Plugin Multi-Instance fähig ist, ist es wahrscheinlich, dass Item Strukturen Instanz-spezifische Attribute
-enthalten. In Item Definitionen wird bei solchen Attributen `'@<instance-name>`` an den Attribut Namen angefügt.
+enthalten. In Item Definitionen wird bei solchen Attributen ``@<instance-name>`` an den Attribut Namen angefügt.
 
 Um in Strukturen zu kennzeichnen, welche Attribute einen Instanz Namen hinzugefügt bekommen sollen, wird bei diesen
 Attributen der konstante String ``@instance`` hinzugefügt. Dieser String wird beim Aufbau des Item Trees durch den
@@ -147,4 +147,3 @@ Datei ``plugin.yaml`` angezeigt:
 .. hint::
 
     Bitte beachten, dass hier ``NONE`` vollständig in Großbuchstaben geschrieben werden muss.
-

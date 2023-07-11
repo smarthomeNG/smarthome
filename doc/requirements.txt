@@ -3,7 +3,7 @@ sphinx-rtd-theme>=1.0
 
 # create tabs for content for alternative ways to use like | Linux | MacOS | Windows |
 # https://sphinx-tabs.readthedocs.io/en/latest/
-sphinx-tabs>=3.4.0
+sphinx-tabs>=3.4.1
 
 # the following extensions create collapsible parts of documentation
 # sphinx-panels seem to be most extensive

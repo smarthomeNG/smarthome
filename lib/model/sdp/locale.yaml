@@ -1,0 +1,34 @@
+%YAML 1.1
+# vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+---
+
+# translations for the web interface
+plugin_translations:
+    # Translations for the plugin specially for the web interface
+    'Aktiv':                 {'de': '=', 'en': 'active'}
+    'Anzahl Geräte':         {'de': '=', 'en': '# of devices'}
+    'Anzahl Items':          {'de': '=', 'en': '# of items'}
+    'nach Devices suchen':   {'de': '=', 'en': 'find devices'}
+    'Geräte':                {'de': '=', 'en': 'devices'}
+    'Gerät':                 {'de': '=', 'en': 'device'}
+    'Start':                 {'de': '=', 'en': 'start'}
+    'Stop':                  {'de': '=', 'en': 'stop'}
+    'Geräte-ID':             {'de': '=', 'en': 'device ID'}
+    'Geräte-Typ':            {'de': '=', 'en': 'device type'}
+    'Parameter':             {'de': '=', 'en': 'parameter'}
+    'Typ':                   {'de': '=', 'en': 'type'}
+    'Zahl':                  {'de': '=', 'en': 'number'}
+    'Bool':                  {'de': '=', 'en': 'bool'}
+    'String':                {'de': '=', 'en': 'string'}
+    'übernommen':            {'de': '=', 'en': 'applied'}
+    'Setzen':                {'de': '=', 'en': 'set'}
+    'keine':                 {'de': '=', 'en': 'none'}
+    'Item':                  {'de': '=', 'en': 'item'}
+    'Befehlsname':           {'de': '=', 'en': 'command'}
+    'Lesen':                 {'de': '=', 'en': 'read'}
+    'Schreiben':             {'de': '=', 'en': 'write'}
+    'Init':                  {'de': '=', 'en': 'initial'}
+    'Cycle':                 {'de': '=', 'en': 'cycle'}
+    'Wert':                  {'de': '=', 'en': 'value'}
+    'Letzte Aktualisierung': {'de': '=', 'en': 'last update'}
+    'update_all':            {'de': '=', 'en': '='}

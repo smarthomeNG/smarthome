@@ -59,7 +59,7 @@ import lib.config
 import lib.translation as translation
 import lib.shyaml as shyaml
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE,YAML_FILE,CONF_FILE)
+from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, KEY_WEBIF_PAGELENGTH, YAML_FILE,CONF_FILE)
 #from lib.utils import Utils
 from lib.metadata import Metadata
 #import lib.item
@@ -87,6 +87,8 @@ class Plugins():
     _plugins = []
     _threads = []
 
+    _plugindict = {}
+
     def __init__(self, smarthome, configfile):
         self._sh = smarthome
         self._configfile = configfile
@@ -113,6 +115,8 @@ class Plugins():
             return
 
         logger.info('Load plugins')
+        threads_early = []
+        threads_late = []
 
         # for every section (plugin) in the plugin.yaml file
         for plugin in _conf:
@@ -158,25 +162,47 @@ class Plugins():
                     args = self._get_conf_args(_conf[plugin])
 #                    logger.warning("Plugin '{}' from section '{}': classname = {}, classpath = {}".format( str(classpath).split('.')[1], plugin, classname, classpath ) )
                     instance = self._get_instancename(_conf[plugin]).lower()
+                    try:
+                        plugin_version = self.meta.pluginsettings.get('version', 'ersion unknown')
+                        plugin_version = 'v' + plugin_version
+                    except Exception as e:
+                        plugin_version = 'version unknown'
                     dummy = self._test_duplicate_pluginconfiguration(plugin, classname, instance)
+                    os.chdir((self._sh._base_dir))
                     try:
                         plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta, self._configfile)
                         if plugin_thread._init_complete == True:
                             try:
+                                try:
+                                    startorder = self.meta.pluginsettings.get('startorder', 'normal').lower()
+                                except Exception as e:
+                                    logger.warning(f"Plugin {str(classpath).split('.')[1]} error on getting startorder: {e}")
+                                    startorder = 'normal'
                                 self._plugins.append(plugin_thread.plugin)
-                                self._threads.append(plugin_thread)
-                                if instance == '':
-                                    logger.info("Initialized plugin '{}' from section '{}'".format( str(classpath).split('.')[1], plugin ) )
+                                # dict to get a handle to the plugin code by plugin name:
+                                if self._plugindict.get(classpath.split('.')[1], None) is None:
+                                    self._plugindict[classpath.split('.')[1]] = plugin_thread.plugin
+                                self._plugindict[classpath.split('.')[1]+'#'+instance] = plugin_thread.plugin
+                                if startorder == 'early':
+                                    threads_early.append(plugin_thread)
+                                elif startorder == 'late':
+                                    threads_late.append(plugin_thread)
                                 else:
-                                    logger.info("Initialized plugin '{}' instance '{}' from section '{}'".format( str(classpath).split('.')[1], instance, plugin ) )
-                            except:
-                                logger.warning("Plugin '{}' from section '{}' not loaded".format( str(classpath).split('.')[1], plugin ) )
+                                    self._threads.append(plugin_thread)
+                                if instance == '':
+                                    logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' from section '{plugin}'")
+                                else:
+                                    logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' instance '{instance}' from section '{plugin}'")
+                            except Exception as e:
+                                logger.warning(f"Plugin '{str(classpath).split('.')[1]}' from section '{plugin}' not loaded - exception {e}" )
                     except Exception as e:
-                        logger.exception("Plugin '{}' from section '{}' exception: {}".format(str(classpath).split('.')[1], plugin, e))
+                        logger.exception(f"Plugin '{str(classpath).split('.')[1]}' {plugin_version} from section '{plugin}'\nException: {e}\nrunning SmartHomeNG {self._sh.version} / plugins {self._sh.plugins_version}")
 
+        # join the start_early and start_late lists with the main thread list
+        self._threads = threads_early + self._threads + threads_late
         logger.info('Load of plugins finished')
         del(_conf)  # clean up
-
+        os.chdir((self._sh._base_dir))
 
         # Tests für logic-Parameter Metadaten
         self.logic_parameters = {}
@@ -190,6 +216,20 @@ class Plugins():
                     self.logic_parameters[param]['plugin'] = self._plugins[i]._shortname
 
         return
+
+
+    def get(self, plugin_name, instance=None):
+        """
+        Get plugin object by plugin name and instance (optional)
+
+        :param plugin_name: name of the plugin (not the plugin configuration)
+        :param instance: name of the instance of the plugin (optional)
+
+        :return: plugin object
+        """
+        if instance is None:
+            return self._plugindict.get(plugin_name, None)
+        return self._plugindict.get(plugin_name+'#'+instance, None)
 
 
     def get_logic_parameters(self):
@@ -247,10 +287,11 @@ class Plugins():
         """
         args = {}
         for arg in plg_conf:
+            # ignore class_name, class_path and instance - those parameters ar not handed to the PluginWrapper
             if arg != KEY_CLASS_NAME and arg != KEY_CLASS_PATH and arg != KEY_INSTANCE:
                 value = plg_conf[arg]
                 if isinstance(value, str):
-                    value = "'{0}'".format(value)
+                    value = f"'{value}'"
                 args[arg] = value
         return args
 
@@ -340,6 +381,39 @@ class Plugins():
     def __iter__(self):
         for plugin in self._plugins:
             yield plugin
+
+
+    def get_loaded_plugins(self):
+        """
+        Returns a list with the names of all loaded plugins
+
+        if multiple instances of a plugin are loaded, the plugin name is returned only once
+
+        :return: list of plugin names
+        :rtype: list
+        """
+        plgs = []
+        for plugin in self._plugins:
+            plgname = plugin.get_shortname()
+            if not plgname in plgs:
+                plgs.append(plgname)
+        return sorted(plgs)
+
+
+    def get_loaded_plugin_instances(self):
+        """
+        Returns a list of tuples of all loaded plugins with the plugin name and the instance name
+
+        :return: list of (plugin name, instance name)
+        :rtype: list of tuples
+        """
+        plgs = []
+        for plugin in self._plugins:
+            plgname = plugin.get_shortname()
+            insname = plugin.get_instance_name()
+            plgs.append((plgname, insname))
+        return sorted(plgs)
+
 
     # ------------------------------------------------------------------------------------
     #   Following (static) methods of the class Plugins implement the API for plugins in shNG
@@ -487,14 +561,14 @@ class Plugins():
 
     def stop(self):
         logger.info('Stop plugins')
-        for plugin in self._threads:
+        for plugin in list(reversed(self._threads)):
             try:
                 instance = plugin.get_implementation().get_instance_name()
                 if instance != '':
                     instance = ", instance '"+instance+"'"
-                logger.debug("Stopping plugin '{}'{}".format(plugin.get_implementation().get_shortname(), instance))
+                logger.debug(f"Stopping plugin '{plugin.get_implementation().get_shortname()}'{instance}")
             except:
-                logger.debug("Stopping classic-plugin from section '{}'".format(plugin.name))
+                logger.debug(f"Stopping classic-plugin from section '{plugin.name}'")
             try:
                 plugin.stop()
             except:
@@ -539,7 +613,7 @@ class PluginWrapper(threading.Thread):
         """
         Initialization of wrapper class
         """
-        logger.debug('PluginWrapper __init__: Section {}, classname {}, classpath {}'.format( name, classname, classpath ))
+        logger.debug("PluginWrapper __init__: Section {name}, classname {classname}, classpath {classpath}")
         threading.Thread.__init__(self, name=name)
 
         self._sh = smarthome

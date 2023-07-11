@@ -35,6 +35,19 @@ global_translations:
     'Samstag':         {'de': '=', 'en': 'Saturday', 'fr': 'Samedi'}
     'Sonntag':         {'de': '=', 'en': 'Sunday', 'fr': 'Dimanche'}
 
+    'Januar':          {'de': '=', 'en': 'January', 'fr': 'Janvier'}
+    'Februar':         {'de': '=', 'en': 'February', 'fr': 'Février'}
+    'März':            {'de': '=', 'en': 'March', 'fr': 'Mars'}
+    'April':           {'de': '=', 'en': 'April', 'fr': 'Avril'}
+    'Mai':             {'de': '=', 'en': 'May', 'fr': 'Mai'}
+    'Juni':            {'de': '=', 'en': 'June', 'fr': 'Juin'}
+    'Juli':            {'de': '=', 'en': 'July', 'fr': 'Juillet'}
+    'August':          {'de': '=', 'en': 'August', 'fr': 'Août'}
+    'September':       {'de': '=', 'en': 'September', 'fr': 'Septembre'}
+    'Oktober':         {'de': '=', 'en': 'October', 'fr': 'Octobre'}
+    'November':        {'de': '=', 'en': 'November', 'fr': 'Novembre'}
+    'Dezember':        {'de': '=', 'en': 'December', 'fr': 'Décembre'}
+
     'Host':            {'de': '=', 'en': '=', 'fr': 'Hôte'}
     'Port':            {'de': '=', 'en': '=', 'fr': '='}
     'IP':              {'de': '=', 'en': '=', 'fr': '='}
@@ -76,6 +89,7 @@ global_translations:
 
     'Letztes Update':        {'de': '=', 'en': 'Last Update', 'fr': ''}
     'Letzter Change':        {'de': '=', 'en': 'Last Change', 'fr': ''}
+    'Letzte Änderung':        {'de': '=', 'en': 'Last Change', 'fr': ''}
 
     #Translations for lib.scene:
     "A second 'scenes' object has been created. There should only be ONE instance of class 'Scenes'!!! Called from: {frame1} ({frame2})":

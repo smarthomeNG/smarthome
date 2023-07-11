@@ -48,7 +48,7 @@ class ServicesController(RESTResource):
         self._sh = module._sh
         self.module = module
         self.base_dir = self._sh.get_basedir()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.etc_dir = self._sh._etc_dir
         self.modules_dir = os.path.join(self.base_dir, 'modules')
@@ -112,7 +112,8 @@ class ServicesController(RESTResource):
             rel_to_item = items.return_item(relative_to)
             if rel_to_item is not None:
                 expanded_code = rel_to_item.get_stringwithabsolutepathes(eval_code, 'sh.', '(')
-                expanded_code = rel_to_item.get_stringwithabsolutepathes(expanded_code, 'sh.', '.property')
+                # Aufruf mit '.property' ist überflüssig
+                #expanded_code = rel_to_item.get_stringwithabsolutepathes(expanded_code, 'sh.', '.property')
                 value = rel_to_item()    #  item value for use in eval
             else:
                 expanded_code = "Error: Item {} does not exist!".format(relative_to)
