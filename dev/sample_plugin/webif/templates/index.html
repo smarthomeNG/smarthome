@@ -114,6 +114,19 @@ Activate that function if needed, otherwise just remove the line to increase per
 		catch (e) {
 			console.warn("Datatable JS not loaded, showing standard table without reorder option " + e);
 		}
+    /*
+    This part creates tooltips for buttons/inputs that have the class "button-tooltip"
+    */
+    const tooltipList = ['Nach Devices suchen'];
+    createTooltips(tooltipList);
+    /*
+    This part reads cookies for the attribute "sort_order" and activates the resepctive button after page load
+    */
+    order = getCookie('sort_order');
+    if (order == '')
+      order = 'time-desc';
+    const button = document.getElementById(order);
+    button.click();
 	});
 </script>
 <!--
@@ -169,7 +182,8 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 {% block buttons %}
 {% if 1==2 %}
 	<div>
-		<button id="btn1" class="btn btn-shng btn-sm" name="scan" onclick="shngPost('', {learn: 'on'})"><i class="fas fa-question"></i>&nbsp;&nbsp;&nbsp;{{ _('nach Devices suchen') }}&nbsp;</button>
+		<button id="btn1" class="btn btn-shng btn-sm" name="scan" onclick="shngPost('', {learn: 'on'})"><i class="fas fa-question button-tooltip"></i>&nbsp;&nbsp;&nbsp;{{ _('nach Devices suchen') }}&nbsp;</button>
+    <button onclick="setCookie('sort_order', 'time-desc', 365, window.pluginname);" type="button" class="button-tooltip" id="time-desc">Button</button>
 	</div>
 {% endif %}
 {% endblock %}
