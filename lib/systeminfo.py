@@ -148,7 +148,10 @@ class Systeminfo:
     def read_macosinfo(cls):
 
         output = subprocess.Popen(["sw_vers", ], stdout=subprocess.PIPE).communicate()
-        ostype, vers, build, extra = output[0].decode().split('\n')
+        try:
+            ostype, vers, build, extra = output[0].decode().split('\n')
+        except Exception:
+            ostype, vers, build, extra, _ = output[0].decode().split('\n')
         ostype = ostype.split('\t')[-1]
         vers = vers.split('\t')[-1]
         build = build.split('\t')[-1]
