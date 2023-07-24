@@ -285,25 +285,31 @@ class SmartDevicePlugin(SmartPlugin):
 
         return True
 
-    def set_standby(self, active=None):
+    def set_standby(self, stby_active=None):
         """
         enable / disable standby mode: open/close connections, schedulers
         """
-        if active is None:
+        if stby_active is None:
             if self._standby_item:
-                active = bool(self._standby_item())
+                stby_active = bool(self._standby_item())
             else:
-                active = False            
+                stby_active = False            
 
-        self.logger.info(f'Standby mode set to {active}')
-        self.standby = active
+        item_msg = ''
+        if self._standby_item:
+            item_msg = f' (set by item {self._standby_item_path})'
 
-        if active:
+        self.logger.info(f'Standby mode set to {stby_active}{item_msg}')
+        self.standby = stby_active
+
+        if stby_active:
             if self.scheduler_get(self.get_shortname() + '_cyclic'):
                 self.scheduler_remove(self.get_shortname() + '_cyclic')
+            self.logger.debug('closing connection on standby enabled')
             self.disconnect()
 
         else:
+            self.logger.debug('opening connection after standby disabled')
             self.connect()
 
             if self._connection.connected() and not SDP_standalone:
@@ -554,8 +560,8 @@ class SmartDevicePlugin(SmartPlugin):
 
             # check for standby item
             if item is self._standby_item:
-                self.standby = bool(self._standby_item())
-                self.logger.info(f'Standby item changed to {item()}')
+                self.logger.debug(f'Standby item changed to {item()}')
+                self.set_standby()
                 return
 
             if not (self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo')) or self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_READ_GRP', 'foo'))):
