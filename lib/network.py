@@ -951,6 +951,11 @@ class Tcp_client(object):
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
             self.__receive_thread.join()
 
+        self.__connect_thread = None
+        self.__receive_thread = None
+        self.__connect_threadlock = threading.Lock()
+        self.__receive_threadlock = threading.Lock()
+
     def __str__(self):
         if self.name:
             return self.name
@@ -1334,6 +1339,7 @@ class Tcp_server(object):
         with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
+        self.__listening_thread = None
         self.__loop.close()
 
     def __str__(self):
@@ -1474,6 +1480,7 @@ class Udp_server(object):
         with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
+        self.__listening_thread = None        
         self.__loop.close()
 
     async def __start_server(self):
