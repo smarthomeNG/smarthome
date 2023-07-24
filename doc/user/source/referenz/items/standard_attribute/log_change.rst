@@ -2,9 +2,9 @@
 .. role:: redsup
 .. role:: bluesup
 
-=========================================
-*log_change* und *log_text* :redsup:`Neu`
-=========================================
+===========================
+*log_change* und *log_text*
+===========================
 
 
 .. index:: Standard-Attribute; log_change

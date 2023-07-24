@@ -207,6 +207,7 @@
 
     "PATH": "Item Pfad",
     "NAME": "Item Name",
+    "DESCRIPTION": "Beschreibung",
     "TYPE": "Datentyp",
     "STRUCT": "Beinhaltet Struktur(en)",
     "UPDATE INFORMATION": "Änderungsinformationen",
@@ -311,6 +312,7 @@
     "NEXT EXECUTION": "nächste Ausführung",
     "PRIO": "Prio",
     "VALUE": "Wert",
+    "PARAMETERS": "Parameter",
     "CYCLE": "Cycle",
     "CRONTAB": "Crontab",
     "TRIGGERED_BY": "Getriggert durch",

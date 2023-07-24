@@ -25,34 +25,74 @@ Zunächst müssen einige zusätzlichen Pakete installiert werden:
 
 .. code-block:: bash
 
-   sudo apt-get -y install dialog python3 python3-dev python3-setuptools unzip git-core build-essential python3-pip
+   sudo apt-get -y install dialog python3 python3-dev python3-setuptools python3-venv unzip git-core build-essential python3-pip
 
 
 SmartHomeNG Quellcode laden
 ===========================
 
-SmartHomeNG Dateien vom github holen:
+.. tabs::
 
-Die folgenden Kommandos mit dem User Account (smarthome) durchführen
-unter dem später SmartHomeNG laufen soll, **nicht als root**.
+    .. tab:: SmartHomeNG ab v1.10
 
-**WICHTIG**: Das Skript ``tools/postinstall`` setzt die Dateiberechtigungen. Anschluießend prüft es, welche Python
-Version(en) auf dem System installiert sind und erstellt mit einer geeigneten Python Version ein virtuelles
-Environment in dem SmartHomeNG später laufen soll.
+        SmartHomeNG Dateien vom github holen:
 
-.. code-block:: bash
+        Die folgenden Kommandos mit dem User Account (smarthome) durchführen
+        unter dem später SmartHomeNG laufen soll, **nicht als root**.
 
-   cd /usr/local
-   sudo mkdir smarthome
-   sudo chown -R smarthome:smarthome /usr/local/smarthome
+        .. note::
 
-   cd smarthome
-   git clone https://github.com/smarthomeNG/smarthome.git .
-   git clone https://github.com/smarthomeNG/plugins.git plugins
+            **WICHTIG**: Das Skript ``tools/postinstall`` setzt die Dateiberechtigungen. Anschließend prüft es, welche
+            Python Version(en) auf dem System installiert sind und erstellt mit einer geeigneten Python Version ein
+            virtuelles Environment in dem SmartHomeNG später laufen soll.
 
-   bash tools/postinstall
+        .. code-block:: bash
 
-Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
+           cd /usr/local
+           sudo mkdir smarthome
+           sudo chown -R smarthome:smarthome /usr/local/smarthome
+
+           cd smarthome
+           git clone https://github.com/smarthomeNG/smarthome.git .
+           git clone https://github.com/smarthomeNG/plugins.git plugins
+
+           bash tools/postinstall
+
+        Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
+
+        Das Skript postinstall erzeugt ein virtuelles Environment **py_shng**, welches vor dem Start von SmartHomeNG
+        mit folgendem Befeht aktiviert werden muss:
+
+        .. code-block:: bash
+
+            cd /usr/local/smarthome
+            source venvs/act shng
+
+        Ausführlichere Informationen zu den virtuellen Python Environments sind im Abschnitt Referenz unter
+        :doc:`Python/Virtuelle Python Environments </referenz/referenz/python/virtual_environments>` zu finden.
+
+
+
+    .. tab:: SmartHomeNG vor v1.10
+
+        SmartHomeNG Dateien vom github holen:
+
+        Die folgenden Kommandos mit dem User Account (smarthome) durchführen
+        unter dem später SmartHomeNG laufen soll, **nicht als root**.
+
+        .. code-block:: bash
+
+           cd /usr/local
+           sudo mkdir smarthome
+           sudo chown -R smarthome:smarthome /usr/local/smarthome
+
+           cd smarthome
+           git clone https://github.com/smarthomeNG/smarthome.git .
+           git clone https://github.com/smarthomeNG/plugins.git plugins
+
+           bash tools/setpermissions
+
+        Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
 
 |
 

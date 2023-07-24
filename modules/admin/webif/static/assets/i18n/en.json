@@ -205,6 +205,7 @@
 
     "PATH": "Item Path",
     "NAME": "Item Name",
+    "DESCRIPTION": "Description",
     "TYPE": "Datatype",
     "STRUCT": "Contains structure(s)",
     "UPDATE INFORMATION": "Update Information",
@@ -310,6 +311,7 @@
     "NEXT EXECUTION": "Next Execution",
     "PRIO": "Prio",
     "VALUE": "Value",
+    "PARAMETERS": "Parameters",
     "CYCLE": "Cycle",
     "CRONTAB": "Crontab",
     "TRIGGERED_BY": "Triggered by",

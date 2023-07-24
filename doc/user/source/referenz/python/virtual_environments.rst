@@ -28,36 +28,24 @@ und muss dann separat installiert werden.
 
 **virtualenv** bietet eine größere Funktionalität als **venv**. Die Funktionalität von **venv** ist eine Untermenge
 der Funktionalität von **virtualenv**. **virtualenv** ist Vergleich zu **venv** schneller und es ist erweiterbar.
+Für den Einsatz im Kontext von SmartHomeNG wird diese größere Funktionalität jedoch nicht benötigt.
 
-Da **venv** Teil der Python Distribution ist, wird empfohlen diesem den Vorzug vor **virtualenv** zu geben.
+Da **venv** Teil der Python Distribution ist, wird empfohlen diesem den Vorzug vor **virtualenv** zu geben. Im
+Folgenden wird auch nur vom Einsatz von **venv** ausgegangen.
 
 |
 
-Die virtuellen Environments sollten in einem Unterverzeichnis zum Home Verzeichnis des Users **smarthome**
-gespeichert werden. Dieses Verzeichnis sollte zur einfacheren Handhabung der virtuellen Environments in
-den PATH aufgenommen werden.
+Die virtuellen Environments werden standardmäßig im Unterverzeichnis ``venvs`` des SmartHomeNG Basisverzeichnises
+gespeichert. Außer den virtuallen Environments enthält das Verzeichnis auch Skripte zur Verwaltung der
+virtuellen Environments.
 
-Empfohlen  wird das Verzeichnis **environments** zu nennen.
-
-
-.. code-block:: bash
-
-    $ mkdir ~/environments
-
-Zur Anlage eines Environments muss diese Verzeichnis das aktuelle Arbeitsverzeichnis sein.
-
-
-.. code-block:: bash
-
-    $ cd ~/environments
+Das postinstall Skript der SmartHomeNG Installation nimmt dieses Verzeichnis in den Pfad auf, so dass die Skripte
+ohne Pfadangabe aufgerufen werden können.
 
 |
 
 Installation von venv bzw. virtualenv
 =====================================
-
-Im folgenden wird davon ausgegangen, dass die Environments im Unterverzeichnis **environments** des Users **smarthome**
-erstellt/gespeichert werden.
 
 **venv** bzw. **virtualenv** wird am besten unter der Python Version installiert, für die später virtuelle
 Environments erstellt werden sollen. (**venv** ist bei aktuellen Distributionen bereits auf dem System installiert)
@@ -82,31 +70,20 @@ Jetzt kann mit dem folgenden Befehl ein virtual Environment erstellt werden, wel
 
 .. code-block:: bash
 
-    $ cd ~/environments
-    $ python3.10 -m venv py_3.10
+    $ make_env 3.10
 
-Anschließend muss für ein Environment das Environment aktiviert werden, um einige norwendige Python
-Packages in das Environment zu installieren bzw. aktualisieren.
-
-.. code-block:: bash
-
-    $ cd ~/environments
-    $ source py_3.10/bin/activate
-    (py_3.10) $ pip install --upgrade pip
-    (py_3.10) $ pip install wheel
-    (py_3.10) $ deactivate
-    $
+Während der Anlage wird das Environment aktiviert, um einige norwendige Python Packages in das Environment zu
+installieren bzw. zu aktualisieren.
 
 |
 
-Das Environment wird mit dem Kommande
+Das Environment wird mit dem Kommando
 
 .. code-block:: bash
 
-    $ source /home/smarthome/environments/py_3.10/bin/activate
-    (py_3.10) $
+    $ source act 3.10
 
-aktiviert. Eine Vereinfachung des Aufrufes ist weiter unten beschrieben.
+aktiviert.
 
 In dem Environment sind nun nur die Packages **pip**, **setuptools** und evtl. **wheel** installiert. Weitere benötigte
 Packages können ganz normal mit **pip3** nachinstalliert werden. (SmartHomeNG installiert wie bei einer kompletten
@@ -125,53 +102,8 @@ Um das virtuelle Environment zu deaktivieren, muss nur
 .. code-block:: bash
 
     (py_3.10) $ deactivate
-    $
 
 eingegeben werden.
-
-|
-
-Vereinfachtes Aktivieren der Environments
-=========================================
-
-Die Aktivierung der eingerichteten virtuellen Environments kann vereinfacht werden, wenn ein Skript mit dem Namen
-**act** und dem folgenden Inhalt im Verzeichnis **environments** angelegt wird.
-
-.. code-block:: bash
-
-    #!/bin/bash
-
-    # test if script is called with 'source'
-    (return 0 2>/dev/null) && sourced=1 || sourced=0
-
-    if [ "$sourced" -eq "0" ]; then
-        echo
-        echo ERROR: The script MUST be called with \'source\', like: \'source act $1\'
-        echo
-        exit
-    fi
-
-    if test -f "/home/smarthome/environments/py_$1/bin/activate"; then
-        echo
-        source /home/smarthome/environments/py_$1/bin/activate
-        echo "Activating virtual environment py_$1 (`python3 -V`)"
-        echo
-        echo To deactivate the virtual environment simply type the command \'deactivate\'
-    else
-        echo
-        echo "ERROR: Virtual environment py_$1 does not exist"
-    fi
-    echo
-
-Anschließend nicht vergessen das Skript mit ``chmod 775 act`` ausführbar zu machen.
-
-Nun kann ein existierendes Environment (z.B, py_3.9) einfach mit dem Befehl ``source act 3.9`` aktiviert werden.
-Das Verzeichnis ``/home/smarthome/environments`` sollte in den Pfad aufgenommen werden, damit ``act`` aus jedem
-Verzeichnis heraus aufgerufen werden kann, ohne den vollständigen Pfad angeben zu müssen.
-
-Das ``source`` im Aufruf ist wichtig, weil das Environment sonst bei Beendigung der Skriptes ``act`` wieder beendet wird.
-
-Der geänderte Prompt zeigt an, dass das Virtual Environment **py_3.9** aktiv ist.
 
 |
 
@@ -184,11 +116,8 @@ deaktivieren.
 
 .. code-block:: bash
 
-    $ cd ~/environments
+    $ cd /usr/local/smarthome/venvs
     $ rm -r py_3.10
-
-Wenn ein jungfräuliches virtuelles Environment benötigt wird, so ist es zuerst zu löschen und anschließend neu zu
-erstellen.
 
 |
 
@@ -219,7 +148,7 @@ und folgenden Text hineinkopieren:
 
    [Service]
    Type=forking
-   ExecStart=/home/smarthome/environments/py_310/bin/python3 /usr/local/smarthome/bin/smarthome.py
+   ExecStart=/usr/local/smarthome/venvs/py_310/bin/python3 /usr/local/smarthome/bin/smarthome.py
    WorkingDirectory=/usr/local/smarthome
    User=smarthome
    PIDFile=/usr/local/smarthome/var/run/smarthome.pid

@@ -643,10 +643,12 @@ class Scheduler(threading.Thread):
                     next_time = ct
                     job['source'] = {'source': 'cron', 'details': str(entry)}
                     value = job['cron'][entry]
+
         self._scheduler[name]['next'] = next_time
-        self._scheduler[name]['value'] = value
-        #if name not in ['Connections', 'series', 'SQLite dump']:
-        #    logger.debug(f"{name} next time: {next_time}")
+
+        if value is not None:
+            self._scheduler[name]['value'] = value
+
         logger.debug(f"{name} next time: {next_time}")
 
     def __iter__(self):
@@ -681,6 +683,7 @@ class Scheduler(threading.Thread):
     def _task(self, name, obj, by, source, dest, value):
         threading.current_thread().name = name
         #logger = logging.getLogger('_task.' + name)
+
         if obj.__class__.__name__ == 'Logic':
             self._execute_logic_task(obj, by, source, dest, value)
 

@@ -51,8 +51,8 @@ $(window).bind('datatables_defaults', function() {
 					$(this).on( 'click', 'tbody tr td', function () {
 						if ($(this).hasClass( "datatable-responsive" )){
 							window.toggle = window.toggle * -1 + 0.1;
-							console.log("click responsive, resize");
-							$(window).resize();
+							console.log("click responsive, recalc");
+							//$(window).resize();
 							$(this).parent().parent().parent().DataTable().responsive.recalc();
 						}
 					});

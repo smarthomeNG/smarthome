@@ -163,6 +163,26 @@
         "logfiles": []
       }
     },
+    "plugins.beolink": {
+      "level": "NOTICE",
+      "active": {
+        "disabled": false,
+        "level": "NOTICE",
+        "filters": [],
+        "handlers": [],
+        "logfiles": []
+      }
+    },
+    "plugins.beolink.notify": {
+      "level": "INFO",
+      "active": {
+        "disabled": false,
+        "level": "INFO",
+        "filters": [],
+        "handlers": [],
+        "logfiles": []
+      }
+    },
     "plugins.blockly": {
       "level": "WARNING",
       "active": {
@@ -888,6 +908,7 @@
   "active_plugins": [
     "avm",
     "backend",
+    "beolink",
     "cli",
     "database",
     "homematic",

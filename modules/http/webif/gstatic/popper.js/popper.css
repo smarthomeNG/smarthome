@@ -1,0 +1,347 @@
+.tooltip {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip[data-show] {
+  display: block;
+}
+
+.arrow,
+.arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+.arrow {
+  visibility: hidden;
+}
+
+.arrow::before {
+  visibility: visible;
+  content: '';
+  transform: rotate(45deg);
+}
+
+.tooltip[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip0 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip0[data-show] {
+  display: block;
+}
+
+.tooltip0[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip0[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip0[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip0[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip1 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip1[data-show] {
+  display: block;
+}
+
+.tooltip1[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip1[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip1[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip1[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip2 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip2[data-show] {
+  display: block;
+}
+
+.tooltip2[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip2[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip2[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip2[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip3 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip3[data-show] {
+  display: block;
+}
+
+.tooltip3[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip3[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip3[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip3[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip4 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip4[data-show] {
+  display: block;
+}
+
+.tooltip4[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip4[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip4[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip4[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip5 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip5[data-show] {
+  display: block;
+}
+
+.tooltip5[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip5[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip5[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip5[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip6 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip6[data-show] {
+  display: block;
+}
+
+.tooltip6[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip6[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip6[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip6[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip7 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip7[data-show] {
+  display: block;
+}
+
+.tooltip7[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip7[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip7[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip7[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip8 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip8[data-show] {
+  display: block;
+}
+
+.tooltip8[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip8[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip8[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip8[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+
+.tooltip9 {
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: none;
+}
+
+.tooltip9[data-show] {
+  display: block;
+}
+
+.tooltip9[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip9[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tooltip9[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tooltip9[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}

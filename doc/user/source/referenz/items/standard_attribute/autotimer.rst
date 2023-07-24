@@ -25,10 +25,17 @@ Das allgemeine Format für die Angabe des **autotimer** Attributes ist:
    myitem:
        autotimer: <Dauer> [; <Wert>]
 
-Der Wert für **Dauer** kann auf folgende Weise angegeben werden:
+**Ab SmartHomeNG v1.10** möglichen Angaben für die Dauer erweitert. Der Wert für **Dauer** kann auf folgende
+Weise angegeben werden:
 
     - eine Zahl, die die Anzahl an Sekunden angibt
+
+    - eine Zahl gefolgt von **h**, gibt die Anzahl an Stunden an
     - eine Zahl gefolgt von **m**, gibt die Anzahl an Minuten an
+    - eine Zahl gefolgt von **s**, gibt die Anzahl an Sekunden an
+    - Eine Kombination der Stunden, Minuten und Sekunden Angaben (z.B.: 2h30m45s)
+
+|
 
 Der Wert für **Wert** ist optional. Falls er weg gelassen wird, wird nach Ablauf der Dauer das Item auf den
 Wert gesetzt, den es zum Zeitpunkt der auslösenden Wertänderung angenommen hat.

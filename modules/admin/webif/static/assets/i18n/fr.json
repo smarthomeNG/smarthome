@@ -202,6 +202,7 @@
 
     "PATH": "Chemin de l'objet",
     "NAME": "Nom de l'objet",
+    "DESCRIPTION": "Description",
     "TYPE": "Type de donnée",
     "STRUCT": "Contient des structures",
     "UPDATE INFORMATION": "Informations des mises à hour",
@@ -305,6 +306,7 @@
     "NEXT EXECUTION": "Prochaine exécution",
     "PRIO": "Prio",
     "VALUE": "Valeur",
+    "PARAMETERS": "Paramètres",
     "CYCLE": "Cycle",
     "CRONTAB": "Crontab",
     "TRIGGERED_BY": "Déclenchées par",

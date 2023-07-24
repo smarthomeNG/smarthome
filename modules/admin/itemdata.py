@@ -149,6 +149,10 @@ class ItemData:
                 prev_value = html.escape(prev_value)
                 last_value = html.escape(last_value)
 
+            description = item.property.description
+            if description is None:
+                description = ''
+
             #cycle = ''
             crontab = ''
             for entry in self._sh.scheduler._scheduler:
@@ -238,8 +242,9 @@ class ItemData:
             if item._autotimer_value is not None:
                 autotimer += ' ' + ATTRIBUTE_SEPARATOR + ' ' + str(item._autotimer_value)
 
-            data_dict = {'path': item._path,
-                         'name': item._name,
+            data_dict = {'path': item.property.path,
+                         'name': item.property.name,
+                         'description': description,
                          'type': item.property.type,
                          'value': value,
                          'change_age': item.property.last_change_age,

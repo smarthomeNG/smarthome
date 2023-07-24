@@ -378,7 +378,7 @@ class Http(Module):
         if self._showservicelist == True:
             # Register the service-list as a cherrypy app
             self.root.services = _ServicesApp(self)
-            self.register_service(self.root.services, 'services', config)
+            self.register_service(self.root.services, 'services', config_services)
 #                                  pluginclass='', instance='', description='', servicename='')
 
         return
@@ -634,12 +634,7 @@ class Http(Module):
         self._hostmap[self.dom2] = '/plugins'
         self._hostmap[self.dom3] = '/plugins'
 
-        if self._port != self._servicesport:
-            self._hostmap[self.dom4] = '/services'
-            self._hostmap[self.dom5] = '/services'
-            self._hostmap[self.dom6] = '/services'
-
-#        self.logger.info("_hostmap = {}".format(self._hostmap))
+  #        self.logger.info("_hostmap = {}".format(self._hostmap))
 
         self._hostmap_webifs = {}
         self._hostmap_webifs[self.dom1] = ''       # früher: '/msg'
@@ -648,9 +643,9 @@ class Http(Module):
 
         self._hostmap_services = {}
         if self._port != self._servicesport:
-            self._hostmap_services[self.dom4] = '/msgS'
-            self._hostmap_services[self.dom5] = '/msgS'
-            self._hostmap_services[self.dom6] = '/msgS'
+            self._hostmap_services[self.dom4] = ''
+            self._hostmap_services[self.dom5] = ''
+            self._hostmap_services[self.dom6] = ''
 
         self.logger.info(f"_hostmap = {self._hostmap}")
         self.logger.info(f"_hostmap_webifs = {self._hostmap_webifs}")
@@ -876,7 +871,7 @@ class Http(Module):
 
         It should be called like this:
 
-            self.mod_http.register_service(self.get_shortname(), config, use_global_basic_auth)
+            self.mod_http.register_visu(self.get_shortname(), config, use_global_basic_auth)
 
 
         :param pluginname: Mount point for the service
