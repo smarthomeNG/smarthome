@@ -140,6 +140,11 @@ class SmartDevicePlugin(SmartPlugin):
 
         # set class properties
 
+        # "standby" mode properties
+        self.standby = False
+        self._standby_item = None
+        self._standby_item_path = self.get_parameter_value('standby_item_path')
+
         # connection instance
         self._connection = None
         # commands instance
@@ -206,6 +211,11 @@ class SmartDevicePlugin(SmartPlugin):
         # call smartplugin method
         if not super().remove_item(item):
             return False
+
+        if item.path == self._standby_item_path:
+            self.standby(False)
+            self.logger.warning(f'removed standby item {item.path()}, disabling standby')
+            return True
 
         """ remove item from custom plugin dicts/lists """
         if item in self._items_write:
@@ -275,6 +285,36 @@ class SmartDevicePlugin(SmartPlugin):
 
         return True
 
+    def set_standby(self, stby_active=None):
+        """
+        enable / disable standby mode: open/close connections, schedulers
+        """
+        if stby_active is None:
+            if self._standby_item:
+                stby_active = bool(self._standby_item())
+            else:
+                stby_active = False            
+
+        item_msg = ''
+        if self._standby_item:
+            item_msg = f' (set by item {self._standby_item_path})'
+
+        self.logger.info(f'Standby mode set to {stby_active}{item_msg}')
+        self.standby = stby_active
+
+        if stby_active:
+            if self.scheduler_get(self.get_shortname() + '_cyclic'):
+                self.scheduler_remove(self.get_shortname() + '_cyclic')
+            self.logger.debug('closing connection on standby enabled')
+            self.disconnect()
+
+        else:
+            self.logger.debug('opening connection after standby disabled')
+            self.connect()
+
+            if self._connection.connected() and not SDP_standalone:
+                self._create_cyclic_scheduler()
+
     def run(self):
         """
         Run method for the plugin
@@ -286,13 +326,10 @@ class SmartDevicePlugin(SmartPlugin):
 
         # start the devices
         self.alive = True
-
-        self.connect()
+        self.set_standby()
 
         if self._connection.connected():
             self._read_initial_values()
-            if not SDP_standalone:
-                self._create_cyclic_scheduler()
 
     def stop(self):
         """
@@ -300,10 +337,10 @@ class SmartDevicePlugin(SmartPlugin):
         """
         self.logger.debug('Stop method called')
         self.alive = False
-
         if self.scheduler_get(self.get_shortname() + '_cyclic'):
             self.scheduler_remove(self.get_shortname() + '_cyclic')
-        self._connection.close()
+        self.disconnect()
+
 
     def connect(self):
         """
@@ -354,6 +391,12 @@ class SmartDevicePlugin(SmartPlugin):
                 return self.get_iattr_value(parent.conf, self._item_attrs.get('ITEM_ATTR_CUSTOM' + str(index), 'foo'))
 
             return find_custom_attr(parent, index)
+
+        # check for standby item
+        if item.path() == self._standby_item_path:
+            self._standby_item = item
+            self.add_item(item, updating=True)
+            return self.update_item
 
         command = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo'))
 
@@ -514,6 +557,13 @@ class SmartDevicePlugin(SmartPlugin):
         if self.alive:
 
             self.logger.debug(f'Update_item was called with item "{item}" from caller {caller}, source {source} and dest {dest}')
+
+            # check for standby item
+            if item is self._standby_item:
+                self.logger.debug(f'Standby item changed to {item()}')
+                self.set_standby()
+                return
+
             if not (self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo')) or self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_READ_GRP', 'foo'))):
                 self.logger.warning(f'Update_item was called with item {item}, which is not configured for this plugin. This shouldn\'t happen...')
                 return
@@ -561,7 +611,11 @@ class SmartDevicePlugin(SmartPlugin):
         :rtype: bool
         """
         if not self.alive:
-            self.logger.warning(f'trying to send command {command} with value {value}, but device is not active.')
+            self.logger.warning(f'trying to send command {command} with value {value}, but plugin is not active.')
+            return False
+
+        if self.standby:
+            self.logger.warning(f'trying to send command {command} with value {value}, but plugin is on standby.')
             return False
 
         if not self._connection:
@@ -585,6 +639,12 @@ class SmartDevicePlugin(SmartPlugin):
             if not self._connection.connected():
                 self.logger.warning(f'trying to send command {command} with value {value}, but connection could not be established.')
                 return False
+
+        # enable doing something before sending data normally
+        # passing kwargs as dict is no error, possible modification is intended
+        continue_send, result = self._do_before_send(command, value, kwargs)
+        if not continue_send:
+            return result
 
         try:
             data_dict = self._commands.get_send_data(command, value, **kwargs)
@@ -626,6 +686,7 @@ class SmartDevicePlugin(SmartPlugin):
         """
         data = self._transform_received_data(data)
         commands = None
+
         if command is not None:
             self.logger.debug(f'received data "{data}" from {by} for command {command}')
             commands = [command]
@@ -641,12 +702,18 @@ class SmartDevicePlugin(SmartPlugin):
             if not commands:
                 if self._discard_unknown_command:
                     self.logger.debug(f'data "{data}" did not identify a known command, ignoring it')
-                    return
                 else:
-                    self.logger.debug(f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}')
-                    self._dispatch_callback(self._unknown_command, data, by)
+                    if not self.standby:
+                        self.logger.debug(f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}')
+                        self._dispatch_callback(self._unknown_command, data, by)
+                    else:
+                        self.logger.info(f'received data "{data}" not identifying a known command while in standby, aborting.')            
+                return
 
-# TODO: remove later?
+        if self.standby:
+            self.logger.info(f'received data "{data}" from {by} for command {command} while on standby, ignoring.')
+            return
+
         assert(isinstance(commands, list))
 
         # process all commands
@@ -681,7 +748,7 @@ class SmartDevicePlugin(SmartPlugin):
         :param by: str
         :type command: str
         """
-        if self.alive:
+        if self.alive and not self.standby:
 
             item = None
 
@@ -691,6 +758,10 @@ class SmartDevicePlugin(SmartPlugin):
 
             if not items:
                 self.logger.warning(f'Command {command} yielded value {value} by {by}, not assigned to any item, discarding data')
+                return
+
+            if self.standby:
+                self.logger.error(f'Trying to update item {item.path()}, but on standby. This should not happen, please report to developer.')
                 return
 
             for item in items:
@@ -789,6 +860,20 @@ class SmartDevicePlugin(SmartPlugin):
         By default, nothing happens here.
         """
         return data
+
+    def _do_before_send(self, command, value, kwargs):
+        """
+        This method provides a way to act before send_command actually sends
+        anything, e.g. checking for "special commands" which are internal
+        trigger signals or something like this.
+
+        You need to return two boolen values: continue_send and result
+        If continue_send is True, send_command will behave normally and continue
+        sending the specified command.
+        If continue_send is False, send_command will abort and return <result>
+        """
+        return (True, True)
+        # return (False, True)
 
     def _send(self, data_dict):
         """

@@ -158,6 +158,15 @@ parameters:
             de: 'Anzahl Stopbits'
             en: 'number of stop bits'
 
+    # standby mode configuration
+    # mute plugin on setting associated item to True
+    standby_item_path:
+        type: str
+        default: ''
+        description:
+            de: 'Item-Pfad für das Standby-Item'
+            en: 'item path for standby switch item'
+
     # more fundamental connection settings
     # !! plugin defaults can be set here (add default:) or in code
     # adjust/set only if necessary for plugin
