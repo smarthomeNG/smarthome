@@ -640,6 +640,12 @@ class SmartDevicePlugin(SmartPlugin):
                 self.logger.warning(f'trying to send command {command} with value {value}, but connection could not be established.')
                 return False
 
+        # enable doing something before sending data normally
+        # passing kwargs as dict is no error, possible modification is intended
+        continue_send, result = self._do_before_send(command, value, kwargs)
+        if not continue_send:
+            return result
+
         try:
             data_dict = self._commands.get_send_data(command, value, **kwargs)
         except Exception as e:
@@ -708,7 +714,6 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.info(f'received data "{data}" from {by} for command {command} while on standby, ignoring.')
             return
 
-# TODO: remove later?
         assert(isinstance(commands, list))
 
         # process all commands
@@ -855,6 +860,20 @@ class SmartDevicePlugin(SmartPlugin):
         By default, nothing happens here.
         """
         return data
+
+    def _do_before_send(self, command, value, kwargs):
+        """
+        This method provides a way to act before send_command actually sends
+        anything, e.g. checking for "special commands" which are internal
+        trigger signals or something like this.
+
+        You need to return two boolen values: continue_send and result
+        If continue_send is True, send_command will behave normally and continue
+        sending the specified command.
+        If continue_send is False, send_command will abort and return <result>
+        """
+        return (True, True)
+        # return (False, True)
 
     def _send(self, data_dict):
         """
