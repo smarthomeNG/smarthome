@@ -885,11 +885,13 @@ class Tcp_client(object):
                                     self.logger.debug(f'{self._id} autoreconnect enabled')
                                     self.connect()
                                 if self._is_connected:
-                                    self.logger.debug('{self._id} set read watch on socket again')
+                                    self.logger.debug(f'{self._id} set read watch on socket again')
                                     waitobj.watch(self._socket, read=True)
                             else:
                                 # socket shut down by self.close, no error
-                                self.logger.debug('{self._id} connection shut down by call to close method')
+                                self.logger.debug(f'{self._id} connection shut down by call to close method')
+                                self._is_receiving = False
+                                self._is_connected = False
                                 return
         except Exception as ex:
             if not self.__running:
@@ -950,6 +952,12 @@ class Tcp_client(object):
             self.__connect_thread.join()
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
             self.__receive_thread.join()
+
+        self.__connect_thread = None
+        self.__receive_thread = None
+        self.__connect_threadlock = threading.Lock()
+        self.__receive_threadlock = threading.Lock()
+        self._is_connected = False
 
     def __str__(self):
         if self.name:
@@ -1334,6 +1342,7 @@ class Tcp_server(object):
         with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
+        self.__listening_thread = None
         self.__loop.close()
 
     def __str__(self):
@@ -1474,6 +1483,7 @@ class Udp_server(object):
         with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
+        self.__listening_thread = None        
         self.__loop.close()
 
     async def __start_server(self):
