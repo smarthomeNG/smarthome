@@ -273,11 +273,10 @@ class LogicsController(RESTResource):
             logic_conf['next_exec'] = mylogic['next_exec']
             logic_conf['last_run'] = mylogic['last_run']
 
-        # self.logger.warning("type = {}, mylogic = {}".format(type(mylogic), mylogic))
+            # self.logger.warning("type = {}, mylogic = {}".format(type(mylogic), mylogic))
         # self.logger.warning("type = {}, logic_conf = {}".format(type(logic_conf), logic_conf))
 
         return json.dumps(logic_conf)
-
 
 
     # ======================================================================
@@ -309,6 +308,21 @@ class LogicsController(RESTResource):
         return
 
 
+    def get_logic_state(self, logicname):
+        """
+
+        :param logicname:
+        :param action:
+        :return:
+
+        valid actions are: 'loaded'
+        """
+        self.logger.info(f"LogicsController.get_logic_state(): logicname = {logicname}")
+        logic_status = {}
+        logic_status['is_loaded'] = self.logics.is_logic_loaded(logicname)
+        return json.dumps(logic_status)
+
+
     def set_logic_state(self, logicname, action, filename):
         """
 
@@ -318,8 +332,7 @@ class LogicsController(RESTResource):
 
         valid actions are: 'enable', 'disable', 'trigger', 'unload', 'load', 'reload', 'delete', 'create'
         """
-
-        self.logger.info("LogicsController.set_logic_state(): logicname = {}, action = {}".format(logicname, action))
+        self.logger.info(f"LogicsController.set_logic_state(): logicname = {logicname}, action = {action}")
         if action == 'enable':
             self.logics.enable_logic(logicname)
             return json.dumps( {"result": "ok"} )
@@ -334,14 +347,20 @@ class LogicsController(RESTResource):
             return json.dumps({"result": "ok"})
         elif action == 'load':
             self.logics.load_logic(logicname)
-            return json.dumps({"result": "ok"})
+            if self.logics.is_logic_loaded(logicname):
+                return json.dumps({"result": "ok"})
+            else:
+                return json.dumps({"result": "error", "description": "Logic could not be loaded - for details look at the log"})
         elif action == 'reload':
             self.logics.load_logic(logicname)            # implies unload_logic()
-            crontab = self.logics.get_logiccrontab(logicname)
-            if (crontab is not None) and ('init' in crontab):
-                self.logger.info("LogicsController.set_logic_state(relaod): Triggering logic because crontab contains 'init' - crontab = '{}'".format(crontab))
-                self.logics.trigger_logic(logicname, by='Admin')
-            return json.dumps({"result": "ok"})
+            if self.logics.is_logic_loaded(logicname):
+                crontab = self.logics.get_logiccrontab(logicname)
+                if (crontab is not None) and ('init' in crontab):
+                    self.logger.info("LogicsController.set_logic_state(relaod): Triggering logic because crontab contains 'init' - crontab = '{}'".format(crontab))
+                    self.logics.trigger_logic(logicname, by='Admin')
+                return json.dumps({"result": "ok"})
+            else:
+                return json.dumps({"result": "error", "description": "Logic could not be loaded - for details look at the log"})
         elif action == 'delete_with_code':
             self.logger.info(f"set_logic_state: action={action}")
             self.logics.delete_logic(logicname, with_code=True)
@@ -425,9 +444,9 @@ class LogicsController(RESTResource):
         return json.dumps(response)
 
 
-    def read(self, logicname=None):
+    def read(self, logicname=None, infotype=None):
         """
-        return an object with type info about all logics
+        return an object with type info about all logics or of a specific logic (if logicname is given)
         """
         # create a list of dicts, where each dict contains the information for one logic
         self.logger.info("LogicsController.read()")
@@ -444,8 +463,10 @@ class LogicsController(RESTResource):
 
         if logicname is None:
             return self.get_logics_info()
-        else:
+        elif infotype is None:
             return self.get_logic_info(logicname)
+        elif infotype == 'status':
+            return self.get_logic_state(logicname)
 
 
     read.expose_resource = True
@@ -472,7 +493,8 @@ class LogicsController(RESTResource):
         elif not action in ['create', 'load', 'delete', 'delete_with_code']:
             mylogic = self.logics.return_logic(logicname)
             if mylogic is None:
-                return json.dumps({'result': 'Error', 'description': "No logic with name '" + logicname + "' found"})
+                self.logger.info(f"Error: No loaded logic with name '{logicname}' found")
+                return json.dumps({'result': 'Error', 'description': f"No loaded logic with name '{logicname}' found"})
 
         if logicname != '':
             return self.set_logic_state(logicname, action, filename)

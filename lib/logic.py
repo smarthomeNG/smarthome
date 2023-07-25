@@ -123,9 +123,16 @@ class Logics():
 
         for name in _config:
             if name == '_groups':
-                self._groups = _config[name]
+                #self._groups = _config[name]
+                pass
             else:
                 self._load_logic(name, _config)
+
+        # load /etc/admin.yaml
+        admconf_filename = os.path.join(self._get_etc_dir(), 'admin')
+        _admin_conf = shyaml.yaml_load_roundtrip(admconf_filename)
+
+        self._groups = _admin_conf['logics']['groups']
 
 
     def _read_logics(self, filename, directory):
@@ -260,7 +267,7 @@ class Logics():
         if name != '':
             name = '.'+name
         name = self._logicname_prefix+self.get_fullname()+name
-        self.logger.debug("scheduler_add: name = {}".format(name))
+        logger.debug("scheduler_add: name = {}".format(name))
         self.scheduler.add(name, obj, prio, cron, cycle, value, offset, next, from_smartplugin=True)
 
 
@@ -271,7 +278,7 @@ class Logics():
         if name != '':
             name = '.'+name
         name = self._logicname_prefix+self.get_fullname()+name
-        self.logger.debug("scheduler_change: name = {}".format(name))
+        logger.debug("scheduler_change: name = {}".format(name))
         self.scheduler.change(name, kwargs)
 
 
@@ -286,7 +293,7 @@ class Logics():
         if name != '':
             name = '.'+name
         name = self._logicname_prefix+self.get_fullname()+name
-        self.logger.debug("scheduler_remove: name = {}".format(name))
+        logger.debug("scheduler_remove: name = {}".format(name))
         self.scheduler.remove(name, from_smartplugin=False)
 
 
@@ -511,15 +518,19 @@ class Logics():
         :return: Success
         :rtype: bool
         """
+        logger.info("load_logics: Start")
         if self.is_logic_loaded(name):
             self.unload_logic(name)
 
         _config = self._read_logics(self._get_logic_conf_basename(), self.get_logics_dir())
         if not (name in _config):
             logger.warning("load_logic: FAILED: Logic '{}', _config = {}".format( name, str(_config) ))
+            logger.info("load_logics: Failed")
             return False
 
         logger.info("load_logic: Logic '{}', _config = {}".format( name, str(_config) ))
+
+        logger.info("load_logics: End")
         return self._load_logic(name, _config)
 
 
@@ -912,11 +923,11 @@ class Logics():
         :return: True, if deletion fas successful
         :rtype: bool
         """
-        logger.notice(f"delete_logic: This routine implements the deletion of logic '{name}' with_code={with_code} (still in testing)")
+        #logger.notice(f"delete_logic: This routine implements the deletion of logic '{name}' with_code={with_code} (still in testing)")
 
         # Logik entladen
         if self.is_logic_loaded(name):
-            logger.notice(f"delete_logic: Logic '{name}' unloaded")
+            logger.info(f"delete_logic: Logic '{name}' unloaded")
             self.unload_logic(name)
 
         # load /etc/logic.yaml
@@ -945,14 +956,14 @@ class Logics():
                         logger.warning(f"delete_logic: Blockly-Logic file '{blocklyname}' deleted")
                     if os.path.isfile(filename):
                         os.remove(filename)
-                        logger.notice(f"delete_logic: Logic file '{filename}' deleted")
+                        logger.info(f"delete_logic: Logic file '{filename}' deleted")
             else:
                 logger.warning(f"delete_logic: Skipped deletion of logic file '{filename}' because it is used by {count-1} other logic(s)")
 
         # delete logic configuration from ../etc/logic.yaml
         if conf.get(name, None) is not None:
             del conf[name]
-            logger.notice(f"delete_logic: Section '{name}' from configuration deleted")
+            logger.info(f"delete_logic: Section '{name}' from configuration deleted")
 
         # save /etc/logic.yaml
         shyaml.yaml_save_roundtrip(conf_filename, conf, True)
@@ -1015,7 +1026,7 @@ class Logic():
             self._prio = int(self._prio)
             self._generate_bytecode()
         else:
-            logger.error("Logic {} is not configured correctly (configuration has no attibutes)".format(self._name))
+            self.logger.error("Logic {} is not configured correctly (configuration has no attibutes)".format(self._name))
 
 
     def id(self):
@@ -1308,12 +1319,12 @@ class Logic():
         if self._enabled:
             self.scheduler.trigger(self._logicname_prefix+self._name, self, prio=self._prio, by=by, source=source, dest=dest, value=value, dt=dt)
         else:
-            logger.info("trigger: Logic '{}' not triggered because it is disabled".format(self._name))
+            self.logger.info("trigger: Logic '{}' not triggered because it is disabled".format(self._name))
 
     def _generate_bytecode(self):
         if hasattr(self, '_pathname'):
             if not os.access(self._pathname, os.R_OK):
-                logger.warning("{}: Could not access logic file ({}) => ignoring.".format(self._name, self._pathname))
+                self.logger.warning("{}: Could not access logic file ({}) => ignoring.".format(self._name, self._pathname))
                 return
             try:
                 f = open(self._pathname, encoding='UTF-8')
@@ -1322,9 +1333,9 @@ class Logic():
                 code = code.lstrip('\ufeff')  # remove BOM
                 self._bytecode = compile(code, self._pathname, 'exec')
             except Exception as e:
-                logger.exception("Exception: {}".format(e))
+                self.logger.exception("Exception: {}".format(e))
         else:
-            logger.warning("{}: No pathname specified => ignoring.".format(self._name))
+            self.logger.warning("{}: No pathname specified => ignoring.".format(self._name))
 
     def add_method_trigger(self, method):
         self.__methods_to_trigger.append(method)
