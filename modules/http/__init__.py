@@ -856,6 +856,7 @@ class Http(Module):
                                            'Pluginname': pluginname, 'Instance': instance, 'Conf': conf,
                                            'Description': description}
             self.logger.info("self._services['{}'] = {}".format(service_key, self._services[service_key]))
+
         if len(self._hostmap_services) > 0:
             conf['/']['request.dispatch'] = cherrypy.dispatch.VirtualHost(**self._hostmap_services)
 
