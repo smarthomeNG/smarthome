@@ -500,9 +500,9 @@ class UDPServer(socket.socket):
 
 
 class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
-    """ Connection via TCP / HTTP requests and listens for UDP messages
+    """ Connection via TCP/HTTP requests and listens for UDP messages
 
-    This class implements TCP connections in the query-reply matter using
+    This class implements UDP connections in the query-reply matter using
     the requests library, e.g. for HTTP communication.
 
     The data_dict['payload']-Data needs to be the full query URL. Additional
@@ -539,6 +539,11 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
         except Exception:
             pass
 
+        if self.__receive_thread is not None and self.__receive_thread.is_alive():
+            self.__receive_thread.join()
+        self.__receive_thread = None
+        self._connected = False
+
     def _receive_thread_worker(self):
         self.sock = UDPServer(self._params[PLUGIN_ATTR_NET_PORT])
         if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
@@ -556,6 +561,7 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
                 if self._data_received_callback:
                     self._data_received_callback(host, data.decode('utf-8'))
 
+        self._connected = False
         self.sock.close()
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](self.__str__() + ' UDP_listener')
@@ -630,6 +636,7 @@ class SDPConnectionSerial(SDPConnection):
 
     def _open(self):
         if self._is_connected:
+            self.logger.debug(f'{self.__class__.__name__} _open called while connected, doing nothing')
             return True
         self.logger.debug(f'{self.__class__.__name__} _open called with params {self._params}')
 
@@ -870,6 +877,8 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
             self.__receive_thread.join()
         except Exception:
             pass
+        self.__receive_thread = None
+        self._is_connected = False
 
     def __receive_thread_worker(self):
         """ thread worker to handle receiving """
