@@ -540,26 +540,32 @@ class Tcp_client(object):
     :param port: Remote host port to connect to
     :param name: Name of this connection (mainly for logging purposes). Try to keep the name short.
     :param autoreconnect: Should the socket try to reconnect on lost connection (or finished connect cycle)
-    :param connect_retries: Number of connect retries per cycle
-    :param connect_cycle: Time between retries inside a connect cycle
-    :param retry_cycle: Time between cycles if :param:autoreconnect is True
+    :param autoconnect: automatically connect on send. Copies autoreconnect if None
+    :param connect_retries: Number of connect retries per connect round
+    :param connect_cycle: Time between retries inside a connect round
+    :param retry_cycle: Time between connect rounds if autoreconnect is True
+    :param retry_abort: abort connecting after this many failed connect rounds and call abort_callback, no action if set to 0 or callback not set
+    :param abort_callback: callback function to be run on connection abort 
     :param binary: Switch between binary and text mode. Text will be encoded / decoded using encoding parameter.
     :param terminator: Terminator to use to split received data into chunks (split lines <cr> for example). If integer then split into n bytes. Default is None means process chunks as received.
-    :param autoconnect: automatically connect on send. Copies autoreconnect if None
+    :param timeout: Timeout to set for connected socket. Don't change without reason
 
     :type host: str
     :type port: int
     :type name: str
     :type autoreconnect: bool
+    :type autoconnect: bool
     :type connect_retries: int
     :type connect_cycle: int
     :type retry_cycle: int
+    :type retry_abort: int
+    :type abort_callback: function
     :type binary: bool
     :type terminator: int | bytes | str
-    :type autoconnect: bool
+    :type timeout: int
     """
 
-    def __init__(self, host, port, name=None, autoreconnect=True, connect_retries=5, connect_cycle=5, retry_cycle=30, binary=False, terminator=False, timeout=1, autoconnect=None):
+    def __init__(self, host, port, name=None, autoreconnect=True, autoconnect=None, connect_retries=5, connect_cycle=5, retry_cycle=30, retry_abort=0, abort_callback=None, binary=False, terminator=False, timeout=1):
         self.logger = logging.getLogger(__name__)
 
         # public properties
@@ -577,13 +583,16 @@ class Tcp_client(object):
         self._is_receiving = False
         self._connect_retries = connect_retries
         self._connect_cycle = connect_cycle
-        self._retry_cycle = retry_cycle
+        self._retry_cycle = int(retry_cycle)
+        self._retry_abort = retry_abort
+        self._abort_callback = abort_callback
         self._timeout = timeout
 
         self._hostip = None
         self._family = socket.AF_INET
         self._socket = None
         self._connect_counter = 0
+        self._retry_round_counter = 0
         self._binary = binary
 
         self._connected_callback = None
@@ -742,10 +751,11 @@ class Tcp_client(object):
             return
         self.logger.debug(f'{self._id} starting connection cycle')
         self._connect_counter = 0
+        self._retry_round_counter = 0
         self.__running = True
         while self.__running and not self._is_connected:
-            # Try a full connect cycle
-            while not self._is_connected and self._connect_counter < self._connect_retries and self.__running:
+            # Try a full connect round
+            while not self._is_connected and self._connect_counter < self._connect_retries and (self._retry_round_counter < self._retry_abort or not self._retry_abort) and self.__running:
                 self._connect()
                 if self._is_connected:
                     try:
@@ -762,10 +772,15 @@ class Tcp_client(object):
                     return True
                 else:
                     self.logger.warning(f"self._connect() for {self.name} did not work")
-                if self.__running:
+                if self.__running and self._connect_counter < self._connect_retries:
                     self._sleep(self._connect_cycle)
 
             if self._autoreconnect and self.__running:
+                self._retry_round_counter += 1
+                if self._retry_abort and self._retry_round_counter == self._retry_abort and self._abort_callback:
+                    self._abort_callback()
+                    break
+                self.logger.debug(f'waiting {self._retry_cycle} seconds before next connection attempt')
                 self._sleep(self._retry_cycle)
                 self._connect_counter = 0
             else:
@@ -773,7 +788,7 @@ class Tcp_client(object):
         try:
             self.__connect_threadlock.release()
         except Exception:
-            self.logger.debug(f'{self._id} exception while trying self.__connect_threadlock.release()')
+            # self.logger.debug(f'{self._id} exception while trying self.__connect_threadlock.release()')
             pass
 
     def _connect(self):
@@ -794,7 +809,7 @@ class Tcp_client(object):
         except Exception as err:
             self._is_connected = False
             self._connect_counter += 1
-            self.logger.warning(f'{self._id} TCP connection failed {self._connect_counter}/{self._connect_retries} times, last error was: {err}')
+            self.logger.warning(f'{self._id} TCP connection failed {self._connect_counter}/{int(self._connect_retries)} times, last error was: {err}')
 
     def __receive_thread_worker(self):
         """
@@ -817,9 +832,12 @@ class Tcp_client(object):
                         timeout = False
                         try:
                             msg = self._socket.recv(4096)
-                        except TimeoutError:
+                        except (TimeoutError, OSError) as e:
+                            if isinstance(e, OSError) and e.errno not in (60, 65):
+                                raise
                             msg = None
                             timeout = True
+
                         # Check if incoming message is not empty
                         if msg:
                             # TODO: doing this breaks line separation if multiple lines
@@ -896,8 +914,6 @@ class Tcp_client(object):
         except Exception as ex:
             if not self.__running:
                 self.logger.debug(f'{self._id} receive thread shutting down')
-                self._is_receiving = False
-                return
             else:
                 self._log_exception(ex, f'lib.network {self._id} receive thread died with unexpected error: {ex}. Go tell...')
         self._is_receiving = False
@@ -949,9 +965,15 @@ class Tcp_client(object):
             except Exception as e:
                 self.logger.info(f"socket no longer connected on disconnect, exception is {e}")
         if self.__connect_thread is not None and self.__connect_thread.is_alive():
-            self.__connect_thread.join()
+            try:
+                self.__connect_thread.join()
+            except Exception:
+                pass
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
-            self.__receive_thread.join()
+            try:
+                self.__receive_thread.join()
+            except Exception:
+                pass
 
         self.__connect_thread = None
         self.__receive_thread = None
