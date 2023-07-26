@@ -82,14 +82,26 @@ parameters:
         type: num
         default: 5
         description:
-            de: 'Anzahl Verbindungsversuche'
-            en: 'number of connect retries'
+            de: 'Anzahl Verbindungsversuche pro Durchgang ("round")'
+            en: 'number of connect retries per round'
     connect_cycle:
         type: num
         default: 3
         description:
             de: 'Pause zwischen Verbindungsversuchen'
             en: 'wait time between connect retries'
+    retry_cycle:
+        type: num
+        default: 30
+        description:
+            de: 'Pause zwischen Durchgängen von Verbindungsversuchen (rounds)'
+            en: 'wait time between connect rounds'
+    retry_standby:
+        type: num
+        default: 0
+        description:
+            de: 'Anzahl von Durchgängen vor Standby-Modus'
+            en: 'number of connect rounds before entering standby mode'
     message_timeout:
         type: num
         default: 2
