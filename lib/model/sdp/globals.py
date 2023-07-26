@@ -45,16 +45,19 @@ import types
 PLUGIN_ATTR_MODEL            = 'model'                   # select model if applicable. Don't set if not necessary!
 PLUGIN_ATTR_CMD_CLASS        = 'command_class'           # name of class to use for commands
 PLUGIN_ATTR_RECURSIVE        = 'recursive_custom'        # indices of custom item attributes for which to enable recursive lookup (number or list of numbers)
+PLUGIN_ATTR_STANDBY_ITEM     = 'standby_item_path'       # item to toggle standby mode
 
 # general connection attributes
 PLUGIN_ATTR_CONNECTION       = 'conn_type'               # manually set connection class, classname or type (see below)
 PLUGIN_ATTR_CONN_TIMEOUT     = 'timeout'                 # timeout for reading from network or serial
 PLUGIN_ATTR_CONN_TERMINATOR  = 'terminator'              # terminator for reading from network or serial
 PLUGIN_ATTR_CONN_BINARY      = 'binary'                  # tell connection to handle data for binary parsing
-PLUGIN_ATTR_CONN_AUTO_RECONN = 'autoreconnect'           # (re)connect automatically on disconnect
+PLUGIN_ATTR_CONN_RETRIES     = 'connect_retries'         # how often to try connecting (a "round")
+PLUGIN_ATTR_CONN_CYCLE       = 'connect_cycle'           # how long to wait between attempts
+PLUGIN_ATTR_CONN_AUTO_RECONN = 'autoreconnect'           # (re)connect automatically on disconnect or failed connection cycle
 PLUGIN_ATTR_CONN_AUTO_CONN   = 'autoconnect'             # (re)connect automatically on send
-PLUGIN_ATTR_CONN_RETRIES     = 'connect_retries'         # if autoreconnect: how often to reconnect
-PLUGIN_ATTR_CONN_CYCLE       = 'connect_cycle'           # if autoreconnect: how many seconds to wait between retries
+PLUGIN_ATTR_CONN_RETRY_CYCLE = 'retry_cycle'             # if autoreconnect: how many seconds to wait between retry rounds
+PLUGIN_ATTR_CONN_RETRY_STBY  = 'retry_standby'           # after this number of failed connect cycles, activate standby mode (if enabled)
 
 # network attributes
 PLUGIN_ATTR_NET_HOST         = 'host'                    # hostname / IP for network connection
@@ -75,13 +78,16 @@ PLUGIN_ATTR_MSG_REPEAT       = 'message_repeat'          # how often to repeat c
 # callback functions, not in plugin.yaml
 PLUGIN_ATTR_CB_ON_CONNECT    = 'connected_callback'      # callback function, called if connection is established
 PLUGIN_ATTR_CB_ON_DISCONNECT = 'disconnected_callback'   # callback function, called if connection is lost
+PLUGIN_ATTR_CB_STANDBY       = 'standby_callback'        # callback function, called if connection attempts are aborted
 
 PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE,
-                PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONN_TIMEOUT,
-                PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_CYCLE,
-                PLUGIN_ATTR_CONN_BINARY, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
-                PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_STOP,
-                PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_MSG_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT)
+                PLUGIN_ATTR_STANDBY_ITEM, PLUGIN_ATTR_CONNECTION,
+                PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_BINARY,
+                PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
+                PLUGIN_ATTR_CONN_RETRY_CYCLE, PLUGIN_ATTR_CONN_RETRY_STBY, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
+                PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY,
+                PLUGIN_ATTR_SERIAL_STOP, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_MSG_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT,
+                PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CB_STANDBY)
 
 # connection types for PLUGIN_ATTR_CONNECTION
 CONN_NULL                    = ''                 # use base connection class without real connection functionality, for testing

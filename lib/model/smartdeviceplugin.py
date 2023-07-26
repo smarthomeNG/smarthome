@@ -51,7 +51,7 @@ from lib.model.sdp.globals import (
     ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ,
     ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE,
     PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT,
-    PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION,
+    PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_STANDBY_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH)
 from lib.model.sdp.commands import SDPCommands
@@ -143,7 +143,7 @@ class SmartDevicePlugin(SmartPlugin):
         # "standby" mode properties
         self.standby = False
         self._standby_item = None
-        self._standby_item_path = self.get_parameter_value('standby_item_path')
+        self._standby_item_path = self.get_parameter_value(PLUGIN_ATTR_STANDBY_ITEM)
 
         # connection instance
         self._connection = None
@@ -259,6 +259,10 @@ class SmartDevicePlugin(SmartPlugin):
 
         self._parameters.update(kwargs)
 
+        # if standby mode is enabled, set callback for tcp client etc.
+        if self._standby_item_path:
+            self._parameters['standby_callback'] = self.set_standby
+
         # this is only viable for the base class. All derived plugin classes
         # will probably be created towards a specific command class
         # but, just in case, be well-behaved...
@@ -285,7 +289,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         return True
 
-    def set_standby(self, stby_active=None):
+    def set_standby(self, stby_active=None, by=None):
         """
         enable / disable standby mode: open/close connections, schedulers
         """
@@ -295,12 +299,14 @@ class SmartDevicePlugin(SmartPlugin):
             else:
                 stby_active = False            
 
-        item_msg = ''
-        if self._standby_item:
-            item_msg = f' (set by item {self._standby_item_path})'
+        by_msg = ''
+        if by:
+            by_msg = f' (set by {by})'
 
-        self.logger.info(f'Standby mode set to {stby_active}{item_msg}')
+        self.logger.info(f'Standby mode set to {stby_active}{by_msg}')
         self.standby = stby_active
+        if self._standby_item is not None:
+            self._standby_item(self.standby)
 
         if stby_active:
             if self.scheduler_get(self.get_shortname() + '_cyclic'):
@@ -326,7 +332,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         # start the devices
         self.alive = True
-        self.set_standby()
+        self.set_standby(by='run')
 
         if self._connection.connected():
             self._read_initial_values()
@@ -347,6 +353,7 @@ class SmartDevicePlugin(SmartPlugin):
         Open connection
         """
         self._connection.open()
+
 
     def disconnect(self):
         """
@@ -560,8 +567,9 @@ class SmartDevicePlugin(SmartPlugin):
 
             # check for standby item
             if item is self._standby_item:
-                self.logger.debug(f'Standby item changed to {item()}')
-                self.set_standby()
+                if caller != self.get_shortname():                
+                    self.logger.debug(f'Standby item changed to {item()}')
+                    self.set_standby(by=f'standby item {item.path()}')
                 return
 
             if not (self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo')) or self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_READ_GRP', 'foo'))):
@@ -634,10 +642,10 @@ class SmartDevicePlugin(SmartPlugin):
 
         if not self._connection.connected():
             if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_CONN):
-                self._connection.open()
+                self.connect()
 
             if not self._connection.connected():
-                self.logger.warning(f'trying to send command {command} with value {value}, but connection could not be established.')
+                self.logger.warning(f'trying to send command {command} with value {value}, but connection could not be re-established.')
                 return False
 
         # enable doing something before sending data normally
