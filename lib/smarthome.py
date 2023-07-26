@@ -536,7 +536,7 @@ class SmartHome():
         - logic.yaml / logic.conf
 
         """
-        configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'smarthome']
+        configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'admin', 'smarthome']
 
         for c in configs:
             default = os.path.join(self._base_dir, 'etc', c + YAML_FILE + DEFAULT_FILE)
@@ -635,7 +635,7 @@ class SmartHome():
         #############################################################
         # Init and import user-functions
         #############################################################
-        uf.init_lib(self.get_basedir())
+        uf.init_lib(self.get_basedir(), self)
 
         #############################################################
         # Init Item-Wrapper
