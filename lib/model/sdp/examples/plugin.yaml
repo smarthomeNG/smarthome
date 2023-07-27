@@ -82,14 +82,26 @@ parameters:
         type: num
         default: 5
         description:
-            de: 'Anzahl Verbindungsversuche'
-            en: 'number of connect retries'
+            de: 'Anzahl Verbindungsversuche pro Durchgang ("round")'
+            en: 'number of connect retries per round'
     connect_cycle:
         type: num
         default: 3
         description:
             de: 'Pause zwischen Verbindungsversuchen'
             en: 'wait time between connect retries'
+    retry_cycle:
+        type: num
+        default: 30
+        description:
+            de: 'Pause zwischen Durchgängen von Verbindungsversuchen (rounds)'
+            en: 'wait time between connect rounds'
+    retry_standby:
+        type: num
+        default: 0
+        description:
+            de: 'Anzahl von Durchgängen vor Standby-Modus'
+            en: 'number of connect rounds before entering standby mode'
     message_timeout:
         type: num
         default: 2
@@ -157,6 +169,15 @@ parameters:
         description:
             de: 'Anzahl Stopbits'
             en: 'number of stop bits'
+
+    # standby mode configuration
+    # mute plugin on setting associated item to True
+    standby_item_path:
+        type: str
+        default: ''
+        description:
+            de: 'Item-Pfad für das Standby-Item'
+            en: 'item path for standby switch item'
 
     # more fundamental connection settings
     # !! plugin defaults can be set here (add default:) or in code

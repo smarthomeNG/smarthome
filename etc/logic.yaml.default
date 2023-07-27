@@ -18,15 +18,3 @@ ex_persist:
     filename: example_persistance.py
     logic_groupname: beispiele
 
-# ----------------------------------------------------------------------
-
-_groups:
-
-    beispiele:
-        title: Beispiel Logiken für SmartHomeNG
-        description: In dieser Gruppe sind die Beispiel Logiken zusammengefasst, die mit SmartHomeNG installiert werden.
-
-    tools:
-        title: Logiken, die als Tools für SmartHomeNG dienen
-        description: In dieser Gruppe sind Logiken zusammengefasst, die als Tools mit SmartHomeNG ausgeliefert wurden.
-

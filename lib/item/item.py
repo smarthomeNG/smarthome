@@ -539,7 +539,7 @@ class Item():
 
     def _cast_duration(self, time, test=False):
         """
-        casts a time value string (e.g. '5m') to an duration integer
+        casts a time value string (e.g. '5m') to an integer (duration in seconds)
         used for autotimer, timer, cycle
 
         if 'test' is set to True the warning log message is suppressed
@@ -547,13 +547,36 @@ class Item():
         supported formats for time parameter:
         - seconds as integer (45)
         - seconds as a string ('45')
-        - seconds as a string, trailed by 's' ('45s')
-        - minutes as a string, trailed by 'm' ('5m'), is converted to seconds (300)
+        - seconds as a string, trailed by 's' (e.g. '45s')
+        - minutes as a string, trailed by 'm' (e.g. '5m'), is converted to seconds (300)
+        - hours as a string, trailed by 'h' (e.g. '2h'), is converted to seconds (7200)
+        - a combination of the above (e.g. '2h5m45s')
 
         :param time: string containing the duration
-        :param itempath: item path as additional information for logging
+        :param test: if set to True, no warning ist logged in case of an error, only False is returned
         :return: number of seconds as an integer
         """
+        if isinstance(time, str):
+            time_in_sec= self.shtime.to_seconds(time, test=True)
+            if time_in_sec == -1:
+                if not test:
+                    logger.warning(f"Item {self._path} - _cast_duration: Unable to convert parameter 'time' to seconds (time={time})")
+                time_in_sec = False
+        elif isinstance(time, int):
+            time_in_sec = int(time)
+        elif isinstance(time, float):
+            time_in_sec = int(time)
+        else:
+            if not test:
+                logger.warning(
+                    f"Item {self._path} - _cast_duration: Unable to convert parameter 'time' to int (time={time})")
+            time_in_sec = False
+
+        return (time_in_sec)
+
+
+    def _cast_duration_old(self, time, test=False):
+
         if isinstance(time, str):
             try:
                 time = time.strip()
@@ -575,19 +598,11 @@ class Item():
                     #time = wrk[1].strip()
                 elif wrk[0] != '':
                     time_in_sec += int(wrk[0])
-
-#                if time.endswith('h'):
-#                    time_in_sec = int(time.strip('h')) * 60 * 60
-#                elif time.endswith('m'):
-#                    time_in_sec = int(time.strip('m')) * 60
-#                elif time.endswith('s'):
-#                    time_in_sec = int(time.strip('s'))
-#                else:
-#                    time_in_sec = int(time)
             except Exception as e:
                 if not test:
                     logger.warning(f"Item {self._path} - _cast_duration: (time={time}) - problem: {e}")
                 time_in_sec = False
+
         elif isinstance(time, int):
             time_in_sec = int(time)
         elif isinstance(time, float):

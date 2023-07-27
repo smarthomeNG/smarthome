@@ -40,7 +40,8 @@ from lib.model.sdp.globals import (
     sanitize_param, CONN_NET_TCP_REQ, CONN_NULL, CONN_SER_DIR, CONNECTION_TYPES,
     PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION,
     PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_BINARY,
-    PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_TERMINATOR,
+    PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_RETRY_CYCLE,
+    PLUGIN_ATTR_CONN_RETRY_STBY, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CB_STANDBY,
     PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE,
     PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_STOP,
@@ -90,11 +91,16 @@ class SDPConnection(object):
                         PLUGIN_ATTR_CONN_TIMEOUT: 1.0,
                         PLUGIN_ATTR_CONN_AUTO_RECONN: True,
                         PLUGIN_ATTR_CONN_AUTO_CONN: True,
-                        PLUGIN_ATTR_CONN_RETRIES: 1,
-                        PLUGIN_ATTR_CONN_CYCLE: 3,
+                        PLUGIN_ATTR_CONN_RETRIES: 3,
+                        PLUGIN_ATTR_CONN_CYCLE: 5,
+                        PLUGIN_ATTR_CONN_RETRY_CYCLE: 30,
+                        PLUGIN_ATTR_CONN_RETRY_STBY: 0,
                         PLUGIN_ATTR_CONN_TERMINATOR: '',
                         PLUGIN_ATTR_CB_ON_CONNECT: None,
-                        PLUGIN_ATTR_CB_ON_DISCONNECT: None}
+                        PLUGIN_ATTR_CB_ON_DISCONNECT: None,
+                        PLUGIN_ATTR_CB_STANDBY: None}
+
+        # "import" options from plugin
         self._params.update(kwargs)
 
         # check if some of the arguments are usable
@@ -451,13 +457,19 @@ class SDPConnectionNetTcpClient(SDPConnection):
         if isinstance(self._params[PLUGIN_ATTR_CONN_TERMINATOR], str):
             self._params[PLUGIN_ATTR_CONN_TERMINATOR] = bytes(self._params[PLUGIN_ATTR_CONN_TERMINATOR], 'utf-8')
 
+        self._standby_callback = self._params[PLUGIN_ATTR_CB_STANDBY]
+
         # initialize connection
         self._tcp = Tcp_client(host=self._params[PLUGIN_ATTR_NET_HOST],
                                port=self._params[PLUGIN_ATTR_NET_PORT],
                                name=name,
-                               autoreconnect=self._params[PLUGIN_ATTR_CONN_AUTO_CONN],
+                               autoreconnect=self._params[PLUGIN_ATTR_CONN_AUTO_RECONN],
+                               autoconnect=self._params[PLUGIN_ATTR_CONN_AUTO_CONN],
                                connect_retries=self._params[PLUGIN_ATTR_CONN_RETRIES],
                                connect_cycle=self._params[PLUGIN_ATTR_CONN_CYCLE],
+                               retry_cycle=self._params[PLUGIN_ATTR_CONN_RETRY_CYCLE],
+                               retry_abort=self._params[PLUGIN_ATTR_CONN_RETRY_STBY],
+                               abort_callback=self._abort_callback,
                                terminator=self._params[PLUGIN_ATTR_CONN_TERMINATOR])
         self._tcp.set_callbacks(data_received=self.on_data_received,
                                 disconnected=self.on_disconnect,
@@ -486,6 +498,11 @@ class SDPConnectionNetTcpClient(SDPConnection):
         # we receive only via callback, so we return "no reply".
         return None
 
+    def _abort_callback(self):
+        if self._standby_callback:
+            self._standby_callback(True, by=self.__class__.__name__)
+        else:
+            self.logger.warning('standby callback wanted, but not set by plugin. Check plugin code...')
 
 class UDPServer(socket.socket):
     """
@@ -500,9 +517,9 @@ class UDPServer(socket.socket):
 
 
 class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
-    """ Connection via TCP / HTTP requests and listens for UDP messages
+    """ Connection via TCP/HTTP requests and listens for UDP messages
 
-    This class implements TCP connections in the query-reply matter using
+    This class implements UDP connections in the query-reply matter using
     the requests library, e.g. for HTTP communication.
 
     The data_dict['payload']-Data needs to be the full query URL. Additional
@@ -539,6 +556,11 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
         except Exception:
             pass
 
+        if self.__receive_thread is not None and self.__receive_thread.is_alive():
+            self.__receive_thread.join()
+        self.__receive_thread = None
+        self._connected = False
+
     def _receive_thread_worker(self):
         self.sock = UDPServer(self._params[PLUGIN_ATTR_NET_PORT])
         if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
@@ -556,6 +578,7 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
                 if self._data_received_callback:
                     self._data_received_callback(host, data.decode('utf-8'))
 
+        self._connected = False
         self.sock.close()
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](self.__str__() + ' UDP_listener')
@@ -630,6 +653,7 @@ class SDPConnectionSerial(SDPConnection):
 
     def _open(self):
         if self._is_connected:
+            self.logger.debug(f'{self.__class__.__name__} _open called while connected, doing nothing')
             return True
         self.logger.debug(f'{self.__class__.__name__} _open called with params {self._params}')
 
@@ -870,6 +894,8 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
             self.__receive_thread.join()
         except Exception:
             pass
+        self.__receive_thread = None
+        self._is_connected = False
 
     def __receive_thread_worker(self):
         """ thread worker to handle receiving """

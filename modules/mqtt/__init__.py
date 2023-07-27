@@ -592,9 +592,10 @@ class Mqtt(Module):
 
     def _on_mqtt_log(self, client, userdata, level, buf):
         if str(buf).startswith('Caught exception'):
-            self.logger.error("_on_log: {}".format(buf))
+            self.logger.error(f"_on_log: {buf} - client={client}, userdata={userdata}, level={level}")
         else:
-            self.logger.debug("_on_log: {}".format(buf))
+            self.logger.debug(f"_on_log: {buf} - client={client}, userdata={userdata}, level={level} - dir(client)={dir(client)}")
+            self.logger.debug(f"_on_log: {buf} - client={client}, userdata={userdata}, level={level} - dir(client.__class__)={dir(client.__class__)}")
         return
 
 
@@ -718,7 +719,7 @@ class Mqtt(Module):
         Callback function called on disconnect
         """
         if rc == 0:
-            self.logger.info(f"Disconnection was successful (rc={rc}'")
+            self.logger.info(f"Disconnection was successful (rc={rc})")
         elif rc == 7:
             self.logger.warning(f"Disconnected from broker with returncode '{rc}'")
             self._got_disconnected = True
