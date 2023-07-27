@@ -498,7 +498,7 @@ class Shtime:
                     time_in_sec += int(wrk[0])
             except Exception as e:
                 if test:
-                    self.logger.notice(f"shtime.to_seconds: time string could not be converted (time={time_str}) - problem: {e}")
+                    self.logger.info(f"shtime.to_seconds: time string could not be converted (time={time_str}) - problem: {e}")
                 else:
                     self.logger.warning(f"shtime.to_seconds: time string could not be converted (time={time_str}) - problem: {e}")
                 time_in_sec = -1
