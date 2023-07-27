@@ -47,7 +47,7 @@ Neuerungen bei Plugins
 Bei den Plugins sind folgende Änderungen zu beachten:
 
   - **Plugin smartvisu**: Der Default Wert des Parameters **generate_pages** wurde auf **False** geändert. Zum
-    generieren von Seiten muss dieser Parameter nun aktive konfiguriert werden.
+    generieren von Seiten muss dieser Parameter nun aktiv konfiguriert werden.
   - Es sind auch einige :ref:`neue Plugins <releasenotes_1_10_neue_plugins>` hinzugekommen.
   - Außerdem hat es eine Reihe von :ref:`Updates zu bestehenden Plugins <releasenotes_1_10_updates_plugins>` gegeben.
   - Es sind einige veraltete Plugins :ref:`retired <releasenotes_1_10_retired_plugins>` worden.

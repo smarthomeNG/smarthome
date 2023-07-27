@@ -255,6 +255,7 @@
     "USERLOGICS": "Nutzerlogiken",
     "SYSTEMLOGICS": "Systemlogiken",
     "GROUP": "Gruppe",
+    "GROUPS": "Gruppen",
     "NOGROUP_TITLE": "Logiken ohne Gruppenzugehörigkeit",
     "LOGIC": "Logik",
     "NEXT_EXEC": "Nächste Ausführung",
@@ -299,7 +300,9 @@
     "TYPE": "Typ",
     "DESCRIPTION": "Beschreibung",
     "ADD_ITEM": "Item hinzufügen",
-    "ITEM_INVALID": "Item ungültig oder bereits in der Liste vorhanden, bitte Eingabe prüfen!"
+    "ITEM_INVALID": "Item ungültig oder bereits in der Liste vorhanden, bitte Eingabe prüfen!",
+    "GROUP_TITLE": "Titel",
+    "GROUP_DESCRIPTION": "Beschreibung"
   },
   "SCHEDULERS": {
     "ITEM SCHEDULERS": "Item Scheduler",
@@ -496,6 +499,7 @@
     "RESTORE": "Wiederherstellen",
     "CLEAR_FILTER": "Filter Löschen",
     "NEW_DEFINITION_FILE": "Neue Datei",
+    "NEW_GROUP": "Neue Gruppe",
     "NEW_LOGIC": "Neue Logik",
     "NEW_LOGGER": "weiterer Logger",
     "NEW_SCENE": "Neue Szene",

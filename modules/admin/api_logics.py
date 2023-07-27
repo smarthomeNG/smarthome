@@ -252,6 +252,14 @@ class LogicsController(RESTResource):
         return json.dumps(self.logics_data)
 
 
+    def get_groups_info(self):
+        """
+        Get information of defined groups
+        """
+        self.groups_data = {'groups': self.logics._groups}
+        return json.dumps(self.groups_data)
+
+
     def get_logic_info(self, logicname):
         """
         Get code of a logic from file
@@ -461,10 +469,12 @@ class LogicsController(RESTResource):
             # SmartHomeNG has not yet initialized the logics module (still starting up)
             raise cherrypy.NotFound
 
-        if logicname is None:
+        if logicname is None and infotype is None:
             return self.get_logics_info()
-        elif infotype is None:
+        elif logicname is not None and infotype is None:
             return self.get_logic_info(logicname)
+        elif logicname is None and infotype == 'groups':
+            return self.get_groups_info()
         elif infotype == 'status':
             return self.get_logic_state(logicname)
 
