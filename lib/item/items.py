@@ -285,10 +285,12 @@ class Items():
             self.logger.warning(f"Error occured while trying to remove item {item.path()}: {e}")
 
         # remove item bindings in plugins
-        item.remove()
+        if item.remove():
 
-        # delete item
-        del item
+            # delete item
+            del item
+        else:
+            self.logger.warning(f"Item {item.path()} could not be removed due to incompatible plugins.")
 
 
     def get_toplevel_items(self):

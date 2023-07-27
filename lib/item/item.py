@@ -472,13 +472,25 @@ class Item():
         """
         Cleanup item usage before item deletion
         Calls all plugins to remove the item and its references.
+        :return: success
+        :rtype: bool
         """
+        incompatible = []
+
         for plugin in self.plugins.return_plugins():
             if hasattr(plugin, PLUGIN_REMOVE_ITEM):
                 try:
                     plugin.remove_item(self)
                 except Exception as e:
                     self.logger.warning(f"while removing item {self} from plugin {plugin}, the following error occurred: {e}")
+            else:
+                incompatible.append(plugin.get_shortname())
+
+        if incompatible:
+            self.logger.warning(f"while removing item {self}, the following plugins were incompatible: {', '.join(incompatible)}")
+            return False
+
+        return True
 
     def _split_destitem_from_value(self, value):
         """
