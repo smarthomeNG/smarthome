@@ -456,6 +456,64 @@ class Shtime:
         return result
 
 
+    def to_seconds(self, time_str, test=False):
+        """
+        casts a time value string (e.g. '5m') to an integer (duration in seconds)
+        used for autotimer, timer, cycle
+
+        if 'test' is set to True the warning log message is suppressed
+
+        supported formats for time parameter:
+        - seconds as integer (45)
+        - seconds as a string ('45')
+        - seconds as a string, trailed by 's' (e.g. '45s')
+        - minutes as a string, trailed by 'm' (e.g. '5m'), is converted to seconds (300)
+        - hours as a string, trailed by 'h' (e.g. '2h'), is converted to seconds (7200)
+        - a combination of the above (e.g. '2h5m45s')
+
+        :param time_str: string containing the duration
+        :param test: if set to True, no warning ist logged in case of an error, only -1 is returned
+        :return: number of seconds as an integer
+        """
+        if isinstance(time_str, str):
+            try:
+                time = time_str.strip()
+                time_in_sec = 0
+
+                wrk = time.split('h')
+                if len(wrk) > 1:
+                    time_in_sec += int(wrk[0]) * 60 * 60
+                    time = wrk[1].strip()
+
+                wrk = time.split('m')
+                if len(wrk) > 1:
+                    time_in_sec += int(wrk[0]) * 60
+                    time = wrk[1].strip()
+
+                wrk = time.split('s')
+                if len(wrk) > 1:
+                    time_in_sec += int(wrk[0])
+                    # time = wrk[1].strip()
+                elif wrk[0] != '':
+                    time_in_sec += int(wrk[0])
+            except Exception as e:
+                if test:
+                    self.logger.notice(f"shtime.to_seconds: time string could not be converted (time={time_str}) - problem: {e}")
+                else:
+                    self.logger.warning(f"shtime.to_seconds: time string could not be converted (time={time_str}) - problem: {e}")
+                time_in_sec = -1
+
+        elif isinstance(time_str, int):
+            time_in_sec = int(time_str)
+        elif isinstance(time_str, float):
+            time_in_sec = int(time_str)
+        else:
+            if not test:
+                self.logger.warning( f"shtime.to_seconds: (time={time_str}) problem: unable to convert to int")
+            time_in_sec = -1
+        return time_in_sec
+
+
     # -----------------------------------------------------------------------------------------------------
     #   Following methods implement some date handling
     # -----------------------------------------------------------------------------------------------------

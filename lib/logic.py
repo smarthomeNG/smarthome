@@ -122,17 +122,16 @@ class Logics():
         _config.update(self._userlogics)
 
         for name in _config:
-            if name == '_groups':
-                #self._groups = _config[name]
-                pass
-            else:
+            if name != '_groups':
                 self._load_logic(name, _config)
 
         # load /etc/admin.yaml
         admconf_filename = os.path.join(self._get_etc_dir(), 'admin')
         _admin_conf = shyaml.yaml_load_roundtrip(admconf_filename)
-
-        self._groups = _admin_conf['logics']['groups']
+        if _admin_conf.get('logics', None) is None:
+            self._groups = {}
+        else:
+            self._groups = _admin_conf['logics']['groups']
 
 
     def _read_logics(self, filename, directory):

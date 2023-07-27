@@ -332,7 +332,7 @@ class Protocol():
             if str(e).startswith(('no close frame received or sent', 'received 1005', 'code = 1005')):
                 self.logger.info(logmsg)
             elif str(e).startswith(('code = 1006')) or str(e).endswith('keepalive ping timeout; no close frame received'):
-                if str(e).find('1011 (unexpected error)') >= 0:
+                if (str(e).find('1011 (unexpected error)') >= 0) or (str(e).find('no reason')):
                     self.logger.info(logmsg)
                 else:
                     self.logger.warning(logmsg)
