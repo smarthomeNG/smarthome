@@ -17,10 +17,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 4. Juni 2023
-           (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 3. Juni 2023
-           (...)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 27. Juli 2023
+           (lib.shtime: Changed a loglevel from notice to info...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 27. Juli 2023
+           (Merge pull request #765 from sisamiwe/...)
 
 
 Überblick
@@ -61,11 +61,13 @@ Allgmein
 
   * ...
 
+* venvs: Scripts for creation and activation of virtual environments
+
 
 Updates im CORE
 ---------------
 
-* ...
+* bin.smarthome: Replaced th deprecated function getdefaultlocale()
 
 * Items:
 
@@ -76,6 +78,14 @@ Updates im CORE
   * ...
 
 * Libs:
+
+  * lib.db:
+
+    * Suppress an error log message, if database is new and empty
+
+  * lib.env:
+
+    * Added descriptions for system logics
 
   * lib.item:
 
@@ -88,6 +98,9 @@ Updates im CORE
     * Attribute autotimer now supports eval expressions; Attribute autotimer is working without specification of
       a value (again)
     * Attribute cycle now supports eval expressions; Attribute cylce is working without specification of a value (again)
+    * Corrected Call order of __run_attribute_eval() and _cast_duration() for autotimer
+    * Extended configuration options for autotimer (duration)
+    * Corrected Call to __run_attribute_eval() and _cast_duration() for autotimer
 
   * lib.log:
 
@@ -99,7 +112,12 @@ Updates im CORE
 
   * lib.model:
 
-    * Added SmartDevicePlugin and documentation
+    * Added SmartDevicePlugin (sdp) and documentation
+    * sdp:
+      * Add standby mode
+      * Added do_before_send method
+      * Update sdp connections for standby
+      * Update standby mode on failed connect and reconnect
 
   * lib.network:
 
@@ -115,7 +133,12 @@ Updates im CORE
     * Implemented a single logger for tasks (before, each task created it's own logger, resulting
       in hundreds or thousands of active loggers)
     * Added some error handling
+    * Bugfix for giving parameters to a task via scheduler.add()
 
+  * lib.shpypi: Small updates for changed messages of pip commend
+  * lib.shtime:
+
+    * Added function to_seconds() which converts a string (e.g. '2h5m25s') to seconds (integer)
 
 * Modules:
 
@@ -123,15 +146,53 @@ Updates im CORE
 
     * Bugfix for new loglevels in list of loggers
     * api_loggers: Converting all entries of filters list of loggers to strings to be JSON serializable
+    * Adjusted log levels
     * shngadmin:
+
       * v0.6.7: Added "Add Logger" and "Remove Logger" for plugins to list of loggers page
       * v0.7.0: Added "Add Logger" and "Remove Logger" for logics, items and advanced loggers to
         'list of loggers' page
       * v0.7.2: Added "Modify Handlers" to loggers configuration page
       * v0.7.3: Added hysteresis attributes to shngadmin
-      * shngadmin 0.7.8: Logic list can now be grouped. Logics can be assigned to one or more groups
-      * shngadmin 0.7.12, modules.admin.api_logics, lib.logic: Added description for groups; Small fixes
-      * shngadmin v0.8.1.: First version using the adm payload protocol for websocket communication
+      * v0.7.8: Logic list can now be grouped. Logics can be assigned to one or more groups
+      * v0.7.12, modules.admin.api_logics, lib.logic: Added description for groups; Small fixes
+      * v0.8.1.: First version using the adm payload protocol for websocket communication
+      * v0.8.5:
+
+        * Implemented item Monitoring
+        * Implemented adm payload protocol for websocket communication (used by resource graphs)
+        * Completed logics-list
+      * v0.8.6 small modifications on services tab and logics listing
+      * v0.8.8:
+
+        * Now keeping grouped list of logics expanded when changing tabs
+        * Added item description to details in item-tree view
+      * v0.8.10:
+
+        * Keeping groups expanded on logic-list
+        * Added description attribute to item details
+        * In Logger configuration sub-loggers of a plugin are en-/disabled with the plugin logger
+      * v0.8.17 Implemented load logics from editor page after it has been unloaded due to error
+
+  * http:
+
+    * Added initial support for hosting a visu by a plugin
+    * Modification of hostmaps for rest interface on newer cherrypy packages
+    * Added requirement of cherrypy 18.8.9 for Python 3.11 and allowed newer versions of cheroot
+    * Use correct config for services, removed /msgS to make services urls working again
+    * for webinterfaces:
+      * Remove window.resize on click on responsive "+" sign
+      * Only update page resize and headtable calculation if respective elements are available
+      * Introduce sorting icons that can be used by plugins (outside of datatables)
+      * Introduce set_cookie and get_cookie functions that can be used in plugins for storing values
+      * use cookies to store and read automatic update of datatables
+      * Update popper.js and provide easy way to integrate tooltips in web interfaces by using createTooltips function
+      * Add popper.css
+      * Update jquery to 3.7.0 and jquery-ui to 1.13.2
+      * Update datatables incl. modules and datetime-moment
+      * Add sorting icons for num values
+      * Update documentation.. add info on tooltips, datepicker, cookies, icons
+      * Update sample plugin to include cookies and tooltips
 
   * websocket:
 
@@ -156,7 +217,7 @@ Allgmein
 
 * Workflows:
 
-  * ...
+  * Fix unittest for forked repos
 
 
 .. _releasenotes_1_10_neue_plugins:
@@ -181,6 +242,10 @@ Plugin Updates
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
+* alexarc4shng:
+
+  * Small bug-fix in Web-IF
+
 * appletv:
 
   * Use separate webif/init for web interface integration
@@ -192,6 +257,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Adjust requirements to work with Python 3.10
   * Fix module imports for web interface
   * Added requirement to circumvent problematic requirements of pyatv package under Python 3.11
+  * Clean up user_doc
+  * Improve error handling and logging
 
 * avm:
 
@@ -213,6 +280,13 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
     included in item_attributes_master.py
   * Bugfix of update of valid_list of avm_data_type in plugin.yaml by
   * Create valid_list_description in metadata
+  * Bugfix and Extension of get_hosts
+  * Make use of standard methods of class SmartPlugin for item handling/storage
+  * Improve Fritz_Home
+
+* database:
+
+  * Changed log message, if no cache value was found
 
 * db_addon:
 
@@ -231,10 +305,39 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Allow to define database_item_path to be defined up to 3 level above db_addon_item
   * Allow to define database_item_path to be defined up to 3 level above db_addon_item (bugfix)
   * Add plugin parameter to enable/disable optimizing defined value filters
+  * Enable on-change attributes to be run on startup
+  * Bugfix in handle_onchange
+  * Code rework to enable more flexible attributes
+  * Bump to version 1.2.0 due to significant change in code
+  * several fixes
+  * bump to v1.2.1
+  * Code rework to enable more flexible attributes
+
+* drexelundweiss:
+
+  * Improved error handling
+  * Implement plugin logo
+  * Clean up init code, bump version to v1.5.4
+
+* enocean:
+
+  * Robustify plugin reaction to loss of Enocean serial device
 
 * executor:
 
   * Extending base_plugin.html instead of extending base.html in webinterface
+  * Fix major issue with autocomplete. Now full item paths are available instead of (non existing) item name references
+  * Allow sorting of saved files, minor code improvements
+  * Re-write autocomplete method using worker and promise functions. Now the plugin can be used immediately
+    without having to wait for fetching the autocomplete dict.
+  * Fix autocomplete dict. Previously (sub)items called "id" were fetched wrongly
+  * Fix and extend user_doc
+  * Bump version to 1.2.0
+  * Introduce popper.js tooltips for sorting
+  * Add two database example scripts
+  * Introduce example scripts that can be loaded in the web interface
+  * Change order of file list
+  * Improve button enable/disable
 
 * gpio:
 
@@ -243,6 +346,15 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * hue2:
 
   * Adjusted requirements for zeroconf package
+
+* knx:
+
+  * Prevent send actions to bus while plugin is not running
+  * Fix issue with polling knx items on startup. All polls are put in a waiting list and polled on run only.
+
+* modbus_tcp:
+
+  * Fixed bug
 
 * piratewthr:
 
@@ -262,6 +374,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * smartvisu:
 
   * Changed default value for generate_pages to False
+  * Corrected log message
 
 * stateengine:
 
@@ -270,6 +383,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Temporarily set state_name and state_id on init
   * Adjust docu accordingly regarding current.state_name variable
   * Bump version to 1.9.6
+  * Update struct and logging
+  * (re)introduce separate loggers for each stateengine item. Custom logger stateengine.<item>.rules
 
 * tankerkoenig:
 
@@ -288,6 +403,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Bugfix update item with relay
   * Improve exception handling
   * Improve clearing retained messages
+  * Revert direct use of _plg_item_dict in WebIF
 
 * telegram:
 
@@ -298,6 +414,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * V2.0.0 Additions in locale; evaluate if debugging
   * Retry sending in case of error (with parameters)
   * Attempt to catch the exception in the updater
+
+* Webservices:
+
+  * Fix for splitting up of autotimer attribute into _value and _time
 
 
 Outdated Plugins
@@ -360,13 +480,14 @@ Weitere Änderungen
 Tools
 -----
 
-* ...
+* Added script 'postinstall' which sets file permissions and cre…ates a virtual environment to run SmartHomeNG in
+** checkplugins: catch error when a file resides within plugin directory
 
 
 Dokumentation
 -------------
 
-* ...
+* Increase version required for sphinx tabs
 * ...
 
 
