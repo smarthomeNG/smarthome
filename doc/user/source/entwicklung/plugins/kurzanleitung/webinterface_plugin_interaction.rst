@@ -132,7 +132,7 @@ Tabellen in einem ``bodytab?`` können mit einer Schleife befüllt werden, das i
 
     {% block **bodytab1** %}
 
-            <table id="maintable" class="dataTableAdditional">
+            <table id="maintable">
                 <thead>
                     <tr>
                         <th></th>
@@ -181,7 +181,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
     ...
 
     {% block **bodytab1** %}
-            <table id="maintable" class="dataTableAdditional">
+            <table id="maintable">
                 <thead>
                     <tr>
                         <th></th>
@@ -235,7 +235,7 @@ sollte das ``form`` Element NACH der Tabelle deklariert werden.
 .. code-block:: html+jinja
 
     {% block bodytab1 %}
-          <table id="maintable" class="dataTableAdditional">
+          <table id="maintable">
               <thead>
                   <tr>
                       <th></th>

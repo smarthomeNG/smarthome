@@ -287,8 +287,6 @@ anzugeben ist (0 wäre die erste Tabellenspalte, 1 die zweite, etc.).
 .. code-block:: html+jinja
 
     table = $('#maintable').DataTable( {
-      "pageLength": webif_pagelength,
-      "pageResize": resize,
       "columnDefs": [{ "targets": 1, "className": "none"}].concat($.fn.dataTable.defaults.columnDefs)
     } );
 

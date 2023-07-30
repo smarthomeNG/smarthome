@@ -64,7 +64,9 @@ Cookies
 Um Einstellungen im Webinterface dauerhaft zu speichern, sollten die entsprechenden
 Werte als Browser-Cookie gespeichert werden. Eine einfache Möglichkeit dazu wird
 seit *SmarthomeNG 1.10* angeboten. Zum Speichern von Cookies steht die Funktion
-``setCookie(<Cookiename>, <Cookiewert>, <Dauer der Speicherung>, <Pluginname>)`` bereit, für das Laden ``getCookie(<Cookiename>)``. Im Folgenden Beispiel wird beim Laden der Seite das Cookie
+``setCookie(<Cookiename>, <Cookiewert>, <Dauer der Speicherung>, <Pluginname>)`` bereit, für das Laden ``getCookie(<Cookiename>)``. Cookies können gelöscht werden, indem 0 als Dauer angegebene wird.
+
+Im Folgenden Beispiel wird beim Laden der Seite das Cookie
 ausgelesen. Ist dieses (noch) nicht gesetzt, wird ein leerer Wert zurückgegeben,
 der im Code entsprechend abgefangen werden muss. Beim Klick auf einen Button wird
 beispielhaft ein Cookie namens "sort_order" mit dem Wert "alpha-asc" für ein Jahr (365 Tage) gespeichert.
