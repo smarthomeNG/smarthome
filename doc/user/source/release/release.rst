@@ -12,4 +12,6 @@ Release Notes für SmartHomeNG:
    :reversed:
 
    *
+   smarthomeng_older/releases
+   smarthome_py/releases
 

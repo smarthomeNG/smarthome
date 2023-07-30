@@ -3,7 +3,6 @@
 Release 1.0 und davor
 =====================
 
-x
 
 Die folgenden Release Notes beziehen sich auf den Vorläufer **smarthome.py**:
 
@@ -12,4 +11,4 @@ Die folgenden Release Notes beziehen sich auf den Vorläufer **smarthome.py**:
    :titlesonly:
    :reversed:
 
-   smarthome_py/*
+   *
