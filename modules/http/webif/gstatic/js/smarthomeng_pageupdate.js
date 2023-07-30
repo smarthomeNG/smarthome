@@ -10,7 +10,7 @@ function getCookie(cname) {
     if (c.indexOf(name) == 0) {
       let result = c.substring(name.length, c.length);
       console.log("Reading cookie " + cname + " with value " + result);
-      return result;
+      return JSON.parse(result);
     }
   }
   return "";
@@ -27,6 +27,7 @@ function setCookie(cname, cvalue, exdays, path) {
   else
   {
     const d = new Date();
+    cvalue = JSON.stringify(cvalue);
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     let expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/plugin/" + path;

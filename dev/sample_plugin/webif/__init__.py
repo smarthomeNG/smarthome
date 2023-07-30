@@ -68,7 +68,7 @@ class WebInterface(SmartPluginWebIf):
 
         Render the template and return the html file to be delivered to the browser
 
-        :return: contents of the template after beeing rendered
+        :return: contents of the template after being rendered
         """
         pagelength = self.plugin.get_parameter_value('webif_pagelength')
         tmpl = self.tplenv.get_template('index.html')

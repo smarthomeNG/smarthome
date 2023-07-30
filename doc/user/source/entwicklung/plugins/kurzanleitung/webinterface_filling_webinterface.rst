@@ -39,7 +39,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
 
             Render the template and return the html file to be delivered to the browser
 
-            :return: contents of the template after beeing rendered
+            :return: contents of the template after being rendered
             """
             pagelength = self.plugin.get_parameter_value('webif_pagelength')
             tmpl = self.tplenv.get_template('index.html')
@@ -136,17 +136,9 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
         <script>
           $(document).ready( function () {
             $(window).trigger('datatables_defaults'); // loading default behaviour
-            {% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
-            if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
-              resize = true;
-              webif_pagelength = -1;
-            }
-            else {
-              resize = false;
-            }
-            console.log("Using page length from http module/plugin " + webif_pagelength + ", pageResize: " + resize);
+
             try {
-              maintable = $('#maintable').DataTable( {pageLength: webif_pagelength, pageResize: resize} ); // put more options into {} if needed
+              maintable = $('#maintable').DataTable( {} ); // put more options into {} if needed
               <table_xx> = $('#<table_id>').DataTable( {} ); // delete or change name of table and id
             }
             catch (e) {
