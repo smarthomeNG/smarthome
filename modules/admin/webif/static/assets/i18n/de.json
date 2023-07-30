@@ -255,7 +255,7 @@
     "USERLOGICS": "Nutzerlogiken",
     "SYSTEMLOGICS": "Systemlogiken",
     "GROUP": "Gruppe",
-    "GROUPS": "Gruppen",
+    "GROUPS": "Logik Gruppen",
     "NOGROUP_TITLE": "Logiken ohne Gruppenzugehörigkeit",
     "LOGIC": "Logik",
     "NEXT_EXEC": "Nächste Ausführung",
@@ -300,9 +300,14 @@
     "TYPE": "Typ",
     "DESCRIPTION": "Beschreibung",
     "ADD_ITEM": "Item hinzufügen",
-    "ITEM_INVALID": "Item ungültig oder bereits in der Liste vorhanden, bitte Eingabe prüfen!",
+    "ITEM_INVALID": "Item ungültig oder bereits in der Liste vorhanden, bitte Eingabe prüfen!"
+  },
+  "LOGIC_GROUPS": {
+    "GROUP_NAME": "Gruppenname",
     "GROUP_TITLE": "Titel",
-    "GROUP_DESCRIPTION": "Beschreibung"
+    "GROUP_DESCRIPTION": "Beschreibung",
+    "NAME_NEW_GROUP": "Namen für die neue Logik-Gruppe wählen",
+    "UNIQUE_NAME": "Eindeutiger Name für eine neue Logik Gruppe"
   },
   "SCHEDULERS": {
     "ITEM SCHEDULERS": "Item Scheduler",

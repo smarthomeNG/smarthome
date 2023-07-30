@@ -134,6 +134,15 @@ class Logics():
             self._groups = _admin_conf['logics']['groups']
 
 
+    def _save_groups(self):
+
+        # load /etc/admin.yaml
+        admconf_filename = os.path.join(self._get_etc_dir(), 'admin')
+        _admin_conf = shyaml.yaml_load_roundtrip(admconf_filename)
+        _admin_conf['logics']['groups'] = self._groups
+        shyaml.yaml_save_roundtrip(admconf_filename, _admin_conf, create_backup=True)
+
+
     def _read_logics(self, filename, directory):
         """
         Read the logics configuration file

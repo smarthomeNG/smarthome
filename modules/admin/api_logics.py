@@ -260,6 +260,24 @@ class LogicsController(RESTResource):
         return json.dumps(self.groups_data)
 
 
+    def save_group(self, name, params):
+
+        self.logics._groups[name] = params
+        self.logics._save_groups()
+        response = {'result': 'ok'}
+
+        return json.dumps(response)
+
+
+    def delete_group(self, name, params):
+
+        del self.logics._groups[name]
+        self.logics._save_groups()
+        response = {'result': 'ok'}
+
+        return json.dumps(response)
+
+
     def get_logic_info(self, logicname):
         """
         Get code of a logic from file
@@ -408,9 +426,9 @@ class LogicsController(RESTResource):
         return
 
 
-    def save_logic_parameters(self, logicname):
-        params = self.get_body()
-        self.logger.info("LogicsController.save_logic_parameters: logic = {}, params = {}".format(logicname, params))
+    def save_logic_parameters(self, logicname, params):
+        #params = self.get_body()
+        self.logger.info(f"LogicsController.save_logic_parameters: logic = {logicname}, params = {params}")
 
         config_filename = os.path.join(self.etc_dir, 'logic')
         logic_conf = shyaml.yaml_load_roundtrip(config_filename)
@@ -418,7 +436,7 @@ class LogicsController(RESTResource):
         if sect is None:
             response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(logicname)}
         else:
-            self.logger.info("LogicsController.save_logic_parameters: logic = {}, alte params = {}".format(logicname, dict(sect)))
+            self.logger.info(f"LogicsController.save_logic_parameters: logic = {logicname}, alte params = {dict(sect)}")
             for param, value in params.items():
                 if param == 'group':
                     param = 'logic_groupname'
@@ -483,11 +501,12 @@ class LogicsController(RESTResource):
     read.authentication_needed = True
 
 
-    def update(self, logicname='', action='', filename=''):
+    def update(self, name='', action='', filename=''):
         """
         Handle PUT requests for logics API
         """
-        self.logger.info(f"LogicsController.update(logicname='{logicname}', action='{action}')")
+        params = self.get_body()
+        self.logger.info(f"LogicsController.update(logic-/groupname='{name}', action='{action}'), , params={params} ")
 
         if self.plugins is None:
             self.plugins = Plugins.get_instance()
@@ -498,16 +517,28 @@ class LogicsController(RESTResource):
         if self.logics is None:
             return json.dumps({'result': 'Error', 'description': "SmartHomeNG is still initializing"})
 
-        if (action == 'saveparameters') and (logicname != ''):
-            return self.save_logic_parameters(logicname)
-        elif not action in ['create', 'load', 'delete', 'delete_with_code']:
-            mylogic = self.logics.return_logic(logicname)
-            if mylogic is None:
-                self.logger.info(f"Error: No loaded logic with name '{logicname}' found")
-                return json.dumps({'result': 'Error', 'description': f"No loaded logic with name '{logicname}' found"})
+        if name != '':
+            if action == 'saveparameters':
+                return self.save_logic_parameters(name, params)
+            elif action == 'savegroup':
+                self.logger.info(f"LogicsController.update: group={name}, action={action}, params={params}")
+                return self.save_group(name, params)
+                #return json.dumps({'result': 'Error', 'description': f"Saving of groups is not yet implemented. Group '{name}' was not saved"})
+            elif action == 'deletegroup':
+                self.logger.info(f"LogicsController.update: group={name}, action={action}, params={params}")
+                return self.delete_group(name, params)
+                #return json.dumps({'result': 'Error', 'description': f"Deleting of groups is not yet implemented. Group '{name}' was not deleted"})
+            elif action == '':
+                self.logger.info(f"LogicsController.update: group={name}, action={action}, filename={filename}")
+                return self.set_logic_state(name, action, filename)
+            else:
+                return json.dumps({'result': 'Error', 'description': f"unknown action '{action}' requested"})
 
-        if logicname != '':
-            return self.set_logic_state(logicname, action, filename)
+        elif not action in ['create', 'load', 'delete', 'delete_with_code']:
+            mylogic = self.logics.return_logic(name)
+            if mylogic is None:
+                self.logger.info(f"Error: No loaded logic with name '{name}' found")
+                return json.dumps({'result': 'Error', 'description': f"No loaded logic with name '{name}' found"})
 
         return None
 

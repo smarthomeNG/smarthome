@@ -255,7 +255,7 @@
     "USERLOGICS": "User Logics",
     "SYSTEMLOGICS": "System Logics",
     "GROUP": "Group",
-    "GROUPS": "Groups",
+    "GROUPS": "Logic Groups",
     "NOGROUP_TITLE": "Logics without group membership",
     "LOGIC": "Logic",
     "NEXT_EXEC": "Next Execution",
@@ -300,6 +300,13 @@
     "DESCRIPTION": "Description",
     "ADD_ITEM": "Add item",
     "ITEM_INVALID": "Item invalid or already added, please check your input!"
+  },
+  "LOGIC_GROUPS": {
+    "GROUP_NAME": "Groupname",
+    "GROUP_TITLE": "Title",
+    "GROUP_DESCRIPTION": "Description",
+    "NAME_NEW_GROUP": "Choose a name for the new logic-group",
+    "UNIQUE_NAME": "Unique name for the new logic-group"
   },
   "SCHEDULERS": {
     "ITEM SCHEDULERS": "Item Schedulers",
