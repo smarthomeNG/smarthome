@@ -68,7 +68,7 @@ class WebInterface(SmartPluginWebIf):
 
         Render the template and return the html file to be delivered to the browser
 
-        :return: contents of the template after beeing rendered
+        :return: contents of the template after being rendered
         """
         self.plugin.get_broker_info()
         # try to get the webif pagelength from the module.yaml configuration
