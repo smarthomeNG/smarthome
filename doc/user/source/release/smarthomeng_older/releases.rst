@@ -5,7 +5,7 @@ Release 1.1 bis 1.5
 
 
 .. toctree::
-   :maxdepth: 0
+   :maxdepth: 1
    :titlesonly:
    :reversed:
 
