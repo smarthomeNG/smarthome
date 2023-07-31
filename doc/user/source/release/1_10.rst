@@ -17,10 +17,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 27. Juli 2023
-           (lib.shtime: Changed a loglevel from notice to info...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 27. Juli 2023
-           (Merge pull request #765 from sisamiwe/...)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 31. Juli 2023
+           (modules.admin: Bugfix in api_logics)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Juli 2023
+           (...)
 
 
 Überblick
@@ -122,6 +122,7 @@ Updates im CORE
   * lib.network:
 
     * Fix name reference
+    * Small fixes
 
   * lib.plugin:
 
@@ -173,6 +174,7 @@ Updates im CORE
         * Added description attribute to item details
         * In Logger configuration sub-loggers of a plugin are en-/disabled with the plugin logger
       * v0.8.17 Implemented load logics from editor page after it has been unloaded due to error
+      * v0.9.1: Adding, changing and deleting of logic-groups implemented
 
   * http:
 
@@ -193,6 +195,7 @@ Updates im CORE
       * Add sorting icons for num values
       * Update documentation.. add info on tooltips, datepicker, cookies, icons
       * Update sample plugin to include cookies and tooltips
+      * Updates to datatables and pageresize
 
   * websocket:
 
@@ -375,6 +378,11 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Changed default value for generate_pages to False
   * Corrected log message
+  * only check dir if handling option is set
+
+* solarforecast:
+
+  * Fallback to smarthomeNG lat/long default values if no plugin specific latitude and longitude values are specified
 
 * stateengine:
 

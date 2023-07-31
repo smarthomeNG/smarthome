@@ -27,8 +27,10 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       möglich
   - **Admin GUI**:
 
-    - **Logiken**: Die Liste der Logiken kann nun gruppiert angezeigt werden. Logiken können einer oder mehreren
+    - **Logiken**:
+      - Die Liste der Logiken kann nun gruppiert angezeigt werden. Logiken können einer oder mehreren
       Gruppen zugeordnet werden.
+      - Zu den Gruppen können eine Titelzeile und eine Beschreibung gepflegt werden.
     - **Systemeigenschaften**: Die Resource Graphen der Systemdaten funktionieren jetzt auch, ohne dass das smartvisu
       Plugin konfiguriert sein muss.
     - **Items**: Es ist jetzt möglich die Veränderung des Werte von mehreren Items in einer Tabelle live zu
