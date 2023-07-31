@@ -11,15 +11,15 @@ Die Beschreibung ihrer Funktionalität ist hier beschrieben:
 
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :titlesonly:
 
-    /lib/item
-    /lib/plugin
+   /lib/item
+   /lib/plugin
 
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :titlesonly:
 
     /lib/shtime
@@ -30,9 +30,9 @@ Die Beschreibung ihrer Funktionalität ist hier beschrieben:
 Folgende Libraries mit Hilfsfunktionen stehen zur Verfügung:
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :titlesonly:
 
-    /lib/env
-    /lib/tools
-    /lib/utils
+   /lib/env
+   /lib/tools
+   /lib/utils
