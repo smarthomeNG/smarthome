@@ -19,8 +19,8 @@ Die Beschreibung ihrer Funktionalität ist hier beschrieben:
 
 
 .. toctree::
-   :maxdepth: 4
-   :titlesonly:
+    :maxdepth: 4
+    :titlesonly:
 
     /lib/shtime
     /lib/logic
