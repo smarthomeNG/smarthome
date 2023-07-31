@@ -888,7 +888,8 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         self.__receive_thread.start()
 
     def _close(self):
-        self.logger.debug(f'stopping receive thread {self.__receive_thread.name}')
+        if self.__receive_thread is not None:
+            self.logger.debug(f'stopping receive thread {self.__receive_thread.name}')
         self._listener_active = False
         try:
             self.__receive_thread.join()
