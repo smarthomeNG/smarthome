@@ -13,6 +13,6 @@ Der Aufruf der darin bereitgestellten Funktionen ist im Folgenden beschrieben:
    /lib/logutils
    /lib/network
    /lib/orb
-   /liv/env
+   /lib/env
    /lib/tools
    /lib/utils

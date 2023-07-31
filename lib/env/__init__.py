@@ -109,12 +109,11 @@ class Env:
         return mps_to_beaufort(kmh_to_mps(speed_in_kmh))
 
 
-    def get_beaufort_description(self, speed_in_bft, sh=None):
+    def get_beaufort_description(self, speed_in_bft):
         """
         Get description for windspeed in beaufort
 
         :param speed_in_bft: Wind speed in beauford (Bft) - range from 0 - 12
-        :param sh:
         :return:
         """
         if speed_in_bft is None:
@@ -129,7 +128,7 @@ class Env:
                 f"speed_in_bft is out of scale: '{speed_in_bft}'")
             return None
 
-        if sh is None or sh.get_defaultlanguage() == 'de':
+        if self._sh is None or self._sh.get_defaultlanguage() == 'de':
             return self._beaufort_descriptions_de[speed_in_bft]
         return self._beaufort_descriptions_en[speed_in_bft]
 
