@@ -16,3 +16,19 @@ lib.env
    :no-members:
    :noindex:
 
+-----X
+
+.. autoclass:: Env
+   :members:
+   :noindex:
+
+=====
+
+.. module:: lib.env.envlib
+
+=====
+
+.. autoclass:: Env
+   :no-members:
+   :noindex:
+

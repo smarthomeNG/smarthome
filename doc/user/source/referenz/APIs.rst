@@ -19,12 +19,12 @@ Die Beschreibung ihrer Funktionalität ist hier beschrieben:
 
 
 .. toctree::
-    :maxdepth: 4
-    :titlesonly:
+   :maxdepth: 4
+   :titlesonly:
 
-    /lib/shtime
-    /lib/logic
-    /lib/scheduler
+   /lib/shtime
+   /lib/logic
+   /lib/scheduler
 
 
 Folgende Libraries mit Hilfsfunktionen stehen zur Verfügung:
