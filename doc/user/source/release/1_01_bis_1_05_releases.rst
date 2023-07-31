@@ -1,4 +1,4 @@
-:tocdepth: 2
+:tocdepth: 3
 
 Release 1.1 bis 1.5
 ===================
