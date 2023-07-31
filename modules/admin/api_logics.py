@@ -527,13 +527,9 @@ class LogicsController(RESTResource):
             elif action == 'deletegroup':
                 self.logger.info(f"LogicsController.update: group={name}, action={action}, params={params}")
                 return self.delete_group(name, params)
-                #return json.dumps({'result': 'Error', 'description': f"Deleting of groups is not yet implemented. Group '{name}' was not deleted"})
-            #elif action == '':
             else:
                 self.logger.info(f"LogicsController.update: group={name}, action={action}, filename={filename}")
                 return self.set_logic_state(name, action, filename)
-            #else:
-            #    return json.dumps({'result': 'Error', 'description': f"unknown action '{action}' requested"})
 
         elif not action in ['create', 'load', 'delete', 'delete_with_code']:
             mylogic = self.logics.return_logic(name)

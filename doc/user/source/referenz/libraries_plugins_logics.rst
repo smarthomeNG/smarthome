@@ -6,7 +6,7 @@ Der Aufruf der darin bereitgestellten Funktionen ist im Folgenden beschrieben:
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
    :titlesonly:
 
    /lib/db
