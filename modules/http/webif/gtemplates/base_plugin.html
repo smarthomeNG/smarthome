@@ -14,7 +14,7 @@
 
 {% block scripts -%}
 {{ super() }}
-
+<script src="/gstatic/js/smarthomeng_pageupdate.js"></script>
 <script>
 	$(document).on("change", ".dataTables_length select", function(){
 	          var selectedVal = $(this).val();
@@ -23,12 +23,26 @@
 						setCookie("pagelength", window.pageLength, 3650, window.pluginname);
 						if (selectedVal == 1)
 						{
-							console.log("Triggering resize window because pagelength in tab " + tab + " is set to " + selectedVal);
+							window.toggle = window.toggle * -1 + 0.1;
 							$(window).resize();
+							this.options[this.selectedIndex].disabled = true;
+							console.log("Triggering resize window because pagelength in tab " + tab + " is set to " + selectedVal);
+						}
+						else {
+							this.options[0].disabled = false;
 						}
 	    });
 </script>
-<script src="/gstatic/js/smarthomeng_pageupdate.js"></script>
+<script>
+	$(document).ready(function(){
+		const select_menu = document.querySelector(".dataTables_length select");
+		if (select_menu.selectedIndex == -1)
+		{
+			select_menu.selectedIndex = 0;
+			select_menu.options[select_menu.selectedIndex].disabled = true;
+		}
+	});
+	</script>
 <script>
 	function initVariables() {
 		// Make refresh variable, dataSet and update_params available for plugins html files.
@@ -45,19 +59,23 @@
 	  if (window.pageLength == "")
 	  {
 			window.pageLength = {}
-			let tabcount = {{ tabcount }};
-			if (isNaN(parseFloat(tabcount))) {
-				tabcount = 1;
-			}
+			let tabcount = 0;
+			{%- if tabcount is defined %}
+				if (isNaN(parseFloat({{ tabcount }})))
+					tabcount = 1;
+				else
+					tabcount = {{ tabcount }};
+			{%- endif %}
 			for (let i = 1; i <= tabcount; i++) {
-				let pagelength = {{ webif_pagelength }};
-				if (isNaN(parseFloat(pagelength)) || pagelength == 0) {
+				let pagelength = 0;
+				if (isNaN(parseFloat({{ webif_pagelength }})) || {{ webif_pagelength }} == 0)
 		      pagelength = 1;
-		    }
+		    else
+		    	pagelength = {{ webif_pagelength }};
 			  window.pageLength["bodytab_"+i] = {'tableid': 'unknown', 'pagelength': parseInt(pagelength)};
 				console.log(window.pageLength);
 			}
-			setCookie("pagelength", window.pageLength, 30, window.pluginname);
+			setCookie("pagelength", window.pageLength, 3650, window.pluginname);
 		}
 		window.initial_update = false;
 		{%- if row_count is defined %}
