@@ -57,7 +57,10 @@ def kmh_to_kn(speed_in_kmh):
     Umrechnung km/h in Knoten (nm/h)
 
     :param speed_in_kmh: Geschwindigkeit in km/h
+    :type speed_in_kmh: float
+
     :return: Geschwindigkeit in Knoten
+    :rtype: float
     """
     return speed_in_kn / nauticalmiles_to_meter(1)
     #return speed_in_kmh / 1.852
@@ -90,7 +93,8 @@ def mps_to_kmh(speed_in_mps):
     :param speed_in_mps:
     :return:
     """
-    return speed_in_mps * 3.6 * 1609.344
+    return speed_in_mps * 3.6 * miles_to_meter(1)
+    #return speed_in_mps * 3.6 * 1609.344
 
 
 def kmh_to_mps(speed_in_kmh):
@@ -100,7 +104,8 @@ def kmh_to_mps(speed_in_kmh):
     :param speed_in_mps:
     :return:
     """
-    return speed_in_kmh / 3.6 / 1609.344   # / 5793.638
+    return speed_in_kmh / 3.6 / miles_to_meter(1)   # / 5793.638
+    #return speed_in_kmh / 3.6 / 1609.344   # / 5793.638
 
 
 """
@@ -111,7 +116,7 @@ def miles_to_meter(miles):
     """
     Umterchnung Meilen zu Metern
 
-    :param speed_in_mps:
+    :param miles:
     :return:
     """
     return miles * 1609.344
@@ -121,10 +126,30 @@ def nauticalmiles_to_meter(miles):
     """
     Umterchnung nautische Meilen zu Metern
 
-    :param speed_in_mps:
+    :param miles:
     :return:
     """
     return miles * 1852.0
+
+
+def meter_to_miles(meter):
+    """
+    Umterchnung Meter zu Meilen
+
+    :param meter:
+    :return:
+    """
+    return meter / 1609.344
+
+
+def meter_to_nauticalmiles(meter):
+    """
+    Umterchnung Meter zu nautische Meilen
+
+    :param meter:
+    :return:
+    """
+    return meter / 1852.0
 
 
 

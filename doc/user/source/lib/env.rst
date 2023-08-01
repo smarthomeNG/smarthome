@@ -34,15 +34,12 @@ lib.env
 -----
 
 4
-
-.. module:: lib.env.envlib
-
------
-
 5
 
-.. autoclass:: Env
+.. automodule:: lib.env
     :members:
     :member-order: bysource
-    :noindex:
+    :undoc-members:
+    :show-inheritance:
+    :autodoc_typehints_format: short
 
