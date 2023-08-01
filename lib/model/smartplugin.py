@@ -75,6 +75,11 @@ class SmartPlugin(SmartObject, Utils):
         self._plg_item_dict = {}      # make sure, that the dict is local to the plugin
         self._item_lookup_dict = {}   # make sure, that the dict is local to the plugin
 
+        # set parameter value
+        # TODO: need to check for this item in parse_item and set self._suspend_item
+        #       for suspend item functionality to work
+        self._suspend_item_path = self.get_parameter_value('suspend_item')
+
     def suspend(self, by=None):
         """
         sets plugin into suspended mode, no network/serial activity and no item changed

@@ -297,24 +297,29 @@ class SmartDevicePlugin(SmartPlugin):
         """
         enable / disable suspend mode: open/close connections, schedulers
         """
+
         if suspend_active is None:
             if self._suspend_item:
+                # if no parameter set, try to use item setting
                 suspend_active = bool(self._suspend_item())
             else:
+                # if not available, default to "resume"
                 suspend_active = False
 
+        # print debug logging
         if suspend_active:
             msg = 'Suspend mode enabled'
         else:
             msg = 'Suspend mode disabled'
         if by:
             msg += f' (set by {by})'
+        self.logger.debug(msg)
 
-        self.logger.info(msg)
+        # activate selected mode, use smartplugin methods
         if suspend_active:
-            self.suspend()
+            self.suspend(by)
         else:
-            self.resume()
+            self.resume(by)
 
         if suspend_active:
             if self.scheduler_get(self.get_shortname() + '_cyclic'):
