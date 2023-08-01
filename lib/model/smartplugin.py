@@ -66,11 +66,38 @@ class SmartPlugin(SmartObject, Utils):
     logger = logging.getLogger(__name__)
 
     alive = False
+    suspended = False       # flag for setting suspended (inactive) state
+    _suspend_item = None      # suspend item
+    _suspend_item_path = None # path of suspend item
 
     # Initialization of SmartPlugin class called by super().__init__() from the plugin's __init__() method
     def __init__(self, **kwargs):
         self._plg_item_dict = {}      # make sure, that the dict is local to the plugin
         self._item_lookup_dict = {}   # make sure, that the dict is local to the plugin
+
+    def suspend(self, by=None):
+        """
+        sets plugin into suspended mode, no network/serial activity and no item changed
+        """
+        if self.alive:
+            self.logger.info(f'plugin suspended by {by if by else "unknown"}, connections will be closed')
+            self.suspended = True
+            if self._suspend_item is not None:
+                self._suspend_item(True)
+            if hasattr(self, 'disconnect'):
+                self.disconnect()
+
+    def resume(self, by=None):
+        """
+        disabled suspended mode, network/serial connections are resumed
+        """
+        if self.alive:
+            self.logger.info(f'plugin resumed by {by if by else "unknown"}, connections will be resumed')
+            self.suspended = False
+            if self._suspend_item is not None:
+                self._suspend_item(False)
+            if hasattr(self, 'connect'):
+                self.connect()
 
     def deinit(self, items=[]):
         """
@@ -174,6 +201,11 @@ class SmartPlugin(SmartObject, Utils):
             else:
                 self.logger.debug(f'not stopping plugin for removal of item {item.path()}')
 
+        if item.path() == self._suspend_item_path:
+            self.logger.warning(f'trying to remove suspend item {item}. Disabling suspend item function')
+            self._suspend_item = None
+            self._suspend_item_path = ''
+        
         # remove data from item_dict early in case of concurrent actions
         data = self._plg_item_dict[item.path()]
         del self._plg_item_dict[item.path()]

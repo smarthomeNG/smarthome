@@ -51,9 +51,11 @@ from lib.model.sdp.globals import (
     ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ,
     ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE,
     PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT,
-    PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_STANDBY_ITEM,
+    PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
-    PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH)
+    PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH,
+    PLUGIN_ATTR_CB_SUSPEND)
+
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
 from lib.model.sdp.connection import SDPConnection
@@ -138,12 +140,12 @@ class SmartDevicePlugin(SmartPlugin):
         # set to True to use on_connect and on_disconnect callbacks
         self._use_callbacks = False
 
+        #
         # set class properties
+        #
 
-        # "standby" mode properties
-        self.standby = False
-        self._standby_item = None
-        self._standby_item_path = self.get_parameter_value(PLUGIN_ATTR_STANDBY_ITEM)
+        # suspend mode properties
+        self._suspend_item_path = self.get_parameter_value(PLUGIN_ATTR_SUSPEND_ITEM)
 
         # connection instance
         self._connection = None
@@ -196,12 +198,16 @@ class SmartDevicePlugin(SmartPlugin):
         # call method for possible custom work (overwrite _post_init)
         self._post_init()
 
+        # self._webif might be set by smartplugin init
         if self._webif and self._sh:
             self.init_webinterface(self._webif)
 
         self.logger.debug(f'device initialized from {self.__class__.__name__}')
 
     def remove_item(self, item):
+        """
+        remove item references from plugin
+        """
 
         try:
             cmd = self._plg_item_dict[item]['mapping']
@@ -212,9 +218,8 @@ class SmartDevicePlugin(SmartPlugin):
         if not super().remove_item(item):
             return False
 
-        if item.path == self._standby_item_path:
-            self.standby(False)
-            self.logger.warning(f'removed standby item {item.path()}, disabling standby')
+        if item.path == self._suspend_item_path:
+            self.logger.warning(f'removed suspend item {item.path()}, ')
             return True
 
         """ remove item from custom plugin dicts/lists """
@@ -259,9 +264,8 @@ class SmartDevicePlugin(SmartPlugin):
 
         self._parameters.update(kwargs)
 
-        # if standby mode is enabled, set callback for tcp client etc.
-        if self._standby_item_path:
-            self._parameters['standby_callback'] = self.set_standby
+        # set callback for tcp client etc.
+        self._parameters[PLUGIN_ATTR_CB_SUSPEND] = self.set_suspend
 
         # this is only viable for the base class. All derived plugin classes
         # will probably be created towards a specific command class
@@ -289,35 +293,34 @@ class SmartDevicePlugin(SmartPlugin):
 
         return True
 
-    def set_standby(self, stby_active=None, by=None):
+    def set_suspend(self, suspend_active=None, by=None):
         """
-        enable / disable standby mode: open/close connections, schedulers
+        enable / disable suspend mode: open/close connections, schedulers
         """
-        if stby_active is None:
-            if self._standby_item:
-                stby_active = bool(self._standby_item())
+        if suspend_active is None:
+            if self._suspend_item:
+                suspend_active = bool(self._suspend_item())
             else:
-                stby_active = False            
+                suspend_active = False
 
-        by_msg = ''
+        if suspend_active:
+            msg = 'Suspend mode enabled'
+        else:
+            msg = 'Suspend mode disabled'
         if by:
-            by_msg = f' (set by {by})'
+            msg += f' (set by {by})'
 
-        self.logger.info(f'Standby mode set to {stby_active}{by_msg}')
-        self.standby = stby_active
-        if self._standby_item is not None:
-            self._standby_item(self.standby)
+        self.logger.info(msg)
+        if suspend_active:
+            self.suspend()
+        else:
+            self.resume()
 
-        if stby_active:
+        if suspend_active:
             if self.scheduler_get(self.get_shortname() + '_cyclic'):
                 self.scheduler_remove(self.get_shortname() + '_cyclic')
-            self.logger.debug('closing connection on standby enabled')
-            self.disconnect()
 
         else:
-            self.logger.debug('opening connection after standby disabled')
-            self.connect()
-
             if self._connection.connected() and not SDP_standalone:
                 self._create_cyclic_scheduler()
 
@@ -332,7 +335,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         # start the devices
         self.alive = True
-        self.set_standby(by='run')
+        self.set_suspend(by='run()')
 
         if self._connection.connected():
             self._read_initial_values()
@@ -399,9 +402,9 @@ class SmartDevicePlugin(SmartPlugin):
 
             return find_custom_attr(parent, index)
 
-        # check for standby item
-        if item.path() == self._standby_item_path:
-            self._standby_item = item
+        # check for suspend item
+        if item.path() == self._suspend_item_path:
+            self._suspend_item = item
             self.add_item(item, updating=True)
             return self.update_item
 
@@ -565,11 +568,11 @@ class SmartDevicePlugin(SmartPlugin):
 
             self.logger.debug(f'Update_item was called with item "{item}" from caller {caller}, source {source} and dest {dest}')
 
-            # check for standby item
-            if item is self._standby_item:
+            # check for suspend item
+            if item is self._suspend_item:
                 if caller != self.get_shortname():                
-                    self.logger.debug(f'Standby item changed to {item()}')
-                    self.set_standby(by=f'standby item {item.path()}')
+                    self.logger.debug(f'Suspend item changed to {item()}')
+                    self.set_suspend(by=f'suspend item {item.path()}')
                 return
 
             if not (self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo')) or self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_READ_GRP', 'foo'))):
@@ -622,8 +625,8 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.warning(f'trying to send command {command} with value {value}, but plugin is not active.')
             return False
 
-        if self.standby:
-            self.logger.warning(f'trying to send command {command} with value {value}, but plugin is on standby.')
+        if self.suspended:
+            self.logger.warning(f'trying to send command {command} with value {value}, but plugin is suspended.')
             return False
 
         if not self._connection:
@@ -711,15 +714,15 @@ class SmartDevicePlugin(SmartPlugin):
                 if self._discard_unknown_command:
                     self.logger.debug(f'data "{data}" did not identify a known command, ignoring it')
                 else:
-                    if not self.standby:
+                    if not self.suspended:
                         self.logger.debug(f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}')
                         self._dispatch_callback(self._unknown_command, data, by)
                     else:
-                        self.logger.info(f'received data "{data}" not identifying a known command while in standby, aborting.')            
+                        self.logger.info(f'received data "{data}" not identifying a known command while suspended, aborting.')            
                 return
 
-        if self.standby:
-            self.logger.info(f'received data "{data}" from {by} for command {command} while on standby, ignoring.')
+        if self.suspended:
+            self.logger.info(f'received data "{data}" from {by} for command {command} while suspended, ignoring.')
             return
 
         assert(isinstance(commands, list))
@@ -756,7 +759,7 @@ class SmartDevicePlugin(SmartPlugin):
         :param by: str
         :type command: str
         """
-        if self.alive and not self.standby:
+        if self.alive and not self.suspended:
 
             item = None
 
@@ -768,8 +771,8 @@ class SmartDevicePlugin(SmartPlugin):
                 self.logger.warning(f'Command {command} yielded value {value} by {by}, not assigned to any item, discarding data')
                 return
 
-            if self.standby:
-                self.logger.error(f'Trying to update item {item.path()}, but on standby. This should not happen, please report to developer.')
+            if self.suspended:
+                self.logger.error(f'Trying to update item {item.path()}, but suspended. This should not happen, please report to developer.')
                 return
 
             for item in items:
@@ -1165,14 +1168,14 @@ class SmartDevicePlugin(SmartPlugin):
         """
 
         plugins = Plugins.get_instance()
-        global_mod = sys.modules.get('lib.model.sdp.globals', '')
+        globals_mod = sys.modules.get('lib.model.sdp.globals', '')
 
         self._item_attrs = {}
 
-        if plugins and global_mod:
+        if plugins and globals_mod:
             keys = list(self.metadata.itemdefinitions.keys())
             for attr in ATTR_NAMES:
-                attr_val = getattr(global_mod, attr)
+                attr_val = getattr(globals_mod, attr)
                 for key in keys:
                     if key.endswith(attr_val):
                         self._item_attrs[attr] = key
