@@ -18,18 +18,18 @@ lib.env
 2
 
 .. autoclass:: Env
-   :no-members:
+    :members:
     :member-order: bysource
-   :noindex:
+    :noindex:
 
 -----
 
 3
 
 .. autoclass:: Env
-   :members:
+    :members:
     :member-order: bysource
-   :noindex:
+    :noindex:
 
 -----
 
@@ -42,7 +42,7 @@ lib.env
 5
 
 .. autoclass:: Env
-   :no-members:
+    :members:
     :member-order: bysource
-   :noindex:
+    :noindex:
 

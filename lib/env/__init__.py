@@ -21,8 +21,111 @@
 
 
 """
-This library implements functions to handle environmental data in SmartHomeNG.
+Diese lib implementiert Funktionen zum Umgang mit Environment Daten in SmartHomeNG.
+
+Hierzu gehören Umrechnungen der folgenden Maßeinheiten:
+
+  - mps  - Miles Per Second (1 Meile = 1609,344 Meter)
+  - km/h - Kilometer pro Stunde (kmh)
+  - m/s  - Meter je Sekunde (ms)
+  - nm/h - Nautical Miles per Hour (1 nautische Meile = 1852 Meter)
+  - kn   - Knoten (1 nm pro Stunde)
+
+
+  https://www.einheiten-umrechnen.de
+
 """
+
+
+"""
+Umrechnungen von Geschwindigkeiten  (m/s, km/h, mph, Knoten, Mach) + mps + Bft - Mach
+"""
+
+def kn_to_kmh(speed_in_kn: float) -> float:
+    """
+    Umrechnung Knoten (nm/h) in km/h
+
+    :param speed_in_kn: Geschwindigkeit in Knoten
+    :return: Geschwindigkeit in km/h
+    """
+    return speed_in_kn * nauticalmiles_to_meter(1)
+    #return speed_in_kn * 1.852
+
+
+def kmh_to_kn(speed_in_kmh):
+    """
+    Umrechnung km/h in Knoten (nm/h)
+
+    :param speed_in_kmh: Geschwindigkeit in km/h
+    :return: Geschwindigkeit in Knoten
+    """
+    return speed_in_kn / nauticalmiles_to_meter(1)
+    #return speed_in_kmh / 1.852
+
+
+def ms_to_kmh(speed_in_mps):
+    """
+    Umterchnung m/s in km/h
+
+    :param speed_in_mps:
+    :return:
+    """
+    return speed_in_mps * 3.6
+
+
+def kmh_to_ms(speed_in_kmh):
+    """
+    Umterchnung km/h in m/s
+
+    :param speed_in_mps:
+    :return:
+    """
+    return speed_in_kmh / 3.6
+
+
+def mps_to_kmh(speed_in_mps):
+    """
+    Umterchnung m/s in km/h
+
+    :param speed_in_mps:
+    :return:
+    """
+    return speed_in_mps * 3.6 * 1609.344
+
+
+def kmh_to_mps(speed_in_kmh):
+    """
+    Umterchnung km/h in miles per second
+
+    :param speed_in_mps:
+    :return:
+    """
+    return speed_in_kmh / 3.6 / 1609.344   # / 5793.638
+
+
+"""
+Umrechnung von Längen / Entfernungen
+"""
+
+def miles_to_meter(miles):
+    """
+    Umterchnung Meilen zu Metern
+
+    :param speed_in_mps:
+    :return:
+    """
+    return miles * 1609.344
+
+
+def nauticalmiles_to_meter(miles):
+    """
+    Umterchnung nautische Meilen zu Metern
+
+    :param speed_in_mps:
+    :return:
+    """
+    return miles * 1852.0
+
 
 
 class Env:
@@ -66,6 +169,12 @@ class Env:
         self._sh = smarthome
         self._logger = smarthome._logger
 
+
+    """
+    Die folgenden Funktionen dienen der Umrechnung von (Wind-)Geschwindigkeiten
+    
+    Zu beachten ist, dass sich die Angabe mps (miles per second) jeweils auf Seemeilen bezieht.
+    """
 
     def mps_to_beaufort(self, speed_in_mps):
         """
@@ -134,7 +243,7 @@ class Env:
 
 
     @staticmethod
-    def mps_to_kmh(speed_in_mps):
+    def ms_to_kmh(speed_in_mps):
         """
         Umterchnung m/s in km/h
 
@@ -145,7 +254,7 @@ class Env:
 
 
     @staticmethod
-    def kmh_to_mps(speed_in_kmh):
+    def kmh_to_ms(speed_in_kmh):
         """
         Umterchnung km/h in m/s
 
@@ -153,6 +262,28 @@ class Env:
         :return:
         """
         return speed_in_kmh / 3.6
+
+
+    @staticmethod
+    def mps_to_kmh(speed_in_mps):
+        """
+        Umterchnung m/s in km/h
+
+        :param speed_in_mps:
+        :return:
+        """
+        return speed_in_mps * 3.6 * 1609.344
+
+
+    @staticmethod
+    def kmh_to_mps(speed_in_kmh):
+        """
+        Umterchnung km/h in 5793.638
+
+        :param speed_in_mps:
+        :return:
+        """
+        return speed_in_kmh / 3.6 / 1609.344
 
 
     @staticmethod
@@ -179,6 +310,9 @@ class Env:
 
 
 
+    """
+    Die folgenden Funktionen dienen der Umrechnung einer Himmelsrichtung von Grad in die gebräuchlichen Abkürzungen
+    """
 
     @staticmethod
     def get_wind_direction8(deg):
@@ -199,6 +333,10 @@ class Env:
 
 
 
+
+    """
+    ...
+    """
 
 
     def get_location_name(self, lat=None, lon=None):
