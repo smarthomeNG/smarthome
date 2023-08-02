@@ -25,6 +25,13 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **Attribute**: In den Attributen **autotimer** und **cycle** können nun eval Ausdrücke
       in der Konfiguration genutzt werden. Bisher waren nur konstante Werte und alternativ Item Referenzen
       möglich
+  - **Neue Bibliothek lib.env**:
+
+      - lib.env enthält eine Reihe von Funktionen zur Maßeinheitenumrechnung für Environment Daten, sowie weitere
+        Funktionen welche den Umgang mit Environment Informationen unterstützen.
+        Details in der :doc:`Dokumentation </lib/env>`
+      - Die Funktionen können in Logiken und eval Statements in Item Attributen einfach mit ``env.<Funktion>``
+        aufgerufen werden.
   - **Admin GUI**:
 
     - **Logiken**:
@@ -64,6 +71,8 @@ Für Entwickler von Plugins gibt es folgende Neuerungen:
   - **SmartDevicePlugin**: Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und
     jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen
     (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.
+  - **lib.env**: Neue Bibliothek zum Umgang mit Environment Daten. Details in der :doc:`Dokumentation </lib/env>`
+
 
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Entwicklung </entwicklung/entwicklung>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.

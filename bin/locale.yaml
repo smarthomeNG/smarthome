@@ -152,7 +152,45 @@ global_translations:
         'de': "Es existieren keine Userfunctions, es gibt nichts für einen Reload"
         'en': '='
 
+    #Translations for lib.env:
+    "Parameter must be of type float or int but is of type {typ}":
+        'de': "Parameter muss vom Typ float oder int sein, ist jedoch vom Typ {typ}"
+        'en': '='
+    "Parameter must be of type int but is of type {typ}":
+        'de': "Parameter muss vom Typ int sein, ist jedoch vom Typ {typ}"
+        'en': '='
+    "Beaufort is out of scale: '{bft}'":
+        'de': "Die Beaufort Angabe liegt außerhalb des gültigen Bereichs {bft}"
+        'en': '='
+    "Exception when sending GET request: {e}":
+        'de': "Exception beim senden des GET Requests: {e}"
+        'en': '='
+    "Response '{response}' is not in valid json format: {e}":
+        'de': "Antwort '{response}' enthält kein gültiges JSON Format: {e}"
+        'en': '='
+    "No suburb information found for location (lat={lat}, lon={lon}) in address data":
+        'de': "Keine 'suburb' Information in den Address-Daten für die Lokation (lat={lat}, lon={lon}) gefunden"
+        'en': '='
 
+    # Beaufort:
+    #   source for german descriptions https://www.smarthomeng.de/vom-winde-verweht
+    #   source for english descriptions https://simple.wikipedia.org/wiki/Beaufort_scale
+    "bft_0": {'de': "Windstille",          'en':"Calm"}
+    "bft_1": {'de': "leiser Zug",          'en':"Light air"}
+    "bft_2": {'de': "leichte Brise",       'en':"Light breeze"}
+    "bft_3": {'de': "schwacher Wind",      'en':"Gentle breeze"}
+    "bft_4": {'de': "mäßiger Wind",        'en':"Moderate breeze"}
+    "bft_5": {'de': "frischer Wind",       'en':"Fresh breeze"}
+    "bft_6": {'de': "starker Wind",        'en':"Strong breeze"}
+    "bft_7": {'de': "steifer Wind",        'en':"High wind"}
+    "bft_8": {'de': "stürmischer Wind",    'en':"Fresh Gale"}
+    "bft_9": {'de': "Sturm",               'en':"Strong Gale"}
+    "bft_10": {'de': "schwerer Sturm",     'en':"Storm"}
+    "bft_11": {'de': "orkanartiger Sturm", 'en':"Violent storm"}
+    "bft_12": {'de': "Orkan",              'en':"Hurricane-force"}
+
+
+#Translations for lib.shtime:
 lib.shtime_translations:
     'defined':               {'de': 'definiert', 'en': '='}
     'not defined':           {'de': 'nicht definiert', 'en': '='}

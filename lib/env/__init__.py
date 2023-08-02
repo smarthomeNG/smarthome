@@ -34,10 +34,20 @@ Hierzu gehören
     - kn   - Knoten (1 nm pro Stunde)
     - bft  - Beaufort
 
+  - Umrechnungen der folgenden Maßeinheiten für Längen / Entfernungenn:
+
+    - meter   - Meter
+    - miles   - Meilen
+    - nm      - Nautische Meilen
+
   - Umrechnungen der folgenden Maßeinheiten für Temperaturen:
 
     - °F   - Grad Fahrenheit
     - °C   - Grad Celsius
+
+  - weitere Umrechnungen
+
+    - Grad zu Himmelsrichtung
 
 
   https://www.einheiten-umrechnen.de
@@ -45,6 +55,8 @@ Hierzu gehören
 """
 
 import logging
+
+from lib.translation import translate
 
 _logger = logging.getLogger('lib.env')
 
@@ -65,7 +77,7 @@ def kn_to_kmh(speed: float) -> float:
     :return: Geschwindigkeit in km/h
     """
     if not isinstance(speed,(int, float)):
-        _logger.error(f"kn_to_kmh: Parameter must be of type float or int but is of type {type(speed)}")
+        _logger.error("kn_to_kmh: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
     return speed * _nautical_mile
@@ -79,7 +91,7 @@ def kmh_to_kn(speed: float) -> float:
     :return: Geschwindigkeit in Knoten
     """
     if not isinstance(speed,(int, float)):
-        _logger.error(f"kmh_to_kn: Parameter must be of type float or int but is of type {type(speed)}")
+        _logger.error("kmh_to_kn: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
     return speed / _nautical_mile
@@ -93,7 +105,7 @@ def ms_to_kmh(speed: float) -> float:
     :return: Geschwindigkeit in km/h
     """
     if not isinstance(speed,(int, float)):
-        _logger.error(f"ms_to_kmh: Parameter must be of type float or int but is of type {type(speed)}")
+        _logger.error("ms_to_kmh: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
     return speed * 3.6
@@ -107,7 +119,7 @@ def kmh_to_ms(speed: float) -> float:
     :return: Geschwindigkeit in m/s
     """
     if not isinstance(speed,(int, float)):
-        _logger.error(f"kmh_to_ms: Parameter must be of type float or int but is of type {type(speed)}")
+        _logger.error("kmh_to_ms: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
     return speed / 3.6
@@ -121,7 +133,7 @@ def mps_to_kmh(speed: float) -> float:
     :return: Geschwindigkeit in km/h
     """
     if not isinstance(speed,(int, float)):
-        _logger.error(f"mps_to_kmh: Parameter must be of type float or int but is of type {type(speed)}")
+        _logger.error("mps_to_kmh: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
     return speed * 3.6 * _mile
@@ -135,7 +147,7 @@ def kmh_to_mps(speed: float) -> float:
     :return:
     """
     if not isinstance(speed,(int, float)):
-        _logger.error(f"kmh_to_mps: Parameter must be of type float or int but is of type {type(speed)}")
+        _logger.error("kmh_to_mps: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
     return speed / 3.6 / _mile
@@ -151,7 +163,7 @@ def ms_to_bft(speed: float) -> int:
     :return: Windgeschwindigkeit in bft
     """
     if not isinstance(speed,(int, float)):
-        _logger.error(f"ms_to_bft: Parameter must be of type float or int but is of type {type(speed)}")
+        _logger.error("ms_to_bft: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
     # Origin of table: https://www.smarthomeng.de/vom-winde-verweht
@@ -182,7 +194,7 @@ def kmh_to_bft(speed: float) -> int:
     :return: Windgeschwindigkeit in bft
     """
     if not isinstance(speed,(int, float)):
-        _logger.error(f"kmh_to_bft: Parameter must be of type float or int but is of type {type(speed)}")
+        _logger.error("kmh_to_bft: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
     return ms_to_bft(kmh_to_ms(speed))
@@ -196,103 +208,72 @@ def bft_to_text(bft: int, language: str='de') -> str:
     :return: Text Beschreibung der Windgeschwindigkeit
     """
 
-    # source for german descriptions https://www.smarthomeng.de/vom-winde-verweht
-    _beaufort_descriptions_de = ["Windstille",
-                                 "leiser Zug",
-                                 "leichte Brise",
-                                 "schwacher Wind",
-                                 "mäßiger Wind",
-                                 "frischer Wind",
-                                 "starker Wind",
-                                 "steifer Wind",
-                                 "stürmischer Wind",
-                                 "Sturm",
-                                 "schwerer Sturm",
-                                 "orkanartiger Sturm",
-                                 "Orkan"]
-    # source for english descriptions https://simple.wikipedia.org/wiki/Beaufort_scale
-    _beaufort_descriptions_en = ["Calm",
-                                 "Light air",
-                                 "Light breeze",
-                                 "Gentle breeze",
-                                 "Moderate breeze",
-                                 "Fresh breeze",
-                                 "Strong breeze",
-                                 "High wind",
-                                 "Fresh Gale",
-                                 "Strong Gale",
-                                 "Storm",
-                                 "Violent storm",
-                                 "Hurricane-force"]
-
     if not isinstance(bft,(int)):
-        _logger.error(f"bft_to_text: Parameter must be of type int but is of type {type(bft)}")
+        _logger.error("bft_to_text: " + translate("Parameter must be of type int but is of type {typ}", {'typ': type(bft)}))
         return ''
 
     if (bft < 0) or (bft > 12):
-        _logger.error(f"speed_in_bft is out of scale: '{bft}'")
+        _logger.error("bft_to_text: " + translate("Beaufort is out of scale: '{bft}'", {'bft': bft}))
         return ''
 
-    if language.lower() == 'de':
-        return _beaufort_descriptions_de[bft]
-    return _beaufort_descriptions_en[bft]
+    return translate("bft_"+str(bft))
 
 
 """
 Umrechnung von Längen / Entfernungen
 """
 
-def miles_to_meter(miles):
+def miles_to_meter(distance):
     """
     Umterchnung Meilen zu Metern
 
-    :param miles:
-    :return:
+    :param distance: Strecke in Meilen
+    :return: Strecke in Metern
     """
-    if not isinstance(speed,(int, float)):
-        _logger.error(f"miles_to_meter: Parameter must be of type float or int but is of type {type(miles)}")
+    if not isinstance(distance,(int, float)):
+        _logger.error("miles_to_meter: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(distance)}))
         return -1
 
     return miles * _mile
 
 
-def nauticalmiles_to_meter(miles):
+def nauticalmiles_to_meter(distance):
     """
     Umterchnung nautische Meilen zu Metern
 
-    :param miles:
-    :return:
+    :param distance: Strecke in nautischen Meilen
+    :return: Strecke in Metern
     """
-    if not isinstance(speed,(int, float)):
-        _logger.error(f"nauticalmiles_to_meter: Parameter must be of type float or int but is of type {type(miles)}")
+    if not isinstance(distance,(int, float)):
+        _logger.error("nauticalmiles_to_meter: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(distance)}))
         return -1
 
     return miles * _nautical_mile
 
 
-def meter_to_miles(meter):
+def meter_to_miles(distance):
     """
     Umterchnung Meter zu Meilen
 
-    :param meter:
-    :return:
+    :param distance: Strecke in Metern
+    :return: Strecke in Meilen
     """
-    if not isinstance(speed,(int, float)):
-        _logger.error(f"meter_to_miles: Parameter must be of type float or int but is of type {type(meter)}")
+    if not isinstance(distance,(int, float)):
+        _logger.error("meter_to_miles: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(distance)}))
         return -1
 
     return meter / _mile
 
 
-def meter_to_nauticalmiles(meter):
+def meter_to_nauticalmiles(distance):
     """
     Umterchnung Meter zu nautische Meilen
 
-    :param meter:
-    :return:
+    :param distance: Strecke in Metern
+    :return: Strecke in nautischen Meilen
     """
-    if not isinstance(speed,(int, float)):
-        _logger.error(f"meter_to_nauticalmiles: Parameter must be of type float or int but is of type {type(meter)}")
+    if not isinstance(distance,(int, float)):
+        _logger.error("meter_to_nauticalmiles: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(distance)}))
         return -1
 
     return meter / _nautical_mile
@@ -305,11 +286,12 @@ Umrechnung von Temperaturen
 def f_to_c(grad: float) -> float:
     """
     Umrechnung von Grad Fahrenheit in Grad Celsius
+
     :param grad: Temperatur in °F
     :return: Temperatur in °C
     """
     if not isinstance(grad,(int, float)):
-        _logger.error(f"f_to_c: Parameter must be of type float or int but is of type {type(grad)}")
+        _logger.error("f_to_c: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(grad)}))
         return -999
 
     return (grad - 32) * 5 / 9
@@ -318,11 +300,12 @@ def f_to_c(grad: float) -> float:
 def c_to_f(grad: float) -> float:
     """
     Umrechnung von Grad Celsius in Grad Fahrenheit
+
     :param grad: Temperatur in °C
     :return: Temperatur in °F
     """
     if not isinstance(grad,(int, float)):
-        _logger.error(f"c_to_f: Parameter must be of type float or int but is of type {type(grad)}")
+        _logger.error("c_to_f: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(grad)}))
         return -999
 
     return grad * 9 / 5 + 32
@@ -342,7 +325,7 @@ def degrees_to_direction_8(deg: float) -> str:
     :return: Himmelsrichtung (Abkürzung)
     """
     if not isinstance(deg,(int, float)):
-        _logger.error(f"degrees_to_direction_8: Parameter must be of type float or int but is of type {type(deg)}")
+        _logger.error("degrees_to_direction_8: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(deg)}))
         return ''
 
     direction_array = ['N', 'NO', 'O', 'SO', 'S', 'SW', 'W', 'NW', 'N']
@@ -361,7 +344,7 @@ def degrees_to_direction_16(deg: float) -> str:
     :return: Himmelsrichtung (Abkürzung)
     """
     if not isinstance(deg,(int, float)):
-        _logger.error(f"degrees_to_direction_8: Parameter must be of type float or int but is of type {type(deg)}")
+        _logger.error("degrees_to_direction_16: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(deg)}))
         return ''
 
     direction_array = ['N', 'NNO', 'NO', 'ONO', 'O', 'OSO', 'SO', 'SSO', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N']
@@ -375,37 +358,29 @@ def location_name(lat:float, lon:float) -> str:
 
     import requests
 
-    #if not isinstance(lat,(int, float)) or not isinstance(lon,(int, float)):
-    #    _logger.error(f"location_name: Parameters must be of type float or int but are of type {type(lat)} and {type(lon)}")
-    #    return ''
-
-    if lat == 0 or lon == 0:
-        _logger.warning(f"lat or lon are zero, not sending request: {lat=}, {lon=}")
-        return ''
-
     # api documentation: https://nominatim.org/release-docs/develop/api/Reverse/
     request_str = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=jsonv2"
 
     try:
         response = requests.get(request_str)
     except Exception as e:
-        _logger.warning(f"location_name: Exception when sending GET request: {e}")
+        _logger.warning("location_name: " + translate("Exception when sending GET request: {e}", {'e': e}))
         return ''
 
     try:
         json_obj = response.json()
     except Exception as e:
-        _logger.warning(f"location_name: Response '{response}' is no valid json format: {e}")
+        _logger.warning("location_name: " + translate("Response '{response}' is not in valid json format: {e}", {'response': response, 'e': e}))
         return ''
 
     if response.status_code >= 500:
-        _logger.warning(f"get_location_name: {location_name(response.status_code)}")
+        _logger.warning(f"location_name: {location_name(response.status_code)}")
         return ''
 
     #self._logger.notice(f"{json_obj['display_name']}")
     #self._logger.notice(f"{json_obj['address']}")
-    if  json_obj['address'].get('suberb', None) is None:
-        _logger.warning(f"location_name: no suburb information found for location (lat={lat}, lon={lon}) in address data: {json_obj['address']}")
+    if  json_obj['address'].get('suburb', None) is None:
+        _logger.warning("location_name: " + translate("No suburb information found for location (lat={lat}, lon={lon}) in address data", {'lat': lat, 'lon': lon}) + f": {json_obj['address']}")
         return ''
 
     return json_obj['address']['suburb']

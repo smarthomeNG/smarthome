@@ -37,6 +37,7 @@ from math import *
 
 
 from lib.shtime import Shtime
+import lib.env
 from lib.plugin import Plugins
 
 from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB,
@@ -1414,6 +1415,7 @@ class Item():
         items = _items_instance
         import math
         import lib.userfunctions as uf
+        env = lib.env
 
         eval_expression = str(eval_expression)
         try:
@@ -1491,6 +1493,7 @@ class Item():
                     import math
                     import lib.userfunctions as uf
                     # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
+                    env = lib.env
 
                     cond = eval(self._trigger_condition)
                     logger.warning(f"Item {self._path}: Condition result '{cond}' evaluating trigger condition {self._trigger_condition}")
@@ -1514,6 +1517,7 @@ class Item():
                 import math
                 import lib.userfunctions as uf
                 # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
+                env = lib.env
 
                 try:
                     self.__prev_trigger_by = self.__triggered_by
@@ -1569,6 +1573,7 @@ class Item():
         import math
         import lib.userfunctions as uf
         #uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
+        env = lib.env
 
         logger.info("Item {}: '{}' evaluating {} = {}".format(self._path, attr, on_dest, on_eval))
 
@@ -1668,6 +1673,7 @@ class Item():
         items = _items_instance
         import math
         import lib.userfunctions as uf
+        env = lib.env
 
         try:
             #logger.warning(f"self._log_text: {self._log_text}, type={type(self._log_text)}")

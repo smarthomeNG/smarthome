@@ -3,7 +3,7 @@
 #########################################################################
 # Copyright 2011-2014 Marcus Popp                          marcus@popp.mx
 # Copyright 2016-2017 Christian Straßburg
-# Copyright 2017-2022 Martin Sinn                           m.sinn@gmx.de
+# Copyright 2017-2023 Martin Sinn                           m.sinn@gmx.de
 # Copyright 2017-2022 Bernd Meiners                 Bernd.Meiners@mail.de
 #########################################################################
 #  This file is part of SmartHomeNG
@@ -33,6 +33,7 @@ import inspect
 import copy
 
 from lib.shtime import Shtime
+import lib.env
 from lib.item import Items
 from lib.model.smartplugin import SmartPlugin
 
@@ -740,11 +741,13 @@ class Scheduler(threading.Thread):
 
         # set the logic environment here (for use within functions in logics):
         #logic = obj  # noqa
-        logic.sh = self._sh
-        logic.logger = logger
-        logic.shtime = self.shtime
-        logic.items = self.items
-        logic.trigger_dict = trigger  # logic.trigger has naming conflict with method logic.trigger of lib.item
+        #logic.sh = self._sh           # not needed (because of being set in logic_globals dict
+       # logic.logger = logger         # not needed (because of being set in logic_globals dict
+        #logic.shtime = self.shtime    # not needed (because of being set in logic_globals dict
+        #logic.items = self.items      # not needed (because of being set in logic_globals dict
+        #logic.env = lib.env           # not needed (because of being set in logic_globals dict
+        #logic.trigger_dict = trigger # logic.trigger has naming conflict with method logic.trigger of lib.item
+                                      # not needed (because of being set in logic_globals dict
 
         #logics = logic._logics
 
@@ -762,11 +765,12 @@ class Scheduler(threading.Thread):
                     # set up "globals" environment for the logic
                     logic_globals = dict(globals())
                     logic_globals['sh'] = self._sh
-                    logic_globals['logger'] = logic.logger
+                    logic_globals['logger'] = logger
                     logic_globals['mqtt'] = self.mqtt
                     logic_globals['shtime'] = self.shtime
+                    logic_globals['env'] = lib.env
                     logic_globals['items'] = self.items
-                    logic_globals['trigger'] = logic.trigger_dict
+                    logic_globals['trigger'] = trigger  # logic.trigger_dict
                     logic_globals['logic'] = logic
                     logic_globals['logics'] = logic._logics
 

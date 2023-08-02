@@ -453,6 +453,26 @@ class SmartHome():
             self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev)
 
 
+    @property
+    def lat(self) -> float:
+        """
+        Read-Only Property: latitude (from smarthome.yaml)
+
+        :return: latitude (from smarthome.yaml)
+        """
+        return float(self._lat)
+
+
+    @property
+    def lon(self) -> float:
+        """
+        Read-Only Property: longitude (from smarthome.yaml)
+
+        :return: longitude (from smarthome.yaml)
+        """
+        return float(self._lon)
+
+
     def get_defaultlanguage(self):
         """
         Returns the configured default language of SmartHomeNG
