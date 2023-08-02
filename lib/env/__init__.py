@@ -19,6 +19,10 @@
 #  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+import logging
+
+_logger = logging.getLogger('lib.env')
+
 
 """
 Diese lib implementiert Funktionen zum Umgang mit Environment Daten in SmartHomeNG.
@@ -36,83 +40,179 @@ Hierzu gehören Umrechnungen der folgenden Maßeinheiten:
 
 """
 
+_mile = 1609.344       # 1 mile is 1609.344 meters long
+_nautical_mile = 1852  # 1 nm is 1852 meters long
+
 
 """
 Umrechnungen von Geschwindigkeiten  (m/s, km/h, mph, Knoten, Mach) + mps + Bft - Mach
 """
 
-def kn_to_kmh(speed_in_kn: float) -> float:
+def kn_to_kmh(speed: float) -> float:
     """
-    Umrechnung Knoten (nm/h) in km/h
+    Umrechnung Knoten (nautische Meilen pro Stunde) in Kilometer pro Stunde
 
-    :param speed_in_kn: Geschwindigkeit in Knoten
+    :param speed: Geschwindigkeit in Knoten
     :return: Geschwindigkeit in km/h
     """
-    return speed_in_kn * nauticalmiles_to_meter(1)
-    #return speed_in_kn * 1.852
+    return speed * _nautical_mile
 
 
-def kmh_to_kn(speed_in_kmh):
+def kmh_to_kn(speed: float) -> float:
     """
-    Umrechnung km/h in Knoten (nm/h)
+    Umrechnung Kilometer pro Stunde in Knoten (nautische Meilen pro Stunde)
 
-    :param speed_in_kmh: Geschwindigkeit in km/h
-    :type speed_in_kmh: float
-
+    :param speed: Geschwindigkeit in km/h
     :return: Geschwindigkeit in Knoten
-    :rtype: float
     """
-    return speed_in_kn / nauticalmiles_to_meter(1)
-    #return speed_in_kmh / 1.852
+    return speed / _nautical_mile
 
 
-def ms_to_kmh(speed_in_mps):
+def ms_to_kmh(speed: float) -> float:
     """
-    Umterchnung m/s in km/h
+    Umrechnung Meter pro Sekunde in Kilometer pro Stunde
 
-    :param speed_in_mps:
+    :param speed: Geschwindigkeit in m/s
+    :return: Geschwindigkeit in km/h
+    """
+    try:
+        return speed * 3.6
+    except Exception as e:
+        _logger.error(f"ms_to_kmh: Cannot convert speed to km/h, received speed='{speed}' - Exception {e}")
+        return -1
+
+
+def kmh_to_ms(speed: float) -> float:
+    """
+    Umrechnung Kilometer pro Stunde in Meter pro Sekunde
+
+    :param speed: Geschwindigkeit in km/h
+    :return: Geschwindigkeit in m/s
+    """
+    try:
+        return speed / 3.6
+    except Exception as e:
+        _logger.error(f"kmh_to_ms: Cannot convert speed to m/s, received speed='{speed}' - Exception {e}")
+        return -1
+
+
+def mps_to_kmh(speed: float) -> float:
+    """
+    Umrechnung Miles per Second in Kilometer pro Stunde
+
+    :param speed: Geschwindigkeit in mps
+    :return: Geschwindigkeit in km/h
+    """
+    return speed * 3.6 * _mile
+
+
+def kmh_to_mps(speed: float) -> float:
+    """
+    Umrechnung Kilometer pro Stunde in Miles per Second
+
+    :param speed:
     :return:
     """
-    return speed_in_mps * 3.6
+    return speed / 3.6 / _mile
 
 
-def kmh_to_ms(speed_in_kmh):
+def ms_to_bft(speed: float) -> int:
     """
-    Umterchnung km/h in m/s
+    Umrechnung Windgeschwindigkeit von Meter pro Sekunde in Beaufort
 
-    :param speed_in_mps:
-    :return:
+    Beaufort gibt die Windgeschwindigkeit durch eine Zahl zwischen 0 und 12 an
+
+    :param speed: Windgeschwindigkeit in m/s
+    :return: Windgeschwindigkeit in bft
     """
-    return speed_in_kmh / 3.6
+    try:
+        # Origin of table: https://www.smarthomeng.de/vom-winde-verweht
+        table = [
+            (0.3, 0),
+            (1.6, 1),
+            (3.4, 2),
+            (5.5, 3),
+            (8.0, 4),
+            (10.8, 5),
+            (13.9, 6),
+            (17.2, 7),
+            (20.8, 8),
+            (24.5, 9),
+            (28.5, 10),
+            (32.7, 11),
+            (999, 12)]
+        return min(filter(lambda x: x[0] >= speed, table))[1]
+    except Exception as e:
+        _logger.error(f"ms_to_bft: Cannot translate wind-speed to beaufort-number, received speed='{speed}' - Exception {e}")
+        return -1
 
 
-def mps_to_kmh(speed_in_mps):
+def kmh_to_bft(speed: float) -> int:
     """
-    Umterchnung m/s in km/h
+    Umrechnung Windgeschwindigkeit von Kilometer pro Stunde in Beaufort
 
-    :param speed_in_mps:
-    :return:
+    Beaufort gibt die Windgeschwindigkeit durch eine Zahl zwischen 0 und 12 an
+
+    :param speed: Windgeschwindigkeit in km/h
+    :return: Windgeschwindigkeit in bft
     """
-    return speed_in_mps * 3.6 * miles_to_meter(1)
-    #return speed_in_mps * 3.6 * 1609.344
+    return ms_to_bft(kmh_to_ms(speed))
 
 
-def kmh_to_mps(speed_in_kmh):
+def bft_to_text(bft: int, language: str='de') -> str:
     """
-    Umterchnung km/h in miles per second
+    Umwandlung Windgeschwindigkeit in bft in beschreibenden Text
 
-    :param speed_in_mps:
-    :return:
+    :param bft: Wind speed in beaufort (bft)
+    :return: Text Beschreibung der Windgeschwindigkeit
     """
-    return speed_in_kmh / 3.6 / miles_to_meter(1)   # / 5793.638
-    #return speed_in_kmh / 3.6 / 1609.344   # / 5793.638
+
+    # source for german descriptions https://www.smarthomeng.de/vom-winde-verweht
+    _beaufort_descriptions_de = ["Windstille",
+                                 "leiser Zug",
+                                 "leichte Brise",
+                                 "schwacher Wind",
+                                 "mäßiger Wind",
+                                 "frischer Wind",
+                                 "starker Wind",
+                                 "steifer Wind",
+                                 "stürmischer Wind",
+                                 "Sturm",
+                                 "schwerer Sturm",
+                                 "orkanartiger Sturm",
+                                 "Orkan"]
+    # source for english descriptions https://simple.wikipedia.org/wiki/Beaufort_scale
+    _beaufort_descriptions_en = ["Calm",
+                                 "Light air",
+                                 "Light breeze",
+                                 "Gentle breeze",
+                                 "Moderate breeze",
+                                 "Fresh breeze",
+                                 "Strong breeze",
+                                 "High wind",
+                                 "Fresh Gale",
+                                 "Strong Gale",
+                                 "Storm",
+                                 "Violent storm",
+                                 "Hurricane-force"]
+
+    if type(bft) is not int:
+        _logger.error(f"speed_in_bft is not given as int: '{bft}'")
+        return ''
+    if (bft < 0) or (bft > 12):
+        _logger.error(f"speed_in_bft is out of scale: '{bft}'")
+        return ''
+
+    if language.lower() == 'de':
+        return _beaufort_descriptions_de[bft]
+    return _beaufort_descriptions_en[bft]
 
 
 """
 Umrechnung von Längen / Entfernungen
 """
 
-def miles_to_meter(miles):
+def _miles_to_meter(miles):
     """
     Umterchnung Meilen zu Metern
 
@@ -122,7 +222,7 @@ def miles_to_meter(miles):
     return miles * 1609.344
 
 
-def nauticalmiles_to_meter(miles):
+def _nauticalmiles_to_meter(miles):
     """
     Umterchnung nautische Meilen zu Metern
 
@@ -132,7 +232,7 @@ def nauticalmiles_to_meter(miles):
     return miles * 1852.0
 
 
-def meter_to_miles(meter):
+def _meter_to_miles(meter):
     """
     Umterchnung Meter zu Meilen
 
@@ -142,7 +242,7 @@ def meter_to_miles(meter):
     return meter / 1609.344
 
 
-def meter_to_nauticalmiles(meter):
+def _meter_to_nauticalmiles(meter):
     """
     Umterchnung Meter zu nautische Meilen
 

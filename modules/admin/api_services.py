@@ -34,6 +34,7 @@ import bin.shngversion
 from lib.item_conversion import convert_yaml as convert_yaml
 from lib.item_conversion import parse_for_convert as parse_for_convert
 from lib.shtime import Shtime
+import lib.env
 
 
 # ======================================================================
@@ -100,6 +101,7 @@ class ServicesController(RESTResource):
         # set up environment for calculating eval-expression
         sh = self._sh
         shtime = Shtime.get_instance()
+        env = lib.env
         items = Items.get_instance()
         import math
         import lib.userfunctions as uf

@@ -38,6 +38,7 @@ extensions = [
   'sphinx.ext.ifconfig',
   'sphinx.ext.viewcode',
   'sphinx.ext.githubpages',
+  'sphinx_autodoc_typehints',
   'sphinx_tabs.tabs',
   'myst_parser']
 #  'rst2pdf.pdfbuilder']

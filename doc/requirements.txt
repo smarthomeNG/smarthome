@@ -11,6 +11,8 @@ sphinx-tabs>=3.4.1
 #sphinx-toolbox
 #sphinx-panels  https://sphinx-panels.readthedocs.io/en/latest/
 
+sphinx-autodoc-typehints
+
 # recommonmark is marked deprecated as of April 30th, 2021
 #recommonmark>=0.6.0
 # the replacement to support Markdown like Readme.md is MyST
