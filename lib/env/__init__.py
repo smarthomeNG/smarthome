@@ -355,6 +355,13 @@ def degrees_to_direction_16(deg: float) -> str:
 
 
 def location_name(lat:float, lon:float) -> str:
+    """
+    Lokationsname (Stadtteil/suburb) einer Lokation, die über Latitude und Longitude gewählt wird
+
+    :param lat: Latitude
+    :param lon: Longitude
+    :return: Lokationsname
+    """
 
     import requests
 
@@ -378,11 +385,48 @@ def location_name(lat:float, lon:float) -> str:
         return ''
 
     #self._logger.notice(f"{json_obj['display_name']}")
-    #self._logger.notice(f"{json_obj['address']}")
     if  json_obj['address'].get('suburb', None) is None:
         _logger.warning("location_name: " + translate("No suburb information found for location (lat={lat}, lon={lon}) in address data", {'lat': lat, 'lon': lon}) + f": {json_obj['address']}")
         return ''
 
     return json_obj['address']['suburb']
+
+
+def location_address(lat:float, lon:float) -> dict:
+    """
+    Address-Information einer Lokation, die über Latitude und Longitude gewählt wird
+
+    :param lat: Latitude
+    :param lon: Longitude
+    :return: Address Information
+    """
+
+    import requests
+
+    # api documentation: https://nominatim.org/release-docs/develop/api/Reverse/
+    request_str = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=jsonv2"
+
+    try:
+        response = requests.get(request_str)
+    except Exception as e:
+        _logger.warning("location_name: " + translate("Exception when sending GET request: {e}", {'e': e}))
+        return ''
+
+    try:
+        json_obj = response.json()
+    except Exception as e:
+        _logger.warning("location_name: " + translate("Response '{response}' is not in valid json format: {e}", {'response': response, 'e': e}))
+        return ''
+
+    if response.status_code >= 500:
+        _logger.warning(f"location_name: {location_name(response.status_code)}")
+        return ''
+
+    #self._logger.notice(f"{json_obj['display_name']}")
+    if  json_obj['address'].get('suburb', None) is None:
+        _logger.warning("location_name: " + translate("No suburb information found for location (lat={lat}, lon={lon}) in address data", {'lat': lat, 'lon': lon}) + f": {json_obj['address']}")
+        return ''
+
+    return json_obj['address']
 
 
