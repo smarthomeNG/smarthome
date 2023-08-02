@@ -4,7 +4,7 @@ lib.env
 .. automodule:: lib.env
     :members:
     :member-order: bysource
-    :undoc-members:
+    :undoc-members: True
     :show-inheritance:
 
 -----
@@ -31,7 +31,6 @@ lib.env
     :member-order: bysource
     :undoc-members:
     :show-inheritance:
-    :typehints-format: short
 
 -----
 
