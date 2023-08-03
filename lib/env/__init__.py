@@ -49,9 +49,6 @@ Hierzu gehören
 
     - Grad zu Himmelsrichtung
 
-
-  https://www.einheiten-umrechnen.de
-
 """
 
 import logging
@@ -67,6 +64,8 @@ _nautical_mile = 1852  # 1 nm is 1852 meters long
 
 """
 Umrechnungen von Geschwindigkeiten  (m/s, km/h, mph, Knoten, mps, Bft)
+
+  https://www.einheiten-umrechnen.de
 """
 
 def kn_to_kmh(speed: float) -> float:
@@ -353,10 +352,13 @@ def degrees_to_direction_16(deg: float) -> str:
     return direction_array[index]
 
 
+from typing import Union
 
-def location_name(lat:float, lon:float) -> str:
+# Ab Python 3.10 auch: def location_name(lat: float | str, lon: float | str) -> str:
+def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
     """
-    Lokationsname (Stadtteil/suburb) einer Lokation, die über Latitude und Longitude gewählt wird
+    Lokationsname (Stadtteil/suburb) einer Lokation, die über Latitude und Longitude gewählt wird.
+    Die Informationen werden von OpenWeatherMap abgerufen.
 
     :param lat: Latitude
     :param lon: Longitude
@@ -384,17 +386,27 @@ def location_name(lat:float, lon:float) -> str:
         _logger.warning(f"location_name: {location_name(response.status_code)}")
         return ''
 
-    #self._logger.notice(f"{json_obj['display_name']}")
-    if  json_obj['address'].get('suburb', None) is None:
-        _logger.warning("location_name: " + translate("No suburb information found for location (lat={lat}, lon={lon}) in address data", {'lat': lat, 'lon': lon}) + f": {json_obj['address']}")
-        return ''
+    if json_obj['address'].get('city', None) is not None:
+        result = json_obj['address']['city']
+    elif json_obj['address'].get('town', None) is not None:
+        result = json_obj['address']['town']
+    elif json_obj['address'].get('village', None) is not None:
+        result = json_obj['address']['village']
+    else:
+        result = ''
 
-    return json_obj['address']['suburb']
+    if  json_obj['address'].get('suburb', None) is not None:
+        if result != '':
+            result += ', '
+        result += json_obj['address']['suburb']
+
+    return result
 
 
-def location_address(lat:float, lon:float) -> dict:
+def location_address(lat: Union[float, str], lon: Union[float, str]) -> dict:
     """
-    Address-Information einer Lokation, die über Latitude und Longitude gewählt wird
+    Address-Information einer Lokation, die über Latitude und Longitude gewählt wird.
+    Die Informationen werden von OpenWeatherMap abgerufen.
 
     :param lat: Latitude
     :param lon: Longitude
@@ -423,9 +435,6 @@ def location_address(lat:float, lon:float) -> dict:
         return ''
 
     #self._logger.notice(f"{json_obj['display_name']}")
-    if  json_obj['address'].get('suburb', None) is None:
-        _logger.warning("location_name: " + translate("No suburb information found for location (lat={lat}, lon={lon}) in address data", {'lat': lat, 'lon': lon}) + f": {json_obj['address']}")
-        return ''
 
     return json_obj['address']
 
