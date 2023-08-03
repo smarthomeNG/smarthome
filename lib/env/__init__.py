@@ -431,7 +431,7 @@ def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
     return result
 
 
-def location_address(lat: float | str, lon: float | str) -> dict:
+def location_address(lat: Union[float, str], lon: Union[float, str]) -> dict:
     """
     Address-Information einer Lokation, die über Latitude und Longitude gewählt wird.
     Die Informationen werden von OpenWeatherMap abgerufen.
