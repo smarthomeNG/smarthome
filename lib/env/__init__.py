@@ -142,14 +142,42 @@ def kmh_to_mps(speed: float) -> float:
     """
     Umrechnung Kilometer pro Stunde in Miles per Second
 
-    :param speed:
-    :return:
+    :param speed: Geschwindigkeit in km/h
+    :return: Geschwindigkeit in mps
     """
     if not isinstance(speed,(int, float)):
         _logger.error("kmh_to_mps: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
     return speed / 3.6 / _mile
+
+
+def mph_to_kmh(speed: float) -> float:
+    """
+    Umrechnung Miles per Hour in Kilometer pro Stunde
+
+    :param speed: Geschwindigkeit in mph
+    :return: Geschwindigkeit in km/h
+    """
+    if not isinstance(speed,(int, float)):
+        _logger.error("mph_to_kmh: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
+        return -1
+
+    return speed * _mile / 1000
+
+
+def kmh_to_mph(speed: float) -> float:
+    """
+    Umrechnung Kilometer pro Stunde in Miles per Hour
+
+    :param speed: Geschwindigkeit in km/h
+    :return: Geschwindigkeit in mph
+    """
+    if not isinstance(speed,(int, float)):
+        _logger.error("kmh_to_mph: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
+        return -1
+
+    return speed / _mile * 1000
 
 
 def ms_to_bft(speed: float) -> int:
@@ -403,7 +431,7 @@ def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
     return result
 
 
-def location_address(lat: Union[float, str], lon: Union[float, str]) -> dict:
+def location_address(lat: float | str, lon: float | str) -> dict:
     """
     Address-Information einer Lokation, die über Latitude und Longitude gewählt wird.
     Die Informationen werden von OpenWeatherMap abgerufen.
