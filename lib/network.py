@@ -648,6 +648,9 @@ class Tcp_client(object):
             self.logger.debug(f"connected_callback for {self._id} is {data_received.__qualname__} and it expects {params} arguments")
             self._data_received_callback = data_received
 
+    def open(self):
+        self.connect()
+
     def connect(self):
         """
         Connect the socket.
