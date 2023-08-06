@@ -96,12 +96,12 @@ parameters:
         description:
             de: 'Pause zwischen Durchgängen von Verbindungsversuchen (rounds)'
             en: 'wait time between connect rounds'
-    retry_standby:
+    retry_suspend:
         type: num
         default: 0
         description:
-            de: 'Anzahl von Durchgängen vor Standby-Modus'
-            en: 'number of connect rounds before entering standby mode'
+            de: 'Anzahl von Durchgängen vor Suspend-Modus'
+            en: 'number of connect rounds before entering suspend mode'
     message_timeout:
         type: num
         default: 2
@@ -170,14 +170,14 @@ parameters:
             de: 'Anzahl Stopbits'
             en: 'number of stop bits'
 
-    # standby mode configuration
+    # suspend mode configuration
     # mute plugin on setting associated item to True
-    standby_item_path:
+    suspend_item_path:
         type: str
         default: ''
         description:
-            de: 'Item-Pfad für das Standby-Item'
-            en: 'item path for standby switch item'
+            de: 'Item-Pfad für das Suspend-Item'
+            en: 'item path for suspend switch item'
 
     # more fundamental connection settings
     # !! plugin defaults can be set here (add default:) or in code

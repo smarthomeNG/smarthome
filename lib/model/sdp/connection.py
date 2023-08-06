@@ -41,7 +41,7 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION,
     PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_BINARY,
     PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_RETRY_CYCLE,
-    PLUGIN_ATTR_CONN_RETRY_STBY, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CB_STANDBY,
+    PLUGIN_ATTR_CONN_RETRY_SUSPD, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CB_SUSPEND,
     PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE,
     PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_STOP,
@@ -74,6 +74,7 @@ class SDPConnection(object):
         # set class properties
         self._is_connected = False
         self._data_received_callback = data_received_callback
+        self._suspend_callback = None
         self.dummy = None   # dummy response for testing
 
         # we set defaults for all possible connection parameters, so we don't
@@ -94,11 +95,11 @@ class SDPConnection(object):
                         PLUGIN_ATTR_CONN_RETRIES: 3,
                         PLUGIN_ATTR_CONN_CYCLE: 5,
                         PLUGIN_ATTR_CONN_RETRY_CYCLE: 30,
-                        PLUGIN_ATTR_CONN_RETRY_STBY: 0,
+                        PLUGIN_ATTR_CONN_RETRY_SUSPD: 0,
                         PLUGIN_ATTR_CONN_TERMINATOR: '',
                         PLUGIN_ATTR_CB_ON_CONNECT: None,
                         PLUGIN_ATTR_CB_ON_DISCONNECT: None,
-                        PLUGIN_ATTR_CB_STANDBY: None}
+                        PLUGIN_ATTR_CB_SUSPEND: None}
 
         # "import" options from plugin
         self._params.update(kwargs)
@@ -457,7 +458,7 @@ class SDPConnectionNetTcpClient(SDPConnection):
         if isinstance(self._params[PLUGIN_ATTR_CONN_TERMINATOR], str):
             self._params[PLUGIN_ATTR_CONN_TERMINATOR] = bytes(self._params[PLUGIN_ATTR_CONN_TERMINATOR], 'utf-8')
 
-        self._standby_callback = self._params[PLUGIN_ATTR_CB_STANDBY]
+        self._suspend_callback = self._params[PLUGIN_ATTR_CB_SUSPEND]
 
         # initialize connection
         self._tcp = Tcp_client(host=self._params[PLUGIN_ATTR_NET_HOST],
@@ -468,8 +469,8 @@ class SDPConnectionNetTcpClient(SDPConnection):
                                connect_retries=self._params[PLUGIN_ATTR_CONN_RETRIES],
                                connect_cycle=self._params[PLUGIN_ATTR_CONN_CYCLE],
                                retry_cycle=self._params[PLUGIN_ATTR_CONN_RETRY_CYCLE],
-                               retry_abort=self._params[PLUGIN_ATTR_CONN_RETRY_STBY],
-                               abort_callback=self._abort_callback,
+                               retry_abort=self._params[PLUGIN_ATTR_CONN_RETRY_SUSPD],
+                               abort_callback=self._on_abort,
                                terminator=self._params[PLUGIN_ATTR_CONN_TERMINATOR])
         self._tcp.set_callbacks(data_received=self.on_data_received,
                                 disconnected=self.on_disconnect,
@@ -498,11 +499,11 @@ class SDPConnectionNetTcpClient(SDPConnection):
         # we receive only via callback, so we return "no reply".
         return None
 
-    def _abort_callback(self):
-        if self._standby_callback:
-            self._standby_callback(True, by=self.__class__.__name__)
+    def _on_abort(self):
+        if self._suspend_callback:
+            self._suspend_callback(True, by=self.__class__.__name__)
         else:
-            self.logger.warning('standby callback wanted, but not set by plugin. Check plugin code...')
+            self.logger.warning('suspend callback wanted, but not set by plugin. Check plugin code...')
 
 class UDPServer(socket.socket):
     """
