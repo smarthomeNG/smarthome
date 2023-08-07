@@ -80,7 +80,7 @@ class Structs():
 
     def load_struct_definitions(self, etc_dir):
         """
-        Read in all struct definitions before reading item definitions
+        Read in all struct definitions from ../etc directory before reading item definitions
 
         structs are merged into the item tree in lib.config
 
@@ -305,7 +305,7 @@ class Structs():
         :return:
         """
 
-        self.logger.dbglow(f"merge_substruct_to_struct: substruct_name='{substruct_name}' -> main_struct='{main_struct_name}'")
+        self.logger.dbgmed(f"merge_substruct_to_struct: substruct_name='{substruct_name}' -> main_struct='{main_struct_name}'")
         if substruct_name.startswith('.'):
             # referencing a struct from same definition file
             substruct_name = key_prefix + substruct_name

@@ -729,9 +729,9 @@ class Metadata():
             if result != orig:
                 # Für non-default Prüfung nur Warning
                 if is_default:
-                    logger.error(self._log_premsg+"Invalid default '{}' in metadata file '{}' for {} '{}' -> using '{}' instead".format( orig, self.relative_filename, definition['_type'], definition['_name'], result ) )
+                    logger.error(self._log_premsg+f"Invalid default '{orig}' in metadata file '{self.relative_filename}' for {definition['_type']} '{definition['_name']}' -> using '{result}' instead" )
                 else:
-                    logger.warning(self._log_premsg+"Invalid value '{}' for {} '{}' -> using '{}' instead {}".format( orig, definition['_type'], definition['_name'], result, definition.get('_def_in', '') ) )
+                    logger.warning(self._log_premsg+f"Invalid value '{orig}' for {definition['_type']} '{definition['_name']}' -> using '{result}' instead {definition.get('_def_in', '')}" )
         return result
 
 
@@ -1207,7 +1207,7 @@ class Metadata():
                     break
             if not(attribute.startswith(all_prefixes_tuple)):
                 if not (item.id().startswith('env.core.') or item.id().startswith('env.system.')):
-                    logger.warning("Item '{}', attribute '{}': Attribute is undefined and has value '{}' {}".format(item.id(), attribute, value, def_in))
+                    logger.notice(f"Item '{item.id()}', attribute '{attribute}': Attribute is undefined and has value '{value}' {def_in}")
                 return value
 
         attr_definition['_def_in'] = def_in
