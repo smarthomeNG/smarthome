@@ -51,23 +51,9 @@ filters:
 handlers:
 
     shng_warnings_file:
-        # This handler writes only entries with level NOTICE/WARNING and above
-        # to the file. This allows for a quick check if all is running smooth.
-        #
-        # To keep the warnings file easy readable, the level should always be NOTICE!
-        #
-        # The TimedRotatingFileHandler seperates the logentries by day and
-        # keeps the entries of the last seven days in seperate files.
-        #
-        #class: logging.handlers.TimedRotatingFileHandler
-        (): lib.log.ShngTimedRotatingFileHandler
+        class: logging.StreamHandler
         formatter: shng_simple
-        level: NOTICE
-        utc: false
-        when: midnight
-        backupCount: 7
-        filename: ./var/log/smarthome-test-warnings.log
-        encoding: utf8
+        stream: ext://sys.stdout
 
     shng_test_details_file:
         # This handler writes all entries to the details-file. Log entries with level WARNING
