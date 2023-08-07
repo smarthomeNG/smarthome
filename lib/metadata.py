@@ -1207,7 +1207,7 @@ class Metadata():
                     break
             if not(attribute.startswith(all_prefixes_tuple)):
                 if not (item.id().startswith('env.core.') or item.id().startswith('env.system.')):
-                    logger.notice(f"Item '{item.id()}', attribute '{attribute}': Attribute is undefined and has value '{value}' {def_in}")
+                    logger.warning(f"Item '{item.id()}', attribute '{attribute}': Attribute is undefined and has value '{value}' {def_in}")
                 return value
 
         attr_definition['_def_in'] = def_in

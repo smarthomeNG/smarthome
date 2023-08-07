@@ -107,6 +107,8 @@ class TestPlugin(unittest.TestCase):
         self.assertEqual(len(it.get_method_triggers()),1)
 
     def test_plugin_instance_used_in_item_config(self):
+        it = self.sh.items.return_item("item3.item3b.item3b1")
+        self.assertIsNotNone(it)
         it = self.sh.items.return_item("item3.item3b.item3b1.item3b1a")
         self.assertIsNotNone(it)
         self.assertEqual(len(it.get_method_triggers()),2)

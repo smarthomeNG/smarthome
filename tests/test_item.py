@@ -122,10 +122,13 @@ class TestItem(unittest.TestCase):
         it = self.sh.items.return_item("item_tree")
         self.assertIsNotNone(it)
 
-        it = self.sh.items.return_item("item_tree.grandparent.parent.m_item")
+        it = self.sh.items.return_item("item_tree.grandparent.parent")
+        self.assertIsNotNone(it)
+
+        it = self.sh.items.return_item("item_tree.grandparent.parent.my_item")
         self.assertIsNotNone(it)
         self.assertEqual(it._type, 'bool')
-        it = self.sh.items.return_item("item_tree.grandparent.parent.m_item.child")
+        it = self.sh.items.return_item("item_tree.grandparent.parent.my_item.child")
         self.assertIsNotNone(it)
         self.assertEqual(it._type, 'foo')
 
@@ -133,12 +136,12 @@ class TestItem(unittest.TestCase):
             logger.warning('')
             logger.warning('=== eval_trigger Tests:')
         # Attribute with relative references
-        it = self.sh.items.return_item("item_tree.grandparent.parent.m_item")
-        self.assertEqual(it.get_absolutepath('.', 'eval_trigger'), 'item_tree.grandparent.parent.m_item')
-        self.assertEqual(it.get_absolutepath('.self', 'eval_trigger'), 'item_tree.grandparent.parent.m_item')
-        self.assertEqual(it.get_absolutepath('.child', 'eval_trigger'), 'item_tree.grandparent.parent.m_item.child')
-        self.assertEqual(it.get_absolutepath('.self.child', 'eval_trigger'), 'item_tree.grandparent.parent.m_item.child')
-        self.assertEqual(it.get_absolutepath('.child.grandchild', 'eval_trigger'), 'item_tree.grandparent.parent.m_item.child.grandchild')
+        it = self.sh.items.return_item("item_tree.grandparent.parent.my_item")
+        self.assertEqual(it.get_absolutepath('.', 'eval_trigger'), 'item_tree.grandparent.parent.my_item')
+        self.assertEqual(it.get_absolutepath('.self', 'eval_trigger'), 'item_tree.grandparent.parent.my_item')
+        self.assertEqual(it.get_absolutepath('.child', 'eval_trigger'), 'item_tree.grandparent.parent.my_item.child')
+        self.assertEqual(it.get_absolutepath('.self.child', 'eval_trigger'), 'item_tree.grandparent.parent.my_item.child')
+        self.assertEqual(it.get_absolutepath('.child.grandchild', 'eval_trigger'), 'item_tree.grandparent.parent.my_item.child.grandchild')
         self.assertEqual(it.get_absolutepath('..', 'eval_trigger'), 'item_tree.grandparent.parent')
         self.assertEqual(it.get_absolutepath('...', 'eval_trigger'), 'item_tree.grandparent')
         self.assertEqual(it.get_absolutepath('....', 'eval_trigger'), 'item_tree')
@@ -147,23 +150,23 @@ class TestItem(unittest.TestCase):
         self.assertEqual(it.get_absolutepath('..sister', 'eval_trigger'), 'item_tree.grandparent.parent.sister')
 
         # Attribute w/o relative references
-        self.assertEqual(it.get_absolutepath('item_tree.grandparent.parent.m_item', 'eval_trigger'), 'item_tree.grandparent.parent.m_item')
+        self.assertEqual(it.get_absolutepath('item_tree.grandparent.parent.my_item', 'eval_trigger'), 'item_tree.grandparent.parent.my_item')
         self.assertEqual(it.get_absolutepath('abc', 'eval_trigger'), 'abc')
 
         if verbose == True:
             logger.warning('')
             logger.warning('=== eval Tests:')
-        it = self.sh.items.return_item("item_tree.grandparent.parent.m_item")
+        it = self.sh.items.return_item("item_tree.grandparent.parent.my_item")
 
-        self.assertEqual(it.get_stringwithabsolutepathes('sh..child()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.m_item.child()')
-        self.assertEqual(it.get_stringwithabsolutepathes('5*sh..child()', 'sh.', '(', 'eval'), '5*sh.item_tree.grandparent.parent.m_item.child()')
-        self.assertEqual(it.get_stringwithabsolutepathes('5 * sh..child() + 4', 'sh.', '(', 'eval'), '5 * sh.item_tree.grandparent.parent.m_item.child() + 4')
+        self.assertEqual(it.get_stringwithabsolutepathes('sh..child()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.my_item.child()')
+        self.assertEqual(it.get_stringwithabsolutepathes('5*sh..child()', 'sh.', '(', 'eval'), '5*sh.item_tree.grandparent.parent.my_item.child()')
+        self.assertEqual(it.get_stringwithabsolutepathes('5 * sh..child() + 4', 'sh.', '(', 'eval'), '5 * sh.item_tree.grandparent.parent.my_item.child() + 4')
 
         # tests for '.self' implementation
-        self.assertEqual(it.get_stringwithabsolutepathes('sh..child.changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.m_item.child.changed_by()')
-        self.assertNotEqual(it.get_stringwithabsolutepathes('sh...changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.m_item.changed_by()')
-        self.assertEqual(it.get_stringwithabsolutepathes('sh.item_tree.grandparent.parent.m_item.changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.m_item.changed_by()')
-        self.assertEqual(it.get_stringwithabsolutepathes('sh..self.changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.m_item.changed_by()')
+        self.assertEqual(it.get_stringwithabsolutepathes('sh..child.changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.my_item.child.changed_by()')
+        self.assertNotEqual(it.get_stringwithabsolutepathes('sh...changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.my_item.changed_by()')
+        self.assertEqual(it.get_stringwithabsolutepathes('sh.item_tree.grandparent.parent.my_item.changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.my_item.changed_by()')
+        self.assertEqual(it.get_stringwithabsolutepathes('sh..self.changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.my_item.changed_by()')
         self.assertEqual(it.get_stringwithabsolutepathes('sh...changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.changed_by()')
         self.assertEqual(it.get_stringwithabsolutepathes('sh...self.changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.parent.changed_by()')
         self.assertNotEqual(it.get_stringwithabsolutepathes('sh.....changed_by()', 'sh.', '(', 'eval'), 'sh.item_tree.grandparent.changed_by()')
@@ -173,9 +176,9 @@ class TestItem(unittest.TestCase):
             logger.warning('')
             logger.warning('=== plugin-attribute Tests:')
         # Attribute with relative references
-        it = self.sh.items.return_item("item_tree.grandparent.parent.m_item")
+        it = self.sh.items.return_item("item_tree.grandparent.parent.my_item")
         it.expand_relativepathes('sv_widget', "'", "'")
-        self.assertEqual(it.conf['sv_widget'], "{{ basic.switch('id_schreibtischleuchte', 'item_tree.grandparent.parent.m_item.onoff') }}")
+        self.assertEqual(it.conf['sv_widget'], "{{ basic.switch('id_schreibtischleuchte', 'item_tree.grandparent.parent.my_item.onoff') }}")
 
         # Attribute with relative references (sv_widget contains a list)
         it = self.sh.items.return_item("item_tree.svwidget_list")
@@ -185,19 +188,19 @@ class TestItem(unittest.TestCase):
         # length of list should be 2
         self.assertEqual(len(it.conf['sv_widget']), 2)
         # test both values of list (first w/o relative path, second with relative path)
-        self.assertEqual(it.conf['sv_widget'][0], "{{ basic.switch('id_schreibtischleuchte1', 'item_tree.grandparent.parent.m_item.child.onoff') }}")
-        self.assertEqual(it.conf['sv_widget'][1], "{{ basic.switch('id_schreibtischleuchte2', 'item_tree.grandparent.parent.m_item.child.onoff') }}")
+        self.assertEqual(it.conf['sv_widget'][0], "{{ basic.switch('id_schreibtischleuchte1', 'item_tree.grandparent.parent.my_item.child.onoff') }}")
+        self.assertEqual(it.conf['sv_widget'][1], "{{ basic.switch('id_schreibtischleuchte2', 'item_tree.grandparent.parent.my_item.child.onoff') }}")
 
         # Attribute w/o relative references
-        it = self.sh.items.return_item("item_tree.grandparent.parent.m_item.child")
+        it = self.sh.items.return_item("item_tree.grandparent.parent.my_item.child")
         orig = it.conf['sv_widget']
         it.expand_relativepathes('sv_widget', "'", "'")
         self.assertEqual(it.conf['sv_widget'], orig)
-        self.assertEqual(it.conf['sv_widget'], "{{ basic.switch('id_schreibtischleuchte', 'item_tree.grandparent.parent.m_item.child.onoff') }}")
+        self.assertEqual(it.conf['sv_widget'], "{{ basic.switch('id_schreibtischleuchte', 'item_tree.grandparent.parent.my_item.child.onoff') }}")
 
         # Tests for accessing internal attributes of items using relative adressing
-        it = self.sh.items.return_item("item_tree.grandparent.parent.m_item")
-        self.assertEqual(it.get_absolutepath('.child', 'eval_trigger'), 'item_tree.grandparent.parent.m_item.child')
+        it = self.sh.items.return_item("item_tree.grandparent.parent.my_item")
+        self.assertEqual(it.get_absolutepath('.child', 'eval_trigger'), 'item_tree.grandparent.parent.my_item.child')
 
 
 
