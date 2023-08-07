@@ -123,7 +123,7 @@ class Structs():
                 if struct_name not in self._finalized_structs:
                     #self.logger.dbghigh(f"- processing struct '{struct_name}'")
 
-                    if self.traverse_struct(struct_name):
+                    if self.traverse_struct(struct_name, key_prefix):
                         do_resolve = True
                     else:
                         self._finalized_structs.append(struct_name)
@@ -212,7 +212,7 @@ class Structs():
 
     """
 
-    def traverse_struct(self, struct_name):
+    def traverse_struct(self, struct_name, key_prefix):
         """
         Traverses through a struct to find struct-attributes and replace them with the references struct(s)
 
@@ -226,7 +226,7 @@ class Structs():
             return
 
         self.logger.dbghigh(f"traverse_struct: struct {struct_name}")
-        new_struct = self.process_struct_node(struct, struct_name)
+        new_struct = self.process_struct_node(struct, struct_name, key_prefix=key_prefix)
         if new_struct is not None:
             self.logger.dbghigh(f"traverse_struct: struct '{struct_name}' was updated")
             self.logger.dbghigh(f"traverse_struct: new_struct {new_struct}")
@@ -236,14 +236,14 @@ class Structs():
         return False
 
 
-    def process_struct_node(self, node, node_name='?', level=0):
+    def process_struct_node(self, node, node_name='?', key_prefix='', level=0):
 
         spaces = " " * level
         structs_expanded = False
         for element in dict(node):
             if isinstance(node[element], dict):
                 #self.logger.dbghigh(f"process_struct_node: {spaces}node {element}:")
-                newnode = self.process_struct_node(node[element], node_name=element, level=level+4)
+                newnode = self.process_struct_node(node[element], node_name=element, key_prefix=key_prefix, level=level+4)
                 if newnode is not None:
                     node[element] = newnode
                     structs_expanded = True
@@ -253,7 +253,7 @@ class Structs():
                 substruct_names = node[element]
                 if isinstance(substruct_names, str):
                     substruct_names = [substruct_names]
-                node = self.resolve_structs(node, node_name, substruct_names)
+                node = self.resolve_structs(node, node_name, substruct_names, key_prefix)
                 structs_expanded = True
                 #self.logger.dbghigh(f"process_struct_node: {spaces}node   = {dict(node)}")
                 del (node['struct'])
@@ -266,7 +266,7 @@ class Structs():
             return node
 
 
-    def resolve_structs(self, struct, struct_name, substruct_names):
+    def resolve_structs(self, struct, struct_name, substruct_names, key_prefix):
         """
         Resolve a struct reference within a struct
 
@@ -291,12 +291,12 @@ class Structs():
             if structentry == 'struct':
                 for substruct_name in substruct_names:
                     # for every substruct
-                    self.merge_substruct_to_struct(new_struct, substruct_name, struct_name)
+                    self.merge_substruct_to_struct(new_struct, substruct_name, struct_name, key_prefix)
 
         return new_struct
 
 
-    def merge_substruct_to_struct(self, main_struct, substruct_name, main_struct_name='?'):
+    def merge_substruct_to_struct(self, main_struct, substruct_name, main_struct_name='?', key_prefix=''):
         """
 
         :param main_struct:
@@ -306,9 +306,12 @@ class Structs():
         """
 
         self.logger.dbglow(f"merge_substruct_to_struct: substruct_name='{substruct_name}' -> main_struct='{main_struct_name}'")
+        if substruct_name.startswith('.'):
+            # referencing a struct from same definition file
+            substruct_name = key_prefix + substruct_name
         substruct = self._struct_definitions.get(substruct_name, None)
         if substruct is None:
-            self.logger.error(f"struct '{substruct_name}' not found in structdefinitions (used in struct '{main_struct_name}')")
+            self.logger.error(f"struct '{substruct_name}' not found in structdefinitions (used in struct '{main_struct_name}') - key_prefix={key_prefix}")
         else:
             # merge the sub-struct to the main-struct key by key
             for key in substruct:
