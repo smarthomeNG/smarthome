@@ -679,6 +679,7 @@ class SDPConnectionSerial(SDPConnection):
                 self._lock.release()
 
             if not self._is_connected:
+                self.logger.debug(f'sleeping {self._params[PLUGIN_ATTR_CONN_CYCLE]} seconds before next connection attempt')
                 sleep(self._params[PLUGIN_ATTR_CONN_CYCLE])
 
         self.logger.error(f'error on connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]}, max number of connection attempts reached')
@@ -690,8 +691,8 @@ class SDPConnectionSerial(SDPConnection):
         self._is_connected = False
         try:
             self._connection.close()
-        except Exception:
-            pass
+        except Exception as e:
+            self.logger.debug(f'closing socket {self._params[PLUGIN_ATTR_SERIAL_PORT]} raised error {e}')
         self.logger.info(f'connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]} closed')
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](self)
@@ -897,7 +898,7 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         except Exception:
             pass
         self.__receive_thread = None
-        self._is_connected = False
+        super()._close()
 
     def __receive_thread_worker(self):
         """ thread worker to handle receiving """
