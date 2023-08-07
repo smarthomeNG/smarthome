@@ -113,7 +113,7 @@ class Logs():
         try:
             root_handler_name = config_dict['root']['handlers'][0]
             root_handler = config_dict['handlers'][ root_handler_name ]
-            root_handler_level = root_handler.get('level', None)
+            root_handler_level = root_handler.get('level', '?')
             self.root_handler_name = root_handler_name
         except:
             root_handler_level = '?'
