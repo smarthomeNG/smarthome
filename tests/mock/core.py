@@ -23,6 +23,11 @@ from tests.common import BASE
 
 logger = logging.getLogger('Mockup')
 
+logging.addLevelName(29, 'NOTICE')
+logging.addLevelName(13, 'DBGHIGH')
+logging.addLevelName(12, 'DBGMED')
+logging.addLevelName(11, 'DBGLOW')
+
 
 class MockScheduler():
 
