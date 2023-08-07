@@ -299,7 +299,7 @@ class SmartDevicePlugin(SmartPlugin):
         """
 
         if suspend_active is None:
-            if self._suspend_item:
+            if self._suspend_item is not None:
                 # if no parameter set, try to use item setting
                 suspend_active = bool(self._suspend_item())
             else:
