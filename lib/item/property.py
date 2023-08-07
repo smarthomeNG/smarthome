@@ -814,6 +814,23 @@ class Property:
         return
 
 
+    @property
+    def hysteresis_state(self):
+        """
+        Property: Inner hysteresis_state
+
+        returns
+        - 1  - On   = set the output to True
+        - 0  - Stay = leave the output unchaned in last state
+        - -1 - Off  = set the output to False
+
+        Available in SmartHomeNG v1.10 and above
+
+        :return: hysteresis state of the item
+        :rtype: int
+        """
+        return self._item.hysteresis_state()
+
 """
 ---
 ---  End of Properties class

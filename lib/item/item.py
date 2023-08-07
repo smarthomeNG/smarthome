@@ -144,6 +144,8 @@ class Item():
         self._hysteresis_upper_timer_active = False
         self._hysteresis_lower_timer_active = False
         self._hysteresis_items_to_trigger = []
+        self._hysteresis_log = False
+
 
         self._on_update = None				# -> KEY_ON_UPDATE eval expression
         self._on_change = None				# -> KEY_ON_CHANGE eval expression
@@ -275,6 +277,8 @@ class Item():
                     self._parse_hysteresis_input_attribute(attr, value)
                 elif attr in [KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD]:
                     self._parse_hysteresis_xx_threshold_attribute(attr, value)
+                elif attr == '_hysteresis_log':
+                    self._hysteresis_log = value
 
                 elif attr in [KEY_ON_CHANGE, KEY_ON_UPDATE]:
                     self._parse_on_xx_list_attribute(attr, value)
@@ -374,11 +378,30 @@ class Item():
                             #self.conf[attr] = self._get_attr_from_greatgrandparent(fromattr)
                             value = self._get_attr_from_greatgrandparent(fromattr)
 
+
                     # Test if the plugin-specific attribute contains a valid value
                     # and set the default value, if needed
-                    if hasattr(self.plugins, 'meta'):
-                        value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
+                    if str(value).startswith('.:'):
+                        # Don't check metadata if attribute still has reference (.:xxx)
                         self.conf[attr] = value
+                    else:
+                        if hasattr(self.plugins, 'meta'):
+                            value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
+                            self.conf[attr] = value
+        # end of 'for attr, value in config.items()'
+
+        # test for attribute copy within the same item to ensure replace in every definition order of attributes
+        for attr in self.conf:
+            if str(self.conf[attr]).startswith('.:'):
+                value = self.conf[attr]
+                fromattr = value.split(':')[1]
+                if fromattr in ['', '.']:
+                    fromattr = attr
+                value = self._get_attr(fromattr)
+#                self.conf[attr] = value
+                if hasattr(self.plugins, 'meta'):
+                    value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
+                    self.conf[attr] = value
 
         self.property.init_dynamic_properties()
 
@@ -1173,9 +1196,23 @@ class Item():
         return pref
 
 
+    def _get_attr(self, attr):
+        """
+        Get attribute value from actual item
+
+        :param attr: Get the value from this attribute of the parent item
+        :return: value from attribute of parent item
+        """
+        pitem = self
+        pattr_value = pitem.conf.get(attr, '')
+        #        logger.warning("_get_attr_from_parent Item {}: for attr '{}'".format(self._path, attr))
+        #        logger.warning("_get_attr_from_parent Item {}: for parent '{}', pattr_value '{}'".format(self._path, pitem._path, pattr_value))
+        return pattr_value
+
+
     def _get_attr_from_parent(self, attr):
         """
-        Get value from parent
+        Get attribute value from parent item
 
         :param attr: Get the value from this attribute of the parent item
         :return: value from attribute of parent item
@@ -1189,7 +1226,7 @@ class Item():
 
     def _get_attr_from_grandparent(self, attr):
         """
-        Get value from grandparent
+        Get attribute value from grandparent item
 
         :param attr: Get the value from this attribute of the grandparent item
         :return: value from attribute of grandparent item
@@ -1204,7 +1241,7 @@ class Item():
 
     def _get_attr_from_greatgrandparent(self, attr):
         """
-        Get value from grandparent
+        Get attribute value from grandparent item
 
         :param attr: Get the value from this attribute of the grandparent item
         :return: value from attribute of grandparent item
@@ -1353,6 +1390,8 @@ class Item():
             #    logger.error(f"item '{self._path}': Hysteresis upper threshod is lower than lower threshod")
             else:
                 if triggering_item != self:  # prevent loop
+                    if self._hysteresis_log:
+                        logger.notice(f"_init_prerun: Adding to triggering_item {self}")
                     triggering_item._hysteresis_items_to_trigger.append(self)
 
 
@@ -1449,30 +1488,138 @@ class Item():
             if self._hysteresis_upper_timer is None:
                 self.__update(True, caller, source, dest)
             else:
-                if not self._hysteresis_upper_timer_active:
+                if not self._hysteresis_upper_timer_active and (self._value == False): ###ms value = self._value
                     timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
                     if timer < 0:
                         logger.warning(f"Item '{self._path}': Hysteresis upper-timer evaluated to an value less than zero ({timer}), using 0 instead")
                         timer = 0
+                    self._hysteresis_upper_timer_active = True
                     next = self.shtime.now() + datetime.timedelta(seconds=timer)
                     #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_upper_timer)
+                    if self._hysteresis_log:
+                        logger.notice(f"__run_hysteresis {self._path}: scheduler.add {self._path}-UpTimer")
                     self._sh.scheduler.add(self._itemname_prefix+self.id() + '-UpTimer', self.__call__, value={'value': True, 'caller': 'Hysteresis'}, next=next)
-                    self._hysteresis_upper_timer_active = True
 
         if value < lower:
             if self._hysteresis_lower_timer is None:
                 self.__update(False, caller, source, dest)
             else:
-                if not self._hysteresis_lower_timer_active:
+                if not self._hysteresis_lower_timer_active and (self._value == True):
                     timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
                     if timer < 0:
                         logger.warning(f"Item '{self._path}': Hysteresis lower-timer evaluated to an value less than zero ({timer}), using 0 instead")
                         timer = 0
+                    self._hysteresis_lower_timer_active = True
                     next = self.shtime.now() + datetime.timedelta(seconds=timer)
                     #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_lower_timer)
+                    if self._hysteresis_log:
+                        logger.notice(f"__run_hysteresis {self._path}: scheduler.add {self._path}-LoTimer")
                     self._sh.scheduler.add(self._itemname_prefix + self.id() + '-LoTimer', self.__call__, value={'value': False, 'caller': 'Hysteresis'}, next=next)
-                    self._hysteresis_lower_timer_active = True
         return
+
+
+    def _onoff(self, value: bool) -> str:
+        if value:
+            return 'On'
+        return 'Off'
+
+    def _get_hysterisis_state_string(self, lower: float, upper: float, input_value: float, log: bool=False, txt: str='') -> str:
+        """
+        Helper method to return the inner hysteresis-state as a readable string
+
+        TODO: Return right state, if value is from init:cache
+
+        :param lower: hysteresis lower threshold
+        :param upper: hysteresis upper threshold
+        :param input_value: hysteresis input
+
+        :return: hysteresis-state as a readable string
+        """
+
+        if log:
+            logger.notice(f"{self._path}: {txt}")
+        state = ''
+        if input_value > upper:
+            if self._hysteresis_upper_timer_active:
+                state = 'Timer -> '
+            state += 'On'
+            if log:
+                logger.notice(f" -> {state} - {txt}")
+        elif input_value < lower:
+            if self._hysteresis_lower_timer_active:
+                state = 'Timer -> '
+            state += 'Off'
+            if log:
+                logger.notice(f" -> {state} - {txt}")
+        else:
+            state = 'Stay (' + self._onoff(self._value) + ')'
+            if log:
+                logger.notice(f" -> {state} - {txt}")
+
+        if not (self._hysteresis_upper_timer_active) and not (self._hysteresis_lower_timer_active):
+            if self.__updated_by.lower() == 'init:cache':
+                if not state.startswith('Stay'):
+                    if state != self._onoff(self._value):
+                        state = 'Cached (' + self._onoff(self._value) + ')'
+                        if log:
+                            logger.notice(f" -> {state} - {txt}")
+
+        return state
+
+
+    def hysteresis_state(self):
+        """
+        Return the inner hysteresis_state
+
+        Available in SmartHomeNG v1.10 and above
+
+        TODO: Return right state, if value is from init:cache
+
+        :return: hysteresis state of the item
+        :rtype: str
+        """
+        time.sleep(0.1)     # to prevent execution before xxx_timer_active could be updated
+
+        upper = self.__run_attribute_eval(self._hysteresis_upper_threshold)
+        #upper_timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
+        lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
+        #lower_timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
+        input_value = _items_instance.return_item(self._hysteresis_input)()
+        #value = self._value
+
+        state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_state')
+
+        if self._hysteresis_log:
+            logger.notice(f"hysteresis_state ({self._path}): state={state}, input_value={input_value}, value={self._value}, __updated_by={self.__updated_by}")
+        return state
+
+
+    def hysteresis_data(self):
+        """
+        Return the inner hysteresis_state
+
+        returns a dict with the current hysteresis data
+        (lower threshold, upper threshold, input value, output value and internal state)
+
+        Available in SmartHomeNG v1.10 and above
+
+        :return: hysteresis state of the item
+        :rtype: dict
+        """
+        time.sleep(0.1)     # to prevent execution before xxx_timer_active could be updated
+
+        upper = self.__run_attribute_eval(self._hysteresis_upper_threshold)
+        upper_timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
+        lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
+        lower_timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
+        input_value = _items_instance.return_item(self._hysteresis_input)()
+
+        state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_data')
+
+        data = {'lower_threshold': lower, 'lower_timer': lower_timer, 'upper_threshold': upper, 'upper_timer': upper_timer, 'input': input_value, 'output': self._value, 'state': state, 'lower_timer_active': self._hysteresis_lower_timer_active, 'upped_timer_active': self._hysteresis_upper_timer_active}
+        if self._hysteresis_log:
+            logger.notice(f"hysteresis_data ({self._path}): {data}, __updated_by={self.__updated_by}")
+        return data
 
 
     def __run_eval(self, value=None, caller='Eval', source=None, dest=None):
@@ -1778,6 +1925,17 @@ class Item():
 
 
     def __update(self, value, caller='Logic', source=None, dest=None):
+
+        if self._hysteresis_input is not None:
+            if self._hysteresis_upper_timer_active:
+                if self._hysteresis_log:
+                    logger.notice(f"__update: upper_timer caller={caller}, value={value}")
+                self._hysteresis_upper_timer_active = False
+            if self._hysteresis_lower_timer_active:
+                self._hysteresis_lower_timer_active = False
+                if self._hysteresis_log:
+                    logger.notice(f"__update: lower_timer caller={caller}, value={value}")
+
         try:
             value = self.cast(value)
         except:
