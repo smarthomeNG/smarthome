@@ -91,6 +91,26 @@ class MockSmartHome():
     _SmartHome__items = []
 
 
+    def initialize_vars(self):
+        # the APIs available though the smarthome object instance:
+        self.shtime = None
+
+        self.items = None
+        self.plugins = None
+        self.logics = None
+        self.scheduler = None
+
+        self.plugin_load_complete = False
+        self.item_load_complete = False
+        self.plugin_start_complete = False
+
+        self._smarthome_conf_basename = None
+        self.__event_listeners = {}
+        self.__all_listeners = []
+        self.modules = None
+        self.__children = []
+
+
     def __init__(self):
         #VERSION = '1.8.'
         #VERSION += '2c.man'
@@ -101,6 +121,8 @@ class MockSmartHome():
         MODE = 'default'
         self._mode = MODE
 
+        self.initialize_vars()
+
         self.python_bin = os.environ.get('_','')
         self.__logs = {}
 #        self.__item_dict = {}
@@ -108,8 +130,9 @@ class MockSmartHome():
         self.children = []
         self._use_modules = 'True'
         self._moduledict = {}
-        if self.shtime is None:
-            self.shtime = Shtime.get_instance()
+        #if self.shtime is None:
+        #    self.shtime = Shtime.get_instance()
+        self.shtime = Shtime(self)
 
         self.logs = lib.log.Logs(self)   # initialize object for memory logs and extended log levels for plugins
 
@@ -254,6 +277,48 @@ class MockSmartHome():
         elif MODE == 'quiet':
             logging.getLogger().setLevel(logging.WARNING)
         return
+
+
+
+    #################################################################
+    # Event Methods
+    #################################################################
+    def add_event_listener(self, events, method):
+        """
+        This Function adds listeners for a list of events. This function is called from
+        plugins interfacing with visus (e.g. visu_websocket)
+
+        :param events: List of events to add listeners for
+        :param method: Method used by the visu-interface
+        :type events: list
+        :type method: object
+        """
+
+        for event in events:
+            if event in self.__event_listeners:
+                self.__event_listeners[event].append(method)
+            else:
+                self.__event_listeners[event] = [method]
+        self.__all_listeners.append(method)
+
+
+    def return_event_listeners(self, event='all'):
+        """
+        This function returns the listeners for a specified event.
+
+        :param event: Name of the event or 'all' to return all listeners
+        :type event: str
+
+        :return: List of listeners
+        :rtype: list
+        """
+
+        if event == 'all':
+            return self.__all_listeners
+        elif event in self.__event_listeners:
+            return self.__event_listeners[event]
+        else:
+            return []
 
 
 

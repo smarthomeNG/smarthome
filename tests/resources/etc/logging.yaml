@@ -76,7 +76,8 @@ handlers:
         # The TimedRotatingFileHandler seperates the logentries by day and
         # keeps the entries of the last seven days in seperate files.
         #
-        (): lib.log.ShngTimedRotatingFileHandler
+        class: logging.handlers.TimedRotatingFileHandler
+        #(): lib.log.ShngTimedRotatingFileHandler
         formatter: shng_simple
         level: DEBUG
         utc: false
