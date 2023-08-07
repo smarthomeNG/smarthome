@@ -6,7 +6,7 @@ item_tree:
 
         parent:
 
-            my_item:
+            m_item:
                 type: bool
                 sv_widget: "{{ basic.switch('id_schreibtischleuchte', '.onoff') }}"
                 sv_widget2: "{{ basic.switch('id_schreibtischleuchte', 'item_tree.grandparent.parent.my_item.onoff') }}"
@@ -14,14 +14,14 @@ item_tree:
                 child:
                     sv_widget: "{{ basic.switch('id_schreibtischleuchte', 'item_tree.grandparent.parent.my_item.child.onoff') }}"
                     grandchild: {}
-                    
+
                     onoff:
                         type: bool
-                        
+
             sister: {}
 
     svwidget_list:
         type: bool
         sv_widget:
-        - "{{ basic.switch('id_schreibtischleuchte1', 'item_tree.grandparent.parent.my_item.child.onoff') }}"    
-        - "{{ basic.switch('id_schreibtischleuchte2', '..grandparent.parent.my_item.child.onoff') }}"    
+        - "{{ basic.switch('id_schreibtischleuchte1', 'item_tree.grandparent.parent.my_item.child.onoff') }}"
+        - "{{ basic.switch('id_schreibtischleuchte2', '..grandparent.parent.my_item.child.onoff') }}"
