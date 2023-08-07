@@ -235,10 +235,11 @@ def bft_to_text(bft: int, language: str='de') -> str:
     :return: Text Beschreibung der Windgeschwindigkeit
     """
 
-    if not isinstance(bft,(int)):
-        _logger.error("bft_to_text: " + translate("Parameter must be of type int but is of type {typ}", {'typ': type(bft)}))
+    if not isinstance(bft,(int, float)):
+        _logger.error("bft_to_text: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(bft)}))
         return ''
 
+    bft = int(bft)
     if (bft < 0) or (bft > 12):
         _logger.error("bft_to_text: " + translate("Beaufort is out of scale: '{bft}'", {'bft': bft}))
         return ''
@@ -351,6 +352,9 @@ def degrees_to_direction_8(deg: float) -> str:
     :param deg: Kompass Gradzahl
     :return: Himmelsrichtung (Abkürzung)
     """
+    if deg is None:
+        return '?'
+
     if not isinstance(deg,(int, float)):
         _logger.error("degrees_to_direction_8: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(deg)}))
         return ''
@@ -370,6 +374,9 @@ def degrees_to_direction_16(deg: float) -> str:
     :param deg: Kompass Gradzahl
     :return: Himmelsrichtung (Abkürzung)
     """
+    if deg is None:
+        return '?'
+
     if not isinstance(deg,(int, float)):
         _logger.error("degrees_to_direction_16: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(deg)}))
         return ''
@@ -385,7 +392,7 @@ from typing import Union
 # Ab Python 3.10 auch: def location_name(lat: float | str, lon: float | str) -> str:
 def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
     """
-    Lokationsname (Stadtteil/suburb) einer Lokation, die über Latitude und Longitude gewählt wird.
+    Lokationsname (Stadt, Stadtteil oder Ort) einer Lokation, die über Latitude und Longitude gewählt wird.
     Die Informationen werden von OpenWeatherMap abgerufen.
 
     :param lat: Latitude
