@@ -130,9 +130,9 @@ class MockSmartHome():
         self.children = []
         self._use_modules = 'True'
         self._moduledict = {}
-        #if self.shtime is None:
+        if self.shtime is None:
         #    self.shtime = Shtime.get_instance()
-        self.shtime = Shtime(self)
+            self.shtime = Shtime(self)
 
         self.logs = lib.log.Logs(self)   # initialize object for memory logs and extended log levels for plugins
 
