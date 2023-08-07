@@ -21,10 +21,10 @@ from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
 from tests.common import BASE
 
 
-logging.addLevelName(29, 'NOTICE')
-logging.addLevelName(13, 'DBGHIGH')
-logging.addLevelName(12, 'DBGMED')
-logging.addLevelName(11, 'DBGLOW')
+#logging.addLevelName(29, 'NOTICE')
+#logging.addLevelName(13, 'DBGHIGH')
+#logging.addLevelName(12, 'DBGMED')
+#logging.addLevelName(11, 'DBGLOW')
 
 logger = logging.getLogger('Mockup')
 
@@ -76,7 +76,7 @@ class MockSmartHome():
     _logic_conf_basename = os.path.join(_etc_dir, 'logic')
     _logic_dir = os.path.join(_base_dir, 'tests', 'resources', 'logics'+os.path.sep)
 #    _cache_dir = os.path.join(_var_dir,'cache'+os.path.sep)
-#    _log_config = os.path.join(_etc_dir,'logging'+YAML_FILE)
+    _log_conf_basename = os.path.join(_etc_dir, 'logging')
 #    _smarthome_conf_basename = None
 
     # the APIs available though the smarthome object instance:
@@ -98,6 +98,9 @@ class MockSmartHome():
 
         self.version = bin.shngversion.shNG_version
 
+        MODE = 'default'
+        self._mode = MODE
+
         self.python_bin = os.environ.get('_','')
         self.__logs = {}
 #        self.__item_dict = {}
@@ -109,6 +112,11 @@ class MockSmartHome():
             self.shtime = Shtime.get_instance()
 
         self.logs = lib.log.Logs(self)   # initialize object for memory logs and extended log levels for plugins
+
+        #############################################################
+        # setup logging
+        self.init_logging(self._log_conf_basename, MODE)
+
 
         self.scheduler = MockScheduler()
 
@@ -215,6 +223,39 @@ class MockSmartHome():
 
     def add_log(self, name, log):
         self.__logs[name] = log
+
+
+    def init_logging(self, conf_basename='', MODE='default'):
+        """
+        This function initiates the logging for SmartHomeNG.
+        """
+        if conf_basename == '':
+            conf_basename = self._log_conf_basename
+        #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+
+        if not self.logs.configure_logging():
+            conf_basename = self._log_conf_basename + YAML_FILE + '.default'
+            print(f"       Trying default logging configuration from:")
+            print(f"       {conf_basename}")
+            print()
+            #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
+            if not self.logs.configure_logging('logging.yaml.default'):
+                print("ABORTING")
+                print()
+                exit(1)
+            print("Starting with default logging configuration")
+
+        if MODE == 'interactive':  # remove default stream handler
+            logging.getLogger().disabled = True
+        elif MODE == 'verbose':
+            logging.getLogger().setLevel(logging.INFO)
+        elif MODE == 'debug':
+            logging.getLogger().setLevel(logging.DEBUG)
+        elif MODE == 'quiet':
+            logging.getLogger().setLevel(logging.WARNING)
+        return
+
+
 
     # ------------------------------------------------------------
     #  Deprecated methods
