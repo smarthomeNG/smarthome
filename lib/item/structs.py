@@ -225,7 +225,12 @@ class Structs():
             self.logger.warning(f"traverse_struct: struct {struct_name} not found")
             return
 
-        self.logger.dbghigh(f"traverse_struct: struct {struct_name}")
+        prefixes = struct_name.split('.')
+        if prefixes[0] != 'my':
+            # set plugin-name as key_prefix
+            key_prefix = prefixes[0]
+
+        self.logger.dbghigh(f"traverse_struct: struct={struct_name}, prefixes={prefixes}, key_prefix={key_prefix}")
         new_struct = self.process_struct_node(struct, struct_name, key_prefix=key_prefix)
         if new_struct is not None:
             self.logger.dbghigh(f"traverse_struct: struct '{struct_name}' was updated")
