@@ -42,13 +42,16 @@
     "config": {
       "lin_mode": "ALL"
     },
-    "logics": ["test"],
+    "logics": [
+      {"name": "test", "description": "Dieses ist die Beschreibung der Funktion der Logik 'test'"},
+      {"name": "test2", "description": "Dieses ist die Beschreibung der Funktion der weiteren Logik 'test2'"}
+    ],
     "triggers": ["bound method WebSocket.update_item of plugins.visu_websocket.WebSocket"],
     "filename": "q21_c26lintronic.yaml"
   },
   {
-    "path": "beoremote.beo4command",
-    "name": "beoremote.beo4command",
+    "path": "beoremote.beo4commandnum",
+    "name": "beoremote.beo4commandnum",
     "type": "bool",
     "struct": "stateengine",
     "value": "false",
