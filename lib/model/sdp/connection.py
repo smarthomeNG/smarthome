@@ -77,6 +77,10 @@ class SDPConnection(object):
         self._suspend_callback = None
         self.dummy = None   # dummy response for testing
 
+        # try to assure no concurrent sending is done
+        self._send_lock = Lock()
+        self.use_send_lock = False
+
         # we set defaults for all possible connection parameters, so we don't
         # need to care later if a parameter is set or not
         # these will be overwritten by all parameters set in plugin.yaml
@@ -114,9 +118,20 @@ class SDPConnection(object):
     def open(self):
         """ wrapper method provides stable interface and allows overwriting """
         self.logger.debug('open method called for connection')
-        if self._open():
-            self._is_connected = True
-            self._send_init_on_open()
+
+        try:
+            if self.use_send_lock:
+                self.logger.debug('trying to get send_lock for opening connection')
+                self._send_lock.acquire()
+
+            if self._open():
+                self._is_connected = True
+                self._send_init_on_open()
+        except Exception:
+            raise
+        finally:
+            if self.use_send_lock:
+                self._send_lock.release()
 
         return self._is_connected
 
@@ -146,8 +161,19 @@ class SDPConnection(object):
 
         response = None
 
-        if self._send_init_on_send():
-            response = self._send(data_dict)
+        try:
+            if self.use_send_lock:
+                self.logger.debug(f'trying to get send_lock for sending {data_dict}')
+                self._send_lock.acquire()
+
+            if self._send_init_on_send():
+                response = self._send(data_dict)
+        except Exception:
+            raise
+        finally:
+            if self.use_send_lock:
+                self.logger.debug('releasing send_lock')
+                self._send_lock.release()
 
         return response
 

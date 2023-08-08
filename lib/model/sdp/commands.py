@@ -107,7 +107,11 @@ class SDPCommands(object):
             result = self._commands[command].get_shng_data(data, **kwargs)
             lu = self._get_cmd_lookup(command)
             if lu:
-                result = self._lookup(result, lu)
+                try:
+                    result = self._lookup(result, lu)
+                except ValueError as e:
+                    self.logger.warning(f'whie parsing reply to {command}, the lookup of {lu} failed: {e}')
+                    return
             return result
 
         raise Exception(f'command {command} not found in commands')

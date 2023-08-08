@@ -172,7 +172,7 @@ parameters:
 
     # suspend mode configuration
     # mute plugin on setting associated item to True
-    suspend_item_path:
+    suspend_item:
         type: str
         default: ''
         description:

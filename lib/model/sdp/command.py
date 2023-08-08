@@ -61,7 +61,7 @@ class SDPCommand(object):
     read_cmd = None
     write_cmd = None
     item_type = None
-    reply_token = []
+    reply_token = None
     reply_pattern = ''
     cmd_settings = None
     lookup = None
@@ -78,6 +78,8 @@ class SDPCommand(object):
         else:
             self.name = command
 
+        self.reply_token = []
+        self._cmd_params = kwargs['cmd']
         self._plugin_params = kwargs['plugin']
 
         self._get_kwargs(COMMAND_PARAMS, **(kwargs.get('cmd', {})))
@@ -537,14 +539,18 @@ class SDPCommandViessmann(SDPCommand):
     params and param_value need to be None or lists of the same length.
     """
     def __init__(self, command, dt_class, **kwargs):
+
         super().__init__(command, dt_class, **kwargs)
 
-        self._len = 1
-        self._mult = 0
-        self._signed = False
-        for attr in ('len', 'mult', 'signed'):
-            if attr in self._plugin_params:
-                setattr(self, '_' + attr, self._plugin_params[attr])
+        self.len = 1
+        self.mult = 0
+        self.signed = False
+
+        cp = self._cmd_params.get('params')
+        if cp:
+            for attr in ('len', 'mult', 'signed'):
+                if attr in cp:
+                    setattr(self, attr, cp[attr])
 
     def get_send_data(self, data, **kwargs):
 
@@ -561,8 +567,12 @@ class SDPCommandViessmann(SDPCommand):
             else:
                 cmd = self.opcode
 
-        ddict = self._build_dict(self._DT.get_send_data(data, len=self._len, mult=self._mult, signed=self._signed), **kwargs)
+        ddict = self._build_dict(self._DT.get_send_data(data, len=self.len, mult=self.mult, signed=self.signed), **kwargs)
         return {'payload': cmd, 'data': ddict}
+
+    def get_shng_data(self, data, **kwargs):
+        value = self._DT.get_shng_data(data, len=self.len, mult=self.mult, signed=self.signed, **kwargs)
+        return value
 
     def _build_dict(self, data, **kwargs):
         """
@@ -577,8 +587,10 @@ class SDPCommandViessmann(SDPCommand):
         if not hasattr(self, CMD_ATTR_PARAMS):
             return None
 
-        for key in self._plugin_params:
-            val = self._plugin_params[key]
+        cmd_params = getattr(self, CMD_ATTR_PARAMS)
+
+        for key in cmd_params:
+            val = cmd_params[key]
             if val == 'VAL':
                 val = data
             elif isinstance(val, tuple):
