@@ -45,7 +45,7 @@ import types
 PLUGIN_ATTR_MODEL            = 'model'                   # select model if applicable. Don't set if not necessary!
 PLUGIN_ATTR_CMD_CLASS        = 'command_class'           # name of class to use for commands
 PLUGIN_ATTR_RECURSIVE        = 'recursive_custom'        # indices of custom item attributes for which to enable recursive lookup (number or list of numbers)
-PLUGIN_ATTR_SUSPEND_ITEM     = 'suspend_item_path'       # item to toggle suspend/resume mode
+PLUGIN_ATTR_SUSPEND_ITEM     = 'suspend_item'            # item to toggle suspend/resume mode
 
 # general connection attributes
 PLUGIN_ATTR_CONNECTION       = 'conn_type'               # manually set connection class, classname or type (see below)

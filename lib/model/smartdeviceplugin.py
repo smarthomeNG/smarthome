@@ -409,6 +409,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         # check for suspend item
         if item.path() == self._suspend_item_path:
+            self.logger.debug(f'suspend item {item.path()} registered')
             self._suspend_item = item
             self.add_item(item, updating=True)
             return self.update_item
@@ -686,7 +687,8 @@ class SmartDevicePlugin(SmartPlugin):
         if result:
             by = kwargs.get('by')
             self.logger.debug(f'command {command} received result {result} by {by}')
-            self.on_data_received(by, value, command)
+# changed value to result, as value is given by function call
+            self.on_data_received(by, result, command)
 
         return True
 
