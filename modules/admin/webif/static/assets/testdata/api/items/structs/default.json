@@ -1,6 +1,7 @@
 {
   "darksky.weather": {
     "name": "Weather report from darksky.net",
+    "database_maxage": 92,
     "latitude": {
       "type": "num",
       "ds_matchstring": "latitude"
