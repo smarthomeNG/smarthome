@@ -52,6 +52,10 @@ class MockScheduler():
 
 class MockSmartHome():
 
+    cwd = os.getcwd()
+    print(f"MockSmartHome: cwd={cwd}")
+    print(f"MockSmartHome: __file__={__file__}")
+
     _base_dir = BASE
     base_dir = _base_dir     # for external modules using that var (backend, ...?)
     _default_language = 'de'
