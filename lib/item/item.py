@@ -362,33 +362,11 @@ class Item():
                     # the following code is executed for plugin specific attributes:
                     #
                     # get value from attribute of other (relative addressed) item
-                    # at the moment only parent and grandparent item are supported
-                    if (type(value) is str) and (value.startswith('..:') or value.startswith('...:')):
-                        fromitem = value.split(':')[0]
-                        fromattr = value.split(':')[1]
-                        if fromattr in ['', '.']:
-                            fromattr = attr
-                        if fromitem == '..':
-                            #self.conf[attr] = self._get_attr_from_parent(fromattr)
-                            value = self._get_attr_from_parent(fromattr)
-                        elif fromitem == '...':
-                            #self.conf[attr] = self._get_attr_from_grandparent(fromattr)
-                            value = self._get_attr_from_grandparent(fromattr)
-                        elif fromitem == '....':
-                            #self.conf[attr] = self._get_attr_from_greatgrandparent(fromattr)
-                            value = self._get_attr_from_greatgrandparent(fromattr)
-
-
-                    # Test if the plugin-specific attribute contains a valid value
-                    # and set the default value, if needed
-                    if str(value).startswith('.:'):
-                        # Don't check metadata if attribute still has reference (.:xxx)
-                        self.conf[attr] = value
-                    else:
-                        if hasattr(self.plugins, 'meta'):
-                            value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
-                            self.conf[attr] = value
-        # end of 'for attr, value in config.items()'
+                    # at the moment only current, parent, grandparent and greatgrandparent items are supported
+                    if (type(value) is str):
+                        value = self._get_attribute_value(value, current_attr=attr, ignore_current_item=True)
+                    self.conf[attr] = value
+        # end of loop 'for attr, value in config.items()' - handling of all attributes of an item
 
         # test for attribute copy within the same item to ensure replace in every definition order of attributes
         for attr in self.conf:
@@ -398,12 +376,37 @@ class Item():
                 if fromattr in ['', '.']:
                     fromattr = attr
                 value = self._get_attr(fromattr)
-#                self.conf[attr] = value
-                if hasattr(self.plugins, 'meta'):
-                    value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
-                    self.conf[attr] = value
+                self.conf[attr] = value
+
+        # variable replacement for attributes
+        for attr in dict(self.conf):
+            if attr.endswith('_'):
+                # Only for attributes which's name ends with an underline
+                attr_value = str(self.conf[attr])
+                while attr_value.find('{') > -1:
+                    wrk = attr_value.split('{')[1]
+                    if wrk.find('}') > -1:
+                        # varname = attr_value.split('{')[1].split('}')[0]
+                        varname = wrk.split('}')[0]
+                        value = self._get_attribute_value(varname, current_attr=attr)
+                        attr_value = attr_value.replace('{' + varname + '}', value)
+                    else:
+                        logger.warning(f"Item {self._path}, attribute {attr}: " + "Invalid var definition - '}' is missing")
+                        break
+
+                # store resolved attribute value under name w/o underline
+                attr_new = attr[:-1]
+                self.conf[attr_new] = attr_value
+                del self.conf[attr]
+
+        # Test if attributes are defined in metadata
+        for attr in self.conf:
+            if hasattr(self.plugins, 'meta'):
+                self.conf[attr] = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], self.conf[attr], self._filename)
+
 
         self.property.init_dynamic_properties()
+
 
         #############################################################
         # Child Items
@@ -490,6 +493,36 @@ class Item():
                         pass
                     self.add_method_trigger(update)
 
+
+
+    def _get_attribute_value(self, attr_ref: str, current_attr: str, default: str='', ignore_current_item: bool=False) -> str:
+        """
+        Get the value of an other attribute using a relative reference
+
+        at the moment only the current, parent, grandparent and greatgrandparent items are supported
+
+        :param attr_ref: Reference to attribute
+        :param ignore_current_item: Skip attributes of current item (needed in attr loop)
+
+        :return: Value of the referenced attribute
+        """
+        value = attr_ref
+        attr_ref = attr_ref.strip()
+        if attr_ref.startswith( ('.:', '..:', '...:', '....:') ):
+            fromitem = attr_ref.split(':')[0]
+            fromattr = attr_ref.split(':')[1]
+            if fromattr in ['', '.']:
+                fromattr = current_attr
+            if fromitem == '.':
+                if not ignore_current_item:
+                    value = self._get_attr(fromattr, default)
+            elif fromitem == '..':
+                value = self._get_attr_from_parent(fromattr, default)
+            elif fromitem == '...':
+                value = self._get_attr_from_grandparent(fromattr, default)
+            elif fromitem == '....':
+                value = self._get_attr_from_greatgrandparent(fromattr, default)
+        return value
 
 
     def _split_destitem_from_value(self, value):
@@ -1196,7 +1229,7 @@ class Item():
         return pref
 
 
-    def _get_attr(self, attr):
+    def _get_attr(self, attr, default=''):
         """
         Get attribute value from actual item
 
@@ -1204,13 +1237,11 @@ class Item():
         :return: value from attribute of parent item
         """
         pitem = self
-        pattr_value = pitem.conf.get(attr, '')
-        #        logger.warning("_get_attr_from_parent Item {}: for attr '{}'".format(self._path, attr))
-        #        logger.warning("_get_attr_from_parent Item {}: for parent '{}', pattr_value '{}'".format(self._path, pitem._path, pattr_value))
+        pattr_value = pitem.conf.get(attr, default)
         return pattr_value
 
 
-    def _get_attr_from_parent(self, attr):
+    def _get_attr_from_parent(self, attr, default=''):
         """
         Get attribute value from parent item
 
@@ -1218,13 +1249,11 @@ class Item():
         :return: value from attribute of parent item
         """
         pitem = self.return_parent()
-        pattr_value = pitem.conf.get(attr, '')
-        #        logger.warning("_get_attr_from_parent Item {}: for attr '{}'".format(self._path, attr))
-        #        logger.warning("_get_attr_from_parent Item {}: for parent '{}', pattr_value '{}'".format(self._path, pitem._path, pattr_value))
+        pattr_value = pitem.conf.get(attr, default)
         return pattr_value
 
 
-    def _get_attr_from_grandparent(self, attr):
+    def _get_attr_from_grandparent(self, attr, default=''):
         """
         Get attribute value from grandparent item
 
@@ -1233,13 +1262,11 @@ class Item():
         """
         pitem = self.return_parent()
         gpitem = pitem.return_parent()
-        gpattr_value = gpitem.conf.get(attr, '')
-#        logger.warning("_get_attr_from_grandparent Item {}: for attr '{}'".format(self._path, attr))
-#        logger.warning("_get_attr_from_grandparent Item {}: for grandparent '{}', gpattr_value '{}'".format(self._path, gpitem._path, gpattr_value))
+        gpattr_value = gpitem.conf.get(attr, default)
         return gpattr_value
 
 
-    def _get_attr_from_greatgrandparent(self, attr):
+    def _get_attr_from_greatgrandparent(self, attr, default=''):
         """
         Get attribute value from grandparent item
 
@@ -1249,7 +1276,7 @@ class Item():
         pitem = self.return_parent()
         gpitem = pitem.return_parent()
         ggpitem = gpitem.return_parent()
-        ggpattr_value = ggpitem.conf.get(attr, '')
+        ggpattr_value = ggpitem.conf.get(attr, default)
         return ggpattr_value
 
 
