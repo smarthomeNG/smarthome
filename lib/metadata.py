@@ -107,18 +107,25 @@ class Metadata():
         self.plugin_functions = None
         self._plugin_functionlist = []
 
-        # dummy 'my_' prefix for user's attributes for logics, etc. (add only, if list is still empty)
+        # Add dummy prefixes only, if all_itemprefixdefinitions is still empty
         if all_itemprefixdefinitions == {}:
+            # dummy 'my_' prefix for user's attributes for logics, etc.
             prefix_name = 'my_'
             all_itemprefixdefinitions[prefix_name] = {'type': 'foo',
                                                       'description': {'de': 'Attribute für verschiedene Tests',
                                                                       'en': 'Attributes for various tests'},
-                                                      'listtype': ['foo'], 'listlen': 0, '_addon_name': 'priv_develop',
-                                                      '_addon_type': 'plugin', '_name': 'my_', '_type': 'prefix'}
-            all_itemprefixdefinitions[prefix_name]['_addon_name'] = 'lib_metadata'
-            all_itemprefixdefinitions[prefix_name]['_addon_type'] = 'plugin'
-            all_itemprefixdefinitions[prefix_name]['_name'] = prefix_name
-            all_itemprefixdefinitions[prefix_name]['_type'] = 'prefix'
+                                                      'listtype': ['foo'], 'listlen': 0, '_addon_name': 'lib_metadata',
+                                                      '_addon_type': 'plugin', '_name': prefix_name, '_type': 'prefix'}
+
+            # dummy '_' prefix for hidden user's attributes for logics, etc.
+            prefix_name = '_'
+            all_itemprefixdefinitions[prefix_name] = {'type': 'foo',
+                                                      'description': {'de': 'Attribute für internes Handling (z.B. in structs',
+                                                                      'en': 'Attributes for internal handling (e.g. in structs)'},
+                                                      'listtype': ['foo'], 'listlen': 0, '_addon_name': 'lib_metadata',
+                                                      '_addon_type': 'plugin', '_name': prefix_name, '_type': 'prefix'}
+
+            logger.info(f"Definierte spezielle Präfixe für Namen von Attributen: {list(all_itemprefixdefinitions.keys())}")
 
         if self.meta is not None:
             # read paramter and item definition sections
