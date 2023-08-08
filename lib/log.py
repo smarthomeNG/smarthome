@@ -69,7 +69,7 @@ class Logs():
 
         if config_dict == None:
             print()
-            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
+            print(f"ERROR: Invalid logging configuration in file '{os.path.join(self.etc_dir, config_filename)}'")
             print()
             exit(1)
 
@@ -137,7 +137,7 @@ class Logs():
         except Exception as e:
             #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
             print()
-            print(f"ERROR: dictConfig: Invalid logging configuration in file '{config_filename}'")
+            print(f"ERROR: dictConfig: Invalid logging configuration in file '{os.path.join(self.etc_dir, config_filename)}'")
             print(f"       Exception: {e}")
             print()
             return False
