@@ -396,8 +396,12 @@ class Item():
 
                 # store resolved attribute value under name w/o underline
                 attr_new = attr[:-1]
-                self.conf[attr_new] = attr_value
-                del self.conf[attr]
+                if attr_new == 'name':
+                    self._name = attr_value
+                    del self.conf[attr]
+                else:
+                    self.conf[attr_new] = attr_value
+                    del self.conf[attr]
 
         # Test if attributes are defined in metadata
         for attr in self.conf:
