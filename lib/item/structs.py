@@ -95,7 +95,8 @@ class Structs():
         totalstart = time.perf_counter()
         start = time.perf_counter()
         self.load_struct_definitions_from_file(etc_dir, 'struct.yaml', '')
-
+        key_prefix = ''
+        
         # look for further struct files
         fl = os.listdir(etc_dir)
         for fn in fl:
