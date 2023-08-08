@@ -96,7 +96,7 @@ class Items():
             self.logger.critical("A second 'items' object has been created. There should only be ONE instance of class 'Items'!!! Called from: {} ({})".format(calframe[1][1], calframe[1][3]))
 
         _items_instance = self
-        self.structs = Structs()
+        self.structs = Structs(self._sh)
 
 
     # -----------------------------------------------------------------------------------------

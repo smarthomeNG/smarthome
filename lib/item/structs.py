@@ -43,7 +43,7 @@ class Structs():
     _finalized_structs = []                             # struct names are appended to this list, if they do not
                                                         # contain any 'struct' attributes any more
 
-    def __init__(self):
+    def __init__(self, smarthome):
         self.logger = logging.getLogger(__name__)
         self.save_joined_structs = False
 
@@ -95,8 +95,7 @@ class Structs():
         totalstart = time.perf_counter()
         start = time.perf_counter()
         self.load_struct_definitions_from_file(etc_dir, 'struct.yaml', '')
-        key_prefix = ''
-        
+
         # look for further struct files
         fl = os.listdir(etc_dir)
         for fn in fl:
@@ -124,7 +123,7 @@ class Structs():
                 if struct_name not in self._finalized_structs:
                     #self.logger.dbghigh(f"- processing struct '{struct_name}'")
 
-                    if self.traverse_struct(struct_name, key_prefix):
+                    if self.traverse_struct(struct_name):
                         do_resolve = True
                     else:
                         self._finalized_structs.append(struct_name)
@@ -213,7 +212,7 @@ class Structs():
 
     """
 
-    def traverse_struct(self, struct_name, key_prefix):
+    def traverse_struct(self, struct_name):
         """
         Traverses through a struct to find struct-attributes and replace them with the references struct(s)
 
@@ -227,7 +226,9 @@ class Structs():
             return
 
         prefixes = struct_name.split('.')
-        if prefixes[0] != 'my':
+        if prefixes[0] == 'my':
+            key_prefix = prefixes[0] + '.' + prefixes[1]
+        else:
             # set plugin-name as key_prefix
             key_prefix = prefixes[0]
 
