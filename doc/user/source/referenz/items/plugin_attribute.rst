@@ -147,7 +147,7 @@ Platzhalter können (wie die Vererbung und die Nutzung anderer Attributwerte) **
 plugin-spezifischen Attributen verwendet werden. Die einzige Ausnahme ist das Standard-Attribut **name**. Hier können
 Platzhalter verwendet werden (:code:`name_: "Text {..:my_value}"`).
 
-Die Nutzung der Platzhalter wird in der struct im folgenden Beispiel verdeutlicht:
+Die Nutzung der Platzhalter wird am Beispiel der folgenden **structs** verdeutlicht:
 
 .. code-block:: yaml
     :caption: ../etc/struct_knx.yaml
@@ -175,21 +175,93 @@ Die Nutzung der Platzhalter wird in der struct im folgenden Beispiel verdeutlich
             type: num
             knx_dpt: 5
             knx_cache_: "{..:_maingroup}/5/{..:_device}"
-            knx_send_: "{..:_maingroup}1/4/{..:_device}"
+            knx_send_: "{..:_maingroup}/4/{..:_device}"
 
+|
 
-.. code:: yaml
+Wenn diese **structs** bei der Definition von Items folgendermaßen verwendet werden:
+
+.. code-block:: yaml
     :caption: ../items/testitems.yaml
 
-testitems:
+    testitems:
 
-    switch1:
-        _device: 4
-        struct: my.knx.switch
+        switch1:
+            _device: 4
+            struct: my.knx.switch
 
-    dimmer1:
-        _device: 7
-        struct: my.knx.dimmer
+        dimmer1:
+            _device: 7
+            struct: my.knx.dimmer
 
-...
+|
+
+ergibt zur Laufzeit folgende Item Struktur:
+
+.. code-block:: yaml
+    :caption: Item Teilbaum zur Laufzeit
+
+    testitems:
+        switch1:
+            type: bool
+            knx_dpt: 1
+            knx_send_: "1/1/4"
+            knx_cache_: "1/2/4"
+
+        dimmer1:
+            switch:
+                type: bool
+                knx_dpt: 1
+                knx_send_: "1/1/7"
+                knx_cache_: "1/2/7"
+            relative:
+                type: num
+                knx_dpt: 3
+                knx_send_: "1/3/7"
+            level:
+                type: num
+                knx_dpt: 5
+                knx_cache_: "1/5/7"
+                knx_send_: "1/4/7"
+
+|
+
+Falls eine abweichende KNX Hauptgruppe verwendet wird, ist zusätzlich das Attribut _maingroup zu setzen. Diese
+Hauptgruppe wird dann statt der in der struct definierten Hauptgruppe verwendet:
+
+.. code-block:: yaml
+    :caption: ../items/testitems.yaml
+
+    testitems:
+
+        dimmer1:
+            _maingroup: 3
+            _device: 7
+            struct: my.knx.dimmer
+
+|
+
+ergibt dann zur Laufzeit:
+
+.. code-block:: yaml
+    :caption: Item Teilbaum zur Laufzeit
+
+    testitems:
+        dimmer1:
+            switch:
+                type: bool
+                knx_dpt: 1
+                knx_send_: "3/1/7"
+                knx_cache_: "3/2/7"
+            relative:
+                type: num
+                knx_dpt: 3
+                knx_send_: "3/3/7"
+            level:
+                type: num
+                knx_dpt: 5
+                knx_cache_: "3/5/7"
+                knx_send_: "3/4/7"
+
+|
 

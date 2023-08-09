@@ -16,8 +16,10 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **virtuelle Environments**: Skripte zum Anlegen und Aktivieren von virtuellen Python Environments
   - **Structs**:
 
-    - Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch auf Unterebenen
-      einer stuct eingebunden werden.
+    - **Verschachtelung**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch
+      auf Unterebenen einer stuct eingebunden werden.
+    - **relative Referenzen**: Bei der Einbindung von Sub-Structs aus der selben Datei können jetzt relative
+      Angaben gemacht werden.
   - **Items**:
 
     - **Hysterese**: Es gibt neue Attribute, die es ermöglichen ein Item als Hysterese-Glied mit optionalem Zeitlied
@@ -27,12 +29,12 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       möglich
     - **Platzhalter in Attributwerten**: Es ist jetzt möglich innerhalb von Attributwerten über Platzhalter die
       Inhalte anderer Attribute zu verwenden.
-      Details sind in der :ref:`Dokumentation <Platzhalter_in_Attributwerten>` zu finden
+      Details sind in der :ref:`Dokumentation <Platzhalter_in_Attributwerten>` zu finden.
   - **Neue Bibliothek lib.env**:
 
       - lib.env enthält eine Reihe von Funktionen zur Maßeinheitenumrechnung für Environment Daten, sowie weitere
         Funktionen welche den Umgang mit Environment Informationen unterstützen.
-        Details sind in der :doc:`Dokumentation </lib/env>` zu finden
+        Details sind in der :doc:`Dokumentation </lib/env>` zu finden.
       - Die Funktionen können in Logiken und eval Statements in Item Attributen einfach mit ``env.<Funktion>``
         aufgerufen werden.
   - **Admin GUI**:
