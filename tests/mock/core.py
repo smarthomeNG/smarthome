@@ -65,6 +65,7 @@ class MockSmartHome():
     _restart_on_num_workers = 30
 
     _etc_dir = os.path.join(_base_dir, 'tests', 'resources', 'etc')
+    _structs_dir = os.path.join(_base_dir, 'tests', 'resources', 'structs')
 #    _var_dir = os.path.join(_base_dir, 'var')
     _lib_dir = os.path.join(_base_dir, 'lib')
     _env_dir = os.path.join(_lib_dir, 'env' + os.path.sep)
@@ -195,6 +196,15 @@ class MockSmartHome():
         :rtype: str
         """
         return self._etc_dir
+
+    def get_structsdir(self):
+        """
+        Function to return the etc config directory
+
+        :return: Config directory as an absolute path
+        :rtype: str
+        """
+        return self._structs_dir
 
     def get_vardir(self):
         """
