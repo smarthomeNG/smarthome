@@ -40,6 +40,7 @@ from lib.shtime import Shtime
 import lib.env
 from lib.plugin import Plugins
 
+
 from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB,
                            KEY_EVAL, KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_DESCRIPTION, KEY_TYPE,
                            KEY_STRUCT, KEY_REMARK, KEY_INSTANCE, KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM,
@@ -48,6 +49,7 @@ from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_
                            KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
                            KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD,
                            ATTRIBUTE_SEPARATOR)
+
 
 from lib.utils import Utils
 
@@ -497,7 +499,29 @@ class Item():
                         pass
                     self.add_method_trigger(update)
 
+    def remove(self):
+        """
+        Cleanup item usage before item deletion
+        Calls all plugins to remove the item and its references.
+        :return: success
+        :rtype: bool
+        """
+        incompatible = []
 
+        for plugin in self.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_REMOVE_ITEM):
+                try:
+                    plugin.remove_item(self)
+                except Exception as e:
+                    self.logger.warning(f"while removing item {self} from plugin {plugin}, the following error occurred: {e}")
+            else:
+                incompatible.append(plugin.get_shortname())
+
+        if incompatible:
+            self.logger.warning(f"while removing item {self}, the following plugins were incompatible: {', '.join(incompatible)}")
+            return False
+
+        return True
 
     def _get_attribute_value(self, attr_ref: str, current_attr: str, default: str='', ignore_current_item: bool=False) -> str:
         """
