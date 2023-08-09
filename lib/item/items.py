@@ -129,8 +129,8 @@ class Items():
     #   Following methods handle structs
     # -----------------------------------------------------------------------------------------
 
-    def add_struct_definition(self, plugin_name, struct_name, struct):
-        self.structs.add_struct_definition(plugin_name, struct_name, struct)
+    def add_struct_definition(self, plugin_name, struct_name, struct, from_dir='plugins'):
+        self.structs.add_struct_definition(plugin_name, struct_name, struct, from_dir)
 
 
     def return_struct_definitions(self, all=True):
@@ -171,7 +171,7 @@ class Items():
         #
         # Read in item structs from ../etc/struct.yaml
         self._sh.shng_status['details'] = 'Structs'
-        self.structs.load_struct_definitions(etc_dir)
+        self.structs.load_struct_definitions()
 
 
         # --------------------------------------------------------------------

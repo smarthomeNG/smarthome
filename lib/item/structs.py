@@ -45,7 +45,10 @@ class Structs():
 
     def __init__(self, smarthome):
         self.logger = logging.getLogger(__name__)
+        self._sh = smarthome
         self.save_joined_structs = False
+        self.etc_dir = self._sh.get_etcdir()
+        self.structs_dir = self._sh.get_structsdir()
 
 
     def return_struct_definitions(self, all=True):
@@ -78,7 +81,47 @@ class Structs():
     
     """
 
-    def load_struct_definitions(self, etc_dir):
+    def load_definitions_from_etc(self):
+        """
+        Read in all struct definitions from ../etc directory
+
+        - structs are read in from ../etc/struct.yaml by this procedure
+        - further structs are read in from ../etc/struct_<prefix>.yaml by this procedure
+
+        :param etc_dir: path to etc directory of SmartHomeNG
+
+        """
+        self.load_struct_definitions_from_file(self.etc_dir, 'struct.yaml', '')
+
+        # look for further struct files
+        fl = os.listdir(self.etc_dir)
+        for fn in fl:
+            if fn.startswith('struct_') and fn.endswith('.yaml'):
+                key_prefix = 'my.' + fn[7:-5]
+                self.load_struct_definitions_from_file(self.etc_dir, fn, key_prefix)
+        return
+
+
+    def load_definitions_from_structs(self):
+        """
+        Read in all struct definitions from ../structs directory
+
+        - structs are read in from ../structs/<name>.yaml by this procedure
+
+        """
+        if os.path.isdir(self.structs_dir):
+            # look for struct files
+            fl = os.listdir(self.structs_dir)
+            for fn in fl:
+                if not(fn.startswith('.')) and fn.endswith('.yaml'):
+                    key_prefix = 'my.' + fn[:-5]
+                    self.load_struct_definitions_from_file(self.structs_dir, fn, key_prefix)
+        else:
+            logger.notice("../structs does not exist")
+        return
+
+
+    def load_struct_definitions(self):
         """
         Read in all struct definitions from ../etc directory before reading item definitions
 
@@ -88,20 +131,13 @@ class Structs():
         - other structs are read in from ../etc/struct.yaml by this procedure
         - further structs are read in from ../etc/struct_<prefix>.yaml by this procedure
 
-        :param etc_dir: path to etc directory of SmartHomeNG
-
         """
         import time
         totalstart = time.perf_counter()
         start = time.perf_counter()
-        self.load_struct_definitions_from_file(etc_dir, 'struct.yaml', '')
 
-        # look for further struct files
-        fl = os.listdir(etc_dir)
-        for fn in fl:
-            if fn.startswith('struct_') and fn.endswith('.yaml'):
-                key_prefix = 'my.' + fn[7:-5]
-                self.load_struct_definitions_from_file(etc_dir, fn, key_prefix)
+        self.load_definitions_from_structs()
+        self.load_definitions_from_etc()
 
         end = time.perf_counter()
         duration = end - start
@@ -138,8 +174,8 @@ class Structs():
         import time
         if self.save_joined_structs:
             start = time.perf_counter()
-            self.logger.info(f"load_itemdefinitions(): For testing the joined item structs are saved to {os.path.join(etc_dir, 'structs_joined.yaml')}")
-            shyaml.yaml_save(os.path.join(etc_dir, 'structs_joined.yaml'), self._struct_definitions)
+            self.logger.info(f"load_itemdefinitions(): For testing the joined item structs are saved to {os.path.join(self.etc_dir, 'structs_joined.yaml')}")
+            shyaml.yaml_save(os.path.join(self.etc_dir, 'structs_joined.yaml'), self._struct_definitions)
             end = time.perf_counter()
             duration = end - start
             self.logger.dbghigh(f"load_struct_definitions: time yaml_save(): Duration={duration}")
@@ -151,11 +187,11 @@ class Structs():
         return
 
 
-    def load_struct_definitions_from_file(self, etc_dir, fn, key_prefix):
+    def load_struct_definitions_from_file(self, source_dir, fn, key_prefix):
         """
         Loads struct definitions from a file
 
-        :param etc_dir: path to etc directory of SmartHomeNG
+        :param source_dir: path to etc directory of SmartHomeNG
         :param fn: filename to load struct definition(s) from
         :param key_prefix: prefix to be used when adding struct(s) to loaded definitions
 
@@ -165,8 +201,8 @@ class Structs():
         else:
             self.logger.info(f"Loading struct file '{fn}' with key-prefix '{key_prefix}'")
 
-        # Read in item structs from ../etc/<fn>.yaml
-        struct_definitions = shyaml.yaml_load(os.path.join(etc_dir, fn), ordered=True, ignore_notfound=True)
+        # Read in item structs from ../source_dir/<fn>.yaml
+        struct_definitions = shyaml.yaml_load(os.path.join(source_dir, fn), ordered=True, ignore_notfound=True)
 
         # if valid struct definition file etc/<fn>.yaml ist found
         if struct_definitions is not None:
@@ -176,19 +212,19 @@ class Structs():
                         struct_name = key
                     else:
                         struct_name = key_prefix + '.' + key
-                    self.add_struct_definition('', struct_name, struct_definitions[key])
+                    self.add_struct_definition('', struct_name, struct_definitions[key], source_dir)
             else:
                 self.logger.error(f"load_itemdefinitions(): Invalid content in {fn}: struct_definitions = '{struct_definitions}'")
 
         return
 
 
-    def add_struct_definition(self, plugin_name, struct_name, struct):
+    def add_struct_definition(self, plugin_name, struct_name, struct, from_dir=''):
         """
         Add a single struct definition
 
-        called from load_struct_definitions_from_file when reading in item structs from ../etc/<fn>>.yaml
-        or from lib.plugin when reading in plugin-metadata which contains structs
+        called from load_struct_definitions_from_file when reading in item structs from ../etc/<fn>>.yaml,
+        ../structs/<fn>>.yaml or from lib.plugin when reading in plugin-metadata which contains structs
 
         :param plugin_name: Name of the plugin if called from lib.plugin else an empty string
         :param struct_name: Name of the struct to add
@@ -201,7 +237,11 @@ class Structs():
             name = plugin_name + '.' + struct_name
 
         #self.logger.debug(f"add_struct_definition: struct '{name}' = {dict(struct)}")
-        self._struct_definitions[name] = struct
+        if self._struct_definitions.get(name, None) is None:
+            self._struct_definitions[name] = struct
+        else:
+            if from_dir != 'plugins':
+                self.logger.error(f"add_struct_definition: struct '{name}' already loaded - ignoring definition from {from_dir}")
         return
 
 

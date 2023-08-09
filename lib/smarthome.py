@@ -161,6 +161,7 @@ class SmartHome():
         self._var_dir = os.path.join(self._base_dir, 'var')
         self._lib_dir = os.path.join(self._base_dir,'lib')
         self._plugins_dir = os.path.join(self._base_dir, 'plugins')
+        self._structs_dir = os.path.join(self._base_dir, 'structs')
         self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
 
         self._env_logic_conf_basename = os.path.join(self._env_dir ,'logic')
@@ -182,12 +183,14 @@ class SmartHome():
         """
         Create directories used by SmartHomeNG if they don't exist
         """
-        os.makedirs(self._var_dir, exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'backup'), exist_ok=True)
-        os.makedirs(self._cache_dir, exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'db'), exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'log'), exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'run'), exist_ok=True)
+        os.makedirs(self._structs_dir, mode = 0o775, exist_ok=True)
+
+        os.makedirs(self._var_dir, mode = 0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'backup'), mode = 0o775, exist_ok=True)
+        os.makedirs(self._cache_dir, mode = 0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'db'), mode = 0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'log'), mode = 0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'run'), mode = 0o775, exist_ok=True)
 
 
     def __init__(self, MODE, extern_conf_dir=''):
@@ -508,14 +511,22 @@ class SmartHome():
         return self._extern_conf_dir
 
 
-    def get_etcdir(self):
+    def get_etcdir(self) -> str:
         """
         Function to return the etc config directory
 
         :return: Config directory as an absolute path
-        :rtype: str
         """
         return self._etc_dir
+
+
+    def get_structsdir(self) -> str:
+        """
+        Function to return the structs config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._structs_dir
 
 
     def get_vardir(self):

@@ -20,6 +20,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       auf Unterebenen einer stuct eingebunden werden.
     - **relative Referenzen**: Bei der Einbindung von Sub-Structs aus der selben Datei können jetzt relative
       Angaben gemacht werden.
+    -**structs Verzeichnis**: Dateien mit struct Definitionen können jetzt im Verzeichnis ../structs abgelegt werden.
   - **Items**:
 
     - **Hysterese**: Es gibt neue Attribute, die es ermöglichen ein Item als Hysterese-Glied mit optionalem Zeitlied
@@ -27,16 +28,16 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **Attribute**: In den Attributen **autotimer** und **cycle** können nun eval Ausdrücke
       in der Konfiguration genutzt werden. Bisher waren nur konstante Werte und alternativ Item Referenzen
       möglich
-    - **Platzhalter in Attributwerten**: Es ist jetzt möglich innerhalb von Attributwerten über Platzhalter die
+    - **Platzhalter in Attributen**: Es ist jetzt möglich innerhalb von Attributwerten über Platzhalter die
       Inhalte anderer Attribute zu verwenden.
       Details sind in der :ref:`Dokumentation <Platzhalter_in_Attributwerten>` zu finden.
   - **Neue Bibliothek lib.env**:
 
-      - lib.env enthält eine Reihe von Funktionen zur Maßeinheitenumrechnung für Environment Daten, sowie weitere
-        Funktionen welche den Umgang mit Environment Informationen unterstützen.
-        Details sind in der :doc:`Dokumentation </lib/env>` zu finden.
-      - Die Funktionen können in Logiken und eval Statements in Item Attributen einfach mit ``env.<Funktion>``
-        aufgerufen werden.
+    - lib.env enthält eine Reihe von Funktionen zur Maßeinheitenumrechnung für Environment Daten, sowie weitere
+      Funktionen welche den Umgang mit Environment Informationen unterstützen.
+      Details sind in der :doc:`Dokumentation </lib/env>` zu finden.
+    - Die Funktionen können in Logiken und eval Statements in Item Attributen einfach mit ``env.<Funktion>``
+      aufgerufen werden.
   - **Admin GUI**:
 
     - **Logiken**:
