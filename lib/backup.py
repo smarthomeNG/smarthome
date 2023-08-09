@@ -107,6 +107,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     items_dir = os.path.join(conf_base_dir, 'items')
     logic_dir = os.path.join(conf_base_dir, 'logics')
     scenes_dir = os.path.join(conf_base_dir, 'scenes')
+    structs_dir = os.path.join(conf_base_dir, 'structs')
     uf_dir = os.path.join(conf_base_dir, 'functions')
 
 
@@ -151,6 +152,10 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     #logger.warning("- scenes_dir = {}".format(scenes_dir))
     backup_directory(backupzip, scenes_dir, '.yaml')
     backup_directory(backupzip, scenes_dir, '.conf')
+
+    # backup files from /structs
+    #logger.warning("- structs_dir = {}".format(structs_dir))
+    backup_directory(backupzip, structs_dir, '.yaml')
 
     # backup files from /functions
     #logger.warning("- uf_dir = {}".format(uf_dir))
@@ -293,7 +298,10 @@ def restore_backup(conf_base_dir, base_dir):
     # backup files from /scenes
     restore_directory(restorezip, 'scenes', scenes_dir, overwrite)
 
-    # backup files from /scenes
+    # backup files from /structs
+    restore_directory(restorezip, 'structs', structs_dir, overwrite)
+
+    # backup files from /functions
     restore_directory(restorezip, 'functions', uf_dir, overwrite)
 
     # mark zip-file as restored

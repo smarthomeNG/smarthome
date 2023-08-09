@@ -13,6 +13,9 @@
 ![Github Tag](https://img.shields.io/github/v/release/smarthomeng/smarthome?sort=semver)
 [![Aktuelles Release](https://img.shields.io/github/actions/workflow/status/smarthomeNG/smarthome/unittests.yml?branch=master)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml)
 
+develop: [![Aktuelles Release](https://img.shields.io/github/actions/workflow/status/smarthomeNG/smarthome/unittests.yml?branch=develop)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml)
+
+
 SmartHomeNG [1] ist eine Software die eine Basis für eine Heimautomation bereitstellt. Über Plugins können spezielle Schnittstellen angesprochen und damit die Funktionalität des Gesamtsystems erweitert werden.
 
 Auf der ([Webseite des Projektes](https://www.smarthomeNG.de)) kann eine [Benutzerdokumentation](https://www.smarthomeNG.de) eingesehen werden.
