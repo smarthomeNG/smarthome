@@ -20,7 +20,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       auf Unterebenen einer stuct eingebunden werden.
     - **relative Referenzen**: Bei der Einbindung von Sub-Structs aus der selben Datei können jetzt relative
       Angaben gemacht werden.
-    -**structs Verzeichnis**: Dateien mit struct Definitionen können jetzt im Verzeichnis ../structs abgelegt werden.
+    - **structs Verzeichnis**: Dateien mit struct Definitionen können jetzt im Verzeichnis ../structs abgelegt werden.
   - **Items**:
 
     - **Hysterese**: Es gibt neue Attribute, die es ermöglichen ein Item als Hysterese-Glied mit optionalem Zeitlied

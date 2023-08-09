@@ -58,22 +58,27 @@ Umfang der Sicherung
 
 Beim sichern werden folgende Daten in das zip-Archiv übernommen:
 
-  - /etc/holidays.yaml
-  - /etc/logging.yaml
-  - /etc/logic.yaml
-  - /etc/module.yaml
-  - /etc/plugin.yaml
-  - /etc/smarthome.yaml
-  - /etc/struct.yaml
-  - /etc/struct\_\*.yaml
-  - /etc/\*.cer
-  - /etc/\*.pem
-  - /etc/\*.key
+  - /etc
+    - etc/holidays.yaml
+    - etc/logging.yaml
+    - etc/logic.yaml
+    - etc/module.yaml
+    - etc/plugin.yaml
+    - etc/smarthome.yaml
+    - etc/struct.yaml
+    - etc/struct\_\*.yaml
+    - etc/\*.cer
+    - etc/\*.pem
+   - etc/\*.key
   - /functions\*.*
-  - /items\*.yaml
+  - /items
+    - items\*.yaml
+    - items\*.conf
   - /logic\*.yaml
-  - /scenes\*.yaml
-  - /scenes\*.conf
+  - /scenes
+    - scenes\*.yaml
+    - scenes\*.conf
+  - /structs\*.yaml
 
 .. attention::
 
