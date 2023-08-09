@@ -88,8 +88,6 @@ class Structs():
         - structs are read in from ../etc/struct.yaml by this procedure
         - further structs are read in from ../etc/struct_<prefix>.yaml by this procedure
 
-        :param etc_dir: path to etc directory of SmartHomeNG
-
         """
         self.load_struct_definitions_from_file(self.etc_dir, 'struct.yaml', '')
 
@@ -102,6 +100,41 @@ class Structs():
         return
 
 
+    def migrate_one_file(self, fn: str, dest_fn: str):
+        """
+
+        :param fn: source filename
+        :param dest_fn: destination filename
+
+        """
+        import shutil
+
+        if os.path.isfile(os.path.join(self.structs_dir, dest_fn)):
+            logger.warning(f"Cannot migrate structs definition file `{fn}` to structs directory. {dest_fn} already exists.")
+        else:
+            logger.notice(f"Migrating struct definition file from etc/{fn} to structs/{dest_fn}")
+            shutil.move(os.path.join(self.etc_dir, fn), os.path.join(self.structs_dir, dest_fn))
+
+
+    def migrate_to_structs_dir(self):
+        """
+        Migrate structs definition files from ../etc directory to ../structs directory
+
+        """
+        fl = os.listdir(self.etc_dir)
+        for fn in fl:
+            if fn.startswith('struct_') and fn.endswith('.yaml'):
+                dest_fn = fn[7:]
+                self.migrate_one_file(fn, dest_fn)
+
+        fn = 'struct.yaml'
+        if os.path.isfile(os.path.join(self.etc_dir, fn)):
+            dest_fn = 'global_structs.yaml'
+            self.migrate_one_file(fn, dest_fn)
+
+        return
+
+
     def load_definitions_from_structs(self):
         """
         Read in all struct definitions from ../structs directory
@@ -109,12 +142,16 @@ class Structs():
         - structs are read in from ../structs/<name>.yaml by this procedure
 
         """
+        self.load_struct_definitions_from_file(self.etc_dir, 'struct.yaml', '')
         if os.path.isdir(self.structs_dir):
             # look for struct files
             fl = os.listdir(self.structs_dir)
             for fn in fl:
                 if not(fn.startswith('.')) and fn.endswith('.yaml'):
-                    key_prefix = 'my.' + fn[:-5]
+                    if fn == 'global_structs.yaml':
+                        key_prefix = ''
+                    else:
+                        key_prefix = 'my.' + fn[:-5]
                     self.load_struct_definitions_from_file(self.structs_dir, fn, key_prefix)
         else:
             logger.notice("../structs does not exist")
@@ -135,6 +172,8 @@ class Structs():
         import time
         totalstart = time.perf_counter()
         start = time.perf_counter()
+
+        self.migrate_to_structs_dir()
 
         self.load_definitions_from_structs()
         self.load_definitions_from_etc()
@@ -208,7 +247,7 @@ class Structs():
         if struct_definitions is not None:
             if isinstance(struct_definitions, collections.OrderedDict):
                 for key in struct_definitions:
-                    if fn == 'struct.yaml':
+                    if key_prefix == '':
                         struct_name = key
                     else:
                         struct_name = key_prefix + '.' + key
