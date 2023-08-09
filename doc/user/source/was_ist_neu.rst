@@ -25,6 +25,9 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **Attribute**: In den Attributen **autotimer** und **cycle** können nun eval Ausdrücke
       in der Konfiguration genutzt werden. Bisher waren nur konstante Werte und alternativ Item Referenzen
       möglich
+    - **Platzhalter in Attributwerten**: Es ist jetzt möglich innerhalb von Attributwerten über Platzhalter die
+      Inhalte anderer Attribute zu verwenden.
+      Details sind in der :ref:`Dokumentation <Platzhalter_in_Attributwerten>` zu finden
   - **Neue Bibliothek lib.env**:
 
       - lib.env enthält eine Reihe von Funktionen zur Maßeinheitenumrechnung für Environment Daten, sowie weitere

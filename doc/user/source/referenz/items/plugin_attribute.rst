@@ -105,8 +105,8 @@ Start von SmartHomeNG kopiert wird. Im Backend wird in den Item Details des Chil
 .. index:: Zugriff auf Attribute anderer Items
 .. index:: Items; Zugriff auf Attribute anderer Items
 
-Zugriff auf Attribute anderer Items :redsup:`neu`
--------------------------------------------------
+Zugriff auf Attribute anderer Items :bluesup:`update`
+-----------------------------------------------------
 
 Der Zugriff auf Attribute anderer Items ist als Erweiterung der Vererbung von Attributen implementiert.
 Hierzu muss im aktuellen Item ein Attribut definiert werden, welches den Wert aufnimmt. Es ist hierbei
@@ -125,6 +125,8 @@ ein :code:`.` (für das aktuelle Item) angegeben (:code:`.:<Attribut>`).
 .. index:: Platzhalter in Attributwerten
 .. index:: Items; Platzhalter in Attributwerten
 
+.. _Platzhalter_in_Attributwerten:
+
 Platzhalter in Attributwerten :redsup:`neu`
 -------------------------------------------
 
@@ -140,6 +142,54 @@ aktivieren, muss an den Namen des Attributes ein Unterstrich angefügt werden. E
 der Konfigurationsdatei :code:`my_attribute: "Text"` zu schreiben, :code:`my_attribute_: "Text {..:my_value}"`
 angegeben werden. Im Zuge des Ladens wird beim Ersetzen der Platzhalter der Unterstrich entfernt. Das Attribut
 hal zur Laufzeit also den Namen **my_attribute** und nicht (wie man denken könnte) **my_attribute_**.
+
+Platzhalter können (wie die Vererbung und die Nutzung anderer Attributwerte) **nur** bei
+plugin-spezifischen Attributen verwendet werden. Die einzige Ausnahme ist das Standard-Attribut **name**. Hier können
+Platzhalter verwendet werden (:code:`name_: "Text {..:my_value}"`).
+
+Die Nutzung der Platzhalter wird in der struct im folgenden Beispiel verdeutlicht:
+
+.. code-block:: yaml
+    :caption: ../etc/struct_knx.yaml
+
+    switch:
+        _maingroup: 1
+        _device: 0
+        type: bool
+        knx_dpt: 1
+        knx_send_: "{.:_maingroup}/1/{.:_device}"
+        knx_cache_: "{.:_maingroup}/2/{.:_device}"
+
+    dimmer:
+        _maingroup: 1
+        _device: 0
+        switch:
+            _maingroup: ..:.
+            _device: ..:.
+            struct: .switch
+        relative:
+            type: num
+            knx_dpt: 3
+            knx_send_: "{..:_maingroup}/3/{..:_device}"
+        level:
+            type: num
+            knx_dpt: 5
+            knx_cache_: "{..:_maingroup}/5/{..:_device}"
+            knx_send_: "{..:_maingroup}1/4/{..:_device}"
+
+
+.. code:: yaml
+    :caption: ../items/testitems.yaml
+
+testitems:
+
+    switch1:
+        _device: 4
+        struct: my.knx.switch
+
+    dimmer1:
+        _device: 7
+        struct: my.knx.dimmer
 
 ...
 
