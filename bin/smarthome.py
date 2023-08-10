@@ -244,7 +244,8 @@ if __name__ == '__main__':
         _sh_thread = threading.Thread(target=sh.start)
         _sh_thread.start()
         shell = code.InteractiveConsole(locals())
-        shell.interact()
+        while sh.alive:
+            shell.interact()
         exit(0)
     elif args.logics:
         _reload_logics()
