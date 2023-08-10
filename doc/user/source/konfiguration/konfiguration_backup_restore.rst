@@ -59,6 +59,7 @@ Umfang der Sicherung
 Beim sichern werden folgende Daten in das zip-Archiv übernommen:
 
   - /etc
+
     - etc/holidays.yaml
     - etc/logging.yaml
     - etc/logic.yaml
@@ -69,13 +70,15 @@ Beim sichern werden folgende Daten in das zip-Archiv übernommen:
     - etc/struct\_\*.yaml
     - etc/\*.cer
     - etc/\*.pem
-   - etc/\*.key
+    - etc/\*.key
   - /functions\*.*
   - /items
+
     - items\*.yaml
     - items\*.conf
   - /logic\*.yaml
   - /scenes
+
     - scenes\*.yaml
     - scenes\*.conf
   - /structs\*.yaml
