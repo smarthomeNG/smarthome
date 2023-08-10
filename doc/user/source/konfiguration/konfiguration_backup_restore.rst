@@ -51,6 +51,8 @@ Die Wiederherstellung von der Kommandozeile aus kann durchgeführt werden, währ
 Es ist nicht notwendig ein laufendes SmartHomeNG vorher zu beenden. Allerdings muss nach der Wiederherstellung die
 laufende Instanz beendet und neu gestartet werden, damit die wiederhergestellte Konfiguration verwendet wird.
 
+Falls die Wiederherstellung mit der Admin GUI durchgeführt wird, startet SmartHomeNG anschließend automatisch neu.
+
 
 --------------------
 Umfang der Sicherung
@@ -60,28 +62,34 @@ Beim sichern werden folgende Daten in das zip-Archiv übernommen:
 
   - /etc
 
-    - etc/holidays.yaml
-    - etc/logging.yaml
-    - etc/logic.yaml
-    - etc/module.yaml
-    - etc/plugin.yaml
-    - etc/smarthome.yaml
-    - etc/struct.yaml
-    - etc/struct\_\*.yaml
-    - etc/\*.cer
-    - etc/\*.pem
-    - etc/\*.key
-  - /functions\*.*
+    - holidays.yaml
+    - logging.yaml
+    - logic.yaml
+    - module.yaml
+    - plugin.yaml
+    - smarthome.yaml
+    - struct.yaml
+    - struct\_\*.yaml
+    - \*.cer
+    - \*.pem
+    - \*.key
+  - /functions
+
+    - \*.*
   - /items
 
     - items\*.yaml
     - items\*.conf
-  - /logic\*.yaml
+  - /logic
+
+    - \*.yaml
   - /scenes
 
-    - scenes\*.yaml
-    - scenes\*.conf
-  - /structs\*.yaml
+    - *.yaml
+    - *.conf
+  - /structs
+
+    - \*.yaml
 
 .. attention::
 
