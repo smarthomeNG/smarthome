@@ -61,6 +61,16 @@ class SDPConnection(object):
     not much. Opening and closing of connections and writing and receiving data
     is something to implement in the interface-specific derived classes.
     """
+
+    _is_connected = False
+    _data_received_callback = None
+    _suspend_callback = None
+    dummy = None
+    _send_lock = None
+    use_send_lock = False
+    _params = None
+    
+
     def __init__(self, data_received_callback, name=None, **kwargs):
 
         if not hasattr(self, 'logger'):
@@ -72,14 +82,10 @@ class SDPConnection(object):
         self.logger.debug(f'connection initializing from {self.__class__.__name__} with arguments {kwargs}')
 
         # set class properties
-        self._is_connected = False
         self._data_received_callback = data_received_callback
-        self._suspend_callback = None
-        self.dummy = None   # dummy response for testing
 
         # try to assure no concurrent sending is done
         self._send_lock = Lock()
-        self.use_send_lock = False
 
         # we set defaults for all possible connection parameters, so we don't
         # need to care later if a parameter is set or not
