@@ -2,5 +2,3 @@
 *
 # except .gitignore and scripts act and make_env
 !.gitignore
-!act
-!make_env

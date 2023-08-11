@@ -4,12 +4,17 @@
 .. role:: bluesup
 .. role:: redsup
 
-===================================================
-SmartHomeNG als Dienst einrichten :bluesup:`update`
-===================================================
+========================================
+SmartHomeNG als Dienst :bluesup:`update`
+========================================
 
 .. contents:: Schritte der Installation
    :local:
+
+|
+
+Einrechten des Dienstes
+=======================
 
 Um SmartHomeNG als Dienst zu betreiben muss eine Startup-Datei
 für **systemd** erstellt werden.
@@ -56,12 +61,13 @@ und folgenden Text hineinkopieren:
 
 |
 
-Nutzung eines virtuellen Environments:redsup:`neu`
+Nutzung eines virtuellen Environments redsup:`neu`
 ==================================================
 
 Bei der Installation von SmartHomeNG v1.10 (oder neuer) wird vom postinstall-Skript ein virtuelles Python
 Environment angelegt. Wenn dieses virtuelle Environment im Zusammenhang mit dem Dienst genutzt werden soll, muss
-der folgende Test in die Datei /etc/systemd/system/smarthome.service eingefügt werden:
+der Python Interpreter aus diesem virtuellen Environment genutzt werden um SmartHomeNG zu betreiben.
+Dazu muss der folgende Text in die Datei /etc/systemd/system/smarthome.service eingefügt werden:
 
 .. code-block:: bash
 
