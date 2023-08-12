@@ -667,14 +667,15 @@ class Tcp_client(object):
             self._is_connected = False
             return False
 
-        self.logger.debug(f'Starting connect to {self._host}:{self._port}')
-        if not self.__connect_thread or not self.__connect_thread.is_alive():
-            self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name=f'TCP_Connect {self._id}')
-            self.__connect_thread.daemon = True
-        self.logger.debug(f'connect() to {self._host}:{self._port}: self.__running={self.__running}, self.__connect_thread.is_alive()={self.__connect_thread.is_alive()}')
-        if not self.__running or not self.__connect_thread.is_alive():
-            self.logger.debug(f'connect() to {self._host}:{self._port}: calling __connect_thread.start()')
-            self.__connect_thread.start()
+        with self.__connect_threadlock:
+            self.logger.debug(f'Starting connect to {self._host}:{self._port}')
+            if not self.__connect_thread or not self.__connect_thread.is_alive():
+                self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name=f'TCP_Connect {self._id}')
+                self.__connect_thread.daemon = True
+            self.logger.debug(f'connect() to {self._host}:{self._port}: self.__running={self.__running}, self.__connect_thread.is_alive()={self.__connect_thread.is_alive()}')
+            if not self.__running or not self.__connect_thread.is_alive():
+                self.logger.debug(f'connect() to {self._host}:{self._port}: calling __connect_thread.start()')
+                self.__connect_thread.start()
         self.logger.debug(f'leaving connect() to {self._host}:{self._port}')
         return True
 
