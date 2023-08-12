@@ -776,7 +776,11 @@ class SDPConnectionSerial(SDPConnection):
         else:
             res = self._read_bytes(rlen)
             if not self._params[PLUGIN_ATTR_CONN_BINARY]:
-                res = str(res, 'utf-8').strip()
+                try:
+                    res = str(res, 'utf-8', errors='replace').strip()
+                except Exception as e:
+                    self.logger.warning(f'could not convert received result {res} to str, discarding value. Error was: {e}')
+                    return
 
             if self._data_received_callback:
                 self._data_received_callback(self, res, None)
