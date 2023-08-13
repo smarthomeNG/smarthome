@@ -12,26 +12,6 @@
 #
 #########################################################################
 
-# test if the right number of parameters is given
-if [ $# -eq 0 ]; then
-    echo
-    echo "ERROR: Parameter is missing. The script MUST be called like this:"
-    echo "       source act <Python version/venv name>"
-    echo
-    exit
-fi
-
-START_DIR=`pwd`
-
-# get directory where this script is stored
-SOURCE=${BASH_SOURCE[0]}
-DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
-
-# get directory where the environments are stored
-cd $DIR
-cd ../venvs
-ENV_DIR=`pwd`
-
 # test if script is called with 'source'
 (return 0 2>/dev/null) && sourced=1 || sourced=0
 
@@ -42,17 +22,38 @@ if [ "$sourced" -eq "0" ]; then
     exit
 fi
 
-if test -f "$ENV_DIR/py_$1/bin/activate"; then
+# test if the right number of parameters is given
+if [ $# -eq 0 ]; then
     echo
-    source $ENV_DIR/py_$1/bin/activate
-    echo "Activating virtual environment py_$1 (`python3 -V`)"
+    echo "ERROR: Parameter is missing. The script MUST be called like this:"
+    echo "       source act <Python version/venv name>"
     echo
-    echo To deactivate the virtual environment simply type the command \'deactivate\'
 else
-    echo
-    echo "ERROR: Virtual environment 'py_$1' does not exist"
-    echo "       in directory '$ENV_DIR'"
-fi
-echo
 
-cd $START_DIR
+    START_DIR=`pwd`
+
+    # get directory where this script is stored
+    SOURCE=${BASH_SOURCE[0]}
+    DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+
+    # get directory where the environments are stored
+    cd $DIR
+    cd ../venvs
+    ENV_DIR=`pwd`
+
+    if test -f "$ENV_DIR/py_$1/bin/activate"; then
+        echo
+        source $ENV_DIR/py_$1/bin/activate
+        echo "Activating virtual environment py_$1 (`python3 -V`)"
+        echo
+        echo To deactivate the virtual environment simply type the command \'deactivate\'
+    else
+        echo
+        echo "ERROR: Virtual environment 'py_$1' does not exist"
+        echo "       in directory '$ENV_DIR'"
+    fi
+    echo
+
+    cd $START_DIR
+
+fi
