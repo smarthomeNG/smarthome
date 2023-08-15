@@ -20,6 +20,7 @@ plugin:
     py_minversion: 3.6
     multi_instance: false
     restartable: true
+    suspendable: true              # plugin can be suspended, implemented in sdp
     classname: example              # !! fill
 
 parameters:
@@ -37,6 +38,14 @@ parameters:
             de: 'Modellauswahl'
             en: 'model selection'
 
+    # item to toggle suspend mode
+    suspend_item:
+        type: str
+        default: ''
+        description:
+            de: 'Item zum Schalten des Suspend-Modus'
+            en: 'item for toggling suspend mode'
+            
     # select if ex_custom1/2/3 item attributes should be inherited by sub-items
     # !! irrelevant if ex_custom1/2/3 not implemented
     recursive_custom:
