@@ -1442,20 +1442,21 @@ class Standalone:
                 cmd = path if path else node_name
                 if cut_levels:
                     cmd = COMMAND_SEP.join(cmd.split(COMMAND_SEP)[cut_levels:])
-                item[ITEM_ATTR_COMMAND] = cmd
-                item[ITEM_ATTR_READ] = node.get(CMD_ATTR_READ, True)
-                item[ITEM_ATTR_WRITE] = node.get(CMD_ATTR_WRITE, False)
+                # add '@instance' to enable multi-instance usage
+                item[ITEM_ATTR_COMMAND + '@instance'] = cmd
+                item[ITEM_ATTR_READ + '@instance'] = node.get(CMD_ATTR_READ, True)
+                item[ITEM_ATTR_WRITE + '@instance'] = node.get(CMD_ATTR_WRITE, False)
                 if self.acl:
                     item['visu_acl'] = 'rw' if node.get(CMD_ATTR_WRITE, False) else 'ro'
 
                 # set sub-node for readability
-                inode = node.get(CMD_ATTR_ITEM_ATTRS)
+                ia_node = node.get(CMD_ATTR_ITEM_ATTRS)
 
                 rg_level = None
                 rg_list = None
-                if inode:
-                    rg_level = inode.get(CMD_IATTR_RG_LEVELS, None)
-                    rg_list = inode.get(CMD_IATTR_READ_GROUPS)
+                if ia_node:
+                    rg_level = ia_node.get(CMD_IATTR_RG_LEVELS, None)
+                    rg_list = ia_node.get(CMD_IATTR_READ_GROUPS)
 
                 # rg_level = None: print all read groups (default)
                 # rg_level = 0: don't print read groups
@@ -1473,33 +1474,34 @@ class Standalone:
                             rg_list = [rg_list]
                         for entry in rg_list:
                             grps.append(entry.get('name'))
-                    item[ITEM_ATTR_GROUP] = grps
+                    item[ITEM_ATTR_GROUP + '@instance'] = grps
 
-                if inode:
-                    if inode.get(CMD_IATTR_ENFORCE):
+                # item attributes
+                if ia_node:
+                    if ia_node.get(CMD_IATTR_ENFORCE):
                         item['enforce_updates'] = True
-                    if inode.get(CMD_IATTR_INITIAL):
-                        item[ITEM_ATTR_READ_INIT] = True
-                    cycle = inode.get(CMD_IATTR_CYCLE)
+                    if ia_node.get(CMD_IATTR_INITIAL):
+                        item[ITEM_ATTR_READ_INIT + '@instance'] = True
+                    cycle = ia_node.get(CMD_IATTR_CYCLE)
                     if cycle:
-                        item[ITEM_ATTR_CYCLE] = cycle
-                    custom = inode.get(CMD_IATTR_CUSTOM1)
+                        item[ITEM_ATTR_CYCLE + '@instance'] = cycle
+                    custom = ia_node.get(CMD_IATTR_CUSTOM1)
                     if custom is not None:
-                        item[ITEM_ATTR_CUSTOM1] = custom
-                    custom = inode.get(CMD_IATTR_CUSTOM2)
+                        item[ITEM_ATTR_CUSTOM1 + '@instance'] = custom
+                    custom = ia_node.get(CMD_IATTR_CUSTOM2)
                     if custom is not None:
-                        item[ITEM_ATTR_CUSTOM1[:-1] + '2'] = custom
-                    custom = inode.get(CMD_IATTR_CUSTOM3)
+                        item[ITEM_ATTR_CUSTOM1[:-1] + '2' + '@instance'] = custom
+                    custom = ia_node.get(CMD_IATTR_CUSTOM3)
                     if custom is not None:
-                        item[ITEM_ATTR_CUSTOM1[:-1] + '3'] = custom
+                        item[ITEM_ATTR_CUSTOM1[:-1] + '3' + '@instance'] = custom
 
                     # custom item attributes: add 1:1
-                    attrs = inode.get(CMD_IATTR_ATTRIBUTES)
+                    attrs = ia_node.get(CMD_IATTR_ATTRIBUTES)
                     if attrs:
                         update(item, attrs)
 
                     # custom item templates: add 1:!
-                    templates = inode.get(CMD_IATTR_TEMPLATE)
+                    templates = ia_node.get(CMD_IATTR_TEMPLATE)
                     if templates:
                         if not isinstance(templates, list):
                             templates = [templates]
@@ -1509,27 +1511,27 @@ class Standalone:
 
                     # if item has 'xx_lookup' and item_attrs['lookup_item'] is
                     # set, create additional item with lookup values
-                    lu_item = inode.get(CMD_IATTR_LOOKUP_ITEM)
+                    lu_item = ia_node.get(CMD_IATTR_LOOKUP_ITEM)
                     if lu_item and node.get(CMD_ATTR_LOOKUP):
-                        ltyp = inode.get(CMD_IATTR_LOOKUP_ITEM)
+                        ltyp = ia_node.get(CMD_IATTR_LOOKUP_ITEM)
                         if ltyp is True:
                             ltyp = 'list'
                         item['lookup'] = {'type': 'list' if ltyp == 'list' else 'dict'}
-                        item['lookup'][ITEM_ATTR_LOOKUP] = f'{node.get(CMD_ATTR_LOOKUP)}#{ltyp}'
+                        item['lookup'][ITEM_ATTR_LOOKUP + '@instance'] = f'{node.get(CMD_ATTR_LOOKUP)}#{ltyp}'
 
             # 'level node' -> print read item
             elif node_name not in (CMD_ATTR_CMD_SETTINGS, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS, CMD_IATTR_ATTRIBUTES, CMD_IATTR_READ_GROUPS):
 
                 item['read'] = {'type': 'bool'}
                 item['read']['enforce_updates'] = True
-                item['read'][ITEM_ATTR_READ_GRP] = path if path else node_name
+                item['read'][ITEM_ATTR_READ_GRP + '@instance'] = path if path else node_name
                 try:
                     # set sub-node for readability
-                    inode = node.get(CMD_ATTR_ITEM_ATTRS)
-                    if inode.get(CMD_IATTR_INITIAL):
-                        item['read'][ITEM_ATTR_READ_INIT] = True
-                    if inode.get(CMD_IATTR_CYCLE):
-                        item['read'][ITEM_ATTR_CYCLE] = inode.get(CMD_IATTR_CYCLE)
+                    ia_node = node.get(CMD_ATTR_ITEM_ATTRS)
+                    if ia_node.get(CMD_IATTR_INITIAL):
+                        item['read'][ITEM_ATTR_READ_INIT + '@instance'] = True
+                    if ia_node.get(CMD_IATTR_CYCLE):
+                        item['read'][ITEM_ATTR_CYCLE + '@instance'] = ia_node.get(CMD_IATTR_CYCLE)
                 except AttributeError:
                     pass
 
@@ -1592,8 +1594,8 @@ class Standalone:
 
         self.yaml['item_structs'] = OrderedDict()
 
-        # this means the commands dict has 'ALL' and model names at the top
-        # level otherwise, these be commands or sections
+        # this means the commands dict has 'ALL' and model names at the top level 
+        # otherwise, the top level nodes are commands or sections
         cmds_has_models = INDEX_GENERIC in top_level_entries
 
         if cmds_has_models:
