@@ -430,13 +430,13 @@ class Shpypi:
             if 'virtualenv' in stderr and '--user' in stderr:
                 if logging:
                     try:
-                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtual environment, please wait...")
+                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to current virtual environment, please wait...")
                     except:
-                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtual environment, please wait...")
+                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to current virtual environment, please wait...")
                 else:
                     print()
                     print("Running in a virtual environment environment,")
-                    print("installing "+req_type_display+" requirements only to actual virtual environment, please wait...")
+                    print("installing "+req_type_display+" requirements only to current virtual environment, please wait...")
                 stdout, stderr = Utils.execute_subprocess('pip3 install -r '+req_filepath)
         if logging:
             self.logger.debug("stdout = 'Output from PIP command:\n{}'".format(stdout))
