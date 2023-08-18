@@ -1728,15 +1728,24 @@ class Item():
                     self.__prev_trigger = self.__last_trigger
                     self.__last_trigger = self.shtime.now()
 
-                    logger.debug("Item {}: Eval triggered by: {}. Evaluating item with value {}. Eval expression: {}".format(self._path, self.__triggered_by, value, self._eval))
-
-                    # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
                     try:
-                       value = eval(self._eval)
+                        triggered = source in self._trigger
                     except:
-                        value = self._value = self.cast(value)
-                        value = eval(self._eval)
-                    # ms end
+                        triggered = False
+
+                    if self._eval_on_trigger_only and not triggered:
+                        # logger.debug(f'Item {self._path} Eval triggered by: {self.__triggered_by}, not in eval triggers {self._trigger}, but eval_on_trigger only set, so eval is ignored. Value is "{value}"')
+                        logger.info(f'Item {self._path} Eval triggered by: {self.__triggered_by}, not in eval_triggers, but eval_on_trigger_only set. Ignoring eval expression, setting value "{value}"')
+                    else:
+                        logger.debug("Item {}: Eval triggered by: {}. Evaluating item with value {}. Eval expression: {}".format(self._path, self.__triggered_by, value, self._eval))
+
+                        # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
+                        try:
+                           value = eval(self._eval)
+                        except:
+                            value = self._value = self.cast(value)
+                            value = eval(self._eval)
+                        # ms end
 
                 except Exception as e:
                     # adding "None" as the "destination" information at end of triggered_by
