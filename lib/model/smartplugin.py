@@ -29,6 +29,7 @@ from lib.utils import Utils
 from lib.translation import translate as lib_translate
 import logging
 import os
+import inspect
 
 
 class SmartPlugin(SmartObject, Utils):
@@ -210,7 +211,7 @@ class SmartPlugin(SmartObject, Utils):
             self.logger.warning(f'trying to remove suspend item {item}. Disabling suspend item function')
             self._suspend_item = None
             self._suspend_item_path = ''
-        
+
         # remove data from item_dict early in case of concurrent actions
         data = self._plg_item_dict[item.path()]
         del self._plg_item_dict[item.path()]
@@ -296,43 +297,88 @@ class SmartPlugin(SmartObject, Utils):
             item_path = item.path()
         return self._plg_item_dict[item_path].get('mapping')
 
-    def get_item_path_list(self, filter_key=None, filter_value=None):
+    def get_item_mapping_list(self):
+        """
+        Returns the plugin-specific mapping that was defined by add_item()
+
+        This method is implemented to support plugin development
+        to be used with the eval syntax checker or the executor plugin
+
+        Only available in SmartHomeNG versions **v1.10.0 and up**.
+
+        :return: mapping string for that item
+        :rtype: str
+        """
+        result = []
+        for item_path in list(self._plg_item_dict.keys()):
+            result.append([item_path, self._plg_item_dict[item_path].get('mapping')])
+        return result
+
+    def _string_compare(self, s1, s2: str, mode: str=None) -> str:
+        """
+        Compare strings of different length
+
+        This method compares strings only up to the length of the shorter string.
+        - mode 'start' compares the shorter string with the beginning of longer string
+        - mode 'end' compares the shorter string with the end of longer string
+
+        :param s1: First string to compare
+        :param s2: Second string to compare
+        :param mode: Compare mode ('start', 'end') for comparing strings of different length
+        :return:
+        """
+        if mode is None:
+            return s1 == s2
+        elif mode == 'end':
+            if len(s1) > len(s2):
+                return s1.endswith(s2)
+            else:
+                return s2.endswith(s1)
+        elif mode == 'start':
+            if len(s1) > len(s2):
+                return s1.startswith(s2)
+            else:
+                return s2.startswith(s1)
+
+    def get_item_path_list(self, filter_key: str=None, filter_value: str=None, mode: str=None) -> list:
         """
         Return list of stored item paths used by this plugin
 
         Only available in SmartHomeNG versions **v1.9.4 and up**.
+        Parameter 'mode' only available in SmartHomeNG versions **v1.10.0 and up**.
 
         :param filter_key: key of the configdata dict used to filter
         :param filter_value: value for filtering item_path_list
-        :type filter_key: str
-        :type filter_value: any
+        :param mode: Compare mode ('start', 'end') for comparing strings of different length, None oder ommitting does a standard compare
 
         :return: List of item pathes
-        :rtype: list(str)
         """
         if filter_key is None or filter_value is None:
             return self._plg_item_dict.keys()
 
-        return [item_path for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        if mode is None:
+            return [item_path for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        return [item_path for item_path in list(self._plg_item_dict.keys()) if self._string_compare(self._plg_item_dict[item_path]['config_data'].get(filter_key, None), filter_value, mode)]
 
-    def get_item_list(self, filter_key=None, filter_value=None):
+    def get_item_list(self, filter_key: str=None, filter_value: str=None, mode: str=None) -> list:
         """
         Return list of stored items used by this plugin
 
         Only available in SmartHomeNG versions **v1.9.4 and up**.
+        Parameter 'mode' only available in SmartHomeNG versions **v1.10.0 and up**.
 
         :param filter_key: key of the configdata dict used to filter
         :param filter_value: value for filtering item_path_list
-        :type filter_key: str
-        :type filter_value: any
+        :param mode: Compare mode ('start', 'end') for comparing strings of different length, None oder ommitting does a standard compare
 
         :return: List of item objects
-        :rtype: list(item)
         """
         if filter_key is None or filter_value is None:
             return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys())]
 
-        return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        if mode is None:
+            return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys()) if self._string_compare(self._plg_item_dict[item_path]['config_data'].get(filter_key, None), filter_value, mode)]
 
     def get_trigger_items(self):
         """
@@ -730,36 +776,33 @@ class SmartPlugin(SmartObject, Utils):
         return None
 
 
-    def has_iattr(self, conf, attr):
+    def has_iattr(self, conf: str, attr: str) -> bool:
         """
         checks item configuration for an attribute
 
         :param conf: item configuration
         :param attr: attribute name
-        :type conf: str
-        :type attr: str
 
         :return: True, if attribute is in item configuration
-        :rtype: Boolean
         """
         __attr = self.__get_iattr_conf(conf, attr)
         return __attr is not None
 
 
-    def get_iattr_value(self, conf, attr):
+    def get_iattr_value(self, conf: str, attr: str, default=None) -> str:
         """
         Returns value for an attribute from item config
 
+        Parameter default is only available in SmartHomeNG versions **v1.10.0 and up**.
+
         :param conf: item configuration
         :param attr: attribute name
-        :type conf: str
-        :type attr: str
+        :param default: Return-value, if attribute is not found
 
         :return: value of an attribute
-        :rtype: str
         """
         __attr = self.__get_iattr_conf(conf, attr)
-        return None if __attr is None else conf[__attr]
+        return default if __attr is None else conf[__attr]
 
 
     def set_attr_value(self, conf, attr, value):
