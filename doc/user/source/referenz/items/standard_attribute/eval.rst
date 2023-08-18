@@ -37,6 +37,11 @@ Die Auswertung des **eval** Ausdrucks wird gestartet, wenn:
  - ein **autotimer** verwendet wird und die angegebene Zeit abgelaufen ist
  - ein **crontab** definiert ist und die zeitlichen Angaben zutreffen
 
+Wenn das Attribut **eval_on_trigger_only** gesetzt ist, wird der **eval** Ausdruck
+nur ausgewertet, wenn ein **eval_trigger** der Auslöser war; in allen anderen
+Fällen (Zuweisung durch Plugin, Logik, Konsole, AdminUI o.ä.) wird der Wert
+gesetzt wie bei einem normalen Item ohne **eval** Ausdruck.
+
 Das Eval Attribut kann auch bis zu einem gewissen Grad Logiken
 beinhalten. Wichtig ist, dass bei der Angabe eines **if** auch ein **else**
 implementiert sein muss. Außerdem ist dem Item ein **sh.** voran zu
@@ -236,6 +241,50 @@ angegeben werden sondern können sich relative auf andere Items beziehen.
 
     - eval: sh.my.item
     - eval_trigger: **sh.** my.item | **sh.** my.other.item
+
+
+Attribut *eval_on_trigger_only*
+===============================
+
+Mit dem Attribut **eval_on_trigger_only** wird die Auswertung des **eval** Ausdrucks
+übersprungen, wenn dessen Auswertung nicht durch einen definierten **eval_trigger**
+erfolgt ist.
+
+.. code-block:: yaml
+
+   Raum:
+
+       Temperatur:
+           type: num
+           name: average temperature
+           eval: avg
+           eval_trigger:
+             - room_a.temp
+             - room_b.temp
+
+       Temperatur2:
+           type: num
+           name: average temperature
+           eval: avg
+           eval_on_trigger_only: true
+           eval_trigger:
+             - room_a.temp
+             - room_b.temp
+
+.. note::
+
+    Wichtig anzumerken ist, dass die Nutzung der Funktionen, die **eval_trigger**
+    Werte zur Berechnung verwenden (sum, avg, min, max, and und or) eingeschränkt
+    wird.
+
+    Wenn im vorhergehenden Beispiel dem Item Temperatur - z.B. per Logik - der
+    Wert 5 zugewiesen wird, löst das die Berechnung der Durchschnittstemperatur
+    der beiden Trigger aus.
+
+    Wenn dem Item Temperatur2 per Logik der Wert 5 zugewiesen wird, wird die
+    Auswertung des **eval** Ausdrucks übersprungen und statt dessen der Wert
+    des Items auf 5 gesetzt.
+
 
 
 Gemeinsame Verwendung von eval und on\_\.\.\. Item Attributen
