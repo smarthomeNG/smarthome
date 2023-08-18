@@ -63,8 +63,8 @@ ENV_DIR=`pwd`
 
 if test -f "$ENV_DIR/py_$1/bin/activate"; then
     echo
-    echo "Activating virtual environment py_$1 (`python3 -V`)"
     source $ENV_DIR/py_$1/bin/activate
+    echo "Activating virtual environment py_$1 (`python3 -V`)"
     echo
     echo To deactivate the virtual environment simply type the command \'deactivate\'
 else
