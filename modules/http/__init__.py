@@ -947,7 +947,7 @@ class Http(Module):
 
         Otherwise don't enter code here
         """
-#        self.logger.debug("{}: Starting up".format(self._shortname))
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'start()'}))
         pass
 
 
@@ -958,6 +958,8 @@ class Http(Module):
 
         Otherwise don't enter code here
         """
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
+
         self.logger.info("{}: Shutting down".format(self._shortname))   # should be debug
         cherrypy.engine.exit()
         for thread in threading.enumerate():
