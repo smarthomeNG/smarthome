@@ -15,8 +15,8 @@ im Tools Verzeichnis abgelegt.
 
 |
 
-make_venv
-=========
+make_venv Skript
+================
 
 Das Skript **make_venv** dient zum Erzeugen von virtuellen Python Umgebungen. Es wird mit einem oder zwei Parametern
 aufgerufen. Der erste (Pflicht-)Parameter ist die Python Version. Der zweite optionale Parameter ist der Name
@@ -51,8 +51,8 @@ Um dieses Environment nu nutzen, muss es noch mit Hilfe des Skriptes **act** akt
 
 |
 
-act
-===
+act Skript
+==========
 
 Das Skript **act** dient zum Aktivieren von vorher erzeugten virtuellen Python Umgebungen. Es wird mit einem
 Parameter aufgerufen. Der Parameter ist der Name des Environments. Dem Aufruf des Skriptes muss ``source``
