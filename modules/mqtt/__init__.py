@@ -43,7 +43,7 @@ from lib.scheduler import Scheduler
 
 
 class Mqtt(Module):
-    version = '1.7.4'
+    version = '1.7.6'
     longname = 'MQTT module for SmartHomeNG'
 
     __plugif_CallbackTopics = {}         # for plugin interface
@@ -178,6 +178,8 @@ class Mqtt(Module):
 
         It is called by lib.module and should not be called otherwise.
         """
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'start()'}))
+
         # self.alive = True
         if (self.birth_topic != '') and (self.birth_payload != ''):
             self._client.publish(self.birth_topic, self.birth_payload, self.qos, retain=True)
@@ -197,6 +199,8 @@ class Mqtt(Module):
         It is called by lib.module and should not be called otherwise.
         """
         #        self.logger.debug("Module '{}': Shutting down".format(self.shortname))
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
+
         self._client.loop_stop()
         self.logger.debug("MQTT client loop stopped")
         self._disconnect_from_broker()
@@ -399,7 +403,7 @@ class Mqtt(Module):
             if not (isinstance(bool_values, list) and len(bool_values) == 2):
                 self.logger.warning("subscribe_topic: topic '{}', source '{}': Invalid bool_values specified ('{}') - Ignoring bool_values".format(topic, source, bool_values))
 
-        if not payload_type.lower() in ['str', 'num', 'bool', 'list', 'dict', 'scene', 'bytes']:
+        if not payload_type.lower() in ['str', 'num', 'bool', 'list', 'dict', 'scene', 'bytes', 'dict/str']:
             self.logger.warning("Invalid payload-datatype '{}' specified for {} '{}', ignored".format(payload_type, source_type, callback))
             payload_type = 'str'
 
@@ -838,10 +842,13 @@ class Mqtt(Module):
                 data = str_data
         elif datatype == 'dict':
             try:
-                data = json.loads(str_data)
+                if str_data == '':
+                    data = {}
+                else:
+                    data = json.loads(str_data)
             except Exception as e:
                 self.logger.error("cast_from_mqtt: datatype 'dict', error '{}', data = ‘{}‘".format(e, str_data))
-                data = str_data
+                data = {}
         elif datatype == 'scene':
             data = '0'
             if Utils.is_int(str_data):
@@ -849,6 +856,14 @@ class Mqtt(Module):
                     data = str_data
         elif datatype == 'foo':
             data = raw_data
+        elif datatype == 'dict/str':
+            try:
+                if str_data == '':
+                    data = {}
+                else:
+                    data = json.loads(str_data)
+            except Exception as e:
+                data = str_data
         else:
             self.logger.warning("cast_from_mqtt: Casting '{}' to '{}' is not implemented".format(raw_data, datatype))
             data = raw_data
