@@ -88,7 +88,10 @@ class MqttPlugin(SmartPlugin):
                     # stop subscription to all items for this topic
                     for item_path in self._subscribed_topics[topic]:
                         current = str(self._subscribed_topics[topic][item_path]['current'])
-                        self.logger.info("stop(): Unsubscribing from topic {} for item {}".format(topic, item_path))
+                        if item_path == '*no_item*':
+                            self.logger.info(f"Unsubscribing from topic {topic}")
+                        else:
+                            self.logger.info(f"Unsubscribing from topic {topic} for item {item_path}")
                         self.mod_mqtt.unsubscribe_topic(self.get_shortname() + '-' + current, topic)
             self._subscriptions_started = False
         return
@@ -100,7 +103,10 @@ class MqttPlugin(SmartPlugin):
         payload_type = self._subscribed_topics[topic][item_path].get('payload_type', None)
         callback = self._subscribed_topics[topic][item_path].get('callback', None)
         bool_values = self._subscribed_topics[topic][item_path].get('bool_values', None)
-        self.logger.info("_start_subscription: Subscribing to topic {}, payload_type '{}' for item {} (callback={})".format(topic, payload_type, item_path, callback))
+        if item_path == '*no_item*':
+            self.logger.info(f"Subscribing to topic {topic}, payload_type '{payload_type}' - callback={callback}")
+        else:
+            self.logger.info(f"Subscribing to topic {topic}, payload_type '{payload_type}' - for item '{item_path}'")
         self.mod_mqtt.subscribe_topic(self.get_shortname() + '-' + current, topic, callback=callback,
                                       qos=qos, payload_type=payload_type, bool_values=bool_values)
         return
@@ -165,7 +171,7 @@ class MqttPlugin(SmartPlugin):
             # Update dict for periodic updates of the web interface
             self._update_item_values(item, payload)
         else:
-            self.logger.info("publish_topic: topic '{}', payload '{}', QoS '{}', retain '{}'".format(topic,  payload, qos, retain))
+            self.logger.dbghigh("publish_topic: topic '{}', payload '{}', QoS '{}', retain '{}'".format(topic,  payload, qos, retain))
         return
 
 
@@ -217,7 +223,7 @@ class MqttPlugin(SmartPlugin):
         :param qos:
         :param retain:
         """
-        self.logger.debug("_on_mqtt_message: Received topic '{}', payload '{} (type {})', QoS '{}', retain '{}' ".format(topic, payload, type(payload), qos, retain))
+        self.logger.debug(f"_on_mqtt_message: Received topic '{topic}', payload '{payload} (type {type(payload)})', QoS '{qos}', retain '{retain}' ")
 
         # get item for topic
         if self._subscribed_topics.get(topic, None):
@@ -230,14 +236,14 @@ class MqttPlugin(SmartPlugin):
                     except:
                         log_info = (str(payload) != str(item()))
                     if log_info:
-                        self.logger.info("_on_mqtt_message: Received topic '{}', payload '{}' (type {}), QoS '{}', retain '{}' for item '{}'".format( topic, payload, item.type(), qos, retain, item.id() ))
+                        self.logger.dbghigh(f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.id()}' (value={item()})")
                     else:
-                        self.logger.debug("_on_mqtt_message: Received topic '{}', payload '{}' (type {}), QoS '{}', retain '{}' for item '{}'".format(topic, payload, item.type(), qos, retain, item.id()))
+                        self.logger.debug(f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.id()}' (value={item()})")
                     item(payload, self.get_shortname())
                     # Update dict for periodic updates of the web interface
                     self._update_item_values(item, payload)
         else:
-            self.logger.error("_on_mqtt_message: No definition found for subscribed topic '{}'".format(topic))
+            self.logger.error(f"_on_mqtt_message: No definition found for subscribed topic '{topic}'")
         return
 
 
