@@ -275,7 +275,7 @@ erfolgt ist.
 
     Wichtig anzumerken ist, dass die Nutzung der Funktionen, die **eval_trigger**
     Werte zur Berechnung verwenden (sum, avg, min, max, and und or) eingeschränkt
-    wird.
+    wird, wenn **eval_on_trigger_only** gesetzt ist.
 
     Wenn im vorhergehenden Beispiel dem Item Temperatur - z.B. per Logik - der
     Wert 5 zugewiesen wird, löst das die Berechnung der Durchschnittstemperatur
