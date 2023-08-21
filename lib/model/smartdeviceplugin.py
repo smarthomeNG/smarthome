@@ -333,7 +333,7 @@ class SmartDevicePlugin(SmartPlugin):
         """
         Run method for the plugin
         """
-        self.logger.dbghigh(translate("Methode '{method}' aufgerufen", {'method': 'run()'}))
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'run()'}))
 
         if self.alive:
             return
@@ -349,7 +349,8 @@ class SmartDevicePlugin(SmartPlugin):
         """
         Stop method for the plugin
         """
-        self.logger.dbghigh(translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
+        
         self.alive = False
         if self.scheduler_get(self.get_shortname() + '_cyclic'):
             self.scheduler_remove(self.get_shortname() + '_cyclic')
