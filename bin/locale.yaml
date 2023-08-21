@@ -91,6 +91,12 @@ global_translations:
     'Letzter Change':        {'de': '=', 'en': 'Last Change', 'fr': ''}
     'Letzte Änderung':        {'de': '=', 'en': 'Last Change', 'fr': ''}
 
+    #Common log messages
+    "Methode '{method}' aufgerufen":
+        'de': "="
+        'en': "Method '{method}' called"
+        'fr': ""
+
     #Translations for lib.scene:
     "A second 'scenes' object has been created. There should only be ONE instance of class 'Scenes'!!! Called from: {frame1} ({frame2})":
         'de': "Ein zweites Szenenobjekt wurde erzeugt. Es darf jedoch nur EINE Instanz der Klasse 'Szenes' geben!!! Aufgerufen durch: {frame1} ({frame2})"

@@ -133,6 +133,7 @@ class Admin(Module):
 
         Initialization and startup code of the module
         """
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'start()'}))
 
         self.webif_dir = os.path.dirname(os.path.abspath(__file__)) + '/webif'
 
@@ -229,6 +230,7 @@ class Admin(Module):
         """
 
         """
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
 
         self.logger.info(f"Shutting down {self._shortname}")
         for stop_method in self._stop_methods:

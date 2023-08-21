@@ -200,7 +200,10 @@ class ServicesController(RESTResource):
             result_type = result_type[:-2]
         result = {'expression': expanded_code, 'result': eval_result, 'type': result_type}
         # return json.dumps({'expression': 'Expandierter Ausdruck (Antwort vom Server)', 'result': '42 (Antwort vom Server)'})
-        return json.dumps(result)
+        try:
+            return json.dumps(result)
+        except:
+            return json.dumps({'expression': expanded_code, 'result': str(eval_result), 'type': result_type})
 
 
     # ======================================================================

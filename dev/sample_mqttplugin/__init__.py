@@ -74,7 +74,7 @@ class SampleMqttPlugin(MqttPlugin):
         """
         Run method for the plugin
         """
-        self.logger.debug("Run method called")
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'run()'}))
 
         self.alive = True
 
@@ -85,7 +85,7 @@ class SampleMqttPlugin(MqttPlugin):
         """
         Stop method for the plugin
         """
-        self.logger.debug("Stop method called")
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
         self.alive = False
 
         # stop subscription to all topics
