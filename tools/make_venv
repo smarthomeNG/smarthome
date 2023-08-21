@@ -18,7 +18,7 @@ if [ $# -eq 0 ]; then
     echo "ERROR: Parameter is missing. The script MUST be called like this:"
     echo "       make_env <Python version> [<venv name>]"
     echo
-    return 1
+    exit 1
 fi
 
 # get directory where this script is stored
@@ -46,7 +46,7 @@ if [ ! -d venvs ]; then
     echo "ERROR: venv directory not found, looking in"
     echo -n "       "
     pwd
-    return 2
+    exit 2
 fi
 
 VENV_NAME=$1
