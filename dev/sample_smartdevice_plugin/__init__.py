@@ -21,7 +21,7 @@
 #  along with SmartHomeNG  If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
-# this block is needed for standalone operation
+# this block is needed for standalone operation (only struct generation)
 # -->
 import builtins
 import os
