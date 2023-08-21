@@ -39,7 +39,6 @@ DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 cd $DIR
 cd ..
 SHNG_BASEDIR=`pwd`
-cd $DIR
 
 if [ ! -d venvs ]; then
     echo
@@ -49,6 +48,7 @@ if [ ! -d venvs ]; then
     exit 2
 fi
 
+cd $DIR
 VENV_NAME=$1
 if [ $# -eq 2 ]; then
     VENV_NAME=$2
