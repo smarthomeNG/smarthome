@@ -19,7 +19,7 @@ if [ "$sourced" -eq "0" ]; then
     echo
     echo ERROR: The script MUST be called with \'source\', like: \'source act $1\'
     echo
-    return 3
+    exit 3
 fi
 
 # script is called with "source", don't use "exit" now, but "return <errval>"
