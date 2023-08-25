@@ -258,6 +258,6 @@ def translate(txt, vars=None, plugin_translations=None, module_translations=None
             except Exception as e:
                 logger.error(f"translate: Could not fill in variables {vars}. Exception: {e}")
         else:
-            logger.error(f"translate: Invalid vars for string {txt} -> vars must be a dict")
+            logger.error(f"translate: Invalid vars for string {txt} -> vars must be a dict, not '{vars}' (for text '{txt}')")
 
     return translated_txt
