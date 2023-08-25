@@ -1086,11 +1086,7 @@ class SmartPlugin(SmartObject, Utils):
 
 
 
-try:
-    from jinja2 import Environment, FileSystemLoader
-except:
-    pass
-from lib.module import Modules
+#from lib.module import Modules
 
 
 class SmartPluginWebIf():
@@ -1105,6 +1101,11 @@ class SmartPluginWebIf():
         :return: Jinja2 template engine environment
         :rtype: object
         """
+        try:
+            from jinja2 import Environment, FileSystemLoader
+        except:
+            pass
+
         mytemplates = self.plugin.path_join(self.webif_dir, 'templates')
         globaltemplates = self.plugin.mod_http.gtemplates_dir
         tplenv = Environment(loader=FileSystemLoader([mytemplates, globaltemplates]))

@@ -40,6 +40,8 @@ If is a replacement when rendering templates using Jinja2:
 import logging
 import os
 
+import inspect
+
 from lib.constants import (YAML_FILE)
 import lib.shyaml as shyaml
 
@@ -137,7 +139,7 @@ def load_translations(translation_type='global', from_dir='bin', translation_id=
             trans = trans_dict.get(translation_type+'_translations', {})
             #logger.info(f"Loading {relative_filename} translations (id={translation_id}) from {relative_filename}")
             if _translations.get(translation_id, None) is not None:
-                logger.info(f"Duplicate identifier '{translation_id}' used for translation_type '{translation_type}' to load from '{from_dir}' - translations not loaded")
+                logger.dbghigh(f"Duplicate identifier '{translation_id}' used for translation_type '{translation_type}' to load from '{from_dir}' - translations not loaded")
                 return trans
             _translations[translation_id] = trans
             logger.debug(" - translations = {}".format(trans))
@@ -172,7 +174,7 @@ def reload_translations():
     return True
 
 
-def _get_translation(translation_lang, txt, plugin_translations=None, module_translations=None):
+def _get_translation(translation_lang, txt, plugin_translations=None, module_translations=None, additional_translations=None, log_missing=False):
     """
     Returns translated text from for a specified language from plugin_translations or global_translations
 
@@ -188,26 +190,27 @@ def _get_translation(translation_lang, txt, plugin_translations=None, module_tra
     if plugin_translations is not None:
         if plugin_translations in _translations.keys():
             translations = _translations[plugin_translations].get(txt, {})
-            if translations == {}:
-                translationtype_to_log = 'plugin-'
-                translationinfo_to_log = f" - {plugin_translations}"
         else:
-            logger.warning("Trying to use undefined additional_translations '{}'".format(plugin_translations))
+            logger.warning(f"Trying to use undefined plugin_translations '{plugin_translations}'  (plugin has no locale.yaml)")
+
+    if translations == {} and additional_translations is not None:
+        if additional_translations in _translations.keys():
+            translations = _translations[additional_translations].get(txt, {})
+        else:
+            logger.warning(f"Trying to use undefined additional_translations '{additional_translations}'")
 
     if translations == {} and module_translations is not None:
         if module_translations in _translations.keys():
             translations = _translations[module_translations].get(txt, {})
-            if translations == {} and translationtype_to_log == '':
-                translationtype_to_log = 'module-'
-                translationinfo_to_log = f" - {module_translations}"
         else:
-            logger.warning(f"Trying to use undefined additional_translations '{plugin_translations}'")
+            logger.info(f"Trying to use undefined module_translations '{module_translations}' (module has no locale.yaml)")
 
     if translations == {}:
         if 'global' in _translations.keys():
             translations = _translations['global'].get(txt, {})
             if translations == {}:
-                logger.info(f"No {translationtype_to_log}translation found for '{txt}'{translationinfo_to_log}")
+                if log_missing and txt != '':
+                    logger.info(f"No translation for '{txt}' found in global (bin), plugin ({plugin_translations}), module ({module_translations}), additional ({additional_translations})")
         else:
             logger.error("Global translations not loaded")
     else:
@@ -216,7 +219,7 @@ def _get_translation(translation_lang, txt, plugin_translations=None, module_tra
     return translations.get(translation_lang, None)
 
 
-def translate(txt, vars=None, plugin_translations=None, module_translations=None):
+def translate(txt, vars=None, plugin_translations=None, module_translations=None, additional_translations=None):
     """
     Returns translated text
 
@@ -230,12 +233,12 @@ def translate(txt, vars=None, plugin_translations=None, module_translations=None
     global _fallback_language_order
     txt = str(txt)
 
-    translated_txt = _get_translation(_default_language, txt, plugin_translations=plugin_translations, module_translations=module_translations)
+    translated_txt = _get_translation(_default_language, txt, plugin_translations=plugin_translations, module_translations=module_translations, additional_translations=additional_translations, log_missing=True)
     if translated_txt is None:
         logger.dbghigh(f"Translation of '{txt}' to language '{_default_language}' not found -> using fallback languages")
         if len(_fallback_language_order) > 0:
             for fallback_language in _fallback_language_order:
-                translated_txt = _get_translation(fallback_language, txt, plugin_translations=plugin_translations, module_translations=module_translations)
+                translated_txt = _get_translation(fallback_language, txt, plugin_translations=plugin_translations, module_translations=module_translations, additional_translations=additional_translations)
                 if translated_txt is None:
                     logger.debug(" - No translation found for fallback_language '{}'".format(fallback_language))
                 else:
@@ -243,7 +246,8 @@ def translate(txt, vars=None, plugin_translations=None, module_translations=None
 
         if translated_txt is None:
             translated_txt = txt
-            logger.info(f" - No translation found for '{txt}' -> using original text")
+            if txt != '':
+                logger.dbghigh(f" - No translation found for '{txt}' -> using original text")
 
     if translated_txt == '=':
         translated_txt = txt
@@ -258,6 +262,6 @@ def translate(txt, vars=None, plugin_translations=None, module_translations=None
             except Exception as e:
                 logger.error(f"translate: Could not fill in variables {vars}. Exception: {e}")
         else:
-            logger.error(f"translate: Invalid vars for string {txt} -> vars must be a dict, not '{vars}' (for text '{txt}')")
+            logger.error(f"translate: Invalid vars for string {txt} -> vars must be a dict, not {type(vars)} '{vars}' (for text '{txt}')")
 
     return translated_txt
