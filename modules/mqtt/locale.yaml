@@ -1,0 +1,24 @@
+module_translations:
+    # Module translations, used by plugins specially for the web interface
+
+    'Broker Host':              {'de': '=', 'en': '='}
+    'Broker Port':              {'de': '=', 'en': '='}
+    'QoS':                      {'de': 'Quality of Service', 'en': '='}
+
+
+    'Message Durchsatz':        {'de': 'Message Durchsatz', 'en': 'Message throughput'}
+    'letzte Minute':            {'de': '=', 'en': 'last minute'}
+    'letzte 5 Min.':            {'de': '=', 'en': 'last 5 min'}
+    'letzte 15 Min.':           {'de': '=', 'en': 'last 15 min'}
+
+    'Unbehandelter Status':     {'de': '=', 'en': 'Unhandled status'}
+    'Unbehandelter Substatus':  {'de': '=', 'en': 'Unhandled sub-status'}
+
+    # Alternative format for translations of longer texts:
+    'Durchschnittlich Messages je Minute empfangen':
+        de: '='
+        en: 'Messages per minute received on average'
+    'Durchschnittlich Messages je Minute gesendet':
+        de: '='
+        en: 'Messages per minute sent on average'
+
