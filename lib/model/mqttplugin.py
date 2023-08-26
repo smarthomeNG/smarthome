@@ -76,7 +76,6 @@ class MqttPlugin(SmartPlugin):
             translation_fn = os.path.join(self._plugin_dir, 'locale.yaml')
             self._add_translation = os.path.isfile(translation_fn)
 
-        self.logger.notice(F"mqttPlugin translate()")
         if self._add_translation:
             return lib_translate(txt, vars, plugin_translations='plugin/'+self.get_shortname(), additional_translations='module/mqtt')
         else:

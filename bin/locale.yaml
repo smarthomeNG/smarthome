@@ -196,6 +196,12 @@ global_translations:
     "bft_12": {'de': "Orkan",              'en':"Hurricane-force"}
 
 
+#Translations for lib.userfunctions:
+#lib.userfunctions_translations:
+    "Imported userfunctions from '{module}' v{version} - {description}":
+        'de': "Userfunktionen aus '{module}' importiert: v{version} - {description}"
+        'en': '='
+
 #Translations for lib.shtime:
 lib.shtime_translations:
     'defined':               {'de': 'definiert', 'en': '='}

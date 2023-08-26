@@ -1356,14 +1356,25 @@ class Item():
         return result
 
 
-    def __call__(self, value=None, caller='Logic', source=None, dest=None):
+    def __call__(self, value=None, caller='Logic', source=None, dest=None, key=None, index=None):
+        # return value
         if value is None or self._type is None:
+            if key is not None and self._type == 'dict':
+                return self._value.get(key, None)
+            elif index is not None and self._type == 'list':
+                try:
+                    return self._value[index]
+                except:
+                    return None
             return copy.deepcopy(self._value)
+
+        # set value
         if self._eval:
             args = {'value': value, 'caller': caller, 'source': source, 'dest': dest}
             self._sh.trigger(name=self._path + '-eval', obj=self.__run_eval, value=args, by=caller, source=source, dest=dest)
         else:
-            self.__update(value, caller, source, dest)
+            self.__update(value, caller, source, dest, key, index)
+
 
     def __iter__(self):
         for child in self.__children:
@@ -1979,8 +1990,9 @@ class Item():
         return
 
 
-    def __update(self, value, caller='Logic', source=None, dest=None):
+    def __update(self, value, caller='Logic', source=None, dest=None, key=None, index=None):
 
+        # special handling, if item is a hysteresys item (has a hysteresis_input attribute)
         if self._hysteresis_input is not None:
             if self._hysteresis_upper_timer_active:
                 if self._hysteresis_log:
@@ -1991,18 +2003,36 @@ class Item():
                 if self._hysteresis_log:
                     logger.notice(f"__update: lower_timer caller={caller}, value={value}")
 
-        try:
-            value = self.cast(value)
-        except:
+        if key is None and index is None:
+            # don't cast for elements of complex types
             try:
-                logger.warning(f'Item {self._path}: value "{value}" does not match type {self._type}. Via caller {caller}, source {source}')
+                value = self.cast(value)
             except:
-                pass
-            return
+                try:
+                    logger.warning(f'Item {self._path}: value "{value}" does not match type {self._type}. Via caller {caller}, source {source}')
+                except:
+                    pass
+                return
 
         self._lock.acquire()
         _changed = False
         trigger_source_details = self.__updated_by
+
+
+        if key is not None and self._type == 'dict':
+            # Update a dict item element or add an element (selected by key)
+            entry_value = value
+            value = copy.deepcopy(self._value)
+            value[key] = entry_value
+        elif index is not None and self._type == 'list':
+            # Update a list item element (selected by index)
+            entry_value = value
+            value = copy.deepcopy(self._value)
+            try:
+                value[index] = entry_value
+            except:
+                pass  # do nothing, if index is out of range
+
         if value != self._value or self._enforce_change:
             _changed = True
             self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
