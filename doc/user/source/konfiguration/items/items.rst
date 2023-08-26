@@ -5,18 +5,6 @@ Items
 .. Aus dem Wiki übernommen: 11. November 2017 von Seite https://github.com/smarthomeNG/smarthome/wiki/Items
 
 
-.. toctree::
-   :maxdepth: 4
-   :hidden:
-
-   initiale_itemkonfiguration
-   /referenz/items/standard_attribute/standard_attribute
-   /referenz/items/plugin_attribute
-   /referenz/items/attributes_relative_referenzen
-   /referenz/items/properties
-   /referenz/items/funktionen
-
-
 Überblick
 ---------
 
@@ -56,6 +44,7 @@ Die richtige Referenzierung der Items wäre hier ``Opa``, ``Opa.Papa`` und ``Opa
 So wie die Items oben stehen, erfüllen Sie noch keine Funktion außer einer gewissen Gliederung.
 Aus diesem Grund kann man den Items Attribute zuweisen.
 
+|
 
 Namensvergabe
 -------------
@@ -69,6 +58,21 @@ bereits für eine Plugin-Instanz gewählt wurde. Dieses kann zu unvorhergesehene
 z.B.: Wenn ein Plugin Funktionen implementiert hat, wird dies beim Aufruf dieser Funktionen zu
 Problemen führen, da SmartHomeNG dann versucht auf eine (nicht existierende) Methode des Items
 zuzugreifen, statt auf das Plugin.
+
+|
+
+.. toctree::
+   :maxdepth: 4
+   :hidden:
+
+   initiale_itemkonfiguration
+   /referenz/items/standard_attribute/standard_attribute
+   /referenz/items/item_zugriff
+   /referenz/items/plugin_attribute
+   /referenz/items/attributes_relative_referenzen
+   /referenz/items/properties
+   /referenz/items/funktionen
+
 
 Attribute
 ---------
