@@ -106,7 +106,7 @@ from lib.utils import Version
 
 shNG_version = '1.9.5.6'
 shNG_branch = 'master'
-shNG_releasedate = '31. März 2023'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
+shNG_releasedate = '26. August 2023'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
 # ---------------------------------------------------------------------------------
 FileBASE = None
