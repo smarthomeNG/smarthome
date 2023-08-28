@@ -514,12 +514,12 @@ class Item():
                 try:
                     plugin.remove_item(self)
                 except Exception as e:
-                    self.logger.warning(f"while removing item {self} from plugin {plugin}, the following error occurred: {e}")
+                    logger.warning(f"while removing item {self} from plugin {plugin}, the following error occurred: {e}")
             else:
                 incompatible.append(plugin.get_shortname())
 
         if incompatible:
-            self.logger.warning(f"while removing item {self}, the following plugins were incompatible: {', '.join(incompatible)}")
+            logger.warning(f"while removing item {self}, the following plugins were incompatible: {', '.join(incompatible)}")
             return False
 
         return True
@@ -1357,16 +1357,13 @@ class Item():
         return result
 
 
-    def __call__(self, value=None, caller='Logic', source=None, dest=None, key=None, index=None):
+    def __call__(self, value=None, caller='Logic', source=None, dest=None, key=None, index=None, default=None):
         # return value
         if value is None or self._type is None:
             if key is not None and self._type == 'dict':
                 return self._value.get(key, None)
             elif index is not None and self._type == 'list':
-                try:
-                    return self._value[index]
-                except:
-                    return None
+                return self.__get_listentry(index, default)
             return copy.deepcopy(self._value)
 
         # set value
@@ -1375,6 +1372,49 @@ class Item():
             self._sh.trigger(name=self._path + '-eval', obj=self.__run_eval, value=args, by=caller, source=source, dest=dest)
         else:
             self.__update(value, caller, source, dest, key, index)
+
+
+    def __get_listentry(self, index, default):
+        if isinstance(index, int):
+            try:
+                return self._value[index]
+            except Exception as e:
+                if default is None:
+                    msg = f"Item '{self._path}': Cannot access list entry (index={index}) : {e}"
+                    logger.warning(msg)
+                    raise ValueError(msg)  # needed additionally to show error message in eval syntax checker
+            return default
+        else:
+            msg = f"Item '{self._path}': Cannot access list entry: 'index' must be an integer not a {str(type(index)).split(chr(39))[1]} value ({index})"
+            logger.warning(msg)
+            raise TypeError(msg)  # needed additionally to show error message in eval syntax checker
+
+
+    def __set_listentry(self, value, index):
+
+        # Update a list item element (selected by index)
+        if isinstance(index, str):
+            if index.lower() == 'append':
+                valuelist = copy.deepcopy(self._value)
+                valuelist.append(value)
+                return valuelist
+            elif index.lower() == 'prepend':
+                valuelist = copy.deepcopy(self._value)
+                valuelist.insert(0, value)
+                return valuelist
+        if isinstance(index, int):
+            valuelist = copy.deepcopy(self._value)
+            try:
+                valuelist[index] = value
+            except Exception as e:
+                msg = f"Item '{self._path}': Cannot access list entry (index={index}) : {e}"
+                logger.warning(msg)
+                raise ValueError(msg)  # needed additionally to show error message in eval syntax checker
+            return valuelist
+        else:
+            msg = f"Item '{self._path}': Cannot access list entry: 'index' must be an integer not a {str(type(index)).split(chr(39))[1]} value ({index})"
+            logger.warning(msg)
+            raise TypeError(msg)  # needed additionally to show error message in eval syntax checker
 
 
     def __iter__(self):
@@ -1527,7 +1567,7 @@ class Item():
         try:
             result = eval(eval_expression)
         except Exception as e:
-            logger.error(f"Item {self._path}: __run_attribute_eval(): Problem evaluating '{eval_expression}' - Exception {e}")
+            logger.error(f"Item '{self._path}': __run_attribute_eval(): Problem evaluating '{eval_expression}' - Exception {e}")
             result = ''
         if result_type == 'num':
             if not isinstance(result, (int, float)):
@@ -1710,9 +1750,9 @@ class Item():
                     env = lib.env
 
                     cond = eval(self._trigger_condition)
-                    logger.warning(f"Item {self._path}: Condition result '{cond}' evaluating trigger condition {self._trigger_condition}")
+                    logger.warning(f"Item '{self._path}': Condition result '{cond}' evaluating trigger condition {self._trigger_condition}")
                 except Exception as e:
-                    log_msg = f"Item {self._path}: Problem evaluating trigger condition '{self._trigger_condition}': {e}"
+                    log_msg = f"Item '{self._path}': Problem evaluating trigger condition '{self._trigger_condition}': {e}"
                     if (self._sh.shng_status['code'] != 20) and (caller != 'Init'):
                         logger.debug(log_msg)
                     else:
@@ -1753,7 +1793,7 @@ class Item():
                         # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
                         try:
                            value = eval(self._eval)
-                        except:
+                        except Exception as e:
                             value = self._value = self.cast(value)
                             value = eval(self._eval)
                         # ms end
@@ -1762,17 +1802,17 @@ class Item():
                     # adding "None" as the "destination" information at end of triggered_by
                     # This helps figuring out whether an eval expression was successfully evaluated or not.
                     self.__triggered_by = "{0}:{1}:None".format(caller, source)
-                    log_msg = "Item {}: problem evaluating '{}': {}".format(self._path, self._eval, e)
+                    log_msg = f"Item '{self._path}': problem evaluating '{self._eval}': '{e}'"
                     if (self._sh.shng_status['code'] != 20) and (caller != 'Init'):
                         logger.debug(log_msg + " (status_code={}/caller={})".format(self._sh.shng_status['code'], caller))
                     else:
                         logger.warning(log_msg)
                 else:
                     if value is None:
-                        logger.debug("Item {}: evaluating {} returns None".format(self._path, self._eval))
+                        logger.debug(f"Item {self._path}: evaluating {self._eval} returns None")
                     else:
                         if self._path == 'wohnung.flur.szenen_helper':
-                            logger.info("__run_eval: item = {}, value = {}".format(self._path, value))
+                            logger.info(f"__run_eval: item = {self._path}, value = {value}")
                         self.__update(value, caller, source, dest)
 
 
@@ -1798,7 +1838,7 @@ class Item():
         #uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
         env = lib.env
 
-        logger.info("Item {}: '{}' evaluating {} = {}".format(self._path, attr, on_dest, on_eval))
+        logger.info(f"Item '{self._path}': '{attr}' evaluating {on_dest} = {on_eval}")
 
         # if syntax without '=' is used, add caller and source to the item assignement
         if on_dest == '':
@@ -2036,12 +2076,13 @@ class Item():
             value[key] = entry_value
         elif index is not None and self._type == 'list':
             # Update a list item element (selected by index)
-            entry_value = value
-            value = copy.deepcopy(self._value)
-            try:
-                value[index] = entry_value
-            except:
-                pass  # do nothing, if index is out of range
+            value = self.__set_listentry(value, index)
+            # entry_value = value
+            # value = copy.deepcopy(self._value)
+            # try:
+            #     value[index] = entry_value
+            # except:
+            #     pass  # do nothing, if index is out of range
 
         if value != self._value or self._enforce_change:
             _changed = True

@@ -1,6 +1,6 @@
 
 .. index:: Referenz; Items
-.. Index:: Items; Referenz
+.. index:: Items; Referenz
 
 .. role:: redsup
 .. role:: bluesup
