@@ -4,6 +4,7 @@
 .. role:: greensup
 .. role:: blacksup
 
+.. _Zugriff_auf_Attributwerte:
 
 Zugriff auf die Werte von Items
 ===============================
@@ -36,16 +37,14 @@ konfiguriert ist:
 ist für das Item ``Kind`` der Pfad ``Oma.Papa.Kind``. Auf den Wert kann folglich über ``sh.Oma.Papa.Kind()``
 zugegriffen werden.
 
-|
-
 Wenn ein Item einen komplexen Datentyp (``type: list`` oder ``type: dict``) hat, ist außer dem Zugriff auf den gesamten
 Item Wert (also die komplette Liste oder das komplette dict) auch der Zugriff auf einzelne Elemente dieser Item Werte
 möglich.
 
 |
 
-Zugriff auf ein Listen-Element
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Zugriff auf ein Listen-Element :redsup:`neu`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein Item als Liste konfiguriert ist, kann auf die einzelnen Elemente der Liste über ihre Position zugegriffen
 werden, wobei 0 die erste Position kennzeichnet. Um z.B. auf das dritte Element einer Liste zuzugreifen, ist der
@@ -60,15 +59,15 @@ das vorletzte Element usw.
 
 |
 
-Zugriff auf ein Dict-Element
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Zugriff auf ein Dict-Element :redsup:`neu`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein Item als Dict konfiguriert ist, kann auf die einzelnen Elemente des Dicts über ihren Key zugegriffen
 werden. Um z.B. auf das Element mit dem Key **meinWert** eines Dicts zuzugreifen, ist der Syntax folgender:
 
 .. code-block:: python
 
-    myvar = sh.Oma.Papa.Kind(key='meinWert')
+    myvar = sh.Oma.Papa.Kind(key='myKey')
 
 
 |
@@ -107,8 +106,8 @@ Alle weiteren (namentlich benannten) Parameter dürfen erst danach folgen.
 
 |
 
-Schreiben eines Listen-Elements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Schreiben eines Listen-Elements :redsup:`neu`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein Item als Liste konfiguriert ist, kann auf die einzelnen Elemente der Liste über ihre Position zugegriffen
 werden, wobei 0 die erste Position kennzeichnet. Um z.B. das dritte Element einer Liste zu setzen, ist
@@ -125,6 +124,7 @@ Wenn eine Liste vergrößert werden soll, so gibt es die Möglichkeit das neue I
 anzufügen.
 
 Um einen Wert am Ende der Liste anzufügen, ist als **index** der String 'append' anzugeben.
+
 .. code-block:: python
 
     sh.Oma.Papa.Kind(<value>, index='append')
@@ -134,21 +134,23 @@ Um einen Wert am Anfang der Liste einzufügen, ist als **index** der String 'pre
 
 .. code-block:: python
 
-    sh.Oma.Papa.Kind(<value>, index='prepent')
+    sh.Oma.Papa.Kind(<value>, index='prepend')
 
 
 |
 
-Schreiben eines Dict-Elements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Schreiben eines Dict-Elements :redsup:`neu`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein Item als Dict konfiguriert ist, kann auf die einzelnen Elemente des Dicts über ihren Key zugegriffen
-werden. Um z.B. auf das Element mit dem Key **meinWert** eines Dicts zu setzen, ist der Syntax folgender:
+werden. Um z.B. auf das Element mit dem Key **myKey** eines Dicts zu setzen, ist der Syntax folgender:
 
 .. code-block:: python
 
-    sh.Oma.Papa.Kind(<value>, key='meinWert')
+    sh.Oma.Papa.Kind(<value>, key='myKey')
 
+
+Falls der Key im dict noch nicht existiert, wird ein neuer Eintrag hinzugefügt.
 
 |
 

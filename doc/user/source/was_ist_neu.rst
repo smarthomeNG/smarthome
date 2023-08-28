@@ -33,6 +33,9 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **Platzhalter in Attributen**: Es ist jetzt möglich innerhalb von Attributwerten über Platzhalter die
       Inhalte anderer Attribute zu verwenden.
       Details sind in der :ref:`Dokumentation <Platzhalter_in_Attributwerten>` zu finden.
+    - **Zugriff auf Elemente komplexer Items**: Bei Items vom Typ **list** oder **dict** ist es möglich auf einzelne
+      Elemente zuzugreifen.
+      Details sind in der :ref:`Dokumentation <Zugriff_auf_Attributwerte>` zu finden.
   - **Neue Bibliothek lib.env**:
 
     - lib.env enthält eine Reihe von Funktionen zur Maßeinheitenumrechnung für Environment Daten, sowie weitere

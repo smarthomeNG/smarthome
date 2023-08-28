@@ -17,9 +17,9 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 31. Juli 2023
-           (modules.admin: Bugfix in api_logics)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Juli 2023
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 26. August 2023
+           (...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 21. August 2023
            (...)
 
 
@@ -79,13 +79,19 @@ Updates im CORE
 
 * Libs:
 
+  * lib.backup:
+
+    *  Added structs directory to configuration backup and restore
+
   * lib.db:
 
     * Suppress an error log message, if database is new and empty
 
   * lib.env:
 
+    * New lib with support functions for environmental calculations
     * Added descriptions for system logics
+    * Integration in eval-statements and logics
 
   * lib.item:
 
@@ -101,14 +107,28 @@ Updates im CORE
     * Corrected Call order of __run_attribute_eval() and _cast_duration() for autotimer
     * Extended configuration options for autotimer (duration)
     * Corrected Call to __run_attribute_eval() and _cast_duration() for autotimer
+    * structs: Added relative reference to sub-struct from same file (struct name starts with a period)
+    * Implemented attributes with variables (attribut reference) in attribute value; attribute references now
+      include attributes from current item to great-grandparent item
+    * Allow attribute-vars in name attribute
+    * Implemented loading structs from ../structs directory
+    * structs: Implemented automatic migration from /etc to /structs
+    * eval on trigger only implemented
+    * Initial support for access to elements of list and dict items
 
   * lib.log:
 
     * Improvements to logging configuration
+    * Added import logging.config (to keep mockup core from failing)
 
   * lib.logic:
 
     * Logic list can now be grouped. Logics can be assigned to one or more groups
+
+  * lib.metadata:
+
+    * Changed one loglevel from warning to notice (to test mockup core)
+    * Added prefix '_' for "internal" attributes to allow using these attributes without warnings
 
   * lib.model:
 
@@ -118,11 +138,16 @@ Updates im CORE
       * Added do_before_send method
       * Update sdp connections for standby
       * Update standby mode on failed connect and reconnect
+    * move suspend/resume function to smartplugin
+    * Suspend/resume API für SmartPlugin
+    * sdp: Update sdp serial connections
+    * smartplugin: New parameter 'mode' for get_item_list()
 
   * lib.network:
 
     * Fix name reference
     * Small fixes
+    * Add open method
 
   * lib.plugin:
 
@@ -136,10 +161,21 @@ Updates im CORE
     * Added some error handling
     * Bugfix for giving parameters to a task via scheduler.add()
 
-  * lib.shpypi: Small updates for changed messages of pip commend
+  * lib.shpypi:
+
+    * Small updates for changed messages of pip commend
+
   * lib.shtime:
 
     * Added function to_seconds() which converts a string (e.g. '2h5m25s') to seconds (integer)
+
+  * lib.systeminfo:
+
+    * Fix issues with some Mac OS X versions on startup
+
+  * lib.translate:
+
+    * Enhanced translation capabilities
 
 * Modules:
 
@@ -175,6 +211,10 @@ Updates im CORE
         * In Logger configuration sub-loggers of a plugin are en-/disabled with the plugin logger
       * v0.8.17 Implemented load logics from editor page after it has been unloaded due to error
       * v0.9.1: Adding, changing and deleting of logic-groups implemented
+      * v0.9.2: In item-details show logic-description for connected logics
+      * v0.9.3: Fix for display of items/struct templates
+
+    * Caught an error in eval syntax checker, if result could not be converted to json
 
   * http:
 
@@ -196,6 +236,11 @@ Updates im CORE
       * Update documentation.. add info on tooltips, datepicker, cookies, icons
       * Update sample plugin to include cookies and tooltips
       * Updates to datatables and pageresize
+      * Update to base_plugin.html to support bordered tab data
+
+  * mqtt:
+
+    * Added datatype 'dict/str' for subscribing to messages containing a payload with uncertain data type
 
   * websocket:
 
@@ -208,7 +253,8 @@ Updates im CORE
 
 * tests:
 
-  * ...
+  * Added extended loglevels to mock/core
+  * Extended mockup core
 
 |
 
@@ -235,6 +281,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * lms: Logitech Mediaserver / Squeezebox, based on SmartDevicePlugin
 * pioneer: for Pioneer AV Receivers, based on SmartDevicePlugin
 * oppo: First version of SmartDevicePlugin based plugin for Oppo UHD players
+* byd_bat: Plugin to display data from BYD batteries
 
 
 .. _releasenotes_1_10_updates_plugins:
@@ -248,6 +295,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * alexarc4shng:
 
   * Small bug-fix in Web-IF
+  * Fixed issues with urlencode
 
 * appletv:
 
@@ -262,6 +310,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Added requirement to circumvent problematic requirements of pyatv package under Python 3.11
   * Clean up user_doc
   * Improve error handling and logging
+
+* avdevice:
+
+  * Fix dependency function for int/float values
 
 * avm:
 
@@ -286,10 +338,23 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Bugfix and Extension of get_hosts
   * Make use of standard methods of class SmartPlugin for item handling/storage
   * Improve Fritz_Home
+  * Exception Classes & Minor Fixes
+  * FritzHome: Bugfix renewing SID in case SID has expired
+  * CallMonitor: bugfix join listing thread
+  * CallMonitor: reconnect if connection is lost
+  * Bump to 2.0.9
+  * CallMonitor: bugfix join counter threads
+  * FritzHome: Add support for device statistics
+  * bump to 2.1.0
+
+* beolink:
+
+  * Changes to translations
 
 * database:
 
   * Changed log message, if no cache value was found
+  * Added option 'no' to valid list of database attribute
 
 * db_addon:
 
@@ -325,6 +390,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * enocean:
 
   * Robustify plugin reaction to loss of Enocean serial device
+  * Support RFC2217 connections
+  * Expanded user documentation
+  * Added serial/ethernet connection status to webinterface
 
 * executor:
 
@@ -346,9 +414,26 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Fix user_doc reference to configuration
 
+* homeconnect:
+
+  * Added requests-oauthlib to requirements
+
 * hue2:
 
   * Adjusted requirements for zeroconf package
+  * Changed requirements for zeroconf
+
+* husky2:
+
+  * Minor updates
+
+* ical:
+
+  * Reduced warning log indicating event with no summary entry to info level
+
+* indego4shng:
+
+  * Update to 4.0.1 including single-key-id login
 
 * knx:
 
@@ -358,6 +443,14 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * modbus_tcp:
 
   * Fixed bug
+
+* philips_tv:
+
+  * Added support for ambilight control
+
+* pioneer:
+
+  * Update plugin.yaml to make suspend_item and retry_suspend available.
 
 * piratewthr:
 
@@ -369,20 +462,42 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Removed 'database_maxage: 731' from struct items to use default of database plugin
   * Bumped version to 1.2.0
   * Added locals.location to struct
+  * Reworked structs to use new features
+  * Modified to use lib.env
+
+* rcs1000n:
+
+  *Restructure send method and improve try/except clause
+
+* resol:
+
+  * Improved user_doc
 
 * rpi_info:
 
   * Update and fix web interface
 
+* shelly:
+
+  * Initial version of plugin with Gen2 api support
+
 * smartvisu:
 
   * Changed default value for generate_pages to False
   * Corrected log message
-  * only check dir if handling option is set
+  * Only check dir if handling option is set
+  * Adjust empty dir handling
 
 * solarforecast:
 
   * Fallback to smarthomeNG lat/long default values if no plugin specific latitude and longitude values are specified
+  * Fix for plugin.yaml, lat, lon are now interpreted as strings not numbers (backward compatible)
+  * Fix for fallback to system location as a plugin default value
+  * Replaced deprecated sh.now() with method of lib shtime
+
+* sonos:
+
+  * Improved thread termination; reintroduced old legacy method play_radio
 
 * stateengine:
 
@@ -398,6 +513,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Fix for get_petrol_stations(), if tankerkoenig.de did not return any information
   * Added check for Nonetype results
+  * Extend error message to show raw response
 
 * tasmota:
 
@@ -412,6 +528,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Improve exception handling
   * Improve clearing retained messages
   * Revert direct use of _plg_item_dict in WebIF
+  * Allow unknown tasmota-attrs, move tasmota-attr doc to user_doc.rst
+  * Improve Exception handling and handling of power messages
+  * Bump version to 1.5.2
 
 * telegram:
 
@@ -422,6 +541,12 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * V2.0.0 Additions in locale; evaluate if debugging
   * Retry sending in case of error (with parameters)
   * Attempt to catch the exception in the updater
+
+* vacations:
+
+  * Update after start
+  * Update cycle configurable
+  * Accept country "Germany"
 
 * Webservices:
 
@@ -496,6 +621,6 @@ Dokumentation
 -------------
 
 * Increase version required for sphinx tabs
-* ...
+* Updates to example plugin files
 
 
