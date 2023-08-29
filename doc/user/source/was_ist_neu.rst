@@ -69,6 +69,7 @@ Neuerungen bei Plugins
 
 Bei den Plugins sind folgende Änderungen zu beachten:
 
+  - **Plugin shelly**: Es werden jetzt Shelly Devices mit dem (neuen) Gen2 API untersützt.
   - **Plugin smartvisu**: Der Default Wert des Parameters **generate_pages** wurde auf **False** geändert. Zum
     generieren von Seiten muss dieser Parameter nun aktiv konfiguriert werden.
   - Es sind auch einige :ref:`neue Plugins <releasenotes_1_10_neue_plugins>` hinzugekommen.

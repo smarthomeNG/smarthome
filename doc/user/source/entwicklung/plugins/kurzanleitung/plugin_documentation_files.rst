@@ -10,7 +10,9 @@ Es gibt eine Dokumentations-Datei die für ein Plugin erstellt werden kann (und 
     restliche Dokumentation sollte nur noch im ``user_doc.rst``-Format erfolgen.
 
     Soweit möglich, sollten bestehende ``README.md`` im Rahmen von Aktualisierungen in entsprechende ``user_doc.rst``
-    überführt werden.
+    überführt werden. Wenn alle Informationen, die in der ``README.md`` enthalten waren, entweder in der automatisch
+    generierten Seite mit Konfigurationsinformationen oder in der ``user_doc.rst`` enhalten sind, ist die Datei
+    ``README.md`` zu löschen.
 
 
 user_doc.rst

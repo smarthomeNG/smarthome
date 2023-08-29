@@ -17,9 +17,9 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 26. August 2023
-           (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 21. August 2023
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 29. August 2023
+           (Bugfix in dict handling)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 28. August 2023
            (...)
 
 
@@ -67,21 +67,16 @@ Allgmein
 Updates im CORE
 ---------------
 
-* bin.smarthome: Replaced th deprecated function getdefaultlocale()
+* bin.smarthome:
 
-* Items:
-
-  * ...
-
-* Logics:
-
-  * ...
+  * Replaced th deprecated function getdefaultlocale()
 
 * Libs:
 
   * lib.backup:
 
-    *  Added structs directory to configuration backup and restore
+    * Added structs directory to configuration backup and restore
+    * Included requirements.txt file for userfunctions and logics
 
   * lib.db:
 
@@ -115,6 +110,7 @@ Updates im CORE
     * structs: Implemented automatic migration from /etc to /structs
     * eval on trigger only implemented
     * Initial support for access to elements of list and dict items
+    * Bugfix in dict handling
 
   * lib.log:
 
@@ -134,14 +130,21 @@ Updates im CORE
 
     * Added SmartDevicePlugin (sdp) and documentation
     * sdp:
+
       * Add standby mode
       * Added do_before_send method
       * Update sdp connections for standby
       * Update standby mode on failed connect and reconnect
-    * move suspend/resume function to smartplugin
-    * Suspend/resume API für SmartPlugin
-    * sdp: Update sdp serial connections
-    * smartplugin: New parameter 'mode' for get_item_list()
+      * Update sdp serial connections
+    * SmartPlugin:
+
+      * move suspend/resume function to smartplugin
+      * Suspend/resume API für SmartPlugin
+      * New parameter 'mode' for get_item_list() implemented
+
+    * MqttPlugin:
+
+      * Fixed implementation of webinterface
 
   * lib.network:
 
@@ -164,6 +167,8 @@ Updates im CORE
   * lib.shpypi:
 
     * Small updates for changed messages of pip commend
+    * Included userfunctions and logics. Directories for both can contain a requirements.txt file which is
+      now loaded and interpreted
 
   * lib.shtime:
 
@@ -278,6 +283,7 @@ Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugin
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
 * denon: For Denon AV Receivers, based on SmartDevicePlugin
+* epson: Based on SDP control of Epson projectors are supported (minimal setup for now)
 * lms: Logitech Mediaserver / Squeezebox, based on SmartDevicePlugin
 * pioneer: for Pioneer AV Receivers, based on SmartDevicePlugin
 * oppo: First version of SmartDevicePlugin based plugin for Oppo UHD players
@@ -393,6 +399,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Support RFC2217 connections
   * Expanded user documentation
   * Added serial/ethernet connection status to webinterface
+  * Clean-up logging import and unused argument of init function
 
 * executor:
 
@@ -409,6 +416,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Introduce example scripts that can be loaded in the web interface
   * Change order of file list
   * Improve button enable/disable
+  * Removed duplicate scroolbars from webinterface
+  * Bump to v1.2.1
 
 * gpio:
 
@@ -438,15 +447,31 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * knx:
 
   * Prevent send actions to bus while plugin is not running
-  * Fix issue with polling knx items on startup. All polls are put in a waiting list and polled on run only.
+  * Fix issue with polling knx items on startup. All polls are put in a waiting list and polled on run only
+  * Corrected a translation
 
 * modbus_tcp:
 
   * Fixed bug
 
+* neato:
+
+  * Clean-up unused argument of init function
+
+* network:
+
+  * Remove debug print
+
+* nut:
+
+  * Added user_doc, default logo and refined plugin.yaml
+  * Clean-up unused argument of init function, switched to parameter import via method get_parameter_value()
+  * Bugfix for exception that can occur during termination of the plugin
+
 * philips_tv:
 
   * Added support for ambilight control
+  * Clean-up unused argument of init method
 
 * pioneer:
 
@@ -472,6 +497,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * resol:
 
   * Improved user_doc
+  * Clean-up unused argument of init method
 
 * rpi_info:
 
@@ -494,6 +520,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix for plugin.yaml, lat, lon are now interpreted as strings not numbers (backward compatible)
   * Fix for fallback to system location as a plugin default value
   * Replaced deprecated sh.now() with method of lib shtime
+  * Clean-up unused argument of init method
 
 * sonos:
 
