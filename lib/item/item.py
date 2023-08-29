@@ -1361,7 +1361,7 @@ class Item():
         # return value
         if value is None or self._type is None:
             if key is not None and self._type == 'dict':
-                return self._value.get(key, None)
+                return self.__get_dictentry(key, default)
             elif index is not None and self._type == 'list':
                 return self.__get_listentry(index, default)
             return copy.deepcopy(self._value)
@@ -1372,6 +1372,26 @@ class Item():
             self._sh.trigger(name=self._path + '-eval', obj=self.__run_eval, value=args, by=caller, source=source, dest=dest)
         else:
             self.__update(value, caller, source, dest, key, index)
+
+
+    def __iter__(self):
+        for child in self.__children:
+            yield child
+
+    def __setitem__(self, item, value):
+        vars(self)[item] = value
+
+    def __getitem__(self, item):
+        return vars(self)[item]
+
+    def __bool__(self):
+        return bool(self._value)
+
+    def __str__(self):
+        return self._name
+
+    def __repr__(self):
+        return "Item: {}".format(self._path)
 
 
     def __get_listentry(self, index, default):
@@ -1391,7 +1411,6 @@ class Item():
 
 
     def __set_listentry(self, value, index):
-
         # Update a list item element (selected by index)
         if isinstance(index, str):
             if index.lower() == 'append':
@@ -1417,24 +1436,22 @@ class Item():
             raise TypeError(msg)  # needed additionally to show error message in eval syntax checker
 
 
-    def __iter__(self):
-        for child in self.__children:
-            yield child
+    def __get_dictentry(self, key, default):
+        try:
+            return self._value[key]
+        except Exception as e:
+            if default is None:
+                msg = f"Item '{self._path}': Cannot access dict entry (key={key}) : {e}"
+                logger.warning(msg)
+                raise ValueError(msg)  # needed additionally to show error message in eval syntax checker
+        return default
 
-    def __setitem__(self, item, value):
-        vars(self)[item] = value
 
-    def __getitem__(self, item):
-        return vars(self)[item]
-
-    def __bool__(self):
-        return bool(self._value)
-
-    def __str__(self):
-        return self._name
-
-    def __repr__(self):
-        return "Item: {}".format(self._path)
+    def __set_dictentry(self, value, key):
+        # Update a dict item element (selected by key) or add an element, if the key does not exist
+        valuedict = copy.deepcopy(self._value)
+        valuedict[key] = value
+        return valuedict
 
 
     # feature moved to lib.metadata
@@ -2071,18 +2088,10 @@ class Item():
 
         if key is not None and self._type == 'dict':
             # Update a dict item element or add an element (selected by key)
-            entry_value = value
-            value = copy.deepcopy(self._value)
-            value[key] = entry_value
+            value = self.__set_dictentry(value, key)
         elif index is not None and self._type == 'list':
             # Update a list item element (selected by index)
             value = self.__set_listentry(value, index)
-            # entry_value = value
-            # value = copy.deepcopy(self._value)
-            # try:
-            #     value[index] = entry_value
-            # except:
-            #     pass  # do nothing, if index is out of range
 
         if value != self._value or self._enforce_change:
             _changed = True
