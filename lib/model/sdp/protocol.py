@@ -207,15 +207,21 @@ class SDPProtocolJsonrpc(SDPProtocol):
             self._shutdown_active = False
 
     def on_data_received(self, connection, response):
+        self.logger.dbglow(f'data received before encode: {response}')
+
         if isinstance(response, (bytes, bytearray)):
             response = str(response, 'utf-8').strip()
 
         # split multi-response data into list items
+        self.logger.dbglow(f'data received before split: {response}')
+
         try:
             datalist = response.replace('}{', '}-#-{').split('-#-')
             datalist = list(OrderedDict((x, True) for x in datalist).keys())
         except Exception:
             datalist = [response]
+
+        self.logger.dbglow(f'data received after split: {response}')
 
         # process all response items
         for data in datalist:
