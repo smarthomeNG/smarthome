@@ -347,14 +347,14 @@ class Scheduler(threading.Thread):
             if name in self._scheduler:
                 obj = self._scheduler[name]['obj']
             else:
-                logger.warning("Logic name not found: {0}".format(name))
+                logger.warning(f"Logic name not found: {name}")
                 return
         if name in self._scheduler:
             if not self._scheduler[name]['active']:
-                logger.debug("Logic '{0}' deactivated. Ignoring trigger from {1} {2}".format(name, by, source))
+                logger.debug(f"Logic '{name}' deactivated. Ignoring trigger from {by} {source}")
                 return
         if dt is None:
-            logger.debug("Triggering {0} - by: {1} source: {2} dest: {3} value: {4}".format(name, by, source, dest, str(value)[:40]))
+            logger.debug(f"Triggering {name} - by: {by} source: {source} dest: {dest} value: {value}")
             self._runc.acquire()
             self._runq.insert(prio, (name, obj, by, source, dest, value))
             self._runc.notify()
@@ -366,7 +366,7 @@ class Scheduler(threading.Thread):
             if dt.tzinfo is None:
                 logger.warning(f"Trigger: Not a valid timezone aware datetime for {name}. Ignoring.")
                 return
-            logger.debug(f"Triggering {name} - by: {by} source: {source} dest: {dest} value: {str(value)[:40]} at: {dt}")
+            logger.debug(f"Triggering {name} - by: {by} source: {source} dest: {dest} value: {value} at: {dt}")
             self._triggerq.insert((dt, prio), (name, obj, by, source, dest, value))
 
     def remove(self, name, from_smartplugin=False):
@@ -706,6 +706,11 @@ class Scheduler(threading.Thread):
                 if value is None:
                     obj()
                 else:
+                    logger.debug(f"_task: name={name}, value={value}, by={by}, source={source}")
+                    if isinstance(value, dict):
+                        caller = value.get('caller', None)
+                        if caller is None:
+                            value['caller'] = by
                     obj(**value)
             except Exception as e:
                 tasks_logger.exception(f"Method {name} exception: {e}")
