@@ -68,10 +68,12 @@
 			{%- endif %}
 			for (let i = 1; i <= tabcount; i++) {
 				let pagelength = 0;
-				if (isNaN(parseFloat({{ webif_pagelength }})) || {{ webif_pagelength }} == 0)
-		      pagelength = 1;
-		    else
-		    	pagelength = {{ webif_pagelength }};
+				{%- if webif_pagelength is defined %}
+					if (isNaN(parseFloat({{ webif_pagelength }})) || {{ webif_pagelength }} == 0)
+			      pagelength = 1;
+			    else
+			    	pagelength = {{ webif_pagelength }};
+				{%- endif %}
 			  window.pageLength["bodytab_"+i] = {'tableid': 'unknown', 'pagelength': parseInt(pagelength)};
 				console.log(window.pageLength);
 			}
