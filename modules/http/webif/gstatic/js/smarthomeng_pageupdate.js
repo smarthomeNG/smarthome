@@ -75,10 +75,12 @@ function set_update_interval() {
   if (window.update_active)
   {
     refresh.set_interval(update_interval, false);
-    setCookie("update_interval", update_interval, 30, window.pluginname);
+    setCookie("update_interval", update_interval, 365, window.pluginname);
+    setCookie("update_active", update_active, 365, window.pluginname);
     console.log("Set Refresh Interval to " + update_interval + ", active " + update_active);
   }
   else {
+    setCookie("update_active", update_active, 365, window.pluginname);
     refresh.stop();
   }
 }
@@ -89,9 +91,13 @@ function set_update_interval() {
 */
 $(window).on('load', function (e) {
   let update_interval = getCookie("update_interval");
+  window.update_active = getCookie("update_active");
   if (update_interval != "")
   {
-    refresh.set_interval(update_interval, false);
+    if (window.update_active == true)
+      refresh.set_interval(update_interval, false);
+    else
+      window.update_interval = update_interval;
     if ( document.body.contains(document.getElementById("update_interval")) )
       document.getElementById("update_interval").value = update_interval;
   }

@@ -36,10 +36,12 @@
 <script>
 	$(document).ready(function(){
 		const select_menu = document.querySelector(".dataTables_length select");
-		if (select_menu.selectedIndex == -1)
-		{
-			select_menu.selectedIndex = 0;
-			select_menu.options[select_menu.selectedIndex].disabled = true;
+		if (select_menu != null) {
+			if (select_menu.selectedIndex == -1)
+			{
+				select_menu.selectedIndex = 0;
+				select_menu.options[select_menu.selectedIndex].disabled = true;
+			}
 		}
 	});
 	</script>
@@ -68,10 +70,12 @@
 			{%- endif %}
 			for (let i = 1; i <= tabcount; i++) {
 				let pagelength = 0;
-				if (isNaN(parseFloat({{ webif_pagelength }})) || {{ webif_pagelength }} == 0)
-		      pagelength = 1;
-		    else
-		    	pagelength = {{ webif_pagelength }};
+				{%- if webif_pagelength is defined %}
+					if (isNaN(parseFloat({{ webif_pagelength }})) || {{ webif_pagelength }} == 0)
+			      pagelength = 1;
+			    else
+			    	pagelength = {{ webif_pagelength }};
+				{%- endif %}
 			  window.pageLength["bodytab_"+i] = {'tableid': 'unknown', 'pagelength': parseInt(pagelength)};
 				console.log(window.pageLength);
 			}
