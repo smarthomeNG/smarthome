@@ -36,10 +36,12 @@
 <script>
 	$(document).ready(function(){
 		const select_menu = document.querySelector(".dataTables_length select");
-		if (select_menu.selectedIndex == -1)
-		{
-			select_menu.selectedIndex = 0;
-			select_menu.options[select_menu.selectedIndex].disabled = true;
+		if (select_menu != null) {
+			if (select_menu.selectedIndex == -1)
+			{
+				select_menu.selectedIndex = 0;
+				select_menu.options[select_menu.selectedIndex].disabled = true;
+			}
 		}
 	});
 	</script>
