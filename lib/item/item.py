@@ -31,6 +31,8 @@ import json
 import threading
 import ast
 
+import inspect
+
 import time             # for calls to time in eval
 import math             # for calls to math in eval
 from math import *
@@ -45,7 +47,7 @@ from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_
                            KEY_EVAL, KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_DESCRIPTION, KEY_TYPE,
                            KEY_STRUCT, KEY_REMARK, KEY_INSTANCE, KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM,
                            KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE, KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT,
-                           KEY_LOG_MAPPING, KEY_LOG_RULES, KEY_THRESHOLD,
+                           KEY_LOG_MAPPING, KEY_LOG_RULES, KEY_THRESHOLD, KEY_EVAL_TRIGGER_ONLY,
                            KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
                            KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD,
                            ATTRIBUTE_SEPARATOR)
@@ -132,6 +134,7 @@ class Item():
         self._eval = None				    # -> KEY_EVAL
         self._eval_unexpanded = ''
         self._eval_trigger = False
+        self._eval_on_trigger_only = False
         self._trigger = False
         self._trigger_unexpanded = []
         self._trigger_condition_raw = []
@@ -245,7 +248,7 @@ class Item():
         #############################################################
         for attr, value in config.items():
             if not isinstance(value, dict):
-                if attr in [KEY_NAME, KEY_DESCRIPTION, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
+                if attr in [KEY_NAME, KEY_DESCRIPTION, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE, KEY_EVAL_TRIGGER_ONLY]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
                     setattr(self, '_' + attr, value)
@@ -513,12 +516,12 @@ class Item():
                 try:
                     plugin.remove_item(self)
                 except Exception as e:
-                    self.logger.warning(f"while removing item {self} from plugin {plugin}, the following error occurred: {e}")
+                    logger.warning(f"while removing item {self} from plugin {plugin}, the following error occurred: {e}")
             else:
                 incompatible.append(plugin.get_shortname())
 
         if incompatible:
-            self.logger.warning(f"while removing item {self}, the following plugins were incompatible: {', '.join(incompatible)}")
+            logger.warning(f"while removing item {self}, the following plugins were incompatible: {', '.join(incompatible)}")
             return False
 
         return True
@@ -1356,14 +1359,22 @@ class Item():
         return result
 
 
-    def __call__(self, value=None, caller='Logic', source=None, dest=None):
+    def __call__(self, value=None, caller='Logic', source=None, dest=None, key=None, index=None, default=None):
+        # return value
         if value is None or self._type is None:
+            if key is not None and self._type == 'dict':
+                return self.__get_dictentry(key, default)
+            elif index is not None and self._type == 'list':
+                return self.__get_listentry(index, default)
             return copy.deepcopy(self._value)
+
+        # set value
         if self._eval:
             args = {'value': value, 'caller': caller, 'source': source, 'dest': dest}
             self._sh.trigger(name=self._path + '-eval', obj=self.__run_eval, value=args, by=caller, source=source, dest=dest)
         else:
-            self.__update(value, caller, source, dest)
+            self.__update(value, caller, source, dest, key, index)
+
 
     def __iter__(self):
         for child in self.__children:
@@ -1383,6 +1394,118 @@ class Item():
 
     def __repr__(self):
         return "Item: {}".format(self._path)
+
+
+    def __get_listentry(self, index, default):
+        if isinstance(index, int):
+            try:
+                return self._value[index]
+            except Exception as e:
+                if default is None:
+                    msg = f"Item '{self._path}': Cannot access list entry (index={index}) : {e}"
+                    logger.warning(msg)
+                    raise ValueError(msg)  # needed additionally to show error message in eval syntax checker
+            return default
+        else:
+            msg = f"Item '{self._path}': Cannot access list entry: 'index' must be an integer not a {str(type(index)).split(chr(39))[1]} value ({index})"
+            logger.warning(msg)
+            raise TypeError(msg)  # needed additionally to show error message in eval syntax checker
+
+
+    def __set_listentry(self, value, index):
+        # Update a list item element (selected by index)
+        if isinstance(index, str):
+            if index.lower() == 'append':
+                valuelist = copy.deepcopy(self._value)
+                valuelist.append(value)
+                return valuelist
+            elif index.lower() == 'prepend':
+                valuelist = copy.deepcopy(self._value)
+                valuelist.insert(0, value)
+                return valuelist
+        if isinstance(index, int):
+            valuelist = copy.deepcopy(self._value)
+            try:
+                valuelist[index] = value
+            except Exception as e:
+                msg = f"Item '{self._path}': Cannot access list entry (index={index}) : {e}"
+                logger.warning(msg)
+                raise ValueError(msg)  # needed additionally to show error message in eval syntax checker
+            return valuelist
+        else:
+            msg = f"Item '{self._path}': Cannot access list entry: 'index' must be an integer not a {str(type(index)).split(chr(39))[1]} value ({index})"
+            logger.warning(msg)
+            raise TypeError(msg)  # needed additionally to show error message in eval syntax checker
+
+
+    def get_class_from_frame(self, fr):
+        # https://stackoverflow.com/questions/2203424/python-how-to-retrieve-class-information-from-a-frame-object
+        #import inspect
+        args, _, _, value_dict = inspect.getargvalues(fr)
+        # we check the first parameter for the frame function is
+        # named 'self'
+        if len(args) and args[0] == 'self' and False:    # Don't execute this if-branch
+            # in that case, 'self' will be referenced in value_dict
+            instance = value_dict.get('self', None)
+            if instance:
+                # return its class
+#                return getattr(instance, '__class__', None)
+                return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+        # return None otherwise
+        return f"args={args}  - value_dict={value_dict}"
+
+    def get_calling_item_from_frame(self, fr):
+        # Info from: https://stackoverflow.com/questions/2203424/python-how-to-retrieve-class-information-from-a-frame-object
+        # import inspect
+        args, _, _, value_dict = inspect.getargvalues(fr)
+        # we check the first parameter for the frame function is
+        # named 'self'
+        if len(args) and args[0] == 'self' and False:
+            # in that case, 'self' will be referenced in value_dict
+            instance = value_dict.get('self', None)
+            if instance:
+                return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+        return f"{value_dict.get('self', None)}"
+
+    def get_stack_info(self):
+
+        # msg = "call stack:"
+        #msg += f" {inspect.stack()[1][3]}() / {inspect.stack()[2][3]}() / {inspect.stack()[3][3]}() / {inspect.stack()[4][4]}() / {inspect.stack()[5][5]}()"
+        for level in range(4,5):
+            msg = ''
+            try:
+                # f_code.__class__.__name__ == 'code'
+                # f_code.__class__.__class__.__name__ == 'type'
+                #msg += f" - f_code={inspect.stack()[level].frame.f_code}   -  classname={inspect.stack()[level].frame.f_code.__class__.__class__.__class__.__name__}   -   dir(__class__.__class__.__class__)={dir(inspect.stack()[level].frame.f_code.__class__.__class__.__class__)}"
+                if inspect.stack()[level].function == '__run_eval':
+                    msg += f"Item '{self.get_calling_item_from_frame(inspect.stack()[level].frame)}'"
+                else:
+                    msg += f"{inspect.stack()[level].function}()"
+            except Exception as ex:
+                msg += f" - error getting code {ex}"
+
+        return msg
+
+
+    def __get_dictentry(self, key, default):
+        try:
+            return self._value[key]
+        except Exception as e:
+            if default is None:
+                msg = f"Item '{self._path}': {e.__class__.__name__}: {e}"
+                stack_info = self.get_stack_info()
+                if stack_info.startswith('Item'):
+                    msg += f"  -  called from: {self.get_stack_info()}"
+                logger.info(msg)
+                raise KeyError(msg)  # msg needed to show error message in eval syntax checker
+        return default
+
+
+    def __set_dictentry(self, value, key):
+        # Update a dict item element (selected by key) or add an element, if the key does not exist
+        valuedict = copy.deepcopy(self._value)
+        valuedict[key] = value
+        return valuedict
 
 
     # feature moved to lib.metadata
@@ -1485,7 +1608,7 @@ class Item():
             # Only if item has an eval_trigger
             if self._eval and not self._cache:
                 # Only if item has an eval expression
-                self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', value={'value': self._value, 'caller': 'Init:Eval'})
+                self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', source='_init_run', value={'value': self._value, 'caller': 'Init:Eval'})
                 return True
         return False
 
@@ -1515,7 +1638,7 @@ class Item():
         try:
             result = eval(eval_expression)
         except Exception as e:
-            logger.error(f"Item {self._path}: __run_attribute_eval(): Problem evaluating '{eval_expression}' - Exception {e}")
+            logger.error(f"Item '{self._path}': __run_attribute_eval(): Problem evaluating '{eval_expression}' - Exception {e}")
             result = ''
         if result_type == 'num':
             if not isinstance(result, (int, float)):
@@ -1681,8 +1804,15 @@ class Item():
         """
         evaluate the 'eval' entry of the actual item
         """
-        if (self._sh.shng_status['code'] != 20) and (caller != 'Init'):
-            logger.info(f"Item {self._path}: Running __run_eval before initialization is finished - caller={caller}, source={source}")
+        if (self._sh.shng_status['code'] < 14):
+            # items are not (completly) loaded
+            logger.dbghigh(f"Item {self._path}: Running __run_eval before initialization is finished - eval run ignored- caller={caller}, source={source}  -  shng_status{self._sh.shng_status}")
+            return
+        if (self._sh.shng_status['code'] < 20) and (not caller.startswith('Init')):
+            logger.info(f"Item {self._path}: Running __run_eval before initialization is finished - caller={caller}, source={source}, value={value}  -  shng_status{self._sh.shng_status}")
+        if (self._sh.shng_status['code'] > 20):
+            logger.info(f"Item {self._path}: Running __run_eval after leaving run-mode - caller={caller}, source={source}, value={value}  -  shng_status{self._sh.shng_status}")
+
         if self._eval:
             # Test if a conditional trigger is defined
             if self._trigger_condition is not None:
@@ -1698,9 +1828,9 @@ class Item():
                     env = lib.env
 
                     cond = eval(self._trigger_condition)
-                    logger.warning(f"Item {self._path}: Condition result '{cond}' evaluating trigger condition {self._trigger_condition}")
+                    logger.warning(f"Item '{self._path}': Condition result '{cond}' evaluating trigger condition {self._trigger_condition}")
                 except Exception as e:
-                    log_msg = f"Item {self._path}: Problem evaluating trigger condition '{self._trigger_condition}': {e}"
+                    log_msg = f"Item '{self._path}': Problem evaluating trigger condition '{self._trigger_condition}': {e}"
                     if (self._sh.shng_status['code'] != 20) and (caller != 'Init'):
                         logger.debug(log_msg)
                     else:
@@ -1710,8 +1840,6 @@ class Item():
                 cond = True
 
             if cond == True:
-    #            if self._path == 'wohnung.flur.szenen_helper':
-    #                logger.info("__run_eval: item = {}, value = {}, self._eval = {}".format(self._path, value, self._eval))
                 # set up environment for calculating eval-expression
                 sh = self._sh
                 shtime = self.shtime
@@ -1727,31 +1855,41 @@ class Item():
                     self.__prev_trigger = self.__last_trigger
                     self.__last_trigger = self.shtime.now()
 
-                    logger.debug("Item {}: Eval triggered by: {}. Evaluating item with value {}. Eval expression: {}".format(self._path, self.__triggered_by, value, self._eval))
-
-                    # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
                     try:
-                       value = eval(self._eval)
+                        triggered = source in self._trigger
                     except:
-                        value = self._value = self.cast(value)
-                        value = eval(self._eval)
-                    # ms end
+                        triggered = False
+
+                    if self._eval_on_trigger_only and not triggered:
+                        # logger.debug(f'Item {self._path} Eval triggered by: {self.__triggered_by}, not in eval triggers {self._trigger}, but eval_on_trigger only set, so eval is ignored. Value is "{value}"')
+                        logger.info(f'Item {self._path} Eval triggered by: {self.__triggered_by}, not in eval_triggers, but eval_on_trigger_only set. Ignoring eval expression, setting value "{value}"')
+                    else:
+                        logger.debug(f"Item {self._path} Eval triggered by: {self.__triggered_by}, Evaluating item with value {value}. Eval expression: {self._eval}")
+
+                        # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
+                        try:
+                           value = eval(self._eval)
+                        except Exception as e:
+                            value = self._value = self.cast(value)
+                            value = eval(self._eval)
+                        # ms end
 
                 except Exception as e:
                     # adding "None" as the "destination" information at end of triggered_by
                     # This helps figuring out whether an eval expression was successfully evaluated or not.
-                    self.__triggered_by = "{0}:{1}:None".format(caller, source)
-                    log_msg = "Item {}: problem evaluating '{}': {}".format(self._path, self._eval, e)
+                    self.__triggered_by = f"{caller}:{source}:None"
+                    if e.__class__.__name__ == 'KeyError':
+                        log_msg = f"Item '{self._path}': problem evaluating '{self._eval}' - KeyError (in dict)"
+                    else:
+                        log_msg = f"Item '{self._path}': problem evaluating '{self._eval}' - {e.__class__.__name__}: {e}"
                     if (self._sh.shng_status['code'] != 20) and (caller != 'Init'):
                         logger.debug(log_msg + " (status_code={}/caller={})".format(self._sh.shng_status['code'], caller))
                     else:
                         logger.warning(log_msg)
                 else:
                     if value is None:
-                        logger.debug("Item {}: evaluating {} returns None".format(self._path, self._eval))
+                        logger.debug(f"Item {self._path}: evaluating {self._eval} returns None")
                     else:
-                        if self._path == 'wohnung.flur.szenen_helper':
-                            logger.info("__run_eval: item = {}, value = {}".format(self._path, value))
                         self.__update(value, caller, source, dest)
 
 
@@ -1777,7 +1915,7 @@ class Item():
         #uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
         env = lib.env
 
-        logger.info("Item {}: '{}' evaluating {} = {}".format(self._path, attr, on_dest, on_eval))
+        logger.info(f"Item '{self._path}': '{attr}' evaluating {on_dest} = {on_eval}")
 
         # if syntax without '=' is used, add caller and source to the item assignement
         if on_dest == '':
@@ -1979,8 +2117,9 @@ class Item():
         return
 
 
-    def __update(self, value, caller='Logic', source=None, dest=None):
+    def __update(self, value, caller='Logic', source=None, dest=None, key=None, index=None):
 
+        # special handling, if item is a hysteresys item (has a hysteresis_input attribute)
         if self._hysteresis_input is not None:
             if self._hysteresis_upper_timer_active:
                 if self._hysteresis_log:
@@ -1991,18 +2130,29 @@ class Item():
                 if self._hysteresis_log:
                     logger.notice(f"__update: lower_timer caller={caller}, value={value}")
 
-        try:
-            value = self.cast(value)
-        except:
+        if key is None and index is None:
+            # don't cast for elements of complex types
             try:
-                logger.warning(f'Item {self._path}: value "{value}" does not match type {self._type}. Via caller {caller}, source {source}')
+                value = self.cast(value)
             except:
-                pass
-            return
+                try:
+                    logger.warning(f'Item {self._path}: value "{value}" does not match type {self._type}. Via caller {caller}, source {source}')
+                except:
+                    pass
+                return
 
         self._lock.acquire()
         _changed = False
         trigger_source_details = self.__updated_by
+
+
+        if key is not None and self._type == 'dict':
+            # Update a dict item element or add an element (selected by key)
+            value = self.__set_dictentry(value, key)
+        elif index is not None and self._type == 'list':
+            # Update a list item element (selected by index)
+            value = self.__set_listentry(value, index)
+
         if value != self._value or self._enforce_change:
             _changed = True
             self._set_value(value, caller, source, dest, prev_change=None, last_change=None)

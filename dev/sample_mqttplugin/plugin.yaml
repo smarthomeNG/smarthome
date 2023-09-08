@@ -7,7 +7,7 @@ plugin:
         en: 'Sample plugin using MQTT protocol for SmartHomeNG v1.8 and up'
     maintainer: msinn
 #    tester:                         # Who tests this plugin?
-    state: develop                  # change to ready when done with development
+    state: develop                  # Initial 'develop'. change to 'ready' when done with development
 #    keywords: iot xyz
 #    documentation: ''               # An url to optional plugin doc - NOT the url to user_doc!!!
 #    support: https://knx-user-forum.de/forum/supportforen/smarthome-py
@@ -32,7 +32,7 @@ parameters:
         description:
             de: 'Item zum Schalten des Suspend-Modus'
             en: 'item for toggling suspend mode'
-            
+
 
 item_attributes:
     # Definition of item attributes defined by this plugin (enter 'item_attributes: NONE', if section should be empty)

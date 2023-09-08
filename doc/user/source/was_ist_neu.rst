@@ -33,6 +33,9 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **Platzhalter in Attributen**: Es ist jetzt möglich innerhalb von Attributwerten über Platzhalter die
       Inhalte anderer Attribute zu verwenden.
       Details sind in der :ref:`Dokumentation <Platzhalter_in_Attributwerten>` zu finden.
+    - **Zugriff auf Elemente komplexer Items**: Bei Items vom Typ **list** oder **dict** ist es möglich auf einzelne
+      Elemente zuzugreifen.
+      Details sind in der :ref:`Dokumentation <Zugriff_auf_Attributwerte>` zu finden.
   - **Neue Bibliothek lib.env**:
 
     - lib.env enthält eine Reihe von Funktionen zur Maßeinheitenumrechnung für Environment Daten, sowie weitere
@@ -43,8 +46,11 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
   - **Admin GUI**:
 
     - **Logiken**:
+
       - Die Liste der Logiken kann nun gruppiert angezeigt werden. Logiken können einer oder mehreren
       Gruppen zugeordnet werden.
+      - Zu Logiken kann nun eine Beschreibung erfasst werden. Diese wird in der Liste der Logiken, sowie zu den
+        verbundenen Logiken in den Item-Details angezeigt.
       - Zu den Gruppen können eine Titelzeile und eine Beschreibung gepflegt werden.
     - **Systemeigenschaften**: Die Resource Graphen der Systemdaten funktionieren jetzt auch, ohne dass das smartvisu
       Plugin konfiguriert sein muss.
@@ -63,6 +69,7 @@ Neuerungen bei Plugins
 
 Bei den Plugins sind folgende Änderungen zu beachten:
 
+  - **Plugin shelly**: Es werden jetzt Shelly Devices mit dem (neuen) Gen2 API untersützt.
   - **Plugin smartvisu**: Der Default Wert des Parameters **generate_pages** wurde auf **False** geändert. Zum
     generieren von Seiten muss dieser Parameter nun aktiv konfiguriert werden.
   - Es sind auch einige :ref:`neue Plugins <releasenotes_1_10_neue_plugins>` hinzugekommen.

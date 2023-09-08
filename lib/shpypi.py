@@ -1104,6 +1104,7 @@ class Requirements_files():
     _module_files = []
     _plugin_files = []
     _core_files = []  # to be a list in the future
+    _user_files = []
 
     def __init__(self, version='0.0.0', for_tests=False):
 
@@ -1292,10 +1293,10 @@ class Requirements_files():
     def _build_filelists(self, selection):
 
         self.logger.debug(f"_build_filelists: selection={selection}")
-        # global _module_files, _plugin_files, _core_files
         self._module_files = []
         self._plugin_files = []
         self._core_files = []         # to be a list in the future
+        self._user_files = []
 
         if selection in ['modules', 'base', 'all', 'conf_all']:
             # build list of all modules with requirements
@@ -1313,6 +1314,11 @@ class Requirements_files():
         if selection in ['core', 'base', 'all', 'conf_all']:
             # Read core requirements
             self._core_files = self._get_filelist('lib')
+
+        if selection in ['core', 'all', 'conf_all']:
+            # Read requirements for userfunctions and logics
+            self._user_files = self._get_filelist('functions')
+            self._user_files += self._get_filelist('logics')
         return
 
 
@@ -1346,6 +1352,10 @@ class Requirements_files():
         for fname in self._module_files:
             self._read_requirementfile(fname, requirements, 'SmartHomeNG-module ')
 
+        # Read requirements for userfunctions
+        #self.logger.warning(f"__read_requirementfiles: self._module_files={self._module_files}")
+        self._read_requirementfile(fname, requirements, 'SmartHomeNG-userfunctions ')
+
         # Read requirements for plugins
         #self.logger.warning(f"__read_requirementfiles: self._plugin_files={self._plugin_files}")
         for fname in self._plugin_files:
@@ -1355,6 +1365,11 @@ class Requirements_files():
         #self.logger.warning(f"__read_requirementfiles: self._conf_plugin_files={self._conf_plugin_files}")
         for fname in self._conf_plugin_files:
             self._read_requirementfile(fname, requirements, 'configured plugin ')
+
+        # Read user defined requirements for userfunctions (and logics)
+        #self.logger.warning(f"__read_requirementfiles: self._user_files={self._user_files}")
+        for fname in self._user_files:
+            self._read_requirementfile(fname, requirements, 'user-defined ')
 
         return requirements
 

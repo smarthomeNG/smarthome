@@ -138,7 +138,7 @@
 {% endif %}
 
 <div class="container-fluid m-3" id="webif-top">
-	<div class="row" id="webif-toprow">
+	<div class="row" id="webif-toprow" style="margin-right: 0px">
 
 		<div class="{% if logo_frame %}card {% endif %} col-sm-2" style="height:150px;" id="webif-pluginlogo">
 		    {% if isfile("static/img/plugin_logo.png") %}
@@ -175,7 +175,7 @@
 			{% block headtable %}
 			{% endblock %}
 			{%- if buttons is not defined or buttons == true %}
-				<div id="webif-allbuttons" style="margin-left: 10px; margin-right: 10px; float:right; white-space: nowrap;">
+				<div id="webif-allbuttons" style="margin-left: 10px; margin-right: 5px; float:right; white-space: nowrap;">
 					{%- if update_interval is defined and (autorefresh_buttons is not defined or autorefresh_buttons == true) %}
 						<span id="webif-autorefresh" style="white-space: nowrap;">
 							{{ _('Autom. Aktualisierung') }}
@@ -257,7 +257,7 @@ window.activeTab = "bodytab_" + {{ start_tab }};
 
 
 <div id="webif-tabs" class="container-fluid" style="position: fixed; background-color: white; top:180px; z-index: 8;">
-	<ul class="nav nav-tabs">
+	<ul class="nav nav-tabs" style="margin-right: 5px">
 		{% if tabcount == 1 and tab1title != "hidden" %}
 			<li id="tab_1" class="nav-item"><a class="text-dark nav-link active" href="#bodytab_1">{{ tab1title }}</a></li>
 		{% endif %}
@@ -284,7 +284,11 @@ window.activeTab = "bodytab_" + {{ start_tab }};
 	</ul>
 </div>
 
-<div style="margin-left: 10px; margin-right: 10px;" class="tab-content" id="resize_wrapper">
+{% if bordered_tab is not defined %}
+<div style="margin-left: 10px; margin-right: 0px;" class="tab-content" id="resize_wrapper">
+{% else %}
+<div style="margin-left: 15px; margin-right: 10px; border-left: 1px solid var(--shng-border); border-right: 1px solid var(--shng-border); border-bottom: 1px solid var(--shng-border);" class="tab-content" id="resize_wrapper">
+{% endif %}
 	<div id="bodytab_1" class="table-resize tab-pane {% if start_tab==1 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab1 %}
 		{% endblock bodytab1 %}

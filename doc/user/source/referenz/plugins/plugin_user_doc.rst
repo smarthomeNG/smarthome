@@ -13,7 +13,9 @@
 Dokumentation des Plugins
 =========================
 
-Die Dokumentation für Plugins wird in der Datei user_doc.rst abgelegt.
+Die Dokumentation für Plugins wird in der Datei ``user_doc.rst`` abgelegt. Früher wurde die Dokumentation in der
+Datei ``README.md`` abgelegt. Falls ein Plugin noch eine Datei ``README.md`` hat, ist Information hieraus in
+die ``user_doc`` zu überführen und anschließend ist die ``README.md`` zu löschen.
 
 Die Konfigurationsparameter selbst müssen in der user_doc.rst nicht beschrieben werden. Die Dokumentation der
 Konfigurationsparameter und der Item Attribute wird automatisch aus den Metadaten (aus der plugin.yaml) generiert.

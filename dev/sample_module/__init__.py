@@ -84,6 +84,7 @@ class SampleModule(Module):
 
         Otherwise don't enter code here
         """
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'start()'}))
         pass
 
     def stop(self):
@@ -93,7 +94,7 @@ class SampleModule(Module):
 
         Otherwise don't enter code here
         """
-        #        self.logger.debug("Module '{}': Shutting down".format(self.shortname))
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
         pass
 
 

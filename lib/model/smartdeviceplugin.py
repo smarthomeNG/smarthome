@@ -333,7 +333,7 @@ class SmartDevicePlugin(SmartPlugin):
         """
         Run method for the plugin
         """
-        self.logger.debug('Run method called')
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'run()'}))
 
         if self.alive:
             return
@@ -349,7 +349,8 @@ class SmartDevicePlugin(SmartPlugin):
         """
         Stop method for the plugin
         """
-        self.logger.debug('Stop method called')
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
+        
         self.alive = False
         if self.scheduler_get(self.get_shortname() + '_cyclic'):
             self.scheduler_remove(self.get_shortname() + '_cyclic')
@@ -576,7 +577,7 @@ class SmartDevicePlugin(SmartPlugin):
 
             # check for suspend item
             if item is self._suspend_item:
-                if caller != self.get_shortname():                
+                if caller != self.get_shortname():
                     self.logger.debug(f'Suspend item changed to {item()}')
                     self.set_suspend(by=f'suspend item {item.path()}')
                 return
@@ -713,7 +714,7 @@ class SmartDevicePlugin(SmartPlugin):
             # don't know yet to which command this belongs to. So find out...
             self.logger.debug(f'received data "{data}" from {by} without command specification')
 
-            # command can be a string (classic single command) or 
+            # command can be a string (classic single command) or
             # - new - a list of strings if multiple commands are identified
             # in that case, work on all strings
             commands = self._commands.get_command_from_reply(data)
@@ -725,7 +726,7 @@ class SmartDevicePlugin(SmartPlugin):
                         self.logger.debug(f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}')
                         self._dispatch_callback(self._unknown_command, data, by)
                     else:
-                        self.logger.info(f'received data "{data}" not identifying a known command while suspended, aborting.')            
+                        self.logger.info(f'received data "{data}" not identifying a known command while suspended, aborting.')
                 return
 
         if self.suspended:

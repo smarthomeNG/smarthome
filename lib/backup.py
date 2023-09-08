@@ -147,6 +147,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     # backup files from /logic
     #logger.warning("- logic_dir = {}".format(logic_dir))
     backup_directory(backupzip, logic_dir, '.py')
+    backup_directory(backupzip, logic_dir, '.txt')
 
     # backup files from /scenes
     #logger.warning("- scenes_dir = {}".format(scenes_dir))
@@ -252,7 +253,7 @@ def restore_backup(conf_base_dir, base_dir):
     :return:
     """
     logger.info(f"Beginning restore of configuration")
-    
+
     make_backup_directories(base_dir)
     restore_dir = os.path.join(base_dir, 'var','restore')
 

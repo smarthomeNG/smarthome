@@ -101,6 +101,6 @@ class Module(SmartObject, Utils):
         """
         txt = str(txt)
 
-        return lib_translate(txt, vars, additional_translations='module/'+self._shortname)
+        return lib_translate(txt, vars, module_translations='module/'+self._shortname)
 
 

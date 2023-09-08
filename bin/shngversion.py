@@ -101,10 +101,12 @@ from lib.utils import Version
 # Update auf 1.9.5.2  wg. lib.plugin Erweiterung: Neue Methode get der Klasse plugins
 # Update auf 1.9.5.3  wg. Implementierung der ersten Version des adm Protokolls im Websocket Modul
 # Update auf 1.9.5.4  wg. Implementierung der lib.env zur Nutzung in Logiken und env Attributen
+# Update auf 1.9.5.5  wg. Modifikation von SmartPlugin und mqtt Modul (Datentyp 'dict/str')
+# Update auf 1.9.5.6  wg. Initialem Support für Zugriff auf Elemente von dict-/list-Items
 
-shNG_version = '1.9.5.4'
+shNG_version = '1.9.5.6'
 shNG_branch = 'master'
-shNG_releasedate = '31. März 2023'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
+shNG_releasedate = '26. August 2023'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
 # ---------------------------------------------------------------------------------
 FileBASE = None

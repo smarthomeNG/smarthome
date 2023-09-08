@@ -24,6 +24,9 @@ import threading
 from lib.module import Modules
 from lib.model.smartplugin import SmartPlugin
 from lib.shtime import Shtime
+from lib.translation import translate as lib_translate
+
+import os
 
 
 class MqttPlugin(SmartPlugin):
@@ -60,6 +63,25 @@ class MqttPlugin(SmartPlugin):
         return True
 
 
+    def translate(self, txt, vars=None, block=None):
+        """
+        Returns translated text for class SmartPlugin
+        """
+        txt = str(txt)
+        if block:
+            self.logger.warning(f"unsuported 3. parameter '{block}' used in translation function _( ... )")
+
+        if self._add_translation is None:
+            # test initially, if plugin has additional translations
+            translation_fn = os.path.join(self._plugin_dir, 'locale.yaml')
+            self._add_translation = os.path.isfile(translation_fn)
+
+        if self._add_translation:
+            return lib_translate(txt, vars, plugin_translations='plugin/'+self.get_shortname(), additional_translations='module/mqtt')
+        else:
+            return lib_translate(txt, vars, additional_translations='module/mqtt')
+
+
     def start_subscriptions(self):
         """
         Start subscription to all topics
@@ -88,7 +110,10 @@ class MqttPlugin(SmartPlugin):
                     # stop subscription to all items for this topic
                     for item_path in self._subscribed_topics[topic]:
                         current = str(self._subscribed_topics[topic][item_path]['current'])
-                        self.logger.info("stop(): Unsubscribing from topic {} for item {}".format(topic, item_path))
+                        if item_path == '*no_item*':
+                            self.logger.info(f"Unsubscribing from topic {topic}")
+                        else:
+                            self.logger.info(f"Unsubscribing from topic {topic} for item {item_path}")
                         self.mod_mqtt.unsubscribe_topic(self.get_shortname() + '-' + current, topic)
             self._subscriptions_started = False
         return
@@ -100,7 +125,10 @@ class MqttPlugin(SmartPlugin):
         payload_type = self._subscribed_topics[topic][item_path].get('payload_type', None)
         callback = self._subscribed_topics[topic][item_path].get('callback', None)
         bool_values = self._subscribed_topics[topic][item_path].get('bool_values', None)
-        self.logger.info("_start_subscription: Subscribing to topic {}, payload_type '{}' for item {} (callback={})".format(topic, payload_type, item_path, callback))
+        if item_path == '*no_item*':
+            self.logger.info(f"Subscribing to topic {topic}, payload_type '{payload_type}' - callback={callback}")
+        else:
+            self.logger.info(f"Subscribing to topic {topic}, payload_type '{payload_type}' - for item '{item_path}'")
         self.mod_mqtt.subscribe_topic(self.get_shortname() + '-' + current, topic, callback=callback,
                                       qos=qos, payload_type=payload_type, bool_values=bool_values)
         return
@@ -161,11 +189,11 @@ class MqttPlugin(SmartPlugin):
         """
         self.mod_mqtt.publish_topic(self.get_shortname(), topic, payload, qos, retain, bool_values)
         if item is not None:
-            self.logger.info("publish_topic: Item '{}' -> topic '{}', payload '{}', QoS '{}', retain '{}'".format(item.id(), topic,  payload, qos, retain))
+            self.logger.dbghigh(f"publish_topic: Item '{item.id()}' -> topic '{topic}', payload '{payload}', QoS '{qos}', retain '{retain}'")
             # Update dict for periodic updates of the web interface
             self._update_item_values(item, payload)
         else:
-            self.logger.info("publish_topic: topic '{}', payload '{}', QoS '{}', retain '{}'".format(topic,  payload, qos, retain))
+            self.logger.dbghigh(f"publish_topic: topic '{topic}', payload '{payload}', QoS '{qos}', retain '{retain}'")
         return
 
 
@@ -217,7 +245,7 @@ class MqttPlugin(SmartPlugin):
         :param qos:
         :param retain:
         """
-        self.logger.debug("_on_mqtt_message: Received topic '{}', payload '{} (type {})', QoS '{}', retain '{}' ".format(topic, payload, type(payload), qos, retain))
+        self.logger.debug(f"_on_mqtt_message: Received topic '{topic}', payload '{payload} (type {type(payload)})', QoS '{qos}', retain '{retain}' ")
 
         # get item for topic
         if self._subscribed_topics.get(topic, None):
@@ -230,14 +258,14 @@ class MqttPlugin(SmartPlugin):
                     except:
                         log_info = (str(payload) != str(item()))
                     if log_info:
-                        self.logger.info("_on_mqtt_message: Received topic '{}', payload '{}' (type {}), QoS '{}', retain '{}' for item '{}'".format( topic, payload, item.type(), qos, retain, item.id() ))
+                        self.logger.dbghigh(f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.id()}' (value={item()})")
                     else:
-                        self.logger.debug("_on_mqtt_message: Received topic '{}', payload '{}' (type {}), QoS '{}', retain '{}' for item '{}'".format(topic, payload, item.type(), qos, retain, item.id()))
+                        self.logger.debug(f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.id()}' (value={item()})")
                     item(payload, self.get_shortname())
                     # Update dict for periodic updates of the web interface
                     self._update_item_values(item, payload)
         else:
-            self.logger.error("_on_mqtt_message: No definition found for subscribed topic '{}'".format(topic))
+            self.logger.error(f"_on_mqtt_message: No definition found for subscribed topic '{topic}'")
         return
 
 
@@ -257,3 +285,35 @@ class MqttPlugin(SmartPlugin):
         self._item_values[item.id()]['last_update'] = item.last_update().strftime('%d.%m.%Y %H:%M:%S')
         self._item_values[item.id()]['last_change'] = item.last_change().strftime('%d.%m.%Y %H:%M:%S')
         return
+
+
+from lib.model.smartplugin import SmartPluginWebIf
+# try:
+#     from jinja2 import Environment, FileSystemLoader
+# except:
+#     pass
+# from lib.module import Modules
+
+
+class MqttPluginWebIf(SmartPluginWebIf):
+
+
+    def translate(self, txt, vars=None):
+        """
+        Returns translated text for class SmartPluginWebIf
+
+        This method extends the jinja2 template engine _( ... ) -> translate( ... )
+        """
+        txt = str(txt)
+
+        if self.plugin._add_translation is None:
+            # test initially, if plugin has additional translations
+            translation_fn = os.path.join(self.plugin._plugin_dir, 'locale.yaml')
+            self.plugin._add_translation = os.path.isfile(translation_fn)
+
+        if self.plugin._add_translation:
+            return lib_translate(txt, vars, plugin_translations='plugin/' + self.plugin.get_shortname(), module_translations='module/http', additional_translations='module/mqtt')
+        else:
+            return lib_translate(txt, vars, module_translations='module/http', additional_translations='module/mqtt')
+
+

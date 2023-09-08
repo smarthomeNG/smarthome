@@ -421,14 +421,18 @@ def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
         _logger.warning(f"location_name: {location_name(response.status_code)}")
         return ''
 
-    if json_obj['address'].get('city', None) is not None:
-        result = json_obj['address']['city']
-    elif json_obj['address'].get('town', None) is not None:
-        result = json_obj['address']['town']
-    elif json_obj['address'].get('village', None) is not None:
-        result = json_obj['address']['village']
-    else:
+    if json_obj.get('address', None) is None:
         result = ''
+        _logger.notice(f"No 'address' in json response '{json_obj}' for request '{request_str}'")
+    else:
+        if json_obj['address'].get('city', None) is not None:
+            result = json_obj['address']['city']
+        elif json_obj['address'].get('town', None) is not None:
+            result = json_obj['address']['town']
+        elif json_obj['address'].get('village', None) is not None:
+            result = json_obj['address']['village']
+        else:
+            result = ''
 
     if  json_obj['address'].get('suburb', None) is not None:
         if result != '':
