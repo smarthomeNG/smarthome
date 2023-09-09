@@ -1804,6 +1804,11 @@ class Item():
         """
         evaluate the 'eval' entry of the actual item
         """
+        if caller.lower().startswith('admin:'):
+            caller = caller[6:] + ':admin'
+        if (not caller.lower().startswith('eval:')) and (not caller.lower().endswith(':eval')):
+            caller = 'Eval:' + caller
+
         if (self._sh.shng_status['code'] < 14):
             # items are not (completly) loaded
             logger.dbghigh(f"Item {self._path}: Running __run_eval before initialization is finished - eval run ignored- caller={caller}, source={source}  -  shng_status{self._sh.shng_status}")
@@ -1868,12 +1873,12 @@ class Item():
 
                         # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
                         try:
-                           value = eval(self._eval)
+                            value = eval(self._eval)
                         except Exception as e:
-                            value = self._value = self.cast(value)
+                            #value = self._value = self.cast(value)
+                            value = self.cast(value)
                             value = eval(self._eval)
                         # ms end
-
                 except Exception as e:
                     # adding "None" as the "destination" information at end of triggered_by
                     # This helps figuring out whether an eval expression was successfully evaluated or not.
