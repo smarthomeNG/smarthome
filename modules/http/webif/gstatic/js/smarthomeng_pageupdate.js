@@ -1,51 +1,3 @@
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let i = 0; i <ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      let result = c.substring(name.length, c.length);
-      console.log("Reading cookie " + cname + " with value " + result);
-      try {
-        result = JSON.parse(result);
-      }
-      catch (e) {
-      }
-      return result;
-    }
-  }
-  return "";
-}
-
-function setCookie(cname, cvalue, exdays, path) {
-  if (exdays === 0)
-  {
-    let expires = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
-
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/plugin/" + path;
-    console.log("Deleting cookie " + cname + " for plugin " + path);
-  }
-  else
-  {
-    const d = new Date();
-    try {
-      cvalue = JSON.stringify(cvalue);
-    }
-    catch(e) {
-
-    }
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    let expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/plugin/" + path;
-    console.log("Setting cookie " + cname + " for plugin " + path + " to " + cvalue + ", all cookies " + document.cookie);
-  }
-
-}
-/* setCookie('update_interval', '', 0, '');*/
 /**
  * enables or disables the auto refresh checkbox based on form input for interval
 */
@@ -90,16 +42,20 @@ function set_update_interval() {
  * initialize form values correctly and update active checkbox based on interval value (disabled on 0)
 */
 $(window).on('load', function (e) {
-  let update_interval = getCookie("update_interval");
-  window.update_active = getCookie("update_active");
-  if (update_interval != "")
+  //setCookie('update_interval', '', 0, window.pluginname);
+  //setCookie('update_active', '', 0, window.pluginname);
+  let cookie_interval = getCookie("update_interval");
+  let cookie_active = getCookie("update_active");
+  if (cookie_active !== "")
+    window.update_active = cookie_active;
+  if (cookie_interval !== "")
   {
     if (window.update_active == true)
-      refresh.set_interval(update_interval, false);
+      refresh.set_interval(cookie_interval, false);
     else
-      window.update_interval = update_interval;
+      window.update_interval = cookie_interval;
     if ( document.body.contains(document.getElementById("update_interval")) )
-      document.getElementById("update_interval").value = update_interval;
+      document.getElementById("update_interval").value = cookie_interval;
   }
 
   if ( document.body.contains(document.getElementById("update_active")) )
@@ -107,6 +63,7 @@ $(window).on('load', function (e) {
   if ( document.body.contains(document.getElementById("update_interval")) )
     document.getElementById("update_interval").value = window.update_interval / 1000;
   set_update_active();
+  set_update_interval();
   if ( document.body.contains(document.getElementById("update_interval")) ) {
     let interval_input = document.getElementById("update_interval");
     interval_input.addEventListener('input', event => {

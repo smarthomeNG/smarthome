@@ -14,7 +14,7 @@
 
 {% block scripts -%}
 {{ super() }}
-<script src="/gstatic/js/smarthomeng_pageupdate.js"></script>
+<script src="/gstatic/js/smarthomeng_cookies.js"></script>
 <script>
 	$(document).on("change", ".dataTables_length select", function(){
 	          var selectedVal = $(this).val();
@@ -132,7 +132,7 @@
 	}
   initVariables();
 </script>
-
+<script src="/gstatic/js/smarthomeng_pageupdate.js"></script>
 {%- endblock scripts %}
 
 {% block content -%}
