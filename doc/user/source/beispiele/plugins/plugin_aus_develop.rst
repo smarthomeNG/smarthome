@@ -14,7 +14,7 @@ zu installieren. Dazu sind folgende Schritte durchzuführen:
 Plugins Repository aufrufen
 ---------------------------
 
-Im Browser die Seite http://www.github.com/smarthomemg/plugins aufrufen:
+Im Browser die Seite http://www.github.com/smarthomeng/plugins aufrufen:
 
 .. image:: ../assets/plugin_install_1.jpg
    :class: screenshot
@@ -33,7 +33,7 @@ Plugins Repository Download
 
 Anschließend auf den grünen **Code** Button klicken und **Download ZIP** auswählen:
 
-.. image:: ../assets/plugin_install_2.jpg
+.. image:: ../assets/plugin_install_3.jpg
    :class: screenshot
 
 |
