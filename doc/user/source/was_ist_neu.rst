@@ -14,15 +14,6 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       (Siehe auch :doc:`Komplettanleitung </installation/komplettanleitung/02_smarthomeng>`)
 
     - **virtuelle Environments**: Skripte zum Anlegen und Aktivieren von virtuellen Python Environments
-  - **Structs**:
-
-    - **Verschachtelung**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch
-      auf Unterebenen einer stuct eingebunden werden.
-    - **relative Referenzen**: Bei der Einbindung von Sub-Structs aus der selben Datei können jetzt relative
-      Angaben gemacht werden.
-    - **structs Verzeichnis**: Dateien mit struct Definitionen werden jetzt im Verzeichnis ../structs abgelegt.
-      Bestehende Definitionsdateien werden automatisch aus dem ../etc Verzeichnis in das ../structs Verzeichnis
-      migriert.
   - **Items**:
 
     - **Hysterese**: Es gibt neue Attribute, die es ermöglichen ein Item als Hysterese-Glied mit optionalem Zeitlied
@@ -36,6 +27,15 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **Zugriff auf Elemente komplexer Items**: Bei Items vom Typ **list** oder **dict** ist es möglich auf einzelne
       Elemente zuzugreifen.
       Details sind in der :ref:`Dokumentation <Zugriff_auf_Attributwerte>` zu finden.
+  - **Structs**:
+
+    - **Verschachtelung**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch
+      auf Unterebenen einer stuct eingebunden werden.
+    - **relative Referenzen**: Bei der Einbindung von Sub-Structs aus der selben Datei können jetzt relative
+      Angaben gemacht werden.
+    - **structs Verzeichnis**: Dateien mit struct Definitionen werden jetzt im Verzeichnis ../structs abgelegt.
+      Bestehende Definitionsdateien werden automatisch aus dem ../etc Verzeichnis in das ../structs Verzeichnis
+      migriert.
   - **Neue Bibliothek lib.env**:
 
     - lib.env enthält eine Reihe von Funktionen zur Maßeinheitenumrechnung für Environment Daten, sowie weitere
