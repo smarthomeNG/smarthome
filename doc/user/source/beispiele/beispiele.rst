@@ -20,7 +20,8 @@ Dokumentation des jeweiligen Plugins im Abschnitt  :doc:`Plugins </plugins_all>`
    :hidden:
    :titlesonly:
 
-   items/*
-   logiken/logiken.rst
-   structs/*
-   knxd.rst
+    items/items_eval_evaltrigger
+    items/items_tipps_und_tricks
+    logiken/logiken.rst
+    structs/*.rst
+    knxd.rst
