@@ -1,17 +1,17 @@
 
-.. index:: Beispiele; Plugins
-.. index:: Plugins; Beispiele
+.. index:: Tipps & Tricks; Plugins
+.. index:: Plugins; Tipps & Tricks
 
 =======
 Plugins
 =======
 
-Hier finden sich einige Beispiele, sowie Tipps & Tricks.
+Hier finden sich einige Tipps & Tricks zu Plugins.
 
 
 .. toctree::
     :maxdepth: 4
     :titlesonly:
 
-    plugins_aus_develop.rst
+    plugin_aus_develop.rst
 

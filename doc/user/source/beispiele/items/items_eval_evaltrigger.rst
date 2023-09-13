@@ -6,8 +6,8 @@
 .. index:: Beispiele; eval
 
 
-Items: eval und eval_trigger
-============================
+eval und eval_trigger
+=====================
 
 Hier finden sich einige Beispiele für die Anwendung von **eval** und **eval_trigger**
 

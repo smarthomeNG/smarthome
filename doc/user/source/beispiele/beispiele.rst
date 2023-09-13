@@ -5,6 +5,8 @@
 .. role:: greensup
 .. role:: blacksup
 
+.. index:: Beispiele
+.. index:: Tipps & Tricks
 
 =========================
 Beispiele, Tipps & Tricks
