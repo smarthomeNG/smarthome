@@ -16,9 +16,9 @@ Dokumentation des jeweiligen Plugins im Abschnitt  :doc:`Plugins </plugins_all>`
 
 
 .. toctree::
-   :maxdepth: 5
-   :hidden:
-   :titlesonly:
+    :maxdepth: 5
+    :hidden:
+    :titlesonly:
 
     items/items_eval_evaltrigger.rst
     items/items_tipps_und_tricks.rst
