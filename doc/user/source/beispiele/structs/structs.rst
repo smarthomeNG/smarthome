@@ -1,12 +1,14 @@
 
-.. index:: Beispiele; Structs
-.. index:: Structs; Beispiele
+.. index:: Beispiele; structs
+.. index:: structs; Beispiele
+.. index:: Tipps & Tricks; structs
+.. index:: structs; Tipps & Tricks
 
 =======
 Structs
 =======
 
-Hier finden sich einige Beispiele, sowie Tipps & Tricks.
+Hier finden sich einige Beispiele, sowie Tipps & Tricks zu structs.
 
 
 .. toctree::

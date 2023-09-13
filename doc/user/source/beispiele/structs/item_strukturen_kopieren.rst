@@ -1,4 +1,6 @@
 
+.. index:: Tipps & Tricks; structs bequem kopieren
+
 Item Strukturen bequem kopieren
 ===============================
 

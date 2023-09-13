@@ -1,6 +1,8 @@
 
-Ein Item aus develop installieren
-=================================
+.. index:: Tipps & Tricks; Plugins: Ein Plugin aus develop installieren
+
+Ein Plugin aus develop installieren
+===================================
 
 Falls in Probleme mit einem Plugin auftreten, kann es hilfreich sein eine neuere Version des Plugins aus dem develop
 Branch auf GitHub zu installieren, ohne deshalb die eigene Installation vollständig auf die (nicht notwendigerweise
@@ -36,7 +38,7 @@ Anschließend auf den grünen **Code** Button klicken und **Download ZIP** ausw�
 
 |
 
-Falls der Browser das ZIP Archiv nicht bereits entpackt hat, das Archiv ```plugins-develop.zip``` entpacken.
+Falls der Browser das ZIP Archiv nicht bereits entpackt hat, das Archiv ``plugins-develop.zip`` entpacken.
 
 |
 
@@ -44,14 +46,14 @@ Gewünschtes Plugin installieren
 -------------------------------
 
 Um zub Beispiel ein Plugin mit dem Namen **xyz** durch die Version aus dem develop Branch zu ersetzen, sollte
-zuerst das Verzeichnis der bestehenen Version im ```plugins``` Verzeichnis von **xyz** in **xyz.mstr** umbenannt werden,
+zuerst das Verzeichnis der bestehenen Version im ``plugins`` Verzeichnis von **xyz** in **xyz.mstr** umbenannt werden,
 damit man später bei Bedarf darauf zurück wechseln kann.
 
 Anschließend kann das Verzeichnis **xyz** (mit allen Bestandteilen/Unterordnern) aus dem beim Entpacken entstandenen
-Verzeichnis ```plugins-develop``` in das ```plugins``` Verzeichnis der SmartHomeNG Installation kopiert werden.
+Verzeichnis ``plugins-develop`` in das ``plugins`` Verzeichnis der SmartHomeNG Installation kopiert werden.
 
 Um das neue Plugin zu aktivieren, muss SmartHomeNG nun neu gestartet werden. Falls die neue Version
 Konfigurationsänderungen benötigen sollte, sind diese vor dem Neustart durchzuführen.
 
-Nun kann das Verzeichnis ```plugins-develop``` gelöscht werden.
+Nun kann das Verzeichnis ``plugins-develop`` gelöscht werden.
 

@@ -18,6 +18,8 @@ Tipps und Tricks :bluesup:`Update`
 .. index:: Items; Zeitglied
 
 
+.. index:: Tipps & Tricks; Items: Erstellen eines Zeitgiedes
+
 Erstellen eines Zeitgiedes
 ==========================
 
@@ -46,7 +48,7 @@ implementiert.
 |
 
 
-.. index:: Items; Wert invertieren
+.. index:: Tipps & Tricks; Items: Wert Invertieren
 
 Invertieren eines Item Wertes
 =============================
@@ -105,6 +107,8 @@ ein ``eval_trigger`` und ein ``eval`` zufügen.
            eval_trigger: ..
 
 |
+
+.. index:: Tipps & Tricks; Items: Erstellung von Tag-/Nacht-Items für KNX
 
 Erstellung von Tag-/Nacht-Items für KNX
 =======================================
