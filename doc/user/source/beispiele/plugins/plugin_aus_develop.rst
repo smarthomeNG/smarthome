@@ -8,8 +8,25 @@ Falls in Probleme mit einem Plugin auftreten, kann es hilfreich sein eine neuere
 Branch auf GitHub zu installieren, ohne deshalb die eigene Installation vollständig auf die (nicht notwendigerweise
 stabile) develop Version von SmartHomeNG zu wechseln.
 
-Im folgenden wird ein mögliches Vorgehen beschrieben, um ein Plugin aus dem develop Branch in eine Release Installation
-zu installieren. Dazu sind folgende Schritte durchzuführen:
+Im tools Verzeichnis gibt es ein Skript, welches ein gewähltes Plugin aus dem develop branch zusätzlich in die
+aktuelle Installation von SmartHomeNG kopiert. Damit kein Namenskonflikt mit einem bestehenden Plugin entsteht,
+wird an den Plugin Namen der String '_dev' angehängt. Ein Plugin mit dem Namen **xyz** wird also mit dem Namen
+**xyz_dev** in die bestehende SmartHomeNG Installation kopiert.
+
+Das Skript für Installation wird folgendermaßen gestartet:
+
+.. code-block:: bash
+
+    install_plugin_from_develop xyz
+
+|
+
+Plugin manuell installieren
+===========================
+
+Alternativ kann das Plugin manuell installiert werden. Im folgenden wird ein mögliches Vorgehen beschrieben,
+um ein Plugin aus dem develop Branch in eine Release Installation zu installieren. Dazu sind folgende Schritte
+durchzuführen:
 
 Plugins Repository aufrufen
 ---------------------------
@@ -45,15 +62,22 @@ Falls der Browser das ZIP Archiv nicht bereits entpackt hat, das Archiv ``plugin
 Gewünschtes Plugin installieren
 -------------------------------
 
-Um zub Beispiel ein Plugin mit dem Namen **xyz** durch die Version aus dem develop Branch zu ersetzen, sollte
-zuerst das Verzeichnis der bestehenen Version im ``plugins`` Verzeichnis von **xyz** in **xyz.mstr** umbenannt werden,
-damit man später bei Bedarf darauf zurück wechseln kann.
+Um zum Beispiel ein Plugin mit dem Namen **xyz** aus dem develop Branch zu installieren, sollte (falls es existiert)
+zuerst das Verzeichnis **xyz_dev** im ``plugins`` Verzeichnis gelöscht werden, damit keine Seiteneffekte durch
+bestehende Dateien auftreten.
 
 Anschließend kann das Verzeichnis **xyz** (mit allen Bestandteilen/Unterordnern) aus dem beim Entpacken entstandenen
-Verzeichnis ``plugins-develop`` in das ``plugins`` Verzeichnis der SmartHomeNG Installation kopiert werden.
+Verzeichnis ``plugins-develop`` in das ``plugins`` Verzeichnis der SmartHomeNG Installation unter dem Namen **xyz_dev**
+kopiert werden.
 
-Um das neue Plugin zu aktivieren, muss SmartHomeNG nun neu gestartet werden. Falls die neue Version
-Konfigurationsänderungen benötigen sollte, sind diese vor dem Neustart durchzuführen.
+Nun kann das Archiv ``develop.zip`` und das Verzeichnis ``plugins-develop`` gelöscht werden.
 
-Nun kann das Verzeichnis ``plugins-develop`` gelöscht werden.
+Um das neue Plugin zu aktivieren, muss noch die Plugin Konfiguration in der Datei ``etc/plugin.yaml`` angepasst werden.
+Dazu muss im Abschnitt in dem das Plugin konfiguriert ist, der Eintrag ``plugin_name: xyz`` durch
+``plugin_name: xyz_dev`` ersetzt werden.
+
+Falls ein Logger für das ursprüngliche Plugin **xyz** konfiguriert ist, muss auch noch in ``etc/logging.yaml`` ein
+Logger für das Plugin **xyz_dev** konfiguriert werden. Dazu einfach den Abschnitt mit dem Logger ``plugins.xyz``
+kopieren und in der Kopie den Namen in ``plugins.xyz_dev`` ändern.
+
 

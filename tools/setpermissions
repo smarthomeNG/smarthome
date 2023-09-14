@@ -30,6 +30,7 @@ chmod +x tools/getshngpid
 chmod +x tools/measure_cpu_speed.py
 chmod +x tools/plugin_metadata_checker.py
 chmod +x tools/test_running
+chmod +x tools/install_plugin_from_develop
 
 #echo `pwd`
 #find . -type d -exec chmod g+rwsx {} +
