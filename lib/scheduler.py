@@ -706,11 +706,12 @@ class Scheduler(threading.Thread):
                 if value is None:
                     obj()
                 else:
-                    logger.debug(f"_task: name={name}, value={value}, by={by}, source={source}")
-                    if isinstance(value, dict):
-                        caller = value.get('caller', None)
-                        if caller is None:
-                            value['caller'] = by
+                    if 'caller' in inspect.getfullargspec(obj).args:
+                        logger.debug(f"_task: name={name}, value={value}, by={by}, source={source} - args of task-obj={inspect.getfullargspec(obj).args}")
+                        if isinstance(value, dict):
+                            caller = value.get('caller', None)
+                            if caller is None:
+                                value['caller'] = by
                     obj(**value)
             except Exception as e:
                 tasks_logger.exception(f"Method {name} exception: {e}")
