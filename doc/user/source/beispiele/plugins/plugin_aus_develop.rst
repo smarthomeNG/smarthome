@@ -19,6 +19,8 @@ Das Skript für Installation wird folgendermaßen gestartet:
 
     install_plugin_from_develop xyz
 
+Nachdem das Skript erfolgreich endet, ist ein zusätzliches Plugin **xyz_dev** in der Installation vorhanden.
+
 |
 
 Konfiguration anpassen
