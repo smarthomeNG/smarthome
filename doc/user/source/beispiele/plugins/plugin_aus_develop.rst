@@ -21,15 +21,28 @@ Das Skript für Installation wird folgendermaßen gestartet:
 
 |
 
+Konfiguration anpassen
+----------------------
+
+Um das neue Plugin zu aktivieren, muss noch die Plugin Konfiguration in der Datei ``etc/plugin.yaml`` angepasst werden.
+Dazu muss im Abschnitt in dem das Plugin konfiguriert ist, der Eintrag ``plugin_name: xyz`` durch
+``plugin_name: xyz_dev`` ersetzt werden.
+
+Falls ein Logger für das ursprüngliche Plugin **xyz** konfiguriert ist, muss auch noch in ``etc/logging.yaml`` ein
+Logger für das Plugin **xyz_dev** konfiguriert werden. Dazu einfach den Abschnitt mit dem Logger ``plugins.xyz``
+kopieren und in der Kopie den Namen in ``plugins.xyz_dev`` ändern.
+
+|
+
 Plugin manuell installieren
-===========================
+---------------------------
 
 Alternativ kann das Plugin manuell installiert werden. Im folgenden wird ein mögliches Vorgehen beschrieben,
 um ein Plugin aus dem develop Branch in eine Release Installation zu installieren. Dazu sind folgende Schritte
 durchzuführen:
 
 Plugins Repository aufrufen
----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Im Browser die Seite http://www.github.com/smarthomeng/plugins aufrufen:
 
@@ -46,12 +59,13 @@ und in den develop Branch wechseln:
 |
 
 Plugins Repository Download
----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Anschließend auf den grünen **Code** Button klicken und **Download ZIP** auswählen:
 
 .. image:: ../assets/plugin_install_3.jpg
    :class: screenshot
+
 
 |
 
@@ -60,7 +74,7 @@ Falls der Browser das ZIP Archiv nicht bereits entpackt hat, das Archiv ``plugin
 |
 
 Gewünschtes Plugin installieren
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Um zum Beispiel ein Plugin mit dem Namen **xyz** aus dem develop Branch zu installieren, sollte (falls es existiert)
 zuerst das Verzeichnis **xyz_dev** im ``plugins`` Verzeichnis gelöscht werden, damit keine Seiteneffekte durch
@@ -71,6 +85,9 @@ Verzeichnis ``plugins-develop`` in das ``plugins`` Verzeichnis der SmartHomeNG I
 kopiert werden.
 
 Nun kann das Archiv ``develop.zip`` und das Verzeichnis ``plugins-develop`` gelöscht werden.
+
+Konfiguration anpassen
+^^^^^^^^^^^^^^^^^^^^^^
 
 Um das neue Plugin zu aktivieren, muss noch die Plugin Konfiguration in der Datei ``etc/plugin.yaml`` angepasst werden.
 Dazu muss im Abschnitt in dem das Plugin konfiguriert ist, der Eintrag ``plugin_name: xyz`` durch
