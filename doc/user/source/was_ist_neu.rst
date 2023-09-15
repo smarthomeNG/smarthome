@@ -26,15 +26,15 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       Details sind in der :ref:`Dokumentation <Platzhalter_in_Attributwerten>` zu finden.
     - **Zugriff auf Elemente komplexer Items**: Bei Items vom Typ **list** oder **dict** ist es möglich auf einzelne
       Elemente zuzugreifen.
-      Details sind in der Dokumentation unter :ref:`Tipps & Tricks <Plugin_aus_develop>` zu finden.
+      Details sind in der :ref:`Dokumentation <Zugriff_auf_Attributwerte>` zu finden.
   - **Structs**:
 
     - **Verschachtelung**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch
       auf Unterebenen einer stuct eingebunden werden.
     - **relative Referenzen**: Bei der Einbindung von Sub-Structs aus der selben Datei können jetzt relative
       Angaben gemacht werden.
-    - **structs Verzeichnis**: Dateien mit struct Definitionen werden jetzt im Verzeichnis ../structs abgelegt.
-      Bestehende Definitionsdateien werden automatisch aus dem ../etc Verzeichnis in das ../structs Verzeichnis
+    - **structs Verzeichnis**: Dateien mit struct Definitionen werden jetzt im Verzeichnis ``../structs`` abgelegt.
+      Bestehende Definitionsdateien werden automatisch aus dem ``../etc`` Verzeichnis in das ``../structs`` Verzeichnis
       migriert.
   - **Plugins**:
 
@@ -42,7 +42,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       soll, ohne deshalb die eigene Installation vollständig auf die (nicht notwendigerweise stabile) develop Version
       von SmartHomeNG umzustellen, wurde ein Skript erstellt. Dieses Skript installiert ein gewähltes Plugin aus dem
       develop branch zusätzlich in die aktuelle Installation von SmartHomeNG.
-      Details sind in der :ref:`Dokumentation <Zugriff_auf_Attributwerte>` zu finden.
+      Details sind in der Dokumentation unter :ref:`Tipps & Tricks <Plugin_aus_develop>` zu finden.
 
   - **Neue Bibliothek lib.env**:
 
