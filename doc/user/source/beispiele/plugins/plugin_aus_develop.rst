@@ -1,6 +1,8 @@
 
 .. index:: Tipps & Tricks; Plugins: Ein Plugin aus develop installieren
 
+.. _Plugin_aus_develop:
+
 Ein Plugin aus develop installieren
 ===================================
 
