@@ -58,7 +58,7 @@ Activate that function if needed, otherwise just remove the line to increase per
 -->
 {% block pluginscripts %}
 <script>
-	function handleUpdatedData(response, dataSet=null) {
+	function handleUpdatedData(response, dataSet=null, update_params=null, initial=1) {
 		if (dataSet === 'devices_info' || dataSet === null) {
 			var objResponse = JSON.parse(response);
 			myProto = document.getElementById(dataSet);
@@ -69,11 +69,9 @@ Activate that function if needed, otherwise just remove the line to increase per
           1: mandatory, Value to be written - taken from the objResponse dict
           2: optional, If element of parameter 0 is in a (data)table, the ID of the table has to be put here
           3: optional, If you want a visual highlight effect when a value changes, provide the duration in seconds.
-				shngInsertText (item+'_value', objResponse[item]['value'], 'maintable', 5);
+				shngInsertText (item+'_value', objResponse[item]['value'], 'maintable', 5 * initial);
 				*/
 			}
-      // Redraw datatable after cell updates
-      // $('#maintable').DataTable().draw(false);
 		}
 	}
 </script>

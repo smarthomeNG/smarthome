@@ -35,17 +35,16 @@
 	});
 </script>
 <script>
-	function handleUpdatedData(response, dataSet=null) {
+	function handleUpdatedData(response, dataSet=null, update_params=null, initial=1) {
 		if (dataSet === 'devices_info' || dataSet === null) {
 			var objResponse = JSON.parse(response);
 			myProto = document.getElementById(dataSet);
 			for (var device in objResponse) {
 				<!--
-				shngInsertText (device+'_source', objResponse[device]['source'], 'maintable', 10));
-				shngInsertText (device+'_powerState', objResponse[device]['powerState'], 'maintable', 10));
+				shngInsertText (device+'_source', objResponse[device]['source'], 'maintable', 10 * initial));
+				shngInsertText (device+'_powerState', objResponse[device]['powerState'], 'maintable', 10 * initial));
 				-->
 			}
-      $('#maintable').DataTable().draw(false);
 		}
 	}
 </script>
