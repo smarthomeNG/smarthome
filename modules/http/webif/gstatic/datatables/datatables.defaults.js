@@ -65,6 +65,15 @@ $(window).bind('datatables_defaults', function() {
 							shngGetUpdatedData(null, null, 0);
 						}
 					});
+					// update content on pagelength change - if activated
+					$(".dataTables_length").off("change").on("change", function () {
+						let tab = $(this).closest('.tab-pane').attr('id');
+						let dataTable = $(this).closest('.tab-pane').find(".dataTable").DataTable();
+						if (window.initial_update == 'true' && window.pageLength[tab]['pagelength'] < dataTable.page.len()){
+							console.log("Instant value update after length change");
+							shngGetUpdatedData(null, null, 0);
+						}
+					});
 					// Warning if first column is not empty (for responsive + sign)
 					td_content = $(this).find('tbody').find('td:first-child').html();
 					if (td_content != '' && td_content != 'No data available in table')
