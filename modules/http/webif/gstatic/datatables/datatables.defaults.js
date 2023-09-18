@@ -82,9 +82,11 @@ $(window).bind('datatables_defaults', function() {
 					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false') {
 						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after init is " + window.row_count);}, 200);
 					}
-					console.log("Instant value update is " + window.initial_update);
-					if (window.initial_update == 'true') {
-						setTimeout(function() { shngGetUpdatedData(); }, 200);
+					console.log("Instant value update is " + window.initial_update + ", already run: " + window.initial_update_run);
+					if (window.initial_update == 'true' && window.initial_update_run == 0) {
+						console.log("Initializing page update on init");
+						window.initial_update_run = 1;
+						setTimeout(function() { shngGetUpdatedData(null, null, 0); }, 300);
 					}
 					//setTimeout(function() { $(window).resize();  }, 2000);
 
