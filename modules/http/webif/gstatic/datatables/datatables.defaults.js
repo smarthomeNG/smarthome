@@ -45,7 +45,7 @@ $(window).bind('datatables_defaults', function() {
 					$(this).on( 'click', 'thead tr th', function () {
 						if ($(this).hasClass( "sorting" ) && window.initial_update == 'true'){
 							console.log("Instant value update after sorting");
-							shngGetUpdatedData();
+							shngGetUpdatedData(null, null, 0);
 						}
 					});
 					// slightly change resize_wrapper when expanding/collapsing responsive rows to fix some issues
@@ -62,7 +62,7 @@ $(window).bind('datatables_defaults', function() {
 					$(".dataTables_filter").change( function () {
 						if (window.initial_update == 'true'){
 							console.log("Instant value update after search filter");
-							shngGetUpdatedData();
+							shngGetUpdatedData(null, null, 0);
 						}
 					});
 					// Warning if first column is not empty (for responsive + sign)
@@ -120,7 +120,7 @@ $(window).bind('datatables_defaults', function() {
 							  }, 'slow');
 	 							 console.log("Instant value update is " + window.initial_update);
 	 							 if (window.initial_update == 'true') {
-									 setTimeout(function() { shngGetUpdatedData(); }, 200);
+									 setTimeout(function() { shngGetUpdatedData(null, null, 0); }, 300);
 	 							 }
 							});
 					}
