@@ -77,11 +77,11 @@
 			    	pagelength = {{ webif_pagelength }};
 				{%- endif %}
 			  window.pageLength["bodytab_"+i] = {'tableid': 'unknown', 'pagelength': parseInt(pagelength)};
-				console.log(window.pageLength);
 			}
 			setCookie("pagelength", window.pageLength, 3650, window.pluginname);
 		}
 		window.initial_update = false;
+		window.initial_update_run = 0;
 		{%- if row_count is defined %}
 		  window.row_count = '{{ row_count|lower }}';
 		{%- endif %}
