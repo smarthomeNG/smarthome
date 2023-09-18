@@ -84,17 +84,20 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
     text = text.toString();
     if (table_id == null) {
       element = $("#" + $.escapeSelector(id));
-      if (highlight > 0) {
-        let old_text = sanitize($('#' + $.escapeSelector(id)).text(), true);
-        let alternative_old_text = sanitize(old_text, false, true);
-        let new_content = (old_text !== sanitize(text)) && (alternative_old_text !== sanitize(text));
-        // compare old value of cell with new one and highlight
-        if (old_text != "..." && new_content) {
-          startAnimation(element, highlight);
-        }
+      if (element.length == 0) {
+        console.warn("Element with id " + id + " does not exist");
+        return;
       }
-      // update HTML element
-      element.html(text);
+      let old_text = sanitize(element.text(), true);
+      let alternative_old_text = sanitize(old_text, false, true);
+      let new_content = (old_text !== sanitize(text, true)) && (alternative_old_text !== sanitize(text, false, true));
+      if (highlight > 0 && old_text != "..." && new_content) {
+          startAnimation(element, highlight);
+      }
+      if (new_content) {
+        console.log("Updating html element with id " + id + " because new data found: " + text + ", old text: " + old_text);
+        element.html(text);
+      }
     }
     else {
       try {
@@ -104,7 +107,7 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
           // fix HTML entities and quotation
           let old_text = sanitize($('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(), true);
           let alternative_old_text = sanitize(old_text, false, true);
-          let new_content = (old_text !== sanitize(text)) && (alternative_old_text !== sanitize(text));
+          let new_content = (old_text !== sanitize(text, true)) && (alternative_old_text !== sanitize(text, false, true));
 
           if (highlight > 0) {
             element = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).node();
@@ -133,12 +136,12 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
  * @param {string} optional name of dataset to get. Only needed, if the webinterface gets multiple different datasets from the plugin
  * @param {undefined} optional set of parameters. Has to be handled in get_data_html function of web interface init.py. Can be any type, e.g. an item name, date, dict with multiple values, etc.
  */
-function shngGetUpdatedData(dataSet=null, update_params=null) {
+function shngGetUpdatedData(dataSet=null, update_params=null, initial=1) {
     if (dataSet == null) dataSet = window.dataSet;
     if (update_params == null) update_params = window.update_params;
     if (dataSet) {
       if (update_params) {
-        console.log("Running page update with dataSet: " + dataSet + " and params: " + update_params);
+        console.log("Running page update with dataSet: " + dataSet + " and params: " + update_params + ". Initial: " + initial);
         $.ajax({
             url: "get_data.html",
             type: "GET",
@@ -146,14 +149,14 @@ function shngGetUpdatedData(dataSet=null, update_params=null) {
                   },
             contentType: "application/json; charset=utf-8",
             success: function (response) {
-                    handleUpdatedData(response, dataSet, update_params);
+                    handleUpdatedData(response, dataSet, update_params, initial);
             },
             error: function () {
                 console.warn("Error - while getting updated data for dataSet: "+dataSet)
             }
         });
       } else {
-        console.log("Running page update with dataSet: " + dataSet);
+        console.log("Running page update with dataSet: " + dataSet + ". Initial: " + initial);
         $.ajax({
             url: "get_data.html",
             type: "GET",
@@ -161,7 +164,7 @@ function shngGetUpdatedData(dataSet=null, update_params=null) {
                   },
             contentType: "application/json; charset=utf-8",
             success: function (response) {
-                    handleUpdatedData(response, dataSet);
+                    handleUpdatedData(response, dataSet, null, initial);
             },
             error: function () {
                 console.warn("Error - while getting updated data for dataSet: "+dataSet)
@@ -169,13 +172,13 @@ function shngGetUpdatedData(dataSet=null, update_params=null) {
         });
       }
     } else {
-      console.log("Running page update.");
+      console.log("Running page update. Initial: " + initial);
     $.ajax({
         url: "get_data.html",
         type: "GET",
         contentType: "application/json; charset=utf-8",
         success: function (response) {
-                handleUpdatedData(response);
+                handleUpdatedData(response, null, null, initial);
         },
         error: function () {
             console.warn("Error - while getting updated data")
