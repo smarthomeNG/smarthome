@@ -68,9 +68,10 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.
 
-Die vollständigen Änderungen dieses Releases können in den :doc:`Release Notes v1.10  </release/1_10>` nachgelesen
+Die vollständigen Änderungen am Core können in den :ref:`Release Notes v1.10  <Änderungen_am_core>` nachgelesen
 werden.
 
+|
 
 Neuerungen bei Plugins
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -80,10 +81,16 @@ Bei den Plugins sind folgende Änderungen zu beachten:
   - **Plugin shelly**: Es werden jetzt Shelly Devices mit dem (neuen) Gen2 API untersützt.
   - **Plugin smartvisu**: Der Default Wert des Parameters **generate_pages** wurde auf **False** geändert. Zum
     generieren von Seiten muss dieser Parameter nun aktiv konfiguriert werden.
-  - Es sind auch einige :ref:`neue Plugins <releasenotes_1_10_neue_plugins>` hinzugekommen.
-  - Außerdem hat es eine Reihe von :ref:`Updates zu bestehenden Plugins <releasenotes_1_10_updates_plugins>` gegeben.
-  - Es sind einige veraltete Plugins :ref:`retired <releasenotes_1_10_retired_plugins>` worden.
 
+Die vollständigen Änderungen bei Plugins können in den Release Notes in den Abschnitten
+
+  - :ref:`neue Plugins <releasenotes_1_10_neue_plugins>`
+  - :ref:`Updates zu bestehenden Plugins <releasenotes_1_10_updates_plugins>`
+  - :ref:`veraltete/retired Plugins <releasenotes_1_10_retired_plugins>`
+
+nachgelesen werden.
+
+|
 
 Neuerungen für Plugin Entwickler
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -163,3 +163,27 @@ wechselt bei unterschreiten eines Verbrauchs von 10 Watt auf False (ausgeschalte
        hysteresis_input: ..tv_verbrauch
        hysteresis_upper_threshold: 90
        hysteresis_lower_threshold: 10
+
+|
+
+zusätzliche Statusinformationen
+===============================
+
+Beim Einrichten einer Konfiguration kann es hilfreich sein, den Zustand des Hysteresis Items genauer zu kennen.
+Hierfür gibt es eine Methode ```hysteresis_state()```, um den aktuellen Zustand des Items über den Status (True/False)
+hinaus abzufragen.
+
+Um die Informationen zu dem Item **beschattung** aus dem obigen Beispiel abzufragen, kann z.B. im eval Syntax Checker
+der Admin GUI der Ausdruck ```sh.beschattung.hysteresis_state()``` eingegeben werden. Als Ergebnis wird ein String
+zurück gegeben, der die folgenden Werte haben kann:
+
+.. csv-table:: Stati eines Hysteresis Items
+  :header: "Status", "Bedeutung"
+
+  "On",              "Der Wert des **hysteresis_input** Items liegt oberhalb des oberen Schwellwertes"
+  "Timer -> On",     "Der Wert des **hysteresis_input** Items liegt zwar oberhalb des oberen Schwellwertes, aber der Timer für die Mindestdauer ist noch nicht abgelaufen"
+  "Stay (On)",       "Der Wert des **hysteresis_input** Items liegt zwischen unterem und oberen Schwellwert und lag vorher oberhalb des oberen Schwellwertes"
+  "Stay (Off)",      "Der Wert des **hysteresis_input** Items liegt zwischen unterem und oberen Schwellwert und lag vorher unterhalb des unteren Schwellwertes"
+  "Timer -> Off",    "Der Wert des **hysteresis_input** Items liegt zwar unterhalb des unteren Schwellwertes, aber der Timer für die Mindestdauer ist noch nicht abgelaufen"
+  "Off",             "Der Wert des **hysteresis_input** Items liegt unterhalb des unteren Schwellwertes"
+
