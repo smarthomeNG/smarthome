@@ -14,15 +14,6 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       (Siehe auch :doc:`Komplettanleitung </installation/komplettanleitung/02_smarthomeng>`)
 
     - **virtuelle Environments**: Skripte zum Anlegen und Aktivieren von virtuellen Python Environments
-  - **Structs**:
-
-    - **Verschachtelung**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch
-      auf Unterebenen einer stuct eingebunden werden.
-    - **relative Referenzen**: Bei der Einbindung von Sub-Structs aus der selben Datei können jetzt relative
-      Angaben gemacht werden.
-    - **structs Verzeichnis**: Dateien mit struct Definitionen werden jetzt im Verzeichnis ../structs abgelegt.
-      Bestehende Definitionsdateien werden automatisch aus dem ../etc Verzeichnis in das ../structs Verzeichnis
-      migriert.
   - **Items**:
 
     - **Hysterese**: Es gibt neue Attribute, die es ermöglichen ein Item als Hysterese-Glied mit optionalem Zeitlied
@@ -36,6 +27,23 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **Zugriff auf Elemente komplexer Items**: Bei Items vom Typ **list** oder **dict** ist es möglich auf einzelne
       Elemente zuzugreifen.
       Details sind in der :ref:`Dokumentation <Zugriff_auf_Attributwerte>` zu finden.
+  - **Structs**:
+
+    - **Verschachtelung**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch
+      auf Unterebenen einer stuct eingebunden werden.
+    - **relative Referenzen**: Bei der Einbindung von Sub-Structs aus der selben Datei können jetzt relative
+      Angaben gemacht werden.
+    - **structs Verzeichnis**: Dateien mit struct Definitionen werden jetzt im Verzeichnis ``../structs`` abgelegt.
+      Bestehende Definitionsdateien werden automatisch aus dem ``../etc`` Verzeichnis in das ``../structs`` Verzeichnis
+      migriert.
+  - **Plugins**:
+
+    - **Installation**: Falls eine neuere Version eines Plugins aus dem develop Branch auf GitHub installiert werden
+      soll, ohne deshalb die eigene Installation vollständig auf die (nicht notwendigerweise stabile) develop Version
+      von SmartHomeNG umzustellen, wurde ein Skript erstellt. Dieses Skript installiert ein gewähltes Plugin aus dem
+      develop branch zusätzlich in die aktuelle Installation von SmartHomeNG.
+      Details sind in der Dokumentation unter :ref:`Tipps & Tricks <Plugin_aus_develop>` zu finden.
+
   - **Neue Bibliothek lib.env**:
 
     - lib.env enthält eine Reihe von Funktionen zur Maßeinheitenumrechnung für Environment Daten, sowie weitere
@@ -60,9 +68,10 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.
 
-Die vollständigen Änderungen dieses Releases können in den :doc:`Release Notes v1.10  </release/1_10>` nachgelesen
+Die vollständigen Änderungen am Core können in den :ref:`Release Notes v1.10  <Änderungen_am_core>` nachgelesen
 werden.
 
+|
 
 Neuerungen bei Plugins
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -72,10 +81,16 @@ Bei den Plugins sind folgende Änderungen zu beachten:
   - **Plugin shelly**: Es werden jetzt Shelly Devices mit dem (neuen) Gen2 API untersützt.
   - **Plugin smartvisu**: Der Default Wert des Parameters **generate_pages** wurde auf **False** geändert. Zum
     generieren von Seiten muss dieser Parameter nun aktiv konfiguriert werden.
-  - Es sind auch einige :ref:`neue Plugins <releasenotes_1_10_neue_plugins>` hinzugekommen.
-  - Außerdem hat es eine Reihe von :ref:`Updates zu bestehenden Plugins <releasenotes_1_10_updates_plugins>` gegeben.
-  - Es sind einige veraltete Plugins :ref:`retired <releasenotes_1_10_retired_plugins>` worden.
 
+Die vollständigen Änderungen bei Plugins können in den Release Notes in den Abschnitten
+
+  - :ref:`neue Plugins <releasenotes_1_10_neue_plugins>`
+  - :ref:`Updates zu bestehenden Plugins <releasenotes_1_10_updates_plugins>`
+  - :ref:`veraltete/retired Plugins <releasenotes_1_10_retired_plugins>`
+
+nachgelesen werden.
+
+|
 
 Neuerungen für Plugin Entwickler
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

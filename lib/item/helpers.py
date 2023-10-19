@@ -248,7 +248,7 @@ def cache_write(filename, value, cformat=CACHE_FORMAT):
 #####################################################################
 # Fade Method
 #####################################################################
-def fadejob(item, dest, step, delta):
+def fadejob(item, dest, step, delta, caller=None):
     if item._fading:
         return
     else:

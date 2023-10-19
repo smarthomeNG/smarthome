@@ -185,7 +185,7 @@ loggers:
     # items.temperatures:
     #     # Logging items with configuration: log_change: temperatures
     #     #
-    #     handlers: [shng_details_file]
+    #     # handlers: [shng_develop_file]   # Hier keinen ererbten Handler (aus items: logger oder root: logger) erneut eintragen
     #     level: INFO
 
     # items.new_device:
@@ -194,6 +194,12 @@ loggers:
     #     #
     #     handlers: [shng_items_file]
     #     level: DEBUG
+
+    # ------------------------------------------
+
+    # plugins.avm:
+    #     # handlers: [shng_develop_file]   # Hier keinen ererbten Handler (aus plugins: logger oder root: logger) erneut eintragen
+    #     level: INFO
 
     # ------------------------------------------
 

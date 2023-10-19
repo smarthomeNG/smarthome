@@ -148,6 +148,7 @@ class Item():
         self._hysteresis_lower_timer = None
         self._hysteresis_upper_timer_active = False
         self._hysteresis_lower_timer_active = False
+        self._hysteresis_active_timer_ends = None
         self._hysteresis_items_to_trigger = []
         self._hysteresis_log = False
 
@@ -305,7 +306,10 @@ class Item():
                 elif attr in [KEY_LOG_CHANGE]:
                     if value != '':
                         setattr(self, '_log_change', value)
-                        self._log_change_logger = logging.getLogger('items.'+value)
+                        if value[0] != '_':
+                            self._log_change_logger = logging.getLogger('items.'+value)
+                        else:
+                            self._log_change_logger = logging.getLogger(value[1:])
                         # set level to make logger appear in internal list of loggers (if not configured by logging.yaml)
                         if self._log_change_logger.level == 0:
                             if self._log_level == 'DEBUG':
@@ -1638,11 +1642,11 @@ class Item():
         try:
             result = eval(eval_expression)
         except Exception as e:
-            logger.error(f"Item '{self._path}': __run_attribute_eval(): Problem evaluating '{eval_expression}' - Exception {e}")
+            logger.error(f"Item '{self._path}': __run_attribute_eval({eval_expression}): Problem evaluating '{eval_expression}' - Exception {e}")
             result = ''
         if result_type == 'num':
             if not isinstance(result, (int, float)):
-                logger.error(f"Item '{self._path}': __run_attribute_eval(): Attribute expression '{eval_expression}' evaluated to a non-numeric value '{result}', using 0 instead")
+                logger.error(f"Item '{self._path}': __run_attribute_eval({eval_expression}): Attribute expression '{eval_expression}' evaluated to a non-numeric value '{result}', using 0 instead")
                 result = 0
 
         return result
@@ -1658,9 +1662,11 @@ class Item():
         if self._hysteresis_upper_timer_active and (value <= upper):
             self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-UpTimer')
             self._hysteresis_upper_timer_active = False
+            self._hysteresis_active_timer_ends = None
         if self._hysteresis_lower_timer_active and (value >= lower):
             self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-LoTimer')
             self._hysteresis_lower_timer_active = False
+            self._hysteresis_active_timer_ends = None
 
         if value > upper:
             if self._hysteresis_upper_timer is None:
@@ -1673,6 +1679,7 @@ class Item():
                         timer = 0
                     self._hysteresis_upper_timer_active = True
                     next = self.shtime.now() + datetime.timedelta(seconds=timer)
+                    self.active_timer_ends = next
                     #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_upper_timer)
                     if self._hysteresis_log:
                         logger.notice(f"__run_hysteresis {self._path}: scheduler.add {self._path}-UpTimer")
@@ -1689,6 +1696,7 @@ class Item():
                         timer = 0
                     self._hysteresis_lower_timer_active = True
                     next = self.shtime.now() + datetime.timedelta(seconds=timer)
+                    self._hysteresis_active_timer_ends = next
                     #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_lower_timer)
                     if self._hysteresis_log:
                         logger.notice(f"__run_hysteresis {self._path}: scheduler.add {self._path}-LoTimer")
@@ -1759,11 +1767,8 @@ class Item():
         time.sleep(0.1)     # to prevent execution before xxx_timer_active could be updated
 
         upper = self.__run_attribute_eval(self._hysteresis_upper_threshold)
-        #upper_timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
         lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
-        #lower_timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
         input_value = _items_instance.return_item(self._hysteresis_input)()
-        #value = self._value
 
         state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_state')
 
@@ -1787,14 +1792,22 @@ class Item():
         time.sleep(0.1)     # to prevent execution before xxx_timer_active could be updated
 
         upper = self.__run_attribute_eval(self._hysteresis_upper_threshold)
-        upper_timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
+        if self._hysteresis_upper_timer is None:
+            upper_timer = self._hysteresis_upper_timer
+        else:
+            upper_timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
         lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
-        lower_timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
+        if self._hysteresis_lower_timer is None:
+            lower_timer = self._hysteresis_lower_timer
+        else:
+            lower_timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
         input_value = _items_instance.return_item(self._hysteresis_input)()
 
         state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_data')
 
-        data = {'lower_threshold': lower, 'lower_timer': lower_timer, 'upper_threshold': upper, 'upper_timer': upper_timer, 'input': input_value, 'output': self._value, 'state': state, 'lower_timer_active': self._hysteresis_lower_timer_active, 'upped_timer_active': self._hysteresis_upper_timer_active}
+        data = {'lower_threshold': lower, 'lower_timer': lower_timer, 'upper_threshold': upper, 'upper_timer': upper_timer, 'input': input_value, 'output': self._value, 'state': state, 'lower_timer_active': self._hysteresis_lower_timer_active, 'upper_timer_active': self._hysteresis_upper_timer_active}
+        if (self._hysteresis_lower_timer_active or self._hysteresis_upper_timer_active) and self._hysteresis_active_timer_ends is not None:
+            data['active_timer_ends'] = self._hysteresis_active_timer_ends.strftime("%d.%m.%Y %H:%M:%S") + " " + self._hysteresis_active_timer_ends.tzname()
         if self._hysteresis_log:
             logger.notice(f"hysteresis_data ({self._path}): {data}, __updated_by={self.__updated_by}")
         return data
@@ -1804,6 +1817,11 @@ class Item():
         """
         evaluate the 'eval' entry of the actual item
         """
+        if caller.lower().startswith('admin:'):
+            caller = caller[6:] + ':admin'
+        if (not caller.lower().startswith('eval:')) and (not caller.lower().endswith(':eval')):
+            caller = 'Eval:' + caller
+
         if (self._sh.shng_status['code'] < 14):
             # items are not (completly) loaded
             logger.dbghigh(f"Item {self._path}: Running __run_eval before initialization is finished - eval run ignored- caller={caller}, source={source}  -  shng_status{self._sh.shng_status}")
@@ -1868,12 +1886,12 @@ class Item():
 
                         # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
                         try:
-                           value = eval(self._eval)
+                            value = eval(self._eval)
                         except Exception as e:
-                            value = self._value = self.cast(value)
+                            #value = self._value = self.cast(value)
+                            value = self.cast(value)
                             value = eval(self._eval)
                         # ms end
-
                 except Exception as e:
                     # adding "None" as the "destination" information at end of triggered_by
                     # This helps figuring out whether an eval expression was successfully evaluated or not.
@@ -2125,8 +2143,10 @@ class Item():
                 if self._hysteresis_log:
                     logger.notice(f"__update: upper_timer caller={caller}, value={value}")
                 self._hysteresis_upper_timer_active = False
+                self.active_timer_ends = None
             if self._hysteresis_lower_timer_active:
                 self._hysteresis_lower_timer_active = False
+                self.active_timer_ends = None
                 if self._hysteresis_log:
                     logger.notice(f"__update: lower_timer caller={caller}, value={value}")
 
