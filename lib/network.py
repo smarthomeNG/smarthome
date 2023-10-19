@@ -667,13 +667,14 @@ class Tcp_client(object):
             self._is_connected = False
             return False
 
+        # prevent starting connect thread twice
         with self.__connect_threadlock:
             self.logger.debug(f'Starting connect to {self._host}:{self._port}')
             if not self.__connect_thread or not self.__connect_thread.is_alive():
                 self.logger.dbglow(f'connect() creating connect thread "TCP_Connect {self._id}')
                 self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name=f'TCP_Connect {self._id}')
                 self.__connect_thread.daemon = True
-            self.logger.dgblow(f'connect() to {self._host}:{self._port}: self.__running={self.__running}, self.__connect_thread.is_alive()={self.__connect_thread.is_alive()}')
+            self.logger.dbglow(f'connect() to {self._host}:{self._port}: self.__running={self.__running}, self.__connect_thread.is_alive()={self.__connect_thread.is_alive()}')
             if not self.__running or not self.__connect_thread.is_alive():
                 self.logger.dbglow(f'connect() to {self._host}:{self._port}: calling __connect_thread.start()')
                 try:
@@ -753,9 +754,6 @@ class Tcp_client(object):
         """
         Thread worker to handle connection.
         """
-        if not self.__connect_threadlock.acquire(blocking=False):
-            self.logger.info(f'{self._id} connection attempt already in progress, ignoring new request')
-            return
         if self._is_connected:
             self.logger.info(f'{self._id} already connected, ignoring new request')
             return
@@ -769,7 +767,6 @@ class Tcp_client(object):
                 self._connect()
                 if self._is_connected:
                     try:
-                        self.__connect_threadlock.release()
                         if self._connected_callback:
                             self._connected_callback(self)
                         name = f'TCP_Client {self._id}'
@@ -795,11 +792,6 @@ class Tcp_client(object):
                 self._connect_counter = 0
             else:
                 break
-        try:
-            self.__connect_threadlock.release()
-        except Exception:
-            # self.logger.debug(f'{self._id} exception while trying self.__connect_threadlock.release()')
-            pass
 
     def _connect(self):
         """
