@@ -162,7 +162,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
         self._send_queue = queue.Queue()
         self._stale_lock = threading.Lock()
 
-        self._receive_buffer = ''
+        self._receive_buffer = b''
 
         # make sure we have a basic set of parameters for the TCP connection
         self._params = {PLUGIN_ATTR_NET_HOST: '',
@@ -223,6 +223,17 @@ class SDPProtocolJsonrpc(SDPProtocol):
         message-ids. Processed data packets are dispatched one by one via
         callback.
         """
+
+        def check_chunk(data: str):
+            print(f'I 0000 000000 lib.model.sdp.protocol | checking chunk {data}')
+            try:
+                json.loads(data)
+                print('W 0000 000000 lib.model.sdp.protocol | chunk checked ok')
+                return True
+            except Exception:
+                print('E 0000 000000 lib.model.sdp.protocol | chunk not valid json')
+                return False
+
         self.logger.debug(f'data received before encode: {response}')
 
         if isinstance(response, (bytes, bytearray)):
@@ -242,7 +253,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
                 self._receive_buffer = ''
             except Exception:
                 pass
-        elif self._receive_buffer[0] == '{' and self._receive_buffer[-1] == '}':
+        elif self._receive_buffer[0] == '{' and self._receive_buffer[-1] == '}' and check_chunk(self._receive_buffer):
             datalist = [self._receive_buffer]
             self._receive_buffer = ''
         elif self._receive_buffer:
@@ -258,7 +269,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
             try:
                 jdata = json.loads(data)
             except Exception as err:
-                if data == datalist[-1] and data[-1] != '}':
+                if data == datalist[-1]:
                     self.logger.debug(f'returning incomplete data to buffer: {data}')
                     self._receive_buffer = data
                 else:
