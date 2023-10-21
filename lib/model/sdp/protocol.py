@@ -162,7 +162,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
         self._send_queue = queue.Queue()
         self._stale_lock = threading.Lock()
 
-        self._receive_buffer = ''
+        self._receive_buffer = b''
 
         # make sure we have a basic set of parameters for the TCP connection
         self._params = {PLUGIN_ATTR_NET_HOST: '',
@@ -223,28 +223,40 @@ class SDPProtocolJsonrpc(SDPProtocol):
         message-ids. Processed data packets are dispatched one by one via
         callback.
         """
+
+        def check_chunk(data):
+            self.logger.debug(f'checking chunk {data}')
+            try:
+                json.loads(str(data, 'utf-8').strip())
+                self.logger.debug('chunk checked ok')
+                return True
+            except Exception:
+                self.logger.debug('chunk not valid json')
+                return False
+
         self.logger.debug(f'data received before encode: {response}')
 
-        if isinstance(response, (bytes, bytearray)):
-            response = str(response, 'utf-8').strip()
+        # if isinstance(response, (bytes, bytearray)):
+        #     response = str(response, 'utf-8').strip()
 
         self.logger.debug(f'adding response to buffer: {response}')
         self._receive_buffer += response
 
         datalist = []
-        if '}{' in self._receive_buffer:
+        if b'}{' in self._receive_buffer:
 
             # split multi-response data into list items
             try:
                 self.logger.debug(f'attempting to split buffer')
-                tmplist = self._receive_buffer.replace('}{', '}-#-{').split('-#-')
+                tmplist = self._receive_buffer.replace(b'}{', b'}-#-{').split(b'-#-')
                 datalist = list(OrderedDict((x, True) for x in tmplist).keys())
-                self._receive_buffer = ''
+                self._receive_buffer = b''
             except Exception:
                 pass
-        elif self._receive_buffer[0] == '{' and self._receive_buffer[-1] == '}':
+        # checking for bytes[0] == b'{' fails for some reason, so check for byte value instead... need to check char encoding?
+        elif self._receive_buffer[0] == 123 and self._receive_buffer[-1] == 125 and check_chunk(self._receive_buffer):
             datalist = [self._receive_buffer]
-            self._receive_buffer = ''
+            self._receive_buffer = b''
         elif self._receive_buffer:
             self.logger.debug(f'Buffer with incomplete response: {self._receive_buffer}')
 
@@ -256,9 +268,9 @@ class SDPProtocolJsonrpc(SDPProtocol):
             self.logger.debug(f'Processing received data item #{datalist.index(data)}: {data}')
 
             try:
-                jdata = json.loads(data)
+                jdata = json.loads(str(data, 'utf-8').strip())
             except Exception as err:
-                if data == datalist[-1] and data[-1] != '}':
+                if data == datalist[-1]:
                     self.logger.debug(f'returning incomplete data to buffer: {data}')
                     self._receive_buffer = data
                 else:
