@@ -94,13 +94,13 @@ class SmartDevicePlugin(SmartPlugin):
         # set item properties
 
         # contains all items with write command
-        # <item_id>: <command>
+        # <item.path>: <command>
         self._items_write = {}
         # contains items which trigger 'read all'
-        # <item_id>
+        # <item.path>
         self._items_read_all = []
         # contains items which trigger 'read group foo'
-        # <item_id>: <foo>
+        # <item.path>: <foo>
         self._items_read_grp = {}
 
         # contains all commands with read command
@@ -125,7 +125,7 @@ class SmartDevicePlugin(SmartPlugin):
         # <grp>: {'cycle': <cycle>, 'next': <next>}
         self._triggers_cyclic = {}
         # contains item xx_custom<x> attributes
-        # <item_id>: {1: custom1, 2: custom2, 3:custom3}
+        # <item.path>: {1: custom1, 2: custom2, 3:custom3}
         self._items_custom = {}
 
         # None for normal operations, 1..3 for combined custom commands
@@ -418,7 +418,7 @@ class SmartDevicePlugin(SmartPlugin):
         command = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo'))
 
         # handle custom item attributes
-        self._items_custom[item.id()] = {1: None, 2: None, 3: None}
+        self._items_custom[item.path()] = {1: None, 2: None, 3: None}
         for index in (1, 2, 3):
 
             val = None
@@ -431,11 +431,11 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.debug(f'Item {item} inherited custom item attribute {index} with value {val}')
             if val is not None:
                 self.set_custom_item(item, command, index, val)
-                self._items_custom[item.id()][index] = val
+                self._items_custom[item.path()][index] = val
 
         custom_token = ''
-        if self.custom_commands and self._items_custom[item.id()][self.custom_commands]:
-            custom_token = CUSTOM_SEP + self._items_custom[item.id()][self.custom_commands]
+        if self.custom_commands and self._items_custom[item.path()][self.custom_commands]:
+            custom_token = CUSTOM_SEP + self._items_custom[item.path()][self.custom_commands]
 
         if command:
 
@@ -499,7 +499,7 @@ class SmartDevicePlugin(SmartPlugin):
             # command marked for writing
             if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_WRITE', 'foo')):
                 if self.is_valid_command(command, COMMAND_WRITE):
-                    self._items_write[item.id()] = command
+                    self._items_write[item.path()] = command
                     self.logger.debug(f'Item {item} saved for writing command {command}')
                     return self.update_item
 
@@ -534,11 +534,11 @@ class SmartDevicePlugin(SmartPlugin):
                 self.logger.debug(f'{item_msg} cyclic triggering of read group {grp}')
 
             if grp == '0':
-                self._items_read_all.append(item.id())
+                self._items_read_all.append(item.path())
                 self.logger.debug(f'{item_msg} read_all')
                 return self.update_item
             elif grp:
-                self._items_read_grp[item.id()] = grp
+                self._items_read_grp[item.path()] = grp
                 self.logger.debug(f'{item_msg} reading group {grp}')
                 return self.update_item
             else:
@@ -590,29 +590,29 @@ class SmartDevicePlugin(SmartPlugin):
             if caller != self.get_shortname():
 
                 # okay, go ahead
-                self.logger.info(f'Update item: {item.id()}: item has been changed outside this plugin')
+                self.logger.info(f'Update item: {item.path()}: item has been changed outside this plugin')
 
                 # item in list of write-configured items?
-                if item.id() in self._items_write:
+                if item.path() in self._items_write:
 
                     # get data and send new value
-                    command = self._items_write[item.id()]
-                    self.logger.debug(f'Writing value "{item()}" from item {item.id()} with command "{command}"')
-                    if not self.send_command(command, item(), custom=self._items_custom[item.id()]):
-                        self.logger.debug(f'Writing value "{item()}" from item {item.id()} with command "{command}" failed, resetting item value')
+                    command = self._items_write[item.path()]
+                    self.logger.debug(f'Writing value "{item()}" from item {item.path()} with command "{command}"')
+                    if not self.send_command(command, item(), custom=self._items_custom[item.path()]):
+                        self.logger.debug(f'Writing value "{item()}" from item {item.path()} with command "{command}" failed, resetting item value')
                         item(item.property.last_value, self.get_shortname())
                         return None
 
-                elif item.id() in self._items_read_all:
+                elif item.path() in self._items_read_all:
 
                     # get data and trigger read_all
                     self.logger.debug('Triggering read_all')
                     self.read_all_commands()
 
-                elif item.id() in self._items_read_grp:
+                elif item.path() in self._items_read_grp:
 
                     # get data and trigger read_grp
-                    group = self._items_read_grp[item.id()]
+                    group = self._items_read_grp[item.path()]
                     self.logger.debug(f'Triggering read_group {group}')
                     self.read_all_commands(group)
 
@@ -784,7 +784,7 @@ class SmartDevicePlugin(SmartPlugin):
                 return
 
             for item in items:
-                self.logger.debug(f'Command {command} wants to update item {item.id()} with value {value} received from {by}')
+                self.logger.debug(f'Command {command} wants to update item {item.path()} with value {value} received from {by}')
                 item(value, self.get_shortname())
 
     def read_all_commands(self, group=''):
