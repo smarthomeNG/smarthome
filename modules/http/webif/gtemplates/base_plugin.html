@@ -58,7 +58,7 @@
 		window.toggle = 1;
 		window.pluginname = '{{ p.get_fullname() }}';
 		window.pageLength = getCookie("pagelength");
-	  if (window.pageLength == "")
+	  if (window.pageLength == "" || Object.keys(window.pageLength).length === 0)
 	  {
 			window.pageLength = {}
 			let tabcount = 0;
@@ -77,7 +77,6 @@
 			    	pagelength = {{ webif_pagelength }};
 				{%- endif %}
 			  window.pageLength["bodytab_"+i] = {'tableid': 'unknown', 'pagelength': parseInt(pagelength)};
-				console.log(window.pageLength);
 			}
 			setCookie("pagelength", window.pageLength, 3650, window.pluginname);
 		}
