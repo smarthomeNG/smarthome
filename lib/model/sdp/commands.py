@@ -116,10 +116,10 @@ class SDPCommands(object):
 
         raise Exception(f'command {command} not found in commands')
 
-    def get_command_from_reply(self, data):
-        """ return command (or new: list of commands) for received data """
+    def get_commands_from_reply(self, data):
+        """ return list of commands for received data """
         if data is None:
-            return None
+            return []
 
         if type(data) in (bytes, bytearray):
             data = str(data.decode('utf-8'))
@@ -130,6 +130,8 @@ class SDPCommands(object):
             patterns = getattr(self._commands[command], CMD_ATTR_REPLY_PATTERN, None)
             if patterns:
                 for pattern in patterns:
+                    # check for empty pattern is superfluous as re.compile is in a try/except block, but...
+                    # empty patterns would match anywhere and create false matches, so exclude those
                     if pattern:
                         try:
                             regex = re.compile(pattern)
@@ -139,10 +141,7 @@ class SDPCommands(object):
                         except Exception as e:
                             self.logger.warning(f'parsing or matching reply_pattern {getattr(self._commands[command], CMD_ATTR_REPLY_PATTERN)} from command {command} as regex failed. Error was: {e}. Ignoring')
 
-        if commands:
-            return commands
-
-        return None
+        return commands
 
     def get_lookup(self, lookup, type='fwd'):
         """ returns the contents of the lookup table named <lookup>, None on error """

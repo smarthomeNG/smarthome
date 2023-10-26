@@ -717,7 +717,7 @@ class SmartDevicePlugin(SmartPlugin):
             # command can be a string (classic single command) or
             # - new - a list of strings if multiple commands are identified
             # in that case, work on all strings
-            commands = self._commands.get_command_from_reply(data)
+            commands = self._commands.get_commands_from_reply(data)
             if not commands:
                 if self._discard_unknown_command:
                     self.logger.debug(f'data "{data}" did not identify a known command, ignoring it')
