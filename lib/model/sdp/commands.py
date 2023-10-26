@@ -139,7 +139,7 @@ class SDPCommands(object):
                                 self.logger.debug(f'matched reply_pattern {pattern} as regex against data {data}, found command {command}')
                                 commands.append(command)
                         except Exception as e:
-                            self.logger.warning(f'parsing or matching reply_pattern {getattr(self._commands[command], CMD_ATTR_REPLY_PATTERN)} from command {command} as regex failed. Error was: {e}. Ignoring')
+                            self.logger.warning(f'parsing or matching reply_pattern {pattern} from command {command} as regex failed. Error was: {e}. Ignoring')
 
         return commands
 
