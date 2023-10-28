@@ -46,9 +46,9 @@ $(window).on('load', function (e) {
   //setCookie('update_active', '', 0, window.pluginname);
   let cookie_interval = getCookie("update_interval");
   let cookie_active = getCookie("update_active");
-  if (cookie_active !== "")
+  if (cookie_active !== "" && typeof cookie_active == 'boolean')
     window.update_active = cookie_active;
-  if (cookie_interval !== "")
+  if (cookie_interval !== "" && typeof cookie_interval == 'number')
   {
     if (window.update_active == true)
       refresh.set_interval(cookie_interval, false);
