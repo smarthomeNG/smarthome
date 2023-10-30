@@ -20,8 +20,8 @@ cd ..
 
 chmod +x bin/smarthome.py
 
-chmod +x venvs/make_venv
-chmod +x venvs/act
+chmod +x tools/make_venv
+chmod +x tools/act
 
 chmod +x tools/build_requirements.py
 chmod +x tools/check_plugin.py
