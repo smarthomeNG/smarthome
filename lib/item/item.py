@@ -2028,6 +2028,11 @@ class Item():
 
         sh = self._sh
         shtime = self.shtime
+        time = shtime.now().strftime("%H:%M:%S")
+        date = shtime.now().strftime("%d.%m.%Y")
+        stamp = shtime.now().timestamp()
+        now = str(shtime.now())
+
         items = _items_instance
         import math
         import lib.userfunctions as uf
