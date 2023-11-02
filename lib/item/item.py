@@ -2028,9 +2028,10 @@ class Item():
         except AttributeError:
             pid = None
         mvalue = self._log_mapping.get(value, value)
-        lowlimit = self._log_rules.get('lowlimit', None)
-        highlimit = self._log_rules.get('highlimit', None)
-
+        lowlimit = self._get_rule('lowlimit')
+        highlimit = self._get_rule('highlimit')
+        filter = self._get_rule('filter')
+        exclude = self._get_rule('exclude')
 
         sh = self._sh
         shtime = self.shtime
@@ -2062,29 +2063,71 @@ class Item():
         return txt
 
 
+    def _get_rule(self, rule_entry):
+        def convert_entry(entry, to):
+            returnvalue = entry
+            if isinstance(returnvalue, str) and to != "str":
+                try:
+                    # try to get value from item
+                    item = self.get_absolutepath(entry.strip().replace("sh.", ""), "log_rules")
+                    returnvalue = _items_instance.return_item(item).property.value
+                except Exception as e:
+                    pass
+            if isinstance(returnvalue, (str, int)) and to == "num":
+                try:
+                    returnvalue = float(returnvalue)
+                except ValueError as e:
+                    returnvalue = None
+            elif isinstance(entry, list):
+                entry = [convert_entry(val, self._type) for val in entry]
+            elif isinstance(returnvalue, (float, int)) and to == "str":
+                returnvalue = str(returnvalue)
+            if returnvalue is None:
+                logger.warning(f"Given log_rules entry '{entry}' is invalid.")
+            return returnvalue
+
+        defaults = {'filter': [], 'exclude': [], 'lowlimit': None, 'highlimit': None}
+        types = {'filter': 'list', 'exclude': 'list', 'lowlimit': 'num', 'highlimit': 'num'}
+        entry =  self._log_rules.get(rule_entry, defaults.get(rule_entry))
+        entry = convert_entry(entry, types.get(rule_entry) or self._type)
+
+        return entry
+
     def _log_on_change(self, value, caller, source=None, dest=None):
         """
         Write log, if Item has attribute log_change set
         :return:
         """
+
         if self._log_change_logger is not None:
-            filter_list = self._log_rules.get('filter', [])
+            filter_list = self._get_rule('filter')
+            exclude_list = self._get_rule('exclude')
+            if filter_list != [] and exclude_list != []:
+                logger.warning(f"Defining filter AND exclude does not work. "
+                               f"Ignoring exclude list {exclude_list} "
+                               f"Using filter: {filter_list}")
 
             if self._type == 'num':
-                low_limit =  self._log_rules.get('lowlimit', None)
+                low_limit =  self._get_rule('lowlimit')
                 if low_limit:
                     if low_limit > float(value):
                         return
-                high_limit =  self._log_rules.get('highlimit', None)
+                high_limit =  self._get_rule('highlimit')
                 if high_limit:
                     if high_limit <= float(value):
                         return
                 if filter_list != []:
                     if not float(value) in filter_list:
                         return
+                elif exclude_list != []:
+                    if float(value) in exclude_list:
+                        return
             else:
                 if filter_list != []:
                     if not value in filter_list:
+                        return
+                elif exclude_list != []:
+                    if value in exclude_list:
                         return
 
             if self._log_text is None:
