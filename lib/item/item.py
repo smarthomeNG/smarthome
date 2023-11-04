@@ -2043,8 +2043,11 @@ class Item():
         items = _items_instance
         try:
             entry = self._log_rules.get('itemvalue', None)
-            item = self.get_absolutepath(entry.strip().replace("sh.", ""), "log_rules")
-            itemvalue = str(_items_instance.return_item(item).property.value)
+            if entry is not None:
+                item = self.get_absolutepath(entry.strip().replace("sh.", ""), "log_rules")
+                itemvalue = str(_items_instance.return_item(item).property.value)
+            else:
+                itemvalue = None
         except Exception as e:
             logger.error(f"{id}: Invalid item in log_text '{self._log_text}'"
                          f" or log_rules '{self._log_rules}' - (Exception: {e})")
@@ -2089,7 +2092,8 @@ class Item():
         defaults = {'filter': [], 'exclude': [], 'lowlimit': None, 'highlimit': None}
         types = {'filter': 'list', 'exclude': 'list', 'lowlimit': 'num', 'highlimit': 'num'}
         entry =  self._log_rules.get(rule_entry, defaults.get(rule_entry))
-        entry = convert_entry(entry, types.get(rule_entry) or self._type)
+        if entry is not None and entry != []:
+            entry = convert_entry(entry, types.get(rule_entry) or self._type)
 
         return entry
 
