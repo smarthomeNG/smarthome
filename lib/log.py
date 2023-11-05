@@ -398,6 +398,17 @@ class ShngTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
     """
     TimedRotatingFilehandler with a different naming scheme for rotated files
     """
+    def __init__(self, filename, when='MIDNIGHT', interval=0, backupCount=0, encoding=None, delay=False, utc=False):
+        year = datetime.datetime.now().strftime("%Y")
+        month = datetime.datetime.now().strftime("%m")
+        day = datetime.datetime.now().strftime("%d")
+        hour = datetime.datetime.now().strftime("%H")
+        stamp = datetime.datetime.now().timestamp()
+        try:
+            filename = eval(f"f'{filename}'")
+        except Exception:
+            pass
+        super().__init__(filename, when, interval, backupCount, encoding, delay, utc)
 
     def getFilesToDelete(self):
         """
