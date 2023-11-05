@@ -99,15 +99,17 @@ In der Datei ``../etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt
             logname: mem_heiz
             maxlen: 60
             level: INFO
+            cache: True
 
 
-**ShngMemLogHandler** hat zwei Parameter:
+**ShngMemLogHandler** hat vier Parameter:
 
     - ``logname:`` - Legt den Namen fest, unter dem das Memory Log aus der smartVISU oder dem **cli** Plugin
       angesprochen werden kann.
     - ``maxlen:`` - Legt fest, wie viele Einträge ein Memory Log aufnehmen kann, bevor der älteste Eintrag
       gelöscht wird.
     - ``level:`` - Legt den minimalen Log Level fest, der in das Memory Log geschrieben wird
+    - ``cache:`` - Ist dieser Parameter True, werden die Einträge im cache Ordner gesichert und beim Neustart geladen
 
 |
 
