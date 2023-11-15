@@ -27,13 +27,15 @@ Eine Reihe von Methoden eines Plugins werden von außerhalb des Plugins aufgeruf
 unterschiedlichen Threads. die Eventloop von asyncio läuft dem gegenüber nur in einem Thread
 
 .. csv-table:: Threads in denen Plugin Methoden ausgeführt werden
-  :header: "Methode des Plugins", "Aufruf erfolgt in Thread"
+  :header: "Methode des Plugins", "Aufruf erfolgt in Thread", "Bemerkungen"
 
-   "init()",                               "Main Thread von SmartHomeNG"
-   "parse_item()",                         "Main Thread von SmartHomeNG"
-   "run(), beim Start von SmartHomeNG",    "Thread des Plugins"
-   "stop(), beim Start von SmartHomeNG",   "Main Thread von SmartHomeNG"
-   "poll_device()",                        "ein Thread Worker-Pool des Schedulers"
+   "init()",           "Main",                         "Main Thread von SmartHomeNG"
+   "parse_item()",     "Main",                         "Main Thread von SmartHomeNG"
+   "run()",            "PluginWrapper(<Plugin>)",      "beim Start von SmartHomeNG "
+   "",                 "beliebiger Thread",            "bei erneutem Start des Plugins"
+   "stop()",           "Main",                         "beim Stop von SmartHomeNG"
+   "",                 "beliebiger Thread",            "beim Stop des Plugins in anderen Situationen"
+   "poll_device()",    "ein Thread des Schedulers",    "ein Thread aus dem Worker-Pool"
 
 |
 
@@ -46,5 +48,5 @@ Bei der Kombination von Threads und asyncio gibt es zwei zu berücksichtigende �
   - Aufruf von asyncio Code in einem Thread basierte Programm
 
 Eine gut Beschreibung zu den Herausforderungen und Lösungen findet sich in dem Artikel
-`Combining Traditional Thread-Based Code and Asyncio in Python <https://https://www.dataleadsfuture.com/combining-traditional-thread-based-code-and-asyncio-in-python/>`__
+`Combining Traditional Thread-Based Code and Asyncio in Python <https:www.dataleadsfuture.com/combining-traditional-thread-based-code-and-asyncio-in-python/>`__
 
