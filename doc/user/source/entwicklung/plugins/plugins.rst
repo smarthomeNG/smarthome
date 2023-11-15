@@ -22,4 +22,4 @@ Abschnitt und den links in der Navigation verlinkten Seiten gefunden werden.
    entwicklungsrichtlinien.rst
    plugin_checker.rst
    kurzanleitung/kurzanleitung.rst
-
+   async_in_plugins.rst
