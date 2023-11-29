@@ -896,9 +896,15 @@ class SmartPlugin(SmartObject, Utils):
         This method is used to parse the configuration of an item for this plugin. It is
         called for all plugins before the plugins are started (calling all run methods).
 
-        :note: This method should to be overwritten by the plugin implementation.
+        :note: This method should be overwritten by the plugin implementation.
         """
-        pass
+        # check for suspend item
+        if item.property.path == self._suspend_item_path:
+            self.logger.debug(f'suspend item {item.property.path} registered')
+            self._suspend_item = item
+            self.add_item(item, updating=True)
+            return self.update_item
+
 
 
     def now(self):
