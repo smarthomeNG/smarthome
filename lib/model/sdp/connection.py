@@ -69,7 +69,6 @@ class SDPConnection(object):
     _send_lock = None
     use_send_lock = False
     _params = None
-    
 
     def __init__(self, data_received_callback, name=None, **kwargs):
 
@@ -158,8 +157,10 @@ class SDPConnection(object):
         if not self._is_connected:
             if self._params[PLUGIN_ATTR_CONN_AUTO_CONN]:
                 self._open()
-            if not self._is_connected:
-                raise RuntimeError('trying to send, but not connected')
+                if not self._is_connected:
+                    raise RuntimeError('trying to send, but autoconnect did not open a connection')
+            else:
+                raise RuntimeError('trying to send, but not connected and autoconnect not enabled')
 
         data = data_dict.get('payload', None)
         if not data:

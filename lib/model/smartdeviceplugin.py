@@ -350,19 +350,17 @@ class SmartDevicePlugin(SmartPlugin):
         Stop method for the plugin
         """
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
-        
+
         self.alive = False
         if self.scheduler_get(self.get_shortname() + '_cyclic'):
             self.scheduler_remove(self.get_shortname() + '_cyclic')
         self.disconnect()
-
 
     def connect(self):
         """
         Open connection
         """
         self._connection.open()
-
 
     def disconnect(self):
         """
@@ -399,7 +397,7 @@ class SmartDevicePlugin(SmartPlugin):
             parent = item.return_parent()
 
             # parent(top_item) is sh.items
-            if type(parent) != type(item):
+            if type(parent) is not type(item):
                 # reached top of item tree
                 return None
 
@@ -681,7 +679,7 @@ class SmartDevicePlugin(SmartPlugin):
         result = None
         try:
             result = self._send(data_dict)
-        except OSError as e:  # Exception as e:
+        except (RuntimeError, OSError) as e:  # Exception as e:
             self.logger.debug(f'error on sending command {command}, error was {e}')
             return False
 
