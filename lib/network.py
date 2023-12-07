@@ -568,7 +568,8 @@ class Tcp_client(object):
     def __init__(self, host, port, name=None, 
                  autoreconnect=True, autoconnect=None, connect_retries=5,
                  connect_cycle=5, retry_cycle=30, retry_abort=0,
-                 abort_callback=None, binary=False, terminator=False, timeout=1):
+                 abort_callback=None, binary=False, terminator=False, timeout=1,
+                 rate_limit=1, max_rate_connects=10):
         self.logger = logging.getLogger(__name__)
 
         # public properties
@@ -591,8 +592,8 @@ class Tcp_client(object):
         self._abort_callback = abort_callback
         self._timeout = timeout
 
-        self._ratelimit = 1                 # 1 connect / sec
-        self._max_rate_connects = 10        # after 10 ratelimits, stop
+        self._ratelimit = rate_limit
+        self._max_rate_connects = max_rate_connects
         self._last_connect = 0
         self._num_connects = 0
 
