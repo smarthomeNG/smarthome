@@ -565,7 +565,7 @@ class Tcp_client(object):
     :type timeout: int
     """
 
-    def __init__(self, host, port, name=None, 
+    def __init__(self, host, port, name=None,
                  autoreconnect=True, autoconnect=None, connect_retries=5,
                  connect_cycle=5, retry_cycle=30, retry_abort=0,
                  abort_callback=None, binary=False, terminator=False, timeout=1,
