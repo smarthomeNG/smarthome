@@ -565,7 +565,11 @@ class Tcp_client(object):
     :type timeout: int
     """
 
-    def __init__(self, host, port, name=None, autoreconnect=True, autoconnect=None, connect_retries=5, connect_cycle=5, retry_cycle=30, retry_abort=0, abort_callback=None, binary=False, terminator=False, timeout=1):
+    def __init__(self, host, port, name=None,
+                 autoreconnect=True, autoconnect=None, connect_retries=5,
+                 connect_cycle=5, retry_cycle=30, retry_abort=0,
+                 abort_callback=None, binary=False, terminator=False, timeout=1,
+                 rate_limit=1, max_rate_connects=10):
         self.logger = logging.getLogger(__name__)
 
         # public properties
@@ -588,6 +592,11 @@ class Tcp_client(object):
         self._abort_callback = abort_callback
         self._timeout = timeout
 
+        self._ratelimit = rate_limit
+        self._max_rate_connects = max_rate_connects
+        self._last_connect = 0
+        self._num_connects = 0
+
         self._hostip = None
         self._family = socket.AF_INET
         self._socket = None
@@ -604,7 +613,6 @@ class Tcp_client(object):
         self.__connect_thread = None
         self.__connect_threadlock = threading.Lock()
         self.__receive_thread = None
-        self.__receive_threadlock = threading.Lock()
         self.__running = False
 
         # self.logger.setLevel(logging.DEBUG)   # Das sollte hier NICHT gesetzt werden, sondern in etc/logging.yaml im Logger lib.network konfiguriert werden!
@@ -671,6 +679,24 @@ class Tcp_client(object):
         with self.__connect_threadlock:
             self.logger.debug(f'Starting connect to {self._host}:{self._port}')
             if not self.__connect_thread or not self.__connect_thread.is_alive():
+
+                # limit connection rates
+                if time.time() < self._last_connect + (1.0 / self._ratelimit):
+                    self.logger.debug(f'connect: rate limit active, minimum delay is {1.0 / self._ratelimit}, current delay is {time.time() - self._last_connect}')
+                    self._num_connects += 1
+                    if self._num_connects >= self._max_rate_connects:
+
+                        # too many rate limits reached
+                        self.logger.debug(f'connect: max number of rate limits hit {self._max_rate_connects}, aborting connect')
+                        if self._abort_callback:
+                            self._abort_callback()
+                            self._num_connects = 0
+                            return False
+
+                    # wait till we may connect again
+                    while time.time() < self._last_connect + (1.0 / self._ratelimit):
+                        time.sleep(.1)
+
                 self.logger.dbglow(f'connect() creating connect thread "TCP_Connect {self._id}')
                 self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name=f'TCP_Connect {self._id}')
                 self.__connect_thread.daemon = True
@@ -767,6 +793,7 @@ class Tcp_client(object):
                 self._connect()
                 if self._is_connected:
                     try:
+                        self._last_connect = time.time()
                         if self._connected_callback:
                             self._connected_callback(self)
                         name = f'TCP_Client {self._id}'
