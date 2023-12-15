@@ -41,7 +41,7 @@ SmartHomeNG Quellcode laden
         Die folgenden Kommandos mit dem User Account (smarthome) durchführen
         unter dem später SmartHomeNG laufen soll, **nicht als root**.
 
-        .. note::
+        .. important::
 
             **WICHTIG**: Das Skript ``tools/postinstall`` setzt die Dateiberechtigungen. Anschließend prüft es, welche
             Python Version(en) auf dem System installiert sind und erstellt mit einer geeigneten Python Version ein
@@ -70,7 +70,7 @@ SmartHomeNG Quellcode laden
             source venvs/act shng
 
         Ausführlichere Informationen zu den virtuellen Python Environments sind im Abschnitt Referenz unter
-        :doc:`Python/Virtuelle Python Environments </referenz/referenz/python/virtual_environments>` zu finden.
+        :doc:`Python Environment/Virtuelle Python Environments </referenz/python/virtual_environments>` zu finden.
 
 
 

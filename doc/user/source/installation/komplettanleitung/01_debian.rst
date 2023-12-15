@@ -10,14 +10,16 @@ Debian Linux installieren
 
 Die genaue Schritt für Schritt Installation des Betriebsystems wird hier nicht beschrieben, das hier ist der falsche
 Ort dafür. Jedoch werden als Referenz die Paketauswahlen während der Installation hier beschrieben.
-Am kompaktesten ist die Netinstall ISO-Datei. Zur Installation auf einem externen Rechner (z.B. NUC o.ä.) kann die
-ISO-Datei mit Tools wie z.B. `Linux Live USB Creator <http://www.linuxliveusb.com/>`__,
-`Universal-USB-Installer <http://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/>`__
-oder `UNetbootin <https://unetbootin.github.io/>`__ auf einen USB Stick übertragen werden.
 
+Am kompaktesten ist die Netinstall ISO-Datei. Zur Installation auf einem externen Rechner (z.B. NUC o.ä.) kann die
+ISO-Datei am einfachsten mit dem Tool `Balena Etcher <https://etcher.balena.io>`__ auf einen USB-Stick übertragen werden.
+
+Es können auch andere Tools wie z.B. `Linux Live USB Creator <http://www.linuxliveusb.com/>`__,
+`Universal-USB-Installer <http://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/>`__
+oder `UNetbootin <https://unetbootin.github.io/>`__ dazu genutzt werden.
 
 Diese Komplettanleitung wurde auf einer virtuellen Maschine unter VMWare mit einem
-Debian bullseye 11.3 getestet.
+Debian bullseye 11.3 und Debian Bookworm 12.4 getestet.
 
 Andere Linux Derivate können abweichen, man sollte dann mit den Unterschieden umgehen
 können.

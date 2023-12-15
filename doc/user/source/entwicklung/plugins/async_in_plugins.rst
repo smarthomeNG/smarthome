@@ -37,6 +37,14 @@ unterschiedlichen Threads. die Eventloop von asyncio läuft dem gegenüber nur i
    "",                 "beliebiger Thread",            "beim Stop des Plugins in anderen Situationen"
    "poll_device()",    "ein Thread des Schedulers",    "ein Thread aus dem Worker-Pool"
 
+.. note::
+
+    Der Thread PluginWrapper(<Plugin>) wird nach beenden der run() Methode beendet. Falls ein Plugin einen eigenen
+    Thread benötigt, kann der Thread genutzt werden, indem die run() Methode nicht beendet wird.
+
+    Dabei ist darauf zu achten, dass dir run() Methode, falls sie aus anderen Threads aufgerufen wird, normal beendet
+    werden muss.
+
 |
 
 Asyncio und Threads kombinieren
@@ -48,5 +56,5 @@ Bei der Kombination von Threads und asyncio gibt es zwei zu berücksichtigende �
   - Aufruf von asyncio Code in einem Thread basierte Programm
 
 Eine gut Beschreibung zu den Herausforderungen und Lösungen findet sich in dem Artikel
-`Combining Traditional Thread-Based Code and Asyncio in Python <https:www.dataleadsfuture.com/combining-traditional-thread-based-code-and-asyncio-in-python/>`__
+`Combining Traditional Thread-Based Code and Asyncio in Python <https:www.dataleadsfuture.com/combining-traditional-thread-based-code-and-asyncio-in-python/>`_
 
