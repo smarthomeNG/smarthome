@@ -61,16 +61,27 @@ SmartHomeNG Quellcode laden
 
         Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
 
-        Das Skript postinstall erzeugt ein virtuelles Environment **py_shng**, welches vor dem Start von SmartHomeNG
-        mit folgendem Befeht aktiviert werden muss:
+        Das Skript postinstall erzeugt ein virtuelles Environment **py_shng**.
 
-        .. code-block:: bash
-
-            cd /usr/local/smarthome
-            source venvs/act shng
+        Nach dem Aufruf des postinstall Skripts bitte **ausloggen** und **erneut einloggen**. Damit wird die Umgebung
+        für den User richtig gesetzt und das virtuelle Python Environment wird aktiviert.
 
         Ausführlichere Informationen zu den virtuellen Python Environments sind im Abschnitt Referenz unter
         :doc:`Python Environment/Virtuelle Python Environments </referenz/python/virtual_environments>` zu finden.
+
+
+        .. attention::
+
+            Bei der Installation von debian 12 (bookworm) wird Python 3.11 installiert. SmartHomeNG v1.10 ist zwar
+            prinzipiell unter Python 3.11 lauffähig, es sind jedoch nicht alle Plugins unter Python 3.11 getetet,
+            weshalb SmartHomeNG v1.10 offinziell nur Python Versionen bis 3.10 untersützt.
+
+            Soll eine andere Python Version als 3.11 genutzt werden, sollte diese Python Version vor dem Aufruf des
+            Skripts tools/postinstall installiert werden, damit das Standard Virtual Environment welches beim Start
+            des Rechners aktiviert wird, für die gewünschte Python Version erstellt wird.
+
+            Eine Beschreibung, wie zusätzliche Python Versionen installiert werden, ist unter
+            :doc:`Python Environment/Python Version Installieren </referenz/python/python_installation>` zu finden.
 
 
 
