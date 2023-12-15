@@ -110,7 +110,7 @@ echo
 
 # make a virtual environment with the standard Python installation
 echo "Creating virtual environment 'shng' with Python $VERS"
-source venvs/make_venv $VERS shng
+source tools/make_venv $VERS shng
 
 echo $PATH>$HOME/postinstall_tst
 WRK=`grep /venvs $HOME/postinstall_tst`
