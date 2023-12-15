@@ -150,8 +150,12 @@ Weitere Python Bibliotheken installieren
 
       .. note::
 
-         Dieser Mechanismus sorgt auch dafür, dass Pakete die von später konfigurierten Plugins benötigt werden, automatisch
-         nachinstalliert werden.
+         Dieser Mechanismus sorgt auch dafür, dass Pakete die von später konfigurierten Plugins benötigt werden,
+         automatisch nachinstalliert werden.
+
+      Nach der Installation der benötigten Pakete dauert es noch einige Zeit, bis SmartHomeNG reagiert, da beim ersten
+      Start die CUP Geschwindigkeit des Rechners getestet wird.
+
 
    .. tab:: SmartHomeNG vor v1.7
 
