@@ -16,8 +16,9 @@ SmartHomeNG als Dienst :bluesup:`update`
 Einrechten des Dienstes
 =======================
 
-Um SmartHomeNG als Dienst zu betreiben muss eine Startup-Datei
-für **systemd** erstellt werden.
+Um SmartHomeNG auf einer älteren Version als Debian 12 (bookworm) als Dienst zu betreiben muss eine Startup-Datei
+für **systemd** erstellt werden. Für Debiam 12 oder neuer, bitte der Beschreibung im folgenden Abschnitt
+(Nutzung eines virtuellen Environments) folgen.
 
 .. warning::
     Bevor man als **Neuling** SmartHomeNG als Dienst einrichtet,
@@ -61,8 +62,8 @@ und folgenden Text hineinkopieren:
 
 |
 
-Nutzung eines virtuellen Environments redsup:`neu`
-==================================================
+Nutzung eines virtuellen Environments :redsup:`neu`
+===================================================
 
 Bei der Installation von SmartHomeNG v1.10 (oder neuer) wird vom postinstall-Skript ein virtuelles Python
 Environment angelegt. Wenn dieses virtuelle Environment im Zusammenhang mit dem Dienst genutzt werden soll, muss

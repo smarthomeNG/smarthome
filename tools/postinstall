@@ -119,6 +119,10 @@ if [ "$WRK" == "" ]; then
 else
     echo "Use command 'source act shng' to activate environment"
 fi
+
+echo
+echo Please logout and login again, to ensure that the shell environment is initialized correctly.
+
 rm $HOME/postinstall_tst
 echo
 
