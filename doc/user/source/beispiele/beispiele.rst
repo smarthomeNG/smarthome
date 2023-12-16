@@ -8,9 +8,9 @@
 .. index:: Beispiele
 .. index:: Tipps & Tricks
 
-=========================
-Beispiele, Tipps & Tricks
-=========================
+============================================
+Beispiele, Tipps & Tricks :greensup:`Update`
+============================================
 
 In diesem Abschnitt sind ausführliche Beispiele sowie Tipps & Tricks für die Konfiguration von SmartHomeNG beschrieben.
 Diese Beispiele beziehen sich auf den Core von SmartHomeNG. Beispiele zu den Plugins sind gegebenenfalls in der
@@ -27,3 +27,5 @@ Dokumentation des jeweiligen Plugins im Abschnitt  :doc:`Plugins </plugins_all>`
     structs/structs.rst
     plugins/plugins.rst
     knxd.rst
+    umzug.rst
+
