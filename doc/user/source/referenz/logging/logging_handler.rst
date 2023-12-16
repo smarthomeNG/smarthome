@@ -21,14 +21,14 @@ ShngTimedRotatingFileHandler
 Der **ShngTimedRotatingFileHandler** ist eine Variante des **TimedRotatingFileHandler**, der im Python
 Logging Modul vorhanden ist (logging.handlers.TimedRotatingFileHandler).
 
-Der **TimedRotatingFileHandler** benennt die Backaup Versionen einer Log Datei in einer Art und Weise um, die
+Der **TimedRotatingFileHandler** benennt die Backup Versionen einer Log Datei in einer Art und Weise um, die
 im Handling umständlich sein kann, da die Datei dabei die normale Extension **.log** verliert:
 
     smarthome-warnings.log  -->  smarthome-warnings.log.2021-04-06
 
 Der **ShngTimedRotatingFileHandler** hat die gleiche Funktionalität und Konfigurierbarkeit wie der
 **TimedRotatingFileHandler**, bildet den Namen für die Backup Dateien jedoch anders. Der Timestamp (2021-04-06)
-wird nicht an das Ende des Dateinamens angefügt, sondern vor der Extenstion **.log** eingefügt:
+wird nicht an das Ende des Dateinamens angefügt, sondern vor der Extension **.log** eingefügt:
 
     smarthome-warnings.log  -->  smarthome-warnings.2021-04-06.log
 
