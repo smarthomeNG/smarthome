@@ -2018,15 +2018,13 @@ class Item():
         mlvalue = self._log_mapping.get(lvalue, lvalue)
         name = self._name
         age = round(self._get_last_change_age(), 2)
-        try:
-            pname = self.__parent._name
-        except AttributeError:
-            pname = None
         id = self._path
-        try:
-            pid = self.__parent._path
-        except AttributeError:
+        if self.__parent = _items_instance:
+            pname = None
             pid = None
+        else:
+            pname = self.__parent._name
+            pid = self.__parent._path
         mvalue = self._log_mapping.get(value, value)
         lowlimit = self._get_rule('lowlimit')
         highlimit = self._get_rule('highlimit')
