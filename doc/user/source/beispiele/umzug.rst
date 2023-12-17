@@ -199,15 +199,35 @@ Falls das Verzeichnis ``/usr/local/smarthome/var/plugings_cache`` existiert und 
 Verzeichnisinhalt inclusive der Unterverzeichnisse kopiert werden.
 
 
-SmartHomeNG zum Test starten
-----------------------------
+SmartHomeNG Konfiguration einspielen
+------------------------------------
 
-...
+Auf dem neuen System SmartHomeNG starten
+
+.. code-block:: python
+
+    python3 bin/smarthome.py
+
+
+Die Admin GUI des neuen Systemes starten und auf der Seite Dienste "Konfiguration wiederherstellen" wählen, um die
+gesicherte Konfiguration des alten Systems auf dem neuen System zu installieren.
+
+Damit die Konfiguration wirksam wird, startet SmartHomeNG neu.
+
+Nun sollte kurz getestet werden, ob SmartHomeNG (bis auf noch nicht angeschlossene Peripherie) funktioniert.
+Dabei auch die Datenbank prüfen. Zuerst über einen Blick in das Webinterface des database Plugis (Sind die erwarteten
+Items da, sind zu einem Item die erwarteten Werte da).
+
+Anschließend die smartVISU auf dem neuen System aufrufen und auf einer Seite mit einem Plot prüfen, ob der Plot die
+erwarteten Daten enthält.
 
 |
 
 Neues System als produktiv einrichten
 =====================================
+
+In diesem Schritt wird das neue System so konfiguriert, dass es unter der bisher verwendeten IP Adresse und dem
+bisher verwendeten DNS Namen erreichbar ist.
 
 ...
 
@@ -218,12 +238,25 @@ Restarbeiten
 
 ...
 
+Letzte Konfigurationsänderungen
+-------------------------------
+
+...
+
 Transfer Verzeichnis löschen
 ----------------------------
 
-...
+Das Transfer Verzeichnis, welches im SmartHomeNG Verzeichnis angelegt wurde, sollte nun mit seinem Inhalt gelöscht
+werden.
+
+.. code-block:: python
+
+    rm -R /usr/local/smarthome/transfer
+
 
 SmartHomeNG als Dienst einrichten
 ---------------------------------
 
-...
+Zum Abschluß smartHomeNG als Dienst einrichten, damit es bei einem Systemstart wieder gestartet wird. Das Vorgehen
+ist in der :doc:`Komplettanleitung </installation/komplettanleitung/08_shng_daemon>` beschrieben.
+
