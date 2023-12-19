@@ -2111,11 +2111,11 @@ class Item():
 
             if self._type == 'num':
                 low_limit =  self._get_rule('lowlimit')
-                if low_limit:
+                if low_limit is not None:
                     if low_limit > float(value):
                         return
                 high_limit =  self._get_rule('highlimit')
-                if high_limit:
+                if high_limit is not None:
                     if high_limit <= float(value):
                         return
                 if filter_list != []:
