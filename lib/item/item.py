@@ -2019,7 +2019,7 @@ class Item():
         name = self._name
         age = round(self._get_last_change_age(), 2)
         id = self._path
-        if self.__parent = _items_instance:
+        if self.__parent == _items_instance:
             pname = None
             pid = None
         else:

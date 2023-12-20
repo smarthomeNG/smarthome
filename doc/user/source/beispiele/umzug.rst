@@ -223,25 +223,29 @@ erwarteten Daten enthält.
 
 |
 
-Neues System als produktiv einrichten
-=====================================
-
-In diesem Schritt wird das neue System so konfiguriert, dass es unter der bisher verwendeten IP Adresse und dem
-bisher verwendeten DNS Namen erreichbar ist.
-
-...
-
-|
-
 Restarbeiten
 ============
 
 ...
 
+Neues System als produktiv einrichten
+-------------------------------------
+
+In diesem Schritt wird das neue System so konfiguriert, dass es unter der bisher verwendeten IP Adresse und dem
+bisher verwendeten DNS Namen erreichbar ist.
+
+Prinzipiell kann das System auch mit der neuen IP Adresse betrieben werden. Wenn jedoch der Mosquitto Broker auf dem
+System für die MQTT Kommunikation genutzt wird, sollte die IP Adresse auf die des alten Systems geändert werden, weil
+sonst in allen MQTT Devices eine neue Adresse für den Broker hinterlegt werden müsste.
+
+...
+
+
 Letzte Konfigurationsänderungen
 -------------------------------
 
 ...
+
 
 Transfer Verzeichnis löschen
 ----------------------------
