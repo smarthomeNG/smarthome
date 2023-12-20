@@ -529,7 +529,7 @@ class ShngMemLogHandler(logging.StreamHandler):
         self._cache = cache
         self._maxlen = maxlen
         # save cache files in var/log/cache directory
-        cache_directory = os.path.join(logs_instance._sh._var_dir, 'log'+os.path.sep, 'cache'+os.path.sep)
+        cache_directory = os.path.join(logs_instance._sh.get_vardir(), 'log'+os.path.sep, 'cache'+os.path.sep)
         if cache is True:
             if not os.path.isdir(cache_directory):
                 os.makedirs(cache_directory)

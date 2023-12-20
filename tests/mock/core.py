@@ -66,7 +66,7 @@ class MockSmartHome():
 
     _etc_dir = os.path.join(_base_dir, 'tests', 'resources', 'etc')
     _structs_dir = os.path.join(_base_dir, 'tests', 'resources', 'structs')
-#    _var_dir = os.path.join(_base_dir, 'var')
+    _var_dir = os.path.join(_base_dir, 'var')
     _lib_dir = os.path.join(_base_dir, 'lib')
     _env_dir = os.path.join(_lib_dir, 'env' + os.path.sep)
 
