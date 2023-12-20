@@ -26,6 +26,7 @@ import logging.handlers
 import logging.config
 import os
 import datetime
+import pickle
 
 import collections
 
@@ -389,7 +390,7 @@ class Log(collections.deque):
 
 # ================================================================================
 
-""" 
+"""
 In the following part of the code, logging handlers are defined
 """
 
@@ -397,6 +398,17 @@ class ShngTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
     """
     TimedRotatingFilehandler with a different naming scheme for rotated files
     """
+    def __init__(self, filename, when='MIDNIGHT', interval=0, backupCount=0, encoding=None, delay=False, utc=False):
+        year = datetime.datetime.now().strftime("%Y")
+        month = datetime.datetime.now().strftime("%m")
+        day = datetime.datetime.now().strftime("%d")
+        hour = datetime.datetime.now().strftime("%H")
+        stamp = datetime.datetime.now().timestamp()
+        try:
+            filename = eval(f"f'{filename}'")
+        except Exception:
+            pass
+        super().__init__(filename, when, interval, backupCount, encoding, delay, utc)
 
     def getFilesToDelete(self):
         """
@@ -499,7 +511,8 @@ class ShngMemLogHandler(logging.StreamHandler):
     """
     LogHandler used by MemLog
     """
-    def __init__(self, logname='undefined', maxlen=35, level=logging.NOTSET):
+    def __init__(self, logname='undefined', maxlen=35, level=logging.NOTSET,
+            mapping=['time', 'thread', 'level', 'message'], cache=False):
         super().__init__()
         self.setLevel(level)
 
@@ -509,11 +522,30 @@ class ShngMemLogHandler(logging.StreamHandler):
 
         #logs_instance.logger.info(f"ShngMemLogHandler.__init__(): logname={logname}, self={self}, handlername={self.get_name()}, level={self.level}, levelname={logging.getLevelName(self.level)}, maxlen={maxlen}")
 
-        self._log = Log(self, logname, ['time', 'thread', 'level', 'message'], maxlen=maxlen, handler=self)
-
+        self._log = Log(self, logname, mapping, maxlen=maxlen, handler=self)
         self._shtime = logs_instance._sh.shtime
         # Dummy baseFileName for output in shngadmin (and priv_develop plugin)
         self.baseFilename = "'" + self._log._name + "'"
+        self._cache = cache
+        self._maxlen = maxlen
+        # save cache files in var/log/cache directory
+        cache_directory = os.path.join(logs_instance._sh._var_dir, 'log'+os.path.sep, 'cache'+os.path.sep)
+        if cache is True:
+            if not os.path.isdir(cache_directory):
+                os.makedirs(cache_directory)
+            self._cachefile = cache_directory + self._log._name
+            try:
+                self.__last_change, self._logcache = self._cache_read(self._cachefile, self._shtime.tzinfo())
+                self.load(self._logcache)
+                logs_instance.logger.debug(f"Memory Log {self._log._name}: read cache: {self._logcache}")
+            except Exception:
+                try:
+                    self._cache_write(logs_instance.logger, self._cachefile, self._log.export(int(self._maxlen)))
+                    self._cache_read(self._cachefile, self._shtime.tzinfo())
+                    logs_instance.logger.info(f"Memory Log {self._log._name}: generated cache file")
+                except Exception as e:
+                    pass
+                    logs_instance.logger.warning(f"Memory Log: problem reading cache: {e}")
 
     def emit(self, record):
         #logs_instance.logger.info(f"ShngMemLogHandler.emit() #1: logname={self._log._name}, handlername={self.get_name()}, level={self.level}, record.levelno={record.levelno}, record.levelname={record.levelname}, record={record}")
@@ -524,5 +556,54 @@ class ShngMemLogHandler(logging.StreamHandler):
             self._log.add([timestamp, record.threadName, record.levelname, record.message])
         except Exception:
             self.handleError(record)
+        if self._cache is True:
+            try:
+                self._cache_write(logs_instance.logger, self._cachefile, self._log.export(int(self._maxlen)))
+            except Exception as e:
+                logs_instance.logger.warning(f"Memory Log {self._log._name}: could not update cache {e}")
 
 
+    ##############################################################################################
+    # Cache Methods, taken from operationlog plugin by Jan Troelsen, Oliver Hinckel, Bernd Meiners
+    ##############################################################################################
+    def load(self, logentries):
+        """
+        Loads logentries (which were just read from cache) into the log object (see lib.log.Log())
+        """
+        if len(logentries) != 0:
+            for logentry in reversed(logentries):
+                log = []
+                for name in self._log.mapping:
+                    if name == 'time':
+                        log.append(logentry['time'])
+                    elif name == 'thread':
+                        log.append(logentry['thread'])
+                    elif name == 'level':
+                        log.append(logentry['level'])
+                    elif name == 'message':
+                        log.append(logentry['message'])
+                self._log.add(log)
+
+    def _cache_read(self, filename, tz):
+        """
+        This loads the cache from a file
+
+        :param filename: file to load from
+        :param tz: timezone
+        :return: [description]
+        :rtype: a tuple with datetime and values from file
+        """
+        ts = os.path.getmtime(filename)
+        dt = datetime.datetime.fromtimestamp(ts, tz)
+        value = None
+        with open(filename, 'rb') as f:
+            value = pickle.load(f)
+        return (dt, value)
+
+
+    def _cache_write(self, logger, filename, value):
+        try:
+            with open(filename, 'wb') as f:
+                pickle.dump(value, f)
+        except IOError:
+            logger.warning("Could not write to {}".format(filename))
