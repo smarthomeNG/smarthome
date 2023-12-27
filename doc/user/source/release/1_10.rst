@@ -17,9 +17,9 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 29. August 2023
-           (Bugfix in dict handling)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 28. August 2023
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Dezember 2023
+           (...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 26. Dezember 2023
            (...)
 
 
@@ -113,11 +113,24 @@ Updates im CORE
     * eval on trigger only implemented
     * Initial support for access to elements of list and dict items
     * Bugfix in dict handling
+    * Implemented option to control full name of item-logger
+    * Add some more keyword options to log_text
+    * Put log_text options pid and pname in try/except to prevent issues when parent is not found
+    * Add itemvalue (getting e.g. text from an item) as additional option to log_text
+    * Allow defining entries in log_rules as absolute or relative items, implement exclude option, minor issue fixing
+    * Fix perviously introduced issue in log_change handling when attributes in log_rules are not set or no log_rules exists
+    * log_text: adjust pname and pid handling when no parent is available
 
   * lib.log:
 
     * Improvements to logging configuration
     * Added import logging.config (to keep mockup core from failing)
+    * Introduce mapping and cache possibilites for memory logs
+    * Allow placeholders for filename {year}, {month}, {day}, {hour}, {stamp}
+    * Add cache option for memlog to docu
+    * Move cache for memory log to var/log/cache directory
+    * Fix test conditions (also mock core)
+
 
   * lib.logic:
 
@@ -138,6 +151,13 @@ Updates im CORE
       * Update sdp connections for standby
       * Update standby mode on failed connect and reconnect
       * Update sdp serial connections
+      * Fixed fragmented packet handling for json
+      * Modify chunk checking
+      * Change json buffering to bytes type to prevent utf decode error on split bytes
+      * Use item.path
+      * Use item.property.path instead of item.path()
+      * Rename get_command_from_reply after changing return type to list
+      * Fix logging message
     * SmartPlugin:
 
       * move suspend/resume function to smartplugin
@@ -153,6 +173,10 @@ Updates im CORE
     * Fix name reference
     * Small fixes
     * Add open method
+    * Modify logging
+    * Add connect rate limit
+    * Add parameter for rate limit
+    * Introduce connect ratelimit
 
   * lib.plugin:
 
@@ -165,6 +189,8 @@ Updates im CORE
       in hundreds or thousands of active loggers)
     * Added some error handling
     * Bugfix for giving parameters to a task via scheduler.add()
+    * Fixed a bug where 'caller' was not initialized in _task when starting an object; Adjusted some log messages
+    * Initializing 'caller' (fixed bug) is only performed, if the task-method which is to be called has a parameter 'caller'
 
   * lib.shpypi:
 
@@ -244,6 +270,12 @@ Updates im CORE
       * Update sample plugin to include cookies and tooltips
       * Updates to datatables and pageresize
       * Update to base_plugin.html to support bordered tab data
+      * Fix error when webif_pagelength is not defined
+      * Avoid error in console when select_menu from datatable is not present
+      * Correctly save and read update interval cookies
+      * Some cookie fixes for automatic page update
+      * Fix window.pagelength if no datatable is present / cookie reading
+      * Improve cookie value handling
 
   * mqtt:
 
@@ -287,6 +319,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * denon: For Denon AV Receivers, based on SmartDevicePlugin
 * epson: Based on SDP control of Epson projectors are supported (minimal setup for now)
 * lms: Logitech Mediaserver / Squeezebox, based on SmartDevicePlugin
+* mikrotik: Mikrotik RouterOS Switch management
 * pioneer: for Pioneer AV Receivers, based on SmartDevicePlugin
 * oppo: First version of SmartDevicePlugin based plugin for Oppo UHD players
 * byd_bat: Plugin to display data from BYD batteries
@@ -305,6 +338,12 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Small bug-fix in Web-IF
   * Fixed issues with urlencode
 
+* apcups:
+
+  * Add user_doc, remove Readme.md
+  * Fix docu (translation, layout issues)
+  * Add plugin logo
+
 * appletv:
 
   * Use separate webif/init for web interface integration
@@ -319,9 +358,26 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Clean up user_doc
   * Improve error handling and logging
 
+* artnet:
+
+  * Outsource and improve web interface
+  * Convert readme to user_doc
+  * Bump to version 1.6.1
+  * Improve handling of "NoneType" values
+  * Fix Webif, update docu
+
+* asterix:
+
+  * Update documentation and remove template logo
+  * Fix network callback issues
+  * Fix bug in found_terminator to expect bytes instead of str
+
 * avdevice:
 
   * Fix dependency function for int/float values
+  * Remove README and english documentation
+  * Set state to deprecated as there are new plugins based on SmartDevice framework
+  * Remove unneccessary webif pagelength entries in web interface
 
 * avm:
 
@@ -350,19 +406,56 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * FritzHome: Bugfix renewing SID in case SID has expired
   * CallMonitor: bugfix join listing thread
   * CallMonitor: reconnect if connection is lost
-  * Bump to 2.0.9
   * CallMonitor: bugfix join counter threads
   * FritzHome: Add support for device statistics
-  * bump to 2.1.0
+  * Update docu
+  * FritzHome: Change all saturations to value range 0-255
+  * Bump to 2.2.1
+  * Improve plugin shutdown: terminate update loop if plugin is no longer alive
 
 * beolink:
 
   * Changes to translations
 
+* blockly:
+
+  * Remove bootstrap and jquery as it is now part of the http module
+  * Remove base.html from webif as it is part of http module
+  * Update locale / translation to work with newer translate function of shng
+  * Outsource web interface code, update webif translation feature
+  * Update blockly core code to 10.2.2
+  * Update logics_blockly_code to work with newest blockly core release
+  * New plugin logo and webif screenshot
+  * Cleanup utils (remove all translation methods)
+  * Create and update user_doc
+  * Bump to version 1.5.0
+  * Replace Blockly.Python.variableDB_ by nameDB\_ in sh_logics.js
+  * Refix code
+  * Correct Utils import, now everything seems to work...?
+  * Fix item get
+  * Remove unused buttons, add languages
+  * Fix deprecated block definition
+  * Cleanup web if code. Load german translation if set language is not found
+  * Load language in blockly based on shng language
+  * Put 1.4.0 version as a backup in the folder
+  * Remove unused css
+  * Add headtable, put editor in a bodytab
+  * Remove old info on blockly update as seperate rst as it's updated and implemented in user_doc
+
+* casambi:
+
+  * Update doc
+
+* comfoair:
+
+  * Modifications for parameter checks, restartability and code cleanness
+
 * database:
 
   * Changed log message, if no cache value was found
   * Added option 'no' to valid list of database attribute
+  * Remove unneccessary webif pagelength code from web interface
+  * Catch various exceptions that occurred if db was temporarily not reachable
 
 * db_addon:
 
@@ -384,10 +477,29 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Enable on-change attributes to be run on startup
   * Bugfix in handle_onchange
   * Code rework to enable more flexible attributes
-  * Bump to version 1.2.0 due to significant change in code
   * several fixes
-  * bump to v1.2.1
   * Code rework to enable more flexible attributes
+  * Update doc
+  * Update WebIF for button
+  * Add attribute "verbauch_last_24h"
+  * Update methods to handle hourly calculation
+  * Update WebIF for button
+  * Debug _handle_verbrauch
+  * Update docu
+  * Bugfix bei Verbrauchsberechnung der on-change Items
+  * Bugfix bis Zählerstand
+  * Bump to 1.2.7
+  * Add attribute 'verbrauch_jahr_minus3'
+  * Reset on_change items if new timeframe starts (e.g. reset all on_change items for day at midnight)
+  * Use item_attributes_master.py during parse_item
+  * Bugfix on-change item calculation
+  * Resolve conflicts to be able to merge
+  * Resolve conflicts to be able to merge
+  * Update user_doc
+
+* dlms:
+
+  * Update doc
 
 * drexelundweiss:
 
@@ -402,6 +514,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Expanded user documentation
   * Added serial/ethernet connection status to webinterface
   * Clean-up logging import and unused argument of init function
+  * Update doc
+  * Added key list to user_doc.rst
+  * Moved serial open from init to run method (to prepare plugin for restart)
 
 * executor:
 
@@ -421,9 +536,17 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Removed duplicate scroolbars from webinterface
   * Bump to v1.2.1
 
+* garminconnect:
+
+  * Adjusted requirements to reflect new package version
+
 * gpio:
 
   * Fix user_doc reference to configuration
+
+* helios:
+
+  * Modifications for parameter checks, restartability and code cleanness
 
 * homeconnect:
 
@@ -446,29 +569,123 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Update to 4.0.1 including single-key-id login
 
+* influxdb:
+
+  * Convert readme to user_doc
+  * Add super.init method
+  * Bump version to 1.0.3
+  * Fix code-blocks in docu
+  * Include database conversion script in docu
+  * Add info on conversion script that it was tested for influxdb2.
+
+* influxdb2:
+
+  * Add screenshot of webif to docu
+  * Add conversion script to docu
+  * Clean up web interface code and tabs
+
+* intercom_2n:
+
+  * Modifications for parameter checks, restartability and code cleanness
+
+* join:
+
+  * Convert readme to user_doc, add logo
+  * Bump version to 1.4.4
+  * Remove documentation link from plugin.yaml
+
+* jsonread:
+
+  * Clean up and improve web interface (using internal datatables, etc.)
+  * Bump version to 1.0.3
+  * Set status to "ready" (tested successfully)
+  * Extend automatic webif update
+  * Update locale
+  * Add datatableAdditional class to webif table
+
+* jvcproj:
+
+  * Add super.init
+  * Bump version to 1.0.1
+  * Put example item config into struct in plugin.yaml
+  * Convert readme to user_doc, add plugin logo
+  * Modifications for parameter checks, restartability and code cleanness
+
 * knx:
 
   * Prevent send actions to bus while plugin is not running
   * Fix issue with polling knx items on startup. All polls are put in a waiting list and polled on run only
   * Corrected a translation
+  * Replace sh.scheduler.add by smartplugin scheduler_add
+  * Add plugin shortname as caller in scheduler
+  * Add dpt 5003
+
+* kodi:
+
+  * Update docs, include config change warning
+  * Fixes, docs, add get_settings
+
+* kostal:
+
+  * Modifications for parameter checks, restartability and code cleanness
+
+* lirc:
+
+  * Remove webif pagelength code from web interface
+  * Improve web interface feedback on button press for sending command
+
+* luxtronic2:
+
+  * Modifications for parameter checks, restartability and code cleanness
+
+* mailrcv:
+
+  * Replace readme by user_doc
+  * Add super().__init__()
+  * Bump version to 1.4.2
+
+* mailsend:
+
+  * Fixed bug when called from onchange expression
+  * Fixed default values of parameters of extended() method
+  * Added minimal user_doc.rst
 
 * modbus_tcp:
 
   * Fixed bug
+  * Add crontab to poll devices, update log messages to Python f-strings
 
 * neato:
 
   * Clean-up unused argument of init function
+  * Improved user_doc
+  * Fixed error message decoding
+  * Automatically decode mapID for extraction of boundary IDs. This is needed for single room cleaning
+  * Corrections in user_doc
+  * Neduced timeout exceptions from error to warning level
+  * Fixed exception for situations in which mapID attribute is not available
 
 * network:
 
   * Remove debug print
+
+* nuki:
+
+  * Read Lock State via LISTS webservice, as direct lock access is returning 503 in case of locking
+  * Update Lock state via Lists once lock state is changed to get intermediate states
+  * Small fix for getting state 4 and 7
+  * Updated Log message
 
 * nut:
 
   * Added user_doc, default logo and refined plugin.yaml
   * Clean-up unused argument of init function, switched to parameter import via method get_parameter_value()
   * Bugfix for exception that can occur during termination of the plugin
+  * Fixed bug in IP port handling; improved plugin shutdown
+
+* odlinfo:
+
+  * Added verify parameter to plugin, to disable certificate checks due to temporary certificate error of endpoint
 
 * philips_tv:
 
@@ -491,15 +708,39 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Added locals.location to struct
   * Reworked structs to use new features
   * Modified to use lib.env
+  * Ignoring responses from pirateweather, if units in response don't match units from request
+  * Bumped to v1.2.5
+
+* plex:
+
+  * Modifications for parameter checks, restartability and code cleanness
+
+* pushover:
+
+  * Add ttl parameter
+
+* raumfeld:
+
+  * Marked as deprecated
 
 * rcs1000n:
 
   *Restructure send method and improve try/except clause
 
+* rcswithch:
+
+  * Modifications for parameter checks, restartability and code cleanness
+
 * resol:
 
   * Improved user_doc
   * Clean-up unused argument of init method
+  * Extended user_doc.rst
+  * Retired README.md
+
+* roomba_980:
+
+  * Modifications for parameter checks, restartability and code cleanness
 
 * rpi_info:
 
@@ -509,12 +750,36 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Initial version of plugin with Gen2 api support
 
+* sma:
+
+  * Modifications for parameter checks, restartability and code cleanness
+
+* smarttv:
+
+  * Modifications for parameter checks, restartability and code cleanness
+
 * smartvisu:
 
   * Changed default value for generate_pages to False
   * Corrected log message
   * Only check dir if handling option is set
   * Adjust empty dir handling
+  * Update web interface to make automatic updates of logics and items work
+  * Extend locale.yaml
+  * Bump version to 1.8.14
+  * Add datatableAdditional class to tables
+  * locale cleanup
+
+* sml:
+
+  * Modifications for parameter checks, restartability and code cleanness
+  * Fix tests
+  * Set state to deprecated
+
+* sml2:
+
+  * Fix webinterface missing item column
+  * Update requirements to fix descriptions
 
 * solarforecast:
 
@@ -523,10 +788,17 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix for fallback to system location as a plugin default value
   * Replaced deprecated sh.now() with method of lib shtime
   * Clean-up unused argument of init method
+  * Changed attribute 'power' to 'energy' (breaking change) as power is not correct for forecasted energy (in Wh)
+  * Now multi-instance capable
 
 * sonos:
 
   * Improved thread termination; reintroduced old legacy method play_radio
+  * Fixed WebIf crash if one speaker is not reachable
+  * Update doc
+  * Removed deprecated webif_pagelength parameter from plugin.yaml
+  * Fix for method _play_radio (had problems with radio station names with spaces)
+  * Code clean-up for selection of radio stations
 
 * stateengine:
 
@@ -537,6 +809,68 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Bump version to 1.9.6
   * Update struct and logging
   * (re)introduce separate loggers for each stateengine item. Custom logger stateengine.<item>.rules
+  * Improve web interface: Icons on conditions are only shown on currently evaluated states (and not on formerly "invalid" evaluations)
+  * Some code refactoring and internal issue fixing and improvements
+  * Improve configuration issue handling and logging
+  * Improve se_use attribute handling and error checking
+  * Introduce possibility to delete a scheduler for delayed actions by setting delay to -1
+  * Refactor, optimize and extend se_released_by functionality. Should now work as expected
+  * Update suspend structs to delete retrigger schedule on leave
+  * Update plugin.yaml
+  * Bump version to 2.0.0
+  * Fix force action
+  * Improve log level handling, minimize queries and workload
+  * Improve instant_leaveaction and suspendtime handling
+  * Fix/improve plugin.yaml
+  * Improve web interface: show when state evaluation will run/has run. zoom into visu graphics using PanZoom
+  * Improve web interface refresh
+  * Improve log level handling
+  * Improve issue handling
+  * Introduce possibility to define se_item and se_status as "eval:..." instead of using se_eval or se_status_eval (which still works)
+  * Fix casting issue for eval expressions
+  * Fix issue handling in actions (return issue as list)
+  * Improve item handling if item does not exist, improve logging
+  * Update suspend_dynamic to avoid error messages
+  * Update, fix, simplify and extend documentation
+  * Fix delayed execution for new scheduler caller
+  * Fix manual logger
+  * Fix exception when original caller function doesn't return an item
+  * Fix searching for original caller to work with recent scheduler/caller changes from core
+  * Auto update webif on start to automatically find out when visu can be redrawn
+  * Make original caller finding work with latest changes of core
+  * Minor code refactor for stateengine tools
+  * Improve log entries for elog (update of manuell item)
+  * (re)fix web interface for overview page
+  * Fix value evaluation by reintroducing deepcopy of value
+  * Fix potential issue with releasedby because of deepcopy
+  * Use get_fullname as plugin identification (used as caller, etc.)
+  * Fix log level in web interface
+  * Check if caller is plugin corrected
+  * Fix and improve manual item check
+  * Improve and extend web interface and visu
+  * Fix manual exclude/include handling (gone wrong in previous commit)
+  * Fix regex for manual_exclude
+  * Fix unused attribute detection
+  * Improve issue logging
+  * Introduce se_stateorder attribute to change order of state during runtime
+  * Further improve issue logging
+  * Fix and improve se_stateorder feature
+  * Update and fix docu
+  * Introduce internal methods to convert a string to list or dict
+  * Minor code improvement in StateengineValue
+  * Catch exception if invalid items/values are used
+  * Allow to use lists in items
+  * Allow list in se_use eval/item declaration
+  * Allow definition of se_released_by as list in item
+  * Improve se_use handling (only fill if not used yet)
+  * Improve eval handling when list is returned
+  * Update docu with info about list items
+  * Fix reordering of states
+  * Improve state order handling
+
+* systemair:
+
+  * Modifications for parameter checks, restartability and code cleanness
 
 * tankerkoenig:
 
@@ -560,6 +894,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Allow unknown tasmota-attrs, move tasmota-attr doc to user_doc.rst
   * Improve Exception handling and handling of power messages
   * Bump version to 1.5.2
+  * Update doc
 
 * telegram:
 
@@ -570,6 +905,35 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * V2.0.0 Additions in locale; evaluate if debugging
   * Retry sending in case of error (with parameters)
   * Attempt to catch the exception in the updater
+  * Update doc
+  * Improve user documentation, add section about web interface
+  * Remove unneccassary webif pagelength from webif index.html
+  * Bump version to 2.0.1
+
+* unifi:
+
+  * Initialize the web interface the "new" way
+  * Provide plugin logo
+  * Replace readme by user_doc.rst
+  * Improve web interface - implement datatables, move issue information to responsive row, implement automatic page update
+  * Adjust locale based on updated web interface
+  * Bump to version 1.6.3
+  * Update color in webif
+  * Update webif, remove div container of datatable
+
+* uzsu:
+
+  * Minor code changes and improvements regarding PEP8 and variables
+  * Important update for scheduler handling to work with newest changes in core regarding caller
+  * Bump version to 1.6.6
+  * Replace caller UZSU Plugin by longname of plugin
+  * Re-fix previous implementation
+  * Adjust webif pagelength handling to most recent approach
+  * Use own interpolation methods, remove scipy/numpy dependencies
+  * Partial rewrite
+  * Added previous version
+  * Bump version to 2.0.0
+  * Cast value to float, refactor core
 
 * vacations:
 
@@ -577,9 +941,48 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Update cycle configurable
   * Accept country "Germany"
 
-* Webservices:
+* vicare:
+
+  * Initial commit for new Viessmann plugin, communicating via Viessmann API with backend
+  * Code-cleanup; new feature 'online status'
+
+* webservices:
 
   * Fix for splitting up of autotimer attribute into _value and _time
+
+* withings:
+
+  * Small webif improvement
+  * Convert readme to user_doc
+  * Metadata update
+  * Bump version to 1.8.3
+  * Improve docu
+  * Catch auth error
+  * Improve user doc regarding user_id info
+
+* xiaomi_vac:
+
+  * Remove webif pagelength init from web interface, not needed anymore
+  * Add super.init to init function
+  * Bump version to 1.2.4
+
+* yamahaxyc:
+
+  * Fix status info updates
+
+* zigbee2mqtt:
+
+  * v2.0 initial commit
+  * Updates, refactor
+  * Fixes for bool_values handling, modify structs to set base item as state/power item
+  * Include rgbxy
+  * Reimplement handlers, color sync
+  * Added dimmer struct
+  * Add hex rgb color item
+  * Updated docs
+  * Update webif
+  * Fixed bridge handling
+  * Fix struct error
 
 
 Outdated Plugins
@@ -639,11 +1042,16 @@ Repositiory aufgenommen.
 Weitere Änderungen
 ==================
 
+* Addition to .gitignore
+* Update README.md: Removed old links and travis badge
+
 Tools
 -----
 
-* Added script 'postinstall' which sets file permissions and cre…ates a virtual environment to run SmartHomeNG in
-** checkplugins: catch error when a file resides within plugin directory
+* Added script 'postinstall' which sets file permissions and creates a virtual environment to run SmartHomeNG in
+* checkplugins: catch error when a file resides within plugin directory
+* New tool install_plugin_from_develop
+* tools.setpermissions: Changed directory of venv support scripts
 
 
 Dokumentation

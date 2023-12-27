@@ -195,13 +195,14 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
 .. csv-table:: Zur Verdeutlichung
   :header: "SmartHomeNG", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen", "minimale Python Version"
 
-  "v1.4",            "Python 3.6",  "Python 3.4, 3.5, 3.6", "Python 3.3"
-  "v1.5",            "Python 3.6",  "Python 3.4, 3.5, 3.6", "Python 3.4"
-  "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7", "Python 3.4"
-  "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7", "Python 3.5"
-  "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8", "Python 3.6"
-  "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9", "Python 3.7"
-  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10", "tbd"
+  "v1.4",            "Python 3.6",  "Python 3.4, 3.5, 3.6",    "Python 3.3"
+  "v1.5",            "Python 3.6",  "Python 3.4, 3.5, 3.6",    "Python 3.4"
+  "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.4"
+  "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.5"
+  "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8",    "Python 3.6"
+  "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9",    "Python 3.7"
+  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.7"
+  "v1.11",           "Python 3.12", "Python 3.10, 3.11, 3.12", "tbd"
 
 Wenn die eingesetzte Python Version nicht in den unterstützen Python Versionen aufgelistet ist, bedeutet das nicht
 automatisch, dass SmartHomeNG mit älteren/neueren Python Versionen nicht funktioniert. Die Entwicklung wird nur
@@ -215,6 +216,8 @@ Zudem bekommen ältere Python Versionen keine Bugfixes mehr sondern nur noch Sic
 als dem Python Lifecycle und erhalten keinerlei Updates mehr. Das Supportende der verschiedenen Python Versionen
 ist in der folgenden Tabelle aufgelistet:
 
+.. note https://devguide.python.org/versions/
+
 .. csv-table:: Aktive Python Releases (wie auf python.org dokumentiert)
   :header: "Python Version", "Maintenance Status", "Erstes Release", "Support Ende"
 
@@ -224,7 +227,8 @@ ist in der folgenden Tabelle aufgelistet:
   "3.9",   "security",     "5\. Oktober 2020",     "Oktober 2025"
   "3.10",  "security",     "4\. Oktober 2021",     "Oktober 2026"
   "3.11",  "bugfix",       "24\. Oktober 2022",    "Oktober 2027"
-  "3.12",  "prerelease",   "2\. Oktober 2023",     "Oktober 2028"
+  "3.12",  "bugfix",       "2\. Oktober 2023",     "Oktober 2028"
+  "3.13",  "prerelease",   "1\. Oktober 2024",     "Oktober 2029"
 
 
 Python (und PHP) Versionen unter Linux
