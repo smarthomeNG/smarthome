@@ -74,7 +74,7 @@ werden.
 |
 
 Neuerungen bei Plugins
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 Bei den Plugins sind folgende Änderungen zu beachten:
 
@@ -109,6 +109,15 @@ Details zu den genannten Punkten sind in den Abschnitten :doc:`Entwicklung </ent
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.
 
 |
+
+Tipps & Tricks
+--------------
+
+Folgende Tipps sind in der Doku hinzugekommen:
+
+  - :ref:`Ein Plugin aus develop installieren <Plugin_aus_develop>`
+  - :ref:`SmartHomeNG umziehen <shng_umziehen>`
+
 
 
 .. comment

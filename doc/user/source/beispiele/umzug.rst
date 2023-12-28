@@ -9,6 +9,8 @@
 .. index:: Tipps & Tricks; SmartHomeNG umziehen
 .. index:: Umzug, Tipps & Tricks
 
+.. _shng_umziehen:
+
 ==================================
 SmartHomeNG umziehen :redsup:`Neu`
 ==================================
