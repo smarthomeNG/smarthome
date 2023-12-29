@@ -1,4 +1,4 @@
-:tocdepth: 1
+:tocdepth: 2
 
 Neuerungen im Release v1.10
 ===========================

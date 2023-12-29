@@ -1,5 +1,5 @@
 =============================
-Release 1.10.x - tt. mmm 2023
+Release 1.10.x - tt. Jan 2024
 =============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -19,8 +19,8 @@ sowie einige neue Plugins.
 
          - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Dezember 2023
            (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 26. Dezember 2023
-           (...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 29. Dezember 2023
+           (Merge pull request #871 from onkelandy/xiaomi_vac)
 
 
 Überblick
@@ -867,6 +867,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Update docu with info about list items
   * Fix reordering of states
   * Improve state order handling
+  * Change force action
 
 * systemair:
 
@@ -965,6 +966,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Remove webif pagelength init from web interface, not needed anymore
   * Add super.init to init function
   * Bump version to 1.2.4
+  * Add zeroconf 0.52.0 as requirement because otherwise creating wheel of newer version might not work for Raspi bookworm
 
 * yamahaxyc:
 
