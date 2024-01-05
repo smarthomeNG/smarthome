@@ -458,16 +458,15 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
             # replace placeholders by actual datetime
             return filename.format(**{'year': now.year, 'month': now.month,
                                    'day': now.day, 'hour': now.hour,
-                                   'minute': now.minute,
+                                   'minute': now.minute, 'intstamp': int(now.timestamp()),
                                    'stamp': now.timestamp()})
         except Exception:
             return filename
 
     def get_filename(self) -> str:
-        if '{' in self._fullname:
-            filename = self.parseFilename(self._fullname)
-        else:
-            dirName, _ = os.path.split(self._fullname)
+        filename = self.parseFilename(self._fullname)
+        if '{' not in self._originalname:
+            dirName, _ = os.path.split(filename)
             fn = self._fn + '.' + datetime.datetime.now().strftime(self.suffix) + self._ext
             filename = os.path.join(dirName, fn)
         if self._fullname.startswith("."):
@@ -534,13 +533,15 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
                 return '\d{2}'
             elif any(match.group(i) for i in (5, 8, 11, 14)):
                 return '\d{1}'
-            else:
+            elif match.group(16):
                 return '\d+'
+            else:
+                return '[0-9.]'
 
         dir_name, base_fname = os.path.split(self.baseFilename)
         fileNames = os.listdir(dir_name)
         result = []
-        if '{' in self._fullname:
+        if '{' in self._originalname:
             year = r'{year}'
             year2 = r'{year:02}'
             year4 = r'{year:04}'
@@ -556,10 +557,12 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
             minute = r'{minute}'
             minute1 = r'{minute:01}'
             minute2 = r'{minute:02}'
+            intstamp = r'{intstamp}'
             stamp = r'{stamp}'
+
             combined_pattern = f'({year})|({year2})|({year4})|({month})'\
                 f'|({month1})|({month2})|({day})|({day1})|({day2})|({hour})'\
-                f'|({hour1})|({hour2})|({minute})|({minute1})|({minute2})|({stamp})'
+                f'|({hour1})|({hour2})|({minute})|({minute1})|({minute2})|({intstamp})|({stamp})'
             regex_result = re.sub(combined_pattern, custom_replace, self._originalname)
             pattern_regex = re.compile(regex_result)
             for fileName in fileNames:
