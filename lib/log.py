@@ -473,7 +473,6 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
         if self._fullname.startswith("."):
             shng_dir = Path(logs_instance._sh.get_basedir())
             filename = str((shng_dir / filename).resolve())
-        print(f"{self._fullname}, {filename}")
         dirName, _ = os.path.split(filename)
         if not os.path.isdir(dirName):
             os.makedirs(dirName)
