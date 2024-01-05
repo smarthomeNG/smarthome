@@ -71,6 +71,65 @@ wird anstelle des ``class:`` Attributes der Handler **ShngTimedRotatingFileHandl
 
 |
 
+DateTimeRotatingFileHandler
+===========================
+
+Dieser Handler ermöglicht wie das operationlog und datalog Plugin, die Logdateien
+entsprechend der aktuellen Uhrzeit zu benennen. Gleich wie beim oben beschriebenen
+ShngTimedRotatingFileHandler kann angegeben werden, in welchem zeitlichen Abstand
+eine neue Datei erstellt werden soll und wieviele Backup-Versionen erhalten bleiben.
+Der Handler stellt mehrere Platzhalter für Dateinamen und Ordner zur Verfügung.
+Monat, Tag, Stunde und Minute werden im Normalfall mit einer Ziffer
+ohne vorgestellter 0 geschrieben, außer man setzt dezidiert ein ``:02`` hinten dran.
+Durch ``{month:02}`` wird z.B. der März als 03 geschrieben,
+während der März bei ``{month}`` als 3 geschrieben wird.
+
+* {year}: Das aktuelle Jahr im Format YYYY, z.B. 2023
+* {month}: Der aktuelle Monat im Format (M)M, z.B. (0)3 für März oder 10 für Oktober
+* {day}: Der aktuelle Tag im Format (D)D, z.B. (0)1 für den 1. oder 10 für den 10. des Monats
+* {hour}: Die aktuelle Stunde im Format (H)H, z.B. 22 für zehn Uhr abends oder (0)1 für ein Uhr nachts
+* {minute}: Die aktuelle Minute im Format , z.B. 22 für zehn Uhr abends oder 1 für ein Uhr nachts
+* {stamp}: Der aktuelle Unix Timestamp, z.B. 1699220771.133886
+* {intstamp}: Der aktuelle Unix Timestamp als Integer, z.B. 1699220771
+
+Das folgende Beispiel erstellt eine CSV Datei mit Namen "test" und dem aktuellen Datum im Format Tag.Monat.Jahr_Stunde im Ordner smarthome/<aktuelles Jahr>.
+Jede volle Stunde wird eine neue Logdatei mit dem gleichen Muster erstellt. Es werden
+zwei Backup-Dateien behalten, ältere Dateien werden zur vollen Stunde gelöscht.
+
+Hinweis: Ist {hour} nicht Bestandteil des Dateinamens, wird die selbe Datei für den jeweiligen Tag überschrieben, erst am nächsten Tag wird eine neue Datei erstellt.
+
+.. code-block:: yaml
+
+    handler:
+        csv_file:
+            (): lib.log.DateTimeRotatingFileHandler
+            formatter: shng_simple
+            filename: ./{year}/test_{day}.{month}.{year}_{hour}.csv
+            when: 'H'
+            interval: 1
+            backupCount: 2
+
+Wird beim Anlegen des Handlers kein Platzhalter im Dateinamen genutzt,
+kommt die standardmäßige Benennung, bei der zwischen Dateinamen und Dateierweiterung
+die aktuelle minimale Zeitinformation eingefügt wird, zu tragen.
+
+Das folgende Beispiel erstellt im Log-Ordner alle 10 Minuten eine Datei namens
+``test.<Jahr>-<Monat>-<Tag>-<Stunde>.<Minute>.txt``. Wird die Logrotation auf
+"jeden xten Tag" gestellt, also ``when: 'D'``, wird die Datei
+``test.<Jahr>-<Monat>-<Tag>.txt`` benannt.
+
+.. code-block:: yaml
+
+    handler:
+        txt_file:
+            (): lib.log.DateTimeRotatingFileHandler
+            formatter: shng_simple
+            filename: ./var/log/test.txt
+            when: 'M'
+            interval: 10
+
+|
+
 ShngMemLogHandler
 =================
 
