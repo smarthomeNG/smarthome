@@ -27,6 +27,8 @@ import logging.config
 import os
 import datetime
 import pickle
+import re
+from pathlib import Path
 
 import collections
 
@@ -387,6 +389,236 @@ class Log(collections.deque):
                 self.append(entry)
                 return
 
+class DateTimeRotatingFileHandler(logging.StreamHandler):
+    """
+    Handler for logging to file using current date and time information in
+    the filename. Either placeholders can be used or a standard pattern is used.
+    Rotating the log file at each `when` beginning.
+    If backupCount is > 0, when rollover is done, no more than backupCount
+    files are kept - the oldest ones are deleted.
+    """
+
+    def __init__(self,
+                 filename,
+                 when='H',
+                 interval=1,
+                 backupCount=0,
+                 encoding=None,
+                 delay=True,
+                 utc=False):
+
+        super().__init__()
+        self._shtime = logs_instance._sh.shtime
+        logging.Handler.__init__(self)
+        self._originalname = os.path.basename(filename)
+        self._fullname = filename
+        self._fn = os.path.splitext(self._originalname)[0]
+        self._ext = os.path.splitext(self._originalname)[1]
+        self.stream = None
+        self.encoding = encoding
+        self.delay = delay
+        self._when = when.upper()
+        self.backup_count = backupCount
+
+        # Current 'when' events supported:
+        # S - Seconds
+        # M - Minutes
+        # H - Hours
+        # D - Days
+        # midnight - roll over at midnight
+        if self._when == 'S':
+            self.time_unit = datetime.timedelta(seconds=1)  # one second
+            self.suffix = "%Y-%m-%d-%H.%M.%S"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}\-\d{2}\.\d{2}\.\d{2}", re.ASCII)
+        if self._when == 'M':
+            self.time_unit = datetime.timedelta(minutes=1)  # one minute
+            self.suffix = "%Y-%m-%d-%H.%M"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}\-\d{2}\.\d{2}", re.ASCII)
+        elif self._when == 'H':
+            self.time_unit = datetime.timedelta(hours=1)  # one hour
+            self.suffix = "%Y-%m-%d-%H"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}\-\d{2}", re.ASCII)
+        elif self._when == 'D' or self._when == 'MIDNIGHT':
+            self.time_unit = datetime.timedelta(days=1)  # one day
+            self.suffix = "%Y-%m-%d"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}", re.ASCII)
+        else:
+            raise ValueError(f"Invalid rollover interval specified: {self._when}")
+
+        self.interval = self.time_unit * interval  # multiply by units requested
+        self.rollover_at = self.next_rollover_time()
+        self.baseFilename = self.get_filename()  # logging to this file
+
+        if not delay:
+            self.stream = self._open()
+
+    def parseFilename(self, filename) -> str:
+        now = self._shtime.now()
+        try:
+            # replace placeholders by actual datetime
+            return filename.format(**{'year': now.year, 'month': now.month,
+                                   'day': now.day, 'hour': now.hour,
+                                   'minute': now.minute,
+                                   'stamp': now.timestamp()})
+        except Exception:
+            return filename
+
+    def get_filename(self) -> str:
+        if '{' in self._fullname:
+            filename = self.parseFilename(self._fullname)
+        else:
+            dirName, _ = os.path.split(self._fullname)
+            fn = self._fn + '.' + datetime.datetime.now().strftime(self.suffix) + self._ext
+            filename = os.path.join(dirName, fn)
+        if self._fullname.startswith("."):
+            shng_dir = Path(logs_instance._sh.get_basedir())
+            filename = str((shng_dir / filename).resolve())
+        print(f"{self._fullname}, {filename}")
+        dirName, _ = os.path.split(filename)
+        if not os.path.isdir(dirName):
+            os.makedirs(dirName)
+        return filename
+
+    def close(self):
+        """
+        Closes the stream.
+        """
+        self.acquire()
+        try:
+            try:
+                if self.stream:
+                    try:
+                        self.flush()
+                    finally:
+                        stream = self.stream
+                        self.stream = None
+                        if hasattr(stream, "close"):
+                            stream.close()
+            finally:
+                logging.StreamHandler.close(self)
+        finally:
+            self.release()
+
+    def _open(self):
+        """
+        Open the current base file with encoding.
+        Return the resulting stream.
+        """
+        return open(self.baseFilename, 'a', encoding=self.encoding)
+
+    def next_rollover_time(self):
+        """
+        Work out the rollover time based on current time.
+        """
+        t = self._shtime.now()
+        if self._when == 'S':
+            t = t.replace(microsecond=0)
+        elif self._when == 'M':
+            t = t.replace(second=0, microsecond=0)
+        elif self._when == 'H':
+            t = t.replace(minute=0, second=0, microsecond=0)
+        elif self._when == 'D' or self._when == 'MIDNIGHT':
+            t = t.replace(hour=0, minute=0, second=0, microsecond=0)
+        return t + self.interval
+
+    def get_files_to_delete(self):
+        """
+        Determine the files to delete when rolling over.
+        """
+        def custom_replace(match):
+            # Replace based on different patterns
+            if any(match.group(i) for i in (1, 2, 3)):
+                return '\d{4}'
+            elif any(match.group(i) for i in (4, 7, 10, 13)):
+                return '\d{1,2}'
+            elif any(match.group(i) for i in (6, 9, 12, 15)):
+                return '\d{2}'
+            elif any(match.group(i) for i in (5, 8, 11, 14)):
+                return '\d{1}'
+            else:
+                return '\d+'
+
+        dir_name, base_fname = os.path.split(self.baseFilename)
+        fileNames = os.listdir(dir_name)
+        result = []
+        if '{' in self._fullname:
+            year = r'{year}'
+            year2 = r'{year:02}'
+            year4 = r'{year:04}'
+            month = r'{month}'
+            month1 = r'{month:01}'
+            month2 = r'{month:02}'
+            day = r'{day}'
+            day1 = r'{day:01}'
+            day2 = r'{day:02}'
+            hour = r'{hour}'
+            hour1 = r'{hour:01}'
+            hour2 = r'{hour:02}'
+            minute = r'{minute}'
+            minute1 = r'{minute:01}'
+            minute2 = r'{minute:02}'
+            stamp = r'{stamp}'
+            combined_pattern = f'({year})|({year2})|({year4})|({month})'\
+                f'|({month1})|({month2})|({day})|({day1})|({day2})|({hour})'\
+                f'|({hour1})|({hour2})|({minute})|({minute1})|({minute2})|({stamp})'
+            regex_result = re.sub(combined_pattern, custom_replace, self._originalname)
+            pattern_regex = re.compile(regex_result)
+            for fileName in fileNames:
+                if pattern_regex.match(fileName):
+                    result.append(os.path.join(dir_name, fileName))
+        else:
+            prefix = self._fn + "."
+            plen = len(prefix)
+            elen = len(self._ext) * -1
+            for fileName in fileNames:
+                cond1 = fileName.startswith(prefix)
+                cond2 = self.ext_pat.match(fileName[plen:elen])
+                cond3 = fileName.endswith(self._ext)
+                if cond1 and cond2 and cond3:
+                    result.append(os.path.join(dir_name, fileName))
+
+        if len(result) < self.backup_count:
+            result = []
+        else:
+            result.sort()
+            result = result[:len(result) - self.backup_count]
+        return result
+
+    def do_rollover(self):
+        """
+        Do a rollover. In this case, the current stream will be closed and a new
+        filename will be generated when the rollover happens.
+        If there is a backup count, then we have to get a list of matching
+        filenames, sort them and remove the one with the oldest suffix.
+        """
+        if self.stream:
+            self.stream.close()
+            self.stream = None
+
+        self.rollover_at = self.next_rollover_time()
+        self.baseFilename = self.get_filename()
+
+        if self.backup_count > 0:
+            for s in self.get_files_to_delete():
+                os.remove(s)
+
+        if not self.delay:
+            self.stream = self._open()
+
+    def emit(self, record):
+        """
+        Emit a record.
+        Output the record to the file, catering for rollover as described
+        in do_rollover().
+        """
+        try:
+            if self._shtime.now() >= self.rollover_at:
+                self.do_rollover()
+            if self.stream is None:
+                self.stream = self._open()
+            logging.StreamHandler.emit(self, record)
+        except Exception:
+            self.handleError(record)
 
 # ================================================================================
 
