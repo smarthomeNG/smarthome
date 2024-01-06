@@ -135,11 +135,17 @@ class MockSmartHome():
         self.children = []
         self._use_modules = 'True'
         self._moduledict = {}
-        if self.shtime is None:
+        # if self.shtime is None:
         #    self.shtime = Shtime.get_instance()
-            self.shtime = Shtime(self)
+        #    self.shtime = Shtime(self)
 
-        self.logs = lib.log.Logs(self)   # initialize object for memory logs and extended log levels for plugins
+        # prevent instantiating a second logs instance
+        global logs_instance
+        try:
+            self.logs = logs_instance
+        except NameError:
+            logs_instance = self.logs = lib.log.Logs(self)   # initialize object for memory logs and extended log levels for plugins
+
 
         #############################################################
         # setup logging
@@ -148,8 +154,11 @@ class MockSmartHome():
 
         self.scheduler = MockScheduler()
 
-        if self.shtime is None:
+        # make sure not to instantiate a second shtime
+        if lib.shtime._shtime_instance is None:
             lib.shtime._shtime_instance = self.shtime = Shtime(self)
+        else:
+            self.shtime = Shtime.get_instance()
         # Start()
 #        self.scheduler = lib.scheduler.Scheduler(self)
         if self.modules is None:
