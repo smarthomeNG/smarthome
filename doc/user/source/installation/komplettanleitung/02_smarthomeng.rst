@@ -21,7 +21,7 @@ zu laden und zu installieren.
 zusätzliche Linux Pakete installieren
 =======================================
 
-Zunächst müssen einige zusätzlichen Pakete installiert werden:
+Zunächst müssen einige zusätzliche Pakete installiert werden:
 
 .. code-block:: bash
 
@@ -74,10 +74,10 @@ SmartHomeNG Quellcode laden
 
             Bei der Installation von debian 12 (bookworm) wird Python 3.11 installiert. SmartHomeNG v1.10 ist zwar
             prinzipiell unter Python 3.11 lauffähig, es sind jedoch nicht alle Plugins unter Python 3.11 getetet,
-            weshalb SmartHomeNG v1.10 offinziell nur Python Versionen bis 3.10 untersützt.
+            weshalb SmartHomeNG v1.10 offiziell nur Python Versionen bis 3.10 unterstützt.
 
             Soll eine andere Python Version als 3.11 genutzt werden, sollte diese Python Version vor dem Aufruf des
-            Skripts tools/postinstall installiert werden, damit das Standard Virtual Environment welches beim Start
+            Skripts tools/postinstall installiert werden, damit das Standard Virtual Environment, welches beim Start
             des Rechners aktiviert wird, für die gewünschte Python Version erstellt wird.
 
             Eine Beschreibung, wie zusätzliche Python Versionen installiert werden, ist unter
@@ -117,8 +117,8 @@ Weitere Python Bibliotheken installieren
 
       SmartHomeNG kann benötigte Pakete selbst nachinstallieren.
 
-      Wenn SmartHomeNG in einer Python Umgebung gestartet wird in der nicht der minimale Set an Packages installiert ist,
-      wird dieser installiert und die Informationen werden auf die Konsole ausgegeben (da das Logging dann noch nicht
+      Wenn SmartHomeNG in einer Python Umgebung gestartet wird, in der nicht der minimale Set an Packages installiert ist,
+      wird dieser installiert und die Informationen werden auf der Konsole ausgegeben (da das Logging dann noch nicht
       konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folgendermaßen aus.
 
       .. code-block:: bash
@@ -145,7 +145,7 @@ Weitere Python Bibliotheken installieren
 
       Danach kann der Core von SmartHomeNG vollständig initialisiert werden und Ausgaben erfolgen in smarthome-warnings.log
 
-      Anschließend prüft SmartHomeNG ob die benötigten Pakete für die ladbaren Module und für die konfigurierten Plugins
+      Anschließend prüft SmartHomeNG, ob die benötigten Pakete für die ladbaren Module und für die konfigurierten Plugins
       installiert sind. Falls nicht, werden diese jeweils installiert und SmartHomeNG startet sich erneut.
 
       .. note::
@@ -154,7 +154,7 @@ Weitere Python Bibliotheken installieren
          automatisch nachinstalliert werden.
 
       Nach der Installation der benötigten Pakete dauert es noch einige Zeit, bis SmartHomeNG reagiert, da beim ersten
-      Start die CUP Geschwindigkeit des Rechners getestet wird.
+      Start die CPU Geschwindigkeit des Rechners bestimmt wird.
 
 
    .. tab:: SmartHomeNG vor v1.7
@@ -251,7 +251,7 @@ nachlesen.
 .. note::
 
    SmartHomeNG kann zur Zeit nur ein einziges Mal auf einem Rechner ausgeführt werden. Versucht man dies mehrfach,
-   so kann die Version die als letztes gestartet wurde oft keine Netzwerkverbindungen aufbauen.
+   so kann die Version, die als letztes gestartet wurde, oft keine Netzwerkverbindungen aufbauen.
    Ein solcher Fall kann schnell auftreten, wenn SmartHomeNG als Daemon eingerichtet wird und aber zusätzlich ein Start
    von der Kommandozeile erfolgt.
 
@@ -284,7 +284,7 @@ Beim ersten Start erscheint folgende Login Seite:
    :class: screenshot
 
 Da bisher kein Password festgelegt ist, brauchen Benutzername und Password nicht eingegeben zu werden. Es kann einfach
-auf anmelden geklickt werden.
+auf **Anmelden** geklickt werden.
 
 
 Anschließend erscheint die Startseite von SmartHomeNG (Da kein Password festgelegt ist, ist der Button **Abmelden**
@@ -329,9 +329,9 @@ und bestimmten die Position eines Elementes in der Objekthierarchie.
 
 .. note::
 
-   Damit die Änderungen wirksam werden, die mit einem Editor durchgeführt wurden, muss SmartHomeNG
+   Damit die Änderungen, die mit einem Editor durchgeführt wurden, wirksam werden, muss SmartHomeNG
    unbedingt neu gestartet werden.
-   (Eine Ausnahme bildet hier nur die **logic.yaml** da es möglich ist mit
+   (Eine Ausnahme bildet hier nur die **logic.yaml**, da es möglich ist, mit
    dem Logikeditor im Admin Interface diese Logiken zur Laufzeit neu
    zu laden.)
 
@@ -341,7 +341,7 @@ smarthome.yaml
 --------------
 
 In der **smarthome.yaml** stehen die allgemeinen Konfigurationseinstellungen der SmartHomeNG Installation, wie z.B. die
-Koordinaten des Standortes. Die Koordinaten werden benötigt um unter anderem Sonnenaufgang und Sonnenuntergang zu berechnen.
+Koordinaten des Standortes. Die Koordinaten werden benötigt, um unter anderem Sonnenaufgang und Sonnenuntergang zu berechnen.
 Die Koordinaten für einen Standort kann man z.B. auf http://www.mapcoordinates.net/de ermitteln.
 
 .. code-block:: yaml
@@ -373,25 +373,25 @@ Die Koordinaten für einen Standort kann man z.B. auf http://www.mapcoordinates.
    # Version 1.3: control type casting when assiging values to items
    # assign_compatibility = latest            # latest or compat_1.2 (compat_1.2 is default for shNG v1.3)
 
-Es bietet sich an die default-Datei zu kopieren nach smarthome.yaml und die Daten oben auf den eigenen Standort
+Es bietet sich an, die default-Datei nach smarthome.yaml zu kopieren und die Daten oben auf den eigenen Standort
 anzupassen. Alternativ kann diese Anpassung später über das Admin Interface durchgeführt werden.
 
 
 logging.yaml
 ------------
 
-In der **logging.yaml** finden sich die Anweisungen, wie Ereignisse die während des Programmablaufes von
-SmartHomeNG auftreten geloggt also notiert werden sollen.
+In der **logging.yaml** finden sich die Anweisungen wie Ereignisse, die während des Programmablaufes von
+SmartHomeNG auftreten und geloggt also notiert werden sollen.
 
-Diese recht umfangreiche Datei sollte zunächst nicht geändert werden. Später kann sie angepasst werden um
+Diese recht umfangreiche Datei sollte zunächst nicht geändert werden. Später kann sie angepasst werden, um
 komplexe Ausführungsketten detailliert zu untersuchen.
 
-Zunächst ist wichtig, das in der Grundkonfiguration zwei Dateien erzeugt werden:
+Zunächst ist wichtig, dass in der Grundkonfiguration zwei Dateien erzeugt werden:
 
 - ./var/log/smarthome-warnings.log und
 - ./var/log/smarthome-details.log
 
-In der ersten Datei findet man nach dem ersten Start von SmartHomeNG etwas ähnliches wie folgende Informationen:
+In der ersten Datei findet man nach dem ersten Start von SmartHomeNG etwas Ähnliches wie folgende Informationen:
 
 .. code-block:: text
 
@@ -402,9 +402,9 @@ In der ersten Datei findet man nach dem ersten Start von SmartHomeNG etwas ähnl
 
 
 Vorne steht Datum und Uhrzeit, dann der Loglevel (ERROR, WARNING, INFO), dann je nach Setup in der Datei logging.yaml
-noch Name bzw. Modul oder Thread und ein Meldungstext der den Logeintrag beschreibt.
+noch Name bzw. Modul oder Thread und ein Meldungstext, der den Logeintrag beschreibt.
 
-Dabei sind im Beispiel ``YYYY-MM-dd hh:mm:ss`` Zeitangaben die von der aktuellen Startzeit abhängen und ``????`` ist die Prozess-ID anhand derer SmartHomeNG identifiziert werden kann.
+Dabei sind im Beispiel ``YYYY-MM-dd hh:mm:ss`` Zeitangaben, die von der aktuellen Startzeit abhängen und ``????`` ist die Prozess-ID anhand derer SmartHomeNG identifiziert werden kann.
 Die ersten beiden Zeile werden immer in dieser Form auftreten, alles weitere hängt von der tatsächlichen Konfiguration ab.
 
 Sollte ein Plugin konfiguriert werden, das noch weitere Bibliotheken benötigt, so würde SmartHomeNG an dieser Stelle einen kritischen Fehler
@@ -413,7 +413,7 @@ melden und sich beenden.
 .. note::
 
    Der erste Blick bei ungewohntem Verhalten oder Funktionsschwierigkeiten sollte immer dieser Datei gelten.
-   Wichtig ist es nach CRITICAL, ERROR und WARNING zu schauen und zu versuchen diese zu vermeiden.
+   Wichtig ist es nach CRITICAL, ERROR und WARNING zu schauen und zu versuchen, diese zu vermeiden.
    Meldungen der Level INFO und DEBUG sind normal und brauchen erstmal nicht weiter beachtet zu werden.
 
    Deshalb schreibt SmartHomeNG standardmäßig zwei Logs (**smarthome-warnings.log** und **smarthome-details.log**).
@@ -421,7 +421,7 @@ melden und sich beenden.
    enthält: CRITICAL, ERROR und WARNING. **smarthome-details.log** enthält dem gegenüber Log Einträge bis zum Level DEBUG.
 
 
-In der zweiten Datei finden sich zusätzliche Informationen die für die Erstkonfiguration die hier beschrieben wird nicht
+In der zweiten Datei finden sich zusätzliche Informationen, die für die Erstkonfiguration, die hier beschrieben wird, nicht
 entscheidend sind.
 
 Da nach dem ersten Start von SmartHomeNG ohnehin die default Datei übernommen wird, ist hier kein Handlungsbedarf etwas
@@ -431,7 +431,7 @@ anzupassen.
 plugin.yaml
 -----------
 
-In der **plugin.yaml** stehen die Plugins die verwendet werden sollen, sowie ihre Konfigurationsparameter.
+In der **plugin.yaml** stehen die Plugins, die verwendet werden sollen, sowie ihre Konfigurationsparameter.
 
 Wenn keine Datei **plugin.yaml** existiert, wird beim ersten Start von SmartHomeNG die mitgelieferte Datei **plugin.yaml.default**
 kopiert. In dieser Datei ist ein minimaler Set von Plugins konfiguriert, so dass z.B. per Browser oder mit der smartVISU auf die
