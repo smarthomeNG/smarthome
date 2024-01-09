@@ -44,11 +44,13 @@ Datei *../etc/module.yaml*
    # etc/module.yaml
    websocket:
        module_name: websocket
-       # tls_key: myprivate.key
-       # use_tls: true
-       # tls_cert: myprivate.pem
+       # enabled: True
+       # ip: ''
        # port: 2424
        # tls_port: 2425
+       # use_tls: False
+       # tls_cert: myprivate.pem
+       # tls_key: myprivate.key
 
 .. note::
     Das Zertifikat muss ohne Passphrase erstellt werden (bei der Frage nach der Passphrase einfach Enter drücken). Zudem muss der "Common Name"

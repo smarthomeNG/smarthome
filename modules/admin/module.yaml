@@ -82,7 +82,7 @@ parameters:
         type: bool
         default: False
         description:
-            de: 'Entwickler Modus aktivieren'
+            de: 'Entwickler Modus aktivieren (Ist für das Core Entwickler Team gedacht)'
             en: 'Activate developer mode'
 
     rest_dispatch_force_exception:
