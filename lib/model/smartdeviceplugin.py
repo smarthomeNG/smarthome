@@ -1238,11 +1238,6 @@ class Standalone:
 
         ``__init__.py -v``
 
-        If you add the -a parameter, all items will have an added
-
-        ``visu_acl: <ro>/<rw>``
-
-        attribute depending on the read/write configuration.
         ========================================================================
 
         If you call it with -s as a parameter, the plugin will insert the struct
@@ -1250,6 +1245,14 @@ class Standalone:
         content will be overwritten:
 
         ``__init__.py -s``
+
+        If you add the -a parameter, all items will have an added
+
+        ``visu_acl: <ro>/<rw>``
+
+        attribute depending on the read/write configuration.
+
+        If you add the -l parameter, all items will be lowercase.
 
         """
         self.logger = logging.getLogger(__name__)
@@ -1266,6 +1269,7 @@ class Standalone:
 
         self.struct_mode = False
         self.acl = False
+        self.lc = False
 
         self.indentwidth = 4
 
@@ -1286,6 +1290,9 @@ class Standalone:
 
                 elif arg_str[:2].lower() == '-a':
                     self.acl = True
+
+                elif arg_str[:2].lower() == '-l':
+                    self.lc = True
 
                 else:
                     try:
@@ -1328,7 +1335,7 @@ class Standalone:
     def add_item_to_tree(self, item_path, item_dict):
         """ add entry for custom read group triggers """
 
-        dst_path_elems = item_path.split('.')
+        dst_path_elems = item_path.lower().split('.')
         item = {dst_path_elems[-1]: item_dict}
         for elem in reversed(dst_path_elems[:-1]):
             item = {elem: item}
