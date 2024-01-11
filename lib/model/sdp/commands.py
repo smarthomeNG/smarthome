@@ -110,7 +110,7 @@ class SDPCommands(object):
                 try:
                     result = self._lookup(result, lu)
                 except ValueError as e:
-                    self.logger.warning(f'whie parsing reply to {command}, the lookup of {lu} failed: {e}')
+                    self.logger.warning(f'while parsing reply to {command}, the lookup of {lu} failed: {e}')
                     return
             return result
 
