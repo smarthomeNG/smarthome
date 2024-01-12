@@ -53,8 +53,8 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT,
     PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
-    PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH,
-    PLUGIN_ATTR_CB_SUSPEND)
+    PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
+    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_CYCLIC)
 
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
@@ -162,6 +162,10 @@ class SmartDevicePlugin(SmartPlugin):
         self._unknown_command = '.notify.'
         self._initial_value_read_done = False
         self._cyclic_update_active = False
+        # plugin-wide cycle interval, -1 is undefined
+        self._cycle = self.get_parameter_value(PLUGIN_ATTR_CYCLE)
+        if self._cycle is None:
+            self._cycle = -1
 
         # set (overwritable) callback
         self._dispatch_callback = self.dispatch_data
@@ -487,7 +491,16 @@ class SmartDevicePlugin(SmartPlugin):
                         self._commands_initial.append(command)
                         self.logger.debug(f'Item {item} saved for startup reading command {command}')
 
-                # read cyclically?
+                # read cyclically (global cycle)?
+                if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLIC', 'foo')):
+                    if self._cycle > 0:
+                        # set plpugin-wide cycle
+                        self._commands_cyclic[command] = {'cycle': min(self._cycle, self._commands_cyclic.get(command, self._cycle)), 'next': 0}
+                        self.logger.debug(f'Item {item} saved for global cyclic reading command {command}')
+                    else:
+                        self.logger.info(f'Item {item} wants global cyclic reading, but global cycle is {self._cycle}, ignoring.')
+
+                # read individual-cyclically?
                 cycle = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLE', 'foo'))
                 if cycle:
                     # if cycle is already set for command, use the lower value of the two
@@ -1488,6 +1501,8 @@ class Standalone:
                         item['enforce_updates'] = True
                     if ia_node.get(CMD_IATTR_INITIAL):
                         item[ITEM_ATTR_READ_INIT + '@instance'] = True
+                    if ia_node.get(CMD_IATTR_CYCLIC):
+                        item[ITEM_ATTR_CYCLIC + '@instance'] = True
                     cycle = ia_node.get(CMD_IATTR_CYCLE)
                     if cycle:
                         item[ITEM_ATTR_CYCLE + '@instance'] = cycle
