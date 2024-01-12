@@ -113,7 +113,12 @@ commands = {
             # can also be specified for sections to trigger initial read group reading
             'initial': False,
 
-            # create "ex_read_cycle: <cycle>" entry with given cycle time
+            # create "ex_read_cyclic: true>" entry, causing cyclic read with
+            # plugin-wide cycle interval
+            # can also be specified for section to trigger cyclic read group reading
+            'cyclic': False,
+
+            # create "ex_read_cycle: <cycle>" entry with item-specific given cycle time
             # can also be specified for section to trigger cyclic read group reading
             'cycle': None,
 
