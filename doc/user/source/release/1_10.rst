@@ -17,7 +17,7 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Dezember 2023
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 12. Januar 2024
            (...)
          - Berücksichtigt sind Commits im plugins Repository bis incl. 29. Dezember 2023
            (Merge pull request #871 from onkelandy/xiaomi_vac)
@@ -130,6 +130,8 @@ Updates im CORE
     * Add cache option for memlog to docu
     * Move cache for memory log to var/log/cache directory
     * Fix test conditions (also mock core)
+    * Introduce a new rotating filehandler considering current date and time as filenames
+    * DateTime log rotation handler - add intstamp placeholder, fix rotation if placeholder is used for folder only
 
 
   * lib.logic:
