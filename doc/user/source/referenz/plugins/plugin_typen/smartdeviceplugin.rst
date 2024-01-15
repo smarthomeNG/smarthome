@@ -184,7 +184,7 @@ Zugriff auf die konfigurierten Kommandos ermöglicht.
 
 Die Klasse `SDPCommand` stellt für jedes konfigurierte Kommando eine eigene Instanz dar, die die notwendigen
 Informationen und Methoden zum Zugriff und zur notwendigen Datentransformation bereitstellt. Die einzelnen Instanzen
-werden durch die `SDPCommands`-Klasse erstellt und entsprechend den Angaben in `commands.py`konfiguriert.
+werden durch die `SDPCommands`-Klasse erstellt und entsprechend den Angaben in `commands.py` konfiguriert.
 
 Auf Plugin-Ebene kann festgelegt werden, ob die Standardklasse `SDPCommand` oder bei Bedarf eine abgeleitete Klasse
 verwendet werden soll. Die abgeleiteten Klassen umfassen `SDPCommandStr` für Kommandos, die textbasiert arbeiten
