@@ -8,7 +8,9 @@
 ===============================
 
 
-.. image:: webif/static/img/plugin_logo.png   # png, jpg oder svg
+.. comment set image name and extension according to the image file you use for the plugin-logo
+
+.. image:: webif/static/img/plugin_logo.png
    :alt: plugin logo
    :width: 300px
    :height: 300px
