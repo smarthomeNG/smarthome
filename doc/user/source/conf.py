@@ -111,6 +111,7 @@ release += ')'
 plgrelease = shngversion.get_shng_plugins_version()
 plgbranch = pluginsversion.plugin_branch()
 if plgbranch != 'master':
+    copyright = u'2016-2024 SmartHomeNG Team  -  ACHTUNG: Dokumentation zum Develop Branch - Work in Progress'
     plgrelease += ' ' + plgbranch
 version = plgrelease
 
