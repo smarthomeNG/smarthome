@@ -1,10 +1,10 @@
 
-.. index:: Plugins; <Pluginname in Kleinbuchstaben>
-.. index:: <Pluginname in Kleinbuchstaben>
+.. index:: Plugins; Pluginname (in Kleinbuchstaben)
+.. index:: Pluginname (in Kleinbuchstaben)
 
 
 ===============================
-<Pluginname in Kleinbuchstaben>
+Pluginname (in Kleinbuchstaben)
 ===============================
 
 

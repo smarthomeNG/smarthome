@@ -1,9 +1,10 @@
-.. index:: Plugins; sample_mqtt
-.. index:: sample_mqtt
+.. index:: Plugins; Mqtt-Pluginname (in Kleinbuchstaben)
+.. index:: Mqtt-Pluginname (in Kleinbuchstaben)
 
-===========
-sample_mqtt
-===========
+
+====================================
+Mqtt-Pluginname (in Kleinbuchstaben)
+====================================
 
 Hier sollte eine allgemeine Beschreibung stehen, wozu das Plugin gut ist (was es tut).
 
