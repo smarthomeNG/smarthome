@@ -85,8 +85,8 @@ Beim sichern werden folgende Daten in das zip-Archiv übernommen:
     - \*.yaml
   - /scenes
 
-    - *.yaml
-    - *.conf
+    - \*.yaml
+    - \*.conf
   - /structs
 
     - \*.yaml

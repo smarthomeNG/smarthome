@@ -109,7 +109,7 @@ Datei *../etc/module.yaml*
 | port                    | **Optional**: Der Port auf welchem das html Interface lauscht. Dieser Port wird für Webinterfaces    |
 |                         | wie z.B. das Backend Plugin genutzt- Standard Port ist **8383** .                                    |
 +-------------------------+------------------------------------------------------------------------------------------------------+
-| tls_port                | **Optional**: Portnummer für die Webinterfaces bei Nutzung von https - Standard Port ist **8385*     |
+| tls_port                | **Optional**: Portnummer für die Webinterfaces bei Nutzung von https - Standard Port ist **8385**    |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | use_tls                 | **Optional**: Auf True setzen, um Zugriffe über https:// zu ermöglichen (Zertifikat muss             |
 |                         | installiert sein)                                                                                    |

@@ -57,7 +57,9 @@ Die Quellen finden/installieren
 -------------------------------
 
   * Sie können auf GitHub einen Fork der Repositories erstellen
+
 oder
+
   * Sie holen sich das Repository direkt:
 
     * ``git clone https://github.com/smarthomeNG/smarthome.git .``
@@ -110,7 +112,7 @@ flake8
 ~~~~~~
 
    * ``pip3 install flake8``
-   * ``flake8 yourcode.py`
+   * ``flake8 yourcode.py``
 
 flake8 kann als Vim-Plugin verwendet werden. Der Code wird jedes Mal überprüft, wenn die Datei gespeichert wird.
 

@@ -8,7 +8,7 @@
 ===============================
 
 
-.. image:: webif/static/img/plugin_logo.<png, jpg oder svg>
+.. image:: webif/static/img/plugin_logo.png   # png, jpg oder svg
    :alt: plugin logo
    :width: 300px
    :height: 300px

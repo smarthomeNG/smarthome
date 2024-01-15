@@ -41,12 +41,12 @@ Das ``backend`` Plugin beinhaltet eine Datei ``user_doc.rst``.
 Diese Datei ist in den Navigationsbaum der Dokumentation integriert.
 Dieser Eintrag wird angezeigt, wenn die entsprechende Plugin-Kategorie ausgewählt wird:
 
-.. image:: assets/backend_user_doc_tree.png
+.. image:: ../assets/backend_user_doc_tree.png
 
 
 Wenn der Eintrag im Navigationspanel ausgewählt wird, wird die Seite aufgerufen:
 
-.. image:: assets/backend_user_doc_page.png
+.. image:: ../assets/backend_user_doc_page.png
 
 
 Die Dokumentation kann Bilder enthalten. Diese müssten in eim Unterordner ``assets`` des Plugin-Ordners abgelegt werden.

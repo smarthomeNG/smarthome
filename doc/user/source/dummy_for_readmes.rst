@@ -30,7 +30,6 @@
    /plugins/README.md
    /plugins/alexa/nginx.md
    /plugins/buderus/URLs.md
-   /plugins/blockly/How_to_Update_Blockly_Components.rst
    /plugins/wunderground/README_OLD.md
    /plugins/visu_smartvisu/developer_doc.md
    /plugins/visu_websocket/developer_doc.rst
