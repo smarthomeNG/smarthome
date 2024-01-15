@@ -113,7 +113,7 @@ definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des
 
 Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
 
-..code:
+.. code-block:: yaml
 
     'Aussen': { 				# Name des Kommandos, Code für das Item-Attribut
     	'read': True, 			# Kommando kann Wert vom Gerät lesen
