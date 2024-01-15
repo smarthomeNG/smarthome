@@ -182,7 +182,7 @@ Commands
 Die Klasse `SDPCommands` ist ein "intelligentes" dict, das die `commands.py` liest und verarbeitet und strukturieren
 Zugriff auf die konfigurierten Kommandos ermöglicht.
 
-Die Klasse `SDPCommand`` stellt für jedes konfigurierte Kommando eine eigene Instanz dar, die die notwendigen
+Die Klasse `SDPCommand` stellt für jedes konfigurierte Kommando eine eigene Instanz dar, die die notwendigen
 Informationen und Methoden zum Zugriff und zur notwendigen Datentransformation bereitstellt. Die einzelnen Instanzen
 werden durch die `SDPCommands`-Klasse erstellt und entsprechend den Angaben in `commands.py`konfiguriert.
 
