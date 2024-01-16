@@ -132,15 +132,20 @@ Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
 .. code-block:: json
 
     {
-        "Aussen": {
-            "read": true,
-            "write": false,
-            "opcode": "0101",
-            "reply_pattern": "*",
-            "item_type": "num",
-            "dev_datatype": "V",
-            "params": {"value": "VAL", "mult": 10, "signed": True, "len": 2}
-        }
+       "Aussen":{
+          "read":true,
+          "write":false,
+          "opcode":"0101",
+          "reply_pattern":"*",
+          "item_type":"num",
+          "dev_datatype":"V",
+          "params":{
+             "value":"VAL",
+             "mult":10,
+             "signed":true,
+             "len":2
+          }
+       }
     }
 
 Die einzelnen Attribute der command-Definitionen sind in der Datei `./dev/sample_smartdevice_plugin/commands.py` im
