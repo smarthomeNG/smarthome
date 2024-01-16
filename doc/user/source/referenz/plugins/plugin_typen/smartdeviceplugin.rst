@@ -113,28 +113,25 @@ definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des
 
 Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
 
-.. code-block:: json
+.. code-block:: yaml
 
-    {
-        "Aussen": {                 # Name des Kommandos, Code für das Item-Attribut
-            "read": true,           # Kommando kann Wert vom Gerät lesen
-            "write": false,         # Kommando kann Wert - nicht - auf Gerät schreiben
-            "opcode": "0101",       # "Code", der an das Gerät gesendet wird
-            "reply_pattern": "*",   # Identifier, um Antwort auf dieses Kommando zu erkennen
-            "item_type": "num",     # Datentyp, der an SmartHomeNG gesendet wird
-            "dev_datatype": "V",    # Datentyp, der zur Kommunikation mit dem Gerät verwendet wird
-            "params": {"value": "VAL", "mult": 10, "signed": True, "len": 2}
-                                    # Werttransformation: signed int, 2 Bytes ("word")
-                                    # Wert vom Gerät wird durch 10 geteilt (ergibt eine Nachkommastelle)
-        }
-    }
+    "Aussen":                   # Name des Kommandos, Code für das Item-Attribut
+        "read": true            # Kommando kann Wert vom Gerät lesen
+        "write": false          # Kommando kann Wert - nicht - auf Gerät schreiben
+        "opcode": "0101"        # "Code", der an das Gerät gesendet wird
+        "reply_pattern": "*"    # Identifier, um Antwort auf dieses Kommando zu erkennen
+        "item_type": "num"      # Datentyp, der an SmartHomeNG gesendet wird
+        "dev_datatype": "V"     # Datentyp, der zur Kommunikation mit dem Gerät verwendet wird
+        "params": {"value": "VAL", "mult": 10, "signed": True, "len": 2}
+                                # Werttransformation: signed int, 2 Bytes ("word")
+                                # Wert vom Gerät wird durch 10 geteilt (ergibt eine Nachkommastelle)
 
 .. code-block:: json
 
     {
-       "Aussen": {                  # Name des Kommandos, Code für das Item-Attribut
-          "read": true,             # Kommando kann Wert vom Gerät lesen
-          "write": false,           # Kommando kann Wert - nicht - auf Gerät schreiben
+       "Aussen": {
+          "read": true,
+          "write": false,
           "opcode": "0101",
           "reply_pattern": "*",
           "item_type": "num",
