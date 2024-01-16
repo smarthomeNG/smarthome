@@ -60,7 +60,7 @@ Dabei gibt es eine Reihe von - zunehmend komplexen - Optionen, die in der Refere
 Wesentlichen wird in der `commands.py` das dict `commands` definiert, dessen Inhalte die Intelligenz des Plugins
 definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des sdp_viessmann-Plugins:
 
-.. code-block:: json
+.. code-block:: yaml
 
     commands = {
         'Allgemein': {'item_attrs': {'cycle': 45},
@@ -113,7 +113,7 @@ definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des
 
 Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
 
-.. code-block:: json
+.. code-block:: yaml
 
     'Aussen': { 				# Name des Kommandos, Code für das Item-Attribut
     	'read': True, 			# Kommando kann Wert vom Gerät lesen
