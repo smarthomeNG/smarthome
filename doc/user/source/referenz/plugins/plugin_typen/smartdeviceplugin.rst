@@ -60,9 +60,9 @@ Dabei gibt es eine Reihe von - zunehmend komplexen - Optionen, die in der Refere
 Wesentlichen wird in der `commands.py` das dict `commands` definiert, dessen Inhalte die Intelligenz des Plugins
 definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des sdp_viessmann-Plugins:
 
-.. code-block:: yaml
+.. code-block::
 
-    commands = {
+    commands:
         'Allgemein': {'item_attrs': {'cycle': 45},
             'Temperatur': {
                 'Aussen':             {'read': True, 'write': False, 'opcode': '0101', 'reply_pattern': '*', 'item_type': 'num',  'dev_datatype': 'V', 'params': {'value': 'VAL', 'mult': 10, 'signed': True, 'len': 2}},     # getTempA -- Information - Allgemein: Aussentemperatur (-40..70)
@@ -126,24 +126,6 @@ Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
                                 # Werttransformation: signed int, 2 Bytes ("word")
                                 # Wert vom Gerät wird durch 10 geteilt (ergibt eine Nachkommastelle)
 
-.. code-block:: json
-
-    {
-       "Aussen": {
-          "read": true,
-          "write": false,
-          "opcode": "0101",
-          "reply_pattern": "*",
-          "item_type": "num",
-          "dev_datatype": "V",
-          "params": {
-             "value": "VAL",
-             "mult": 10,
-             "signed": true,
-             "len": 2
-          }
-       }
-    }
 
 Die einzelnen Attribute der command-Definitionen sind in der Datei `./dev/sample_smartdevice_plugin/commands.py` im
 Detail erklärt.
