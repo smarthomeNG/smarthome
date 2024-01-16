@@ -366,4 +366,4 @@ angezeigt und muss auch so in Item Definitionen referenziert werden.
 Beispiele
 =========
 
-Ausführliche Beispiele sind im Abschnitt :doc:`Beispiele </beispiele/structs>` dieser Dokumentation zu finden.
+Ausführliche Beispiele sind im Abschnitt :doc:`Beispiele </beispiele/structs/structs>` dieser Dokumentation zu finden.

@@ -247,7 +247,7 @@ Sortierbare Tabellen
 --------------------
 
 Wie erwähnt muss für das Aktivieren von sortier- und durchsuchbaren Tabellen der entsprechende Script-Block
-wie in :doc:`Das Webinterface mit Inhalt füllen </entwicklung/plugins/webinterface_filling_webinterface>`
+wie in :doc:`Das Webinterface mit Inhalt füllen </entwicklung/plugins/kurzanleitung/webinterface_filling_webinterface>`
 unter Punkt 3 beschrieben eingefügt werden. Dabei ist auch zu beachten, dass der zu sortierenden
 Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``maintable``).
 

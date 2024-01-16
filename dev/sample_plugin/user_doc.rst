@@ -41,15 +41,19 @@ werden, kann dieser Abschnitt entfallen.>
 Konfiguration
 =============
 
+.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
+
 Die Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
-unter :doc:`/plugins_doc/config/Pluginname (in Kleinbuchstaben)` beschrieben.
+unter **Pluginname (in Kleinbuchstaben)** beschrieben.
 
 
 plugin.yaml
 -----------
 
+.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
+
 Zu den Informationen, welche Parameter in der ../etc/plugin.yaml konfiguriert werden können bzw. müssen, bitte
-bitte die Dokumentation :doc:`Dokumentation </plugins_doc/config/Pluginname (in Kleinbuchstaben)>` lesen, die aus
+bitte die Dokumentation **Pluginname (in Kleinbuchstaben)** lesen, die aus
 den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
 
 <Hier können bei Bedarf ausführliche Beschreibungen zu den Parametern dokumentiert werden.>
@@ -57,8 +61,10 @@ den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
 items.yaml
 ----------
 
+.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
+
 Zu den Informationen, welche Attribute in der Item Konfiguration verwendet werden können bzw. müssen, bitte
-bitte die Dokumentation :doc:`Dokumentation </plugins_doc/config/Pluginname (in Kleinbuchstaben)>` lesen, die aus
+bitte die Dokumentation **Pluginname (in Kleinbuchstaben)** lesen, die aus
 den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
 
 <Hier können bei Bedarf ausführliche Beschreibungen zu den Attributen dokumentiert werden.>
@@ -66,15 +72,19 @@ den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
 logic.yaml
 ----------
 
+.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
+
 Zu den Informationen, welche Konfigurationsmöglichkeiten für Logiken bestehen, bitte
-bitte die Dokumentation :doc:`Dokumentation </plugins_doc/config/Pluginname (in Kleinbuchstaben)>` lesen, die aus
+bitte die Dokumentation **Pluginname (in Kleinbuchstaben)** lesen, die aus
 den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
 
 Funktionen
 ----------
 
+.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
+
 Zu den Informationen, welche Funktionen das Plugin bereitstellt (z.B. zur Nutzung in Logiken), bitte
-bitte die Dokumentation :doc:`Dokumentation </plugins_doc/config/Pluginname (in Kleinbuchstaben)>` lesen, die aus
+bitte die Dokumentation **Pluginname (in Kleinbuchstaben)** lesen, die aus
 den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
 
 <Hier können bei Bedarf ausführliche Beschreibungen zu den Funktionen dokumentiert werden.>
