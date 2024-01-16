@@ -509,12 +509,7 @@ class Mqtt(Module):
         """
         datatype = subscription_dict.get('payload_type', 'foo')
         bool_values = subscription_dict.get('bool_values', None)
-        try:
-            payload = self.cast_from_mqtt(datatype, payload, bool_values)
-        except UnicodeDecodeError:
-            # log error and stop further processing of message
-            self.logger.warning(f'received non-decodable mqtt message: {payload}, ignoring')
-            return False
+        payload = self.cast_from_mqtt(datatype, payload, bool_values)
 
         plugin = subscription_dict.get('callback', None)
 
@@ -569,13 +564,16 @@ class Mqtt(Module):
                 for subscription in list(topic_dict):
                     self.logger.debug("_on_mqtt_message: subscription '{}': {}".format(subscription, topic_dict[subscription]))
                     subscriber_type = topic_dict[subscription].get('subscriber_type', None)
-                    if subscriber_type == 'plugin':
-                        subscription_found = self._callback_to_plugin(subscription, topic_dict[subscription], message.topic, message.payload, message.qos, message.retain)
-                    elif subscriber_type == 'logic':
-                        subscription_found = self._trigger_logic(topic_dict[subscription], message.topic, message.payload)
-                    else:
-                        self.logger.error("_on_mqtt_message: received topic for unknown subscriber_type '{}'".format(subscriber_type))
-
+                    try:
+                        if subscriber_type == 'plugin':
+                            subscription_found = self._callback_to_plugin(subscription, topic_dict[subscription], message.topic, message.payload, message.qos, message.retain)
+                        elif subscriber_type == 'logic':
+                            subscription_found = self._trigger_logic(topic_dict[subscription], message.topic, message.payload)
+                        else:
+                            self.logger.error("_on_mqtt_message: received topic for unknown subscriber_type '{}'".format(subscriber_type))
+                    except UnicodeDecodeError:
+                        self.logger.error(f"_on_mqtt_message: received ill-formed message with topic '{message.topic}', payload '{message.payload}', discarding")
+                        return
 
         if not subscription_found:
             if not self._handle_broker_infos(message):
