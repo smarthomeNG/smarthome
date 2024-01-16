@@ -43,51 +43,18 @@ Konfiguration
 
 .. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
 
-Die Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
-unter **Pluginname (in Kleinbuchstaben)** beschrieben.
+Die Plugin Parameter, die Informationen zur Item-spezifischen Konfiguration des Plugins und zur Logik-spezifischen
+Konfiguration sind unter **Pluginname (in Kleinbuchstaben)** beschrieben.
 
+Dort findet sich auch die Dokumentation zu Funktionen, die das Plugin evtl. bereit stellt.
 
-plugin.yaml
------------
-
-.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
-
-Zu den Informationen, welche Parameter in der ../etc/plugin.yaml konfiguriert werden können bzw. müssen, bitte
-bitte die Dokumentation **Pluginname (in Kleinbuchstaben)** lesen, die aus
-den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
-
-<Hier können bei Bedarf ausführliche Beschreibungen zu den Parametern dokumentiert werden.>
-
-items.yaml
-----------
-
-.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
-
-Zu den Informationen, welche Attribute in der Item Konfiguration verwendet werden können bzw. müssen, bitte
-bitte die Dokumentation **Pluginname (in Kleinbuchstaben)** lesen, die aus
-den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
-
-<Hier können bei Bedarf ausführliche Beschreibungen zu den Attributen dokumentiert werden.>
-
-logic.yaml
-----------
-
-.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
-
-Zu den Informationen, welche Konfigurationsmöglichkeiten für Logiken bestehen, bitte
-bitte die Dokumentation **Pluginname (in Kleinbuchstaben)** lesen, die aus
-den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
 
 Funktionen
 ----------
 
-.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
-
-Zu den Informationen, welche Funktionen das Plugin bereitstellt (z.B. zur Nutzung in Logiken), bitte
-bitte die Dokumentation **Pluginname (in Kleinbuchstaben)** lesen, die aus
-den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
-
 <Hier können bei Bedarf ausführliche Beschreibungen zu den Funktionen dokumentiert werden.>
+
+<Sonst diesen Abschnitt löschen>
 
 |
 
