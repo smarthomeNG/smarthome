@@ -122,7 +122,7 @@ Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
         "reply_pattern": "*",   # Identifier, um Antwort auf dieses Kommando zu erkennen
         "item_type": "num",     # Datentyp, der an SmartHomeNG gesendet wird
         "dev_datatype": "V",    # Datentyp, der zur Kommunikation mit dem Gerät verwendet wird
-        "params": {"value": "VAL", "mult": 10, "signed": True, "len": 2}}
+        "params": {"value": "VAL", "mult": 10, "signed": True, "len": 2}
                                 # Werttransformation: signed int, 2 Bytes ("word")
                                 # Wert vom Gerät wird durch 10 geteilt (ergibt eine Nachkommastelle)
     }
@@ -136,7 +136,7 @@ Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
         "reply_pattern": "*",
         "item_type": "num",
         "dev_datatype": "V",
-        "params": {"value": "VAL", "mult": 10, "signed": True, "len": 2}}
+        "params": {"value": "VAL", "mult": 10, "signed": True, "len": 2}
 	}
 
 Die einzelnen Attribute der command-Definitionen sind in der Datei `./dev/sample_smartdevice_plugin/commands.py` im
