@@ -509,7 +509,13 @@ class Mqtt(Module):
         """
         datatype = subscription_dict.get('payload_type', 'foo')
         bool_values = subscription_dict.get('bool_values', None)
-        payload = self.cast_from_mqtt(datatype, payload, bool_values)
+        try:
+            payload = self.cast_from_mqtt(datatype, payload, bool_values)
+        except UnicodeDecodeError:
+            # log error and stop further processing of message
+            self.logger.warning(f'received non-decodable mqtt message: {payload}, ignoring')
+            return False
+
         plugin = subscription_dict.get('callback', None)
 
         subscription_found = False
