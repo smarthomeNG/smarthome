@@ -84,7 +84,14 @@ Die Methoden von ``MqttPlugin`` sind hier dokumentiert:
 SmartDevicePlugin
 =================
 
-.. include:: smartdeviceplugin.rst
+Wenn ein Plugin Geräte anbinden soll, ist für jedes neue Plugin der gesamte Rahmencode - 
+Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit
+Netzwerk- oder seriellen Treibern und Libraries - immer wieder neu zu erfinden.
+
+Die ``class SmartDevicePlugin`` bietet dafür als Plugintyp einen fertigen Rahmen,
+der im Idealfall mit einer "intelligenten" Beschreibung der möglichen Kommandos
+auskommt. Ggf. müssen spezielle (binäre) Datentypen und -konversionen oder sogar
+Protokollebenen geschrieben werden.
 
 Die Methoden von ``SmartDevicePlugin`` sind hier dokumentiert:
 
