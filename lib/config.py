@@ -513,7 +513,10 @@ def add_struct_to_item_template(path, struct_name, template, struct_dict, instan
         # add struct/template to temporary item(template) tree
         #logger.debug("- add_struct_to_item_template: struct_dict = {}".format(dict(struct_dict)))
         #logger.debug("- add_struct_to_item_template: struct '{}' to item '{}'".format(struct_name, path))
-        nested_put(template, path, copy.deepcopy(struct))
+        tmp_struct = copy.deepcopy(struct)
+        if 'name' in tmp_struct and isinstance(struct.get('name'), str):
+            del tmp_struct['name']
+        nested_put(template, path, tmp_struct)
         if instance != '' or True:
             # add instance to items added by template struct
             subtree = nested_get(template, path)
