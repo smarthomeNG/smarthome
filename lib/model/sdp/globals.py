@@ -46,6 +46,7 @@ PLUGIN_ATTR_MODEL            = 'model'                   # select model if appli
 PLUGIN_ATTR_CMD_CLASS        = 'command_class'           # name of class to use for commands
 PLUGIN_ATTR_RECURSIVE        = 'recursive_custom'        # indices of custom item attributes for which to enable recursive lookup (number or list of numbers)
 PLUGIN_ATTR_SUSPEND_ITEM     = 'suspend_item'            # item to toggle suspend/resume mode
+PLUGIN_ATTR_CYCLE            = 'cycle'                   # plugin-wide cyclic update interval
 
 # general connection attributes
 PLUGIN_ATTR_CONNECTION       = 'conn_type'               # manually set connection class, classname or type (see below)
@@ -80,7 +81,7 @@ PLUGIN_ATTR_CB_ON_CONNECT    = 'connected_callback'      # callback function, ca
 PLUGIN_ATTR_CB_ON_DISCONNECT = 'disconnected_callback'   # callback function, called if connection is lost
 PLUGIN_ATTR_CB_SUSPEND       = 'suspend_callback'        # callback function, called if connection attempts are aborted
 
-PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE,
+PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE, PLUGIN_ATTR_CYCLE,
                 PLUGIN_ATTR_SUSPEND_ITEM, PLUGIN_ATTR_CONNECTION,
                 PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_BINARY,
                 PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
@@ -110,7 +111,8 @@ PROTOCOL_TYPES = (PROTO_NULL, PROTO_JSONRPC, PROTO_VIESSMANN)
 # item attribute suffixes (as defined with individual prefix in plugin.yaml)
 ITEM_ATTR_COMMAND            = '_command'             # command to issue/read for the item
 ITEM_ATTR_READ               = '_read'                # command can be triggered for reading
-ITEM_ATTR_CYCLE              = '_read_cycle'          # trigger read every x seconds
+ITEM_ATTR_CYCLIC             = '_read_cyclic'         # trigger cyclic reading using plugin-wide cycle setting
+ITEM_ATTR_CYCLE              = '_read_cycle'          # trigger cyclic read every x seconds (item-specific)
 ITEM_ATTR_READ_INIT          = '_read_initial'        # trigger read on initial connect
 ITEM_ATTR_GROUP              = '_read_group'          # trigger read with read group <foo>
 ITEM_ATTR_WRITE              = '_write'               # command can be called for writing values
@@ -120,8 +122,12 @@ ITEM_ATTR_CUSTOM1            = '_custom1'             # custom attribute 1
 ITEM_ATTR_CUSTOM2            = '_custom2'             # custom attribute 2
 ITEM_ATTR_CUSTOM3            = '_custom3'             # custom attribute 3
 
-ITEM_ATTRS = (ITEM_ATTR_COMMAND, ITEM_ATTR_READ, ITEM_ATTR_CYCLE, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, ITEM_ATTR_READ_GRP, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3)
-ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLE', 'ITEM_ATTR_READ_INIT', 'ITEM_ATTR_GROUP', 'ITEM_ATTR_WRITE', 'ITEM_ATTR_READ_GRP', 'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3')
+ITEM_ATTRS = (ITEM_ATTR_COMMAND, ITEM_ATTR_READ, ITEM_ATTR_CYCLIC, ITEM_ATTR_CYCLE,
+              ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, ITEM_ATTR_READ_GRP, ITEM_ATTR_GROUP,
+              ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3)
+ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLIC', 'ITEM_ATTR_CYCLE',
+              'ITEM_ATTR_READ_INIT', 'ITEM_ATTR_GROUP', 'ITEM_ATTR_WRITE', 'ITEM_ATTR_READ_GRP',
+              'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3')
 
 # command definition
 COMMAND_READ                 = True                     # used internally
@@ -149,7 +155,8 @@ CMD_IATTR_ATTRIBUTES         = 'attributes'             # additional item attrib
 CMD_IATTR_READ_GROUPS        = 'read_groups'            # add custom read group(s) and read group trigger(s)
 CMD_IATTR_ENFORCE            = 'enforce'                # add ``enforce_updates: true``
 CMD_IATTR_INITIAL            = 'initial'                # add ``ex_read_initial: true``
-CMD_IATTR_CYCLE              = 'cycle'                  # add ``ex_read_cycle: <val>``
+CMD_IATTR_CYCLE              = 'cycle'                  # add ``ex_read_cycle: <val>`` (item-speficic cycle)
+CMD_IATTR_CYCLIC             = 'cyclic'                 # add ``ex_read_cyclic: true`` (plugin-wide cycle)
 CMD_IATTR_TEMPLATE           = 'item_template'          # add item template <foo>
 CMD_IATTR_CUSTOM1            = 'custom1'                # add item-specific custom attribute 1
 CMD_IATTR_CUSTOM2            = 'custom2'                # add item-specific custom attribute 2
@@ -162,7 +169,7 @@ COMMAND_PARAMS = (CMD_ATTR_OPCODE, CMD_ATTR_READ, CMD_ATTR_WRITE, CMD_ATTR_ITEM_
 
 COMMAND_ITEM_ATTRS = (CMD_IATTR_RG_LEVELS, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_ATTRIBUTES, CMD_IATTR_TEMPLATE,
                       CMD_IATTR_READ_GROUPS, CMD_IATTR_CYCLE, CMD_IATTR_INITIAL, CMD_IATTR_ENFORCE,
-                      CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3)
+                      CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3, CMD_IATTR_CYCLIC)
 
 # reply pattern substitution tokens, set token in {<token>}
 PATTERN_LOOKUP               = 'LOOKUP'                 # replace with lookup values    

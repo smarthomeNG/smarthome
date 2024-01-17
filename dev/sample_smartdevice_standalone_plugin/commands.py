@@ -66,6 +66,9 @@ commands = {
         #
         # you can use the following tokens to have them replaced by their respective values:
         # - ``{LOOKUP}`` to replace with a regex which matches on all values from the command lookup table
+        #   Note: keep in mind that the generated pattern is not bounded, so a lookup containing 
+        #         e.g. 'foo' and 'foobar' will find 'foo' even if 'foobar' is returned
+        #         Consider bounding the pattern like ``{LOOKUP}$`` or similar
         # - ``{VALID_LIST}`` to replace with all valid values according to the cmd_settings
         # - ``{VALID_LIST_CI}`` ditto, with case-insensitive flag set
         # - ``{CUSTOM_PATTERN1}``...``{CUSTOM_PATTERN3}`` to replace with the respective
@@ -110,7 +113,12 @@ commands = {
             # can also be specified for sections to trigger initial read group reading
             'initial': False,
 
-            # create "ex_read_cycle: <cycle>" entry with given cycle time
+            # create "ex_read_cyclic: true>" entry, causing cyclic read with
+            # plugin-wide cycle interval
+            # can also be specified for section to trigger cyclic read group reading
+            'cyclic': False,
+
+            # create "ex_read_cycle: <cycle>" entry with item-specific given cycle time
             # can also be specified for section to trigger cyclic read group reading
             'cycle': None,
 
@@ -131,6 +139,16 @@ commands = {
             # if lookup_item is True or 'list', the lookup will be type 'list'
             # otherwise specify 'lookup_item': 'fwd' / 'rev' / 'rci'
             'lookup_item': False,
+
+            # create custom[123] item attribute
+            # to override inheriting custom attributes for a single item,
+            # set this to ''
+            #
+            # for this to work, the corresponding item attribute needs to
+            # be defined in plugins/<plugin>/plugin.yaml
+            'custom1': None,
+            'custom2': None,
+            'custom3': None,
 
             # attributes to add to the item definition verbatim
             # e.g. eval: or on_change: attributes. you can even 
