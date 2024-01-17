@@ -572,7 +572,7 @@ class Mqtt(Module):
                         else:
                             self.logger.error("_on_mqtt_message: received topic for unknown subscriber_type '{}'".format(subscriber_type))
                     except UnicodeDecodeError:
-                        self.logger.error(f"_on_mqtt_message: received ill-formed message with topic '{message.topic}', payload '{message.payload}', discarding")
+                        self.logger.warning(f"_on_mqtt_message: received ill-formed message with topic '{message.topic}', payload '{message.payload}', discarding")
                         return
 
         if not subscription_found:
