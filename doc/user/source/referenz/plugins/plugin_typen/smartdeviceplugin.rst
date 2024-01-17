@@ -60,9 +60,9 @@ Dabei gibt es eine Reihe von - zunehmend komplexen - Optionen, die in der Refere
 Wesentlichen wird in der `commands.py` das dict `commands` definiert, dessen Inhalte die Intelligenz des Plugins
 definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des sdp_viessmann-Plugins:
 
-.. code::
+.. code-block::
 
-    commands = {
+    commands:
         'Allgemein': {'item_attrs': {'cycle': 45},
             'Temperatur': {
                 'Aussen':             {'read': True, 'write': False, 'opcode': '0101', 'reply_pattern': '*', 'item_type': 'num',  'dev_datatype': 'V', 'params': {'value': 'VAL', 'mult': 10, 'signed': True, 'len': 2}},     # getTempA -- Information - Allgemein: Aussentemperatur (-40..70)
@@ -113,19 +113,18 @@ definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des
 
 Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
 
-..code:
+.. code-block:: yaml
 
-    'Aussen': { 				# Name des Kommandos, Code für das Item-Attribut
-    	'read': True, 			# Kommando kann Wert vom Gerät lesen
-    	'write': False, 		# Kommando kann Wert - nicht - auf Gerät schreiben
-    	'opcode': '0101', 		# "Code", der an das Gerät gesendet wird
-    	'reply_pattern': '*', 	# Identifier, um Antwort auf dieses Kommando zu erkennen
-		'item_type': 'num',		# Datentyp, der an SmartHomeNG gesendet wird
-		'dev_datatype': 'V', 	# Datentyp, der zur Kommunikation mit dem Gerät verwendet wird
-		'params': {'value': 'VAL', 'mult': 10, 'signed': True, 'len': 2}}
+    "Aussen":                   # Name des Kommandos, Code für das Item-Attribut
+        "read": true            # Kommando kann Wert vom Gerät lesen
+        "write": false          # Kommando kann Wert - nicht - auf Gerät schreiben
+        "opcode": "0101"        # "Code", der an das Gerät gesendet wird
+        "reply_pattern": "*"    # Identifier, um Antwort auf dieses Kommando zu erkennen
+        "item_type": "num"      # Datentyp, der an SmartHomeNG gesendet wird
+        "dev_datatype": "V"     # Datentyp, der zur Kommunikation mit dem Gerät verwendet wird
+        "params": {"value": "VAL", "mult": 10, "signed": True, "len": 2}
                                 # Werttransformation: signed int, 2 Bytes ("word")
-								# Wert vom Gerät wird durch 10 geteilt (ergibt eine Nachkommastelle)
-	}
+                                # Wert vom Gerät wird durch 10 geteilt (ergibt eine Nachkommastelle)
 
 
 Die einzelnen Attribute der command-Definitionen sind in der Datei `./dev/sample_smartdevice_plugin/commands.py` im
@@ -184,7 +183,7 @@ Zugriff auf die konfigurierten Kommandos ermöglicht.
 
 Die Klasse `SDPCommand` stellt für jedes konfigurierte Kommando eine eigene Instanz dar, die die notwendigen
 Informationen und Methoden zum Zugriff und zur notwendigen Datentransformation bereitstellt. Die einzelnen Instanzen
-werden durch die `SDPCommands`-Klasse erstellt und entsprechend den Angaben in `commands.py`konfiguriert.
+werden durch die `SDPCommands`-Klasse erstellt und entsprechend den Angaben in `commands.py` konfiguriert.
 
 Auf Plugin-Ebene kann festgelegt werden, ob die Standardklasse `SDPCommand` oder bei Bedarf eine abgeleitete Klasse
 verwendet werden soll. Die abgeleiteten Klassen umfassen `SDPCommandStr` für Kommandos, die textbasiert arbeiten

@@ -15,6 +15,7 @@ Zusätzlich werden die Methoden der Klasse ``lib.utils.Utils`` vererbt.
 
 .. autoclass:: lib.model.smartdeviceplugin.SmartDevicePlugin
     :members:
+    :noindex:
     :undoc-members:
     :show-inheritance:
     :member-order: bysource

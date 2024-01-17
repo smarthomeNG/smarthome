@@ -674,6 +674,8 @@ class Shpypi:
                         package['is_required_for_plugins'] = True
                         package['sort'] = self._build_sortstring(package)
 
+                    self.logger.debug("Package name, type: {}, {}".format(pkg_name, type(required_packages[pkg_name])))
+                    self.logger.debug("Package value: {}".format(required_packages[pkg_name]))
                     package['vers_req_min'] = required_packages[pkg_name].get('min', '*')
                     package['vers_req_max'] = required_packages[pkg_name].get('max', '*')
                     package['vers_req_msg'] = ''
@@ -946,42 +948,24 @@ class Shpypi:
                 if self._compare_versions(pyversion, version, operator):
                     result_list.append(self._split_requirement_to_min_max(requirement[0]))
 
-        if len(result_list) > 2:
-            # Hier sollten die Einträge noch konsolidiert werden
-            # Vorübergehend: Eine Liste von dicts zurückliefern
-            return result_list
-
-        if len(result_list) == 2:
+        # Es wurde bisher eine Liste von dicts zurückgeliefert, wenn es mehr als einen Eintrag gab. Das
+        # führte dann später zu Fehlern, weil als Ergbnis eine Liste und keine Dictionaries erwartet wurden.
+        # Das sollte jetzt behoben sein. Die Werte werden kosolidiert.
+        if len(result_list) > 1:
+            set_min = '*'
+            set_max = '*'
+            for result_entry in result_list:
+                val_min = result_entry.get('min', None)
+                if val_min is not None and val_min != '*':
+                    if set_min == '*' or val_min > set_min:
+                        set_min = val_min
+                val_max = result_entry.get('max', None)
+                if val_max is not None and val_max != '*':
+                    if set_max == '*' or val_max < set_max:
+                        set_max = val_max
             result = {}
-
-            #consolidate minimum values (only '*' at the moment)
-            val0 = result_list[0].get('min', None)
-            val1 = result_list[1].get('min', None)
-            if  val0 is not None and val1 is not None:
-                # Consolidate minimum requirements
-                if val0 == '*':
-                    result['min'] = val1
-                elif val1 == '*':
-                    result['min'] = val0
-            elif val0 is None:
-                result['min'] = val1
-            elif val1 is None:
-                result['min'] = val0
-
-            #consolidate maximum values (only '*' at the moment)
-            val0 = result_list[0].get('max', None)
-            val1 = result_list[1].get('max', None)
-            if  val0 is not None and val1 is not None:
-                # Consolidate minimum requirements
-                if val0 == '*':
-                    result['max'] = val1
-                elif val1 == '*':
-                    result['max'] = val0
-            elif val0 is None:
-                result['max'] = val1
-            elif val1 is None:
-                result['max'] = val0
-
+            result['min'] = set_min
+            result['max'] = set_max
             return result
 
         if len(result_list) == 0:

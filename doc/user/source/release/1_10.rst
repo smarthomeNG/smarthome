@@ -17,7 +17,7 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Dezember 2023
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 12. Januar 2024
            (...)
          - Berücksichtigt sind Commits im plugins Repository bis incl. 29. Dezember 2023
            (Merge pull request #871 from onkelandy/xiaomi_vac)
@@ -51,7 +51,7 @@ zu unterstützten Python Versionen)
 
 |
 
-.. _Änderungen_am_core::
+.. _Änderungen_am_core:
 
 Änderungen am Core
 ==================
@@ -130,6 +130,8 @@ Updates im CORE
     * Add cache option for memlog to docu
     * Move cache for memory log to var/log/cache directory
     * Fix test conditions (also mock core)
+    * Introduce a new rotating filehandler considering current date and time as filenames
+    * DateTime log rotation handler - add intstamp placeholder, fix rotation if placeholder is used for folder only
 
 
   * lib.logic:
@@ -385,7 +387,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * make plugin parameter 'host' mandatory
   * Catch exception if node value returns empty value (e.g. happens if plugin tries to read in color temperature
     value of RGB light when beeing in RGB not white mode)
-  * Improved plugin shutdown fixing "Thread *.poll_tr064, still alive" warning
+  * Improved plugin shutdown fixing "Thread \*.poll_tr064, still alive" warning
   * Improve exception handling during init of devices
   * Disable tab5 (Logs) for Devices without AHA-Interface
   * Improve stop of plugin
@@ -429,7 +431,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Cleanup utils (remove all translation methods)
   * Create and update user_doc
   * Bump to version 1.5.0
-  * Replace Blockly.Python.variableDB_ by nameDB\_ in sh_logics.js
+  * Replace Blockly.Python.variableDB\_ by nameDB\_ in sh_logics.js
   * Refix code
   * Correct Utils import, now everything seems to work...?
   * Fix item get
@@ -725,7 +727,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
 * rcs1000n:
 
-  *Restructure send method and improve try/except clause
+  * Restructure send method and improve try/except clause
 
 * rcswithch:
 
