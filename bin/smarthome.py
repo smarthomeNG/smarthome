@@ -27,6 +27,7 @@
 #####################################################################
 # Check mimimum Python Version
 #####################################################################
+from hashlib import new
 import sys
 if sys.hexversion < 0x03070000:
     print()
@@ -91,9 +92,10 @@ import signal
 import subprocess
 import threading
 import time
+from pathlib import Path
 try:
     import psutil
-except:
+except ImportError:
     pass
 
 
@@ -107,6 +109,47 @@ PIDFILE= os.path.join(BASE,'var','run','smarthome.pid')
 # Only used for Version Check in Plugins to decide if a logger must be explicitly declared
 import bin.shngversion
 VERSION = bin.shngversion.get_shng_version()
+
+
+#############################################################
+# test for new directory setup and migrate
+#############################################################
+
+etc_dir = os.path.join(BASE, 'etc')
+
+old_dirs = {
+    'items': os.path.join(BASE, 'items'),
+    'logics': os.path.join(BASE, 'logics'),
+    'structs': os.path.join(BASE, 'structs')
+}
+
+new_dirs = {
+    'items': os.path.join(etc_dir, 'items'),
+    'logics': os.path.join(etc_dir, 'logics'),
+    'structs': os.path.join(etc_dir, 'structs')
+}
+
+for conf in old_dirs:
+    odir = Path(old_dirs[conf])
+    ndir = Path(new_dirs[conf])
+    err_files = []
+
+    if odir.exists() and odir.is_dir():
+        print(f'Migrating {conf} dir {odir} to {ndir}...')
+        ndir.mkdir(exist_ok=True)
+        for file in odir.glob('*.*'):
+            target = ndir.joinpath(file.name)
+            if target.exists():
+                err_files.append(file.name)
+            else:
+                file.rename(ndir.joinpath(file.name))
+
+        if err_files:
+            print(f"While migrating {conf} dirs, the following files could not be moved:")
+            print(", ".join(err_files))
+            print("Please check/move files manually")
+        else:
+            odir.rmdir()
 
 
 #############################################################
@@ -178,9 +221,6 @@ from lib.smarthome import SmartHome
 
 MODE = 'default'
 #TZ = gettz('UTC')
-
-
-
 
 
 #####################################################################
