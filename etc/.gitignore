@@ -11,3 +11,7 @@
 !module.yaml.default
 !plugin.yaml.default
 !smarthome.yaml.default
+# except config dirs
+!items
+!logics
+!structs
