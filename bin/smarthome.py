@@ -120,13 +120,17 @@ etc_dir = os.path.join(BASE, 'etc')
 old_dirs = {
     'items': os.path.join(BASE, 'items'),
     'logics': os.path.join(BASE, 'logics'),
-    'structs': os.path.join(BASE, 'structs')
+    'structs': os.path.join(BASE, 'structs'),
+    'scenes': os.path.join(BASE, 'scenes'),
+    'functions': os.path.join(BASE, 'functions')
 }
 
 new_dirs = {
     'items': os.path.join(etc_dir, 'items'),
     'logics': os.path.join(etc_dir, 'logics'),
-    'structs': os.path.join(etc_dir, 'structs')
+    'structs': os.path.join(etc_dir, 'structs'),
+    'scenes': os.path.join(etc_dir, 'scenes'),
+    'functions': os.path.join(etc_dir, 'functions')
 }
 
 for conf in old_dirs:

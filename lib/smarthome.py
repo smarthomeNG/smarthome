@@ -231,9 +231,9 @@ class SmartHome():
         # reinitialize dir vars with path to extern configuration directory
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
         self._items_dir = os.path.join(self._etc_dir, 'items' + os.path.sep)
-        self._functions_dir = os.path.join(self._extern_conf_dir, 'functions' + os.path.sep)
+        self._functions_dir = os.path.join(self._etc_dir, 'functions' + os.path.sep)
         self._logic_dir = os.path.join(self._etc_dir, 'logics' + os.path.sep)
-        self._scenes_dir = os.path.join(self._extern_conf_dir, 'scenes' + os.path.sep)
+        self._scenes_dir = os.path.join(self._etc_dir, 'scenes' + os.path.sep)
         self._smarthome_conf_basename = os.path.join(self._etc_dir, 'smarthome')
         self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
         self._module_conf_basename = os.path.join(self._etc_dir, 'module')

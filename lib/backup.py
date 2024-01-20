@@ -104,11 +104,11 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     backup_filename += '.zip'
 
     etc_dir = os.path.join(conf_base_dir, 'etc')
-    items_dir = os.path.join(conf_base_dir, 'items')
-    logic_dir = os.path.join(conf_base_dir, 'logics')
-    scenes_dir = os.path.join(conf_base_dir, 'scenes')
-    structs_dir = os.path.join(conf_base_dir, 'structs')
-    uf_dir = os.path.join(conf_base_dir, 'functions')
+    items_dir = os.path.join(etc_dir, 'items')
+    logic_dir = os.path.join(etc_dir, 'logics')
+    scenes_dir = os.path.join(etc_dir, 'scenes')
+    structs_dir = os.path.join(etc_dir, 'structs')
+    uf_dir = os.path.join(etc_dir, 'functions')
 
 
     # create new zip file
@@ -258,11 +258,11 @@ def restore_backup(conf_base_dir, base_dir):
     restore_dir = os.path.join(base_dir, 'var','restore')
 
     etc_dir = os.path.join(conf_base_dir, 'etc')
-    items_dir = os.path.join(conf_base_dir, 'items')
-    logic_dir = os.path.join(conf_base_dir, 'logics')
-    scenes_dir = os.path.join(conf_base_dir, 'scenes')
-    structs_dir = os.path.join(conf_base_dir, 'structs')
-    uf_dir = os.path.join(conf_base_dir, 'functions')
+    items_dir = os.path.join(etc_dir, 'items')
+    logic_dir = os.path.join(etc_dir, 'logics')
+    scenes_dir = os.path.join(etc_dir, 'scenes')
+    structs_dir = os.path.join(etc_dir, 'structs')
+    uf_dir = os.path.join(etc_dir, 'functions')
 
     archive_file = ''
     for filename in os.listdir(restore_dir):
@@ -284,7 +284,7 @@ def restore_backup(conf_base_dir, base_dir):
 
     logger.notice(f"Restoring configuration from file {restorezip_filename}")
 
-    logger.info(f"Creating a backup of the actual configuration before restoring configuration from zip-file")
+    logger.info(f"Creating a backup of the current configuration before restoring configuration from zip-file")
     create_backup(conf_base_dir, base_dir, True, True)
     overwrite = True
 
