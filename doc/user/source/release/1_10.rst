@@ -17,10 +17,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 12. Januar 2024
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Januar 2024
            (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 29. Dezember 2023
-           (Merge pull request #871 from onkelandy/xiaomi_vac)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 4 Januar 2024
+           (...)
 
 
 Überblick
@@ -160,6 +160,7 @@ Updates im CORE
       * Use item.property.path instead of item.path()
       * Rename get_command_from_reply after changing return type to list
       * Fix logging message
+      * Added global cyclic read
     * SmartPlugin:
 
       * move suspend/resume function to smartplugin
@@ -199,6 +200,7 @@ Updates im CORE
     * Small updates for changed messages of pip commend
     * Included userfunctions and logics. Directories for both can contain a requirements.txt file which is
       now loaded and interpreted
+    * Updated _split_requirement
 
   * lib.shtime:
 
@@ -282,6 +284,7 @@ Updates im CORE
   * mqtt:
 
     * Added datatype 'dict/str' for subscribing to messages containing a payload with uncertain data type
+    * Added error handling for non-decodable utf-8 messages
 
   * websocket:
 
@@ -296,6 +299,7 @@ Updates im CORE
 
   * Added extended loglevels to mock/core
   * Extended mockup core
+  * Added unittests under Python 3.12 for core
 
 |
 
@@ -345,6 +349,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Add user_doc, remove Readme.md
   * Fix docu (translation, layout issues)
   * Add plugin logo
+  * Fix and clean docu
 
 * appletv:
 
@@ -443,6 +448,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Remove unused css
   * Add headtable, put editor in a bodytab
   * Remove old info on blockly update as seperate rst as it's updated and implemented in user_doc
+  * correctly rename webif screenshot for docu
 
 * casambi:
 
@@ -458,6 +464,16 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Added option 'no' to valid list of database attribute
   * Remove unneccessary webif pagelength code from web interface
   * Catch various exceptions that occurred if db was temporarily not reachable
+  * Added database functions to user_doc
+  * Added new database function "diff", "differentiate" and "duration"
+
+* datalog:
+
+  * Add super init to init method
+  * Replace readme by user_doc
+  * Bump version to 1.5.2
+  * Extend docu with info on replacement
+  * Set deprecated (core features and operationlog plugin does the same.. hopefully)
 
 * db_addon:
 
@@ -626,6 +642,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Update docs, include config change warning
   * Fixes, docs, add get_settings
+  * Fix docu
 
 * kostal:
 
@@ -651,11 +668,24 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fixed bug when called from onchange expression
   * Fixed default values of parameters of extended() method
   * Added minimal user_doc.rst
+  * Fix and clean docu
+
+* memlog:
+
+  * Created and updated user_doc, include info about replacement using core features
+  * clean files
+  * Bump to version 1.6.1.
+  * Mark deprecated
+  * Fix docu
 
 * modbus_tcp:
 
   * Fixed bug
   * Add crontab to poll devices, update log messages to Python f-strings
+
+* mvg_live:
+
+  * Updated to new Pypi library "mvg", as MVG_Live is not maintained anymore
 
 * neato:
 
@@ -677,6 +707,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Update Lock state via Lists once lock state is changed to get intermediate states
   * Small fix for getting state 4 and 7
   * Updated Log message
+  * Removed registration of callbacks from scheduled function
+  * Changed lxml requirements
+  * removed requests requirement, as its now part of core
 
 * nut:
 
@@ -688,6 +721,21 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * odlinfo:
 
   * Added verify parameter to plugin, to disable certificate checks due to temporary certificate error of endpoint
+
+* operationlog:
+
+  * Remove non functional web interface code
+  * Remove init_webinterface as there is no web interface
+  * Remove README.MD
+  * Fix, cleanup and extend docu
+  * Add plugin logo
+  * Change cache location to var/log/cache
+  * Cleanup metadata
+  * Bump version to 1.3.6
+  * Simplify and improve code slightly
+  * Introduce new loglevel "NONE" to log without timestamp and log level info (plain text such as in datalog)
+  * Introduce new placeholders for olog_text and allow highlimit, lowlimit (in addition to highlim, lowlim)
+  * Fix docu example
 
 * philips_tv:
 
@@ -739,6 +787,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Clean-up unused argument of init method
   * Extended user_doc.rst
   * Retired README.md
+  * Fix and improve docu
+  * Catch socket timeout exception with a warning message only
 
 * roomba_980:
 
@@ -747,6 +797,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * rpi_info:
 
   * Update and fix web interface
+  * Fix and simplify docu
 
 * shelly:
 
@@ -771,6 +822,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Bump version to 1.8.14
   * Add datatableAdditional class to tables
   * locale cleanup
+  * Use infoblock.html
+  * Remove obsolete widget imports
+  * Fix import paths for widgets
+
 
 * sml:
 
@@ -792,6 +847,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Clean-up unused argument of init method
   * Changed attribute 'power' to 'energy' (breaking change) as power is not correct for forecasted energy (in Wh)
   * Now multi-instance capable
+  * Fixed error if no explicit lat/lon values were specified
+  * Limit plugin azimuth angle to values between -180° and 180°
+  * Added limits for lat/lon, declination and peak power configuration
 
 * sonos:
 
@@ -801,6 +859,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Removed deprecated webif_pagelength parameter from plugin.yaml
   * Fix for method _play_radio (had problems with radio station names with spaces)
   * Code clean-up for selection of radio stations
+  * Remove readme, fix and improve user_doc
+  * Changed lxml requirements
+  * Removed requests requirement, as its now part of core
 
 * stateengine:
 
@@ -948,6 +1009,11 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Initial commit for new Viessmann plugin, communicating via Viessmann API with backend
   * Code-cleanup; new feature 'online status'
+  * Reset token refresh only on success, retry otherwise
+
+* viessmann:
+
+  * Fix and improve docu
 
 * webservices:
 
@@ -962,6 +1028,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Improve docu
   * Catch auth error
   * Improve user doc regarding user_id info
+  * Fix docu
 
 * xiaomi_vac:
 
@@ -969,6 +1036,11 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Add super.init to init function
   * Bump version to 1.2.4
   * Add zeroconf 0.52.0 as requirement because otherwise creating wheel of newer version might not work for Raspi bookworm
+
+* yamaha:
+
+  * Changed lxml requirements
+  * Removed requests requirement, as its now part of core
 
 * yamahaxyc:
 
