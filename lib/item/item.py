@@ -2290,7 +2290,7 @@ class Item():
             try:
                 cache_write(self._cache, self._value)
             except Exception as e:
-                logger.warning("Item: {}: could update cache {}".format(self._path, e))
+                logger.warning("Item: {}: could not update cache {}".format(self._path, e))
 
         if self._autotimer_time and caller != 'Autotimer' and not self._fading:
             # cast_duration for fixed attribute
