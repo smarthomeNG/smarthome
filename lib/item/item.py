@@ -464,12 +464,9 @@ class Item():
         if self._cache:
             self._cache = os.path.join(self._sh._cache_dir, self._path)
             try:
-                self.__changed_by = 'Init:Cache'
                 self.__last_change, self._value = cache_read(self._cache, self.shtime.tzinfo())
-                try:
-                    self._value = self.cast(self._value)
-                except Exception:
-                    logger.warning(f'Item {self._path}: cached value {self._value} does not match type {self._type}')
+                self._value = self.cast(self._value)
+                self.__changed_by = 'Init:Cache'
                 self.__prev_change = self.__last_change
                 self.__updated_by = self.__changed_by
                 self.__triggered_by = 'N/A'
@@ -478,6 +475,8 @@ class Item():
 
                 # Write item value to log, if Item has attribute log_change set
                 self._log_on_change(self._value, self.__changed_by, 'Cache', None)
+            except ValueError:
+                logger.warning(f'Item {self._path}: cached value {self._value} does not match type {self._type}')
             except Exception as e:
                 if str(e).startswith('[Errno 2]'):
                     logger.info(f"Item {self._path}: No cached value: {e}")
