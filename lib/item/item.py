@@ -466,6 +466,10 @@ class Item():
             try:
                 self.__changed_by = 'Init:Cache'
                 self.__last_change, self._value = cache_read(self._cache, self.shtime.tzinfo())
+                try:
+                    self._value = self.cast(self._value)
+                except Exception:
+                    logger.warning(f'Item {self._path}: cached value {self._value} does not match type {self._type}')
                 self.__prev_change = self.__last_change
                 self.__updated_by = self.__changed_by
                 self.__triggered_by = 'N/A'
