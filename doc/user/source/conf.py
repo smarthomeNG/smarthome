@@ -102,10 +102,10 @@ if os.path.isfile(os.getcwd()+'/doc_version.flg'):
 else:
     release = shngversion.get_shng_docversion()
     commit, commit_short, branch, describe = shngversion._get_git_data()
-release += ' (Stand ' + shngversion.get_shng_version_date()
-if branch != 'master':
-    release += ', commit '+commit_short
-release += ')'
+if branch == 'master':
+  release += ' (Stand ' + shngversion.get_shng_version_date() + ')'
+else:
+    release += ' (Stand ' + now.strftime("%-d. %B %Y") + ', commit '+commit_short + ')'
 #release = sphinx_bootstrap_theme.__version__
 
 plgrelease = shngversion.get_shng_plugins_version()
