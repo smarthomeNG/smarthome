@@ -19,6 +19,8 @@ import bin.shngversion as shngversion
 import plugins as pluginsversion
 
 import datetime
+import locale
+locale.setlocale(locale.LC_TIME, 'de_DE.UTF-8')
 now = datetime.datetime.now()
 import calendar
 
