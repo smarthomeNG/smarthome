@@ -20,7 +20,7 @@ import plugins as pluginsversion
 
 import datetime
 import locale
-locale.setlocale(locale.LC_TIME, 'de_DE.UTF-8')
+locale.setlocale(locale.LC_TIME, 'de_DE')
 now = datetime.datetime.now()
 import calendar
 
