@@ -1,26 +1,10 @@
-=============================
-Release 1.10.x - tt. Jan 2024
-=============================
+===========================
+Release 1.10 - 29. Jan 2024
+===========================
 
-Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
-sowie einige neue Plugins.
-
-.. only: comment
-
-    Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
 |
-
-    .. only:: comment
-
-    .. note::
-
-        Diese Release Notes sind ein Arbeitsstand.
-
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 25. Januar 2024
-           (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Januar 2024
-           (smlx plugin: fix missing shtime error)
 
 
 Überblick
@@ -33,7 +17,7 @@ folgenden in diesen Release Notes beschrieben.
 Minimum Python Version
 ----------------------
 
-Die absolute Minimum Python Version in der SmartHomeNG startet, ist **Python 3.7**.
+Die absolute Minimum Python Version in der SmartHomeNG startet, ist **Python 3.8**.
 
 Für das SmartHomeNG Release 1.10 wird die absolute Minimum Python Version auf **Python 3.8** angehoben, da der
 Community Support für Python 3.7 am 27. Juni 2023 endete.
@@ -58,10 +42,6 @@ zu unterstützten Python Versionen)
 
 Allgmein
 --------
-
-* Workflows:
-
-  * ...
 
 * venvs: Scripts for creation and activation of virtual environments
 
@@ -292,10 +272,6 @@ Updates im CORE
 
     * Fix for smartvisu payload protocol
     * Implementation of first version of the adm payload protocol
-
-* Plugins:
-
-  * ...
 
 * tests:
 
