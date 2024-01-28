@@ -5,6 +5,13 @@
 telegram
 ========
 
+.. image:: webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+   
 Das Plugin dient zum Senden und Empfangen von Nachrichten über den
 `Telegram Nachrichten Dienst <https://telegram.org/>`_
 
@@ -69,7 +76,10 @@ Im Dictionary sind Paare von Chat-ID und Berechtigung gespeichert.
     # es wird dann der letzte Wert geladen
     cache: 'True'
     # Beispiel value: '{ 3234123342: 1, 9234123341: 0 }'
-    # Ein Dictionary mit chat id und 1 für Lese und Schreibzugriff oder 0 für einen nur Lese-Zugriff
+    # Ein Dictionary mit chat id und:
+    # 2 für Lese und Schreibzugriff ohne Willkommens- und Ende Nachricht
+    # 1 für Lese und Schreibzugriff
+    # 0 für einen nur Lese-Zugriff
     # Nachfolgend ein Chat dem Lese- und Schreibrechte gewährt werden
     value: '{ 3234123342: 1 }'
 
@@ -92,7 +102,8 @@ In ihm werden Chat-IDs und Zugriff auf den Bot gespeichert. Siehe obiges Beispie
 
 
 telegram_message
------------------
+----------------
+
 Items mit dem Attribut ``telegram_message`` lösen eine Nachricht aus, wenn sich der Itemwert ändert. Es ist möglich Platzhalter
 in der Nachricht zu verwenden.
 
@@ -144,7 +155,7 @@ Einfaches Beispiel
        telegram_value_match_regex: (true|True|1)
 
 Dadurch wird auf eine mehrfache Zuweisung des Items mit dem Wert ``True`` nur einmal mit einer Nachricht reagiert. Um eine weitere Nachricht zu generieren
-muss das Item zunächst wieder den Wert ``False`` annehmen. Das Attribut ``telegram_value_match_regex`` filtert den Wert so das es bei der Änderung des Itemwertes 
+muss das Item zunächst wieder den Wert ``False`` annehmen. Das Attribut ``telegram_value_match_regex`` filtert den Wert so das es bei der Änderung des Itemwertes
 auf ``False`` zu keiner Meldung *Es klingelt an der Tür* kommt.
 
 
@@ -169,9 +180,9 @@ Beispiel
        cache: True
        telegram_message: "TestBool: [VALUE]"
        telegram_value_match_regex: 1            # nur Nachricht senden wenn 1 (True)
-       
-       
-telegram_message_chat_id     
+
+
+telegram_message_chat_id
 ------------------------
 Ist zusätzlich zum Attribut ``telegram_message`` auch das Attribut ``telegram_message_chat_id`` gesetzt, wird die Nachricht nur an die dort angegebene Chat-ID (hier 3234123342) gesendet.
 Ist das Attribut nicht gesetzt, erfolgt der Versand der Nachricht an alle Chat-IDs, die dem Plugin bekannt sind.
@@ -264,26 +275,36 @@ Mit einer Logik kann basierend darauf ein Menu und entsprechende Abfragen an shN
 Siehe dazu ein Beispiel weiter unten.
 
 telegram_control
--------------
+----------------
 
 Für alle Items mit diesem Attribut wird eine Liste mit Kommandos für den Bot erstellt. Der Listeneintrag muss mit ``name`` spezifiziert werden.
 Wird das Kommando ``/control`` an den Bot gesendet, so erstellt der Bot ein Tastaturmenü, dass jedes Attribut als Kommando enthält.
 Dabei werden auch alle aktuellen Werte der Items ausgegeben.
 Bei Auswahl eines dieser Kommandos im Telegram Client kann dann ein Item vom Type bool geschalten werden (on/off) oder beim Type 'num' kein eine Zahl zum SH-Item gesendet werden.
 
-``name``    Item wird mit diesem Namen im Bot als Kommando dargestellt
-``type``    Möglichkeiten: on, off, onoff, toggle, num
-    on          * nur Einschalten ist möglich
-    off         * nur Ausschalten ist möglich
-    onoff       * das Ein- und Ausschalten muss mit einen weiteren Kommando vom Tastaturmenu ausgewählt werden 
-                [On] [Off] (nach einem Timeout ohne Antwort wird der Befehl abgebrochen)
-    toggle      * der Wert des Items wird umgeschltet (0 zu 1; 1 zu 0)
-    num         * es kann eine Zahl an SH gesendet werden und das entsprechende Item wird damit geschrieben. (nach einem Timeout ohne Antwort wird der Befehl abgebrochen)
-``question``Sicherheitsabfrage vor dem Schalten des Items (verwendbar bei type:on/off/toggle - nach einem Timeout ohne Antwort wird der Befehl abgebrochen) 
-            [Yes] [No]
-``min``     Minimalwert (verwendbar bei type:num)
-``max``     Maximalwert (verwendbar bei type:num)
-``timeout`` Zeit nach welcher der Befehl mit Antwort(onoff/question/num) abgebrochen wird (default 20Sekunden)
+``name``
+    Item wird mit diesem Namen im Bot als Kommando dargestellt
+``type``
+    Möglichkeiten: on, off, onoff, toggle, num
+        on
+            * nur Einschalten ist möglich
+        off
+            * nur Ausschalten ist möglich
+        onoff
+            * das Ein- und Ausschalten muss mit einen weiteren Kommando vom Tastaturmenu ausgewählt werden
+              [On] [Off] (nach einem Timeout ohne Antwort wird der Befehl abgebrochen)
+        toggle
+            * der Wert des Items wird umgeschltet (0 zu 1; 1 zu 0)
+        num
+            * es kann eine Zahl an SH gesendet werden und das entsprechende Item wird damit geschrieben. (nach einem Timeout ohne Antwort wird der Befehl abgebrochen)
+``question``
+    Sicherheitsabfrage vor dem Schalten des Items (verwendbar bei type:on/off/toggle - nach einem Timeout ohne Antwort wird der Befehl abgebrochen) [Yes] [No]
+``min``
+    Minimalwert (verwendbar bei type:num)
+``max``
+    Maximalwert (verwendbar bei type:num)
+``timeout``
+    Zeit nach welcher der Befehl mit Antwort(onoff/question/num) abgebrochen wird (default 20Sekunden)
 
 
 Beispiel
@@ -376,30 +397,32 @@ Die folgende Beispiellogik zeigt einige Nutzungsmöglichkeiten für die Funktion
 
 .. code:: python
 
+   telegram_plugin = sh.plugins.return_plugin('telegram')
+
    # Eine Nachricht `Hello world!` wird an alle vertrauten Chat Ids gesendet
    msg = "Hello world!"
-   sh.telegram.msg_broadcast(msg)
+   telegram_plugin.msg_broadcast(msg)
 
    # Ein Bild von einem externen Server soll gesendet werden.
    # Nur die URL wird an Telegram gesendet und keine Daten lokal aufbereitet
-   sh.telegram.photo_broadcast("https://cdn.pixabay.com/photo/2018/10/09/16/20/dog-3735336_960_720.jpg", "A dog", None, False)
+   telegram_plugin.photo_broadcast("https://cdn.pixabay.com/photo/2018/10/09/16/20/dog-3735336_960_720.jpg", "A dog", None, False)
 
    # Bild auf lokalem Server mit aktueller Zeit an Telegram senden
    my_webcam_url = "http:// .... bitte lokale URL hier einfügen zum Test ..."
-   sh.telegram.photo_broadcast(my_webcam_url, "My webcam at {:%Y-%m-%d %H:%M:%S}".format(sh.shtime.now()))
+   telegram_plugin.photo_broadcast(my_webcam_url, "My webcam at {:%Y-%m-%d %H:%M:%S}".format(sh.shtime.now()))
 
    # Bild senden aber den Inhalt lokal vorbereiten
-   sh.telegram.photo_broadcast("https://cdn.pixabay.com/photo/2018/10/09/16/20/dog-3735336_960_720.jpg", "The dog again (data locally prepared)")
+   telegram_plugin.photo_broadcast("https://cdn.pixabay.com/photo/2018/10/09/16/20/dog-3735336_960_720.jpg", "The dog again (data locally prepared)")
 
    local_file = "/usr/local/smarthome/var/ ... bitte eine lokal gespeicherte Datei angeben ..."
-   sh.telegram.photo_broadcast(local_file, local_file)
+   telegram_plugin.photo_broadcast(local_file, local_file)
 
 
 Anwendungen
 ===========
 
-Menugestützte Interaktion zwischen Telegram und shNG
-----------------------------------------------------
+Menugestützte Interaktion zwischen Telegram und SmartHomeNG
+-----------------------------------------------------------
 
 Diese Anwendung nutzt den Wert, den Telegram in das Item mit dem Attribut ``telegram_text`` schreibt.
 Dieser Wert beinhaltet den den User, die Chat-ID und die Message. Basierend auf diesem wird mit einer Logik ein Menu im Chat
@@ -575,3 +598,27 @@ dargestellt und die entsprechenden Aktionen ausgeführt.
     # Message senden
     if msg != '':
         telegram_plugin.msg_broadcast(msg, message_chat_id, reply_markup, parse_mode)
+
+Web Interface
+=============
+
+Das Webinterface bietet folgende Informationen:
+
+-  **Allgemeines**: Oben rechts wird das Timeout, Begrüßungs- und Verabschiedungsnachricht angezeigt
+
+-  **Output Items**: Sämtliche Items, die zum Senden einer Nachricht beitragen
+
+-  **Input Items**: Items, über die Nachrichten empfangen werden können
+
+-  **Telegram Control**: Items, die über Telegram geändert werden können
+
+-  **Telegram Infos**: Befehle mit den zugehörigen Items, deren Werte auf eine Abfrage hin kommuniziert werden
+
+-  **Chat IDs**: Registrierte Chat IDs inkl. Angabe der Zugriffe
+
+.. image:: assets/telegram_webif.png
+   :height: 1584px
+   :width: 3340px
+   :scale: 25%
+   :alt: Web Interface
+   :align: center

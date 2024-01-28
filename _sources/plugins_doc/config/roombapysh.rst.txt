@@ -1,0 +1,175 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'roombapysh' Konfiguration
+=================================
+
+
+.. index:: Plugins; roombapysh Konfiguration
+
+.. image:: /plugins/roombapysh/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **roombapysh** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Integration von iRobot Roomba Staubsaugern
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **roombapysh** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+address
+=======
+
+
+Die IP Adresse des roomba Staubsaugers
+
+ - Datentyp: **str**
+ - Standardwert: **0.0.0.0**
+
+
+blid
+====
+
+
+Die blid des roomba Staubsaugers -> kann mit der getpassword.py ausgelesen werden
+
+ - Datentyp: **str**
+ - Standardwert: **---**
+
+
+cycle
+=====
+
+
+update des items alle x Sekunden, default wert 900
+
+ - Datentyp: **int**
+ - Standardwert: **30**
+
+
+roombaPassword
+==============
+
+
+Das Passwort des roomba Staubsaugers -> kann mit der getpassword.py ausgelesen werden
+
+ - Datentyp: **str**
+ - Standardwert: **:1:xxx**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+roombapysh
+==========
+
+
+Befehle und Statusobjekte des Roomba Staubsaugers
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **connect**
+   - **start**
+   - **pause**
+   - **resume**
+   - **stop**
+   - **dock**
+   - **evac**
+   - **reset**
+   - **locate**
+   - **connected**
+   - **status**
+   - **error_code**
+   - **error_message**
+   - **client_error**
+   - **name**
+   - **bat_cCount**
+   - **status_batterie**
+   - **run_nCliffs**
+   - **run_nPanics**
+   - **run_time**
+   - **run_nScrubs**
+   - **mission_total**
+   - **mission_OK**
+   - **mission_err**
+   - **MissionStatus_cycle**
+   - **MissionStatus_phase**
+   - **MissionStatus_error**
+   - **MissionStatus_startTime**
+   - **MissionStatus_expireTime**
+   - **MissionStatus_initiator**
+   - **MissionStatus_runTime**
+   - **dock_known**
+   - **bin_present**
+   - **bin_full**
+   - **mission_state**
+   - **lastCommand_command**
+   - **lastCommand_time**
+   - **lastCommand_initiator**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/roombapysh/README>` des Plugins zugreifen.

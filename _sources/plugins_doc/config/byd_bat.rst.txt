@@ -1,0 +1,154 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'byd_bat' Konfiguration
+==============================
+
+
+.. index:: Plugins; byd_bat Konfiguration
+
+.. image:: /plugins/byd_bat/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **byd_bat** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin fuer die Anzeige von Daten von BYD Batterien
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9**
+ - Minimum Python Version: **3.9**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **byd_bat** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+diag_cycle
+==========
+
+
+Abfrage-Zyklus fuer die Diagnosedaten (>=60s)
+
+ - Datentyp: **num**
+ - Standardwert: **300**
+
+
+imgpath
+=======
+
+
+Pfad fuer Heatmap-Bilder (z.Bsp. fuer smartvisu)
+
+ - Datentyp: **str**
+
+
+ip
+==
+
+
+IP-Adresse der BYD Batterie (Master)
+
+ - Datentyp: **ip**
+ - Standardwert: **192.168.16.254**
+
+
+log_age
+=======
+
+
+Aufbewahrungsdauer der Log-Dateien in Tagen (0=kein Löschen)
+
+ - Datentyp: **num**
+ - Standardwert: **365**
+
+
+log_data
+========
+
+
+Abfrage der Log-Daten
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+byd_para
+========
+
+
+Interner Parameter
+
+ - Datentyp: **bool**
+ - Standardwert: **off**
+
+
+byd_root
+========
+
+
+Root-Flag fuer das Plugin
+
+ - Datentyp: **bool**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

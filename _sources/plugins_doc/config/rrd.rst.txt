@@ -87,7 +87,7 @@ rrd
 ===
 
 
-Wenn auf 'yes' gesetzt, werden die Werte des Items in die rrd Datenbank geschrieben. Wenn auf 'init' gesetzt, wird zusätzlich beim Start von SmartHomeNG der Wert aus rrd gelesen.
+Wenn auf 'yes' gesetzt, werden die Werte des Items in die rrd Datenbank geschrieben.  Wenn auf 'init' gesetzt, wird zusätzlich beim Start von SmartHomeNG der Wert aus rrd gelesen.   Wenn für dieses Item ebenfalls ein Attribut 'sqlite' oder 'database' gesetzt ist,  so ist die Wahrscheinlichkeit groß, das eines der Plugins nicht funktioniert. Um dieses Problem zum umgehen kann das Attribut 'rrd_no_series' gesetzt werden.
 
  - Datentyp: **str**
 
@@ -179,4 +179,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/rrd/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

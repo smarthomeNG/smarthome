@@ -105,6 +105,8 @@ Key fuer den Empfang von Statusinformationen
    - **POWERSTATE**
    - **POWERSTATEINFO**
    - **CHANNEL**
+   - **AMBILIGHT_STATE**
+   - **AMBILIGHT_HUE**
 
 
 philips_tv_tx_key
@@ -119,6 +121,8 @@ Key fuer das Senden von Kommandos an den Philips TV
 
    - **MUTE**
    - **POWEROFF**
+   - **AMBILIGHT_STATE**
+   - **AMBILIGHT_HUE**
 
 
 ===============

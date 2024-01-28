@@ -118,26 +118,6 @@ tts
  - Standardwert: **False**
 
 
-webif_pagelength
-================
-
-
-Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
-Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
-Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
-
- - Datentyp: **int**
- - Standardwert: **0**
-
- - Mögliche Werte:
-
-   - **-1**
-   - **0**
-   - **25**
-   - **50**
-   - **100**
-
-
 webservice_ip
 =============
 
@@ -353,6 +333,54 @@ Plugin Functions
 
 Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
 
-**Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/sonos/README>` des Plugins zugreifen.
+play_all(alert_uri, speaker_list, alert_volume, alert_duration, fade_back)
+==========================================================================
+
+
+Spiel eine URL auf allen Speakern, oder einer Untermenge, ab
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+alert_uri
+---------
+
+URL die Sonos abspielen soll
+
+ - Datentyp: **str**
+
+
+speaker_list
+------------
+
+Liste mit Speaker Namen, auf denen der Sound abgespielt werden soll
+
+ - Datentyp: **list**
+
+
+alert_volume
+------------
+
+Volumenlevel (0-100)
+
+ - Datentyp: **int**
+
+
+alert_duration
+--------------
+
+Länge der Ansage in Sekunden (wenn 0, dann gleich Tracklänge)
+
+ - Datentyp: **int**
+
+
+fade_back
+---------
+
+auf True setzen, um den Sound nach der Ansage ansteigen zu lassen
+
+ - Datentyp: **bool**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

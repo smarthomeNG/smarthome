@@ -9,7 +9,7 @@ For support, questions and bug reports, please refer to [KNX-User-Forum](https:/
 - an Harmony Hub device
 - SmarthomeNG version >= 1.3
 - Python3 module <b>sleekxmpp</b>
-- (optional) create a dummy Harmony Hub activity, [see remarks](#dummy)
+- (optional) create a dummy Harmony Hub activity, see remarks
 
 ```
 sudo pip3 install sleekxmpp

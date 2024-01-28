@@ -23,8 +23,6 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **web Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
-
 
 
 Beschreibung

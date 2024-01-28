@@ -8,8 +8,8 @@ Plugin 'memlog' Konfiguration
 
 .. index:: Plugins; memlog Konfiguration
 
-.. image:: /_static/img/system.svg
-   :alt: plugin type logo
+.. image:: /plugins/memlog/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -23,12 +23,14 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **system Plugin**.
 
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
 
 
 Beschreibung
 ============
 
-Speichern der Logeinträge im Speicher (zur Anzeige in der VISU)
+Speichern der Logeinträge im Speicher (zur Anzeige in der VISU). Durch Bordmittel ersetzbar.
 
 
 Anforderungen
@@ -67,7 +69,7 @@ mappings
 ========
 
 
-Definiert eine Liste mit kommagetrennten Werten die für jede Nachricht geloggt werden.  Die folgenden internen Zuordnungen können benutzt werden:   time - Zeitstempel des Eintrags thread - Thread der die Daten erzeugt level - Der log level (Standard ist INFO) message - Die Nachricht   Die Vorgabe sollte beibehalten werden, wenn das Log in SmartVISU angezeigt werden soll,  sonst werden die Werte von der SmartVISU für die Darstellung nicht korrekt interpretiert.
+Definiert eine Liste mit kommagetrennten Werten die für jede Nachricht geloggt werden. Die folgenden internen Zuordnungen können benutzt werden:   time - Zeitstempel des Eintrags thread - Thread der die Daten erzeugt level - Der log level (Standard ist INFO) message - Die Nachricht   Die Vorgabe sollte beibehalten werden, wenn das Log in SmartVISU angezeigt werden soll, sonst werden die Werte von der SmartVISU für die Darstellung nicht korrekt interpretiert.
 
  - Datentyp: **list(str)**
  - Standardwert: **['time', 'thread', 'level', 'message']**
@@ -104,7 +106,7 @@ memlog
 ======
 
 
-Bezeichnet den Namen des Logs in dem die Nachricht aufgezeichnet werden soll. Alle´Einträge werden mit Level INFO erstellt
+Bezeichnet den Namen des Logs in dem die Nachricht aufgezeichnet werden soll. Alle Einträge werden mit Level INFO erstellt
 
  - Datentyp: **str**
 
@@ -127,4 +129,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/memlog/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

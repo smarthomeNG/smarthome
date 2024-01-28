@@ -107,40 +107,6 @@ Zu lesendes/schreibendes Attribut des Tasmota Devices. Achtung: Nicht jedes Attr
  - Datentyp: **str**
  - Standardwert: **relay**
 
- - Mögliche Werte:
-
-   - **relay** |_| - |_| Schalten des Relais -> bool, r/w
-   - **online** |_| - |_| Online Status des Tasmota Devices -> bool, r/o
-   - **voltage** |_| - |_| Spannung in Volt bei Tasmota Devices mit ENERGY Sensor -> num, r/o
-   - **current** |_| - |_| Strom in Ampere bei Tasmota Devices mit ENERGY Sensor -> num, r/o
-   - **power** |_| - |_| Leistung in Watt bei Tasmota Devices mit ENERGY Sensor -> num, r/o
-   - **power_total** |_| - |_| Verbrauch (gesamt) in kWh bei Tasmota Devices mit ENERGY Sensor -> num, r/o
-   - **power_yesterday** |_| - |_| Verbrauch (gestern) in kWh bei Tasmota Devices mit ENERGY Sensor -> num, r/o
-   - **power_today** |_| - |_| Verbrauch (heute) in kWh bei Tasmota Devices mit ENERGY Sensor -> num, r/o
-   - **temp** |_| - |_| Temperatur in °C bei Tasmota Devices mit TEMP Sensor (DS18B20, AM2301) -> num, r/o
-   - **hum** |_| - |_| Luftfeuchtigkeit in %rH bei Tasmota Devices mit HUM Sensor (AM2301) -> num, r/o
-   - **dewpoint** |_| - |_| Taupunkt in °C bei Tasmota Devices mit HUM und TEMP Sensor (AM2301) -> num, r/o
-   - **hsb** |_| - |_| Hue, Saturation, Brightness (HSB) bei RGBW Tasmota Devices (H801) -> list, r/w
-   - **white** |_| - |_| Color Temperature in Kelvin bei RGBW Tasmota Devices (H801) -> num, r/w
-   - **ct** |_| - |_| Color Temperature in Kelvin bei RGBW Tasmota Devices (H801) -> num, r/w
-   - **dimmer** |_| - |_| Dimmwert in % Tasmota Devices -> num, r/w
-   - **rf_recv** |_| - |_| Empfangene RF Daten bei Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> dict, r/o
-   - **rf_send** |_| - |_| Zu sendende RF Daten bei Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> dict {'RfSync': 12220, 'RfLow': 440, 'RfHigh': 1210, 'RfCode':'#F06104'}, r/w
-   - **rf_key_send** |_| - |_| Zu sendender RF-Key Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> num [1-16], r/w
-   - **rf_key_recv** |_| - |_| Zu empfangender RF-Key Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> num [1-16], r/w
-   - **rf_key** |_| - |_| RF Key
-   - **zb_permit_join** |_| - |_| Schaltet das Pairing an der ZigBee Bridge ein/aus -> bool, r/w
-   - **zb_forget** |_| - |_| Löscht das Zigbee-Gerät aus dem Item Wert aus der Liste bekannter Geräte in der Zigbee-Bridge -> str, r/w
-   - **zb_ping** |_| - |_| Sendet ein Ping zum Zigbee-Gerät aus dem Item Wert -> str, r/w
-   - **power_total** |_| - |_| Gemessener Gesamtenergieverbrauch
-   - **power_today** |_| - |_| Gemessener Energieverbrauch heute
-   - **power_yesterday** |_| - |_| Gemessener Energieverbrauch gestern
-   - **analog_temp** |_| - |_| Temperatur am Analogeingang
-   - **analog_temp1** |_| - |_| Temperatur am Analogeingang1
-   - **analog_a0** |_| - |_| ADC-Eingang eines ESPs
-   - **analog_range** |_| - |_| ADC-Eingang eines ESPs
-   - **esp32_temp** |_| - |_| Temperatur des ESP32
-
 
 tasmota_relay
 =============
@@ -158,10 +124,9 @@ tasmota_rf_details
 ==================
 
 
-Nummer des auszulösenden RF Keys im Tasmota Device=Aktion bei Empfang
+Nummer des auszulösenden RF Keys im Tasmota Device und Aktion bei Empfang als String; bspw: '16=true' - Bei Empfang des Key16, setze Item auf True
 
  - Datentyp: **str**
- - Standardwert: **1**
 
 
 tasmota_sml_attr

@@ -10,7 +10,7 @@ Beispiel
 --------
 
 Im folgenden Beispiel wird der Zustand "Daemmerung" eingenommen, sobald
-die Helligkeit (über se_item_brightness definiert) über 500 Lux liegt.
+die Helligkeit (über se_item_brightness oder se_status_brightness definiert) über 500 Lux liegt.
 
 .. code-block:: yaml
 
@@ -19,12 +19,58 @@ die Helligkeit (über se_item_brightness definiert) über 500 Lux liegt.
        automatik:
            struct: stateengine.general
                rules:
-                   se_item_brightness: beispiel.wetterstation.helligkeit
+                   se_status_brightness: beispiel.wetterstation.helligkeit
                    Daemmerung:
                        name: Dämmerung
                        remark: <Aktionen>
                        enter:
                           se_min_brightness: 500
+
+Name der Bedingung
+------------------
+
+Der Name einer Bedingung setzt sich aus folgenden drei Teilen zusammen,
+die jeweils mit einem Unterstrich "_" getrennt werden:
+
+- ``se_``: eindeutiger Prefix, um dem Plugin zugeordnet zu werden
+- ``<Vergleichsfunktion>``: siehe unten. Beispiel: min = der Wert des <Bedingungsitems> muss mindestens dem beim Attribut angegebenen Wert entsprechen.
+- ``<Vergleichsitem/Bedingungsname>``: Hier wird entweder das im Regelwerk-Item mittels ``se_item_<Name>`` oder ``se_status_<Name>`` deklarierte Item oder eine besondere Bedingung (siehe unten) referenziert.
+
+
+Referenzieren von Items
+-----------------------
+
+Für jede "standardmäßige" Bedingung muss ein Item hinterlegt werden, das geprüft werden soll.
+Dies geschieht in der Regel durch ``se_status_<Name>``, kann aber auch durch ``se_item_<Name>``
+erfolgen, falls z.B. das gleiche Item für Bedingungen und Aktionen gebraucht wird.
+
+Im Beispiel wird durch ``se_status_brightness`` das Item für den Check von
+Bedingungen bekannt gemacht. Aufgrund der angegebenen eval-Funktion wird das Item
+abhängig vom aktuellen Zustandsnamen eruiert. Da Zustand_Eins den Namen "sueden"
+hat, wird somit der Wert von wetterstation.helligkeit_sueden abgefragt. Ist dieser
+mehr als 499, ist die Bedingung erfüllt. Würde der Zustand "osten" heißen (Name von Zustand_Zwei),
+würde der Helligkeitswert vom Osten getestet werden. Bedingung wäre dann erfüllt,
+wenn die Helligkeit 1500 oder mehr beträge.
+
+.. code-block:: yaml
+
+    #items/item.yaml
+    raffstore1:
+        automatik:
+            struct: stateengine.general
+            rules:
+                se_status_brightness: eval:se_eval.get_relative_itemvalue('wetterstation.helligkeit_{}'.format(se_eval.get_variable('current.state_name')))
+
+                Zustand_Eins:
+                    name: sueden
+                    enter:
+                        se_min_brightness: 500
+
+                Zustand_Zwei:
+                    name: osten
+                    enter:
+                        se_min_brightness: 1500
+
 
 Bedingungsgruppen
 -----------------
@@ -60,22 +106,11 @@ Wertevergleich
 Der zu vergleichende Wert einer Bedingung kann auf folgende Arten definiert werden:
 
 - statischer Wert (also z.B. 500 Lux). Wird angegegeben mit ``value:500``, wobei das value: auch weggelassen werden kann.
-- Item (beispielsweise ein Item namens settings.helligkeitsschwellwert). Wird angegeben mit ``item:settings.helligkeitsschwellwert``
+- Item (beispielsweise ein Item namens settings.helligkeitsschwellwert). Wird angegeben mit ``item:settings.helligkeitsschwellwert``. Das Item kann auch eine Liste von Werten beinhalten.
 - Eval-Funktion (siehe auch `eval Ausdrücke <https://www.smarthomeng.de/user/referenz/items/standard_attribute/eval.html>`_). Wird angegeben mit ``eval:1*2*se_eval.get_relative_itemvalue('..bla')``
-- Regular Expression (siehe auch ` RegEx Howto <https://docs.python.org/3.7/howto/regex.html#regex-howto>`_) - Vergleich mittels re.fullmatch, wobei Groß/Kleinschreibung ignoriert wird. Wird angegeben mit ``regex:StateEngine Plugin:(.*)``
+- Regular Expression (siehe auch ` RegEx Howto <https://docs.python.org/3/howto/regex.html>`_) - Vergleich mittels re.fullmatch, wobei Groß/Kleinschreibung ignoriert wird. Wird angegeben mit ``regex:StateEngine Plugin:(.*)``
 - Template: eine Vorlage, z.B. eine eval Funktion, die immer wieder innerhalb
   des StateEngine Items eingesetzt werden kann. Angegeben durch ``template:<Name des Templates>``
-
-
-Name der Bedingung
-------------------
-
-Der Name einer Bedingung setzt sich aus folgenden drei Teilen zusammen,
-die jeweils mit einem Unterstrich "_" getrennt werden:
-
-- ``se_``: eindeutiger Prefix, um dem Plugin zugeordnet zu werden
-- ``<Vergleichsfunktion>``: siehe unten. Beispiel: min = der Wert des <Bedingungsitems> muss mindestens dem beim Attribut angegebenen Wert entsprechen.
-- ``<Vergleichsitem/Bedingungsname>``: Hier wird entweder das im Regelwerk-Item mittels ``se_item_<Name>`` deklarierte Item oder eine besondere Bedingung (siehe unten) referenziert.
 
 
 Templates für Bedingungsabfragen
@@ -83,7 +118,7 @@ Templates für Bedingungsabfragen
 
 Setzt man für mehrere Bedingungsabfragen (z.B. Helligkeit, Temperatur, etc.) immer die
 gleichen Ausdrücke ein (z.B. eine eval-Funktion), so kann Letzteres als Template
-definiert und referenziert werden. Dadurch wird die  Handhabung
+definiert und referenziert werden. Dadurch wird die Handhabung
 komplexerer Abfragen deutlich vereinfacht. Diese Templates müssen wie se_item/se_eval
 auf höchster Ebene des StateEngine Items (also z.B. rules) deklariert werden.
 
@@ -101,6 +136,27 @@ auf höchster Ebene des StateEngine Items (also z.B. rules) deklariert werden.
 
 Bei sämtlichen Bedingungen ist es möglich, Werte als Liste anzugeben. Es ist allerdings
 nicht möglich, Templates als Listen zu definieren.
+
+
+Bedingungen mittels eval-Ausdrücken
+-----------------------------------
+
+``se_eval_<Name>`` kann neben der dynamischen Definition von Items auch für einen
+herkömmlichen eval-Ausdruck herhalten, der dann in einem Bedingungsset geprüft wird.
+
+.. code-block:: yaml
+
+    #items/item.yaml
+    raffstore1:
+        automatik:
+            struct: stateengine.general
+            rules:
+                se_eval_berechnung: sh.test.property.value + 1
+
+                Zustand_Eins:
+                    name: sueden
+                    enter:
+                        se_value_berechnung: 3
 
 
 Bedingungslisten
@@ -233,6 +289,28 @@ Die Werte(liste) kann auch durch ``se_changedbynegate_<Bedingungsname>`` negiert
 
        se_changedbynegate_<Bedingungsname>: True|False
 
+**Triggerung des Items durch**
+
+.. code-block:: yaml
+
+      se_triggeredby_<Bedingungsname>: [Wert]
+
+Die Bedingung ist erfüllt, wenn das Item durch den angegebenen Wert bzw.
+einen der angegebenen Werte getriggert wurde. Dies kann relevant werden,
+um herauszufinden, wodurch ein Item mit einem eval-Attribut getriggert wurde,
+unabhängig davon, ob sich daraus eine Wertänderung ergibt oder nicht.
+Hier bietet es sich an, den Wert als Regular Expression mittels
+``se_triggeredby_<Bedingungsname>: regex:StateEngine Plugin`` zu definieren.
+Die Werte(liste) kann auch durch ``se_triggeredbynegate_<Bedingungsname>`` negiert werden.
+
+.. code-block:: yaml
+
+      se_triggeredby_<Bedingungsname>:
+         - [Wert1]
+         - [Wert2]
+         - regex:[WertN]
+
+      se_triggeredbynegate_<Bedingungsname>: True|False
 
 **Mindestalter**
 
@@ -308,7 +386,7 @@ Freitag, 5 = Samstag, 6 = Sonntag
 Der Azimut (Horizontalwinkel) ist die Kompassrichtung, in der die
 Sonne steht. Der Azimut wird von smarthomeNg auf Basis der
 aktuellen Zeit sowie der konfigurierten geographischen Position
-berechnet. Siehe auch `Dokumentation <https://www.smarthomeng.de/user/logiken/objekteundmethoden_sonne_mond.html>`_
+berechnet. Siehe auch `Dokumentation <https://www.smarthomeng.de/user/referenz/smarthomeng/methoden_sonne_mond.html>`_
 für Voraussetzungen zur Berechnung der Sonnenposition.
 Beispielwerte: 0 → Sonne exakt im Norden, 90 → Sonne exakt im
 Osten, 180 → Sonne exakt im Süden, 270 → Sonne exakt im Westen
@@ -319,8 +397,8 @@ Osten, 180 → Sonne exakt im Süden, 270 → Sonne exakt im Westen
 Die Altitude (Vertikalwikel) ist der Winkel, in dem die Sonne über
 dem Horizont steht. Die Altitude wird von smarthomeNG auf Basis
 der aktuellen Zeit sowie der konfigurierten geographischen
-Position berechnet. Siehe auch `SmarthomeNG
-Dokumentation <https://www.smarthomeng.de/user/logiken/objekteundmethoden_sonne_mond.html>`_
+Position berechnet. Siehe ebenfalls `SmarthomeNG
+Dokumentation <https://www.smarthomeng.de/user/referenz/smarthomeng/methoden_sonne_mond.html>`_
 für Voraussetzungen zur Berechnung der Sonnenposition. Werte:
 negativ → Sonne unterhalb des Horizonts, 0 →
 Sonnenaufgang/Sonnenuntergang, 90 → Sonne exakt im Zenith
@@ -350,7 +428,7 @@ verwendet werden.
 
 Die Abfrage se_value_laststate ist besonders wichtig für
 Bedingungsabfragen, die über das Verbleiben im aktuellen Zustand
-bestimmen (z.b. enter_stay). So können aber auch Stati übersprungen
+bestimmen (z.b. enter_stay). So können aber auch Zustände übersprungen
 werden, wenn sie nicht nach einem bestimmten anderen Zustand aktiviert
 werden sollen.
 Wichtig: Hier muss die vollständige Item-Id angegeben werden

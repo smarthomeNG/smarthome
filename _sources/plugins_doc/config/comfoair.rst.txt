@@ -108,7 +108,7 @@ comfoair_init
 =============
 
 
-Konfiguriert ob der Wert aus dem KWL System initialisiert werden soll.
+Konfiguriert, ob der Wert aus dem KWL System initialisiert werden soll.
 
  - Datentyp: **bool**
 
@@ -126,7 +126,7 @@ comfoair_read_afterwrite
 ========================
 
 
-Konfiguriert eine Verzögerung in Sekunden nachdem ein Lesekommando nach einem Schreibkommando an das KWL System geschickt wird.
+Konfiguriert eine Verzögerung in Sekunden, nachdem ein Lesekommando nach einem Schreibkommando an das KWL System geschickt wird.
 
  - Datentyp: **num**
 
@@ -135,7 +135,7 @@ comfoair_read_cycle
 ===================
 
 
-Konfiguriert ein Interval in Sekunden für das Lesekommando.
+Konfiguriert ein Intervall in Sekunden für das Lesekommando.
 
  - Datentyp: **num**
 
@@ -153,7 +153,7 @@ comfoair_trigger
 ================
 
 
-Konfiguriert Lesekommandos die nach einem Schreibvorgang auf das Item aufgerufen werden.
+Konfiguriert Lesekommandos, die nach einem Schreibvorgang auf das Item aufgerufen werden.
 
  - Datentyp: **list(str)**
 

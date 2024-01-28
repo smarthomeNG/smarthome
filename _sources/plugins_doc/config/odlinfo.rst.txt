@@ -64,6 +64,16 @@ cycle
  - Standardwert: **1800**
 
 
+verify
+======
+
+
+Schaltet die Prüfung der Zertifikate des odlinfo Endpunkts ab.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
 ==============
 Item Attribute
 ==============

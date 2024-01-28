@@ -15,9 +15,14 @@ mittels ``eval:`` verwendet werden können:
 
 **Sonnenstandsabhängige Lamellenausrichtung**
 *Die Neigung der Lamellen wird automatisch von der Höhe der Sonne bestimmt.*
-Optional kann noch ein Offset in Klammer mitgegeben werden, um etwaige kleine Abweichungen auszugleichen. Diese Abweichung
-kann auch global bei der Pluginkonfiguration mittels ``lamella_offset`` eingestellt werden, was sich dann auf
-sämtliche Aufrufe der Funktion auswirkt. Der Offset wird in Grad angegeben, wobei ein negativer Offset dafür sorgt, dass sich die Lamellen weniger weit drehen. Bei einem positiven Offset hingegen werden die Lamellen mehr geschlossen. Die Angabe beim direkten Aufruf der Funktion hat dabei immer Vorrang. Da verschiedene Lamellenarten unterschiedliche Prozentwerte im offenen Zustand
+Optional kann noch ein Offset in Klammer mitgegeben werden, um etwaige kleine
+Abweichungen auszugleichen. Diese Abweichung kann auch global bei der
+Pluginkonfiguration mittels ``lamella_offset`` eingestellt werden, was sich dann auf
+sämtliche Aufrufe der Funktion auswirkt. Der Offset wird in Grad angegeben,
+wobei ein negativer Offset dafür sorgt, dass sich die Lamellen weniger weit drehen.
+Bei einem positiven Offset hingegen werden die Lamellen mehr geschlossen.
+Die Angabe beim direkten Aufruf der Funktion hat dabei immer Vorrang.
+Da verschiedene Lamellenarten unterschiedliche Prozentwerte im offenen Zustand
 haben können, kann die Berechnung auch mittels ``lamella_open_value`` manipuliert werden.
 
 .. code-block:: yaml
@@ -149,10 +154,15 @@ Bedarf aber auch für andere Zwecke, welche auch immer, genutzt werden.
 
 **item.instant_leaveaction:**
 *Information, wie das leave_action Attribut für das Regelwerkitem gesetzt ist*
-Die Option instant_leaveaction kann sowohl in der globalen Pluginkonfiguration
-mittels ``instant_leaveaction``, als auch pro Item mittels ``se_instant_leaveaction``
-festgelegt werden. Sie bestimmt, ob on_leave Aktionen sofort nach dem Verlassen
+Die Konfiguration von instant_leaveaction bestimmt, ob on_leave Aktionen sofort nach dem Verlassen
 eines Zustands ausgeführt werden oder erst am Ende der Statusevaluierung.
+Die Option kann sowohl in der globalen Pluginkonfiguration
+mittels ``instant_leaveaction`` (boolscher Wert True oder False), als auch pro Item
+mittels ``se_instant_leaveaction`` festgelegt werden. Letzteres Attribut kann auch
+auf ein Item verweisen, dem der Wert -1 = Nutzen des Default Wertes, 0 = False,
+1 = True zugewiesen werden kann. Im ``general struct`` sind bereits entsprechende
+Einträge und Items angelegt (mit einem Wert von -1).
+
 
 **current.action_name:**
 *Der Name der Aktion, in der auf die Variable zugegriffen wird*
@@ -213,15 +223,16 @@ auf das passende Unteritem in licht1.automatik.settings.
 **current.state_id:**
 *Die Id des Status, der gerade geprüft wird*
 
-Diese Variable wird leer, sobald die Statusevaluierung beendet wurde, noch bevor die Aktionen des
-zuletzt eingenommenen Zustands ausgeführt werden. Sie kann daher nur in der Evaluierung, nicht aber
-in on_enter(_or_stay) genutzt werden. Hierfür wird stattdessen ``se_eval.get_relative_itemvalue('..state_id')`` genutzt.
+Diese Variable wird leer, sobald die Statusevaluierung beendet wurde,
+noch bevor die Aktionen des zuletzt eingenommenen Zustands ausgeführt werden.
+Sie kann daher nur in der Evaluierung, nicht aber in on_enter(_or_stay) genutzt
+werden. Hierfür wird stattdessen ``se_eval.get_relative_itemvalue('..state_id')`` genutzt.
 
 **current.state_name:**
 *Der Name des Status, der gerade geprüft wird*
 
-Wie die state_id Variable wird diese nur während der Statusevaluierung entsprechend befüllt und sofort beim Eintritt
-in einen neuen Zustand geleert (noch vor dem Durchführen der Aktionen).
+Wie die state_id Variable wird diese nur während der Statusevaluierung entsprechend
+befüllt und sofort beim Eintritt in einen neuen Zustand geleert (noch vor dem Durchführen der Aktionen).
 
 Das angeführte Beispiel zeigt, wie eine Bedingung mit einem Wert abgeglichen
 werden kann, der in einem passenden Settingitem hinterlegt ist. Konkret
@@ -327,7 +338,8 @@ auf True gesetzt - aber nur, wenn zuvor der x-Zustand aktiv war.
 **previous.conditionset_name:**
 *Der Name der Bedingungsgruppe, die beim vorigen Durchlauf aktiv war*
 
-Bei den previous.conditionset Variablen spielt es keine Rolle, ob ein neuer Zustand eingenommen wurde oder nicht.
+Bei den previous.conditionset Variablen spielt es keine Rolle, ob ein neuer Zustand
+eingenommen wurde oder nicht.
 Beispiel: Ein Item ist aktuell im Zustand "Suspend" auf Grund einer manuellen Triggerung,
 also der Bedingungsgruppe "enter_manuell". Die Variable ``previous.conditionset_name``
 beinhaltet nun den Namen der Bedingungsgruppe vom vorherigen Zustand. Bei einer erneuten
@@ -351,3 +363,42 @@ Zustand aktiv gewesen ist. Ansonsten gelten alle vorhin beschriebenen Regeln.
 
 **previous.state_conditionset_name:**
 *Der Name der Bedingungsgruppe, die beim vorigen Zustand zuletzt aktiv war*
+
+**release.can_be_released_by:**
+*Die Definitionen, die den aktuellen Zustand generell auflösen könnten*
+
+Nach einer Bereinigung und Berechnung der ``se_released_by`` Angaben
+(z.B. Löschen von ungültigen Zuständen, Auflösen relativer Angaben, etc.)
+wird eine Liste mit den noch übrigen Einträgen in diese Variable gespeichert.
+Dabei bleiben die originalen Datentypen (z.B. Item, Eval, etc.) erhalten.
+
+**release.was_released_by:**
+*Die Id des Zustandes, der zuletzt den aktuellen Zustand aufgelöst hat*
+
+Nachdem der im ``se_released_by`` Attribut angegebene Zustand den aktuellen Zustand
+aufgelöst hat, wird der auflösende Zustand in dieser Variable hinterlegt.
+
+**release.can_release:**
+*Die Ids von Zuständen, die durch den aktuellen Zustand aufgelöst werden können*
+
+Wird das ``se_released_by`` Attribut genutzt, wird dessen Inhalt nach jeder
+Zustandsevaluierung aktualisiert. Ist das Attribut beispielsweise im Zustand
+"suspend" mit dem Wert ".schnee" definiert, wird die ``can_release`` Variable
+des Zustands <Hierarchie>.schnee mit dem Wert "suspend" aktualisiert.
+
+**release.will_release:**
+*Die Id des Zustandes, der aufgelöst wird, sobald die Bedingungen erfüllt werden*
+
+Ein im ``se_released_by`` Attribut angegebener Zustand wird "scharf gestellt"
+(intern an eine übergeordnete Stelle in der Hierarchie kopiert), sobald seine
+Bedingungen nicht mehr erfüllt sind, er also aktuell nicht eingenommen werden kann.
+Sobald die Bedingungen erfüllt sind, wird er allerdings den in dieser Variable
+hinterlegten Zustand auflösen. Sobald die Auflösung stattgefunden hat, wird die
+Variable wieder auf "None" gestellt.
+
+**release.has_released:**
+*Die Id des Zustandes, der zuletzt durch den aktuellen Zustand aufgelöst wurde*
+
+Nachdem der im ``se_released_by`` Attribut angegebene Zustand einen anderen
+Zustand erfolgreich aufgelöst ("released") hat, wird die ID jenes aufgelösten
+Zustandes in dieser Variablen gespeichert.

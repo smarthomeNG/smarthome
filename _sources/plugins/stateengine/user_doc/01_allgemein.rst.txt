@@ -69,15 +69,23 @@ Webinterface
 Über das Webinterface lässt sich auf einen Blick erkennen, welche State Engine sich
 in welchem Zustand befindet. Zusätzlich ist es möglich, durch Klick auf einen Eintrag
 die komplette State Engine visuell zu betrachten. Dabei ist folgende Farbkodierung zu beachten:
+
 - grau: wurde nicht evaluiert (weil bereits ein höherrangiger Zustand eingenommen wurde)
 - grün: aktueller Zustand / ausgeführte Aktion
 - rot: Bedingungen nicht erfüllt
 
+Innerhalb einer Bedingungsgruppe wird bei evaluierten Zuständen ein rotes X angezeigt,
+wenn die Bedingung nicht wahr ist oder ein grünes Häkchen, falls die Bedingung erfüllt ist.
+
 Bei den Aktionen sind die einzelnen Zeilen unter Umständen ebenfalls farbkodiert:
+
 - schwarz: Aktion normal ausgeführt
 - weiß: Aktion nicht ausgeführt, da Bedingungen nicht erfüllt
 - grau: Aktion wird erst mit Verzögerung ausgeführt
 - rot: Fehler in der Konfiguration
 
-.. image:: assets/webinterface.png
+Zudem wird hinter ausgeführten Aktionen ein grünes Häkchen angezeigt, hinter nicht ausgeführten
+(weil beispielsweise Bedingungen nicht erfüllt sind) ein rotes X und hinter Problemen ein Warnsignal.
+
+.. image:: assets/webif_stateengine_detail.png
    :class: screenshot

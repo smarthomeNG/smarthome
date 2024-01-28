@@ -81,8 +81,8 @@ Plugin Functions
 Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
 
 
-get_station_departures(station, timeoffset, entries, ubahn, tram, bus, sbahn)
-=============================================================================
+get_station_departures(station)
+===============================
 
 
 Gibt ein Array von DICTs mit Infos Verkehrverbindungen der Münchner Verkehrsbetriebe (MVG) zurück. Keys: 'productsymbol', 'product', 'linesymbol', 'time', 'direction', 'linename', 'productsymbolurl', 'linesymbolurl', 'destination'.
@@ -96,54 +96,6 @@ station
 Name der Haltestelle. Schauen Sie auf der MVG live Webseite nach gültigen Namen.
 
  - Datentyp: **str**
-
-
-timeoffset
-----------
-
-Keine Verbindungen in weniger als dieser Zeitdauer anzeigen. Sinnvoll, wenn man einige Minuten von der Haltstelle entfernt ist. Default: 0
-
- - Datentyp: **int**
-
-
-entries
--------
-
-Anzahl der Einträge, die geholt werden sollen. Default: 10
-
- - Datentyp: **int**
-
-
-ubahn
------
-
-Falls 'False', keine U-Bahn Abfahrtzeiten anzeigen. Default: True.
-
- - Datentyp: **bool**
-
-
-tram
-----
-
-Falls 'False', keine Tram Abfahrtzeiten anzeigen. Default: True.
-
- - Datentyp: **bool**
-
-
-bus
----
-
-Falls 'False', keine Bus Abfahrtzeiten anzeigen. Default: True.
-
- - Datentyp: **bool**
-
-
-sbahn
------
-
-Falls 'False', keine S-Bahn Abfahrtzeiten anzeigen. Default: True.
-
- - Datentyp: **bool**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/mvg_live/README>` des Plugins zugreifen.

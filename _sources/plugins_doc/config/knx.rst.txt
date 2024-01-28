@@ -253,6 +253,8 @@ Dieses Attribut setzt den Typ des KNX-Datenpunktes, der für die Konvertierung d
    - **5** |_| - |_| Relativwert, 0 … 255 (8 Bit) -> num
    - **5001** |_| - |_| Relativwert, 0 … 100 % (8 Bit) -> num
    - **5.001** |_| - |_| Relativwert, 0 … 100 % (8 Bit) -> num
+   - **5003** |_| - |_| Winkel, 0 … 360 ° (8 Bit) -> num
+   - **5.003** |_| - |_| Winkel, 0 … 360 ° (8 Bit) -> num
    - **5999** |_| - |_| Spezial DPT für Tebis TS Systeme, (8 Bit) -> num
    - **5.999** |_| - |_| Spezial DPT für Tebis TS Systeme, (8 Bit) -> num
    - **6** |_| - |_| Ganzzahl -128 - 127 (8 Bit) -> num
@@ -446,6 +448,8 @@ KNX Datenpunkttyp
    - **5** |_| - |_| Relativwert, 0 … 255 (8 Bit) -> num
    - **5001** |_| - |_| Relativwert, 0 … 100 % (8 Bit) -> num
    - **5.001** |_| - |_| Relativwert, 0 … 100 % (8 Bit) -> num
+   - **5003** |_| - |_| Winkel, 0 … 360 ° (8 Bit) -> num
+   - **5.003** |_| - |_| Winkel, 0 … 360 ° (8 Bit) -> num
    - **5999** |_| - |_| Spezial DPT für Tebis TS Systeme, (8 Bit) -> num
    - **5.999** |_| - |_| Spezial DPT für Tebis TS Systeme, (8 Bit) -> num
    - **6** |_| - |_| Ganzzahl -128 - 127 (8 Bit) -> num

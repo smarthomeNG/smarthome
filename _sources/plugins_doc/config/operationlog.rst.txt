@@ -8,8 +8,8 @@ Plugin 'operationlog' Konfiguration
 
 .. index:: Plugins; operationlog Konfiguration
 
-.. image:: /_static/img/system.svg
-   :alt: plugin type logo
+.. image:: /plugins/operationlog/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -22,6 +22,8 @@ Plugin 'operationlog' Konfiguration
 Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **operationlog** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
 
 Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
 
 
 
@@ -162,7 +164,7 @@ olog_level
 ==========
 
 
-Gibt den Log-Level an (DEBUG, INFO, WARNING, ERROR)
+Gibt den Log-Level an (DEBUG, INFO, WARNING, ERROR, NONE). NONE bedeutet, dass kein Zeitstempel und Loglevel in die Datei geschrieben wird (äquivalent zum datalog Plugin), für Memory und zusätzliches Log wird der Loglevel auf INFO gesetzt.
 
  - Datentyp: **str**
 
@@ -172,6 +174,7 @@ Gibt den Log-Level an (DEBUG, INFO, WARNING, ERROR)
    - **INFO**
    - **WARNING**
    - **ERROR**
+   - **NONE**
 
 
 olog_rules
@@ -210,4 +213,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/operationlog/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

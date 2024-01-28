@@ -16,7 +16,7 @@ executor
 Einführung
 ~~~~~~~~~~
 
-Das executor plugin kann genutzt werden, um **Python Code** (z.B. für **Logiken**) und **eval Ausdrücke** zu testen.
+Das executor Plugin kann genutzt werden, um **Python Code** (z.B. für **Logiken**) zu testen.
 
 .. important::
 
@@ -35,8 +35,8 @@ Damit wird dem Plugin eine relative Pfadangabe unterhalb *var* angegeben wo Skri
 Webinterface
 ============
 
-Im Webinterface findet sich eine Listbox mit den auf dem Rechner gespeicherten Skripten. 
-Um das Skript in den Editor zu laden entweder ein Skript in der Liste einfach anklicken und auf *aus Datei laden* klicken oder
+Im Webinterface findet sich eine Listbox mit den auf dem Rechner gespeicherten Skripten.
+Um das Skript in den Editor zu laden, entweder ein Skript in der Liste einfach anklicken und auf *aus Datei laden* klicken oder
 direkt in der Liste einen Doppelklick auf die gewünschte Datei ausführen.
 
 Der Dateiname wird entsprechend der gewählten Datei gesetzt. Mit Klick auf *aktuellen Code speichern* wird der Code im konfigurierten
@@ -46,7 +46,7 @@ Mit einem Klick auf *Code ausführen!* oder der Kombination Ctrl+Return wird der
 Das kann gerade bei Datenbank Abfragen recht lange dauern. Es kann keine Rückmeldung von SmartHomeNG abgefragt werden wie weit der Code derzeit ist.
 Das Ergebnis wird unten angezeigt. Solange kein Ergebnis vorliegt, steht im Ergebniskasten **... processing ...**
 
-Mit einem Klick auf Datei löschen wird versucht die unter Dateiname angezeigte Datei ohne Rückfrage zu löschen. 
+Mit einem Klick auf *Datei löschen* wird versucht, die unter Dateiname angezeigte Datei ohne Rückfrage zu löschen.
 Anschliessend wird die Liste der Skripte aktualisiert.
 
 Beispiel Python Code
@@ -55,7 +55,9 @@ Beispiel Python Code
 Sowohl ``logger`` als auch ``print`` funktionieren für die Ausgabe von Ergebnissen.
 Die Idee ist, dass Logiken mehr oder weniger 1:1 kopiert und getestet werden können.
 
+
 Loggertest
+----------
 
 .. code-block:: python
 
@@ -66,6 +68,7 @@ Loggertest
 
 
 Datenserien für ein Item ausgeben
+---------------------------------
 
 Abfragen von Daten aus dem database plugin für ein spezifisches Item:
 
@@ -111,4 +114,20 @@ würde in folgendem Ergebnis münden:
       ]
     }
 
-Damit die Nutzung
+
+Zählen der Datensätze in der Datenbank
+--------------------------------------
+
+Das folgende Snippet zeigt alle Datenbank-Items an und zählt die Einträge in der Datenbank. Vorsicht: Dies kann sehr lange dauern, wenn Sie eine große Anzahl von Einträgen mit Datenbankattributen haben.
+
+.. code-block:: python
+
+    from lib.item import Items
+    items = Items.get_instance()
+    myfiller = "                                                            "
+    allItems = items.return_items()
+    for myItem in allItems:
+        if not hasattr(myItem,'db'):
+            continue
+        mycount = myItem.db('countall', 0)
+        print (myItem.property.name + myfiller[0:len(myfiller)-len(myItem.property.name)]+ ' - Anzahl Datensätze :'+str(mycount))

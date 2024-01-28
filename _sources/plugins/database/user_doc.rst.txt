@@ -219,3 +219,67 @@ Die `log` Tabelle enthält die folgenden Spalten:
 Es gibt aktuell nur eine Möglichkeit die Anzahl der Datensätze pro Item zu begrenzen:
 Durch die Angabe des Item Attributs ``database_maxage`` wird das maximale Alter der Einträge eines Items begrenzt.
 Regelmässig werden Werte deren Zeitstempel älter ist als die angegebene Zeitspanne aus der Datenbank gelöscht.
+
+Datenbankfunktionen für Datenreihen/Plots
+=========================================
+
+Nachfolgende Tabelle zeigt die implementierten Datenbankfunktionen für Plots. Die Funktionen werden dabei auf die verfügbaren Datenbankwerte eines bestimmten Intervalls, definiert
+mit t_start und t_end, ausgeführt und liefern Datenreihen zurück.
+
+=============== ================================================================
+Funktion                Bedeutung
+=============== ================================================================
+avg                  Mittelwert       
+integrate            Diskretes Integral der Werte über der Zeit
+differentiate        Diskretes Differential der Werte über der Zeit
+diff                 Differenz zu dem vorherigen Wert
+duration             Dauer des Wertes
+count                Anzahl aller Werte, die eine bestimmte Bedingung erfüllen
+countall             Anzahl aller Werte
+min                  Minimalwert
+max                  Maximalwert
+on                   Prozentzahl der Werte > 0
+sum                  Summe der Werte
+raw                  Rohwerte ohne Berechnung
+=============== ================================================================
+
+Über das SmartVisu Widget plot.period können die genannten Datenbankfunktionen genutzt werden, um Plots der Werte zu erstellen. 
+Beispiele finden sich in der SmartVisu Dokumentation unter plot.period.
+
+Datenbankfunktionen für Einzelauswertungen
+==========================================
+
+Das Plugin stellt außerdem Funktionen bereit, um Berechnungen über alle Werte innerhalb eines definierten Intervalls (t_start und t_end) zu machen und als
+**genau ein** Wert zurückzugeben. Diese Funktionen können dann z.B. aus Logiken heraus verwendet werden.
+
+Folgende Funktionen werden hier unterstützt:
+
+=============== ================================================================
+Funktion                Bedeutung
+=============== ================================================================
+avg                     Mittelwert
+integrate               Diskretes Integral über der Zeit
+count                   Anzahl aller Werte, die eine bestimmte Bedingung erfüllen
+countall                Anzahl aller Werte
+min                     Minimalwert
+max                     Maximalwert
+diff                    Differenz 
+on                      Prozentzahl der Werte > 0
+sum                     Summe aller Werte
+raw                     Rohwerte
+=============== ================================================================
+
+Beispiele:
+
+Integral aller Werte der letzten Woche, z.B. um Leistungen zu einem Verbrauch aufzuintegrieren
+
+.. code-block:: yaml
+
+    item.db('integrate','1w')
+
+Differenz der Datenbank zwischen heute und vor einem Jahr:
+
+.. code-block:: yaml
+
+    item.db('diff','365d', 'now') 
+

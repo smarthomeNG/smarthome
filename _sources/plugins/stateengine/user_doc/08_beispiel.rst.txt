@@ -390,14 +390,14 @@ Beim zweiten Durchlauf wird somit der Zustand Sonnenschutz aktiviert. Der Raffst
 
 Let's play god. Ändern wir das Wetter ;) Entweder über das CLI, Visu oder Backend-Plugin oder Admin-Interface:
 
-c) up beispiel.wetterstation.helligkeit=35000
+c) beispiel.wetterstation.helligkeit=35000
 
 - Die erste Bedingungsgruppe des Sonnenstandzustands ist nicht mehr "wahr", da die Helligkeit zu niedrig ist.
 - Es wird ``enter_hysterese`` evaluiert. Da die Helligkeit noch über 25000 und die Sonnenposition gleich wie zuvor ist, ist diese Gruppe wahr.
 
 Der Sonnenschutz bleibt somit aktiv, weil trotz der Helligkeitsverringerung der untere Schwellwert noch überschritten wurde. Der Raffstore bleibt unten.
 
-d) up beispiel.wetterstation.helligkeit=15000
+d) beispiel.wetterstation.helligkeit=15000
 
 - Die ersten beiden Bedingungsgruppen sind unwahr, da die Helligkeit zu gering ist.
 - Durch den Eintrag ``se_agemax_brightnessGt25k: 60`` in der Gruppe ``enter_delay`` wird 60 Sekunden gewartet.
@@ -411,13 +411,13 @@ e) Es erfolgt eine weitere Evaluierung des Automaten durch das cycle Attribut:
 
 Der Zustand wird verlassen. Gibt es einen nachfolgenden Zustand, der eingenommen werden kann, ist dies der neue aktive Zustand. Gibt es keine Zustände, die aktiviert werden könnten, verbleibt die State Engine beim letzten aktiven Zustand, also beim Sonnenschutz. Im Beispiel gibt es noch einen Standard "Tag" Eintrag, wodurch der Raffstore hoch fährt.
 
-f) up beispiel.raffstore1.aufab = 1
+f) beispiel.raffstore1.aufab = 1
 
 - Durch Triggern des "Manuell" Items wird die Zustandsevaluierung pausiert.
 
 Sämtliche Änderungen der Helligkeit, Temperatur, etc. werden für die suspend_time ignoriert. Die Dauer ist im Template auf 60 Minuten festgelegt, kann aber manuell durch Ändern des entsprechenden Items geändert werden.
 
-g) up beispiel.raffstore1.automatik.settings.suspendduration = 1
+g) beispiel.raffstore1.automatik.settings.suspendduration = 1
 
 - Die Suspendzeit wird auf eine Minute verkürzt.
 - Beim erneuten Durchlauf ist die Suspendzeit abgelaufen, daher dieser Zustand nicht mehr aktiv.
@@ -639,9 +639,9 @@ Settings für Itemwerte
 ----------------------
 
 Das Setup ist besonders flexibel, wenn zu setzende Werte nicht fix in den Zustandsvorgaben
-definiert werden, sondern in eigenen Items, die dann jederzeit zur Laufzeit abänderbar
+definiert werden, sondern in eigenen Items, die dann jederzeit zur Laufzeit änderbar
 sind. Das folgende Beispiel zeigt eine Leuchte, die abhängig vom aktuell definierten
-Lichtmodus (z.B. über die Visu) verschiedene Stati einnimmt und immer wieder dieselben
+Lichtmodus (z.B. über die Visu) verschiedene Zustände einnimmt und immer wieder dieselben
 Änderungen vornimmt. Sollte eine Änderung nicht möglich sein, weil das entsprechende
 Item nicht existiert, wird das Plugin die Aktion einfach ignorieren.
 
@@ -649,8 +649,6 @@ Die Struct-Vorlagen sehen dabei folgendermaßen aus. Besonders ist der Eval Ausd
 Dieser führt dazu, dass der zu setzende Wert aus dem Item ``automatik.settings.<STATUSNAME>.sollwert``
 im aktuellen Item gelesen wird. Somit kann diese Vorlage für sämtliche Zustände 1:1 eingesetzt werden,
 wobei natürlich zu beachten ist, dass sowohl "Settings" als auch Zustand richtig benannt sind.
-Das Item state_name wird bis zur Pluginversion 1.5.0 erst nach Ausführen der Aktionen aktualisiert,
-weshalb diese Vorgehensweise erst ab 1.5.1 empfohlen wird.
 
 .. code-block:: yaml
 
@@ -758,7 +756,7 @@ Letzten Endes wird alles in einem item.yaml auf folgende Art und Weise implement
                   - licht_rules_heimkino
                   - licht_rules_lichtkurve
 
-                remark: Das eval_trigger muss vor SmarthomeNG 1.7 noch manuell mit der kompletten Liste überschrieben werden, auch wenn die Structs bereits Einträge enthalten. Ab 1.7 würde licht.modus* ausreichen!
+                remark: Das eval_trigger muss vor SmarthomeNG 1.7 noch manuell mit der kompletten Liste überschrieben werden, auch wenn die Structs bereits Einträge enthalten. Ab 1.7 würde merge_unique* und licht.modus* ausreichen!
                 eval_trigger:
                   - ..settings_edited
                   - ..lock

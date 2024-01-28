@@ -60,14 +60,14 @@ host
 
 Adresse des SMTP Hosts
 
- - Datentyp: **ip**
+ - Datentyp: **str**
 
 
 mail_from
 =========
 
 
-Absender-Adresse der eMails (mail@example.com)
+Absenderadresse der eMails (mail@example.com)
 
  - Datentyp: **str**
 
@@ -85,7 +85,7 @@ port
 ====
 
 
-Port des SMTP service (bitte 25 nutzen, fals tls deaktiviert wird)
+Port des SMTP service - Alternative gebräuchliche Ports sind 2525, 465 (smtp over SSL) und 25 (nur ohne tls)
 
  - Datentyp: **int**
  - Standardwert: **587**
@@ -171,4 +171,4 @@ Nachrichtentext der eMail
  - Datentyp: **foo**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/mailsend/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -89,8 +89,6 @@ Mit jedem Item Wert, der in einem InfluxDB Bucket abgelegt werden, werden folgen
 - **str_value** - enthält nicht numerische Werte, die in der Datenbank abgelegt werden sollen.
 
 
-
-
 Konfiguration
 =============
 
@@ -100,14 +98,72 @@ Die Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration d
 unter :doc:`/plugins_doc/config/influxdb2` nachzulesen.
 
 
-Beispiele
----------
+Daten aus dem Database Plugin transferieren
+===========================================
 
-Hier können ausführlichere Beispiele und Anwendungsfälle beschrieben werden.
+Diese Anleitung wurde unter influxdb2 getestet und muss eventuell für influxdb1 adaptiert werden.
 
-...
+1. Pandas und influxdb_client Module für Python installieren
+2. CSV-Dump aus dem Webinterface des Datenbank-Plugins herunterladen
+3. Anpassen der Zugriffsparameter im unten stehenden Skript
+4. Anpassen des Pfads zur CVS-Datei
+5. Ausführen des Skripts
+6. Abhängig von der Größe der Datenbank ist Geduld gefragt.
+
+
+.. code-block:: python
+
+    from influxdb_client import InfluxDBClient
+    from influxdb_client.client.write_api import SYNCHRONOUS
+    import pandas as pd
+
+
+    # ----------------------------------------------
+    ip = "localhost"
+    port = 8086
+    token = "******************"
+    org = "smarthomeng"
+    bucket = "shng"
+    value_field = "value"
+    str_value_field = "str_value"
+
+    csvfile = "smarthomeng_dump.csv"
+    # ----------------------------------------------
+
+
+    client = InfluxDBClient(url=f"http://{ip}:{port}", token=token, org=org)
+    write_api = client.write_api(write_options=SYNCHRONOUS)
+
+    df = pd.read_csv(csvfile, sep=';', header=0)
+    df = df.reset_index()
+
+    num_rows = len(df.index)
+    last_progress_percent = -1
+
+    for index, row in df.iterrows():
+      progress_percent = int((index/num_rows)*100)
+      if last_progress_percent != progress_percent:
+          print(f"{progress_percent}%")
+          last_progress_percent = progress_percent
+
+      p = {'measurement': row['item_name'], 'time': int(row['time']) * 1000000,
+           'tags': {'item': row['item_name']},
+           'fields': {value_field: row['val_num'], str_value_field: row['val_str']}
+           }
+      write_api.write(bucket=bucket, record=p)
+
+    client.close()
+
+
 
 Web Interface
 =============
 
-...
+Das Web Interface ermöglicht das Betrachten der Items, die mit der Datenbank verbunden sind.
+
+.. image:: assets/influxdb2_webif.png
+   :height: 1610px
+   :width: 3304px
+   :scale: 25%
+   :alt: Web Interface
+   :align: center

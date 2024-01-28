@@ -37,8 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.8**
- - Minimum Python Version: **3.6**
+ - Minimum SmartHomeNG Version: **1.9.5**
 
 Konfiguration
 =============
@@ -59,7 +58,7 @@ bye_msg
 =======
 
 
-Endenachricht, wird an alle vertrauenswürdigen Clients beim Stop des Plugins gesendet.  Ist der Wert leer, wird keine Endenachricht gesendet.
+Endenachricht, wird an auswählbare vertrauenswürdigen Clients beim Stop des Plugins gesendet.  Ist der Wert leer, wird keine Endenachricht gesendet.
 
  - Datentyp: **str**
  - Standardwert: **SmartHomeNG Telegram Plugin stops**
@@ -69,7 +68,7 @@ long_polling_timeout
 ====================
 
 
-Zeit nachdem eine neue Verbindung zum Telegram Server aufgebaut um Updates zu holen
+Zeit (Sekunden) nachdem eine neue Verbindung zum Telegram Server aufgebaut um Updates zu holen
 
  - Datentyp: **num**
  - Standardwert: **120**
@@ -115,6 +114,26 @@ Telegram Threads zur leichteren Unterscheidung in der Thread Liste umbenennen
  - Standardwert: **True**
 
 
+resend_attemps
+==============
+
+
+Nach dieser Anzahl an Sendeversuchen erfolgt keine Sendeversuch mehr
+
+ - Datentyp: **num**
+ - Standardwert: **10**
+
+
+resend_delay
+============
+
+
+Zeit (Sekunden) nachdem eine neuer Sendeversuch unternommen wird
+
+ - Datentyp: **num**
+ - Standardwert: **60**
+
+
 token
 =====
 
@@ -128,7 +147,7 @@ welcome_msg
 ===========
 
 
-Willkommensnachricht, wird an alle vertrauenswürdigen Clients beim Start des Plugins gesendet. Ist der Wert leer, wird keine Willkommensnachricht gesendet.
+Willkommensnachricht, wird an auswählbare vertrauenswürdigen Clients beim Start des Plugins gesendet. Ist der Wert leer, wird keine Willkommensnachricht gesendet.
 
  - Datentyp: **str**
  - Standardwert: **SmarthomeNG Telegram Plugin is up and running**
@@ -170,7 +189,7 @@ telegram_control
 ================
 
 
-Item schreiben per Telegram Keyboard. Der Wert des Attributes (mit mehreren Paramtern) bestimmt das Telegram Keyboard Kommando
+Item schreiben per Telegram Keyboard. Den Wert des Attributes (mit mehreren Paramtern) bestimmt das Telegram Keyboard Kommando
 
  - Datentyp: **str**
 

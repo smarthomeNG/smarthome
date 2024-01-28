@@ -46,12 +46,12 @@ Einziger Unterschied ist, dass die Wertänderung erzwungen wird:
 Wenn das Item bereits den zu setzenden Wert hat, dann ändert
 smarthomeNG das Item nicht. Selbst wenn beim Item das Attribut
 ``enforce_updates: yes`` gesetzt ist, wird zwar der Wert neu
-gesetzt, der von smarthomeNG die Änderungszeit nicht neu gesetzt. Mit
+gesetzt, aber nicht die Änderungszeit. Mit
 dem Attribut ``se_force_<Aktionsname>`` wird das Plugin den Wert
 des Items bei Bedarf zuerst auf einen anderen Wert ändern und dann
 auf dem Zielwert setzen. Damit erfolgt auf jeden Fall eine
 Wertänderung (ggf. sogar zwei) mit allen damit in Zusammenhang
-stehenden Änderungen (eval's, Aktualisierung der Änderungszeiten,
+stehenden Änderungen (evals, Aktualisierung der Änderungszeiten,
 etc).
 
 **Aktion run: Ausführen einer Funktion**
@@ -164,7 +164,7 @@ Aktion ausgeführt werden soll. Die Angabe erfolgt in Sekunden oder
 mit dem Suffix "m" in Minuten.
 
 Der Timer zur Ausführung der Aktion nach der angegebenen
-Verzögerung wird entfernt, wenn eine gleichartike Aktion
+Verzögerung wird entfernt, wenn eine gleichartige Aktion
 ausgeführt werden soll (egal ob verzögert oder nicht). Wenn also
 die Verzögerung größer als der ``cycle`` ist, wird die Aktion
 nie durchgeführt werden, es sei denn die Aktion soll nur

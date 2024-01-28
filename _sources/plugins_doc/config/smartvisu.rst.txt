@@ -88,7 +88,7 @@ generate_pages
 Falls True, werden Seiten für smartVISU generiert
 
  - Datentyp: **bool**
- - Standardwert: **True**
+ - Standardwert: **False**
 
 
 handle_widgets

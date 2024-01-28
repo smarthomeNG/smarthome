@@ -36,11 +36,6 @@ Anforderungen
 =============
 
 
-Das Plugin benötigt die folgende Software:
-
- - libatlas-base-dev: Zumindest auf einem Raspberry Pi mit Debian Stretch ist der Befehl nötig: ``sudo apt install libatlas-base-dev``
- - Bei neueren SciPy Versionen kann auf einem Raspi der Build trotzdem scheitern. Es ist dann empfohlen, die aktuellste passende Datei (armv6 = Raspi1, armv7 = Rest) von hier herunterzuladen und ``pip3 install scipy*.whl`` zu starten: https://www.piwheels.org/simple/scipy/
- - Python Modul scipy: ``pip3 install scipy``. Es wird empfohlen, zuerst die Pythonmodule zu aktualisieren, aber unbedingt darauf zu achten, dass die Requirements von SmarthomeNG erfüllt bleiben! Sollte die Installation via pip nicht funktionieren: ``sudo apt update && sudo apt install -y python3-scipy``
 
 
  - Minimum SmartHomeNG Version: **1.6**

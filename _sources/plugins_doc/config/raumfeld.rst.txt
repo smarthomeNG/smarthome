@@ -23,6 +23,8 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
 
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
 
 
 Beschreibung

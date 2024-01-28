@@ -64,15 +64,25 @@ Größe des Lesepuffers. Mindestens doppelte Größe der maximalen Nachrichtenl�
  - Standardwert: **1024**
 
 
+crontab
+=======
+
+
+Abfragen des Smartmeters mit Festlegung via Crontab
+
+ - Datentyp: **str**
+
+
 cycle
 =====
 
 
-Zeitlicher Abstand in Sekunden zwischen zwei Abfragen des Smartmeters
+Zeitlicher Abstand in Sekunden zwischen zwei Abfragen des Smartmeters, wird 0 angegeben so wird der Smartmeter über cycle nicht abgefragt
 
  - Datentyp: **int**
  - Standardwert: **60**
 
+ - Minimalwert: **0**
 
 date_offset
 ===========

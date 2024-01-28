@@ -271,7 +271,6 @@ Hier ein Beispiel für die Verwendung der virtuellen Matchstrings mit dem smartV
 
 .. code:: html
 
-    {% import "widgets_openweathermap.html" as owm %}
     {{ owm.rain_overview('visual_id', 'weather.rain_past_12h', 'weather.rain_next_12h', 'weather.as_of') }}
 
 
@@ -865,7 +864,6 @@ Das Beispiel, passend zur YAML von oben:
 
 .. code:: html
 
-    {% import "widgets_openweathermap.html" as owm %}
     {{ owm.irrigation('valve_1', 'The greenhouse', 'garden.irrigation_valve1') }}
 
 
@@ -1035,7 +1033,6 @@ Das Beispiel, passend zur YAML von oben:
 
 .. code:: html
 
-    {% import "widgets_openweathermap.html" as owm %}
     {{ owm.irrigation_weekly('valve_2', 'Lawn in the backyard', 'garden.irrigation_valve2') }}
 
 

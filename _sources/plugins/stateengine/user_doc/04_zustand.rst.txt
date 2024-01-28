@@ -11,6 +11,10 @@ Zustände
 Alle Items unterhalb des Regelwerk-Items (``rules``)
 beschreiben Zustände des Objekts ("Zustands-Item").
 Die Ids der Zustands-Items sind beliebig, im Beispiel ``day``.
+Prinzipiell werden die Zustände der Reihe nach, wie sie im YAML
+File angegeben wurden evaluiert. Es ist allerdings auch möglich,
+die Reihenfolge (selbst zur Laufzeit) mittels ``se_stateorder`` 
+zu verändern. Dies ist insbesondere für die ersten Tests sinnvoll.
 
 .. code-block:: yaml
 
@@ -61,9 +65,9 @@ und mittels ``se_use`` zu referenzieren, bietet sich ab **smarthomeNG 1.6** das 
 Zum einen können in der Datei ``etc/struct.yaml`` eigene Vorlagen definiert werden,
 zum anderen stellt das Plugin folgende Vorlagen fix fertig bereit:
 
+- stateengine.state_release: Sofortiges Entsperren und Beenden des Suspend-Modus und Neuevaluierung
 - stateengine.state_lock: Sperren der Zustandsevaluierung, sobald das Sperritem "lock" aktiv ist.
 - stateengine.state_suspend: Aussetzen der Evaluierung für eine bestimmte Zeit bei manueller Betätigung (z.B. Taster)
-- stateengine.state_release: Sofortiges Entsperren und Beenden des Suspend-Modus und Neuevaluierung
 
 Gemeinsam mit der Vorlage stateengine.general, die allgemein relevante Items automatisch erstellt, könnte
 ein Item wie unten zu sehen bestückt werden. Das Einbinden der Zustandsvorlagen findet dabei auf gleicher
@@ -79,9 +83,9 @@ Zusätzlich können eigene Zustände (beispielsweise day) definiert werden.
         automatik:
             struct:
               - stateengine.general
+              - stateengine.state_release
               - stateengine.state_lock
               - stateengine.state_suspend
-              - stateengine.state_release
 
             rules:
                 day:

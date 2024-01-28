@@ -23,12 +23,14 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
 
 
 Beschreibung
 ============
 
-Steuerung eines AV Gerätes über TCP/IP oder RS232 Schnittstelle. Das Plugin unterstützt eine Vielzahl von AV-Geräten und wurde mit folgenden Geräten getestet: - Pioneer AV Receiver < 2016 - Denon AV Receiver > 2016 - Epson Projektor < 2010 - Oppo UHD Player
+Steuerung eines AV Gerätes über TCP/IP oder RS232 Schnittstelle. Das Plugin unterstützt eine Vielzahl von AV-Geräten und wurde mit folgenden Geräten getestet: - Pioneer AV Receiver < 2016 - Denon AV Receiver > 2016 - Epson Projektor < 2010 - Oppo UHD Player Zu diesen Geräten gibt es eigene neue Plugins, die auf dem SmartDevice Framework aufbauen.
 
 
 Anforderungen
@@ -551,4 +553,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/avdevice/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

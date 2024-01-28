@@ -39,7 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.8.2**
+ - Minimum SmartHomeNG Version: **1.9.5.6**
  - Minimum Python Version: **3.8**
 
 Konfiguration
@@ -61,7 +61,7 @@ base_topic
 ==========
 
 
-TopicLevel_1 um mit dem ZigBee2MQTT Gateway zu kommunizieren (%topic%)
+Topic, um mit dem ZigBee2MQTT-Gateway zu kommunizieren (%topic%)
 
  - Datentyp: **str**
  - Standardwert: **zigbee2mqtt**
@@ -71,10 +71,10 @@ poll_period
 ===========
 
 
-Zeitabstand in Sekunden in dem das Gateway Infos liefer soll
+Zeitabstand in Sekunden, in dem der Status des Gateway abgefragt wird
 
  - Datentyp: **int**
- - Standardwert: **300**
+ - Standardwert: **900**
 
  - Minimalwert: **10**
  - Maximalwert: **3600**
@@ -89,6 +89,25 @@ Einlesen aller Werte beim Start
  - Standardwert: **True**
 
 
+suspend_item
+============
+
+
+Pfad zum Suspend-Item
+
+ - Datentyp: **str**
+
+
+z2m_gui
+=======
+
+
+Web-Adresse des zigbee2mqtt-Web-GUI (Standard localhost:8080)
+
+ - Datentyp: **str**
+ - Standardwert: **localhost:8080**
+
+
 ==============
 Item Attribute
 ==============
@@ -97,22 +116,49 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
-zigbee2mqtt_attr
-================
+z2m_attr
+========
 
 
-Zu lesendes/schreibendes Attribut des ZigBee2MQTT Devices. Achtung: Nicht jedes Attribut ist auf allen Device-Typen vorhanden.
+Zu lesendes/schreibendes Attribut des ZigBee2MQTT Devices
+
+ - Datentyp: **str**
+
+
+z2m_bool_values
+===============
+
+
+Ersetzungwerte für bool-Werte (z.B. ['OFF', 'ON'])
+
+ - Datentyp: **list**
+
+
+z2m_readonly
+============
+
+
+Attribut wird nur gelesen
+
+ - Datentyp: **bool**
+
+
+z2m_topic
+=========
+
+
+Name des anzusprechenden Gerätes, entweder die Seriennummer ('0xdeadbeef') oder der friendly_name
 
  - Datentyp: **str**
 
 
-zigbee2mqtt_topic
-=================
+z2m_writeonly
+=============
 
 
-TopicLevel_2 um mit dem ZigBee2MQTT Gateway zu kommunizieren; entspricht dem Friendly_Name oder Short_Name des Zigbee-Gerätes
+Attribut wird nur geschrieben. Wenn z2m_readonly auch gesetzt ist, hat readonly Vorrang
 
- - Datentyp: **str**
+ - Datentyp: **bool**
 
 
 ===============

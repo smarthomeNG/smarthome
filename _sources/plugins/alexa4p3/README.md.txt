@@ -4,34 +4,34 @@ Alexa4PayloadV3
 
 ## Table of Content
 
-1. [Generell](#generell)
-2. [Change Log](#changelog)
-3. [Requrirements](#requirements)<br>
-   [Einrichtung Amazon-Skill / Lambda-Funktion](#Skill)<sup><span style="color:red"> **Neu**</sup></span>
-4. [Icon / Display Categories](#Icons)<sup><span style="color:blue"> **Update**</sup></span>
-5. [Entwicklung / Einbau von neuen Skills](#Entwicklung)
-6. [Alexa-ThermostatController](#ThermostatController) + [Thermosensor](#Thermostatsensor)
-7. [Alexa-PowerController](#PowerController)
-8. [Alexa-BrightnessController](#BrightnessController)
-9. [Alexa-PowerLevelController](#PowerLevelController)
-10. [Alexa-PercentageController](#PercentageController)
-11. [Alexa-LockController](#LockController)
-12. [Alexa-CameraStreamController](#CameraStreamController) <sup><span style="color:blue"> **Update**</sup></span>
-13. [Alexa-SceneController](#SceneController)
-14. [Alexa-ContactSensor](#ContactSensor)
-15. [Alexa-ColorController](#ColorController)
-16. [Alexa-RangeController](#RangeController) <sup><span style="color:red"> **Neu**</sup></span>
-17. [Alexa-ColorTemperaturController](#ColorTemperaturController) <sup><span style="color:red"> **Neu**</sup></span>
-18. [Alexa-PlaybackController](#PlaybackController) <sup><span style="color:red"> **Neu**</sup></span>
-19. [Web-Interface](#webinterface) <sup><span style="color:red"> **Neu**</sup></span>
+1. Generell
+2. Change Log
+3. Requrirements<br>
+   Einrichtung Amazon-Skill / Lambda-Funktion<sup><span style="color:red"> **Neu**</sup></span>
+4. Icon / Display Categories<sup><span style="color:blue"> **Update**</sup></span>
+5. Entwicklung / Einbau von neuen Skills
+6. Alexa-ThermostatController + Thermosensor
+7. Alexa-PowerController
+8. Alexa-BrightnessController
+9. Alexa-PowerLevelController
+10. Alexa-PercentageController
+11. Alexa-LockController
+12. Alexa-CameraStreamController <sup><span style="color:blue"> **Update**</sup></span>
+13. Alexa-SceneController
+14. Alexa-ContactSensor
+15. Alexa-ColorController
+16. Alexa-RangeController <sup><span style="color:red"> **Neu**</sup></span>
+17. Alexa-ColorTemperaturController <sup><span style="color:red"> **Neu**</sup></span>
+18. Alexa-PlaybackController <sup><span style="color:red"> **Neu**</sup></span>
+19. Web-Interface <sup><span style="color:red"> **Neu**</sup></span>
 
 
 
-## [Beispiel-Konfigurationen](#Beispiel) <sup><span style="color:red"> **Neu**</sup></span>
+## Beispiel-Konfigurationen <sup><span style="color:red"> **Neu**</sup></span>
 
 
-- [der fast perfekte Rolladen](#perfect_blind) <sup><span style="color:red"> **Neu**</sup></span>
-- [Items in Abhängikeit des letzten benutzten Echos-Devices schalten](#get_last_alexa)<sup><span style="color:red"> **Neu**</sup></span>
+- der fast perfekte Rolladen <sup><span style="color:red"> **Neu**</sup></span>
+- Items in Abhängikeit des letzten benutzten Echos-Devices schalten<sup><span style="color:red"> **Neu**</sup></span>
 # --------------------------------------
 
 ## Generell <a name="generell"/></a>
@@ -1030,7 +1030,7 @@ Default-Wert ist : RGB
 Die Helligkeit wird bei Farbwechsel unverändert beibehalten. Bei HSB-Werten wird der ursprüngliche Wert gepuffert und als aktueller Wert wieder an das Item übergeben.
 
 Zum Wechseln der Helligkeit einen BrightnessController hinzufügen
-Details siehe [BrightnessController](#BrightnessController)
+Details siehe BrightnessController
 Beispiel Konfiguration (wobei R_Wert, G_Wert, B_Wert für die Gruppenadressen stehen :
 <pre><code>
 %YAML 1.1

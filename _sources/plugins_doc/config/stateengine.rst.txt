@@ -110,13 +110,14 @@ log_level
 
 
 **Erweiterte Protokollierung:**
-Bei einem Wert von 1 oder 2 wird pro Item eine eigene Logdatei im unter log_directory angegebenen Verzeichnis angelegt. Wenn der Parameter nicht angegeben oder auf 0 gestellt ist, ist die erweiterte Protokollierung deaktiviert.
+Bei einem Wert von 1, 2 oder 3 wird pro Item eine eigene Logdatei im unter log_directory angegebenen Verzeichnis angelegt. Wenn der Parameter nicht angegeben oder auf 0 gestellt ist, ist die erweiterte Protokollierung deaktiviert.
 
  - Datentyp: **int**
  - Standardwert: **0**
 
  - Mögliche Werte:
 
+   - **-1** |_| - |_| Standardlevel aus plugin.yaml
    - **0** |_| - |_| deaktiviert
    - **1** |_| - |_| Info
    - **2** |_| - |_| Debug
@@ -157,6 +158,25 @@ Ohne Angabe dieses Parameters wird der Standardwert von 10 Sekunden angenommen.
  - Minimalwert: **-1**
  - Maximalwert: **600**
 
+startup_log_level
+=================
+
+
+**Erweiterte Protokollierung:**
+Bei einem Wert von 1, 2 oder 3 wird pro Item eine eigene Logdatei im unter log_directory angegebenen Verzeichnis angelegt. Ist die Initialisierung eines Stateengine Items abgeschlossen, wird der über se_log_level oder den Standard Loglevel im plugin.yaml eingestellt.
+
+ - Datentyp: **int**
+ - Standardwert: **2**
+
+ - Mögliche Werte:
+
+   - **-1** |_| - |_| Standardlevel aus plugin.yaml
+   - **0** |_| - |_| deaktiviert
+   - **1** |_| - |_| Info
+   - **2** |_| - |_| Debug
+   - **3** |_| - |_| Develop
+
+
 suspend_time_default
 ====================
 
@@ -178,23 +198,13 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
-se_hasreleased_item
-===================
-
-
-**ID des Items, in dem interne Informationen für das released_by Feature gespeichert werden:**
-Ein Dictionary mit den Stati als Keys, die ein se_released_by Attribut haben und den Stati/Items als Values, die jene Items bereits aufgelöst haben und somit erst bei erneutem Wechsel von "can not be entered" auf "can be entered" den enstprechenden Status released, also (vorübergehend) auflösen.
-
- - Datentyp: **str**
-
-
 se_instant_leaveaction
 ======================
 
 
-Ist dieser Parameter auf True gesetzt, werden "on leave" Aktionen sofort ausgeführt, wenn der aktuelle Zustand nicht mehr eingenommen wird. Standardmäßig werden die Aktionen erst direkt vor dem Eintreten in einen neuen Zustand getriggert.
+Ist dieser Parameter auf True bzw. 1 gesetzt, werden "on leave" Aktionen sofort ausgeführt, wenn der aktuelle Zustand nicht mehr eingenommen wird. Standardmäßig werden die Aktionen erst direkt vor dem Eintreten in einen neuen Zustand getriggert. Kann auch über ein Item zur Laufzeit geändert werden, beispielsweise durch item:..settings.instant_leaveaction. Der Wert -1 sorgt dafür, dass der in der plugin.yaml angegebene Standardwert herangezogen wird.
 
- - Datentyp: **bool**
+ - Datentyp: **foo**
  - Standardwert: **False**
 
 
@@ -262,16 +272,9 @@ se_log_level
 ============
 
 
-Das global angegebene Loglevel kann für jedes SE item individuell überschrieben werden. Somit ist es einfacher möglich, bestimme State Engines zu debuggen.
+Das global angegebene Loglevel kann für jedes SE item individuell überschrieben werden. Somit ist es einfacher möglich, bestimme State Engines zu debuggen. Das Loglevel kann durch das Settings Item log_level im laufenden Betrieb angepasst werden. Ist der Wert auf -1 gesetzt, wird der Standardwert aus dem plugin.yaml übernommen.
 
- - Datentyp: **int**
-
- - Mögliche Werte:
-
-   - **0** |_| - |_| deaktiviert
-   - **1** |_| - |_| Info
-   - **2** |_| - |_| Debug
-   - **3** |_| - |_| Develop
+ - Datentyp: **foo**
 
 
 se_plugin
@@ -352,7 +355,7 @@ se_released_by
 ==============
 
 
-Definieren von untergeordneten Zuständen, die den aktuellen Zustand auflösen können
+Durch Setzen dieses Attributs können Zustände durch untergeordnete Zustände aufgelöst werden. Sobald ein durch das Attribut definierter untergeordneter Zustand neu eingenommen werden könnte, wird der aktuelle Zustand verlassen und eine neue Zustandsevaluierung ausgeführt.
 
  - Datentyp: **list(str)**
 
@@ -367,16 +370,6 @@ Im Normalfall werden Aktionen jedesmal ausgeführt wenn der aktuelle Zustand neu
  - Datentyp: **bool**
 
 
-se_shouldnotrelease_item
-========================
-
-
-**ID des Items, in dem interne Informationen für das released_by Feature gespeichert werden:**
-Ein Dictionary mit den Stati als Keys, die ein se_released_by Attribut haben und den Stati/Items als Values, die zuvor schon aktiv waren und erst bei einem erneuten Wechsel von "can not be entered" auf "can be entered" den entsprechenden Status released, also (vorübergehend) auflöst.
-
- - Datentyp: **str**
-
-
 se_startup_delay
 ================
 
@@ -389,6 +382,16 @@ Beim Starten von smarthomeNG dauert es üblicherweise einige Sekunden, bis alle 
  - Minimalwert: **-1**
  - Maximalwert: **600**
 
+se_stateorder
+=============
+
+
+Durch diesen Wert wird bestimmt, an welcher Position der Status eingeordnet wird. Normalerweise ist die Sortierung abhängig von der Angabe der Stati innerhalb des rules Items. Durch diesen Wert kann die Sortierung zur Laufzeit abgeändert werden. Der Wert kann als Zahl, item oder eval deklariert werden.
+
+ - Datentyp: **foo**
+
+ - Minimalwert: **1**
+
 se_suspend_time
 ===============
 
@@ -398,7 +401,7 @@ Nach manuellen Aktionen kann die Automatik für eine bestimmte Zeit Unterbrochen
 
  - Datentyp: **foo**
 
- - Minimalwert: **1**
+ - Minimalwert: **-60**
  - Maximalwert: **86400**
 
 se_use

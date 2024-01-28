@@ -53,7 +53,18 @@ Parameter
 
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
-**Keine**
+
+cycle
+=====
+
+
+Zeitabstand in Sekunden in dem neue Daten abgerufen werden
+
+ - Datentyp: **int**
+ - Standardwert: **21600**
+
+ - Minimalwert: **300**
+ - Maximalwert: **2592000**
 
 ==============
 Item Attribute

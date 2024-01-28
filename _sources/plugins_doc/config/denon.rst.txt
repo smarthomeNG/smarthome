@@ -1,0 +1,380 @@
+.. |_| unicode:: 0xA0
+
+
+============================
+Plugin 'denon' Konfiguration
+============================
+
+
+.. index:: Plugins; denon Konfiguration
+
+.. image:: /plugins/denon/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **denon** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.5**
+ - Minimum Python Version: **3.7**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **denon** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+autoconnect
+===========
+
+
+Automatisches Verbinden bei Senden
+
+ - Datentyp: **bool**
+
+
+autoreconnect
+=============
+
+
+Automatisches Neuverbinden bei Abbruch
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+baudrate
+========
+
+
+Serielle Übertragungsgeschwindigkeit
+
+ - Datentyp: **num**
+ - Standardwert: **9600**
+
+
+binary
+======
+
+
+Binärer Übertragungsmodus
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+bytesize
+========
+
+
+Anzahl Datenbits
+
+ - Datentyp: **num**
+ - Standardwert: **8**
+
+
+command_class
+=============
+
+
+Klasse für Verarbeitung von Kommandos
+
+ - Datentyp: **str**
+ - Standardwert: **SDPCommandParseStr**
+
+ - Mögliche Werte:
+
+   - **SDPCommand**
+   - **SDPCommandParseStr**
+
+
+conn_type
+=========
+
+
+Verbindungstyp
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - 
+   - **net_tcp_client**
+   - **serial_async**
+
+
+connect_cycle
+=============
+
+
+Pause zwischen Verbindungsversuchen
+
+ - Datentyp: **num**
+ - Standardwert: **3**
+
+
+connect_retries
+===============
+
+
+Anzahl Verbindungsversuche
+
+ - Datentyp: **num**
+ - Standardwert: **5**
+
+
+host
+====
+
+
+Netzwerkziel/-host
+
+ - Datentyp: **str**
+
+
+model
+=====
+
+
+Modellauswahl
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - 
+   - **AVR-X6300H**
+   - **AVR-X4300H**
+   - **AVR-X3300W**
+   - **AVR-X2300W**
+   - **AVR-X1300W**
+
+
+parity
+======
+
+
+Parität
+
+ - Datentyp: **str**
+ - Standardwert: **N**
+
+ - Mögliche Werte:
+
+   - **N**
+   - **E**
+   - **O**
+   - **M**
+   - **S**
+
+
+port
+====
+
+
+Port für Netzwerkverbindung
+
+ - Datentyp: **int**
+ - Standardwert: **23**
+
+
+retry_cycle
+===========
+
+
+Pause zwischen Durchgängen von Verbindungsversuchen
+
+ - Datentyp: **num**
+ - Standardwert: **30**
+
+
+retry_suspend
+=============
+
+
+Anzahl von Durchgängen vor Verbindungsabbruch oder Suspend-Modus
+
+ - Datentyp: **num**
+ - Standardwert: **3**
+
+
+serialport
+==========
+
+
+Serieller Anschluss (z.B. /dev/ttyUSB0 oder COM1)
+
+ - Datentyp: **str**
+
+
+stopbits
+========
+
+
+Anzahl Stopbits
+
+ - Datentyp: **num**
+ - Standardwert: **1**
+
+
+suspend_item
+============
+
+
+Item-Pfad für das Standby-Item
+
+ - Datentyp: **str**
+
+
+terminator
+==========
+
+
+Zeilen-/Antwortbegrenzer
+
+ - Datentyp: **str**
+ - Standardwert: **\r**
+
+
+timeout
+=======
+
+
+Timeout für Geräteantwort
+
+ - Datentyp: **num**
+ - Standardwert: **3**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+denon_command
+=============
+
+
+Legt das angegebene Kommando für das Item fest
+
+ - Datentyp: **str**
+
+
+denon_lookup
+============
+
+
+Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.   Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art der Tabelle ausgewählt werden: - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard) - rev liefert die Tabelle SmartHomeNG -> Gerät - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
+
+ - Datentyp: **str**
+
+
+denon_read
+==========
+
+
+Item liest/erhält Werte vom Gerät
+
+ - Datentyp: **bool**
+
+
+denon_read_cycle
+================
+
+
+Konfiguriert ein Intervall in Sekunden für regelmäßiges Lesen
+
+ - Datentyp: **num**
+
+
+denon_read_group
+================
+
+
+Weist das Item der angegebenen Gruppe zum gesammelten Lesen zu. Mehrere Gruppen können als Liste angegeben werden.
+
+ - Datentyp: **list(str)**
+
+
+denon_read_group_trigger
+========================
+
+
+Wenn diesem Item ein beliebiger Wert zugewiesen wird, werden alle zum Lesen konfigurierten Items der angegebenen Gruppe neu vom Gerät gelesen, bei Gruppe 0 werden alle zum Lesen konfigurierten Items neu gelesen. Das Item kann nicht gleichzeitig mit denon_command belegt werden.
+
+ - Datentyp: **str**
+
+
+denon_read_initial
+==================
+
+
+Legt fest, dass der Wert beim Start vom Gerät gelesen wird
+
+ - Datentyp: **bool**
+
+
+denon_write
+===========
+
+
+Änderung des Items werden an das Gerät gesendet
+
+ - Datentyp: **bool**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

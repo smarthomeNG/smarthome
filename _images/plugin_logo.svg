@@ -1,12 +1,36 @@
-<svg width="29.265mm" height="21.205mm" version="1.1" viewBox="0 0 29.265 21.205" xmlns="http://www.w3.org/2000/svg">
- <g transform="translate(-20.904 -18.683)">
-  <rect x="20.062" y="17.934" width="30.121" height="21.983"/>
-  <g fill="#008000">
-   <path d="m24.625 32.092q-0.73039 0.30239-1.5306 0.30239-1.2887 0-1.9818-0.76761-0.68852-0.77226-0.68852-2.2796 0-0.73039 0.19074-1.3212 0.19074-0.59083 0.54431-1.0002 0.35357-0.41404 0.856-0.63735t1.1258-0.2233q0.42335 0 0.78622 0.07444 0.36287 0.06978 0.69783 0.21865v0.81413q-0.3303-0.18144-0.68387-0.27448-0.35357-0.0977-0.77226-0.0977-0.428 0-0.77692 0.16283-0.34426 0.15818-0.58618 0.46522-0.24191 0.30239-0.37218 0.74435-0.13026 0.43731-0.13026 1.0002 0 1.1817 0.47918 1.7818 0.47918 0.60013 1.405 0.60013 0.39078 0 0.749-0.08839 0.35822-0.09304 0.68852-0.25587z" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal"/>
-   <path d="m29.826 32.32h-3.4984v-6.0804h0.84205v5.3733h2.6564z" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal"/>
-   <path d="m32.691 26.937h-1.4003v-0.69783h3.638v0.69783h-1.4003v4.6754h1.4003v0.70713h-3.638v-0.70713h1.4003z" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal"/>
-   <path d="m38.606 27.691 0.50244-0.51639 3.1263 2.6099-3.1263 2.6099-0.50244-0.51174 2.5354-2.0888z" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal"/>
-   <path d="m49.172 34.227h-5.2384v-0.66992h5.2384z" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="317.93549"
+   height="309.67743"
+   viewBox="0 0 317.93549 309.67743"
+   sodipodi:docname="plugin_logo.png"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Image"
+     id="g1">
+    <path
+       style="font-weight:bold;font-size:40px;line-height:125%;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';letter-spacing:0px;word-spacing:0px;fill:#ff6600;stroke-width:16.1113px"
+       d="m 314.39634,99.70234 -103.84181,54.43837 103.84181,54.75286 -23.91501,44.36884 -104.78588,-57.8997 V 303.60997 H 132.20118 V 195.36271 L 27.100629,253.26241 3.185537,208.89357 108.28608,154.14071 3.185537,99.70234 27.100629,55.333495 132.20118,112.60389 V 4.3566273 h 53.49427 V 112.60389 L 290.48133,55.333495 Z"
+       id="text1"
+       aria-label="*" />
   </g>
- </g>
 </svg>

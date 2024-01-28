@@ -12,7 +12,7 @@ solarforecast
    :scale: 50 %
    :align: left
 
-Dieses Plugin unterstützt Solare.forecast Vorhersagen von Solaretrag (Leistung).
+Dieses Plugin unterstützt Solare.forecast Vorhersagen von Solaretrag (Energieertrag).
 
 Für weitere Informationen empfiehlt sich die Lektüre der offiziellen
 `Solar.forecast API Dokumentation <https://doc.forecast.solar/doku.php?id=start>`_
@@ -25,13 +25,13 @@ Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/co
 Requirements
 ============
 
-The plugin does not need a license key in public mode. An API key can be optained, which is optional.
+The plugin does not need a license key in public mode. An API key can be obtained, which is optional.
 
 
 Beispiele
 =========
 
-Beispiel für jeweils zwei Items mit vorhergesagtem Leistungsertrag für heute und morgen.
+Beispiel für jeweils zwei Items mit vorhergesagtem Energieertrag für heute und morgen.
 
 .. code:: yaml
 
@@ -40,7 +40,8 @@ Beispiel für jeweils zwei Items mit vorhergesagtem Leistungsertrag für heute u
         today:
             type: num
             visu_acl: ro
-            solarforecast_attribute: power_today
+            name: Forecast energy for today in Wh
+            solarforecast_attribute: energy_today
 
             date:
                 type: str
@@ -50,13 +51,13 @@ Beispiel für jeweils zwei Items mit vorhergesagtem Leistungsertrag für heute u
         tomorrow:
             type: num
             visu_acl: ro
-            solarforecast_attribute: power_tomorrow
+            name: Forecast energy for tomorrow in Wh
+            solarforecast_attribute: energy_tomorrow
 
             date:
                 type: str
                 visu_acl: ro
                 solarforecast_attribute: date_tomorrow
-
 
 Web Interface
 =============

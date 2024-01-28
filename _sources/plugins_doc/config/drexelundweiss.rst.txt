@@ -8,8 +8,8 @@ Plugin 'drexelundweiss' Konfiguration
 
 .. index:: Plugins; drexelundweiss Konfiguration
 
-.. image:: /_static/img/interface.svg
-   :alt: plugin type logo
+.. image:: /plugins/drexelundweiss/webif/static/img/plugin_logo.jpg
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %

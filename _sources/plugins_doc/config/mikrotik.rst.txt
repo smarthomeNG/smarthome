@@ -1,0 +1,257 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'mikrotik' Konfiguration
+===============================
+
+
+.. index:: Plugins; mikrotik Konfiguration
+
+.. image:: /plugins/mikrotik/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **mikrotik** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Mikrotik RouterOS Switch management
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **mikrotik** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Zeitlicher Abstand in Sekunden zwischen zwei Abfragen des Gerätes
+
+ - Datentyp: **int**
+ - Standardwert: **15**
+
+
+hostname
+========
+
+
+Hostname oder IP des Switches
+
+ - Datentyp: **str**
+
+
+password
+========
+
+
+API Password
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+API Port des Switches
+
+ - Datentyp: **int**
+ - Standardwert: **8729**
+
+
+username
+========
+
+
+API Benutzername
+
+ - Datentyp: **str**
+ - Standardwert: **admin**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+mikrotik_parameter
+==================
+
+
+Parameter, auf den über den ausgewählten Anschluss zugegriffen werden soll
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **active**
+   - **enabled**
+   - **poe**
+
+
+mikrotik_port
+=============
+
+
+Name des zu adressierenden Geräteanschlusses, Beispiel: ether1
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_port_enabled(port)
+======================
+
+
+Port Status abfragen. True = aktiviert, False = deaktiviert
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+port
+----
+
+Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
+
+ - Datentyp: **str**
+
+
+get_port_poe(port)
+==================
+
+
+Port POE Status abfragen. True = aktiviert, False = deaktiviert
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+port
+----
+
+Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
+
+ - Datentyp: **str**
+
+
+get_port_status(port)
+=====================
+
+
+Aktuellen Port Status abfragen. True = in Betrieb, False = Aus
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+port
+----
+
+Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
+
+ - Datentyp: **str**
+
+
+set_port_enabled(port, state)
+=============================
+
+
+Anschluss aktivieren oder deaktivieren
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+port
+----
+
+Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
+
+ - Datentyp: **str**
+
+
+state
+-----
+
+Gewünschter Aktivierungsstatus (true = aktiviert, false = deaktiviert)
+
+ - Datentyp: **bool**
+
+
+set_port_poe(port, state)
+=========================
+
+
+Poe Ausgabe für einen bestimmten Anschluss einstellen
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+port
+----
+
+Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
+
+ - Datentyp: **str**
+
+
+state
+-----
+
+Gewünschter POE-Status (true = auto-on, false = off)
+
+ - Datentyp: **bool**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

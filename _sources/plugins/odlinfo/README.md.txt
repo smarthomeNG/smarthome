@@ -81,6 +81,7 @@ odlinfo:
     class_name: ODLInfo
     class_path: plugins.odlinfo
     cycle: 3600
+    verify: True
 ```
 
 ### items.yaml

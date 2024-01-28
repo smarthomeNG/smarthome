@@ -76,6 +76,15 @@ Russound Port
  - Standardwert: **9621**
 
 
+standby_item
+============
+
+
+Item zum Aktivieren des Suspend-Modus
+
+ - Datentyp: **str**
+
+
 ==============
 Item Attribute
 ==============

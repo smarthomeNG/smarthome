@@ -8,8 +8,8 @@ Plugin 'join' Konfiguration
 
 .. index:: Plugins; join Konfiguration
 
-.. image:: /_static/img/web.svg
-   :alt: plugin type logo
+.. image:: /plugins/join/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -323,4 +323,4 @@ AlarmVolume
  - Standardwert: **None**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/join/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

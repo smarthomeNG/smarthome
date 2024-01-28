@@ -43,9 +43,7 @@ können wie folgt eingebunden werden:
 
                 rules:
                   eval_trigger:
-                      - ..lock
-                      - ..supsend
-                      - .. release
+                      - merge_unique*
                       - beispiel.trigger
 
                   additional_state1:
@@ -63,81 +61,17 @@ general
 
 Die ``general`` Vorlage enthält die Items, die generell für einen Zustandsautomaten
 angelegt werden sollten. Das "rules" Item ist das Regelwerk-Item mit aktiviertem
-se_plugin. Dieser Codeblock wird zwingend von jedem Zustandsautomaten benötigt.
-
-.. code-block:: yaml
-
-   #stateengine.general
-   state_id:
-       # The id/path of the actual state is assigned to this item by the stateengine
-       type: str
-       visu_acl: r
-       cache: True
-
-   state_name:
-       # The name of the actual state is assigned to this item by the stateengine
-       type: str
-       visu_acl: r
-       cache: True
-
-   conditionset_id:
-       remark: The id/path of the actual condition set is assigned to this item by the stateengine
-       type: str
-       visu_acl: r
-       cache: True
-
-   conditionset_name:
-       remark: The name of the actual condition set is assigned to this item by the stateengine
-       type: str
-       visu_acl: r
-       cache: True
-
-   rules:
-       name: Regeln und Item Verweise für den Zustandsautomaten
-       type: bool
-       se_plugin: active
-       eval: True
-
-       # se_startup_delay: 30
-       # se_repeat_actions: true
-       # se_suspend_time: 7200
-
-       se_laststate_item_id: ..state_id
-       se_laststate_item_name: ..state_name
-       se_lastconditionset_item_id: ..conditionset_id
-       se_lastconditionset_item_name: ..conditionset_name
+se_plugin. Außerdem werden zwei Settings Items angelegt, um das Log Level und
+"Instant Leaveaction" per Item konfigurieren und zur Laufzeit ändern zu können.
+Dieser Codeblock wird zwingend von jedem Zustandsautomaten benötigt.
 
 lock
 ====
 
 Die ``state_lock`` Vorlage beinhaltet zum einen den Lock Zustand mit dem Namen "gesperrt",
 zum anderen ein Item mit dem Namen ``lock``. Wird dieses auf "1/True" gesetzt, wird der
-Zustand eingenommen. Der Zustand sollte immer als erster Zustand eingebunden werden.
-
-.. code-block:: yaml
-
-  #stateengine.state_lock
-  lock:
-      type: bool
-      knx_dpt: 1
-      visu_acl: rw
-      cache: 'on'
-
-  rules:
-      se_item_lock: ..lock
-      eval_trigger:
-          - ..lock
-
-      lock:
-          name: gesperrt
-
-          on_leave:
-              se_action_lock:
-                - 'function: set'
-                - 'to: False'
-
-          enter:
-              se_value_lock: True
+Zustand so lange eingenommen, bis das Item wieder auf False gestellt wird. So lässt sich zeitweise
+die Evaluierung anderer Zustände pausieren. Der Zustand sollte immer als erster Zustand eingebunden werden.
 
 suspend
 =======
@@ -162,198 +96,19 @@ Setzt man das Item ``settings.suspend_active`` auf False, wird der Pause-Zustand
 deaktiviert und manuelle Betätigungen werden
 beim nächsten Durchlauf eventuell durch andere Zustände überschrieben.
 
-.. code-block:: yaml
+suspend_dynamic
+===============
 
-  #stateengine.state_suspend
-  state_suspend:
-      name: Zustandsvorlage für manuelles Aussetzen
+Eine Variante des Suspendmodus, bei dem es möglich ist, bis zu drei verschiedene
+Suspendzeiten zu deklarieren. Außerdem kann man definieren, ob noch zusätzliche Zustände
+integriert werden sollen. Dabei ist zu beachten, dass standardmäßig der "Standard"-Status
+mit eingebunden wird. Da dieser leer ist, wird nichts passieren. Bei Bedarf kann der Wert
+in den Items ``automatik.settings.suspendvariant.additionaluse[0-2]`` geändert werden.
 
-      suspend:
-          type: bool
-          knx_dpt: 1
-          visu_acl: rw
-          cache: True
+Welche Zeiten und Zustände letztlich genutzt werden, wird durch Setzen des Items
+``suspendvariant`` bestimmt. Der Wert muss zwischen 0 und 2 liegen.
 
-          visu:
-              type: bool
-              knx_dpt: 1
-              visu_acl: rw
-              cache: True
-
-      suspend_end:
-          type: str
-          visu_acl: ro
-          eval: "'' if not any(char.isdigit() for char in sh..self.date_time()) else sh..self.date_time().split(' ')[1].split('.')[0]"
-          eval_trigger: .date_time
-          crontab: init
-
-          date_time:
-              type: str
-              visu_acl: ro
-              cache: True
-
-          unix_timestamp:
-              type: num
-              visu_acl: ro
-              eval: "0 if not any(char.isdigit() for char in sh...date_time()) else  sh.tools.dt2ts(shtime.datetime_transform(sh...date_time())) * 1000"
-              eval_trigger: ..date_time
-              crontab: init
-
-      suspend_start:
-          type: str
-          visu_acl: ro
-          eval: "'' if not any(char.isdigit() for char in sh..self.date_time()) else sh..self.date_time().split(' ')[1].split('.')[0]"
-          eval_trigger: .date_time
-          crontab: init
-
-          date_time:
-              type: str
-              visu_acl: ro
-              cache: True
-
-          unix_timestamp:
-              remark: Can be used for the clock.countdown widget
-              type: num
-              visu_acl: ro
-              eval: "0 if not any(char.isdigit() for char in sh...date_time()) else  sh.tools.dt2ts(shtime.datetime_transform(sh...date_time())) * 1000"
-              eval_trigger: ..date_time
-              crontab: init
-
-      manuell:
-          type: bool
-          name: manuell
-          se_manual_invert: True
-          remark: Adapt the se_manual_exclude the way you need it
-          #se_manual_include: KNX:* Force manual mode based on source
-          se_manual_exclude:
-            - database:*
-            - init:*
-
-      retrigger:
-          remark: Item to retrigger the rule set evaluation
-          type: bool
-          visu_acl: rw
-          enforce_updates: True
-          on_update: ..rules = True
-
-      settings:
-          remark: Use these settings for your condition values
-          type: foo
-          eval: (sh..suspendduration(sh..suspendduration(), "Init", "Start"), sh..suspendvariant.suspendduration0(sh..suspendduration(), "Init", "Start"), sh..suspendvariant.suspendduration1(sh..suspendvariant.suspendduration1(), "Init", "Start"), sh..suspendvariant.suspendduration2(sh..suspendvariant.suspendduration2(), "Init", "Start"))
-          crontab: init = True
-
-          suspendduration:
-              remark: duration of suspend mode in minutes (gets converted automatically)
-              type: num
-              visu_acl: rw
-              cache: True
-              initial_value: 60
-              on_change: .seconds = value * 60 if not sh..self.property.last_change_by == "On_Change:{}".format(sh..seconds.property.path) else None
-              on_update: .seconds = value * 60 if "Init" in sh..self.property.last_update_by else None
-
-              duration_format:
-                  remark: Can be used for the clock.countdown widget
-                  type: str
-                  cache: True
-                  visu_acl: ro
-                  eval: "'{}d {}h {}i {}s'.format(int(sh...seconds()//86400), int((sh...seconds()%86400)//3600), int((sh...seconds()%3600)//60), round((sh...seconds()%3600)%60))"
-                  eval_trigger:
-                    - ..seconds
-                    - ..
-
-              seconds:
-                  remark: duration of suspend mode in seconds (gets converted automatically)
-                  type: num
-                  visu_acl: rw
-                  cache: True
-                  on_change: .. = value / 60 if not sh..self.property.last_change_by in [ "On_Change:{}".format(sh....property.path), "On_Update:{}".format(sh....property.path)] else None
-
-          suspend_active:
-              remark: Use this to (de)activate suspend mode in general
-              type: bool
-              visu_acl: rw
-              cache: True
-              initial_value: True
-
-          settings_edited:
-              type: bool
-              name: settings editiert
-              eval_trigger: ...settings.*
-              eval: not sh..self()
-              on_update: ...retrigger = True if sh..self.property.prev_update_age > 0.1 else None
-
-      rules:
-          se_item_suspend: ..suspend
-          se_item_suspend_visu: ..suspend.visu
-          se_item_suspend_end: ..suspend_end.date_time
-          se_item_suspend_start: ..suspend_start.date_time
-          se_item_suspend_active: ..settings.suspend_active
-          se_suspend_time: ..settings.suspendduration
-
-          eval_trigger:
-              - ..manuell
-
-          suspend:
-              name: ausgesetzt
-
-              on_enter:
-                  se_action_suspend_visu:
-                    - 'function: set'
-                    - 'to: True'
-                    - 'order: 2'
-
-              on_enter_or_stay:
-                  se_action_suspend:
-                    - 'function: special'
-                    - 'value: suspend:..suspend, ..manuell'
-                    - 'repeat: True'
-                    - 'order: 1'
-                  se_action_suspend_end:
-                    - 'function: set'
-                    - "to: eval:se_eval.insert_suspend_time('..suspend', suspend_text='%Y-%m-%d %H:%M:%S.%f%z')"
-                    - 'repeat: True'
-                    - 'order: 3'
-                  se_action_suspend_start:
-                    - 'function: set'
-                    - "to: eval:str(shtime.now())"
-                    - 'repeat: True'
-                    - 'conditionset: enter_manuell'
-                    - 'order: 4'
-                  se_action_retrigger:
-                    - 'function: special'
-                    - 'value: retrigger:..retrigger'
-                    - 'delay: var:item.suspend_remaining'
-                    - 'repeat: True'
-                    - 'order: 5'
-
-              on_leave:
-                  se_action_suspend:
-                    - 'function: set'
-                    - 'to: False'
-                    - 'order: 2'
-                  se_action_suspend_visu:
-                    - 'function: set'
-                    - 'to: False'
-                    - 'order: 3'
-                  se_action_suspend_end:
-                    - 'function: set'
-                    - 'to:  '
-                    - 'order: 4'
-                  se_action_suspend_start:
-                    - 'function: set'
-                    - 'to:  '
-                    - 'order: 5'
-                    - 'delay: 1'
-
-              enter_manuell:
-                  se_value_trigger_source: eval:se_eval.get_relative_itemproperty('..manuell', 'path')
-                  se_value_suspend_active: True
-
-              enter_stay:
-                  se_value_laststate: var:current.state_id
-                  se_agemax_suspend: var:item.suspend_time
-                  se_value_suspend: True
-                  se_value_suspend_active: True
+Weitere Informationen sind unter :ref:`Besondere Zustände` zu finden.
 
 release
 =======
@@ -362,54 +117,11 @@ Die ``state_release`` Vorlage ist nicht unbedingt nötig, kann aber dazu genutzt
 schnell den Sperr- oder Pause-Zustand zu verlassen und die erneute Evaluierung
 der Zustände anzuleiern.
 
-.. code-block:: yaml
+standard
+========
 
-  #stateengine.state_release
-  release: #triggers the release
-      type: bool
-      knx_dpt: 1
-      visu_acl: rw
-      enforce_updates: True
-
-  rules:
-      se_item_lock: ..lock
-      se_item_suspend: ..suspend
-      se_item_retrigger: ..rules
-      se_item_release: ..release
-      se_item_suspend_end: ..suspend_end
-      eval_trigger:
-          - ..release
-
-      release:
-          name: release
-
-          on_enter_or_stay:
-              se_action_suspend:
-                - 'function: set'
-                - 'to: False'
-                - 'order: 1'
-              se_action_lock:
-                - 'function: set'
-                - 'to: False'
-                - 'order: 2'
-              se_action_release:
-                - 'function: set'
-                - 'to: False'
-                - 'order: 3'
-              se_action_suspend_end:
-                - 'function: set'
-                - 'to: '
-                - 'order: 4'
-              se_action_retrigger:
-                - 'function: set'
-                - 'to: True'
-                - 'order: 5'
-                - 'repeat: True'
-                - 'delay: 1'
-
-          enter:
-              se_value_release: True
-
+Ein praktisch leerer Status, der immer am Ende angehängt werden sollte. Dieser Status wird
+eingenommen, wenn keine Bedingungen der anderen Zustände erfüllt sind.
 
 Pluginspezifische Templates
 ---------------------------

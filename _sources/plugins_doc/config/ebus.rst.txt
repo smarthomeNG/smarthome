@@ -28,7 +28,7 @@ Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 Beschreibung
 ============
 
-Unterstützt eBus Heizungen (z.B. Vailant, Wolf, Kromschroeder) - Dieses Plugin verbindet sich zu einem ebusd Deamon (http://www.cometvisu.de/wiki/Ebusd), welcher mit einer eBus Heizung kommuniziert. Voraussetzungen: Ein ebusd Deamon läuft auf dem Netzwerk. (Anmerkung: Der ebusd benötigt ein ebus-Interface um mit ihm zu kommunizieren.
+Unterstützt eBus Heizungen (z.B. Vailant, Wolf, Kromschroeder) Dieses Plugin verbindet sich zu einem ebusd Deamon (https://ebusd.de/), welcher mit einer eBus Heizung kommuniziert. Voraussetzungen: Ein ebusd Deamon läuft auf dem Netzwerk. Anmerkung: Der ebusd benötigt ein ebus-Interface um mit ihm zu kommunizieren.
 
 
 Anforderungen

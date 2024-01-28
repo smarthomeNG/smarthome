@@ -1,4 +1,3 @@
-
 .. index:: Plugins; rpi_info
 .. index:: rpi_info
 
@@ -22,20 +21,8 @@ Raspberry Pi
 Konfiguration
 =============
 
-Diese Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
-unter :doc:`/plugins_doc/config/rpi_log` beschrieben.
-
-
-Funktionen
-==========
-
-Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
-
-
-Beispiele
-=========
-
-Hier können ausführlichere Beispiele und Anwendungsfälle beschrieben werden.
+Die Pluginparameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
+unter :doc:`/plugins_doc/config/rpi_info` beschrieben.
 
 
 Web Interface

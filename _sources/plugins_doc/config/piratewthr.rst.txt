@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.3.4**
+ - Minimum SmartHomeNG Version: **1.9.5.4**
 
 Konfiguration
 =============
@@ -58,10 +58,10 @@ cycle
 =====
 
 
-(optional) Zeit zwischen zwei Updateläufen. Default ist 300 Sekunden.
+(optional) Zeit zwischen zwei Updateläufen. Default ist 900 Sekunden.
 
  - Datentyp: **int**
- - Standardwert: **300**
+ - Standardwert: **900**
 
 
 key
@@ -89,7 +89,8 @@ latitude
 
 Latitude des Ortes, für den die Wetterdaten abgerufen werden sollen. Default: SmartHomeNG Settings
 
- - Datentyp: **str**
+ - Datentyp: **num**
+ - Standardwert: **0**
 
 
 longitude
@@ -98,7 +99,8 @@ longitude
 
 Longitude des Ortes, für den die Wetterdaten abgerufen werden sollen. Default: SmartHomeNG Settings.
 
- - Datentyp: **str**
+ - Datentyp: **num**
+ - Standardwert: **0**
 
 
 units

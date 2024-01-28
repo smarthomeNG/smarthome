@@ -8,8 +8,8 @@ Plugin 'unifi' Konfiguration
 
 .. index:: Plugins; unifi Konfiguration
 
-.. image:: /_static/img/interface.svg
-   :alt: plugin type logo
+.. image:: /plugins/unifi/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -215,4 +215,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/unifi/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

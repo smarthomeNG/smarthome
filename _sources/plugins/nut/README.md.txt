@@ -83,11 +83,11 @@ the UPS status as a NUT server. For this configuration
 ### plugin.yaml
 
 ```yaml
-nut:
-    class_name: NUT
-    class_path: plugins.nut
-    ups: ups
-    host: <IP of smarthomeNG system>
-    port: 3493
+
+    nut:
+        plugin_name: nut
+        ups: ups
+        host: <IP of smarthomeNG system>
+        port: 3493
 ```
 

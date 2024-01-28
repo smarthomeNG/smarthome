@@ -4,12 +4,13 @@
 This plugin requires lib PyMVGLive. You can install this lib with:
 
 ```
-sudo pip3 install PyMVGLive --upgrade
+sudo pip3 install mvg --upgrade
 ```
 
-This plugin provides functionality to query the data of www.mvg-live.de via the python package PyMVGLive.
+This plugin provides functionality to query the data of www.mvv-muenchen.de via the python package "mvg" (pip install mvg).
+
 Take care to not run it too often. My example below is manually triggered by a select action in the
-smartVISU 2.9 select widget or a refresh button.
+smartVISU 2.9 select widget including a refresh button.
 
 Forum thread to the plugin: https://knx-user-forum.de/forum/supportforen/smarthome-py/1108867-neues-plugin-mvg_live
 
@@ -66,27 +67,39 @@ MVGWatch:
 
 ### mvg.py
 
+For the images I am using https://commons.wikimedia.org/wiki/M%C3%BCnchen_U-Bahn?uselang=de and https://commons.wikimedia.org/wiki/Category:Line_numbers_of_Munich_S-Bahn
+and put them in the dropins folder of smartVISU (/dropins/icons/myglive/Muenchen_%s.svg.png). %s is e.g. S8 or U3 and inputted from the departure array.
 ```html
-results = sh.mvg_live.get_station_departures(sh.travel_info.mvg_station.search(), entries=15, bus=False, tram=False)
+import logging
+from datetime import datetime
+from lib.shtime import Shtime
+logger = logging.getLogger('mvg_info logics')
+now = Shtime.get_instance().now()
+
+results = sh.mvg_live.get_station_departures(sh.general.travel_info.mvg_station.search())
 html_string = '<table>'
 i = 1
-for result in results:
 
-    dir_info = ''
-    line_string = '<tr><td style="width: 10px;"></td>'
-    line_string += '<td><img src="%s" alt="%s"/><td><td style="margin-left: 5px;"><img src="%s" alt="%s"/></td>' % (
-    result['productsymbolurl'], result['product'], result['linesymbolurl'], result['linename'])
-    line_string += '<td style="text-align: left; padding-left: 15px; width: 100%;">'
-    line_string += '%s </td>' % result['destination']
-    line_string += '<td style="color: #000; font-weight: bold; font-size: 25px;">'
-    line_string += '<div style="background-color: #fff; width: 30px; ">%i</div></td></tr>' % result['time']
-    html_string += line_string
-    i = i + 1
+for result in results:
+    if result['type'] in ["U-Bahn","S-Bahn"]:
+        result['linesymbolurl'] = 'https://<sv_dyndns_url>/smartVISU/dropins/icons/mvglive/Muenchen_%s.svg.png'%result['line']
+        dir_info = ''
+        line_string = '<tr><td style="width: 10px;"></td>'
+        line_string += '<td><img src="%s" alt="%s"/></td>' % (result['linesymbolurl'],result['linesymbolurl']) #<td><td style="margin-left: 5px;"><img src="%s" alt="%s"/>
+        line_string += '<td style="text-align: left; padding-left: 15px; width:60%;">'
+        line_string += '%s </td>' % result['destination']
+        line_string += '<td style="color: #000; font-weight: bold; font-size: 25px;">'
+        calculated_delay = ""
+        if int(datetime.fromtimestamp(result['time']-result['planned']).strftime("%M")) > 0:
+            calculated_delay = "(+%i)"%int(datetime.fromtimestamp(result['time']-result['planned']).strftime("%M"))
+        line_string += '<div style="background-color: #fff; width: 120px; ">%s %s</div></td></tr>' % (datetime.fromtimestamp(result['time']).strftime("%H:%M"),calculated_delay) #calculated_delay)
+        html_string += line_string
+        i = i + 1
     if i == 7:
         break
 
 html_string += '</table>'
-sh.travel_info.mvg_station.search.result(html_string)
+sh.general.travel_info.mvg_station.search.result(html_string)
 ```
 
 ### smartVISU integration (Requires smartVISU 2.9, as select widget is used)

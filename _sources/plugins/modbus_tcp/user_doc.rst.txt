@@ -6,30 +6,39 @@
 modbus_tcp
 ==========
 
+.. image:: webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
 SmarthomeNG plugin, zum Lesen von Register über ModBusTCP
 
 Anforderungen
--------------
+=============
+
 * Python > 3.6
 * pymodbus >= 2.5.3
 * SmarthomeNG >= 1.8.0
 
 pymodbus
-~~~~~~~~
+--------
+
 das Paket sollte automatisch von SH installiert werden.
 
 pymodbus - manuelle Installation:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------
 
 .. code:: shell-session
 
-    pip install pymodbus
+    python3 -m pip install pymodbus --user --upgrade
 
 Konfiguration
--------------
+=============
 
 plugin.yaml
-~~~~~~~~~~~
+-----------
 
 .. code-block:: yaml
 
@@ -55,13 +64,13 @@ Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wur
 
 
 items.yaml
-~~~~~~~~~~
+----------
 
 Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
 
 
 logic.yaml
-~~~~~~~~~~
+----------
 
 Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
 
@@ -155,9 +164,14 @@ siehe auch example.yaml
 
 Changelog
 ---------
-V1.0.8  work with newer versions of pymodbus too, minimum pymodbus now 2.5.3
+V1.0.10	Mindestversion für pymodbus ist nun 3.5.2
 
-V1.0.7  keep connection open and use locking to ensure thread safety (CaeruleusAqua and bmxp)
+V1.0.9  
+
+V1.0.8  Neuere Pymodbus Versionen können nun verwendet werden.
+        Di minimale Version für Pymodbus ist jetzt 2.5.3
+
+V1.0.7  Verbindung offen halten und lock nutzen um Thread Sicherheit zu erreichen (CaeruleusAqua and bmxp)
         Fehler behoben: nicht deklarierte Variable "TypeStr" und "bitstr"
 
 V1.0.6  schreiben von Register (HoldingRegister, Coil)
@@ -180,7 +194,7 @@ V1.0.0  Initial plugin version
 
 
 Web Interface
--------------
+=============
 
 Das Plugin kann aus dem Admin Interface aufgerufen werden. Dazu auf der Seite Plugins in der entsprechenden
 Zeile das Icon in der Spalte **Web Interface** anklicken.

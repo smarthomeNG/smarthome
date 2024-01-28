@@ -8,15 +8,9 @@
    :titlesonly:
    :hidden:
 
-   /plugins/blockly/README.md
    /plugins/cli/README.md
    /plugins/database/README.md
-   /plugins/datalog/README.md
    /plugins/influxdata/README.md
-   /plugins/influxdb/README.md
-   /plugins/memlog/README.md
-   /plugins/operationlog/README.md
-   /plugins/rrd/README.md
    /plugins/rtr/README.md
    /plugins/simulation/README.md
    /plugins/sqlite_visu2_8/README.md

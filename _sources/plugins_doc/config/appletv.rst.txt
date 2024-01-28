@@ -81,7 +81,70 @@ Item Attribute
 
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
-**Keine**
+
+appletv
+=======
+
+
+ATV Funktion
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **name** |_| - |_| AppleTV Name
+   - **ip** |_| - |_| AppleTV IP Adresse
+   - **mac** |_| - |_| AppleTV MAC
+   - **model** |_| - |_| AppleTV Modell
+   - **os** |_| - |_| AppleTV OS Version
+   - **power** |_| - |_| Einschaltstatus
+   - **playing_app_identifier** |_| - |_| Applikationsidentifikation
+   - **playing_app_name** |_| - |_| Applikationsname
+   - **playing_state** |_| - |_| Abspielstatus als Zahl
+   - **playing_state_text** |_| - |_| Abspielstatus als Text
+   - **playing_fingerprint** |_| - |_| Fingerprint des aktuellen Mediums
+   - **playing_genre** |_| - |_| Aktuelles Genre
+   - **playing_artist** |_| - |_| Aktueller Künstler
+   - **playing_album** |_| - |_| Aktuelles Album
+   - **playing_title** |_| - |_| Aktueller Titel
+   - **playing_type** |_| - |_| Aktueller Medientyp als Zahl
+   - **playing_type_text** |_| - |_| Aktueller Medientyp als Text
+   - **playing_position** |_| - |_| Aktuelle Zeitposition
+   - **playing_total_time** |_| - |_| Aktuelle Gesamtspielzeit
+   - **playing_position_percent** |_| - |_| Aktuelle Abspielposition in Prozent
+   - **playing_repeat** |_| - |_| Aktueller Wiederholmodus als Zahl
+   - **playing_repeat_text** |_| - |_| Aktueller Wiederholmodus als Text
+   - **playing_shuffle** |_| - |_| Aktueller Shuffle Modus als Zahl
+   - **playing_shuffle_text** |_| - |_| Aktueller Shuffle Modus als Text
+   - **artwork_width** |_| - |_| Breite des aktuellen Artworks in Pixel
+   - **artwork_height** |_| - |_| Höhe des aktuellen Artworks in Pixel
+   - **artwork_mimetype** |_| - |_| Mimetype des aktuellen Artorks
+   - **artwork_base64** |_| - |_| Tatsächliches aktuelles Artwork
+   - **rc_top_menu** |_| - |_| Topmenü Taste
+   - **rc_home** |_| - |_| Home Taste
+   - **rc_home_hold** |_| - |_| Hold home Taste
+   - **rc_menu** |_| - |_| Menü Taste
+   - **rc_select** |_| - |_| Auswählen Taste
+   - **rc_next** |_| - |_| Nächster Titel
+   - **rc_previous** |_| - |_| Vorheriger Titel
+   - **rc_play** |_| - |_| Abspielen
+   - **rc_pause** |_| - |_| Pause
+   - **rc_stop** |_| - |_| Stop
+   - **rc_play_pause** |_| - |_| Umschalten zwischen Play und Pause
+   - **rc_down** |_| - |_| Hinunter Taste
+   - **rc_up** |_| - |_| Hinauf Taste
+   - **rc_left** |_| - |_| Links Taste
+   - **rc_right** |_| - |_| Rechts Taste
+   - **rc_set_position** |_| - |_| Abspielposition setzen
+   - **rc_set_repeat** |_| - |_| Wiederholmodus setzen
+   - **rc_set_shuffle** |_| - |_| Shuffle Modus setzen
+   - **rc_skip_backward** |_| - |_| Rückwärts springen
+   - **rc_skip_forward** |_| - |_| Vorwärts springen
+   - **rc_volume_down** |_| - |_| Lautstärke verringern
+   - **rc_volume_up** |_| - |_| Lautstärke erhöhen
+   - **rc_suspend** |_| - |_| Suspend Modus
+   - **rc_wakeup** |_| - |_| Aufwecken
+
 
 ===============
 Logik Parameter
@@ -136,4 +199,4 @@ Abspielen
  - Ergebnistyp der Funktion: **bool**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/appletv/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

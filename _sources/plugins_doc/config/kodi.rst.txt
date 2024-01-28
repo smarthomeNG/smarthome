@@ -23,21 +23,24 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
 
 
 Beschreibung
 ============
 
-Anbindung von Kodi (ehemals XBMC)
+
 
 
 Anforderungen
 =============
 
 
-Es ist eine Kodi Installation v12 oder höher notwendig, bei der in den Einstellungen "Allow programs on other systems to control Kodi" aktiviert ist.
 
- - Minimum SmartHomeNG Version: **1.4**
+
+ - Minimum SmartHomeNG Version: **1.9.5**
+ - Minimum Python Version: **3.7**
 
 Konfiguration
 =============
@@ -54,34 +57,53 @@ Parameter
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
 
+autoconnect
+===========
+
+
+Automatisches Verbinden bei Senden
+
+ - Datentyp: **bool**
+
+
 autoreconnect
 =============
 
 
-Erneute Verbindungsversuche bei Verlust der Verbindung alle 30 Sekunden
+Automatisches Neuverbinden bei Abbruch
 
  - Datentyp: **bool**
- - Standardwert: **False**
+ - Standardwert: **True**
 
 
-command_repeat
-==============
+command_class
+=============
 
 
-Anzahl der Wiederholversuche für unbeantwortete Befehle
+Klasse für Verarbeitung von Kommandos
 
- - Datentyp: **int**
- - Standardwert: **2**
+ - Datentyp: **str**
+ - Standardwert: **SDPCommandJSON**
+
+ - Mögliche Werte:
+
+   - **SDPCommand**
+   - **SDPCommandJSON**
 
 
-command_timeout
-===============
+conn_type
+=========
 
 
-Zeit, nach der ein unbeantworteter Befehl erneut gesendet wird
+Verbindungstyp
 
- - Datentyp: **int**
- - Standardwert: **5**
+ - Datentyp: **str**
+ - Standardwert: **net_tcp_client**
+
+ - Mögliche Werte:
+
+   - 
+   - **net_tcp_client**
 
 
 connect_cycle
@@ -90,40 +112,112 @@ connect_cycle
 
 Pause zwischen Verbindungsversuchen
 
- - Datentyp: **int**
- - Standardwert: **5**
+ - Datentyp: **num**
+ - Standardwert: **3**
 
 
 connect_retries
 ===============
 
 
-Anzahl der Verbindungsversuche
+Anzahl Verbindungsversuche
 
- - Datentyp: **int**
- - Standardwert: **10**
+ - Datentyp: **num**
+ - Standardwert: **5**
 
 
 host
 ====
 
 
-Hostname oder IP-Adresse des Kodi-Systems
+Netzwerkziel/-host
 
- - Datentyp: **ip**
+ - Datentyp: **str**
+
+
+message_repeat
+==============
+
+
+Anzahl Sendewiederholungen auf Protokollebene
+
+ - Datentyp: **num**
+ - Standardwert: **3**
+
+
+message_timeout
+===============
+
+
+Timeout für Antwort auf Protokollebene
+
+ - Datentyp: **num**
+ - Standardwert: **5**
 
 
 port
 ====
 
 
-Netzwerkport für die Steuerung des Kodi-Systems
+Port für Netzwerkverbindung
 
  - Datentyp: **int**
  - Standardwert: **9090**
 
- - Minimalwert: **1**
- - Maximalwert: **65535**
+
+protocol
+========
+
+
+Protokolltyp für Verbindung
+
+ - Datentyp: **str**
+ - Standardwert: **jsonrpc**
+
+ - Mögliche Werte:
+
+   - 
+   - **jsonrpc**
+
+
+retry_cycle
+===========
+
+
+Pause zwischen Durchgängen von Verbindungsversuchen
+
+ - Datentyp: **num**
+ - Standardwert: **30**
+
+
+retry_suspend
+=============
+
+
+Anzahl von Durchgängen vor Verbindungsabbruch oder Suspend-Modus
+
+ - Datentyp: **num**
+ - Standardwert: **3**
+
+
+suspend_item
+============
+
+
+Item-Pfad für das Suspend-Item
+
+ - Datentyp: **str**
+
+
+timeout
+=======
+
+
+Timeout für Geräteantwort
+
+ - Datentyp: **num**
+ - Standardwert: **3**
+
 
 ==============
 Item Attribute
@@ -133,37 +227,76 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
-kodi_item
-=========
+kodi_command
+============
 
 
-Der Attributwert hängt von der gewünschten Funktion ab. Siehe Dokumentation für Details.
+Legt das angegebene Kommando für das Item fest
 
  - Datentyp: **str**
 
- - Mögliche Werte:
 
-   - **quit**
-   - **mute**
-   - **volume**
-   - **action**
-   - **seek**
-   - **audio**
-   - **speed**
-   - **subtitle**
-   - **playpause**
-   - **stop**
-   - **goto**
-   - **power**
-   - **subtitles**
-   - **streams**
-   - **media**
-   - **title**
-   - **player**
-   - **state**
-   - **update**
-   - **macro**
-   - **get_favourites**
+kodi_lookup
+===========
+
+
+Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.   Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art der Tabelle ausgewählt werden: - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard) - rev liefert die Tabelle SmartHomeNG -> Gerät - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
+
+ - Datentyp: **str**
+
+
+kodi_read
+=========
+
+
+Item liest/erhält Werte vom Gerät
+
+ - Datentyp: **bool**
+
+
+kodi_read_cycle
+===============
+
+
+Konfiguriert ein Intervall in Sekunden für regelmäßiges Lesen
+
+ - Datentyp: **num**
+
+
+kodi_read_group
+===============
+
+
+Weist das Item der angegebenen Gruppe zum gesammelten Lesen zu. Mehrere Gruppen können als Liste angegeben werden.
+
+ - Datentyp: **list(str)**
+
+
+kodi_read_group_trigger
+=======================
+
+
+Wenn diesem Item ein beliebiger Wert zugewiesen wird, werden alle zum Lesen konfigurierten Items der angegebenen Gruppe neu vom Gerät gelesen, bei Gruppe 0 werden alle zum Lesen konfigurierten Items neu gelesen. Das Item kann nicht gleichzeitig mit kodi_command belegt werden.
+
+ - Datentyp: **str**
+
+
+kodi_read_initial
+=================
+
+
+Legt fest, dass der Wert beim Start vom Gerät gelesen wird
+
+ - Datentyp: **bool**
+
+
+kodi_write
+==========
+
+
+Änderung des Items werden an das Gerät gesendet
+
+ - Datentyp: **bool**
 
 
 ===============
@@ -182,48 +315,6 @@ Plugin Functions
 
 Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
 
+**Keine**
 
-notify(title, message, image= 'None*', display_time=10000)
-==========================================================
-
-
-Diese Funktion ermöglicht es, Mitteilungen an Kodi zu schicken. Beispiel: sh.kodi.notify('Door', 'Ding Dong'). 'kodi' ist dabei der Name der jeweiligen Plugin-Instanz und kein Item-Name.
-
- - Ergebnistyp der Funktion: **str**
-
-
-title
------
-
-Überschrift der Mitteilung
-
- - Datentyp: **str**
-
-
-message
--------
-
-Text der Mitteilung
-
- - Datentyp: **str**
-
-
-image
------
-
-URL des anzuzeigenden Bildes (z.B.: "http://smarthome.local/img/phone.png")
-
- - Datentyp: **str**
- - Standardwert: **None***
-
-
-display_time
-------------
-
-Dauer der Anzeige in msec
-
- - Datentyp: **int**
- - Standardwert: **10000**
-
-
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/kodi/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -31,7 +31,8 @@ Das Casambi Konzept sieht vor, ein Mobilgerät (z.B. Handy oder Tablett) als Har
 enzusetzen.
 
 Anforderungen
-============
+=============
+
 Das Casambi Plugin benötigt einen validen Casambi API key, der hier beantragt werden kann:
 ``support@casambi.com``
 

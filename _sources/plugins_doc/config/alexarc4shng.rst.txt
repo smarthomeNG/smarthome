@@ -60,7 +60,9 @@ alexa_credentials
 =================
 
 
-Zugangsdaten für das Amazon-Alexa-Web-Site <USER>:<PWD>, base64 encodiert
+Die Zugangsdaten können entweder über der Web Interface kodiert werden oder direkt über eine Python-Konsole mit den zwei Zeilen
+import base64
+base64.b64encode("user.test@gmail.com:your_pwd".encode("utf-8"))
 
  - Datentyp: **str**
 
@@ -88,7 +90,9 @@ item_2_enable_alexa_rc
 ======================
 
 
-Ein Item welches verwendet wird um die Freigabe für die Kommunikation zu erteilen (USZU)
+Item, das beispielsweise durch eine Zeitschaltuhr oder etwas anderem geschaltet wird, um die Kommunikation mit Alexa-Amazon-Geräten zu ermöglichen.
+Ist der Wert leer oder nicht angegeben, ist die Kommunikation jederzeit rund um die Uhr aktiviert.
+Dieses Item wird nur während update_item in smarthomeNG überprüft. Wenn die API direkt von einer Logik oder über die Benutzeroberfläche verwendet wird, wird das Item nicht überprüft.
 
  - Datentyp: **str**
 
@@ -173,7 +177,7 @@ send_cmd(dvName, cmdName, mValue)
 =================================
 
 
-Sendet einen Befehl an Alexa.
+Sendet einen Befehl an Alexa. Es können auch Platzhalter genutzt werden. Das Resultat wird der HTTP Status des Requests als String sein.
 
  - Ergebnistyp der Funktion: **str**
 
@@ -202,4 +206,4 @@ Wert, der gesendet werden soll, numerische Werte ohne Hochkomma als Zahl
  - Datentyp: **str**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/alexarc4shng/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

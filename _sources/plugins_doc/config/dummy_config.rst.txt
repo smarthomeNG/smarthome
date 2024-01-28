@@ -23,6 +23,7 @@
    bose_soundtouch.rst
    bsblan.rst
    buderus.rst
+   byd_bat.rst
    casambi.rst
    cli.rst
    co2meter.rst
@@ -33,15 +34,14 @@
    datalog.rst
    db_addon.rst
    deebot_ozmo.rst
+   denon.rst
    dlms.rst
    dmx.rst
    drexelundweiss.rst
-   easymeter.rst
    ebus.rst
-   ecmd.rst
-   elro.rst
    enigma2.rst
    enocean.rst
+   epson.rst
    eta_pu.rst
    executor.rst
    garminconnect.rst
@@ -55,7 +55,6 @@
    hue2.rst
    husky.rst
    husky2.rst
-   iaqstick.rst
    ical.rst
    indego.rst
    indego4shng.rst
@@ -74,6 +73,7 @@
    ksemmodbus.rst
    leveljet.rst
    lirc.rst
+   lms.rst
    logo.rst
    luxtronic2.rst
    mailrcv.rst
@@ -81,6 +81,7 @@
    memlog.rst
    mieleathome.rst
    miflora.rst
+   mikrotik.rst
    milight.rst
    mlgw.rst
    modbus_tcp.rst
@@ -95,7 +96,9 @@
    onewire.rst
    openweathermap.rst
    operationlog.rst
+   oppo.rst
    philips_tv.rst
+   pioneer.rst
    piratewthr.rst
    plex.rst
    pluggit.rst
@@ -110,6 +113,7 @@
    robonect.rst
    roomba.rst
    roomba_980.rst
+   roombapysh.rst
    rpi1wire.rst
    rpi_info.rst
    rrd.rst
@@ -129,7 +133,6 @@
    smlx.rst
    snap7_logo.rst
    snmp.rst
-   snom.rst
    solarforecast.rst
    solarlog.rst
    sonos.rst
@@ -149,11 +152,11 @@
    unifi.rst
    uzsu.rst
    vacations.rst
+   vicare.rst
    viessmann.rst
    visu_smartvisu.rst
    visu_websocket.rst
    volkszaehler.rst
-   vr100.rst
    waterkotte.rst
    webpush.rst
    webservices.rst

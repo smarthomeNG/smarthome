@@ -21,21 +21,143 @@ Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/co
 
 Anforderungen
 =============
-- locale en_US.utf8 must be installed (sudo dpkg-reconfigure locales)
+1) Es muss auf dem SmarthomeNG Rechner en_US.utf8 installiert sein (sudo dpkg-reconfigure locales)
 
-Supported Hardware
-==================
+Unterstützte Hardware
+=====================
 
-=============== ========= ======
-Robot           Supported Tested
-=============== ========= ======
-Neato Botvac D3 yes       no
-Neato Botvac D4 yes       no
-Neato Botvac D5 yes       yes
-Neato Botvac D6 yes       no
-Neato Botvac D7 yes       no
-Vorwerk VR300   yes       yes
-=============== ========= ======
+=============== ============= ==========
+Roboter          Unterstützt   Getestet
+=============== ============= ==========
+Neato Botvac D3   ja             nein
+Neato Botvac D4   ja             nein
+Neato Botvac D5   ja             ja
+Neato Botvac D6   ja             nein
+Neato Botvac D7   ja             nein
+Vorwerk VR300     ja             ja
+=============== ============= ==========
+
+Authentifizierung
+=================
+
+Das Plugin unterstützt zwei verschiedene Arten der Authentifizierung mit dem Neato oder Vorwerk Backend:
+
+a) Authentifizierung über Emailadresse des Nutzerkontos und zugehöriges Passwort. Nutzbar für Neato und alte Vorwerk API
+
+.. code-block:: yaml
+
+    Neato:
+        plugin_name: neato
+        account_email: 'your_neato_account_email'
+        account_pass: 'your_neato_account_password!'
+        robot_vendor: 'neato or vorwerk'
+
+b) Oauth2 Authentifizierung über Emailadresse des Nutzerkontos und Token. Nutzbar nur für Vorwerk mit dem aktuellen MyKobol APP Interface
+
+.. code-block:: yaml
+
+    Neato:
+        plugin_name: neato
+        account_email: 'your_neato_account_email'
+        token: 'HEX_ASCII_TOKEN'
+        robot_vendor: 'vorwerk'
+
+Der Token kann hier kompfortabel über die Schritt für Schritt Anleitung des Plugin Webinterfaces generiert werden, siehe Vorwerk OAuth2 Tab.
+
+Wenn eine Nutzung des Webinterfaces nicht möglich ist, kann ein Token auch manuell generiert werden. Hierzu:
+
+a) Neato plugin aktivieren und Emailadresse des Vorwerk Nutzerkontos konfigurieren.
+
+b) Plugin Logging auf Level INFO stellen (in logger.yaml oder via Admin Interface)
+
+c) Plugin Funktion request_oauth2_code ausführen. Hierbei wird ein Code bei Vorwerk angefragt, welcher an die oben angegebene Emaildresse gesendet wird.
+
+d) Nach Erhalt des Codes die Plugin Funktion request_oauth2_token(code) ausführen, wobei als Argument der per Email erhaltene Code übergeben wird.
+
+e) Im Logfile nach dem generierten ASCII Token im Hexadezimalformat suchen
+
+f) Das Hex ASCII Token in der plugin.yaml angeben.
+
+
+
+Unterstützte Plugin Attribute
+=============================
+
+Folgende Item Attribute (neato_attribute) werden vom Plugin unterstützt:
+
+=========================== ========== =====================
+Attribut                      Itemtyp    Lesend/Schreibend
+=========================== ========== =====================
+name                           str        r
+state                          str        r
+state_action                   str        r
+command                        num        w
+is_docked                      bool       r
+is_schedule_enabled            bool       r
+is_charging                    bool       r
+charge_percentage              num        r
+command_goToBaseAvailable      bool       r
+alert                          str        r
+clean_room                     str        w
+=========================== ========== =====================
+
+
+Roboter Status
+--------------
+
+Das String Item für den Roboterstatus (state) kann folgende Zustände einnehmen:
+
+======================= ====
+Roboterstatus (state)
+======================= ====
+invalid
+idle
+busy
+paused
+error
+======================= ====
+
+
+Das Num Item für den Roboterzustand (state_action) kann folgende Zustände einnehmen:
+
+========================================= =========
+Roboterzustand (state_action)               dezimal
+========================================= =========
+Invalid                                     0
+House Cleaning                              1
+Spot Cleaning                               2
+Manual Cleaning                             3
+Docking                                     4
+User Menu Active                            5
+Suspended Cleaning                          6
+Updating                                    7
+Copying Logs                                8
+Recovering Location                         9
+IEC Test                                    10
+Map cleaning                                11
+Exploring map (creating a persistent map)   12
+Acquiring Persistent Map IDs                13
+Creating & Uploading Map                    14
+Suspended Exploration                       15
+========================================= =========
+
+Roboterbefehle
+===============
+
+Das Num Item für die Roboterbefehle (command) kann folgende Zustände einnehmen:
+
+============================= =========
+Befehl (command)               dezimal
+============================= =========
+Start cleaning                  61
+Stop cleaning                   62
+Pause cleaning                  63
+Resume cleaning                 64
+Find the robot                  65
+Send to base                    66
+Enable schedule                 67
+Disable schedule                68
+============================= =========
 
 
 Web Interface
@@ -70,26 +192,42 @@ Im ersten Tab Vorwerk OAuth2 findet sich direkt die Schritt für Schritt Anleitu
 .. image:: assets/webif1.jpg
    :class: screenshot
 
-Changelog
+Im zweiten Tab Einstellungen findet sich zwei Optionen zum Löschen von gemeldeten Alarmmeldungen (z.B. Roboter Behälter leeren) und zum Auslesen aller bekannter RaumIDs (BoundardyIDs) zur
+Einzelraumreinigung. Die bekannten Räume werden dazu in das Plugin Logfile geschrieben. Übergeben werden muss hierzu die Vorwerk MapID. Hierzu einmal manuell eine Einzelraumreinigung via Vorwerk/Neato
+App anstoßen. Das Plugin extrahiert anschließend automatisch den Namen der MapID und schlägt diese als Eingabe im Eingabefeld des Webinterfaces vor.
+
+.. image:: assets/webif2.jpg
+   :class: screenshot
+
+
+SmartVisu
+=========
+
+Beispiele
 ---------
-V1.6.8     added decoding of command availability status, e.g. "start" command available
-           If start command with persistent map is rejected due to "not_on_charge_base" error, retry start with non-persistent map.
 
-V1.6.6     added option to clear errors/alarms in neato/vorwerk backend via plugin's webif
+Beispiele für Integrationen in smartVisu:
 
-V1.6.5     added new function start_robot(boundary_id=None, map_id=None) to enable single room cleaning
-           added new function get_map_boundaries_robot(map_id=None) to request available map boundaries (rooms) for a given map
-           added new function dismiss_current_alert() to reset current alerts
+.. code-block:: html
 
-V 1.6.4    fixed readout for docking state and go to base availability
-           combined all neato attribues into one
+    <p> {{ basic.button('RobotButton_Start', 'Neato.Robot.Command', 'Start', '', '61', 'midi') }} </p>
+    <p> {{ basic.button('RobotButton_Stop', 'Neato.Robot.Command', 'Stop', '', '62', 'midi') }} </p>
+    <p> {{ basic.button('RobotButton_Pause', 'Neato.Robot.Command', 'Pause', '', '63', 'midi') }} </p>
+    <p> {{ basic.button('RobotButton_Resume', 'Neato.Robot.Command', 'Resume', '', '64', 'midi') }} </p>
+    <p> {{ basic.button('RobotButton_Find', 'Neato.Robot.Command', 'Find', '', '65', 'midi') }}</p>
 
-V 1.6.3    changed attribute charge_percentage from string to integer
-           added alert text output, e.g. dustbin full
-           Write obtained OAuth2 token obtained via web interface directly to config plugin.yaml
+    <p>Name: {{ basic.value('RobotName', 'Neato.Robot.Name') }}</p>
+    /** Get the robots name (str)*/
 
-V 1.6.2    Added webinterface
+    <p>Cleaning status: {{ basic.value('RobotState', 'Neato.Robot.State') }}</p>
+    /** Get the robots cleaning status (str) */
 
-V 1.6.1    Added new Vorwerk Oauth2 based authentication feature (compatible with myKobold APP)
+    <p>Cleaning status action: {{ basic.value('RobotStateAction', 'Neato.Robot.StateAction') }}</p>
+    /** Get the robots cleaning status action (str). Only when it's busy */
 
-V 1.6.0    Initial working version
+    <p>Docking status: {{ basic.value('RobotDockingStatus', 'Neato.Robot.IsDocked') }}</p>
+    /** Get the robots docking status (bool) */
+
+    <p>Battery status: {{ basic.value('RobotBatteryState', 'Neato.Robot.ChargePercentage') }}</p>
+    /** Get the robots battery charge status (num) */
+

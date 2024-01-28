@@ -2,133 +2,109 @@
 zigbee2mqtt
 ===========
 
-Das Plugin dienst zur Steuerung von Zigbee Devices via Zigbee2MQTT über MQTT. Notwendige Voraussetzung ist eine
-funktionsfähige und laufende Installation von Zigbee2Mqtt. Die Installation, Konfiguration und der Betrieb ist hier
-beschrieben: https://www.zigbee2mqtt.io/
-Dort findet man ebenfalls die unterstützten Zigbee Geräte.
+Das Plugin dienst zur Steuerung von Zigbee Devices via Zigbee2MQTT über MQTT.
+Notwendige Voraussetzung ist eine funktionsfähige und laufende Installation von
+Zigbee2Mqtt. Dessen Installation, Konfiguration und der Betrieb ist hier
+beschrieben: https://www.zigbee2mqtt.io/ Dort findet man ebenfalls die
+unterstützten Zigbee Geräte.
 
 .. attention::
 
-    Das Plugin kommuniziert über MQTT und benötigt das mqtt Modul, welches die Kommunikation mit dem MQTT Broker
-    durchführt. Dieses Modul muß geladen und konfiguriert sein, damit das Plugin funktioniert.
+    Das Plugin kommuniziert über MQTT und benötigt das mqtt-Modul, welches die
+    Kommunikation mit dem MQTT Broker durchführt. Dieses Modul muss geladen und
+    konfiguriert sein, damit das Plugin funktioniert.
 
 Getestet ist das Plugin mit folgenden Zigbee-Geräten:
 
-- SONOFF SNZB-02
-- IKEA TRADFRI E1766
-- Aqara DJT11LM
-- TuYa TS0210
-- Aqara Opple 3fach Taster
+- Philips Hue white ambiance E27 800lm with Bluetooth
+- Philips Hue white ambiance E26/E27
+- IKEA Tradfri LED1924G9
+- IKEA Tradfri LED1949C5
+- Philips Hue dimmer switch
 
+Grundsätzlich kann jedes Gerät angebunden werden; für eine sinnvolle
+Verarbeitung von Werten sollte ein entsprechendes struct erstellt werden,
+ggfs. kann noch erweiterte Funktionalität mit zusätzlichem Code bereitgestellt
+werden.
+
+.. hint::
+
+    Im Rahmen der Umstellung des Plugins auf Version 2 wurden die Attribute
+    umbenannt, d.h. von "zigbee2mqtt_foo" in "z2m_foo" geändert.
+    Das macht die Konfigurationsdateien übersichtlicher und einfacher zu
+    schreiben. Bestehende Dateien müssen entsprechend angepasst werden.
 
 Konfiguration
 =============
 
-Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/config/zigbee2mqtt` beschrieben.
+Die Informationen zur Konfiguration des Plugins sind
+unter :doc:`/plugins_doc/config/zigbee2mqtt` beschrieben.
 
 Nachfolgend noch einige Zusatzinformationen.
-
-Konfiguration des Plugins
--------------------------
-
-Die Konfigruation des Plugins erfolgt über das Admin-Interface. Dafür stehen die folgenden Einstellungen zur Verfügung:
-
-- `base_topic`: MQTT TopicLevel_1, um mit dem ZigBee2MQTT Gateway zu kommunizieren (%topic%)
-- `poll_period`: Zeitabstand in Sekunden in dem das Gateway Infos liefer soll
-
 
 Konfiguration von Items
 -----------------------
 
-Für die Nutzung eines Zigbee Devices müssen in dem entsprechenden Item die zwei Attribute ``zigbee2mqtt_topic`` und
-``zigbee2mqtt_attr`` konfiguriert werden, wie im folgenden Beispiel gezeigt:
+Für die Nutzung eines Zigbee Devices können - sofern vorhanden - die
+mitgelieferten structs verwendet werden:
+
+.. code-block:: yaml
+
+    lampe1:
+        struct: zigbee2mqtt.light_white_ambient
+        z2m_topic: friendlyname1
+
+    lampe2:
+        struct: zigbee2mqtt.light_rgb
+        z2m_topic: friendlyname2
+
+
+Sofern für das entsprechende Gerät kein struct vorhanden ist, können einzelne
+Datenpunkte des Geräts auch direkt angesprochen werden:
 
 .. code-block:: yaml
 
     sensor:
         temp:
             type: num
-            zigbee2mqtt_topic: SNZB02_01
-            zigbee2mqtt_attr: temperature
+            z2m_topic: SNZB02_01
+            z2m_attr: temperature
         hum:
             type: num
-            zigbee2mqtt_topic: SNZB02_01
-            zigbee2mqtt_attr: humidity
+            z2m_topic: SNZB02_01
+            z2m_attr: humidity
 
 
-Dabei entspricht das Attribute ``zigbee2mqtt_topic`` dem Zigbee ``Friendly Name`` des Device bzw. dem MQTT Topic Level_2, um mit dem ZigBee2MQTT Gateway zu kommunizieren.
+Dabei entspricht das Attribute ``z2m_topic`` dem Zigbee ``Friendly Name`` des
+Device bzw. dem MQTT Topic Level_2, um mit dem ZigBee2MQTT Gateway zu
+kommunizieren.
 
-Das Attribut ``zigbee2mqtt_attr`` entspricht dem jeweiligen Tag aus der Payload, der verwendet werden soll. Welche Tags beim jeweiligen Device verfügbar sind, kann man im WebIF des Pluigns sehen.
+Das Attribut ``z2m_attr`` entspricht dem jeweiligen Tag aus der Payload, der
+verwendet werden soll. Welche Tags beim jeweiligen Device verfügbar sind, kann
+man im WebIF des Plugins sehen.
 
-Die folgenden Tags des Attributes ``zigbee2mqtt_attr`` sind definiert und werden vom Plugin unterstützt:
+Die Informationen des Zigbee2MQTT-Gateways werden unter dem z2m_topic
+(Gerätenamen) ``bridge`` bereitgestellt.
+
+Die folgenden Tags des Attributes ``z2m_attr`` sind definiert und werden vom
+Plugin unterstützt:
 
 - online
-- bridge_permit_join
-- bridge_health_check
-- bridge_restart
-- bridge_networkmap_raw
-- device_remove
-- device_configure
-- device_options
-- device_rename
-- device_configure_reporting
-- temperature
-- humidity
+- permit_join (bridge)
+- health_check (bridge)
+- restart (bridge)
+- networkmap_raw (bridge)
+- device_remove (bridge)
+- device_configure (bridge)
+- device_options (bridge)
+- device_rename (bridge)
+- device_configure_reporting (bridge)
 - battery
-- battery_low
 - linkquality
 - action
-- vibration
-- action_group
-- voltage
-- angle
-- angle_x
-- angle_x_absolute
-- angle_y
-- angle_y_absolute
-- angle_z
-- strength
 - last_seen
-- tamper
-- sensitivity
-- contact
+
+Weitere Tags werden abhängig vom Gerät unterstützt. In den meisten Fällen können
+auch unbekannte Tags bei direkter Konfiguration verwendet werden.
 
 
-Web Interface des Plugins
-=========================
-
-Zigbee2Mqtt Items
------------------
-
-Das Webinterface zeigt die Items an, für die ein Zigbee2Mqtt Device konfiguriert ist.
-
-.. image:: user_doc/assets/webif_tab1.jpg
-   :class: screenshot
-
-
-Zigbee2Mqtt Devices
--------------------
-
-Das Webinterface zeigt Informationen zu den konfigurierten Zigbee2Mqtt Devices an, sowie etwa hinzugekommen Devices die
-in SmartHomeNG noch nicht konfiguriert (mit einem Item vebunden) sind.
-
-.. image:: user_doc/assets/webif_tab2.jpg
-   :class: screenshot
-
-
-Zigbee2Mqtt Bridge Info
------------------------
-
-Das Webinterface zeigt detaillierte Informationen der Zigbee2Mqtt Bridge zu jedem verbundenen Device an.
-
-.. image:: user_doc/assets/webif_tab3.jpg
-   :class: screenshot
-
-
-Broker Information
-------------------
-
-Das Webinterface zeigt Informationen zum genutzten MQTT Broker an.
-
-.. image:: user_doc/assets/webif_tab6.jpg
-   :class: screenshot

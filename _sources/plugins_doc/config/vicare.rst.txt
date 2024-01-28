@@ -1,0 +1,192 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'vicare' Konfiguration
+=============================
+
+
+.. index:: Plugins; vicare Konfiguration
+
+.. image:: /plugins/vicare/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **vicare** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin zur Anbindung an das Viessmann Backend an SmartHomeNG
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **vicare** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+accessToken
+===========
+
+
+Token (beim Oauth2 Verfahren generiert)
+
+ - Datentyp: **str**
+
+
+clientID
+========
+
+
+Client ID (via Viessmann Developper API Portal generiert)
+
+ - Datentyp: **str**
+
+
+redirectUrl
+===========
+
+
+Redirect Url (via Viessmann Developper API Portal angelegt)
+
+ - Datentyp: **str**
+
+
+refreshToken
+============
+
+
+Refresh token (beim Oauth2 Verfahren generiert)
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+vicare_path
+===========
+
+
+Array mit Pfad zur Eigenschaft in Feature property
+
+ - Datentyp: **list**
+
+
+vicare_rx_key
+=============
+
+
+Key für den Empfang von Statusinformationen aus dem Viessmann Backend
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **boilerSerial**
+   - **onlineStatus**
+   - **heating.circuits.1.sensors.temperature.supply**
+   - **heating.circuits.1.operating.programs.active**
+   - **heating.circuits.1.operating.modes.heating**
+   - **heating.circuits.1.operating.modes.active**
+   - **heating.gas.consumption.total**
+   - **heating.circuits.1.operating.programs.comfort**
+   - **heating.circuits.1.operating.programs.normal**
+   - **heating.circuits.1.operating.programs.reduced**
+   - **heating.circuits.1.circulation.pump**
+   - **heating.operating.programs.holiday**
+   - **heating.dhw**
+   - **heating.dhw.temperature.main**
+   - **heating.dhw.oneTimeCharge**
+   - **heating.dhw.operating.modes.active**
+   - **heating.dhw.sensors.temperature.dhwCylinder**
+   - **heating.dhw.sensors.temperature.hotWaterStorage**
+   - **heating.boiler.sensors.temperature.commonSupply**
+   - **heating.boiler.temperature**
+   - **heating.sensors.temperature.outside**
+   - **heating.power.consumption.summary.heating**
+   - **heating.power.consumption.total**
+   - **device.messages.errors.raw**
+
+
+vicare_tx_key
+=============
+
+
+Key für das Senden von Kommandos an das Viessmann Backend
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **heating.circuits.1.operating.programs.normal**
+   - **heating.circuits.1.operating.programs.reduced**
+   - **heating.dhw.temperature.main**
+   - **heating.dhw.operating.modes.active**
+   - **heating.circuits.1.operating.modes.active**
+
+
+vicare_tx_path
+==============
+
+
+Array mit Einträgen zum Pfad des Sendekommandos im Feature command
+
+ - Datentyp: **list**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

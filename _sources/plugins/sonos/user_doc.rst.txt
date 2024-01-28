@@ -35,9 +35,9 @@ Unterstützte Geräte
 
 Es werden alle Sonos Lautsprecher mit Sonos Softwareversion > 10.1 unterstützt.
 
-Offizielle Sonos Seite: ``https://www.sonos.com/``
+`Offizielle Sonos Seite <https://www.sonos.com/>`_
 
-Das Plugin basiert auf dem Sonos SoCo Github Projekt: ``https://github.com/SoCo/SoCo``
+Das Plugin basiert auf dem Sonos `SoCo Github Projekt <https://github.com/SoCo/SoCo>`_
 
 Konfiguration
 =============
@@ -45,7 +45,7 @@ Konfiguration
 Erste Schritte
 --------------
 
-Die Zuordnung der Items zu den Speakern erfolgt über eine eindeutige Speaker ID, auch UID genannt. 
+Die Zuordnung der Items zu den Speakern erfolgt über eine eindeutige Speaker ID, auch UID genannt.
 Diese können für Speaker im lokalen Netzwerk mittels des Python Skriptes ``search_uids.py`` ausgelesen werden. Dazu wird
 das Skript in der Konsole folgendermaßen ausgeführt:
 
@@ -60,14 +60,14 @@ Die Aussgabe sieht dann so aus:
     ---------------------------------------------------------
     rincon_000f448c3392a01411
         ip           : 192.168.1.100
-        speaker name : Wohnzimmer 
-        speaker model: Sonos PLAY:1 
+        speaker name : Wohnzimmer
+        speaker model: Sonos PLAY:1
 
     ---------------------------------------------------------
     rincon_c7e91735d19711411
         ip           : 192.168.1.99
-        speaker name : Kinderzimmer 
-        speaker model: Sonos PLAY:3 
+        speaker name : Kinderzimmer
+        speaker model: Sonos PLAY:3
     ---------------------------------------------------------
 
 Die erste Zeile jedes Eintrags gibt die UID an (rincon_xxxxxxxxxxxxxx).
@@ -98,8 +98,8 @@ Folgendermaßen werden Speaker statisch in der plugin.yaml konfiguriert:
     Sonos:
         class_name: Sonos
         class_path: plugins.sonos
-        speaker_ips:                       
-          - 192.168.1.10                    
+        speaker_ips:
+          - 192.168.1.10
           - 192.168.1.77
           - 192.168.1.78
 
@@ -164,7 +164,7 @@ cross_fade
 
 Setzt bzw. liest den Cross-Fade Modus eines Speakers. Das Item ist vom Typ Boolean. `True` bedeutet Cross-Fade
 eingeschaltet, `False` ausgeschaltet.
-Das Setzen ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. 
+Das Setzen ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
 current_track
@@ -194,15 +194,15 @@ current_valid_play_modes
 ``read``
 
 Gibt alle validen Abspielmodi für den aktuellen Zustand zurück. Die Modi werden als String (mit Kommata getrennt) ausgegeben.
-Einer der Modi kann dem ``play_mode`` Befehl übergeben werden. 
+Einer der Modi kann dem ``play_mode`` Befehl übergeben werden.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
 dialog_mode
 -----------
 ``read`` ``write``
 
-Nur unterstützt von Sonos Playbars. 
-Setzt bzw. liest den Dialog Modus einer Playbar. `True` bedeutet Dialog Modus ein, `False` Modus aus. 
+Nur unterstützt von Sonos Playbars.
+Setzt bzw. liest den Dialog Modus einer Playbar. `True` bedeutet Dialog Modus ein, `False` Modus aus.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an (zu bestätigen).
 
 household_id
@@ -224,7 +224,7 @@ is_initialized
 ``read``
 
 Gibt den Status zurück, ob ein Speaker initialisiert und erreichbar ist. Das Item ist vom Typ Boolean.
-`True` bedeutet, dass der Speaker initialisiert und erreichbar ist. Bei `False` ist der Speaker entweder offline oder nicht vollständig initialisiert. 
+`True` bedeutet, dass der Speaker initialisiert und erreichbar ist. Bei `False` ist der Speaker entweder offline oder nicht vollständig initialisiert.
 Nutze dieses Item in Logiken oder Szenen, bevor weitere Kommendos an den Speaker gesendet werden, siehe Beispiel 3).
 
 join
@@ -239,9 +239,9 @@ load_sonos_playlist
 -------------------
 ``write``
 
-Lädt eine Sonos playlist über ihren Namen. Die Funktion ``sonos_playlists`` zeigt alle verfügbaren Playlisten an. 
-Dies ist ein Gruppenbefehl, der auf jeden Speaker einer Gruppe angewandt werden kann. 
- 
+Lädt eine Sonos playlist über ihren Namen. Die Funktion ``sonos_playlists`` zeigt alle verfügbaren Playlisten an.
+Dies ist ein Gruppenbefehl, der auf jeden Speaker einer Gruppe angewandt werden kann.
+
 Unteritem  ``start_after``:
 Wird ein untergeordnetes item vom Typ Boolean mit dem Attribut ``sonos_attrib: start_after`` angelegt, kann das Verhalten
 nach Laden der Playliste bestimmt werden. Wird das Item auf `True` gesetzt, startet der Speaker direkt die Wiedergabe.
@@ -253,11 +253,11 @@ Wird ein untergeordnetes item vom Typ Boolean mit dem Attribut ``sonos_attrib: c
 `True` die bestehende Sonos Playlist gelöscht bevor die neue Playlist geladen wird. Bei Wert `False` bleibt die bestehende Liste
 erhalten und die Songs der neu zu ladenden Playliste werden angehängt.
 Wird dieses Item weggelassen, ist das Standardverhalten `False`.
- 
+
 Unteritem  ``start_track``:
 Wird ein untergeordnetes item vom Typ Number mit dem Attribut ``sonos_attrib: start_track`` angelegt, kann die Indexposition
 innerhalb der geladen Playliste definiert werden, von wo die Wiedergabe startet. Der erste Song in der Playliste entspricht der
-Indexposition `0`. 
+Indexposition `0`.
 Wird dieses Item weggelassen, ist das Standardverhalten ein Start bei Indexposition `0`.
 
 loudness
@@ -275,7 +275,7 @@ streamtype
 ``read`` ``visu``
 
 Gibt den aktuellen Streamtyp zurück. Das Item ist vom Typ String. Mögliche Werte sind
-`music` (Standard, z.B. beim Spielen eines Songs aus dem Netzwerk), `radio`, `tv` (falls der Audio Output einer Playbar 
+`music` (Standard, z.B. beim Spielen eines Songs aus dem Netzwerk), `radio`, `tv` (falls der Audio Output einer Playbar
 auf `TV` gesetzt ist, oder `line-in` (z.B. beim Sonos Play5).
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
@@ -285,7 +285,7 @@ mute
 
 Stellt einen Speaker auf lautlos. Das Item ist vom Typ Boolean. Der Wert `True` bedeutet lautlos (mute),
 `False` bedeutet laut (un-mute).
-Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. 
+Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
 next
@@ -295,7 +295,7 @@ next
 Wechselt zum nächsten Song der aktuellen Playliste. Das Item ist vom Typ Boolean. Der Wert `True`
 bedeutet Sprung zum nächsten Track. Ein Setzen auf `False` hat keinen Effekt. Zusätzlich muss
 für das Item das smarthomeNG item Attribut ``enforce_update: True`` gesetzt werden.
-Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. 
+Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 
 night_mode
 ----------
@@ -317,7 +317,7 @@ pause
 -----
 ``read`` ``write`` ``visu``
 
-Pausiert die Wiedergabe. Das Item ist vom Typ Boolean. Wert `True` bedeutet pausieren, `False` führt die Wiedergabe fort. 
+Pausiert die Wiedergabe. Das Item ist vom Typ Boolean. Wert `True` bedeutet pausieren, `False` führt die Wiedergabe fort.
 Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
@@ -325,7 +325,7 @@ play
 ----
 ``read`` ``write`` ``visu``
 
-Startet die Wiedergabe.  Das Item ist vom Typ Boolean. Der Wert `True` bedeutet Wiedergabe, `False` bedeutet pausieren. 
+Startet die Wiedergabe.  Das Item ist vom Typ Boolean. Der Wert `True` bedeutet Wiedergabe, `False` bedeutet pausieren.
 Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
@@ -350,36 +350,36 @@ play_snippet
 ``write``
 
 Spielt ein Audio Snippet über einen Audiodateinamen ab (z.B. `alarm.mp3`). Das Item ist vom Typ String.
-Voraussetzung ist, dass in der ``plugin.yaml`` die Attribute ``tts`` und der ``local_webservice_path`` gesetzt sind. 
-Die Audiodatei muss in dem unter ``local_webservice_path`` oder ``local_webservice_path_snippet`` angegebenen Pfaden liegen. 
+Voraussetzung ist, dass in der ``plugin.yaml`` die Attribute ``tts`` und der ``local_webservice_path`` gesetzt sind.
+Die Audiodatei muss in dem unter ``local_webservice_path`` oder ``local_webservice_path_snippet`` angegebenen Pfaden liegen.
 Folgende Dateiformate werden unterstützt: `mp3`, `mp4`, `ogg`, `wav`, `aac` (tested only with `mp3`).
 Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 
 Unteritem  ``snippet_volume``:
-Wird ein untergeordnetes Item vom Typ Number mit Attribut ``sonos_attrib: snippet_volume`` definiert, 
+Wird ein untergeordnetes Item vom Typ Number mit Attribut ``sonos_attrib: snippet_volume`` definiert,
 kann die Laustärke explizit für das Abspielen von Snippets gesetzt werden. Diese Snippet Lautstärke beeinflusst nicht
 die Lautstärke der normalen Wiedergabe, auf die nach Abspielen des Snippets zurück gewechselt wird.
-Wird ein Snippet in einer Gruppe abgespielt, wird für jeden einzelnen Speaker die ursprüngliche Lautstärke wiederhergestellt. 
+Wird ein Snippet in einer Gruppe abgespielt, wird für jeden einzelnen Speaker die ursprüngliche Lautstärke wiederhergestellt.
 
 Unteritem  ``snippet_fade_in``:
 Wird ein untergeordnetes Item vom Typ Boolean mit Attribut ``sonos_attrib: snippet_fade_in`` definiert, wird die Lautstärke
-nach dem Abspielen des Snippets von `0` auf das gewünschte Level schrittweise angehoben und eingeblendet. 
+nach dem Abspielen des Snippets von `0` auf das gewünschte Level schrittweise angehoben und eingeblendet.
 
 play_tts
 --------
 ``write``
 
 Spielt eine definierte Nachricht ab (Text-to-Speech). Das Item ist vom Typ String. Aus der Nachricht im String wird von dem Google TTS API eine
-Audiodatei erzeugt, die lokal gespeichert und abgespielt wird. 
+Audiodatei erzeugt, die lokal gespeichert und abgespielt wird.
 Für die Nutzung dieses Features müssen mindestens zwei Parameter in der ``plugin.yaml`` gesetzt sein:
 ``tts`` und ``local_webservice_path``.
 Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 
 Unteritem ``tts_language``:
 Wird ein untergeordnetes Item vom Typ String mit Attribut ``sonos_attrib: tts_language`` angelegt, kann die
-Spracheinstellung der Google TTS API definiert werden. 
+Spracheinstellung der Google TTS API definiert werden.
 Gültige Werte sind `en`, `de`, `es`, `fr`, `it`. Ist das Item nicht vorhanden, wird die Standardeinstellung `de` verwendet.
- 
+
 Unteritem ``tts_volume``:
 Wird ein untergeordnetes Item vom Typ Number mit Attribut ``sonos_attrib: tts_volume`` angelegt, kann die Lautstärke
 für das Abspielen von Text-to-Speech separat definiert werden. Die reguläre Lautstärke wird damit nicht beeinflusst.
@@ -387,22 +387,23 @@ Nach der Ansage wird die Lautstärke jedes Speakers individuell in der Gruppe wi
 
 Unteritem ``tts_fade_in``:
 Wird ein untergeordnetes Item vom Typ Boolean mit Attribut ``sonos_attrib: tts_fade_in`` definiert, wird die Lautstärke
-nach dem Abspielen der Nachricht von 0 auf das gewünschte Level schrittweise angehoben und eingeblendet. 
+nach dem Abspielen der Nachricht von 0 auf das gewünschte Level schrittweise angehoben und eingeblendet.
 
-play_tunein / play_sonos_radio
+play_sonos_radio / play_tunein
 ------------------------------
 ``write``
 
 Spielt einen Radiosender anhand eines Namens. Das Item ist vom Typ String. Sonos sucht dazu in einer Datenbank
 nach potentiellen Radiostationen, die dem Namen entsprechen.
-Wird mehr als ein zum Suchbegriff passender Radiosender gefunden, wird der erste Treffer verwendet. 
-Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
+Wird mehr als ein zum Suchbegriff passender Radiosender gefunden, wird der erste Treffer verwendet.
+Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. Empfohlen wird die Nutzung der Funktion play_sonos_radio.
+Die alte Funktion play_tunein existiert noch, sollte aber nicht mehr verwendet werden.
 
 Unteritem ``start_after``:
-Wird ein untergeordnetes Item vom Typ Boolean mit Attribut ``sonos_attrib: start_after`` definiert, wird das 
+Wird ein untergeordnetes Item vom Typ Boolean mit Attribut ``sonos_attrib: start_after`` definiert, wird das
 Verhalten nach dem Laden der Radiostation definiert. Der Wert `True`, startet die Wiedergabe automatisch.
 Existiert das Unteritem nicht, ist die Standardeinstellung `True`.
-Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. 
+Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 
 play_url
 --------
@@ -411,10 +412,10 @@ play_url
 Spielt eine gegebene URL. Das Item ist vom Typ String, in dem die URL übergeben wird.
 
 Unteritem ``start_after``:
-Wird ein untergeordnetes Item vom Typ Boolean mit Attribut ``sonos_attrib: start_after`` definiert, wird das 
+Wird ein untergeordnetes Item vom Typ Boolean mit Attribut ``sonos_attrib: start_after`` definiert, wird das
 Verhalten nach dem Laden der URL definiert. Wurde der obige ``group_command`` auf `True` gesetzt,
 startet die Wiedergabe automatisch. Existiert das Unteritem nicht, ist die Standardeinstellung `True`.
-Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. 
+Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 
 play_sharelink
 --------------
@@ -424,10 +425,10 @@ Spielt einen gegebenen Sharelink, z.B. einen Spotify Sharelink. In diesem Fall w
 kostenlose Account Sharelinks nicht unterstützt.
 
 Unteritem  ``start_after``:
-Wird ein untergeordnetes Item vom Typ Boolean mit Attribut ``sonos_attrib: start_after`` definiert, wird das 
+Wird ein untergeordnetes Item vom Typ Boolean mit Attribut ``sonos_attrib: start_after`` definiert, wird das
 Verhalten nach dem Laden des Sharelinks definiert. Wurde der obige ``group_command`` auf `True` gesetzt,
 startet die Wiedergabe automatisch. Existiert das Unteritem nicht, ist die Standardeinstellung `True`.
-Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. 
+Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 
 previous
 --------
@@ -436,13 +437,13 @@ previous
 Setzt den aktuellen Track auf den Vorherigen zurück. Das Item ist vom Typ Boolean. Der Wert `True` triggert das Schalten
 auf den vorherigen Track, der Wert `False` hat keinen Effekt.
 Zusätzlich muss für das Item das smarthomeNG Item Attribut ``enforce_update: True`` gesetzt werden.
-Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. 
+Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 
 radio_station
 -------------
 ``read`` ``visu``
 
-Gibt den Namen des aktuellen Radiosenders zurück. 
+Gibt den Namen des aktuellen Radiosenders zurück.
 Das Item ist vom Typ String. Falls kein Radio gespielt wird, siehe ``streamtype``, ist das Item leer.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
@@ -450,7 +451,7 @@ radio_show
 ----------
 ``read`` ``visu``
 
-Falls verfügbar (hängt von dem Radiosender ab), gibt dieses Item den Namen des aktuellen Programms zurück. 
+Falls verfügbar (hängt von dem Radiosender ab), gibt dieses Item den Namen des aktuellen Programms zurück.
 Das Item ist vom Typ String. Falls kein Radio gespielt wird, siehe ``streamtype``, ist das Item leer.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
@@ -460,9 +461,9 @@ snooze
 
 Setzt bzw. liest den Snooze Timer. Das Item ist vom Typ Number mit ganzzahligen Werten zwischen 0 - 86399 (in Sekunden).
 Der Wert `0` bedeutet, dass der Snooze Timer ausgeschaltet ist.
-Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. 
+Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 Der Wert wird **nicht** in Echtzeit aktualisiert, sondern in jedem Speaker Discovery Zyklus aktualisiert.
-  
+
 sonos_playlists
 ---------------
 ``read`` ``visu``
@@ -491,7 +492,7 @@ stop
 ``read`` ``write`` ``visu``
 
 Stoppt die Wiedergabe. Das Item ist vom Typ Boolean. Der Wert `True` steht für Stop, `False` für Wiedergabe starten.
-Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet. 
+Der Befehl ist ein Gruppenbefehl und wird für alle Speaker einer Gruppe angewendet.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
 stream_content
@@ -558,7 +559,7 @@ treble
 ``read`` ``write``
 
 Setzt bzw. liest das Höhen Level eines Speakers. Das Item ist vom Typ Number und muss ein ganzzahligen Wert zwischen -10 and 10 enthalten.
-Diese Eigenschaft ist **kein** Gruppenbefehl. Nichtsdestotrotz kann ein untergeordnetes Item ``group_command: True`` definiert werden, 
+Diese Eigenschaft ist **kein** Gruppenbefehl. Nichtsdestotrotz kann ein untergeordnetes Item ``group_command: True`` definiert werden,
 um die Höheneinstellung für alle Speaker innerhalb der Gruppe zu übernehmen.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
@@ -616,7 +617,7 @@ Liest die Liste der gespeicherten Sonos Favoriten. Das Item ist vom Typ List.
 Das Item wird über Sonos Events aktualisiert und zeigt daher immer den aktuellen Status an.
 
 favorite_radio_stations
----------------
+-----------------------
 ``read``
 
 Liest die Liste der gespeicherten Tunein Favoriten. Das Item ist vom Typ List.
@@ -661,28 +662,30 @@ Nicht echtzeitfähige Eigenschaften
 Einige Eigenschaften sind nicht Event basiert. Das bedeutet, dass sie nicht direkt nach
 Änderung über ein Event aktualisiert werden, sondern die Änderung erst bei der nächsten
 zyklischen Abfrage bei smarthomeNG ankommt.
+
 Folgende Eigenschaften sind **nicht** Event basiert:
- * snooze
- * status_light
+
+- snooze
+- status_light
 
 
 Gruppenbefehle
 --------------
 Einige Items werden immer als Gruppenbefehl, d.h. auf alle Speaker innerhalb einer Gruppe ausgeführt.
 Folgende Methoden sind Gruppenbefehle:
-  
- * play
- * pause
- * stop
- * mute
- * cross_fade
- * snooze
- * play_mode
- * next
- * previous
- * play_tunein
- * play_url
- * load_sonos_playlist
+
+* play
+* pause
+* stop
+* mute
+* cross_fade
+* snooze
+* play_mode
+* next
+* previous
+* play_tunein
+* play_url
+* load_sonos_playlist
 
 Für diese Items ist es egal, für welchen Speaker einer Gruppe diese Kommandos gesendet werden. Sie werden automatisch für alle
 Speaker einer Gruppe angewendet.
@@ -727,7 +730,7 @@ Beispiel:
         do_something()
 
 4a) Lautstärke inkrementell verstellen (via KNX dpt3)
-----------------------------------------------------
+-----------------------------------------------------
 
 Dieses Beispiel zeigt die Verstellung der Laustärke inkrementell via dpt3:
 
@@ -741,7 +744,7 @@ Dieses Beispiel zeigt die Verstellung der Laustärke inkrementell via dpt3:
             sonos_attrib: vol_dpt3
             sonos_dpt3_step: 2
             sonos_dpt3_time: 1
-    
+
             helper:
                 sonos_attrib: dpt3_helper
                 type: num
@@ -801,7 +804,7 @@ Beispiel:
     MyRoom:
         MySonos:
             sonos_uid: rincon_xxxxxxxxxxxxxx
-        
+
             play:
                 type: bool
                 sonos_recv: play
@@ -822,7 +825,6 @@ Folgende Informationen können im Webinterface angezeigt werden:
    angezeigt, die aktuell online und verwendbar sind..
  - Tab Items: Mit dem Plugin verbundene Items
  - Tab Speakers/Zones: Details zu den Speakern/Zones im Netzwerk u.a. UID
-
 
 
 SmartVisu Widget
@@ -847,8 +849,3 @@ Sofern alle Sonos Items gemäß Beispiel Struct definiert worden sind, wird das 
     </div>
 
     {% endblock %}
-
-
-Version History
-===============
-

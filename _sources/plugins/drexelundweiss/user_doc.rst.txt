@@ -8,6 +8,13 @@ drexelundweiss
 Einführung
 ==========
 
+.. image:: webif/static/img/plugin_logo.jpg
+   :alt: plugin logo
+   :width: 900px
+   :height: 900px
+   :scale: 16 %
+   :align: left
+
 Dieses Plugin ermöglicht es, Drexel und Weiß Geräte (Wärmepumpen) direkt über USB ohne Modbusadapter zu steuern.
 
 .. important::

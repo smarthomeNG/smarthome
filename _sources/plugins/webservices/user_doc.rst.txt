@@ -3,7 +3,7 @@
 .. index:: Webservices
 .. index:: REST Interface
 
-webservicew
+webservices
 ===========
 
 Das Webservices Plugin stellt ein REST basiertes API für SmartHomeNG bereit.

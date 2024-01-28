@@ -284,8 +284,37 @@ abweichend sein soll, kann dort das Attribut
 
 angegeben werden. Der Parameter kann auch durch ein Item oder eval festgelegt werden.
 Letzteres ermöglicht es, je nach Situation die Suspenddauer von verschiedenen Items
-abhängig zu machen. Im struct ``state_suspend_dynamic`` wird hier das Item automatik.settings.suspendduration.seconds verknüpft bzw.
-für die verschiedenen "suspendvariants" automatik.settings.suspendvariant.suspendduration[0-2].seconds.
+abhängig zu machen. Im struct ``state_suspend_dynamic`` wird hier das
+Item automatik.settings.suspendduration.seconds verknüpft bzw.
+für die verschiedenen "suspendvariants" die Items automatik.settings.suspendvariant.suspendduration[0-2].seconds.
 Hierzu ist im struct ein Item settings.suspendvariant integriert, das einen numerischen Wert zwischen 0
 und 2 erwartet. 0 ist dabei die "normale" Funktionsweise, eine 1 würde auf die duration1 und eine 2 auf die
 duration2 verweisen.
+
+Um diese unterschiedlichen Dauerangaben zu nutzen, ist der Wert von suspendvariant in den entsprechenden
+Zuständen zu setzen. Außerdem sollte beim Beenden des Suspendstatus der Wert wieder auf 0 oder den
+vorherigen Wert gesetzt werden (was im entsprechenden Struct auch passiert).
+
+.. code-block:: yaml
+
+  #items/item.yaml
+  beispiel:
+    raffstore1:
+      automatik:
+          struct:
+            - stateengine.general
+            - stateengine.state_release
+            - stateengine.state_lock
+            - stateengine.state_suspend_dynamic
+            - beschattung_se_state_abend
+            - beschattung_se_state_nacht
+            - beschattung_se_state_schnee
+            - beschattung_se_state_standard
+
+          rules:
+              nacht:
+                  on_leave:
+                    se_set_suspendvariant: 1
+              schnee:
+                  on_leave:
+                    se_set_suspendvariant: 2

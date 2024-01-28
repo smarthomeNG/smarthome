@@ -90,33 +90,125 @@ Dabei definiert
     - ``tasmota_sml_attr`` den Namen des Keys aus dem Werte-Dictionary, dass dem Item zugewiesen werden soll.
 
 Die/Eine MQTT Message zum Beispiel oben.
+
 .. code-block:: text
+
     ``tele/tasmota_sml2mqtt/SENSOR = {"Time":"2023-01-27T17:20:45","MT631":{"Total_in":0001.000}}``
 
 Den Namen des SML-Devices (hier MT631), die Keys für das gelieferte Dictionary (Zuweisung des Werte) etc. wird direkt im
 Tasmota-Script zum Konfiguration des SML-Devices definiert.
 
-    .. code-block:: text
-        >D
-        >B
+.. code-block:: text
 
-        =>sensor53 r
-        >M 1
-        +1,3,s,0,9600,MT631
-        1,77070100010800ff@1000,Gesamtverbrauch,KWh,Total_in,2
-        1,77070100100700ff@1,aktueller Verbrauch,W,Power_curr,2
-        #
+    >D
+    >B
+
+    =>sensor53 r
+    >M 1
+    +1,3,s,0,9600,MT631
+    1,77070100010800ff@1000,Gesamtverbrauch,KWh,Total_in,2
+    1,77070100100700ff@1,aktueller Verbrauch,W,Power_curr,2
+    #
 
 Der Sendezykus der Werte über ebenfalls in der Konfiguration des Scripts mit <precision> definiert.
 "number of decimal places. Add 16 to transmit the data immediately. Otherwise it is transmitted on TelePeriod only."
 Siehe hierzu: https://tasmota.github.io/docs/Smart-Meter-Interface/#meter-metrics
 
-    .. code-block:: text
-        1,1-0:1.8.0*255(@1,consumption,KWh,Total_in,4 precision of 4, transmitted only on TelePeriod
-        1,1-0:1.8.0*255(@1,consumption,KWh,Total_in,20 precision of 4, transmitted immediately (4 + 16 = 20)
+.. code-block:: text
+    
+    1,1-0:1.8.0*255(@1,consumption,KWh,Total_in,4 precision of 4, transmitted only on TelePeriod
+    1,1-0:1.8.0*255(@1,consumption,KWh,Total_in,20 precision of 4, transmitted immediately (4 + 16 = 20)
 
-Vollständige Informationen zur Konfiguration und die vollständige Beschreibung der Item-Attribute sind
-unter **plugin.yaml** zu finden.
+Vollständige Informationen zur Konfiguration und die Beschreibung der Item-Attribute sind unter **plugin.yaml** zu finden.
+
+Bekannte tasmota-Attribute
+--------------------------
+
+Die folgenden Attribute (Werte für das Item-Attribut ``tasmota-attr``) sind bisher bekannt und unterstützt:
+
+    * "relay": Schalten des Relais -> bool, r/w
+    * "online": Online Status des Tasmota Devices -> bool, r/o
+    * "voltage": Spannung in Volt bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+    * "current": Strom in Ampere bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+    * "power": Leistung in Watt bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+    * "power_total": Verbrauch (gesamt) in kWh bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+    * "power_yesterday": Verbrauch (gestern) in kWh bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+    * "power_today": Verbrauch (heute) in kWh bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+    * "temp": Temperatur in °C bei Tasmota Devices mit TEMP Sensor (DS18B20, AM2301) -> num, r/o
+    * "hum": Luftfeuchtigkeit in %rH bei Tasmota Devices mit HUM Sensor (AM2301) -> num, r/o
+    * "dewpoint": Taupunkt in °C bei Tasmota Devices mit HUM und TEMP Sensor (AM2301) -> num, r/o
+    * "hsb": Hue, Saturation, Brightness (HSB) bei RGBW Tasmota Devices (H801) -> list, r/w
+    * "white": Color Temperature in Kelvin bei RGBW Tasmota Devices (H801) -> num, r/w
+    * "ct": Color Temperature in Kelvin bei RGBW Tasmota Devices (H801) -> num, r/w
+    * "dimmer": Dimmwert in % Tasmota Devices -> num, r/w
+    * "rf_recv": Empfangene RF Daten bei Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> dict, r/o
+    * "rf_send": Zu sendende RF Daten bei Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> dict {'RfSync': 12220, 'RfLow': 440, 'RfHigh': 1210, 'RfCode':'#F06104'}, r/w
+    * "rf_key_send": Zu sendender RF-Key Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> num [1-16], r/w
+    * "rf_key_recv": Zu empfangender RF-Key Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> num [1-16], r/w
+    * rf_key: 'RF Key'
+    * "zb_permit_join": Schaltet das Pairing an der ZigBee Bridge ein/aus -> bool, r/w
+    * "zb_forget": Löscht das Zigbee-Gerät aus dem Item Wert aus der Liste bekannter Geräte in der Zigbee-Bridge -> str, r/w
+    * "zb_ping": Sendet ein Ping zum Zigbee-Gerät aus dem Item Wert -> str, r/w
+    * "power_total": Gemessener Gesamtenergieverbrauch
+    * "power_today": Gemessener Energieverbrauch heute
+    * "power_yesterday": Gemessener Energieverbrauch gestern
+    * "analog_temp": Temperatur am Analogeingang
+    * "analog_temp1": Temperatur am Analogeingang1
+    * "analog_a0": ADC-Eingang eines ESPs
+    * "analog_range": ADC-Eingang eines ESPs
+    * "esp32_temp": Temperatur des ESP32
+
+
+Die folgenden ZigBee-Attribute (Werte für das Item-Attribute ``tasmota-zb-attr``) sind bisher bekannt und unterstützt:
+
+    * "device": Geräte_ID Kurzform -> str, r/o
+    * "power": Schalter true/false -> bool, r/w
+    * "dimmer": Helligkeit 0-100 -> num, r/w
+    * "hue": Farbwert 0-360 -> num, r/w
+    * "sat": Sättigung 0-100 -> num, r/w
+    * "ct": Farbtemperatur (mired scale), 150-500 -> num, r/w
+    * "ct_k": Farbtemperatur (Kelvin), 2000-6700 -> num, r/w
+    * "temperature": Temperatur -> num, r/o
+    * "humidity": Feuchtigkeit -> num, r/o
+    * "reachable": Erreichbarkeit -> bool, r/o
+    * "batterypercentage": Batteriefüllung in % -> num, r/o
+    * "batterylastseenepoch": Letzte Batteriemeldung -> datetime, r/o
+    * "lastseen": Letzter Kontakt vor xx Sekunden -> num, r/o
+    * "lastseenepoch": Letzter Kontakt -> datetime, r/o
+    * "linkquality": Verbindungsqualität -> num, r/o
+    * "ieeeaddr": IEEE-Adresse -> str, r/o
+    * "modelid": Model-ID -> str, r/o
+    * "manufacturer": Hersteller -> str, r/o
+    * "colormode": Farbmodus -> num, r/o
+    * "zonestatus": Zonenstatus -> num, r/o
+    * "contact": Kontakt -> bool, r/o
+    * "movement": Bewegung -> bool, r/o
+    * "colortempstepup": Farbtemperatur +
+    * "colortempstepdown": Farbtemperatur -
+    * "dimmerstepup": Dimmer +
+    * "dimmerstepdown": Dimmer -
+    * "dimmermove": Dimmer
+    * "aqaravibrationmode": aqaravibrationmode
+    * "aqaravibration505": aqaravibration505
+    * "batteryvoltage": Batteriespannung
+    * "shutterclose": Rollo schließen
+    * "shutteropen": Rollo öffnen
+    * "endpoint": Endlage erreicht
+    * "huemove": Farbbewegung Hue
+    * "0300!0a": 0300!0a
+    * "0300!01": 0300!01
+    * "0300!03": 0300!03
+    * "0300!4c": 0300!4c
+    * "0006!00": 0006!00
+    * "0006!01": 0006!01
+    * "0008!01": 0008!01
+    * "0008!02": 0008!02
+    * "0008!03": 0008!03
+    * "0008!04": 0008!04
+    * "0008!05": 0008!05
+
+
+Weitere Attribute sind - z.B. bei neuen Geräten - möglich. In vielen Fällen können diese ohne weiter Änderungen genutzt werden; wenn dies in Einzelfällen nicht funktioniert, bitten wir um Information an die Entwickler.
 
 
 Web Interface des Plugins

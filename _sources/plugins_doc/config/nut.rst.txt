@@ -8,8 +8,8 @@ Plugin 'nut' Konfiguration
 
 .. index:: Plugins; nut Konfiguration
 
-.. image:: /_static/img/interface.svg
-   :alt: plugin type logo
+.. image:: /plugins/nut/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -58,7 +58,7 @@ cycle
 =====
 
 
-Lese-Zyklus
+Lesezyklus in Sekunden
 
  - Datentyp: **int**
  - Standardwert: **60**
@@ -68,7 +68,7 @@ host
 ====
 
 
-Host des ups Daemons
+Host des USV Daemons
 
  - Datentyp: **str**
  - Standardwert: **localhost**
@@ -78,7 +78,7 @@ port
 ====
 
 
-Port des ups Daemons
+IP Port des USV Daemons
 
  - Datentyp: **int**
  - Standardwert: **3493**
@@ -90,7 +90,7 @@ timeout
 =======
 
 
-Telnet Lese-Timeout
+Telnet Lese-Timeout (Sekunden)
 
  - Datentyp: **int**
  - Standardwert: **5**
@@ -100,7 +100,7 @@ ups
 ===
 
 
-Name of the ups
+Name der USV
 
  - Datentyp: **str**
 

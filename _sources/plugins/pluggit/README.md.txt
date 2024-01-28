@@ -24,6 +24,13 @@ struct: pluggit.pluggit
 
 ## Änderungen:
 
+V2.0.6 - 15.09.2023
+- Anpassung für pymodbus 3.5.2: bytorder und wordorder musste korrrigiert werden, statt Little und Big nun LITTLE und BIG
+- Python muss >= 3.8 sein und pymodbus >= 3.5.2
+
+V2.05 - 11.09.2023
+- unter Python 10 muss mindestens die Version 3.3.2 von pymodbus laufen, da sonst Verbindungsprobleme
+
 V2.0.4 - 13.11.2022
 - Verbesserungen zur Versionsprüfung "pymodbus"
 

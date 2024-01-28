@@ -54,6 +54,16 @@ Parameter
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
 
+cycle
+=====
+
+
+Zeitintervall zur Datenabfrage
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
 host
 ====
 

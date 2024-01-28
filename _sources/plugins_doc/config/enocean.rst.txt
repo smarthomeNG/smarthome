@@ -68,7 +68,7 @@ serialport
 ==========
 
 
-Name der Schnittstelle, an der sich der EnOcean Adapter befindet
+Name der Schnittstelle, an der sich der EnOcean Adapter befindet (als Linux-Handle oder RFC2217-URL)
 
  - Datentyp: **str**
  - Standardwert: **/dev/ttyAMA0**

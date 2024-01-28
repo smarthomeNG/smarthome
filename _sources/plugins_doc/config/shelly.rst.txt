@@ -23,6 +23,8 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
 
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
 
 
 Beschreibung
@@ -37,7 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.7.2**
+ - Minimum SmartHomeNG Version: **1.9.5.6**
 
 Konfiguration
 =============
@@ -53,7 +55,24 @@ Parameter
 
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
-**Keine**
+
+debuggen1devices
+================
+
+
+Shelly_IDs der zu debuggenden Devices. Falls leer, werden Debug Ausgaben für alle Gen1 Devices erzeugt
+
+ - Datentyp: **list**
+
+
+gen1debug
+=========
+
+
+Debug Gen1 devices
+
+ - Datentyp: **bool**
+
 
 ==============
 Item Attribute
@@ -72,23 +91,14 @@ Zu lesendes/schreibendes Attribut des Shelly Devices. Achtung: Nicht jedes Attri
  - Datentyp: **str**
  - Standardwert: **relay**
 
- - Mögliche Werte:
 
-   - **relay**
-   - **power**
-   - **energy**
-   - **online**
-   - **temp**
-   - **temp_f**
-   - **humidity**
-   - **battery**
-   - **state**
-   - **tilt**
-   - **vibration**
-   - **lux**
-   - **illumination**
-   - **flood**
-   - **error**
+shelly_group
+============
+
+
+Gruppe des Shelly Devices von der ein Attribut gelesen/geschrieben werden soll (z.B. "sensor", "switch:0" oder "input_event:0")
+
+ - Datentyp: **str**
 
 
 shelly_id
@@ -98,6 +108,15 @@ shelly_id
 ID des Shelly Devices
 
  - Datentyp: **str**
+
+
+shelly_list_attrs
+=================
+
+
+True=Attribute, die vom Shelly Device gesendet werden, im Details Log auflisten.
+
+ - Datentyp: **bool**
 
 
 shelly_relay
@@ -115,18 +134,20 @@ Nummer des zu schaltenden Relais
    - **1**
    - **2**
    - **3**
+   - **-**
 
 
 shelly_type
 ===========
 
 
-Typ des Shelly Devices (z.B. Shellyplug, Shellyplug-s, Shelly1/pm, Shelly2, Shelly2.5, Shelly4Pro)
+Nur für Gen1 Devices: Typ des Shelly Devices (z.B. Shellyplug, Shellyplug-s, Shelly1/pm, Shelly2, Shelly2.5, Shelly4Pro)
 
  - Datentyp: **str**
 
  - Mögliche Werte:
 
+   - 
    - **shellyplug**
    - **shellyplug-s**
    - **shelly1**

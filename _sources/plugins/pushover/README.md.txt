@@ -8,6 +8,9 @@ Pushover is one out of many push services, which is compatible with Android, IOS
 
 ---
 ## Changelog
+__2023-11-22__:
+* add ttl parameter
+
 __2018-10-04__:
 
 * Use new lib.network
@@ -40,7 +43,7 @@ Description of the attributes:
 ---    
 ## Usage:
 
-### sh.po(title, message [, priority] [, retry] [, expire] [, sound] [, url] [, url_title] [, device] [, userKey] [, apiKey])
+### sh.po(title, message [, priority] [, retry] [, expire] [, ttl] [, sound] [, url] [, url_title] [, device] [, userKey] [, apiKey])
 Send a message to your device.  
 
 #### Parameters  
@@ -49,6 +52,7 @@ Send a message to your device.
 * __priority__: Priority of the message - read https://pushover.net/api#priority
 * __retry__: when Emergency priority set, this specifies how often (in seconds) the Pushover servers will send the same notification to the user - read https://pushover.net/api#priority
 * __expire__: when Emergency priority set, this specifies how many seconds your notification will continue to be retried for (every retry seconds) - read https://pushover.net/api#priority
+* __ttl__: specifies the time to live in seconds (ignored for priority 2 messages) - read https://pushover.net/api#ttl
 * __sound__: override a user's default tone choice on a per-notification basis - read https://pushover.net/api#sounds
 * __url__: adds a supplementary URL that is not included in the message text, but available for the user to click on - read https://pushover.net/api#urls
 * __url_title__: the title for the a supplementary URL - read https://pushover.net/api#urls
@@ -72,7 +76,7 @@ sh.po("Simple Test", "This is my test message.")
 sh.po("Warning", "Your door is not locked!", 1)
 
 # send simple message to device with id: e6653
-sh.po("Simple Test", "This is my test message", None, None, None, None, None, None, "e6653")
+sh.po("Simple Test", "This is my test message", device="e6653")
 
 # send a message with an attached image (camera snapshot for example)
 sh.po(title="Simple Test", message="This is my test message", attachment="/tmp/snapshot.jpg")

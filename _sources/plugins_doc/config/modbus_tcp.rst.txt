@@ -55,15 +55,25 @@ Parameter
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
 
+crontab
+=======
+
+
+Update mit Festlegung via Crontab
+
+ - Datentyp: **str**
+
+
 cycle
 =====
 
 
-Update Zyklus in Sekunden
+Update Zyklus in Sekunden. Wenn der Wert 0 ist, wird keine Abfrage über cycle ausgeführt
 
- - Datentyp: **num**
+ - Datentyp: **int**
  - Standardwert: **300**
 
+ - Minimalwert: **0**
 
 host
 ====
@@ -80,8 +90,10 @@ port
 
 modbus Port
 
- - Datentyp: **num**
+ - Datentyp: **int**
 
+ - Minimalwert: **0**
+ - Maximalwert: **65535**
 
 slaveUnit
 =========
@@ -155,7 +167,7 @@ modBusFactor
 ============
 
 
-Faktor mit welchem der gelesene Register-Wert multipliziert wird
+Faktor mit dem der gelesene Register-Wert multipliziert wird
 
  - Datentyp: **num**
  - Standardwert: **1**

@@ -15,7 +15,7 @@ gpio
 Konfiguration
 =============
 
-Die Informationen zur Konfiguration des Plugins sind unter :doc:`/user/plugins_doc/config/gpio` beschrieben.
+Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/config/gpio` beschrieben.
 
 Beschreibung
 ============

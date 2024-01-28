@@ -71,8 +71,28 @@ ignore_0
 
 Bei Items, bei denen ein String aus der Liste im Pfadnamen vorkommt, werden 0-Werte (val_num = 0) bei Datenbankauswertungen ignoriert. Beispieleintrag: temp | hum
 
- - Datentyp: **list**
+ - Datentyp: **list(str)**
  - Standardwert: **[]**
+
+
+lock_db_for_query
+=================
+
+
+Sperren der Datenbank während der Abfrage
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+optimize_value_filter
+=====================
+
+
+Optimierung der gesetzen als Plugin-Parameter oder/und Item-Attribute gesetzten Wertefilter.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
 
 
 startup_run_delay
@@ -93,6 +113,15 @@ True: Verwendung des ältesten Eintrags des Items in der Datenbank, falls der St
 
  - Datentyp: **bool**
  - Standardwert: **False**
+
+
+value_filter
+============
+
+
+Definition von Wertefiltern als Wörterbuch {'Teil des Itempfades: [Liste von Vergleichsoperatoren als String]} Bsp: {'temp': ['> -10', '< 85'], 'hum': ['>= 0', '<= 100']}
+
+ - Datentyp: **dict**
 
 
 ==============
@@ -138,9 +167,12 @@ Auswertefunktion des DB-Addon Plugins
  - Mögliche Werte:
 
    - **verbrauch_heute**
+   - **verbrauch_tag**
    - **verbrauch_woche**
    - **verbrauch_monat**
    - **verbrauch_jahr**
+   - **verbrauch_last_24h**
+   - **verbrauch_last_7d**
    - **verbrauch_heute_minus1**
    - **verbrauch_heute_minus2**
    - **verbrauch_heute_minus3**
@@ -148,6 +180,15 @@ Auswertefunktion des DB-Addon Plugins
    - **verbrauch_heute_minus5**
    - **verbrauch_heute_minus6**
    - **verbrauch_heute_minus7**
+   - **verbrauch_heute_minus8**
+   - **verbrauch_tag_minus1**
+   - **verbrauch_tag_minus2**
+   - **verbrauch_tag_minus3**
+   - **verbrauch_tag_minus4**
+   - **verbrauch_tag_minus5**
+   - **verbrauch_tag_minus6**
+   - **verbrauch_tag_minus7**
+   - **verbrauch_tag_minus8**
    - **verbrauch_woche_minus1**
    - **verbrauch_woche_minus2**
    - **verbrauch_woche_minus3**
@@ -159,7 +200,9 @@ Auswertefunktion des DB-Addon Plugins
    - **verbrauch_monat_minus12**
    - **verbrauch_jahr_minus1**
    - **verbrauch_jahr_minus2**
+   - **verbrauch_jahr_minus3**
    - **verbrauch_rolling_12m_heute_minus1**
+   - **verbrauch_rolling_12m_tag_minus1**
    - **verbrauch_rolling_12m_woche_minus1**
    - **verbrauch_rolling_12m_monat_minus1**
    - **verbrauch_rolling_12m_jahr_minus1**
@@ -169,6 +212,9 @@ Auswertefunktion des DB-Addon Plugins
    - **zaehlerstand_heute_minus1**
    - **zaehlerstand_heute_minus2**
    - **zaehlerstand_heute_minus3**
+   - **zaehlerstand_tag_minus1**
+   - **zaehlerstand_tag_minus2**
+   - **zaehlerstand_tag_minus3**
    - **zaehlerstand_woche_minus1**
    - **zaehlerstand_woche_minus2**
    - **zaehlerstand_woche_minus3**
@@ -186,6 +232,7 @@ Auswertefunktion des DB-Addon Plugins
    - **minmax_last_7d_avg**
    - **minmax_heute_min**
    - **minmax_heute_max**
+   - **minmax_heute_avg**
    - **minmax_heute_minus1_min**
    - **minmax_heute_minus1_max**
    - **minmax_heute_minus1_avg**
@@ -195,6 +242,18 @@ Auswertefunktion des DB-Addon Plugins
    - **minmax_heute_minus3_min**
    - **minmax_heute_minus3_max**
    - **minmax_heute_minus3_avg**
+   - **minmax_tag_min**
+   - **minmax_tag_max**
+   - **minmax_tag_avg**
+   - **minmax_tag_minus1_min**
+   - **minmax_tag_minus1_max**
+   - **minmax_tag_minus1_avg**
+   - **minmax_tag_minus2_min**
+   - **minmax_tag_minus2_max**
+   - **minmax_tag_minus2_avg**
+   - **minmax_tag_minus3_min**
+   - **minmax_tag_minus3_max**
+   - **minmax_tag_minus3_avg**
    - **minmax_woche_min**
    - **minmax_woche_max**
    - **minmax_woche_minus1_min**
@@ -220,6 +279,10 @@ Auswertefunktion des DB-Addon Plugins
    - **tagesmitteltemperatur_heute_minus1**
    - **tagesmitteltemperatur_heute_minus2**
    - **tagesmitteltemperatur_heute_minus3**
+   - **tagesmitteltemperatur_tag**
+   - **tagesmitteltemperatur_tag_minus1**
+   - **tagesmitteltemperatur_tag_minus2**
+   - **tagesmitteltemperatur_tag_minus3**
    - **serie_minmax_monat_min_15m**
    - **serie_minmax_monat_max_15m**
    - **serie_minmax_monat_avg_15m**
@@ -237,16 +300,30 @@ Auswertefunktion des DB-Addon Plugins
    - **serie_zaehlerstand_monat_18m**
    - **serie_waermesumme_monat_24m**
    - **serie_kaeltesumme_monat_24m**
+   - **serie_tagesmittelwert_0d**
    - **serie_tagesmittelwert_stunde_0d**
+   - **serie_tagesmittelwert_stunde_30_0d**
    - **serie_tagesmittelwert_tag_stunde_30d**
    - **general_oldest_value**
    - **general_oldest_log**
    - **kaeltesumme**
    - **waermesumme**
    - **gruenlandtempsumme**
-   - **tagesmitteltemperatur**
    - **wachstumsgradtage**
+   - **wuestentage**
+   - **heisse_tage**
+   - **tropennaechte**
+   - **sommertage**
+   - **heiztage**
+   - **vegetationstage**
+   - **frosttage**
+   - **eistage**
+   - **tagesmitteltemperatur**
    - **db_request**
+   - **minmax**
+   - **minmax_last**
+   - **verbrauch**
+   - **zaehlerstand**
 
 
 db_addon_ignore_value
@@ -256,6 +333,15 @@ db_addon_ignore_value
 Wert der bei Abfrage bzw. Auswertung der Datenbank für diese Item ignoriert werden soll
 
  - Datentyp: **num**
+
+
+db_addon_ignore_value_list
+==========================
+
+
+Liste von Vergleichsoperatoren, die bei Abfrage bzw. Auswertung der Datenbank für dieses Item berücksichtigt werden sollen. Bsp: ['> 0', '< 35']
+
+ - Datentyp: **list(str)**
 
 
 db_addon_info
@@ -278,6 +364,15 @@ db_addon_params
 Parameter für eine Auswertefunktion des DB-Addon Plugins im Format 'kwargs' enclosed in quotes like 'keyword=argument, keyword=argument'
 
  - Datentyp: **str**
+
+
+db_addon_params_dict
+====================
+
+
+Parameter für eine Auswertefunktion des DB-Addon Plugins im Format eines Dictionary
+
+ - Datentyp: **dict**
 
 
 db_addon_startup

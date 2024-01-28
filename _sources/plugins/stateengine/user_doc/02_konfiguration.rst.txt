@@ -46,10 +46,11 @@ Logging
 
 Es gibt zwei Möglichkeiten, den Output des Plugins zu loggen:
 **intern**
-Hierbei werden, sofern das Loglevel 1 oder 2 beträgt, sämtliche Logeinträge in
+Hierbei werden, sofern das Loglevel 1 oder mehr beträgt, sämtliche Logeinträge in
 eigene Dateien in einem selbst definierten Verzeichnis geschrieben. Das Loglevel
 kann sowohl global in der etc/plugin.yaml Datei deklariert, als auch individuell
 pro Item mittels ``se_log_level`` (dort wo auch se_plugin: active steht) überschrieben werden.
+Wird im Item nichts angegeben oder das Attribut mit dem Wert -1 angegeben, wird der Standardwert herangezogen.
 
 **logging.yaml**
 Sowohl der Output des Plugins generell, als auch der Einträge für bestimmte Items

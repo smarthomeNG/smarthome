@@ -60,19 +60,23 @@ azimuth
 =======
 
 
-Azimutwinkel der Panelausrichtung. 0 Grad enstspricht Sueden
+Azimutwinkel der Panelausrichtung (-180 bis 180 Grad). 0 Grad entspricht Süden
 
  - Datentyp: **num**
 
+ - Minimalwert: **-180**
+ - Maximalwert: **180**
 
 declination
 ===========
 
 
-Declinationswinkel Solaranlage in Grad
+Deklinationswinkel Solaranlage in Grad
 
  - Datentyp: **num**
 
+ - Minimalwert: **0**
+ - Maximalwert: **90**
 
 kwp
 ===
@@ -82,30 +86,37 @@ Leistung der Solaranlage in kW Peak
 
  - Datentyp: **num**
 
+ - Minimalwert: **0**
 
 latitude
 ========
 
 
-Breitengrad der Solaranlage in dezimalen Grad
+(Optional) Breitengrad der Solaranlage in dezimalen Grad
 
  - Datentyp: **num**
+ - Standardwert: **0.0**
 
+ - Minimalwert: **-90**
+ - Maximalwert: **90**
 
 longitude
 =========
 
 
-Laengengrad der Solaranlage in dezimalen Grad
+(Optional) Längengrad der Solaranlage in dezimalen Grad.
 
  - Datentyp: **num**
+ - Standardwert: **0.0**
 
+ - Minimalwert: **-180**
+ - Maximalwert: **180**
 
 service
 =======
 
 
-Webservice fuer Vorhersage
+Webservice für Vorhersage
 
  - Datentyp: **str**
  - Standardwert: **solarforecast**
@@ -127,14 +138,14 @@ solarforecast_attribute
 =======================
 
 
-Solarforecast Attribute: Vorhersage Leistung morgen Vorhersage Leistung heute Datum morgen Datum heute
+Solarforecast Attribute: Vorhersage Energie in Wh morgen Vorhersage Energie in Wh heute Datum morgen Datum heute
 
  - Datentyp: **str**
 
  - Mögliche Werte:
 
-   - **power_tomorrow**
-   - **power_today**
+   - **energy_tomorrow**
+   - **energy_today**
    - **date_tomorrow**
    - **date_today**
 

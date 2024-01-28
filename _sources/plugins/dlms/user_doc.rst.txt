@@ -20,15 +20,16 @@ Anforderungen
 - Smartmeter mit DLMS-Protokoll (Device Language Message Specification) gemäß IEC 62056-21
 - USB-Schnittstelle mit IR Lesekopf (z.B. von `volkszaehler.org <http://www.volkszaehler.org>`_ )
 
-Das Python Modul Pyserial wird benötigt. Die Installation ab SmartHomeNG 1.8 erfolgt automatisch
+Das Python Modul pyserial wird benötigt. Die Installation ab SmartHomeNG 1.8 erfolgt automatisch
 über den Inhalt der mitgelieferten Datei ``requirements.txt`` oder manuell auf der Konsole mit
 
 .. code:: bash
 
    python3 -m pip install pyserial --user
 
-Es muß sichergestellt sein, das der Benutzer der SmartHomeNG ausführt auch die Brechtigung hat
-den seriellen Port zu verwenden. Möglicherweise muß eine udev-Regel erstellt werden.
+Es muß sichergestellt sein, das der Benutzer der SmartHomeNG ausführt auch die 
+Berechtigung hat den seriellen Port zu verwenden.
+Möglicherweise muß eine udev-Regel erstellt werden.
 
 Ein Beispiel für eine aktuelle Version des Volkszaehler IR-Lesekopfes bei der jeweils
 Vendor- und Product-ID für den eigenen Lesekopf angepaßt werden müssen:
@@ -43,7 +44,9 @@ Der Symlink erstellt dabei einen passenden Namen der Schnittstelle der natürlic
 Unterstützte Hardware
 ======================
 
-- Smart Meter mit DLMS (Device Language Message Specification) IEC 62056-21
+Smart Meter mit DLMS (Device Language Message Specification) IEC 62056-21
+
+Erfolgreich getestet wurden bisher:
 - Landis & Gyr ZMD120
 - Landis & Gyr E350
 - Landis & Gyr ZMD310CT
@@ -102,8 +105,9 @@ Einrichtungsverfahren:
 ----------------------
 
 Das Plugin kann im **Standalone-Modus** mit einer Shell aus dem Plugin
-Verzeichnis z.B. **/usr/local/smarthome/plugins/dlms** gestartet werden mit ``python3
-dlms.py <serieller Port>``
+Verzeichnis z.B. **/usr/local/smarthome/plugins/dlms** gestartet werden mit
+``python3 dlms.py <serieller Port>``
+
 Eine Hilfe zu verfügbaren Parametern wird mit ``python3 dlms.py -h`` angezeigt.
 
 Wichtig ist es zunächst zu wissen ob ein Smartmeter nur auf Anforderung Daten sendet
@@ -122,6 +126,24 @@ für die Itemdefinition ableiten.
 
 Die gewählten Parameter für den Standalone Modus finden sich in den Einstellungen für die ``plugin.yaml``
 von SmartHomeNG wieder. Alternativ kann die Einstellung auch über das Admin Interface vorgenommen werden.
+
+Optional
+--------
+
+Mit dem Python Skript ``get_manufacturer_ids.py`` im Ordner des Plugins kann eine Liste von Herstellern
+als Exceldatei geladen werden.
+
+Dieses Skript benötigt das Python Modul ``openpyxl`` dieses ist nicht in der ``requirements.txt`` mit aufgeführt weil 
+es nur für dieses Skript benötigt wird.
+
+Wird dieses Skript im Ordner des Plugins ``plugins/dlms`` ausgeführt, so lädt
+diese eine Excel Datei mit einer Liste bekannter Hersteller aus 
+``https://www.dlms.com/srv/lib/Export_Flagids.php``.
+Daraus wird eine YAML Datei ``manufacturer.yaml`` erstellt mit den ids und den entsprechenden
+Herstellern.
+
+Das Plugin wird die Datei ``manufacturer.yaml`` verwenden wenn sie existiert um die Ausgabeinformationen
+damit anzureichern.
 
 
 Einige Hintergrundinformationen zu OBIS-Codes
@@ -189,11 +211,16 @@ Wo dies nicht relevant ist, kann diese Wertegruppe für weitere Klassifizierung 
 
 Im folgenden zwei Beispiele um eine Vorstellung von den Unterschieden zu bekommen:
 
-OBIS-Codebeispiel A
-~~~~~~~~~~~~~~~~~~~
+Werte aus Codezeilen ermitteln
+==============================
 
-Einige erste Zeilen einer beispielhaften OBIS-Code-Auslesung für einen **Landis & Gyr ZMD
-310** Smartmeter für industrielle Zwecke
+Zunächst zwei Codebeispiele von unterschiedlichen Smartmetern.
+
+OBIS-Codebeispiel A
+-------------------
+
+Einige erste Zeilen einer beispielhaften OBIS-Code-Auslesung für einen
+**Landis & Gyr ZMD 310** Smartmeter für industrielle Zwecke
 
 .. code:: text
 
@@ -219,7 +246,7 @@ Einige erste Zeilen einer beispielhaften OBIS-Code-Auslesung für einen **Landis
    ...
 
 OBIS-Codebeispiel B
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Beispiel für das Auslesen eines OBIS-Codes von einem relativ einfachen **Pafal 12EC3g**
 Smartmeter:
@@ -234,20 +261,6 @@ Smartmeter:
    2.8.0*00(000045.38)(000045.38)
    C.2.1(000000000000)(                                                )(000000000000)(                                                )
    0.2.2(:::::G11)!(:::::G11)(!)
-
-
-Web Interface
-=============
-
-Das dlms Plugin verfügt über ein Webinterface, mit dessen Hilfe die Items die das Plugin nutzen
-übersichtlich dargestellt werden.
-
-.. important::
-
-   Das Webinterface des Plugins kann mit SmartHomeNG v1.4.2 und davor **nicht** genutzt werden.
-   Es wird dann nicht geladen. Diese Einschränkung gilt nur für das Webinterface. Ansonsten gilt
-   für das Plugin die in den Metadaten angegebene minimale SmartHomeNG Version.
-
 
 Werte aus den Codezeilen ermitteln
 ----------------------------------
@@ -419,6 +432,18 @@ dabei ist
 
 Für einen Wertetyp mit ``time`` oder ``date`` wird für das Item ein Python datetime erstellt.
 Das impliziert, das das Item einen Typ ``foo`` in der Definition in der entsprechenden item.yaml bekommt.
+
+Web Interface
+=============
+
+Das dlms Plugin verfügt über ein Webinterface, mit dessen Hilfe die Items die das Plugin nutzen
+übersichtlich dargestellt werden.
+
+.. important::
+
+   Das Webinterface des Plugins kann mit SmartHomeNG v1.4.2 und davor **nicht** genutzt werden.
+   Es wird dann nicht geladen. Diese Einschränkung gilt nur für das Webinterface. Ansonsten gilt
+   für das Plugin die in den Metadaten angegebene minimale SmartHomeNG Version.
 
 
 Aufruf des Webinterfaces

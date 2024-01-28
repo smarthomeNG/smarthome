@@ -55,11 +55,5 @@ Das Webinterface bietet folgende Übersichtsinformationen:
      :alt: Web Interface Overview
      :align: center
 
-Ein Klick auf das Lupensymbol in der Visu-Spalte öffnet die Detailansicht. Hier ist zu sehen, welcher Zustand eingenommen werden könnte, welcher aktiv ist und welche Aktionen bei welcher Bedingung ausgeführt werden.
-
-  .. image:: user_doc/assets/webif_stateengine_detail.png
-     :height: 1656px
-     :width: 3312px
-     :scale: 25%
-     :alt: Web Interface Detail
-     :align: center
+Ein Klick auf das Lupensymbol in der Visu-Spalte öffnet die Detailansicht. Hier ist zu sehen, welcher Zustand eingenommen werden könnte, welcher aktiv ist und welche Aktionen bei welcher Bedingung ausgeführt werden. Ein Beispiel ist in der
+Sektion zu finden.

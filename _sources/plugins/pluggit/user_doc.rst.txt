@@ -102,6 +102,19 @@ werden.
 Version History
 ===============
 
+V2.0.6 - 15.09.2023
+
+- Anpassung für pymodbus 3.5.2: bytorder und wordorder musste korrrigiert werden, statt Little und Big nun LITTLE und BIG
+- Python muss >= 3.8 sein und pymodbus >= 3.5.2
+
+V2.0.5 - 11.09.2023
+
+- unter Python 10 muss mindestens die Version 3.3.2 von pymodbus laufen, da sonst Verbindungsprobleme
+
+V2.0.4 - 13.11.2022
+
+- Verbesserungen zur Versionsprüfung "pymodbus"
+
 V2.0.3 - 25.10.2022
 
 - Support für pymodbus 3.0
@@ -124,5 +137,5 @@ V2.0.3 - 25.10.2022
 
 29.08.2020
 
- - bool-Werte konnten nicht geschrieben werden
+- bool-Werte konnten nicht geschrieben werden
 
