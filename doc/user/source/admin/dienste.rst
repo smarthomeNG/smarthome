@@ -1,5 +1,6 @@
 
-.. index:: Dienste
+.. index:: Admin GUI; Dienste
+.. index:: Dienste; Admin GUI
 
 =======
 Dienste

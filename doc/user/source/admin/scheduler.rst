@@ -1,5 +1,6 @@
 
-.. index:: Scheduler
+.. index:: Admin GUI; Scheduler
+.. index:: Scheduler; Admin GUI
 
 =========
 Scheduler

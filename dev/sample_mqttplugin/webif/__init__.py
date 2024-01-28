@@ -30,7 +30,7 @@ import os
 import json
 
 from lib.item import Items
-from lib.model.mqttplugin import SmartPluginWebIf
+from lib.model.mqttplugin import MqttPluginWebIf
 
 
 # ------------------------------------------
@@ -38,11 +38,9 @@ from lib.model.mqttplugin import SmartPluginWebIf
 # ------------------------------------------
 
 import cherrypy
-import csv
-from jinja2 import Environment, FileSystemLoader
 
 
-class WebInterface(SmartPluginWebIf):
+class WebInterface(MqttPluginWebIf):
 
     def __init__(self, webif_dir, plugin):
         """
@@ -68,7 +66,7 @@ class WebInterface(SmartPluginWebIf):
 
         Render the template and return the html file to be delivered to the browser
 
-        :return: contents of the template after beeing rendered
+        :return: contents of the template after being rendered
         """
         self.plugin.get_broker_info()
         # try to get the webif pagelength from the module.yaml configuration

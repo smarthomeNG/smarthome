@@ -30,7 +30,7 @@ import json
 from ast import literal_eval
 import pickle
 
-from lib.constants import (CACHE_FORMAT, CACHE_JSON, CACHE_PICKLE)
+from lib.constants import (CACHE_FORMAT, CACHE_JSON, CACHE_PICKLE, ATTRIBUTE_SEPARATOR)
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +39,8 @@ logger = logging.getLogger(__name__)
 #####################################################################
 
 def cast_str(value):
+    if isinstance(value, (int, float)):
+        value = str(value)
     if isinstance(value, str):
         return value
     else:
@@ -141,17 +143,28 @@ def split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT):
     :param value: raw attribute string containing duration, value (and compatibility)
     :return: three strings, representing time, value and compatibility attribute
     """
-    time, __, value = value.partition('=')
-    value, __, compat = value.partition('=')
+    if value.find(ATTRIBUTE_SEPARATOR) >= 0:
+        time, __, attrvalue = value.partition(ATTRIBUTE_SEPARATOR)
+        attrvalue, __, compat = attrvalue.partition(ATTRIBUTE_SEPARATOR)
+    elif value.find('=') >= 0:
+        time, __, attrvalue = value.partition('=')
+        attrvalue, __, compat = attrvalue.partition('=')
+    else:
+        time = value
+        attrvalue = None
+        compat = ''
+
     time = time.strip()
-    value = value.strip()
-    # remove quotes, if present
-    if value != '' and ((value[0] == "'" and value[-1] == "'") or (value[0] == '"' and value[-1] == '"')):
-        value = value[1:-1]
+    if attrvalue is not None:
+        attrvalue = attrvalue.strip()
     compat = compat.strip().lower()
     if compat == '':
         compat = ATTRIB_COMPAT_DEFAULT
-    return (time, value, compat)
+
+    # remove quotes, if present
+    if value != '' and ((value[0] == "'" and value[-1] == "'") or (value[0] == '"' and value[-1] == '"')):
+        value = value[1:-1]
+    return (time, attrvalue, compat)
 
 
 def join_duration_value_string(time, value, compat=''):
@@ -235,7 +248,7 @@ def cache_write(filename, value, cformat=CACHE_FORMAT):
 #####################################################################
 # Fade Method
 #####################################################################
-def fadejob(item, dest, step, delta):
+def fadejob(item, dest, step, delta, caller=None):
     if item._fading:
         return
     else:

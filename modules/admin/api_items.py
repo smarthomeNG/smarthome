@@ -37,7 +37,7 @@ class ItemsController(RESTResource):
         self._sh = module._sh
         self.module = module
         self.base_dir = self._sh.get_basedir()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.items = Items.get_instance()
 
@@ -57,8 +57,9 @@ class ItemsController(RESTResource):
 
         if id == 'structs':
             # /api/items/structs
-            self.logger.info("ItemsController.root(): item_name = {}".format(id))
+            self.logger.info(f"ItemsController GET /api/items/{id}")
             result = self.items.return_struct_definitions(all=False)
+            #self.logger.notice(f"ItemsController.root(): result = {result}")
             return json.dumps(result)
 
             #raise cherrypy.NotFound

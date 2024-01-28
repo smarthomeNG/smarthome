@@ -27,9 +27,10 @@ $(window).bind('datatables_defaults', function() {
 			// Set datatable useful defaults
 			$.extend( $.fn.dataTable.ext.classes, { "sTable": "table table-striped table-hover pluginList display dataTable dataTableAdditional" });
 			$.extend( $.fn.dataTable.defaults, {
-				lengthMenu: [ [100000, 25, 50, 100, -1], ["Auto", 25, 50, 100, "All"] ], // pagination menu
+				lengthMenu: [ [1, 25, 50, 100, -1], ["Auto", 25, 50, 100, "All"] ], // pagination menu
 				lengthChange: true,
 				paging: true,
+				pageResize: true,
 				stateSave: true,
 				pageLength: 100, // default to "100"
 				pagingType: "full_numbers", // include first and last in pagination menu
@@ -51,8 +52,9 @@ $(window).bind('datatables_defaults', function() {
 					$(this).on( 'click', 'tbody tr td', function () {
 						if ($(this).hasClass( "datatable-responsive" )){
 							window.toggle = window.toggle * -1 + 0.1;
-							console.log("click responsive, resize");
-							$(window).resize();
+							console.log("click responsive, recalc");
+							// Don't resize as it might mess up pagination when responsive icon is clicked...
+							//$(window).resize();
 							$(this).parent().parent().parent().DataTable().responsive.recalc();
 						}
 					});
@@ -72,6 +74,11 @@ $(window).bind('datatables_defaults', function() {
 					this.api().responsive.recalc();
 					initialized = true;
 					$(this).show();
+					// update pagelength and save cookie
+					let tab = $(this).closest('.tab-pane').attr('id');
+					window.pageLength[tab]['tableid'] = this.attr('id');
+					setCookie("pagelength", window.pageLength, 30, window.pluginname);
+
 					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false') {
 						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after init is " + window.row_count);}, 200);
 					}
@@ -79,30 +86,27 @@ $(window).bind('datatables_defaults', function() {
 					if (window.initial_update == 'true') {
 						setTimeout(function() { shngGetUpdatedData(); }, 200);
 					}
-					if (oSettings.oInit.pageResize == true);
-					{
-						setTimeout(function() { $(window).resize();  }, 2000);
-					}
+					//setTimeout(function() { $(window).resize();  }, 2000);
 
 				},
         responsive: {details: {type: 'column', renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				preDrawCallback: function (oSettings) {
 
+					// scroll
         	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();
 					bodyScrollPos = $('html, body').scrollTop();
 
     		},
-				drawCallback: function(oSettings) { // hide pagination if not needed
-					if (this.api().page.len() == 0 || this.api().page.len() == 100000)
-					{
-						console.log("resize datatable");
+				drawCallback: function(oSettings) {
+					let tab = $(this).closest('.tab-pane').attr('id');
+					// Following lines would help to recalculate page raws after changing pages.
+					// However it also might mess up pagination! Leave it alone for now...
+					//$(window).resize();
+					//window.toggle = window.toggle * -1;
+					//setTimeout(function() { $(window).resize();  }, 500);
 
-						$(window).resize();
-						window.toggle = window.toggle * -1;
-						setTimeout(function() { $(window).resize();  }, 500);
-					}
 
-					console.log("draw datatable " + this.attr('id') + " with pagelength " + this.api().page.len());
+					console.log("draw datatable " + oSettings.sTableId + " in tab " + tab + " with pagelength " + this.api().page.len());
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
 						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
 					} else {

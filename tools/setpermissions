@@ -1,8 +1,27 @@
 #!/bin/bash
-cd "$(dirname "$0")"
+
+#########################################################################
+# Copyright 2023-       Martin Sinn                         m.sinn@gmx.de
+#########################################################################
+#  This file is part of SmartHomeNG
+#
+#  SmartHomeNG is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#########################################################################
+
+# get directory where this script is stored
+DIR=$(dirname "$0")
+
+cd $DIR
 cd ..
 
 chmod +x bin/smarthome.py
+
+chmod +x tools/make_venv
+chmod +x tools/act
 
 chmod +x tools/build_requirements.py
 chmod +x tools/check_plugin.py
@@ -11,6 +30,7 @@ chmod +x tools/getshngpid
 chmod +x tools/measure_cpu_speed.py
 chmod +x tools/plugin_metadata_checker.py
 chmod +x tools/test_running
+chmod +x tools/install_plugin_from_develop
 
 #echo `pwd`
 #find . -type d -exec chmod g+rwsx {} +

@@ -42,7 +42,7 @@ Datei **/etc/knxd.conf** bearbeitet:
 
     sudo nano /etc/knxd.conf
 
-Die Originalzeile ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -u /tmp/eib -b ip:"`` 
+Die Originalzeile ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -u /tmp/eib -b ip:"``
 am besten mit einem ``#`` zum Kommentar machen und in der Zeile darunter dann die
 gewählten Parameter eintragen.
 
@@ -69,7 +69,7 @@ zu vermeiden. Der Parameter **--no-tunnel-client-queuing** ist obsolet und sollt
 knxd testen
 ============
 
-Nachdem knxd installiert, konfiguriert und der Dienst gestartet ist, kann mit folgendem Kommando geprüft
+Nachdem knxd installiert, konfiguriert und der Dienst **(neu) gestartet** ist, kann mit folgendem Kommando geprüft
 werden, ob eine funktionsfähige Verbindung zum KNX Bus besteht. Dazu das folgende Kommando eingeben:
 
 .. code-block:: bash

@@ -73,7 +73,7 @@ class ServerController(RESTResource):
         self._sh = module._sh
         self.module = module
         self.base_dir = self._sh.get_basedir()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.etc_dir = self._sh._etc_dir
         self.modules_dir = os.path.join(self.base_dir, 'modules')
@@ -243,6 +243,8 @@ class ServerController(RESTResource):
 
         :return: status dict
         """
+        self.logger.info("ServerController.restart()")
+
         status = self._sh.shng_status
         if status['code'] == 20:
             self._sh.restart('admin interface')
@@ -261,6 +263,8 @@ class ServerController(RESTResource):
         """
         Handle GET requests for server API
         """
+        self.logger.info(f"ServerController.read('{id}')")
+
         if id is None:
             return self.root()
         elif id == 'status':
@@ -275,10 +279,11 @@ class ServerController(RESTResource):
     read.public_root = True
 
 
-    def update(self, id=''):
+    def update(self, id='', level=None):
         """
         Handle PUT requests for server API
         """
+        self.logger.info(f"ServerController.update('{id}'), level='{level}'")
 
         if id == 'restart':
             return self.restart()

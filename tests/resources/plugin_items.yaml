@@ -22,15 +22,16 @@ item3:
 
         item3b1:
             type: bool
-            wol_mac: 11:22:33:44:55:66
+            #wol_mac: 11:22:33:44:55:66
 
             item3b1a:
                 type: bool
-                key1: value1
-                wol_mac@*: aa:22:33:44:55:66
-                key2: value2
-                key3@bind: value3
-                key1_quotes: value1
-                
-                
-                
+                item3b1a1:
+                    type: bool
+                    #key1: value1
+                    #wol_mac@*: aa:22:33:44:55:66
+                    #key2: value2
+                    #key3@bind: value3
+                    #key1_quotes: value1
+            item3b1b:
+                type: bool

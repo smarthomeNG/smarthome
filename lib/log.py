@@ -23,11 +23,16 @@
 import time
 import logging
 import logging.handlers
+import logging.config
 import os
 import datetime
+import pickle
+import re
+from pathlib import Path
 
 import collections
 
+import lib.shyaml as shyaml
 
 logs_instance = None
 
@@ -35,12 +40,17 @@ logs_instance = None
 class Logs():
 
     _logs = {}
+    logging_levels = {}
     root_handler_name = ''
 
     NOTICE_level = 29
     DBGHIGH_level = 13
     DBGMED_level = 12
     DBGLOW_level = 11
+
+    _all_handlers_logger_name = '_shng_all_handlers_logger'
+    _all_handlers = {}
+
 
     def __init__(self, sh):
 
@@ -53,17 +63,21 @@ class Logs():
             self.logger.error(f"Another instance of Logs class already exists: {logs_instance}")
 
         self._sh = sh
-
+        self.etc_dir = self._sh.get_etcdir()
         return
 
 
-    def configure_logging(self, config_dict, config_filename='logging.yaml'):
+    def configure_logging(self, config_filename='logging.yaml'):
+
+        config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
 
         if config_dict == None:
             print()
-            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
+            print(f"ERROR: Invalid logging configuration in file '{os.path.join(self.etc_dir, config_filename)}'")
             print()
             exit(1)
+
+        config_dict = self.add_all_handlers_logger(config_dict)
 
         # Default loglevels are:
         #  - CRITICAL     50
@@ -78,6 +92,20 @@ class Logs():
         #  - DBGMED       12   Debug medium level
         #  - DBGLOW       11   Debug low level
 
+        self.logging_levels = {}
+        self.logging_levels[50] = 'CRITICAL'
+        self.logging_levels[40] = 'ERROR'
+        self.logging_levels[30] = 'WARNING'
+        self.logging_levels[20] = 'INFO'
+        self.logging_levels[10] = 'DEBUG'
+        self.logging_levels[0]  = 'NOTSET'
+
+        # # self.logging_levels[31] = 'NOTICE'
+        # self.logging_levels[29] = 'NOTICE'
+        # self.logging_levels[13] = 'DBGHIGH'
+        # self.logging_levels[12] = 'DBGMED'
+        # self.logging_levels[11] = 'DBGLOW'
+
         # adjust config dict from logging.yaml:
         # if logger 'lib.smarthome' is not defined or no level is defined for it,
         # define logger with level 'NOTICE'
@@ -89,7 +117,7 @@ class Logs():
         try:
             root_handler_name = config_dict['root']['handlers'][0]
             root_handler = config_dict['handlers'][ root_handler_name ]
-            root_handler_level = root_handler.get('level', None)
+            root_handler_level = root_handler.get('level', '?')
             self.root_handler_name = root_handler_name
         except:
             root_handler_level = '?'
@@ -113,7 +141,7 @@ class Logs():
         except Exception as e:
             #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
             print()
-            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
+            print(f"ERROR: dictConfig: Invalid logging configuration in file '{os.path.join(self.etc_dir, config_filename)}'")
             print(f"       Exception: {e}")
             print()
             return False
@@ -151,7 +179,19 @@ class Logs():
         setattr(logging, description, value)
         setattr(logging.getLoggerClass(), description.lower(), logForLevel)
         setattr(logging, description.lower(), logToRoot)
+        self.logging_levels[value] = description
         return
+
+
+    def get_shng_logging_levels(self):
+        """
+        Returns a dict of the logging levels, that are defined in SmartHomeNG (key=numeric log level, value=name od loa level)
+
+        It is used e.g. by the admin module
+
+        :return: dict
+        """
+        return self.logging_levels
 
 
     def initMemLog(self):
@@ -195,6 +235,85 @@ class Logs():
         :rtype: list
         """
         return self._logs
+
+    # ---------------------------------------------------------------------------
+
+    def load_logging_config(self, filename='logging', ignore_notfound=False):
+        """
+        Load config from logging.yaml to a dict
+
+        If logging.yaml does not contain a 'shng_version' key, a backup is created
+        """
+        conf_filename = os.path.join(self.etc_dir, filename)
+        if not conf_filename.endswith('.yaml') and not conf_filename.endswith('.default'):
+            conf_filename += '.yaml'
+        result = shyaml.yaml_load(conf_filename, ignore_notfound)
+
+        return result
+
+
+    def save_logging_config(self, logging_config, create_backup=False):
+        """
+        Save dict to logging.yaml
+        """
+        if logging_config is not None:
+            logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
+            conf_filename = os.path.join(self.etc_dir, 'logging')
+            shyaml.yaml_save_roundtrip(conf_filename, logging_config, create_backup=create_backup)
+        return
+
+
+    def load_logging_config_for_edit(self):
+        """
+        Load config from logging.yaml to a dict
+
+        If logging.yaml does not contain a 'shng_version' key, a backup is created
+        """
+        #self.etc_dir = self._sh.get_etcdir()
+        conf_filename = os.path.join(self.etc_dir, 'logging')
+        logging_config = shyaml.yaml_load_roundtrip(conf_filename)
+        self.logger.info("load_logging_config_for_edit: shng_version={}".format(logging_config.get('shng_version', None)))
+
+        if logging_config.get('shng_version', None) is None:
+            logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
+            self.save_logging_config(logging_config, create_backup=True)
+
+        return logging_config
+
+
+    def add_all_handlers_logger(self, logging_config):
+
+        lg = logging_config['loggers'].get(self._all_handlers_logger_name, None)
+        if lg is None:
+            logging_config['loggers'][self._all_handlers_logger_name] = {}
+            lg = logging_config['loggers'].get(self._all_handlers_logger_name, None)
+
+        hd = logging_config['loggers'][self._all_handlers_logger_name].get('handlers', None)
+        if hd is None:
+            logging_config['loggers'][self._all_handlers_logger_name]['handlers'] = []
+            hd = logging_config['loggers'][self._all_handlers_logger_name].get('handlers', None)
+
+        all_hdlrs = sorted(logging_config['handlers'].keys())
+        logging_config['loggers'][self._all_handlers_logger_name]['handlers'] = all_hdlrs
+
+        return logging_config
+
+
+    def get_all_handlernames(self):
+        if self._all_handlers == {}:
+            l = logging.getLogger(self._all_handlers_logger_name)
+            for h in l.handlers:
+                self._all_handlers[h.name] = h
+
+        return sorted(self._all_handlers.keys())
+
+
+    def get_handler_by_name(self, handlername):
+
+        if self._all_handlers == {}:
+            self.get_all_handlernames()
+        return self._all_handlers[handlername]
+
 
 # -------------------------------------------------------------------------------
 
@@ -270,10 +389,242 @@ class Log(collections.deque):
                 self.append(entry)
                 return
 
+class DateTimeRotatingFileHandler(logging.StreamHandler):
+    """
+    Handler for logging to file using current date and time information in
+    the filename. Either placeholders can be used or a standard pattern is used.
+    Rotating the log file at each `when` beginning.
+    If backupCount is > 0, when rollover is done, no more than backupCount
+    files are kept - the oldest ones are deleted.
+    """
+
+    def __init__(self,
+                 filename,
+                 when='H',
+                 interval=1,
+                 backupCount=0,
+                 encoding=None,
+                 delay=True,
+                 utc=False):
+
+        super().__init__()
+        self._shtime = logs_instance._sh.shtime
+        logging.Handler.__init__(self)
+        self._originalname = os.path.basename(filename)
+        self._fullname = filename
+        self._fn = os.path.splitext(self._originalname)[0]
+        self._ext = os.path.splitext(self._originalname)[1]
+        self.stream = None
+        self.encoding = encoding
+        self.delay = delay
+        self._when = when.upper()
+        self.backup_count = backupCount
+
+        # Current 'when' events supported:
+        # S - Seconds
+        # M - Minutes
+        # H - Hours
+        # D - Days
+        # midnight - roll over at midnight
+        if self._when == 'S':
+            self.time_unit = datetime.timedelta(seconds=1)  # one second
+            self.suffix = "%Y-%m-%d-%H.%M.%S"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}\-\d{2}\.\d{2}\.\d{2}", re.ASCII)
+        if self._when == 'M':
+            self.time_unit = datetime.timedelta(minutes=1)  # one minute
+            self.suffix = "%Y-%m-%d-%H.%M"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}\-\d{2}\.\d{2}", re.ASCII)
+        elif self._when == 'H':
+            self.time_unit = datetime.timedelta(hours=1)  # one hour
+            self.suffix = "%Y-%m-%d-%H"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}\-\d{2}", re.ASCII)
+        elif self._when == 'D' or self._when == 'MIDNIGHT':
+            self.time_unit = datetime.timedelta(days=1)  # one day
+            self.suffix = "%Y-%m-%d"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}", re.ASCII)
+        else:
+            raise ValueError(f"Invalid rollover interval specified: {self._when}")
+
+        self.interval = self.time_unit * interval  # multiply by units requested
+        self.rollover_at = self.next_rollover_time()
+        self.baseFilename = self.get_filename()  # logging to this file
+
+        if not delay:
+            self.stream = self._open()
+
+    def parseFilename(self, filename) -> str:
+        now = self._shtime.now()
+        try:
+            # replace placeholders by actual datetime
+            return filename.format(**{'year': now.year, 'month': now.month,
+                                   'day': now.day, 'hour': now.hour,
+                                   'minute': now.minute, 'intstamp': int(now.timestamp()),
+                                   'stamp': now.timestamp()})
+        except Exception:
+            return filename
+
+    def get_filename(self) -> str:
+        filename = self.parseFilename(self._fullname)
+        if '{' not in self._originalname:
+            dirName, _ = os.path.split(filename)
+            fn = self._fn + '.' + datetime.datetime.now().strftime(self.suffix) + self._ext
+            filename = os.path.join(dirName, fn)
+        if self._fullname.startswith("."):
+            shng_dir = Path(logs_instance._sh.get_basedir())
+            filename = str((shng_dir / filename).resolve())
+        dirName, _ = os.path.split(filename)
+        if not os.path.isdir(dirName):
+            os.makedirs(dirName)
+        return filename
+
+    def close(self):
+        """
+        Closes the stream.
+        """
+        self.acquire()
+        try:
+            try:
+                if self.stream:
+                    try:
+                        self.flush()
+                    finally:
+                        stream = self.stream
+                        self.stream = None
+                        if hasattr(stream, "close"):
+                            stream.close()
+            finally:
+                logging.StreamHandler.close(self)
+        finally:
+            self.release()
+
+    def _open(self):
+        """
+        Open the current base file with encoding.
+        Return the resulting stream.
+        """
+        return open(self.baseFilename, 'a', encoding=self.encoding)
+
+    def next_rollover_time(self):
+        """
+        Work out the rollover time based on current time.
+        """
+        t = self._shtime.now()
+        if self._when == 'S':
+            t = t.replace(microsecond=0)
+        elif self._when == 'M':
+            t = t.replace(second=0, microsecond=0)
+        elif self._when == 'H':
+            t = t.replace(minute=0, second=0, microsecond=0)
+        elif self._when == 'D' or self._when == 'MIDNIGHT':
+            t = t.replace(hour=0, minute=0, second=0, microsecond=0)
+        return t + self.interval
+
+    def get_files_to_delete(self):
+        """
+        Determine the files to delete when rolling over.
+        """
+        def custom_replace(match):
+            # Replace based on different patterns
+            if any(match.group(i) for i in (1, 2, 3)):
+                return '\d{4}'
+            elif any(match.group(i) for i in (4, 7, 10, 13)):
+                return '\d{1,2}'
+            elif any(match.group(i) for i in (6, 9, 12, 15)):
+                return '\d{2}'
+            elif any(match.group(i) for i in (5, 8, 11, 14)):
+                return '\d{1}'
+            elif match.group(16):
+                return '\d+'
+            else:
+                return '[0-9.]'
+
+        dir_name, base_fname = os.path.split(self.baseFilename)
+        fileNames = os.listdir(dir_name)
+        result = []
+        if '{' in self._originalname:
+            year = r'{year}'
+            year2 = r'{year:02}'
+            year4 = r'{year:04}'
+            month = r'{month}'
+            month1 = r'{month:01}'
+            month2 = r'{month:02}'
+            day = r'{day}'
+            day1 = r'{day:01}'
+            day2 = r'{day:02}'
+            hour = r'{hour}'
+            hour1 = r'{hour:01}'
+            hour2 = r'{hour:02}'
+            minute = r'{minute}'
+            minute1 = r'{minute:01}'
+            minute2 = r'{minute:02}'
+            intstamp = r'{intstamp}'
+            stamp = r'{stamp}'
+
+            combined_pattern = f'({year})|({year2})|({year4})|({month})'\
+                f'|({month1})|({month2})|({day})|({day1})|({day2})|({hour})'\
+                f'|({hour1})|({hour2})|({minute})|({minute1})|({minute2})|({intstamp})|({stamp})'
+            regex_result = re.sub(combined_pattern, custom_replace, self._originalname)
+            pattern_regex = re.compile(regex_result)
+            for fileName in fileNames:
+                if pattern_regex.match(fileName):
+                    result.append(os.path.join(dir_name, fileName))
+        else:
+            prefix = self._fn + "."
+            plen = len(prefix)
+            elen = len(self._ext) * -1
+            for fileName in fileNames:
+                cond1 = fileName.startswith(prefix)
+                cond2 = self.ext_pat.match(fileName[plen:elen])
+                cond3 = fileName.endswith(self._ext)
+                if cond1 and cond2 and cond3:
+                    result.append(os.path.join(dir_name, fileName))
+
+        if len(result) < self.backup_count:
+            result = []
+        else:
+            result.sort()
+            result = result[:len(result) - self.backup_count]
+        return result
+
+    def do_rollover(self):
+        """
+        Do a rollover. In this case, the current stream will be closed and a new
+        filename will be generated when the rollover happens.
+        If there is a backup count, then we have to get a list of matching
+        filenames, sort them and remove the one with the oldest suffix.
+        """
+        if self.stream:
+            self.stream.close()
+            self.stream = None
+
+        self.rollover_at = self.next_rollover_time()
+        self.baseFilename = self.get_filename()
+
+        if self.backup_count > 0:
+            for s in self.get_files_to_delete():
+                os.remove(s)
+
+        if not self.delay:
+            self.stream = self._open()
+
+    def emit(self, record):
+        """
+        Emit a record.
+        Output the record to the file, catering for rollover as described
+        in do_rollover().
+        """
+        try:
+            if self._shtime.now() >= self.rollover_at:
+                self.do_rollover()
+            if self.stream is None:
+                self.stream = self._open()
+            logging.StreamHandler.emit(self, record)
+        except Exception:
+            self.handleError(record)
 
 # ================================================================================
 
-""" 
+"""
 In the following part of the code, logging handlers are defined
 """
 
@@ -281,6 +632,17 @@ class ShngTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
     """
     TimedRotatingFilehandler with a different naming scheme for rotated files
     """
+    def __init__(self, filename, when='MIDNIGHT', interval=0, backupCount=0, encoding=None, delay=False, utc=False):
+        year = datetime.datetime.now().strftime("%Y")
+        month = datetime.datetime.now().strftime("%m")
+        day = datetime.datetime.now().strftime("%d")
+        hour = datetime.datetime.now().strftime("%H")
+        stamp = datetime.datetime.now().timestamp()
+        try:
+            filename = eval(f"f'{filename}'")
+        except Exception:
+            pass
+        super().__init__(filename, when, interval, backupCount, encoding, delay, utc)
 
     def getFilesToDelete(self):
         """
@@ -383,7 +745,8 @@ class ShngMemLogHandler(logging.StreamHandler):
     """
     LogHandler used by MemLog
     """
-    def __init__(self, logname='undefined', maxlen=35, level=logging.NOTSET):
+    def __init__(self, logname='undefined', maxlen=35, level=logging.NOTSET,
+            mapping=['time', 'thread', 'level', 'message'], cache=False):
         super().__init__()
         self.setLevel(level)
 
@@ -393,11 +756,30 @@ class ShngMemLogHandler(logging.StreamHandler):
 
         #logs_instance.logger.info(f"ShngMemLogHandler.__init__(): logname={logname}, self={self}, handlername={self.get_name()}, level={self.level}, levelname={logging.getLevelName(self.level)}, maxlen={maxlen}")
 
-        self._log = Log(self, logname, ['time', 'thread', 'level', 'message'], maxlen=maxlen, handler=self)
-
+        self._log = Log(self, logname, mapping, maxlen=maxlen, handler=self)
         self._shtime = logs_instance._sh.shtime
         # Dummy baseFileName for output in shngadmin (and priv_develop plugin)
         self.baseFilename = "'" + self._log._name + "'"
+        self._cache = cache
+        self._maxlen = maxlen
+        # save cache files in var/log/cache directory
+        cache_directory = os.path.join(logs_instance._sh.get_vardir(), 'log'+os.path.sep, 'cache'+os.path.sep)
+        if cache is True:
+            if not os.path.isdir(cache_directory):
+                os.makedirs(cache_directory)
+            self._cachefile = cache_directory + self._log._name
+            try:
+                self.__last_change, self._logcache = self._cache_read(self._cachefile, self._shtime.tzinfo())
+                self.load(self._logcache)
+                logs_instance.logger.debug(f"Memory Log {self._log._name}: read cache: {self._logcache}")
+            except Exception:
+                try:
+                    self._cache_write(logs_instance.logger, self._cachefile, self._log.export(int(self._maxlen)))
+                    self._cache_read(self._cachefile, self._shtime.tzinfo())
+                    logs_instance.logger.info(f"Memory Log {self._log._name}: generated cache file")
+                except Exception as e:
+                    pass
+                    logs_instance.logger.warning(f"Memory Log: problem reading cache: {e}")
 
     def emit(self, record):
         #logs_instance.logger.info(f"ShngMemLogHandler.emit() #1: logname={self._log._name}, handlername={self.get_name()}, level={self.level}, record.levelno={record.levelno}, record.levelname={record.levelname}, record={record}")
@@ -408,5 +790,54 @@ class ShngMemLogHandler(logging.StreamHandler):
             self._log.add([timestamp, record.threadName, record.levelname, record.message])
         except Exception:
             self.handleError(record)
+        if self._cache is True:
+            try:
+                self._cache_write(logs_instance.logger, self._cachefile, self._log.export(int(self._maxlen)))
+            except Exception as e:
+                logs_instance.logger.warning(f"Memory Log {self._log._name}: could not update cache {e}")
 
 
+    ##############################################################################################
+    # Cache Methods, taken from operationlog plugin by Jan Troelsen, Oliver Hinckel, Bernd Meiners
+    ##############################################################################################
+    def load(self, logentries):
+        """
+        Loads logentries (which were just read from cache) into the log object (see lib.log.Log())
+        """
+        if len(logentries) != 0:
+            for logentry in reversed(logentries):
+                log = []
+                for name in self._log.mapping:
+                    if name == 'time':
+                        log.append(logentry['time'])
+                    elif name == 'thread':
+                        log.append(logentry['thread'])
+                    elif name == 'level':
+                        log.append(logentry['level'])
+                    elif name == 'message':
+                        log.append(logentry['message'])
+                self._log.add(log)
+
+    def _cache_read(self, filename, tz):
+        """
+        This loads the cache from a file
+
+        :param filename: file to load from
+        :param tz: timezone
+        :return: [description]
+        :rtype: a tuple with datetime and values from file
+        """
+        ts = os.path.getmtime(filename)
+        dt = datetime.datetime.fromtimestamp(ts, tz)
+        value = None
+        with open(filename, 'rb') as f:
+            value = pickle.load(f)
+        return (dt, value)
+
+
+    def _cache_write(self, logger, filename, value):
+        try:
+            with open(filename, 'wb') as f:
+                pickle.dump(value, f)
+        except IOError:
+            logger.warning("Could not write to {}".format(filename))

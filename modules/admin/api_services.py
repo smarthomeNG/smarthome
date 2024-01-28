@@ -34,6 +34,7 @@ import bin.shngversion
 from lib.item_conversion import convert_yaml as convert_yaml
 from lib.item_conversion import parse_for_convert as parse_for_convert
 from lib.shtime import Shtime
+import lib.env
 
 
 # ======================================================================
@@ -48,7 +49,7 @@ class ServicesController(RESTResource):
         self._sh = module._sh
         self.module = module
         self.base_dir = self._sh.get_basedir()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.etc_dir = self._sh._etc_dir
         self.modules_dir = os.path.join(self.base_dir, 'modules')
@@ -100,6 +101,7 @@ class ServicesController(RESTResource):
         # set up environment for calculating eval-expression
         sh = self._sh
         shtime = Shtime.get_instance()
+        env = lib.env
         items = Items.get_instance()
         import math
         import lib.userfunctions as uf
@@ -198,7 +200,10 @@ class ServicesController(RESTResource):
             result_type = result_type[:-2]
         result = {'expression': expanded_code, 'result': eval_result, 'type': result_type}
         # return json.dumps({'expression': 'Expandierter Ausdruck (Antwort vom Server)', 'result': '42 (Antwort vom Server)'})
-        return json.dumps(result)
+        try:
+            return json.dumps(result)
+        except:
+            return json.dumps({'expression': expanded_code, 'result': str(eval_result), 'type': result_type})
 
 
     # ======================================================================

@@ -1,0 +1,64 @@
+#!/bin/bash
+
+#########################################################################
+# Copyright 2023-       Martin Sinn                         m.sinn@gmx.de
+#########################################################################
+#  This file is part of SmartHomeNG
+#
+#  SmartHomeNG is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#########################################################################
+
+# test if the right number of parameters is given
+if [ $# -eq 0 ]; then
+    echo
+    echo "ERROR: Parameter is missing. The script MUST be called like this:"
+    echo "       install_plugin_from_develop <plugin name>"
+    echo
+    exit 1
+fi
+PLUGIN_NAME=$1
+DEVELOP_PLUGIN=$PLUGIN_NAME"_dev"
+
+# get directory where this script is stored
+SOURCE=${BASH_SOURCE[0]}
+DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+
+# get BASE directory of SmartHomeNG
+cd $DIR
+cd ..
+SHNG_BASEDIR=`pwd`
+
+echo "SmartHomeNG base directory: $SHNG_BASEDIR"
+echo
+
+cd $SHNG_BASEDIR
+cd var
+mkdir downloads 2>/dev/null
+cd downloads
+
+echo "Downloading plugins from develop branch"
+
+wget https://github.com/smarthomeNG/plugins/archive/refs/heads/develop.zip 2>/dev/null
+unzip -o develop.zip >/dev/null
+rm develop.zip
+
+echo
+if test -d plugins-develop/$PLUGIN_NAME; then
+    echo "Installing plugin '$PLUGIN_NAME' from develop branch as plugin '$DEVELOP_PLUGIN'"
+    echo
+    rm $SHNG_BASEDIR/plugins/$DEVELOP_PLUGIN  2>/dev/null
+
+    cp -r plugins-develop/$PLUGIN_NAME $SHNG_BASEDIR/plugins/$DEVELOP_PLUGIN
+    chmod -R 775 $SHNG_BASEDIR/plugins/$DEVELOP_PLUGIN
+    rm -r plugins-develop
+
+else
+    echo "No plugin with name '$PLUGIN_NAME' found in develop branch"
+    echo
+    rm -r plugins-develop
+    exit 1
+fi

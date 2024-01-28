@@ -34,6 +34,7 @@ _logger = logging.getLogger(__name__)
 _uf_subdir = 'functions'
 
 _func_dir = None
+_sh = None
 _user_modules = []
 
 
@@ -73,7 +74,7 @@ def import_user_module(m):
         return True
 
 
-def init_lib(shng_base_dir=None):
+def init_lib(shng_base_dir=None, sh=None):
     """
     Initialize userfunctions module
 
@@ -82,6 +83,8 @@ def init_lib(shng_base_dir=None):
 
     global _func_dir
     global _user_modules
+    global _sh
+    _sh = sh
 
     if shng_base_dir is not None:
         base_dir = shng_base_dir

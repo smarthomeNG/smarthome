@@ -18,3 +18,9 @@ Das Haupt-Objekt von SmartHomeNG ist im folgenden beschrieben:
     :show-inheritance:
     :member-order: bysource
 
+
+lib.item
+--------
+
+Eine der wichtigsten Objekt-Klassen von SmartHomeNG ist die Item Klasse:
+

@@ -133,7 +133,7 @@ def yaml_load(filename, ordered=False, ignore_notfound=False):
             estr += '\nNOTE: Look for the error at the expected <block end>, near the second specified line number'
         if "[Errno 2]" in estr:
             if not ignore_notfound:
-                logger.warning("YAML-file not found: {}".format(filename))
+                logger.warning(f"yaml_load: YAML-file '{filename}' not found")
         else:
             logger.error("YAML-file load error in {}:  \n{}".format(filename, estr))
 

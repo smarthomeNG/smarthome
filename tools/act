@@ -1,0 +1,77 @@
+#!/bin/bash
+
+#########################################################################
+# Copyright 2023-       Martin Sinn                         m.sinn@gmx.de
+#########################################################################
+#  This file is part of SmartHomeNG
+#
+#  SmartHomeNG is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#########################################################################
+
+# test if script is called with 'source'
+(return 0 2>/dev/null) && sourced=1 || sourced=0
+
+if [ "$sourced" -eq "0" ]; then
+    echo
+    echo ERROR: The script MUST be called with \'source\', like: \'source act $1\'
+    echo
+    exit 3
+fi
+
+# script is called with "source", don't use "exit" now, but "return <errval>"
+
+# test if the right number of parameters is given
+if [ $# -eq 0 ]; then
+    echo
+    echo "ERROR: Parameter is missing. The script MUST be called like this:"
+    echo "       source act <Python version/venv name>"
+    echo
+    return 1
+fi
+
+START_DIR=`pwd`
+
+# get directory where this script is stored
+if [ ! -z $BASH_SOURCE ]; then
+    SOURCE=${BASH_SOURCE[0]}
+elif [ ! -z $0 ]; then
+    SOURCE=$0
+elif [ -e /proc ]; then
+    SOURCE="$(cat /proc/$PPID/cmdline)"
+else
+    SOURCE=''
+fi
+
+DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+
+# get directory where the environments are stored
+cd $DIR/..
+if [ ! -d venvs ]; then
+    echo
+    echo "ERROR: venv directory not found, looking in"
+    echo -n "       "
+    pwd
+    return 2
+fi
+
+cd venvs > /dev/null
+ENV_DIR=`pwd`
+
+if test -f "$ENV_DIR/py_$1/bin/activate"; then
+    echo
+    source $ENV_DIR/py_$1/bin/activate
+    echo "Activating virtual environment py_$1 (`python3 -V`)"
+    echo
+    echo To deactivate the virtual environment simply type the command \'deactivate\'
+else
+    echo
+    echo "ERROR: Virtual environment 'py_$1' does not exist"
+    echo "       in directory '$ENV_DIR'"
+fi
+echo
+
+cd $START_DIR

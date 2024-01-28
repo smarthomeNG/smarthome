@@ -540,26 +540,36 @@ class Tcp_client(object):
     :param port: Remote host port to connect to
     :param name: Name of this connection (mainly for logging purposes). Try to keep the name short.
     :param autoreconnect: Should the socket try to reconnect on lost connection (or finished connect cycle)
-    :param connect_retries: Number of connect retries per cycle
-    :param connect_cycle: Time between retries inside a connect cycle
-    :param retry_cycle: Time between cycles if :param:autoreconnect is True
+    :param autoconnect: automatically connect on send. Copies autoreconnect if None
+    :param connect_retries: Number of connect retries per connect round
+    :param connect_cycle: Time between retries inside a connect round
+    :param retry_cycle: Time between connect rounds if autoreconnect is True
+    :param retry_abort: abort connecting after this many failed connect rounds and call abort_callback, no action if set to 0 or callback not set
+    :param abort_callback: callback function to be run on connection abort 
     :param binary: Switch between binary and text mode. Text will be encoded / decoded using encoding parameter.
     :param terminator: Terminator to use to split received data into chunks (split lines <cr> for example). If integer then split into n bytes. Default is None means process chunks as received.
-    :param autoconnect: automatically connect on send. Copies autoreconnect if None
+    :param timeout: Timeout to set for connected socket. Don't change without reason
 
     :type host: str
     :type port: int
     :type name: str
     :type autoreconnect: bool
+    :type autoconnect: bool
     :type connect_retries: int
     :type connect_cycle: int
     :type retry_cycle: int
+    :type retry_abort: int
+    :type abort_callback: function
     :type binary: bool
     :type terminator: int | bytes | str
-    :type autoconnect: bool
+    :type timeout: int
     """
 
-    def __init__(self, host, port, name=None, autoreconnect=True, connect_retries=5, connect_cycle=5, retry_cycle=30, binary=False, terminator=False, timeout=1, autoconnect=None):
+    def __init__(self, host, port, name=None,
+                 autoreconnect=True, autoconnect=None, connect_retries=5,
+                 connect_cycle=5, retry_cycle=30, retry_abort=0,
+                 abort_callback=None, binary=False, terminator=False, timeout=1,
+                 rate_limit=1, max_rate_connects=10):
         self.logger = logging.getLogger(__name__)
 
         # public properties
@@ -577,13 +587,21 @@ class Tcp_client(object):
         self._is_receiving = False
         self._connect_retries = connect_retries
         self._connect_cycle = connect_cycle
-        self._retry_cycle = retry_cycle
+        self._retry_cycle = int(retry_cycle)
+        self._retry_abort = retry_abort
+        self._abort_callback = abort_callback
         self._timeout = timeout
+
+        self._ratelimit = rate_limit
+        self._max_rate_connects = max_rate_connects
+        self._last_connect = 0
+        self._num_connects = 0
 
         self._hostip = None
         self._family = socket.AF_INET
         self._socket = None
         self._connect_counter = 0
+        self._retry_round_counter = 0
         self._binary = binary
 
         self._connected_callback = None
@@ -595,7 +613,6 @@ class Tcp_client(object):
         self.__connect_thread = None
         self.__connect_threadlock = threading.Lock()
         self.__receive_thread = None
-        self.__receive_threadlock = threading.Lock()
         self.__running = False
 
         # self.logger.setLevel(logging.DEBUG)   # Das sollte hier NICHT gesetzt werden, sondern in etc/logging.yaml im Logger lib.network konfiguriert werden!
@@ -639,6 +656,9 @@ class Tcp_client(object):
             self.logger.debug(f"connected_callback for {self._id} is {data_received.__qualname__} and it expects {params} arguments")
             self._data_received_callback = data_received
 
+    def open(self):
+        self.connect()
+
     def connect(self):
         """
         Connect the socket.
@@ -655,15 +675,41 @@ class Tcp_client(object):
             self._is_connected = False
             return False
 
-        self.logger.debug(f'Starting connect to {self._host}:{self._port}')
-        if not self.__connect_thread or not self.__connect_thread.is_alive():
-            self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name=f'TCP_Connect {self._id}')
-            self.__connect_thread.daemon = True
-        self.logger.debug(f'connect() to {self._host}:{self._port}: self.__running={self.__running}, self.__connect_thread.is_alive()={self.__connect_thread.is_alive()}')
-        if not self.__running or not self.__connect_thread.is_alive():
-            self.logger.debug(f'connect() to {self._host}:{self._port}: calling __connect_thread.start()')
-            self.__connect_thread.start()
-        self.logger.debug(f'leaving connect() to {self._host}:{self._port}')
+        # prevent starting connect thread twice
+        with self.__connect_threadlock:
+            self.logger.debug(f'Starting connect to {self._host}:{self._port}')
+            if not self.__connect_thread or not self.__connect_thread.is_alive():
+
+                # limit connection rates
+                if time.time() < self._last_connect + (1.0 / self._ratelimit):
+                    self.logger.debug(f'connect: rate limit active, minimum delay is {1.0 / self._ratelimit}, current delay is {time.time() - self._last_connect}')
+                    self._num_connects += 1
+                    if self._num_connects >= self._max_rate_connects:
+
+                        # too many rate limits reached
+                        self.logger.debug(f'connect: max number of rate limits hit {self._max_rate_connects}, aborting connect')
+                        if self._abort_callback:
+                            self._abort_callback()
+                            self._num_connects = 0
+                            return False
+
+                    # wait till we may connect again
+                    while time.time() < self._last_connect + (1.0 / self._ratelimit):
+                        time.sleep(.1)
+
+                self.logger.dbglow(f'connect() creating connect thread "TCP_Connect {self._id}')
+                self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name=f'TCP_Connect {self._id}')
+                self.__connect_thread.daemon = True
+            self.logger.dbglow(f'connect() to {self._host}:{self._port}: self.__running={self.__running}, self.__connect_thread.is_alive()={self.__connect_thread.is_alive()}')
+            if not self.__running or not self.__connect_thread.is_alive():
+                self.logger.dbglow(f'connect() to {self._host}:{self._port}: calling __connect_thread.start()')
+                try:
+                    self.__connect_thread.start()
+                except RuntimeError as e:
+                    self.logger.dbglow(f'connect() starting thread failed, error was {e}, thread is {self.__connect_thread}, running={self.__running}, is_alive()={self.__connect_thread.is_alive()}')
+                    return False
+
+        self.logger.dbglow(f'leaving connect() to {self._host}:{self._port}')
         return True
 
     def connected(self):
@@ -734,22 +780,20 @@ class Tcp_client(object):
         """
         Thread worker to handle connection.
         """
-        if not self.__connect_threadlock.acquire(blocking=False):
-            self.logger.info(f'{self._id} connection attempt already in progress, ignoring new request')
-            return
         if self._is_connected:
             self.logger.info(f'{self._id} already connected, ignoring new request')
             return
         self.logger.debug(f'{self._id} starting connection cycle')
         self._connect_counter = 0
+        self._retry_round_counter = 0
         self.__running = True
         while self.__running and not self._is_connected:
-            # Try a full connect cycle
-            while not self._is_connected and self._connect_counter < self._connect_retries and self.__running:
+            # Try a full connect round
+            while not self._is_connected and self._connect_counter < self._connect_retries and (self._retry_round_counter < self._retry_abort or not self._retry_abort) and self.__running:
                 self._connect()
                 if self._is_connected:
                     try:
-                        self.__connect_threadlock.release()
+                        self._last_connect = time.time()
                         if self._connected_callback:
                             self._connected_callback(self)
                         name = f'TCP_Client {self._id}'
@@ -757,24 +801,24 @@ class Tcp_client(object):
                         self.__receive_thread.daemon = True
                         self.__receive_thread.start()
                     except Exception:
-                        self.logger.error(f"could not start __receive_thread_worker for {name}")
+                        self.logger.error(f"could not start __receive_thread_worker for {self.name}")
                         raise
                     return True
                 else:
-                    self.logger.warning(f"self._connect() for {name} did not work")
-                if self.__running:
+                    self.logger.warning(f"self._connect() for {self.name} did not work")
+                if self.__running and self._connect_counter < self._connect_retries:
                     self._sleep(self._connect_cycle)
 
             if self._autoreconnect and self.__running:
+                self._retry_round_counter += 1
+                if self._retry_abort and self._retry_round_counter == self._retry_abort and self._abort_callback:
+                    self._abort_callback()
+                    break
+                self.logger.debug(f'waiting {self._retry_cycle} seconds before next connection attempt')
                 self._sleep(self._retry_cycle)
                 self._connect_counter = 0
             else:
                 break
-        try:
-            self.__connect_threadlock.release()
-        except Exception:
-            self.logger.debug(f'{self._id} exception while trying self.__connect_threadlock.release()')
-            pass
 
     def _connect(self):
         """
@@ -794,7 +838,7 @@ class Tcp_client(object):
         except Exception as err:
             self._is_connected = False
             self._connect_counter += 1
-            self.logger.warning(f'{self._id} TCP connection failed {self._connect_counter}/{self._connect_retries} times, last error was: {err}')
+            self.logger.warning(f'{self._id} TCP connection failed {self._connect_counter}/{int(self._connect_retries)} times, last error was: {err}')
 
     def __receive_thread_worker(self):
         """
@@ -817,9 +861,12 @@ class Tcp_client(object):
                         timeout = False
                         try:
                             msg = self._socket.recv(4096)
-                        except TimeoutError:
+                        except (TimeoutError, OSError) as e:
+                            if isinstance(e, OSError) and e.errno not in (60, 65):
+                                raise
                             msg = None
                             timeout = True
+
                         # Check if incoming message is not empty
                         if msg:
                             # TODO: doing this breaks line separation if multiple lines
@@ -885,17 +932,17 @@ class Tcp_client(object):
                                     self.logger.debug(f'{self._id} autoreconnect enabled')
                                     self.connect()
                                 if self._is_connected:
-                                    self.logger.debug('{self._id} set read watch on socket again')
+                                    self.logger.debug(f'{self._id} set read watch on socket again')
                                     waitobj.watch(self._socket, read=True)
                             else:
                                 # socket shut down by self.close, no error
-                                self.logger.debug('{self._id} connection shut down by call to close method')
+                                self.logger.debug(f'{self._id} connection shut down by call to close method')
+                                self._is_receiving = False
+                                self._is_connected = False
                                 return
         except Exception as ex:
             if not self.__running:
                 self.logger.debug(f'{self._id} receive thread shutting down')
-                self._is_receiving = False
-                return
             else:
                 self._log_exception(ex, f'lib.network {self._id} receive thread died with unexpected error: {ex}. Go tell...')
         self._is_receiving = False
@@ -947,9 +994,21 @@ class Tcp_client(object):
             except Exception as e:
                 self.logger.info(f"socket no longer connected on disconnect, exception is {e}")
         if self.__connect_thread is not None and self.__connect_thread.is_alive():
-            self.__connect_thread.join()
+            try:
+                self.__connect_thread.join()
+            except Exception:
+                pass
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
-            self.__receive_thread.join()
+            try:
+                self.__receive_thread.join()
+            except Exception:
+                pass
+
+        self.__connect_thread = None
+        self.__receive_thread = None
+        self.__connect_threadlock = threading.Lock()
+        self.__receive_threadlock = threading.Lock()
+        self._is_connected = False
 
     def __str__(self):
         if self.name:
@@ -1334,6 +1393,7 @@ class Tcp_server(object):
         with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
+        self.__listening_thread = None
         self.__loop.close()
 
     def __str__(self):
@@ -1474,6 +1534,7 @@ class Udp_server(object):
         with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
+        self.__listening_thread = None        
         self.__loop.close()
 
     async def __start_server(self):

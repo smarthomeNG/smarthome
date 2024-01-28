@@ -249,7 +249,7 @@ class RESTResource:
 
     @cherrypy.expose
     def index(self, *vpath, **params):
-        # self.logger.info("RESTResource.index {}".format(self.__class__.__name__))
+        self.logger.info(f"RESTResource.index for class {self.__class__.__name__}")
         return self.default(*vpath, **params)
 
 
@@ -330,27 +330,27 @@ class RESTResource:
             public_root = False
             if root:
                 public_root = getattr(m, "public_root", False)
-                self.logger.info("REST_dispatch_execute(): public_root = '{}'".format(public_root))
+                self.logger.info(f"REST_dispatch_execute(): public_root = '{public_root}'")
             if not public_root:
                 auth_needed = getattr(m, "authentication_needed", False)
-                self.logger.debug("REST_dispatch_execute(): {}Authentication needed for {} ({})".format(('' if auth_needed else 'No '), method, str(m).split()[2]))
+                self.logger.info(f"REST_dispatch_execute(): {('' if auth_needed else 'No ')}Authentication needed for {method} ({str(m).split()[2]})")
                 if auth_needed:
                     # self.logger.info("REST_dispatch: Authentication needed for {} ({})".format(method, str(m).split()[2]))
                     token_valid, error_text = self.REST_test_jwt_token()
                     if not token_valid:
-                        self.logger.info("REST_dispatch_execute(): Authentication failed for {} ({})".format(method, str(m).split()[2]))
+                        self.logger.info("REST_dispatch_execute(): Authentication failed for {method} ({str(m).split()[2]})")
                         response = {'result': 'error', 'description': error_text}
                         return json.dumps(response)
 
             try:
                 return m(resource, **params)
             except Exception as e:
-                if self.REST_dispatch_execute_warnlevel == 'WARNING':
-                    self.logger.warning("REST_dispatch_execute: {}: {}".format(resource, e))
-                else:
+                if self.module.rest_dispatch_force_exception:
                     self.logger.notice("The following exception is thrown, due to the configuration in etc/module.yaml:")
-                    self.logger.exception("REST_dispatch_execute: {}: {}".format(resource, e))
-                response = {'result': 'error', 'description': format(e)}
+                    self.logger.exception(f"REST_dispatch_execute: {resource}: {e.__class__.__name__} {e}")
+                else:
+                    self.logger.warning(f"REST_dispatch_execute: {resource}: {e.__class__.__name__} {e}")
+                response = {'result': 'error', 'description': f"{e.__class__.__name__} {e}"}
                 return json.dumps(response)
         return None
 
@@ -387,13 +387,14 @@ class RESTResource:
 
     @cherrypy.expose
     def default(self, *vpath, **params):
+        self.logger.info(f"RESTResource.default: *vpath={vpath}, **params={params}")
         if not vpath:
             resource = None
             # self.logger.info("RESTResource.default: vpath = '{}',  params = '{}'".format(list(vpath), dict(**params)))
 
             return self.REST_dispatch(True, resource, **params)
             # return list(**params)
-        # self.logger.info("RESTResource.default: vpath = '{}',  params = '{}'".format(list(vpath), dict(**params)))
+        self.logger.info(f"RESTResource.default: vpath = '{list(vpath)}',  params = '{dict(**params)}'")
         # Make a copy of vpath in a list
         vpath = list(vpath)
         atom = vpath.pop(0)
@@ -417,7 +418,8 @@ class RESTResource:
                 c.parent = resource
                 return c.default(*vpath, **params)
             method = getattr(self, a, None)
-            if method and getattr(method, "expose_resource"):
+            #self.logger.notice(f"dir(method): {dir(method)}")
+            if method and getattr(method, "expose_resource", False):
                 return method(resource, *vpath, **params)
             else:
                 # path component was specified but doesn't

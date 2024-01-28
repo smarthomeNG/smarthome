@@ -187,6 +187,8 @@ class Shpypi:
 
         req_dict = self.parse_requirementsfile(filepath)
         inst_dict = self.get_installed_packages()
+        #self.logger.info(f"test_requirements: inst_dict={inst_dict}")
+        #self.logger.info(f"test_requirements: req_dict={req_dict}")
 
         requirements_met = True
         for req_pkg in req_dict:
@@ -207,25 +209,25 @@ class Shpypi:
                 if logging:
                     if hard_requirement:
                         if inst_vers == '-' and min == '*':
-                            self.logger.error("test_requirements: '{}' not installed, any version needed".format(req_pkg))
+                            self.logger.warning(f"test_requirements: '{req_pkg}' not installed, any version needed")
                         elif inst_vers == '-':
-                            self.logger.error("test_requirements: '{}' not installed. Minimum v{} needed".format(req_pkg, min))
+                            self.logger.warning(f"test_requirements: '{req_pkg}' not installed. Minimum v{min} needed")
                         elif not min_met:
-                            self.logger.error("test_requirements: '{}' v{} too old. Minimum v{} needed".format(req_pkg, inst_vers, min))
+                            self.logger.warning(f"test_requirements: '{req_pkg}' v{inst_vers} too old. Minimum v{min} needed")
                         else:
-                            self.logger.error("test_requirements: '{}' v{} too new. Maximum v{} needed".format(req_pkg, inst_vers, max))
+                            self.logger.warning(f"test_requirements: '{req_pkg}' v{inst_vers} too new. Maximum v{max} needed")
                 else:
                     if not self._error:
                         print()
                         self._error = True
                     if inst_vers == '-' and min == '*':
-                        print("test_requirements: '{}' not installed, any version needed".format(req_pkg))
+                        print(f"test_requirements: '{req_pkg}' not installed, any version needed")
                     elif inst_vers == '-':
-                        print("test_requirements: '{}' not installed. Minimum v{} needed".format(req_pkg, min))
+                        print(f"test_requirements: '{req_pkg}' not installed. Minimum v{min} needed")
                     elif not min_met:
-                        print("test_requirements: '{}' v{} too old. Minimum v{} needed".format(req_pkg, inst_vers, min))
+                        print(f"test_requirements: '{req_pkg}' v{inst_vers} too old. Minimum v{min} needed")
                     else:
-                        print("test_requirements: '{}' v{} too new. Maximum v{} needed".format(req_pkg, inst_vers, max))
+                        print(f"test_requirements: '{req_pkg}' v{inst_vers} too new. Maximum v{max} needed")
 
         return requirements_met
 
@@ -361,7 +363,7 @@ class Shpypi:
             python_bin_path = os.path.split(self.sh.python_bin)[0]
         else:
             python_bin_path = os.path.split(sys.executable)[0]
-        print("python_bin_path={}".format(python_bin_path))
+        #print("python_bin_path={}".format(python_bin_path))
 
         if not os.name == 'nt':
             pip_command = os.path.join(python_bin_path, 'pip3')
@@ -394,12 +396,14 @@ class Shpypi:
 
         if pip3_command:
             pip_command = pip3_command
+            msg = 'configured'
         else:
             pip_command = self.get_pip_command()
+            msg = 'auto-determined'
         try:
-            self.logger.notice("> using PIP command: '{}'".format(pip_command))
+            self.logger.notice(f"Using {msg} PIP: '{pip_command}'")
         except:
-            self.logger.warning("> using PIP command: '{}'".format(pip_command))
+            self.logger.warning(f"Using {msg} PIP: '{pip_command}'")
 
         req_filepath = os.path.join(self._sh_dir, 'requirements', req_type+'.txt')
         command_line = pip_command +' install -r ' + req_filepath + ' --user --no-warn-script-location'
@@ -426,13 +430,13 @@ class Shpypi:
             if 'virtualenv' in stderr and '--user' in stderr:
                 if logging:
                     try:
-                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to current virtual environment, please wait...")
                     except:
-                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to current virtual environment, please wait...")
                 else:
                     print()
-                    print("Running in a virtualenv environment,")
-                    print("installing "+req_type_display+" requirements only to actual virtualenv, please wait...")
+                    print("Running in a virtual environment environment,")
+                    print("installing "+req_type_display+" requirements only to current virtual environment, please wait...")
                 stdout, stderr = Utils.execute_subprocess('pip3 install -r '+req_filepath)
         if logging:
             self.logger.debug("stdout = 'Output from PIP command:\n{}'".format(stdout))
@@ -456,10 +460,13 @@ class Shpypi:
                 # result on windows nt:
                 # WARNING: You are using pip version 19.2.3, however version 20.2.1 is available.
                 # You should consider upgrading via the 'python -m pip install --upgrade pip' command.
-                if stderr.find("You should consider upgrading via") > -1 and stderr.find("pip install --upgrade pip") > -1:
+                if (stderr.find("You should consider upgrading via") > -1 or stderr.find("[notice] A new release of pip") > -1) \
+                    and stderr.find("pip install --upgrade pip") > -1:
                     #if logging:
                     #    self.logger.warning(stderr)
                     return True
+            #if stdout.find("[notice] A new release of pip") > -1:
+            #
             if logging:
                 self.logger.error(stderr)
             else:
@@ -667,6 +674,8 @@ class Shpypi:
                         package['is_required_for_plugins'] = True
                         package['sort'] = self._build_sortstring(package)
 
+                    self.logger.debug("Package name, type: {}, {}".format(pkg_name, type(required_packages[pkg_name])))
+                    self.logger.debug("Package value: {}".format(required_packages[pkg_name]))
                     package['vers_req_min'] = required_packages[pkg_name].get('min', '*')
                     package['vers_req_max'] = required_packages[pkg_name].get('max', '*')
                     package['vers_req_msg'] = ''
@@ -939,42 +948,24 @@ class Shpypi:
                 if self._compare_versions(pyversion, version, operator):
                     result_list.append(self._split_requirement_to_min_max(requirement[0]))
 
-        if len(result_list) > 2:
-            # Hier sollten die Einträge noch konsolidiert werden
-            # Vorübergehend: Eine Liste von dicts zurückliefern
-            return result_list
-
-        if len(result_list) == 2:
+        # Es wurde bisher eine Liste von dicts zurückgeliefert, wenn es mehr als einen Eintrag gab. Das
+        # führte dann später zu Fehlern, weil als Ergbnis eine Liste und keine Dictionaries erwartet wurden.
+        # Das sollte jetzt behoben sein. Die Werte werden kosolidiert.
+        if len(result_list) > 1:
+            set_min = '*'
+            set_max = '*'
+            for result_entry in result_list:
+                val_min = result_entry.get('min', None)
+                if val_min is not None and val_min != '*':
+                    if set_min == '*' or val_min > set_min:
+                        set_min = val_min
+                val_max = result_entry.get('max', None)
+                if val_max is not None and val_max != '*':
+                    if set_max == '*' or val_max < set_max:
+                        set_max = val_max
             result = {}
-
-            #consolidate minimum values (only '*' at the moment)
-            val0 = result_list[0].get('min', None)
-            val1 = result_list[1].get('min', None)
-            if  val0 is not None and val1 is not None:
-                # Consolidate minimum requirements
-                if val0 == '*':
-                    result['min'] = val1
-                elif val1 == '*':
-                    result['min'] = val0
-            elif val0 is None:
-                result['min'] = val1
-            elif val1 is None:
-                result['min'] = val0
-
-            #consolidate maximum values (only '*' at the moment)
-            val0 = result_list[0].get('max', None)
-            val1 = result_list[1].get('max', None)
-            if  val0 is not None and val1 is not None:
-                # Consolidate minimum requirements
-                if val0 == '*':
-                    result['max'] = val1
-                elif val1 == '*':
-                    result['max'] = val0
-            elif val0 is None:
-                result['max'] = val1
-            elif val1 is None:
-                result['max'] = val0
-
+            result['min'] = set_min
+            result['max'] = set_max
             return result
 
         if len(result_list) == 0:
@@ -1097,6 +1088,7 @@ class Requirements_files():
     _module_files = []
     _plugin_files = []
     _core_files = []  # to be a list in the future
+    _user_files = []
 
     def __init__(self, version='0.0.0', for_tests=False):
 
@@ -1285,10 +1277,10 @@ class Requirements_files():
     def _build_filelists(self, selection):
 
         self.logger.debug(f"_build_filelists: selection={selection}")
-        # global _module_files, _plugin_files, _core_files
         self._module_files = []
         self._plugin_files = []
         self._core_files = []         # to be a list in the future
+        self._user_files = []
 
         if selection in ['modules', 'base', 'all', 'conf_all']:
             # build list of all modules with requirements
@@ -1306,6 +1298,11 @@ class Requirements_files():
         if selection in ['core', 'base', 'all', 'conf_all']:
             # Read core requirements
             self._core_files = self._get_filelist('lib')
+
+        if selection in ['core', 'all', 'conf_all']:
+            # Read requirements for userfunctions and logics
+            self._user_files = self._get_filelist('functions')
+            self._user_files += self._get_filelist('logics')
         return
 
 
@@ -1339,6 +1336,10 @@ class Requirements_files():
         for fname in self._module_files:
             self._read_requirementfile(fname, requirements, 'SmartHomeNG-module ')
 
+        # Read requirements for userfunctions
+        #self.logger.warning(f"__read_requirementfiles: self._module_files={self._module_files}")
+        self._read_requirementfile(fname, requirements, 'SmartHomeNG-userfunctions ')
+
         # Read requirements for plugins
         #self.logger.warning(f"__read_requirementfiles: self._plugin_files={self._plugin_files}")
         for fname in self._plugin_files:
@@ -1348,6 +1349,11 @@ class Requirements_files():
         #self.logger.warning(f"__read_requirementfiles: self._conf_plugin_files={self._conf_plugin_files}")
         for fname in self._conf_plugin_files:
             self._read_requirementfile(fname, requirements, 'configured plugin ')
+
+        # Read user defined requirements for userfunctions (and logics)
+        #self.logger.warning(f"__read_requirementfiles: self._user_files={self._user_files}")
+        for fname in self._user_files:
+            self._read_requirementfile(fname, requirements, 'user-defined ')
 
         return requirements
 

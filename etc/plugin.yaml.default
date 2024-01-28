@@ -38,21 +38,13 @@ cli:
 #      - db:smarthome
 #      - port:3306
 
-# memlog:
-#     plugin_name: memlog
-#     name: alert
-
-# ow:
-#     plugin_name: onewire
-#     host: 127.0.0.1
-#     port: 4304
-
 # Autogenerierung von Webseiten für SmartVISU UND Aktivierung des Nutzdatenprotokolls über Websocket für die smartVISU
 smartvisu_pages:
     plugin_name: smartvisu
     smartvisu_dir: /var/www/html/smartvisu
-    #generate_pages: True
+    #generate_pages: False
     #overwrite_templates: True
+    #create_masteritem_file: True
     #visu_style: std
     #default_acl: rw
     #handle_widgets: True
@@ -68,96 +60,6 @@ smartvisu_pages:
 #    laststate_name_suspended: ausgesetzt
 #    log_maxage: 1
 
-# apcups:
-#     plugin_name: apcups
-#     host: localhost
-#     port: 3551
-
-# dmx1:
-#     plugin_name: artnet
-#     artnet_subnet: 0
-#     artnet_net: 0
-#     artnet_universe: 0
-#     ip: 192.168.1.123
-#     port: 6454
-
-# ast:
-#     plugin_name: asterisk
-#     username: admin
-#     password: secret
-#     host: 127.0.0.1    # default
-#     port: 5038    # default
-
-# avm1:
-#     plugin_name: avm
-#     username: ...    # optional
-#     password: '...'
-#     host: fritz.box
-#     port: 49443
-#     cycle: 300
-#     ssl: True    # use https or not
-#     verify: False    # verify ssl certificate
-#     call_monitor: 'True'
-#     call_monitor_incoming_filter: "...    ## optional, don't set if you don't want to watch only one specific number with your call monitor"
-#     avm_identifier: fritzbox_1
-
-# boxcar:
-#     plugin_name: boxcar
-#     apikey: abcdefghij123456    # Get it from your Boxcar Account
-#     email: your@mail.org    # Registered with Boxcar
-
-# comfoair:
-#     plugin_name: comfoair
-#     kwltype: comfoair350    # Currently supported: comfoair350 and comfoair500
-#     host: 192.168.123.6    # Provide host and port if you want to use TCP connection (for a TCP to serial converter)
-#     port: 5555    # Port
-#     serialport: /dev/ttyUSB0    # Enable this if you want to use a serial connection
-
-# datalog:
-#     plugin_name: datalog
-#     path: var/log/data
-#     filepatterns:
-#       - default:{log}-{year}-{month}-{day}.csv
-#       - yearly:{log}-{year}.csv
-#     logpatterns: csv:{time};{item};{value}\n
-#     cycle: 300
-
-# dlms:
-#     plugin_name: dlms
-#     serialport: /dev/ttyO1
-#     baudrate: 300    # default 300
-#     update_cycle: 20    # default 20
-#     use_checksum: no    # default no
-#     reset_baudrate: no    # default no
-#     no_waiting: yes    # default yes
-
-# dmx:
-#     plugin_name: dmx
-#     tty: /dev/usbtty...
-#     interface: nanodmx
-
-# DuW:
-#     plugin_name: drexelundweiss
-#     tty: /dev/ttyUSB0
-#     Busmonitor: 1
-#     LU_ID: 130
-#     WP_ID: 140
-#     device: 14
-#     cycle: 60
-#     retrylimit: 10
-
-# squeezebox:
-#     plugin_name: squeezebox
-#     host: squeezeserver
-#     # port: <port>
-
-# uzsu:
-#     plugin_name: uzsu
-
-# simulation:
-#     plugin_name: simulation
-#     data_file: ./var/db/simulation.txt
-
 # nw:
 #     plugin_name: network
 #     ip: 0.0.0.0
@@ -169,10 +71,3 @@ smartvisu_pages:
 #     udp: 'no'
 #     udp_acl: '*'
 
-# wol:
-#     plugin_name: wol
-
-# homematic:
-#     plugin_name: homematic
-#     host: 192.168.50.250
-#     port: 2001

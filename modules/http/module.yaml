@@ -2,7 +2,7 @@
 module:
     # Global module attributes
     classname: Http
-    version: 1.7.0
+    version: 1.7.2
     sh_minversion: 1.5b
 #   sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)
     description:

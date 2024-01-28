@@ -18,15 +18,6 @@
 		Of course you can also overwrite defaults by putting the option declarations in {} below.
 		*/
 		$(window).trigger('datatables_defaults');
-		{% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
-		if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
-			resize = true;
-			webif_pagelength = -1;
-			console.log('Activating automatic table resize ' + webif_pagelength);
-		}
-		else {
-			resize = false;
-		}
 		try {
 			/*
 			Copy this part for every datatable on your page. Adjust options if necessary.
@@ -36,8 +27,7 @@
 			  /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
 			  */
 			  columnDefs: [{ "targets": [2], "className": "value"}].concat($.fn.dataTable.defaults.columnDefs),
-			  pageLength: webif_pagelength,
-			  pageResize: resize});
+			  });
 		}
 		catch (e) {
 			console.warn("Datatable JS not loaded, showing standard table without reorder option " + e);

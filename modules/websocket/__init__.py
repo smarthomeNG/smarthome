@@ -106,6 +106,8 @@ class Websocket(Module):
 
         Otherwise don't enter code here
         """
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'start()'}))
+
         _name = 'modules.' + self.get_fullname() + '.websocket_server'
         try:
             self._server_thread = threading.Thread(target=self._ws_server_thread, name=_name)
@@ -123,6 +125,8 @@ class Websocket(Module):
 
         Otherwise don't enter code here
         """
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
+
         self.logger.info("Shutting down websocket server(s)...")
         self.loop.call_soon_threadsafe(self.loop.stop)
         time.sleep(5)
@@ -151,6 +155,10 @@ class Websocket(Module):
         # parameters and class instance for smartVISU protocol
         from . import smartvisu
         self.initialize_payload_protocol(smartvisu.Protocol)
+
+        # parameters and class instance for smartVISU protocol
+        from . import admin
+        self.initialize_payload_protocol(admin.Protocol)
 
         return
 

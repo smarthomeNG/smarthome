@@ -1,0 +1,128 @@
+#!/bin/bash
+
+#########################################################################
+# Copyright 2023-       Martin Sinn                         m.sinn@gmx.de
+#########################################################################
+#  This file is part of SmartHomeNG
+#
+#  SmartHomeNG is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#########################################################################
+
+# get directory where this script is stored
+SOURCE=${BASH_SOURCE[0]}
+DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+
+cd $DIR
+cd ..
+SHNG_BASEDIR=`pwd`
+echo
+echo "setting file permissions..."
+bash tools/setpermissions
+echo
+
+# ---------------------------------------------------------------
+
+# Adding SmartHomeNG to .bashrc
+if [ -f "$HOME/.bashrc" ]; then
+    WRK=`grep shng-additions ~/.bashrc`
+    if [ "$WRK" == "" ]; then
+        echo --- Adding SmartHomeNG path to .bashrc
+        WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:\$PATH:."
+        echo >>~/.bashrc
+        echo "# shng-additions" >>~/.bashrc
+        echo export $WRK >>~/.bashrc
+        echo cd $SHNG_BASEDIR >>~/.bashrc
+        echo source act shng >>~/.bashrc
+
+        WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
+    fi
+fi
+
+# Adding path to actual running shell
+if [ "$SHNG_ADDITIONS" != "1" ]; then
+    WRK="PATH=$SHNG_BASEDIR/tools:$SHNG_BASEDIR/venvs:$PATH:."
+    export $WRK
+    SHNG_ADDITIONS=1
+fi
+
+# ---------------------------------------------------------------
+
+function print_pythonversion() {
+    PY_PATHNAME=`which python$1`
+    if [ "$PY_PATHNAME" != "" ]; then
+        echo " - `python$1 -V`  ($PY_PATHNAME)"
+    #else
+    #    echo Python $1 is not installed
+    fi
+}
+
+function print_installed_pythonversions() {
+    echo Installed Python versions:
+    print_pythonversion '3.3'
+    print_pythonversion '3.4'
+    print_pythonversion '3.5'
+    print_pythonversion '3.6'
+    print_pythonversion '3.7'
+    print_pythonversion '3.8'
+    print_pythonversion '3.9'
+    print_pythonversion '3.10'
+    print_pythonversion '3.11'
+}
+
+function get_pythonversion_for_shng() {
+    if [ "`which python3.10`" != "" ]; then
+        echo 3.10
+    else
+        if [ "`which python3.9`" != "" ]; then
+            echo 3.9
+        else
+            if [ "`which python3.8`" != "" ]; then
+                echo 3.8
+            else
+                if [ "`which python3.11`" != "" ]; then
+                    echo 3.11
+                fi
+            fi
+        fi
+    fi
+}
+
+echo "Checking Python installation(s)..."
+echo
+
+print_installed_pythonversions
+
+VERS=$(get_pythonversion_for_shng)
+echo
+if [ "$VERS" = "" ]; then
+    echo "ERROR: No Python version found which can be used to run SmartHomeNG"
+    echo "       Please install a Python version supported by SmartHomeNG"
+    echo
+    exit
+fi
+
+echo Selecting Python version $VERS
+echo
+
+# make a virtual environment with the standard Python installation
+echo "Creating virtual environment 'shng' with Python $VERS"
+source tools/make_venv $VERS shng
+
+echo $PATH>$HOME/postinstall_tst
+WRK=`grep /venvs $HOME/postinstall_tst`
+if [ "$WRK" == "" ]; then
+    echo "Use command 'source $SHNG_BASEDIR/venvs/act shng' to activate environment"
+else
+    echo "Use command 'source act shng' to activate environment"
+fi
+
+echo
+echo Please logout and login again, to ensure that the shell environment is initialized correctly.
+
+rm $HOME/postinstall_tst
+echo
+

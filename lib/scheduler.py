@@ -3,7 +3,7 @@
 #########################################################################
 # Copyright 2011-2014 Marcus Popp                          marcus@popp.mx
 # Copyright 2016-2017 Christian Straßburg
-# Copyright 2017-2022 Martin Sinn                           m.sinn@gmx.de
+# Copyright 2017-2023 Martin Sinn                           m.sinn@gmx.de
 # Copyright 2017-2022 Bernd Meiners                 Bernd.Meiners@mail.de
 #########################################################################
 #  This file is part of SmartHomeNG
@@ -33,6 +33,7 @@ import inspect
 import copy
 
 from lib.shtime import Shtime
+import lib.env
 from lib.item import Items
 from lib.model.smartplugin import SmartPlugin
 
@@ -58,6 +59,7 @@ except:
 
 
 logger = logging.getLogger(__name__)
+tasks_logger = logging.getLogger(__name__ + '.tasks')
 
 _scheduler_instance = None    # Pointer to the initialized instance of the scheduler class  (for use by static methods)
 
@@ -345,14 +347,14 @@ class Scheduler(threading.Thread):
             if name in self._scheduler:
                 obj = self._scheduler[name]['obj']
             else:
-                logger.warning("Logic name not found: {0}".format(name))
+                logger.warning(f"Logic name not found: {name}")
                 return
         if name in self._scheduler:
             if not self._scheduler[name]['active']:
-                logger.debug("Logic '{0}' deactivated. Ignoring trigger from {1} {2}".format(name, by, source))
+                logger.debug(f"Logic '{name}' deactivated. Ignoring trigger from {by} {source}")
                 return
         if dt is None:
-            logger.debug("Triggering {0} - by: {1} source: {2} dest: {3} value: {4}".format(name, by, source, dest, str(value)[:40]))
+            logger.debug(f"Triggering {name} - by: {by} source: {source} dest: {dest} value: {value}")
             self._runc.acquire()
             self._runq.insert(prio, (name, obj, by, source, dest, value))
             self._runc.notify()
@@ -364,7 +366,7 @@ class Scheduler(threading.Thread):
             if dt.tzinfo is None:
                 logger.warning(f"Trigger: Not a valid timezone aware datetime for {name}. Ignoring.")
                 return
-            logger.debug(f"Triggering {name} - by: {by} source: {source} dest: {dest} value: {str(value)[:40]} at: {dt}")
+            logger.debug(f"Triggering {name} - by: {by} source: {source} dest: {dest} value: {value} at: {dt}")
             self._triggerq.insert((dt, prio), (name, obj, by, source, dest, value))
 
     def remove(self, name, from_smartplugin=False):
@@ -386,6 +388,7 @@ class Scheduler(threading.Thread):
         finally:
             self._lock.release()
 
+
     def check_caller(self, name, from_smartplugin=False):
         """
         Checks the calling stack if the calling function (one of get, change, remove, trigger) itself was called by
@@ -398,11 +401,20 @@ class Scheduler(threading.Thread):
         """
         try:
             stack = inspect.stack()
+        except IndexError:
+            return name
         except Exception as e:
-            logger.exception(f"check_caller('{name}'): Exception in inspect.stack(): {e}")
+            logger.exception(f"check_caller('{name}') *1: Exception in inspect.stack(): {e}")
 
         try:
             obj = stack[2][0].f_locals["self"]
+        except KeyError:
+            return name
+        except Exception as e:
+            pass
+            logger.exception(f"check_caller('{name}') *2: Exception in inspect.stack(): {e}")
+
+        try:
             if isinstance(obj, SmartPlugin):
                 iname = obj.get_instance_name()
                 if iname != '':
@@ -410,9 +422,11 @@ class Scheduler(threading.Thread):
                     if not from_smartplugin:
                         if not str(name).endswith('_' + iname):
                             name = name + '_' + obj.get_instance_name()
-        except:
+        except Exception as e:
             pass
+            logger.exception(f"check_caller('{name}') *3: Exception in inspect.stack(): {e}")
         return name
+
 
     def return_next(self, name, from_smartplugin=False):
         # name = self.check_caller(name, from_smartplugin)   # ms
@@ -630,10 +644,12 @@ class Scheduler(threading.Thread):
                     next_time = ct
                     job['source'] = {'source': 'cron', 'details': str(entry)}
                     value = job['cron'][entry]
+
         self._scheduler[name]['next'] = next_time
-        self._scheduler[name]['value'] = value
-        #if name not in ['Connections', 'series', 'SQLite dump']:
-        #    logger.debug(f"{name} next time: {next_time}")
+
+        if value is not None:
+            self._scheduler[name]['value'] = value
+
         logger.debug(f"{name} next time: {next_time}")
 
     def __iter__(self):
@@ -667,7 +683,8 @@ class Scheduler(threading.Thread):
 
     def _task(self, name, obj, by, source, dest, value):
         threading.current_thread().name = name
-        logger = logging.getLogger(name)
+        #logger = logging.getLogger('_task.' + name)
+
         if obj.__class__.__name__ == 'Logic':
             self._execute_logic_task(obj, by, source, dest, value)
 
@@ -682,16 +699,20 @@ class Scheduler(threading.Thread):
                 if value is not None:
                     obj(value, caller=("Scheduler"+scheduler_source))
             except Exception as e:
-                logger.exception(f"Item {name} exception: {e}")
+                tasks_logger.exception(f"Item {name} exception: {e}")
 
         else:  # method
             try:
                 if value is None:
                     obj()
                 else:
+                    if ('caller' in inspect.getfullargspec(obj).args) and isinstance(value, dict):
+                        caller = value.get('caller', None)
+                        if caller is None:
+                            value['caller'] = by
                     obj(**value)
             except Exception as e:
-                logger.exception(f"Method {name} exception: {e}")
+                tasks_logger.exception(f"Method {name} exception: {e}")
 
         threading.current_thread().name = 'idle'
 
@@ -703,8 +724,10 @@ class Scheduler(threading.Thread):
         :param logic:
         :return:
         """
+        # get logger for the logic
         name = 'logics.' + logic.name
         logger = logging.getLogger(name)
+
         source_details = None
         if isinstance(source, dict):
             source_details = source.get('details', '')
@@ -722,11 +745,13 @@ class Scheduler(threading.Thread):
 
         # set the logic environment here (for use within functions in logics):
         #logic = obj  # noqa
-        logic.sh = self._sh
-        logic.logger = logger
-        logic.shtime = self.shtime
-        logic.items = self.items
-        logic.trigger_dict = trigger  # logic.trigger has naming conflict with method logic.trigger of lib.item
+        #logic.sh = self._sh           # not needed (because of being set in logic_globals dict
+       # logic.logger = logger         # not needed (because of being set in logic_globals dict
+        #logic.shtime = self.shtime    # not needed (because of being set in logic_globals dict
+        #logic.items = self.items      # not needed (because of being set in logic_globals dict
+        #logic.env = lib.env           # not needed (because of being set in logic_globals dict
+        #logic.trigger_dict = trigger # logic.trigger has naming conflict with method logic.trigger of lib.item
+                                      # not needed (because of being set in logic_globals dict
 
         #logics = logic._logics
 
@@ -744,11 +769,12 @@ class Scheduler(threading.Thread):
                     # set up "globals" environment for the logic
                     logic_globals = dict(globals())
                     logic_globals['sh'] = self._sh
-                    logic_globals['logger'] = logic.logger
+                    logic_globals['logger'] = logger
                     logic_globals['mqtt'] = self.mqtt
                     logic_globals['shtime'] = self.shtime
+                    logic_globals['env'] = lib.env
                     logic_globals['items'] = self.items
-                    logic_globals['trigger'] = logic.trigger_dict
+                    logic_globals['trigger'] = trigger  # logic.trigger_dict
                     logic_globals['logic'] = logic
                     logic_globals['logics'] = logic._logics
 

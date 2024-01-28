@@ -90,30 +90,32 @@ Activate that function if needed, otherwise just remove the line to increase per
 		Of course you can also overwrite defaults by putting the option declarations in {} below.
 		*/
 		$(window).trigger('datatables_defaults');
-		{% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
-		if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
-			resize = true;
-			webif_pagelength = -1;
-			console.log('Activating automatic table resize ' + webif_pagelength);
-		}
-		else {
-			resize = false;
-		}
 		try {
 			/*
 			Copy this part for every datatable on your page. Adjust options if necessary.
-			pageLength and pageResize should be included as they are to adjust it based on the plugin settings
 			*/
 			maintable = $('#maintable').DataTable( {
 			  /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
 			  */
 			  columnDefs: [{ "targets": [2], "className": "value"}].concat($.fn.dataTable.defaults.columnDefs),
-			  pageLength: webif_pagelength,
-			  pageResize: resize});
+			  });
 		}
 		catch (e) {
 			console.warn("Datatable JS not loaded, showing standard table without reorder option " + e);
 		}
+    /*
+    This part creates tooltips for buttons/inputs that have the class "button-tooltip"
+    */
+    const tooltipList = ['Nach Devices suchen'];
+    createTooltips(tooltipList);
+    /*
+    This part reads cookies for the attribute "sort_order" and activates the resepctive button after page load
+    */
+    order = getCookie('sort_order');
+    if (order == '')
+      order = 'time-desc';
+    const button = document.getElementById(order);
+    button.click();
 	});
 </script>
 <!--
@@ -169,7 +171,8 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 {% block buttons %}
 {% if 1==2 %}
 	<div>
-		<button id="btn1" class="btn btn-shng btn-sm" name="scan" onclick="shngPost('', {learn: 'on'})"><i class="fas fa-question"></i>&nbsp;&nbsp;&nbsp;{{ _('nach Devices suchen') }}&nbsp;</button>
+		<button id="btn1" class="btn btn-shng btn-sm" name="scan" onclick="shngPost('', {learn: 'on'})"><i class="fas fa-question button-tooltip"></i>&nbsp;&nbsp;&nbsp;{{ _('nach Devices suchen') }}&nbsp;</button>
+    <button onclick="setCookie('sort_order', 'time-desc', 365, window.pluginname);" type="button" class="button-tooltip" id="time-desc">Button</button>
 	</div>
 {% endif %}
 {% endblock %}
@@ -194,12 +197,12 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 {% set tab1title = "<strong>" ~ p.get_shortname() ~ " Items</strong> (" ~ item_count ~ ")" %}
 {% block bodytab1 %}
   <!-- remove this div if not needed -->
-  <div class="mb-2">
-    {{ _('Hier kommt der Inhalt des Webinterfaces hin.') }} (optional)
+  <div class="m-2">
+    {{ _('Hier kommen bei Bedarf Informationen des Webinterfaces oberhalb der Tabelle hin.') }} (optional)
   </div>
 
 	<!-- set id accordingly -->
-	<table id="maintable" class="dataTableAdditional">
+	<table id="maintable" class="dataTableAdditional m-2">
 		<thead>
 			<tr>
         <!-- You HAVE to add an empty th here for correct implementation of the responsive plugin -->
@@ -211,18 +214,18 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 		<tbody>
 			{% for item in items %}
 			  {% if p.has_iattr(item.conf, '<plugin_attribute>') %}
-				<tr>
-          <!-- You HAVE to add an empty td here for correct implementation of the responsive plugin -->
-          <td></td>
-				  <td class="py-1" id="{{ item._path }}">{{ item._path }}</td>
-				  <td class="py-1" id="{{ item._path }}_value">{{ item() }}</td>
-				</tr>
+				 <tr>
+				   <!-- You HAVE to add an empty td here for correct implementation of the responsive plugin -->
+				   <td></td>
+				   <td class="py-1" id="{{ item._path }}">{{ item._path }}</td>
+				   <td class="py-1" id="{{ item._path }}_value">{{ item() }}</td>
+				 </tr>
 			  {% endif %}
 			{% endfor %}
 		</tbody>
 	</table>
   <!-- remove this div if not needed -->
-  <div class="mb-2">
+  <div class="m-2">
     Etwaige Informationen unterhalb der Tabelle (optional)
   </div>
 

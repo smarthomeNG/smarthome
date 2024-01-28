@@ -4,6 +4,7 @@
 !.gitignore
 #!logging.yaml
 # except yaml default-files
+!admin.yaml.default
 !holidays.yaml.default
 !logging.yaml.default
 !logic.yaml.default

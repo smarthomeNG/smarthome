@@ -1,0 +1,13 @@
+
+logics:
+
+    groups:
+
+        Beispiele:
+            title: Beispiel Logiken für SmartHomeNG
+            description: In dieser Gruppe sind die Beispiel Logiken zusammengefasst, die mit SmartHomeNG installiert werden.
+
+        Tools:
+            title: Logiken, die als Tools für SmartHomeNG dienen
+            description: In dieser Gruppe sind Logiken zusammengefasst, die als Tools mit SmartHomeNG ausgeliefert wurden.
+

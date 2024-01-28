@@ -17,6 +17,7 @@ Zusätzlich werden die Methoden der Klasse ``lib.utils.Utils`` vererbt.
 
 .. autoclass:: lib.model.mqttplugin.MqttPlugin
     :members:
+    :noindex:
     :undoc-members:
     :show-inheritance:
     :member-order: bysource

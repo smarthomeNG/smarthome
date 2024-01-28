@@ -43,7 +43,7 @@ from lib.scheduler import Scheduler
 
 
 class Mqtt(Module):
-    version = '1.7.4'
+    version = '1.7.6'
     longname = 'MQTT module for SmartHomeNG'
 
     __plugif_CallbackTopics = {}         # for plugin interface
@@ -178,6 +178,8 @@ class Mqtt(Module):
 
         It is called by lib.module and should not be called otherwise.
         """
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'start()'}))
+
         # self.alive = True
         if (self.birth_topic != '') and (self.birth_payload != ''):
             self._client.publish(self.birth_topic, self.birth_payload, self.qos, retain=True)
@@ -197,6 +199,8 @@ class Mqtt(Module):
         It is called by lib.module and should not be called otherwise.
         """
         #        self.logger.debug("Module '{}': Shutting down".format(self.shortname))
+        self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
+
         self._client.loop_stop()
         self.logger.debug("MQTT client loop stopped")
         self._disconnect_from_broker()
@@ -399,7 +403,7 @@ class Mqtt(Module):
             if not (isinstance(bool_values, list) and len(bool_values) == 2):
                 self.logger.warning("subscribe_topic: topic '{}', source '{}': Invalid bool_values specified ('{}') - Ignoring bool_values".format(topic, source, bool_values))
 
-        if not payload_type.lower() in ['str', 'num', 'bool', 'list', 'dict', 'scene', 'bytes']:
+        if not payload_type.lower() in ['str', 'num', 'bool', 'list', 'dict', 'scene', 'bytes', 'dict/str']:
             self.logger.warning("Invalid payload-datatype '{}' specified for {} '{}', ignored".format(payload_type, source_type, callback))
             payload_type = 'str'
 
@@ -506,6 +510,7 @@ class Mqtt(Module):
         datatype = subscription_dict.get('payload_type', 'foo')
         bool_values = subscription_dict.get('bool_values', None)
         payload = self.cast_from_mqtt(datatype, payload, bool_values)
+
         plugin = subscription_dict.get('callback', None)
 
         subscription_found = False
@@ -559,13 +564,16 @@ class Mqtt(Module):
                 for subscription in list(topic_dict):
                     self.logger.debug("_on_mqtt_message: subscription '{}': {}".format(subscription, topic_dict[subscription]))
                     subscriber_type = topic_dict[subscription].get('subscriber_type', None)
-                    if subscriber_type == 'plugin':
-                        subscription_found = self._callback_to_plugin(subscription, topic_dict[subscription], message.topic, message.payload, message.qos, message.retain)
-                    elif subscriber_type == 'logic':
-                        subscription_found = self._trigger_logic(topic_dict[subscription], message.topic, message.payload)
-                    else:
-                        self.logger.error("_on_mqtt_message: received topic for unknown subscriber_type '{}'".format(subscriber_type))
-
+                    try:
+                        if subscriber_type == 'plugin':
+                            subscription_found = self._callback_to_plugin(subscription, topic_dict[subscription], message.topic, message.payload, message.qos, message.retain)
+                        elif subscriber_type == 'logic':
+                            subscription_found = self._trigger_logic(topic_dict[subscription], message.topic, message.payload)
+                        else:
+                            self.logger.error("_on_mqtt_message: received topic for unknown subscriber_type '{}'".format(subscriber_type))
+                    except UnicodeDecodeError:
+                        self.logger.warning(f"_on_mqtt_message: received ill-formed message with topic '{message.topic}', payload '{message.payload}', discarding")
+                        return
 
         if not subscription_found:
             if not self._handle_broker_infos(message):
@@ -592,9 +600,10 @@ class Mqtt(Module):
 
     def _on_mqtt_log(self, client, userdata, level, buf):
         if str(buf).startswith('Caught exception'):
-            self.logger.error("_on_log: {}".format(buf))
+            self.logger.error(f"_on_log: {buf} - client={client}, userdata={userdata}, level={level}")
         else:
-            self.logger.debug("_on_log: {}".format(buf))
+            self.logger.debug(f"_on_log: {buf} - client={client}, userdata={userdata}, level={level} - dir(client)={dir(client)}")
+            self.logger.debug(f"_on_log: {buf} - client={client}, userdata={userdata}, level={level} - dir(client.__class__)={dir(client.__class__)}")
         return
 
 
@@ -718,7 +727,7 @@ class Mqtt(Module):
         Callback function called on disconnect
         """
         if rc == 0:
-            self.logger.info(f"Disconnection was successful (rc={rc}'")
+            self.logger.info(f"Disconnection was successful (rc={rc})")
         elif rc == 7:
             self.logger.warning(f"Disconnected from broker with returncode '{rc}'")
             self._got_disconnected = True
@@ -837,10 +846,13 @@ class Mqtt(Module):
                 data = str_data
         elif datatype == 'dict':
             try:
-                data = json.loads(str_data)
+                if str_data == '':
+                    data = {}
+                else:
+                    data = json.loads(str_data)
             except Exception as e:
                 self.logger.error("cast_from_mqtt: datatype 'dict', error '{}', data = ‘{}‘".format(e, str_data))
-                data = str_data
+                data = {}
         elif datatype == 'scene':
             data = '0'
             if Utils.is_int(str_data):
@@ -848,6 +860,14 @@ class Mqtt(Module):
                     data = str_data
         elif datatype == 'foo':
             data = raw_data
+        elif datatype == 'dict/str':
+            try:
+                if str_data == '':
+                    data = {}
+                else:
+                    data = json.loads(str_data)
+            except Exception as e:
+                data = str_data
         else:
             self.logger.warning("cast_from_mqtt: Casting '{}' to '{}' is not implemented".format(raw_data, datatype))
             data = raw_data

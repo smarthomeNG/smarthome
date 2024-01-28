@@ -87,6 +87,8 @@ class Plugins():
     _plugins = []
     _threads = []
 
+    _plugindict = {}
+
     def __init__(self, smarthome, configfile):
         self._sh = smarthome
         self._configfile = configfile
@@ -177,6 +179,10 @@ class Plugins():
                                     logger.warning(f"Plugin {str(classpath).split('.')[1]} error on getting startorder: {e}")
                                     startorder = 'normal'
                                 self._plugins.append(plugin_thread.plugin)
+                                # dict to get a handle to the plugin code by plugin name:
+                                if self._plugindict.get(classpath.split('.')[1], None) is None:
+                                    self._plugindict[classpath.split('.')[1]] = plugin_thread.plugin
+                                self._plugindict[classpath.split('.')[1]+'#'+instance] = plugin_thread.plugin
                                 if startorder == 'early':
                                     threads_early.append(plugin_thread)
                                 elif startorder == 'late':
@@ -210,6 +216,20 @@ class Plugins():
                     self.logic_parameters[param]['plugin'] = self._plugins[i]._shortname
 
         return
+
+
+    def get(self, plugin_name, instance=None):
+        """
+        Get plugin object by plugin name and instance (optional)
+
+        :param plugin_name: name of the plugin (not the plugin configuration)
+        :param instance: name of the instance of the plugin (optional)
+
+        :return: plugin object
+        """
+        if instance is None:
+            return self._plugindict.get(plugin_name, None)
+        return self._plugindict.get(plugin_name+'#'+instance, None)
 
 
     def get_logic_parameters(self):
@@ -361,6 +381,39 @@ class Plugins():
     def __iter__(self):
         for plugin in self._plugins:
             yield plugin
+
+
+    def get_loaded_plugins(self):
+        """
+        Returns a list with the names of all loaded plugins
+
+        if multiple instances of a plugin are loaded, the plugin name is returned only once
+
+        :return: list of plugin names
+        :rtype: list
+        """
+        plgs = []
+        for plugin in self._plugins:
+            plgname = plugin.get_shortname()
+            if not plgname in plgs:
+                plgs.append(plgname)
+        return sorted(plgs)
+
+
+    def get_loaded_plugin_instances(self):
+        """
+        Returns a list of tuples of all loaded plugins with the plugin name and the instance name
+
+        :return: list of (plugin name, instance name)
+        :rtype: list of tuples
+        """
+        plgs = []
+        for plugin in self._plugins:
+            plgname = plugin.get_shortname()
+            insname = plugin.get_instance_name()
+            plgs.append((plgname, insname))
+        return sorted(plgs)
+
 
     # ------------------------------------------------------------------------------------
     #   Following (static) methods of the class Plugins implement the API for plugins in shNG

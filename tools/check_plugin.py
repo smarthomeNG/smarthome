@@ -395,16 +395,19 @@ def check_all_plugins(chk_meta, chk_code, chk_docu, quiet=True):
         if chk_meta:
             check_metadata(plg, quiet=quiet)
 
-        os.chdir(os.path.join(pluginsdir, plg))
-        if chk_code:
-            check_code(plg, quiet=quiet)
+        try:
+            os.chdir(os.path.join(pluginsdir, plg))
+            if chk_code:
+                check_code(plg, quiet=quiet)
 
-        os.chdir(os.path.join(pluginsdir, plg))
-        if chk_docu:
-            check_documentation(plg, quiet=quiet)
+            os.chdir(os.path.join(pluginsdir, plg))
+            if chk_docu:
+                check_documentation(plg, quiet=quiet)
 
-        global sum_errors, sum_warnings, sum_hints
-        print(f"{plg:<16.16}    {sum_errors:10}  {sum_warnings:10}  {sum_hints:10}")
+            global sum_errors, sum_warnings, sum_hints
+            print(f"{plg:<16.16}    {sum_errors:10}  {sum_warnings:10}  {sum_hints:10}")
+        except NotADirectoryError:
+            pass
 
         sum_errors = 0
         sum_warnings = 0

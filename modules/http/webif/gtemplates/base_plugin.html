@@ -14,7 +14,37 @@
 
 {% block scripts -%}
 {{ super() }}
-
+<script src="/gstatic/js/smarthomeng_cookies.js"></script>
+<script>
+	$(document).on("change", ".dataTables_length select", function(){
+	          var selectedVal = $(this).val();
+						var tab = $(this).closest('.tab-pane').attr('id');
+	          window.pageLength[tab]['pagelength'] = parseInt(selectedVal);
+						setCookie("pagelength", window.pageLength, 3650, window.pluginname);
+						if (selectedVal == 1)
+						{
+							window.toggle = window.toggle * -1 + 0.1;
+							$(window).resize();
+							this.options[this.selectedIndex].disabled = true;
+							console.log("Triggering resize window because pagelength in tab " + tab + " is set to " + selectedVal);
+						}
+						else {
+							this.options[0].disabled = false;
+						}
+	    });
+</script>
+<script>
+	$(document).ready(function(){
+		const select_menu = document.querySelector(".dataTables_length select");
+		if (select_menu != null) {
+			if (select_menu.selectedIndex == -1)
+			{
+				select_menu.selectedIndex = 0;
+				select_menu.options[select_menu.selectedIndex].disabled = true;
+			}
+		}
+	});
+	</script>
 <script>
 	function initVariables() {
 		// Make refresh variable, dataSet and update_params available for plugins html files.
@@ -26,6 +56,30 @@
 		window.update_active = false;
 		window.update_blocked = false;
 		window.toggle = 1;
+		window.pluginname = '{{ p.get_fullname() }}';
+		window.pageLength = getCookie("pagelength");
+	  if (window.pageLength == "" || Object.keys(window.pageLength).length === 0)
+	  {
+			window.pageLength = {}
+			let tabcount = 0;
+			{%- if tabcount is defined %}
+				if (isNaN(parseFloat({{ tabcount }})))
+					tabcount = 1;
+				else
+					tabcount = {{ tabcount }};
+			{%- endif %}
+			for (let i = 1; i <= tabcount; i++) {
+				let pagelength = 0;
+				{%- if webif_pagelength is defined %}
+					if (isNaN(parseFloat({{ webif_pagelength }})) || {{ webif_pagelength }} == 0)
+			      pagelength = 1;
+			    else
+			    	pagelength = {{ webif_pagelength }};
+				{%- endif %}
+			  window.pageLength["bodytab_"+i] = {'tableid': 'unknown', 'pagelength': parseInt(pagelength)};
+			}
+			setCookie("pagelength", window.pageLength, 3650, window.pluginname);
+		}
 		window.initial_update = false;
 		{%- if row_count is defined %}
 		  window.row_count = '{{ row_count|lower }}';
@@ -33,6 +87,7 @@
 		{%- if initial_update is defined %}
 		  window.initial_update = '{{ initial_update|lower }}';
 		{%- endif %}
+
 		{%- if dataSet is defined %}
 		  window.dataSet = '{{ dataSet }}';
 		{%- endif %}
@@ -76,7 +131,6 @@
 	}
   initVariables();
 </script>
-
 <script src="/gstatic/js/smarthomeng_pageupdate.js"></script>
 {%- endblock scripts %}
 
@@ -87,7 +141,7 @@
 {% endif %}
 
 <div class="container-fluid m-3" id="webif-top">
-	<div class="row" id="webif-toprow">
+	<div class="row" id="webif-toprow" style="margin-right: 0px">
 
 		<div class="{% if logo_frame %}card {% endif %} col-sm-2" style="height:150px;" id="webif-pluginlogo">
 		    {% if isfile("static/img/plugin_logo.png") %}
@@ -124,7 +178,7 @@
 			{% block headtable %}
 			{% endblock %}
 			{%- if buttons is not defined or buttons == true %}
-				<div id="webif-allbuttons" style="margin-left: 10px; margin-right: 10px; float:right; white-space: nowrap;">
+				<div id="webif-allbuttons" style="margin-left: 10px; margin-right: 5px; float:right; white-space: nowrap;">
 					{%- if update_interval is defined and (autorefresh_buttons is not defined or autorefresh_buttons == true) %}
 						<span id="webif-autorefresh" style="white-space: nowrap;">
 							{{ _('Autom. Aktualisierung') }}
@@ -206,7 +260,7 @@ window.activeTab = "bodytab_" + {{ start_tab }};
 
 
 <div id="webif-tabs" class="container-fluid" style="position: fixed; background-color: white; top:180px; z-index: 8;">
-	<ul class="nav nav-tabs">
+	<ul class="nav nav-tabs" style="margin-right: 5px">
 		{% if tabcount == 1 and tab1title != "hidden" %}
 			<li id="tab_1" class="nav-item"><a class="text-dark nav-link active" href="#bodytab_1">{{ tab1title }}</a></li>
 		{% endif %}
@@ -233,7 +287,11 @@ window.activeTab = "bodytab_" + {{ start_tab }};
 	</ul>
 </div>
 
-<div style="margin-left: 10px; margin-right: 10px;" class="tab-content" id="resize_wrapper">
+{% if bordered_tab is not defined %}
+<div style="margin-left: 10px; margin-right: 0px;" class="tab-content" id="resize_wrapper">
+{% else %}
+<div style="margin-left: 15px; margin-right: 10px; border-left: 1px solid var(--shng-border); border-right: 1px solid var(--shng-border); border-bottom: 1px solid var(--shng-border);" class="tab-content" id="resize_wrapper">
+{% endif %}
 	<div id="bodytab_1" class="table-resize tab-pane {% if start_tab==1 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab1 %}
 		{% endblock bodytab1 %}

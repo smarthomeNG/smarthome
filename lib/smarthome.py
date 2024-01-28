@@ -161,6 +161,7 @@ class SmartHome():
         self._var_dir = os.path.join(self._base_dir, 'var')
         self._lib_dir = os.path.join(self._base_dir,'lib')
         self._plugins_dir = os.path.join(self._base_dir, 'plugins')
+        self._structs_dir = os.path.join(self._base_dir, 'structs')
         self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
 
         self._env_logic_conf_basename = os.path.join(self._env_dir ,'logic')
@@ -182,12 +183,14 @@ class SmartHome():
         """
         Create directories used by SmartHomeNG if they don't exist
         """
-        os.makedirs(self._var_dir, exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'backup'), exist_ok=True)
-        os.makedirs(self._cache_dir, exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'db'), exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'log'), exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'run'), exist_ok=True)
+        os.makedirs(self._structs_dir, mode = 0o775, exist_ok=True)
+
+        os.makedirs(self._var_dir, mode = 0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'backup'), mode = 0o775, exist_ok=True)
+        os.makedirs(self._cache_dir, mode = 0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'db'), mode = 0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'log'), mode = 0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'run'), mode = 0o775, exist_ok=True)
 
 
     def __init__(self, MODE, extern_conf_dir=''):
@@ -197,7 +200,6 @@ class SmartHome():
         self.shng_status = {'code': 0, 'text': 'Initializing'}
         self._logger = logging.getLogger(__name__)
         self._logger_main = logging.getLogger(__name__)
-        self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
         # keep for checking on restart command
         self._mode = MODE
@@ -205,6 +207,8 @@ class SmartHome():
         self.initialize_vars()
         self.initialize_dir_vars()
         self.create_directories()
+
+        self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
         os.chdir(self._base_dir)
 
@@ -229,6 +233,7 @@ class SmartHome():
         # self.version = shngversion.get_shng_version()
         self.connections = None
 
+        #reinitialize dir vars with path to extern configuration directory
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
         self._items_dir = os.path.join(self._extern_conf_dir, 'items'+os.path.sep)
         self._functions_dir = os.path.join(self._extern_conf_dir, 'functions'+os.path.sep)
@@ -339,7 +344,7 @@ class SmartHome():
             self._logger.warning("Encoding should be UTF8 but is instead {}".format(default_encoding))
 
         if self._extern_conf_dir != BASE:
-            self._logger.warning("Using config dir {}".format(self._extern_conf_dir))
+            self._logger.notice("Using config dir {}".format(self._extern_conf_dir))
 
         #############################################################
         # Initialize multi-language support
@@ -451,6 +456,26 @@ class SmartHome():
             self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev)
 
 
+    @property
+    def lat(self) -> float:
+        """
+        Read-Only Property: latitude (from smarthome.yaml)
+
+        :return: latitude (from smarthome.yaml)
+        """
+        return float(self._lat)
+
+
+    @property
+    def lon(self) -> float:
+        """
+        Read-Only Property: longitude (from smarthome.yaml)
+
+        :return: longitude (from smarthome.yaml)
+        """
+        return float(self._lon)
+
+
     def get_defaultlanguage(self):
         """
         Returns the configured default language of SmartHomeNG
@@ -486,14 +511,22 @@ class SmartHome():
         return self._extern_conf_dir
 
 
-    def get_etcdir(self):
+    def get_etcdir(self) -> str:
         """
         Function to return the etc config directory
 
         :return: Config directory as an absolute path
-        :rtype: str
         """
         return self._etc_dir
+
+
+    def get_structsdir(self) -> str:
+        """
+        Function to return the structs config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._structs_dir
 
 
     def get_vardir(self):
@@ -534,7 +567,7 @@ class SmartHome():
         - logic.yaml / logic.conf
 
         """
-        configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'smarthome']
+        configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'admin', 'smarthome']
 
         for c in configs:
             default = os.path.join(self._base_dir, 'etc', c + YAML_FILE + DEFAULT_FILE)
@@ -551,15 +584,15 @@ class SmartHome():
         """
         if conf_basename == '':
             conf_basename = self._log_conf_basename
-        conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+        #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
 
-        if not self.logs.configure_logging(conf_dict):
-            #conf_basename = self._log_conf_basename + YAML_FILE + '.default'
+        if not self.logs.configure_logging():
+            conf_basename = self._log_conf_basename + YAML_FILE + '.default'
             print(f"       Trying default logging configuration from:")
-            print(f"       {conf_basename + YAML_FILE + '.default'}")
+            print(f"       {conf_basename}")
             print()
-            conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
-            if not self.logs.configure_logging(conf_dict, 'logging.yaml.default'):
+            #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
+            if not self.logs.configure_logging('logging.yaml.default'):
                 print("ABORTING")
                 print()
                 exit(1)
@@ -633,7 +666,7 @@ class SmartHome():
         #############################################################
         # Init and import user-functions
         #############################################################
-        uf.init_lib(self.get_basedir())
+        uf.init_lib(self.get_basedir(), self)
 
         #############################################################
         # Init Item-Wrapper
@@ -646,7 +679,7 @@ class SmartHome():
         self.shng_status = {'code': 12, 'text': 'Starting: Initializing plugins'}
         os.chdir(self._base_dir)
 
-        self._logger.info("Init Plugins")
+        self._logger.info("Start initialization of plugins")
         self.plugins = lib.plugin.Plugins(self, configfile=self._plugin_conf_basename)
         self.plugin_load_complete = True
 

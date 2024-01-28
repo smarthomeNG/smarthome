@@ -96,7 +96,7 @@ class Items():
             self.logger.critical("A second 'items' object has been created. There should only be ONE instance of class 'Items'!!! Called from: {} ({})".format(calframe[1][1], calframe[1][3]))
 
         _items_instance = self
-        self.structs = Structs()
+        self.structs = Structs(self._sh)
 
 
     # -----------------------------------------------------------------------------------------
@@ -129,8 +129,8 @@ class Items():
     #   Following methods handle structs
     # -----------------------------------------------------------------------------------------
 
-    def add_struct_definition(self, plugin_name, struct_name, struct):
-        self.structs.add_struct_definition(plugin_name, struct_name, struct)
+    def add_struct_definition(self, plugin_name, struct_name, struct, from_dir='plugins'):
+        self.structs.add_struct_definition(plugin_name, struct_name, struct, from_dir)
 
 
     def return_struct_definitions(self, all=True):
@@ -171,7 +171,7 @@ class Items():
         #
         # Read in item structs from ../etc/struct.yaml
         self._sh.shng_status['details'] = 'Structs'
-        self.structs.load_struct_definitions(etc_dir)
+        self.structs.load_struct_definitions()
 
 
         # --------------------------------------------------------------------
@@ -264,6 +264,34 @@ class Items():
     #    def __iter__(self):
     #        for child in self.__children:
     #            yield child
+
+    def remove_item(self, item):
+        """
+        Function to remove an item from the dictionary of items
+        and delete the item object.
+
+        :param item: The item to delete
+        :type item: object
+        """
+
+        if item.path() not in self.__items:
+            return
+        
+        # remove item from Items data
+        try:
+            del self.__item_dict[item.path()]
+            self.__items.remove(item.path())
+        except Exception as e:
+            self.logger.warning(f"Error occured while trying to remove item {item.path()}: {e}")
+
+        # remove item bindings in plugins
+        if item.remove():
+
+            # delete item
+            del item
+        else:
+            self.logger.warning(f"Item {item.path()} could not be removed due to incompatible plugins.")
+
 
     def get_toplevel_items(self):
         """

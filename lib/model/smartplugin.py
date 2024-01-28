@@ -29,6 +29,7 @@ from lib.utils import Utils
 from lib.translation import translate as lib_translate
 import logging
 import os
+import inspect
 
 
 class SmartPlugin(SmartObject, Utils):
@@ -66,11 +67,43 @@ class SmartPlugin(SmartObject, Utils):
     logger = logging.getLogger(__name__)
 
     alive = False
+    suspended = False       # flag for setting suspended (inactive) state
+    _suspend_item = None      # suspend item
+    _suspend_item_path = None # path of suspend item
 
     # Initialization of SmartPlugin class called by super().__init__() from the plugin's __init__() method
     def __init__(self, **kwargs):
         self._plg_item_dict = {}      # make sure, that the dict is local to the plugin
         self._item_lookup_dict = {}   # make sure, that the dict is local to the plugin
+
+        # set parameter value
+        # TODO: need to check for this item in parse_item and set self._suspend_item
+        #       for suspend item functionality to work
+        self._suspend_item_path = self.get_parameter_value('suspend_item')
+
+    def suspend(self, by=None):
+        """
+        sets plugin into suspended mode, no network/serial activity and no item changed
+        """
+        if self.alive:
+            self.logger.info(f'plugin suspended by {by if by else "unknown"}, connections will be closed')
+            self.suspended = True
+            if self._suspend_item is not None:
+                self._suspend_item(True)
+            if hasattr(self, 'disconnect'):
+                self.disconnect()
+
+    def resume(self, by=None):
+        """
+        disabled suspended mode, network/serial connections are resumed
+        """
+        if self.alive:
+            self.logger.info(f'plugin resumed by {by if by else "unknown"}, connections will be resumed')
+            self.suspended = False
+            if self._suspend_item is not None:
+                self._suspend_item(False)
+            if hasattr(self, 'connect'):
+                self.connect()
 
     def deinit(self, items=[]):
         """
@@ -174,6 +207,11 @@ class SmartPlugin(SmartObject, Utils):
             else:
                 self.logger.debug(f'not stopping plugin for removal of item {item.path()}')
 
+        if item.path() == self._suspend_item_path:
+            self.logger.warning(f'trying to remove suspend item {item}. Disabling suspend item function')
+            self._suspend_item = None
+            self._suspend_item_path = ''
+
         # remove data from item_dict early in case of concurrent actions
         data = self._plg_item_dict[item.path()]
         del self._plg_item_dict[item.path()]
@@ -259,43 +297,88 @@ class SmartPlugin(SmartObject, Utils):
             item_path = item.path()
         return self._plg_item_dict[item_path].get('mapping')
 
-    def get_item_path_list(self, filter_key=None, filter_value=None):
+    def get_item_mapping_list(self):
+        """
+        Returns the plugin-specific mapping that was defined by add_item()
+
+        This method is implemented to support plugin development
+        to be used with the eval syntax checker or the executor plugin
+
+        Only available in SmartHomeNG versions **v1.10.0 and up**.
+
+        :return: mapping string for that item
+        :rtype: str
+        """
+        result = []
+        for item_path in list(self._plg_item_dict.keys()):
+            result.append([item_path, self._plg_item_dict[item_path].get('mapping')])
+        return result
+
+    def _string_compare(self, s1, s2: str, mode: str=None) -> str:
+        """
+        Compare strings of different length
+
+        This method compares strings only up to the length of the shorter string.
+        - mode 'start' compares the shorter string with the beginning of longer string
+        - mode 'end' compares the shorter string with the end of longer string
+
+        :param s1: First string to compare
+        :param s2: Second string to compare
+        :param mode: Compare mode ('start', 'end') for comparing strings of different length
+        :return:
+        """
+        if mode is None:
+            return s1 == s2
+        elif mode == 'end':
+            if len(s1) > len(s2):
+                return s1.endswith(s2)
+            else:
+                return s2.endswith(s1)
+        elif mode == 'start':
+            if len(s1) > len(s2):
+                return s1.startswith(s2)
+            else:
+                return s2.startswith(s1)
+
+    def get_item_path_list(self, filter_key: str=None, filter_value: str=None, mode: str=None) -> list:
         """
         Return list of stored item paths used by this plugin
 
         Only available in SmartHomeNG versions **v1.9.4 and up**.
+        Parameter 'mode' only available in SmartHomeNG versions **v1.10.0 and up**.
 
         :param filter_key: key of the configdata dict used to filter
         :param filter_value: value for filtering item_path_list
-        :type filter_key: str
-        :type filter_value: any
+        :param mode: Compare mode ('start', 'end') for comparing strings of different length, None oder ommitting does a standard compare
 
         :return: List of item pathes
-        :rtype: list(str)
         """
         if filter_key is None or filter_value is None:
             return self._plg_item_dict.keys()
 
-        return [item_path for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        if mode is None:
+            return [item_path for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        return [item_path for item_path in list(self._plg_item_dict.keys()) if self._string_compare(self._plg_item_dict[item_path]['config_data'].get(filter_key, None), filter_value, mode)]
 
-    def get_item_list(self, filter_key=None, filter_value=None):
+    def get_item_list(self, filter_key: str=None, filter_value: str=None, mode: str=None) -> list:
         """
         Return list of stored items used by this plugin
 
         Only available in SmartHomeNG versions **v1.9.4 and up**.
+        Parameter 'mode' only available in SmartHomeNG versions **v1.10.0 and up**.
 
         :param filter_key: key of the configdata dict used to filter
         :param filter_value: value for filtering item_path_list
-        :type filter_key: str
-        :type filter_value: any
+        :param mode: Compare mode ('start', 'end') for comparing strings of different length, None oder ommitting does a standard compare
 
         :return: List of item objects
-        :rtype: list(item)
         """
         if filter_key is None or filter_value is None:
             return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys())]
 
-        return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        if mode is None:
+            return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys()) if self._string_compare(self._plg_item_dict[item_path]['config_data'].get(filter_key, None), filter_value, mode)]
 
     def get_trigger_items(self):
         """
@@ -693,36 +776,33 @@ class SmartPlugin(SmartObject, Utils):
         return None
 
 
-    def has_iattr(self, conf, attr):
+    def has_iattr(self, conf: str, attr: str) -> bool:
         """
         checks item configuration for an attribute
 
         :param conf: item configuration
         :param attr: attribute name
-        :type conf: str
-        :type attr: str
 
         :return: True, if attribute is in item configuration
-        :rtype: Boolean
         """
         __attr = self.__get_iattr_conf(conf, attr)
         return __attr is not None
 
 
-    def get_iattr_value(self, conf, attr):
+    def get_iattr_value(self, conf: str, attr: str, default=None) -> str:
         """
         Returns value for an attribute from item config
 
+        Parameter default is only available in SmartHomeNG versions **v1.10.0 and up**.
+
         :param conf: item configuration
         :param attr: attribute name
-        :type conf: str
-        :type attr: str
+        :param default: Return-value, if attribute is not found
 
         :return: value of an attribute
-        :rtype: str
         """
         __attr = self.__get_iattr_conf(conf, attr)
-        return None if __attr is None else conf[__attr]
+        return default if __attr is None else conf[__attr]
 
 
     def set_attr_value(self, conf, attr, value):
@@ -816,9 +896,15 @@ class SmartPlugin(SmartObject, Utils):
         This method is used to parse the configuration of an item for this plugin. It is
         called for all plugins before the plugins are started (calling all run methods).
 
-        :note: This method should to be overwritten by the plugin implementation.
+        :note: This method should be overwritten by the plugin implementation.
         """
-        pass
+        # check for suspend item
+        if item.property.path == self._suspend_item_path:
+            self.logger.debug(f'suspend item {item.property.path} registered')
+            self._suspend_item = item
+            self.add_item(item, updating=True)
+            return self.update_item
+
 
 
     def now(self):
@@ -1006,11 +1092,7 @@ class SmartPlugin(SmartObject, Utils):
 
 
 
-try:
-    from jinja2 import Environment, FileSystemLoader
-except:
-    pass
-from lib.module import Modules
+#from lib.module import Modules
 
 
 class SmartPluginWebIf():
@@ -1025,6 +1107,11 @@ class SmartPluginWebIf():
         :return: Jinja2 template engine environment
         :rtype: object
         """
+        try:
+            from jinja2 import Environment, FileSystemLoader
+        except:
+            pass
+
         mytemplates = self.plugin.path_join(self.webif_dir, 'templates')
         globaltemplates = self.plugin.mod_http.gtemplates_dir
         tplenv = Environment(loader=FileSystemLoader([mytemplates, globaltemplates]))

@@ -1,7 +1,9 @@
 
 .. index:: Logs
 .. index:: Logging
-.. index:: Logging; Anzeige
+.. index:: Logging; Logs anzeige
+.. index:: Admin GUI; Logs anzeigen
+.. index:: Logs; Admin GUI
 
 ====
 Logs

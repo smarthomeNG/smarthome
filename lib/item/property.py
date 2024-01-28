@@ -407,6 +407,40 @@ class Property:
         return
 
     @property
+    def description(self):
+        """
+        Read-Only Property: description
+
+        Available in SmartHomeNG v1.6 and above
+
+        :return: type of the item
+        :rtype: str
+        """
+        return self._item._description
+
+    @description.setter
+    def description(self, value):
+        self._ro_error()
+        return
+
+    @property
+    def type(self):
+        """
+        Read-Only Property: type
+
+        Available in SmartHomeNG v1.6 and above
+
+        :return: type of the item
+        :rtype: str
+        """
+        return self._item._type
+
+    @type.setter
+    def type(self, value):
+        self._ro_error()
+        return
+
+    @property
     def on_change(self):
         """
         Read-Only Property: on_update
@@ -759,23 +793,6 @@ class Property:
             return
 
     @property
-    def type(self):
-        """
-        Read-Only Property: type
-
-        Available in SmartHomeNG v1.6 and above
-
-        :return: type of the item
-        :rtype: str
-        """
-        return self._item._type
-
-    @type.setter
-    def type(self, value):
-        self._ro_error()
-        return
-
-    @property
     def value(self):
         """
         Property: value
@@ -796,6 +813,23 @@ class Property:
         self._item(value, caller='Property', source='Assign')
         return
 
+
+    @property
+    def hysteresis_state(self):
+        """
+        Property: Inner hysteresis_state
+
+        returns
+        - 1  - On   = set the output to True
+        - 0  - Stay = leave the output unchaned in last state
+        - -1 - Off  = set the output to False
+
+        Available in SmartHomeNG v1.10 and above
+
+        :return: hysteresis state of the item
+        :rtype: int
+        """
+        return self._item.hysteresis_state()
 
 """
 ---

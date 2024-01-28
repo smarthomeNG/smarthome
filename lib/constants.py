@@ -41,12 +41,14 @@ KEY_ENFORCE_CHANGE = 'enforce_change'
 KEY_CACHE = 'cache'
 KEY_CYCLE = 'cycle'
 KEY_NAME = 'name'
+KEY_DESCRIPTION = 'description'
 KEY_TYPE = 'type'
 KEY_VALUE = 'value'
 KEY_INITVALUE = 'initial_value'
 KEY_CRONTAB = 'crontab'
 KEY_EVAL_TRIGGER = 'eval_trigger'
 KEY_TRIGGER = 'trigger'
+KEY_EVAL_TRIGGER_ONLY = 'eval_on_trigger_only'
 KEY_CONDITION = 'trigger_condition'
 KEY_EVAL = 'eval'
 KEY_THRESHOLD = 'threshold'
@@ -59,6 +61,12 @@ KEY_LOG_LEVEL =   'log_level'
 KEY_LOG_TEXT =    'log_text'
 KEY_LOG_MAPPING = 'log_mapping'
 KEY_LOG_RULES =   'log_rules'
+
+KEY_HYSTERESIS_INPUT = 'hysteresis_input'
+KEY_HYSTERESIS_UPPER_THRESHOLD = 'hysteresis_upper_threshold'
+KEY_HYSTERESIS_LOWER_THRESHOLD = 'hysteresis_lower_threshold'
+
+ATTRIBUTE_SEPARATOR = ';'
 
 KEY_STRUCT = 'struct'
 KEY_REMARK = 'remark'
@@ -76,6 +84,7 @@ CACHE_FORMAT=CACHE_PICKLE
 #plugin methods
 PLUGIN_PARSE_ITEM = 'parse_item'
 PLUGIN_PARSE_LOGIC = 'parse_logic'
+PLUGIN_REMOVE_ITEM = 'remove_item'
 
 #file extensions
 CONF_FILE = '.conf'

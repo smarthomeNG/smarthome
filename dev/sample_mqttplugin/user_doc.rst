@@ -1,9 +1,10 @@
-.. index:: Plugins; sample_mqtt
-.. index:: sample_mqtt
+.. index:: Plugins; Mqtt-Pluginname (in Kleinbuchstaben)
+.. index:: Mqtt-Pluginname (in Kleinbuchstaben)
 
-===========
-sample_mqtt
-===========
+
+====================================
+Mqtt-Pluginname (in Kleinbuchstaben)
+====================================
 
 Hier sollte eine allgemeine Beschreibung stehen, wozu das Plugin gut ist (was es tut).
 
@@ -44,31 +45,20 @@ Unterstützte Geräte
 Konfiguration
 =============
 
-Die Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
-unter :doc:`/plugins_doc/config/sample_mqtt` beschrieben.
+.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
 
-plugin.yaml
------------
+Die Plugin Parameter, die Informationen zur Item-spezifischen Konfiguration des Plugins und zur Logik-spezifischen
+Konfiguration sind unter **Pluginname (in Kleinbuchstaben)** beschrieben.
 
-Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
-
-
-items.yaml
-----------
-
-Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
-
-
-logic.yaml
-----------
-
-Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
+Dort findet sich auch die Dokumentation zu Funktionen, die das Plugin evtl. bereit stellt.
 
 
 Funktionen
 ----------
 
-Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
+<Hier können bei Bedarf ausführliche Beschreibungen zu den Funktionen dokumentiert werden.>
+
+<Sonst diesen Abschnitt löschen>
 
 |
 

@@ -107,6 +107,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     items_dir = os.path.join(conf_base_dir, 'items')
     logic_dir = os.path.join(conf_base_dir, 'logics')
     scenes_dir = os.path.join(conf_base_dir, 'scenes')
+    structs_dir = os.path.join(conf_base_dir, 'structs')
     uf_dir = os.path.join(conf_base_dir, 'functions')
 
 
@@ -125,6 +126,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     backup_file(backupzip, source_dir, arc_dir, 'module.yaml')
     backup_file(backupzip, source_dir, arc_dir, 'plugin.yaml')
     backup_file(backupzip, source_dir, arc_dir, 'smarthome.yaml')
+    backup_file(backupzip, source_dir, arc_dir, 'admin.yaml')
 
     backup_file(backupzip, source_dir, arc_dir, 'struct.yaml')
     struct_files = glob.glob(os.path.join( etc_dir, 'struct_*.yaml'))
@@ -145,11 +147,16 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     # backup files from /logic
     #logger.warning("- logic_dir = {}".format(logic_dir))
     backup_directory(backupzip, logic_dir, '.py')
+    backup_directory(backupzip, logic_dir, '.txt')
 
     # backup files from /scenes
     #logger.warning("- scenes_dir = {}".format(scenes_dir))
     backup_directory(backupzip, scenes_dir, '.yaml')
     backup_directory(backupzip, scenes_dir, '.conf')
+
+    # backup files from /structs
+    #logger.warning("- structs_dir = {}".format(structs_dir))
+    backup_directory(backupzip, structs_dir, '.yaml')
 
     # backup files from /functions
     #logger.warning("- uf_dir = {}".format(uf_dir))
@@ -245,6 +252,7 @@ def restore_backup(conf_base_dir, base_dir):
 
     :return:
     """
+    logger.info(f"Beginning restore of configuration")
 
     make_backup_directories(base_dir)
     restore_dir = os.path.join(base_dir, 'var','restore')
@@ -253,6 +261,7 @@ def restore_backup(conf_base_dir, base_dir):
     items_dir = os.path.join(conf_base_dir, 'items')
     logic_dir = os.path.join(conf_base_dir, 'logics')
     scenes_dir = os.path.join(conf_base_dir, 'scenes')
+    structs_dir = os.path.join(conf_base_dir, 'structs')
     uf_dir = os.path.join(conf_base_dir, 'functions')
 
     archive_file = ''
@@ -273,6 +282,9 @@ def restore_backup(conf_base_dir, base_dir):
         return
     restorezip_filename = os.path.join(restore_dir, archive_file)
 
+    logger.notice(f"Restoring configuration from file {restorezip_filename}")
+
+    logger.info(f"Creating a backup of the actual configuration before restoring configuration from zip-file")
     create_backup(conf_base_dir, base_dir, True, True)
     overwrite = True
 
@@ -292,10 +304,14 @@ def restore_backup(conf_base_dir, base_dir):
     # backup files from /scenes
     restore_directory(restorezip, 'scenes', scenes_dir, overwrite)
 
-    # backup files from /scenes
+    # backup files from /structs
+    restore_directory(restorezip, 'structs', structs_dir, overwrite)
+
+    # backup files from /functions
     restore_directory(restorezip, 'functions', uf_dir, overwrite)
 
     # mark zip-file as restored
+    logger.info(f"- marking zip-file as restored")
     os.rename(restorezip_filename, restorezip_filename + '.done')
 
     # delete last backup timestamp
@@ -305,6 +321,7 @@ def restore_backup(conf_base_dir, base_dir):
     except OSError:
         pass
 
+    logger.info(f"Finished restore of configuration")
     return restorezip_filename
 
 
@@ -349,7 +366,7 @@ def restore_directory(restorezip, arc_dir, dest_dir, overwrite=False):
     :param dest_dir: Destinaion directory where the file should be restored to
     :param overwrite: Overwrite file in destination, if it already exists
     """
-
+    logger.info(f"- Restoring directory {dest_dir}")
     for fn in restorezip.namelist():
         if fn.startswith(arc_dir+'/'):
             restore_file(restorezip, arc_dir, os.path.basename(fn), dest_dir, overwrite)

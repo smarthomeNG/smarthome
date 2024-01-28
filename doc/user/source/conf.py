@@ -19,6 +19,9 @@ import bin.shngversion as shngversion
 import plugins as pluginsversion
 
 import datetime
+import locale
+locale.setlocale(locale.LC_TIME, 'de_DE.utf8')
+#locale.setlocale(locale.LC_ALL, 'C')
 now = datetime.datetime.now()
 import calendar
 
@@ -38,6 +41,7 @@ extensions = [
   'sphinx.ext.ifconfig',
   'sphinx.ext.viewcode',
   'sphinx.ext.githubpages',
+  'sphinx_autodoc_typehints',
   'sphinx_tabs.tabs',
   'myst_parser']
 #  'rst2pdf.pdfbuilder']
@@ -83,7 +87,7 @@ shversion = shngversion.get_shng_main_version()
 # General information about the project.
 #project = u'SmartHomeNG'
 project = u'Dokumentation '
-copyright = u'2016-2023 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
+copyright = u'2016-2024 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The full version, including alpha/beta/rc tags.
 #release = '1.3a dev (as of 13. October 2017)'  13. October 2017 is replaced by makefile with a date in the form of '2. September 2017'
@@ -101,15 +105,16 @@ if os.path.isfile(os.getcwd()+'/doc_version.flg'):
 else:
     release = shngversion.get_shng_docversion()
     commit, commit_short, branch, describe = shngversion._get_git_data()
-release += ' (Stand ' + shngversion.get_shng_version_date()
-if branch != 'master':
-    release += ', commit '+commit_short
-release += ')'
+if branch == 'master':
+  release += ' (Stand ' + shngversion.get_shng_version_date() + ')'
+else:
+    release += ' (Stand ' + now.strftime("%-d. %B %Y") + ', commit '+commit_short + ')'
 #release = sphinx_bootstrap_theme.__version__
 
 plgrelease = shngversion.get_shng_plugins_version()
 plgbranch = pluginsversion.plugin_branch()
 if plgbranch != 'master':
+    copyright = u'2016-2024 SmartHomeNG Team  -  ACHTUNG: Dokumentation zum Develop Branch - Work in Progress'
     plgrelease += ' ' + plgbranch
 version = plgrelease
 
