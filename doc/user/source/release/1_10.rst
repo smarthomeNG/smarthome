@@ -17,10 +17,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Januar 2024
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 25. Januar 2024
            (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 4 Januar 2024
-           (...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Januar 2024
+           (smlx plugin: fix missing shtime error)
 
 
 Überblick
@@ -120,6 +120,8 @@ Updates im CORE
     * Allow defining entries in log_rules as absolute or relative items, implement exclude option, minor issue fixing
     * Fix perviously introduced issue in log_change handling when attributes in log_rules are not set or no log_rules exists
     * log_text: adjust pname and pid handling when no parent is available
+    * Cast cached value (to prevent errors when an item type is changed)
+    * Changed error behaviour
 
   * lib.log:
 
@@ -329,7 +331,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * pioneer: for Pioneer AV Receivers, based on SmartDevicePlugin
 * oppo: First version of SmartDevicePlugin based plugin for Oppo UHD players
 * byd_bat: Plugin to display data from BYD batteries
-
+* roombapysh: New plugin for Roomba vacuum cleaners basierend auf roombapy
 
 .. _releasenotes_1_10_updates_plugins:
 
@@ -343,6 +345,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Small bug-fix in Web-IF
   * Fixed issues with urlencode
+  * Update metadata with some more information
+  * Improve metadata description
+  * Transfer all README info to user_doc and delete README
 
 * apcups:
 
@@ -466,6 +471,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Catch various exceptions that occurred if db was temporarily not reachable
   * Added database functions to user_doc
   * Added new database function "diff", "differentiate" and "duration"
+  * Robustify WebIf against empty DB entries
 
 * datalog:
 
@@ -474,6 +480,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Bump version to 1.5.2
   * Extend docu with info on replacement
   * Set deprecated (core features and operationlog plugin does the same.. hopefully)
+  * Update docu
 
 * db_addon:
 
@@ -525,6 +532,12 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Implement plugin logo
   * Clean up init code, bump version to v1.5.4
 
+* ebus:
+
+  * Try connection on request
+  * Add userdoc.rst
+  * Fixed bug in metadata (description)
+
 * enocean:
 
   * Robustify plugin reaction to loss of Enocean serial device
@@ -535,6 +548,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Update doc
   * Added key list to user_doc.rst
   * Moved serial open from init to run method (to prepare plugin for restart)
+  * Fixed errors in user_doc.rst
 
 * executor:
 
@@ -678,10 +692,17 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Mark deprecated
   * Fix docu
 
+* mieleathome:
+
+  * Create user_doc from README
+  * Remove unused files from assets folder
+
 * modbus_tcp:
 
   * Fixed bug
   * Add crontab to poll devices, update log messages to Python f-strings
+  * Changes for pymodbus 3.5.2
+  * Support for pymodbis 2.x dropped
 
 * mvg_live:
 
@@ -696,6 +717,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Corrections in user_doc
   * Neduced timeout exceptions from error to warning level
   * Fixed exception for situations in which mapID attribute is not available
+  * Fixed syntax errors in user_doc.rst
 
 * network:
 
@@ -717,6 +739,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Clean-up unused argument of init function, switched to parameter import via method get_parameter_value()
   * Bugfix for exception that can occur during termination of the plugin
   * Fixed bug in IP port handling; improved plugin shutdown
+  * Corrected scheduler to correct syntax - nut poll thread did not appear as plugin scheduler
 
 * odlinfo:
 
@@ -736,6 +759,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Introduce new loglevel "NONE" to log without timestamp and log level info (plain text such as in datalog)
   * Introduce new placeholders for olog_text and allow highlimit, lowlimit (in addition to highlim, lowlim)
   * Fix docu example
+  * Update Docu
+  * Improve docu and functionality to replace datalog plugin
+  * Set to deprecated
 
 * philips_tv:
 
@@ -765,6 +791,13 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Modifications for parameter checks, restartability and code cleanness
 
+* pluggit:
+
+  * Update auf Version 2.0.6
+  * Support for pymodbus 2 dropped
+  * Update user_doc.rst
+  * Previous version 1.2.2 removed
+
 * pushover:
 
   * Add ttl parameter
@@ -772,6 +805,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * raumfeld:
 
   * Marked as deprecated
+  * Change readme into userdoc
 
 * rcs1000n:
 
@@ -799,6 +833,11 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Update and fix web interface
   * Fix and simplify docu
 
+* rrd:
+
+  * Translate Readme into userdoc
+  * Updated requirements
+
 * shelly:
 
   * Initial version of plugin with Gen2 api support
@@ -825,7 +864,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Use infoblock.html
   * Remove obsolete widget imports
   * Fix import paths for widgets
-
+  * Fix icon class in navigation
 
 * sml:
 
@@ -837,6 +876,12 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Fix webinterface missing item column
   * Update requirements to fix descriptions
+
+* smlx:
+
+  * Introduce crontab as poll trigger
+  * Update webinterface poll source
+  * Fix missing shtime error
 
 * solarforecast:
 
@@ -850,6 +895,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fixed error if no explicit lat/lon values were specified
   * Limit plugin azimuth angle to values between -180° and 180°
   * Added limits for lat/lon, declination and peak power configuration
+  * Catch timeout exception with warning log message only
 
 * sonos:
 
@@ -862,6 +908,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Remove readme, fix and improve user_doc
   * Changed lxml requirements
   * Removed requests requirement, as its now part of core
+  * Update to SoCo version 30.2
+  * Fix for play_tts audio length
+  * Implemented new function "play_alert_all_speakers" to play sounds and alerts on all speakers
+    (or only a some of them) and return to the previous titles
 
 * stateengine:
 
@@ -1010,6 +1060,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Initial commit for new Viessmann plugin, communicating via Viessmann API with backend
   * Code-cleanup; new feature 'online status'
   * Reset token refresh only on success, retry otherwise
+  * Add plugin online status to webif
+  * Fixed online status being not updated if backend connected was lost
 
 * viessmann:
 
