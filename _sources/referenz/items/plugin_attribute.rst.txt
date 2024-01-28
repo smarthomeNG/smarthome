@@ -2,6 +2,7 @@
 .. index:: Items; plugin-spezifische Attribute
 .. index:: plugin-spezifische Attribute
 
+.. role:: redsup
 .. role:: bluesup
 
 Plugin-spezifische Attribute
@@ -36,8 +37,7 @@ Beispiele für Kürzel, die kennzeichnen zu welchem Plugin die jeweiligen Attrib
 
 
 .. index:: Vererbung von Attributen
-.. role:: redsup
-
+.. index:: Items; Vererbung von Attributen
 
 Vererbung von Attributen :bluesup:`update`
 ------------------------------------------
@@ -54,20 +54,22 @@ den Wert aus einem übergeordneten Item zu erben. Dieser Mechanismus funktionier
 plugin-spezifischen Attributen. Hierbei kann ein Attribut mit dem Wert eines Attributes eines
 übergeordneten Items belegt werden.
 
-Es kann die übergeordnete Ebene (Eltern / Großeltern) das Attribut der Ebene angegeben werden. Dabei wird
-als Wert eines Attributes folgender Platzhalter eingetragen: :code:`<Ebene>:<Attribut>`
+Es kann der Wert eines Attributes aus einer übergeordneten Ebene (Eltern / Großeltern / Urgroßeltern)
+überommen (geerbt) werden. Dazu wird für das erbende Attribut ein Wert im Format :code:`<Ebene>:<Attribut>`
+angegeben.
 
 .. attention::
 
    Zwischen Ebene und Doppelpunkt, sowie zwischen Doppelpunkt und Attribut dürfen keine Leerzeichen angegeben werden.
 
-Die :code:`<Ebene>` kann die Werte :code:`..` und :code:`...` für Parent- bzw. Grandparent-Item annehmen.
-Für :code:`<Attribut>` kann der Name des Attributes aus der übergeordneten Ebene angegeben werden oder
-:code:`.` um aus der übergeordneten Ebene das Attribut mit dem gleichen Namen zu referenzieren.
+Die :code:`<Ebene>` kann die Werte :code:`..` (für das Parent-Item), :code:`...` (für das Grandparent-Item) sowie
+:code:`....` (für das Great-Grandparent-Item) annehmen.
 
+Für :code:`<Attribut>` wird ein :code:`.` angegeben, um aus der übergeordneten Ebene das Attribut mit dem
+gleichen Namen zu referenzieren.
 
-Um den Wert eines Attributes (mit gleichem Namen) von dem übergeordnetem Item (Parent-Item) zu erben, muss
-in der Konfiguration das Attribut mit dem Wert :code:`..:.` konfiguriert werden:
+Um den Wert eines Attributes vom übergeordnetem Item (Parent-Item) zu erben, muss dementsprechend in der
+Konfiguration das Attribut mit dem Wert :code:`..:.` konfiguriert werden:
 
 .. code-block:: yaml
 
@@ -86,10 +88,11 @@ in der Konfiguration das Attribut mit dem Wert :code:`..:.` konfiguriert werden:
           hm_function: LOW_BAT
 
 
-In diesem Beispiel sieht man, dass die HomeMatic Adresse des Devices nur einmal angegeben werden muss.
-Der Vorteil wird besonders sichtbar, wenn man mehrere Fenstergriffe hat. Dann kann man diesen Block
+In diesem Beispiel sieht man, dass die HomeMatic Adresse des Devices (hm_address) nur einmal angegeben werden
+muss. Der Vorteil wird besonders sichtbar, wenn man mehrere Fenstergriffe hat. Dann kann man diesen Block
 einfach kopieren und muss nur dem Item einen neuen Namen geben (z.B. fenstergriff_bad) und die
-**hm_adress** an einer Stelle abzuändern.
+**hm_adress** an einer Stelle abzuändern. Die Vererbung ist auch bei der Erstellung von structs hilfreich, weil
+es die spätere Konfiguration des entstehenden Item-Teilbaums vereinfacht.
 
 Um direkt den Wert eines Attributes von dem übergeordnetem Item des Parent-Items (Grandparent-Item)
 zu erben, kann in der Konfiguration das Attribut mit dem Wert :code:`...:.` konfiguriert werden.
@@ -97,3 +100,168 @@ zu erben, kann in der Konfiguration das Attribut mit dem Wert :code:`...:.` konf
 Die Vererbung ist so implementiert, dass der Attribut Wert während der Initialisierung der Items beim
 Start von SmartHomeNG kopiert wird. Im Backend wird in den Item Details des Child-Items also nicht
 :code:`..:.` oder :code:`...:.` angezeigt, sondern der kopierte Wert.
+
+
+.. index:: Zugriff auf Attribute anderer Items
+.. index:: Items; Zugriff auf Attribute anderer Items
+
+Zugriff auf Attribute anderer Items :bluesup:`update`
+-----------------------------------------------------
+
+Der Zugriff auf Attribute anderer Items ist als Erweiterung der Vererbung von Attributen implementiert.
+Hierzu muss im aktuellen Item ein Attribut definiert werden, welches den Wert aufnimmt. Es ist hierbei
+(wie bei der Vererbung) ist nur ein Zugriff auf Items oberhalb in der Item Hirarchie möglich.
+
+Der Unterschied liegt darin, dass ein Attributname angegeben werden kann.
+
+Um den Wert eines Attributes vom übergeordnetem Item (Parent-Item) zu übernehmen, muss dementsprechend in
+der Konfiguration statt dem :code:`.` (für das aktuelle Attribut), ein Attributname angegeben werden
+(:code:`<Ebene>:<Attribut>`).
+
+Es ist auch möglich, auf Attribute des aktuellen Items zuzugreifen. Dazu wird für die :code:`<Ebene>` nur
+ein :code:`.` (für das aktuelle Item) angegeben (:code:`.:<Attribut>`).
+
+
+.. index:: Platzhalter in Attributwerten
+.. index:: Items; Platzhalter in Attributwerten
+
+.. _Platzhalter_in_Attributwerten:
+
+Platzhalter in Attributwerten :redsup:`neu`
+-------------------------------------------
+
+Ab SmartHomeNG v1.10 ist es möglich in Attributwerten Platzhalter zu verwenden. Diese Platzhalter referenzieren
+ein anderes Attribut und werden beim Start von SmartHomeNG durch den entsprechenden Wert ersetzt.
+
+Die Platzhalter sind Attribut-Referenzen, wie sie in den zwei vorangegangenen Abschnitten beschrieben wurden.
+Diese Attribut-Referenzen werden in geschweifte Klammern eingeschlossen (:code:`{<Ebene>:<Attribut>}`).
+
+Damit keine Probleme bei Attributwerten entstehen, die zwar geschweifte Klammern enthalten, aber keine Platzhalter,
+findet standardmäßig keine Prüfung auf (und die Ersetzung von) Platzhalter(n) statt. Um die Ersetzung zu
+aktivieren, muss an den Namen des Attributes ein Unterstrich angefügt werden. Es muss also z.B. statt in
+der Konfigurationsdatei :code:`my_attribute: "Text"` zu schreiben, :code:`my_attribute_: "Text {..:my_value}"`
+angegeben werden. Im Zuge des Ladens wird beim Ersetzen der Platzhalter der Unterstrich entfernt. Das Attribut
+hal zur Laufzeit also den Namen **my_attribute** und nicht (wie man denken könnte) **my_attribute_**.
+
+Platzhalter können (wie die Vererbung und die Nutzung anderer Attributwerte) **nur** bei
+plugin-spezifischen Attributen verwendet werden. Die einzige Ausnahme ist das Standard-Attribut **name**. Hier können
+Platzhalter verwendet werden (:code:`name_: "Text {..:my_value}"`).
+
+Die Nutzung der Platzhalter wird am Beispiel der folgenden **structs** verdeutlicht:
+
+.. code-block:: yaml
+    :caption: ../etc/struct_knx.yaml
+
+    switch:
+        _maingroup: 1
+        _device: 0
+        type: bool
+        knx_dpt: 1
+        knx_send_: "{.:_maingroup}/1/{.:_device}"
+        knx_cache_: "{.:_maingroup}/2/{.:_device}"
+
+    dimmer:
+        _maingroup: 1
+        _device: 0
+        switch:
+            _maingroup: ..:.
+            _device: ..:.
+            struct: .switch
+        relative:
+            type: num
+            knx_dpt: 3
+            knx_send_: "{..:_maingroup}/3/{..:_device}"
+        level:
+            type: num
+            knx_dpt: 5
+            knx_cache_: "{..:_maingroup}/5/{..:_device}"
+            knx_send_: "{..:_maingroup}/4/{..:_device}"
+
+|
+
+Wenn diese **structs** bei der Definition von Items folgendermaßen verwendet werden:
+
+.. code-block:: yaml
+    :caption: ../items/testitems.yaml
+
+    testitems:
+
+        switch1:
+            _device: 4
+            struct: my.knx.switch
+
+        dimmer1:
+            _device: 7
+            struct: my.knx.dimmer
+
+|
+
+ergibt zur Laufzeit folgende Item Struktur:
+
+.. code-block:: yaml
+    :caption: Item Teilbaum zur Laufzeit
+
+    testitems:
+        switch1:
+            type: bool
+            knx_dpt: 1
+            knx_send_: "1/1/4"
+            knx_cache_: "1/2/4"
+
+        dimmer1:
+            switch:
+                type: bool
+                knx_dpt: 1
+                knx_send_: "1/1/7"
+                knx_cache_: "1/2/7"
+            relative:
+                type: num
+                knx_dpt: 3
+                knx_send_: "1/3/7"
+            level:
+                type: num
+                knx_dpt: 5
+                knx_cache_: "1/5/7"
+                knx_send_: "1/4/7"
+
+|
+
+Falls eine abweichende KNX Hauptgruppe verwendet wird, ist zusätzlich das Attribut _maingroup zu setzen. Diese
+Hauptgruppe wird dann statt der in der struct definierten Hauptgruppe verwendet:
+
+.. code-block:: yaml
+    :caption: ../items/testitems.yaml
+
+    testitems:
+
+        dimmer1:
+            _maingroup: 3
+            _device: 7
+            struct: my.knx.dimmer
+
+|
+
+ergibt dann zur Laufzeit:
+
+.. code-block:: yaml
+    :caption: Item Teilbaum zur Laufzeit
+
+    testitems:
+        dimmer1:
+            switch:
+                type: bool
+                knx_dpt: 1
+                knx_send_: "3/1/7"
+                knx_cache_: "3/2/7"
+            relative:
+                type: num
+                knx_dpt: 3
+                knx_send_: "3/3/7"
+            level:
+                type: num
+                knx_dpt: 5
+                knx_cache_: "3/5/7"
+                knx_send_: "3/4/7"
+
+|
+

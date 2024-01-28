@@ -1,4 +1,4 @@
-.. index:: Administrations GUI
+.. index:: Admin GUI
 .. index:: Administrations-Interface
 .. index:: Webinterfaces; Administrations GUI
 .. index:: Webinterfaces; Administrations-Interface

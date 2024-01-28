@@ -1,5 +1,6 @@
 
-.. index:: Szenen
+.. index:: Admin GUI; Szenen
+.. index:: Szenen; Admin GUI
 
 ======
 Szenen

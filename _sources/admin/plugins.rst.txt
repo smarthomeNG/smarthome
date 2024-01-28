@@ -1,5 +1,6 @@
 
-.. index:: Plugins
+.. index:: Admin GUI; Plugins
+.. index:: Plugins; Admin GUI
 
 #######
 Plugins

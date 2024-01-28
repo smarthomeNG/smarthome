@@ -120,3 +120,27 @@ werden sollen.
 
    SmartHomeNG nutzt zur Kommunikation mit dem Broker nur das MQTT Protokoll.
 
+
+Die Konfiguration wird in der Datei ``/etc/mosquitto/conf.d/mosquitto.conf`` vorgenommen.
+
+Um zum Beispiel mosquitto so zu konfigurieren, dass die Clients sich anmelden müssen und eine anonyme Anmeldung
+verhindert wird, muss die Konfiguration folgendermaßen aussehen:
+
+.. code-Block:: text
+
+    password_file /etc/mosquitto/passwd
+
+    allow_anonymous false
+
+Zusätzlich muss eine Datei ``/etc/mosquitto/passwd`` angelegt werden, in der die Accountinformationen hinterlegt werden.
+Informationen dazu finden sich in der Mosquitto Dokumentation. Eine hilfreiche Website ist auch
+http://www.steves-internet-guide.com/mqtt-username-password-example/.
+
+In Mosquitto Versionen ab 2.0 muss die Authentifizierung explizit konfiguriert werden. Ein anonymer Zugriff ist
+standardmäßig nicht möglich er muss (falls gewünscht) in der Konfigurationsdatei explizit konfiguriert werden:
+
+.. code-Block:: text
+
+    allow_anonymous true
+
+

@@ -35,17 +35,19 @@ Datei *../etc/module.yaml*
    # etc/module.yaml
    mqtt:
        module_name: mqtt
+       # enabled: False
        # broker_host: 127.0.0.1
        # broker_port: 1883
+       # broker_client: MQTT-module
+       # user: Benutzer
+       # password: Geheim
        # broker_monitoring: False
        # qos: 1
+       # bool_values: ['Falsch', 'Wahr']
        # last_will_topic: devices/shng-module/$online
        # last_will_payload: 'False'
        # birth_topic: devices/shng-module/$online
        # birth_payload: 'True'
-       # bool_values: ['Falsch', 'Wahr']
-       # user: Benutzer
-       # password: Geheim
 
 
 .. note::
@@ -57,6 +59,8 @@ Datei *../etc/module.yaml*
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | Parameter               | Bemerkung                                                                                            |
 +=========================+======================================================================================================+
+| enabled                 | MQTT Unterstützung aktivieren oder deaktivieren.                                                     |
++-------------------------+------------------------------------------------------------------------------------------------------+
 | broker_host             | **Optional**: DNS Name oder IP Adresse des MQTT Brokers. Wird **broker_host** nicht angegeben, wird  |
 |                         | angenommen, dass der Broker auf dem selben Rechner läuft wie SmartHomeNG und es wird **127.0.0.1**   |
 |                         | (localhost) genutzt.                                                                                 |
@@ -64,11 +68,24 @@ Datei *../etc/module.yaml*
 | broker_port             | **Optional**: Port auf dem der MQTT Broker hört. Wird **broker_port** nicht angegeben, wird der      |
 |                         | Standard Port **1883** genutzt.                                                                      |
 +-------------------------+------------------------------------------------------------------------------------------------------+
+| broker_client           | **Optional**: Client Name für die Broker Kommunikation - Muss nur angegeben werden, falls mehrere    |
+|                         | SmartHomeNG Installationen zeitgleich mit dem selben Broker kommunizieren sollen.                    |
++-------------------------+------------------------------------------------------------------------------------------------------+
+| user                    | **Optional**: Benutzername des MQTT Brokers, falls dieser ein Login erfordert.                       |
++-------------------------+------------------------------------------------------------------------------------------------------+
+| password                | **Optional**: Password des MQTT Brokers, falls dieser ein Login erfordert.                           |
++-------------------------+------------------------------------------------------------------------------------------------------+
 | broker_monitoring       | **Optional**: Wenn dieser Parameter auf **True** gesetzt wird, werden Informationen des Brokers zum  |
 |                         | Message Durchsatz abgefragt und können im Admin-Interface angezeigt werden.                          |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | qos                     | **Optional**: Legt fest, welche Quality-of-Service Anforderungen MQTT Messages beim Publish          |
 |                         | mitgegeben werden soll. Wird der Parameter nicht angegeben, wird als Standardwert **1** verwendet.   |
++-------------------------+------------------------------------------------------------------------------------------------------+
+| bool_values             | **Optional**: Legt fest, welche Werte als Payload für Topics verwendet werden sollen, wenn Werte vom |
+|                         | Typ **bool** versendet werden sollen. Außerdem werden diese Werte auch auf eingehende MQTT Messages  |
+|                         | angewendet, die in Variablen des Typ **bool** eingelesen werden sollen. Für den Parameter            |
+|                         | **bool_values** muss eine Liste mit **zwei** Werten angegeben werden, wobei der erste Wert für       |
+|                         | **False** steht und der zweiter Wert für **True**                                                    |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | last_will_topic         | **Optional**: Legt den Topic der MQTT last_will Message fest. Wird der Parameter nicht angegeben,    |
 |                         | wird beim Verbindungsaufbau keine last_will Message festgelegt.                                      |
@@ -82,15 +99,5 @@ Datei *../etc/module.yaml*
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | birth_payload           | **Optional**: Legt die Payload der birth Message fest. Wird der Parameter nicht angegeben, wird beim |
 |                         | Verbindungsaufbau eine birth Message ohne Payload versendet.                                         |
-+-------------------------+------------------------------------------------------------------------------------------------------+
-| bool_values             | **Optional**: Legt fest, welche Werte als Payload für Topics verwendet werden sollen, wenn Werte vom |
-|                         | Typ **bool** versendet werden sollen. Außerdem werden diese Werte auch auf eingehende MQTT Messages  |
-|                         | angewendet, die in Variablen des Typ **bool** eingelesen werden sollen. Für den Parameter            |
-|                         | **bool_values** muss eine Liste mit **zwei** Werten angegeben werden, wobei der erste Wert für       |
-|                         | **False** steht und der zweiter Wert für **True**                                                    |
-+-------------------------+------------------------------------------------------------------------------------------------------+
-| user                    | **Optional**: Benutzername des MQTT Brokers, falls dieser ein Login erfordert.                       |
-+-------------------------+------------------------------------------------------------------------------------------------------+
-| password                | **Optional**: Password des MQTT Brokers, falls dieser ein Login erfordert.                           |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 

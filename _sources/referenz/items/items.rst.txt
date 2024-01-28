@@ -1,6 +1,6 @@
 
 .. index:: Referenz; Items
-.. Index:: Items; Referenz
+.. index:: Items; Referenz
 
 .. role:: redsup
 .. role:: bluesup
@@ -19,6 +19,7 @@ In den folgenden Abschnitten sind Informationen zu den Items in SmartHomeNG zu f
    :maxdepth: 4
 
    standard_attribute/standard_attribute
+   item_zugriff
    plugin_attribute
    attributes_relative_referenzen
    properties

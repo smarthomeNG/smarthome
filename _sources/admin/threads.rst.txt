@@ -1,5 +1,6 @@
 
-.. index:: Threads
+.. index:: Admin GUI; Threads
+.. index:: Threads; Admin GUI
 
 =======
 Threads

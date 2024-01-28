@@ -86,6 +86,28 @@ Nach der Konfigurationsänderung wird der ``owserver`` neu gestartet:
 
    sudo systemctl restart owserver
 
+.. note::
+
+    Wenn kein USB-Bridge angeschlossen ist, starten  ``owserver`` und ``owhttp`` nicht. In diesem Fall muss die Zeile
+
+    .. code-block:: ini
+
+       # USB device: DS9490
+       server: usb = all
+
+    auskommentiert werden und eine FAKE Konfiguration enabled werden. Also folgendermaßen:
+
+    .. code-block:: ini
+
+        # This part must be changed on real installation
+        server: FAKE = DS18S20,DS2405
+        #
+        # USB device: DS9490
+        #server: usb = all
+        #
+
+
+|
 
 SmartHomeNG Plugin konfigurieren
 ================================

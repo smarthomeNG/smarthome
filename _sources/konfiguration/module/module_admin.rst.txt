@@ -29,10 +29,17 @@ Datei *../etc/module.yaml*
    # etc/module.yaml
    admin:
        module_name: admin
-   #    login_expiration: 168
-   #    pypi_timeout: 5
-   #    itemtree_fullpath: True
-   #    itemtree_searchstart: 3
+       # login_expiration: 168
+       # login_autorenew: True
+       # pypi_timeout: 5
+       # itemtree_fullpath: True
+       # itemtree_searchstart: 3
+       # websocket_host: smarthomeng.local
+       # websocket_port: 2424
+       # log_chunksize: 1000
+       # developer_mode: False
+       # rest_dispatch_force_exception: False
+       # click_dropdown_header: False
 
 
 .. note::
@@ -41,19 +48,33 @@ Datei *../etc/module.yaml*
     Administrations-Interface geändert werden.
 
 
-+-------------------------+------------------------------------------------------------------------------------------------------+
-| Parameter               | Bemerkung                                                                                            |
-+=========================+======================================================================================================+
-| login_expiration        | **Optional**: Gültigkeitsdauer des Tokens nach einem Login in Stunden (Nachkommastellen können       |
-|                         | angegeben werden). Standard ist 168 -> eine Woche                                                    |
-+-------------------------+------------------------------------------------------------------------------------------------------+
-| pypi_timeout            | **Optional**: Anzahl Sekunden die auf eine Antwort von pypi.org gewartet wird.                       |
-+-------------------------+------------------------------------------------------------------------------------------------------+
-| itemtree_fullpath       | **Optional**: Falls dieser Parameter auf **True** gesetzt wird, werden auf der Item Seite im Tree    |
-|                         | Items mit vollem Pfad angezeigt, fallse der Wert auf **False** gesetzt wird, wird die Kurzform       |
-|                         | verwendet.                                                                                           |
-+-------------------------+------------------------------------------------------------------------------------------------------+
-| itemtree_searchstart    | **Optional**: Anzahl Zeichen die eingegeben sein muss, damit die Suche im Itemtree startet.          |
-|                         | Standardmäßig wird nach der Eingabe des dritten Zeichens mit der Suche begonnen.                     |
-+-------------------------+------------------------------------------------------------------------------------------------------+
++-------------------------------+------------------------------------------------------------------------------------------------+
+| Parameter                     | Bemerkung                                                                                      |
++===============================+================================================================================================+
+| login_expiration              | **Optional**: Gültigkeitsdauer des Tokens nach einem Login in Stunden (Nachkommastellen        |
+|                               | können angegeben werden). Standard ist 168 -> eine Woche                                       |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| login_autorenew               | **Optional**: Bestehendes Login-Token automatisch verlängern.                                  |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| pypi_timeout                  | **Optional**: Anzahl Sekunden die auf eine Antwort von pypi.org gewartet wird.                 |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| itemtree_fullpath             | **Optional**: Falls dieser Parameter auf **True** gesetzt wird, werden auf der Item Seite im   |
+|                               | Tree Items mit vollem Pfad angezeigt, fallse der Wert auf **False** gesetzt wird, wird die     |
+|                               | Kurzform verwendet.                                                                            |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| itemtree_searchstart          | **Optional**: Anzahl Zeichen die eingegeben sein muss, damit die Suche im Itemtree startet.    |
+|                               | Standardmäßig wird nach der Eingabe des dritten Zeichens mit der Suche begonnen.               |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| websocket_host                | **Optional**: IP Adresse für den websocket Zugriff.                                            |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| websocket_port                | **Optional**: Port der für den Websocket Zugriff verwendet wird.                               |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| log_chunksize                 | **Optional**: Größe der gelesenen Blöcke bei der Anzeige großer Logdateien.                    |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| developer_mode                | **Optional**: Entwickler Modus aktivieren (Ist für das Core Entwickler Team gedacht).          |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| rest_dispatch_force_exception | **Optional**: Sollen WARNINGs aus REST_dispatch_execute als EXECPTION geloggt werden?          |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| click_dropdown_header         | **Optional**: Click auf Kopfeintrag von Dropdown Menüs erlauben.                               |
++-------------------------------+------------------------------------------------------------------------------------------------+
 

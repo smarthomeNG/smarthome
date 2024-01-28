@@ -7,9 +7,9 @@
 .. role:: redsup
 
 
-======================
-Netzwerk :redsup:`Neu`
-======================
+========
+Netzwerk
+========
 
 Hier sind einige Informationen über die Netzwerk Nutzung durch SmartHomeNG zusammengestellt.
 

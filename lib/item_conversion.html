@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="de" >
+<html class="writer-html5" lang="de">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lib.item_conversion &mdash; Dokumentation v1.9.5 v1.9.5 (Stand 31. März 2023) Dokumentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+  <title>lib.item_conversion &mdash; Dokumentation v1.9.5 v1.10.0 (Stand 19. Januar 2024) Dokumentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+
+  
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
@@ -50,7 +52,11 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../was_ist_neu.html">Neuerungen im Release v1.9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../was_ist_neu.html">Neuerungen im Release v1.10</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../was_ist_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../was_ist_neu.html#tipps-tricks">Tipps &amp; Tricks</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation/anforderungen.html">Hard- u. Software Anforderungen</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../installation/anforderungen.html#hardware">Hardware</a></li>
@@ -63,7 +69,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#softwareauswahl">Softwareauswahl</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#einloggen-via-ssh-oder-an-der-konsole">Einloggen via SSH oder an der Konsole</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#systemaktualisierung">Systemaktualisierung</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#restarbeiten-am-system">Restarbeiten am System</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#restarbeiten-am-system">Restarbeiten am System</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#sudo-fur-user-smarthome">sudo für User smarthome</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#standby-energiesparmodus-abschalten">Standby/Energiesparmodus abschalten</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#anpassung-fur-die-smartvisu">Anpassung für die smartVISU</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#anpassung-der-userumgebung">Anpassung der Userumgebung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../installation/komplettanleitung/01_debian.html#system-abschalten">System abschalten</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../installation/komplettanleitung/02_smarthomeng.html">SmartHomeNG installieren</a><ul>
@@ -128,7 +141,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/07_samba.html#samba-konfigurieren">Samba konfigurieren</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../installation/komplettanleitung/08_shng_daemon.html">SmartHomeNG als Dienst einrichten <span class="bluesup">update</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../installation/komplettanleitung/08_shng_daemon.html">SmartHomeNG als Dienst <span class="bluesup">update</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/08_shng_daemon.html#einrechten-des-dienstes">Einrechten des Dienstes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/08_shng_daemon.html#nutzung-eines-virtuellen-environments-neu">Nutzung eines virtuellen Environments <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/08_shng_daemon.html#starten-des-dienstes">Starten des Dienstes</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../installation/docker.html">Installation über Docker</a><ul>
@@ -245,28 +263,38 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../konfiguration/items/items.html">Items</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../konfiguration/items/ueberblick.html">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../konfiguration/items/ueberblick.html#namensvergabe">Namensvergabe</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../konfiguration/items/ueberblick.html#attribute">Attribute</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../konfiguration/items/ueberblick.html#properties-und-funktionen">Properties und Funktionen</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../konfiguration/items/initiale_itemkonfiguration.html">Initiale Item-Konfiguration</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../konfiguration/items/initiale_itemkonfiguration.html#beispiele-fur-erstmaliges-setup">Beispiele für erstmaliges Setup</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/standard_attribute/standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html"><em>autotimer</em></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html#datentyp-der-wertzuweisung">Datentyp der Wertzuweisung</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html"><em>autotimer</em></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html">cycle</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html#datentyp-der-wertzuweisung">Datentyp der Wertzuweisung</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html">cycle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/enforce_updates.html">enforce_updates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/enforce_change.html">enforce_change</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html"><em>eval</em> und <em>eval_trigger</em></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html#attribut-eval">Attribut <em>eval</em></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html#attribut-eval-trigger">Attribut <em>eval_trigger</em></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html#attribut-eval-on-trigger-only">Attribut <em>eval_on_trigger_only</em></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html"><em>log_change</em> und <em>log_text</em> <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html">Hysterese</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#hysteresis-input"><cite>hysteresis_input</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#hysteresis-upper-threshold"><cite>hysteresis_upper_threshold</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#hysteresis-lower-threshold"><cite>hysteresis_lower_threshold</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#konfiguration">Konfiguration</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#beispiele">Beispiele</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#zusatzliche-statusinformationen">zusätzliche Statusinformationen</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html"><em>log_change</em> und <em>log_text</em></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html#attribut-log-change">Attribut <em>log_change</em></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html#attribut-log-level">Attribut <em>log_level</em></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html#attribut-log-text">Attribut <em>log_text</em></a></li>
@@ -283,8 +311,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/type.html"><cite>type</cite></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/items/item_zugriff.html">Zugriff auf die Werte von Items</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#lesen-einer-item-wertes">Lesen einer Item Wertes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#zugriff-auf-ein-listen-element-neu">Zugriff auf ein Listen-Element <span class="redsup">neu</span></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#zugriff-auf-ein-dict-element-neu">Zugriff auf ein Dict-Element <span class="redsup">neu</span></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#schreiben-eines-item-wertes">Schreiben eines Item Wertes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#schreiben-eines-listen-elements-neu">Schreiben eines Listen-Elements <span class="redsup">neu</span></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#schreiben-eines-dict-elements-neu">Schreiben eines Dict-Elements <span class="redsup">neu</span></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#weitere-parameter-item-zugriff">Weitere Parameter Item Zugriff</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/plugin_attribute.html">Plugin-spezifische Attribute</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/plugin_attribute.html#vererbung-von-attributen-update">Vererbung von Attributen <span class="bluesup">update</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/plugin_attribute.html#zugriff-auf-attribute-anderer-items-update">Zugriff auf Attribute anderer Items <span class="bluesup">update</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/plugin_attribute.html#platzhalter-in-attributwerten-neu">Platzhalter in Attributwerten <span class="redsup">neu</span></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/attributes_relative_referenzen.html">Relative Item Referenzen</a><ul>
@@ -302,10 +346,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/funktionen.html#beispiele-fur-die-nutzung-von-funktionen">Beispiele für die Nutzung von Funktionen</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../konfiguration/items/items.html#uberblick">Überblick</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../konfiguration/items/items.html#namensvergabe">Namensvergabe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../konfiguration/items/items.html#attribute">Attribute</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../konfiguration/items/items.html#properties-und-funktionen">Properties und Funktionen</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../konfiguration/item_structs.html">structs (Item Strukturen)</a><ul>
@@ -3097,7 +3137,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../admin/items.html">Items</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../admin/items.html#item-baum">Item Baum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../admin/items.html#item-baum">Item Baum</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../admin/items.html#item-monitoring">Item Monitoring</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../admin/items.html#item-konfiguration">Item Konfiguration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../admin/items.html#struktur-templates">Struktur Templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../admin/items.html#struktur-konfiguration">Struktur Konfiguration</a></li>
@@ -3108,6 +3151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../admin/logiken.html#logik-editor">Logik Editor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../admin/logiken.html#code-editor">Code Editor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../admin/logiken.html#parameter-editor">Parameter Editor</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../admin/logiken.html#beschreibung">Beschreibung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../admin/logiken.html#gruppe-n">Gruppe(n)</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../admin/logiken.html#cycle">Cycle</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../admin/logiken.html#crontab">Crontab</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../admin/logiken.html#watch-items">Watch Items</a></li>
@@ -3145,9 +3190,17 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../beispiele/beispiele.html">Beispiele, Tipps &amp; Tricks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../beispiele/eval.html">Items: eval und eval_trigger</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beispiele/items_tipps_und_tricks.html">Items: Tipps und Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beispiele/beispiele.html">Beispiele, Tipps &amp; Tricks <span class="greensup">Update</span></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beispiele/items/items.html">Items</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../beispiele/items/items_eval_evaltrigger.html">eval und eval_trigger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../beispiele/items/items_tipps_und_tricks.html">Tipps und Tricks <span class="bluesup">Update</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/items/items_tipps_und_tricks.html#erstellen-eines-zeitgiedes">Erstellen eines Zeitgiedes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/items/items_tipps_und_tricks.html#invertieren-eines-item-wertes">Invertieren eines Item Wertes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/items/items_tipps_und_tricks.html#erstellung-von-tag-nacht-items-fur-knx">Erstellung von Tag-/Nacht-Items für KNX</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../beispiele/logiken/logiken.html">Logiken</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../beispiele/logiken/logiken.html#einfache-beispiele">Einfache Beispiele</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../beispiele/logiken/beispiel_beaufort.html">Berechnung der Windstärke</a><ul>
@@ -3191,8 +3244,66 @@
 <li class="toctree-l3"><a class="reference internal" href="../beispiele/logiken/logiken.html#weitere-beispiele">Weitere Beispiele</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../beispiele/structs.html">structs (Item Strukturen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beispiele/structs/structs.html">Structs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../beispiele/structs/1_structs.html">structs (Item Strukturen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../beispiele/structs/item_strukturen_kopieren.html">Item Strukturen bequem kopieren</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../beispiele/plugins/plugins.html">Plugins</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html">Ein Plugin aus develop installieren</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#konfiguration-anpassen">Konfiguration anpassen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#plugin-manuell-installieren">Plugin manuell installieren</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#plugins-repository-aufrufen">Plugins Repository aufrufen</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#plugins-repository-download">Plugins Repository Download</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#gewunschtes-plugin-installieren">Gewünschtes Plugin installieren</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../beispiele/knxd.html">knxd: Hinweise und Konfiguration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beispiele/umzug.html">SmartHomeNG umziehen <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../beispiele/umzug.html#neues-system-installieren">Neues System installieren</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#linux-installieren">Linux installieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#smarthomeng-installieren">SmartHomeNG installieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#mosquitto-installieren">Mosquitto installieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#smartvisu-installieren">smartVISU installieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#knxd-installieren">knxd installieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#onewire-installieren">Onewire installieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#samba-installieren">Samba installieren</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../beispiele/umzug.html#konfiguration-sichern-ubertragen">Konfiguration sichern/übertragen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#dienst-konfigurationen-ubertragen">Dienst-Konfigurationen übertragen</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#mosquitto">Mosquitto</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#knxd">knxd</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#onewire">Onewire</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#samba">Samba</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#smarthomeng-konfiguration-sichern">SmartHomeNG Konfiguration sichern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#kopieren-weiterer-daten">Kopieren weiterer Daten</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#item-cache-verzeichnis-kopieren">Item cache Verzeichnis kopieren</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#database-verzeichnis-kopieren">database Verzeichnis kopieren</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#executor-verzeichnis-kopieren">executor Verzeichnis kopieren</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#knx-verzeichnis-kopieren">knx Verzeichnis kopieren</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#logs-kopieren">Logs kopieren</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../beispiele/umzug.html#plugins-cache-verzeichnis-kopieren">plugins_cache Verzeichnis kopieren</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#smarthomeng-konfiguration-einspielen">SmartHomeNG Konfiguration einspielen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../beispiele/umzug.html#restarbeiten">Restarbeiten</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#neues-system-als-produktiv-einrichten">Neues System als produktiv einrichten</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#letzte-konfigurationsanderungen">Letzte Konfigurationsänderungen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#transfer-verzeichnis-loschen">Transfer Verzeichnis löschen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../beispiele/umzug.html#smarthomeng-als-dienst-einrichten">SmartHomeNG als Dienst einrichten</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tools/tools.html">Tools</a><ul>
@@ -3219,7 +3330,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../entwicklung/logiken/logiken.html#beispiele">Beispiele</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../entwicklung/plugins/plugins.html">Plugins <span class="bluesup">under construction</span></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../entwicklung/plugins/plugins.html">Plugins <span class="bluesup">Update</span></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../entwicklung/plugins/vorueberlegungen.html">Vorüberlegungen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/vorueberlegungen.html#fragestellungen">Fragestellungen</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/vorueberlegungen.html#typ-des-plugins">Typ des Plugins</a><ul>
@@ -3235,83 +3346,93 @@
 <li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/vorueberlegungen.html#python-version">Python Version</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../dev/README.html">Plugin development guidelines</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../dev/README.html#git-github">GIT / github</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../dev/README.html#repositories-and-branches">Repositories and Branches</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../dev/README.html#getting-the-source">Getting the Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html">Entwicklungsrichtlinien <span class="bluesup">under construction</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#nutzung-von-git-und-github">Nutzung von git und GitHub</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#die-repositories-von-smarthomeng">Die Repositories von SmartHomeNG</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#repositories-und-branches">Repositories und Branches</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#die-quellen-finden-installieren">Die Quellen finden/installieren</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../dev/README.html#coding-style">Coding style</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../dev/README.html#start-coding">Start Coding</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../dev/README.html#tools">Tools</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../dev/README.html#test-and-document">Test and Document</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../dev/README.html#basic-rules">Basic Rules</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../dev/README.html#fork-description-is-deprecated-has-to-be-updated">Fork (description is deprecated, has to be updated)</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../dev/README.html#merge-description-is-deprecated-has-to-be-updated">Merge (description is deprecated, has to be updated)</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../dev/README.html#working-with-the-git-commandline-client">Working with the git commandline client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#code-stil">Code Stil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#programmieren-beginnen">Programmieren beginnen</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#tools">Tools</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#testen-und-dokumentieren">Testen und Dokumentieren</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#basic-rules">Basic Rules</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#fork-erstellen">Fork erstellen</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#merge-description-is-deprecated-has-to-be-updated">Merge (description is deprecated, has to be updated)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/entwicklungsrichtlinien.html#arbeiten-mit-dem-git-befehlszeilen-client">Arbeiten mit dem Git-Befehlszeilen-Client</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../entwicklung/plugins/plugin_checker.html">Plugin-Checker <span class="redsup">neu</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung.html">Kurzanleitung</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/plugin_in5minutes.html">In 5 Minuten zum eigenen Plugin…</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_in5minutes.html#beschreibung-des-plugins">Beschreibung des Plugins</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_in5minutes.html#vordefinierte-funktionen-des-plugins">Vordefinierte Funktionen des Plugins</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_in5minutes.html#zusammenfassung">Zusammenfassung</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/kurzanleitung.html">Kurzanleitung  <span class="bluesup">update</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html">In wenigen Minuten zum eigenen Plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#beschreibung-des-plugins">Beschreibung des Plugins</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#vordefinierte-funktionen-des-plugins">Vordefinierte Funktionen des Plugins</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/smartplugin.html">Class SmartPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/mqttplugin.html">Class MqttPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html#plugin">plugin</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html#parameters">parameters</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html#item-attributes">item_attributes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html#item-structs">item_structs</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html#logic-parameters">logic_parameters</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html#plugin-functions">plugin_functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartplugin_class.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/plugin_documentation_files.html">Dateien der Plugin-Dokumentation</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_documentation_files.html#user-doc-rst-user-doc-md">user_doc.rst / user_doc.md</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_documentation_files.html#developer-doc-rst-developer-doc-md">developer_doc.rst / developer_doc.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/mqttplugin_class.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/webinterface.html">Webinterface <span class="bluesup">update</span></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/webinterface_extend_plugin.html">Erweitern eines bestehenden Plugins</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/webinterface_filling_webinterface.html">Das Webinterface mit Inhalt füllen</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/webinterface_multilanguage.html">Unterstützung mehrerer Sprachen <span class="redsup">new</span></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/webinterface_automatic_update.html">Automatische Updates der Daten im Webinterface <span class="redsup">new</span></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/webinterface_plugin_interaction.html">Interaktion des Webinterface mit dem Plugin <span class="redsup">new</span></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/webinterface_3rdparty_components.html">Komponenten von Drittanbietern für Webinterfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html">Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#kommandos">Kommandos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#protokoll">Protokoll</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#verbindung">Verbindung</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#datatypes">DataTypes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#commands">Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#plugin">plugin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#parameters">parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#item-attributes">item_attributes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#item-structs">item_structs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#logic-parameters">logic_parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#plugin-functions">plugin_functions</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/multilanguage.html">Unterstützung mehrerer Sprachen <span class="bluesup">Update</span></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/multilanguage.html#text-als-mehrsprachig-kennzeichnen">Text als mehrsprachig kennzeichnen</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/multilanguage.html#wie-mehrsprachigkeit-funktioniert">Wie Mehrsprachigkeit funktioniert</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/multilanguage.html#sprachen-und-ubersetzungen-hinzufugen">Sprachen und Übersetzungen hinzufügen</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/multilanguage.html#platzhalter-in-ubersetzungen-nutzen-neu">Platzhalter in Übersetzungen nutzen <span class="redsup">Neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_documentation_files.html">Plugin-Dokumentation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_documentation_files.html#user-doc-rst">user_doc.rst</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/sampleplugin.html">Beispielplugin <span class="bluesup">update</span></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/sampleplugin.html#die-metadaten-datei">Die Metadaten-Datei:</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/sampleplugin.html#der-quelltext">Der Quelltext:</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/sampleplugin.html#das-webinterface-template-file">Das Webinterface (template file):</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/sampleplugin.html#die-datei-fur-mehrsprachigkeit">Die Datei für Mehrsprachigkeit:</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/sampleplugin.html#die-dokumentation">Die Dokumentation:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/webinterface.html">Webinterface <span class="bluesup">update</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/webinterface.html#allgemeines">Allgemeines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/webinterface.html#tooltips">Tooltips</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/webinterface.html#cookies">Cookies</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/webinterface.html#icons">Icons</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/webinterface.html#kalenderansicht">Kalenderansicht</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/samplemqttplugin.html">Beispielplugin mit MQTT-Unterstützung</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/samplemqttplugin.html#die-metadaten-datei">Die Metadaten-Datei:</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/samplemqttplugin.html#der-quelltext">Der Quelltext:</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/samplemqttplugin.html#das-webinterface-template-file">Das Webinterface (template file):</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/samplemqttplugin.html#die-datei-fur-mehrsprachigkeit">Die Datei für Mehrsprachigkeit:</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/samplemqttplugin.html#die-dokumentation">Die Dokumentation:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/multilanguage.html">Unterstützung mehrerer Sprachen <span class="bluesup">Update</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/multilanguage.html#text-als-mehrsprachig-kennzeichnen">Text als mehrsprachig kennzeichnen</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/multilanguage.html#wie-mehrsprachigkeit-funktioniert">Wie Mehrsprachigkeit funktioniert</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/multilanguage.html#sprachen-und-ubersetzungen-hinzufugen">Sprachen und Übersetzungen hinzufügen</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/multilanguage.html#platzhalter-in-ubersetzungen-nutzen-neu">Platzhalter in Übersetzungen nutzen <span class="redsup">Neu</span></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/libraries_plugins.html">Programm Module zur Nutzung in Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/sampleplugin.html">Beispielplugin <span class="bluesup">update</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/sampleplugin.html#die-metadaten-datei">Die Metadaten-Datei:</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/sampleplugin.html#der-quelltext">Der Quelltext:</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/sampleplugin.html#das-webinterface-template-file">Das Webinterface (template file):</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/sampleplugin.html#die-datei-fur-mehrsprachigkeit">Die Datei für Mehrsprachigkeit:</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/sampleplugin.html#die-dokumentation">Die Dokumentation:</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/samplemqttplugin.html">Beispielplugin mit MQTT-Unterstützung</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/samplemqttplugin.html#die-metadaten-datei">Die Metadaten-Datei:</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/samplemqttplugin.html#der-quelltext">Der Quelltext:</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/samplemqttplugin.html#das-webinterface-template-file">Das Webinterface (template file):</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/samplemqttplugin.html#die-datei-fur-mehrsprachigkeit">Die Datei für Mehrsprachigkeit:</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/samplemqttplugin.html#die-dokumentation">Die Dokumentation:</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/libraries_plugins.html">Programm Module zur Nutzung in Plugins</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="db.html">lib.db</a></li>
 <li class="toctree-l5"><a class="reference internal" href="logutils.html">lib.logutils</a></li>
 <li class="toctree-l5"><a class="reference internal" href="network.html">lib.network</a></li>
@@ -3320,19 +3441,13 @@
 <li class="toctree-l5"><a class="reference internal" href="utils.html">lib.utils</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/visu_smartvisu/developer_doc.html">visu_smartvisu</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/visu_smartvisu/developer_doc.html#visualisation-plugin-smartvisu-support-for-developers">Visualisation plugin (smartVISU support) - for developers</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/visu_smartvisu/developer_doc.html#files-of-the-plugin">Files of the Plugin</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/visu_smartvisu/developer_doc.html#handling-of-smartvisu-widgets">Handling of smartVISU widgets</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/visu_websocket/developer_doc.html">visu_websocket</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/visu_websocket/developer_doc.html#visualisation-plugin-websocket-protocol-for-developers">Visualisation plugin (Websocket Protocol) - for developers</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/visu_websocket/developer_doc.html#websocket-interface">WebSocket Interface</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/visu_websocket/developer_doc.html#requests-sent-from-the-visu-to-smarthomeng">Requests sent from the Visu to SmartHomeNG</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/visu_websocket/developer_doc.html#requests-sent-from-smarthomeng-to-the-visu">Requests sent from SmartHomeNG to the Visu</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../entwicklung/plugins/smartplugin.html">Class SmartPlugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../entwicklung/plugins/mqttplugin.html">Class MqttPlugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../entwicklung/plugins/async_in_plugins.html">AsyncIO in Plugins <span class="redsup">neu</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/async_in_plugins.html#methoden-des-plugins">Methoden des Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/async_in_plugins.html#asyncio-und-threads-kombinieren">Asyncio und Threads kombinieren</a></li>
 </ul>
 </li>
 </ul>
@@ -3348,8 +3463,19 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
@@ -3381,7 +3507,11 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../entwicklung/core/core.html">Entwicklung des Core</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#lib-item">lib.item</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="../entwicklung/core/core_libraries.html">Programm Module</a><ul class="current">
@@ -3410,7 +3540,15 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="daemon.html">lib.daemon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="daemon.html">lib.daemon</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -3419,6 +3557,7 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="log.html">lib.log</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.DateTimeRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">DateTimeRotatingFileHandler</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.Logs"><code class="docutils literal notranslate"><span class="pre">Logs</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.ShngMemLogHandler"><code class="docutils literal notranslate"><span class="pre">ShngMemLogHandler</span></code></a></li>
@@ -3433,7 +3572,10 @@
 <li class="toctree-l5"><a class="reference internal" href="module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="scene.html">lib.scene</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scene.html">lib.scene</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -3470,8 +3612,20 @@
 <li class="toctree-l5"><a class="reference internal" href="logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="network.html">lib.network</a></li>
-<li class="toctree-l4"><a class="reference internal" href="orb.html">lib.orb</a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html">lib.network</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="orb.html">lib.orb</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="tools.html">lib.tools</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a></li>
 </ul>
@@ -3539,23 +3693,27 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/items/items.html">Items</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/standard_attribute/standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html"><em>autotimer</em></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html#datentyp-der-wertzuweisung">Datentyp der Wertzuweisung</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html"><em>autotimer</em></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html">cycle</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html#datentyp-der-wertzuweisung">Datentyp der Wertzuweisung</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html">cycle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/enforce_updates.html">enforce_updates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/enforce_change.html">enforce_change</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html"><em>eval</em> und <em>eval_trigger</em></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html#attribut-eval">Attribut <em>eval</em></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html#attribut-eval-trigger">Attribut <em>eval_trigger</em></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html#attribut-eval-on-trigger-only">Attribut <em>eval_on_trigger_only</em></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html"><em>log_change</em> und <em>log_text</em> <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html">Hysterese</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#hysteresis-input"><cite>hysteresis_input</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#hysteresis-upper-threshold"><cite>hysteresis_upper_threshold</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#hysteresis-lower-threshold"><cite>hysteresis_lower_threshold</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#konfiguration">Konfiguration</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#beispiele">Beispiele</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/hysteresis.html#zusatzliche-statusinformationen">zusätzliche Statusinformationen</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html"><em>log_change</em> und <em>log_text</em></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html#attribut-log-change">Attribut <em>log_change</em></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html#attribut-log-level">Attribut <em>log_level</em></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/standard_attribute/log_change.html#attribut-log-text">Attribut <em>log_text</em></a></li>
@@ -3572,8 +3730,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/type.html"><cite>type</cite></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/items/item_zugriff.html">Zugriff auf die Werte von Items</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#lesen-einer-item-wertes">Lesen einer Item Wertes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#zugriff-auf-ein-listen-element-neu">Zugriff auf ein Listen-Element <span class="redsup">neu</span></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#zugriff-auf-ein-dict-element-neu">Zugriff auf ein Dict-Element <span class="redsup">neu</span></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#schreiben-eines-item-wertes">Schreiben eines Item Wertes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#schreiben-eines-listen-elements-neu">Schreiben eines Listen-Elements <span class="redsup">neu</span></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#schreiben-eines-dict-elements-neu">Schreiben eines Dict-Elements <span class="redsup">neu</span></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#weitere-parameter-item-zugriff">Weitere Parameter Item Zugriff</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/plugin_attribute.html">Plugin-spezifische Attribute</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/plugin_attribute.html#vererbung-von-attributen-update">Vererbung von Attributen <span class="bluesup">update</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/plugin_attribute.html#zugriff-auf-attribute-anderer-items-update">Zugriff auf Attribute anderer Items <span class="bluesup">update</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/plugin_attribute.html#platzhalter-in-attributwerten-neu">Platzhalter in Attributwerten <span class="redsup">neu</span></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/attributes_relative_referenzen.html">Relative Item Referenzen</a><ul>
@@ -3615,6 +3789,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../referenz/logging/logging_handler.html#benutzung-des-handlers">Benutzung des Handlers</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/logging/logging_handler.html#datetimerotatingfilehandler">DateTimeRotatingFileHandler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/logging/logging_handler.html#shngmemloghandler">ShngMemLogHandler</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/logging/logging_handler.html#id1">Benutzung des Handlers</a></li>
 </ul>
@@ -3753,7 +3928,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#module-modules.http">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -3761,15 +3941,29 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -3833,11 +4027,33 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../referenz/netzwerk.html">Netzwerk <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../referenz/netzwerk.html">Netzwerk</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/netzwerk.html#ports">Ports</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/plugins/plugins.html">Plugins</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/plugins/plugin_typen/plugin_typen.html">Plugin Typen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/plugin_typen.html#classic-plugin">Classic Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/plugin_typen.html#smartplugin">SmartPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/plugin_typen.html#mqttplugin">MqttPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/plugin_typen.html#smartdeviceplugin">SmartDevicePlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html">Plugin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#kommandos">Kommandos</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#protokoll">Protokoll</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#verbindung">Verbindung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#datatypes">DataTypes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#commands">Commands</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/plugins/plugin_metadata.html">Metadaten für Plugins</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/metadata/plugin_global.html">plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/metadata/parameters.html">parameters</a><ul>
@@ -3870,6 +4086,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/plugins/plugin_user_doc.html">Dokumentation des Plugins</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/userfunctions/userfunctions.html">Userfunctions</a><ul>
@@ -3888,10 +4105,27 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/userfunctions/userfunctions.html#reload-von-userfunctions">Reload von Userfunctions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../referenz/virtual_environments/virtual_environments.html">Virtuelle Environments <span class="redsup">Neu</span></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../referenz/virtual_environments/virtual_environments.html#installation-von-virtualenv">Installation von virtualenv</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../referenz/virtual_environments/virtual_environments.html#erstellung-von-virtuellen-environments">Erstellung von virtuellen Environments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../referenz/virtual_environments/virtual_environments.html#virtuelle-environements-als-dienst">Virtuelle Environements als Dienst</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../referenz/python/python.html">Python Environment <span class="bluesup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/python/support_skripte.html">Support Skripte für SmartHomeNG</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/support_skripte.html#make-venv-skript">make_venv Skript</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/support_skripte.html#act-skript">act Skript</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/python/virtual_environments.html">Virtuelle Python Environments <span class="bluesup">Update</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/virtual_environments.html#installation-von-venv-bzw-virtualenv">Installation von venv bzw. virtualenv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/virtual_environments.html#erstellung-von-virtuellen-environments">Erstellung von virtuellen Environments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/virtual_environments.html#loschen-eines-virtuellen-environment">Löschen eines virtuellen Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/virtual_environments.html#virtuelle-environements-als-dienst">Virtuelle Environements als Dienst</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/python/python_installation.html">Python Version Installieren <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/python_installation.html#installation-von-benotigten-paketen">Installation von benötigten Paketen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/python_installation.html#download-des-source-codes">Download des Source Codes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/python_installation.html#das-archiv-auspacken">Das Archiv auspacken</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/python_installation.html#source-code-konfigurieren">Source Code konfigurieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/python/python_installation.html#den-build-prozess-starten">Den Build-Prozess starten</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul>
@@ -3925,8 +4159,112 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="network.html">lib.network</a></li>
-<li class="toctree-l3"><a class="reference internal" href="orb.html">lib.orb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="network.html">lib.network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.ip_port_to_socket"><code class="docutils literal notranslate"><span class="pre">Network.ip_port_to_socket()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.family_to_string"><code class="docutils literal notranslate"><span class="pre">Network.family_to_string()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.ping"><code class="docutils literal notranslate"><span class="pre">Network.ping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.ping_port"><code class="docutils literal notranslate"><span class="pre">Network.ping_port()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.send_wol"><code class="docutils literal notranslate"><span class="pre">Network.send_wol()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.validate_inet_addr"><code class="docutils literal notranslate"><span class="pre">Network.validate_inet_addr()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.clean_uri"><code class="docutils literal notranslate"><span class="pre">Network.clean_uri()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Connections.monitor"><code class="docutils literal notranslate"><span class="pre">Connections.monitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Connections.unmonitor"><code class="docutils literal notranslate"><span class="pre">Connections.unmonitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Connections.check"><code class="docutils literal notranslate"><span class="pre">Connections.check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.HTTPDigestAuth"><code class="docutils literal notranslate"><span class="pre">Http.HTTPDigestAuth()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.post_json"><code class="docutils literal notranslate"><span class="pre">Http.post_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.get_json"><code class="docutils literal notranslate"><span class="pre">Http.get_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.get_text"><code class="docutils literal notranslate"><span class="pre">Http.get_text()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.download"><code class="docutils literal notranslate"><span class="pre">Http.download()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.get_binary"><code class="docutils literal notranslate"><span class="pre">Http.get_binary()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.response_status"><code class="docutils literal notranslate"><span class="pre">Http.response_status()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.response_headers"><code class="docutils literal notranslate"><span class="pre">Http.response_headers()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.response_cookies"><code class="docutils literal notranslate"><span class="pre">Http.response_cookies()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.response_object"><code class="docutils literal notranslate"><span class="pre">Http.response_object()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_client.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.open"><code class="docutils literal notranslate"><span class="pre">Tcp_client.open()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.connect"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.connected"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connected()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.send"><code class="docutils literal notranslate"><span class="pre">Tcp_client.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.close"><code class="docutils literal notranslate"><span class="pre">Tcp_client.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.socket"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.socket</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.set_callbacks"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.send"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.send_echo_off"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_off()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.send_echo_on"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_on()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.close"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.MODE_TEXT"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.MODE_TEXT_LINE"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT_LINE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.MODE_BINARY"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_BINARY</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.MODE_FIXED_LENGTH"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_FIXED_LENGTH</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.start"><code class="docutils literal notranslate"><span class="pre">Tcp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.listening"><code class="docutils literal notranslate"><span class="pre">Tcp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.send"><code class="docutils literal notranslate"><span class="pre">Tcp_server.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.disconnect"><code class="docutils literal notranslate"><span class="pre">Tcp_server.disconnect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.close"><code class="docutils literal notranslate"><span class="pre">Tcp_server.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server.start"><code class="docutils literal notranslate"><span class="pre">Udp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Udp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server.listening"><code class="docutils literal notranslate"><span class="pre">Udp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server.close"><code class="docutils literal notranslate"><span class="pre">Udp_server.close()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="orb.html">lib.orb</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="env.html">lib.env</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kn_to_kmh"><code class="docutils literal notranslate"><span class="pre">kn_to_kmh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_kn"><code class="docutils literal notranslate"><span class="pre">kmh_to_kn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.ms_to_kmh"><code class="docutils literal notranslate"><span class="pre">ms_to_kmh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_ms"><code class="docutils literal notranslate"><span class="pre">kmh_to_ms()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.mps_to_kmh"><code class="docutils literal notranslate"><span class="pre">mps_to_kmh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_mps"><code class="docutils literal notranslate"><span class="pre">kmh_to_mps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.mph_to_kmh"><code class="docutils literal notranslate"><span class="pre">mph_to_kmh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_mph"><code class="docutils literal notranslate"><span class="pre">kmh_to_mph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.ms_to_bft"><code class="docutils literal notranslate"><span class="pre">ms_to_bft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_bft"><code class="docutils literal notranslate"><span class="pre">kmh_to_bft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.bft_to_text"><code class="docutils literal notranslate"><span class="pre">bft_to_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.miles_to_meter"><code class="docutils literal notranslate"><span class="pre">miles_to_meter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.nauticalmiles_to_meter"><code class="docutils literal notranslate"><span class="pre">nauticalmiles_to_meter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.meter_to_miles"><code class="docutils literal notranslate"><span class="pre">meter_to_miles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.meter_to_nauticalmiles"><code class="docutils literal notranslate"><span class="pre">meter_to_nauticalmiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.f_to_c"><code class="docutils literal notranslate"><span class="pre">f_to_c()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.c_to_f"><code class="docutils literal notranslate"><span class="pre">c_to_f()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.degrees_to_direction_8"><code class="docutils literal notranslate"><span class="pre">degrees_to_direction_8()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.degrees_to_direction_16"><code class="docutils literal notranslate"><span class="pre">degrees_to_direction_16()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.location_name"><code class="docutils literal notranslate"><span class="pre">location_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.location_address"><code class="docutils literal notranslate"><span class="pre">location_address()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="tools.html">lib.tools</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.abs2rel"><code class="docutils literal notranslate"><span class="pre">Tools.abs2rel()</span></code></a></li>
@@ -3984,7 +4322,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="item.html#lib-item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="item.html#module-lib.item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="item.html#class-item">class Item</a></li>
@@ -3994,7 +4332,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="plugin.html#module-lib.plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="plugin.html#lib-plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -4004,15 +4342,103 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="shtime.html#lib-shtime">lib.shtime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shtime.html#module-lib.shtime">lib.shtime</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="logic.html#lib-logic">lib.logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="logic.html#module-lib.logic">lib.logic</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.html#lib-scheduler">lib.scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="env.html">lib.env</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kn_to_kmh"><code class="docutils literal notranslate"><span class="pre">kn_to_kmh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_kn"><code class="docutils literal notranslate"><span class="pre">kmh_to_kn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.ms_to_kmh"><code class="docutils literal notranslate"><span class="pre">ms_to_kmh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_ms"><code class="docutils literal notranslate"><span class="pre">kmh_to_ms()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.mps_to_kmh"><code class="docutils literal notranslate"><span class="pre">mps_to_kmh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_mps"><code class="docutils literal notranslate"><span class="pre">kmh_to_mps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.mph_to_kmh"><code class="docutils literal notranslate"><span class="pre">mph_to_kmh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_mph"><code class="docutils literal notranslate"><span class="pre">kmh_to_mph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.ms_to_bft"><code class="docutils literal notranslate"><span class="pre">ms_to_bft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_bft"><code class="docutils literal notranslate"><span class="pre">kmh_to_bft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.bft_to_text"><code class="docutils literal notranslate"><span class="pre">bft_to_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.miles_to_meter"><code class="docutils literal notranslate"><span class="pre">miles_to_meter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.nauticalmiles_to_meter"><code class="docutils literal notranslate"><span class="pre">nauticalmiles_to_meter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.meter_to_miles"><code class="docutils literal notranslate"><span class="pre">meter_to_miles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.meter_to_nauticalmiles"><code class="docutils literal notranslate"><span class="pre">meter_to_nauticalmiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.f_to_c"><code class="docutils literal notranslate"><span class="pre">f_to_c()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.c_to_f"><code class="docutils literal notranslate"><span class="pre">c_to_f()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.degrees_to_direction_8"><code class="docutils literal notranslate"><span class="pre">degrees_to_direction_8()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.degrees_to_direction_16"><code class="docutils literal notranslate"><span class="pre">degrees_to_direction_16()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.location_name"><code class="docutils literal notranslate"><span class="pre">location_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.location_address"><code class="docutils literal notranslate"><span class="pre">location_address()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tools.html">lib.tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.abs2rel"><code class="docutils literal notranslate"><span class="pre">Tools.abs2rel()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.dewpoint"><code class="docutils literal notranslate"><span class="pre">Tools.dewpoint()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.dt2js"><code class="docutils literal notranslate"><span class="pre">Tools.dt2js()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.dt2ts"><code class="docutils literal notranslate"><span class="pre">Tools.dt2ts()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.fetch_url"><code class="docutils literal notranslate"><span class="pre">Tools.fetch_url()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.ping"><code class="docutils literal notranslate"><span class="pre">Tools.ping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.rel2abs"><code class="docutils literal notranslate"><span class="pre">Tools.rel2abs()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.runtime"><code class="docutils literal notranslate"><span class="pre">Tools.runtime()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">lib.utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="utils.html#lib.utils.Utils"><code class="docutils literal notranslate"><span class="pre">Utils</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.check_hashed_password"><code class="docutils literal notranslate"><span class="pre">Utils.check_hashed_password()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.create_hash"><code class="docutils literal notranslate"><span class="pre">Utils.create_hash()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.execute_subprocess"><code class="docutils literal notranslate"><span class="pre">Utils.execute_subprocess()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_local_ipv4_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv4_address()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_local_ipv6_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv6_address()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_type"><code class="docutils literal notranslate"><span class="pre">Utils.get_type()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_float"><code class="docutils literal notranslate"><span class="pre">Utils.is_float()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_hash"><code class="docutils literal notranslate"><span class="pre">Utils.is_hash()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_hostname"><code class="docutils literal notranslate"><span class="pre">Utils.is_hostname()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_int"><code class="docutils literal notranslate"><span class="pre">Utils.is_int()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_ip"><code class="docutils literal notranslate"><span class="pre">Utils.is_ip()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_ipv4"><code class="docutils literal notranslate"><span class="pre">Utils.is_ipv4()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_ipv6"><code class="docutils literal notranslate"><span class="pre">Utils.is_ipv6()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_knx_groupaddress"><code class="docutils literal notranslate"><span class="pre">Utils.is_knx_groupaddress()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_mac"><code class="docutils literal notranslate"><span class="pre">Utils.is_mac()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.is_timeframe"><code class="docutils literal notranslate"><span class="pre">Utils.is_timeframe()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.string_to_list"><code class="docutils literal notranslate"><span class="pre">Utils.string_to_list()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.strip_quotes"><code class="docutils literal notranslate"><span class="pre">Utils.strip_quotes()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.strip_quotes_fromlist"><code class="docutils literal notranslate"><span class="pre">Utils.strip_quotes_fromlist()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.strip_square_brackets"><code class="docutils literal notranslate"><span class="pre">Utils.strip_square_brackets()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.to_bool"><code class="docutils literal notranslate"><span class="pre">Utils.to_bool()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.to_timeframe"><code class="docutils literal notranslate"><span class="pre">Utils.to_timeframe()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="utils.html#lib.utils.Version"><code class="docutils literal notranslate"><span class="pre">Version</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Version.check_list"><code class="docutils literal notranslate"><span class="pre">Version.check_list()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Version.compare"><code class="docutils literal notranslate"><span class="pre">Version.compare()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Version.format"><code class="docutils literal notranslate"><span class="pre">Version.format()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Version.to_list"><code class="docutils literal notranslate"><span class="pre">Version.to_list()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Version.to_string"><code class="docutils literal notranslate"><span class="pre">Version.to_string()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="utils.html#lib.utils.execute_subprocess"><code class="docutils literal notranslate"><span class="pre">execute_subprocess()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="utils.html#lib.utils.get_python_version"><code class="docutils literal notranslate"><span class="pre">get_python_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="utils.html#lib.utils.running_virtual"><code class="docutils literal notranslate"><span class="pre">running_virtual()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -4021,248 +4447,277 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ - Häufig gestellte Fragen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../release/release.html">Release Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_9_5.html">Release 1.9.5 - 31. März 2023</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_5.html#uberblick">Überblick</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#minimum-python-version">Minimum Python Version</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_10.html">Release 1.10 - 29. Jan 2024</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_10.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_5.html#anderungen-am-core">Änderungen am Core</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#allgmein">Allgmein</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#updates-in-the-core">Updates in the CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_10.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#updates-im-core">Updates im CORE</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_5.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#id1">Allgmein</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#neue-plugins">Neue Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#plugin-updates">Plugin Updates</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#outdated-plugins">Outdated Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_10.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#id2">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#outdated-plugins">Outdated Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#retired-plugins">Retired Plugins</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_5.html#weitere-anderungen">Weitere Änderungen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#tools">Tools</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#dokumentation">Dokumentation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_9_4.html">Release 1.9.4 - 14. März 2023</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_4.html#uberblick">Überblick</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#minimum-python-version">Minimum Python Version</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_4.html#anderungen-am-core">Änderungen am Core</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#allgmein">Allgmein</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#updates-in-the-core">Updates in the CORE</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_4.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#id1">Allgmein</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#neue-plugins">Neue Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#plugin-updates">Plugin Updates</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#outdated-plugins">Outdated Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#retired-plugins">Retired Plugins</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_4.html#weitere-anderungen">Weitere Änderungen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#tools">Tools</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#dokumentation">Dokumentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_10.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#tools">Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#dokumentation">Dokumentation</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_9_3.html">Release 1.9.3 - 31. Okt 2022</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_3.html#uberblick">Überblick</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_3.html#minimum-python-version">Minimum Python Version</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_3.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_09_5.html">Release 1.9.5 - 31. März 2023</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_5.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_3.html#allgemeine-anderungen">Allgemeine Änderungen</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_3.html#anderungen-am-core">Änderungen am Core</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_3.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_3.html#neue-plugins">Neue Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_3.html#plugin-updates">Plugin Updates</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_3.html#outdated-plugins">Outdated Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_3.html#retired-plugins">Retired Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_5.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#updates-in-the-core">Updates in the CORE</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_3.html#weitere-anderungen">Weitere Änderungen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_3.html#tools">Tools</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_3.html#dokumentation">Dokumentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_5.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#outdated-plugins">Outdated Plugins</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_9_2.html">Release 1.9.2 - 2. Mai 2022</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_2.html#uberblick">Überblick</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_2.html#minimum-python-version">Minimum Python Version</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_2.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_2.html#anderungen-am-core">Änderungen am Core</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_2.html#updates-in-the-core">Updates in the CORE</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_2.html#new-plugins">New Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_2.html#plugin-updates">Plugin Updates</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_2.html#outdated-plugins">Outdated Plugins</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_2.html#weitere-anderungen">Weitere Änderungen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_2.html#documentation">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_5.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#tools">Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_5.html#dokumentation">Dokumentation</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_9_1.html">Release 1.9.1 - 13. Feb 2022</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_1.html#uberblick">Überblick</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_1.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_1.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_09_4.html">Release 1.9.4 - 14. März 2023</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_4.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_1.html#anderungen-am-core">Änderungen am Core</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_1.html#updates-to-the-core">Updates to the CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_4.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#updates-in-the-core">Updates in the CORE</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_1.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_1.html#new-plugins">New Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_1.html#plugin-updates">Plugin Updates</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_1.html#outdated-plugins">Outdated Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_1.html#retired-plugins">Retired Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_4.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#outdated-plugins">Outdated Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#retired-plugins">Retired Plugins</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9_1.html#weitere-anderungen">Weitere Änderungen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_1.html#tools">Tools</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9_1.html#documentation">Documentation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_9.html">Release 1.9 - 28. Dezember 2021</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9.html#uberblick">Überblick</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../release/1_9.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_4.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#tools">Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_4.html#dokumentation">Dokumentation</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9.html#anderungen-am-core">Änderungen am Core</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9.html#bugfixes-in-the-core">Bugfixes in the CORE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9.html#updates-in-the-core">Updates in the CORE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_09_3.html">Release 1.9.3 - 31. Okt 2022</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_3.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_3.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_3.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9.html#new-plugins">New Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9.html#plugin-updates">Plugin Updates</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9.html#outdated-plugins">Outdated Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9.html#retired-plugins">Retired Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_3.html#allgemeine-anderungen">Allgemeine Änderungen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_3.html#anderungen-am-core">Änderungen am Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_3.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_3.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_3.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_3.html#outdated-plugins">Outdated Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_3.html#retired-plugins">Retired Plugins</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_9.html#weitere-anderungen">Weitere Änderungen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_9.html#documentation">Documentation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_8_2.html">Release 1.8.2 - 21. Februar 2021</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8_2.html#uberblick">Überblick</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8_2.html#minimum-python-version">Minimum Python Version</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8_2.html#anderungen-am-core">Änderungen am Core</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8_2.html#bugfixes-in-the-core">Bugfixes in the CORE</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8_2.html#plugin-updates">Plugin Updates</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8_2.html#weitere-anderungen">Weitere Änderungen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8_2.html#documentation">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_3.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_3.html#tools">Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_3.html#dokumentation">Dokumentation</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_8_1.html">Release 1.8.1 - 24. Januar 2021</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8_1.html#uberblick">Überblick</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8_1.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_09_2.html">Release 1.9.2 - 2. Mai 2022</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_2.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_2.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_2.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8_1.html#anderungen-am-core">Änderungen am Core</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8_1.html#bugfixes-in-the-core">Bugfixes in the CORE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8_1.html#updates-in-the-core">Updates in the CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_2.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_2.html#updates-in-the-core">Updates in the CORE</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8_1.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8_1.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_2.html#new-plugins">New Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_2.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_2.html#outdated-plugins">Outdated Plugins</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8_1.html#weitere-anderungen">Weitere Änderungen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8_1.html#documentation">Documentation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_8.html">Release 1.8 - 15. Januar 2021</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8.html#uberblick">Überblick</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#minimum-python-version">Minimum Python Version</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8.html#anderungen-am-core">Änderungen am Core</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#bugfixes-in-the-core">Bugfixes in the CORE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#updates-in-the-core">Updates in the CORE</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#new-plugins">New Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#plugin-updates-and-bugfixes">Plugin Updates and Bugfixes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#outdated-plugins">Outdated Plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#retired-plugins">Retired Plugins</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_8.html#weitere-anderungen">Weitere Änderungen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#tools">Tools</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../release/1_8.html#documentation">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_2.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_2.html#documentation">Documentation</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_7_2.html">Release 1.7.2 - 23. Juni 2020</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_7_2.html#uberblick">Überblick</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_7_2.html#anderungen-am-core">Änderungen am Core</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_7_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_09_1.html">Release 1.9.1 - 13. Feb 2022</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_1.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_1.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_1.html#minimum-python-version">Minimum Python Version</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_7_1.html">Release 1.7.1 - 14. April 2020</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_7_1.html#uberblick">Überblick</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_7_1.html#anderungen-am-core">Änderungen am Core</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_7_1.html#anderungen-bei-plugins">Änderungen bei Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_1.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_1.html#updates-to-the-core">Updates to the CORE</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_7.html">Release 1.7 - 6. April 2020</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_7.html#uberblick">Überblick</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_7.html#anderungen-am-core">Änderungen am Core</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_7.html#anderungen-bei-plugins">Änderungen bei Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_1.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_1.html#new-plugins">New Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_1.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_1.html#outdated-plugins">Outdated Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_1.html#retired-plugins">Retired Plugins</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_6_1.html">Release 1.6.1 - 10. August 2019</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_6_1.html#neue-plugins">Neue Plugins</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/1_6_1.html#plugin-erweiterungen">Plugin Erweiterungen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09_1.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_1.html#tools">Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09_1.html#documentation">Documentation</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_6.html">Release 1.6 - 11. Mai 2019</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_5_1.html">Release 1.5.1 - 15. Juli 2018</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_5.html">Release 1.5 - 8. Juli 2018</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_4_2.html">Release 1.4.2 - 2. Januar 2018</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_4_1.html">Release 1.4.1 - 23. Dezember 2017</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_4.html">Release 1.4 - 17. Dezember 2017</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_3.html">Release 1.3 - 5. August 2017</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_2.html">Release 1.2 - 16. Mai 2016</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_1.html">Release 1.1 - 13. April 2016</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../release/1_0_release_sh_py.html">Release 1.0 und davor</a><ul>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_09.html">Release 1.9 - 28. Dezember 2021</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../release/1_09.html#minimum-python-version">Minimum Python Version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09.html#bugfixes-in-the-core">Bugfixes in the CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09.html#new-plugins">New Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09.html#outdated-plugins">Outdated Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09.html#retired-plugins">Retired Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_09.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_09.html#documentation">Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_08_2.html">Release 1.8.2 - 21. Februar 2021</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08_2.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08_2.html#minimum-python-version">Minimum Python Version</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08_2.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08_2.html#bugfixes-in-the-core">Bugfixes in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08_2.html#plugin-updates">Plugin Updates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08_2.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08_2.html#documentation">Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_08_1.html">Release 1.8.1 - 24. Januar 2021</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08_1.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08_1.html#minimum-python-version">Minimum Python Version</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08_1.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08_1.html#bugfixes-in-the-core">Bugfixes in the CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08_1.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08_1.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08_1.html#plugin-updates">Plugin Updates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08_1.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08_1.html#documentation">Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_08.html">Release 1.8 - 15. Januar 2021</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#minimum-python-version">Minimum Python Version</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#bugfixes-in-the-core">Bugfixes in the CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#new-plugins">New Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#plugin-updates-and-bugfixes">Plugin Updates and Bugfixes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#outdated-plugins">Outdated Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#retired-plugins">Retired Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_08.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#tools">Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_08.html#documentation">Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_07_2.html">Release 1.7.2 - 23. Juni 2020</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_07_2.html#uberblick">Überblick</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_07_2.html#anderungen-am-core">Änderungen am Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_07_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_07_1.html">Release 1.7.1 - 14. April 2020</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_07_1.html#uberblick">Überblick</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_07_1.html#anderungen-am-core">Änderungen am Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_07_1.html#anderungen-bei-plugins">Änderungen bei Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_07.html">Release 1.7 - 6. April 2020</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_07.html#uberblick">Überblick</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_07.html#anderungen-am-core">Änderungen am Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_07.html#anderungen-bei-plugins">Änderungen bei Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_06_1.html">Release 1.6.1 - 10. August 2019</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_06_1.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_06_1.html#plugin-erweiterungen">Plugin Erweiterungen</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_06.html">Release 1.6 - 11. Mai 2019</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_01_and_newer.html">Release 1.1 bis 1.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/smarthomeng_older/1_05_1.html">Release 1.5.1 - 15. Juli 2018</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/smarthomeng_older/1_05.html">Release 1.5 - 8. Juli 2018</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/smarthomeng_older/1_04_2.html">Release 1.4.2 - 2. Januar 2018</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/smarthomeng_older/1_04_1.html">Release 1.4.1 - 23. Dezember 2017</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/smarthomeng_older/1_04.html">Release 1.4 - 17. Dezember 2017</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/smarthomeng_older/1_03.html">Release 1.3 - 5. August 2017</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/smarthomeng_older/1_02.html">Release 1.2 - 16. Mai 2016</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/smarthomeng_older/1_01.html">Release 1.1 - 13. April 2016</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_00_release_sh_py.html">Release 1.0 und davor</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../release/smarthome_py/1_0.html">Release 1.0 - November 14th, 2013</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../release/smarthome_py/1_0.html#with-contributions-from">With Contributions from:</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../release/smarthome_py/1_0.html#new-plugins">New Plugins</a></li>
@@ -4410,7 +4865,7 @@ by the converter tools/conf_to_yaml_converter.py.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2016-2023 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp.</p>
+    <p>&#169; Copyright 2016-2024 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp.</p>
   </div>
 
    

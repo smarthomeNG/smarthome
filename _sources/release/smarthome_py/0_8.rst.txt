@@ -14,7 +14,7 @@ New Plugins
 -  `Mail Plugin </plugins_doc/config/mail>`: sending (SMTP) and receiving (IMAP) mail.
 -  :doc:`RRD Plugin </plugins_doc/config/rrd>`: build round robin databases.
 -  :doc:`Russound Plugin </plugins_doc/config/russound>`: control a Russound audio device with RIO over TCP.
--  :doc:`Snom Plugin </plugins_doc/config/snom>`: to handle snom VOIP phones.
+-  Snom Plugin: to handle snom VOIP phones.
 
 Features
 ^^^^^^^^

@@ -1,6 +1,6 @@
 
-.. index:: Administrations GUI; Logiken
-.. index:: Logiken
+.. index:: Admin GUI; Logiken
+.. index:: Logiken; Admin GUI
 
 =======
 Logiken
@@ -37,6 +37,15 @@ Auf einem 2. Tab kann eine Liste der Systemlogiken eingesehen werden.
 
 .. index:: Logiken; Editor
 
+Ab **SmartHomeNG v1.10** können die Logiken in dieser Ansicht gruppiert werden. Wenn mindestens eine Logik einer Gruppe
+zugeordnet wird, ändert sich die Ansicht von einer flachen Liste, in eine Liste aufklappbarer Gruppen.
+
+.. image:: assets/logics-grouped.jpg
+   :class: screenshot
+
+
+|
+
 Logik Editor
 ============
 
@@ -53,6 +62,8 @@ Das Tab mit dem Code Editor ermöglicht den Python Code der Logik zu erfassen/zu
 .. image:: assets/logics-codeeditor.jpg
    :class: screenshot
 
+Ab **SmartHomeNG v1.10** sind Buttons zum Aktivieren/Deaktivieren und zum neu Laden der Logik hinzugekommen.
+
 
 Parameter Editor
 ----------------
@@ -62,6 +73,21 @@ für die Logik konfiguriert werden.
 
 .. image:: assets/logics-parametereditor.jpg
    :class: screenshot
+
+Ab **SmartHomeNG v1.10** sind Felder für die Beschreibung der Logik und zur Zuordnung zu einer bzw. mehreren Gruppen
+hinzu gekommen.
+
+Beschreibung
+~~~~~~~~~~~~
+
+Hier kann eine Beschreibung der Logik angegeben werden, die dann in der Liste der Logiken angezeigt wird.
+
+
+Gruppe(n)
+~~~~~~~~~
+
+Wenn mehrere Einträge als Liste eingegeben werden sollen, so sind die Einträge durch ein | Zeichen zu trennen.
+
 
 
 Cycle

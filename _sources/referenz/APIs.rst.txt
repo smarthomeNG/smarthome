@@ -11,7 +11,7 @@ Die Beschreibung ihrer Funktionalität ist hier beschrieben:
 
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :titlesonly:
 
    /lib/item
@@ -19,10 +19,20 @@ Die Beschreibung ihrer Funktionalität ist hier beschrieben:
 
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :titlesonly:
 
    /lib/shtime
    /lib/logic
    /lib/scheduler
 
+
+Folgende Libraries mit Hilfsfunktionen stehen zur Verfügung:
+
+.. toctree::
+   :maxdepth: 4
+   :titlesonly:
+
+   /lib/env
+   /lib/tools
+   /lib/utils
