@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.8' ]
+        python-version: [ '3.9' ]
     name: Python ${{ matrix.python-version }}
     steps:
       - name: update OS (Ubuntu)
@@ -20,6 +20,8 @@ jobs:
       - run: sudo apt-get install libudev-dev
       - run: sudo apt-get install librrd-dev libpython3-dev
       - run: sudo apt-get install gcc --only-upgrade
+      - run: sudo locale-gen de_DE.UTF-8
+      - run: locale -a
       - uses: actions/checkout@v2
       - name: Checkout SmartHomeNG DEVELOP Branch
         uses: actions/checkout@v2
