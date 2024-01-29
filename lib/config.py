@@ -513,7 +513,14 @@ def add_struct_to_item_template(path, struct_name, template, struct_dict, instan
         # add struct/template to temporary item(template) tree
         #logger.debug("- add_struct_to_item_template: struct_dict = {}".format(dict(struct_dict)))
         #logger.debug("- add_struct_to_item_template: struct '{}' to item '{}'".format(struct_name, path))
-        nested_put(template, path, copy.deepcopy(struct))
+        tmp_struct = copy.deepcopy(struct)
+        if 'name' in tmp_struct and isinstance(struct["name"], str):
+            from lib.smarthome import SmartHome
+            _sh = SmartHome.get_instance()
+            if Utils.to_bool(getattr(_sh, '_struct_strip_name', False)):
+                del tmp_struct['name']
+                logger.debug(f'removed "name" attribute from struct {struct_name}')
+        nested_put(template, path, tmp_struct)
         if instance != '' or True:
             # add instance to items added by template struct
             subtree = nested_get(template, path)
