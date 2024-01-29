@@ -118,11 +118,16 @@ Folgende Tipps sind in der Doku hinzugekommen:
   - :ref:`Ein Plugin aus develop installieren <Plugin_aus_develop>`
   - :ref:`SmartHomeNG umziehen <shng_umziehen>`
 
+|
 
+Neuerungen im Release v1.10.1
+-----------------------------
+
+*Hier kommen die Neuerungen des Releases v1.10.1 hin.*
 
 .. comment
 
-    Neuerungen im Release v1.10.1
+    Neuerungen im Release v1.10.x
     -----------------------------
 
     Ab dem Release v1.9.4 misst SmartHomeNG beim ersten Start die Geschwindigkeit der CPU, um je nach Geschwindigkeit
