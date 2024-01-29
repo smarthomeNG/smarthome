@@ -107,8 +107,10 @@ else:
     commit, commit_short, branch, describe = shngversion._get_git_data()
 if branch == 'master':
   release += ' (Stand ' + shngversion.get_shng_version_date() + ')'
+  tags.add('master_branch')
 else:
     release += ' (Stand ' + now.strftime("%-d. %B %Y") + ', commit '+commit_short + ')'
+    tags.add('develop_branch')
 #release = sphinx_bootstrap_theme.__version__
 
 plgrelease = shngversion.get_shng_plugins_version()
