@@ -11,7 +11,7 @@ sowie einige neue Plugins.
 
 |
 
-.. only: develop_branch
+.. only:: develop_branch
 
     .. note::
 
