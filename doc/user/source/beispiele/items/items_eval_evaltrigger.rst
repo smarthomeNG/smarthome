@@ -150,7 +150,7 @@ Enumeration über Liste
 
         heizung_status_string:
             type: str
-            eval: ['Ausgeschaltet','Heizung startet','Heizung läuft'][value]
+            eval: "['Ausgeschaltet','Heizung startet','Heizung läuft'][value]"
             eval_trigger: ..
 
 

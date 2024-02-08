@@ -140,7 +140,7 @@ auf andere Items beziehen.
 
 .. tip::
 
-   Im Abschnitt **Beispiele** sind auf der Seite :doc:`eval und eval_trigger Beispiele </beispiele/eval>`
+   Im Abschnitt **Beispiele** sind auf der Seite :doc:`eval und eval_trigger Beispiele </beispiele/items/items_eval_evaltrigger>`
    weitere ausführliche Beispiele zu finden.
 
 

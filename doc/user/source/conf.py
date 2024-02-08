@@ -19,6 +19,9 @@ import bin.shngversion as shngversion
 import plugins as pluginsversion
 
 import datetime
+import locale
+locale.setlocale(locale.LC_TIME, 'de_DE.utf8')
+#locale.setlocale(locale.LC_ALL, 'C')
 now = datetime.datetime.now()
 import calendar
 
@@ -102,15 +105,18 @@ if os.path.isfile(os.getcwd()+'/doc_version.flg'):
 else:
     release = shngversion.get_shng_docversion()
     commit, commit_short, branch, describe = shngversion._get_git_data()
-release += ' (Stand ' + shngversion.get_shng_version_date()
-if branch != 'master':
-    release += ', commit '+commit_short
-release += ')'
+if branch == 'master':
+  release += ' (Stand ' + shngversion.get_shng_version_date() + ')'
+  tags.add('master_branch')
+else:
+    release += ' (Stand ' + now.strftime("%-d. %B %Y") + ', commit '+commit_short + ')'
+    tags.add('develop_branch')
 #release = sphinx_bootstrap_theme.__version__
 
 plgrelease = shngversion.get_shng_plugins_version()
 plgbranch = pluginsversion.plugin_branch()
 if plgbranch != 'master':
+    copyright = u'2016-2024 SmartHomeNG Team  -  ACHTUNG: Dokumentation zum Develop Branch - Work in Progress'
     plgrelease += ' ' + plgbranch
 version = plgrelease
 

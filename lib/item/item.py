@@ -464,8 +464,9 @@ class Item():
         if self._cache:
             self._cache = os.path.join(self._sh._cache_dir, self._path)
             try:
-                self.__changed_by = 'Init:Cache'
                 self.__last_change, self._value = cache_read(self._cache, self.shtime.tzinfo())
+                self._value = self.cast(self._value)
+                self.__changed_by = 'Init:Cache'
                 self.__prev_change = self.__last_change
                 self.__updated_by = self.__changed_by
                 self.__triggered_by = 'N/A'
@@ -474,6 +475,8 @@ class Item():
 
                 # Write item value to log, if Item has attribute log_change set
                 self._log_on_change(self._value, self.__changed_by, 'Cache', None)
+            except ValueError:
+                logger.warning(f'Item {self._path}: cached value {self._value} does not match type {self._type}')
             except Exception as e:
                 if str(e).startswith('[Errno 2]'):
                     logger.info(f"Item {self._path}: No cached value: {e}")
@@ -2286,7 +2289,7 @@ class Item():
             try:
                 cache_write(self._cache, self._value)
             except Exception as e:
-                logger.warning("Item: {}: could update cache {}".format(self._path, e))
+                logger.warning("Item: {}: could not update cache {}".format(self._path, e))
 
         if self._autotimer_time and caller != 'Autotimer' and not self._fading:
             # cast_duration for fixed attribute

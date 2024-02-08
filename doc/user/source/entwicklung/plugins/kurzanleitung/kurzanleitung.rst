@@ -119,7 +119,7 @@ eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert
    :maxdepth: 5
    :titlesonly:
 
-   /referenz/plugins/plugin_typen/mqttplugin
+   /referenz/plugins/plugin_typen/mqttplugin_class
 
 |
 

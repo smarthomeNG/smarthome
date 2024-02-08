@@ -56,7 +56,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **Logiken**:
 
       - Die Liste der Logiken kann nun gruppiert angezeigt werden. Logiken können einer oder mehreren
-      Gruppen zugeordnet werden.
+        Gruppen zugeordnet werden.
       - Zu Logiken kann nun eine Beschreibung erfasst werden. Diese wird in der Liste der Logiken, sowie zu den
         verbundenen Logiken in den Item-Details angezeigt.
       - Zu den Gruppen können eine Titelzeile und eine Beschreibung gepflegt werden.
@@ -118,11 +118,16 @@ Folgende Tipps sind in der Doku hinzugekommen:
   - :ref:`Ein Plugin aus develop installieren <Plugin_aus_develop>`
   - :ref:`SmartHomeNG umziehen <shng_umziehen>`
 
+|
 
+Neuerungen im Release v1.10.1
+-----------------------------
+
+*Hier kommen die Neuerungen des Releases v1.10.1 hin.*
 
 .. comment
 
-    Neuerungen im Release v1.10.1
+    Neuerungen im Release v1.10.x
     -----------------------------
 
     Ab dem Release v1.9.4 misst SmartHomeNG beim ersten Start die Geschwindigkeit der CPU, um je nach Geschwindigkeit

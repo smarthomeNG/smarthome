@@ -1,14 +1,16 @@
 
-.. index:: Plugins; <Pluginname in Kleinbuchstaben>
-.. index:: <Pluginname in Kleinbuchstaben>
+.. index:: Plugins; Pluginname (in Kleinbuchstaben)
+.. index:: Pluginname (in Kleinbuchstaben)
 
 
 ===============================
-<Pluginname in Kleinbuchstaben>
+Pluginname (in Kleinbuchstaben)
 ===============================
 
 
-.. image:: webif/static/img/plugin_logo.<png, jpg oder svg>
+.. comment set image name and extension according to the image file you use for the plugin-logo
+
+.. image:: webif/static/img/plugin_logo.png
    :alt: plugin logo
    :width: 300px
    :height: 300px
@@ -39,43 +41,20 @@ werden, kann dieser Abschnitt entfallen.>
 Konfiguration
 =============
 
-Die Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
-unter :doc:`/plugins_doc/config/<Pluginname in Kleinbuchstaben>` beschrieben.
+.. comment Den Text **Pluginname (in Kleinbuchstaben)** durch :doc:`/plugins_doc/config/pluginname` ersetzen
 
+Die Plugin Parameter, die Informationen zur Item-spezifischen Konfiguration des Plugins und zur Logik-spezifischen
+Konfiguration sind unter **Pluginname (in Kleinbuchstaben)** beschrieben.
 
-plugin.yaml
------------
+Dort findet sich auch die Dokumentation zu Funktionen, die das Plugin evtl. bereit stellt.
 
-Zu den Informationen, welche Parameter in der ../etc/plugin.yaml konfiguriert werden können bzw. müssen, bitte
-bitte die Dokumentation :doc:`Dokumentation </plugins_doc/config/<Pluginname in Kleinbuchstaben>>` lesen, die aus
-den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
-
-<Hier können bei Bedarf ausführliche Beschreibungen zu den Parametern dokumentiert werden.>
-
-items.yaml
-----------
-
-Zu den Informationen, welche Attribute in der Item Konfiguration verwendet werden können bzw. müssen, bitte
-bitte die Dokumentation :doc:`Dokumentation </plugins_doc/config/<Pluginname in Kleinbuchstaben>>` lesen, die aus
-den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
-
-<Hier können bei Bedarf ausführliche Beschreibungen zu den Attributen dokumentiert werden.>
-
-logic.yaml
-----------
-
-Zu den Informationen, welche Konfigurationsmöglichkeiten für Logiken bestehen, bitte
-bitte die Dokumentation :doc:`Dokumentation </plugins_doc/config/<Pluginname in Kleinbuchstaben>>` lesen, die aus
-den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
 
 Funktionen
 ----------
 
-Zu den Informationen, welche Funktionen das Plugin bereitstellt (z.B. zur Nutzung in Logiken), bitte
-bitte die Dokumentation :doc:`Dokumentation </plugins_doc/config/<Pluginname in Kleinbuchstaben>>` lesen, die aus
-den Metadaten der plugin.yaml erzeugt wurde (siehe oben).
-
 <Hier können bei Bedarf ausführliche Beschreibungen zu den Funktionen dokumentiert werden.>
+
+<Sonst diesen Abschnitt löschen>
 
 |
 

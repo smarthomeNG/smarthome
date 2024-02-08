@@ -104,9 +104,12 @@ from lib.utils import Version
 # Update auf 1.9.5.5  wg. Modifikation von SmartPlugin und mqtt Modul (Datentyp 'dict/str')
 # Update auf 1.9.5.6  wg. Initialem Support für Zugriff auf Elemente von dict-/list-Items
 
-shNG_version = '1.9.5.6'
-shNG_branch = 'master'
-shNG_releasedate = '26. August 2023'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
+# Update auf 1.10.0   wg. Release
+# Update auf 1.10.0.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.10.0 Release"
+
+shNG_version = '1.10.0.1'
+shNG_branch = 'develop'
+shNG_releasedate = '29. Januar 2024'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
 # ---------------------------------------------------------------------------------
 FileBASE = None

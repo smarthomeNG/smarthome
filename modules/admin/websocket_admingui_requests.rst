@@ -11,8 +11,9 @@ Mit dem ``item`` Befehl kann ein Client die Änderung eines Item Wertes anforder
 Das Beispiel fordert an, das Item mit der id with the id ``wohnung.buero.schreibtischleuchte.onoff`` auf den
 Wert 0 (für Off) zu ändern:
 
-.. comment .. code-block:: JSON
-.. code::
+.. comment .. code::
+
+.. code-block:: json
 
   {
   "cmd":"item",
@@ -30,8 +31,8 @@ Mit dem ``monitor`` Befehl kann ein Client die aktuellen Werte einer Liste von I
 Die Liste der Items für die Werte angefordert werden, muss durch Kommata getrennt sein, wie es das
 folgende Beispiel zeigt:
 
-.. comment .. code-block:: JSON
-.. code::
+.. comment .. code::
+.. code-block:: json
 
   {
     "cmd":"monitor",
@@ -319,7 +320,8 @@ direkt nach dem Öffnen der Verbindung gesendet werden.
 
 Das folgende Beispiel zeigt, was ein Admin GUI v0.8.1 Client, welcher in einem Chrome Browser läuft, senden würde:
 
-.. code:: code-block:: JSON
+.. comment .. code-block:: JSON
+.. code::
 
   {
    "cmd": "identity",
