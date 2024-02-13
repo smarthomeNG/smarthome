@@ -153,25 +153,28 @@ class SmartHome():
         self._extern_conf_dir = BASE
 
         self._etc_dir = os.path.join(self._base_dir, 'etc')
+
+        # decide where to look for config files
+        if self.config_etc:
+            self._conf_dir = self._etc_dir
+        else:
+            self._conf_dir = self._base_dir
+
         self._var_dir = os.path.join(self._base_dir, 'var')
         self._lib_dir = os.path.join(self._base_dir, 'lib')
         self._plugins_dir = os.path.join(self._base_dir, 'plugins')
-        self._structs_dir = os.path.join(self._etc_dir, 'structs')
+        self._structs_dir = os.path.join(self._conf_dir, 'structs')
         self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
 
         self._env_logic_conf_basename = os.path.join(self._env_dir, 'logic')
-        self._items_dir = os.path.join(self._etc_dir, 'items' + os.path.sep)
-        self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
-        self._logic_dir = os.path.join(self._etc_dir, 'logics' + os.path.sep)
+        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
+        self._logic_conf_basename = os.path.join(self._conf_dir, 'logic')
+        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
         self._cache_dir = os.path.join(self._var_dir, 'cache' + os.path.sep)
         self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
 
-# TODO: the following are quite useless, as they are unused local variables.
-#       should these be class members?
-        _module_conf_basename = os.path.join(self._etc_dir, 'module')
-        _module_conf = ''  # is filled by module.py while reading the configuration file, needed by Backend plugin
-
-        _plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
+        self._module_conf_basename = os.path.join(self._etc_dir, 'module')
+        self._plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
 
 
     def create_directories(self):
@@ -188,7 +191,7 @@ class SmartHome():
         os.makedirs(os.path.join(self._var_dir, 'run'), mode=0o775, exist_ok=True)
 
 
-    def __init__(self, MODE, extern_conf_dir=''):
+    def __init__(self, MODE, extern_conf_dir='', config_etc=False):
         """
         Initialization of main smarthome object
         """
@@ -198,6 +201,8 @@ class SmartHome():
 
         # keep for checking on restart command
         self._mode = MODE
+
+        self._config_etc = config_etc
 
         self.initialize_vars()
         self.initialize_dir_vars()
@@ -230,10 +235,10 @@ class SmartHome():
 
         # reinitialize dir vars with path to extern configuration directory
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
-        self._items_dir = os.path.join(self._etc_dir, 'items' + os.path.sep)
-        self._functions_dir = os.path.join(self._etc_dir, 'functions' + os.path.sep)
-        self._logic_dir = os.path.join(self._etc_dir, 'logics' + os.path.sep)
-        self._scenes_dir = os.path.join(self._etc_dir, 'scenes' + os.path.sep)
+        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
+        self._functions_dir = os.path.join(self._conf_dir, 'functions' + os.path.sep)
+        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
+        self._scenes_dir = os.path.join(self._conf_dir, 'scenes' + os.path.sep)
         self._smarthome_conf_basename = os.path.join(self._etc_dir, 'smarthome')
         self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
         self._module_conf_basename = os.path.join(self._etc_dir, 'module')

@@ -43,12 +43,6 @@ Thumbs.db
 # Don't check in plugins to core repository
 /plugins/
 
-# Don't check in (old) config directories
-# or links to new config dirs
-items
-logics
-structs
-
 # don't check in requirements that are built each time SHNG starts
 requirements/all.txt
 requirements/base.txt
