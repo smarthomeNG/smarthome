@@ -84,7 +84,6 @@ arggroup.add_argument('-f', '--foreground', help='stay in the foreground', actio
 arggroup.add_argument('-q', '--quiet', help='reduce logging to the logfile - DEPRECATED use logging-configuration', action='store_true')
 args = argparser.parse_args()
 
-
 #####################################################################
 # Import Python Core Modules
 #####################################################################
@@ -259,8 +258,6 @@ if __name__ == '__main__':
     if args.config_dir is not None:
         extern_conf_dir = os.path.normpath(args.config_dir)
 
-    config_etc = args.config_etc is not None
-
     lib.backup.make_backup_directories(BASE)
 
     if args.restart:
@@ -287,7 +284,7 @@ if __name__ == '__main__':
             pass
         atexit.register(readline.write_history_file, histfile)
         readline.parse_and_bind("tab: complete")
-        sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir, config_etc=config_etc)
+        sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir, config_etc=args.config_etc)
         _sh_thread = threading.Thread(target=sh.start)
         _sh_thread.start()
         shell = code.InteractiveConsole(locals())
@@ -316,17 +313,17 @@ if __name__ == '__main__':
         MODE = 'foreground'
         pass
     elif args.create_backup:
-        fn = lib.backup.create_backup(extern_conf_dir, BASE, config_etc=config_etc)
+        fn = lib.backup.create_backup(extern_conf_dir, BASE, config_etc=args.config_etc)
         if fn:
             print("Backup of configuration created at: \n{}".format(fn))
         exit(0)
     elif args.create_backup_t:
-        fn = lib.backup.create_backup(extern_conf_dir, BASE, filename_with_timestamp=True, config_etc=config_etc)
+        fn = lib.backup.create_backup(extern_conf_dir, BASE, filename_with_timestamp=True, config_etc=args.config_etc)
         if fn:
             print("Backup of configuration created at: \n{}".format(fn))
         exit(0)
     elif args.restore_backup:
-        fn = lib.backup.restore_backup(extern_conf_dir, BASE, config_etc=config_etc)
+        fn = lib.backup.restore_backup(extern_conf_dir, BASE, config_etc=args.config_etc)
         if fn is not None:
             print("Configuration has been restored from: \n{}".format(fn))
             print("Restart SmartHomeNG to use the restored configuration")
@@ -339,6 +336,6 @@ if __name__ == '__main__':
     if MODE == 'debug':
         lib.daemon.write_pidfile(psutil.Process().pid, PIDFILE)
     # Starting SmartHomeNG
-    sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir, config_etc=config_etc)
+    sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir, config_etc=args.config_etc)
     sh.start()
 
