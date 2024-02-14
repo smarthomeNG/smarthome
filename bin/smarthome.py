@@ -76,7 +76,7 @@ arggroup.add_argument('-cb', '--create_backup', help='create backup of SmartHome
 arggroup.add_argument('-cbt', '--create_backup_t', help='create backup of SmartHomeNG configuration with a timestamp in the filename', action='store_true')
 arggroup.add_argument('-rb', '--restore_backup', help='restore backup of configuration to SmartHomeNG installation (yaml configuration only). CAUTION: Existing configuration is overwritten!', action='store_true')
 argparser.add_argument('-c', '--config_dir', help='use external config dir (should contain "etc", "logics" and "items" subdirectories)')
-argparser.add_argument('-e', '--config_etc', help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory')
+argparser.add_argument('-e', '--config_etc', help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory', default=False, action='store_true')
 
 arggroup.add_argument('-v', '--verbose', help='verbose (info output) logging to the logfile - DEPRECATED use logging-configuration', action='store_true')
 arggroup.add_argument('-d', '--debug', help='stay in the foreground with verbose output - DEPRECATED use logging-configuration', action='store_true')

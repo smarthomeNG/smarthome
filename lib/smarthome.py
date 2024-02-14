@@ -155,7 +155,7 @@ class SmartHome():
         self._etc_dir = os.path.join(self._base_dir, 'etc')
 
         # decide where to look for config files
-        if self.config_etc:
+        if self._config_etc:
             self._conf_dir = self._etc_dir
         else:
             self._conf_dir = self._base_dir
