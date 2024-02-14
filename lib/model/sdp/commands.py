@@ -67,10 +67,12 @@ class SDPCommands(object):
         self._cmd_class = command_obj_class
         self._params = {}
         self._params.update(kwargs)
+        self._parsed_commands = {}
 
         self._model = self._params.get('model', None)
 
         self._dt = {}
+        self._cust_dt = {}
         self._return_value = None
 
         self._read_dt_classes()
@@ -152,6 +154,20 @@ class SDPCommands(object):
         else:
             return None
 
+    def get_commandlist(self, cmd=None):
+        """ return list of (or single given) commands with command config for use eg. in webif """
+        if cmd:
+            return self._parsed_commands.get(cmd)
+        else:
+            return self._parsed_commands
+
+    def get_dtlist(self, custom=True):
+        """ return list of DT class names """
+        if custom:
+            return list(self._cust_dt.keys())
+        else:
+            return list(self._dt.keys())
+
     def _lookup(self, data, table, rev=False, ci=True):
         """
         try to lookup data from lookup dict <table>
@@ -209,10 +225,12 @@ class SDPCommands(object):
         Integrating custom classes into the DT module would change this for all
         loaded devices and name collisions could not be resolved.
         """
-        def _enum_dt_cls(mod):
+        def _enum_dt_cls(mod, custom=False):
             classes = [cls for cls in dir(mod) if cls[:3] == 'DT_']
             for cls in classes:
                 self._dt[cls] = getattr(mod, cls)
+                if custom:
+                    self._cust_dt[cls] = getattr(mod, cls)
 
         self._dt['Datatype'] = DT.Datatype
 
@@ -223,7 +241,7 @@ class SDPCommands(object):
         mod_str = self._params[PLUGIN_PATH] + '.datatypes'
         cust_mod = locate(mod_str)
         if cust_mod:
-            _enum_dt_cls(cust_mod)
+            _enum_dt_cls(cust_mod, True)
 
     def _flatten_cmds(self, cmds):
         def walk(node, node_name, parent=None, func=None):
@@ -429,6 +447,11 @@ class SDPCommands(object):
                 self.logger.error(f'importing command {cmd} found invalid datatype "{dev_datatype}", replacing with DT_raw. Check function of device')
                 dt_class = DT.DT_raw
             self._commands[cmd] = self._cmd_class(cmd, dt_class, **{'cmd': cmd_params, 'plugin': self._params})
+
+            # store in self.parsed_commands for access by webif
+            # skip sections only including section settings
+            if not cmd.endswith('.' + CMD_ATTR_ITEM_ATTRS):
+                self._parsed_commands[cmd] = cmd_dict
 
     def _parse_lookups(self, lookups):
         """

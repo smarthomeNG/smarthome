@@ -62,6 +62,10 @@ from lib.model.sdp.connection import SDPConnection
 from lib.model.sdp.protocol import SDPProtocol  # noqa
 
 
+class SDPResultError(OSError):
+    pass
+
+
 # noinspection PyUnresolvedReferences
 class SmartDevicePlugin(SmartPlugin):
     """
@@ -403,7 +407,7 @@ class SmartDevicePlugin(SmartPlugin):
             # parent(top_item) is sh.items
             if type(parent) is not type(item):
                 # reached top of item tree
-                return None
+                return
 
             if self.has_iattr(parent.conf, self._item_attrs.get('ITEM_ATTR_CUSTOM' + str(index), 'foo')):
                 return self.get_iattr_value(parent.conf, self._item_attrs.get('ITEM_ATTR_CUSTOM' + str(index), 'foo'))
@@ -612,7 +616,7 @@ class SmartDevicePlugin(SmartPlugin):
                     if not self.send_command(command, item(), custom=self._items_custom[item.property.path]):
                         self.logger.debug(f'Writing value "{item()}" from item {item.property.path} with command "{command}" failed, resetting item value')
                         item(item.property.last_value, self.get_shortname())
-                        return None
+                        return
 
                 elif item.property.path in self._items_read_all:
 
@@ -627,7 +631,7 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.debug(f'Triggering read_group {group}')
                     self.read_all_commands(group)
 
-    def send_command(self, command, value=None, **kwargs):
+    def send_command(self, command, value=None, return_result=False, **kwargs):
         """
         Sends the specified command to the device providing <value> as data
         Not providing data will issue a read command, trying to read the value
@@ -699,8 +703,12 @@ class SmartDevicePlugin(SmartPlugin):
         if result:
             by = kwargs.get('by')
             self.logger.debug(f'command {command} received result {result} by {by}')
-# changed value to result, as value is given by function call
-            self.on_data_received(by, result, command)
+
+            if return_result:
+                value, _ = self._process_received_data(result, command)
+                return value
+            else:
+                self.on_data_received(by, result, command)
 
         return True
 
@@ -744,28 +752,36 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.info(f'received data "{data}" from {by} for command {command} while suspended, ignoring.')
             return
 
-        assert(isinstance(commands, list))
-
         # process all commands
         for command in commands:
 
-            custom = None
-            if self.custom_commands:
-                custom = self._get_custom_value(command, data)
-
-            base_command = command
-            value = None
             try:
-                value = self._commands.get_shng_data(command, data)
-                if custom:
-                    command = command + CUSTOM_SEP + custom
-            except OSError as e:  # Exception as e:
-                self.logger.info(f'received data "{data}" for command {command}, error {e} occurred while converting. Discarding data.')
+                value, custom = self._process_received_data(data, command)
+            except SDPResultError:
+                pass
             else:
-                self.logger.debug(f'received data "{data}" for command {command} converted to value {value}')
                 self._dispatch_callback(command, value, by)
+                self._process_additional_data(command, data, value, custom, by)
 
-            self._process_additional_data(base_command, data, value, custom, by)
+    def _process_received_data(self, data, command):
+        """ convert received data and handle custom token """
+
+        custom = None
+        if self.custom_commands:
+            custom = self._get_custom_value(command, data)
+
+        value = None
+        try:
+            value = self._commands.get_shng_data(command, data)
+
+            if custom:
+                command = command + CUSTOM_SEP + custom
+        except OSError as e:  # Exception as e:
+            self.logger.info(f'received data "{data}" for command {command}, error {e} occurred while converting. Discarding data.')
+            raise SDPResultError
+        else:
+            self.logger.debug(f'received data "{data}" for command {command} converted to value {value}')
+            return value, custom
 
     def dispatch_data(self, command, value, by=None):
         """
@@ -827,7 +843,7 @@ class SmartDevicePlugin(SmartPlugin):
                 command, custom_value = command.split(CUSTOM_SEP)
                 if custom_value not in self._custom_values[self.custom_commands]:
                     self.logger.debug(f'custom value {custom_value} not in known custom values {self._custom_values[self.custom_commands]}')
-                    return None
+                    return
             except ValueError:
                 pass
 
@@ -841,7 +857,7 @@ class SmartDevicePlugin(SmartPlugin):
         if self._commands:
             return self._commands.get_lookup(lookup, mode)
         else:
-            return None
+            return
 
     def has_recursive_custom_attribute(self, index=1):
         rec = self._parameters.get(PLUGIN_ATTR_RECURSIVE, [])
@@ -947,18 +963,18 @@ class SmartDevicePlugin(SmartPlugin):
         At least PATTERN needs to be overwritten
         """
         if not self.custom_commands:
-            return None
+            return
         if not isinstance(data, str):
-            return None
+            return
         res = re.search(self._token_pattern, data)
         if not res:
             self.logger.debug(f'custom token not found in {data}, ignoring')
-            return None
+            return
         elif res[0] in self._custom_values[self.custom_commands]:
             return res[0]
         else:
             self.logger.debug(f'received custom token {res[0]}, not in list of known tokens {self._custom_values[self.custom_commands]}')
-            return None
+            return
 
     def _get_connection(self, conn_type=None, conn_classname=None, conn_cls=None, proto_type=None, proto_classname=None, proto_cls=None, name=None):
         """
@@ -988,14 +1004,14 @@ class SmartDevicePlugin(SmartPlugin):
 
         conn_cls = SDPConnection._get_connection_class(self, conn_cls, conn_classname, conn_type, **params)
         if not conn_cls:
-            return None
+            return
 
         # if protocol is specified, find second class
         if PLUGIN_ATTR_PROTOCOL in self._parameters:
 
             proto_cls = SDPConnection._get_protocol_class(self, proto_cls, proto_classname, proto_type, **params)
             if not proto_cls:
-                return None
+                return
 
             # set connection class in _params dict for protocol class to use
             self._parameters[PLUGIN_ATTR_CONNECTION] = conn_cls
@@ -1145,7 +1161,7 @@ class SmartDevicePlugin(SmartPlugin):
             cmd_module = sys.modules.get('lib.model.sdp.command', '')
             if not cmd_module:
                 self.logger.error('unable to get object handle of SDPCommand module')
-                return None
+                return
 
             cls = getattr(cmd_module, self._command_class, None)
 

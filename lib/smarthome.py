@@ -103,6 +103,9 @@ import lib.userfunctions as uf
 from lib.systeminfo import Systeminfo
 
 
+_sh_instance = None
+
+
 #####################################################################
 # Classes
 #####################################################################
@@ -198,6 +201,15 @@ class SmartHome():
         self.shng_status = {'code': 0, 'text': 'Initializing'}
         self._logger = logging.getLogger(__name__)
         self._logger_main = logging.getLogger(__name__)
+
+        global _sh_instance
+        if _sh_instance is not None:
+            import inspect
+            curframe = inspect.currentframe()
+            calframe = inspect.getouterframes(curframe, 4)
+            self._logger.critical("A second 'smarthome' object has been created. There should only be ONE instance of class 'smarthome'!!! Called from: {} ({})".format(calframe[1][1], calframe[1][3]))
+        else:
+            _sh_instance = self
 
         # keep for checking on restart command
         self._mode = MODE
@@ -1311,3 +1323,11 @@ class SmartHome():
 
         self._deprecated_warning('Shtime-API')
         return self.shtime.runtime()
+
+
+    @staticmethod
+    def get_instance():
+        """ returns the instance of running smarthome class """
+        global _sh_instance
+        return _sh_instance
+

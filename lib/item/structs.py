@@ -25,6 +25,7 @@ import os
 import copy
 
 import lib.shyaml as shyaml
+from lib.config import sanitize_items
 
 logger = logging.getLogger(__name__)
 
@@ -61,9 +62,8 @@ class Structs():
         result = {}
         for struct in self._struct_definitions:
             try:
-                plg_name, struct_name = struct.split('.')
-            except:
-                plg_name = ''
+                _, struct_name = struct.split('.')
+            except ValueError:
                 struct_name = struct
             if struct_name.startswith('_'):
                 self.logger.info(f"return_struct_definitions: Internal struct {struct}")
@@ -74,12 +74,9 @@ class Structs():
 
         return result
 
+# ==========================================================================
+# The following methods are used to read the struct definitions at startup
 
-    """
-    ==========================================================================
-    The following methods are used to read the struct definitions at startup
-    
-    """
 
     def load_definitions_from_etc(self):
         """
@@ -87,50 +84,47 @@ class Structs():
 
         - structs are read in from ../etc/struct.yaml by this procedure
         - further structs are read in from ../etc/struct_<prefix>.yaml by this procedure
-
         """
         self.load_struct_definitions_from_file(self.etc_dir, 'struct.yaml', '')
 
         # look for further struct files
-        fl = os.listdir(self.etc_dir)
-        for fn in fl:
-            if fn.startswith('struct_') and fn.endswith('.yaml'):
-                key_prefix = 'my.' + fn[7:-5]
-                self.load_struct_definitions_from_file(self.etc_dir, fn, key_prefix)
+        file_list = os.listdir(self.etc_dir)
+        for filename in file_list:
+            if filename.startswith('struct_') and filename.endswith('.yaml'):
+                key_prefix = 'my.' + filename[7:-5]
+                self.load_struct_definitions_from_file(self.etc_dir, filename, key_prefix)
         return
 
 
-    def migrate_one_file(self, fn: str, dest_fn: str):
+    def migrate_one_file(self, filename: str, dest_fn: str):
         """
 
-        :param fn: source filename
+        :param filename: source filename
         :param dest_fn: destination filename
-
         """
         import shutil
 
         if os.path.isfile(os.path.join(self.structs_dir, dest_fn)):
-            logger.warning(f"Cannot migrate structs definition file `{fn}` to structs directory. {dest_fn} already exists.")
+            self.logger.warning(f"Cannot migrate structs definition file `{filename}` to structs directory. {dest_fn} already exists.")
         else:
-            logger.notice(f"Migrating struct definition file from etc/{fn} to structs/{dest_fn}")
-            shutil.move(os.path.join(self.etc_dir, fn), os.path.join(self.structs_dir, dest_fn))
+            self.logger.notice(f"Migrating struct definition file from etc/{filename} to structs/{dest_fn}")
+            shutil.move(os.path.join(self.etc_dir, filename), os.path.join(self.structs_dir, dest_fn))
 
 
     def migrate_to_structs_dir(self):
         """
         Migrate structs definition files from ../etc directory to ../structs directory
-
         """
         fl = os.listdir(self.etc_dir)
-        for fn in fl:
-            if fn.startswith('struct_') and fn.endswith('.yaml'):
-                dest_fn = fn[7:]
-                self.migrate_one_file(fn, dest_fn)
+        for filename in fl:
+            if filename.startswith('struct_') and filename.endswith('.yaml'):
+                dest_fn = filename[7:]
+                self.migrate_one_file(filename, dest_fn)
 
-        fn = 'struct.yaml'
-        if os.path.isfile(os.path.join(self.etc_dir, fn)):
+        filename = 'struct.yaml'
+        if os.path.isfile(os.path.join(self.etc_dir, filename)):
             dest_fn = 'global_structs.yaml'
-            self.migrate_one_file(fn, dest_fn)
+            self.migrate_one_file(filename, dest_fn)
 
         return
 
@@ -140,21 +134,20 @@ class Structs():
         Read in all struct definitions from ../structs directory
 
         - structs are read in from ../structs/<name>.yaml by this procedure
-
         """
         self.load_struct_definitions_from_file(self.etc_dir, 'struct.yaml', '')
         if os.path.isdir(self.structs_dir):
             # look for struct files
-            fl = os.listdir(self.structs_dir)
-            for fn in fl:
-                if not(fn.startswith('.')) and fn.endswith('.yaml'):
-                    if fn == 'global_structs.yaml':
+            file_list = os.listdir(self.structs_dir)
+            for filename in file_list:
+                if not (filename.startswith('.')) and filename.endswith('.yaml'):
+                    if filename == 'global_structs.yaml':
                         key_prefix = ''
                     else:
-                        key_prefix = 'my.' + fn[:-5]
-                    self.load_struct_definitions_from_file(self.structs_dir, fn, key_prefix)
+                        key_prefix = 'my.' + filename[:-5]
+                    self.load_struct_definitions_from_file(self.structs_dir, filename, key_prefix)
         else:
-            logger.notice("../structs does not exist")
+            self.logger.notice("../structs does not exist")
         return
 
 
@@ -167,7 +160,6 @@ class Structs():
         - plugin-structs are read in from metadata file of plugins while loading plugins
         - other structs are read in from ../etc/struct.yaml by this procedure
         - further structs are read in from ../etc/struct_<prefix>.yaml by this procedure
-
         """
         import time
         totalstart = time.perf_counter()
@@ -196,7 +188,7 @@ class Structs():
             start = time.perf_counter()
             for struct_name in self._struct_definitions:
                 if struct_name not in self._finalized_structs:
-                    #self.logger.dbghigh(f"- processing struct '{struct_name}'")
+                    # self.logger.dbghigh(f"- processing struct '{struct_name}'")
 
                     if self.traverse_struct(struct_name):
                         do_resolve = True
@@ -226,24 +218,23 @@ class Structs():
         return
 
 
-    def load_struct_definitions_from_file(self, source_dir, fn, key_prefix):
+    def load_struct_definitions_from_file(self, source_dir, filename, key_prefix):
         """
         Loads struct definitions from a file
 
         :param source_dir: path to etc directory of SmartHomeNG
-        :param fn: filename to load struct definition(s) from
+        :param filename: filename to load struct definition(s) from
         :param key_prefix: prefix to be used when adding struct(s) to loaded definitions
-
         """
         if key_prefix == '':
-            self.logger.info(f"Loading struct file '{fn}' without key-prefix")
+            self.logger.info(f"Loading struct file '{filename}' without key-prefix")
         else:
-            self.logger.info(f"Loading struct file '{fn}' with key-prefix '{key_prefix}'")
+            self.logger.info(f"Loading struct file '{filename}' with key-prefix '{key_prefix}'")
 
-        # Read in item structs from ../source_dir/<fn>.yaml
-        struct_definitions = shyaml.yaml_load(os.path.join(source_dir, fn), ordered=True, ignore_notfound=True)
+        # Read in item structs from ../source_dir/<filename>.yaml
+        struct_definitions = shyaml.yaml_load(os.path.join(source_dir, filename), ordered=True, ignore_notfound=True)
 
-        # if valid struct definition file etc/<fn>.yaml ist found
+        # if valid struct definition file etc/<filename>.yaml ist found
         if struct_definitions is not None:
             if isinstance(struct_definitions, collections.OrderedDict):
                 for key in struct_definitions:
@@ -251,9 +242,14 @@ class Structs():
                         struct_name = key
                     else:
                         struct_name = key_prefix + '.' + key
-                    self.add_struct_definition('', struct_name, struct_definitions[key], source_dir)
+
+                    # cleanup struct data
+                    struct = struct_definitions[key]
+                    sanitize_items(struct, os.path.join(source_dir, filename))
+
+                    self.add_struct_definition('', struct_name, struct, source_dir)
             else:
-                self.logger.error(f"load_itemdefinitions(): Invalid content in {fn}: struct_definitions = '{struct_definitions}'")
+                self.logger.error(f"load_itemdefinitions(): Invalid content in {filename}: struct_definitions = '{struct_definitions}'")
 
         return
 
@@ -262,8 +258,8 @@ class Structs():
         """
         Add a single struct definition
 
-        called from load_struct_definitions_from_file when reading in item structs from ../etc/<fn>>.yaml,
-        ../structs/<fn>>.yaml or from lib.plugin when reading in plugin-metadata which contains structs
+        called from load_struct_definitions_from_file when reading in item structs from ../etc/<filename>>.yaml,
+        ../structs/<filename>>.yaml or from lib.plugin when reading in plugin-metadata which contains structs
 
         :param plugin_name: Name of the plugin if called from lib.plugin else an empty string
         :param struct_name: Name of the struct to add
@@ -275,7 +271,7 @@ class Structs():
         else:
             name = plugin_name + '.' + struct_name
 
-        #self.logger.debug(f"add_struct_definition: struct '{name}' = {dict(struct)}")
+        # self.logger.debug(f"add_struct_definition: struct '{name}' = {dict(struct)}")
         if self._struct_definitions.get(name, None) is None:
             self._struct_definitions[name] = struct
         else:
@@ -284,12 +280,10 @@ class Structs():
         return
 
 
-    """
-    ==========================================================================
-    The following methods are used to resolve nested struct definitions
-    after loading all struct definitions from file(s)
+#   ==========================================================================
+#   The following methods are used to resolve nested struct definitions
+#   after loading all struct definitions from file(s)
 
-    """
 
     def traverse_struct(self, struct_name):
         """
@@ -328,25 +322,25 @@ class Structs():
         structs_expanded = False
         for element in dict(node):
             if isinstance(node[element], dict):
-                #self.logger.dbghigh(f"process_struct_node: {spaces}node {element}:")
+                # self.logger.dbghigh(f"process_struct_node: {spaces}node {element}:")
                 newnode = self.process_struct_node(node[element], node_name=element, key_prefix=key_prefix, level=level+4)
                 if newnode is not None:
                     node[element] = newnode
                     structs_expanded = True
             elif element == 'struct':
                 self.logger.dbghigh(f"process_struct_node: {spaces}{node_name}: 'struct' attribute found: {node[element]}")
-                #self.logger.dbghigh(f"process_struct_node: {spaces}node   = {dict(node)}")
+                # self.logger.dbghigh(f"process_struct_node: {spaces}node   = {dict(node)}")
                 substruct_names = node[element]
                 if isinstance(substruct_names, str):
                     substruct_names = [substruct_names]
                 node = self.resolve_structs(node, node_name, substruct_names, key_prefix)
                 structs_expanded = True
-                #self.logger.dbghigh(f"process_struct_node: {spaces}node   = {dict(node)}")
+                # self.logger.dbghigh(f"process_struct_node: {spaces}node   = {dict(node)}")
                 del (node['struct'])
                 self.logger.dbghigh(f"process_struct_node: Done, removed 'struct' attribute from struct '{node_name}'")
             else:
                 pass
-                #self.logger.dbghigh(f"process_struct_node: {spaces}leaf {element}={node[element]}")
+                # self.logger.dbghigh(f"process_struct_node: {spaces}leaf {element}={node[element]}")
 
         if structs_expanded:
             return node
@@ -417,10 +411,10 @@ class Structs():
 
 
     def merge_structlists(self, l1, l2, key=''):
-        #if not self.struct_merge_lists:
-        #    self.logger.warning(f"merge_structlists: Not merging lists, key '{key}' value '{l2}' is ignored'")
-        #    return l1       # First wins
-        #else:
+        # if not self.struct_merge_lists:
+        #     self.logger.warning(f"merge_structlists: Not merging lists, key '{key}' value '{l2}' is ignored'")
+        #     return l1       # First wins
+        # else:
         if not isinstance(l1, list):
             l1 = [l1]
         if not isinstance(l2, list):
@@ -450,7 +444,7 @@ class Structs():
             True
 
         '''
-        #self.logger.warning("merge: source_name='{}', dest_name='{}'".format(source_name, dest_name))
+        # self.logger.warning("merge: source_name='{}', dest_name='{}'".format(source_name, dest_name))
         for key, value in source.items():
             if isinstance(value, collections.OrderedDict):
                 # get node or create one
@@ -470,5 +464,3 @@ class Structs():
                     if destination.get(key, None) is None:
                         destination[key] = str(value).replace('\n', '')
         return destination
-
-
