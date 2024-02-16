@@ -956,7 +956,7 @@ class Item():
 
     def id(self):
         """
-        Old method name - Use item.path() instead of item.id()
+        Old method name - Use item.property.path instead of item.id()
         """
         return self.property.path
 

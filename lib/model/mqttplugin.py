@@ -156,7 +156,7 @@ class MqttPlugin(SmartPlugin):
             if item is None:
                 item_path = '*no_item*'
             else:
-                item_path = item.path()
+                item_path = item.property.path
             self._subscribed_topics[topic][item_path] = {}
             self._subscribe_current_number += 1
             self._subscribed_topics[topic][item_path]['current'] = self._subscribe_current_number
