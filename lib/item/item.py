@@ -215,7 +215,8 @@ class Item():
         else:
             self._change_logger = logger.debug
 
-        if self._path.split('.')[-1] in dir(self):
+        mnames = [name for name in dir(self) if name[0] != '_']
+        if self._path.split('.')[-1] in mnames:
             logger.warning(f'Item {self._path} has a name with collides with Item class member. Unexpected behaviour might occur, renaming the item is recommended.')
 
         #############################################################
