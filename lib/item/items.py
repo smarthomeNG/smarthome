@@ -84,6 +84,8 @@ class Items():
 
     structs = None
 
+    _item_methods = [name for name in dir(Item) if name[0] != '_']
+
     def __init__(self, smarthome):
         self._sh = smarthome
         self.logger = logging.getLogger(__name__)
