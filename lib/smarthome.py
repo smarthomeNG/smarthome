@@ -32,7 +32,6 @@ __docformat__ = 'reStructuredText'
 #########################################################################
 
 
-
 #####################################################################
 # Check Python Version
 #####################################################################
@@ -59,7 +58,7 @@ import json
 import logging
 import logging.handlers
 import logging.config
-import platform
+import platform  # TODO: remove? unused
 import shutil
 
 import signal
@@ -68,12 +67,13 @@ import threading
 import time
 import traceback
 try:
-    import psutil
-except:
+    import psutil  # TODO: remove? unused
+except ImportError:
     pass
 
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
-PIDFILE= os.path.join(BASE,'var','run','smarthome.pid')
+PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
+
 
 #####################################################################
 # Import SmartHomeNG Modules
@@ -102,10 +102,6 @@ from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
 import lib.userfunctions as uf
 from lib.systeminfo import Systeminfo
 
-#import bin.shngversion
-#MODE = 'default'
-#VERSION = bin.shngversion.get_shng_version()
-
 
 _sh_instance = None
 
@@ -131,7 +127,6 @@ class SmartHome():
     # ---
 
     BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
-
 
 
     def initialize_vars(self):
@@ -161,42 +156,45 @@ class SmartHome():
         self._extern_conf_dir = BASE
 
         self._etc_dir = os.path.join(self._base_dir, 'etc')
+
+        # decide where to look for config files
+        if self._config_etc:
+            self._conf_dir = self._etc_dir
+        else:
+            self._conf_dir = self._base_dir
+
         self._var_dir = os.path.join(self._base_dir, 'var')
-        self._lib_dir = os.path.join(self._base_dir,'lib')
+        self._lib_dir = os.path.join(self._base_dir, 'lib')
         self._plugins_dir = os.path.join(self._base_dir, 'plugins')
-        self._structs_dir = os.path.join(self._base_dir, 'structs')
+        self._structs_dir = os.path.join(self._conf_dir, 'structs')
         self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
 
-        self._env_logic_conf_basename = os.path.join(self._env_dir ,'logic')
-        self._items_dir = os.path.join(self._base_dir, 'items'+os.path.sep)
-        self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
-        self._logic_dir = os.path.join(self._base_dir, 'logics'+os.path.sep)
-        self._cache_dir = os.path.join(self._var_dir,'cache'+os.path.sep)
-        self._log_conf_basename = os.path.join(self._etc_dir,'logging')
+        self._env_logic_conf_basename = os.path.join(self._env_dir, 'logic')
+        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
+        self._logic_conf_basename = os.path.join(self._conf_dir, 'logic')
+        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
+        self._cache_dir = os.path.join(self._var_dir, 'cache' + os.path.sep)
+        self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
 
-        _module_conf_basename = os.path.join(self._etc_dir, 'module')
-        _module_conf = ''  # is filled by module.py while reading the configuration file, needed by Backend plugin
-
-        _plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
-
-    #    _plugin_conf = ''	# is filled by plugin.py while reading the configuration file, needed by Backend plugin
+        self._module_conf_basename = os.path.join(self._etc_dir, 'module')
+        self._plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
 
 
     def create_directories(self):
         """
         Create directories used by SmartHomeNG if they don't exist
         """
-        os.makedirs(self._structs_dir, mode = 0o775, exist_ok=True)
+        os.makedirs(self._structs_dir, mode=0o775, exist_ok=True)
 
-        os.makedirs(self._var_dir, mode = 0o775, exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'backup'), mode = 0o775, exist_ok=True)
-        os.makedirs(self._cache_dir, mode = 0o775, exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'db'), mode = 0o775, exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'log'), mode = 0o775, exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'run'), mode = 0o775, exist_ok=True)
+        os.makedirs(self._var_dir, mode=0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'backup'), mode=0o775, exist_ok=True)
+        os.makedirs(self._cache_dir, mode=0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'db'), mode=0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'log'), mode=0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'run'), mode=0o775, exist_ok=True)
 
 
-    def __init__(self, MODE, extern_conf_dir=''):
+    def __init__(self, MODE, extern_conf_dir='', config_etc=False):
         """
         Initialization of main smarthome object
         """
@@ -215,6 +213,8 @@ class SmartHome():
 
         # keep for checking on restart command
         self._mode = MODE
+
+        self._config_etc = config_etc
 
         self.initialize_vars()
         self.initialize_dir_vars()
@@ -245,17 +245,17 @@ class SmartHome():
         # self.version = shngversion.get_shng_version()
         self.connections = None
 
-        #reinitialize dir vars with path to extern configuration directory
+        # reinitialize dir vars with path to extern configuration directory
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
-        self._items_dir = os.path.join(self._extern_conf_dir, 'items'+os.path.sep)
-        self._functions_dir = os.path.join(self._extern_conf_dir, 'functions'+os.path.sep)
-        self._logic_dir = os.path.join(self._extern_conf_dir, 'logics'+os.path.sep)
-        self._scenes_dir = os.path.join(self._extern_conf_dir, 'scenes'+os.path.sep)
-        self._smarthome_conf_basename = os.path.join(self._etc_dir,'smarthome')
+        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
+        self._functions_dir = os.path.join(self._conf_dir, 'functions' + os.path.sep)
+        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
+        self._scenes_dir = os.path.join(self._conf_dir, 'scenes' + os.path.sep)
+        self._smarthome_conf_basename = os.path.join(self._etc_dir, 'smarthome')
         self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
-        self._module_conf_basename = os.path.join(self._etc_dir,'module')
-        self._plugin_conf_basename = os.path.join(self._etc_dir,'plugin')
-        self._log_conf_basename = os.path.join(self._etc_dir,'logging')
+        self._module_conf_basename = os.path.join(self._etc_dir, 'module')
+        self._plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
+        self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
 
         self._pidfile = PIDFILE
 
@@ -273,7 +273,7 @@ class SmartHome():
             for attr in config:
                 if not isinstance(config[attr], dict):  # ignore sub items
                     vars(self)['_' + attr] = config[attr]
-            del(config)  # clean up
+            del config  # clean up
         else:
             # no valid smarthome.yaml found
             print("No base configuration - terminating SmartHomeNG")
@@ -287,8 +287,6 @@ class SmartHome():
         # (to ensure propper logging)
         if hasattr(self, '_tz'):
             self.shtime.set_tz(self._tz)
-            # self._tz is deleted later (work in progress)
-            #del(self._tz)
 
         #############################################################
         # test if needed Python packages are installed
@@ -313,7 +311,7 @@ class SmartHome():
         # get shng version information
         # shngversion.get_plugins_version() may only be called after logging is initialized
         import bin.shngversion as shngversion
-        #VERSION = shngversion.get_shng_version()
+        # VERSION = shngversion.get_shng_version()
         self.branch = shngversion.get_shng_branch()
         self.version = shngversion.get_shng_version()
         self.plugins_version = shngversion.get_plugins_version()
@@ -324,7 +322,7 @@ class SmartHome():
             # set _tz again (now with logging enabled),
             # so that shtime.set_tz can produce log output
             self.shtime.set_tz(self._tz)
-            del(self._tz)
+            del self._tz
 
         #############################################################
         # Fork process and write pidfile
@@ -332,7 +330,7 @@ class SmartHome():
             lib.daemon.daemonize(PIDFILE)
         else:
             lib.daemon.write_pidfile(os.getpid(), PIDFILE)
-            print("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
+            print(f"--------------------   Init SmartHomeNG {self.version}   --------------------")
 
         #############################################################
         # Write startup message to log(s)
@@ -340,23 +338,22 @@ class SmartHome():
         virtual_text = ''
         if lib.utils.running_virtual():
             virtual_text = ' in virtual environment'
-        self._logger_main.notice("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
+        self._logger_main.notice(f"--------------------   Init SmartHomeNG {self.version}   --------------------")
         self._logger_main.notice(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
-        #self._logger_main.notice(f" - on {platform.platform()} (pid={pid})")
         self._logger_main.notice(f" - operating system '{self.systeminfo.get_osname()}' (pid={pid})")
         if self.systeminfo.get_rasppi_info() == '':
             self._logger_main.notice(f" - on '{self.systeminfo.get_cpubrand()}'")
         else:
             self._logger_main.notice(f" - on '{self.systeminfo.get_rasppi_info()}'")
         if logging.getLevelName('NOTICE') == 31:
-            self._logger_main.notice(f" - Loglevel NOTICE is set to value {logging.getLevelName('NOTICE')} because handler of root logger is set to level WARNING or higher  -  Set level of handler '{self.logs.root_handler_name}' to 'NOTICE'!")
+            self._logger_main.notice(f" - Loglevel NOTICE is set to value {logging.getLevelName('NOTICE')} because handler of root logger is set to level WARNING or higher - Set level of handler '{self.logs.root_handler_name}' to 'NOTICE'!")
 
-        default_encoding = locale.getpreferredencoding() # returns cp1252 on windows
-        if not (default_encoding in  ['UTF8','UTF-8']):
-            self._logger.warning("Encoding should be UTF8 but is instead {}".format(default_encoding))
+        default_encoding = locale.getpreferredencoding()  # returns cp1252 on windows
+        if not (default_encoding in ['UTF8', 'UTF-8']):
+            self._logger.warning(f"Encoding should be UTF8 but is instead {default_encoding}")
 
         if self._extern_conf_dir != BASE:
-            self._logger.notice("Using config dir {}".format(self._extern_conf_dir))
+            self._logger.notice(f"Using config dir {self._extern_conf_dir}")
 
         #############################################################
         # Initialize multi-language support
@@ -369,11 +366,11 @@ class SmartHome():
         # Test if plugins are installed
         if not os.path.isdir(self._plugins_dir):
             self._logger.critical("Plugin folder does not exist!")
-            self._logger.critical("Please create folder '{}' and install plugins.".format(self._plugins_dir))
+            self._logger.critical(f"Please create folder '{self._plugins_dir}' and install plugins.")
             self._logger.critical("Aborting")
             exit(1)
         if not os.path.isdir(os.path.join(self._plugins_dir, 'database')):
-            self._logger.critical("No plugins found in folder '{}'. Please install plugins.".format(self._plugins_dir))
+            self._logger.critical(f"No plugins found in folder '{self._plugins_dir}'. Please install plugins.")
             self._logger.critical("Aborting")
             exit(1)
 
@@ -411,13 +408,13 @@ class SmartHome():
         self.shng_status = {'code': 2, 'text': 'Initializing: Requirements checked'}
 
         # Add Signal Handling
-#        signal.signal(signal.SIGHUP, self.reload_logics)
+        # signal.signal(signal.SIGHUP, self.reload_logics)
         signal.signal(signal.SIGINT, self.stop)
         signal.signal(signal.SIGTERM, self.stop)
 
         #############################################################
         # Check Time
-        while datetime.date.today().isoformat() < '2016-03-16':  # XXX update date
+        while datetime.date.today().isoformat() < '2024-01-01':  # XXX update date
             time.sleep(5)
             self._logger.info("Waiting for updated time.")
 
@@ -584,7 +581,7 @@ class SmartHome():
         for c in configs:
             default = os.path.join(self._base_dir, 'etc', c + YAML_FILE + DEFAULT_FILE)
             conf_basename = os.path.join(self._etc_dir, c)
-            if((c == 'logging' and not (os.path.isfile(conf_basename + YAML_FILE))) or
+            if ((c == 'logging' and not (os.path.isfile(conf_basename + YAML_FILE))) or
                (c != 'logging' and not (os.path.isfile(conf_basename + YAML_FILE)) and not (os.path.isfile(conf_basename + CONF_FILE)))):
                 if os.path.isfile(default):
                     shutil.copy2(default, conf_basename + YAML_FILE)
@@ -596,14 +593,14 @@ class SmartHome():
         """
         if conf_basename == '':
             conf_basename = self._log_conf_basename
-        #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+        # conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
 
         if not self.logs.configure_logging():
             conf_basename = self._log_conf_basename + YAML_FILE + '.default'
-            print(f"       Trying default logging configuration from:")
+            print("       Trying default logging configuration from:")
             print(f"       {conf_basename}")
             print()
-            #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
+            # conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
             if not self.logs.configure_logging('logging.yaml.default'):
                 print("ABORTING")
                 print()
@@ -656,7 +653,7 @@ class SmartHome():
         elif self.cpu_speed_class == 'medium':
             self.scheduler.set_worker_warn_count(35)
         else:
-            #leave it on standard (20 workers)
+            # leave it on standard (20 workers)
             pass
 
         #############################################################
@@ -704,7 +701,7 @@ class SmartHome():
         self.items.load_itemdefinitions(self._env_dir, self._items_dir, self._etc_dir, self._plugins_dir)
 
         self.item_count = self.items.item_count()
-        self._logger.info("Items initialization finished, {} items loaded".format(self.items.item_count()))
+        self._logger.info(f"Items initialization finished, {self.items.item_count()} items loaded")
         self.item_load_complete = True
 
         #############################################################
@@ -757,7 +754,7 @@ class SmartHome():
             try:
                 self.connections.poll()
             except Exception as e:
-                self._logger.exception("Connection polling failed: {}".format(e))
+                self._logger.exception(f"Connection polling failed: {e}")
 
 
     def stop(self, signum=None, frame=None):
@@ -792,14 +789,13 @@ class SmartHome():
         if threading.active_count() > 1:
             header_logged = False
             for thread in threading.enumerate():
-                if thread.name != 'Main' and thread.name[0] !=  '_' \
-                    and thread.name != 'modules.websocket.websocket_server' \
-                    and not thread.name.startswith('ThreadPoolExecutor'):
-                #if thread.name != 'Main' and thread.name[0] !=  '_':
+                if thread.name != 'Main' and thread.name[0] != '_' \
+                        and thread.name != 'modules.websocket.websocket_server' \
+                        and not thread.name.startswith('ThreadPoolExecutor'):
                     if not header_logged:
                         self._logger.warning("The following threads have not been terminated properly by their plugins (please report to the plugin's author):")
                         header_logged = True
-                    self._logger.warning("-Thread: {}, still alive".format(thread.name))
+                    self._logger.warning(f"-Thread: {thread.name}, still alive")
 #            if header_logged:
 #                self._logger.warning("SmartHomeNG stopped")
 #        else:
@@ -823,7 +819,7 @@ class SmartHome():
         if self._mode in ['foreground', 'debug', 'interactive']:
             if source != '':
                 source = ', initiated by ' + source
-            self._logger_main.notice(f"--------------------   SmartHomeNG should restart{source} but is in {self._mode} mode and thus will just try to stop  --------------------")
+            self._logger_main.notice(f"--------------------   SmartHomeNG should restart{source} but is in {self._mode} mode and thus will just try to stop --------------------")
             self.stop()
 
         if self.shng_status['code'] == 30:
@@ -855,25 +851,25 @@ class SmartHome():
             if thread.name.find("HTTPServer") == 0:
                 http_threads +=1
 
-        self._logger.info("list_threads: {} - Number of Threads: {} (CP Server={}, HTTPServer={}".format(txt, threading.activeCount(), cp_threads, http_threads))
+        self._logger.info(f"list_threads: {txt} - Number of Threads: {threading.activeCount()} (CP Server={cp_threads}, HTTPServer={http_threads}")
         for thread in threading.enumerate():
             if thread.name.find("CP Server") != 0 and thread.name.find("HTTPServer") != 0:
-                self._logger.info("list_threads: {} - Thread {}".format(txt, thread.name))
+                self._logger.info(f"list_threads: {txt} - Thread {thread.name}")
         return
 
 
     #################################################################
     # Item Methods
     #################################################################
+
     def __iter__(self):
-#        for child in self.__children:
-#            yield child
         return self.items.get_toplevel_items()
 
 
     #################################################################
     # Event Methods
     #################################################################
+
     def add_event_listener(self, events, method):
         """
         This Function adds listeners for a list of events. This function is called from
@@ -915,11 +911,12 @@ class SmartHome():
     #################################################################
     # Helper Methods
     #################################################################
+
     def _maintenance(self):
         self._logger.debug("_maintenance: Started")
         self._garbage_collection()
         references = sum(self._object_refcount().values())
-        self._logger.debug("_maintenance: Object references: {}".format(references))
+        self._logger.debug(f"_maintenance: Object references: {references}")
 
     def _excepthook(self, typ, value, tb):
         mytb = "".join(traceback.format_tb(tb))
@@ -927,12 +924,11 @@ class SmartHome():
 
     def _garbage_collection(self):
         c = gc.collect()
-        self._logger.debug("Garbage collector: collected {0} objects.".format(c))
+        self._logger.debug(f"Garbage collector: collected {c} objects.")
 
 
     def _export_threadinfo(self):
-
-        filename = os.path.join(self.base_dir, 'var', 'run','threadinfo.json')
+        filename = os.path.join(self.base_dir, 'var', 'run', 'threadinfo.json')
         if self._threadinfo_export:
             all_threads = []
             for t in threading.enumerate():
@@ -994,9 +990,9 @@ class SmartHome():
         else:
             return # if parameter is not defined
 
-        d_func = 'sh.'+str(sys._getframe(1).f_code.co_name)+'()'
+        d_func = 'sh.' + str(sys._getframe(1).f_code.co_name) + '()'
         if n_func != '':
-            n_func = '- use the '+n_func+' instead'
+            n_func = '- use the ' + n_func + ' instead'
         try:
             d_test = ' (' + str(sys._getframe(2).f_locals['self'].__module__) + ')'
         except:
@@ -1027,7 +1023,7 @@ class SmartHome():
             self.dep_id_list = []
         id_str = d_func + '|' + in_class + '|' + called_by
         if not id_str in self.dep_id_list:
-            self._logger.warning("DEPRECATED: Used function '{}', called in '{}' by '{}' {}".format(d_func, in_class, called_by, n_func))
+            self._logger.warning(f"DEPRECATED: Used function '{d_func}', called in '{in_class}' by '{called_by}' {n_func}")
             self.dep_id_list.append(id_str)
         return
 

@@ -79,7 +79,7 @@ def make_backup_directories(base_dir):
 
 
 
-def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before_restore=False):
+def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before_restore=False, config_etc=False):
     """
     Create a zip file containing the configuration of SmartHomeNG. The zip file is stored in var/backup
 
@@ -104,11 +104,17 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     backup_filename += '.zip'
 
     etc_dir = os.path.join(conf_base_dir, 'etc')
-    items_dir = os.path.join(conf_base_dir, 'items')
-    logic_dir = os.path.join(conf_base_dir, 'logics')
-    scenes_dir = os.path.join(conf_base_dir, 'scenes')
-    structs_dir = os.path.join(conf_base_dir, 'structs')
-    uf_dir = os.path.join(conf_base_dir, 'functions')
+
+    if config_etc:
+        conf_dir = etc_dir
+    else:
+        conf_dir = base_dir
+
+    items_dir = os.path.join(conf_dir, 'items')
+    logic_dir = os.path.join(conf_dir, 'logics')
+    scenes_dir = os.path.join(conf_dir, 'scenes')
+    structs_dir = os.path.join(conf_dir, 'structs')
+    uf_dir = os.path.join(conf_dir, 'functions')
 
 
     # create new zip file
@@ -237,7 +243,7 @@ def backup_directory(backupzip, source_dir, extenstion='.yaml'):
     return
 
 
-def restore_backup(conf_base_dir, base_dir):
+def restore_backup(conf_base_dir, base_dir, config_etc=False):
     """
     Restore configuration from a zip-archive to the SmartHomeNG instance.
 
@@ -255,14 +261,20 @@ def restore_backup(conf_base_dir, base_dir):
     logger.info(f"Beginning restore of configuration")
 
     make_backup_directories(base_dir)
-    restore_dir = os.path.join(base_dir, 'var','restore')
+    restore_dir = os.path.join(base_dir, 'var', 'restore')
 
     etc_dir = os.path.join(conf_base_dir, 'etc')
-    items_dir = os.path.join(conf_base_dir, 'items')
-    logic_dir = os.path.join(conf_base_dir, 'logics')
-    scenes_dir = os.path.join(conf_base_dir, 'scenes')
-    structs_dir = os.path.join(conf_base_dir, 'structs')
-    uf_dir = os.path.join(conf_base_dir, 'functions')
+
+    if config_etc:
+        conf_dir = etc_dir
+    else:
+        conf_dir = base_dir
+
+    items_dir = os.path.join(conf_dir, 'items')
+    logic_dir = os.path.join(conf_dir, 'logics')
+    scenes_dir = os.path.join(conf_dir, 'scenes')
+    structs_dir = os.path.join(conf_dir, 'structs')
+    uf_dir = os.path.join(conf_dir, 'functions')
 
     archive_file = ''
     for filename in os.listdir(restore_dir):
@@ -284,7 +296,7 @@ def restore_backup(conf_base_dir, base_dir):
 
     logger.notice(f"Restoring configuration from file {restorezip_filename}")
 
-    logger.info(f"Creating a backup of the actual configuration before restoring configuration from zip-file")
+    logger.info(f"Creating a backup of the current configuration before restoring configuration from zip-file")
     create_backup(conf_base_dir, base_dir, True, True)
     overwrite = True
 

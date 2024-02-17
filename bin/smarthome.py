@@ -27,6 +27,7 @@
 #####################################################################
 # Check mimimum Python Version
 #####################################################################
+from hashlib import new
 import sys
 if sys.hexversion < 0x03080000:
     print()
@@ -75,13 +76,13 @@ arggroup.add_argument('-cb', '--create_backup', help='create backup of SmartHome
 arggroup.add_argument('-cbt', '--create_backup_t', help='create backup of SmartHomeNG configuration with a timestamp in the filename', action='store_true')
 arggroup.add_argument('-rb', '--restore_backup', help='restore backup of configuration to SmartHomeNG installation (yaml configuration only). CAUTION: Existing configuration is overwritten!', action='store_true')
 argparser.add_argument('-c', '--config_dir', help='use external config dir (should contain "etc", "logics" and "items" subdirectories)')
+argparser.add_argument('-e', '--config_etc', help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory', default=False, action='store_true')
 
 arggroup.add_argument('-v', '--verbose', help='verbose (info output) logging to the logfile - DEPRECATED use logging-configuration', action='store_true')
 arggroup.add_argument('-d', '--debug', help='stay in the foreground with verbose output - DEPRECATED use logging-configuration', action='store_true')
 arggroup.add_argument('-f', '--foreground', help='stay in the foreground', action='store_true')
 arggroup.add_argument('-q', '--quiet', help='reduce logging to the logfile - DEPRECATED use logging-configuration', action='store_true')
 args = argparser.parse_args()
-
 
 #####################################################################
 # Import Python Core Modules
@@ -91,9 +92,10 @@ import signal
 import subprocess
 import threading
 import time
+from pathlib import Path
 try:
     import psutil
-except:
+except ImportError:
     pass
 
 
@@ -107,6 +109,51 @@ PIDFILE= os.path.join(BASE,'var','run','smarthome.pid')
 # Only used for Version Check in Plugins to decide if a logger must be explicitly declared
 import bin.shngversion
 VERSION = bin.shngversion.get_shng_version()
+
+
+# #############################################################
+# # test for new directory setup and migrate
+# #############################################################
+
+# etc_dir = os.path.join(BASE, 'etc')
+
+# old_dirs = {
+#     'items': os.path.join(BASE, 'items'),
+#     'logics': os.path.join(BASE, 'logics'),
+#     'structs': os.path.join(BASE, 'structs'),
+#     'scenes': os.path.join(BASE, 'scenes'),
+#     'functions': os.path.join(BASE, 'functions')
+# }
+
+# new_dirs = {
+#     'items': os.path.join(etc_dir, 'items'),
+#     'logics': os.path.join(etc_dir, 'logics'),
+#     'structs': os.path.join(etc_dir, 'structs'),
+#     'scenes': os.path.join(etc_dir, 'scenes'),
+#     'functions': os.path.join(etc_dir, 'functions')
+# }
+
+# for conf in old_dirs:
+#     odir = Path(old_dirs[conf])
+#     ndir = Path(new_dirs[conf])
+#     err_files = []
+
+#     if odir.exists() and odir.is_dir():
+#         print(f'Migrating {conf} dir {odir} to {ndir}...')
+#         ndir.mkdir(exist_ok=True)
+#         for file in odir.glob('*.*'):
+#             target = ndir.joinpath(file.name)
+#             if target.exists():
+#                 err_files.append(file.name)
+#             else:
+#                 file.rename(ndir.joinpath(file.name))
+
+#         if err_files:
+#             print(f"While migrating {conf} dirs, the following files could not be moved:")
+#             print(", ".join(err_files))
+#             print("Please check/move files manually")
+#         else:
+#             odir.rmdir()
 
 
 #############################################################
@@ -180,9 +227,6 @@ MODE = 'default'
 #TZ = gettz('UTC')
 
 
-
-
-
 #####################################################################
 # Private Methods
 #####################################################################
@@ -240,7 +284,7 @@ if __name__ == '__main__':
             pass
         atexit.register(readline.write_history_file, histfile)
         readline.parse_and_bind("tab: complete")
-        sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir)
+        sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir, config_etc=args.config_etc)
         _sh_thread = threading.Thread(target=sh.start)
         _sh_thread.start()
         shell = code.InteractiveConsole(locals())
@@ -269,17 +313,17 @@ if __name__ == '__main__':
         MODE = 'foreground'
         pass
     elif args.create_backup:
-        fn = lib.backup.create_backup(extern_conf_dir, BASE)
+        fn = lib.backup.create_backup(extern_conf_dir, BASE, config_etc=args.config_etc)
         if fn:
             print("Backup of configuration created at: \n{}".format(fn))
         exit(0)
     elif args.create_backup_t:
-        fn = lib.backup.create_backup(extern_conf_dir, BASE, filename_with_timestamp=True)
+        fn = lib.backup.create_backup(extern_conf_dir, BASE, filename_with_timestamp=True, config_etc=args.config_etc)
         if fn:
             print("Backup of configuration created at: \n{}".format(fn))
         exit(0)
     elif args.restore_backup:
-        fn = lib.backup.restore_backup(extern_conf_dir, BASE)
+        fn = lib.backup.restore_backup(extern_conf_dir, BASE, config_etc=args.config_etc)
         if fn is not None:
             print("Configuration has been restored from: \n{}".format(fn))
             print("Restart SmartHomeNG to use the restored configuration")
@@ -292,6 +336,6 @@ if __name__ == '__main__':
     if MODE == 'debug':
         lib.daemon.write_pidfile(psutil.Process().pid, PIDFILE)
     # Starting SmartHomeNG
-    sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir)
+    sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir, config_etc=args.config_etc)
     sh.start()
 

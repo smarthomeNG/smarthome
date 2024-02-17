@@ -141,3 +141,15 @@ Neuerungen im Release v1.10.1
 
     Die vollständigen Änderungen können in den :doc:`Release Notes </release/1_9_4>` nachgelesen werden.
 
+  - **Neues Layout der Konfiguration**:
+
+    - SmartHomeNG ermöglicht wahlweise, ein Layout der Konfiguration zu nutzen,
+      dass sich näher an der klassischen Dateistruktur von Unix/Linux anpasst.
+
+      Dabei befinden sich alle Verzeichniss mit nutzergenerierter Konfiguration
+      unterhalb von `etc/`, also `items/`, `logics/`, `structs/`, `scenes/` und
+      `functions/`.
+
+    - Das neue Layout wird durch den Kommandozeilenschalter `-e` oder
+      `--config_etc` aktiviert. Dies muss bei jedem Start angegeben werden.
+

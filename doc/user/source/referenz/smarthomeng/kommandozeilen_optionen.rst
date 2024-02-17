@@ -33,6 +33,10 @@ smarthome.py kann mit folgenden Kommandozeilen Optionen gestartet werden:
 | -c         | --config_dir         | Ein externes Konfigurations-Verzeichnis benutzen. Dieses Verzeichnis sollte    |
 |            |                      | die Unter-Verzeichnisse "etc", "items", "logics" and "scenes" enthalten.       |
 +------------+----------------------+--------------------------------------------------------------------------------+
+| -e         | --config_etc         | Die Verzeichnisse mit benutzerdefinierter Konfiguration (items, structs,       |
+|            |                      | logics, scenes, uf) unterhalb von etc suchen                                   |
+|            |                      | (/etc/items/ statt /items/, /etc/structs/ statt /structs/ usw.)                |
++------------+----------------------+--------------------------------------------------------------------------------+
 | -v         | --verbose            | Ausführliches Logging - DEPRECATED bitte die Logging-Konfiguration benutzen    |
 +------------+----------------------+--------------------------------------------------------------------------------+
 | -d         | --debug              | Im Vordergrund bleiben mit ausführlichem Logging - DEPRECATED bitte die        |
