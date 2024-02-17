@@ -157,20 +157,20 @@ class SmartPlugin(SmartObject, Utils):
         :return: True, if the information has been added
         :rtype: bool
         """
-        if item.path() in self._plg_item_dict:
+        if item.property.path in self._plg_item_dict:
 
             # if called again (e.g. from lib/item/item.py) with updating == True,
             # update "is_updating" key...
             if updating:
-                self.logger.debug(f"add_item called with existing item {item.path()}, updating stored data: is_updating enabled")
+                self.logger.debug(f"add_item called with existing item {item.property.path}, updating stored data: is_updating enabled")
                 self.register_updating(item)
                 return True
 
             # otherwise return error
-            self.logger.warning(f"Trying to add an existing item: {item.path()}")
+            self.logger.warning(f"Trying to add an existing item: {item.property.path}")
             return False
 
-        self._plg_item_dict[item.path()] = {
+        self._plg_item_dict[item.property.path] = {
             'item': item,
             'is_updating': updating,
             'mapping': mapping,
@@ -194,27 +194,27 @@ class SmartPlugin(SmartObject, Utils):
         :return: True, if the information has been removed
         :rtype: bool
         """
-        if item.path() not in self._plg_item_dict:
+        if item.property.path not in self._plg_item_dict:
             # There is no information stored for that item
-            self.logger.debug(f'item {item.path()} not associated to this plugin, doing nothing')
+            self.logger.debug(f'item {item.property.path} not associated to this plugin, doing nothing')
             return False
 
         # check if plugin is running
         if self.alive:
             if self._stop_on_item_change:
-                self.logger.debug(f'stopping plugin for removal of item {item.path()}')
+                self.logger.debug(f'stopping plugin for removal of item {item.property.path}')
                 self.stop()
             else:
-                self.logger.debug(f'not stopping plugin for removal of item {item.path()}')
+                self.logger.debug(f'not stopping plugin for removal of item {item.property.path}')
 
-        if item.path() == self._suspend_item_path:
+        if item.property.path == self._suspend_item_path:
             self.logger.warning(f'trying to remove suspend item {item}. Disabling suspend item function')
             self._suspend_item = None
             self._suspend_item_path = ''
 
         # remove data from item_dict early in case of concurrent actions
-        data = self._plg_item_dict[item.path()]
-        del self._plg_item_dict[item.path()]
+        data = self._plg_item_dict[item.property.path]
+        del self._plg_item_dict[item.property.path]
 
         # remove item from self._item_lookup_dict if present
         mapping = data.get('mapping')
@@ -259,9 +259,9 @@ class SmartPlugin(SmartObject, Utils):
         :param item: item object
         :type item: item
         """
-        if item.path() not in self._plg_item_dict:
+        if item.property.path not in self._plg_item_dict:
             self.add_item(item)
-        self._plg_item_dict[item.path()]['is_updating'] = True
+        self._plg_item_dict[item.property.path]['is_updating'] = True
 
     def get_item_config(self, item):
         """
@@ -276,7 +276,7 @@ class SmartPlugin(SmartObject, Utils):
         if isinstance(item, str):
             item_path = item
         else:
-            item_path = item.path()
+            item_path = item.property.path
         return self._plg_item_dict[item_path].get('config_data')
 
     def get_item_mapping(self, item):
@@ -294,7 +294,7 @@ class SmartPlugin(SmartObject, Utils):
         if isinstance(item, str):
             item_path = item
         else:
-            item_path = item.path()
+            item_path = item.property.path
         return self._plg_item_dict[item_path].get('mapping')
 
     def get_item_mapping_list(self):

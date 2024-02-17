@@ -215,6 +215,9 @@ class Item():
         else:
             self._change_logger = logger.debug
 
+        if self._path.split('.')[-1] in _items_instance._item_methods:
+            logger.warning(f'Name of item {self._path} collides with Item class member. Unexpected behaviour might occur, renaming the item is recommended.')
+
         #############################################################
         # Initialize attribute assignment compatibility
         #############################################################
@@ -956,7 +959,7 @@ class Item():
 
     def id(self):
         """
-        Old method name - Use item.path() instead of item.id()
+        Old method name - Use item.property.path instead of item.property.path
         """
         return self.property.path
 
@@ -2278,10 +2281,10 @@ class Item():
                 self.__trigger_logics(trigger_source_details)
             for item in self._items_to_trigger:
                 args = {'value': value, 'source': self._path}
-                self._sh.trigger(name='items.' + item.id(), obj=item.__run_eval, value=args, by=caller, source=source, dest=dest)
+                self._sh.trigger(name='items.' + item.property.path, obj=item.__run_eval, value=args, by=caller, source=source, dest=dest)
             for item in self._hysteresis_items_to_trigger:
                 args = {'value': value, 'source': self._path}
-                self._sh.trigger(name='items.' + item.id(), obj=item.__run_hysteresis, value=args, by=caller, source=source, dest=dest)
+                self._sh.trigger(name='items.' + item.property.path, obj=item.__run_hysteresis, value=args, by=caller, source=source, dest=dest)
             # ms: call run_on_change() from here - after eval is run
             self.__run_on_change(value)
 

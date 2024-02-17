@@ -84,6 +84,8 @@ class Items():
 
     structs = None
 
+    _item_methods = [name for name in dir(Item) if name[0] != '_']
+
     def __init__(self, smarthome):
         self._sh = smarthome
         self.logger = logging.getLogger(__name__)
@@ -274,15 +276,15 @@ class Items():
         :type item: object
         """
 
-        if item.path() not in self.__items:
+        if item.property.path not in self.__items:
             return
         
         # remove item from Items data
         try:
-            del self.__item_dict[item.path()]
-            self.__items.remove(item.path())
+            del self.__item_dict[item.property.path]
+            self.__items.remove(item.property.path)
         except Exception as e:
-            self.logger.warning(f"Error occured while trying to remove item {item.path()}: {e}")
+            self.logger.warning(f"Error occured while trying to remove item {item.property.path}: {e}")
 
         # remove item bindings in plugins
         if item.remove():
@@ -290,7 +292,7 @@ class Items():
             # delete item
             del item
         else:
-            self.logger.warning(f"Item {item.path()} could not be removed due to incompatible plugins.")
+            self.logger.warning(f"Item {item.property.path} could not be removed due to incompatible plugins.")
 
 
     def get_toplevel_items(self):
