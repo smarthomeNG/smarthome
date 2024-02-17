@@ -1194,7 +1194,7 @@ class Metadata():
         """
         global all_prefixes_tuple
 
-        self._log_premsg = "Item '{}', attribute '{}': ".format(item.id(), attribute)
+        self._log_premsg = "Item '{}', attribute '{}': ".format(item.property.path, attribute)
 
         if all_prefixes_tuple is None:
             # Generate tuple on first call to this method
@@ -1213,8 +1213,8 @@ class Metadata():
                     attr_definition['_prefix'] = True
                     break
             if not(attribute.startswith(all_prefixes_tuple)):
-                if not (item.id().startswith('env.core.') or item.id().startswith('env.system.')):
-                    logger.notice(f"Item '{item.id()}', attribute '{attribute}': Attribute is undefined and has value '{value}' {def_in}")
+                if not (item.property.path.startswith('env.core.') or item.property.path.startswith('env.system.')):
+                    logger.notice(f"Item '{item.property.path}', attribute '{attribute}': Attribute is undefined and has value '{value}' {def_in}")
                 return value
 
         attr_definition['_def_in'] = def_in
@@ -1231,7 +1231,7 @@ class Metadata():
             default_value = attr_definition.get('default', None)
             if default_value is not None:
                 additional_text = ", using default value '" + str(default_value) + "' instead"
-            logger.warning("Item '{}', attribute '{}': value '{}' can not be converted to type '{}'{} {}".format(item.id(), attribute, value, attr_type, additional_text, def_in))
+            logger.warning("Item '{}', attribute '{}': value '{}' can not be converted to type '{}'{} {}".format(item.property.path, attribute, value, attr_type, additional_text, def_in))
             if default_value is None:
                 value = ''
             else:

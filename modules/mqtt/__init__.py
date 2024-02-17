@@ -274,7 +274,7 @@ class Mqtt(Module):
 
         for topic in self._subscribed_topics:
             item = self._subscribed_topics[topic]
-            self.logger.debug("Unsubscribing topic '{}' for item '{}'".format(str(topic), str(item.id())))
+            self.logger.debug("Unsubscribing topic '{}' for item '{}'".format(str(topic), str(item.property.path)))
             self._client.unsubscribe(topic)
 
         self.logger.info("Stopping mqtt client '{}'. Disconnecting from broker.".format(self._client._client_id.decode('utf-8')))
@@ -708,7 +708,7 @@ class Mqtt(Module):
             for topic in self._subscribed_topics:
                 item = self._subscribed_topics[topic]
                 self._client.subscribe(topic, qos=self._get_qos_forTopic(topic, item))
-                #self.logger.info("Listening on topic '{}' for item '{}'".format(topic, item.id()))
+                #self.logger.info("Listening on topic '{}' for item '{}'".format(topic, item.property.path))
 
             self.logger.info("self._subscribed_topics = {}".format(self._subscribed_topics))
 

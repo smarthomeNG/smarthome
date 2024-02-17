@@ -90,7 +90,7 @@ class Scenes():
         #   for item in smarthome.return_items():
         for item in self.items.return_items():
             if item.type() == 'scene':
-                self.scene_file = os.path.join(self._scenes_dir, item.id())
+                self.scene_file = os.path.join(self._scenes_dir, item.property.path)
 
                 scene_file_yaml = yaml.yaml_load(self.scene_file+'.yaml', ordered=False, ignore_notfound=True)
                 if scene_file_yaml is not None:
@@ -111,7 +111,7 @@ class Scenes():
                             else:
                                 logger.warning(translate("Scene {scene}, state {state}: actions are not a list", {'scene': item, 'state': state}))
 
-                    self._load_learned_values(str(item.id()))
+                    self._load_learned_values(str(item.property.path))
                 else:
                     # Trying to read conf file with scene definition
                     scene_conf_file = self.scene_file + '.conf'
@@ -158,16 +158,16 @@ class Scenes():
 
     def _get_learned_value(self, scene, state, ditem):
         try:
-            lvalue = self._learned_values[scene +'#'+ str(state) +'#'+ ditem.id()]
+            lvalue = self._learned_values[scene +'#'+ str(state) +'#'+ ditem.property.path]
         except:
             return None
-        logger.debug(" - Return learned value {} for scene/state/ditem {}".format(lvalue, scene +'#'+ str(state) +'#'+ ditem.id()))
+        logger.debug(" - Return learned value {} for scene/state/ditem {}".format(lvalue, scene +'#'+ str(state) +'#'+ ditem.property.path))
         return lvalue
 
 
     def _set_learned_value(self, scene, state, ditem, lvalue):
-        self._learned_values[scene +'#'+ str(state) +'#'+ ditem.id()] = lvalue
-        logger.debug(" - Learned value {} for scene/state/ditem {}".format(lvalue, scene +'#'+ str(state) +'#'+ ditem.id()))
+        self._learned_values[scene +'#'+ str(state) +'#'+ ditem.property.path] = lvalue
+        logger.debug(" - Learned value {} for scene/state/ditem {}".format(lvalue, scene +'#'+ str(state) +'#'+ ditem.property.path))
 
 
     def _save_learned_values(self, scene):
@@ -215,10 +215,10 @@ class Scenes():
         """
         Trigger: set values for a scene state
         """
-        logger.info("Triggered scene {} ({}) with state {} ({}):".format(item.id(), str(item), state, self.get_scene_action_name(item.id(), state)))
-        for ditem, value, name, learn in self._scenes[item.id()][str(state)]:
+        logger.info("Triggered scene {} ({}) with state {} ({}):".format(item.property.path, str(item), state, self.get_scene_action_name(item.property.path, state)))
+        for ditem, value, name, learn in self._scenes[item.property.path][str(state)]:
             if learn:
-                lvalue = self._get_learned_value(item.id(), state, ditem)
+                lvalue = self._get_learned_value(item.property.path, state, ditem)
                 if lvalue is not None:
                     rvalue = lvalue
                 else:
@@ -231,7 +231,7 @@ class Scenes():
                 else:
                     logger.info(" - Item {} set to {} ( from {} )".format(ditem, rvalue, value))
                 try:
-                    ditem(value=rvalue, caller='Scene', source=item.id())
+                    ditem(value=rvalue, caller='Scene', source=item.property.path)
                 except Exception as e:
                     logger.warning(" - ditem '{}', value '{}', exception {}".format(ditem, rvalue, e))
         return
@@ -241,11 +241,11 @@ class Scenes():
         """
         Trigger: learn values for a scene state
         """
-        logger.info("Triggered 'learn' for scene {} ({}), state {} ({}):".format(item.id(), str(item), state, self.get_scene_action_name(item.id(), state)))
-        for ditem, value, name, learn in self._scenes[item.id()][str(state)]:
+        logger.info("Triggered 'learn' for scene {} ({}), state {} ({}):".format(item.property.path, str(item), state, self.get_scene_action_name(item.property.path, state)))
+        for ditem, value, name, learn in self._scenes[item.property.path][str(state)]:
             if learn:
-                self._set_learned_value(item.id(), state, ditem, ditem())
-        self._save_learned_values(str(item.id()))
+                self._set_learned_value(item.property.path, state, ditem, ditem())
+        self._save_learned_values(str(item.property.path))
         return
 
 
@@ -253,14 +253,14 @@ class Scenes():
         """
         Trigger a scene
         """
-        if not item.id() in self._scenes:
+        if not item.property.path in self._scenes:
             return
-        if str(item()&127) in self._scenes[item.id()]:
+        if str(item()&127) in self._scenes[item.property.path]:
             state = item()
             if Utils.is_int(state):
                 state = int(state)
             else:
-                logger.error(translate("Invalid state '{state}' for scene {scene}", {'state': state, 'scene': item.id()}))
+                logger.error(translate("Invalid state '{state}' for scene {scene}", {'state': state, 'scene': item.property.path}))
                 return
 
             if (state >= 0) and (state < 64):
@@ -270,7 +270,7 @@ class Scenes():
                 # learn state
                 self._trigger_learnstate(item, state&127, caller, source, dest)
             else:
-                logger.error(translate("Invalid state '{state}' for scene {scene}", {'state': state, 'scene': item.id()}))
+                logger.error(translate("Invalid state '{state}' for scene {scene}", {'state': state, 'scene': item.property.path}))
 
 
     def _add_scene_entry(self, item, state, ditemname, value, learn=False, name=''):
@@ -284,7 +284,7 @@ class Scenes():
         :type row: list (with 3 entries)
         :type name: str
         """
-        logger.debug("_add_scene_entry: item = {}, state = {}, ditemname = {}, value = {}, learn = {}, name = {}".format(item.id(), state, ditemname, value, learn, name))
+        logger.debug("_add_scene_entry: item = {}, state = {}, ditemname = {}, value = {}, learn = {}, name = {}".format(item.property.path, state, ditemname, value, learn, name))
         value = item.get_stringwithabsolutepathes(value, 'sh.', '(', 'scene')
 #        ditem = self._sh.return_item(item.get_absolutepath(ditemname, attribute='scene'))
         ditem = self.items.return_item(item.get_absolutepath(ditemname, attribute='scene'))
@@ -301,13 +301,13 @@ class Scenes():
                 logger.warning(translate("Could not find item or logic '{ditemname}' specified in {file}", {'ditemname': ditemname, 'file': self.scene_file}))
                 return
 
-        if item.id() in self._scenes:
-            if state in self._scenes[item.id()]:
-                self._scenes[item.id()][state].append([ditem, value, name, learn])
+        if item.property.path in self._scenes:
+            if state in self._scenes[item.property.path]:
+                self._scenes[item.property.path][state].append([ditem, value, name, learn])
             else:
-                self._scenes[item.id()][state] = [[ditem, value, name, learn]]
+                self._scenes[item.property.path][state] = [[ditem, value, name, learn]]
         else:
-            self._scenes[item.id()] = {state: [[ditem, value, name, learn]]}
+            self._scenes[item.property.path] = {state: [[ditem, value, name, learn]]}
         return
 
 

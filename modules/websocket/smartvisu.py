@@ -977,7 +977,7 @@ class Protocol():
         :param dest: Destination for the change (usually None)
         :return:
         """
-        item_data = (item.id(), item(), caller, source)
+        item_data = (item.property.path, item(), caller, source)
         if self.janus_queue:
             # if queue has been created from the async side
             self.janus_queue.sync_q.put(['item', item_data])
