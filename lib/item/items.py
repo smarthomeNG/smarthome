@@ -100,6 +100,8 @@ class Items():
         _items_instance = self
         self.structs = Structs(self._sh)
 
+        self._sh._ignore_item_collision = getattr(self._sh, '_ignore_item_collision', 'False') == 'True'
+
 
     # -----------------------------------------------------------------------------------------
     #   Following (static) method of the class Items implement the API for Items in SmartHomeNG

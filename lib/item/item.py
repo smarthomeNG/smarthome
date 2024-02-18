@@ -215,8 +215,9 @@ class Item():
         else:
             self._change_logger = logger.debug
 
-        if self._path.split('.')[-1] in _items_instance._item_methods:
-            logger.warning(f'Name of item {self._path} collides with Item class member. Unexpected behaviour might occur, renaming the item is recommended.')
+        if not self._sh._ignore_item_collision:
+            if self._path.split('.')[-1] in _items_instance._item_methods:
+                logger.warning(f'Name of item {self._path} collides with Item class member. Unexpected behaviour might occur, renaming the item is recommended.')
 
         #############################################################
         # Initialize attribute assignment compatibility
