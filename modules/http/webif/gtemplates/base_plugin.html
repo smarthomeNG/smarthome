@@ -231,8 +231,8 @@
 <script>
 window.activeTab = "bodytab_" + {{ start_tab }};
 </script>
-{% if tabcount > 6 %}
-	{% set tabcount = 6 %}
+{% if tabcount > 8 %}
+	{% set tabcount = 8 %}
 {% endif %}
 {% if tabcount < 1 %}
 	{% set tabcount = 1 %}
@@ -256,6 +256,12 @@ window.activeTab = "bodytab_" + {{ start_tab }};
 {% endif %}
 {% if tab6title is not defined %}
 	{% set tab6title = "<strong>" ~ p.get_shortname() ~ "</strong> tab6" %}
+{% endif %}
+{% if tab7title is not defined %}
+	{% set tab7title = "<strong>" ~ p.get_shortname() ~ "</strong> tab7" %}
+{% endif %}
+{% if tab8title is not defined %}
+	{% set tab8title = "<strong>" ~ p.get_shortname() ~ "</strong> tab8" %}
 {% endif %}
 
 
@@ -283,6 +289,12 @@ window.activeTab = "bodytab_" + {{ start_tab }};
 		{% endif %}
 		{% if tabcount > 5 and tab6title != "hidden" %}
 			<li id="tab_6" class="nav-item"><a class="text-dark nav-link {% if start_tab==6 %}active{% endif %}" data-toggle="tab" href="#bodytab_6">{{ tab6title }}</a></li>
+		{% endif %}
+		{% if tabcount > 6 and tab7title != "hidden" %}
+			<li id="tab_7" class="nav-item"><a class="text-dark nav-link {% if start_tab==7 %}active{% endif %}" data-toggle="tab" href="#bodytab_7">{{ tab7title }}</a></li>
+		{% endif %}
+		{% if tabcount > 7 and tab8title != "hidden" %}
+			<li id="tab_8" class="nav-item"><a class="text-dark nav-link {% if start_tab==8 %}active{% endif %}" data-toggle="tab" href="#bodytab_8">{{ tab8title }}</a></li>
 		{% endif %}
 	</ul>
 </div>
@@ -320,6 +332,16 @@ window.activeTab = "bodytab_" + {{ start_tab }};
 	<div id="bodytab_6" class="table-resize tab-pane {% if start_tab==6 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab6 %}
 		{% endblock bodytab6 %}
+	</div>
+
+	<div id="bodytab_7" class="table-resize tab-pane {% if start_tab==7 %}in active{% endif %}" role="tabpanel">
+		{% block bodytab7 %}
+		{% endblock bodytab7 %}
+	</div>
+
+	<div id="bodytab_8" class="table-resize tab-pane {% if start_tab==8 %}in active{% endif %}" role="tabpanel">
+		{% block bodytab8 %}
+		{% endblock bodytab8 %}
 	</div>
 </div>
 
