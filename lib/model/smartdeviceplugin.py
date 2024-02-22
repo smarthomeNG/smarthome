@@ -760,6 +760,8 @@ class SmartDevicePlugin(SmartPlugin):
             except SDPResultError:
                 pass
             else:
+                if custom:
+                    command = command + CUSTOM_SEP + custom
                 self._dispatch_callback(command, value, by)
                 self._process_additional_data(command, data, value, custom, by)
 
