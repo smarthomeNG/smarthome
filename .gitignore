@@ -26,6 +26,9 @@ test.cache
 ehthumbs.db
 Thumbs.db
 
+# PyCharm
+*.srctrl*
+
 # Don't check in built documentation
 /doc/user/build
 /doc/user/source/plugins_doc
