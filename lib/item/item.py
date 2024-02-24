@@ -89,6 +89,111 @@ class Item():
 
     _itemname_prefix = 'items.'     # prefix for scheduler names
 
+    class DataHandler():
+
+        def __init__(self, item):
+            if item is None:
+                raise ValueError('no item given')
+            if item._type not in ('list', 'dict'):
+                raise ValueError('item not of type list or dict')
+            self._item = item
+            self._type = item._type
+
+            ext_item_functions = {
+                'list': ['append', 'prepend', 'insert', 'pop', 'extend', 'clear', 'delete', 'remove'],
+                'dict': ['get', 'delete', 'clear', 'pop', 'popitem', 'update']
+            }
+
+            for func in ext_item_functions[self._item._type]:
+                setattr(self, func, getattr(self, f'_DataHandler__{self._type}_{func}'))
+
+        def __call__(self, *args, **kwargs):
+            return self._item.__call__(*args, **kwargs)
+
+        # list functions
+
+        def __list_append(self, value, caller='Logic', source=None, dest=None):
+            self._item.__call__(value, caller, source, dest, index='append')
+
+        def __list_prepend(self, value, caller='Logic', source=None, dest=None):
+            self._item.__call__(value, caller, source, dest, index='prepend')
+
+        def __list_insert(self, index, value, caller='Logic', source=None, dest=None):
+            tmplist = copy.deepcopy(self._item._value)
+            tmplist.insert(index, value)
+            self._item.__call__(tmplist, caller, source, dest)
+
+        def __list_pop(self, index=None, caller='Logic', source=None, dest=None):
+            tmplist = copy.deepcopy(self._item._value)
+            if index is None:
+                ret = tmplist.pop()
+            else:
+                ret = tmplist.pop(index)
+            self._item.__call__(tmplist, caller, source, dest)
+            return ret
+
+        def __list_extend(self, value, caller='Logic', source=None, dest=None):
+            tmplist = copy.deepcopy(self._item._value)
+            tmplist.extend(value)
+            self._item.__call__(tmplist, caller, source, dest)
+
+        def __list_clear(self, caller='Logic', source=None, dest=None):
+            self._item.__call__([], caller, source, dest)
+
+        def __list_delete(self, value, caller='Logic', source=None, dest=None):
+            """
+                mimic the del list[x:y] behaviour - supply "x:y" as value
+                needs to be called delete instead of del for syntax reasons
+            """
+            splits = str(value).count(':')
+            tmplist = copy.deepcopy(self._item._value)
+            if splits == 0:
+                x = int(value)
+                del tmplist[x]
+            if splits == 1:
+                x, y = [int(i) for i in value.split(':')]
+                del tmplist[x:y]
+            elif splits == 2:
+                x, y, z = [int(i) for i in value.split(':')]
+                del tmplist[x:y:z]
+            self._item.__call__(tmplist, caller, source, dest)
+
+        def __list_remove(self, value, caller='Logic', source=None, dest=None):
+            tmplist = copy.deepcopy(self._item._value)
+            tmplist.remove(value)
+            self._item.__call__(tmplist, caller, source, dest)
+
+        # dict functions
+
+        def __dict_get(self, key, caller='Logic', source=None, dest=None, default=None):
+            return self._item.__call__(key=key, default=default, caller=caller, source=source, dest=dest)
+
+        def __dict_delete(self, key, caller='Logic', source=None, dest=None):
+            """ needs to be called delete instead of del for syntax reasons """
+            tmpdict = copy.deepcopy(self._item._value)
+            del tmpdict[key]
+            self._item.__call__(tmpdict, caller, source, dest)
+
+        def __dict_clear(self, caller='Logic', source=None, dest=None):
+            self._item.__call__({}, caller, source, dest)
+
+        def __dict_pop(self, key, caller='Logic', source=None, dest=None, default=None):
+            tmpdict = copy.deepcopy(self._item._value)
+            ret = tmpdict.pop(key, default)
+            self._item.__call__(tmpdict, caller, source, dest)
+            return ret
+
+        def __dict_popitem(self, caller='Logic', source=None, dest=None):
+            tmpdict = copy.deepcopy(self._item._value)
+            ret = tmpdict.popitem()
+            self._item.__call__(tmpdict, caller, source, dest)
+            return ret
+
+        def __dict_update(self, value, caller='Logic', source=None, dest=None):
+            tmpdict = copy.deepcopy(self._item._value)
+            tmpdict.update(value)
+            self._item.__call__(tmpdict, caller, source, dest)
+
     def __init__(self, smarthome, parent, path, config, items_instance=None):
 
         global _items_instance
@@ -247,17 +352,6 @@ class Item():
             logger.error(f"Item {self._path}: type '{self._type}' unknown. Please use one of: {', '.join(list(ITEM_DEFAULTS.keys()))}.")
             raise AttributeError
         self.cast = globals()['cast_' + self._type]
-
-#
-# add type methods
-#
-        ext_item_functions = {
-            'list': ['append', 'prepend', 'insert', 'pop', 'extend', 'clear', 'delete', 'remove'],
-            'dict': ['get', 'delete', 'clear', 'pop', 'popitem', 'update']
-        }
-        if self._type in ['list', 'dict']:
-            for func in ext_item_functions[self._type]:
-                setattr(self, func, getattr(self, f'_Item__{self._type}_{func}'))
 
         #############################################################
         # Item Attributes
@@ -509,6 +603,20 @@ class Item():
             if not os.path.isfile(self._cache):
                 cache_write(self._cache, self._value)
                 logger.notice(f"Created cache for item {self._cache} in file {self._cache}")
+
+        #
+        # add type methods
+        #
+
+        # ext_item_functions = {
+        #     'list': ['append', 'prepend', 'insert', 'pop', 'extend', 'clear', 'delete', 'remove'],
+        #     'dict': ['get', 'delete', 'clear', 'pop', 'popitem', 'update']
+        # }
+        if self._type in ['list', 'dict']:
+            data = self.DataHandler(item=self)
+            setattr(self, self._type, data)
+            # for func in ext_item_functions[self._type]:
+            #     setattr(self, func, getattr(self, f'_Item__{self._type}_{func}'))
 
         #############################################################
         # Plugins
