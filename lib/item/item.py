@@ -89,41 +89,55 @@ class Item():
 
     _itemname_prefix = 'items.'     # prefix for scheduler names
 
-    class DataHandler():
+    class TypeHandler():
+        """
+        Class for dict/list type item handling
+
+        This class is a base class to enable modifying lists or dicts stored
+        in item values. As item() yields a copy of the stored objects, changes
+        are not written back to the item. This set of classes provides methods
+        which handle storing the modified object and at the same time ensure that
+        all item metadata handling (updated, changed, changed_age etc) are properly
+        set.
+
+        The class method for either object type correspond to the Python list/
+        dict class methods for easy usage.
+
+        When an item of type list/dict is created, the appropriate sub-class is
+        instantiated as <item>.list resp. <item>.dict as to minimize collisions
+        between item methods and names of sub-items (e.g. update).
+        """
+
+        # base class, so only initialize class members
+        _type = ''
+        item_functions = []
 
         def __init__(self, item):
             if item is None:
-                raise ValueError('no item given')
-            if item._type not in ('list', 'dict'):
-                raise ValueError('item not of type list or dict')
+                raise ValueError(f'{self.__class__.__name__}: no item given')
+            if item._type != self._type:
+                raise ValueError(f'{self.__class__.__name__}: item not of type {self._type}')
             self._item = item
-            self._type = item._type
 
-            ext_item_functions = {
-                'list': ['append', 'prepend', 'insert', 'pop', 'extend', 'clear', 'delete', 'remove'],
-                'dict': ['get', 'delete', 'clear', 'pop', 'popitem', 'update']
-            }
+    class ListHandler(TypeHandler):
+        """ handle list type items """
+        _type = 'list'
+        item_functions = ['append', 'prepend', 'insert', 'pop', 'extend', 'clear', 'delete', 'remove']
 
-            for func in ext_item_functions[self._item._type]:
-                setattr(self, func, getattr(self, f'_DataHandler__{self._type}_{func}'))
-
-        def __call__(self, *args, **kwargs):
-            return self._item.__call__(*args, **kwargs)
-
-        # list functions
-
-        def __list_append(self, value, caller='Logic', source=None, dest=None):
+        # list functions all use item.__call__() to ensure that all proper
+        # item update handling is applied
+        def append(self, value, caller='Logic', source=None, dest=None):
             self._item.__call__(value, caller, source, dest, index='append')
 
-        def __list_prepend(self, value, caller='Logic', source=None, dest=None):
+        def prepend(self, value, caller='Logic', source=None, dest=None):
             self._item.__call__(value, caller, source, dest, index='prepend')
 
-        def __list_insert(self, index, value, caller='Logic', source=None, dest=None):
+        def insert(self, index, value, caller='Logic', source=None, dest=None):
             tmplist = copy.deepcopy(self._item._value)
             tmplist.insert(index, value)
             self._item.__call__(tmplist, caller, source, dest)
 
-        def __list_pop(self, index=None, caller='Logic', source=None, dest=None):
+        def pop(self, index=None, caller='Logic', source=None, dest=None):
             tmplist = copy.deepcopy(self._item._value)
             if index is None:
                 ret = tmplist.pop()
@@ -132,15 +146,15 @@ class Item():
             self._item.__call__(tmplist, caller, source, dest)
             return ret
 
-        def __list_extend(self, value, caller='Logic', source=None, dest=None):
+        def extend(self, value, caller='Logic', source=None, dest=None):
             tmplist = copy.deepcopy(self._item._value)
             tmplist.extend(value)
             self._item.__call__(tmplist, caller, source, dest)
 
-        def __list_clear(self, caller='Logic', source=None, dest=None):
+        def clear(self, caller='Logic', source=None, dest=None):
             self._item.__call__([], caller, source, dest)
 
-        def __list_delete(self, value, caller='Logic', source=None, dest=None):
+        def delete(self, value, caller='Logic', source=None, dest=None):
             """
                 mimic the del list[x:y] behaviour - supply "x:y" as value
                 needs to be called delete instead of del for syntax reasons
@@ -158,42 +172,48 @@ class Item():
                 del tmplist[x:y:z]
             self._item.__call__(tmplist, caller, source, dest)
 
-        def __list_remove(self, value, caller='Logic', source=None, dest=None):
+        def remove(self, value, caller='Logic', source=None, dest=None):
             tmplist = copy.deepcopy(self._item._value)
             tmplist.remove(value)
             self._item.__call__(tmplist, caller, source, dest)
 
-        # dict functions
+    class DictHandler(TypeHandler):
+        """ handle dict type items """
+        _type = 'dict'
+        item_functions = ['get', 'delete', 'clear', 'pop', 'popitem', 'update']
 
-        def __dict_get(self, key, caller='Logic', source=None, dest=None, default=None):
-            return self._item.__call__(key=key, default=default, caller=caller, source=source, dest=dest)
+        # dict functions all use item.__call__() to ensure that all proper
+        # item update handling is applied
+        def get(self, key, default=None):
+            return self._item().get(key, default)
 
-        def __dict_delete(self, key, caller='Logic', source=None, dest=None):
+        def delete(self, key, caller='Logic', source=None, dest=None):
             """ needs to be called delete instead of del for syntax reasons """
             tmpdict = copy.deepcopy(self._item._value)
             del tmpdict[key]
             self._item.__call__(tmpdict, caller, source, dest)
 
-        def __dict_clear(self, caller='Logic', source=None, dest=None):
+        def clear(self, caller='Logic', source=None, dest=None):
             self._item.__call__({}, caller, source, dest)
 
-        def __dict_pop(self, key, caller='Logic', source=None, dest=None, default=None):
+        def pop(self, key, caller='Logic', source=None, dest=None, default=None):
             tmpdict = copy.deepcopy(self._item._value)
             ret = tmpdict.pop(key, default)
             self._item.__call__(tmpdict, caller, source, dest)
             return ret
 
-        def __dict_popitem(self, caller='Logic', source=None, dest=None):
+        def popitem(self, caller='Logic', source=None, dest=None):
             tmpdict = copy.deepcopy(self._item._value)
             ret = tmpdict.popitem()
             self._item.__call__(tmpdict, caller, source, dest)
             return ret
 
-        def __dict_update(self, value, caller='Logic', source=None, dest=None):
+        def update(self, value, caller='Logic', source=None, dest=None):
             tmpdict = copy.deepcopy(self._item._value)
             tmpdict.update(value)
             self._item.__call__(tmpdict, caller, source, dest)
 
+    # class Item
     def __init__(self, smarthome, parent, path, config, items_instance=None):
 
         global _items_instance
@@ -604,19 +624,16 @@ class Item():
                 cache_write(self._cache, self._value)
                 logger.notice(f"Created cache for item {self._cache} in file {self._cache}")
 
-        #
-        # add type methods
-        #
-
-        # ext_item_functions = {
-        #     'list': ['append', 'prepend', 'insert', 'pop', 'extend', 'clear', 'delete', 'remove'],
-        #     'dict': ['get', 'delete', 'clear', 'pop', 'popitem', 'update']
-        # }
+        #############################################################
+        # add list/dict methods
+        #############################################################
         if self._type in ['list', 'dict']:
-            data = self.DataHandler(item=self)
-            setattr(self, self._type, data)
-            # for func in ext_item_functions[self._type]:
-            #     setattr(self, func, getattr(self, f'_Item__{self._type}_{func}'))
+            # get proper subclass - ListHandler / DictHandler
+            type_class = getattr(self, self._type.capitalize() + 'Handler')
+            # instantiate class
+            obj = type_class(item=self)
+            # create item member <item>.list / <item>.dict
+            setattr(self, self._type, obj)
 
         #############################################################
         # Plugins
@@ -1560,31 +1577,31 @@ class Item():
 
 # dict functions
 
-    def __dict_get(self, key, caller='Logic', source=None, dest=None, default=None):
+    def get(self, key, caller='Logic', source=None, dest=None, default=None):
         return self.__call__(key=key, default=default, caller=caller, source=source, dest=dest)
 
-    def __dict_delete(self, key, caller='Logic', source=None, dest=None):
+    def delete(self, key, caller='Logic', source=None, dest=None):
         """ needs to be called delete instead of del for syntax reasons """
         tmpdict = copy.deepcopy(self._value)
         del tmpdict[key]
         self.__call__(tmpdict, caller, source, dest)
 
-    def __dict_clear(self, caller='Logic', source=None, dest=None):
+    def clear(self, caller='Logic', source=None, dest=None):
         self.__call__({}, caller, source, dest)
 
-    def __dict_pop(self, key, caller='Logic', source=None, dest=None, default=None):
+    def pop(self, key, caller='Logic', source=None, dest=None, default=None):
         tmpdict = copy.deepcopy(self._value)
         ret = tmpdict.pop(key, default)
         self.__call__(tmpdict, caller, source, dest)
         return ret
 
-    def __dict_popitem(self, caller='Logic', source=None, dest=None):
+    def popitem(self, caller='Logic', source=None, dest=None):
         tmpdict = copy.deepcopy(self._value)
         ret = tmpdict.popitem()
         self.__call__(tmpdict, caller, source, dest)
         return ret
 
-    def __dict_update(self, value, caller='Logic', source=None, dest=None):
+    def update(self, value, caller='Logic', source=None, dest=None):
         tmpdict = copy.deepcopy(self._value)
         tmpdict.update(value)
         self.__call__(tmpdict, caller, source, dest)

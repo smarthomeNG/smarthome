@@ -691,6 +691,98 @@ class TestItem(unittest.TestCase):
         self.assertEqual(json.loads(self.sh.items.return_item("item3").to_json())['name'], self.sh.items.return_item("item3")._name)
         self.assertEqual(json.loads(self.sh.items.return_item("item3").to_json())['id'], self.sh.items.return_item("item3")._path)
 
+    # ===================================================================
+    # Following tests are about the list/dict handling
+    #
+
+    def test_item_types(self):
+        """
+        Tests for the list/dict handling in items 
+        """
+        if verbose:
+            logger.warning('')
+            logger.warning('===== test_item_types:')
+
+        sh = MockSmartHome()
+
+        vl = ['foo', 'bar', 'baz']
+        vd = {'foo': 1, 'bar': 2, 'baz': 3}
+
+        conf = {'type': 'list', 'value': vl}
+        il = self.create_item(config=conf, parent=sh, smarthome=sh, path='listitem')
+        conf = {'type': 'dict'}
+        id = self.create_item(config=conf, parent=sh, smarthome=sh, path='dictitem')
+        conf = {'type': 'bool'}
+        ib = self.create_item(config=conf, parent=sh, smarthome=sh, path='boolitem')
+
+        items = sh.items.return_items()
+        for i in items:
+            logger.warning("test_item_types: self.sh.items i = {}".format(i))
+
+        # -----------------------------------------------------------------
+
+        self.assertIsNotNone(il)
+        self.assertIsNotNone(id)
+        self.assertIsNotNone(ib)
+
+        self.assertListEqual(il(), vl)
+
+        id(vd)
+        self.assertDictEqual(id(), vd)
+        #
+        # check creation of helper classes
+        #
+
+        # check existence of helper classes
+        self.assertIsNotNone(il.list)
+        self.assertIsNotNone(id.dict)
+
+        # check non-existence of helper classes in bool item
+        self.assertFalse(hasattr(ib, 'list'))
+        self.assertFalse(hasattr(ib, 'dict'))
+
+        #
+        # check some helper class functions
+        #
+
+        # list functions
+        il.list.remove('baz')
+        self.assertListEqual(il(), ['foo', 'bar'])
+
+        il.list.append('baz')
+        self.assertListEqual(il(), vl)
+
+        self.assertEqual(il.list.pop(1), 'bar')
+
+        il(vl)
+        il.list.delete(1)
+        self.assertListEqual(il(), ['foo', 'baz'])
+
+        il(vl)
+        il.list.delete('1:3')
+        self.assertListEqual(il(), ['foo'])
+
+        il.list.clear()
+        self.assertListEqual(il(), [])
+
+        # dict functions
+        self.assertEqual(id.dict.get('foo'), 1)
+        self.assertEqual(id.dict.get('qux', 0), 0)
+        self.assertIsNone(id.dict.get('qux'))
+
+        self.assertEqual(id.dict.pop('baz'), 3)
+        self.assertDictEqual(id(), {'foo': 1, 'bar': 2})
+
+        id(vd)
+        self.assertEqual(id.dict.popitem(), ('baz', 3))
+        self.assertDictEqual(id(), {'foo': 1, 'bar': 2})
+
+        id.dict.update({'baz': 3})
+        self.assertDictEqual(id(), vd)
+
+        id.dict.delete('foo')
+        self.assertDictEqual(id(), {'bar': 2, 'baz': 3})
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
