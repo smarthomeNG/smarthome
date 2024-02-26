@@ -46,6 +46,19 @@
 	});
 	</script>
 <script>
+	function pagelengthCookies(tabcount) {
+		for (let i = 1; i <= tabcount; i++) {
+			let pagelength = 0;
+			{%- if webif_pagelength is defined %}
+				if (isNaN(parseFloat({{ webif_pagelength }})) || {{ webif_pagelength }} == 0)
+					pagelength = 1;
+				else
+					pagelength = {{ webif_pagelength }};
+			{%- endif %}
+			window.pageLength["bodytab_"+i] = {'tableid': 'unknown', 'pagelength': parseInt(pagelength)};
+		}
+		setCookie("pagelength", window.pageLength, 3650, window.pluginname);
+	}
 	function initVariables() {
 		// Make refresh variable, dataSet and update_params available for plugins html files.
 		window.refresh = new timer();
@@ -58,28 +71,36 @@
 		window.toggle = 1;
 		window.pluginname = '{{ p.get_fullname() }}';
 		window.pageLength = getCookie("pagelength");
+		let tabcount = 0;
+		{%- if tabcount is defined %}
+			if (isNaN(parseFloat({{ tabcount }})))
+				tabcount = 1;
+			else
+				tabcount = {{ tabcount }};
+		{%- endif %}
+
 	  if (window.pageLength == "" || Object.keys(window.pageLength).length === 0)
 	  {
 			window.pageLength = {}
-			let tabcount = 0;
-			{%- if tabcount is defined %}
-				if (isNaN(parseFloat({{ tabcount }})))
-					tabcount = 1;
-				else
-					tabcount = {{ tabcount }};
-			{%- endif %}
-			for (let i = 1; i <= tabcount; i++) {
-				let pagelength = 0;
-				{%- if webif_pagelength is defined %}
-					if (isNaN(parseFloat({{ webif_pagelength }})) || {{ webif_pagelength }} == 0)
-			      pagelength = 1;
-			    else
-			    	pagelength = {{ webif_pagelength }};
-				{%- endif %}
-			  window.pageLength["bodytab_"+i] = {'tableid': 'unknown', 'pagelength': parseInt(pagelength)};
-			}
-			setCookie("pagelength", window.pageLength, 3650, window.pluginname);
+			pagelengthCookies(tabcount);
 		}
+		if (!("bodytab_"+tabcount in window.pageLength))
+		{
+			console.log("Extending cookies for pagelength as more bodytabs found.");
+			pagelengthCookies(tabcount);
+		}
+		let remove = false;
+		for (let key in window.pageLength) {
+		  // Extract the numeric part of the key
+		  let tabNumber = parseInt(key.replace("bodytab_", ""));
+		  if (tabNumber > tabcount) {
+		    delete window.pageLength[key];
+				console.log("Removing bodytab_" + key + " from pagelength.");
+				remove = true;
+		  }
+		}
+		if (remove === true)
+			setCookie("pagelength", window.pageLength, 3650, window.pluginname);
 		window.initial_update = false;
 		{%- if row_count is defined %}
 		  window.row_count = '{{ row_count|lower }}';
