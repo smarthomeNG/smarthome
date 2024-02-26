@@ -193,7 +193,7 @@ angezeigt.
 |
 
 Erweiterter Zugriff auf List- und Dict-Items :redsup:`neu`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------------
 
 Mit den Erweiterungen wird der Zugriff auf Items vom Typ `list` oder `dict`
 noch mehr dem "normalen" Handling von Python angepasst.
@@ -223,7 +223,7 @@ normalen Zugriff auf Items - entsprechend gesetzt werden können.
 
 
 List-Items
-----------
+~~~~~~~~~~
 
 Die Methode `append` hängt Werte an die Liste an:
 
@@ -280,7 +280,7 @@ Die Methode `remove` entfernt das angegebene Element aus der Liste:
 
 
 Dict-Items
-----------
+~~~~~~~~~~
 
 Die Methode `get` gibt den Wert für den angegebenen Key zurück. Wenn der Key
 im dict nicht existiert, wird `None` oder der übergebene Default-Wert zurückgegeben:
