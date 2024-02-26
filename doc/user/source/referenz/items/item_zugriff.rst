@@ -192,3 +192,135 @@ angezeigt.
 
 |
 
+Erweiterter Zugriff auf List- und Dict-Items :redsup:`neu`
+----------------------------------------------------------
+
+Mit den Erweiterungen wird der Zugriff auf Items vom Typ `list` oder `dict`
+noch mehr dem "normalen" Handling von Python angepasst.
+
+Ein Item vom Typ List erhält ein Item-Attribut `list`, vom Typ Dict erhält
+analog das Attribut `dict`. Diese Attribute besitzen typspezifische Methoden
+zum Zugriff auf und Ändern von den jeweiligen Item-Werten.
+
+Mit Ausnahme der (nur lesenden) Methode `get` für dict-Items unterstützen alle
+Methoden die optionalen Parameter `caller`, `source` und `dest`, die - wie beim
+normalen Zugriff auf Items - entsprechend gesetzt werden können.
+
+.. note::
+
+    Alle Methoden sind im Wesentlichen mit den entsprechenden Methoden der `list`-
+    bzw. `dict`-Klassen identisch; das genaue Verhalten kann bei Bedarf in der
+    Python-Dokumentation nachgelesen werden.
+
+    Ausnahmen sind die Methode `prepend` (existiert so in Python nicht) und 
+    `delete`, welche das Verhalten von `del` nachbildet, aus Syntaxgründen aber
+    anders benannt werden musste.
+
+    Analog zu den Python-Funktionen ist keine zusätzliche Fehlerbehandlung 
+    implementiert, so dass ungültige Indizes oder Keys nicht abgefangen werden.
+    Die Behandlung dieser Fehler obliegt - wie beim normalen Umgang mit Listen
+    und Dicts - dem Nutzer.
+
+
+List-Items
+~~~~~~~~~~
+
+Die Methode `append` hängt Werte an die Liste an:
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.list.append('foo')
+
+Die Methode `prepend` fügt Werte am Beginn der List ein:
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.list.prepend(bar')
+
+Die Methode `insert` fügt Werte an der angegebenen Stelle `index` ein:
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.list.insert(2, 'baz')
+
+Die Methode `pop` entfernt den letzten (bzw. angegebenen) Wert der Liste und gibt ihn zurück:
+
+..code-block:: python
+
+    value = sh.Oma.Papa.Kind.list.pop()
+    value = sh.Oma.Papa.Kind.list.pop(2)
+
+Die Methode `extend` hängt die Elemente der übergebenen Liste an die Liste des Items an:
+def extend(self, value, caller='Logic', source=None, dest=None):
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.list.extend(['foo', 'bar'])
+
+Die Methode `clear` leert die Liste:
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.list.clear()
+
+Die Methode `delete` entspricht dem Python-Befehl `del list[x[:y]]` und löscht das
+bzw. die angegebenen Elemente der Liste. Aus Syntaxgründen heißt die Methode `delete`
+statt `del` und der Index bzw. der Index-Bereich muss als String übergeben werden:
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.list.delete(2)
+    sh.Oma.Papa.Kind.list.delete("1:3")
+
+Die Methode `remove` entfernt das angegebene Element aus der Liste:
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.list.remove('foo')
+
+
+Dict-Items
+~~~~~~~~~~
+
+Die Methode `get` gibt den Wert für den angegebenen Key zurück. Wenn der Key
+im dict nicht existiert, wird `None` oder der übergebene Default-Wert zurückgegeben:
+
+..code-block:: python
+
+    value1 = sh.Oma.Papa.Kind.dict.get('foo')
+
+..code-block:: python
+
+    value2 = sh.Oma.Papa.Kind.dict.get('bar', 42)
+
+Die Methode `delete` entspricht dem Python-Befehl `del dict[key]` und lösche den 
+angegebenen Key aus dem dict:
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.dict.delete('foo')
+
+Die Methode `clear` leert das dict:
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.dict.clear()
+
+Die Methode `pop` entfernt den angegebenen Key aus dem dict und liefert den
+entfernten Wert zurück:
+
+..code-block:: python
+
+    value = sh.Oma.Papa.Kind.dict.pop('bar')
+
+Die Methode `popitem` entfernt den zuletzt hinzugefügten Key aus dem dict und liefert das Set `(key, value)` zurück:
+
+..code-block:: python
+
+    (key, value) = sh.Oma.Papa.Kind.dict.popitem()
+
+Die Methode `update` aktualisiert das dict mit dem Inhalt des übergebenen dict:
+
+..code-block:: python
+
+    sh.Oma.Papa.Kind.dict.update({'foo': 42, 'bar': 23})
