@@ -84,6 +84,9 @@ class SmartDevicePlugin(SmartPlugin):
     described if changed/overwritten.
     """
 
+    # this is the internal SDP version
+    SDP_VERSION = '1.0.0'
+
     # this is the placeholder version of the derived plugin, not of SDP
     PLUGIN_VERSION = '0.0.1'
 
@@ -166,6 +169,8 @@ class SmartDevicePlugin(SmartPlugin):
         self._unknown_command = '.notify.'
         self._initial_value_read_done = False
         self._cyclic_update_active = False
+        self._cyclic_errors = 0
+        self._reconnect_on_cycle_error = True
         # plugin-wide cycle interval, -1 is undefined
         self._cycle = self.get_parameter_value(PLUGIN_ATTR_CYCLE)
         if self._cycle is None:
@@ -1054,6 +1059,7 @@ class SmartDevicePlugin(SmartPlugin):
             if self.scheduler_get(self.get_shortname() + '_cyclic'):
                 self.scheduler_remove(self.get_shortname() + '_cyclic')
             self.scheduler_add(self.get_shortname() + '_cyclic', self._read_cyclic_values, cycle=workercycle, prio=5, offset=0)
+            self._cyclic_errors = 0
             self.logger.info(f'Added cyclic worker thread {self.get_shortname()}_cyclic with {workercycle} s cycle. Shortest item update cycle found was {shortestcycle} s')
 
     def _read_initial_values(self):
@@ -1084,10 +1090,20 @@ class SmartDevicePlugin(SmartPlugin):
         """
         # check if another cyclic cmd run is still active
         if self._cyclic_update_active:
-            self.logger.warning('Triggered cyclic command read, but previous cyclic run is still active. Check device and cyclic configuration (too much/too short?)')
+            self._cyclic_errors += 1
+            if self._cyclic_errors >= 3 and self._reconnect_on_cycle_error:
+                self.logger.warning(f'Cyclic command read failed {self._cyclic_errors} times due to long previous cycle. Reconnecting... ')
+                self.disconnect()
+                # reconnect
+                if not self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
+                    time.sleep(1)
+                    self.connect()
+            else:
+                self.logger.warning('Triggered cyclic command read, but previous cyclic run is still active. Check device and cyclic configuration (too much/too short?)')
             return
         else:
             self.logger.info('Triggering cyclic command read')
+            self._cyclic_errors = 0
 
         # set lock
         self._cyclic_update_active = True
