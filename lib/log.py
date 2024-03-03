@@ -62,8 +62,7 @@ class Logs():
         else:
             self.logger.error(f"Another instance of Logs class already exists: {logs_instance}")
 
-        self._sh = sh
-        self.etc_dir = self._sh.get_etcdir()
+        self._sh = sh        
         return
 
 
@@ -73,7 +72,7 @@ class Logs():
 
         if config_dict == None:
             print()
-            print(f"ERROR: Invalid logging configuration in file '{os.path.join(self.etc_dir, config_filename)}'")
+            print(f"ERROR: Invalid logging configuration in file '{os.path.join(self._sh.get_etcdir(), config_filename)}'")
             print()
             exit(1)
 
@@ -141,7 +140,7 @@ class Logs():
         except Exception as e:
             #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
             print()
-            print(f"ERROR: dictConfig: Invalid logging configuration in file '{os.path.join(self.etc_dir, config_filename)}'")
+            print(f"ERROR: dictConfig: Invalid logging configuration in file '{os.path.join(self._sh.get_etcdir(), config_filename)}'")
             print(f"       Exception: {e}")
             print()
             return False
@@ -244,7 +243,7 @@ class Logs():
 
         If logging.yaml does not contain a 'shng_version' key, a backup is created
         """
-        conf_filename = os.path.join(self.etc_dir, filename)
+        conf_filename = os.path.join(self._sh.get_etcdir(), filename)
         if not conf_filename.endswith('.yaml') and not conf_filename.endswith('.default'):
             conf_filename += '.yaml'
         result = shyaml.yaml_load(conf_filename, ignore_notfound)
@@ -258,7 +257,7 @@ class Logs():
         """
         if logging_config is not None:
             logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
-            conf_filename = os.path.join(self.etc_dir, 'logging')
+            conf_filename = os.path.join(self._sh.get_etcdir(), 'logging')
             shyaml.yaml_save_roundtrip(conf_filename, logging_config, create_backup=create_backup)
         return
 
@@ -270,7 +269,7 @@ class Logs():
         If logging.yaml does not contain a 'shng_version' key, a backup is created
         """
         #self.etc_dir = self._sh.get_etcdir()
-        conf_filename = os.path.join(self.etc_dir, 'logging')
+        conf_filename = os.path.join(self._sh.get_etcdir(), 'logging')
         logging_config = shyaml.yaml_load_roundtrip(conf_filename)
         self.logger.info("load_logging_config_for_edit: shng_version={}".format(logging_config.get('shng_version', None)))
 
