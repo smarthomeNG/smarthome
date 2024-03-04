@@ -30,6 +30,7 @@ import os
 import sys
 import time
 import json
+import datetime
 from copy import deepcopy
 from ast import literal_eval
 from collections import OrderedDict
@@ -38,6 +39,7 @@ from lib.model.smartplugin import SmartPlugin
 
 import lib.shyaml as shyaml
 from lib.plugin import Plugins
+from lib.shtime import Shtime
 
 from lib.model.sdp.globals import (
     update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
@@ -54,7 +56,7 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
-    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_CYCLIC)
+    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC)
 
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
@@ -180,6 +182,8 @@ class SmartDevicePlugin(SmartPlugin):
         self._dispatch_callback = self.dispatch_data
 
         self._webif = None
+
+        self._shtime = Shtime.get_instance()
 
         # init parameters in standalone mode
         if SDP_standalone:
@@ -316,7 +320,7 @@ class SmartDevicePlugin(SmartPlugin):
                 # if no parameter set, try to use item setting
                 suspend_active = bool(self._suspend_item())
             else:
-                # if not available, default to "resume"
+                # if not available, default to "resume" (non-breaking default)
                 suspend_active = False
 
         # print debug logging
@@ -546,7 +550,16 @@ class SmartDevicePlugin(SmartPlugin):
                     self._triggers_initial.append(grp)
                     self.logger.debug(f'{item_msg} startup triggering of read group {grp}')
 
-            # read cyclically?
+            # read cyclically (global cycle)?
+            if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLIC', 'foo')):
+                if self._cycle > 0:
+                    # set plpugin-wide cycle
+                    self._triggers_cyclic[grp] = {'cycle': min(self._cycle, self._commands_cyclic.get(command, self._cycle)), 'next': 0}
+                    self.logger.debug(f'Item {item} saved for global cyclic reading for group {grp}')
+                else:
+                    self.logger.info(f'Item {item} wants global cyclic reading of group {grp}, but global cycle is {self._cycle}, ignoring.')
+
+            # read individual-cyclically?
             cycle = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLE', 'foo'))
             if cycle:
                 # if cycle is already set for command, use the lower value of the two
@@ -622,6 +635,19 @@ class SmartDevicePlugin(SmartPlugin):
                         self.logger.debug(f'Writing value "{item()}" from item {item.property.path} with command "{command}" failed, resetting item value')
                         item(item.property.last_value, self.get_shortname())
                         return
+
+# TODO: add readafterwrite code
+                    readafterwrite = self.get_iattr_value(item.conf, 'viess_read_afterwrite')
+                    if readafterwrite is not None:
+                        try:
+                            readafterwrite = float(readafterwrite)
+                        except ValueError:
+                            self.logger.warning(f'Item {item} has readafterwrite set to {readafterwrite}, which is not parseable as (float) seconds. Ignoring.')
+                        else:
+                            cmd = self.get_iattr_value(item.conf, 'viess_read')
+                            if cmd is not None and readafterwrite > 0:
+                                self.logger.debug(f'Attempting to schedule read after write for item {item}, command {cmd}, delay {readafterwrite}')
+                                self.scheduler_add(f'{item}-readafterwrite', lambda: self.send_command(cmd), next=self.shtime.now() + datetime.timedelta(seconds=readafterwrite))
 
                 elif item.property.path in self._items_read_all:
 
