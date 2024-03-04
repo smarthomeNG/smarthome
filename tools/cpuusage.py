@@ -27,9 +27,9 @@ def get_pid():
     waiting = False
     while not os.path.exists(file):
         if not waiting:
-            print('Waiting for shng PID file..', end='')
+            print('Waiting for shng PID file..', end='', flush=True)
             waiting = True
-        print('.', end='')
+        print('.', end='', flush=True)
         time.sleep(1)
     print()
 
