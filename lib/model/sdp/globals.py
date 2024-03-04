@@ -116,16 +116,17 @@ ITEM_ATTR_CYCLE              = '_read_cycle'          # trigger cyclic read ever
 ITEM_ATTR_READ_INIT          = '_read_initial'        # trigger read on initial connect
 ITEM_ATTR_GROUP              = '_read_group'          # trigger read with read group <foo>
 ITEM_ATTR_WRITE              = '_write'               # command can be called for writing values
+ITEM_ATTR_READAFTERWRITE     = '_readafterwrite'      # after writing: read value from device after x seconds
 ITEM_ATTR_READ_GRP           = '_read_group_trigger'  # item triggers reading of read group <foo>
 ITEM_ATTR_LOOKUP             = '_lookup'              # create lookup item <item>.lookup
 ITEM_ATTR_CUSTOM1            = '_custom1'             # custom attribute 1
 ITEM_ATTR_CUSTOM2            = '_custom2'             # custom attribute 2
 ITEM_ATTR_CUSTOM3            = '_custom3'             # custom attribute 3
 
-ITEM_ATTRS = (ITEM_ATTR_COMMAND, ITEM_ATTR_READ, ITEM_ATTR_CYCLIC, ITEM_ATTR_CYCLE,
+ITEM_ATTRS = (ITEM_ATTR_COMMAND, ITEM_ATTR_READ, ITEM_ATTR_CYCLIC, ITEM_ATTR_CYCLE, ITEM_ATTR_READAFTERWRITE,
               ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, ITEM_ATTR_READ_GRP, ITEM_ATTR_GROUP,
               ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3)
-ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLIC', 'ITEM_ATTR_CYCLE',
+ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLIC', 'ITEM_ATTR_CYCLE', 'ITEM_ATTR_READAFTERWRITE',
               'ITEM_ATTR_READ_INIT', 'ITEM_ATTR_GROUP', 'ITEM_ATTR_WRITE', 'ITEM_ATTR_READ_GRP',
               'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3')
 
