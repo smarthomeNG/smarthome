@@ -311,7 +311,7 @@ class SmartHome():
 
         #############################################################
         # setup logging
-        self.init_logging(self._log_conf_basename, MODE)
+        logsetup = self.init_logging(self._log_conf_basename, MODE)
 
 
         #############################################################
@@ -346,6 +346,8 @@ class SmartHome():
         if lib.utils.running_virtual():
             virtual_text = ' in virtual environment'
         self._logger_main.notice(f"--------------------   Init SmartHomeNG {self.version}   --------------------")
+        if logsetup is not True:
+            self._logger_main.warning(f"Problem with logging config: {logsetup}")
         self._logger_main.notice(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
         self._logger_main.notice(f" - operating system '{self.systeminfo.get_osname()}' (pid={pid})")
         if self.systeminfo.get_rasppi_info() == '':
@@ -601,8 +603,9 @@ class SmartHome():
         if conf_basename == '':
             conf_basename = self._log_conf_basename
         # conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+        logsetup = self.logs.configure_logging()
 
-        if not self.logs.configure_logging():
+        if logsetup is not True:
             conf_basename = self._log_conf_basename + YAML_FILE + '.default'
             print("       Trying default logging configuration from:")
             print(f"       {conf_basename}")
@@ -622,7 +625,7 @@ class SmartHome():
             logging.getLogger().setLevel(logging.DEBUG)
         elif MODE == 'quiet':
             logging.getLogger().setLevel(logging.WARNING)
-        return
+        return logsetup
 
 
     #################################################################
