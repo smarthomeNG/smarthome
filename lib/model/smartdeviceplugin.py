@@ -637,17 +637,16 @@ class SmartDevicePlugin(SmartPlugin):
                         return
 
 # TODO: add readafterwrite code
-                    readafterwrite = self.get_iattr_value(item.conf, 'viess_read_afterwrite')
+                    readafterwrite = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READAFTERWRITE', 'foo'))
                     if readafterwrite is not None:
                         try:
                             readafterwrite = float(readafterwrite)
                         except ValueError:
                             self.logger.warning(f'Item {item} has readafterwrite set to {readafterwrite}, which is not parseable as (float) seconds. Ignoring.')
                         else:
-                            cmd = self.get_iattr_value(item.conf, 'viess_read')
-                            if cmd is not None and readafterwrite > 0:
-                                self.logger.debug(f'Attempting to schedule read after write for item {item}, command {cmd}, delay {readafterwrite}')
-                                self.scheduler_add(f'{item}-readafterwrite', lambda: self.send_command(cmd), next=self.shtime.now() + datetime.timedelta(seconds=readafterwrite))
+                            if command and readafterwrite > 0:
+                                self.logger.debug(f'Attempting to schedule read after write for item {item}, command {command}, delay {readafterwrite}')
+                                self.scheduler_add(f'{item}-readafterwrite', lambda: self.send_command(command), next=self.shtime.now() + datetime.timedelta(seconds=readafterwrite))
 
                 elif item.property.path in self._items_read_all:
 
@@ -1238,8 +1237,8 @@ class SmartDevicePlugin(SmartPlugin):
     def _set_item_attributes(self):
         """
         reads all item attributes defined in sdp.globals, tries to find the
-        actual item attribute (as imported from plugin.yaml) and modifies the
-        global variable to refer to the actual item attribute.
+        actual item attribute (as imported from plugin.yaml) and stores the
+        actual item attribute in class member dict _item_attrs.
 
         This way, only the prefixes in plugin.yaml need to be adjusted for new
         plugin classes, and the symbolic names can be used without additional
