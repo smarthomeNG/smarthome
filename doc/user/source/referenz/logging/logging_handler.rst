@@ -69,6 +69,15 @@ wird anstelle des ``class:`` Attributes der Handler **ShngTimedRotatingFileHandl
             filename: ./var/log/smarthome-warnings.log
             encoding: utf8
 
+Mögliche Angaben für ``when:`` sind:
+
+- 'S': jede Sekunde
+- 'M': jede Minute
+- 'H': jede Stunde
+- 'D': täglich
+- 'W0', 'W1', ..., 'W6': Tag der Woche (0 = Montag, 1 = Dienstag, ..., 6 = Sonntag)
+- 'midnight': Mitternacht, gleich wir 'D', also täglich
+
 |
 
 DateTimeRotatingFileHandler
@@ -78,6 +87,12 @@ Dieser Handler ermöglicht wie das operationlog und datalog Plugin, die Logdatei
 entsprechend der aktuellen Uhrzeit zu benennen. Gleich wie beim oben beschriebenen
 ShngTimedRotatingFileHandler kann angegeben werden, in welchem zeitlichen Abstand
 eine neue Datei erstellt werden soll und wieviele Backup-Versionen erhalten bleiben.
+Dabei sind zusätzlich mögliche Angaben für ``when:``:
+
+- 'W': jede Woche, also jeden Montag mitternachts, identisch zu W0
+- 'MO': monatlich, also jeden 1. eines Monats mitternachts
+- 'Y': jährlich, also jedes Jahr am 1. Jänner mitternachts
+
 Der Handler stellt mehrere Platzhalter für Dateinamen und Ordner zur Verfügung.
 Monat, Tag, Stunde und Minute werden im Normalfall mit einer Ziffer
 ohne vorgestellter 0 geschrieben, außer man setzt dezidiert ein ``:02`` hinten dran.

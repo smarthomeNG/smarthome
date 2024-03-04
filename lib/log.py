@@ -24,6 +24,7 @@ import time
 import logging
 import logging.handlers
 import logging.config
+import calendar
 import os
 import datetime
 import pickle
@@ -62,7 +63,7 @@ class Logs():
         else:
             self.logger.error(f"Another instance of Logs class already exists: {logs_instance}")
 
-        self._sh = sh        
+        self._sh = sh
         return
 
 
@@ -424,7 +425,11 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
         # M - Minutes
         # H - Hours
         # D - Days
+        # W or W0..W6 - Week
+        # MO - Month
+        # Y - Year
         # midnight - roll over at midnight
+        now = self._shtime.now()
         if self._when == 'S':
             self.time_unit = datetime.timedelta(seconds=1)  # one second
             self.suffix = "%Y-%m-%d-%H.%M.%S"
@@ -441,6 +446,23 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
             self.time_unit = datetime.timedelta(days=1)  # one day
             self.suffix = "%Y-%m-%d"
             self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}", re.ASCII)
+        elif self._when.startswith('W'):
+            day = 0 if len(self._when) == 1 else int(self._when[1:])
+            days_until_next = (day - now.weekday()) % 7
+            days_until_next = 7 if days_until_next == 0 else days_until_next
+            self.time_unit = datetime.timedelta(days=days_until_next)  # one week
+            self.suffix = "%Y-%m-%d"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}", re.ASCII)
+        elif self._when == 'MO':
+            _, days_in_month = calendar.monthrange(now.year, now.month)
+            self.time_unit = datetime.timedelta(days=days_in_month)  # one month
+            self.suffix = "%Y-%m"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}", re.ASCII)
+        elif self._when == 'Y':
+            days_in_year = (datetime.datetime(now.year + 1, 1, 1) - datetime.datetime(now.year, 1, 1)).days
+            self.time_unit = datetime.timedelta(days=days_in_year)  # one year
+            self.suffix = "%Y"
+            self.ext_pat = re.compile(r"^\d{4}", re.ASCII)
         else:
             raise ValueError(f"Invalid rollover interval specified: {self._when}")
 
@@ -514,8 +536,12 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
             t = t.replace(second=0, microsecond=0)
         elif self._when == 'H':
             t = t.replace(minute=0, second=0, microsecond=0)
-        elif self._when == 'D' or self._when == 'MIDNIGHT':
+        elif self._when == 'D' or self._when == 'MIDNIGHT' or self._when.startswith('W'):
             t = t.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif self._when == 'MO':
+            t = t.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        elif self._when == 'Y':
+            t = t.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
         return t + self.interval
 
     def get_files_to_delete(self):
