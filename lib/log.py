@@ -138,12 +138,11 @@ class Logs():
         try:
             logging.config.dictConfig(config_dict)
         except Exception as e:
-            #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
             print()
             print(f"ERROR: dictConfig: Invalid logging configuration in file '{os.path.join(self._sh.get_etcdir(), config_filename)}'")
             print(f"       Exception: {e}")
             print()
-            return False
+            return e
 
         #self.logger.notice(f"Logs.configure_logging: Level NOTICE = {notice_level} / root_handler_level={root_handler_level}")
 
