@@ -21,7 +21,19 @@ def get_basedir():
 
 
 def get_pid():
-    with open(os.path.join(base_dir, 'var', 'run', 'smarthome.pid')) as f:
+    file = os.path.join(base_dir, 'var', 'run', 'smarthome.pid')
+
+    # if shng is not yet (or not anymore) running, we need to wait for it
+    waiting = False
+    while not os.path.exists(file):
+        if not waiting:
+            print('Waiting for shng PID file..', end='', flush=True)
+            waiting = True
+        print('.', end='', flush=True)
+        time.sleep(1)
+    print()
+
+    with open(file) as f:
         pid = f.read()
     return pid
 
