@@ -1119,6 +1119,8 @@ class SmartDevicePlugin(SmartPlugin):
             if self._cyclic_errors >= 3 and self._reconnect_on_cycle_error:
                 self.logger.warning(f'Cyclic command read failed {self._cyclic_errors} times due to long previous cycle. Reconnecting... ')
                 self.disconnect()
+                self._cyclic_update_active = False
+
                 # reconnect
                 if not self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
                     time.sleep(1)
