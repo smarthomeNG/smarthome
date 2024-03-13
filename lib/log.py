@@ -656,7 +656,7 @@ class ShngTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
     """
     TimedRotatingFilehandler with a different naming scheme for rotated files
     """
-    def __init__(self, filename, when='MIDNIGHT', interval=0, backupCount=0, encoding=None, delay=False, utc=False):
+    def __init__(self, filename, when='MIDNIGHT', interval=1, backupCount=0, encoding=None, delay=False, utc=False):
         year = datetime.datetime.now().strftime("%Y")
         month = datetime.datetime.now().strftime("%m")
         day = datetime.datetime.now().strftime("%d")
