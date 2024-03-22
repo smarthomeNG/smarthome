@@ -29,6 +29,9 @@ from lib.utils import Utils
 from lib.translation import translate as lib_translate
 import logging
 import os
+import threading
+import asyncio
+import time
 import inspect
 
 
@@ -131,7 +134,7 @@ class SmartPlugin(SmartObject, Utils):
 
         The configuration information can be retrieved later by a call to the method get_item_configdata(<item_path>)
 
-        If data is beeing received by the plugin, a mapping ( a 'device-command' or matchstring) has to be specified
+        If data is being received by the plugin, a mapping ( a 'device-command' or matchstring) has to be specified
         as an optional 3rd parameter. This allows a reverse lookup. The method get_itemlist_for_mapping(<mapping>)
         returns a list of items for the items that have defined the <mapping>. In most cases, the list will have
         only one entry, but if multiple items should receive data from the same device (or command), the list can
@@ -954,7 +957,6 @@ class SmartPlugin(SmartObject, Utils):
         self.logger.debug(f"scheduler_add: name = {name}, parameters: {parameters}")
         self._sh.scheduler.add(name, obj, prio, cron, cycle, value, offset, next, from_smartplugin=True)
 
-
     def scheduler_change(self, name, **kwargs):
         """
         This methods changes a scheduler entry of a plugin-scheduler
@@ -971,7 +973,6 @@ class SmartPlugin(SmartObject, Utils):
         self.logger.debug(f"scheduler_change: name = {name}, parameters: {parameters}")
         self._sh.scheduler.change(name, **kwargs)
 
-
     def scheduler_remove(self, name):
         """
         This methods removes a scheduler entry of a plugin-scheduler
@@ -986,7 +987,6 @@ class SmartPlugin(SmartObject, Utils):
         self.logger.debug(f"scheduler_remove: name = {name}")
         self._sh.scheduler.remove(name, from_smartplugin=True)
 
-
     def scheduler_get(self, name):
         """
         This methods gets a scheduler entry of a plugin-scheduler
@@ -1000,6 +1000,122 @@ class SmartPlugin(SmartObject, Utils):
         name = self._pluginname_prefix + self.get_fullname() + name
         self.logger.debug(f"scheduler_get: name = {name}")
         return self._sh.scheduler.get(name, from_smartplugin=True)
+
+
+    # ----------------------------------------------------------------------------------
+    #   Ascyncio handling (to be moved to SmartPlugin?)
+    # ----------------------------------------------------------------------------------
+
+    _asyncio_loop = None        # eventloop of the plugin
+    run_queue = None            # queue to send commends to the main-coro/plugin-coro
+
+    def start_asyncio(self, plugin_coro):
+        """
+        Start the thread for the asyncio loop
+
+        The started asyncio thread sets up the asyncio environment and starts the evemtloop.
+        This routine is to be called from the plugin's run() method
+
+        :param plugin_coro: The asyncio coroutine which implements the async part of the plugin
+        """
+        threadname = 'plugins.'+self.get_fullname()+'.asyncio'
+        try:
+            self.pluginThread = threading.Thread(target=self._asyncio_loop_thread, name=threadname, daemon=False, kwargs={'plugin_coro': plugin_coro})
+            self.logger.info(f"Starting thread {threadname} for asyncio loop...")
+            self.pluginThread.start()
+        except Exception as e:
+            self.logger.error(f"Cannot start thread '{threadname}' - Error: {e}")
+        return
+
+    def stop_asyncio(self):
+        """
+        stop the eventloop and the thread it is running in
+
+        This routine is to be called from the plugin's stop() method
+
+        """
+        self.logger.info("Shutting down asyncio loop and thread...")
+        try:
+            # Send termination command to plugin_coro to stop the plugin
+            asyncio.run_coroutine_threadsafe(self.run_queue.put('STOP'), self._asyncio_loop)
+        except Exception as e:
+            self.logger.notice(f"stop_asyncio: Exception '{e}' in run_queue.put")
+        time.sleep(3)
+        try:
+            self.pluginThread.join()
+            self.logger.debug("_asyncio_loop_thread of plugin stopped")
+        except Exception as err:
+            self.logger.notice(f"Error stopping _asyncio_loop_thread: {err}")
+            pass
+        return
+
+    def _asyncio_loop_thread(self, plugin_coro):
+        """
+        Thread to start and execute the asyncio event loop
+
+        It starts the main task, which starts the plugin coroutine as a task
+
+        :param plugin_coro: Coroutine that should be started in the eventloop of the asyncio-thread
+        """
+        self.logger.debug("_asyncio_loop_thread of plugin started")
+
+        asyncio.run(self._asyncio_main(plugin_coro))
+
+        return
+
+    async def _asyncio_main(self, plugin_coro):
+        """
+        main coroutine to set up the environment for the coroutine of the specific plugin
+
+        :param plugin_coro: Coroutine that should be started in the eventloop of the asyncio-thread
+        """
+        self.logger.debug("_asyncio main task of plugin started")
+        self._asyncio_loop = asyncio.get_event_loop()
+        task = asyncio.current_task()
+        task.set_name('MainTask')
+        # Create queue to send termination command to plugin_coro when the plugin should be stopped
+        self.run_queue = asyncio.Queue()
+
+        # Create the main task of the plugin and await it
+        self.task = asyncio.create_task(plugin_coro, name='PluginTask')
+        try:
+            await self.task
+        except Exception as ex:
+            self.logger.exception(f"Exception raised in PluginTask: {ex}")
+
+        self._asyncio_loop = None
+        self.logger.debug("_asyncio main task of plugin finished")
+
+    def run_asyncio_coro(self, coro):
+        """
+        Run a coroutine in the eventloop of the plugin
+
+        When the asyncio eventloop of the plugin is running, this method can be used to add a coroutine
+        to the eventloop from the part of the plugin which is thread operated.
+        E.g.: This can be used in the plugins update_item() method to send data to the device through an asyncio package
+
+        :param coro: A coroutine that should be run in the eventloop of the asyncio-thread
+        """
+        if self._asyncio_loop is None:
+            self.logger.error(f"run_asyncio_coro: Cannot run coro because no eventloop is active ({coro=})")
+            return
+        try:
+            asyncio.run_coroutine_threadsafe(coro, self._asyncio_loop)
+        except Exception as ex:
+            self.logger.exception(f"run_asyncio_coro: Exception {ex} ({coro=}, loop={self._asyncio_loop})")
+        return
+
+    async def list_asyncio_tasks(self):
+        """
+        Log al list of the tasks that are in the eventloop
+        """
+        self.logger.notice("list_asyncio_tasks: Task list")
+        tasks = asyncio.all_tasks()
+        for task in tasks:
+            if task.get_coro().__name__ == 'list_asyncio_tasks':
+                task.set_name('ListTasks')
+            self.logger.notice(f" - {task}")
+
 
 
     def run(self):
