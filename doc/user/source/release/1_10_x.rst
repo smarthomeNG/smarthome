@@ -17,9 +17,9 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 29. Januar 2024
-           (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 29. Januar 2024
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 22. März 2024
+           (Bumped core version to 1.10.0.2...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 13. März 2024
            (...)
 
 
@@ -59,7 +59,7 @@ Allgmein
 
 * Workflows:
 
-  * ...
+  * Fix unittest for forked repos in core
 
 
 Bugfixes im CORE
@@ -71,7 +71,17 @@ Bugfixes im CORE
 Updates in the CORE
 -------------------
 
-* ...
+* bin
+
+  * smarthome
+
+    * Added option -e (--config_etc)
+
+  * shngversion:
+
+    * Bumped core version to 1.10.0.2 -> added support for asyncio in plugins
+
+
 
 * Items:
 
@@ -83,13 +93,68 @@ Updates in the CORE
 
 * Libs:
 
-  * lib. ...:
+  * lib.backup:
+
+      * Added support for option -e (--config_etc)
+
+  * lib.config:
+
+    * Remove name attribute from struct root before merging
+    * Add struct syntax checking
+
+  * lib.item:
+
+    * Replace item.path() with item.property.path
+    * Added warning for collision of name and class method
+    * Speedup name collision check
+    * Add methods for list/dict manipulation
+    * Remove old list/dict methods
+
+  * lib.log:
+
+    * Mutable etc_dir not persited in lib/log.py
+    * Log issues with logging.yaml to standard shng logger additionally
+    * Allow weekly, monthly and yearly rotation when using DateTimeRotatingFileHandler
+    * Fix for bug introduced with v 1.10 in ShngTimedRotatingFileHandler: Log content and file name had an offset
+
+  * lib.model:
+
+    * mqttplugin:
+
+      * Replace item.path() with item.property.path
+
+    * sdp:
+
+      * Improvements
+      * Add version, cyclic error detection/reconnect
+      * Implement read after write
+      * Fix attr resolving
+      * Fix long cyclic recovery
+
+    * smartplugin:
+
+      * Replace item.path() with item.property.path
+      * Added support for the use of asyncio in plugins
+
+  * lib.smarthome:
+
+      * Added support for option -e (--config_etc)
+      * Log issues with logging.yaml to standard shng logger additionally
+
+  * lib.struct:
+
+    * Add struct syntax checking
 
 * Modules:
 
-  * ...:
+  * modules.http:
 
-    * ...
+    * Extended base_plugin to support 8 tabs in webinterface
+    * Fix issue with datatable when bodytab count changed after cookies have been set
+
+  * modules.mqtt:
+
+    * Changed requirements - the lately released paho client 2.0 has breaking changes
 
 * Plugins:
 
@@ -98,6 +163,13 @@ Updates in the CORE
 * tests:
 
   * ...
+
+* tools:
+
+  * tools/cpuusage:
+
+    * Wait for pid file creation
+    * Fix output buffering
 
 |
 
@@ -131,9 +203,123 @@ Plugin Updates
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-* <name>:
+* avm:
 
-  * ...
+  * Catch exception after maximum retries exceeded
+
+* database:
+
+  * Corrected inline comment
+
+* db_addon:
+
+  * Fix bug in wachstumsgradtage
+  * Fix bug in database queries for "next"-function
+  * Fix bug in database queries for "next"-function
+  * Fix bug in kaeltesumme
+  * Bugfix in wachstumsgradtage and docu update
+
+* enocean:
+
+  * Adapted caller to global smarthomeNG convention -> enocean instead of EnOcean
+
+* homematic:
+
+  * Added name to an unnamed thread
+  * Fixed webinterface for items with the same name
+
+* ical:
+
+  * Fix issue when timezone info contains : e.g. "timezone://..."
+  * Bump v to 1.6.4
+
+* jsonread:
+
+  * Update docu
+  * Update maintainer, tester
+  * Remove pyminversion
+  * Bump version to 1.0.4
+
+* ksemmodbus:
+
+  * Removed support for pymodbus2
+
+* neato:
+
+  * Removed debug output
+  * Added proper backend online status decoding
+
+* nuki:
+
+  * Changes on request lock mechanism
+  * Added debug logging
+  * Fixed README.md
+  * Renamed remotestart_1/2.path to remotestart_1/2.rstart_path
+  * Added timeout to request handling against api to prevent unlimited blocks of lock
+
+* robonect:
+
+  * Removed strange / in version number
+
+* rrd:
+
+  * Remove useless webinterface code and folder
+  * Fix docu
+
+* shelly:
+
+  * Extended plugin to support generation 3 devices
+  * Catch exception in update_item if ID is not known yet
+  * Minor typo fixes in documentation
+  * Fix docu
+
+* simulation:
+
+  * sv_widget option to avoid block with headline
+
+* sma_mb:
+
+  * Removed support for pymodbus2
+
+* smartvisu:
+
+  * Fix for display of datetime object
+
+* solarforecast:
+
+  * Catch exception if return value is not json conform
+
+* sonos:
+
+  * Minor robustness fix
+
+* stateengine:
+
+  * Fix logging of header when directory is not created yet
+
+* tasmota:
+
+  * Add input button
+
+* uzsu:
+
+  * Fix previously introduced problem with series rrule
+  * Improve handling of invalid items
+  * Improve logging
+  * Bump version to 2.0.1
+
+* vicare:
+
+  * If multiple devices are available, readout the first device with valid boiler serial number
+  * Added list of available devices to webinterface
+
+* zigbee2mqtt:
+
+  * Add new structs
+
+* Multiple plugins:
+
+  * Replace item.path() with item.property.path
 
 
 Outdated Plugins

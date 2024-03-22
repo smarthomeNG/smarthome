@@ -201,7 +201,7 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
   "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.5"
   "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8",    "Python 3.6"
   "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9",    "Python 3.7"
-  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.7"
+  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.8"
   "v1.11",           "Python 3.12", "Python 3.10, 3.11, 3.12", "tbd"
 
 Wenn die eingesetzte Python Version nicht in den unterstützen Python Versionen aufgelistet ist, bedeutet das nicht
@@ -242,14 +242,16 @@ Python Versionen zu installieren (Sies Abschnitt Referenz).
 Hier sind einige Beispiele für Linux-System und mitgeliefere Software Versionen:
 
 .. csv-table:: Distributionen und enthaltene Python und PHP Versionen
-  :header: "Distribution", "Python Version", "PHP Version"
+  :header: "Distribution", "End of Support", "Python Version", "PHP Version"
 
-   "Debian 10 (Buster)",                  "Python 3.7",   "PHP 7.3"
-   "Debian 11 (Bullseye)",                "Python 3.9",   "PHP 7.4"
-   "Debian 12 (Bookworm)",                "Python 3.11",  "PHP 8.2"
-   "Ubuntu 18.04 LTS (Bionic Beaver)",    "Python 3.6",   "PHP 7.2"
-   "Ubuntu 20.04 LTS (Focal Fossa)",      "Python 3.8",   "PHP 7.4"
-   "Ubuntu 22.04 LTS (Jammy Jellyfish)",  "Python 3.10",  "PHP 8.1"
+   "Debian 10 (Buster)",                 "Sep 2022 / Jun 2024", "Python 3.7",   "PHP 7.3"
+   "Debian 11 (Bullseye)",               "Jul 2027",            "Python 3.9",   "PHP 7.4"
+   "Debian 12 (Bookworm)",               "",                    "Python 3.11",  "PHP 8.2"
+   "Ubuntu 18.04 LTS (Bionic Beaver)",   "Apr 2023 / Apr 2028", "Python 3.6",   "PHP 7.2"
+   "Ubuntu 20.04 LTS (Focal Fossa)",     "Apr 2025 / Apr 2030", "Python 3.8",   "PHP 7.4"
+   "**Ubuntu 22.04 LTS (Jammy Jellyfish)**", "Apr 2027 / Apr 2032", "Python 3.10",  "PHP 8.1"
+   "Ubuntu 23.04 (Lunar Lobster)",       "Jan 2024",            "Python 3.11",  "PHP 8.1"
+   "Ubuntu 22.10 (Mantic Minotaur)",     "Jul 2024",            "Python 3.11",  "PHP 8.2"
 
 
 Aus den Beispielen ist ersichtlich, das Debian Stretch nicht mehr für Neuinstallationen verwendet werden sollte.
