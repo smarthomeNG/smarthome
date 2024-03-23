@@ -209,7 +209,7 @@ class ItemData:
             for trigger in item.get_logic_triggers():
                 logic_name = format(trigger)
                 logic_info = self._sh.logics.get_logic_info(logic_name)
-                self.logger.notice(f"{logic_name=}, {logic_info=}")
+                self.logger.info(f"Triggered {logic_name=}, {logic_info=}")
                 logic={'name': logic_name, 'description': logic_info.get('description', '')}
                 logics.append(logic)
                 #logics.append(html.escape(format(trigger)))
