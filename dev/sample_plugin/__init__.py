@@ -25,6 +25,8 @@
 #
 #########################################################################
 
+import asyncio
+
 from lib.model.smartplugin import SmartPlugin
 from lib.item import Items
 
@@ -66,7 +68,7 @@ class SamplePlugin(SmartPlugin):
         # cycle time in seconds, only needed, if hardware/interface needs to be
         # polled for value changes by adding a scheduler entry in the run method of this plugin
         # (maybe you want to make it a plugin parameter?)
-        self._cycle = 60
+        # self._cycle = 60
 
         # Initialization code goes here
 
@@ -86,10 +88,18 @@ class SamplePlugin(SmartPlugin):
         Run method for the plugin
         """
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'run()'}))
-        # setup scheduler for device poll loop   (disable the following line, if you don't need to poll the device. Rember to comment the self_cycle statement in __init__ as well)
-        self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
+        # setup scheduler for device poll loop
+        # (enable the following line, if you need to poll the device.
+        #  Rember to un-comment the self._cycle statement in __init__ as well)
+        #self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
 
-        self.alive = True
+        # Start the asyncio eventloop in it's own thread
+        # and set self.alive to True when the eventloop is running
+        # (enable the following line, if you need to use asyncio in the plugin)
+        #self.start_asyncio(self.plugin_coro())
+
+        self.alive = True     # if using asyncio, do not set self.alive here. Set it in the session coroutine
+
         # if you need to create child threads, do not make them daemon = True!
         # They will not shutdown properly. (It's a python bug)
 
@@ -98,8 +108,14 @@ class SamplePlugin(SmartPlugin):
         Stop method for the plugin
         """
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
-        self.scheduler_remove('poll_device')
-        self.alive = False
+        self.alive = False     # if using asyncio, do not set self.alive here. Set it in the session coroutine
+
+        # if you use a scheduled poll loop, enable the following line
+        #self.scheduler_remove('poll_device')
+
+        # stop the asyncio eventloop and it's thread
+        # If you use asyncio, enable the following line
+        #self.stop_asyncio()
 
     def parse_item(self, item):
         """
@@ -138,18 +154,20 @@ class SamplePlugin(SmartPlugin):
         It should write the changed value out to the device (hardware/interface) that
         is managed by this plugin.
 
+        To prevent a loop, the changed value should only be written to the device, if the plugin is running and
+        the value was changed outside of this plugin(-instance). That is checked by comparing the caller parameter
+        with the fullname (plugin name & instance) of the plugin.
+
         :param item: item to be updated towards the plugin
         :param caller: if given it represents the callers name
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
-        if self.alive and caller != self.get_shortname():
+        if self.alive and caller != self.get_fullname():
             # code to execute if the plugin is not stopped
-            # and only, if the item has not been changed by this this plugin:
-            self.logger.info(f"Update item: {item.property.path}, item has been changed outside this plugin")
+            # and only, if the item has not been changed by this plugin:
+            self.logger.info(f"update_item: {item.property.path} has been changed outside this plugin by caller '{self.callerinfo(caller, source)}'")
 
-            if self.has_iattr(item.conf, 'foo_itemtag'):
-                self.logger.debug(f"update_item was called with item {item.property.path} from caller {caller}, source {source} and dest {dest}")
             pass
 
     def poll_device(self):
@@ -170,8 +188,22 @@ class SamplePlugin(SmartPlugin):
         #     # - value and caller must be specified, source and dest are optional
         #     #
         #     # The simple case:
-        #     item(device_value, self.get_shortname())
+        #     item(device_value, self.get_fullname())
         #     # if the plugin is a gateway plugin which may receive updates from several external sources,
-        #     # the source should be included when updating the the value:
-        #     item(device_value, self.get_shortname(), source=device_source_id)
+        #     # the source should be included when updating the value:
+        #     item(device_value, self.get_fullname(), source=device_source_id)
         pass
+
+    async def plugin_coro(self):
+        """
+        Coroutine for the plugin session (only needed, if using asyncio)
+
+        This coroutine opens the session to the hue bridge and
+        only terminate, when the plugin ois stopped
+        """
+        self.logger.notice("plugin_coro started")
+
+        # ...
+
+        self.logger.notice("plugin_coro finished")
+        return

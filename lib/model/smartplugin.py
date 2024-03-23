@@ -231,6 +231,14 @@ class SmartPlugin(SmartObject, Utils):
 
         return True
 
+
+    def callerinfo(self, caller, source):
+
+        if source is None:
+            return caller
+        else:
+            return caller + ':' + source
+
     def update_item(self, item, caller=None, source=None, dest=None):
         """
         Item has been updated
@@ -1097,7 +1105,7 @@ class SmartPlugin(SmartObject, Utils):
         :param coro: A coroutine that should be run in the eventloop of the asyncio-thread
         """
         if self._asyncio_loop is None:
-            self.logger.error(f"run_asyncio_coro: Cannot run coro because no eventloop is active ({coro=})")
+            self.logger.error(f"run_asyncio_coro: Cannot run coro '{coro}' because no eventloop is active")
             return
         try:
             asyncio.run_coroutine_threadsafe(coro, self._asyncio_loop)
@@ -1116,6 +1124,7 @@ class SmartPlugin(SmartObject, Utils):
                 task.set_name('ListTasks')
             self.logger.notice(f" - {task}")
 
+    # ----------------------------------------------------------------------------------
 
 
     def run(self):
