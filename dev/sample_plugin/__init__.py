@@ -166,7 +166,7 @@ class SamplePlugin(SmartPlugin):
         if self.alive and caller != self.get_fullname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this plugin:
-            self.logger.info(f"update_item: {item.property.path} has been changed outside this plugin by caller '{self.callerinfo(caller, source)}'")
+            self.logger.info(f"update_item: '{item.property.path}' has been changed outside this plugin by caller '{self.callerinfo(caller, source)}'")
 
             pass
 
@@ -198,12 +198,16 @@ class SamplePlugin(SmartPlugin):
         """
         Coroutine for the plugin session (only needed, if using asyncio)
 
-        This coroutine opens the session to the hue bridge and
-        only terminate, when the plugin ois stopped
+        This coroutine is run as the PluginTask and should
+        only terminate, when the plugin is stopped
         """
         self.logger.notice("plugin_coro started")
 
+        self.alive = True
+
         # ...
+
+        self.alive = False
 
         self.logger.notice("plugin_coro finished")
         return

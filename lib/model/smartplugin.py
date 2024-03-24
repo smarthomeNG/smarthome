@@ -1043,12 +1043,13 @@ class SmartPlugin(SmartObject, Utils):
 
         """
         self.logger.info("Shutting down asyncio loop and thread...")
-        try:
-            # Send termination command to plugin_coro to stop the plugin
-            asyncio.run_coroutine_threadsafe(self.run_queue.put('STOP'), self._asyncio_loop)
-        except Exception as e:
-            self.logger.notice(f"stop_asyncio: Exception '{e}' in run_queue.put")
-        time.sleep(3)
+        if self._asyncio_loop is not None:
+            try:
+                # Send termination command to plugin_coro to stop the plugin
+                asyncio.run_coroutine_threadsafe(self.run_queue.put('STOP'), self._asyncio_loop)
+            except Exception as e:
+                self.logger.notice(f"stop_asyncio: Exception '{e}' in run_queue.put ({self._asyncio_loop=})")
+            time.sleep(3)
         try:
             self.pluginThread.join()
             self.logger.debug("_asyncio_loop_thread of plugin stopped")
