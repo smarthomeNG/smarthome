@@ -89,9 +89,6 @@ class SystemData:
         else:
             user = os.getlogin()
 
-        ipv6 = Utils.get_local_ipv6_address()
-        ip = Utils.get_local_ipv4_address()
-
         if os.name != 'nt':
             space = os.statvfs(self._sh.base_dir)
             freespace = space.f_frsize * space.f_bavail / 1024 / 1024
@@ -135,8 +132,19 @@ class SystemData:
         response['pyversion'] = pyversion
         response['pypath'] = self._sh.python_bin
         response['pyvirtual'] = lib.utils.running_virtual()
-        response['ip'] = ip
-        response['ipv6'] = ipv6
+
+        # ip = Utils.get_local_ipv4_address()
+        ip = Utils.get_all_local_ipv4_addresses()
+        if '127.0.0.1' in ip:
+            ip.remove('127.0.0.1')
+            #ip.append('127.0.0.1')
+        if len(ip) == 1:
+            response['ip'] = ip[0]
+        else:
+            response['ip'] = str(ip)
+        ipv6 = Utils.get_local_ipv6_address()
+        # ipv6 = Utils.get_all_local_ipv6_addresses()
+        response['ipv6'] = str(ipv6)
         if os.name != 'nt':
             response['pid'] = str(lib.daemon.read_pidfile(self._sh._pidfile))
         else:
