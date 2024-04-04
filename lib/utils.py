@@ -195,6 +195,39 @@ class Utils(object):
                 s.close()
         return IP
 
+    @staticmethod
+    def get_all_local_ipv4_addresses() -> list:
+        """
+        Get all ipv4 addresses as a list
+
+        https://stackoverflow.com/questions/270745/how-do-i-determine-all-of-my-ip-addresses-when-i-have-multiple-nics/274644#274644
+
+        :return: ipv4 adresses
+        """
+        from netifaces import interfaces, ifaddresses, AF_INET
+
+        ip_list = []
+        for interface in interfaces():
+            for link in ifaddresses(interface)[AF_INET]:
+                ip_list.append(link['addr'])
+        return ip_list
+
+    @staticmethod
+    def get_all_local_ipv6_addresses() -> list:
+        """
+        Get all ipv6 addresses as a list
+
+        https://stackoverflow.com/questions/270745/how-do-i-determine-all-of-my-ip-addresses-when-i-have-multiple-nics/274644#274644
+
+        :return: ipv6 adresses
+        """
+        from netifaces import interfaces, ifaddresses, AF_INET6
+
+        ip_list = []
+        for interface in interfaces():
+            for link in ifaddresses(interface)[AF_INET6]:
+                ip_list.append(link['addr'])
+        return ip_list
 
     @staticmethod
     def is_knx_groupaddress(groupaddress):

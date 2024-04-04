@@ -16,6 +16,9 @@ iowait
 #requests: Requirements update to >=2.20.0 due to CVE-2018-18074
 requests>=2.20.0
 
+# lib.utils
+netifaces
+
 # lib.shpypi
 xmltodict
 
