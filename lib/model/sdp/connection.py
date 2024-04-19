@@ -62,15 +62,15 @@ class SDPConnection(object):
     is something to implement in the interface-specific derived classes.
     """
 
-    _is_connected = False
-    _data_received_callback = None
-    _suspend_callback = None
-    dummy = None
-    _send_lock = None
-    use_send_lock = False
-    _params = None
-
     def __init__(self, data_received_callback, name=None, **kwargs):
+
+        self._is_connected = False
+        self._data_received_callback = None
+        self._suspend_callback = None
+        self.dummy = None
+        self._send_lock = None
+        self.use_send_lock = False
+        self._params = None
 
         if not hasattr(self, 'logger'):
             self.logger = logging.getLogger(__name__)
@@ -660,7 +660,11 @@ class SDPConnectionSerial(SDPConnection):
         super().__init__(data_received_callback, done=False, name=name, **kwargs)
 
         # only import serial now we know we need it -> reduce requirements for non-serial setups
-        self.serial = import_module('serial')
+        try:
+            self.serial = import_module('serial')
+        except ImportError:
+            self.logger.critical('SDP plugin wants to use serial connection, but pyserial module not installed.')
+            return
 
         # set class properties
         self._lock = TimeoutLock()
@@ -686,10 +690,11 @@ class SDPConnectionSerial(SDPConnection):
         self.logger.debug(f'connection initialized from {self.__class__.__name__}')
 
     def _open(self):
+        self.logger.debug(f'{self.__class__.__name__} _open called with params {self._params}')
+
         if self._is_connected:
             self.logger.debug(f'{self.__class__.__name__} _open called while connected, doing nothing')
             return True
-        self.logger.debug(f'{self.__class__.__name__} _open called with params {self._params}')
 
         while not self._is_connected and self._connection_attempts <= self._params[PLUGIN_ATTR_CONN_RETRIES]:
 
@@ -703,7 +708,6 @@ class SDPConnectionSerial(SDPConnection):
                 if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
                     self._params[PLUGIN_ATTR_CB_ON_CONNECT](self)
                 self._setup_listener()
-                return True
             except (self.serial.SerialException, ValueError) as e:
                 self.logger.error(f'error on connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]}. Error was: {e}')
                 self._connection_attempts = 0
@@ -711,7 +715,9 @@ class SDPConnectionSerial(SDPConnection):
             finally:
                 self._lock.release()
 
-            if not self._is_connected:
+            if self._is_connected:
+                return True
+            else:
                 self.logger.debug(f'sleeping {self._params[PLUGIN_ATTR_CONN_CYCLE]} seconds before next connection attempt')
                 sleep(self._params[PLUGIN_ATTR_CONN_CYCLE])
 

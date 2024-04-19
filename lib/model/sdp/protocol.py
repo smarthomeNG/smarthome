@@ -146,15 +146,9 @@ class SDPProtocolJsonrpc(SDPProtocol):
     """
     def __init__(self, data_received_callback, name=None, **kwargs):
 
-        self.logger = logging.getLogger(__name__)
-
-        if SDP_standalone:
-            self.logger = logging.getLogger('__main__')
-
-        self.logger.debug(f'protocol initializing from {self.__class__.__name__} with arguments {kwargs}')
+        super().__init__(data_received_callback, name, **kwargs)
 
         # set class properties
-        self._is_connected = False
         self._shutdown_active = False
 
         self._message_id = 0
@@ -188,8 +182,6 @@ class SDPProtocolJsonrpc(SDPProtocol):
         self._check_stale_cycle = float(self._params[PLUGIN_ATTR_MSG_TIMEOUT]) / 2
         self._next_stale_check = 0
         self._last_stale_check = 0
-
-        self._data_received_callback = data_received_callback
 
         # initialize connection
         self._get_connection(True, name=name)
