@@ -208,8 +208,12 @@ class Utils(object):
 
         ip_list = []
         for interface in interfaces():
-            for link in ifaddresses(interface)[AF_INET]:
-                ip_list.append(link['addr'])
+            try:
+                for link in ifaddresses(interface)[AF_INET]:
+                    ip_list.append(link['addr'])
+            except Exception as ex:
+                logger.warning(f"get_all_local_ipv4_addresses: Exception {ex} - {ifaddresses(interface)}")
+                ip_list.append(Utils.get_local_ipv4_address())
         return ip_list
 
     @staticmethod
@@ -225,8 +229,12 @@ class Utils(object):
 
         ip_list = []
         for interface in interfaces():
-            for link in ifaddresses(interface)[AF_INET6]:
-                ip_list.append(link['addr'])
+            try:
+                for link in ifaddresses(interface)[AF_INET6]:
+                    ip_list.append(link['addr'])
+            except Exception as ex:
+                logger.warning(f"get_all_local_ipv4_addresses: Exception {ex} - {ifaddresses(interface)}")
+                ip_list.append(Utils.get_local_ipv6_address())
         return ip_list
 
     @staticmethod
