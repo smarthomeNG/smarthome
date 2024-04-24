@@ -1095,7 +1095,7 @@ class SmartPlugin(SmartObject, Utils):
         self._asyncio_loop = None
         self.logger.debug("_asyncio main task of plugin finished")
 
-    def run_asyncio_coro(self, coro):
+    def run_asyncio_coro(self, coro, return_exeption=False):
         """
         Run a coroutine in the eventloop of the plugin
 
@@ -1109,10 +1109,15 @@ class SmartPlugin(SmartObject, Utils):
             self.logger.error(f"run_asyncio_coro: Cannot run coro '{coro}' because no eventloop is active")
             return
         try:
-            asyncio.run_coroutine_threadsafe(coro, self._asyncio_loop)
+            future = asyncio.run_coroutine_threadsafe(coro, self._asyncio_loop)
+            result = future.result(timeout=60)
         except Exception as ex:
-            self.logger.exception(f"run_asyncio_coro: Exception {ex} ({coro=}, loop={self._asyncio_loop})")
-        return
+            result = None
+            if return_exeption:
+                raise Exception( ex )
+            else:
+                self.logger.exception(f"run_asyncio_coro: Exception {ex} ({coro=}, loop={self._asyncio_loop})")
+        return result
 
     async def list_asyncio_tasks(self):
         """
