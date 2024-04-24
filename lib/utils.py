@@ -212,7 +212,7 @@ class Utils(object):
                 for link in ifaddresses(interface)[AF_INET]:
                     ip_list.append(link['addr'])
             except Exception as ex:
-                logger.warning(f"get_all_local_ipv4_addresses: Exception {ex} - {ifaddresses(interface)}")
+                logger.warning(f"get_all_local_ipv4_addresses: Exception {ex} \n- interfaces={interf}\n-act. interface={interface}\n- {ifaddresses(interface)}")
                 ip_list.append(Utils.get_local_ipv4_address())
         return ip_list
 
@@ -228,12 +228,13 @@ class Utils(object):
         from netifaces import interfaces, ifaddresses, AF_INET6
 
         ip_list = []
+        interf = interfaces()
         for interface in interfaces():
             try:
                 for link in ifaddresses(interface)[AF_INET6]:
                     ip_list.append(link['addr'])
             except Exception as ex:
-                logger.warning(f"get_all_local_ipv4_addresses: Exception {ex} - {ifaddresses(interface)}")
+                logger.warning(f"get_all_local_ipv6_addresses: Exception {ex} \n- interfaces={interf}\n-act. interface={interface}\n- {ifaddresses(interface)}")
                 ip_list.append(Utils.get_local_ipv6_address())
         return ip_list
 
