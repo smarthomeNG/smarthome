@@ -207,12 +207,15 @@ class Utils(object):
         from netifaces import interfaces, ifaddresses, AF_INET
 
         ip_list = []
+        interf = interfaces()
+        interf_data = {}
         for interface in interfaces():
             try:
+                interf_data[interface] = ifaddresses(interface)
                 for link in ifaddresses(interface)[AF_INET]:
                     ip_list.append(link['addr'])
             except Exception as ex:
-                logger.warning(f"get_all_local_ipv4_addresses: Exception {ex} \n- interfaces={interf}\n-act. interface={interface}\n- {ifaddresses(interface)}")
+                logger.warning(f"get_all_local_ipv4_addresses: Exception {ex} \n- interfaces={interf}\n-act. interface={interface}\n-act. interface data={interf_data}\n- {ifaddresses(interface)}")
                 ip_list.append(Utils.get_local_ipv4_address())
         return ip_list
 
