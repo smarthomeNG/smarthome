@@ -291,8 +291,8 @@ class Utils(object):
             return False
 
     @staticmethod
-#    def to_timeframe(value: str | int) -> int:  # works for Python 3.10 and above
     def to_timeframe(value: str) -> int:        # works for Python 3.9 and under
+#    def to_timeframe(value: str | int) -> int:  # works for Python 3.10 and above
         """
         Converts a timeframe value to milliseconds. See is_timeframe() method.
         The special value 'now' is supported for the current time.
@@ -360,10 +360,10 @@ class Utils(object):
             return False
 
     @staticmethod
-#    def to_bool(value: str|int|float, default: bool='exception') -> bool:   # works for Python 3.10 and above
     def to_bool(value: str, default: bool = 'exception') -> bool:           # works for Python 3.9 and under
+#    def to_bool(value: str|int|float, default: bool='exception') -> bool:   # works for Python 3.10 and above
 
-            """
+        """
         Converts a value to boolean.
 
         Raises exception if value is a string and can't be converted and if no default value is given
