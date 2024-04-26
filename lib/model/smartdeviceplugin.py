@@ -87,7 +87,7 @@ class SmartDevicePlugin(SmartPlugin):
     """
 
     # this is the internal SDP version
-    SDP_VERSION = '1.0.0'
+    SDP_VERSION = '1.0.1'
 
     # this is the placeholder version of the derived plugin, not of SDP
     PLUGIN_VERSION = '0.0.1'
