@@ -752,7 +752,7 @@ class Tcp_client(object):
             else:
                 return False
 
-        except (BrokenPipeError, TimeoutError) as e:
+        except (BrokenPipeError, TimeoutError, ConnectionResetError) as e:
             if e.errno == 60:
                 # timeout
                 self.logger.warning(f'{self._id} detected timeout, disconnecting, send failed.')
