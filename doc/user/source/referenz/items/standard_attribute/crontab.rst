@@ -6,7 +6,7 @@
 crontab :bluesup:`Update`
 ===========================
 
-Es gibt drei verschiedene Parametersätze für ein Crontab Attribut:
+Es gibt drei verschiedene Parametersätze für ein crontab Attribut:
 
 .. tabs::
 
@@ -16,14 +16,14 @@ Es gibt drei verschiedene Parametersätze für ein Crontab Attribut:
 
         .. code-block:: yaml
 
-          crontab: init
+          crontab: 'init'
 
         Hier kann auch zusätzlich ein Offset angegeben werden um den
         tatsächlichen Zeitpunkt zu verschieben:
 
         .. code-block:: yaml
 
-          crontab: init+10    # 10 Sekunden nach Start
+          crontab: 'init+10'    # 10 Sekunden nach Start
 
     .. tab:: Zeitpunkte
 
@@ -31,9 +31,9 @@ Es gibt drei verschiedene Parametersätze für ein Crontab Attribut:
         Die Schreibweise ist an Linux Crontab angelehnt, entspricht diesem aber nicht genau.
         Es gibt je nach Parameteranzahl 3 Varianten:
 
-        * ``crontab: <Minute> <Stunde> <Tag> <Wochentag>``
-        * ``crontab: <Minute> <Stunde> <Tag> <Monat> <Wochentag>``
-        * ``crontab: <Sekunde> <Minute> <Stunde> <Tag> <Monat> <Wochentag>``
+        * ``crontab: '<Minute> <Stunde> <Tag> <Wochentag>'``
+        * ``crontab: '<Minute> <Stunde> <Tag> <Monat> <Wochentag>'``
+        * ``crontab: '<Sekunde> <Minute> <Stunde> <Tag> <Monat> <Wochentag>'``
 
         Dabei sind je nach Variante folgende Werte zulässig:
 
@@ -51,7 +51,7 @@ Es gibt drei verschiedene Parametersätze für ein Crontab Attribut:
 
         .. code-block:: yaml
 
-            crontab: 59 23 * * = 70
+            crontab: '59 23 * * = 70'
 
         Für jede dieser Zeiteinheiten (Minuten, Stunde, Tag, Wochentag) werden
         folgende Muster unterstützt (Beispiel jeweils ohne Anführungszeichen verwenden):
@@ -59,7 +59,7 @@ Es gibt drei verschiedene Parametersätze für ein Crontab Attribut:
         * eine einzelne Zahl, z.B. ``8`` → immer zur/zum 8. Sekunde/Minute/Stunde/Tag/Wochentag
         * eine Liste von Zahlen, z.B. ``2,8,16`` → immer zur/zum 2., 8. und 16. Sekunde/Minute/Stunde/Tag/Monat/Wochentag
         * ein Wertebereich, z.B. ``1-5`` → immer zwischen dem/der 1. und 5. Sekunde/Minute/Stunde/Tag/Monat/Wochentag
-        * einen Interval, z.B. ``\*\/4`` → immer alle 4 Sekunden/Minuten/Stunden/Tage/Wochentage
+        * einen Interval, z.B. ``*/4`` → immer alle 4 Sekunden/Minuten/Stunden/Tage/Wochentage
         * einen Stern, z.B. ``*`` → jede Sekunde/Minute/Stunde/Tag/Monat/Wochentag
 
     .. tab:: Zeitpunkte bezogen auf Aufgang von Sonne oder Mond 
@@ -83,18 +83,19 @@ Es gibt drei verschiedene Parametersätze für ein Crontab Attribut:
 
         .. code-block:: yaml
 
-            crontab: sunset 24 12 sun
+            crontab: 'sunset 24 12 sun'
 
         Das Item soll zu einem bestimmten Sonnenstand aktualisiert werden:
 
         .. code-block:: yaml
 
-          crontab: sunrise-10m
-          crontab: sunset+6
-          crontab: sunset
+          crontab: 'sunrise-10m'
+          crontab: 'sunset+6'
+          crontab: 'sunset'
 
 
-Sämtliche Optionen können in einer \*.yaml durch Listenbildung erstellt werden. Im Admin Interface können die einzelnen Parametersätze durch ``|`` getrennt werden.
+Sämtliche Optionen können in einer ``*.yaml`` durch Listenbildung erstellt werden. 
+Im Admin Interface können die einzelnen Parametersätze durch ``|`` getrennt werden.
 
 Durch Anhängen eines ``= value`` wird der entsprechende Wert ``value`` mitgesendet. 
 Das Beispiel setzt den Wert des Items täglich um Mitternacht auf ``20``:
@@ -103,18 +104,18 @@ Das Beispiel setzt den Wert des Items täglich um Mitternacht auf ``20``:
 .. code-block:: yaml
 
    crontab:
-     - 0 0 * * = 20
+     - '0 0 * * = 20'
      - sunrise
 
 Möchte man einen Wert im Minutentakt aktualisieren, ist es notwendig den Ausdruck ``* * * *`` unter Anführungszeichen zu setzen.
 
 .. code-block:: yaml
 
-  crontab: '* * * * = 1'
+   crontab: '* * * * = 1'
 
 Folgendes Beispiel zeigt wie alle 15 Sekunden der Wert ``42`` gesendet wird:
 
 .. code-block:: yaml
 
-  crontab: '*/15 * * * * * = 42'
+   crontab: '*/15 * * * * * = 42'
   
