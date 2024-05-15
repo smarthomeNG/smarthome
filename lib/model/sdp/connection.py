@@ -70,7 +70,7 @@ class SDPConnection(object):
         self.dummy = None
         self._send_lock = None
         self.use_send_lock = False
-        self._params = None
+        self._params = {}
 
         if not hasattr(self, 'logger'):
             self.logger = logging.getLogger(__name__)
