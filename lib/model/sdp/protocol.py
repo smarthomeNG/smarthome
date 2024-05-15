@@ -64,23 +64,13 @@ class SDPProtocol(SDPConnection):
 
     def __init__(self, data_received_callback, name=None, **kwargs):
 
-        self.logger = logging.getLogger(__name__)
-
-        if SDP_standalone:
-            self.logger = logging.getLogger('__main__')
+        # init super, get logger
+        super().__init__(data_received_callback, name, **kwargs)
 
         self.logger.debug(f'protocol initializing from {self.__class__.__name__} with arguments {kwargs}')
 
-        # set class properties
-        self._is_connected = False
-        self._data_received_callback = data_received_callback
-
         # make sure we have a basic set of parameters
-        self._params = {PLUGIN_ATTR_CB_ON_DISCONNECT: None,
-                        PLUGIN_ATTR_CB_ON_CONNECT: None,
-                        PLUGIN_ATTR_MSG_TIMEOUT: 3,
-                        PLUGIN_ATTR_MSG_REPEAT: 3,
-                        PLUGIN_ATTR_CONNECTION: SDPConnection}
+        self._params.update({PLUGIN_ATTR_CONNECTION: SDPConnection})
         self._params.update(kwargs)
 
         # check if some of the arguments are usable
@@ -146,7 +136,19 @@ class SDPProtocolJsonrpc(SDPProtocol):
     """
     def __init__(self, data_received_callback, name=None, **kwargs):
 
+        # init super, get logger
         super().__init__(data_received_callback, name, **kwargs)
+
+        # make sure we have a basic set of parameters for the TCP connection
+        self._params.update({PLUGIN_ATTR_NET_PORT: 9090,
+                             PLUGIN_ATTR_MSG_REPEAT: 3,
+                             PLUGIN_ATTR_MSG_TIMEOUT: 5,
+                             PLUGIN_ATTR_CONNECTION: CONN_NET_TCP_CLI,
+                             JSON_MOVE_KEYS: []})
+        self._params.update(kwargs)
+
+        # check if some of the arguments are usable
+        self._set_connection_params()
 
         # set class properties
         self._shutdown_active = False
@@ -157,24 +159,6 @@ class SDPProtocolJsonrpc(SDPProtocol):
         self._stale_lock = threading.Lock()
 
         self._receive_buffer = b''
-
-        # make sure we have a basic set of parameters for the TCP connection
-        self._params = {PLUGIN_ATTR_NET_HOST: '',
-                        PLUGIN_ATTR_NET_PORT: 9090,
-                        PLUGIN_ATTR_CONN_AUTO_CONN: True,
-                        PLUGIN_ATTR_CONN_RETRIES: 1,
-                        PLUGIN_ATTR_CONN_CYCLE: 3,
-                        PLUGIN_ATTR_CONN_TIMEOUT: 3,
-                        PLUGIN_ATTR_MSG_REPEAT: 3,
-                        PLUGIN_ATTR_MSG_TIMEOUT: 5,
-                        PLUGIN_ATTR_CB_ON_DISCONNECT: None,
-                        PLUGIN_ATTR_CB_ON_CONNECT: None,
-                        PLUGIN_ATTR_CONNECTION: CONN_NET_TCP_CLI,
-                        JSON_MOVE_KEYS: []}
-        self._params.update(kwargs)
-
-        # check if some of the arguments are usable
-        self._set_connection_params()
 
         # self._message_archive[str message_id] = [time() sendtime, str method, str params or None, int repeat]
         self._message_archive = {}
