@@ -78,10 +78,9 @@ class SmartPlugin(SmartObject, Utils):
     def __init__(self, **kwargs):
         self._plg_item_dict = {}      # make sure, that the dict is local to the plugin
         self._item_lookup_dict = {}   # make sure, that the dict is local to the plugin
+        self._cycle = 60              # make sure the _cycle attribute exists
 
         # set parameter value
-        # TODO: need to check for this item in parse_item and set self._suspend_item
-        #       for suspend item functionality to work
         self._suspend_item_path = self.get_parameter_value('suspend_item')
 
     def suspend(self, by=None):
@@ -107,6 +106,39 @@ class SmartPlugin(SmartObject, Utils):
                 self._suspend_item(False)
             if hasattr(self, 'connect'):
                 self.connect()
+
+    def set_suspend(self, suspend_active=None, by=None):
+        """
+        enable / disable suspend mode: open/close connections, schedulers
+        """
+
+        if suspend_active is None:
+            if self._suspend_item is not None:
+                # if no parameter set, try to use item setting
+                suspend_active = bool(self._suspend_item())
+            else:
+                # if not available, default to "resume" (non-breaking default)
+                suspend_active = False
+
+        # output debug logging
+        if suspend_active:
+            msg = 'Suspend mode enabled'
+        else:
+            msg = 'Suspend mode disabled'
+        if by:
+            msg += f' (set by {by})'
+        self.logger.debug(msg)
+
+        # activate selected mode, use smartplugin methods
+        if suspend_active:
+            self.suspend(by)
+        else:
+            self.resume(by)
+
+        if suspend_active:
+            self._remove_cyclic_scheduler()
+        else:
+            self._create_cyclic_scheduler()
 
     def deinit(self, items=[]):
         """
@@ -247,14 +279,20 @@ class SmartPlugin(SmartObject, Utils):
         SmartHomeNG. It should write the changed value out to the device
         (hardware/interface) that is managed by this plugin.
 
-        Method must be overwritten to be functional.
+        Method must be overwritten to be functional. Call super().update_item()
+        to keep stock suspend_item code.
 
         :param item: item to be updated towards the plugin
         :param caller: if given it represents the callers name
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
-        pass
+        # check for suspend item
+        if item is self._suspend_item:
+            if caller != self.get_shortname():
+                self.logger.debug(f'Suspend item changed to {item()}')
+                self.set_suspend(by=f'suspend item {item.property.path}')
+            return
 
     def register_updating(self, item):
         """
@@ -916,7 +954,17 @@ class SmartPlugin(SmartObject, Utils):
             self.add_item(item, updating=True)
             return self.update_item
 
+    def _create_cyclic_scheduler(self):
+        """ create cyclic scheduler if needed """
+        self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
 
+    def _remove_cyclic_scheduler(self):
+        """ remove cyclic scheduler if needed """
+        self.scheduler_remove('poll_device')
+
+    def poll_device(self):
+        """ perodically poll device """
+        pass
 
     def now(self):
         """

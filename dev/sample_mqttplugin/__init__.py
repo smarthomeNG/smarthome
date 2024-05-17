@@ -104,6 +104,13 @@ class SampleMqttPlugin(MqttPlugin):
                         with the item, caller, source and dest as arguments and in case of the knx plugin the value
                         can be sent to the knx with a knx write function within the knx plugin.
         """
+        # check for suspend item
+        if item.property.path == self._suspend_item_path:
+            self.logger.debug(f'suspend item {item.property.path} registered')
+            self._suspend_item = item
+            self.add_item(item, updating=True)
+            return self.update_item
+
         if self.has_iattr(item.conf, 'foo_itemid'):
             self.logger.debug(f"parse item: {item.property.path}")
 
@@ -148,6 +155,13 @@ class SampleMqttPlugin(MqttPlugin):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
+        # check for suspend item
+        if item is self._suspend_item:
+            if caller != self.get_shortname():
+                self.logger.debug(f'Suspend item changed to {item()}')
+                self.set_suspend(by=f'suspend item {item.property.path}')
+            return
+
         if self.alive and caller != self.get_shortname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this this plugin:
