@@ -81,17 +81,16 @@ class SamplePlugin(SmartPlugin):
         # if not self.init_webinterface():
         #     self._init_complete = False
 
-        return
-
     def run(self):
         """
         Run method for the plugin
         """
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'run()'}))
+
         # setup scheduler for device poll loop
         # (enable the following line, if you need to poll the device.
         #  Rember to un-comment the self._cycle statement in __init__ as well)
-        #self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
+        #self._create_cyclic_scheduler()
 
         # Start the asyncio eventloop in it's own thread
         # and set self.alive to True when the eventloop is running
@@ -111,7 +110,7 @@ class SamplePlugin(SmartPlugin):
         self.alive = False     # if using asyncio, do not set self.alive here. Set it in the session coroutine
 
         # if you use a scheduled poll loop, enable the following line
-        #self.scheduler_remove('poll_device')
+        #self._remove_cyclic_scheduler()
 
         # stop the asyncio eventloop and it's thread
         # If you use asyncio, enable the following line
@@ -130,6 +129,13 @@ class SamplePlugin(SmartPlugin):
                         with the item, caller, source and dest as arguments and in case of the knx plugin the value
                         can be sent to the knx with a knx write function within the knx plugin.
         """
+        # check for suspend item
+        if item.property.path == self._suspend_item_path:
+            self.logger.debug(f'suspend item {item.property.path} registered')
+            self._suspend_item = item
+            self.add_item(item, updating=True)
+            return self.update_item
+
         if self.has_iattr(item.conf, 'foo_itemtag'):
             self.logger.debug(f"parse item: {item}")
 
@@ -163,6 +169,13 @@ class SamplePlugin(SmartPlugin):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
+        # check for suspend item
+        if item is self._suspend_item:
+            if caller != self.get_shortname():
+                self.logger.debug(f'Suspend item changed to {item()}')
+                self.set_suspend(by=f'suspend item {item.property.path}')
+            return
+
         if self.alive and caller != self.get_fullname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this plugin:
