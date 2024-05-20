@@ -1011,13 +1011,25 @@ class SmartPlugin(SmartObject, Utils):
 
 
     # ----------------------------------------------------------------------------------
-    #   Ascyncio handling (to be moved to SmartPlugin?)
+    #   Ascyncio handling
     # ----------------------------------------------------------------------------------
 
     _asyncio_loop = None        # eventloop of the plugin
+    _asyncio_state = 'unused'
     run_queue = None            # queue to send commends to the main-coro/plugin-coro
 
-    def start_asyncio(self, plugin_coro):
+    def asyncio_state(self) -> str:
+        """
+        Returns the state of asyncio for the plugin
+         - 'unused'  - If the plugin does not use asyncio (the start_asyncio method has not been successfully executed)
+         - 'running' - An active eventloop is beeing processed
+         - 'stopped' - There is no active eventloop
+
+        :return: 'unused' | 'running' | 'stopped'
+        """
+        return self._asyncio_state
+
+    def start_asyncio(self, plugin_coro) -> None:
         """
         Start the thread for the asyncio loop
 
@@ -1056,6 +1068,7 @@ class SmartPlugin(SmartObject, Utils):
         except Exception as err:
             self.logger.notice(f"Error stopping _asyncio_loop_thread: {err}")
             pass
+        self._asyncio_state = 'stopped'
         return
 
     def _asyncio_loop_thread(self, plugin_coro):
@@ -1087,11 +1100,13 @@ class SmartPlugin(SmartObject, Utils):
 
         # Create the main task of the plugin and await it
         self.task = asyncio.create_task(plugin_coro, name='PluginTask')
+        self._asyncio_state = 'running'
         try:
             await self.task
         except Exception as ex:
             self.logger.exception(f"Exception raised in PluginTask: {ex}")
 
+        self._asyncio_state = 'stopped'
         self._asyncio_loop = None
         self.logger.debug("_asyncio main task of plugin finished")
 
