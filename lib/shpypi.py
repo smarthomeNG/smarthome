@@ -335,6 +335,8 @@ class Shpypi:
         #req_files = Requirements_files(self.sh)
         self.req_files.set_conf_plugin_files(self._conf_plugin_filelist)
         self.req_files.create_requirementsfile('conf_all')
+        # clear list to prevent adding plugin requirements to base.txt
+        self.req_files.set_conf_plugin_files([])
 
         requirements_met = self.test_requirements(os.path.join(self._sh_dir, 'requirements', 'conf_all.txt'), True)
         if requirements_met:
@@ -476,7 +478,7 @@ class Shpypi:
         return False
 
 
-    def parse_requirementsfile(self, file_path):
+    def parse_requirementsfile(self, file_path) -> dict:
         """
         Parses the requirements file and returns the requirements as a dict
 
@@ -1303,6 +1305,9 @@ class Requirements_files():
             # Read requirements for userfunctions and logics
             self._user_files = self._get_filelist('functions')
             self._user_files += self._get_filelist('logics')
+
+        #self.logger.warning(f"_build_filelists: selection={selection=}\n- {self._module_files=}\n- {self._core_files=}\n- {self._plugin_files=}\n- {self._user_files=}\n- {self._plugin_files=}\n- {self._conf_plugin_files=}")
+
         return
 
 
