@@ -1016,6 +1016,7 @@ class SmartPlugin(SmartObject, Utils):
 
     _asyncio_loop = None        # eventloop of the plugin
     _asyncio_state = 'unused'
+    _used_plugin_coro = None    # plugin coro used when calling start_asyncio (to be able to used by a generic 'restart asyncio' method
     run_queue = None            # queue to send commends to the main-coro/plugin-coro
 
     def asyncio_state(self) -> str:
@@ -1038,16 +1039,32 @@ class SmartPlugin(SmartObject, Utils):
 
         :param plugin_coro: The asyncio coroutine which implements the async part of the plugin
         """
+        self._used_plugin_coro = plugin_coro
+        self._start_known_asyncio_coro()
+
+    def _start_known_asyncio_coro(self) -> None:
+        """
+        Start the thread for the asyncio loop, when plugin_coro is already known
+
+        The started asyncio thread sets up the asyncio environment and starts the evemtloop.
+        This routine is to be called from the plugin's run() method
+
+        :param plugin_coro: The asyncio coroutine which implements the async part of the plugin
+        """
+        if self._used_plugin_coro is None:
+            self.logger.error("Called '_start_known_asyncio_coro()' without known plugin_coro")
+            return
+
         threadname = 'plugins.'+self.get_fullname()+'.asyncio'
         try:
-            self.pluginThread = threading.Thread(target=self._asyncio_loop_thread, name=threadname, daemon=False, kwargs={'plugin_coro': plugin_coro})
+            self.pluginThread = threading.Thread(target=self._asyncio_loop_thread, name=threadname, daemon=False, kwargs={'plugin_coro': self._used_plugin_coro})
             self.logger.info(f"Starting thread {threadname} for asyncio loop...")
             self.pluginThread.start()
         except Exception as e:
             self.logger.error(f"Cannot start thread '{threadname}' - Error: {e}")
         return
 
-    def stop_asyncio(self):
+    def stop_asyncio(self) -> None:
         """
         stop the eventloop and the thread it is running in
 
