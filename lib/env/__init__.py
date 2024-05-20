@@ -411,15 +411,19 @@ def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
         _logger.warning("location_name: " + translate("Exception when sending GET request: {e}", {'e': e}))
         return ''
 
-    try:
-        json_obj = response.json()
-    except Exception as e:
-        _logger.warning("location_name: " + translate("Response '{response}' is not in valid json format: {e}", {'response': response, 'e': e}))
+    if response.ok:
+        try:
+            json_obj = response.json()
+        except Exception as e:
+            _logger.warning("location_name: " + translate("Response '{response}' is not in valid json format: {e}", {'response': response, 'e': e}))
+            return ''
+    else:
+        _logger.warning(f"location_name: openstreetmap.org responded with '{response.status_code}'")
         return ''
 
-    if response.status_code >= 500:
-        _logger.warning(f"location_name: {location_name(response.status_code)}")
-        return ''
+#    if response.status_code >= 500:
+#        _logger.warning(f"location_name: {location_name(response.status_code)}")
+#        return ''
 
     if json_obj.get('address', None) is None:
         result = ''
