@@ -1147,6 +1147,25 @@ class SmartPlugin(SmartObject, Utils):
                 self.logger.exception(f"run_asyncio_coro: Exception {ex} ({coro=}, loop={self._asyncio_loop})")
         return result
 
+    async def wait_for_asyncio_termination(self) -> None:
+        """
+        Wait for the command to stop the plugin_coro
+
+        This is used to block the plugin_coro until the plugin should be stopped.
+
+        When the plugin should be stopped, a string 'STOP' is written into the queue
+
+        :return:
+        """
+        queue_command = ''
+        while queue_command != 'STOP':
+            queue_command = await self._run_queue.get()
+            if queue_command != 'STOP':
+                # put command back to queue?
+                await asyncio.sleep(0.1)
+
+        return
+
     def put_command_to_run_queue(self, command: str) -> None:
         """
         Put an entry to the run-queue
@@ -1167,7 +1186,6 @@ class SmartPlugin(SmartObject, Utils):
         """
         Get an entry from the run-queue
 
-        At the moment this is used, to block the plugin_coro until the plugin should be stopped.
         When the plugin should be stopped, a string 'STOP' is written into the queue and the plugin_coro can check for
         the string 'STOP' and terminate itself.
 
@@ -1175,25 +1193,6 @@ class SmartPlugin(SmartObject, Utils):
         """
         queue_item = await self._run_queue.get()
         return queue_item
-
-    async def wait_for_asyncio_termination(self) -> None:
-        """
-        Wait for the command to stop the plugin_coro
-
-        This is used to block the plugin_coro until the plugin should be stopped.
-
-        When the plugin should be stopped, a string 'STOP' is written into the queue
-
-        :return:
-        """
-        queue_command = ''
-        while queue_command != 'STOP':
-            queue_command = await self._run_queue.get()
-            if queue_command != 'STOP':
-                # put command back to queue?
-                await asyncio.sleep(0.1)
-
-        return
 
     async def list_asyncio_tasks(self):
         """
