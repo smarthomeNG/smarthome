@@ -1014,6 +1014,8 @@ class SmartPlugin(SmartObject, Utils):
     #   Ascyncio handling
     # ----------------------------------------------------------------------------------
 
+    from typing import Coroutine, Any
+
     _asyncio_loop = None        # eventloop of the plugin
     _asyncio_state = 'unused'
     _used_plugin_coro = None    # plugin coro used when calling start_asyncio (to be able to used by a generic 'restart asyncio' method
@@ -1047,9 +1049,7 @@ class SmartPlugin(SmartObject, Utils):
         Start the thread for the asyncio loop, when plugin_coro is already known
 
         The started asyncio thread sets up the asyncio environment and starts the evemtloop.
-        This routine is to be called from the plugin's run() method
-
-        :param plugin_coro: The asyncio coroutine which implements the async part of the plugin
+        This routine is to be called from the plugin's run() method.
         """
         if self._used_plugin_coro is None:
             self.logger.error("Called '_start_known_asyncio_coro()' without known plugin_coro")
@@ -1068,7 +1068,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         stop the eventloop and the thread it is running in
 
-        This routine is to be called from the plugin's stop() method
+        This routine is to be called from the plugin's stop() method.
 
         """
         self.logger.info("Shutting down asyncio loop and thread...")
@@ -1084,7 +1084,7 @@ class SmartPlugin(SmartObject, Utils):
         self._asyncio_state = 'stopped'
         return
 
-    def _asyncio_loop_thread(self, plugin_coro):
+    def _asyncio_loop_thread(self, plugin_coro: Coroutine):
         """
         Thread to start and execute the asyncio event loop
 
@@ -1098,7 +1098,7 @@ class SmartPlugin(SmartObject, Utils):
 
         return
 
-    async def _asyncio_main(self, plugin_coro):
+    async def _asyncio_main(self, plugin_coro: Coroutine) -> None:
         """
         main coroutine to set up the environment for the coroutine of the specific plugin
 
@@ -1123,15 +1123,20 @@ class SmartPlugin(SmartObject, Utils):
         self._asyncio_loop = None
         self.logger.debug("_asyncio main task of plugin finished")
 
-    def run_asyncio_coro(self, coro, return_exeption=False):
+    def run_asyncio_coro(self, coro: Coroutine, return_exeption: bool = False) -> Any:
         """
         Run a coroutine in the eventloop of the plugin
 
         When the asyncio eventloop of the plugin is running, this method can be used to add a coroutine
         to the eventloop from the part of the plugin which is thread operated.
-        E.g.: This can be used in the plugins update_item() method to send data to the device through an asyncio package
+        E.g.: This can be used in the plugins update_item() method to send data to the device through an asyncio package.
+
+        This method waits for the coroutine to be finished, to be able to return the result of the coroutine.
 
         :param coro: A coroutine that should be run in the eventloop of the asyncio-thread
+        :return_exeption: If set to True, run_asyncio_coro returns exceptions instead of handling (logging) them itself
+
+        return: The result of the coroutine
         """
         if self._asyncio_loop is None:
             self.logger.error(f"run_asyncio_coro: Cannot run coro '{coro}' because no eventloop is active")

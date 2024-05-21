@@ -27,7 +27,9 @@ Methoden zur Unterstützung von asyncio
 --------------------------------------
 
 .. autoclass:: lib.model.smartplugin.SmartPlugin
-    :members: asyncio_state, start_asyncio, stop_asyncio, run_asyncio_coro, list_asyncio_tasks
+    :members: asyncio_state, start_asyncio, stop_asyncio, run_asyncio_coro, wait_for_asyncio_termination,
+              put_command_to_run_queue, get_command_from_run_queue,
+              list_asyncio_tasks
     :undoc-members:
     :show-inheritance:
     :member-order: bysource
