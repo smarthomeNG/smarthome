@@ -27,6 +27,7 @@ Die möglichen Einträge für die Definition der Metadaten der Plugins sind hier
    :glob:
    :titlesonly:
 
+   asyncio_support
    plugin_typen/plugin_typen
    plugin_metadata
    plugin_user_doc

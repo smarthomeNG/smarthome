@@ -1017,7 +1017,7 @@ class SmartPlugin(SmartObject, Utils):
     _asyncio_loop = None        # eventloop of the plugin
     _asyncio_state = 'unused'
     _used_plugin_coro = None    # plugin coro used when calling start_asyncio (to be able to used by a generic 'restart asyncio' method
-    run_queue = None            # queue to send commends to the main-coro/plugin-coro
+    _run_queue = None            # queue to send commends to the main-coro/plugin-coro
 
     def asyncio_state(self) -> str:
         """
@@ -1072,13 +1072,9 @@ class SmartPlugin(SmartObject, Utils):
 
         """
         self.logger.info("Shutting down asyncio loop and thread...")
-        if self._asyncio_loop is not None:
-            try:
-                # Send termination command to plugin_coro to stop the plugin
-                asyncio.run_coroutine_threadsafe(self.run_queue.put('STOP'), self._asyncio_loop)
-            except Exception as e:
-                self.logger.notice(f"stop_asyncio: Exception '{e}' in run_queue.put ({self._asyncio_loop=})")
-            time.sleep(3)
+
+        self.put_command_to_run_queue('STOP')
+        time.sleep(3)
         try:
             self.pluginThread.join()
             self.logger.debug("_asyncio_loop_thread of plugin stopped")
@@ -1113,7 +1109,7 @@ class SmartPlugin(SmartObject, Utils):
         task = asyncio.current_task()
         task.set_name('MainTask')
         # Create queue to send termination command to plugin_coro when the plugin should be stopped
-        self.run_queue = asyncio.Queue()
+        self._run_queue = asyncio.Queue()
 
         # Create the main task of the plugin and await it
         self.task = asyncio.create_task(plugin_coro, name='PluginTask')
@@ -1151,9 +1147,60 @@ class SmartPlugin(SmartObject, Utils):
                 self.logger.exception(f"run_asyncio_coro: Exception {ex} ({coro=}, loop={self._asyncio_loop})")
         return result
 
+    def put_command_to_run_queue(self, command: str) -> None:
+        """
+        Put an entry to the run-queue
+        """
+        if self._asyncio_loop is not None:
+            self.logger.info(f"Writing command '{command}' to run-queue")
+            try:
+                # Send a command to plugin_coro
+                asyncio.run_coroutine_threadsafe(self._run_queue.put(command), self._asyncio_loop)
+            except Exception as e:
+                self.logger.warning(f"put_command_to_run_queue: Exception '{e}' in _run_queue.put ({self._asyncio_loop=})")
+            time.sleep(3)
+        else:
+            self.logger.warning(f"put_command_to_run_queue: Cannot write command '{command}' to run-queue, no active event-loop")
+        return
+
+    async def get_command_from_run_queue(self) -> str:
+        """
+        Get an entry from the run-queue
+
+        At the moment this is used, to block the plugin_coro until the plugin should be stopped.
+        When the plugin should be stopped, a string 'STOP' is written into the queue and the plugin_coro can check for
+        the string 'STOP' and terminate itself.
+
+        :return: First command from the queue
+        """
+        queue_item = await self._run_queue.get()
+        return queue_item
+
+    async def wait_for_asyncio_termination(self) -> None:
+        """
+        Wait for the command to stop the plugin_coro
+
+        This is used to block the plugin_coro until the plugin should be stopped.
+
+        When the plugin should be stopped, a string 'STOP' is written into the queue
+
+        :return:
+        """
+        queue_command = ''
+        while queue_command != 'STOP':
+            queue_command = await self._run_queue.get()
+            if queue_command != 'STOP':
+                # put command back to queue?
+                await asyncio.sleep(0.1)
+
+        return
+
     async def list_asyncio_tasks(self):
         """
-        Log al list of the tasks that are in the eventloop
+        Log a list of the tasks that are in the eventloop
+
+        The intention of this method is to support the plugin development/debugging. It can be called
+        from the executor plugin or from the evaql-syntax-chacker of the admin gui
         """
         self.logger.notice("list_asyncio_tasks: Task list")
         tasks = asyncio.all_tasks()
