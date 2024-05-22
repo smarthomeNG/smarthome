@@ -1037,7 +1037,9 @@ class SmartPlugin(SmartObject, Utils):
         """
         Start the thread for the asyncio loop
 
-        The started asyncio thread sets up the asyncio environment and starts the evemtloop.
+        The started asyncio thread sets up the asyncio environment and starts the eventloop.
+        The given plugin_coro is added as the main task to the eventloop.
+
         This routine is to be called from the plugin's run() method
 
         :param plugin_coro: The asyncio coroutine which implements the async part of the plugin
