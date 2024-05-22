@@ -41,6 +41,7 @@ class SmartPlugin(SmartObject, Utils):
     The implemented methods are described below.
 
     In addition the methods implemented in lib.utils.Utils are inherited.
+
     """
 
     PLUGIN_VERSION = ''
@@ -1017,9 +1018,9 @@ class SmartPlugin(SmartObject, Utils):
     from typing import Coroutine, Any
 
     _asyncio_loop = None        # eventloop of the plugin
-    _asyncio_state = 'unused'
+    _asyncio_state = 'unused'   # stored state of the asyncio use of the plugin
     _used_plugin_coro = None    # plugin coro used when calling start_asyncio (to be able to used by a generic 'restart asyncio' method
-    _run_queue = None            # queue to send commends to the main-coro/plugin-coro
+    _run_queue = None           # queue to send commends to the main-coro/plugin-coro
 
     def asyncio_state(self) -> str:
         """
@@ -1032,7 +1033,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         return self._asyncio_state
 
-    def start_asyncio(self, plugin_coro) -> None:
+    def start_asyncio(self, plugin_coro: Coroutine) -> None:
         """
         Start the thread for the asyncio loop
 
@@ -1134,7 +1135,7 @@ class SmartPlugin(SmartObject, Utils):
         This method waits for the coroutine to be finished, to be able to return the result of the coroutine.
 
         :param coro: A coroutine that should be run in the eventloop of the asyncio-thread
-        :return_exeption: If set to True, run_asyncio_coro returns exceptions instead of handling (logging) them itself
+        :param return_exeption: If set to True, run_asyncio_coro returns exceptions instead of handling (logging) them itself
 
         return: The result of the coroutine
         """
@@ -1159,8 +1160,6 @@ class SmartPlugin(SmartObject, Utils):
         This is used to block the plugin_coro until the plugin should be stopped.
 
         When the plugin should be stopped, a string 'STOP' is written into the queue
-
-        :return:
         """
         queue_command = ''
         while queue_command != 'STOP':
@@ -1173,7 +1172,9 @@ class SmartPlugin(SmartObject, Utils):
 
     def put_command_to_run_queue(self, command: str) -> None:
         """
-        Put an entry to the run-queue
+        Put an entry to the run-queue (if implemented in the plugin_coro)
+
+        :param command: command to be executed by the plugin_coro
         """
         if self._asyncio_loop is not None:
             self.logger.info(f"Writing command '{command}' to run-queue")
@@ -1199,7 +1200,7 @@ class SmartPlugin(SmartObject, Utils):
         queue_item = await self._run_queue.get()
         return queue_item
 
-    async def list_asyncio_tasks(self):
+    async def list_asyncio_tasks(self) -> None:
         """
         Log a list of the tasks that are in the eventloop
 

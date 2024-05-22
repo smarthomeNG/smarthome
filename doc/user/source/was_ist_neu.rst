@@ -1,14 +1,31 @@
 :tocdepth: 2
 
+Neuerungen im Release v1.11
+===========================
+
+Hier ist eine Kurzübersicht über größere Neuerungen im aktuellen Release. Eine vollständige Übersicht der Änderungen in
+diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/release>` zu finden.
+
+  - **Plugins**:
+
+    - **Asyncio**: Die SmartPlugin Klasse unterstützt nun asyncio.
+      Python Packages zur Ansteuerung von Peripherie werden zunehmend unter Verwendung von asyncio erstellt.
+      Um diese Packages in Plugins nutzen zu können, muss das jeweilige Plugin asyncio unterstützen.
+      Mit der Unterstützung von asyncio in der SmartPlugin Klasse wird es erheblich einfacher Plugins zu erstellen, die
+      asyncio-basierte Packages nutzen.
+      (Siehe auch :doc:`Plugins/Asyncio Support </referenz/plugins/asyncio_support>`)
+
+|
+
 Neuerungen im Release v1.10
 ===========================
 
 Hier ist eine Kurzübersicht über größere Neuerungen im aktuellen Release. Eine vollständige Übersicht der Änderungen in
 diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/release>` zu finden.
 
-  - **Python Environment**: SmartHomeNG sollte/muss in einem virtuellen Python Environment laufen. Ab
+  - **Python Environment**: SmartHomeNG sollte/muss in einem virtuellen Python Environment laufen.
 
-    - **postinstall Skript**: Debian 12/Python 3.11 können in die systemseitige Installation nicht mehr beliebig
+    - **postinstall Skript**: Ab Debian 12/Python 3.11 können in die systemseitige Installation nicht mehr beliebig
       Python Packages installiert werden. Es gibt jetzt ein neues Skript ``tools/postinstall`` welches ein Standard
       Environment anlegt, in dem SmartHomeNG später läuft/laufen soll.
       (Siehe auch :doc:`Komplettanleitung </installation/komplettanleitung/02_smarthomeng>`)
@@ -120,15 +137,17 @@ Folgende Tipps sind in der Doku hinzugekommen:
 
 |
 
-Neuerungen im Release v1.10.1
+Neuerungen im Release v1.11.1
 -----------------------------
 
-*Hier kommen die Neuerungen des Releases v1.10.1 hin.*
+*Hier kommen die Neuerungen des Releases v1.11.1 hin.*
 
 .. comment
 
-    Neuerungen im Release v1.10.x
+    Neuerungen im Release v1.11.x
     -----------------------------
+
+    ...
 
     Ab dem Release v1.9.4 misst SmartHomeNG beim ersten Start die Geschwindigkeit der CPU, um je nach Geschwindigkeit
     interne Konfigurationen vorzunehmen. Die Messung wird nur wiederholt, wenn sich die Hardware geändert hat.

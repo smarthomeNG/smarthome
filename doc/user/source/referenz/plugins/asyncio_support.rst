@@ -21,10 +21,14 @@ Nutzung der Low-Level Funktionen von asyncio (was ein erhebliches Error-Handling
 Um die Nutzung von asyncio zu vereinfachen und in den Plugins zu standardisieren, unterstützt SmartHomeNG ab
 v1.11 die Nutzung von asyncio in Plugins durch eine Erweiterung der SmartPlugin Klasse um einige Methoden.
 
+Ein Plugin welches die neue asyncio Unterstützung nutzt, ist das hue3 Plugin. Es kann bei der der Erstellung eines
+neuen Plugins als Beispiel herangezogen werden.
 |
 
 Methoden zur Unterstützung von asyncio
 --------------------------------------
+
+Im folgenden sind die Methoden beschrieben, die zur asyncio Unterstützung zur SmartPlugin Klasse hinzugekommen sind.
 
 .. autoclass:: lib.model.smartplugin.SmartPlugin
     :members: asyncio_state, start_asyncio, stop_asyncio, run_asyncio_coro, wait_for_asyncio_termination,
