@@ -48,6 +48,7 @@ oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
 
    einleitung.md
    was_ist_neu.rst
+   was_war_neu.rst
    installation/installation.rst
    konfiguration/konfiguration.rst
    plugins_all.rst
