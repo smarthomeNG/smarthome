@@ -1009,6 +1009,17 @@ class SmartPlugin(SmartObject, Utils):
         self.logger.debug(f"scheduler_get: name = {name}")
         return self._sh.scheduler.get(name, from_smartplugin=True)
 
+    def scheduler_get_all(self):
+        """
+        This methods gets all schedulers for a plugin
+        """
+        plugin = self._pluginname_prefix + self.get_fullname() + "."
+        self.logger.debug(f"scheduler_get_all: plugin = {plugin}")
+        scheduler_list = []
+        for name in self._sh.scheduler.return_all(True):
+            if name.startswith(plugin):
+                scheduler_list.append(name)
+        return scheduler_list
 
     # ----------------------------------------------------------------------------------
     #   Ascyncio handling (to be moved to SmartPlugin?)
@@ -1286,5 +1297,3 @@ class SmartPluginWebIf():
             return lib_translate(txt, vars, plugin_translations='plugin/' + self.plugin.get_shortname(), module_translations='module/http')
         else:
             return lib_translate(txt, vars, module_translations='module/http')
-
-

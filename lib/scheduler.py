@@ -433,6 +433,9 @@ class Scheduler(threading.Thread):
         if name in self._scheduler:
             return self._scheduler[name]['next']
 
+    def return_all(self, from_smartplugin=False):
+        return self._scheduler
+
     def add(self, name, obj, prio=3, cron=None, cycle=None, value=None, offset=None, next=None, from_smartplugin=False):
         """
         Adds an entry to the scheduler.
@@ -806,5 +809,3 @@ class Scheduler(threading.Thread):
             #logger.exception(f"In der Logik ist ein Fehler aufgetreten:\n   Logik '{logic.name}', Datei '{tb[0]}', Zeile {tb[1]}\n   {logic_method}, Exception: '{e}'\n ")
 
         return
-
-
