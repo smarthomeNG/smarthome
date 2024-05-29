@@ -711,6 +711,11 @@ class SmartDevicePlugin(SmartPlugin):
 
         try:
             data_dict = self._commands.get_send_data(command, value, **kwargs)
+            data_dict['command'] = command
+            if value is not None:
+                data_dict['returntype'] = type(value)
+                data_dict['returnvalue'] = value
+            data_dict['retry'] = kwargs.get('retry') or 0
         except Exception as e:
             self.logger.warning(f'command {command} with value {value} produced error on converting value, aborting. Error was: {e}')
             return False
