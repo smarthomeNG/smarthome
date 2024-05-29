@@ -341,10 +341,12 @@ class SmartDevicePlugin(SmartPlugin):
         if suspend_active:
             if self.scheduler_get(self.get_shortname() + '_cyclic'):
                 self.scheduler_remove(self.get_shortname() + '_cyclic')
+            self._on_suspend()
 
         else:
             if self._connection.connected() and not SDP_standalone:
                 self._create_cyclic_scheduler()
+                self._on_resume()
 
     def run(self):
         """
@@ -970,6 +972,14 @@ class SmartDevicePlugin(SmartPlugin):
         """
         self.logger.debug(f'sending {data_dict}')
         return self._connection.send(data_dict)
+
+    def _on_suspend(self):
+        """ Additional actions after plugin got suspended. """
+        pass
+
+    def _on_resume(self):
+        """ Additional actions after plugin got resumed. """
+        pass
 
     def on_connect(self, by=None):
         """ callback if connection is made. """
