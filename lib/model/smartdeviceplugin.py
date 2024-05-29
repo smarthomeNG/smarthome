@@ -1087,11 +1087,11 @@ class SmartDevicePlugin(SmartPlugin):
             self._cyclic_errors = 0
             self.logger.info(f'Added cyclic worker thread {self.get_shortname()}_cyclic with {workercycle} s cycle. Shortest item update cycle found was {shortestcycle} s')
 
-    def _read_initial_values(self):
+    def _read_initial_values(self, force=False):
         """
         Read all values configured to be read/triggered at startup
         """
-        if self._initial_value_read_done:
+        if self._initial_value_read_done and force is False:
             self.logger.debug('_read_initial_values() called, but inital values were already read. Ignoring')
         else:
             if self._commands_initial:
@@ -1676,7 +1676,7 @@ class Standalone:
 
         self.yaml['item_structs'] = OrderedDict()
 
-        # this means the commands dict has 'ALL' and model names at the top level 
+        # this means the commands dict has 'ALL' and model names at the top level
         # otherwise, the top level nodes are commands or sections
         cmds_has_models = INDEX_GENERIC in top_level_entries
 
