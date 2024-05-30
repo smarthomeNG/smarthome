@@ -57,10 +57,11 @@ from .api_plugin import *
 
 
 suburl = 'admin'
+suburl2 = 'admin2'
 
 
 class Admin(Module):
-    version = '1.8.1'
+    version = '1.8.2'
     longname = 'Admin module for SmartHomeNG'
     _port = 0
 
@@ -119,11 +120,15 @@ class Admin(Module):
         mysuburl = ''
         if suburl != '':
             mysuburl = '/' + suburl
+        mysuburl2 = ''
+        if suburl2 != '':
+            mysuburl2 = '/' + suburl2
         ip = Utils.get_local_ipv4_address()
         self._port = self.mod_http._port
         # self.logger.warning('port = {}'.format(self._port))
         self.shng_url_root = 'http://' + ip + ':' + str(self._port)         # for links mto plugin webinterfaces
         self.url_root = self.shng_url_root + mysuburl
+        self.url_root2 = self.shng_url_root + mysuburl2
         self.api_url_root = self.shng_url_root + 'api'
         self.api2_url_root = self.shng_url_root + 'api2'
 
@@ -136,6 +141,7 @@ class Admin(Module):
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'start()'}))
 
         self.webif_dir = os.path.dirname(os.path.abspath(__file__)) + '/webif'
+        self.webif2_dir = os.path.dirname(os.path.abspath(__file__)) + '/webif2'
 
         self.logger.info("Module '{}': webif_dir = webif_dir = {}".format(self._shortname, self.webif_dir))
         # config for Angular app (special: error page)
@@ -151,6 +157,24 @@ class Admin(Module):
                 'tools.expires.on': True,
                 'tools.expires.secs': 6,
                 'error_page.404': self.webif_dir + '/static/index.html',
+                #                    'error_page.404': self.error_page,
+                #                   'tools.auth_basic.on': False,
+                #                   'tools.auth_basic.realm': 'shng_admin_webif',
+            }
+        }
+        # config for Angular app (special: error page)
+        config2 = {
+            '/': {
+                'tools.staticdir.root': self.webif2_dir,
+                'tools.staticdir.on': True,
+                'tools.staticdir.dir': 'static',
+                'tools.staticdir.index': 'index.html',
+                'tools.chaching.on': False,
+                'tools.caching.force': False,
+                'tools.caching.delay': 6,
+                'tools.expires.on': True,
+                'tools.expires.secs': 6,
+                'error_page.404': self.webif2_dir + '/static/index.html',
                 #                    'error_page.404': self.error_page,
                 #                   'tools.auth_basic.on': False,
                 #                   'tools.auth_basic.realm': 'shng_admin_webif',
@@ -205,11 +229,23 @@ class Admin(Module):
         """
 
         # Register the web interface as a cherrypy app
+        self.logger.warning(f"register_webif: {self.webif_dir=}, {self.shng_url_root=}, {self.url_root=} - {suburl=}")
         self.mod_http.register_webif(WebInterface(self.webif_dir, self, self.shng_url_root, self.url_root),
                                      suburl,
                                      config,
                                      'admin', '',
                                      description='Administrationsoberfläche für SmartHomeNG',
+                                     webifname='',
+                                     use_global_basic_auth=False,
+                                     useprefix=False)
+
+        # Register the alternate web interface as a cherrypy app
+        self.logger.warning(f"register_webif: {self.webif2_dir=}, {self.shng_url_root=}, {self.url_root2=} - {suburl2=}")
+        self.mod_http.register_webif(WebInterface(self.webif2_dir, self, self.shng_url_root, self.url_root2),
+                                     suburl2,
+                                     config2,
+                                     'admin2', '',
+                                     description='kommende Administrationsoberfläche für SmartHomeNG',
                                      webifname='',
                                      use_global_basic_auth=False,
                                      useprefix=False)
