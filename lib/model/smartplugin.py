@@ -1207,7 +1207,7 @@ class SmartPlugin(SmartObject, Utils):
         Log a list of the tasks that are in the eventloop
 
         The intention of this method is to support the plugin development/debugging. It can be called
-        from the executor plugin or from the evaql-syntax-chacker of the admin gui
+        from the executor plugin or from the eval-syntax-checker of the admin gui
         """
         self.logger.notice("list_asyncio_tasks: Task list")
         tasks = asyncio.all_tasks()

@@ -229,7 +229,6 @@ class Admin(Module):
         """
 
         # Register the web interface as a cherrypy app
-        self.logger.warning(f"register_webif: {self.webif_dir=}, {self.shng_url_root=}, {self.url_root=} - {suburl=}")
         self.mod_http.register_webif(WebInterface(self.webif_dir, self, self.shng_url_root, self.url_root),
                                      suburl,
                                      config,
@@ -240,7 +239,6 @@ class Admin(Module):
                                      useprefix=False)
 
         # Register the alternate web interface as a cherrypy app
-        self.logger.warning(f"register_webif: {self.webif2_dir=}, {self.shng_url_root=}, {self.url_root2=} - {suburl2=}")
         self.mod_http.register_webif(WebInterface(self.webif2_dir, self, self.shng_url_root, self.url_root2),
                                      suburl2,
                                      config2,
