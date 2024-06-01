@@ -56,7 +56,9 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
-    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC)
+    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC,
+    PLUGIN_ATTR_DELAY_INITIAL,
+    ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC)
 
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
@@ -177,7 +179,7 @@ class SmartDevicePlugin(SmartPlugin):
         self._cycle = self.get_parameter_value(PLUGIN_ATTR_CYCLE)
         if self._cycle is None:
             self._cycle = -1
-
+        self._initial_value_read_delay = self.get_parameter_value(PLUGIN_ATTR_DELAY_INITIAL) or 0
         # set (overwritable) callback
         self._dispatch_callback = self.dispatch_data
 
@@ -362,7 +364,13 @@ class SmartDevicePlugin(SmartPlugin):
         self.set_suspend(by='run()')
 
         if self._connection.connected():
-            self._read_initial_values()
+            if self.scheduler_get('read_initial_values'):
+                return
+            elif self._initial_value_read_delay > 0:
+                self.logger.dbghigh(f"On run reading initial values after {self._initial_value_read_delay} seconds.")
+                self.scheduler_add('read_initial_values', self._read_initial_values, next=self.shtime.now() + datetime.timedelta(seconds=self._initial_value_read_delay))
+            else:
+                self._read_initial_values()
 
     def stop(self):
         """

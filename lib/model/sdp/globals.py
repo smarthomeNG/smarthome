@@ -47,7 +47,7 @@ PLUGIN_ATTR_CMD_CLASS        = 'command_class'           # name of class to use 
 PLUGIN_ATTR_RECURSIVE        = 'recursive_custom'        # indices of custom item attributes for which to enable recursive lookup (number or list of numbers)
 PLUGIN_ATTR_SUSPEND_ITEM     = 'suspend_item'            # item to toggle suspend/resume mode
 PLUGIN_ATTR_CYCLE            = 'cycle'                   # plugin-wide cyclic update interval
-
+PLUGIN_ATTR_DELAY_INITIAL    = 'delay_initial_read'      
 # general connection attributes
 PLUGIN_ATTR_CONNECTION       = 'conn_type'               # manually set connection class, classname or type (see below)
 PLUGIN_ATTR_CONN_TIMEOUT     = 'timeout'                 # timeout for reading from network or serial
@@ -88,7 +88,7 @@ PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE,
                 PLUGIN_ATTR_CONN_RETRY_CYCLE, PLUGIN_ATTR_CONN_RETRY_SUSPD, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
                 PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY,
                 PLUGIN_ATTR_SERIAL_STOP, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_MSG_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT,
-                PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CB_SUSPEND)
+                PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CB_SUSPEND, PLUGIN_ATTR_DELAY_INITIAL)
 
 # connection types for PLUGIN_ATTR_CONNECTION
 CONN_NULL                    = ''                 # use base connection class without real connection functionality, for testing
@@ -173,7 +173,7 @@ COMMAND_ITEM_ATTRS = (CMD_IATTR_RG_LEVELS, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_ATTR
                       CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3, CMD_IATTR_CYCLIC)
 
 # reply pattern substitution tokens, set token in {<token>}
-PATTERN_LOOKUP               = 'LOOKUP'                 # replace with lookup values    
+PATTERN_LOOKUP               = 'LOOKUP'                 # replace with lookup values
 PATTERN_VALID_LIST           = 'VALID_LIST'             # replace with valid_list items
 PATTERN_VALID_LIST_CI        = 'VALID_LIST_CI'          # replace with valid_list_ci items
 PATTERN_CUSTOM_PATTERN       = 'CUSTOM_PATTERN'         # replace with custom pattern <x>
