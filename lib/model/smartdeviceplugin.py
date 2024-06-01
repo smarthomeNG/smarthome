@@ -713,11 +713,6 @@ class SmartDevicePlugin(SmartPlugin):
 
         try:
             data_dict = self._commands.get_send_data(command, value, **kwargs)
-            data_dict['command'] = command
-            if value is not None and self._commands_read.get(command, None) is not None:
-                data_dict['returntype'] = type(value)
-                data_dict['returnvalue'] = value
-            data_dict['retry'] = kwargs.get('retry') or 0
         except Exception as e:
             self.logger.warning(f'command {command} with value {value} produced error on converting value, aborting. Error was: {e}')
             return False
@@ -732,7 +727,7 @@ class SmartDevicePlugin(SmartPlugin):
         # if an error occurs on sending, an exception is thrown "below"
         result = None
         try:
-            result = self._send(data_dict)
+            result = self._send(data_dict, {'command': command, 'returntype': type(value), 'returnvalue': value, 'retry': kwargs.get('retry') or 0})
         except (RuntimeError, OSError) as e:  # Exception as e:
             self.logger.debug(f'error on sending command {command}, error was {e}')
             return False
@@ -960,7 +955,7 @@ class SmartDevicePlugin(SmartPlugin):
         return (True, True)
         # return (False, True)
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, resend_info=None):
         """
         This method acts as a overwritable intermediate between the handling
         logic of send_command() and the connection layer.
@@ -1690,7 +1685,6 @@ class Standalone:
             return
 
         self.yaml['item_structs'] = OrderedDict()
-
         # this means the commands dict has 'ALL' and model names at the top level
         # otherwise, the top level nodes are commands or sections
         cmds_has_models = INDEX_GENERIC in top_level_entries
