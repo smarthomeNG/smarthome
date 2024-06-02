@@ -1014,11 +1014,11 @@ class SmartPlugin(SmartObject, Utils):
         This methods gets all schedulers for a plugin
         """
         plugin = self._pluginname_prefix + self.get_fullname() + "."
-        self.logger.debug(f"scheduler_get_all: plugin = {plugin}")
         scheduler_list = []
         for name in self._sh.scheduler.return_all(True):
             if name.startswith(plugin):
-                scheduler_list.append(name)
+                scheduler_list.append(name[len(plugin):])
+        self.logger.debug(f"scheduler_get_all: plugin = {plugin}, schedulers = {scheduler_list}")
         return scheduler_list
 
     # ----------------------------------------------------------------------------------
