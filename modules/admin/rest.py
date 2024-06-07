@@ -235,7 +235,8 @@ class RESTResource:
     REST_defaults = {'DELETE' : 'delete',
                      'GET' : 'read',
                      'POST' : 'add',
-                     'PUT' : 'update'}
+                     'PUT' : 'update',
+                     'OPTIONS': 'options'}
     REST_map = {}
 
     # if the resource has children resources, list them here. format is
@@ -247,9 +248,24 @@ class RESTResource:
     logger = logging.getLogger('REST')
     jwt_secret = 'SmartHomeNG$0815'
 
+    def set_response_headers(self, vpath=''):
+        """
+        Set http response headers for CORS support
+        """
+#        if vpath != 'status':
+#            self.logger.notice(f"set_response_headers ({vpath=}): request headers: {cherrypy.request.headers}")
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = '*'
+        #cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+        origin = cherrypy.request.headers.get('Origin', '*')
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = origin
+        cherrypy.response.headers['Access-Control-Allow-Credentials'] = 'true'
+#        if vpath != 'status':
+#            self.logger.notice(f"set_response_headers: response headers for: {cherrypy.response.headers}")
+
     @cherrypy.expose
     def index(self, *vpath, **params):
-        self.logger.info(f"RESTResource.index for class {self.__class__.__name__}")
+        self.logger.info(f"RESTResource.index for class {self.__class__.__name__} - *vpath={vpath}, **params={params}")
+        self.set_response_headers()
         return self.default(*vpath, **params)
 
 
@@ -387,7 +403,8 @@ class RESTResource:
 
     @cherrypy.expose
     def default(self, *vpath, **params):
-        self.logger.info(f"RESTResource.default: *vpath={vpath}, **params={params}")
+        self.logger.info(f"RESTResource.default: *vpath={vpath}, **params={params} {type(vpath)=}")
+        self.set_response_headers(*vpath)
         if not vpath:
             resource = None
             # self.logger.info("RESTResource.default: vpath = '{}',  params = '{}'".format(list(vpath), dict(**params)))
@@ -455,3 +472,14 @@ class RESTResource:
         return id
         # raise cherrypy.NotFound
 
+    @cherrypy.expose
+    def options(self, id=None):
+        """
+        Handle OPTIONS requests
+        """
+        self.logger.notice("RESTResource.options for class {self.__class__.__name__}")
+
+        return json.dumps(False)
+
+    options.expose_resource = True
+    options.authentication_needed = True

@@ -323,7 +323,7 @@ class Http(Module):
             },
             '/static': {
                 'tools.staticdir.on': True,
-                'tools.staticdir.dir': 'static'
+                'tools.staticdir.dir': 'static',
             }
         }
 
@@ -349,7 +349,7 @@ class Http(Module):
             },
             '/static': {
                 'tools.staticdir.on': True,
-                'tools.staticdir.dir': 'static'
+                'tools.staticdir.dir': 'static',
             },
             '/gstatic': {
                 'tools.staticdir.on': True,
@@ -365,7 +365,7 @@ class Http(Module):
             },
             '/static': {
                 'tools.staticdir.on': True,
-                'tools.staticdir.dir': 'static'
+                'tools.staticdir.dir': 'static',
             }
         }
         self.logger.info("Module http: config dict: '{}'".format( config ) )
