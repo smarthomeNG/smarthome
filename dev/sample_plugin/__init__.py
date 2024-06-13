@@ -138,10 +138,10 @@ class SamplePlugin(SmartPlugin):
 
         if self.has_iattr(item.conf, 'foo_itemtag'):
             self.logger.debug(f"parse item: {item}")
+            self.add_item(item)
 
-        # todo
-        # if interesting item for sending values:
-        #   self._itemlist.append(item)
+        # if plugin should be alerted to item updates:
+        #   self.register_updating(item)
         #   return self.update_item
 
     def parse_logic(self, logic):
@@ -181,6 +181,7 @@ class SamplePlugin(SmartPlugin):
             # and only, if the item has not been changed by this plugin:
             self.logger.info(f"update_item: '{item.property.path}' has been changed outside this plugin by caller '{self.callerinfo(caller, source)}'")
 
+            # do something
             pass
 
     def poll_device(self):
@@ -223,4 +224,3 @@ class SamplePlugin(SmartPlugin):
         self.alive = False
 
         self.logger.notice("plugin_coro finished")
-        return
