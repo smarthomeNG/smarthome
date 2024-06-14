@@ -1020,6 +1020,11 @@ class SmartPlugin(SmartObject, Utils):
         """ This method returns a list of all added schedulers """
         return self._schedulers
 
+    def scheduler_remove_all(self):
+        """ This method removes all schedulers added by the plugin """
+        for sched in self._schedulers:
+            self.scheduler_remove(sched)
+
     # ----------------------------------------------------------------------------------
     #   Ascyncio handling
     # ----------------------------------------------------------------------------------
