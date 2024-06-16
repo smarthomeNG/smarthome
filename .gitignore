@@ -69,9 +69,6 @@ requirements/conf_all.txt
 
 # ./etc -- ignore everything
 etc/*
-# except .gitignore
-!etc/.gitignore
-#!logging.yaml
 # except yaml default-files
 !etc/admin.yaml.default
 !etc/holidays.yaml.default
