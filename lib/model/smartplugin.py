@@ -83,6 +83,7 @@ class SmartPlugin(SmartObject, Utils):
         self._plg_item_dict = {}      # make sure, that the dict is local to the plugin
         self._item_lookup_dict = {}   # make sure, that the dict is local to the plugin
         self._cycle = 60              # make sure the _cycle attribute exists
+        self._schedulers = []         # all created schedulers for this plugin
 
         # set parameter value
         self._suspend_item_path = self.get_parameter_value('suspend_item')
@@ -1009,6 +1010,7 @@ class SmartPlugin(SmartObject, Utils):
 
         The parameters are identical to the scheduler.add method from lib.scheduler
         """
+        self._schedulers.append(name)
         if name != '':
             name = '.' + name
         name = self._pluginname_prefix + self.get_fullname() + name
@@ -1041,6 +1043,10 @@ class SmartPlugin(SmartObject, Utils):
 
         The parameters are identical to the scheduler.remove method from lib.scheduler
         """
+        try:
+            self._schedulers.remove(name)
+        except KeyError:
+            pass  # TODO: maybe give a warning?
         if name != '':
             name = '.' + name
         name = self._pluginname_prefix + self.get_fullname() + name
@@ -1061,6 +1067,14 @@ class SmartPlugin(SmartObject, Utils):
         self.logger.debug(f"scheduler_get: name = {name}")
         return self._sh.scheduler.get(name, from_smartplugin=True)
 
+    def scheduler_get_all(self):
+        """ This method returns a list of all added schedulers """
+        return self._schedulers
+
+    def scheduler_remove_all(self):
+        """ This method removes all schedulers added by the plugin """
+        for sched in self._schedulers:
+            self.scheduler_remove(sched)
 
     # ----------------------------------------------------------------------------------
     #   Ascyncio handling
