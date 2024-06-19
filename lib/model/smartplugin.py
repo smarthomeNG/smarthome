@@ -130,6 +130,8 @@ class SmartPlugin(SmartObject, Utils):
             else:
                 # if not available, default to "resume" (non-breaking default)
                 suspend_active = False
+            if by is None:
+                by = 'set_suspend()'
 
         # output debug logging
         if suspend_active:
@@ -1046,7 +1048,7 @@ class SmartPlugin(SmartObject, Utils):
         try:
             self._schedulers.remove(name)
         except KeyError:
-            pass  # TODO: maybe give a warning?
+            self.logger.warning(f'tried to remove scheduler {name} but scheduler not in list')
         if name != '':
             name = '.' + name
         name = self._pluginname_prefix + self.get_fullname() + name
