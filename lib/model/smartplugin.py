@@ -97,11 +97,11 @@ class SmartPlugin(SmartObject, Utils):
             self.suspended = True
             if self._suspend_item is not None:
                 self._suspend_item(True)
-            if hasattr(self, 'disconnect'):
-                self.disconnect()
-            self._remove_cyclic_scheduler()
+            self.scheduler_remove_all()
             if self.asyncio_state() == 'running':
                 self.async_stop()
+            if hasattr(self, 'disconnect'):
+                self.disconnect()
 
     def resume(self, by=None) -> None:
         """
@@ -950,7 +950,7 @@ class SmartPlugin(SmartObject, Utils):
     def _create_cyclic_scheduler(self) -> None:
         """
         create cyclic scheduler if needed
-        
+
         :note: This method can be overwritten by plugin implementation.
         """
         self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
