@@ -179,7 +179,8 @@ class SmartPlugin(SmartObject, Utils):
 
         :note: This method can be overwritten by plugin implementation.
         """
-        self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
+        # self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
+        pass
 
     def remove_plugin_schedulers(self) -> None:
         """
@@ -187,7 +188,8 @@ class SmartPlugin(SmartObject, Utils):
 
         :note: This method can be overwritten by plugin implementation.
         """
-        self.scheduler_remove('poll_device')
+        # self.scheduler_remove('poll_device')
+        pass
 
     def parse_logic(self, logic) -> None:
         """

@@ -78,8 +78,9 @@ class SampleMqttPlugin(MqttPlugin):
 
         self.alive = True
 
-        # start subscription to all topics
-        self.start_subscriptions()
+        # set suspend mode (possibly query suspend item; when in doubt, resume)
+        # this handles schedulers, asyncio, connections, starting subscriptions
+        self.set_suspend(by='run')
 
     def stop(self):
         """
@@ -87,6 +88,20 @@ class SampleMqttPlugin(MqttPlugin):
         """
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
         self.alive = False
+
+        # let on_suspend shut down all relevant stuff (schedulers, asyncio, subscriptions)
+        self.on_suspend(by='stop')
+
+    def on_resume(self, by=None):
+        """ do stuff on resume of plugin """
+        super().on_resume(by)
+
+        # start subscription to all topics
+        self.start_subscriptions()
+
+    def on_suspend(self, by=None):
+        """ halt stuff on suspend of plugin """
+        super().on_suspend(by)
 
         # stop subscription to all topics
         self.stop_subscriptions()

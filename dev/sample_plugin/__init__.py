@@ -87,20 +87,18 @@ class SamplePlugin(SmartPlugin):
         """
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'run()'}))
 
-        # setup scheduler for device poll loop
-        # (enable the following line, if you need to poll the device.
-        #  Rember to un-comment the self._cycle statement in __init__ as well)
-        #self._create_cyclic_scheduler()
+        # if not using asyncio:
+        self.alive = True
 
-        # Start the asyncio eventloop in it's own thread
-        # and set self.alive to True when the eventloop is running
-        # (enable the following line, if you need to use asyncio in the plugin)
-        #self.start_asyncio(self.plugin_coro())
-
-        self.alive = True     # if using asyncio, do not set self.alive here. Set it in the session coroutine
+        # if using asyncio:
+        # self._used_plugin_coro = self.plugin_coro
 
         # if you need to create child threads, do not make them daemon = True!
         # They will not shutdown properly. (It's a python bug)
+
+        # set suspend mode (possibly query suspend item; when in doubt, resume)
+        # this handles schedulers, asyncio, connections
+        self.set_suspend(by='run')
 
     def stop(self):
         """
@@ -109,12 +107,8 @@ class SamplePlugin(SmartPlugin):
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
         self.alive = False     # if using asyncio, do not set self.alive here. Set it in the session coroutine
 
-        # if you use a scheduled poll loop, enable the following line
-        #self._remove_cyclic_scheduler()
-
-        # stop the asyncio eventloop and it's thread
-        # If you use asyncio, enable the following line
-        #self.stop_asyncio()
+        # let on_suspend clean up schedulers, asyncio, connections and so on
+        self.on_suspend(by='stop')
 
     def parse_item(self, item):
         """
@@ -183,6 +177,25 @@ class SamplePlugin(SmartPlugin):
 
             # do something
             pass
+
+    def create_plugin_schedulers(self) -> None:
+        """
+        create cyclic scheduler if needed
+
+        Uncomment line if using schedulers. In this case, also uncomment
+        'self._cycle = ...' in __init__() above
+        """
+        # self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
+        pass
+
+    def remove_plugin_schedulers(self) -> None:
+        """
+        remove cyclic scheduler if needed
+
+        Uncomment line if using schedulers
+        """
+        # self.scheduler_remove('poll_device')
+        pass
 
     def poll_device(self):
         """
