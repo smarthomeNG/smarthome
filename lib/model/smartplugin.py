@@ -21,19 +21,17 @@
 #########################################################################
 
 from lib.model.smartobject import SmartObject
-
 from lib.shtime import Shtime
 from lib.module import Modules
 import lib.shyaml as shyaml
 from lib.utils import Utils
 from lib.translation import translate as lib_translate
+
 import logging
 import os
 import threading
 import asyncio
 import time
-import inspect
-
 from typing import Coroutine, Any
 
 
@@ -74,12 +72,29 @@ class SmartPlugin(SmartObject, Utils):
     logger = logging.getLogger(__name__)
 
     alive = False
-    suspended = False       # flag for setting suspended (inactive) state
-    _suspend_item = None      # suspend item
-    _suspend_item_path = None # path of suspend item
+    suspended = False           # flag for setting suspended (inactive) state
+    _suspend_item = None        # suspend item
+    _suspend_item_path = None   # path of suspend item
 
-    # Initialization of SmartPlugin class called by super().__init__() from the plugin's __init__() method
+    _asyncio_loop = None        # eventloop of the plugin
+    _asyncio_state = 'unused'   # stored state of the asyncio use of the plugin
+    _used_plugin_coro = None    # plugin coro used when calling start_asyncio (to be able to used by a generic 'restart asyncio' method
+    _run_queue = None           # queue to send commends to the main-coro/plugin-coro
+
+#
+# the following methods need to be overwritten / implemented
+#
+
+#
+# the following methods should be overwritten, but also called via super().<method>()
+#
+
     def __init__(self, **kwargs) -> None:
+        """
+        Initialization of SmartPlugin instance
+
+        Should be called by super().__init__() from the plugin's __init__() method
+        """
         self._plg_item_dict = {}      # make sure, that the dict is local to the plugin
         self._item_lookup_dict = {}   # make sure, that the dict is local to the plugin
         self._cycle = 60              # make sure the _cycle attribute exists
@@ -88,41 +103,164 @@ class SmartPlugin(SmartObject, Utils):
         # set parameter value
         self._suspend_item_path = self.get_parameter_value('suspend_item')
 
+#
+# the following methods should be overwritten
+#
+
+    def run(self):
+        """
+        This method of the plugin is called to start the plugin
+
+        :note: This method needs to be overwritten by the plugin implementation. Otherwise an error will be raised
+        """
+        raise NotImplementedError("'Plugin' subclasses should have a 'run()' method")
+
+    def stop(self):
+        """
+        This method of the plugin is called to stop the plugin when SmartHomeNG shuts down
+
+        :note: This method needs to be overwritten by the plugin implementation. Otherwise an error will be raised
+        """
+        raise NotImplementedError("'Plugin' subclasses should have a 'stop()' method")
+
+    def update_item(self, item, caller=None, source=None, dest=None) -> None:
+        """
+        Item has been updated
+
+        This method is called, if the value of an item has been updated by
+        SmartHomeNG. It should write the changed value out to the device
+        (hardware/interface) that is managed by this plugin.
+
+        Method must be overwritten for the plugin to be able to react to
+        item changes. Copy code to own function; calling via super() does
+        not work without bending three arms...
+
+        :param item: item to be updated towards the plugin
+        :param caller: if given it represents the callers name
+        :param source: if given it represents the source
+        :param dest: if given it represents the dest
+        """
+        # check for suspend item
+        if item is self._suspend_item:
+            if caller != self.get_shortname():
+                self.logger.debug(f'Suspend item changed to {item()}')
+                self.set_suspend(by=f'suspend item {item.property.path}')
+            return
+
+    def parse_item(self, item) -> Any:
+        """
+        This method is used to parse the configuration of an item for this plugin. It is
+        called for all plugins before the plugins are started (calling all run methods).
+
+        :note: This method should be overwritten by the plugin implementation.
+        """
+        # check for suspend item
+        if item.property.path == self._suspend_item_path:
+            self.logger.debug(f'suspend item {item.property.path} registered')
+            self._suspend_item = item
+            self.add_item(item, updating=True)
+            return self.update_item
+
+#
+# the following methods can be overwritten
+#
+
+    def poll_device(self) -> None:
+        """
+        periodically poll device (or do other things periodically)
+
+        :note: This method can be overwritten by plugin implementation.
+        """
+        pass
+
+    def create_plugin_schedulers(self) -> None:
+        """
+        create cyclic scheduler if needed
+
+        :note: This method can be overwritten by plugin implementation.
+        """
+        self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
+
+    def remove_plugin_schedulers(self) -> None:
+        """
+        remove cyclic scheduler if needed
+
+        :note: This method can be overwritten by plugin implementation.
+        """
+        self.scheduler_remove('poll_device')
+
+    def parse_logic(self, logic) -> None:
+        """
+        This method is used to parse the configuration of a logic for this plugin. It is
+        called for all plugins before the plugins are started (calling all run methods).
+
+        :note: This method should to be overwritten by the plugin implementation.
+        """
+        pass
+
+    def deinit(self, items=[]) -> None:
+        """
+        If the Plugin needs special code to be executed before it is unloaded, this method
+        has to be overwritten with the code needed for de-initialization. Keep the
+        original code or call super().deinit()...
+
+        If called without parameters, all registered items are unregistered.
+        items is a list of items (or a single Item() object).
+        """
+        if self.alive:
+            self.stop()
+
+        if not items:
+            items = self.get_item_list()
+        elif not isinstance(items, list):
+            items = [items]
+
+        for item in items:
+            self.remove_item(item)
+
+    def on_suspend(self, by=None) -> None:
+        """ Does all the work if suspend() is called """
+        self.scheduler_remove_all()
+        if self.asyncio_state() == 'running':
+            self.stop_asyncio()
+        if hasattr(self, 'disconnect'):
+            self.disconnect()
+
+    def on_resume(self, by=None) -> None:
+        """ Does all the additional work if resume() is called """
+        if hasattr(self, 'connect'):
+            self.connect()
+        self.create_plugin_schedulers()
+        if self.asyncio_state() == 'stopped':
+            self._start_known_asyncio_coro()
+
+#
+#
+#
+# the following methods should NOT be overwritten
+#
+#
+
     def suspend(self, by=None) -> None:
-        """
-        sets plugin into suspended mode, no network/serial activity and no item changed
-        """
+        """ sets plugin into suspended mode, no network/serial activity and no item changed """
         if self.alive:
             self.logger.info(f'plugin suspended by {by if by else "unknown"}, connections will be closed')
             self.suspended = True
             if self._suspend_item is not None:
                 self._suspend_item(True)
-            self.scheduler_remove_all()
-            if self.asyncio_state() == 'running':
-                self.async_stop()
-            if hasattr(self, 'disconnect'):
-                self.disconnect()
+            self.on_suspend()
 
     def resume(self, by=None) -> None:
-        """
-        disabled suspended mode, network/serial connections are resumed
-        """
+        """ disabled suspended mode, network/serial connections are resumed """
         if self.alive:
             self.logger.info(f'plugin resumed by {by if by else "unknown"}, connections will be resumed')
             self.suspended = False
             if self._suspend_item is not None:
                 self._suspend_item(False)
-            if hasattr(self, 'connect'):
-                self.connect()
-            self._create_cyclic_scheduler()
-            if self.asyncio_state() == 'stopped':
-                self._start_known_asyncio_coro()
+            self.on_resume()
 
     def set_suspend(self, suspend_active=None, by=None) -> None:
-        """
-        enable / disable suspend mode: open/close connections, schedulers
-        """
-
+        """ enable / disable suspend mode: open/close connections, schedulers """
         if suspend_active is None:
             if self._suspend_item is not None:
                 # if no parameter set, try to use item setting
@@ -147,25 +285,6 @@ class SmartPlugin(SmartObject, Utils):
             self.suspend(by)
         else:
             self.resume(by)
-
-    def deinit(self, items=[]) -> None:
-        """
-        If the Plugin needs special code to be executed before it is unloaded, this method
-        has to be overwritten with the code needed for de-initialization
-
-        If called without parameters, all registered items are unregistered.
-        items is a list of items (or a single Item() object).
-        """
-        if self.alive:
-            self.stop()
-
-        if not items:
-            items = self.get_item_list()
-        elif not isinstance(items, list):
-            items = [items]
-
-        for item in items:
-            self.remove_item(item)
 
     def add_item(self, item, config_data_dict: dict = {}, mapping=None, updating: bool = False) -> bool:
         """
@@ -271,36 +390,12 @@ class SmartPlugin(SmartObject, Utils):
 
         return True
 
-
     def callerinfo(self, caller: str, source: str) -> str:
 
         if source is None:
             return caller
         else:
             return caller + ':' + source
-
-    def update_item(self, item, caller=None, source=None, dest=None) -> None:
-        """
-        Item has been updated
-
-        This method is called, if the value of an item has been updated by
-        SmartHomeNG. It should write the changed value out to the device
-        (hardware/interface) that is managed by this plugin.
-
-        Method must be overwritten to be functional. Call super().update_item()
-        to keep stock suspend_item code.
-
-        :param item: item to be updated towards the plugin
-        :param caller: if given it represents the callers name
-        :param source: if given it represents the source
-        :param dest: if given it represents the dest
-        """
-        # check for suspend item
-        if item is self._suspend_item:
-            if caller != self.get_shortname():
-                self.logger.debug(f'Suspend item changed to {item()}')
-                self.set_suspend(by=f'suspend item {item.property.path}')
-            return
 
     def register_updating(self, item) -> None:
         """
@@ -354,7 +449,7 @@ class SmartPlugin(SmartObject, Utils):
             item_path = item.property.path
         return self._plg_item_dict[item_path].get('mapping')
 
-    def get_item_mapping_list(self) -> str:
+    def get_item_mapping_list(self) -> list:
         """
         Returns the plugin-specific mapping that was defined by add_item()
 
@@ -364,14 +459,14 @@ class SmartPlugin(SmartObject, Utils):
         Only available in SmartHomeNG versions **v1.10.0 and up**.
 
         :return: mapping string for that item
-        :rtype: str
+        :rtype: list
         """
         result = []
         for item_path in list(self._plg_item_dict.keys()):
             result.append([item_path, self._plg_item_dict[item_path].get('mapping')])
         return result
 
-    def _string_compare(self, s1, s2: str, mode: str='') -> str:
+    def _string_compare(self, s1: str, s2: str, mode: str='') -> bool:
         """
         Compare strings of different length
 
@@ -382,7 +477,8 @@ class SmartPlugin(SmartObject, Utils):
         :param s1: First string to compare
         :param s2: Second string to compare
         :param mode: Compare mode ('start', 'end') for comparing strings of different length
-        :return:
+        :return: True if strings match, False otherwise
+        :rtype: bool
         """
         if mode == 'end':
             if len(s1) > len(s2):
@@ -629,10 +725,9 @@ class SmartPlugin(SmartObject, Utils):
         :return: True: If multiinstance capable
         :rtype: bool
         """
-        if self.ALLOW_MULTIINSTANCE:
-            return True
-        else:
+        if not hasattr(self, 'ALLOW_MULTIINSTANCE') or self.ALLOW_MULTIINSTANCE is None:
             return False
+        return self.ALLOW_MULTIINSTANCE
 
 
     def get_plugin_dir(self) -> str:
@@ -924,55 +1019,6 @@ class SmartPlugin(SmartObject, Utils):
         """
         return os.path.join(path, dir)
 
-
-    def parse_logic(self, logic) -> None:
-        """
-        This method is used to parse the configuration of a logic for this plugin. It is
-        called for all plugins before the plugins are started (calling all run methods).
-
-        :note: This method should to be overwritten by the plugin implementation.
-        """
-        pass
-
-
-    def parse_item(self, item) -> Any:
-        """
-        This method is used to parse the configuration of an item for this plugin. It is
-        called for all plugins before the plugins are started (calling all run methods).
-
-        :note: This method should be overwritten by the plugin implementation.
-        """
-        # check for suspend item
-        if item.property.path == self._suspend_item_path:
-            self.logger.debug(f'suspend item {item.property.path} registered')
-            self._suspend_item = item
-            self.add_item(item, updating=True)
-            return self.update_item
-
-    def _create_cyclic_scheduler(self) -> None:
-        """
-        create cyclic scheduler if needed
-
-        :note: This method can be overwritten by plugin implementation.
-        """
-        self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
-
-    def _remove_cyclic_scheduler(self) -> None:
-        """
-        remove cyclic scheduler if needed
-
-        :note: This method can be overwritten by plugin implementation.
-        """
-        self.scheduler_remove('poll_device')
-
-    def poll_device(self) -> None:
-        """
-        periodically poll device
-
-        :note: This method can be overwritten by plugin implementation.
-        """
-        pass
-
     def now(self):
         """
         Returns SmartHomeNGs current time (timezone aware)
@@ -1081,11 +1127,6 @@ class SmartPlugin(SmartObject, Utils):
     # ----------------------------------------------------------------------------------
     #   Ascyncio handling
     # ----------------------------------------------------------------------------------
-
-    _asyncio_loop = None        # eventloop of the plugin
-    _asyncio_state = 'unused'   # stored state of the asyncio use of the plugin
-    _used_plugin_coro = None    # plugin coro used when calling start_asyncio (to be able to used by a generic 'restart asyncio' method
-    _run_queue = None           # queue to send commends to the main-coro/plugin-coro
 
     def asyncio_state(self) -> str:
         """
@@ -1273,27 +1314,6 @@ class SmartPlugin(SmartObject, Utils):
             if task.get_coro().__name__ == 'list_asyncio_tasks':
                 task.set_name('ListTasks')
             self.logger.notice(f" - {task}")
-
-    # ----------------------------------------------------------------------------------
-
-
-    def run(self):
-        """
-        This method of the plugin is called to start the plugin
-
-        :note: This method needs to be overwritten by the plugin implementation. Otherwise an error will be raised
-        """
-        raise NotImplementedError("'Plugin' subclasses should have a 'run()' method")
-
-
-    def stop(self):
-        """
-        This method of the plugin is called to stop the plugin when SmartHomeNG shuts down
-
-        :note: This method needs to be overwritten by the plugin implementation. Otherwise an error will be raised
-        """
-        raise NotImplementedError("'Plugin' subclasses should have a 'stop()' method")
-
 
     def translate(self, txt, vars=None, block=None):
         """
