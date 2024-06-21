@@ -994,7 +994,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         try:
             self._schedulers.remove(name)
-        except KeyError:
+        except ValueError:
             pass  # TODO: maybe give a warning?
         if name != '':
             name = '.' + name
