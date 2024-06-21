@@ -25,7 +25,6 @@ import logging
 import json
 import cherrypy
 
-from lib.module import Modules
 import lib.shyaml as shyaml
 
 from .rest import RESTResource
@@ -246,11 +245,6 @@ class ConfigController(RESTResource):
             # update etc/module.yaml with data from admin frontend
             self.module_confdata = shyaml.yaml_load_roundtrip(os.path.join(self.etc_dir, 'module.yaml'))
             self.update_configdict(self.module_confdata['http'], data, 'http')
-            self.mod_http = Modules.get_instance().get_module('http')
-            hashed_password = data.get('http', {}).get('data', {}).get('hashed_password', '')
-            if hashed_password is None:
-                hashed_password = ''
-            self.mod_http._hashed_password = hashed_password
             self.update_configdict(self.module_confdata['admin'], data, 'admin')
 
             if self.module_confdata.get('websocket', None) is None:

@@ -22,14 +22,26 @@
 
 import os
 import logging
+import sys
+import socket
+import platform
+if os.name != 'nt':
+    import pwd
+import psutil
+import datetime
+import time
 import json
 import cherrypy
 
+import bin.shngversion as shngversion
 from .rest import RESTResource
 
-import bin.shngversion
+#import bin.shngversion
 import lib.daemon
 import lib.backup as backup
+from lib.shpypi import Shpypi
+from lib.shtime import Shtime
+from lib.utils import Utils
 
 
 # ======================================================================
@@ -64,7 +76,7 @@ def get_process_info(command, wait=True, append_error=False):
 # ======================================================================
 #  Controller for REST API /api/server
 #
-class ServerController(RESTResource):
+class SystemController(RESTResource):
     """
     Controller for REST API /api/server
     """
@@ -81,7 +93,7 @@ class ServerController(RESTResource):
 
 
     # ======================================================================
-    #  /api/server
+    #  /api/system
     #
     def root(self):
         """
@@ -98,7 +110,7 @@ class ServerController(RESTResource):
 
 
     # ======================================================================
-    #  /api/server/info
+    #  /api/system/info
     #
     def info(self):
         """
@@ -106,11 +118,102 @@ class ServerController(RESTResource):
 
         Note: the root of the REST API is not protected by authentication
         """
-        client_ip = cherrypy.request.wsgi_environ.get('REMOTE_ADDR')
+
+        now = str(self.module.shtime.now())
+        tzname = self.module.shtime.tzname()
+        system = platform.system()
+
+        #self.read_linuxinfo()
+        #vers = Utils.strip_quotes(self.os_release.get('PRETTY_NAME', ''))
+        vers = self._sh.systeminfo.get_osname()
+        if vers == '':
+            vers = platform.version()
+        arch = platform.machine()
+        # node = platform.node()
+        node = socket.getfqdn()
+        if os.name != 'nt':
+            user = pwd.getpwuid(os.geteuid()).pw_name  # os.getlogin()
+        else:
+            user = os.getlogin()
+
+        if os.name != 'nt':
+            space = os.statvfs(self._sh.base_dir)
+            freespace = space.f_frsize * space.f_bavail / 1024 / 1024
+        else:
+            space = psutil.disk_usage(self._sh.base_dir)
+            freespace = space.free / 1024 / 1024
+
+        rt = Shtime.get_instance().runtime_as_dict()
+        sh_runtime_seconds = rt['total_seconds']
+
+        pyversion = "{0}.{1}.{2} {3}".format(sys.version_info[0], sys.version_info[1], sys.version_info[2],
+                                             sys.version_info[3])
 
         response = {}
+        response['tzname'] = tzname
+
+        # Hardware
+        response['hardware'] = self._sh.systeminfo.get_rasppi_info()
+        if response['hardware'] == '':
+            response['hardware'] = self._sh.systeminfo.get_cpubrand()
+        response['arch'] = arch
+        response['rasppi'] = self._sh.systeminfo.running_on_rasppi()
+        if self._sh.systeminfo.cpu_speed_class is not None:
+            response['hwspeed'] = self._sh.systeminfo.cpu_speed_class
+
+        # Betriebssystem
+        response['system'] = system
+        response['ostype'] = self._sh.systeminfo.get_ostype()
+        response['osflavor'] = self._sh.systeminfo.get_osflavor()
+        response['vers'] = vers
+        response['node'] = node
+        # ip = Utils.get_local_ipv4_address()
+        ip = Utils.get_all_local_ipv4_addresses()
+        if '127.0.0.1' in ip:
+            ip.remove('127.0.0.1')
+            #ip.append('127.0.0.1')
+        if len(ip) == 1:
+            response['ip'] = ip[0]
+        else:
+            response['ip'] = str(ip)
+        ipv6 = Utils.get_local_ipv6_address()
+        # ipv6 = Utils.get_all_local_ipv6_addresses()
+        response['ipv6'] = str(ipv6)
+        response['user'] = user
+        response['freespace'] = freespace
+        response['now'] = now
+        response['uptime'] = time.mktime(datetime.datetime.now().timetuple()) - psutil.boot_time()
+        response['tz'] = self.module.shtime.tz()
+        response['tzname'] = str(self.module.shtime.tzname())
+        response['tznameST'] = str(self.module.shtime.tznameST())
+        response['tznameDST'] = str(self.module.shtime.tznameDST())
+
+        # Dienste
+        response['daemon_knx'] = self.get_knx_daemon()
+        response['daemon_ow'] = self.get_1wire_daemon()
+        response['daemon_mqtt'] = self.get_mqtt_daemon()
+        response['daemon_node_red'] = self.get_node_red_daemon()
+
+        # Python
+        response['pyversion'] = pyversion
+        response['pyvirtual'] = lib.utils.running_virtual()
+        response['pypath'] = self._sh.python_bin
+        if os.name != 'nt':
+            response['pid'] = str(lib.daemon.read_pidfile(self._sh._pidfile))
+        else:
+            response['pid'] = str(os.getpid())
+
+        # SmartHomeNG
+        response['sh_dir'] = self._sh.base_dir
+        response['core_branch'] = shngversion.get_shng_branch()
+        response['sh_vers'] = shngversion.get_shng_version()
+        response['sh_desc'] = shngversion.get_shng_description()
+        response['plugins_branch'] = shngversion.get_plugins_branch()
+        response['plg_vers'] = shngversion.get_plugins_version()
+        response['plg_desc'] = shngversion.get_plugins_description()
+        response['sh_uptime'] = sh_runtime_seconds
         response['default_language'] = self._sh.get_defaultlanguage()
-        def_lang = response['default_language'].lower()
+        def_lang = self._sh.get_defaultlanguage().lower()
         if def_lang == 'de':
             response['locale'] = 'de-DE'
         elif def_lang == 'en':
@@ -122,33 +225,24 @@ class ServerController(RESTResource):
         else:
             response['locale'] = ''
         response['fallback_language_order'] = self._sh._fallback_language_order
-        response['client_ip'] = client_ip
-        response['itemtree_fullpath'] = self.module.itemtree_fullpath
-        response['itemtree_searchstart'] = self.module.itemtree_searchstart
-        response['tz'] = self.module.shtime.tz()
-        response['tzname'] = str(self.module.shtime.tzname())
-        response['tznameST'] = str(self.module.shtime.tznameST())
-        response['tznameDST'] = str(self.module.shtime.tznameDST())
-        response['core_branch'] = bin.shngversion.get_shng_branch()
-        response['plugins_branch'] = bin.shngversion.get_plugins_branch()
+
+        # ShngAdmin
+        response['client_ip'] = cherrypy.request.wsgi_environ.get('REMOTE_ADDR')
+        response['developer_mode'] = self.module.developer_mode
         response['websocket_host'] = self.module.websocket_host
         response['websocket_port'] = self.module.websocket_port
-        response['log_chunksize'] = self.module.log_chunksize
-        response['developer_mode'] = self.module.developer_mode
         response['click_dropdown_header'] = self.module.click_dropdown_header
-
-        response['daemon_knx'] = self.get_knx_daemon()
-        response['daemon_ow'] = self.get_1wire_daemon()
-        response['daemon_mqtt'] = self.get_mqtt_daemon()
-        response['daemon_node_red'] = self.get_node_red_daemon()
+        response['itemtree_fullpath'] = self.module.itemtree_fullpath
+        response['itemtree_searchstart'] = self.module.itemtree_searchstart
+        response['log_chunksize'] = self.module.log_chunksize
         response['backup_stem'] = ''
         try:
             response['backup_stem'] = self._sh._backup_name_stem
         except:
             pass
         response['last_backup'] = backup.get_lastbackuptime()
-        # response['pid'] = str(lib.daemon.read_pidfile(self._sh._pidfile))
-        self.logger.info("ServerController.info(): response = {}".format(response))
+
+        self.logger.info("SystemController.info(): response = {}".format(response))
         return json.dumps(response)
 
 
@@ -228,47 +322,47 @@ class ServerController(RESTResource):
 
 
     # ======================================================================
-    #  /api/server/status
+    #  /api/system/status
     #
-    def status(self):
-        """
-        return status of SmartHomeNG server software
-
-        :return: status dict
-        """
-        try:
-            response = self._sh.shng_status
-        except:
-            response = {'code': -1, 'text': 'unknown'}
-
-        # self.logger.debug("ServerController.index(): /{} - response '{}'".format(id, response))
-        return json.dumps(response)
-
-
-    # ======================================================================
-    #  /api/server/restart
+    # def status(self):
+    #     """
+    #     return status of SmartHomeNG server software
     #
-    def restart(self):
-        """
-        restart the SmartHomneNG server software
-
-        :return: status dict
-        """
-        self.logger.info("ServerController.restart()")
-
-        status = self._sh.shng_status
-        if status['code'] == 20:
-            self._sh.restart('admin interface')
-            response = {'result': 'ok'}
-        else:
-            response = {'result': 'error', 'text': "SmartHomeNG is not in state 'running'"}
-
-        self.logger.info("ServerController.update(): /{} - response '{}'".format(id, response))
-        return json.dumps(response)
+    #     :return: status dict
+    #     """
+    #     try:
+    #         response = self._sh.shng_status
+    #     except:
+    #         response = {'code': -1, 'text': 'unknown'}
+    #
+    #     # self.logger.debug("ServerController.index(): /{} - response '{}'".format(id, response))
+    #     return json.dumps(response)
 
 
+    # # ======================================================================
+    # #  /api/server/restart
+    # #
+    # def restart(self):
+    #     """
+    #     restart the SmartHomneNG server software
+    #
+    #     :return: status dict
+    #     """
+    #     self.logger.info("ServerController.restart()")
+    #
+    #     status = self._sh.shng_status
+    #     if status['code'] == 20:
+    #         self._sh.restart('admin interface')
+    #         response = {'result': 'ok'}
+    #     else:
+    #         response = {'result': 'error', 'text': "SmartHomeNG is not in state 'running'"}
+    #
+    #     self.logger.info("ServerController.update(): /{} - response '{}'".format(id, response))
+    #     return json.dumps(response)
+    #
+    #
     # ======================================================================
-    #  GET /api/server/
+    #  GET /api/system/
     #
     def read(self, id=''):
         """
@@ -278,8 +372,8 @@ class ServerController(RESTResource):
 
         if id is None:
             return self.root()
-        elif id == 'status':
-            return self.status()
+        # elif id == 'status':
+        #     return self.status()
         elif id == 'info':
             return self.info()
 
@@ -287,7 +381,7 @@ class ServerController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
-    read.public_root = True
+    # read.public_root = True
 
 
     def update(self, id='', level=None):
@@ -296,11 +390,11 @@ class ServerController(RESTResource):
         """
         self.logger.info(f"ServerController.update('{id}'), level='{level}'")
 
-        if id == 'restart':
-            return self.restart()
+        # if id == 'restart':
+        #     return self.restart()
 
         return None
 
-    update.expose_resource = True
-    update.authentication_needed = True
+    # update.expose_resource = True
+    # update.authentication_needed = True
 
