@@ -94,6 +94,9 @@ class ServerController(RESTResource):
         response = {}
         response['default_language'] = self._sh.get_defaultlanguage()
         response['client_ip'] = client_ip
+        http_user_dict = self.module.mod_http.get_user_dict()
+        response['login_required'] = http_user_dict.get('admin', {"password_hash": ""}).get("password_hash", "") != ""
+
         return json.dumps(response)
 
 

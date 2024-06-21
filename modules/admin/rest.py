@@ -252,14 +252,15 @@ class RESTResource:
         """
         Set http response headers for CORS support
         """
-        # if vpath != 'status':
-        #     self.logger.notice(f"set_response_headers ({vpath=}): request headers: {cherrypy.request.headers}")
+#        if vpath != 'status':
+#            self.logger.notice(f"set_response_headers ({vpath=}): request headers: {cherrypy.request.headers}")
         cherrypy.response.headers['Access-Control-Allow-Headers'] = '*'
+        #cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         origin = cherrypy.request.headers.get('Origin', '*')
         cherrypy.response.headers['Access-Control-Allow-Origin'] = origin
         cherrypy.response.headers['Access-Control-Allow-Credentials'] = 'true'
-        # if vpath != 'status':
-        #     self.logger.notice(f"set_response_headers: response headers for: {cherrypy.response.headers}")
+#        if vpath != 'status':
+#            self.logger.notice(f"set_response_headers: response headers for: {cherrypy.response.headers}")
 
     @cherrypy.expose
     def index(self, *vpath, **params):
