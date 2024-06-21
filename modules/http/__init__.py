@@ -449,6 +449,8 @@ class Http(Module):
         :return: Information of defined users
         :rtype: dict
         """
+        # ensure that actual value of password_hash is used
+        self._user_dict[self._user] = {'password_hash': self._hashed_password, 'name': 'Administrator', 'groups': ['admin']}
         return self._user_dict
 
 
