@@ -67,7 +67,7 @@ class SmartPlugin(SmartObject, Utils):
 
     _parameters = {}        # Dict for storing the configuration parameters read from /etc/plugin.yaml
     _hide_parameters = {}   # Dict for storing parameters to hide from AdminUI
-
+    _schedulers = []        # List for all plugin schedulers
     logger = logging.getLogger(__name__)
 
     alive = False
@@ -1023,7 +1023,10 @@ class SmartPlugin(SmartObject, Utils):
     def scheduler_remove_all(self):
         """ This method removes all schedulers added by the plugin """
         for sched in self._schedulers:
-            self.scheduler_remove(sched)
+            try:
+                self.scheduler_remove(sched)
+            except Exception:
+                pass
 
     # ----------------------------------------------------------------------------------
     #   Ascyncio handling
