@@ -63,16 +63,16 @@ cd $DIR
 
 echo
 echo
-if [ "${DOC,,}" == "all" ]; then
+if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "all" ]; then
   echo Erzeugen der vollständigen Dokumentation für SmartHomeNG
   echo ========================================================
 fi
 echo
-if [ "${DOC,,}" == "developer" ]; then
+if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "developer" ]; then
   echo Erzeugen der Entwicklerdokumentation für SmartHomeNG
   echo ====================================================
 fi
-if [ "${DOC,,}" == "user" ]; then
+if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "user" ]; then
   echo Erzeugen der Anwenderdokumentation für SmartHomeNG
   echo ==================================================
 fi
@@ -97,7 +97,7 @@ if [ "$?" == "1" ]; then
   echo
   exit
 fi
-if [ "${KEEP_REPO,,}" != "true" ]; then
+if [ "$(echo "$KEEP_REPO" | tr '[:upper:]' '[:lower:]')" != "true" ]; then
   echo und legt die entstandene Dokumentation in \'$DIR/html\' ab.
 fi
 echo
@@ -106,7 +106,7 @@ echo gebauten Versionen während des Skriptes gelöscht. Der Account unter dem
 echo dieses Skript ausgeführt wird, muss Rechte zum anlegen von Verzeichnissen
 echo in \'$DIR\' haben.
 echo
-if [ "${GIT_CHECKOUT,,}" == "true" ]; then
+if [ "$(echo "$GIT_CHECKOUT" | tr '[:upper:]' '[:lower:]')" == "true" ]; then
   echo Das Skript clont von github den aktuellen Stand des Branches \'$DESTBRANCH\' aus den
   echo Repositories \'smarthome\' und \'plugins\'.
 else
@@ -159,7 +159,7 @@ read -rsp $'Um fortzufahren ENTER drücken, zum Abbruch ^C drücken...\n'
 #fi
 
 
-if [ "${DOC,,}" == "developer" ] || [ "${DOC,,}" == "all" ]; then
+if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "developer" ] || [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "all" ]; then
   cd $DIR/
 #  cd $LOCALREPO
 #  cd doc
@@ -175,7 +175,7 @@ if [ "${DOC,,}" == "developer" ] || [ "${DOC,,}" == "all" ]; then
   echo Die Startseite ist: \'${DIR}/user/build/html/index.html\'
 fi
 
-if [ "${DOC,,}" == "user" ] || [ "${DOC,,}" == "all" ]; then
+if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "user" ] || [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "all" ]; then
   cd $DIR/
 #  cd $LOCALREPO
 #  cd doc
@@ -199,7 +199,7 @@ cd $DIR
 #  echo Geclontes Repository ist erhalten
 #fi
 
-if [ "${KEEP_REPO,,}" != "true" ]; then
+if [ "$(echo "$KEEP_REPO" | tr '[:upper:]' '[:lower:]')" != "true" ]; then
   if [ -d "$DIR/html" ]; then
     echo Lösche das existierende Verzeichnis $DIR/html
     rm -rf $DIR/html
