@@ -333,10 +333,11 @@ class SmartHome():
 
         #############################################################
         # Fork process and write pidfile
-        if MODE == 'default':
+        if self._mode == 'default':
             lib.daemon.daemonize(PIDFILE)
         else:
             lib.daemon.write_pidfile(os.getpid(), PIDFILE)
+            print(f"MODE = {self._mode}")
             print(f"--------------------   Init SmartHomeNG {self.version}   --------------------")
 
         #############################################################
@@ -698,6 +699,8 @@ class SmartHome():
         self.shng_status = {'code': 12, 'text': 'Starting: Initializing plugins'}
         os.chdir(self._base_dir)
 
+        if self._mode != 'default':
+            print("---> Start initialization of plugins")
         self._logger.info("Start initialization of plugins")
         self.plugins = lib.plugin.Plugins(self, configfile=self._plugin_conf_basename)
         self.plugin_load_complete = True
@@ -707,10 +710,14 @@ class SmartHome():
         #############################################################
         self.shng_status = {'code': 13, 'text': 'Starting: Loading item definitions'}
 
+        if self._mode != 'default':
+            print("---> Start initialization of items")
         self._logger.info("Start initialization of items")
         self.items.load_itemdefinitions(self._env_dir, self._items_dir, self._etc_dir, self._plugins_dir)
 
         self.item_count = self.items.item_count()
+        if self._mode != 'default':
+            print(f"---> Items initialization finished, {self.items.item_count()} items loaded")
         self._logger.info(f"Items initialization finished, {self.items.item_count()} items loaded")
         self.item_load_complete = True
 
@@ -757,6 +764,8 @@ class SmartHome():
         # Main Loop
         #############################################################
         self.shng_status = {'code': 20, 'text': 'Running'}
+        if self._mode != 'default':
+            print("--------------------   SmartHomeNG initialization finished   --------------------")
         self._logger_main.notice("--------------------   SmartHomeNG initialization finished   --------------------")
 
         # modify/replace on removing lib.connection
@@ -924,9 +933,11 @@ class SmartHome():
 
     def _maintenance(self):
         self._logger.debug("_maintenance: Started")
+        references = sum(self._object_refcount().values())
+        self._logger.info(f"_maintenance: Object references: {references}")
         self._garbage_collection()
         references = sum(self._object_refcount().values())
-        self._logger.debug(f"_maintenance: Object references: {references}")
+        self._logger.info(f"_maintenance: Object references: {references}")
 
     def _excepthook(self, typ, value, tb):
         mytb = "".join(traceback.format_tb(tb))
@@ -967,10 +978,12 @@ class SmartHome():
         :return: Number of objects
         :rtype: int
         """
-
         objects = self._object_refcount()
         objects = [(x[1], x[0]) for x in list(objects.items())]
-        objects.sort(reverse=True)
+        try:
+            objects.sort(reverse=True)
+        except Exception as ex:
+            self._logger.info(f"object_refcount - sort: Exception {ex}")
         return objects
 
 
