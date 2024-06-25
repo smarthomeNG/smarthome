@@ -1049,7 +1049,7 @@ class SmartPlugin(SmartObject, Utils):
         try:
             self._schedulers.remove(name)
         except ValueError:
-            self.logger.warning(f'tried to remove scheduler {name} but scheduler not in list')
+            pass
         if name != '':
             name = '.' + name
         name = self._pluginname_prefix + self.get_fullname() + name
