@@ -68,7 +68,6 @@ class SamplePlugin(SmartPlugin):
         # cycle time in seconds, only needed, if hardware/interface needs to be
         # polled for value changes by adding a scheduler entry in the run method of this plugin
         # (maybe you want to make it a plugin parameter?)
-        # self._cycle is set by smartplugin.__init__() to 60 by default
         # self._cycle = 60
 
         # if you want to use an item to toggle plugin execution, enable the
@@ -102,7 +101,7 @@ class SamplePlugin(SmartPlugin):
         # setup scheduler for device poll loop
         # (enable the following line, if you need to poll the device.
         #  Rember to un-comment the self._cycle statement in __init__ as well)
-        #self.create_plugin_schedulers()
+        #self.scheduler_add(self.get_fullname() + '_poll', self.poll_device, cycle=self._cycle)
 
         # Start the asyncio eventloop in it's own thread
         # and set self.alive to True when the eventloop is running

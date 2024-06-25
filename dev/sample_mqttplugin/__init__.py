@@ -100,9 +100,8 @@ class SampleMqttPlugin(MqttPlugin):
         if self._pause_item:
             self._pause_item(True, self.get_fullname())
 
-        # this stops all schedulers the plugin has started.
-        # you can disable/delete the line if you don't use schedulers
-        self.scheduler_remove_all()
+        # if you use schedulers, this stops all schedulers the plugin has started.
+        #self.scheduler_remove_all()
 
         # stop subscription to all topics
         self.stop_subscriptions()

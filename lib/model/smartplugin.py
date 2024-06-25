@@ -77,7 +77,6 @@ class SmartPlugin(SmartObject, Utils):
                                 # contains a list of items for each mapping
 
     alive = False               # flag if plugin is running
-    _cycle = 60                 # default cycle for cyclic scheduler
     _schedulers = []            # all created schedulers for this plugin
 
     _add_translation = None
@@ -131,7 +130,6 @@ class SmartPlugin(SmartObject, Utils):
         # initialize plugin variables
 
         self.alive = False              # flag if plugin is running
-        self._cycle = 60                # default cycle for cyclic scheduler
 
         self._add_translation = None
 
