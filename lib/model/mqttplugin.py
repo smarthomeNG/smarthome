@@ -40,7 +40,7 @@ class MqttPlugin(SmartPlugin):
         """
         Initialization Routine for the mqtt extension class to SmartPlugin
         """
-        SmartPlugin.__init__(self)
+        super().__init__()
 
         # get instance of MQTT module
         try:
@@ -59,8 +59,6 @@ class MqttPlugin(SmartPlugin):
 
         # get broker configuration (for display in web interface)
         self.broker_config = self.mod_mqtt.get_broker_config()
-
-        return True
 
 
     def translate(self, txt, vars=None, block=None):

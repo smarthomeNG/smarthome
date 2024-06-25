@@ -120,8 +120,6 @@ class SmartPlugin(SmartObject, Utils):
 
         Should be called by super().__init__() from the plugin's __init__() method
         """
-        self.logger = logging.getLogger(__name__)
-
         # initialize instance members; for mutable types make sure these are "instance-specific"
 
         self._plg_item_dict = {}        # dict to hold the items assigned to the plugin and their plugin specific information
@@ -132,13 +130,8 @@ class SmartPlugin(SmartObject, Utils):
 
         # initialize plugin variables
 
-        self._plg_item_dict = {}        # dict to hold the items assigned to the plugin and their plugin specific information
-        self._item_lookup_dict = {}     # dict for the reverse lookup from a mapping (device-command or matchstring) to an item,
-                                        # contains a list of items for each mapping
-
         self.alive = False              # flag if plugin is running
         self._cycle = 60                # default cycle for cyclic scheduler
-        self._schedulers = []           # all created schedulers for this plugin
 
         self._add_translation = None
 
