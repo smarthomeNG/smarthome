@@ -16,8 +16,13 @@ plugin:
     # documentation: https://github.com/smarthomeNG/smarthome/wiki/
     # support: https://knx-user-forum.de/forum/supportforen/smarthome-py/
     version: 0.0.1                  # !! adjust
-    sh_minversion: 1.9.5
-    py_minversion: 3.6
+
+    # these min/max-versions MUST be given in quotes, or e.g. 3.10 will be interpreted as 3.1 (3.1 < 3.9 < 3.10)
+    sh_minversion: '1.10'           # minimum shNG version to use this plugin
+#    sh_maxversion: '1.11'          # maximum shNG version to use this plugin (omit if latest)
+#    py_minversion: '3.10'          # minimum Python version to use for this plugin
+#    py_maxversion: '4.25'          # maximum Python version to use for this plugin (omit if latest)
+
     multi_instance: true
     restartable: true
     suspendable: true              # plugin can be suspended, implemented in sdp
