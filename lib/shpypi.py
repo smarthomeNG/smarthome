@@ -385,7 +385,6 @@ class Shpypi:
 
     def create_pip_list(self, dest_file):
         pip_command = self.get_pip_command()
-        self.logger.notice(f"create_pip_list: {pip_command=} for configuration backup - create list in {dest_file=}")
 
         command_line = pip_command +' list >' + dest_file
         if logging:
