@@ -153,32 +153,37 @@ class SmartHome():
         self._base_dir = BASE
         self.base_dir = self._base_dir  # **base_dir** is deprecated. Use method get_basedir() instead. - for external modules using that var (backend, ...?)
 
-        self._extern_conf_dir = BASE
-
-        self._etc_dir = os.path.join(self._base_dir, 'etc')
+        if self._extern_conf_dir != '':
+            self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
+        else:
+            self._etc_dir = os.path.join(self._base_dir, 'etc')
 
         # decide where to look for config files
         if self._config_etc:
             self._conf_dir = self._etc_dir
         else:
-            self._conf_dir = self._base_dir
+            self._conf_dir = self._extern_conf_dir
 
         self._var_dir = os.path.join(self._base_dir, 'var')
         self._lib_dir = os.path.join(self._base_dir, 'lib')
         self._plugins_dir = os.path.join(self._base_dir, 'plugins')
-        self._structs_dir = os.path.join(self._conf_dir, 'structs')
-        self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
 
+        self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
         self._env_logic_conf_basename = os.path.join(self._env_dir, 'logic')
-        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
-        self._logic_conf_basename = os.path.join(self._conf_dir, 'logic')
-        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
         self._cache_dir = os.path.join(self._var_dir, 'cache' + os.path.sep)
-        self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
+
+        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
+        self._structs_dir = os.path.join(self._conf_dir, 'structs')
+        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
+
+        self._logic_conf_basename = os.path.join(self._conf_dir, 'logic')
+        self._log_conf_basename = os.path.join(self._conf_dir, 'logging')
 
         self._module_conf_basename = os.path.join(self._etc_dir, 'module')
         self._plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
 
+        for a in ('conf', 'etc', 'items', 'structs'):
+            print(f'{a}: {getattr(self, "_" + a + "_dir", "")}')
 
     def create_directories(self):
         """
@@ -215,6 +220,8 @@ class SmartHome():
         self._mode = MODE
 
         self._config_etc = config_etc
+        if extern_conf_dir != '':
+            self._extern_conf_dir = extern_conf_dir
 
         self.initialize_vars()
         self.initialize_dir_vars()
@@ -226,9 +233,6 @@ class SmartHome():
 
         self.PYTHON_VERSION = lib.utils.get_python_version()
         self.python_bin = sys.executable
-
-        if extern_conf_dir != '':
-            self._extern_conf_dir = extern_conf_dir
 
         # get systeminfo closs
         self.systeminfo = Systeminfo
@@ -244,25 +248,6 @@ class SmartHome():
         # self.branch = shngversion.get_shng_branch()
         # self.version = shngversion.get_shng_version()
         self.connections = None
-
-        # reinitialize dir vars with path to extern configuration directory
-        self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
-
-        # decide where to look for config files
-        if self._config_etc:
-            self._conf_dir = self._etc_dir
-        else:
-            self._conf_dir = self._extern_conf_dir
-
-        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
-        self._functions_dir = os.path.join(self._conf_dir, 'functions' + os.path.sep)
-        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
-        self._scenes_dir = os.path.join(self._conf_dir, 'scenes' + os.path.sep)
-        self._smarthome_conf_basename = os.path.join(self._etc_dir, 'smarthome')
-        self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
-        self._module_conf_basename = os.path.join(self._etc_dir, 'module')
-        self._plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
-        self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
 
         self._pidfile = PIDFILE
 
