@@ -32,6 +32,7 @@ import time
 import os
 from datetime import datetime
 from lib.shtime import Shtime
+from lib.shpypi import Shpypi
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +116,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     scenes_dir = os.path.join(conf_dir, 'scenes')
     structs_dir = os.path.join(conf_dir, 'structs')
     uf_dir = os.path.join(conf_dir, 'functions')
-
+    var_dir = os.path.join(conf_dir, 'var')
 
     # create new zip file
     #backupzip = zipfile.ZipFile(backup_dir + os.path.sep + backup_filename, mode='w')
@@ -167,6 +168,18 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     # backup files from /functions
     #logger.warning("- uf_dir = {}".format(uf_dir))
     backup_directory(backupzip, uf_dir, '.*')
+
+    # backup files for infos-directory
+    source_dir = var_dir
+    arc_dir = 'infos'
+    backup_file(backupzip, source_dir, arc_dir, 'systeminfo.yaml')
+
+    shpypi = Shpypi.get_instance()
+    if shpypi is None:
+        shpypi = Shpypi()
+    dest_file = os.path.join(source_dir, 'pip_list.txt')
+    shpypi.create_pip_list(dest_file)
+    backup_file(backupzip, source_dir, arc_dir, 'pip_list.txt')
 
     zipped_files = backupzip.namelist()
     logger.info("Zipped files: {}".format(zipped_files))

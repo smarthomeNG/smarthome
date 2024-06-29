@@ -382,6 +382,21 @@ class Shpypi:
 
         return str(pip_command)
 
+
+    def create_pip_list(self, dest_file):
+        pip_command = self.get_pip_command()
+        self.logger.notice(f"create_pip_list: {pip_command=} for configuration backup - create list in {dest_file=}")
+
+        command_line = pip_command +' list >' + dest_file
+        if logging:
+            self.logger.info('> '+command_line)
+        else:
+            #print('> ' + command_line)
+            pass
+        stdout, stderr = Utils.execute_subprocess(command_line)
+        return
+
+
     def install_requirements(self, req_type, logging=True, pip3_command=None):
         req_type_display = req_type
         if req_type == 'conf_all':
