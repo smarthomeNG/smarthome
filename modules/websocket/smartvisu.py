@@ -51,7 +51,7 @@ from lib.shtime import Shtime
 
 class Protocol():
 
-    version = '1.0.4'
+    version = '1.0.5'
 
     protocol_id = 'sv'
     protocol_name = 'smartvisu'
@@ -295,6 +295,12 @@ class Protocol():
                             self.sv_clients[client_addr]['hostname'] = data.get('hostname', '')
                         self.sv_clients[client_addr]['browser'] = data.get('browser', '')
                         self.sv_clients[client_addr]['bver'] = data.get('bver', '')
+
+                        self.sv_clients[client_addr]['os_name'] = data.get('os_name', '')
+                        self.sv_clients[client_addr]['os_vers'] = data.get('os_vers', '')
+                        self.sv_clients[client_addr]['os_vname'] = data.get('os_vname', '')
+                        self.sv_clients[client_addr]['pl_type'] = data.get('pl_type', '')
+                        self.sv_clients[client_addr]['pl_vendor'] = data.get('pl_vendor', '')
                         self.logger.info(f"Client {self.build_client_info(client_addr)} identified as {self.build_sw_info(client_addr)}")
                         answer = {}
 
@@ -1046,6 +1052,11 @@ class Protocol():
             infos['browser'] = self.sv_clients[client_addr].get('browser', '')
             infos['browserversion'] = self.sv_clients[client_addr].get('bver', '')
 
+            infos['os_name'] = self.sv_clients[client_addr].get('os_name', '')
+            infos['os_vers'] = self.sv_clients[client_addr].get('os_vers', '')
+            infos['os_vname'] = self.sv_clients[client_addr].get('os_vname', '')
+            infos['pl_type'] = self.sv_clients[client_addr].get('pl_type', '')
+            infos['pl_vendor'] = self.sv_clients[client_addr].get('pl_vendor', '')
             client_list.append(infos)
 
         return client_list
