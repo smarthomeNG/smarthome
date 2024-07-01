@@ -404,7 +404,10 @@ class RESTResource:
     @cherrypy.expose
     def default(self, *vpath, **params):
         self.logger.info(f"RESTResource.default: *vpath={vpath}, **params={params} {type(vpath)=}")
-        self.set_response_headers(*vpath)
+        try:
+            self.set_response_headers(*vpath)
+        except Exception as ex:
+            self.logger.error(f"reas.py default: Exception {ex} - parameters: {vpath}")
         if not vpath:
             resource = None
             # self.logger.info("RESTResource.default: vpath = '{}',  params = '{}'".format(list(vpath), dict(**params)))

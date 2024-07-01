@@ -15,6 +15,7 @@ parameters:
     # Definition of parameters to be configured in etc/module.yaml
     enabled:
         type: bool
+        gui_type: yes_no
         default: True
         description:
             de: 'Websocket Unterstützung aktivieren oder deaktivieren'
@@ -46,6 +47,7 @@ parameters:
             fr: Numéro de port pour l'accès à l'interface web si utilisation de wss
     use_tls:
         type: bool
+        gui_type: yes_no
         default: False
         description:
             de: Auf True setzen, um Zugriffe über wss:// zu ermöglichen (Zertifikat muss installiert sein)

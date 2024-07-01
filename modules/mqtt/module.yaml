@@ -14,6 +14,7 @@ parameters:
 
     enabled:
         type: bool
+        gui_type: yes_no
         default: False
         description:
             de: 'MQTT Unterstützung aktivieren oder deaktivieren'
@@ -112,6 +113,7 @@ parameters:
 
     broker_monitoring:
         type: bool
+        gui_type: yes_no
         default: False
         description:
             de: 'Ermöglicht das Monitoring einiger Broker Werte durch das Web Interfase.'
@@ -209,6 +211,7 @@ parameters:
 #    publish_items:
 #        type: bool
 #        default: False
+#        gui_type: yes_no
 #        description:
 #            de: 'Publiziere die Items'
 #            en: 'Publish Items'
@@ -245,6 +248,7 @@ parameters:
 
 #    tls:    # Not yet implemented
 #        type: bool
+#        gui_type: yes_no
 #        default: False
 #        description:
 #            de: 'tls zur Verschlüsselung nutzen'
