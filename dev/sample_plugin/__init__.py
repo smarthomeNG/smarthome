@@ -159,9 +159,9 @@ class SamplePlugin(SmartPlugin):
                         with the item, caller, source and dest as arguments and in case of the knx plugin the value
                         can be sent to the knx with a knx write function within the knx plugin.
         """
-        # check for alive item
+        # check for pause item
         if item.property.path == self._pause_item_path:
-            self.logger.debug(f'alive item {item.property.path} registered')
+            self.logger.debug(f'pause item {item.property.path} registered')
             self._pause_item = item
             self.add_item(item, updating=True)
             return self.update_item
