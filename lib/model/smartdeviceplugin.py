@@ -52,9 +52,9 @@ from lib.model.sdp.globals import (
     INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM1,
     ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ,
     ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE,
-    PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT,
+    PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_DELAY_INITIAL,
     PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
-    PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
+    PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_REREAD_INITIAL,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
     PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC)
 
@@ -179,6 +179,10 @@ class SmartDevicePlugin(SmartPlugin):
         self._cycle = self.get_parameter_value(PLUGIN_ATTR_CYCLE)
         if self._cycle is None:
             self._cycle = -1
+        # delay initial read
+        self._initial_value_read_delay = self.get_parameter_value(PLUGIN_ATTR_DELAY_INITIAL)
+        # resend initial commands on resume
+        self._resume_initial_read = self.get_parameter_value(PLUGIN_ATTR_REREAD_INITIAL)
 
         # set (overwritable) callback
         self._dispatch_callback = self.dispatch_data
@@ -321,8 +325,11 @@ class SmartDevicePlugin(SmartPlugin):
             self.suspended = True
             if self._suspend_item is not None:
                 self._suspend_item(True, self.get_fullname())
-            if hasattr(self, 'disconnect'):
-                self.disconnect()
+            self.disconnect()
+            self.scheduler_remove_all()
+
+            # call user-defined suspend actions
+            self.on_suspend()
 
     def resume(self, by=None):
         """
@@ -333,8 +340,25 @@ class SmartDevicePlugin(SmartPlugin):
             self.suspended = False
             if self._suspend_item is not None:
                 self._suspend_item(False, self.get_fullname())
-            if hasattr(self, 'connect'):
-                self.connect()
+            self.connect()
+            if self._connection.connected():
+                if self._resume_initial_read:
+                    # make sure to read again on resume (if configured)
+                    self._initial_value_read_done = False
+                    self.read_initial_values()
+                if not SDP_standalone:
+                    self._create_cyclic_scheduler()
+
+            # call user-defined resume actions
+            self.on_resume()
+
+    def on_suspend(self):
+        """ called when suspend is enabled. Overwrite as needed """
+        pass
+
+    def on_resume(self):
+        """ called when suspend is disabled. Overwrite as needed """
+        pass
 
     def set_suspend(self, suspend_active=None, by=None):
         """
@@ -363,14 +387,6 @@ class SmartDevicePlugin(SmartPlugin):
         else:
             self.resume(by)
 
-        if suspend_active:
-            if self.scheduler_get(self.get_shortname() + '_cyclic'):
-                self.scheduler_remove(self.get_shortname() + '_cyclic')
-
-        else:
-            if self._connection.connected() and not SDP_standalone:
-                self._create_cyclic_scheduler()
-
     def run(self):
         """
         Run method for the plugin
@@ -385,7 +401,9 @@ class SmartDevicePlugin(SmartPlugin):
         self.set_suspend(by='run()')
 
         if self._connection.connected():
-            self._read_initial_values()
+            # make sure to read again on restart
+            self._initial_value_read_done = False
+            self.read_initial_values()
 
     def stop(self):
         """
@@ -1111,6 +1129,16 @@ class SmartDevicePlugin(SmartPlugin):
             self.scheduler_add(self.get_shortname() + '_cyclic', self._read_cyclic_values, cycle=workercycle, prio=5, offset=0)
             self._cyclic_errors = 0
             self.logger.info(f'Added cyclic worker thread {self.get_shortname()}_cyclic with {workercycle} s cycle. Shortest item update cycle found was {shortestcycle} s')
+
+    def read_initial_values(self):
+        """ control call of _read_initial_values - run instantly or delay """
+        if self.scheduler_get('read_initial_values'):
+            return
+        elif self._initial_value_read_delay > 0:
+            self.logger.dbghigh(f"Delaying reading initial values for {self._initial_value_read_delay} seconds.")
+            self.scheduler_add('read_initial_values', self._read_initial_values, next=self.shtime.now() + datetime.timedelta(seconds=self._initial_value_read_delay))
+        else:
+            self._read_initial_values()
 
     def _read_initial_values(self):
         """
