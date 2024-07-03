@@ -70,6 +70,10 @@ class SamplePlugin(SmartPlugin):
         # (maybe you want to make it a plugin parameter?)
         # self._cycle = 60
 
+        # if you want to use an item to toggle plugin execution, enable the
+        # definition in plugin.yaml and uncomment the following line
+        #self._pause_item_path = self.get_parameter_value('pause_item')
+
         # Initialization code goes here
 
         # On initialization error use:
@@ -88,10 +92,16 @@ class SamplePlugin(SmartPlugin):
         Run method for the plugin
         """
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'run()'}))
+
+        # connect to network / web / serial device
+        # (enable the following lines if you want to open a connection
+        #  don't forget to implement a connect (and disconnect) method.. :) )
+        #self.connect()
+
         # setup scheduler for device poll loop
         # (enable the following line, if you need to poll the device.
         #  Rember to un-comment the self._cycle statement in __init__ as well)
-        #self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
+        #self.scheduler_add(self.get_fullname() + '_poll', self.poll_device, cycle=self._cycle)
 
         # Start the asyncio eventloop in it's own thread
         # and set self.alive to True when the eventloop is running
@@ -100,8 +110,15 @@ class SamplePlugin(SmartPlugin):
 
         self.alive = True     # if using asyncio, do not set self.alive here. Set it in the session coroutine
 
+        # let the plugin change the state of pause_item
+        if self._pause_item:
+            self._pause_item(False, self.get_fullname())
+
         # if you need to create child threads, do not make them daemon = True!
         # They will not shutdown properly. (It's a python bug)
+        # Also, don't create the thread in __init__() and start them here, but
+        # create and start them here. Threads can not be restarted after they
+        # have been stopped...
 
     def stop(self):
         """
@@ -110,12 +127,24 @@ class SamplePlugin(SmartPlugin):
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
         self.alive = False     # if using asyncio, do not set self.alive here. Set it in the session coroutine
 
-        # if you use a scheduled poll loop, enable the following line
-        #self.scheduler_remove('poll_device')
+        # let the plugin change the state of pause_item
+        if self._pause_item:
+            self._pause_item(True, self.get_fullname())
+
+        # this stops all schedulers the plugin has started.
+        # you can disable/delete the line if you don't use schedulers
+        self.scheduler_remove_all()
 
         # stop the asyncio eventloop and it's thread
         # If you use asyncio, enable the following line
         #self.stop_asyncio()
+
+        # If you called connect() on run(), disconnect here
+        # (remember to write a disconnect() method!)
+        #self.disconnect()
+
+        # also, clean up anything you set up in run(), so the plugin can be
+        # cleanly stopped and started again
 
     def parse_item(self, item):
         """
@@ -130,6 +159,13 @@ class SamplePlugin(SmartPlugin):
                         with the item, caller, source and dest as arguments and in case of the knx plugin the value
                         can be sent to the knx with a knx write function within the knx plugin.
         """
+        # check for pause item
+        if item.property.path == self._pause_item_path:
+            self.logger.debug(f'pause item {item.property.path} registered')
+            self._pause_item = item
+            self.add_item(item, updating=True)
+            return self.update_item
+
         if self.has_iattr(item.conf, 'foo_itemtag'):
             self.logger.debug(f"parse item: {item}")
 
@@ -163,6 +199,16 @@ class SamplePlugin(SmartPlugin):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
+        # check for pause item
+        if item is self._pause_item:
+            if caller != self.get_shortname():
+                self.logger.debug(f'pause item changed to {item()}')
+                if item() and self.alive:
+                    self.stop()
+                elif not item() and not self.alive:
+                    self.run()
+            return
+
         if self.alive and caller != self.get_fullname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this plugin:

@@ -59,6 +59,10 @@ class SampleMqttPlugin(MqttPlugin):
         # Call init code of parent class (MqttPlugin)
         super().__init__()
 
+        # if you want to use an item to toggle plugin execution, enable the
+        # definition in plugin.yaml and uncomment the following line
+        #self._pause_item_path = self.get_parameter_value('pause_item')
+
         # Initialization code goes here
 
         # On initialization error use:
@@ -78,6 +82,10 @@ class SampleMqttPlugin(MqttPlugin):
 
         self.alive = True
 
+        # let the plugin change the state of pause_item
+        if self._pause_item:
+            self._pause_item(False, self.get_fullname())
+
         # start subscription to all topics
         self.start_subscriptions()
 
@@ -87,6 +95,13 @@ class SampleMqttPlugin(MqttPlugin):
         """
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
         self.alive = False
+
+        # let the plugin change the state of pause_item
+        if self._pause_item:
+            self._pause_item(True, self.get_fullname())
+
+        # if you use schedulers, this stops all schedulers the plugin has started.
+        #self.scheduler_remove_all()
 
         # stop subscription to all topics
         self.stop_subscriptions()
@@ -104,6 +119,13 @@ class SampleMqttPlugin(MqttPlugin):
                         with the item, caller, source and dest as arguments and in case of the knx plugin the value
                         can be sent to the knx with a knx write function within the knx plugin.
         """
+        # check for pause item
+        if item.property.path == self._pause_item_path:
+            self.logger.debug(f'pause item {item.property.path} registered')
+            self._pause_item = item
+            self.add_item(item, updating=True)
+            return self.update_item
+
         if self.has_iattr(item.conf, 'foo_itemid'):
             self.logger.debug(f"parse item: {item.property.path}")
 
@@ -148,6 +170,16 @@ class SampleMqttPlugin(MqttPlugin):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
+        # check for pause item
+        if item is self._pause_item:
+            if caller != self.get_shortname():
+                self.logger.debug(f'pause item changed to {item()}')
+                if item() and self.alive:
+                    self.stop()
+                elif not item() and not self.alive:
+                    self.run()
+            return
+
         if self.alive and caller != self.get_shortname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this this plugin:
