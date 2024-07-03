@@ -155,6 +155,8 @@ class SmartDevicePlugin(SmartPlugin):
 
         # suspend mode properties
         self._suspend_item_path = self.get_parameter_value(PLUGIN_ATTR_SUSPEND_ITEM)
+        self._suspend_item = None
+        self.suspended = False
 
         # connection instance
         self._connection = None
@@ -310,11 +312,34 @@ class SmartDevicePlugin(SmartPlugin):
 
         return True
 
+    def suspend(self, by=None):
+        """
+        sets plugin into suspended mode, no network/serial activity and no item changed
+        """
+        if self.alive:
+            self.logger.info(f'plugin suspended by {by if by else "unknown"}, connections will be closed')
+            self.suspended = True
+            if self._suspend_item is not None:
+                self._suspend_item(True, self.get_fullname())
+            if hasattr(self, 'disconnect'):
+                self.disconnect()
+
+    def resume(self, by=None):
+        """
+        disabled suspended mode, network/serial connections are resumed
+        """
+        if self.alive:
+            self.logger.info(f'plugin resumed by {by if by else "unknown"}, connections will be resumed')
+            self.suspended = False
+            if self._suspend_item is not None:
+                self._suspend_item(False, self.get_fullname())
+            if hasattr(self, 'connect'):
+                self.connect()
+
     def set_suspend(self, suspend_active=None, by=None):
         """
         enable / disable suspend mode: open/close connections, schedulers
         """
-
         if suspend_active is None:
             if self._suspend_item is not None:
                 # if no parameter set, try to use item setting
