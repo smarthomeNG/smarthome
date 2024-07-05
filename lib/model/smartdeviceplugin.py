@@ -1134,7 +1134,7 @@ class SmartDevicePlugin(SmartPlugin):
         """ control call of _read_initial_values - run instantly or delay """
         if self.scheduler_get('read_initial_values'):
             return
-        elif self._initial_value_read_delay > 0:
+        elif self._initial_value_read_delay:
             self.logger.dbghigh(f"Delaying reading initial values for {self._initial_value_read_delay} seconds.")
             self.scheduler_add('read_initial_values', self._read_initial_values, next=self.shtime.now() + datetime.timedelta(seconds=self._initial_value_read_delay))
         else:
