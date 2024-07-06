@@ -107,7 +107,8 @@ from lib.utils import Version
 # Update auf 1.10.0    wg. Release
 # Update auf 1.10.0.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.10.0 Release"
 # Update auf 1.10.0.2  wg. smartplugin: Added support for the use of asyncio in plugins
-shNG_version = '1.10.0.2'
+# Update auf 1.10.0.3  wg. smartplugin: Added support for suspend/resume and functions for pause_item
+shNG_version = '1.10.0.3'
 shNG_branch = 'develop'
 shNG_releasedate = '29. Januar 2024'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
