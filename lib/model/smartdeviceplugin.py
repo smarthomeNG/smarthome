@@ -209,7 +209,7 @@ class SmartDevicePlugin(SmartPlugin):
         # init device
 
         # allow other classes to access plugin
-        self._parameters['plugin'] = selfD
+        self._parameters['plugin'] = self
 
         # possibly initialize additional (overwrite _set_device_defaults)
         self._set_device_defaults()
