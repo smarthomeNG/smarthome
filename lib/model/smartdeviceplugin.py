@@ -1153,7 +1153,6 @@ class SmartDevicePlugin(SmartPlugin):
                 for cmd in self._commands_initial:
                     self.logger.debug(f'Sending initial command {cmd}')
                     self.send_command(cmd)
-                self._initial_value_read_done = True
                 self.logger.info('Initial read commands sent')
             if self._triggers_initial:
                 self.logger.info('Starting initial read group triggers')
@@ -1161,6 +1160,7 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.debug(f'Triggering initial read group {grp}')
                     self.read_all_commands(grp)
                 self.logger.info('Initial read group triggers sent')
+            self._initial_value_read_done = True
 
     def _read_cyclic_values(self):
         """
