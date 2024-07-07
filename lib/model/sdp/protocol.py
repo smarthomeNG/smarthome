@@ -101,6 +101,12 @@ class SDPProtocol(SDPConnection):
         self.logger.debug(f'{self.__class__.__name__} _send called with {data_dict}')
         return self._connection.send(data_dict)
 
+    def _store_commands(self, resend_info):
+        return False
+
+    def _check_commands(self, command, value):
+        return False
+
     def _get_connection(self, use_callbacks=False, name=None):
         conn_params = self._params.copy()
 
@@ -447,19 +453,23 @@ class SDPProtocolResend(SDPProtocol):
         # tell someone about our actual class
         self.logger.debug(f'protocol initialized from {self.__class__.__name__}')
 
-    def _open(self):
+    def on_connect(self, by=None):
+        super().on_connect(by)
+        self.logger.info(f'connect called, retry_sends {self._sending}')
         if self._plugin.scheduler_get('resend'):
             self._plugin.scheduler_remove('resend')
+        self._sending = {}
         if self._send_retries >= 1:
-            self._plugin.scheduler_add('resend', self._resend, cycle=self._send_retries_cycle)
+            self._plugin.scheduler_add('resend', self.resend, cycle=self._send_retries_cycle)
             self.logger.dbghigh(
                 f"Adding resend scheduler with cycle {self._send_retries_cycle}.")
-        super()._open()
 
-    def _close(self):
+    def on_disconnect(self, by=None):
         if self._plugin.scheduler_get('resend'):
             self._plugin.scheduler_remove('resend')
-        super()._close()
+        self._sending = {}
+        self.logger.info(f'disconnect called, retry_sends {self._sending}')
+        super().on_disconnect(by)
 
     def _store_commands(self, resend_info):
         """
@@ -490,7 +500,7 @@ class SDPProtocolResend(SDPProtocol):
                 self._sending_lock.release()
         return returnvalue
 
-    def _resend(self):
+    def resend(self):
         self.logger.info(f"resending queue is {self._sending} retries {self._sending_retries}")
         self._sending_lock.acquire(True, 2)
         remove_commands = []
