@@ -209,6 +209,18 @@ class SDPConnection(object):
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](by)
 
+    def store_commands(self, resend_info):
+        """
+        storing commands, e.g. for resend feature
+        """
+        return self._store_commands(resend_info)
+
+    def check_commands(self, command, value):
+        """
+        storing commands, e.g. for resend feature
+        """
+        return self._check_commands(command, value)
+
     #
     #
     # overwriting needed for at least some of the following methods...
@@ -238,6 +250,20 @@ class SDPConnection(object):
         """
         self.logger.debug(f'simulating to send data {data_dict}...')
         return self.dummy
+
+    def _store_commands(self, resend_info):
+        """
+        overwrite with storing of data
+        Return None by default
+        """
+        return False
+
+    def _check_commands(self, command, value):
+        """
+        overwrite with storing of data
+        Return None by default
+        """
+        return False
 
     def _send_init_on_open(self):
         """

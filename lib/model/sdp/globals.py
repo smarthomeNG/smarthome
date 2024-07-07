@@ -60,6 +60,9 @@ PLUGIN_ATTR_CONN_AUTO_CONN   = 'autoconnect'             # (re)connect automatic
 PLUGIN_ATTR_CONN_RETRY_CYCLE = 'retry_cycle'             # if autoreconnect: how many seconds to wait between retry rounds
 PLUGIN_ATTR_CONN_RETRY_SUSPD = 'retry_suspend'           # after this number of failed connect cycles, activate suspend mode (if enabled)
 
+PLUGIN_ATTR_SEND_RETRIES      = 'send_retries'            # how often should a command be resent (when not receiving expected answer)
+PLUGIN_ATTR_SEND_RETRIES_CYCLE= 'send_retries_cycle'    # if using resend protocol: how many seconds to wait between resend rounds
+
 # network attributes
 PLUGIN_ATTR_NET_HOST         = 'host'                    # hostname / IP for network connection
 PLUGIN_ATTR_NET_PORT         = 'port'                    # port for network connection
@@ -88,7 +91,8 @@ PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE,
                 PLUGIN_ATTR_CONN_RETRY_CYCLE, PLUGIN_ATTR_CONN_RETRY_SUSPD, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
                 PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY,
                 PLUGIN_ATTR_SERIAL_STOP, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_MSG_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT,
-                PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CB_SUSPEND)
+                PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CB_SUSPEND,
+                PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRIES_CYCLE)
 
 # connection types for PLUGIN_ATTR_CONNECTION
 CONN_NULL                    = ''                 # use base connection class without real connection functionality, for testing
@@ -105,8 +109,9 @@ CONNECTION_TYPES = (CONN_NULL, CONN_NET_TCP_REQ, CONN_NET_TCP_CLI, CONN_NET_TCP_
 PROTO_NULL                   = ''                 # use base protocol class without added functionality (why??)
 PROTO_JSONRPC                = 'jsonrpc'          # JSON-RPC 2.0 support with send queue, msgid and resend of unanswered commands
 PROTO_VIESSMANN              = 'viessmann'        # Viessmann P300 / KW
+PROTO_RESEND                 = 'resend'
 
-PROTOCOL_TYPES = (PROTO_NULL, PROTO_JSONRPC, PROTO_VIESSMANN)
+PROTOCOL_TYPES = (PROTO_NULL, PROTO_JSONRPC, PROTO_VIESSMANN, PROTO_RESEND)
 
 # item attribute suffixes (as defined with individual prefix in plugin.yaml)
 ITEM_ATTR_COMMAND            = '_command'             # command to issue/read for the item

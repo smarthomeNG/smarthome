@@ -31,7 +31,7 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION,
     PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES,
     PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT, PLUGIN_ATTR_MSG_TIMEOUT,
-    PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT)
+    PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT, PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRIES_CYCLE)
 from lib.model.sdp.connection import SDPConnection
 
 from collections import OrderedDict
@@ -425,3 +425,91 @@ class SDPProtocolJsonrpc(SDPProtocol):
             response = self._connection.send(ddict)
             if response:
                 self.on_data_received('request', response)
+
+
+class SDPProtocolResend(SDPProtocol):
+    """ Protocol providing resend option
+
+
+    """
+
+    def __init__(self, data_received_callback, name=None, **kwargs):
+
+        # init super, get logger
+        super().__init__(data_received_callback, name, **kwargs)
+
+        self._send_retries = int(self._params.get(PLUGIN_ATTR_SEND_RETRIES) or 0)
+        self._send_retries_cycle = int(self._params.get(PLUGIN_ATTR_SEND_RETRIES_CYCLE) or 1)
+        self._sending = {}
+        self._sending_retries = {}
+        self._sending_lock = threading.Lock()
+
+        # tell someone about our actual class
+        self.logger.debug(f'protocol initialized from {self.__class__.__name__}')
+
+    def _open(self):
+        if self._plugin.scheduler_get('resend'):
+            self._plugin.scheduler_remove('resend')
+        if self._send_retries >= 1:
+            self._plugin.scheduler_add('resend', self._resend, cycle=self._send_retries_cycle)
+            self.logger.dbghigh(
+                f"Adding resend scheduler with cycle {self._send_retries_cycle}.")
+        super()._open()
+
+    def _close(self):
+        if self._plugin.scheduler_get('resend'):
+            self._plugin.scheduler_remove('resend')
+        super()._close()
+
+    def _store_commands(self, resend_info):
+        """
+        overwrite with storing of data
+        Return None by default
+        """
+        if resend_info is None:
+            resend_info = {}
+        if resend_info.get('returnvalue') is not None:
+            self._sending.update({resend_info.get('command'): resend_info})
+            return True
+        return False
+
+    def _check_commands(self, command, value):
+        returnvalue = False
+        if command in self._sending:
+            self._sending_lock.acquire(True, 2)
+            retry = self._sending[command].get("retry") or 0
+            compare = self._sending[command].get('returnvalue')
+            if self._sending[command].get('returntype')(value) == compare:
+                self._sending.pop(command)
+                self._sending_retries.pop(command)
+                self.logger.debug(f'Correct answer for {command}, removing from send. Sending {self._sending}')
+                returnvalue = True
+            elif retry is not None and retry <= self._send_retries:
+                self.logger.debug(f'Should send again {self._sending}...')
+            if self._sending_lock.locked():
+                self._sending_lock.release()
+        return returnvalue
+
+    def _resend(self):
+        self.logger.info(f"resending queue is {self._sending} retries {self._sending_retries}")
+        self._sending_lock.acquire(True, 2)
+        remove_commands = []
+        for command in list(self._sending.keys()):
+            retry = self._sending_retries.get(command, 0)
+            sent = True
+            if retry < self._send_retries:
+                self.logger.debug(f'Re-sending {command}, retry {retry}.')
+                sent = self._connection.send(self._sending[command].get("data_dict"))
+                self._sending_retries[command] = retry + 1
+            elif retry >= self._send_retries:
+                sent = False
+            if sent is False:
+                remove_commands.append(command)
+                self.logger.info(f"Giving up re-sending {command} after {retry} retries.")
+        for command in remove_commands:
+            self._sending.pop(command)
+            self._sending_retries.pop(command)
+        if self._sending_lock.locked():
+            self._sending_lock.release()
+
+

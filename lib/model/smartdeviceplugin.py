@@ -56,7 +56,8 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
-    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC)
+    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC,
+    PROTO_RESEND,PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRIES_CYCLE)
 
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
@@ -184,6 +185,11 @@ class SmartDevicePlugin(SmartPlugin):
         self._webif = None
 
         self._shtime = Shtime.get_instance()
+
+        #resend
+        if self._parameters.get(PLUGIN_ATTR_PROTOCOL) == PROTO_RESEND:
+            self._parameters[PLUGIN_ATTR_SEND_RETRIES] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES)
+            self._parameters[PLUGIN_ATTR_SEND_RETRIES_CYCLE] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES_CYCLE)
 
         # init parameters in standalone mode
         if SDP_standalone:
@@ -715,6 +721,10 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.warning(f'command {command} with value {value} produced error on converting value, aborting. Error was: {e}')
             return False
 
+        stored = self._connection.store_commands({'command': command, 'returntype': type(value), 'returnvalue': value, 'data_dict': data_dict})
+        if stored is True:
+            self.logger.debug(f'Command {command} stored for resend feature')
+
         if data_dict['payload'] is None or data_dict['payload'] == '':
             self.logger.warning(f'command {command} with value {value} yielded empty command payload, aborting')
             return False
@@ -792,6 +802,7 @@ class SmartDevicePlugin(SmartPlugin):
             else:
                 if custom:
                     command = command + CUSTOM_SEP + custom
+                self._connection.check_commands(command, value)
                 self._dispatch_callback(command, value, by)
                 self._process_additional_data(command, data, value, custom, by)
 
