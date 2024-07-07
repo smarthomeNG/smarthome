@@ -87,7 +87,7 @@ class SmartDevicePlugin(SmartPlugin):
     """
 
     # this is the internal SDP version
-    SDP_VERSION = '1.0.1'
+    SDP_VERSION = '1.0.2'
 
     # this is the placeholder version of the derived plugin, not of SDP
     PLUGIN_VERSION = '0.0.1'
@@ -207,6 +207,9 @@ class SmartDevicePlugin(SmartPlugin):
         super().__init__()
 
         # init device
+
+        # allow other classes to access plugin
+        self._parameters['plugin'] = selfD
 
         # possibly initialize additional (overwrite _set_device_defaults)
         self._set_device_defaults()
