@@ -404,8 +404,7 @@ class SmartDevicePlugin(SmartPlugin):
         self.set_suspend(by='run()')
 
         if self._connection.connected():
-            # make sure to read again on restart
-            self._initial_value_read_done = False
+            # make sure this is called once at startup, even if resume_initial is not set
             self.read_initial_values()
 
     def stop(self):
