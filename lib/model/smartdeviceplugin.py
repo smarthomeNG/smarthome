@@ -415,8 +415,7 @@ class SmartDevicePlugin(SmartPlugin):
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))
 
         self.alive = False
-        if self.scheduler_get(self.get_shortname() + '_cyclic'):
-            self.scheduler_remove(self.get_shortname() + '_cyclic')
+        self.scheduler_remove_all()
         self.disconnect()
 
     def connect(self):
