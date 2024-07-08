@@ -721,10 +721,6 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.warning(f'command {command} with value {value} produced error on converting value, aborting. Error was: {e}')
             return False
 
-        stored = self._connection.store_commands({'command': command, 'returntype': type(value), 'returnvalue': value, 'data_dict': data_dict})
-        if stored is True:
-            self.logger.debug(f'Command {command} stored for resend feature')
-
         if data_dict['payload'] is None or data_dict['payload'] == '':
             self.logger.warning(f'command {command} with value {value} yielded empty command payload, aborting')
             return False
@@ -739,7 +735,9 @@ class SmartDevicePlugin(SmartPlugin):
         except (RuntimeError, OSError) as e:  # Exception as e:
             self.logger.debug(f'error on sending command {command}, error was {e}')
             return False
-
+        stored = self._connection.store_commands({'command': command, 'returntype': type(value), 'returnvalue': value, 'data_dict': data_dict})
+        if stored is True:
+            self.logger.debug(f'Command {command} stored for resend feature')
         if result:
             by = kwargs.get('by')
             self.logger.debug(f'command {command} received result {result} by {by}')
