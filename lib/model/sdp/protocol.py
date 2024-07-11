@@ -97,14 +97,11 @@ class SDPProtocol(SDPConnection):
         self._connection.close()
         self._is_connected = False
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         self.logger.debug(f'{self.__class__.__name__} _send called with {data_dict}')
-        return self._connection.send(data_dict)
+        return self._connection.send(data_dict, **kwargs)
 
-    def _store_commands(self, resend_info):
-        return False
-
-    def _check_commands(self, command, value):
+    def _check_command(self, command, value):
         return False
 
     def _get_connection(self, use_callbacks=False, name=None):
@@ -341,7 +338,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
             else:
                 self.logger.debug(f'Skipping stale check {time() - self._last_stale_check} seconds after last check')
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         """
         wrapper to prepare json rpc message to send. extracts command, id, repeat and
         params (data) from data_dict and call send_rpc_message(command, params, id, repeat)
@@ -471,23 +468,40 @@ class SDPProtocolResend(SDPProtocol):
         self.logger.info(f'disconnect called, retry_sends {self._sending}')
         super().on_disconnect(by)
 
-    def _store_commands(self, resend_info):
+    def _send(self, data_dict, **kwargs):
+        """
+        This method acts as a overwritable intermediate between the handling
+        logic of send_command() and the connection layer.
+        If you need any special arrangements for or reaction to events on sending,
+        you can implement this method in your plugin class.
+
+        By default, this just forwards the data_dict to the connection instance
+        and return the result.
+        """
+        self._store_commands(kwargs.get('resend_info'), data_dict)
+        self.logger.debug(f'sending {data_dict}, kwargs {kwargs}')
+        return self._connection.send(data_dict, **kwargs)
+
+    def _store_commands(self, resend_info, data_dict):
         """
         overwrite with storing of data
         Return None by default
         """
         if resend_info is None:
             resend_info = {}
+        else:
+            resend_info['data_dict'] = data_dict
         if resend_info.get('returnvalue') is not None:
             self._sending.update({resend_info.get('command'): resend_info})
+            self.logger.debug(f'saving {resend_info}, self._sending {self._sending}')
             return True
         return False
 
-    def _check_commands(self, command, value):
+    def _check_command(self, command, value):
         returnvalue = False
         if command in self._sending:
             self._sending_lock.acquire(True, 2)
-            retry = self._sending[command].get("retry") or 0
+            retry = self._sending[command].get("retry")
             compare = self._sending[command].get('returnvalue')
             if self._sending[command].get('returntype')(value) == compare:
                 self._sending.pop(command)
@@ -501,7 +515,8 @@ class SDPProtocolResend(SDPProtocol):
         return returnvalue
 
     def resend(self):
-        self.logger.info(f"resending queue is {self._sending} retries {self._sending_retries}")
+        if self._sending:
+            self.logger.debug(f"resending queue is {self._sending} retries {self._sending_retries}")
         self._sending_lock.acquire(True, 2)
         remove_commands = []
         for command in list(self._sending.keys()):
@@ -509,7 +524,7 @@ class SDPProtocolResend(SDPProtocol):
             sent = True
             if retry < self._send_retries:
                 self.logger.debug(f'Re-sending {command}, retry {retry}.')
-                sent = self._connection.send(self._sending[command].get("data_dict"))
+                sent = self._send(self._sending[command].get("data_dict"))
                 self._sending_retries[command] = retry + 1
             elif retry >= self._send_retries:
                 sent = False
@@ -521,5 +536,3 @@ class SDPProtocolResend(SDPProtocol):
             self._sending_retries.pop(command)
         if self._sending_lock.locked():
             self._sending_lock.release()
-
-

@@ -730,14 +730,13 @@ class SmartDevicePlugin(SmartPlugin):
 
         # if an error occurs on sending, an exception is thrown "below"
         result = None
+        resend_info = {'command': command, 'returntype': type(value), 'returnvalue': value}
+
         try:
-            result = self._send(data_dict)
+            result = self._send(data_dict, resend_info=resend_info)
         except (RuntimeError, OSError) as e:  # Exception as e:
             self.logger.debug(f'error on sending command {command}, error was {e}')
             return False
-        stored = self._connection.store_commands({'command': command, 'returntype': type(value), 'returnvalue': value, 'data_dict': data_dict})
-        if stored is True:
-            self.logger.debug(f'Command {command} stored for resend feature')
         if result:
             by = kwargs.get('by')
             self.logger.debug(f'command {command} received result {result} by {by}')
@@ -800,7 +799,7 @@ class SmartDevicePlugin(SmartPlugin):
             else:
                 if custom:
                     command = command + CUSTOM_SEP + custom
-                self._connection.check_commands(command, value)
+                self._connection.check_command(command, value)
                 self._dispatch_callback(command, value, by)
                 self._process_additional_data(command, data, value, custom, by)
 
@@ -962,7 +961,7 @@ class SmartDevicePlugin(SmartPlugin):
         return (True, True)
         # return (False, True)
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         """
         This method acts as a overwritable intermediate between the handling
         logic of send_command() and the connection layer.
@@ -972,8 +971,8 @@ class SmartDevicePlugin(SmartPlugin):
         By default, this just forwards the data_dict to the connection instance
         and return the result.
         """
-        self.logger.debug(f'sending {data_dict}')
-        return self._connection.send(data_dict)
+        self.logger.debug(f'sending {data_dict}, kwargs {kwargs}')
+        return self._connection.send(data_dict, **kwargs)
 
     def on_connect(self, by=None):
         """ callback if connection is made. """
