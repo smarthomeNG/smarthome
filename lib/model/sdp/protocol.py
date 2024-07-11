@@ -493,6 +493,8 @@ class SDPProtocolResend(SDPProtocol):
             resend_info['data_dict'] = data_dict
         if resend_info.get('returnvalue') is not None:
             self._sending.update({resend_info.get('command'): resend_info})
+            if resend_info.get('command') not in self._sending_retries:
+                self._sending_retries.update({resend_info.get('command'): 0})
             self.logger.debug(f'saving {resend_info}, self._sending {self._sending}')
             return True
         return False
