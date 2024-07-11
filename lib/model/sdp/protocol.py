@@ -502,39 +502,36 @@ class SDPProtocolResend(SDPProtocol):
     def _check_command(self, command, value):
         returnvalue = False
         if command in self._sending:
-            self._sending_lock.acquire(True, 2)
-            retry = self._sending[command].get("retry")
-            compare = self._sending[command].get('returnvalue')
-            if self._sending[command].get('returntype')(value) == compare:
-                self._sending.pop(command)
-                self._sending_retries.pop(command)
-                self.logger.debug(f'Correct answer for {command}, removing from send. Sending {self._sending}')
-                returnvalue = True
-            elif retry is not None and retry <= self._send_retries:
-                self.logger.debug(f'Should send again {self._sending}...')
-            if self._sending_lock.locked():
-                self._sending_lock.release()
+            with self._sending_lock:
+                retry = self._sending_retries.get(command)
+                compare = self._sending[command].get('returnvalue')
+                if type(compare)(value) == compare:
+                    self._sending.pop(command)
+                    self._sending_retries.pop(command)
+                    self.logger.debug(f'Correct answer for {command}, removing from send. Sending {self._sending}')
+                    returnvalue = True
+                elif retry is not None and retry <= self._send_retries:
+                    self.logger.debug(f'Should send again {self._sending}...')
+
         return returnvalue
 
     def resend(self):
         if self._sending:
             self.logger.debug(f"resending queue is {self._sending} retries {self._sending_retries}")
-        self._sending_lock.acquire(True, 2)
-        remove_commands = []
-        for command in list(self._sending.keys()):
-            retry = self._sending_retries.get(command, 0)
-            sent = True
-            if retry < self._send_retries:
-                self.logger.debug(f'Re-sending {command}, retry {retry}.')
-                sent = self._send(self._sending[command].get("data_dict"))
-                self._sending_retries[command] = retry + 1
-            elif retry >= self._send_retries:
-                sent = False
-            if sent is False:
-                remove_commands.append(command)
-                self.logger.info(f"Giving up re-sending {command} after {retry} retries.")
-        for command in remove_commands:
-            self._sending.pop(command)
-            self._sending_retries.pop(command)
-        if self._sending_lock.locked():
-            self._sending_lock.release()
+        with self._sending_lock:
+            remove_commands = []
+            for command in list(self._sending.keys()):
+                retry = self._sending_retries.get(command, 0)
+                sent = True
+                if retry < self._send_retries:
+                    self.logger.debug(f'Re-sending {command}, retry {retry}.')
+                    sent = self._send(self._sending[command].get("data_dict"))
+                    self._sending_retries[command] = retry + 1
+                elif retry >= self._send_retries:
+                    sent = False
+                if sent is False:
+                    remove_commands.append(command)
+                    self.logger.info(f"Giving up re-sending {command} after {retry} retries.")
+            for command in remove_commands:
+                self._sending.pop(command)
+                self._sending_retries.pop(command)
