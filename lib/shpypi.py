@@ -1022,13 +1022,62 @@ class Shpypi:
         reqs = requirement.split(',')
         for req in reqs:
             operator, version = self._split_operator(req)
-            if operator in ['>=', '==', '>']:
+            if operator in ['>=', '==']:
                 result['min'] = version
-            if operator in ['<', '<=', '==']:
+            if operator in ['<=', '==']:
                 result['max'] = version
+            if operator == '>':
+                result['min'] = self._get_bounding_version(version, below=True)
+            if operator == '<':
+                result['max'] = self._get_bounding_version(version, above=True)
 
         return result
 
+    def _get_bounding_version(self, version: str, below: bool = False, above: bool = False) -> str:
+        """
+        calculate bounding version number to store requirements like
+        version < 2.0 --> bounding version will be 1.999
+        version < 2.2.0 --> bounding version will be 2.1.999
+
+        If below == above, version is returned unchanged
+
+        :param version: version number
+        :param below: True means bounding version below given version
+        :param above: True means bounding version above given version
+        :type version: str
+        :type below: bool
+        :type above: bool
+
+        :return: modified version number
+        :rtype: str
+        """
+
+        def _to_num(vl: list) -> int:
+            """ convert version number in list form to 1000-based decimal """
+            vi = int(vl[0])
+            for d in vl[1:]:
+                vi = vi * 1000
+                vi = vi + int(d)
+            return vi
+
+        def _to_str(vi: int) -> str:
+            """ convert 1000-based decimal to reduced string """
+            vl = []
+            vs = str(vi)
+            while vs:
+                vl = [str(int(vs[-3:]))] + vl
+                vs = vs[:-3]
+            return ".".join(vl)
+
+        if above == below:
+            return version
+        vers_org = self._version_to_list(version)
+        vers_num = _to_num(vers_org)
+        if above:
+            vers_num += 1
+        if below:
+            vers_num -= 1
+        return _to_str(vers_num)
 
 
     def _compare_versions(self, vers1, vers2, operator):
