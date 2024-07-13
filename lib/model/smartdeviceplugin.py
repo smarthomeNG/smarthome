@@ -732,13 +732,13 @@ class SmartDevicePlugin(SmartPlugin):
         # if an error occurs on sending, an exception is thrown "below"
         result = None
         reply_pattern = self._commands.get_commandlist(command).get('reply_pattern')
-        querycommand = self._commands.get_commandlist(command).get('read_cmd')
+        read_cmd = self._transform_send_data(self._commands.get_send_data(command, None))
         if reply_pattern is None:
-            resend_info = {'command': command, 'returnvalue': None, 'querycommand': querycommand}
+            resend_info = {'command': command, 'returnvalue': None, 'read_cmd': read_cmd}
         elif not any(x in reply_pattern for x in ['(', '{']):
-            resend_info = {'command': command, 'returnvalue': reply_pattern, 'querycommand': querycommand}
+            resend_info = {'command': command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
         else:
-            resend_info = {'command': command, 'returnvalue': value, 'querycommand': querycommand}
+            resend_info = {'command': command, 'returnvalue': value, 'read_cmd': read_cmd}
 
         try:
             result = self._send(data_dict, resend_info=resend_info)

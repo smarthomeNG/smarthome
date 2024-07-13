@@ -532,12 +532,9 @@ class SDPProtocolResend(SDPProtocol):
                 if sent is False:
                     remove_commands.append(command)
                     self.logger.info(f"Giving up re-sending {command} after {retry} retries.")
-                    if self._sending[command].get("querycommand") is not None:
+                    if self._sending[command].get("read_cmd") is not None:
                         self.logger.info(f"Querying current value.")
-                        data_dict = self._sending[command].get("data_dict")
-                        data_dict['payload'] = self._sending[command].get("querycommand")
-                        data_dict['data'] = None
-                        self._send(data_dict)
+                        self._send(self._sending[command].get("read_cmd"))
             for command in remove_commands:
                 self._sending.pop(command)
                 self._sending_retries.pop(command)
