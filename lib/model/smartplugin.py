@@ -1076,7 +1076,7 @@ class SmartPlugin(SmartObject, Utils):
 
     def scheduler_remove_all(self):
         """ This method removes all schedulers added by the plugin """
-        for sched in self._schedulers:
+        for sched in self._schedulers.copy():
             try:
                 self.scheduler_remove(sched)
             except Exception:
