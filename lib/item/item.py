@@ -721,7 +721,7 @@ class Item():
         nolimit = level < 0
         while (level >= 1 or nolimit) and (strict or attr not in item.conf):
             if item._is_top_of_item_tree():
-                return ''
+                return default
             item = item.return_parent()
             level -= 1
 
