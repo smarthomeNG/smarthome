@@ -49,7 +49,8 @@ class LogicsController(RESTResource):
 
         self.etc_dir = self._sh._etc_dir
 
-        self.logics_dir = os.path.join(self.base_dir, 'logics')
+        self.logics_dir = self._sh._logic_dir
+        self.template_dir = self._sh._template_dir
         self.logics = Logics.get_instance()
         self.logger.info("__init__ self.logics = {}".format(self.logics))
         self.plugins = Plugins.get_instance()
@@ -318,7 +319,6 @@ class LogicsController(RESTResource):
         f = open(pathname, 'w', encoding='UTF-8')
         f.write(logics_code)
         f.close()
-
         return True
 
 
@@ -347,6 +347,17 @@ class LogicsController(RESTResource):
         logic_status = {}
         logic_status['is_loaded'] = self.logics.is_logic_loaded(logicname)
         return json.dumps(logic_status)
+
+
+    def get_logic_template(self, logicname):
+        filename = os.path.join(self.template_dir, 'logic.tpl')
+        read_data = None
+        try:
+            with open(filename, encoding='UTF-8') as f:
+                read_data = f.read().replace('example_logic.py', logicname)
+        except Exception:
+            read_data = '#!/usr/bin/env python3\n' + '# ' + logicname + '\n\n'
+        return read_data
 
 
     def set_logic_state(self, logicname, action, filename):
@@ -405,18 +416,19 @@ class LogicsController(RESTResource):
             else:
                 if not os.path.isfile(os.path.join(self.logics.get_logics_dir(), filename)):
                     #create new logic code file, if none is found
-                    logics_code = '#!/usr/bin/env python3\n' + '# ' + filename + '\n\n'
+                    logics_code = self.get_logic_template(filename)
                     if not self.logic_create_codefile(filename, logics_code):
                         self.logger.error(f"Could not create code-file '{filename}'")
                         return json.dumps({"result": "error", "description": f"Could not create code-file '{filename}'"})
-
+                print(1)
                 if self.logics.filename_used_count(filename) > 0:
                     self.logger.error(f"code-file '{filename}' already exists and is used by another logic configuration")
                     return json.dumps({"result": "error", "description": f"code-file '{filename}' already exists and is used by another logic configuration"})
-
+                print(2)
                 self.logic_create_config(logicname, filename)
                 if not self.logics.load_logic(logicname):
                     self.logger.warning(f"Could not load logic '{logicname}', syntax error")
+                print(3)
                 return json.dumps( {"result": "ok"} )
 
         else:
