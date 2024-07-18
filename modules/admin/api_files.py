@@ -56,6 +56,7 @@ class FilesController(RESTResource):
         self.functions_dir = self._sh.get_functionsdir()
         self.scenes_dir = self._sh._scenes_dir
         self.logics_dir = self._sh.get_logicsdir()
+        self.template_dir = self._sh._template_dir
         self.extern_conf_dir = self._sh._extern_conf_dir
         self.modules_dir = os.path.join(self.base_dir, 'modules')
         return
@@ -337,7 +338,7 @@ class FilesController(RESTResource):
 
         self.logger.info("FilesController.get_functions_config({})".format(fn))
         if fn.endswith('.tpl'):
-            filename = os.path.join(self.functions_dir, fn)
+            filename = os.path.join(self.template_dir, fn)
         else:
             filename = os.path.join(self.functions_dir, fn + '.py')
         read_data = None
