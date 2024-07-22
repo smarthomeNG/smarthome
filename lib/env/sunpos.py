@@ -1,5 +1,5 @@
 
-# lib/env/location.py
+# lib/env/sunpos.py
 
 import math
 
