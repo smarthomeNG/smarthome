@@ -215,6 +215,24 @@ class MockSmartHome():
         """
         return self._structs_dir
 
+
+    def get_logicsdir(self) -> str:
+        """
+        Function to return the logics config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._logic_dir
+
+
+    def get_functionsdir(self) -> str:
+        """
+        Function to return the userfunctions config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._functions_dir
+
     def get_vardir(self):
         """
         Function to return the var directory used by SmartHomeNG
