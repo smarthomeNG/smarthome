@@ -51,11 +51,11 @@ class FilesController(RESTResource):
         self.base_dir = self._sh.get_basedir()
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
-        self.etc_dir = self._sh._etc_dir
+        self.etc_dir = self._sh.get_etcdir()
         self.items_dir = self._sh._items_dir
-        self.functions_dir = self._sh._functions_dir
+        self.functions_dir = self._sh.get_functionsdir()
         self.scenes_dir = self._sh._scenes_dir
-        self.logics_dir = self._sh._logic_dir
+        self.logics_dir = self._sh.get_logicsdir()
         self.extern_conf_dir = self._sh._extern_conf_dir
         self.modules_dir = os.path.join(self.base_dir, 'modules')
         return

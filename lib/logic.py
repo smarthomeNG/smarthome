@@ -97,8 +97,8 @@ class Logics():
         self._userlogicconf = userlogicconf
         self._env_dir = smarthome._env_dir
         self._envlogicconf = envlogicconf
-        self._etc_dir = smarthome._etc_dir
-        self._logic_dir = smarthome._logic_dir
+        self._etc_dir = smarthome.get_etcdir()
+        self._logic_dir = smarthome.get_logicsdir()
         self._workers = []
         self._logics = {}
         #self._bytecode = {}
@@ -897,11 +897,12 @@ class Logics():
         Count the number of logics (sections) that reference this filename
         """
         count = 0
-        for name in conf:
-            section = conf.get(name, None)
-            fn = section.get('filename', None)
-            if fn is not None and fn.lower() == filename.lower():
-                count += 1
+        if conf:
+            for name in conf:
+                section = conf.get(name, None)
+                fn = section.get('filename', None)
+                if fn is not None and fn.lower() == filename.lower():
+                    count += 1
         return count
 
 
@@ -909,7 +910,6 @@ class Logics():
         # load /etc/logic.yaml
         conf_filename = os.path.join(self._get_etc_dir(), 'logic')
         conf = shyaml.yaml_load_roundtrip(conf_filename)
-
         count = self._count_filename_uses(conf, filename)
         return count
 

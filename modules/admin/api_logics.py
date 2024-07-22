@@ -49,7 +49,7 @@ class LogicsController(RESTResource):
 
         self.etc_dir = self._sh._etc_dir
 
-        self.logics_dir = os.path.join(self.base_dir, 'logics')
+        self.logics_dir = self._sh.get_logicsdir()
         self.logics = Logics.get_instance()
         self.logger.info("__init__ self.logics = {}".format(self.logics))
         self.plugins = Plugins.get_instance()
