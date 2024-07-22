@@ -155,15 +155,11 @@ class SmartHome():
 
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
 
-        print(f'etc -> {self._etc_dir}')
-
         # self._conf_dir contains the base dir for config folders
         if self._config_etc:
             self._conf_dir = self._etc_dir
         else:
             self._conf_dir = self._extern_conf_dir
-
-        print(f'conf -> {self._conf_dir}')
 
         # shng system dirs
         self._var_dir = os.path.join(self._base_dir, 'var')
@@ -187,7 +183,8 @@ class SmartHome():
         self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
         self._module_conf_basename = os.path.join(self._etc_dir, 'module')
         self._plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
-        self._logic_conf_basename = os.path.join(self._etc_dir, 'logics')
+        self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
+
 
     def create_directories(self):
         """
@@ -536,6 +533,24 @@ class SmartHome():
         :return: Config directory as an absolute path
         """
         return self._structs_dir
+
+
+    def get_logicsdir(self) -> str:
+        """
+        Function to return the logics config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._logic_dir
+
+
+    def get_functionsdir(self) -> str:
+        """
+        Function to return the userfunctions config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._functions_dir
 
 
     def get_vardir(self):

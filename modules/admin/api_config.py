@@ -42,7 +42,7 @@ class ConfigController(RESTResource):
         self.base_dir = self._sh.get_basedir()
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
-        self.etc_dir = self._sh._etc_dir
+        self.etc_dir = self._sh.get_etcdir()
         self.modules_dir = os.path.join(self.base_dir, 'modules')
 
         self.core_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'core', 'module.yaml'))
