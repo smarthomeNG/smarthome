@@ -1140,9 +1140,7 @@ class Shtime:
         """
 
         if self.holidays is None:
-            self._etc_dir = self._sh._etc_dir
-            conf_filename = os.path.join(self._sh._etc_dir, BASE_HOLIDAY + YAML_FILE)
-            self.config = shyaml.yaml_load(conf_filename)
+            self.config = shyaml.yaml_load(self._sh.get_config_file(BASE_HOLIDAY))
             location = self.config.get('location', None)
 
             # prepopulate holidays for following years

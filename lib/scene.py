@@ -36,7 +36,7 @@ from lib.logic import Logics
 from lib.utils import Utils
 from lib.shtime import Shtime
 import lib.shyaml as yaml
-from lib.constants import YAML_FILE
+from lib.constants import (YAML_FILE, DIR_SCENES)
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +82,7 @@ class Scenes():
         """
         self._scenes = {}
         self._learned_values = {}
-        self._scenes_dir = self._sh._scenes_dir
+        self._scenes_dir = self._sh.get_config_dir(DIR_SCENES)
         if not os.path.isdir(self._scenes_dir):
             logger.warning(translate("Directory '{scenes_dir}' not found. Ignoring scenes.", {'scenes_dir': self._scenes_dir}))
             return

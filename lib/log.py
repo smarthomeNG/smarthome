@@ -34,7 +34,7 @@ from pathlib import Path
 import collections
 
 import lib.shyaml as shyaml
-from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG
+from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG, DIR_ETC, DIR_VAR
 
 logs_instance = None
 
@@ -68,13 +68,15 @@ class Logs():
         return
 
 
-    def configure_logging(self, config_filename=BASE_LOG + YAML_FILE):
+    def configure_logging(self, config_filename=''):
 
+        if not config_filename:
+            config_filename = self._sh.get_config_file(BASE_LOG)
         config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
 
         if config_dict == None:
             print()
-            print(f"ERROR: Invalid logging configuration in file '{os.path.join(self._sh.get_etcdir(), config_filename)}'")
+            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
             print()
             exit(1)
 
@@ -141,7 +143,7 @@ class Logs():
             logging.config.dictConfig(config_dict)
         except Exception as e:
             print()
-            print(f"ERROR: dictConfig: Invalid logging configuration in file '{os.path.join(self._sh.get_etcdir(), config_filename)}'")
+            print(f"ERROR: dictConfig: Invalid logging configuration in file '{config_filename}'")
             print(f"       Exception: {e}")
             print()
             return e
@@ -238,13 +240,16 @@ class Logs():
 
     # ---------------------------------------------------------------------------
 
-    def load_logging_config(self, filename=BASE_LOG, ignore_notfound=False):
+    def load_logging_config(self, filename='', ignore_notfound=False):
         """
         Load config from logging.yaml to a dict
 
         If logging.yaml does not contain a 'shng_version' key, a backup is created
         """
-        conf_filename = os.path.join(self._sh.get_etcdir(), filename)
+        if not filename:
+            conf_filename = self._sh.get_config_file(BASE_LOG)
+        else:
+            conf_filename = os.path.join(self._sh.get_config_dir(DIR_ETC), filename)
         if not conf_filename.endswith(YAML_FILE) and not conf_filename.endswith(DEFAULT_FILE):
             conf_filename += YAML_FILE
         result = shyaml.yaml_load(conf_filename, ignore_notfound)
@@ -258,7 +263,7 @@ class Logs():
         """
         if logging_config is not None:
             logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
-            conf_filename = os.path.join(self._sh.get_etcdir(), BASE_LOG)
+            conf_filename = self._sh.get_config_file(BASE_LOG)
             shyaml.yaml_save_roundtrip(conf_filename, logging_config, create_backup=create_backup)
         return
 
@@ -270,7 +275,7 @@ class Logs():
         If logging.yaml does not contain a 'shng_version' key, a backup is created
         """
         #self.etc_dir = self._sh.get_etcdir()
-        conf_filename = os.path.join(self._sh.get_etcdir(), BASE_LOG)
+        conf_filename = self._sh.get_config_file(BASE_LOG)
         logging_config = shyaml.yaml_load_roundtrip(conf_filename)
         self.logger.info("load_logging_config_for_edit: shng_version={}".format(logging_config.get('shng_version', None)))
 
@@ -788,7 +793,7 @@ class ShngMemLogHandler(logging.StreamHandler):
         self._cache = cache
         self._maxlen = maxlen
         # save cache files in var/log/cache directory
-        cache_directory = os.path.join(logs_instance._sh.get_vardir(), 'log'+os.path.sep, 'cache'+os.path.sep)
+        cache_directory = os.path.join(logs_instance._sh.get_config_dir(DIR_VAR), 'log'+os.path.sep, 'cache'+os.path.sep)
         if cache is True:
             if not os.path.isdir(cache_directory):
                 os.makedirs(cache_directory)

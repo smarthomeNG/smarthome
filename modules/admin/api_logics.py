@@ -34,6 +34,8 @@ from lib.utils import Utils
 from lib.logic import Logics
 from lib.plugin import Plugins
 from lib.scheduler import Scheduler
+from lib.constants import (DIR_ETC, DIR_LOGICS, DIR_TPL, BASE_LOGIC)
+
 from .rest import RESTResource
 
 
@@ -47,10 +49,10 @@ class LogicsController(RESTResource):
         self.base_dir = self._sh.get_basedir()
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
-        self.etc_dir = self._sh._etc_dir
+        self.etc_dir = self._sh.get_config_dir(DIR_ETC)
 
-        self.logics_dir = self._sh.get_logicsdir()
-        self.template_dir = self._sh._template_dir
+        self.logics_dir = self._sh.get_config_dir(DIR_LOGICS)
+        self.template_dir = self._sh.get_config_dir(DIR_TPL)
         self.logics = Logics.get_instance()
         self.logger.info("__init__ self.logics = {}".format(self.logics))
         self.plugins = Plugins.get_instance()
@@ -62,7 +64,6 @@ class LogicsController(RESTResource):
         self.logics_data = {}
 
         self.logics = Logics.get_instance()
-        return
 
 
     def get_body(self, text=False):
@@ -117,7 +118,6 @@ class LogicsController(RESTResource):
                         self.blockly_plugin_loaded = True
                 except:
                     pass
-        return
 
     def fill_logicdict(self, logicname):
         """
@@ -283,8 +283,7 @@ class LogicsController(RESTResource):
         """
         Get code of a logic from file
         """
-        config_filename = os.path.join(self.etc_dir, 'logic.yaml')
-        wrk = shyaml.yaml_load(config_filename)
+        wrk = shyaml.yaml_load(self._sh.get_config_file(BASE_LOGIC))
         logic_conf = wrk.get(logicname, {})
 
         if Utils.get_type(logic_conf.get('watch_item', None)) == 'str':
@@ -413,7 +412,7 @@ class LogicsController(RESTResource):
                 self.logger.warning("LogicsController.set_logic_state(create): Logic name {} is already used".format(logicname))
                 return json.dumps({"result": "error", "description": "Logic name {} is already used".format(logicname)})
             else:
-                if not os.path.isfile(os.path.join(self.logics.get_logics_dir(), filename)):
+                if not os.path.isfile(os.path.join(self._sh.get_config_dir(DIR_LOGICS), filename)):
                     #create new logic code file, if none is found
                     logics_code = self.get_logic_template(filename)
                     if not self.logic_create_codefile(filename, logics_code):
@@ -440,8 +439,7 @@ class LogicsController(RESTResource):
         #params = self.get_body()
         self.logger.info(f"LogicsController.save_logic_parameters: logic = {logicname}, params = {params}")
 
-        config_filename = os.path.join(self.etc_dir, 'logic')
-        logic_conf = shyaml.yaml_load_roundtrip(config_filename)
+        logic_conf = shyaml.yaml_load_roundtrip(self._sh.get_config_file(BASE_LOGIC))
         sect = logic_conf.get(logicname)
         if sect is None:
             response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(logicname)}
@@ -474,7 +472,7 @@ class LogicsController(RESTResource):
             self.logger.info("LogicsController.save_logic_parameters: logic = {}, neue params = {}".format(logicname, dict(sect)))
 
 
-            shyaml.yaml_save_roundtrip(config_filename, logic_conf, False)
+            shyaml.yaml_save_roundtrip(self._sh.get_config_file(BASE_LOGIC), logic_conf, False)
             response = {'result': 'ok'}
 
         return json.dumps(response)

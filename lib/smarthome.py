@@ -176,6 +176,8 @@ class SmartHome():
         self._items_dir = os.path.join(self._conf_dir, DIR_ITEMS + os.path.sep)
         self._structs_dir = os.path.join(self._conf_dir, DIR_STRUCTS)
         self._logic_dir = os.path.join(self._conf_dir, DIR_LOGICS + os.path.sep)
+        # TODO: remove self._logic_dir later for uniformness (dirs with plural naming)
+        self._logics_dir = self._logic_dir
         self._functions_dir = os.path.join(self._conf_dir, DIR_UF + os.path.sep)
         self._scenes_dir = os.path.join(self._conf_dir, DIR_SCENES + os.path.sep)
 

@@ -105,6 +105,9 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
         backup_filename += '_' + get_backupdate() + '_' + get_backuptime()
     backup_filename += '.zip'
 
+    # let backup.py create file/directory names the "old way", because this can
+    # be invoked by command line without a working SmartHome instance and so
+    # needs to create the paths for itself. Hope this always works... :)
     etc_dir = os.path.join(conf_base_dir, 'etc')
 
     if config_etc:

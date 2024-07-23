@@ -27,7 +27,7 @@ import cherrypy
 
 import lib.shyaml as shyaml
 from lib.utils import Utils
-
+from lib.constants import (DIR_ETC, BASE_LOG)
 import jwt
 from .rest import RESTResource
 
@@ -40,10 +40,10 @@ class LogsController(RESTResource):
         self.base_dir = self._sh.get_basedir()
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
-        self.etc_dir = self._sh._etc_dir
+        self.etc_dir = self._sh.get_config_dir(DIR_ETC)
         self.log_dir = os.path.join(self.base_dir, 'var', 'log')
 
-        self.logging_conf = shyaml.yaml_load(os.path.join(self.etc_dir, 'logging.yaml'))
+        self.logging_conf = shyaml.yaml_load(self._sh.get_config_file(BASE_LOG))
 
         self.chunksize = self.module.log_chunksize
 

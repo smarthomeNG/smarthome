@@ -93,7 +93,7 @@ def init_lib(shng_base_dir=None, sh=None):
         base_dir = os.getcwd()
 
     if _sh:
-        _func_dir = _sh.get_functionsdir()
+        _func_dir = _sh.get_config_dir(DIR_UF)
     else:
         _func_dir = os.path.join(base_dir, _uf_subdir)
 

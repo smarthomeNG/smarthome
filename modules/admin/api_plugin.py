@@ -32,7 +32,7 @@ from lib.module import Modules
 from lib.plugin import Plugins
 from lib.metadata import Metadata
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (KEY_CLASS_PATH, YAML_FILE)
+from lib.constants import (KEY_CLASS_PATH, YAML_FILE, DIR_PLUGINS)
 
 from .rest import RESTResource
 
@@ -42,7 +42,7 @@ class PluginController(RESTResource):
     def __init__(self, module, jwt_secret=False):
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
-        self.plugins_dir = os.path.join(self.base_dir, 'plugins')
+        self.plugins_dir = self._sh.get_config_dir(DIR_PLUGINS)
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
         self.logger.info("PluginController(): __init__")
         self.plugins = Plugins.get_instance()
