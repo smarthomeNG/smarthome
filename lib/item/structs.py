@@ -26,6 +26,7 @@ import copy
 
 import lib.shyaml as shyaml
 from lib.config import sanitize_items
+from lib.constants import (YAML_FILE, BASE_STRUCT, DIR_STRUCTS)
 
 logger = logging.getLogger(__name__)
 
@@ -85,12 +86,12 @@ class Structs():
         - structs are read in from ../etc/struct.yaml by this procedure
         - further structs are read in from ../etc/struct_<prefix>.yaml by this procedure
         """
-        self.load_struct_definitions_from_file(self.etc_dir, 'struct.yaml', '')
+        self.load_struct_definitions_from_file(self.etc_dir, BASE_STRUCT + YAML_FILE, '')
 
         # look for further struct files
         file_list = os.listdir(self.etc_dir)
         for filename in file_list:
-            if filename.startswith('struct_') and filename.endswith('.yaml'):
+            if filename.startswith(BASE_STRUCT + '_') and filename.endswith(YAML_FILE):
                 key_prefix = 'my.' + filename[7:-5]
                 self.load_struct_definitions_from_file(self.etc_dir, filename, key_prefix)
         return
@@ -117,11 +118,11 @@ class Structs():
         """
         fl = os.listdir(self.etc_dir)
         for filename in fl:
-            if filename.startswith('struct_') and filename.endswith('.yaml'):
+            if filename.startswith(BASE_STRUCT + '_') and filename.endswith(YAML_FILE):
                 dest_fn = filename[7:]
                 self.migrate_one_file(filename, dest_fn)
 
-        filename = 'struct.yaml'
+        filename = BASE_STRUCT + YAML_FILE
         if os.path.isfile(os.path.join(self.etc_dir, filename)):
             dest_fn = 'global_structs.yaml'
             self.migrate_one_file(filename, dest_fn)
@@ -135,19 +136,19 @@ class Structs():
 
         - structs are read in from ../structs/<name>.yaml by this procedure
         """
-        self.load_struct_definitions_from_file(self.etc_dir, 'struct.yaml', '')
+        self.load_struct_definitions_from_file(self.etc_dir, BASE_STRUCT + YAML_FILE, '')
         if os.path.isdir(self.structs_dir):
             # look for struct files
             file_list = os.listdir(self.structs_dir)
             for filename in file_list:
-                if not (filename.startswith('.')) and filename.endswith('.yaml'):
+                if not (filename.startswith('.')) and filename.endswith(YAML_FILE):
                     if filename == 'global_structs.yaml':
                         key_prefix = ''
                     else:
                         key_prefix = 'my.' + filename[:-5]
                     self.load_struct_definitions_from_file(self.structs_dir, filename, key_prefix)
         else:
-            self.logger.notice("../structs does not exist")
+            self.logger.notice("../" + DIR_STRUCTS + " does not exist")
         return
 
 

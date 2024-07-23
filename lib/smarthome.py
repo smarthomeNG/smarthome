@@ -98,7 +98,7 @@ from lib.shtime import Shtime
 import lib.shyaml
 from lib.shpypi import Shpypi
 from lib.triggertimes import TriggerTimes
-from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
+from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE, BASE_LOG, BASE_LOGIC, BASE_MODULE, BASE_PLUGIN, BASE_SH, DIR_CACHE, DIR_ENV, DIR_ETC, DIR_ITEMS, DIR_LIB, DIR_LOGICS, DIR_PLUGINS, DIR_SCENES, DIR_STRUCTS, DIR_TPL, DIR_UF, DIR_VAR)
 import lib.userfunctions as uf
 from lib.systeminfo import Systeminfo
 
@@ -153,7 +153,7 @@ class SmartHome():
         self._base_dir = BASE
         self.base_dir = self._base_dir  # **base_dir** is deprecated. Use method get_basedir() instead. - for external modules using that var (backend, ...?)
 
-        self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
+        self._etc_dir = os.path.join(self._extern_conf_dir, DIR_ETC)
 
         # self._conf_dir contains the base dir for config folders
         if self._config_etc:
@@ -162,29 +162,29 @@ class SmartHome():
             self._conf_dir = self._extern_conf_dir
 
         # shng system dirs
-        self._var_dir = os.path.join(self._base_dir, 'var')
-        self._lib_dir = os.path.join(self._base_dir, 'lib')
-        self._plugins_dir = os.path.join(self._base_dir, 'plugins')
+        self._var_dir = os.path.join(self._base_dir, DIR_VAR)
+        self._lib_dir = os.path.join(self._base_dir, DIR_LIB)
+        self._plugins_dir = os.path.join(self._base_dir, DIR_PLUGINS)
 
         # env and var dirs
-        self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
-        self._template_dir = os.path.join(self._base_dir, 'templates')
-        self._env_logic_conf_basename = os.path.join(self._env_dir, 'logic')
-        self._cache_dir = os.path.join(self._var_dir, 'cache' + os.path.sep)
+        self._env_dir = os.path.join(self._lib_dir, DIR_ENV + os.path.sep)
+        self._template_dir = os.path.join(self._base_dir, DIR_TPL)
+        self._cache_dir = os.path.join(self._var_dir, DIR_CACHE + os.path.sep)
 
         # user config dirs
-        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
-        self._structs_dir = os.path.join(self._conf_dir, 'structs')
-        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
-        self._functions_dir = os.path.join(self._conf_dir, 'functions' + os.path.sep)
-        self._scenes_dir = os.path.join(self._conf_dir, 'scenes' + os.path.sep)
+        self._items_dir = os.path.join(self._conf_dir, DIR_ITEMS + os.path.sep)
+        self._structs_dir = os.path.join(self._conf_dir, DIR_STRUCTS)
+        self._logic_dir = os.path.join(self._conf_dir, DIR_LOGICS + os.path.sep)
+        self._functions_dir = os.path.join(self._conf_dir, DIR_UF + os.path.sep)
+        self._scenes_dir = os.path.join(self._conf_dir, DIR_SCENES + os.path.sep)
 
         # system config files
-        self._smarthome_conf_basename = os.path.join(self._etc_dir, 'smarthome')
-        self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
-        self._module_conf_basename = os.path.join(self._etc_dir, 'module')
-        self._plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
-        self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
+        self._smarthome_conf_basename = os.path.join(self._etc_dir, BASE_SH)
+        self._log_conf_basename = os.path.join(self._etc_dir, BASE_LOG)
+        self._module_conf_basename = os.path.join(self._etc_dir, BASE_MODULE)
+        self._plugin_conf_basename = os.path.join(self._etc_dir, BASE_PLUGIN)
+        self._logic_conf_basename = os.path.join(self._etc_dir, BASE_LOGIC)
+        self._env_logic_conf_basename = os.path.join(self._env_dir, BASE_LOGIC)
 
 
     def create_directories(self):

@@ -59,7 +59,7 @@ import lib.shyaml as shyaml
 from lib.utils import Utils
 
 from lib.constants import PLUGIN_PARSE_LOGIC
-from lib.constants import (YAML_FILE, CONF_FILE)
+from lib.constants import (YAML_FILE, CONF_FILE, DIR_LOGICS, BASE_LOGIC)
 
 from lib.item import Items
 from lib.plugin import Plugins
@@ -508,7 +508,7 @@ class Logics():
             pathname = str(self.return_logic(name)._pathname)
         except:
             return False
-        return os.path.basename(os.path.dirname(pathname)) == 'logics'
+        return os.path.basename(os.path.dirname(pathname)) == DIR_LOGICS
 
 
     def load_logic(self, name):
@@ -618,7 +618,7 @@ class Logics():
         else:
             logger.info("return_logictype: name {} is not loaded".format(name))
             # load /etc/logic.yaml if logic is not in the loaded logics
-            conf_filename = os.path.join(self._get_etc_dir(), 'logic')
+            conf_filename = os.path.join(self._get_etc_dir(), BASE_LOGIC)
             config = shyaml.yaml_load_roundtrip(conf_filename)
             if config is not None:
                 if name in config:
@@ -654,7 +654,7 @@ class Logics():
             logic_list = []
 
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
+        conf_filename = os.path.join(self._get_etc_dir(), BASE_LOGIC)
         config = shyaml.yaml_load_roundtrip(conf_filename)
 
         if config is not None:
@@ -729,7 +729,7 @@ class Logics():
             return False
 
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
+        conf_filename = os.path.join(self._get_etc_dir(), BASE_LOGIC)
         _conf = shyaml.yaml_load_roundtrip(conf_filename)
 
         config_list = []
@@ -780,7 +780,7 @@ class Logics():
 
         """
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
+        conf_filename = os.path.join(self._get_etc_dir(), BASE_LOGIC)
         conf = shyaml.yaml_load_roundtrip(conf_filename)
 
         logger.info("set_config_section_key: section={}, key={}, value={}".format(section, key, str(value)))
@@ -828,7 +828,7 @@ class Logics():
             return False
 
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
+        conf_filename = os.path.join(self._get_etc_dir(), BASE_LOGIC)
         conf = shyaml.yaml_load_roundtrip(conf_filename)
         if conf is None:
             conf = shyaml.get_emptynode()
@@ -908,7 +908,7 @@ class Logics():
 
     def filename_used_count(self, filename):
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
+        conf_filename = os.path.join(self._get_etc_dir(), BASE_LOGIC)
         conf = shyaml.yaml_load_roundtrip(conf_filename)
         count = self._count_filename_uses(conf, filename)
         return count
@@ -939,7 +939,7 @@ class Logics():
             self.unload_logic(name)
 
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
+        conf_filename = os.path.join(self._get_etc_dir(), BASE_LOGIC)
         conf = shyaml.yaml_load_roundtrip(conf_filename)
 
         section = conf.get(name, None)

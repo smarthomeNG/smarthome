@@ -27,7 +27,7 @@ import collections
 from lib.utils import Utils
 from lib.utils import Version
 import lib.shyaml as shyaml
-from lib.constants import (YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS)
+from lib.constants import (YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS, DIR_PLUGINS, DIR_MODULES)
 
 META_MODULE_PARAMETER_SECTION = 'parameters'
 META_PLUGIN_SECTION = 'plugin'
@@ -80,9 +80,9 @@ class Metadata():
 #        logger.warning(self._log_premsg+"classpath = '{}'".format( classpath ) )
         if classpath == '':
             if addon_type == 'plugin':
-                addon_type_dir = 'plugins'
+                addon_type_dir = DIR_PLUGINS
             elif addon_type == 'module':
-                addon_type_dir = 'modules'
+                addon_type_dir = DIR_MODULES
             else:
                 return
             self.relative_filename = os.path.join( addon_type_dir, self._addon_name, addon_type+YAML_FILE )

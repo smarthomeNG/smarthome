@@ -91,6 +91,31 @@ CONF_FILE = '.conf'
 YAML_FILE = '.yaml'
 DEFAULT_FILE = '.default'
 
+DIR_VAR = 'var'
+DIR_LIB = 'lib'
+DIR_CACHE = 'cache'
+DIR_ENV = 'env'
+DIR_TPL = 'templates'
+DIR_PLUGINS = 'plugins'
+DIR_MODULES = 'modules'
+DIR_ETC = 'etc'
+DIR_ITEMS = 'items'
+DIR_STRUCTS = 'structs'
+DIR_LOGICS = 'logics'
+DIR_UF = 'functions'
+DIR_SCENES = 'scenes'
+
+BASE_SH = 'smarthome'
+BASE_LOG = 'logging'
+BASE_MODULE = 'module'
+BASE_PLUGIN = 'plugin'
+BASE_LOGIC = 'logic'
+BASE_STRUCT = 'struct'
+BASE_HOLIDAY = 'holidays'
+
+DIRS = (DIR_VAR, DIR_LIB, DIR_CACHE, DIR_ENV, DIR_TPL, DIR_PLUGINS, DIR_MODULES, DIR_ETC, DIR_ITEMS, DIR_STRUCTS, DIR_LOGICS, DIR_UF, DIR_SCENES)
+BASES = (BASE_SH, BASE_LOG, BASE_MODULE, BASE_PLUGIN, BASE_LOGIC)
+FILES = DIRS + BASES
 
 #attributes for 'autotimer' parameter
 KEY_ATTRIB_COMPAT     = 'assign_compatibility'	# name of key in smarthome.yaml

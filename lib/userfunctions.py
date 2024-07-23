@@ -27,11 +27,12 @@ import os
 import logging
 
 from lib.translation import translate
+from lib.constants import DIR_UF
 
 _logger = logging.getLogger(__name__)
 
 
-_uf_subdir = 'functions'
+_uf_subdir = DIR_UF
 
 _func_dir = None
 _sh = None

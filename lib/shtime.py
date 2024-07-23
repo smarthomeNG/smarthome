@@ -42,7 +42,7 @@ import logging
 import os
 
 import lib.shyaml as shyaml
-from lib.constants import (YAML_FILE)
+from lib.constants import (YAML_FILE, BASE_HOLIDAY)
 #from lib.translation import translate
 from lib.translation import translate as lib_translate
 
@@ -1141,7 +1141,7 @@ class Shtime:
 
         if self.holidays is None:
             self._etc_dir = self._sh._etc_dir
-            conf_filename = os.path.join(self._sh._etc_dir, 'holidays'+YAML_FILE)
+            conf_filename = os.path.join(self._sh._etc_dir, BASE_HOLIDAY + YAML_FILE)
             self.config = shyaml.yaml_load(conf_filename)
             location = self.config.get('location', None)
 

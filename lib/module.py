@@ -48,7 +48,7 @@ import os
 
 import lib.config
 import lib.translation as translation
-from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE,CONF_FILE)
+from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, CONF_FILE, DIR_MODULES)
 from lib.utils import Utils
 from lib.metadata import Metadata
 
@@ -127,7 +127,7 @@ class Modules():
         module_name = mod_conf.get('module_name','').lower()
         meta = None
         if module_name != '':
-            module_dir = os.path.join(self._basedir, 'modules', module_name)
+            module_dir = os.path.join(self._basedir, DIR_MODULES, module_name)
             if os.path.isdir(module_dir):
                 meta = Metadata(self._sh, module_name, 'module')
             else:
@@ -181,7 +181,7 @@ class Modules():
         try:
             classpath = mod_conf[KEY_CLASS_PATH]
         except:
-            classpath = 'modules.' + module_name
+            classpath = DIR_MODULES + '.' + module_name
         return (classname, classpath)
 
 

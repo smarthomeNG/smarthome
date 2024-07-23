@@ -34,6 +34,7 @@ from pathlib import Path
 import collections
 
 import lib.shyaml as shyaml
+from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG
 
 logs_instance = None
 
@@ -67,7 +68,7 @@ class Logs():
         return
 
 
-    def configure_logging(self, config_filename='logging.yaml'):
+    def configure_logging(self, config_filename=BASE_LOG + YAML_FILE):
 
         config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
 
@@ -237,15 +238,15 @@ class Logs():
 
     # ---------------------------------------------------------------------------
 
-    def load_logging_config(self, filename='logging', ignore_notfound=False):
+    def load_logging_config(self, filename=BASE_LOG, ignore_notfound=False):
         """
         Load config from logging.yaml to a dict
 
         If logging.yaml does not contain a 'shng_version' key, a backup is created
         """
         conf_filename = os.path.join(self._sh.get_etcdir(), filename)
-        if not conf_filename.endswith('.yaml') and not conf_filename.endswith('.default'):
-            conf_filename += '.yaml'
+        if not conf_filename.endswith(YAML_FILE) and not conf_filename.endswith(DEFAULT_FILE):
+            conf_filename += YAML_FILE
         result = shyaml.yaml_load(conf_filename, ignore_notfound)
 
         return result
@@ -257,7 +258,7 @@ class Logs():
         """
         if logging_config is not None:
             logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
-            conf_filename = os.path.join(self._sh.get_etcdir(), 'logging')
+            conf_filename = os.path.join(self._sh.get_etcdir(), BASE_LOG)
             shyaml.yaml_save_roundtrip(conf_filename, logging_config, create_backup=create_backup)
         return
 
@@ -269,7 +270,7 @@ class Logs():
         If logging.yaml does not contain a 'shng_version' key, a backup is created
         """
         #self.etc_dir = self._sh.get_etcdir()
-        conf_filename = os.path.join(self._sh.get_etcdir(), 'logging')
+        conf_filename = os.path.join(self._sh.get_etcdir(), BASE_LOG)
         logging_config = shyaml.yaml_load_roundtrip(conf_filename)
         self.logger.info("load_logging_config_for_edit: shng_version={}".format(logging_config.get('shng_version', None)))
 

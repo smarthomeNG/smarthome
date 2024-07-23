@@ -33,6 +33,7 @@ import os
 from datetime import datetime
 from lib.shtime import Shtime
 from lib.shpypi import Shpypi
+from lib.constants import (BASE_LOG, BASE_LOGIC, BASE_MODULE, BASE_PLUGIN, BASE_SH, BASE_STRUCT, BASE_HOLIDAY, DIR_ETC, DIR_ITEMS, DIR_LOGICS, DIR_SCENES, DIR_STRUCTS, DIR_UF, DIR_VAR, YAML_FILE, CONF_FILE)
 
 logger = logging.getLogger(__name__)
 
@@ -59,8 +60,8 @@ def make_backup_directories(base_dir):
     :return:
     """
     global backup_dir
-    backup_dir = os.path.join(base_dir, 'var','backup')
-    restore_dir = os.path.join(base_dir, 'var','restore')
+    backup_dir = os.path.join(base_dir, DIR_VAR, 'backup')
+    restore_dir = os.path.join(base_dir, DIR_VAR, 'restore')
 
     if not os.path.isdir(backup_dir):
         try:
@@ -95,7 +96,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     """
 
     make_backup_directories(base_dir)
-    backup_dir = os.path.join(base_dir, 'var','backup')
+    backup_dir = os.path.join(base_dir, DIR_VAR,'backup')
 
     backup_filename = 'shng_config_backup'
     if before_restore:
@@ -111,12 +112,12 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     else:
         conf_dir = base_dir
 
-    items_dir = os.path.join(conf_dir, 'items')
-    logic_dir = os.path.join(conf_dir, 'logics')
-    scenes_dir = os.path.join(conf_dir, 'scenes')
-    structs_dir = os.path.join(conf_dir, 'structs')
-    uf_dir = os.path.join(conf_dir, 'functions')
-    var_dir = os.path.join(conf_dir, 'var')
+    items_dir = os.path.join(conf_dir, DIR_ITEMS)
+    logic_dir = os.path.join(conf_dir, DIR_LOGICS)
+    scenes_dir = os.path.join(conf_dir, DIR_SCENES)
+    structs_dir = os.path.join(conf_dir, DIR_STRUCTS)
+    uf_dir = os.path.join(conf_dir, DIR_UF)
+    var_dir = os.path.join(conf_dir, DIR_VAR)
 
     # create new zip file
     #backupzip = zipfile.ZipFile(backup_dir + os.path.sep + backup_filename, mode='w')
@@ -127,16 +128,16 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     #logger.warning("- etc_dir = {}".format(etc_dir))
     source_dir = etc_dir
     arc_dir = 'etc'
-    backup_file(backupzip, source_dir, arc_dir, 'holidays.yaml')
-    backup_file(backupzip, source_dir, arc_dir, 'logging.yaml')
-    backup_file(backupzip, source_dir, arc_dir, 'logic.yaml')
-    backup_file(backupzip, source_dir, arc_dir, 'module.yaml')
-    backup_file(backupzip, source_dir, arc_dir, 'plugin.yaml')
-    backup_file(backupzip, source_dir, arc_dir, 'smarthome.yaml')
-    backup_file(backupzip, source_dir, arc_dir, 'admin.yaml')
+    backup_file(backupzip, source_dir, arc_dir, BASE_HOLIDAY + YAML_FILE)
+    backup_file(backupzip, source_dir, arc_dir, BASE_LOG + YAML_FILE)
+    backup_file(backupzip, source_dir, arc_dir, BASE_LOGIC + YAML_FILE)
+    backup_file(backupzip, source_dir, arc_dir, BASE_MODULE + YAML_FILE)
+    backup_file(backupzip, source_dir, arc_dir, BASE_PLUGIN + YAML_FILE)
+    backup_file(backupzip, source_dir, arc_dir, BASE_SH + YAML_FILE)
+    backup_file(backupzip, source_dir, arc_dir, 'admin' + YAML_FILE)
 
-    backup_file(backupzip, source_dir, arc_dir, 'struct.yaml')
-    struct_files = glob.glob(os.path.join( etc_dir, 'struct_*.yaml'))
+    backup_file(backupzip, source_dir, arc_dir, BASE_STRUCT + YAML_FILE)
+    struct_files = glob.glob(os.path.join( etc_dir, BASE_STRUCT + '_*' + YAML_FILE))
     for pn in struct_files:
         fn = os.path.split(pn)[1]
         backup_file(backupzip, source_dir, arc_dir, fn)
@@ -158,12 +159,12 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
 
     # backup files from /scenes
     #logger.warning("- scenes_dir = {}".format(scenes_dir))
-    backup_directory(backupzip, scenes_dir, '.yaml')
-    backup_directory(backupzip, scenes_dir, '.conf')
+    backup_directory(backupzip, scenes_dir, YAML_FILE)
+    backup_directory(backupzip, scenes_dir, CONF_FILE)
 
     # backup files from /structs
     #logger.warning("- structs_dir = {}".format(structs_dir))
-    backup_directory(backupzip, structs_dir, '.yaml')
+    backup_directory(backupzip, structs_dir, YAML_FILE)
 
     # backup files from /functions
     #logger.warning("- uf_dir = {}".format(uf_dir))
@@ -172,7 +173,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     # backup files for infos-directory
     source_dir = var_dir
     arc_dir = 'infos'
-    backup_file(backupzip, source_dir, arc_dir, 'systeminfo.yaml')
+    backup_file(backupzip, source_dir, arc_dir, 'systeminfo' + YAML_FILE)
 
     shpypi = Shpypi.get_instance()
     if shpypi is None:
@@ -237,20 +238,20 @@ def backup_file(backupzip, source_dir, arc_dir, filename):
     return
 
 
-def backup_directory(backupzip, source_dir, extenstion='.yaml'):
+def backup_directory(backupzip, source_dir, extension=YAML_FILE):
     """
     Backup all files with a certain extension from the given directory to a zip-archive
 
     :param backupzip: Name of the zip-archive (full pathname)
     :param source_dir: Directory where the yaml-files to backup are located
-    :param extenstion: Extension of the files to backup (default is .yaml)
+    :param extension: Extension of the files to backup (default is .yaml)
     """
     path = source_dir.split(os.path.sep)
     dir = path[len(path)-1]
     arc_dir = dir + os.path.sep
     files = []
     for filename in os.listdir(source_dir):
-        if filename.endswith(extenstion) or extenstion == '.*':
+        if filename.endswith(extension) or extension == '.*':
             backup_file(backupzip, source_dir, arc_dir, filename)
 
     return
@@ -283,11 +284,11 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
     else:
         conf_dir = base_dir
 
-    items_dir = os.path.join(conf_dir, 'items')
-    logic_dir = os.path.join(conf_dir, 'logics')
-    scenes_dir = os.path.join(conf_dir, 'scenes')
-    structs_dir = os.path.join(conf_dir, 'structs')
-    uf_dir = os.path.join(conf_dir, 'functions')
+    items_dir = os.path.join(conf_dir, DIR_ITEMS)
+    logic_dir = os.path.join(conf_dir, DIR_LOGICS)
+    scenes_dir = os.path.join(conf_dir, DIR_SCENES)
+    structs_dir = os.path.join(conf_dir, DIR_STRUCTS)
+    uf_dir = os.path.join(conf_dir, DIR_UF)
 
     archive_file = ''
     for filename in os.listdir(restore_dir):
@@ -307,7 +308,8 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
         return
     restorezip_filename = os.path.join(restore_dir, archive_file)
 
-    logger.notice(f"Restoring configuration from file {restorezip_filename}")
+    # TODO: as logger has no "notice" method, for the time being log as "info""
+    logger.info(f"Restoring configuration from file {restorezip_filename}")
 
     logger.info(f"Creating a backup of the current configuration before restoring configuration from zip-file")
     create_backup(conf_base_dir, base_dir, True, True)
@@ -318,22 +320,22 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
     #restorezip = zipfile.ZipFile(restorezip_filename, mode='r', compression=zipfile.ZIP_STORED)
 
     # restore files to /etc
-    restore_directory(restorezip, 'etc', etc_dir, overwrite)
+    restore_directory(restorezip, DIR_ETC, etc_dir, overwrite)
 
     # restore files to /items
-    restore_directory(restorezip, 'items', items_dir, overwrite)
+    restore_directory(restorezip, DIR_ITEMS, items_dir, overwrite)
 
     # backup files from /logic
-    restore_directory(restorezip, 'logics', logic_dir, overwrite)
+    restore_directory(restorezip, DIR_LOGICS, logic_dir, overwrite)
 
     # backup files from /scenes
-    restore_directory(restorezip, 'scenes', scenes_dir, overwrite)
+    restore_directory(restorezip, DIR_SCENES, scenes_dir, overwrite)
 
     # backup files from /structs
-    restore_directory(restorezip, 'structs', structs_dir, overwrite)
+    restore_directory(restorezip, DIR_STRUCTS, structs_dir, overwrite)
 
     # backup files from /functions
-    restore_directory(restorezip, 'functions', uf_dir, overwrite)
+    restore_directory(restorezip, DIR_UF, uf_dir, overwrite)
 
     # mark zip-file as restored
     logger.info(f"- marking zip-file as restored")
@@ -379,9 +381,6 @@ def restore_file(restorezip, arc_dir, filename, dest_dir, overwrite=False):
     os.utime(os.path.join(dest_dir, filename), (date_time, date_time))
 
 
-    return
-
-
 def restore_directory(restorezip, arc_dir, dest_dir, overwrite=False):
     """
     Restore all files from a certain archive directory to a given destination directory
@@ -395,7 +394,6 @@ def restore_directory(restorezip, arc_dir, dest_dir, overwrite=False):
     for fn in restorezip.namelist():
         if fn.startswith(arc_dir+'/'):
             restore_file(restorezip, arc_dir, os.path.basename(fn), dest_dir, overwrite)
-    return
 
 
 def write_lastbackuptime(timestamp, timefile):
@@ -407,4 +405,4 @@ def write_lastbackuptime(timestamp, timefile):
     :type pid: int
     :type pidfile: str
     """
-
+    pass
