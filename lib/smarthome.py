@@ -98,7 +98,7 @@ from lib.shtime import Shtime
 import lib.shyaml
 from lib.shpypi import Shpypi
 from lib.triggertimes import TriggerTimes
-from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE, BASE_LOG, BASE_LOGIC, BASE_MODULE, BASE_PLUGIN, BASE_SH, DIR_CACHE, DIR_ENV, DIR_ETC, DIR_ITEMS, DIR_LIB, DIR_LOGICS, DIR_PLUGINS, DIR_SCENES, DIR_STRUCTS, DIR_TPL, DIR_UF, DIR_VAR)
+from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE, DIRS, BASES, BASE_LOG, BASE_LOGIC, BASE_MODULE, BASE_PLUGIN, BASE_SH, DIR_CACHE, DIR_ENV, DIR_ETC, DIR_ITEMS, DIR_LIB, DIR_LOGICS, DIR_MODULES, DIR_PLUGINS, DIR_SCENES, DIR_STRUCTS, DIR_TPL, DIR_UF, DIR_VAR)
 import lib.userfunctions as uf
 from lib.systeminfo import Systeminfo
 
@@ -165,6 +165,7 @@ class SmartHome():
         self._var_dir = os.path.join(self._base_dir, DIR_VAR)
         self._lib_dir = os.path.join(self._base_dir, DIR_LIB)
         self._plugins_dir = os.path.join(self._base_dir, DIR_PLUGINS)
+        self._modules_dir = os.path.join(self._base_dir, DIR_MODULES)
 
         # env and var dirs
         self._env_dir = os.path.join(self._lib_dir, DIR_ENV + os.path.sep)
@@ -535,25 +536,6 @@ class SmartHome():
         """
         return self._structs_dir
 
-
-    def get_logicsdir(self) -> str:
-        """
-        Function to return the logics config directory
-
-        :return: Config directory as an absolute path
-        """
-        return self._logic_dir
-
-
-    def get_functionsdir(self) -> str:
-        """
-        Function to return the userfunctions config directory
-
-        :return: Config directory as an absolute path
-        """
-        return self._functions_dir
-
-
     def get_vardir(self):
         """
         Function to return the var directory used by SmartHomeNG
@@ -562,6 +544,46 @@ class SmartHome():
         :rtype: str
         """
         return self._var_dir
+
+
+    def get_config_dir(self, config):
+        """
+        Function to return a config dir used by SmartHomeNG
+        replace / prevent a plethora of get_<foo>dir() functions
+
+        Returns '' for invalid config strings.
+
+        :return: directory as an absolute path
+        :rtype: str
+        """
+        # method would work fine without this check, but...
+        # make sure we don't allow "any" function call here
+        if config not in DIRS:
+            return ''
+
+        if hasattr(self, f'get_{config}dir'):
+            return getattr(self, f'get_{config}dir')()
+        elif hasattr(self, f'_{config}_dir'):
+            return getattr(self, f'_{config}_dir')
+        
+        return ''
+
+
+    def get_config_file(self, config, extension=YAML_FILE):
+        """
+        Function to return a config file used by SmartHomeNG
+
+        Returns '' for invalid config strings.
+
+        :return: file name as an absolute path
+        :rtype: str
+        """
+        # method would work fine without this check, but...
+        # make sure we don't allow "any" function call here
+        if config not in BASES:
+            return ''
+
+        return os.path.join(self.get_etcdir(), config + extension)
 
 
     def getBaseDir(self):
