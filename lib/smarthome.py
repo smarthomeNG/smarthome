@@ -166,10 +166,10 @@ class SmartHome():
         self._lib_dir = os.path.join(self._base_dir, DIR_LIB)
         self._plugins_dir = os.path.join(self._base_dir, DIR_PLUGINS)
         self._modules_dir = os.path.join(self._base_dir, DIR_MODULES)
+        self._templates_dir = os.path.join(self._base_dir, DIR_TPL)
 
         # env and var dirs
         self._env_dir = os.path.join(self._lib_dir, DIR_ENV + os.path.sep)
-        self._template_dir = os.path.join(self._base_dir, DIR_TPL)
         self._cache_dir = os.path.join(self._var_dir, DIR_CACHE + os.path.sep)
 
         # user config dirs
