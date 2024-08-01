@@ -112,6 +112,7 @@ class SDPConnection(object):
 
         # "import" options from plugin
         self._params.update(kwargs)
+        self._plugin = self._params.get('plugin')
 
         # check if some of the arguments are usable
         self._set_connection_params()

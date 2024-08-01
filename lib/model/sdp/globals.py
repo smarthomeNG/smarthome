@@ -47,6 +47,8 @@ PLUGIN_ATTR_CMD_CLASS        = 'command_class'           # name of class to use 
 PLUGIN_ATTR_RECURSIVE        = 'recursive_custom'        # indices of custom item attributes for which to enable recursive lookup (number or list of numbers)
 PLUGIN_ATTR_SUSPEND_ITEM     = 'suspend_item'            # item to toggle suspend/resume mode
 PLUGIN_ATTR_CYCLE            = 'cycle'                   # plugin-wide cyclic update interval
+PLUGIN_ATTR_DELAY_INITIAL    = 'delay_initial_read'      # delay reading of initial commands
+PLUGIN_ATTR_REREAD_INITIAL   = 'resume_initial_read'     # repeat initial read on resume
 
 # general connection attributes
 PLUGIN_ATTR_CONNECTION       = 'conn_type'               # manually set connection class, classname or type (see below)
@@ -82,7 +84,7 @@ PLUGIN_ATTR_CB_ON_DISCONNECT = 'disconnected_callback'   # callback function, ca
 PLUGIN_ATTR_CB_SUSPEND       = 'suspend_callback'        # callback function, called if connection attempts are aborted
 
 PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE, PLUGIN_ATTR_CYCLE,
-                PLUGIN_ATTR_SUSPEND_ITEM, PLUGIN_ATTR_CONNECTION,
+                PLUGIN_ATTR_SUSPEND_ITEM, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_DELAY_INITIAL, PLUGIN_ATTR_REREAD_INITIAL,
                 PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_BINARY,
                 PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
                 PLUGIN_ATTR_CONN_RETRY_CYCLE, PLUGIN_ATTR_CONN_RETRY_SUSPD, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
