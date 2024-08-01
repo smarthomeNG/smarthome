@@ -91,7 +91,10 @@ def init_lib(shng_base_dir=None, sh=None):
     else:
         base_dir = os.getcwd()
 
-    _func_dir = os.path.join(base_dir, _uf_subdir)
+    if _sh:
+        _func_dir = _sh.get_functionsdir()
+    else:
+        _func_dir = os.path.join(base_dir, _uf_subdir)
 
     user_modules = []
     if os.path.isdir(_func_dir):

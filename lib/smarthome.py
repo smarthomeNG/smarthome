@@ -58,7 +58,7 @@ import json
 import logging
 import logging.handlers
 import logging.config
-import platform  # TODO: remove? unused
+# import platform  # TODO: remove? unused
 import shutil
 
 import signal
@@ -66,10 +66,10 @@ import subprocess
 import threading
 import time
 import traceback
-try:
-    import psutil  # TODO: remove? unused
-except ImportError:
-    pass
+# try:
+#     import psutil  # TODO: remove? unused
+# except ImportError:
+#     pass
 
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
@@ -153,31 +153,37 @@ class SmartHome():
         self._base_dir = BASE
         self.base_dir = self._base_dir  # **base_dir** is deprecated. Use method get_basedir() instead. - for external modules using that var (backend, ...?)
 
-        self._extern_conf_dir = BASE
+        self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
 
-        self._etc_dir = os.path.join(self._base_dir, 'etc')
-
-        # decide where to look for config files
+        # self._conf_dir contains the base dir for config folders
         if self._config_etc:
             self._conf_dir = self._etc_dir
         else:
-            self._conf_dir = self._base_dir
+            self._conf_dir = self._extern_conf_dir
 
+        # shng system dirs
         self._var_dir = os.path.join(self._base_dir, 'var')
         self._lib_dir = os.path.join(self._base_dir, 'lib')
         self._plugins_dir = os.path.join(self._base_dir, 'plugins')
-        self._structs_dir = os.path.join(self._conf_dir, 'structs')
+
+        # env and var dirs
         self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
-
         self._env_logic_conf_basename = os.path.join(self._env_dir, 'logic')
-        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
-        self._logic_conf_basename = os.path.join(self._conf_dir, 'logic')
-        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
         self._cache_dir = os.path.join(self._var_dir, 'cache' + os.path.sep)
-        self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
 
+        # user config dirs
+        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
+        self._structs_dir = os.path.join(self._conf_dir, 'structs')
+        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
+        self._functions_dir = os.path.join(self._conf_dir, 'functions' + os.path.sep)
+        self._scenes_dir = os.path.join(self._conf_dir, 'scenes' + os.path.sep)
+
+        # system config files
+        self._smarthome_conf_basename = os.path.join(self._etc_dir, 'smarthome')
+        self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
         self._module_conf_basename = os.path.join(self._etc_dir, 'module')
         self._plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
+        self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
 
 
     def create_directories(self):
@@ -187,8 +193,8 @@ class SmartHome():
         os.makedirs(self._structs_dir, mode=0o775, exist_ok=True)
 
         os.makedirs(self._var_dir, mode=0o775, exist_ok=True)
-        os.makedirs(os.path.join(self._var_dir, 'backup'), mode=0o775, exist_ok=True)
         os.makedirs(self._cache_dir, mode=0o775, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'backup'), mode=0o775, exist_ok=True)
         os.makedirs(os.path.join(self._var_dir, 'db'), mode=0o775, exist_ok=True)
         os.makedirs(os.path.join(self._var_dir, 'log'), mode=0o775, exist_ok=True)
         os.makedirs(os.path.join(self._var_dir, 'run'), mode=0o775, exist_ok=True)
@@ -215,6 +221,9 @@ class SmartHome():
         self._mode = MODE
 
         self._config_etc = config_etc
+        self._extern_conf_dir = BASE
+        if extern_conf_dir != '':
+            self._extern_conf_dir = extern_conf_dir
 
         self.initialize_vars()
         self.initialize_dir_vars()
@@ -226,9 +235,6 @@ class SmartHome():
 
         self.PYTHON_VERSION = lib.utils.get_python_version()
         self.python_bin = sys.executable
-
-        if extern_conf_dir != '':
-            self._extern_conf_dir = extern_conf_dir
 
         # get systeminfo closs
         self.systeminfo = Systeminfo
@@ -244,25 +250,6 @@ class SmartHome():
         # self.branch = shngversion.get_shng_branch()
         # self.version = shngversion.get_shng_version()
         self.connections = None
-
-        # reinitialize dir vars with path to extern configuration directory
-        self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
-
-        # decide where to look for config files
-        if self._config_etc:
-            self._conf_dir = self._etc_dir
-        else:
-            self._conf_dir = self._extern_conf_dir
-
-        self._items_dir = os.path.join(self._conf_dir, 'items' + os.path.sep)
-        self._functions_dir = os.path.join(self._conf_dir, 'functions' + os.path.sep)
-        self._logic_dir = os.path.join(self._conf_dir, 'logics' + os.path.sep)
-        self._scenes_dir = os.path.join(self._conf_dir, 'scenes' + os.path.sep)
-        self._smarthome_conf_basename = os.path.join(self._etc_dir, 'smarthome')
-        self._logic_conf_basename = os.path.join(self._etc_dir, 'logic')
-        self._module_conf_basename = os.path.join(self._etc_dir, 'module')
-        self._plugin_conf_basename = os.path.join(self._etc_dir, 'plugin')
-        self._log_conf_basename = os.path.join(self._etc_dir, 'logging')
 
         self._pidfile = PIDFILE
 
@@ -546,6 +533,24 @@ class SmartHome():
         :return: Config directory as an absolute path
         """
         return self._structs_dir
+
+
+    def get_logicsdir(self) -> str:
+        """
+        Function to return the logics config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._logic_dir
+
+
+    def get_functionsdir(self) -> str:
+        """
+        Function to return the userfunctions config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._functions_dir
 
 
     def get_vardir(self):
