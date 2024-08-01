@@ -677,30 +677,56 @@ class Item():
         """
         Get the value of an other attribute using a relative reference
 
-        at the moment only the current, parent, grandparent and greatgrandparent items are supported
-
         :param attr_ref: Reference to attribute
         :param ignore_current_item: Skip attributes of current item (needed in attr loop)
 
-        :return: Value of the referenced attribute
+        :return: Value of the referenced attribute or '' if given number of parents are not present
         """
         value = attr_ref
         attr_ref = attr_ref.strip()
-        if attr_ref.startswith( ('.:', '..:', '...:', '....:') ):
-            fromitem = attr_ref.split(':')[0]
+        if ':' in attr_ref:
             fromattr = attr_ref.split(':')[1]
             if fromattr in ['', '.']:
                 fromattr = current_attr
-            if fromitem == '.':
-                if not ignore_current_item:
-                    value = self._get_attr(fromattr, default)
-            elif fromitem == '..':
-                value = self._get_attr_from_parent(fromattr, default)
-            elif fromitem == '...':
-                value = self._get_attr_from_grandparent(fromattr, default)
-            elif fromitem == '....':
-                value = self._get_attr_from_greatgrandparent(fromattr, default)
+
+            fromitem = attr_ref.split(':')[0]
+            # needed for attr loop
+            if fromitem == '.' and ignore_current_item:
+                return value
+
+            # if fromitem is only dots
+            if all(x == '.' for x in fromitem):
+                level = len(fromitem) - 1
+                value = self.find_attribute(fromattr, default, level=level, strict=True)
         return value
+
+
+    def find_attribute(self, attr, default: str = '', level: int = -1, strict: bool = False) -> str:
+        """
+        Find attribute value from item (level == 0) or parent item of given level
+
+        If level < 0, search up the whole item tree
+        If strict is set and level is not reached, return ''
+
+        :param attr: Get the value from this attribute of the parent item
+        :return: value from attribute of parent item
+        :param level: number of parent-levels
+        :ptype level: int
+        :param strict: define if level is max-level or exact level
+        :ptype strict: bool
+        :return: attribute value
+        :rtype: str
+        """
+        item = self
+        nolimit = level < 0
+        while (level >= 1 or nolimit) and (strict or attr not in item.conf):
+            if item._is_top_of_item_tree():
+                return default
+            item = item.return_parent()
+            level -= 1
+
+        attr_value = item.conf.get(attr, default)
+        return attr_value
 
 
     def _split_destitem_from_value(self, value):
@@ -2569,9 +2595,45 @@ class Item():
         for child in self.__children:
             yield child
 
-    def return_parent(self):
-        return self.__parent
+    def return_parent(self, level: int = 1, strict: bool = False):
+        """
+        Return ancestor item of given level
 
+        If item doesn't have <level> ancestors, and...
+        - strict is set, return None
+        - strict is not set, return the highest found ancestor
+
+        If level is < 1, method returns this item
+
+        :param level: number of parent-levels
+        :ptype level: int
+        :param strict: define if level is max-level or exact level
+        :ptype strict: bool
+        :return: ancestor item (or this item, or None)
+        :rtype: object | None
+        """
+
+        # for performance reasons, add a shortcut
+        # also for compatibility, as self.__parent is not accessible from outside
+        if level == 1:
+            return self.__parent
+
+        item = self
+        while level >= 1:
+            print(f'level is {level}, item is {item}')
+            if item._is_top_of_item_tree():
+                if strict:
+                    return
+                else:
+                    return item
+            item = item.return_parent()
+            level -= 1
+
+        return item
+
+    def _is_top_of_item_tree(self):
+        global _items_instance
+        return self.__parent is None or self.__parent is _items_instance
 
     def set(self, value, caller='Logic', source=None, dest=None, prev_change=None, last_change=None):
         """
