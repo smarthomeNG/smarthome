@@ -737,18 +737,20 @@ class SmartDevicePlugin(SmartPlugin):
         data_dict = self._transform_send_data(data_dict, **kwargs)
         self.logger.debug(f'command {command} with value {value} yielded send data_dict {data_dict}')
 
-        # if an error occurs on sending, an exception is thrown "below"
+        # creating resend info, necessary for resend protocol
         result = None
         reply_pattern = self._commands.get_commandlist(command).get('reply_pattern')
         read_cmd = self._transform_send_data(self._commands.get_send_data(command, None))
+        # if no reply_pattern given, no response is expected
         if reply_pattern is None:
             resend_info = {'command': command, 'returnvalue': None, 'read_cmd': read_cmd}
         # if no reply_pattern has lookup or capture group, put it in resend_info
         elif '(' not in reply_pattern and '{' not in reply_pattern:
             resend_info = {'command': command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
+        # if reply pattern does not expect a specific value, use value as expected reply
         else:
             resend_info = {'command': command, 'returnvalue': value, 'read_cmd': read_cmd}
-
+        # if an error occurs on sending, an exception is thrown "below"
         try:
             result = self._send(data_dict, resend_info=resend_info)
         except (RuntimeError, OSError) as e:  # Exception as e:
@@ -816,7 +818,7 @@ class SmartDevicePlugin(SmartPlugin):
             else:
                 if custom:
                     command = command + CUSTOM_SEP + custom
-                self._connection.check_command(command, value)
+                self._connection.check_command(command, value) # needed for resend protocol
                 self._dispatch_callback(command, value, by)
                 self._process_additional_data(command, data, value, custom, by)
 
@@ -1701,7 +1703,7 @@ class Standalone:
 
         self.yaml['item_structs'] = OrderedDict()
 
-        # this means the commands dict has 'ALL' and model names at the top level 
+        # this means the commands dict has 'ALL' and model names at the top level
         # otherwise, the top level nodes are commands or sections
         cmds_has_models = INDEX_GENERIC in top_level_entries
 
