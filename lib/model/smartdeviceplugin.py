@@ -190,7 +190,7 @@ class SmartDevicePlugin(SmartPlugin):
         self._parameters[PLUGIN_ATTR_SEND_RETRIES] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES)
         self._parameters[PLUGIN_ATTR_SEND_RETRIES_CYCLE] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES_CYCLE)
         # Set protocol to resend if send_retries is > 0
-        if self._parameters.get(PLUGIN_ATTR_SEND_RETRIES, 0) > 0:
+        if self._parameters.get(PLUGIN_ATTR_SEND_RETRIES, 0) > 0 and not self._parameters.get[PLUGIN_ATTR_PROTOCOL]:
             self._parameters[PLUGIN_ATTR_PROTOCOL] = 'resend'
         # init parameters in standalone mode
         if SDP_standalone:
