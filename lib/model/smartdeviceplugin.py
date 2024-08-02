@@ -189,9 +189,17 @@ class SmartDevicePlugin(SmartPlugin):
         #resend
         self._parameters[PLUGIN_ATTR_SEND_RETRIES] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES)
         self._parameters[PLUGIN_ATTR_SEND_RETRIES_CYCLE] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES_CYCLE)
-        # Set protocol to resend if send_retries is > 0
-        if self._parameters.get(PLUGIN_ATTR_SEND_RETRIES, 0) > 0 and not self._parameters.get[PLUGIN_ATTR_PROTOCOL]:
-            self._parameters[PLUGIN_ATTR_PROTOCOL] = 'resend'
+
+        resend = self._parameters.get(PLUGIN_ATTR_SEND_RETRIES, 0) or 0
+        protocol = self._parameters.get(PLUGIN_ATTR_PROTOCOL)
+        if resend > 0:
+            # Set protocol to resend if send_retries is > 0 and protocol is not defined
+            if not protocol:
+                self._parameters[PLUGIN_ATTR_PROTOCOL] = 'resend'
+            # if send_retries is set and protocl is not set to resend, log info that protocol is overruling the parameter
+            elif protocol != 'resend':
+                self.logger.info(f'send_retries is set to {resend}, however,  protocol is overruled to {protocol}')
+
         # init parameters in standalone mode
         if SDP_standalone:
             self._parameters = kwargs
@@ -735,7 +743,8 @@ class SmartDevicePlugin(SmartPlugin):
         read_cmd = self._transform_send_data(self._commands.get_send_data(command, None))
         if reply_pattern is None:
             resend_info = {'command': command, 'returnvalue': None, 'read_cmd': read_cmd}
-        elif not any(x in reply_pattern for x in ['(', '{']):
+        # if no reply_pattern has lookup or capture group, put it in resend_info
+        elif '(' not in reply_pattern and '{' not in reply_pattern:
             resend_info = {'command': command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
         else:
             resend_info = {'command': command, 'returnvalue': value, 'read_cmd': read_cmd}
