@@ -818,7 +818,7 @@ class SmartDevicePlugin(SmartPlugin):
             else:
                 if custom:
                     command = command + CUSTOM_SEP + custom
-                self._connection.check_command(command, value) # needed for resend protocol
+                self._connection.check_reply(command, value) # needed for resend protocol
                 self._dispatch_callback(command, value, by)
                 self._process_additional_data(command, data, value, custom, by)
 

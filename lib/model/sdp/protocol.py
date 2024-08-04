@@ -101,7 +101,7 @@ class SDPProtocol(SDPConnection):
         self.logger.debug(f'{self.__class__.__name__} _send called with {data_dict}')
         return self._connection.send(data_dict, **kwargs)
 
-    def _check_command(self, command, value):
+    def _check_reply(self, command, value):
         return False
 
     def _get_connection(self, use_callbacks=False, name=None):
@@ -512,7 +512,7 @@ class SDPProtocolResend(SDPProtocol):
             return True
         return False
 
-    def _check_command(self, command, value):
+    def _check_reply(self, command, value):
         """
         Check if the command is in _sending dict and if response is same as expected or not
 

@@ -209,11 +209,11 @@ class SDPConnection(object):
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](by)
 
-    def check_command(self, command, value):
+    def check_reply(self, command, value):
         """
-        checking commands, e.g. for resend feature
+        checking reply, e.g. for resend feature
         """
-        return self._check_command(command, value)
+        return self._check_reply(command, value)
 
     #
     #
@@ -245,7 +245,7 @@ class SDPConnection(object):
         self.logger.debug(f'simulating to send data {data_dict}...')
         return self.dummy
 
-    def _check_command(self, command, value):
+    def _check_reply(self, command, value):
         """
         overwrite with checking of data
         Return False by default
