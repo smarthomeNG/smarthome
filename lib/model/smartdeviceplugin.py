@@ -56,7 +56,8 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_REREAD_INITIAL,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
-    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC)
+    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC,
+    PROTO_RESEND,PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRIES_CYCLE)
 
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
@@ -190,6 +191,20 @@ class SmartDevicePlugin(SmartPlugin):
         self._webif = None
 
         self._shtime = Shtime.get_instance()
+
+        #resend
+        self._parameters[PLUGIN_ATTR_SEND_RETRIES] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES)
+        self._parameters[PLUGIN_ATTR_SEND_RETRIES_CYCLE] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES_CYCLE)
+
+        resend = self._parameters.get(PLUGIN_ATTR_SEND_RETRIES, 0) or 0
+        protocol = self._parameters.get(PLUGIN_ATTR_PROTOCOL)
+        if resend > 0:
+            # Set protocol to resend if send_retries is > 0 and protocol is not defined
+            if not protocol:
+                self._parameters[PLUGIN_ATTR_PROTOCOL] = 'resend'
+            # if send_retries is set and protocl is not set to resend, log info that protocol is overruling the parameter
+            elif protocol != 'resend':
+                self.logger.info(f'send_retries is set to {resend}, however,  protocol is overruled to {protocol}')
 
         # init parameters in standalone mode
         if SDP_standalone:
@@ -766,14 +781,25 @@ class SmartDevicePlugin(SmartPlugin):
         data_dict = self._transform_send_data(data_dict, **kwargs)
         self.logger.debug(f'command {command} with value {value} yielded send data_dict {data_dict}')
 
-        # if an error occurs on sending, an exception is thrown "below"
+        # creating resend info, necessary for resend protocol
         result = None
+        reply_pattern = self._commands.get_commandlist(command).get('reply_pattern')
+        read_cmd = self._transform_send_data(self._commands.get_send_data(command, None))
+        # if no reply_pattern given, no response is expected
+        if reply_pattern is None:
+            resend_info = {'command': command, 'returnvalue': None, 'read_cmd': read_cmd}
+        # if no reply_pattern has lookup or capture group, put it in resend_info
+        elif '(' not in reply_pattern and '{' not in reply_pattern:
+            resend_info = {'command': command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
+        # if reply pattern does not expect a specific value, use value as expected reply
+        else:
+            resend_info = {'command': command, 'returnvalue': value, 'read_cmd': read_cmd}
+        # if an error occurs on sending, an exception is thrown "below"
         try:
-            result = self._send(data_dict)
+            result = self._send(data_dict, resend_info=resend_info)
         except (RuntimeError, OSError) as e:  # Exception as e:
             self.logger.debug(f'error on sending command {command}, error was {e}')
             return False
-
         if result:
             by = kwargs.get('by')
             self.logger.debug(f'command {command} received result {result} by {by}')
@@ -836,6 +862,7 @@ class SmartDevicePlugin(SmartPlugin):
             else:
                 if custom:
                     command = command + CUSTOM_SEP + custom
+                self._connection.check_reply(command, value) # needed for resend protocol
                 self._dispatch_callback(command, value, by)
                 self._process_additional_data(command, data, value, custom, by)
 
@@ -997,7 +1024,7 @@ class SmartDevicePlugin(SmartPlugin):
         return (True, True)
         # return (False, True)
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         """
         This method acts as a overwritable intermediate between the handling
         logic of send_command() and the connection layer.
@@ -1007,8 +1034,8 @@ class SmartDevicePlugin(SmartPlugin):
         By default, this just forwards the data_dict to the connection instance
         and return the result.
         """
-        self.logger.debug(f'sending {data_dict}')
-        return self._connection.send(data_dict)
+        self.logger.debug(f'sending {data_dict}, kwargs {kwargs}')
+        return self._connection.send(data_dict, **kwargs)
 
     def on_connect(self, by=None):
         """ callback if connection is made. """
@@ -1730,7 +1757,7 @@ class Standalone:
 
         self.yaml['item_structs'] = OrderedDict()
 
-        # this means the commands dict has 'ALL' and model names at the top level 
+        # this means the commands dict has 'ALL' and model names at the top level
         # otherwise, the top level nodes are commands or sections
         cmds_has_models = INDEX_GENERIC in top_level_entries
 

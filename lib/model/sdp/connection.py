@@ -147,7 +147,7 @@ class SDPConnection(object):
         self._close()
         self._is_connected = False
 
-    def send(self, data_dict):
+    def send(self, data_dict, **kwargs):
         """
         Send data, possibly return response
 
@@ -175,7 +175,7 @@ class SDPConnection(object):
                 self._send_lock.acquire()
 
             if self._send_init_on_send():
-                response = self._send(data_dict)
+                response = self._send(data_dict, **kwargs)
         except Exception:
             raise
         finally:
@@ -210,6 +210,12 @@ class SDPConnection(object):
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](by)
 
+    def check_reply(self, command, value):
+        """
+        checking reply, e.g. for resend feature
+        """
+        return self._check_reply(command, value)
+
     #
     #
     # overwriting needed for at least some of the following methods...
@@ -232,13 +238,20 @@ class SDPConnection(object):
         """
         self.logger.debug(f'simulating closing connection as {__name__} with params {self._params}')
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         """
         overwrite with sending of data and - possibly - returning response data
         Return None if no response is received or expected.
         """
         self.logger.debug(f'simulating to send data {data_dict}...')
         return self.dummy
+
+    def _check_reply(self, command, value):
+        """
+        overwrite with checking of data
+        Return False by default
+        """
+        return False
 
     def _send_init_on_open(self):
         """
@@ -428,7 +441,7 @@ class SDPConnectionNetTcpRequest(SDPConnection):
     def _close(self):
         self.logger.debug(f'{self.__class__.__name__} closing connection as {__name__} with params {self._params}')
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         url = data_dict.get('payload', None)
         if not url:
             self.logger.error(f'can not send without url parameter from data_dict {data_dict}, aborting')
@@ -439,7 +452,7 @@ class SDPConnectionNetTcpRequest(SDPConnection):
 
         # check for additional data
         par = {}
-        for arg in (REQUEST_DICT_ARGS):
+        for arg in REQUEST_DICT_ARGS:
             par[arg] = data_dict.get(arg, {})
 
         if request_method == 'get':
@@ -527,7 +540,7 @@ class SDPConnectionNetTcpClient(SDPConnection):
         self.logger.debug(f'{self.__class__.__name__} closing connection')
         self._tcp.close()
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         self._tcp.send(data_dict['payload'])
 
         # we receive only via callback, so we return "no reply".
@@ -538,6 +551,7 @@ class SDPConnectionNetTcpClient(SDPConnection):
             self._suspend_callback(True, by=self.__class__.__name__)
         else:
             self.logger.warning('suspend callback wanted, but not set by plugin. Check plugin code...')
+
 
 class UDPServer(socket.socket):
     """
@@ -737,7 +751,7 @@ class SDPConnectionSerial(SDPConnection):
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](self)
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         """
         send data. data_dict needs to contain the following information:
 
