@@ -30,8 +30,8 @@ from lib.model.sdp.globals import (
     CONN_NET_TCP_CLI, JSON_MOVE_KEYS, PLUGIN_ATTR_CB_ON_CONNECT,
     PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION,
     PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES,
-    PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT, PLUGIN_ATTR_MSG_TIMEOUT,
-    PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT, PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRIES_CYCLE)
+    PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
+    PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE, PLUGIN_ATTR_SEND_TIMEOUT)
 from lib.model.sdp.connection import SDPConnection
 
 from collections import OrderedDict
@@ -101,9 +101,6 @@ class SDPProtocol(SDPConnection):
         self.logger.debug(f'{self.__class__.__name__} _send called with {data_dict}')
         return self._connection.send(data_dict, **kwargs)
 
-    def _check_reply(self, command, value):
-        return False
-
     def _get_connection(self, use_callbacks=False, name=None):
         conn_params = self._params.copy()
 
@@ -144,8 +141,8 @@ class SDPProtocolJsonrpc(SDPProtocol):
 
         # make sure we have a basic set of parameters for the TCP connection
         self._params.update({PLUGIN_ATTR_NET_PORT: 9090,
-                             PLUGIN_ATTR_MSG_REPEAT: 3,
-                             PLUGIN_ATTR_MSG_TIMEOUT: 5,
+                             PLUGIN_ATTR_SEND_RETRIES: 3,
+                             PLUGIN_ATTR_SEND_TIMEOUT: 5,
                              PLUGIN_ATTR_CONNECTION: CONN_NET_TCP_CLI,
                              JSON_MOVE_KEYS: []})
         self._params.update(kwargs)
@@ -166,7 +163,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
         # self._message_archive[str message_id] = [time() sendtime, str method, str params or None, int repeat]
         self._message_archive = {}
 
-        self._check_stale_cycle = float(self._params[PLUGIN_ATTR_MSG_TIMEOUT]) / 2
+        self._check_stale_cycle = float(self._params[PLUGIN_ATTR_SEND_TIMEOUT]) / 2
         self._next_stale_check = 0
         self._last_stale_check = 0
 
@@ -301,10 +298,10 @@ class SDPProtocolJsonrpc(SDPProtocol):
                 # !! self.logger.debug('Stale commands: {}'.format(stale_messages))
                 for (message_id, (send_time, command, params, repeat)) in stale_messages.items():
 
-                    if send_time + self._params[PLUGIN_ATTR_MSG_TIMEOUT] < time():
+                    if send_time + self._params[PLUGIN_ATTR_SEND_TIMEOUT] < time():
 
                         # reply timeout reached, check repeat count
-                        if repeat <= self._params[PLUGIN_ATTR_MSG_REPEAT]:
+                        if repeat <= self._params[PLUGIN_ATTR_SEND_RETRIES]:
 
                             # send again, increase counter
                             self.logger.info(f'Repeating unanswered command {command} ({params}), try {repeat + 1}')
@@ -443,7 +440,7 @@ class SDPProtocolResend(SDPProtocol):
         super().__init__(data_received_callback, name, **kwargs)
         # get relevant plugin parameters
         self._send_retries = int(self._params.get(PLUGIN_ATTR_SEND_RETRIES) or 0)
-        self._send_retries_cycle = int(self._params.get(PLUGIN_ATTR_SEND_RETRIES_CYCLE) or 1)
+        self._send_retries_cycle = int(self._params.get(PLUGIN_ATTR_SEND_RETRY_CYCLE) or 1)
         self._sending = {}
         self._sending_retries = {}
         self._sending_lock = threading.Lock()
@@ -472,7 +469,7 @@ class SDPProtocolResend(SDPProtocol):
         if self._plugin.scheduler_get('resend'):
             self._plugin.scheduler_remove('resend')
         self._sending = {}
-        self.logger.info(f'disconnect called.')
+        self.logger.info('on_disconnect called')
         super().on_disconnect(by)
 
     def _send(self, data_dict, **kwargs):
@@ -512,7 +509,7 @@ class SDPProtocolResend(SDPProtocol):
             return True
         return False
 
-    def _check_reply(self, command, value):
+    def check_reply(self, command, value):
         """
         Check if the command is in _sending dict and if response is same as expected or not
 
@@ -566,7 +563,7 @@ class SDPProtocolResend(SDPProtocol):
                     remove_commands.append(command)
                     self.logger.info(f"Giving up re-sending {command} after {retry} retries.")
                     if self._sending[command].get("read_cmd") is not None:
-                        self.logger.info(f"Querying current value.")
+                        self.logger.info("Querying current value")
                         self._send(self._sending[command].get("read_cmd"))
             for command in remove_commands:
                 self._sending.pop(command)
