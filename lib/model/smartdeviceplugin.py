@@ -42,7 +42,7 @@ from lib.plugin import Plugins
 from lib.shtime import Shtime
 
 from lib.model.sdp.globals import (
-    update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
+    PLUGIN_ATTR_SEND_TIMEOUT, update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
     CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS,
     CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES,
     CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL,
@@ -57,7 +57,7 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_REREAD_INITIAL,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
     PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC,
-    PROTO_RESEND,PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRIES_CYCLE)
+    PROTO_RESEND, PROTO_JSONRPC, PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE)
 
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
@@ -191,20 +191,6 @@ class SmartDevicePlugin(SmartPlugin):
         self._webif = None
 
         self._shtime = Shtime.get_instance()
-
-        #resend
-        self._parameters[PLUGIN_ATTR_SEND_RETRIES] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES)
-        self._parameters[PLUGIN_ATTR_SEND_RETRIES_CYCLE] = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES_CYCLE)
-
-        resend = self._parameters.get(PLUGIN_ATTR_SEND_RETRIES, 0) or 0
-        protocol = self._parameters.get(PLUGIN_ATTR_PROTOCOL)
-        if resend > 0:
-            # Set protocol to resend if send_retries is > 0 and protocol is not defined
-            if not protocol:
-                self._parameters[PLUGIN_ATTR_PROTOCOL] = 'resend'
-            # if send_retries is set and protocl is not set to resend, log info that protocol is overruling the parameter
-            elif protocol != 'resend':
-                self.logger.info(f'send_retries is set to {resend}, however,  protocol is overruled to {protocol}')
 
         # init parameters in standalone mode
         if SDP_standalone:
@@ -1108,6 +1094,24 @@ class SmartDevicePlugin(SmartPlugin):
         conn_cls = SDPConnection._get_connection_class(self, conn_cls, conn_classname, conn_type, **params)
         if not conn_cls:
             return
+
+        # check for resend protocol
+        resend = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES)
+        protocol = self._parameters.get(PLUGIN_ATTR_PROTOCOL)
+
+        if resend:
+            # if PLUGIN_ATTR_SEND_RETRIES is set, check other resend attributes
+            for attr in (PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE, PLUGIN_ATTR_SEND_TIMEOUT):
+                val = self.get_parameter_value(attr)
+                if val is not None:
+                    params[attr] = val
+
+            # Set protocol to resend only if protocol is not (yet) defined
+            if not protocol:
+                self._parameters[PLUGIN_ATTR_PROTOCOL] = 'resend'
+            # if send_retries is set and protocl is not set to resend, log info that protocol is overruling the parameter
+            elif protocol not in (PROTO_JSONRPC, PROTO_RESEND):
+                self.logger.debug(f'{PLUGIN_ATTR_SEND_RETRIES} is set to {resend}, but protocol {protocol} is requested, so resend may not apply')
 
         # if protocol is specified, find second class
         if PLUGIN_ATTR_PROTOCOL in self._parameters:

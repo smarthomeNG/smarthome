@@ -210,11 +210,6 @@ class SDPConnection(object):
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](by)
 
-    def check_reply(self, command, value):
-        """
-        checking reply, e.g. for resend feature
-        """
-        return self._check_reply(command, value)
 
     #
     #
@@ -246,13 +241,6 @@ class SDPConnection(object):
         self.logger.debug(f'simulating to send data {data_dict}...')
         return self.dummy
 
-    def _check_reply(self, command, value):
-        """
-        overwrite with checking of data
-        Return False by default
-        """
-        return False
-
     def _send_init_on_open(self):
         """
         This class can be overwritten if anything special is needed to make the
@@ -274,6 +262,21 @@ class SDPConnection(object):
         It is routinely called by self.send()
         """
         return True
+
+    def check_reply(self, command, value) -> bool:
+        """
+        Check if the command is in _sending dict and if response is same as expected or not
+
+        By default, this method only returns False. Overwrite if you need to use this in another way.
+
+        :param command: name of command
+        :type command: str
+        :param value: value the command (item) should be set to
+        :type value: str
+        :return: False by default, True if received expected response
+        :rtype: bool
+        """
+        return False
 
     #
     #
