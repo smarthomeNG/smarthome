@@ -1081,7 +1081,6 @@ class SmartDevicePlugin(SmartPlugin):
             self._parameters[PLUGIN_ATTR_CB_ON_DISCONNECT] = self.on_disconnect
 
         params = self._parameters.copy()
-
         conn_cls = SDPConnection._get_connection_class(self, conn_cls, conn_classname, conn_type, **params)
         if not conn_cls:
             return
@@ -1095,7 +1094,7 @@ class SmartDevicePlugin(SmartPlugin):
             for attr in (PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE, PLUGIN_ATTR_SEND_TIMEOUT):
                 val = self.get_parameter_value(attr)
                 if val is not None:
-                    params[attr] = val
+                    self._parameters[attr] = val
 
             # Set protocol to resend only if protocol is not (yet) defined
             if not protocol:
@@ -1107,11 +1106,12 @@ class SmartDevicePlugin(SmartPlugin):
         # if protocol is specified, find second class
         if PLUGIN_ATTR_PROTOCOL in self._parameters:
 
+            params = self._parameters.copy()
             proto_cls = SDPConnection._get_protocol_class(self, proto_cls, proto_classname, proto_type, **params)
             if not proto_cls:
                 return
 
-            # set connection class in _params dict for protocol class to use
+            # set connection class in self._parameters dict for protocol class to use
             self._parameters[PLUGIN_ATTR_CONNECTION] = conn_cls
 
             # return protocol instance as connection instance
