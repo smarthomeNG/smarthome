@@ -768,7 +768,15 @@ class SmartDevicePlugin(SmartPlugin):
         if reply_pattern is None:
             resend_info = {'command': resend_command, 'returnvalue': None, 'read_cmd': read_cmd}
         # if no reply_pattern has lookup or capture group, put it in resend_info
-        elif '(' not in reply_pattern and '{' not in reply_pattern:
+        elif not isinstance(reply_pattern, list) and '(' not in reply_pattern and '{' not in reply_pattern:
+            resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
+        # if reply_pattern is list, check if one of the entries has capture group
+        elif isinstance(reply_pattern, list):
+            return_list = []
+            for r in reply_pattern:
+                 if '(' not in r and '{' not in r:
+                     return_list.append(r)
+            reply_pattern = return_list if return_list else None
             resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
         # if reply pattern does not expect a specific value, use value as expected reply
         else:
