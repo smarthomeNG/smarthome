@@ -42,7 +42,8 @@ from lib.plugin import Plugins
 from lib.shtime import Shtime
 
 from lib.model.sdp.globals import (
-    PLUGIN_ATTR_SEND_TIMEOUT, update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
+    SDP_VERSION, update,
+    PLUGIN_ATTR_SEND_TIMEOUT, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
     CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS,
     CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES,
     CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL,
@@ -64,7 +65,6 @@ from lib.model.sdp.command import SDPCommand
 from lib.model.sdp.connection import SDPConnection
 from lib.model.sdp.protocol import SDPProtocol  # noqa
 
-MIN_SDP_VERSION = "MIN_SDP_VERSION"
 
 class SDPResultError(OSError):
     pass
@@ -87,23 +87,10 @@ class SmartDevicePlugin(SmartPlugin):
     The implemented methods are described below, inherited methods are only
     described if changed/overwritten.
     """
-
-    # this is the internal SDP version
-    SDP_VERSION = '1.0.3'
-
-    # this is the placeholder version of the derived plugin, not of SDP
-    PLUGIN_VERSION = '0.0.1'
-
     def __init__(self, sh, logger=None, **kwargs):
         """
         Initalizes the plugin.
         """
-
-        if not self._check_sdp_version():
-            self.logger.error(f'minimum sdp version {getattr(self, MIN_SDP_VERSION)} required, but only {self.SDP_VERSION} present')
-            self._init_complete = False
-            return
-
         # adjust imported ITEM_ATTR_xxx identifiers
         self._set_item_attributes()
 
@@ -1051,17 +1038,6 @@ class SmartDevicePlugin(SmartPlugin):
     # utility methods
     #
     #
-
-    def _check_sdp_version(self):
-        """ check if minimum sdp version is set and fulfilled """
-        if hasattr(self, MIN_SDP_VERSION):
-            self.logger.debug(f'minimum sdp version {getattr(self, MIN_SDP_VERSION)} required, {self.SDP_VERSION} present')
-            v_is = self.SDP_VERSION.split('.') + ['0', '0', '0']
-            v_min = getattr(self, MIN_SDP_VERSION).split('.') + ['0', '0', '0']
-            vi_is = 1000000 * int(v_is[0]) + 1000 * int(v_is[1]) + int(v_is[2])
-            vi_min = 1000000 * int(v_min[0]) + 1000 * int(v_min[1]) + int(v_min[2])
-            return vi_is >= vi_min
-        return True
 
     def _get_custom_value(self, command, data):
         """

@@ -28,6 +28,7 @@ from lib.utils import Utils
 from lib.utils import Version
 import lib.shyaml as shyaml
 from lib.constants import (YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS)
+from lib.model.sdp.globals import SDP_VERSION
 
 META_MODULE_PARAMETER_SECTION = 'parameters'
 META_PLUGIN_SECTION = 'plugin'
@@ -522,6 +523,29 @@ class Metadata():
             #if self._compare_versions(max_pyversion, py_version, '<', (max_pyversion < py_version)):
             if Version.compare(max_pyversion, py_version, '<'):
                 logger.error(f"{self._addon_type} '{self._addon_name}' {mod_version}: The Python version {py_version} is too new for this {self._addon_type}. It requires a version up to {max_pyversion}. The {self._addon_type} was not loaded.")
+                return False
+        return True
+
+
+    def test_sdpcompatibility(self):
+        """
+        Test if the plugin is based on SDP and check if the version requirements match
+
+        :return: True if not SDP-based or the SDP version is in the supported range
+        :rtype: bool
+        """
+        sdp_version = SDP_VERSION
+        min_sdpversion = Version.format(str(self.get_string('sdp_minversion')))
+        max_sdpversion = Version.format(str(self.get_string('sdp_maxversion')))
+        mod_version = Version.format(self.get_string('version'))
+
+        if min_sdpversion != '':
+            if Version.compare(min_sdpversion, sdp_version, '>'):
+                logger.error(f"{self._addon_type} '{self._addon_name}' {mod_version}: SmartDevicePlugin {sdp_version} is too old for this {self._addon_type}. It requires at least version {Version.format(min_sdpversion)}. The {self._addon_type} was not loaded.")
+                return False
+        if max_sdpversion != '':
+            if Version.compare(max_sdpversion, sdp_version, '<'):
+                logger.error(f"{self._addon_type} '{self._addon_name}' {mod_version}: SmartDevicePlugin {sdp_version} is too new for this {self._addon_type}. It requires a version up to {Version.format(max_sdpversion)}. The {self._addon_type} was not loaded.")
                 return False
         return True
 

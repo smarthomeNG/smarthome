@@ -39,6 +39,9 @@ import types
 #
 #############################################################################################################################################################################################################################################
 
+# this is the internal SDP version
+SDP_VERSION = '1.0.3'
+
 # plugin attributes, used in plugin config 'device' and instance creation (**kwargs)
 
 # general attributes
