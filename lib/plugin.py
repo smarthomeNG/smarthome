@@ -146,11 +146,10 @@ class Plugins():
                 struct_keys = list(item_structs.keys())
                 for struct_name in struct_keys:
                     self._sh.items.add_struct_definition(plugin_name, struct_name, item_structs[struct_name])
-
             # Test if plugin is disabled
             if str(_conf[plugin].get('plugin_enabled', None)).lower() == 'false':
                 logger.info("Section {} (plugin_name {}) is disabled - Plugin not loaded".format(plugin, _conf[plugin].get('plugin_name', None)))
-            elif self.meta.test_shngcompatibility() and self.meta.test_pythoncompatibility():
+            elif self.meta.test_shngcompatibility() and self.meta.test_pythoncompatibility() and self.meta.test_sdpcompatibility():
                 classname, classpath = self._get_classname_and_classpath(_conf[plugin], plugin_name)
                 if (classname == '') and (classpath == ''):
                     logger.error("Plugins, section {}: plugin_name is not defined".format(plugin))
@@ -171,7 +170,7 @@ class Plugins():
                     os.chdir((self._sh._base_dir))
                     try:
                         plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta, self._configfile)
-                        if plugin_thread._init_complete == True:
+                        if plugin_thread._init_complete is True:
                             try:
                                 try:
                                     startorder = self.meta.pluginsettings.get('startorder', 'normal').lower()
