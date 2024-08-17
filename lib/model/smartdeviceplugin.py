@@ -42,8 +42,7 @@ from lib.plugin import Plugins
 from lib.shtime import Shtime
 
 from lib.model.sdp.globals import (
-    SDP_VERSION, update,
-    PLUGIN_ATTR_SEND_TIMEOUT, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
+    update, PLUGIN_ATTR_SEND_TIMEOUT, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
     CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS,
     CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES,
     CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL,
@@ -674,7 +673,6 @@ class SmartDevicePlugin(SmartPlugin):
                         item(item.property.last_value, self.get_shortname())
                         return
 
-# TODO: add readafterwrite code
                     readafterwrite = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READAFTERWRITE', 'foo'))
                     if readafterwrite is not None:
                         try:
