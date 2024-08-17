@@ -722,6 +722,7 @@ class SmartDevicePlugin(SmartPlugin):
             return False
 
         kwargs.update(self._parameters)
+        custom_value = None
         if self.custom_commands:
             try:
                 command, custom_value = command.split(CUSTOM_SEP)
@@ -761,16 +762,17 @@ class SmartDevicePlugin(SmartPlugin):
         # creating resend info, necessary for resend protocol
         result = None
         reply_pattern = self._commands.get_commandlist(command).get('reply_pattern')
-        read_cmd = self._transform_send_data(self._commands.get_send_data(command, None))
+        read_cmd = self._transform_send_data(self._commands.get_send_data(command, None, **kwargs), **kwargs)
+        resend_command = command if custom_value is None else f'{command}#{custom_value}'
         # if no reply_pattern given, no response is expected
         if reply_pattern is None:
-            resend_info = {'command': command, 'returnvalue': None, 'read_cmd': read_cmd}
+            resend_info = {'command': resend_command, 'returnvalue': None, 'read_cmd': read_cmd}
         # if no reply_pattern has lookup or capture group, put it in resend_info
         elif '(' not in reply_pattern and '{' not in reply_pattern:
-            resend_info = {'command': command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
+            resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
         # if reply pattern does not expect a specific value, use value as expected reply
         else:
-            resend_info = {'command': command, 'returnvalue': value, 'read_cmd': read_cmd}
+            resend_info = {'command': resend_command, 'returnvalue': value, 'read_cmd': read_cmd}
         # if an error occurs on sending, an exception is thrown "below"
         try:
             result = self._send(data_dict, resend_info=resend_info)
