@@ -45,9 +45,9 @@ from lib.model.sdp.globals import (
     update, PLUGIN_ATTR_SEND_TIMEOUT, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
     CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS,
     CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES,
-    CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL,
+    CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_ATTR_REPLY_PATTERN,
     CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS,
-    CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3,
+    CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3, PATTERN_CUSTOM_PATTERN,
     CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CUSTOM_SEP,
     INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM1,
     ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ,
@@ -709,6 +709,7 @@ class SmartDevicePlugin(SmartPlugin):
         :return: True if send was successful, False otherwise
         :rtype: bool
         """
+
         if not self.alive:
             self.logger.warning(f'trying to send command {command} with value {value}, but plugin is not active.')
             return False
@@ -761,7 +762,18 @@ class SmartDevicePlugin(SmartPlugin):
 
         # creating resend info, necessary for resend protocol
         result = None
-        reply_pattern = self._commands.get_commandlist(command).get('reply_pattern')
+        reply_pattern = self._commands.get_commandlist(command).get(CMD_ATTR_REPLY_PATTERN)
+        # replace custom patterns in reply_pattern by the current result
+        if custom_value:
+            for index in (1, 2, 3):
+                custom_replacement = kwargs['custom'].get(index)
+                if custom_replacement is not None:
+                    pattern = "{" + PATTERN_CUSTOM_PATTERN + str(index) + "}"
+
+                    if isinstance(reply_pattern, list):
+                        reply_pattern = [r.replace(pattern, custom_replacement) for r in reply_pattern]
+                    else:
+                        reply_pattern = reply_pattern.replace(pattern, custom_replacement)
         read_cmd = self._transform_send_data(self._commands.get_send_data(command, None, **kwargs), **kwargs)
         resend_command = command if custom_value is None else f'{command}#{custom_value}'
         # if no reply_pattern given, no response is expected
