@@ -1126,6 +1126,8 @@ class SmartDevicePlugin(SmartPlugin):
             # Set protocol to resend only if protocol is not (yet) defined
             if not protocol:
                 self._parameters[PLUGIN_ATTR_PROTOCOL] = 'resend'
+                proto_cls = 'resend'
+                self.logger.debug(f'{PLUGIN_ATTR_SEND_RETRIES} is set to {resend}, protocol is set to {proto_cls}')
             # if send_retries is set and protocl is not set to resend, log info that protocol is overruling the parameter
             elif protocol not in (PROTO_JSONRPC, PROTO_RESEND):
                 self.logger.debug(f'{PLUGIN_ATTR_SEND_RETRIES} is set to {resend}, but protocol {protocol} is requested, so resend may not apply')
