@@ -189,7 +189,7 @@ class SDPConnection(object):
         """ getter for self._is_connected """
         return self._is_connected
 
-    def on_data_received(self, by, data):
+    def on_data_received(self, by, data, command=None):
         """ callback for on_data_received event """
         if data:
             self.logger.debug(f'received raw data "{data}" from "{by}"')
