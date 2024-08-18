@@ -34,6 +34,7 @@ import datetime
 from copy import deepcopy
 from ast import literal_eval
 from collections import OrderedDict
+import ruamel.yaml as yaml
 
 from lib.model.smartplugin import SmartPlugin
 
@@ -56,7 +57,7 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_REREAD_INITIAL,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
-    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_READAFTERWRITE, ITEM_ATTR_CYCLIC,
+    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_CYCLIC,
     PROTO_RESEND, PROTO_JSONRPC, PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE)
 
 from lib.model.sdp.commands import SDPCommands
@@ -1377,12 +1378,6 @@ class Standalone:
         self.yaml = None
         self.cmdlist = []
 
-        pfitems = plugin_file.split('/')
-
-        self.plugin_mod_path = '.'.join(pfitems[:-1])
-        self.plugin_path = os.path.join(*pfitems[:-1])
-        self.plugin_name = pfitems[-2]
-
         usage = """
         Usage:
         ------------------------------------------------------------------------
@@ -1481,11 +1476,30 @@ class Standalone:
             print(usage)
             return
 
+        # make sure we are in shng base dir
+        if not os.path.exists(os.path.join('bin', 'smarthome.py')):
+            print('Plugin needs to be called from SmartHomeNG base directory. Aborting.')
+            return
+
+        # make sure we are called with relative path
+        rel_file = os.path.relpath(plugin_file)
+        if rel_file[0] in ('.', '/', '\\'):
+            print(f'Plugin needs to be called with relative path; called as {plugin_file}. Aborting.')
+            return
+
+        # calculate files, paths and modules
+        pfitems = plugin_file.split('/')
+
+        self.plugin_mod_path = '.'.join(pfitems[:-1])
+        self.plugin_path = os.path.join(*pfitems[:-1])
+        if plugin_file.startswith('/') and not self.plugin_path.startswith('/'):
+            self.plugin_path = '/' + self.plugin_path
+
+        self.plugin_name = pfitems[-2]
         self.params[PLUGIN_PATH] = self.plugin_mod_path
 
         if self.struct_mode:
 
-            # as we output a formatted syntax, we can not create any output now
             self.create_struct_yaml()
             return
 
@@ -1507,7 +1521,15 @@ class Standalone:
     def add_item_to_tree(self, item_path, item_dict):
         """ add entry for custom read group triggers """
 
-        dst_path_elems = item_path.lower().split('.')
+        if self.lc:
+            # make lowercase items
+            dst_path_elems = item_path.lower().split('.')
+            # ensure that the ALL branch stays in caps
+            if item_path == 'ALL' or item_path[0:4] == 'ALL.':
+                dst_path_elems[0] = 'ALL'
+        else:
+            # make items with original commands case
+            dst_path_elems = item_path.split('.')
         item = {dst_path_elems[-1]: item_dict}
         for elem in reversed(dst_path_elems[:-1]):
             item = {elem: item}
@@ -1752,6 +1774,23 @@ class Standalone:
     def create_struct_yaml(self):
         """ read commands.py and export struct.yaml """
 
+        def isnumstr(val):
+            return all(c in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.') for c in val)
+
+        def str_presenter(dumper, data):
+            """configures yaml for dumping multiline strings and version number strings """
+
+            # quote strings like '1.2' or '1.2.3' to make is more apparent that this is not a number
+            if isnumstr(data):
+                return dumper.represent_scalar('tag:yaml.org,2002:str', data, style="'")
+
+            # dump multiline strings in | format
+            if data.count('\n') > 0:
+                return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+
+            # default
+            return dumper.represent_scalar('tag:yaml.org,2002:str', data)
+
         self.update_item_attributes()
 
         mod_str = self.plugin_mod_path + '.commands'
@@ -1765,6 +1804,7 @@ class Standalone:
 
         self.item_templates = getattr(cmd_module, 'item_templates', {})
 
+        # load plugin's plugin.yaml
         file = os.path.join(self.plugin_path, 'plugin.yaml')
         try:
             self.yaml = shyaml.yaml_load(file, ordered=True)
@@ -1779,7 +1819,6 @@ class Standalone:
         cmds_has_models = INDEX_GENERIC in top_level_entries
 
         if cmds_has_models:
-
             for model in top_level_entries:
 
                 # create model-specific commands dict
@@ -1794,6 +1833,7 @@ class Standalone:
                 # create item tree
                 self.walk(obj[model], '', None, self.create_item, '', 0, model, [model], True)
 
+                # easiest way to move dict to OrderedDict
                 jdata = json.dumps(self.item_tree)
                 self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)
 
@@ -1805,7 +1845,6 @@ class Standalone:
 
             # output sections separately and unchanged
             for section in top_level_entries:
-
                 self.item_tree = {}
 
                 obj = {section: commands[section]}
@@ -1813,6 +1852,7 @@ class Standalone:
                 # create item tree
                 self.walk(obj[section], section, None, self.create_item, section, 0, '', [], True)
 
+                # easiest way to move dict to OrderedDict
                 jdata = json.dumps(self.item_tree)
                 self.yaml['item_structs'][section] = json.loads(jdata, object_pairs_hook=OrderedDict)[section]
 
@@ -1823,11 +1863,11 @@ class Standalone:
                 models = {'ALL': list(commands.keys())}
 
             for model in models:
-
                 self.item_tree = {}
 
                 # create list of valid commands
                 self.cmdlist = models[model]
+                # add generic commands to every other model
                 if model != INDEX_GENERIC:
                     self.cmdlist += models.get(INDEX_GENERIC, [])
                 self.cmdlist = SDPCommands._get_cmdlist(None, flat_commands, self.cmdlist)
@@ -1847,6 +1887,10 @@ class Standalone:
 
                 jdata = json.dumps(self.item_tree)
                 self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)[model]
+
+        # insert yaml string formatters into ruamel module before final export
+        yaml.add_representer(str, str_presenter)
+        yaml.representer.SafeRepresenter.add_representer(str, str_presenter)
 
         shyaml.yaml_save(file, self.yaml)
         print(f'Updated file {file}')
