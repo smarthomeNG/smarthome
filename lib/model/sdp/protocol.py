@@ -520,24 +520,27 @@ class SDPProtocolResend(SDPProtocol):
         :return: False by default, True if received expected response
         :rtype: bool
         """
-        returnvalue = False
         if command in self._sending:
             with self._sending_lock:
                 # getting current retries for current command
                 retry = self._sending_retries.get(command)
                 # compare the expected returnvalue with the received value after aligning the type of both values
                 compare = self._sending[command].get('returnvalue')
-                if type(compare)(value) == compare:
-                    # if received value equals expexted value, remove command from _sending dict
-                    self._sending.pop(command)
-                    self._sending_retries.pop(command)
-                    self.logger.debug(f'Got correct response for {command}, '
-                                      f'removing from send. Resending queue is {self._sending}')
-                    returnvalue = True
-                elif retry is not None and retry <= self._send_retries:
+                compare = [compare] if not isinstance(compare, list) else compare
+                for c in compare:
+                    self.logger.debug(f'Comparing expected reply {c} ({type(c)}) with value {value} ({type(value)})')
+                    if type(c)(value) == c:
+                        # if received value equals expexted value, remove command from _sending dict
+                        self._sending.pop(command)
+                        self._sending_retries.pop(command)
+                        self.logger.debug(f'Got correct response for {command}, '
+                                          f'removing from send. Resending queue is {self._sending}')
+                        return True
+                if retry is not None and retry <= self._send_retries:
                     # return False and log info if response is not the same as the expected response
                     self.logger.debug(f'Should send again {self._sending}...')
-        return returnvalue
+                    return False
+        return False
 
     def resend(self):
         """
