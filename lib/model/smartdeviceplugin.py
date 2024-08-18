@@ -765,7 +765,7 @@ class SmartDevicePlugin(SmartPlugin):
         result = None
         reply_pattern = self._commands.get_commandlist(command).get(CMD_ATTR_REPLY_PATTERN)
         # replace custom patterns in reply_pattern by the current result
-        if custom_value:
+        if custom_value and reply_pattern:
             for index in (1, 2, 3):
                 custom_replacement = kwargs['custom'].get(index)
                 if custom_replacement is not None:
