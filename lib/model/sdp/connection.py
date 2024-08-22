@@ -1026,6 +1026,7 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
 
         finally:
             # clean up queue worker
+            self._listener_active = False
 
             # make queue get() wait unblock by giving something to consume
             self._queue.put(None)
