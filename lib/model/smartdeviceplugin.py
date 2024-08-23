@@ -765,7 +765,7 @@ class SmartDevicePlugin(SmartPlugin):
         result = None
         reply_pattern = self._commands.get_commandlist(command).get(CMD_ATTR_REPLY_PATTERN)
         # replace custom patterns in reply_pattern by the current result
-        if custom_value:
+        if custom_value and reply_pattern:
             for index in (1, 2, 3):
                 custom_replacement = kwargs['custom'].get(index)
                 if custom_replacement is not None:
@@ -789,7 +789,7 @@ class SmartDevicePlugin(SmartPlugin):
             for r in reply_pattern:
                  if '(' not in r and '{' not in r:
                      return_list.append(r)
-            reply_pattern = return_list if return_list else None
+            reply_pattern = return_list if return_list else value
             resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
         # if reply pattern does not expect a specific value, use value as expected reply
         else:
