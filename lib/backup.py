@@ -117,6 +117,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     structs_dir = os.path.join(conf_dir, 'structs')
     uf_dir = os.path.join(conf_dir, 'functions')
     var_dir = os.path.join(conf_dir, 'var')
+    esphome_conf_dir = os.path.join(conf_dir, 'var', 'esphome', 'config')
 
     # create new zip file
     #backupzip = zipfile.ZipFile(backup_dir + os.path.sep + backup_filename, mode='w')
@@ -174,6 +175,10 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     arc_dir = 'infos'
     backup_file(backupzip, source_dir, arc_dir, 'systeminfo.yaml')
 
+    # backup files from /var/esphome/config
+    backup_directory(backupzip, esphome_conf_dir, '.yaml', 'esphome_config')
+
+    # create and backup list of installed pip packages
     shpypi = Shpypi.get_instance()
     if shpypi is None:
         shpypi = Shpypi()
@@ -237,7 +242,7 @@ def backup_file(backupzip, source_dir, arc_dir, filename):
     return
 
 
-def backup_directory(backupzip, source_dir, extenstion='.yaml'):
+def backup_directory(backupzip, source_dir, extenstion='.yaml', dest_dir=None):
     """
     Backup all files with a certain extension from the given directory to a zip-archive
 
@@ -245,13 +250,17 @@ def backup_directory(backupzip, source_dir, extenstion='.yaml'):
     :param source_dir: Directory where the yaml-files to backup are located
     :param extenstion: Extension of the files to backup (default is .yaml)
     """
-    path = source_dir.split(os.path.sep)
-    dir = path[len(path)-1]
-    arc_dir = dir + os.path.sep
-    files = []
-    for filename in os.listdir(source_dir):
-        if filename.endswith(extenstion) or extenstion == '.*':
-            backup_file(backupzip, source_dir, arc_dir, filename)
+    if os.path.isdir(source_dir):
+        path = source_dir.split(os.path.sep)
+        dir = path[len(path)-1]
+        if dest_dir is None:
+            arc_dir = dir + os.path.sep
+        else:
+            arc_dir = dest_dir + os.path.sep
+        files = []
+        for filename in os.listdir(source_dir):
+            if filename.endswith(extenstion) or extenstion == '.*':
+                backup_file(backupzip, source_dir, arc_dir, filename)
 
     return
 
@@ -288,6 +297,7 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
     scenes_dir = os.path.join(conf_dir, 'scenes')
     structs_dir = os.path.join(conf_dir, 'structs')
     uf_dir = os.path.join(conf_dir, 'functions')
+    esphome_conf_dir = os.path.join(conf_dir, 'var', 'esphome', 'config')
 
     archive_file = ''
     for filename in os.listdir(restore_dir):
@@ -323,17 +333,20 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
     # restore files to /items
     restore_directory(restorezip, 'items', items_dir, overwrite)
 
-    # backup files from /logic
+    # restore files to /logic
     restore_directory(restorezip, 'logics', logic_dir, overwrite)
 
-    # backup files from /scenes
+    # restore files to /scenes
     restore_directory(restorezip, 'scenes', scenes_dir, overwrite)
 
-    # backup files from /structs
+    # restore files to /structs
     restore_directory(restorezip, 'structs', structs_dir, overwrite)
 
-    # backup files from /functions
+    # restore files to /functions
     restore_directory(restorezip, 'functions', uf_dir, overwrite)
+
+    # restore files to /var/esphome/config
+    restore_directory(restorezip, 'esphome_config', esphome_conf_dir, overwrite)
 
     # mark zip-file as restored
     logger.info(f"- marking zip-file as restored")

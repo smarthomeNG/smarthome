@@ -22,6 +22,7 @@ plugin:
 
     multi_instance: false           # plugin supports multi instance
     restartable: unknown            # plugin supports stopping and starting again, must be implemented
+    #configuration_needed: False     # False: The plugin will be enabled by the Admin GUI without configuration
     classname: SamplePlugin         # class containing the plugin
 
 parameters:
