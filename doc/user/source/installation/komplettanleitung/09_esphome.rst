@@ -20,7 +20,7 @@ Virtuelles Environment erstellen
 
 Das ESPHome Dashboard verwendet eine recht große Anzahl von Python Packages. Um Konflikte mit Packages/Package-Versionen
 die in SmartHomeNG verwendet werden zu vermeiden, sollte das ESPHome Dashboard in einem eigenen virtuellen Environment
-laufen.
+laufen. Die minimal benötigte Python Version für das ESPHome Dashboard ist zurzeit Python 3.10.
 
 Das virtuelle Environemnt hierfür wird mit dem folgenden Befehl angelegt:
 
@@ -99,3 +99,24 @@ werden.
 
 ...
 
+.. code-block:: bash
+
+   [Unit]
+   Description=ESPHome dashboard daemon
+   After=network.target
+
+   [Service]
+   Type=forking
+   ExecStart=/usr/local/smarthome/venvs/py_esphome/bin/esphome dashboard /usr/local/smarthome/var/esphome/config
+   WorkingDirectory=/usr/local/smarthome
+   User=smarthome
+   PIDFile=/usr/local/smarthome/var/run/esphome.pid
+   Restart=on-failure
+   TimeoutStartSec=900
+   RestartForceExitStatus=5
+
+   [Install]
+   WantedBy=default.target
+
+
+...
