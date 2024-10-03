@@ -11,82 +11,54 @@ ESPHome Dashboard :redsup:`new`
 Wenn ESPHome Devices mit SmartHomeNG verwendet werden sollen, kann es hilfreich sein das ESPHome Dashboard auf dem
 Rechner zu installieren, auf dem SmartHomeNG läuft.
 
-Im folgenden wird beschrieben, wie das ESPHome Dashboard auf dem SmartHomeNG System installiert werden sollte.
-
-|
-
-Virtuelles Environment erstellen
-================================
-
 Das ESPHome Dashboard verwendet eine recht große Anzahl von Python Packages. Um Konflikte mit Packages/Package-Versionen
-die in SmartHomeNG verwendet werden zu vermeiden, sollte das ESPHome Dashboard in einem eigenen virtuellen Environment
-laufen. Die minimal benötigte Python Version für das ESPHome Dashboard ist zurzeit Python 3.10.
+die in SmartHomeNG verwendet werden zu vermeiden, wird das ESPHome Dashboard in einem eigenen virtuellen Environment
+installiert. Die minimal benötigte Python Version für ESPHome ist zurzeit Python 3.9.
 
-Das virtuelle Environemnt hierfür wird mit dem folgenden Befehl angelegt:
+Zur Installation und Verwaltung von ESPHome sind Skripte im ``tools`` Verzeichnis der SmartHomeNG Installation
+vorhanden.
 
-.. code-block:: bash
-
-    $ make_venv 3.10 esphome
-
-|
-
-ESPHome Dashboard installieren
-==============================
-
-Das ESPHome Dashboard muss im laufenden virtuellen Environment installiert werden. Das virtuelle Environment muss dazu
-vorher mit dem folgenden Befehl aktiviert werden:
+Die Installation erfolgt mithilfe des Skripts `esphome_install`.
 
 .. code-block:: bash
 
-    $ source act epshome
+    $ esphome_install
 
-Nun kann das ESPHome Dashboard mit den folgenden Befehlen angelegt werden:
+Das Skript
 
-.. code-block:: bash
-
-    (py_esphome) $ pip3 install wheel
-    (py_esphome) $ pip3 install esphome
-
-Nun sollte das ESPHome Dashboard installiert sein. Mit dem folgenden Befehl kann die Installation überprüft und
-die installierte Version angezeigt werden:
-
-.. code-block:: bash
-
-    (py_esphome) $ esphome version
-    Version: 2024.9.2
-
-Nun muss noch das Verzeichnis angelegt werden, in dem die Konfigurationen für ESPHome gespeichert werden.
-
-.. code-block:: bash
-
-    (py_esphome) $ mkdir /usr/local/smarthome/var/esphome
-    (py_esphome) $ mkdir /usr/local/smarthome/var/esphome/config
+  - prüft ob eine für ESPHome benötigte Python Version auf dem System gefunden wird
+  - erstellt ein virtuelles Environment mit der entsprechenden Python Version
+  - aktiviert das erstellte virtuelle Environment
+  - installiert ESPHome in das virtuelle Environment
+  - zeigt anschließend die Version von ESPHome an, die installiert wurde
+  - und erzeugt das Verseichnis in dem die Konfigurationen für ESPHome gespeichert werden
 
 Die Dateien aus dem Verzeichnis ``/usr/local/smarthome/var/esphome/config`` werden beim Backup und Restore der
-Konfiguration von SmartHomeNG mit gesichert bzw. zurück gespielt.
+SmartHomeNG Konfiguration mit gesichert bzw. zurück restauriert.
 
 |
 
 ESPHome Dashboard starten und testen
 ====================================
 
-Innerhalb des virtuellen Environments wird das Dashboard mit dem folgenden Befehl gestartet:
+Das ESPHome Dashboard kann im aktuellen Terminal Fenster mit dem Befehl
 
 .. code-block:: bash
 
-    (py_esphome) $ cd /Users/Martin/ESPHome
-    (py_esphome) $ esphome dashboard /usr/local/smarthome/var/esphome/config
+    $ esphome_start
+
+gestartet werden und mit Ctrl-C wieder beendet werden.
 
 Nun sollte das Dashboard mit einem Browser (Chrome oder Safari) aufgerufen werden können. Die URL dazu ist
 
-    <Name/ip des SmartHomeNG Systems>:6052
+    <Name/IP des SmartHomeNG Systems>:6052
 
 Nun sollte das ESPHome Dashboard angezeigt werden.
 
 Der folgende Screenshot zeigt das Dashboard, welches im lokalen Netzwerk bereits ein ESPHome Device entdeckt
 (discovered) hat.
 
-.. image:: /_static/img/esphome-dashboard.jpg
+.. image:: ../assets/esphome-dashboard.jpg
    :class: screenshot
 
 |
@@ -97,26 +69,77 @@ ESPHome Dashboard als Dienst einrichten
 Damit das ESPHome Dashboard bei jedem Start des Systems automatisch gestartet wird, muss es als Dienst eingerichtet
 werden.
 
-...
+Da ESPHome in ein virtuelles Environment installiert wurde, muss dieses virtuelle Environment zum starten dest
+Dienstes genutzt werden. Es muss der Python Interpreter aus diesem virtuellen Environment genutzt werden um
+esphome zu betreiben. Dazu muss der folgende Text in die Datei ``/etc/systemd/system/esphome.service`` eingefügt werden:
 
 .. code-block:: bash
 
-   [Unit]
-   Description=ESPHome dashboard daemon
-   After=network.target
+    [Unit]
+    Description=ESPHome-dashboard daemon
+    After=network-online.target
 
-   [Service]
-   Type=forking
-   ExecStart=/usr/local/smarthome/venvs/py_esphome/bin/esphome dashboard /usr/local/smarthome/var/esphome/config
-   WorkingDirectory=/usr/local/smarthome
-   User=smarthome
-   PIDFile=/usr/local/smarthome/var/run/esphome.pid
-   Restart=on-failure
-   TimeoutStartSec=900
-   RestartForceExitStatus=5
+    [Service]
+    Type=simple
+    ExecStart=/usr/local/smarthome/tools/esphome_start
+    User=smarthome
+    Restart=on-failure
+    RestartSec=30
+    TimeoutStartSec=900
+    RestartForceExitStatus=5
+    Environment="PATH=/usr/local/smarthome/venvs/py_esphome/bin:/usr/local/sbin:/usr$
 
-   [Install]
-   WantedBy=default.target
+    [Install]
+    WantedBy=default.target
 
+|
 
-...
+Starten des Dienstes
+====================
+
+Der so vorbereitete Dienst kann über den **systemctl** Befehl gestartet
+werden.
+
+.. code-block:: bash
+
+   sudo systemctl start esphome.service
+
+Wenn alles ok ist, kann der Autostart aktiviert werden:
+
+.. code-block:: bash
+
+   sudo systemctl enable esphome.service
+
+Bei Systemstart wird nun das ESPHome Dashboard automatisch gestartet.
+
+Um den Dienst wieder auszuschalten und den Neustart bei Systemstart zu
+verhindern nutzt man:
+
+.. code-block:: bash
+
+   sudo systemctl disable esphome.service
+
+Um zu sehen, ob das ESPHome Dashboard läuft, genügt ein
+
+.. code-block:: bash
+
+   systemctl status esphome.service
+
+Läuft es noch nicht und man möchte sozusagen manuell starten reicht ein:
+
+.. code-block:: bash
+
+   sudo systemctl start esphome.service
+
+Ein Neustart des Dashboards würde mit
+
+.. code-block:: bash
+
+   sudo systemctl restart esphome.service
+
+funktionieren, ein Stop von SmartHomeNG entsprechend
+
+.. code-block:: bash
+
+   sudo systemctl stop esphome.service
+

@@ -32,6 +32,10 @@ chmod +x tools/plugin_metadata_checker.py
 chmod +x tools/test_running
 chmod +x tools/install_plugin_from_develop
 
+chmod +x tools/esphome_install
+chmod +x tools/esphome_update
+chmod +x tools/esphome_start
+
 #echo `pwd`
 #find . -type d -exec chmod g+rwsx {} +
 #find . -type f -exec chmod g+r {} +

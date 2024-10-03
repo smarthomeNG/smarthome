@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd /usr/local/shng_dev/tools
+source act esphome
+esphome dashboard /usr/local/shng_dev/var/esphome/config
