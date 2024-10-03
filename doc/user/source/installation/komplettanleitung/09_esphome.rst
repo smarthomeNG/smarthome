@@ -33,8 +33,8 @@ Das Skript
   - zeigt anschließend die Version von ESPHome an, die installiert wurde
   - und erzeugt das Verseichnis in dem die Konfigurationen für ESPHome gespeichert werden
 
-Die Dateien aus dem Verzeichnis ``/usr/local/smarthome/var/esphome/config`` werden beim Backup und Restore der
-SmartHomeNG Konfiguration mit gesichert bzw. zurück restauriert.
+Die Dateien aus dem erzeugten Verzeichnis ``/usr/local/smarthome/var/esphome/config`` werden beim Backup und Restore
+der SmartHomeNG Konfiguration mit gesichert bzw. zurück restauriert.
 
 |
 
@@ -58,7 +58,7 @@ Nun sollte das ESPHome Dashboard angezeigt werden.
 Der folgende Screenshot zeigt das Dashboard, welches im lokalen Netzwerk bereits ein ESPHome Device entdeckt
 (discovered) hat.
 
-.. image:: ../assets/esphome-dashboard.jpg
+.. image:: ../../assets/esphome-dashboard.jpg
    :class: screenshot
 
 |
