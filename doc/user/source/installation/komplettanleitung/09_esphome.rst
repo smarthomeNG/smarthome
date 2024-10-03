@@ -58,7 +58,7 @@ Nun sollte das ESPHome Dashboard angezeigt werden.
 Der folgende Screenshot zeigt das Dashboard, welches im lokalen Netzwerk bereits ein ESPHome Device entdeckt
 (discovered) hat.
 
-.. image:: ../../assets/esphome-dashboard.jpg
+.. image:: /installation/assets/esphome_dashboard.jpg
    :class: screenshot
 
 |
