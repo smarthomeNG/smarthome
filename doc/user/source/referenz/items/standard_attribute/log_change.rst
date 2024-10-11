@@ -30,6 +30,14 @@ ERROR, CRITICAL). Die Angabe kann durch den Namen oder den Integer Wert des Logl
 
 **Beispiel:** ``log_level: WARNING``
 
+eval-Ausduck in log_level
+--------------------------
+
+Ab **SmarthomeNG v1.10.1** ist es möglich, das Loglevel variabel mittels Eval-Ausdruck festzulegen. Es wird dadurch
+vor dem Schreiben eines jeden Logging-Eintrags neu evaluiert.
+
+**Beispiel:** ``log_level: '{10 if value == 5 else "WARNING" if value == 1 else "INFO"}'``
+
 
 Attribut *log_text*
 ===================
@@ -218,4 +226,3 @@ itemvalue
 
 ``itemvalue`` Der absolute oder relative Pfad zu einem Item, dessen Wert ausgelesen werden soll.
 Dies kann beispielsweise dazu genutzt werden, die Lognachricht zur Laufzeit anzupassen.
- 
