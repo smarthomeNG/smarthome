@@ -288,6 +288,7 @@ class Item():
         self._on_change_dest_var_unexp = []	# -> KEY_ON_CHANGE destination var (with unexpanded item reference)
         self._log_change = None
         self._log_change_logger = None
+        self._log_level_attrib = None
         self._log_level = None
         self._log_level_name = None
         self._log_mapping = {}
@@ -420,18 +421,8 @@ class Item():
 
                 elif attr in [KEY_LOG_LEVEL]:
                     if value != '':
-                        level = value.upper()
-                        level_name = level
-                        if Utils.is_int(level):
-                            level = int(level)
-                            level_name = logging.getLevelName(level)
-                        if logging.getLevelName(level) == 'Level ' + str(level):
-                            logger.warning(f"Item {self._path}: Invalid loglevel '{value}' defined in attribute '{KEY_LOG_LEVEL}' - Level 'INFO' will be used instead")
-                            setattr(self, '_log_level_name', 'INFO')
-                            setattr(self, '_log_level', logging.getLevelName('INFO'))
-                        else:
-                            setattr(self, '_log_level_name', level_name)
-                            setattr(self, '_log_level', logging.getLevelName(level_name))
+                        setattr(self, '_log_level_attrib', value)
+
                 elif attr in [KEY_LOG_CHANGE]:
                     if value != '':
                         setattr(self, '_log_change', value)
@@ -2227,7 +2218,7 @@ class Item():
             #logger.warning(f"self._log_text: {self._log_text}, type={type(self._log_text)}")
             txt = eval(f"f'{self._log_text}'")
         except Exception as e:
-            logger.error(f"{id}: Invalid log_text template ' {self._log_text}' - (Exception: {e})")
+            logger.error(f"{id}: Invalid log_text template '{self._log_text}' - (Exception: {e})")
             txt = self._log_text
         return txt
 
@@ -2312,6 +2303,24 @@ class Item():
             # if dest is not None:
             #     log_dst += ', dest: ' + dest
             #self._log_change_logger.log(self._log_level, "Item Change: {} = {}  -  caller: {}{}{}".format(self._path, value, caller, log_src, log_dst))
+            try:
+                val = self._log_level_attrib.replace("'", '"')
+                log_level = eval(f"f'{val}'")
+            except Exception as e:
+                log_level = self._log_level_attrib
+                logger.error(f"{id}: Invalid log_level template '{log_level}' - (Exception: {e})")
+            level = log_level.upper()
+            level_name = level
+            if Utils.is_int(level):
+                level = int(level)
+                level_name = logging.getLevelName(level)
+            if logging.getLevelName(level) == 'Level ' + str(level):
+                logger.warning(f"Item {self._path}: Invalid loglevel '{log_level}' defined in attribute '{KEY_LOG_LEVEL}' - Level 'INFO' will be used instead")
+                setattr(self, '_log_level_name', 'INFO')
+                setattr(self, '_log_level', logging.getLevelName('INFO'))
+            else:
+                setattr(self, '_log_level_name', level_name)
+                setattr(self, '_log_level', logging.getLevelName(level_name))
             self._log_change_logger.log(self._log_level, txt)
 
 
