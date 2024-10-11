@@ -732,9 +732,10 @@ class SDPConnectionSerial(SDPConnection):
 
             if self._is_connected:
                 self._connection_attempts = 0
+                self._setup_listener()
+                # only call on_connect callback after listener is set up
                 if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
                     self._params[PLUGIN_ATTR_CB_ON_CONNECT](self)
-                self._setup_listener()
                 return True
             else:
                 self.logger.debug(f'sleeping {self._params[PLUGIN_ATTR_CONN_CYCLE]} seconds before next connection attempt')

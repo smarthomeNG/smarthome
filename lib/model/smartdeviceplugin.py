@@ -208,7 +208,7 @@ class SmartDevicePlugin(SmartPlugin):
         # possibly initialize additional (overwrite _set_device_defaults)
         self._set_device_defaults()
 
-        # save modified value for passing to SDPCommands
+        # save modified value for ing to SDPCommands
         self._parameters['custom_patterns'] = self._custom_patterns
 
         # set/update plugin configuration
@@ -338,13 +338,6 @@ class SmartDevicePlugin(SmartPlugin):
             if self._suspend_item is not None:
                 self._suspend_item(False, self.get_fullname())
             self.connect()
-            if self._connection.connected():
-                if self._resume_initial_read:
-                    # make sure to read again on resume (if configured)
-                    self._initial_value_read_done = False
-                    self.read_initial_values()
-                if not SDP_standalone:
-                    self._create_cyclic_scheduler()
 
             # call user-defined resume actions
             self.on_resume()
@@ -787,8 +780,8 @@ class SmartDevicePlugin(SmartPlugin):
         elif isinstance(reply_pattern, list):
             return_list = []
             for r in reply_pattern:
-                 if '(' not in r and '{' not in r:
-                     return_list.append(r)
+                if '(' not in r and '{' not in r:
+                    return_list.append(r)
             reply_pattern = return_list if return_list else value
             resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
         # if reply pattern does not expect a specific value, use value as expected reply
@@ -1039,7 +1032,13 @@ class SmartDevicePlugin(SmartPlugin):
 
     def on_connect(self, by=None):
         """ callback if connection is made. """
-        pass
+        if self._connection.connected():
+            if self._resume_initial_read:
+                # make sure to read again on resume (if configured)
+                self._initial_value_read_done = False
+                self.read_initial_values()
+            if not SDP_standalone:
+                self._create_cyclic_scheduler()
 
     def on_disconnect(self, by=None):
         """ callback if connection is broken. """
@@ -1221,7 +1220,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self._cyclic_update_active = False
 
                 # reconnect
-                if not self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
+                if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
                     time.sleep(1)
                     self.connect()
             else:
@@ -1674,7 +1673,9 @@ class Standalone:
                             rg_list = [rg_list]
                         for entry in rg_list:
                             grps.append(entry.get('name'))
-                    item[ITEM_ATTR_GROUP + '@instance'] = grps
+                    # only create read_groups if they actually exist
+                    if grps:
+                        item[ITEM_ATTR_GROUP + '@instance'] = grps
 
                 # item attributes
                 if ia_node:
