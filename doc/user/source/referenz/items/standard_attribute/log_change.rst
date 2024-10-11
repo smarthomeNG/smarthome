@@ -109,14 +109,13 @@ Unterstützt werden folgende Variablen/Platzhalter:
 eval-Ausdrücke in log_text
 --------------------------
 
-Zusätzlich zu den Variaben, können in den Log Text auch eval Ausdrücke eingeschlossen werden. Der Syntax dazu ist
-folgender: ``{eval(<Ausdruck>)}``. Dabei muss sicher gestellt sein, dass der Ausdruck ein String ist. Wenn man
-zum Beispiel nur Zahlen addiert ``3+5``, muss dieser Ausdruck in **doppelte** Anführungszeichen (``"``) gesetzt werden:
-``{eval("3+5")}``.
+Zusätzlich zu den Variaben, können in den Log Text auch eval Ausdrücke eingeschlossen werden. Diese sind in
+geschwungene Klammern zu setzen.
 
 Es können auch mehrere eval-Ausdrücke in einen Log Text eingebunden und mit Variablen konfiguriert werden.
 
-**Beispiel:** ``log_text: Ergebnis={eval("1+4")} für item {id}``
+**Beispiel:** ``log_text: Ergebnis={1+value} für item {id}``
+**Beispiel:** ``log_text: Ergebnis={"Eins" if value == 1 else "Zwei" if value == 2 else 1+value} für item {id}``
 
 
 Attribut *log_mapping*
