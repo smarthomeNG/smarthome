@@ -87,6 +87,18 @@ class example(SmartDevicePlugin):
         """ callback if connection is broken. """
         self.logger.info('example plugin disconnected')
 
+    # if you want to use the suspend/resume feature, you can overwrite these
+    # methods and customize to your liking. If not, you can safely delete them
+    # These are then called after suspending or resuming the plugin.
+
+    def on_suspend(self):
+        """ called when suspend is enabled. Overwrite as needed """
+        self.logger.info('suspend enabled, on_suspend called')
+
+    def on_resume(self):
+        """ called when suspend is disabled. Overwrite as needed """
+        self.logger.info('suspend disabled, plugin resumed, on_resume called')
+
 #
 # methods for standalone mode
 #

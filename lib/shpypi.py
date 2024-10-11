@@ -453,7 +453,7 @@ class Shpypi:
                     print()
                     print("Running in a virtual environment environment,")
                     print("installing "+req_type_display+" requirements only to current virtual environment, please wait...")
-                stdout, stderr = Utils.execute_subprocess('pip3 install -r '+req_filepath)
+                stdout, stderr = Utils.execute_subprocess(pip_command+' install -r '+req_filepath)
         if logging:
             self.logger.debug("stdout = 'Output from PIP command:\n{}'".format(stdout))
         if not logging:

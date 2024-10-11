@@ -1,0 +1,115 @@
+#!/bin/bash
+
+#########################################################################
+# Copyright 2024-       Martin Sinn                         m.sinn@gmx.de
+#########################################################################
+#  This file is part of SmartHomeNG
+#
+#  SmartHomeNG is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#########################################################################
+
+# get directory where this script is stored
+SOURCE=${BASH_SOURCE[0]}
+DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+
+# test if script is called with 'source'
+#(return 0 2>/dev/null) && sourced=1 || sourced=0
+#
+#if [ "$sourced" -eq "0" ]; then
+#    echo
+#    echo ERROR: The script MUST be called with \'source\', like: \'source make_venv $1 $2\'
+#    echo
+#    exit
+#fi
+
+
+cd $DIR
+cd ..
+SHNG_BASEDIR=`pwd`
+
+# ---------------------------------------------------------------
+
+function get_pythonversion_for_esphome() {
+    if [ "`which python3.10`" != "" ]; then
+        echo 3.10
+    else
+        if [ "`which python3.9`" != "" ]; then
+            echo 3.9
+        else
+            if [ "`which python3.11`" != "" ]; then
+                echo 3.11
+            else
+                if [ "`which python3.12`" != "" ]; then
+                    echo 3.12
+                else
+                    if [ "`which python3.13`" != "" ]; then
+                        echo 3.13
+                    fi
+                fi
+            fi
+        fi
+    fi
+}
+
+# ---------------------------------------------------------------
+
+
+# Test if virtual environment for ESPHome already exists
+if [ -d venvs/py_esphome ];
+then
+    echo
+    echo "Virtual environment for ESPHome alredy exists"
+else
+    VERS=$(get_pythonversion_for_esphome)
+    echo
+    if [ "$VERS" = "" ]; then
+        echo "ERROR: No Python version found which can be used to run ESPHome"
+        echo "       Please install a Python version (>= 3.9) supported by ESPHome"
+        echo
+        exit 1
+    fi
+
+    echo Selecting Python version $VERS to create virtual environment
+
+    echo
+    echo "Creating virtual environment for ESPHome"
+    source tools/make_venv $VERS esphome
+fi
+
+source act esphome
+
+echo "Installing ESPHome into virtual environment"
+pip install wheel >/dev/null
+pip install esphome >/dev/null
+
+echo
+echo "`esphome version` of ESPHome is installed"
+
+echo
+if [ -d $SHNG_BASEDIR/var/esphome/config ];
+then
+    echo "Configuration directory for ESPHome already exist"
+    echo " -> $SHNG_BASEDIR/var/esphome/config"
+else
+    echo "Configuration directory for ESPHome will be created"
+    echo " -> $SHNG_BASEDIR/var/esphome/config"
+    if [ ! -d $SHNG_BASEDIR/var/esphome ];
+    then
+        mkdir $SHNG_BASEDIR/var/esphome
+    fi
+    if [ ! -d $SHNG_BASEDIR/var/esphome/config ];
+    then
+        mkdir $SHNG_BASEDIR/var/esphome/config
+    fi
+fi
+
+
+echo
+echo "Deactivating virtual environment for ESPHome"
+deactivate
+
+

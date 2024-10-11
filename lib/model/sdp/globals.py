@@ -39,6 +39,9 @@ import types
 #
 #############################################################################################################################################################################################################################################
 
+# this is the internal SDP version
+SDP_VERSION = '1.0.3'
+
 # plugin attributes, used in plugin config 'device' and instance creation (**kwargs)
 
 # general attributes
@@ -47,6 +50,8 @@ PLUGIN_ATTR_CMD_CLASS        = 'command_class'           # name of class to use 
 PLUGIN_ATTR_RECURSIVE        = 'recursive_custom'        # indices of custom item attributes for which to enable recursive lookup (number or list of numbers)
 PLUGIN_ATTR_SUSPEND_ITEM     = 'suspend_item'            # item to toggle suspend/resume mode
 PLUGIN_ATTR_CYCLE            = 'cycle'                   # plugin-wide cyclic update interval
+PLUGIN_ATTR_DELAY_INITIAL    = 'delay_initial_read'      # delay reading of initial commands
+PLUGIN_ATTR_REREAD_INITIAL   = 'resume_initial_read'     # repeat initial read on resume
 
 # general connection attributes
 PLUGIN_ATTR_CONNECTION       = 'conn_type'               # manually set connection class, classname or type (see below)
@@ -73,8 +78,9 @@ PLUGIN_ATTR_SERIAL_STOP      = 'stopbits'                # stopbits for serial c
 
 # protocol attributes
 PLUGIN_ATTR_PROTOCOL         = 'protocol'                # manually choose protocol class, classname or type (see below). Don't set if not necessary!
-PLUGIN_ATTR_MSG_TIMEOUT      = 'message_timeout'         # how many seconds to wait for reply to command (JSON-RPC only)
-PLUGIN_ATTR_MSG_REPEAT       = 'message_repeat'          # how often to repeat command till reply is received? (JSON-RPC only)
+PLUGIN_ATTR_SEND_RETRIES     = 'send_retries'            # how often should a command be resent when not receiving expected answer (JSON-RPC/resend protocols only)
+PLUGIN_ATTR_SEND_RETRY_CYCLE = 'send_retries_cycle'      # if using resend protocol: how many seconds to wait between resend rounds (JSON-RPC/resend protocols only)
+PLUGIN_ATTR_SEND_TIMEOUT     = 'send_retries_timeout'    # how many seconds to wait for reply to command? (JSON-RPC/resend protocols only)
 
 # callback functions, not in plugin.yaml
 PLUGIN_ATTR_CB_ON_CONNECT    = 'connected_callback'      # callback function, called if connection is established
@@ -82,13 +88,14 @@ PLUGIN_ATTR_CB_ON_DISCONNECT = 'disconnected_callback'   # callback function, ca
 PLUGIN_ATTR_CB_SUSPEND       = 'suspend_callback'        # callback function, called if connection attempts are aborted
 
 PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE, PLUGIN_ATTR_CYCLE,
-                PLUGIN_ATTR_SUSPEND_ITEM, PLUGIN_ATTR_CONNECTION,
+                PLUGIN_ATTR_SUSPEND_ITEM, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_DELAY_INITIAL, PLUGIN_ATTR_REREAD_INITIAL,
                 PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_BINARY,
                 PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
                 PLUGIN_ATTR_CONN_RETRY_CYCLE, PLUGIN_ATTR_CONN_RETRY_SUSPD, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
                 PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY,
-                PLUGIN_ATTR_SERIAL_STOP, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_MSG_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT,
-                PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CB_SUSPEND)
+                PLUGIN_ATTR_SERIAL_STOP, PLUGIN_ATTR_PROTOCOL, 
+                PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CB_SUSPEND,
+                PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE, PLUGIN_ATTR_SEND_TIMEOUT)
 
 # connection types for PLUGIN_ATTR_CONNECTION
 CONN_NULL                    = ''                 # use base connection class without real connection functionality, for testing
@@ -105,8 +112,9 @@ CONNECTION_TYPES = (CONN_NULL, CONN_NET_TCP_REQ, CONN_NET_TCP_CLI, CONN_NET_TCP_
 PROTO_NULL                   = ''                 # use base protocol class without added functionality (why??)
 PROTO_JSONRPC                = 'jsonrpc'          # JSON-RPC 2.0 support with send queue, msgid and resend of unanswered commands
 PROTO_VIESSMANN              = 'viessmann'        # Viessmann P300 / KW
+PROTO_RESEND                 = 'resend'           # protocol implementing resending commands which are not answered (in time)
 
-PROTOCOL_TYPES = (PROTO_NULL, PROTO_JSONRPC, PROTO_VIESSMANN)
+PROTOCOL_TYPES = (PROTO_NULL, PROTO_JSONRPC, PROTO_VIESSMANN, PROTO_RESEND)
 
 # item attribute suffixes (as defined with individual prefix in plugin.yaml)
 ITEM_ATTR_COMMAND            = '_command'             # command to issue/read for the item

@@ -171,19 +171,20 @@ Python Versionen
 Minimum Python Version
 ----------------------
 
-Die absolute Minimum Python Version in der SmartHomeNG startet wurde mit SmartHomeNG v1.9 auf **Python 3.7** angehoben,
-da Features verwendet werden, die Unter Python 3.6 und davor nicht vorhanden sind und da Python 3.6 im Dezember 2021
-End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer der
-neueren Python Versionen (3.8, 3.9 oder 3.10) aufzusetzen.
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde bereits mit SmartHomeNG v1.10 auf **Python 3.8**
+angehoben.
+Da auch Python 3.8 im Oktober 2024 den Status **End-of-Life** (End of security fixes) erreicht, wird empfohlen
+bei einer Neuinstallation auf einer der neueren offizell in SmartHomeNG unterstützten Python Versionen
+(3.10, 3.11 oder 3.12) aufzusetzen.
 
-Die aktuelle Version von SmartHomeNG setzt Python der **Version 3.7** oder neuer voraus. Bei Einsatz einer älteren
+Die aktuelle Version von SmartHomeNG setzt Python der **Version 3.8** oder neuer voraus. Bei Einsatz einer älteren
 Python Version, startet SmartHomeNG nicht.
 
 
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9.x ist **Python 3.7**. (Diese Version
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.11.x ist **Python 3.10**. (Diese Version
 muss nicht mit der *Minimum Python Version* übereinstimmen.
 
 Die Grundregel nach der sich der Support für Python Versionen richten
@@ -226,9 +227,10 @@ ist in der folgenden Tabelle aufgelistet:
   "3.8",   "security",     "14\. Oktober 2019",    "Oktober 2024"
   "3.9",   "security",     "5\. Oktober 2020",     "Oktober 2025"
   "3.10",  "security",     "4\. Oktober 2021",     "Oktober 2026"
-  "3.11",  "bugfix",       "24\. Oktober 2022",    "Oktober 2027"
+  "3.11",  "security",     "24\. Oktober 2022",    "Oktober 2027"
   "3.12",  "bugfix",       "2\. Oktober 2023",     "Oktober 2028"
   "3.13",  "prerelease",   "1\. Oktober 2024",     "Oktober 2029"
+  "3.13",  "feature",      "1\. Oktober 2025",     "Oktober 2030"
 
 
 Python (und PHP) Versionen unter Linux

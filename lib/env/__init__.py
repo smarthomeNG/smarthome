@@ -54,6 +54,7 @@ Hierzu gehören
 import logging
 
 from lib.translation import translate
+#from lib.whocalledme import log_who_called_me
 
 _logger = logging.getLogger('lib.env')
 
@@ -387,6 +388,9 @@ def degrees_to_direction_16(deg: float) -> str:
     return direction_array[index]
 
 
+LOCATION_NAME = ''
+LAT_LON = ''
+
 from typing import Union
 
 # Ab Python 3.10 auch: def location_name(lat: float | str, lon: float | str) -> str:
@@ -400,10 +404,18 @@ def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
     :return: Lokationsname
     """
 
+    #log_who_called_me(with_localvars=False)
+
     import requests
 
     # api documentation: https://nominatim.org/release-docs/develop/api/Reverse/
     request_str = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=jsonv2"
+
+    global LOCATION_NAME, LAT_LON
+    if LOCATION_NAME != '' and LAT_LON == str(lat)+'/'+str(lon):
+        _logger.info(f"-> location_name: returning stored name for {lat} / {lon}")
+        return LOCATION_NAME
+
 
     try:
         response = requests.get(request_str)
@@ -418,12 +430,8 @@ def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
             _logger.warning("location_name: " + translate("Response '{response}' is not in valid json format: {e}", {'response': response, 'e': e}))
             return ''
     else:
-        _logger.warning(f"location_name: openstreetmap.org responded with '{response.status_code}'")
+        _logger.warning(f"location_name: openstreetmap.org responded with '{response.status_code}' when trying to get locatio name for {lat=} / {lon=}")
         return ''
-
-#    if response.status_code >= 500:
-#        _logger.warning(f"location_name: {location_name(response.status_code)}")
-#        return ''
 
     if json_obj.get('address', None) is None:
         result = ''
@@ -443,6 +451,8 @@ def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
             result += ', '
         result += json_obj['address']['suburb']
 
+    LAT_LON = str(lat) + '/' + str(lon)
+    LOCATION_NAME = result
     return result
 
 
@@ -461,20 +471,21 @@ def location_address(lat: Union[float, str], lon: Union[float, str]) -> dict:
     # api documentation: https://nominatim.org/release-docs/develop/api/Reverse/
     request_str = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=jsonv2"
 
+    _logger.warning(f"-> location_address: getting name for {lat} / {lon}")
     try:
         response = requests.get(request_str)
     except Exception as e:
-        _logger.warning("location_name: " + translate("Exception when sending GET request: {e}", {'e': e}))
+        _logger.warning("location_address: " + translate("Exception when sending GET request: {e}", {'e': e}))
         return ''
 
     try:
         json_obj = response.json()
     except Exception as e:
-        _logger.warning("location_name: " + translate("Response '{response}' is not in valid json format: {e}", {'response': response, 'e': e}))
+        _logger.warning("location_address: " + translate("Response '{response}' is not in valid json format: {e}", {'response': response, 'e': e}))
         return ''
 
     if response.status_code >= 500:
-        _logger.warning(f"location_name: {location_name(response.status_code)}")
+        _logger.warning(f"location_address: {location_name(response.status_code)}")
         return ''
 
     #self._logger.notice(f"{json_obj['display_name']}")

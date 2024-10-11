@@ -249,6 +249,7 @@ class Protocol():
                         path = data['item']
                         item = self.items.return_item(path)
                         if item is not None:
+                            self.logger.dbghigh(f"command == 'series': {data=} ")
                             answer = await self.prepare_series(data, client_addr)
                             if answer == {}:
                                 self.logger.warning(f"command 'series' -> No reply from prepare_series() (for request {data})")
@@ -546,6 +547,7 @@ class Protocol():
             if self.sv_update_series.get(client_addr, None) is None:
                 self.sv_update_series[client_addr] = {}
             self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
+            self.logger.info(f"set_periodic_series_updates: {reply['sid']=}")
         return
 
 
@@ -564,19 +566,21 @@ class Protocol():
         while keep_running:
             remove = []
             series_list = list(self.sv_update_series.keys())
+            self.logger.info(f"update_all_series: {series_list=}")
             if series_list != []:
                 txt = ''
                 if self.sv_ser_upd_cycle > 0:
                     txt = " - Fixed update-cycle time"
                 #self.logger.info("update_all_series: series_list={}{}".format(series_list, txt))
             for client_addr in series_list:
+                self.logger.dbgmed(f"update_all_series: Updating client {self.build_log_info(client_addr)}")
                 if (client_addr in self.sv_clients) and not (client_addr in remove):
-                    self.logger.debug(f"update_all_series: Updating client {self.build_log_info(client_addr)}...")
-                    websocket = self.sv_clients[client_addr]['websocket']
                     replys = await self.loop.run_in_executor(None, self.update_series, client_addr)
+                    self.logger.dbgmed(f" - Updating {client_addr},  {replys=}...")
+                    websocket = self.sv_clients[client_addr]['websocket']
                     for reply in replys:
                         if (client_addr in self.sv_clients) and not (client_addr in remove):
-                            self.logger.dbgmed(f"update_all_series: reply {reply}  -->  Replys for client {self.build_log_info(client_addr)}: {replys}")
+                            self.logger.dbgmed(f"   - reply {reply}  -->  Replys for client {client_addr}: {replys}")
                             try:
                                 await websocket.send(json.dumps(reply, default=self.json_serial))
                                 self.logger.debug(f">SerUp {reply}: {self.build_log_info(client_addr)}")
@@ -631,7 +635,9 @@ class Protocol():
             series_replys = []
 
             series_entry = self.sv_update_series.get(client_addr, None)
+            self.logger.dbgmed(f"update_series: {client_addr=} - {series_entry=}")
             if series_entry is not None:
+                self.logger.dbgmed(f" - {client_addr=} - items={self.sv_update_series[client_addr].items()}")
                 for sid, series in self.sv_update_series[client_addr].items():
                     if (series['update'] < now) or self.sv_ser_upd_cycle > 0:
                         # self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))

@@ -30,8 +30,8 @@ from lib.model.sdp.globals import (
     CONN_NET_TCP_CLI, JSON_MOVE_KEYS, PLUGIN_ATTR_CB_ON_CONNECT,
     PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION,
     PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES,
-    PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT, PLUGIN_ATTR_MSG_TIMEOUT,
-    PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT)
+    PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
+    PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE, PLUGIN_ATTR_SEND_TIMEOUT)
 from lib.model.sdp.connection import SDPConnection
 
 from collections import OrderedDict
@@ -97,9 +97,9 @@ class SDPProtocol(SDPConnection):
         self._connection.close()
         self._is_connected = False
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         self.logger.debug(f'{self.__class__.__name__} _send called with {data_dict}')
-        return self._connection.send(data_dict)
+        return self._connection.send(data_dict, **kwargs)
 
     def _get_connection(self, use_callbacks=False, name=None):
         conn_params = self._params.copy()
@@ -141,8 +141,8 @@ class SDPProtocolJsonrpc(SDPProtocol):
 
         # make sure we have a basic set of parameters for the TCP connection
         self._params.update({PLUGIN_ATTR_NET_PORT: 9090,
-                             PLUGIN_ATTR_MSG_REPEAT: 3,
-                             PLUGIN_ATTR_MSG_TIMEOUT: 5,
+                             PLUGIN_ATTR_SEND_RETRIES: 3,
+                             PLUGIN_ATTR_SEND_TIMEOUT: 5,
                              PLUGIN_ATTR_CONNECTION: CONN_NET_TCP_CLI,
                              JSON_MOVE_KEYS: []})
         self._params.update(kwargs)
@@ -163,7 +163,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
         # self._message_archive[str message_id] = [time() sendtime, str method, str params or None, int repeat]
         self._message_archive = {}
 
-        self._check_stale_cycle = float(self._params[PLUGIN_ATTR_MSG_TIMEOUT]) / 2
+        self._check_stale_cycle = float(self._params[PLUGIN_ATTR_SEND_TIMEOUT]) / 2
         self._next_stale_check = 0
         self._last_stale_check = 0
 
@@ -192,7 +192,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
         """
         Handle received data
 
-        Data is handed over as byte/bytearray and needs to be converted to 
+        Data is handed over as byte/bytearray and needs to be converted to
         utf8 strings. As packets can be fragmented, all data is written into
         a buffer and then checked for complete json expressions. Those are
         separated, converted to dict and processed with respect to saved
@@ -298,10 +298,10 @@ class SDPProtocolJsonrpc(SDPProtocol):
                 # !! self.logger.debug('Stale commands: {}'.format(stale_messages))
                 for (message_id, (send_time, command, params, repeat)) in stale_messages.items():
 
-                    if send_time + self._params[PLUGIN_ATTR_MSG_TIMEOUT] < time():
+                    if send_time + self._params[PLUGIN_ATTR_SEND_TIMEOUT] < time():
 
                         # reply timeout reached, check repeat count
-                        if repeat <= self._params[PLUGIN_ATTR_MSG_REPEAT]:
+                        if repeat <= self._params[PLUGIN_ATTR_SEND_RETRIES]:
 
                             # send again, increase counter
                             self.logger.info(f'Repeating unanswered command {command} ({params}), try {repeat + 1}')
@@ -335,7 +335,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
             else:
                 self.logger.debug(f'Skipping stale check {time() - self._last_stale_check} seconds after last check')
 
-    def _send(self, data_dict):
+    def _send(self, data_dict, **kwargs):
         """
         wrapper to prepare json rpc message to send. extracts command, id, repeat and
         params (data) from data_dict and call send_rpc_message(command, params, id, repeat)
@@ -425,3 +425,149 @@ class SDPProtocolJsonrpc(SDPProtocol):
             response = self._connection.send(ddict)
             if response:
                 self.on_data_received('request', response)
+
+
+class SDPProtocolResend(SDPProtocol):
+    """ Protocol supporting resend of command and checking reply_pattern
+
+    This class implements a protocol to resend commands if reply does not align with reply_pattern
+
+    """
+
+    def __init__(self, data_received_callback, name=None, **kwargs):
+
+        # init super, get logger
+        super().__init__(data_received_callback, name, **kwargs)
+        # get relevant plugin parameters
+        self._send_retries = int(self._params.get(PLUGIN_ATTR_SEND_RETRIES) or 0)
+        self._send_retries_cycle = int(self._params.get(PLUGIN_ATTR_SEND_RETRY_CYCLE) or 1)
+        self._sending = {}
+        self._sending_retries = {}
+        self._sending_lock = threading.Lock()
+
+        # tell someone about our actual class
+        self.logger.debug(f'protocol initialized from {self.__class__.__name__}')
+
+    def on_connect(self, by=None):
+        """
+        When connecting, remove resend scheduler first. If send_retries is set > 0, add new scheduler with given cycle
+        """
+        super().on_connect(by)
+        self.logger.info(f'connect called, resending queue is {self._sending}')
+        if self._plugin.scheduler_get('resend'):
+            self._plugin.scheduler_remove('resend')
+        self._sending = {}
+        if self._send_retries >= 1:
+            self._plugin.scheduler_add('resend', self.resend, cycle=self._send_retries_cycle)
+            self.logger.dbghigh(
+                f"Adding resend scheduler with cycle {self._send_retries_cycle}.")
+
+    def on_disconnect(self, by=None):
+        """
+        Remove resend scheduler on disconnect
+        """
+        if self._plugin.scheduler_get('resend'):
+            self._plugin.scheduler_remove('resend')
+        self._sending = {}
+        self.logger.info('on_disconnect called')
+        super().on_disconnect(by)
+
+    def _send(self, data_dict, **kwargs):
+        """
+        Send data, possibly return response
+
+        :param data_dict: dict with raw data and possible additional parameters to send
+        :type data_dict: dict
+        :param kwargs: additional information needed for checking the reply_pattern
+        :return: raw response data if applicable, None otherwise.
+        """
+        self._store_commands(kwargs.get('resend_info'), data_dict)
+        self.logger.debug(f'Sending {data_dict}, kwargs {kwargs}')
+        return self._connection.send(data_dict, **kwargs)
+
+    def _store_commands(self, resend_info, data_dict):
+        """
+        Store the command in _sending dict and the number of retries is _sending_retries dict
+
+        :param resend_info: dict with command, returnvalue and read_command
+        :type resend_info: dict
+        :param data_dict: dict with raw data and possible additional parameters to send
+        :type data_dict: dict
+        :param kwargs: additional information needed for checking the reply_pattern
+        :return: False by default, True if returnvalue is given in resend_info
+        :rtype: bool
+        """
+        if resend_info is None:
+            resend_info = {}
+        else:
+            resend_info['data_dict'] = data_dict
+        if resend_info.get('returnvalue') is not None:
+            self._sending.update({resend_info.get('command'): resend_info})
+            if resend_info.get('command') not in self._sending_retries:
+                self._sending_retries.update({resend_info.get('command'): 0})
+            self.logger.debug(f'Saving {resend_info}, resending queue is {self._sending}')
+            return True
+        return False
+
+    def check_reply(self, command, value):
+        """
+        Check if the command is in _sending dict and if response is same as expected or not
+
+        :param command: name of command
+        :type command: str
+        :param value: value the command (item) should be set to
+        :type value: str
+        :return: False by default, True if received expected response
+        :rtype: bool
+        """
+        if command in self._sending:
+            with self._sending_lock:
+                # getting current retries for current command
+                retry = self._sending_retries.get(command)
+                # compare the expected returnvalue with the received value after aligning the type of both values
+                compare = self._sending[command].get('returnvalue')
+                compare = [compare] if not isinstance(compare, list) else compare
+                for c in compare:
+                    self.logger.debug(f'Comparing expected reply {c} ({type(c)}) with value {value} ({type(value)})')
+                    if type(c)(value) == c:
+                        # if received value equals expexted value, remove command from _sending dict
+                        self._sending.pop(command)
+                        self._sending_retries.pop(command)
+                        self.logger.debug(f'Got correct response for {command}, '
+                                          f'removing from send. Resending queue is {self._sending}')
+                        return True
+                if retry is not None and retry <= self._send_retries:
+                    # return False and log info if response is not the same as the expected response
+                    self.logger.debug(f'Should send again {self._sending}...')
+                    return False
+        return False
+
+    def resend(self):
+        """
+        Resend function that is scheduled with a given cycle.
+        Send command again if response is not as expected and retries are < given retry parameter
+        If expected response is not received after given retries, give up sending and query value by sending read_command
+        """
+        if self._sending:
+            self.logger.debug(f"Resending queue is {self._sending}, retries {self._sending_retries}")
+        with self._sending_lock:
+            remove_commands = []
+            # Iterate through resend queue
+            for command in list(self._sending.keys()):
+                retry = self._sending_retries.get(command, 0)
+                sent = True
+                if retry < self._send_retries:
+                    self.logger.debug(f'Resending {command}, retries {retry}.')
+                    sent = self._send(self._sending[command].get("data_dict"))
+                    self._sending_retries[command] = retry + 1
+                elif retry >= self._send_retries:
+                    sent = False
+                if sent is False:
+                    remove_commands.append(command)
+                    self.logger.info(f"Giving up re-sending {command} after {retry} retries.")
+                    if self._sending[command].get("read_cmd") is not None:
+                        self.logger.info("Querying current value")
+                        self._send(self._sending[command].get("read_cmd"))
+            for command in remove_commands:
+                self._sending.pop(command)
+                self._sending_retries.pop(command)

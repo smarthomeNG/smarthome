@@ -15,6 +15,13 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       asyncio-basierte Packages nutzen.
       (Siehe auch :doc:`Plugins/Asyncio Support </referenz/plugins/asyncio_support>`)
 
+  - **Tools**:
+
+    - **ESPHome**: Im Release sind Tools zur Installation und Verwaltung von ESPHome enthalten.
+      Wenn ESPHome Devices durch Plugins angesteuert werden sollen kann es hilfreich sein, das ESPHome Dashboard
+      zur Verwaltung der ESPHome Devices zu nutzen.
+      (Siehe auch :doc:`ESPHome Dashboard </installation/komplettanleitung/09_esphome>`)
+
 |
 
 .. comment
