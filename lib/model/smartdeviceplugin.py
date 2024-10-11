@@ -208,7 +208,7 @@ class SmartDevicePlugin(SmartPlugin):
         # possibly initialize additional (overwrite _set_device_defaults)
         self._set_device_defaults()
 
-        # save modified value for passing to SDPCommands
+        # save modified value for ing to SDPCommands
         self._parameters['custom_patterns'] = self._custom_patterns
 
         # set/update plugin configuration
@@ -1220,7 +1220,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self._cyclic_update_active = False
 
                 # reconnect
-                if not self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
+                if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
                     time.sleep(1)
                     self.connect()
             else:
