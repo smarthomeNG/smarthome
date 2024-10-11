@@ -35,6 +35,7 @@ import bin.shngversion
 from lib.item_conversion import convert_yaml as convert_yaml
 from lib.item_conversion import parse_for_convert as parse_for_convert
 from lib.shtime import Shtime
+from lib.constants import (DIR_ETC, DIR_ITEMS, DIR_UF, DIR_SCENES, DIR_LOGICS, DIR_TPL, DIR_MODULES, BASE_LOG, BASE_STRUCT)
 
 
 # ======================================================================
@@ -51,15 +52,14 @@ class FilesController(RESTResource):
         self.base_dir = self._sh.get_basedir()
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
-        self.etc_dir = self._sh.get_etcdir()
-        self.items_dir = self._sh._items_dir
-        self.functions_dir = self._sh.get_functionsdir()
-        self.scenes_dir = self._sh._scenes_dir
-        self.logics_dir = self._sh.get_logicsdir()
-        self.extern_conf_dir = self._sh._extern_conf_dir
-        self.modules_dir = os.path.join(self.base_dir, 'modules')
-        return
-
+        self.etc_dir = self._sh.get_config_dir(DIR_ETC)
+        self.items_dir = self._sh.get_config_dir(DIR_ITEMS)
+        self.functions_dir = self._sh.get_config_dir(DIR_UF)
+        self.scenes_dir = self._sh.get_config_dir(DIR_SCENES)
+        self.logics_dir = self._sh.get_config_dir(DIR_LOGICS)
+        self.template_dir = self._sh.get_config_dir(DIR_TPL)
+        self.extern_conf_dir = self._sh.get_confdir()
+        self.modules_dir = self._sh.get_config_dir(DIR_MODULES)
 
     def get_body(self, text=False, binary=False):
         """
@@ -112,7 +112,7 @@ class FilesController(RESTResource):
     def get_logging_config(self):
 
         self.logger.info("FilesController.get_logging_config()")
-        filename = os.path.join(self.etc_dir, 'logging.yaml')
+        filename = self._sh.get_config_file(BASE_LOG)
         read_data = None
         with open(filename, encoding='UTF-8') as f:
             read_data = f.read()
@@ -134,7 +134,7 @@ class FilesController(RESTResource):
         self.logger.debug("FilesController.save_logging_config(): '{}'".format(params))
 
 
-        filename = os.path.join(self.etc_dir, 'logging.yaml')
+        filename = self._sh.get_config_file(BASE_LOG)
         read_data = None
         with open(filename, 'w', encoding='UTF-8') as f:
             f.write(params)
@@ -149,7 +149,7 @@ class FilesController(RESTResource):
     def get_struct_config(self):
 
         self.logger.info("FilesController.get_struct_config()")
-        filename = os.path.join(self.etc_dir, 'struct.yaml')
+        filename = self._sh.get_config_file(BASE_STRUCT)
         if not(os.path.isfile(filename)):
             open(filename, 'a', encoding='UTF-8').close()
             self.logger.info("FilesController.get_struct_config(): created empty file {}".format(filename))
@@ -175,7 +175,7 @@ class FilesController(RESTResource):
         self.logger.debug("FilesController.save_struct_config(): '{}'".format(params))
 
 
-        filename = os.path.join(self.etc_dir, 'struct.yaml')
+        filename = self._sh.get_config_file(BASE_STRUCT)
         read_data = None
         with open(filename, 'w', encoding='UTF-8') as f:
             f.write(params)
@@ -337,7 +337,7 @@ class FilesController(RESTResource):
 
         self.logger.info("FilesController.get_functions_config({})".format(fn))
         if fn.endswith('.tpl'):
-            filename = os.path.join(self.functions_dir, fn)
+            filename = os.path.join(self.template_dir, fn)
         else:
             filename = os.path.join(self.functions_dir, fn + '.py')
         read_data = None

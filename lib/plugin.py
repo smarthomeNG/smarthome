@@ -59,7 +59,7 @@ import lib.config
 import lib.translation as translation
 import lib.shyaml as shyaml
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, KEY_WEBIF_PAGELENGTH, YAML_FILE,CONF_FILE)
+from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, KEY_WEBIF_PAGELENGTH, YAML_FILE, CONF_FILE, DIR_PLUGINS)
 #from lib.utils import Utils
 from lib.metadata import Metadata
 #import lib.item
@@ -103,7 +103,7 @@ class Plugins():
         _plugins_instance = self
 
         # until Backend plugin is modified
-        if os.path.isfile(configfile+ YAML_FILE):
+        if os.path.isfile(configfile + YAML_FILE):
             self._plugin_conf_filename = configfile + YAML_FILE
         else:
             self._plugin_conf_filename = configfile + CONF_FILE
@@ -322,7 +322,7 @@ class Plugins():
             if plugin_name == '':
                 classpath = ''
             else:
-                classpath = 'plugins.' + plugin_name
+                classpath = DIR_PLUGINS + '.' + plugin_name
 #        logger.warning("_get_classname_and_classpath: plugin_name = {}, classpath = {}, classname = {}".format(plugin_name, classpath, classname))
         return (classname, classpath+plugin_version)
 

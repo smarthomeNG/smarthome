@@ -36,6 +36,7 @@ from lib.logic import Logics
 from lib.utils import Utils
 from lib.shtime import Shtime
 import lib.shyaml as yaml
+from lib.constants import (YAML_FILE, DIR_SCENES)
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +82,7 @@ class Scenes():
         """
         self._scenes = {}
         self._learned_values = {}
-        self._scenes_dir = self._sh._scenes_dir
+        self._scenes_dir = self._sh.get_config_dir(DIR_SCENES)
         if not os.path.isdir(self._scenes_dir):
             logger.warning(translate("Directory '{scenes_dir}' not found. Ignoring scenes.", {'scenes_dir': self._scenes_dir}))
             return
@@ -92,7 +93,7 @@ class Scenes():
             if item.type() == 'scene':
                 self.scene_file = os.path.join(self._scenes_dir, item.property.path)
 
-                scene_file_yaml = yaml.yaml_load(self.scene_file+'.yaml', ordered=False, ignore_notfound=True)
+                scene_file_yaml = yaml.yaml_load(self.scene_file + YAML_FILE, ordered=False, ignore_notfound=True)
                 if scene_file_yaml is not None:
                     # Reading yaml file with scene definition
                     for state in scene_file_yaml:
@@ -186,7 +187,7 @@ class Scenes():
                 logger.debug(" - Saving value {} for state/ditem {}".format(lvalue, fkey))
         logger.info(" -> to dict learned_dict {}:".format(learned_dict))
         scene_learnfile = os.path.join(self._scenes_dir, scene+'_learned')
-        yaml.yaml_save(scene_learnfile+'.yaml', learned_dict)
+        yaml.yaml_save(scene_learnfile + YAML_FILE, learned_dict)
         return
 
 
@@ -194,8 +195,8 @@ class Scenes():
         """
         Load learned values for the scene from a file
         """
-        scene_learnfile = os.path.join(self._scenes_dir, scene+'_learned')
-        learned_dict = yaml.yaml_load(scene_learnfile+'.yaml', ordered=False, ignore_notfound=True)
+        scene_learnfile = os.path.join(self._scenes_dir, scene + '_learned')
+        learned_dict = yaml.yaml_load(scene_learnfile + YAML_FILE, ordered=False, ignore_notfound=True)
         logger.info("Loading learned values for scene {} from file {}:".format(scene, scene_learnfile))
         logger.info(" -> loaded dict learned_dict {}:".format(learned_dict))
         if learned_dict is not None:

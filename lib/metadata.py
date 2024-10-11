@@ -27,7 +27,7 @@ import collections
 from lib.utils import Utils
 from lib.utils import Version
 import lib.shyaml as shyaml
-from lib.constants import (YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS)
+from lib.constants import (YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS, DIR_PLUGINS, DIR_MODULES)
 from lib.model.sdp.globals import SDP_VERSION
 
 META_MODULE_PARAMETER_SECTION = 'parameters'
@@ -39,22 +39,21 @@ META_PLUGIN_LOGIC_PARAMETER_SECTION = 'logic_parameters'
 META_PLUGIN_FUNCTION_SECTION = 'plugin_functions'
 
 META_STRUCT_SECTION = 'item_structs'
-#META_DATA_TYPES=['bool', 'int', 'float','num', 'scene', 'str', ['list','list(subtype)'], 'dict', 'ip', 'ipv4', 'ipv6', 'mac', 'knx_ga', 'foo']
-#META_DATA_DEFAULTS={'bool': False, 'int': 0, 'float': 0.0, 'scene': 0, 'str': '', 'list': [], 'dict': {}, 'OrderedDict': {}, 'num': 0, 'scene': 0, 'ip': '0.0.0.0', 'ipv4': '0.0.0.0', 'mac': '00:00:00:00:00:00', 'knx_ga': '', 'foo': None}
+# META_DATA_TYPES=['bool', 'int', 'float','num', 'scene', 'str', ['list','list(subtype)'], 'dict', 'ip', 'ipv4', 'ipv6', 'mac', 'knx_ga', 'foo']
+# META_DATA_DEFAULTS={'bool': False, 'int': 0, 'float': 0.0, 'scene': 0, 'str': '', 'list': [], 'dict': {}, 'OrderedDict': {}, 'num': 0, 'scene': 0, 'ip': '0.0.0.0', 'ipv4': '0.0.0.0', 'mac': '00:00:00:00:00:00', 'knx_ga': '', 'foo': None}
 
 
 logger = logging.getLogger(__name__)
-
 
 # global variables to take definitions of multiple plugins
 all_itemdefinitions = {}
 all_itemprefixdefinitions = {}
 all_prefixes_tuple = None
 
+
 class Metadata():
 
     _version = '?'
-
 
     def __init__(self, sh, addon_name, addon_type, classpath=''):
         """
@@ -78,21 +77,21 @@ class Metadata():
 
         self._log_premsg = "{} '{}': ".format(addon_type, self._addon_name)
 
-#        logger.warning(self._log_premsg+"classpath = '{}'".format( classpath ) )
+#        logger.warning(self._log_premsg + "classpath = '{}'".format(classpath))
         if classpath == '':
             if addon_type == 'plugin':
-                addon_type_dir = 'plugins'
+                addon_type_dir = DIR_PLUGINS
             elif addon_type == 'module':
-                addon_type_dir = 'modules'
+                addon_type_dir = DIR_MODULES
             else:
                 return
-            self.relative_filename = os.path.join( addon_type_dir, self._addon_name, addon_type+YAML_FILE )
+            self.relative_filename = os.path.join(addon_type_dir, self._addon_name, addon_type + YAML_FILE)
         else:
-            self.relative_filename = os.path.join( classpath.replace('.', os.sep), addon_type+YAML_FILE )
-#        logger.warning(self._log_premsg+"relative_filename = '{}'".format( self.relative_filename ) )
+            self.relative_filename = os.path.join(classpath.replace('.', os.sep), addon_type + YAML_FILE)
+#        logger.warning(self._log_premsg + "relative_filename = '{}'".format(self.relative_filename))
 
         # read complete definitions from metadata file
-        filename = os.path.join( self._sh.get_basedir(), self.relative_filename )
+        filename = os.path.join(self._sh.get_basedir(), self.relative_filename)
         self.meta = shyaml.yaml_load(filename, ordered=True)
 
         self.parameters = None
@@ -157,11 +156,11 @@ class Metadata():
                             self.parameters[param_name]['_name'] = param_name
                             self.parameters[param_name]['_type'] = 'parameter'
                     self._paramlist = list(self.parameters.keys())
-                    logger.info(self._log_premsg+"Metadata paramlist = '{}'".format( str(self._paramlist) ) )
-            if  self.parameters is not None:
+                    logger.info(self._log_premsg + "Metadata paramlist = '{}'".format(str(self._paramlist)))
+            if self.parameters is not None:
                 self._test_definitions(self._paramlist, self.parameters)
             else:
-                logger.debug(self._log_premsg+"has no parameter definitions in metadata")
+                logger.debug(self._log_premsg + "has no parameter definitions in metadata")
 
             # test validity of item definition section
             if self.itemdefinitions is not None:
@@ -169,11 +168,11 @@ class Metadata():
                     self.itemdefinitions = None
                 else:
                     self._itemdeflist = list(self.itemdefinitions.keys())
-                    logger.info(self._log_premsg+"Metadata itemdeflist = '{}'".format( str(self._itemdeflist) ) )
-            if  self.itemdefinitions is not None:
+                    logger.info(self._log_premsg + "Metadata itemdeflist = '{}'".format(str(self._itemdeflist)))
+            if self.itemdefinitions is not None:
                 self._test_definitions(self._itemdeflist, self.itemdefinitions)
             else:
-                logger.debug(self._log_premsg+"has no item definitions in metadata")
+                logger.debug(self._log_premsg + "has no item definitions in metadata")
 
             # test validity of item-prefix definition section
             if self.itemprefixdefinitions is not None:
@@ -181,11 +180,11 @@ class Metadata():
                     self.itemprefixdefinitions = None
                 else:
                     self._itemprefixdeflist = list(self.itemprefixdefinitions.keys())
-                    logger.info(self._log_premsg+"Metadata itemprefixdeflist = '{}'".format( str(self._itemprefixdeflist) ) )
-            if  self.itemprefixdefinitions is not None:
+                    logger.info(self._log_premsg + "Metadata itemprefixdeflist = '{}'".format(str(self._itemprefixdeflist)))
+            if self.itemprefixdefinitions is not None:
                 self._test_definitions(self._itemprefixdeflist, self.itemprefixdefinitions)
             else:
-                logger.debug(self._log_premsg+"has no item definitions in metadata")
+                logger.debug(self._log_premsg + "has no item definitions in metadata")
 
             # build dict for checking of item attributes and their values
             if self.itemdefinitions is not None:
@@ -212,11 +211,11 @@ class Metadata():
                     self.logic_parameters = None
                 else:
                     self._logic_paramlist = list(self.logic_parameters.keys())
-                    logger.info(self._log_premsg+"Metadata logic_paramlist = '{}'".format( str(self._logic_paramlist) ) )
-            if  self.logic_parameters is not None:
+                    logger.info(self._log_premsg + "Metadata logic_paramlist = '{}'".format(str(self._logic_paramlist)))
+            if self.logic_parameters is not None:
                 self._test_definitions(self._logic_paramlist, self.logic_parameters)
             else:
-                logger.debug(self._log_premsg+"has no logic-parameter definitions in metadata")
+                logger.debug(self._log_premsg + "has no logic-parameter definitions in metadata")
 
             # test validity of plugin-function definition section
             if self.plugin_functions is not None:
@@ -224,8 +223,8 @@ class Metadata():
                     self.plugin_functions = None
                 else:
                     self._plugin_functionlist = list(self.plugin_functions.keys())
-                    logger.info(self._log_premsg+"Metadata plugin_functionlist = '{}'".format( str(self._plugin_functionlist) ) )
-            if  self.plugin_functions is not None:
+                    logger.info(self._log_premsg + "Metadata plugin_functionlist = '{}'".format(str(self._plugin_functionlist)))
+            if self.plugin_functions is not None:
                 # self._test_definitions(self._plugin_functionlist, self.plugin_functions)
                 pass
                 dummy = self.get_plugin_function_defstrings(with_type=False, with_default=False)
@@ -233,7 +232,7 @@ class Metadata():
                 dummy = self.get_plugin_function_defstrings(with_type=False, with_default=True)
                 dummy = self.get_plugin_function_defstrings(with_type=True, with_default=True)
             else:
-                logger.debug(self._log_premsg+"has no plugin-function definitions in metadata")
+                logger.debug(self._log_premsg + "has no plugin-function definitions in metadata")
 
 
             # test validity of structs definition section
@@ -250,7 +249,7 @@ class Metadata():
 #                                    self.itemstructs[struct][i][si] = dict(self.itemstructs[struct][i][si])
 #                        logger.info(self._log_premsg + "Metadata itemstruct '{}' = '{}'".format(struct, dict(self.itemstructs[struct])))
 #            if self.itemstructs is not None:
-##                self._test_definitions(self._itemdeflist, self.itemdefinitions)
+#                self._test_definitions(self._itemdeflist, self.itemdefinitions)
 #                pass
             else:
                 logger.info(self._log_premsg + "has no item-struct definitions in metadata")
@@ -337,7 +336,7 @@ class Metadata():
         Test parameter or item-attribute definitions for validity
         """
         definition_list = list(definition_dict.keys())
-#        logger.warning(self._log_premsg+"Metadata definition_list = '{}'".format( definition_list ) )
+#        logger.warning(self._log_premsg + "Metadata definition_list = '{}'".format(definition_list))
         for definition in definition_list:
             if definition_dict[definition] is not None:
                 typ = str(definition_dict[definition].get('type', FOO)).lower()
@@ -345,11 +344,11 @@ class Metadata():
                 definition_dict[definition]['listtype'] = [FOO]
                 definition_dict[definition]['listlen'] = 0
                 if definition_dict[definition].get('type', FOO) == 'list':
-                    logger.debug(self._log_premsg+"definition = '{}' of type '{}'".format(definition, str(definition_dict[definition].get('type', FOO)).lower() ) )
+                    logger.debug(self._log_premsg + "definition = '{}' of type '{}'".format(definition, str(definition_dict[definition].get('type', FOO)).lower()))
                 if not (typ in META_DATA_TYPES):
                     # test for list with specified datatype
                     if typ.startswith('list(') and typ.endswith(')'):
-                        logger.debug(self._log_premsg+"definition = '{}' of type '{}'".format(definition, str(definition_dict[definition].get('type', FOO)).lower() ) )
+                        logger.debug(self._log_premsg + "definition = '{}' of type '{}'".format(definition, str(definition_dict[definition].get('type', FOO)).lower()))
                         definition_dict[definition]['type'] = 'list'
                         listparam = typ[5:]
                         listparam = listparam[:-1].strip().split(',')
@@ -370,21 +369,21 @@ class Metadata():
                                     listparam2.append(listparam[i].strip())
                                 else:
                                     listparam2.append(FOO)
-                                    logger.error(self._log_premsg+"definition = '{}': Invalid subtype '{}' specified, using '{}' instead (META_DATA_TYPES={})".format(definition, listparam[i], FOO, META_DATA_TYPES))
+                                    logger.error(self._log_premsg + "definition = '{}': Invalid subtype '{}' specified, using '{}' instead (META_DATA_TYPES={})".format(definition, listparam[i], FOO, META_DATA_TYPES))
                             listparam = listparam2
 
                         definition_dict[definition]['listtype'] = listparam
 
                     else:
-                        logger.error(self._log_premsg+"Invalid definition in metadata file '{}': type '{}' for parameter '{}' -> using type '{}' instead".format( self.relative_filename, typ, definition, FOO ) )
+                        logger.error(self._log_premsg + "Invalid definition in metadata file '{}': type '{}' for parameter '{}' -> using type '{}' instead".format(self.relative_filename, typ, definition, FOO))
                         definition_dict[definition]['type'] = FOO
 
                 if definition_dict[definition].get('type', FOO) == 'list':
-                    logger.debug(self._log_premsg+"definition = '{}' list of subtype_list = {}, listlen={}".format(definition, definition_dict[definition]['listtype'], definition_dict[definition]['listlen'] ) )
+                    logger.debug(self._log_premsg + "definition = '{}' list of subtype_list = {}, listlen={}".format(definition, definition_dict[definition]['listtype'], definition_dict[definition]['listlen']))
                 else:
-                    logger.debug(self._log_premsg+"definition = '{}' list of listparam = >{}<, listlen={}".format(definition, definition_dict[definition]['listtype'], definition_dict[definition]['listlen'] ) )
+                    logger.debug(self._log_premsg + "definition = '{}' list of listparam = >{}<, listlen={}".format(definition, definition_dict[definition]['listtype'], definition_dict[definition]['listlen']))
             else:
-                logger.info(self._log_premsg+"definition = '{}'".format( definition ) )
+                logger.info(self._log_premsg + "definition = '{}'".format(definition))
         return
 
     def _strip_quotes(self, string):
@@ -606,7 +605,7 @@ class Metadata():
         """
         Returns True, if the value can be converted to the specified type
         """
-#        logger.warning(self._log_premsg+"_test_valuetype-list: typ={}, subtype={}, value={}".format(typ, subtype, value))
+#        logger.warning(self._log_premsg + "_test_valuetype-list: typ={}, subtype={}, value={}".format(typ, subtype, value))
         if typ == 'bool':
             return Utils.to_bool(value, default='?') != '?'
         elif typ == 'int':
@@ -704,7 +703,7 @@ class Metadata():
             if (typ == 'list') and (not isinstance(value, list)):
                 result = Utils.string_to_list(value)
 #            if (typ == 'list'):
-#                logger.warning(self._log_premsg+"_expand_listvalues: value = >{}<, type(value) = >{}<, result = >{}<, type(result) = >{}<".format(value, type(value), result, type(result)))
+#                logger.warning(self._log_premsg + "_expand_listvalues: value = >{}<, type(value) = >{}<, result = >{}<, type(result) = >{}<".format(value, type(value), result, type(result)))
         return result
 
 
@@ -741,7 +740,7 @@ class Metadata():
         elif typ == FOO:
             result = value
         else:
-            logger.error(self._log_premsg+"unhandled type {}".format(typ))
+            logger.error(self._log_premsg + "unhandled type {}".format(typ))
         return result
 
 
@@ -760,9 +759,9 @@ class Metadata():
             if result != orig:
                 # Für non-default Prüfung nur Warning
                 if is_default:
-                    logger.error(self._log_premsg+f"Invalid default '{orig}' in metadata file '{self.relative_filename}' for {definition['_type']} '{definition['_name']}' -> using '{result}' instead" )
+                    logger.error(self._log_premsg+f"Invalid default '{orig}' in metadata file '{self.relative_filename}' for {definition['_type']} '{definition['_name']}' -> using '{result}' instead")
                 else:
-                    logger.warning(self._log_premsg+f"Invalid value '{orig}' for {definition['_type']} '{definition['_name']}' -> using '{result}' instead {definition.get('_def_in', '')}" )
+                    logger.warning(self._log_premsg+f"Invalid value '{orig}' for {definition['_type']} '{definition['_name']}' -> using '{result}' instead {definition.get('_def_in', '')}")
         return result
 
 
@@ -826,7 +825,7 @@ class Metadata():
             elif definition.get('type', 'foo') in ['list']:
                  if definition['listlen'] > 0:
                      if definition['listlen'] != len(value):
-                        logger.warning(self._log_premsg+"Invalid value '{}' in plugin configuration file for parameter '{}' -> length of list is not {}".format( value, param, self.parameters[param]['listlen'] ) )
+                        logger.warning(self._log_premsg + "Invalid value '{}' in plugin configuration file for parameter '{}' -> length of list is not {}".format(value, param, self.parameters[param]['listlen']))
                         while len(value) < definition['listlen']:
                             value.append('')
                         result = value
@@ -861,13 +860,13 @@ class Metadata():
             elif self.parameters[param].get('type') in ['list']:
                  if self.parameters[param]['listlen'] > 0:
                      if self.parameters[param]['listlen'] != len(value):
-                        logger.warning(self._log_premsg+"Invalid value '{}' in plugin configuration file for parameter '{}' -> length of list is not {}".format( value, param, self.parameters[param]['listlen'] ) )
+                        logger.warning(self._log_premsg + "Invalid value '{}' in plugin configuration file for parameter '{}' -> length of list is not {}".format(value, param, self.parameters[param]['listlen']))
                         while len(value) < self.parameters[param]['listlen']:
                             value.append('')
                         result = value
 
         if self.parameters[param] is None:
-            logger.warning(self._log_premsg+"_test_validity: param {}".format(param))
+            logger.warning(self._log_premsg + "_test_validity: param {}".format(param))
         else:
             # test against list of valid entries
             result = self._test_against_valid_list(self.parameters[param], result)
@@ -1085,7 +1084,7 @@ class Metadata():
                     ###ms
                     if not self._test_value(value, self.parameters[definition]):
                         # Für non-default Prüfung nur Warning
-                        logger.error(self._log_premsg+"Invalid data for type '{}' in metadata file '{}': default '{}' for parameter '{}' -> using '{}' instead".format( definitions[definition].get('type'), self.relative_filename, value, definition, self._get_default_if_none(typ) ) )
+                        logger.error(self._log_premsg + "Invalid data for type '{}' in metadata file '{}': default '{}' for parameter '{}' -> using '{}' instead".format(definitions[definition].get('type'), self.relative_filename, value, definition, self._get_default_if_none(typ)))
                         value = None
                     if value is None:
                         value = self._get_default_if_none(typ)
@@ -1095,7 +1094,7 @@ class Metadata():
                     value = self._test_validity('', value, self.parameters[definition], is_default=True)
                     if value != orig_value:
                         # Für non-default Prüfung nur Warning
-                        logger.error(self._log_premsg+"Invalid default '{}' in metadata file '{}' for parameter '{}' -> using '{}' instead".format( orig_value, self.relative_filename, definition, value ) )
+                        logger.error(self._log_premsg + "Invalid default '{}' in metadata file '{}' for parameter '{}' -> using '{}' instead".format(orig_value, self.relative_filename, definition, value))
 
         return value
 
@@ -1159,10 +1158,10 @@ class Metadata():
         addon_params = collections.OrderedDict()
         hide_params = collections.OrderedDict()
         if self.meta is None:
-            logger.info(self._log_premsg+"No metadata found" )
+            logger.info(self._log_premsg + "No metadata found")
             return (addon_params, True, hide_params)
         if self.parameters is None:
-            logger.info(self._log_premsg+"No parameter definitions found in metadata" )
+            logger.info(self._log_premsg + "No parameter definitions found in metadata")
             return (addon_params, True, hide_params)
 
         allparams_ok = True
@@ -1172,13 +1171,13 @@ class Metadata():
                 if value is None:
                     if self.parameters[param] is not None:
                         if self.parameters[param].get('mandatory'):
-                            logger.error(self._log_premsg+"'{}' is mandatory, but was not found in /etc/{}".format(param, self._addon_type+YAML_FILE))
+                            logger.error(self._log_premsg + "'{}' is mandatory, but was not found in /etc/{}".format(param, self._addon_type + YAML_FILE))
                             allparams_ok = False
                         else:
                             addon_params[param] = self.get_parameter_defaultvalue(param)
                             hide_params[param] = Utils.to_bool(self.parameters[param].get('hide'), default=False)
-                            logger.info(self._log_premsg+"value not found in plugin configuration file for parameter '{}' -> using default value '{}' instead".format(param, addon_params[param] ) )
-        #                    logger.warning(self._log_premsg+"'{}' not found in /etc/{}, using default value '{}'".format(param, self._addon_type+YAML_FILE, addon_params[param]))
+                            logger.info(self._log_premsg + "value not found in plugin configuration file for parameter '{}' -> using default value '{}' instead".format(param, addon_params[param]))
+        #                    logger.warning(self._log_premsg + "'{}' not found in /etc/{}, using default value '{}'".format(param, self._addon_type + YAML_FILE, addon_params[param]))
                 else:
                     value = self._expand_listvalues(value, self.parameters[param])
                     if self._test_value(value, self.parameters[param]):
@@ -1188,16 +1187,16 @@ class Metadata():
                             hide_params[param] = None
                         else:
                             hide_params[param] = Utils.to_bool(self.parameters[param].get('hide'), default=False)
-                        logger.debug(self._log_premsg+"Found '{}' with value '{}' in /etc/{}".format(param, value, self._addon_type+YAML_FILE))
+                        logger.debug(self._log_premsg + "Found '{}' with value '{}' in /etc/{}".format(param, value, self._addon_type + YAML_FILE))
                     else:
                         if self.parameters.get(param) is not None:
                             if bool(self.parameters[param].get('mandatory', False)) is True:
-                                logger.error(self._log_premsg+"'{}' is mandatory, but no valid value was found in /etc/{}".format(param, self._addon_type+YAML_FILE))
+                                logger.error(self._log_premsg + "'{}' is mandatory, but no valid value was found in /etc/{}".format(param, self._addon_type + YAML_FILE))
                                 allparams_ok = False
                             else:
                                 addon_params[param] = self.get_parameter_defaultvalue(param)
                                 hide_params[param] = Utils.to_bool(self.parameters[param].get('hide'), default=False)
-                                logger.error(self._log_premsg+"Found invalid value '{}' for parameter '{}' (type {}) in /etc/{}, using default value '{}' instead".format(value, param, self.parameters[param]['type'], self._addon_type+YAML_FILE, str(addon_params[param])))
+                                logger.error(self._log_premsg + "Found invalid value '{}' for parameter '{}' (type {}) in /etc/{}, using default value '{}' instead".format(value, param, self.parameters[param]['type'], self._addon_type + YAML_FILE, str(addon_params[param])))
 
         return (addon_params, allparams_ok, hide_params)
 
@@ -1313,8 +1312,8 @@ class Metadata():
         # get rid of non numeric parts
         vlist = []
         for v in vsplit:
-            #v = re.findall('\d+', v )[0]
-            v = re.findall(r'\d+', v )[0]
+            #v = re.findall('\d+', v)[0]
+            v = re.findall(r'\d+', v)[0]
             vi = 0
             try:
                 vi = int(v)
