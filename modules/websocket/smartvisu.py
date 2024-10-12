@@ -426,7 +426,7 @@ class Protocol():
                 else:
                     newmonitor_items.append(path)
             elif len(path_parts) == 2:
-                self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[1]} with property {path_parts[0]}")
+                self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]} with property {path_parts[1]}")
                 try:
                     prop = self.items.return_item(path_parts[0]).property
                     prop_attr = getattr(prop, path_parts[1])
@@ -844,8 +844,8 @@ class Protocol():
 
                     if len(path_parts) == 2:
                         self.logger.debug(f"Send update to Client {self.build_log_info(client_addr)} for item {path_parts[0]} with property {path_parts[1]}")
-                        prop = self.items[path_parts[0]]['item'].property
-                        prop_attr = getattr(prop,path_parts[1])
+                        prop = self.items.return_item(path_parts[0]).property
+                        prop_attr = getattr(prop, path_parts[1])
                         items.append([candidate, prop_attr])
                         continue
 
