@@ -400,32 +400,41 @@ class Protocol():
         items = []
         newmonitor_items = []
         for path in list(data['items']):
-            path_parts = 0 if path is None else path.split('.property.')
+            path_parts = [] if path is None else path.split('.property.')
+
+            # first identify item
+            item = self.items.return_item(path_parts[0])
+            if item is None:
+                self.logger.error(f"prepare_monitor: No item '{path}' found (requested by client {self.build_log_info(client_addr)}")
+                continue
+
+            # get item visu acl
+            item_acl = item.conf.get('acl', None)
+            if item_acl is None:
+                item_acl = self.sv_acl
+
+            # if acl is deny, don't add item or property
+            if item_acl == 'deny':
+                # log deny to indicate feature, not bug?
+                continue
+
             if len(path_parts) == 1:
                 self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]}")
-                try:
-                    item = self.items.return_item(path)
-                    if item is not None:
-                        item_acl = item.conf.get('acl', None)
-                        if item_acl is None:
-                            item_acl = self.sv_acl
-                        if item_acl != 'deny':
-                            items.append([path, item()])
-                        if self.update_visuitem not in item.get_method_triggers():
-                            item.add_method_trigger(self.update_visuitem)
-                    else:
-                        self.logger.error(f"prepare_monitor: No item '{path}' found (requested by client {self.build_log_info(client_addr)}")
-                except KeyError as e:
-                    self.logger.warning(f"KeyError: Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]} which can not be found")
+                items.append([path, item()])
+                if self.update_visuitem not in item.get_method_triggers():
+                    item.add_method_trigger(self.update_visuitem)
                 else:
                     newmonitor_items.append(path)
             elif len(path_parts) == 2:
-                self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[1]} with property {path_parts[0]}")
+                self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]} with property {path_parts[1]}")
                 try:
                     prop = self.items.return_item(path_parts[0]).property
                     prop_attr = getattr(prop, path_parts[1])
                     items.append([path, prop_attr])
-                    newmonitor_items.append(path)
+                    if self.update_visuitem not in item.get_method_triggers():
+                        item.add_method_trigger(self.update_visuitem)
+                    else:
+                        newmonitor_items.append(path)
                 except KeyError as e:
                     self.logger.warning(f"Property KeyError: Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]} with property {path_parts[1]}")
                 except AttributeError as e:
@@ -835,8 +844,8 @@ class Protocol():
 
                     if len(path_parts) == 2:
                         self.logger.debug(f"Send update to Client {self.build_log_info(client_addr)} for item {path_parts[0]} with property {path_parts[1]}")
-                        prop = self.items[path_parts[0]]['item'].property
-                        prop_attr = getattr(prop,path_parts[1])
+                        prop = self.items.return_item(path_parts[0]).property
+                        prop_attr = getattr(prop, path_parts[1])
                         items.append([candidate, prop_attr])
                         continue
 
