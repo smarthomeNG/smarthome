@@ -30,6 +30,7 @@ import copy
 import json
 import threading
 import ast
+import re
 
 import inspect
 
@@ -294,6 +295,7 @@ class Item():
         self._log_rules = {}
         self._log_text = None
         self._fading = False
+        self._fadingdetails = {}
         self._items_to_trigger = []
         self.__last_change = self.shtime.now()
         self.__last_update = self.__last_change
@@ -2326,7 +2328,7 @@ class Item():
 
     def _set_value(self, value, caller, source=None, dest=None, prev_change=None, last_change=None):
         """
-        Set item value, update last aund prev information and perform log_change for item
+        Set item value, update last and prev information and perform log_change for item
 
         :param value:
         :param caller:
@@ -2358,7 +2360,7 @@ class Item():
         self.__updated_by = "{0}:{1}".format(caller, source)
         self.__triggered_by = "{0}:{1}".format(caller, source)
 
-        if caller != "fader":
+        if caller != "Fader":
             # log every item change to standard logger, if level is DEBUG
             # log with level INFO, if 'item_change_log' is set in etc/smarthome.yaml
             self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
@@ -2369,6 +2371,21 @@ class Item():
 
 
     def __update(self, value, caller='Logic', source=None, dest=None, key=None, index=None):
+        def check_external_change(entry_type, entry_value):
+            matches = []
+            for pattern in entry_value:
+                regex = re.compile(pattern, re.IGNORECASE)
+                if regex.match(f'{caller}:{source}'):
+                    if entry_type == "stop_fade":
+                        matches.append(True)  # Match in stop_fade, should stop
+                    else:
+                        matches.append(False)  # Match in continue_fade, should continue fading
+                else:
+                    if entry_type == "continue_fade":
+                        matches.append(True)  # No match in continue_fade -> we can stop
+                    else:
+                        matches.append(False)  # No match in stop_fade -> keep fading
+            return matches
 
         # special handling, if item is a hysteresys item (has a hysteresis_input attribute)
         if self._hysteresis_input is not None:
@@ -2405,21 +2422,48 @@ class Item():
         elif index is not None and self._type == 'list':
             # Update a list item element (selected by index)
             value = self.__set_listentry(value, index)
+        if self._fading:
+            stop_fade = self._fadingdetails.get("stop_fade")
+            continue_fade = self._fadingdetails.get("continue_fade")
+            stopping = check_external_change("stop_fade", stop_fade) if stop_fade else [False]
+            continuing = check_external_change("continue_fade", continue_fade) if continue_fade else [True]
+            # If stop_fade is set and there's a match, stop fading immediately
+            if stop_fade and True in stopping:
+                logger.dbghigh(f"Item {self._path}: Stopping fade loop, {caller} matches stop list {stop_fade}")
+                self._fading = False
+                self._lock.notify_all()
+
+            # If continue_fade is set and there is no match, stop fading immediately
+            elif continue_fade and False not in continuing and caller != "Fader":
+                logger.dbghigh(f"Item {self._path}: Stopping fade loop, {caller} matches no value in continue list {continue_fade}")
+                self._fading = False
+                self._lock.notify_all()
+
+            # If nothing is set, stop (original behaviour)
+            elif not continue_fade and not stop_fade and caller != "Fader":
+                logger.dbghigh(f"Item {self._path}: Stopping fade loop by {caller}, current value {value}")
+                self._fading = False
+                self._lock.notify_all()
+
+            elif value == self._fadingdetails.get("value"):
+                self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
+                self._lock.release()
+                return
+            else:
+                logger.dbghigh(f"Item {self._path}: Ignoring update by {caller} as item is fading")
+                self._lock.release()
+                return
 
         if value != self._value or self._enforce_change:
             _changed = True
             self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
             trigger_source_details = self.__changed_by
-            if caller != "fader":
-                self._fading = False
-                self._lock.notify_all()
         else:
             self.__prev_update = self.__last_update
             self.__last_update = self.shtime.now()
             self.__prev_update_by = self.__updated_by
             self.__updated_by = "{0}:{1}".format(caller, source)
         self._lock.release()
-
         # ms: call run_on_update() from here
         self.__run_on_update(value)
         if _changed or self._enforce_updates or self._type == 'scene':
@@ -2472,7 +2516,6 @@ class Item():
 
             next = self.shtime.now() + datetime.timedelta(seconds=_time)
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': _value, 'caller': 'Autotimer'}, next=next)
-
 
     def add_logic_trigger(self, logic):
         """
@@ -2587,9 +2630,11 @@ class Item():
             self._autotimer_value = None
 
 
-    def fade(self, dest, step=1, delta=1):
+    def fade(self, dest, step=1, delta=1, caller=None, stop_fade=None, continue_fade=None, instant_set=True, update=False):
         dest = float(dest)
-        self._sh.trigger(self._path, fadejob, value={'item': self, 'dest': dest, 'step': step, 'delta': delta})
+        if not self._fading or (self._fading and update):
+            self._fadingdetails = {'value': self._value, 'dest': dest, 'step': step, 'delta': delta, 'caller': caller, 'stop_fade': stop_fade, 'continue_fade': continue_fade, 'instant_set': instant_set}
+        self._sh.trigger(self._path, fadejob, value={'item': self})
 
     def return_children(self):
         for child in self.__children:
@@ -2620,7 +2665,7 @@ class Item():
 
         item = self
         while level >= 1:
-            print(f'level is {level}, item is {item}')
+            # print(f'level is {level}, item is {item}')
             if item._is_top_of_item_tree():
                 if strict:
                     return
