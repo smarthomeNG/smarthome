@@ -27,6 +27,7 @@ import time
 import threading
 import collections
 import re
+from typing import OrderedDict
 
 
 class Database():
@@ -173,16 +174,20 @@ class Database():
             connect = [p.strip() for p in connect.split('|')]
 
         # Deprecated, remove with 1.7 or 1.8
+        # -> but keep list of ordered dict as "default" returned by yaml parser!
         if type(connect) is list:
-            for arg in connect:
-               key, sep, value = arg.partition(':')
-               for t in int, float, str:
-                 try:
-                   v = t(value)
-                   break
-                 except:
-                   pass
-               self._params[key] = v
+            if isinstance(connect[0], str):
+                for arg in connect:
+                    key, sep, value = arg.partition(':')
+                    for t in int, float, str:
+                        try:
+                            v = t(value)
+                            break
+                        except:
+                            pass
+                    self._params[key] = v
+            elif isinstance(connect[0], OrderedDict):
+                self._params = {k: str(v) for item in connect for k, v in item.items()}
 
         elif type(connect) in [dict, collections.OrderedDict]:
             self._params = connect
