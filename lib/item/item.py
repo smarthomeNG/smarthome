@@ -2631,6 +2631,18 @@ class Item():
 
 
     def fade(self, dest, step=1, delta=1, caller=None, stop_fade=None, continue_fade=None, instant_set=True, update=False):
+        """
+        fades an item value to a given destination value
+
+        :param dest: destination value of fade job
+        :param step: step size for fading
+        :param delta: time interval between value changes
+        :param caller: Used as a source for upcoming item changes. Caller will always be "Fader"
+        :param stop_fade: list of callers that can stop the fading (all others won't stop it!)
+        :param continue_fade: list of callers that can continue fading exclusively (all others will stop it)
+        :param instant_set: If set to True, first fade value is set immediately after fade method is called, otherwise only after delta time
+        :param update: If set to True, an ongoing fade will be updated by the new parameters on the fly
+        """
         dest = float(dest)
         if not self._fading or (self._fading and update):
             self._fadingdetails = {'value': self._value, 'dest': dest, 'step': step, 'delta': delta, 'caller': caller, 'stop_fade': stop_fade, 'continue_fade': continue_fade, 'instant_set': instant_set}
