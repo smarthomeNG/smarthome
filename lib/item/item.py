@@ -2643,6 +2643,12 @@ class Item():
         :param instant_set: If set to True, first fade value is set immediately after fade method is called, otherwise only after delta time
         :param update: If set to True, an ongoing fade will be updated by the new parameters on the fly
         """
+        if stop_fade and not isinstance(stop_fade, list):
+            logger.warning(f"stop_fade parameter {stop_fade} for fader {self} has to be a list. Ignoring")
+            stop_fade = None
+        if continue_fade and not isinstance(continue_fade, list):
+            logger.warning(f"continue_fade parameter {continue_fade} for fader {self} has to be a list. Ignoring")
+            continue_fade = None
         dest = float(dest)
         if not self._fading or (self._fading and update):
             self._fadingdetails = {'value': self._value, 'dest': dest, 'step': step, 'delta': delta, 'caller': caller, 'stop_fade': stop_fade, 'continue_fade': continue_fade, 'instant_set': instant_set}
