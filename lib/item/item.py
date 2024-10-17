@@ -2071,7 +2071,7 @@ class Item():
 
 
     # New for on_update / on_change
-    def _run_on_xxx(self, path, value, on_dest, on_eval, attr='?'):
+    def _run_on_xxx(self, path, value, on_dest, on_eval, attr='?', caller=None, source=None, dest=None):
         """
         common method for __run_on_update and __run_on_change
 
@@ -2133,7 +2133,7 @@ class Item():
                 pass
 
 
-    def __run_on_update(self, value=None):
+    def __run_on_update(self, value=None, caller=None, source=None, dest=None):
         """
         evaluate all 'on_update' entries of the actual item
         """
@@ -2141,10 +2141,10 @@ class Item():
             # sh = self._sh  # noqa
 #            logger.info("Item {}: 'on_update' evaluating {} = {}".format(self._path, self._on_update_dest_var, self._on_update))
             for on_update_dest, on_update_eval in zip(self._on_update_dest_var, self._on_update):
-                self._run_on_xxx(self._path, value, on_update_dest, on_update_eval, 'On_Update')
+                self._run_on_xxx(self._path, value, on_update_dest, on_update_eval, 'On_Update', caller=caller, source=source, dest=dest)
 
 
-    def __run_on_change(self, value=None):
+    def __run_on_change(self, value=None, caller=None, source=None, dest=None):
         """
         evaluate all 'on_change' entries of the actual item
         """
@@ -2152,7 +2152,7 @@ class Item():
             # sh = self._sh  # noqa
 #            logger.info("Item {}: 'on_change' evaluating lists {} = {}".format(self._path, self._on_change_dest_var, self._on_change))
             for on_change_dest, on_change_eval in zip(self._on_change_dest_var, self._on_change):
-                self._run_on_xxx(self._path, value, on_change_dest, on_change_eval, 'On_Change')
+                self._run_on_xxx(self._path, value, on_change_dest, on_change_eval, 'On_Change', caller=caller, source=source, dest=dest)
 
 
     def _log_build_standardtext(self, value, caller, source=None, dest=None):
@@ -2430,7 +2430,7 @@ class Item():
         self._lock.release()
 
         # ms: call run_on_update() from here
-        self.__run_on_update(value)
+        self.__run_on_update(value, caller=caller, source=source, dest=dest)
         if _changed or self._enforce_updates or self._type == 'scene':
             # ms: call run_on_change() from here -> noved down
             #self.__run_on_change(value)
@@ -2457,7 +2457,7 @@ class Item():
                 args = {'value': value, 'source': self._path}
                 self._sh.trigger(name='items.' + item.property.path, obj=item.__run_hysteresis, value=args, by=caller, source=source, dest=dest)
             # ms: call run_on_change() from here - after eval is run
-            self.__run_on_change(value)
+            self.__run_on_change(value, caller=caller, source=source, dest=dest)
 
         if _changed and self._cache and not self._fading:
             try:
