@@ -288,7 +288,7 @@ class Item():
         self._on_change_dest_var_unexp = []	# -> KEY_ON_CHANGE destination var (with unexpanded item reference)
         self._log_change = None
         self._log_change_logger = None
-        self._log_level_attrib = None
+        self._log_level_attrib = "INFO"
         self._log_level = None
         self._log_level_name = None
         self._log_mapping = {}
