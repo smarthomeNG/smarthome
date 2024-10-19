@@ -2446,9 +2446,7 @@ class Item():
                 self._lock.notify_all()
 
             elif value == self._fadingdetails.get("value"):
-                self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
-                self._lock.release()
-                return
+                pass
             else:
                 logger.dbghigh(f"Item {self._path}: Ignoring update by {caller} as item is fading")
                 self._lock.release()
