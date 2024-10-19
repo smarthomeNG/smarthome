@@ -120,6 +120,7 @@ class SmartHome():
     _default_language = 'de'
     _fallback_language_order = 'en,de'
     _threadinfo_export = False
+    _default_logtext = None
 
     # for scheduler
     _restart_on_num_workers = 30
@@ -306,7 +307,6 @@ class SmartHome():
         #############################################################
         # setup logging
         logsetup = self.init_logging(self._log_conf_basename, MODE)
-
 
         #############################################################
         # get shng version information
@@ -495,14 +495,24 @@ class SmartHome():
         """
         return self._default_language
 
-
     def set_defaultlanguage(self, language):
         """
-        Returns the configured default language of SmartHomeNG
+        Sets the default language of SmartHomeNG
         """
         self._default_language = language
         lib.translation.set_default_language(language)
 
+    def get_defaultlogtext(self):
+        """
+        Returns the configured default logtext for log_change of SmartHomeNG
+        """
+        return self._default_logtext
+
+    def set_defaultlogtext(self, log_text):
+        """
+        Sets the default logtext for log_change of SmartHomeNG
+        """
+        self._default_logtext = log_text
 
     def get_basedir(self):
         """

@@ -59,6 +59,7 @@ class MockSmartHome():
     _base_dir = BASE
     base_dir = _base_dir     # for external modules using that var (backend, ...?)
     _default_language = 'de'
+    _default_logtext = None
 
     shng_status = {'code': 20, 'text': 'Running'}
 
@@ -180,6 +181,12 @@ class MockSmartHome():
 
     def set_defaultlanguage(self, language):
         self._default_language = language
+
+    def set_defaultlogtext(self, log_text):
+        self._default_logtext = log_text
+
+    def get_defaultlogtext(self):
+        return self._default_logtext
 
     def get_basedir(self):
         """

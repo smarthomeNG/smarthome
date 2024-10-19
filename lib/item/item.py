@@ -2156,7 +2156,9 @@ class Item():
 
 
     def _log_build_standardtext(self, value, caller, source=None, dest=None):
-
+        if self._sh.get_defaultlogtext() is not None:
+            self._log_text = self._sh.get_defaultlogtext()
+            return self._log_build_text(value, caller, source, dest)
         log_src = ''
         if source is not None:
             log_src += ' (' + source + ')'
