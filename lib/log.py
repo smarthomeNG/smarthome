@@ -556,15 +556,15 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
         def custom_replace(match):
             # Replace based on different patterns
             if any(match.group(i) for i in (1, 2, 3)):
-                return '\d{4}'
+                return r'\d{4}'
             elif any(match.group(i) for i in (4, 7, 10, 13)):
-                return '\d{1,2}'
+                return r'\d{1,2}'
             elif any(match.group(i) for i in (6, 9, 12, 15)):
-                return '\d{2}'
+                return r'\d{2}'
             elif any(match.group(i) for i in (5, 8, 11, 14)):
-                return '\d{1}'
+                return r'\d{1}'
             elif match.group(16):
-                return '\d+'
+                return r'\d+'
             else:
                 return '[0-9.]'
 
