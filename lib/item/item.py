@@ -1740,7 +1740,7 @@ class Item():
 
         if self._hysteresis_input:
             # Only if item has a hysteresis_input attribute
-            triggering_item = self._sh.return_item(self._hysteresis_input)
+            triggering_item = _items_instance.return_item(self._hysteresis_input)
             if triggering_item is None: # triggering item was not found
                 logger.error(f"item '{self._path}': trigger item '{self._hysteresis_input}' not found for function 'hysteresis'")
             #elif self._hysteresis_upper_threshold < self._hysteresis_lower_threshold:
@@ -1943,7 +1943,7 @@ class Item():
 
         upper = self.__run_attribute_eval(self._hysteresis_upper_threshold)
         lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
-        input_value = self._sh.return_item(self._hysteresis_input)()
+        input_value = _items_instance.return_item(self._hysteresis_input)()
 
         state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_state')
 
@@ -1976,7 +1976,7 @@ class Item():
             lower_timer = self._hysteresis_lower_timer
         else:
             lower_timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
-        input_value = self._sh.return_item(self._hysteresis_input)()
+        input_value = _items_instance.return_item(self._hysteresis_input)()
 
         state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_data')
 
@@ -2135,7 +2135,7 @@ class Item():
             if dest_value is not None:
                 # expression computes and does not result in None
                 if on_dest != '':
-                    dest_item = self._sh.return_item(on_dest)
+                    dest_item = _items_instance.return_item(on_dest)
                     if dest_item is not None:
                         dest_item.__update(dest_value, caller=attr, source=self._path)
                         logger.debug(" - : '{}' finally evaluating {} = {}, result={}".format(attr, on_dest, on_eval, dest_value))
@@ -2219,7 +2219,7 @@ class Item():
             entry = self._log_rules.get('itemvalue', None)
             if entry is not None:
                 item = self.get_absolutepath(entry.strip().replace("sh.", ""), KEY_LOG_CHANGE)
-                itemvalue = str(self._sh.return_item(item).property.value)
+                itemvalue = str(_items_instance.return_item(item).property.value)
             else:
                 itemvalue = None
         except Exception as e:
@@ -2247,7 +2247,7 @@ class Item():
                 try:
                     # try to get value from item
                     item = self.get_absolutepath(entry.strip().replace("sh.", ""), KEY_LOG_CHANGE)
-                    returnvalue = self._sh.return_item(item).property.value
+                    returnvalue = _items_instance.return_item(item).property.value
                 except Exception:
                     if to == "list":
                         returnvalue = [entry]
