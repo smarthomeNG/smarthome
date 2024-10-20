@@ -293,6 +293,7 @@ class Item():
         self._log_level_name = None
         self._log_mapping = {}
         self._log_rules = {}
+        self._log_rules_cache = {}
         self._log_text = None
         self._fading = False
         self._items_to_trigger = []
@@ -2187,11 +2188,10 @@ class Item():
             pname = self.__parent._name
             pid = self.__parent._path
         mvalue = self._log_mapping.get(value, value)
-        lowlimit = self._get_rule('lowlimit')
-        highlimit = self._get_rule('highlimit')
-        filter = self._get_rule('filter')
-        exclude = self._get_rule('exclude')
-
+        lowlimit = self._log_rules_cache.get('lowlimit')
+        highlimit = self._log_rules_cache.get('highlimit')
+        filter = self._log_rules_cache.get('filter')
+        exclude = self._log_rules_cache.get('exclude')
         sh = self._sh
         shtime = self.shtime
         time = shtime.now().strftime("%H:%M:%S")
@@ -2231,14 +2231,15 @@ class Item():
             if isinstance(returnvalue, str) and to != "str":
                 try:
                     # try to get value from item
-                    item = self.get_absolutepath(entry.strip().replace("sh.", ""), "log_rules")
-                    returnvalue = _items_instance.return_item(item).property.value
-                except Exception as e:
-                    pass
+                    item = self.get_absolutepath(entry.strip().replace("sh.", ""), KEY_LOG_CHANGE)
+                    returnvalue = self._sh.return_item(item).property.value
+                except Exception:
+                    if to == "list":
+                        returnvalue = [entry]
             if isinstance(returnvalue, (str, int)) and to == "num":
                 try:
                     returnvalue = float(returnvalue)
-                except ValueError as e:
+                except ValueError:
                     returnvalue = None
             elif isinstance(entry, list):
                 entry = [convert_entry(val, self._type) for val in entry]
@@ -2261,21 +2262,21 @@ class Item():
         Write log, if Item has attribute log_change set
         :return:
         """
-
         if self._log_change_logger is not None:
             filter_list = self._get_rule('filter')
             exclude_list = self._get_rule('exclude')
+            low_limit = self._get_rule('lowlimit')
+            high_limit = self._get_rule('highlimit')
+            self._log_rules_cache = {'filter': filter_list, 'exclude': exclude_list, 'lowlimit': low_limit, 'highlimit': high_limit}
             if filter_list != [] and exclude_list != []:
                 logger.warning(f"Item {self._path}: Defining filter AND exclude does not work. "
                                f"Ignoring exclude list {exclude_list} "
                                f"Using filter: {filter_list}")
 
             if self._type == 'num':
-                low_limit =  self._get_rule('lowlimit')
                 if low_limit is not None:
                     if low_limit > float(value):
                         return
-                high_limit =  self._get_rule('highlimit')
                 if high_limit is not None:
                     if high_limit <= float(value):
                         return
