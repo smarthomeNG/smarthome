@@ -267,13 +267,13 @@ def fadejob(item):
         if current_value < target_dest:
             # If fading upwards, but next step overshoots, set value to target_dest
             if (current_value + fade_step) >= target_dest:
-                fade_value = target_dest
+                break
             else:
                 fade_value = current_value + fade_step
         elif current_value > target_dest:
             # If fading downwards, but next step overshoots, set value to target_dest
             if (current_value - fade_step) <= target_dest:
-                fade_value = target_dest
+                break
             else:
                 fade_value = current_value - fade_step
         else:
@@ -298,3 +298,4 @@ def fadejob(item):
     # Stop fading
     if item._fading:
         item._fading = False
+        item(item._fadingdetails.get('dest'), 'Fader', item._fadingdetails.get('caller'))
