@@ -135,26 +135,25 @@ Attribut *log_mapping*
 ======================
 
 Über das **log_mapping** Attribut kann festgelegt werden, auf welche Werte/Strings der Wert eines Items für das
-Logging gemappt werden soll. Das Attribut **log_mapping** enthält dazu in einem String die Beschreibung eines
-dicts. Wobei der Key den zu übersetzenden/mappenden Wert angibt und der dazu gehörige Value des dicts den String
-angibt, der über die Variable ``{mvalue}`` ausgegeben wird.
+Logging gemappt werden soll. Das Attribut **log_mapping** enthält dazu eine Liste mit Wertzuweisungen im folgenden Format:
+zu übersetzender/mappender Wert: String, der über die Variable ``{mvalue}`` ausgegeben wird
 
 **Beispiel:**
 
 .. code-block:: yaml
 
-    log_mapping: "{
-        '1': 'Eins',
-        '2': 'Zwei',
-        '3': 'Drei'
-        }"
+    log_mapping:
+        - 1: 'Eins'
+        - 2: 'Zwei'
+        - 3: 'Drei'
 
 
 Attribut *log_rules*
 ====================
 
 Über das **log_rules** Attribut kann festgelegt werden, welche zusätzliche Regeln für das Erzeugen des Log-Eintrages
-anzuwenden sind. Das Attribut **log_rules** enthält dazu in einem String die Beschreibung eines dicts.
+anzuwenden sind. Das Attribut **log_rules** enthält dazu eine Liste mit den folgenden möglichen Definitionen:
+``lowlimit``, ``highlimit``, ``filter``, ``exclude``, ``itemvalue``
 
 **Beispiel:**
 
@@ -162,13 +161,12 @@ anzuwenden sind. Das Attribut **log_rules** enthält dazu in einem String die Be
 
     item:
         type: num
-        log_rules: "{
-            'lowlimit' : -1.0,
-            'highlimit': 10.0,
-            'filter': [1, 2, 5],
-            'exclude': '.exclude_values',
-            'itemvalue': '.text'
-            }"
+        log_rules:
+            - 'lowlimit' : -1.0
+            - 'highlimit': 10.0
+            - 'filter': [1, 2, 5]
+            - 'exclude': '.exclude_values'
+            - 'itemvalue': '.text'
 
         exclude_values:
             type: list

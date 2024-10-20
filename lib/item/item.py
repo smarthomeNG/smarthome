@@ -47,10 +47,11 @@ from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_
                            KEY_EVAL, KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_DESCRIPTION, KEY_TYPE,
                            KEY_STRUCT, KEY_REMARK, KEY_INSTANCE, KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM,
                            KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE, KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT,
-                           KEY_LOG_MAPPING, KEY_LOG_RULES, KEY_THRESHOLD, KEY_EVAL_TRIGGER_ONLY,
-                           KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST, PLUGIN_REMOVE_ITEM,
-                           KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD,
-                           ATTRIBUTE_SEPARATOR)
+                           KEY_LOG_MAPPING, KEY_LOG_RULES, KEY_LOG_RULES_LOWLIMIT, KEY_LOG_RULES_HIGHLIMIT,
+                           KEY_LOG_RULES_FILTER, KEY_LOG_RULES_EXCLUDE, KEY_LOG_RULES_ITEMVALUE, KEY_THRESHOLD,
+                           KEY_EVAL_TRIGGER_ONLY, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
+                           PLUGIN_REMOVE_ITEM, KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD,
+                           KEY_HYSTERESIS_LOWER_THRESHOLD, ATTRIBUTE_SEPARATOR)
 
 
 from lib.utils import Utils
@@ -380,6 +381,8 @@ class Item():
         #############################################################
         for attr, value in config.items():
             if not isinstance(value, dict):
+                log_rules_keys = [KEY_LOG_RULES_LOWLIMIT, KEY_LOG_RULES_HIGHLIMIT, KEY_LOG_RULES_EXCLUDE,
+                                  KEY_LOG_RULES_FILTER, KEY_LOG_RULES_ITEMVALUE]
                 if attr in [KEY_NAME, KEY_DESCRIPTION, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE, KEY_EVAL_TRIGGER_ONLY]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
@@ -441,14 +444,26 @@ class Item():
                             setattr(self, '_log_level_name', 'INFO')
                             setattr(self, '_log_level', logging.getLevelName('INFO'))
                 elif attr in [KEY_LOG_MAPPING]:
-                    if value != '':
+                    if isinstance(value, list):
+                        try:
+                            value_dict = {k: v for od in value for k, v in od.items()}
+                            setattr(self, '_log_mapping', value_dict)
+                        except Exception as e:
+                            logger.warning(f"Item {self._path}: Invalid list data for attribute '{KEY_LOG_MAPPING}': {value} - Exception: {e}")
+                    elif value != '':
                         try:
                             value_dict = ast.literal_eval(value)
                             setattr(self, '_log_mapping', value_dict)
                         except Exception as e:
                             logger.warning(f"Item {self._path}: Invalid data for attribute '{KEY_LOG_MAPPING}': {value} - Exception: {e}")
                 elif attr in [KEY_LOG_RULES]:
-                    if value != '':
+                    if isinstance(value, list):
+                        try:
+                            value_dict = {k: v for od in value for k, v in od.items() if k in log_rules_keys}
+                            setattr(self, '_log_rules', value_dict)
+                        except Exception as e:
+                            logger.warning(f"Item {self._path}: Invalid list data for attribute '{KEY_LOG_RULES}': {value} - Exception: {e}")
+                    elif value != '':
                         try:
                             value_dict = ast.literal_eval(value)
                             setattr(self, '_log_rules', value_dict)
