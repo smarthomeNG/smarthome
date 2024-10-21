@@ -459,7 +459,13 @@ class Item():
                 elif attr in [KEY_LOG_RULES]:
                     if isinstance(value, list):
                         try:
-                            value_dict = {k: v for od in value for k, v in od.items() if k in log_rules_keys}
+                            value_dict = {}
+                            for od in value:
+                                for k, v in od.items():
+                                    if k in log_rules_keys:
+                                        value_dict[k] = v
+                                    else:
+                                        logger.warning(f"Item {self._path}: Ignoring '{k}' as it is not a valid log rule")
                             setattr(self, '_log_rules', value_dict)
                         except Exception as e:
                             logger.warning(f"Item {self._path}: Invalid list data for attribute '{KEY_LOG_RULES}': {value} - Exception: {e}")
