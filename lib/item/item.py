@@ -2629,7 +2629,6 @@ class Item():
 
         item = self
         while level >= 1:
-            print(f'level is {level}, item is {item}')
             if item._is_top_of_item_tree():
                 if strict:
                     return
