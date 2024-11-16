@@ -418,13 +418,13 @@ class Protocol():
                 # log deny to indicate feature, not bug?
                 continue
 
+            newmonitor_items.append(path)
+
             if len(path_parts) == 1:
                 self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]}")
                 items.append([path, item()])
                 if self.update_visuitem not in item.get_method_triggers():
                     item.add_method_trigger(self.update_visuitem)
-                else:
-                    newmonitor_items.append(path)
             elif len(path_parts) == 2:
                 self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]} with property {path_parts[1]}")
                 try:
@@ -433,8 +433,6 @@ class Protocol():
                     items.append([path, prop_attr])
                     if self.update_visuitem not in item.get_method_triggers():
                         item.add_method_trigger(self.update_visuitem)
-                    else:
-                        newmonitor_items.append(path)
                 except KeyError as e:
                     self.logger.warning(f"Property KeyError: Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]} with property {path_parts[1]}")
                 except AttributeError as e:
