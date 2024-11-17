@@ -248,23 +248,54 @@ def cache_write(filename, value, cformat=CACHE_FORMAT):
 #####################################################################
 # Fade Method
 #####################################################################
-def fadejob(item, dest, step, delta, caller=None):
+def fadejob(item):
     if item._fading:
         return
     else:
         item._fading = True
-    if item._value < dest:
-        while (item._value + step) < dest and item._fading:
-            item(item._value + step, 'fader')
-            item._lock.acquire()
-            item._lock.wait(delta)
-            item._lock.release()
-    else:
-        while (item._value - step) > dest and item._fading:
-            item(item._value - step, 'fader')
-            item._lock.acquire()
-            item._lock.wait(delta)
-            item._lock.release()
+
+    # Determine if instant_set is needed
+    instant_set = item._fadingdetails.get('instant_set', False)
+    while item._fading:
+        current_value = item._value
+        target_dest = item._fadingdetails.get('dest')
+        fade_step = item._fadingdetails.get('step')
+        delta_time = item._fadingdetails.get('delta')
+        caller = item._fadingdetails.get('caller')
+
+        # Determine the direction of the fade (increase or decrease)
+        if current_value < target_dest:
+            # If fading upwards, but next step overshoots, set value to target_dest
+            if (current_value + fade_step) >= target_dest:
+                break
+            else:
+                fade_value = current_value + fade_step
+        elif current_value > target_dest:
+            # If fading downwards, but next step overshoots, set value to target_dest
+            if (current_value - fade_step) <= target_dest:
+                break
+            else:
+                fade_value = current_value - fade_step
+        else:
+            # If the current value has reached the destination, stop fading
+            break
+
+        # Set the new value at the beginning
+        if instant_set and item._fading:
+            item._fadingdetails['value'] = fade_value
+            item(fade_value, 'Fader', caller)
+        else:
+            instant_set = True  # Enable instant_set for the next loop iteration
+
+        # Wait for the delta time before continuing to the next step
+        item._lock.acquire()
+        item._lock.wait(delta_time)
+        item._lock.release()
+
+        if fade_value == target_dest:
+            break
+
+    # Stop fading
     if item._fading:
         item._fading = False
-        item(dest, 'Fader')
+        item(item._fadingdetails.get('dest'), 'Fader', item._fadingdetails.get('caller'))
