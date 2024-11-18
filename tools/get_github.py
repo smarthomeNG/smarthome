@@ -39,6 +39,7 @@ try:
     from git import Repo  # noqa
 except Exception:
     print('Bitte Modul gitpython installieren ("pip3 install gitpython") und das Programm erneut starten.')
+    sys.exit(1)
 
 oldcwd = os.getcwd()
 
@@ -54,7 +55,7 @@ target = os.path.join('plugins', plg)
 
 if os.path.exists(target) or os.path.islink(target):
     print('Der Ordner (oder Link) plugins/priv_githubplugin existiert bereits. Ausführung wird beendet.')
-    sys.exit(1)
+    sys.exit(2)
 
 print(f'cloning repo at {target} from {url}...')
 
@@ -63,7 +64,7 @@ try:
     repo = Repo.clone_from(url, target)
 except Exception as e:
     print(f'Fehler beim clone: {e}')
-    sys.exit(2)
+    sys.exit(3)
 
 print("""
 Plugin wurde installiert. Bitte folgenden Eintrag in etc/plugin.yaml eintragen:
