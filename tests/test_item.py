@@ -449,7 +449,11 @@ class TestItem(unittest.TestCase):
 
     def item_fadejob(self, item, dest, step, delta):
         try:
-            lib.item.helpers.fadejob(item, dest, step, delta)
+            item._fadingdetails['dest'] = dest
+            item._fadingdetails['step'] = step
+            item._fadingdetails['delta'] = delta
+            item._fadingdetails['caller'] = 'test'
+            lib.item.helpers.fadejob(item)
         except:
             lib.item._fadejob(item, dest, step, delta)
 
@@ -697,7 +701,7 @@ class TestItem(unittest.TestCase):
 
     def test_item_types(self):
         """
-        Tests for the list/dict handling in items 
+        Tests for the list/dict handling in items
         """
         if verbose:
             logger.warning('')
@@ -786,4 +790,3 @@ class TestItem(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-
