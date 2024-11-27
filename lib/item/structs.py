@@ -255,7 +255,7 @@ class Structs():
         return
 
 
-    def add_struct_definition(self, plugin_name, struct_name, struct, from_dir=''):
+    def add_struct_definition(self, plugin_name, struct_name, struct, from_dir='', optional=False):
         """
         Add a single struct definition
 
@@ -265,6 +265,7 @@ class Structs():
         :param plugin_name: Name of the plugin if called from lib.plugin else an empty string
         :param struct_name: Name of the struct to add
         :param struct: definition of the struct to add
+        :param optional: only add if not yet present
         :return:
         """
         if plugin_name == '':
@@ -275,6 +276,12 @@ class Structs():
         # self.logger.debug(f"add_struct_definition: struct '{name}' = {dict(struct)}")
         if self._struct_definitions.get(name, None) is None:
             self._struct_definitions[name] = struct
+            self._struct_definitions[name]['__struct_is_optional'] = optional
+        elif self._struct_definitions[name].get('__struct_is_optional', False) and not optional:
+            # overwrite optional structs if current struct is not optional
+            self._struct_definitions[name] = struct
+            self._struct_definitions[name]['__struct_is_optional'] = optional
+            self.logger.info(f'overwriting optional struct {name}')
         else:
             if from_dir != 'plugins':
                 self.logger.error(f"add_struct_definition: struct '{name}' already loaded - ignoring definition from {from_dir}")
@@ -396,6 +403,8 @@ class Structs():
         else:
             # merge the sub-struct to the main-struct key by key
             for key in substruct:
+                if key == '__struct_is_optional':
+                    continue
                 if main_struct.get(key, None) is None:
                     self.logger.dbglow(f" - add key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
                     main_struct[key] = copy.deepcopy(substruct[key])
@@ -447,6 +456,8 @@ class Structs():
         '''
         # self.logger.warning("merge: source_name='{}', dest_name='{}'".format(source_name, dest_name))
         for key, value in source.items():
+            if key == "__struct_is_optional":
+                continue
             if isinstance(value, collections.OrderedDict):
                 # get node or create one
                 node = destination.setdefault(key, collections.OrderedDict())

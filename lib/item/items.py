@@ -133,8 +133,8 @@ class Items():
     #   Following methods handle structs
     # -----------------------------------------------------------------------------------------
 
-    def add_struct_definition(self, plugin_name, struct_name, struct, from_dir='plugins'):
-        self.structs.add_struct_definition(plugin_name, struct_name, struct, from_dir)
+    def add_struct_definition(self, plugin_name, struct_name, struct, from_dir='plugins', optional=False):
+        self.structs.add_struct_definition(plugin_name, struct_name, struct, from_dir, optional)
 
 
     def return_struct_definitions(self, all=True):

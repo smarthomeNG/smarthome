@@ -146,6 +146,8 @@ class Plugins():
                 struct_keys = list(item_structs.keys())
                 for struct_name in struct_keys:
                     self._sh.items.add_struct_definition(plugin_name, struct_name, item_structs[struct_name])
+                    # add struct again for plugin "id", marked as optional
+                    self._sh.items.add_struct_definition(plugin, struct_name, item_structs[struct_name], optional=True)
             # Test if plugin is disabled
             if str(_conf[plugin].get('plugin_enabled', None)).lower() == 'false':
                 logger.info("Section {} (plugin_name {}) is disabled - Plugin not loaded".format(plugin, _conf[plugin].get('plugin_name', None)))
