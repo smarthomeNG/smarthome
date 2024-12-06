@@ -46,7 +46,7 @@ Das Attribut **log_text** ermöglicht es, einen eigenen Text für den Logeintrag
 Wird das Attribut nicht angegeben, wird versucht, das im smarthome.yaml hinterlegte Attribut ``default_logtext``
 heranzuziehen. Dieses kann die unten angegebenen Variablen enthalten. Ist auch dieses
 Attribut nicht angegeben, wird folgende Muster herangezogen:
-``Item Change: {id} = {value}  -  caller: {caller}{source}{destination}``
+``Item Change: {id} = {value}  -  caller: {caller}{source}{dest}``
 
 Wird **log_text** angegeben, kann dabei eine Reihe von Variablen und eval-Ausdrücken genutzt werden.
 
