@@ -14,6 +14,7 @@ nosetests.xml
 *.egg-info
 test.cache
 /.pytest_cache
+pyrightconfig.json
 
 # OSX specific files
 .DS_Store
