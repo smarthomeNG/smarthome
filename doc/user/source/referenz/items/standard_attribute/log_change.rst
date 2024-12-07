@@ -55,7 +55,7 @@ Wird **log_text** angegeben, kann dabei eine Reihe von Variablen und eval-Ausdr�
 
     **Achtung:** log_text darf keine Single-Quotes (``'``) enthalten!
 
-    Falls es aufgrund des YAML Syntaxes notwendig kann der gesamte String für log_text in Single-Quotes (')
+    Falls es aufgrund des YAML Syntaxes notwendig ist, kann der gesamte String für log_text in Single-Quotes (')
     eingeschlossen werden.
 
     **Beispiel:** ``log_text: 'Alter={age}'``
@@ -128,6 +128,7 @@ geschwungene Klammern zu setzen.
 Es können auch mehrere eval-Ausdrücke in einen Log Text eingebunden und mit Variablen konfiguriert werden.
 
 **Beispiel:** ``log_text: Ergebnis={1+value} für item {id}``
+
 **Beispiel:** ``log_text: Ergebnis={"Eins" if value == 1 else "Zwei" if value == 2 else 1+value} für item {id}``
 
 
