@@ -2230,9 +2230,8 @@ class Item():
                 itemvalue = None
         except Exception as e:
             logger.error(f"{id}: Invalid item in log_text '{self._log_text}'"
-                         f" or log_rules '{self._log_rules}' - (Exception: {e})")
+                         f" or log_rules '{self._log_rules}' - Exception: {e}")
             itemvalue = "INVALID"
-
         import math
         import lib.userfunctions as uf
         env = lib.env
@@ -2241,7 +2240,7 @@ class Item():
             #logger.warning(f"self._log_text: {self._log_text}, type={type(self._log_text)}")
             txt = eval(f"f'{self._log_text}'")
         except Exception as e:
-            logger.error(f"{id}: Invalid log_text template '{self._log_text}' - (Exception: {e})")
+            logger.error(f"{id}: Invalid log_text template '{self._log_text}' - Exception: {e}")
             txt = self._log_text
         return txt
 
@@ -2264,10 +2263,12 @@ class Item():
                     returnvalue = None
             elif isinstance(entry, list):
                 entry = [convert_entry(val, self._type) for val in entry]
+            elif not isinstance(returnvalue, list) and to == "list":
+                returnvalue = [returnvalue]
             elif isinstance(returnvalue, (float, int)) and to == "str":
                 returnvalue = str(returnvalue)
             if returnvalue is None:
-                logger.warning(f"Given log_rules entry '{entry}' is invalid.")
+                returnvalue = {'value': None, 'issue': f"Given log_rules entry '{entry}' for {rule_entry} is invalid"}
             return returnvalue
 
         defaults = {'filter': [], 'exclude': [], 'lowlimit': None, 'highlimit': None}
@@ -2284,15 +2285,64 @@ class Item():
         :return:
         """
         if self._log_change_logger is not None:
-            filter_list = self._get_rule('filter')
-            exclude_list = self._get_rule('exclude')
+            issue_list = []
             low_limit = self._get_rule('lowlimit')
+            if isinstance(low_limit, dict):
+                issue = low_limit.get('issue')
+                issue_list.append(issue)
+                low_limit = None
             high_limit = self._get_rule('highlimit')
-            self._log_rules_cache = {'filter': filter_list, 'exclude': exclude_list, 'lowlimit': low_limit, 'highlimit': high_limit}
+            if isinstance(high_limit, dict):
+                issue = high_limit.get('issue')
+                issue_list.append(issue)
+                high_limit = None
+            if self._type != 'num' and low_limit:
+                issue = f"Low limit {low_limit} given, however item is not num type - ignoring"
+                issue_list.append(issue)
+                low_limit = None
+            if self._type != 'num' and high_limit:
+                issue = f"High limit {high_limit} given, however item is not num type - ignoring"
+                issue_list.append(issue)
+                high_limit = None
+            if low_limit is not None and high_limit is not None and low_limit > high_limit:
+                issue = f"Low limit {low_limit} > High limit {high_limit} - ignoring high limit"
+                issue_list.append(issue)
+                high_limit = None
+            filter_list = self._get_rule('filter')
+            if isinstance(filter_list, dict):
+                issue = filter_list.get('issue')
+                issue_list.append(issue)
+                filter_list = []
+            f_list = []
+            for f in filter_list:
+                if type(value) != type(f):
+                    issue = f"Filter entry {f} is type {type(f)}, item is {self._type} - ignoring"
+                    issue_list.append(issue)
+                else:
+                    f_list.append(f)
+            filter_list = f_list
+            exclude_list = self._get_rule('exclude')
+            if isinstance(exclude_list, dict):
+                issue = exclude_list.get('issue')
+                issue_list.append(issue)
+                exclude_list = []
+            e_list = []
+            for e in exclude_list:
+                if type(value) != type(e):
+                    issue = f"Exclude entry {e} is type {type(e)}, item is {self._type} - ignoring"
+                    issue_list.append(issue)
+                else:
+                    e_list.append(e)
+            exclude_list = e_list
             if filter_list != [] and exclude_list != []:
-                logger.warning(f"Item {self._path}: Defining filter AND exclude does not work. "
-                               f"Ignoring exclude list {exclude_list} "
-                               f"Using filter: {filter_list}")
+                issue = f"Defining filter AND exclude does not work - ignoring exclude list"
+                issue_list.append(issue)
+                exclude_list = []
+            if issue_list and self._log_rules_cache.get('issues') != issue_list:
+                logger.warning(f"Item {self._path} log_rules has issues: {', '.join(issue_list)}. "
+                               f"Cleaned log_rules: lowlimit = {low_limit}, highlimit = {high_limit}, filter = {filter_list}, exclude = {exclude_list}")
+
+            self._log_rules_cache = {'issues': issue_list, 'filter': filter_list, 'exclude': exclude_list, 'lowlimit': low_limit, 'highlimit': high_limit}
 
             if self._type == 'num':
                 if low_limit is not None:
