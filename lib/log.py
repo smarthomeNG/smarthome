@@ -49,6 +49,7 @@ class Logs():
     DBGHIGH_level = 13
     DBGMED_level = 12
     DBGLOW_level = 11
+    DEVELOP_level = 9
 
     _all_handlers_logger_name = '_shng_all_handlers_logger'
     _all_handlers = {}
@@ -94,6 +95,7 @@ class Logs():
         #  - DBGHIGH      13   Debug high level
         #  - DBGMED       12   Debug medium level
         #  - DBGLOW       11   Debug low level
+        #  - DEVELOP       9   Developer level
 
         self.logging_levels = {}
         self.logging_levels[50] = 'CRITICAL'
@@ -108,6 +110,7 @@ class Logs():
         # self.logging_levels[13] = 'DBGHIGH'
         # self.logging_levels[12] = 'DBGMED'
         # self.logging_levels[11] = 'DBGLOW'
+        # self.logging_levels[9] = 'DEVELOP'
 
         # adjust config dict from logging.yaml:
         # if logger 'lib.smarthome' is not defined or no level is defined for it,
@@ -132,12 +135,14 @@ class Logs():
         self.DBGHIGH_level = 13
         self.DBGMED_level = 12
         self.DBGLOW_level = 11
+        self.DEVELOP_level = 9
 
         # add SmartHomeNG specific loglevels
         self.add_logging_level('NOTICE', self.NOTICE_level)
         self.add_logging_level('DBGHIGH', self.DBGHIGH_level)
         self.add_logging_level('DBGMED', self.DBGMED_level)
         self.add_logging_level('DBGLOW', self.DBGLOW_level)
+        self.add_logging_level('DEVELOP', self.DEVELOP_level)
 
         try:
             logging.config.dictConfig(config_dict)
