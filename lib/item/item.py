@@ -2304,8 +2304,8 @@ class Item():
                 issue = f"High limit {high_limit} given, however item is not num type - ignoring"
                 issue_list.append(issue)
                 high_limit = None
-            if low_limit is not None and high_limit is not None and low_limit > high_limit:
-                issue = f"Low limit {low_limit} > High limit {high_limit} - ignoring high limit"
+            if low_limit is not None and high_limit is not None and low_limit >= high_limit:
+                issue = f"Low limit {low_limit} >= High limit {high_limit} - ignoring high limit"
                 issue_list.append(issue)
                 high_limit = None
             filter_list = self._get_rule('filter')
