@@ -42,15 +42,20 @@ vor dem Schreiben eines jeden Logging-Eintrags neu evaluiert.
 Attribut *log_text*
 ===================
 
-Das Attribut **log_text** ermöglicht es einen eigenen Text für den Logeintrag festzulegen. **log_text** kann dabei
-eine Reihe von Variablen und eval-Ausdrücken enthalten.
+Das Attribut **log_text** ermöglicht es, einen eigenen Text für den Logeintrag festzulegen.
+Wird das Attribut nicht angegeben, wird versucht, das im smarthome.yaml hinterlegte Attribut ``default_logtext``
+heranzuziehen. Dieses kann die unten angegebenen Variablen enthalten. Ist auch dieses
+Attribut nicht angegeben, wird folgende Muster herangezogen:
+``Item Change: {id} = {value}  -  caller: {caller}{source}{dest}``
+
+Wird **log_text** angegeben, kann dabei eine Reihe von Variablen und eval-Ausdrücken genutzt werden.
 
 
 .. attention::
 
     **Achtung:** log_text darf keine Single-Quotes (``'``) enthalten!
 
-    Falls es aufgrund des YAML Syntaxes notwendig kann der gesamte String für log_text in Single-Quotes (')
+    Falls es aufgrund des YAML Syntaxes notwendig ist, kann der gesamte String für log_text in Single-Quotes (')
     eingeschlossen werden.
 
     **Beispiel:** ``log_text: 'Alter={age}'``
@@ -123,6 +128,7 @@ geschwungene Klammern zu setzen.
 Es können auch mehrere eval-Ausdrücke in einen Log Text eingebunden und mit Variablen konfiguriert werden.
 
 **Beispiel:** ``log_text: Ergebnis={1+value} für item {id}``
+
 **Beispiel:** ``log_text: Ergebnis={"Eins" if value == 1 else "Zwei" if value == 2 else 1+value} für item {id}``
 
 
@@ -130,26 +136,25 @@ Attribut *log_mapping*
 ======================
 
 Über das **log_mapping** Attribut kann festgelegt werden, auf welche Werte/Strings der Wert eines Items für das
-Logging gemappt werden soll. Das Attribut **log_mapping** enthält dazu in einem String die Beschreibung eines
-dicts. Wobei der Key den zu übersetzenden/mappenden Wert angibt und der dazu gehörige Value des dicts den String
-angibt, der über die Variable ``{mvalue}`` ausgegeben wird.
+Logging gemappt werden soll. Das Attribut **log_mapping** enthält dazu eine Liste mit Wertzuweisungen im folgenden Format:
+zu übersetzender/mappender Wert: String, der über die Variable ``{mvalue}`` ausgegeben wird
 
 **Beispiel:**
 
 .. code-block:: yaml
 
-    log_mapping: "{
-        '1': 'Eins',
-        '2': 'Zwei',
-        '3': 'Drei'
-        }"
+    log_mapping:
+        - 1: 'Eins'
+        - 2: 'Zwei'
+        - 3: 'Drei'
 
 
 Attribut *log_rules*
 ====================
 
 Über das **log_rules** Attribut kann festgelegt werden, welche zusätzliche Regeln für das Erzeugen des Log-Eintrages
-anzuwenden sind. Das Attribut **log_rules** enthält dazu in einem String die Beschreibung eines dicts.
+anzuwenden sind. Das Attribut **log_rules** enthält dazu eine Liste mit den folgenden möglichen Definitionen:
+``lowlimit``, ``highlimit``, ``filter``, ``exclude``, ``itemvalue``
 
 **Beispiel:**
 
@@ -157,13 +162,12 @@ anzuwenden sind. Das Attribut **log_rules** enthält dazu in einem String die Be
 
     item:
         type: num
-        log_rules: "{
-            'lowlimit' : -1.0,
-            'highlimit': 10.0,
-            'filter': [1, 2, 5],
-            'exclude': '.exclude_values',
-            'itemvalue': '.text'
-            }"
+        log_rules:
+            - 'lowlimit' : -1.0
+            - 'highlimit': 10.0
+            - 'filter': [1, 2, 5]
+            - 'exclude': '.exclude_values'
+            - 'itemvalue': '.text'
 
         exclude_values:
             type: list
@@ -186,7 +190,7 @@ highlimit weitere Werte zulassen würden bzw. exclude einen der Werte ausschlie�
 lowlimit
 --------
 
-``lowlimit`` Ein Wert, der angibt, unterhalb welchen Wertes des Items **kein** Logeintrag geschrieben werden soll.
+Ein Wert, der angibt, unterhalb welchen Wertes des Items **kein** Logeintrag geschrieben werden soll.
 Werte werden geschrieben, Wenn **lowlimit** <= **value** ist.
 
 **low_limit** kann nur auf Items vom Typ **num** angewendet werden.
@@ -195,7 +199,7 @@ Werte werden geschrieben, Wenn **lowlimit** <= **value** ist.
 highlimit
 ---------
 
-``highlimit`` Ein Wert, der angibt, oberhalb welchen Wertes des Items **kein** Logeintrag geschrieben werden soll.
+Ein Wert, der angibt, oberhalb welchen Wertes des Items **kein** Logeintrag geschrieben werden soll.
 Werte werden geschrieben, Wenn **value** < **highlimit** ist.
 
 **highlimit** kann nur auf Items vom Typ **num** angewendet werden.
@@ -204,7 +208,7 @@ Werte werden geschrieben, Wenn **value** < **highlimit** ist.
 filter
 ------
 
-``filter`` Eine Werteliste, die angibt, bei welchen Werten des Items ein Logeintrag geschrieben werden soll.
+Eine Werteliste, die angibt, bei welchen Werten des Items ein Logeintrag geschrieben werden soll.
 
 Wenn das Item vom Typ **num** ist, muss die Liste auch numerische Werte (int oder float) enthalten
 (``'filter': [1, 2, 5, 2.1]``). Falls das Item von einem anderen Datentyp ist, muss die Liste Strings
@@ -214,7 +218,7 @@ enthalten (``'filter': ['1', '2', '5']``).
 exclude
 -------
 
-``exclude`` Eine Werteliste, die angibt, bei welchen Werten des Items ein Logeintrag nicht geschrieben werden soll.
+Eine Werteliste, die angibt, bei welchen Werten des Items ein Logeintrag nicht geschrieben werden soll.
 
 Wenn das Item vom Typ **num** ist, muss die Liste auch numerische Werte (int oder float) enthalten
 (``'exclude': [1, 2, 5, 2.1]``). Falls das Item von einem anderen Datentyp ist, muss die Liste Strings
@@ -224,5 +228,5 @@ enthalten (``'exclude': ['1', '2', '5']``).
 itemvalue
 ---------
 
-``itemvalue`` Der absolute oder relative Pfad zu einem Item, dessen Wert ausgelesen werden soll.
+Der absolute oder relative Pfad zu einem Item, dessen Wert ausgelesen werden soll.
 Dies kann beispielsweise dazu genutzt werden, die Lognachricht zur Laufzeit anzupassen.

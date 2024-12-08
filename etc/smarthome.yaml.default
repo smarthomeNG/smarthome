@@ -15,7 +15,7 @@ elev: 30                 # elevation
 tz: 'Europe/Berlin'      # timezone, the example will be fine for most parts of central Europe
 
 default_language: de     # default_language is used, where multiple languages are supported (de, if not specified)
-
+#default_logtext: "Item {id} wurde geändert."
 
 # control type casting when assiging values to items
 # latest or compat_1.2 (compat_1.2 is default for shNG v1.3, latest is default for higher versions)
@@ -62,4 +62,3 @@ default_language: de     # default_language is used, where multiple languages ar
 #db:
 #  - sqlite:sqlite3
 #  - mysql:pymysql
-
