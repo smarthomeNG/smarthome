@@ -1034,6 +1034,9 @@ class SmartHome():
         objects = {}
         for module in list(sys.modules.values()):
             for sym in dir(module):
+                # skip deprecation warning on MacOS, these ciphers shouldn't be used anyway
+                if module.__name__ == 'cryptography.hazmat.primitives.ciphers.algorithms' and sym in ['Blowfish', 'CAST5', 'IDEA', 'SEED', 'TripleDES', 'ARC4']:
+                    continue
                 try:
                     obj = getattr(module, sym)
                     if isinstance(obj, type):
