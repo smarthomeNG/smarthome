@@ -9,7 +9,7 @@ Um einen sicheren Zugriff auf SmartHomeNG und die smartVISU von außen
 (ohne VPN) zu ermöglichen, empfiehlt es sich einen ReverseProxy mit
 Basic Authentication oder Clientzertifikaten zu nutzen. Die folgende
 Dokumentation beschreibt eine Installation von NGINX als ReverseProxy
-auf eigenständiger Hardware unter Raspberry OS. Dieser ist
+unter Raspberry OS. Dieser ist
 bspw. auch für das Alexa Plugin oder die Nutzung von SmartHomeNG mit
 **EgiGeoZone** / **Geofency** notwendig.
 
@@ -19,11 +19,9 @@ Annahmen
 Diese Anleitung hat folgende Annahmen:
 
 * NGINX wird auf einem frisch aufgesetzten Raspberry Pi mit
-  **Raspberry OS Debian Stretch oder Buster Lite** installiert.
-* Der Raspberry Pi dient ausschliesslich der Funktion als ReverseProxy
+  **Raspberry OS Debian** installiert.
 * Der Standarduser heißt weiterhin **pi**
 * Eine DynDNS (o.ä.) Domain ist vorhanden und leitet auf die aktuelle Internet IP
-* SmartHomeNG und SmartVISU sind auf einem separaten Rechner im gleichen LAN installiert.
 
 Basiskonfiguration
 ------------------
@@ -43,24 +41,17 @@ NGINX installieren:
    sudo apt-get update
    sudo apt-get install nginx-full
 
-GeoIP installieren:
--------------------
+GeoIP installieren (optional)
+-----------------------------
 
 Über GeoIP kann mittels der anfragenden IP herausgefunden werden, aus
 welchem Land eine Anfrage kommt. Darüber lassen sich bspw. Requests aus
-Risikoländern blockieren. Hinweis: Die GeoIP Datenbank von Maxmind wird nicht mehr
-weiter gepflegt, ist aber noch über eine alternative URL (siehe unten) abrufbar.
+Risikoländern blockieren.
 
 .. code-block:: bash
 
-   sudo apt-get install geoip-database libgeoip1
-   cd /usr/share/GeoIP/
-   sudo wget https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz
-   sudo gunzip maxmind4.dat.gz
-   sudo wget https://dl.miyuru.lk/geoip/maxmind/country/maxmind6.dat.gz
-   sudo gunzip maxmind6.dat.gz
-   mv /usr/share/GeoIP/maxmind4.dat /usr/share/GeoIP/GeoIP.dat
-   mv /usr/share/GeoIP/maxmind6.dat /usr/share/GeoIP/GeoIPv6.dat
+   cd /etc/nginx/
+   sudo wget https://git.io/GeoLite2-Country.mmdb
 
 Let’s Encrypt Server-Zertifikate
 --------------------------------
@@ -116,8 +107,11 @@ Dort unterhalb von ``listen [::]:80 default_server;`` die Zeile
 
    sudo systemctl restart nginx
 
-Port 80 und Port 443 im Router jeweils auf den identischen Port am
-ReverseProxy-RaspberryPi mappen!
+Am Router müssen Port 80 und 443 auf den Rechner, auf dem NGINX installiert ist, weitergeleitet
+werden. WARNUNG: Eine Weiterleitung von Port 80 bedeutet, dass von Außen auf lokale Webseiten (evtl. auch die SmartVISU)
+zugegriffen werden kann. Daher sollte das nur gemacht werden, wenn
+a) auf dem Rechner sonst nichts läuft, er also explizit für den Reverse Proxy zur Verfügung steht.
+b) die Portweiterleitung nur temporär für die paar Sekunden aktiviert wird, in denen certbot die Zertifikate erneuert.
 
 .. code-block:: bash
 
@@ -137,7 +131,8 @@ NGINX Konfiguration
 -------------------
 
 ``/etc/nginx/nginx.conf`` bearbeiten und direkt im **http** Block die GeoIP
-Einstellungen hinzufügen. Unter der Konfiguration der **virtual hosts**
+Einstellungen hinzufügen, die Länder können natürlich angepasst werden.
+Unter der Konfiguration der **virtual hosts**
 noch einen Block als Schutz gegen Denial of Service Angriffe ergänzen:
 
 .. code-block::  nginx
@@ -145,12 +140,17 @@ noch einen Block als Schutz gegen Denial of Service Angriffe ergänzen:
    http {
        ##
        # GeoIP Settings
-       # Nur Länder aus erlaubten IP Bereichen dürfen den ReverseProxy
-       # passieren!
-       # https://www.howtoforge.de/anleitung/nginx-besucher-mit-dem-geoip-modul-nach-landern-blocken-debianubuntu/
-       ##
-       geoip_country /usr/share/GeoIP/GeoIP.dat;
-       map $geoip_country_code $allowed_country {
+       # Nur Länder aus erlaubten IP Bereichen
+       geoip2 /etc/nginx/GeoLite2-Country.mmdb {
+         auto_reload 5m;
+         $geoip2_metadata_country_build metadata build_epoch;
+         $geoip2_data_country_code default=DE country iso_code;
+         $geoip2_data_country_name country names en;
+       }
+
+       fastcgi_param COUNTRY_CODE $geoip2_data_country_code;
+       fastcgi_param COUNTRY_NAME $geoip2_data_country_name;
+       map $geoip2_data_country_code $allowed_country {
            default yes;
            BY no;
            BR no;
@@ -167,6 +167,9 @@ noch einen Block als Schutz gegen Denial of Service Angriffe ergänzen:
            IR no;
            SY no;
            UA no;
+           HK no;
+           JP no;
+           SC no;
        }
        ##
        # websocket for shng
@@ -282,6 +285,12 @@ NGINX mit ``sudo systemctl restart nginx`` neu starten.
                   try_files /wartung.html @loc_smartvisu;
        }
 
+       location /smartvisu {
+                  auth_basic "Restricted Area: smartVISU";
+                  auth_basic_user_file /etc/nginx/.smartvisu;
+                  try_files /wartung.html @loc_smartvisu;
+       }
+
        # Alexa Plugin Weiterleitung
        location /alexa {
            auth_basic "Restricted Area: Alexa";
@@ -300,24 +309,28 @@ NGINX mit ``sudo systemctl restart nginx`` neu starten.
                proxy_pass http://websocket;
                include /etc/nginx/headers.conf;
                include /etc/nginx/proxy_params;
+               #access_by_lua_file /etc/nginx/scripts/hass_access.lua;
        }
 
        location @loc_smartvisu {
                proxy_pass http://<SmartHomeNG LAN IP>/$request_uri;
                include /etc/nginx/headers.conf;
                include /etc/nginx/proxy_params;
+               #access_by_lua_file /etc/nginx/scripts/hass_access.lua;
        }
 
        location @loc_alexa {
            proxy_pass http://<SmartHomeNG LAN IP>:<Alexa Plugin Port>/;
            include /etc/nginx/headers.conf;
            include /etc/nginx/proxy_params;
+           #access_by_lua_file /etc/nginx/scripts/hass_access.lua;
        }
 
        location @loc_shng {
            proxy_pass http://<SmartHomeNG LAN IP>:<Network Plugin Port>/;
            include /etc/nginx/headers.conf;
            include /etc/nginx/proxy_params;
+           #access_by_lua_file /etc/nginx/scripts/hass_access.lua;
        }
    }
 
@@ -357,6 +370,10 @@ Im Anschluss muss nginx neu gestartet werden:
 Passwort-Files für unterschiedliche User für smartVISU, Alexa, Network Plugin erstellen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Für die Erstellung eines Passworts können verschiedene Tools genutzt werden, am einfachsten
+ist hier htpasswd zu installieren, das im Paket apache2-utils inkludiert ist.
+Keine Sorge - der Apache Webserver wird dadurch nicht installiert, nur einige kleine Utilities!
+
 .. code-block:: bash
 
    sudo apt-get install apache2-utils
@@ -373,8 +390,7 @@ Nacharbeiten: Port 80 in NGINX deaktivieren
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Da NGINX im LAN aktuell noch auf Port 80 konfiguriert ist, sollte man in
-der /etc/nginx/sites-available/default noch ein ``return 403`` ergänzen
-und NGINX neu starten:
+der /etc/nginx/sites-available/default noch ein ``return 403`` ergänzen:
 
 .. code-block:: nginx
 
@@ -490,7 +506,7 @@ bestätigen und ein Export Passwort wählen:
    cd /home/pi/
    sudo chown pi <USERNAME>.p12
 
-Bspw. nun via SFTP ziehen und aufs Datei aufs Android Handy übertragen
+Bspw. nun via SFTP ziehen und Datei aufs Android Handy übertragen
 und ausführen oder im Browser unter “Zertifikate” importieren. Dabei
 muss es mit Export Passwort bestätigt werden.
 
@@ -499,6 +515,9 @@ Client Zertifikate in NGINX nutzen (optional)
 
 Anleitung nach
 https://arcweb.co/securing-websites-nginx-and-client-side-certificate-authentication-linux/
+
+Der vorige Schritt macht nur Sinn, wenn NGINX auch so konfiguriert wird, dass ein
+Zugriff nur mit Zertifikat möglich ist. Dieses Vorgehen ist sicherheitstechnisch klar zu präferieren.
 
 /etc/nginx/conf.d/<mydomain>.<myds>.<me>.conf bearbeiten und die Zeilen
 im SSL Block ergänzen (“ab Client Zertifikat spezifisch”)
@@ -563,11 +582,7 @@ Clientzertifikate geschützt werden:
                    return 403;
            }
 
-           proxy_pass http://<SmartVISU Server LAN IP>/smartVISU;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-           proxy_set_header X-Forwarded-Proto $scheme;
+           # Hier die weiteren Angaben einfügen wie im vorigen Abschnitt definiert.
        }
 
 Wer es doppelt sicher haben möchte, kann die Basic Auth in den jew.
@@ -586,10 +601,8 @@ im Spiel sind. Daher ist hier auf ein spezielles LUA Script zurückzugreifen.
 .. code-block:: bash
 
   sudo apt-get install lua5.1 luarocks liblua5.1-dev libnginx-mod-http-lua
-  git clone https://github.com/evanlabs/luacrypto.git && cd luacrypto
-  luarocks install ./rockspecs/luacrypto-git-1.rockspec
-  mkdir /usr/local/lib/lua/5.1/
-  ln -s /usr/local/lib/lua/crypto.so /usr/local/lib/lua/5.1/crypto.so
+  luarocks install openssl
+
 
 Das LUA Script selbst wird in einer neuen Datei namens ``/etc/nginx/scripts/hass_access.lua``
 erstellt. In der ersten Zeile ist dabei das Passwort anzugeben, mit dem die Zertifikate
@@ -597,40 +610,41 @@ verschlüsselt wurden.
 
 .. code-block:: lua
 
-  local HMAC_SECRET = "<SECRETKEY from OPENSSL>"
-  local crypto = require "crypto"
+    local HMAC_SECRET = "<SECRETKEY from OPENSSL>"
+    digest = require('openssl').digest
+    hmac = require('openssl').hmac
 
-  function ComputeHmac(msg, expires)
-    return crypto.hmac.digest("sha256", string.format("%s%d", msg, expires), HMAC_SECRET)
-  end
+    function ComputeHmac(msg, expires)
+      return hmac.hmac("sha256", string.format("%s%d", msg, expires), HMAC_SECRET)
+    end
 
-  verify_status = ngx.var.ssl_client_verify
+    verify_status = ngx.var.ssl_client_verify
 
-  if verify_status == "SUCCESS" then
-    client = crypto.digest("sha256", ngx.var.ssl_client_cert)
-    expires = ngx.time() + 3600
+    if verify_status == "SUCCESS" then
+      client = digest.digest("sha256", ngx.var.ssl_client_cert)
+      expires = ngx.time() + 3600
 
-    ngx.header["Set-Cookie"] = {
-      string.format("AccessToken=%s; path=/", ComputeHmac(client, expires)),
-      string.format("ClientId=%s; path=/", client),
-      string.format("AccessExpires=%d; path=/", expires)
-    }
-    return
-  elseif verify_status == "NONE" then
-    client = ngx.var.cookie_ClientId
-    client_hmac = ngx.var.cookie_AccessToken
-    access_expires = ngx.var.cookie_AccessExpires
+      ngx.header["Set-Cookie"] = {
+        string.format("AccessToken=%s; path=/", ComputeHmac(client, expires)),
+        string.format("ClientId=%s; path=/", client),
+        string.format("AccessExpires=%d; path=/", expires)
+      }
+      return
+    elseif verify_status == "NONE" then
+      client = ngx.var.cookie_ClientId
+      client_hmac = ngx.var.cookie_AccessToken
+      access_expires = ngx.var.cookie_AccessExpires
 
-    if client ~= nil and client_hmac ~= nil and access_expires ~= nil then
-      hmac = ComputeHmac(client, access_expires)
+      if client ~= nil and client_hmac ~= nil and access_expires ~= nil then
+        hmac = ComputeHmac(client, access_expires)
 
-      if hmac ~= "" and hmac == client_hmac and tonumber(access_expires) > ngx.time() then
-        return
+        if hmac ~= "" and hmac == client_hmac and tonumber(access_expires) > ngx.time() then
+          return
+        end
       end
     end
-  end
 
-  ngx.exit(ngx.HTTP_FORBIDDEN)
+    ngx.exit(ngx.HTTP_FORBIDDEN)
 
 Schließlich muss noch folgende Zeile in der Datei /etc/nginx/conf.d/\<mydomain\>.\<myds\>.\<me\>.conf
 bei jeder Location eingetragen werden:
@@ -732,5 +746,5 @@ Danach NGINX neu starten.
 
    sudo systemctl restart nginx
 
-Der Test über https://www.ssllabs.com/ssltest/ gibt nun Aufschluß über
+Der Test über https://www.ssllabs.com/ssltest/ gibt nun Aufschluss über
 die Laufzeit des verlängerten Zertifikats.
