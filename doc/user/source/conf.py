@@ -20,8 +20,10 @@ import plugins as pluginsversion
 
 import datetime
 import locale
-locale.setlocale(locale.LC_TIME, 'de_DE.utf8')
-#locale.setlocale(locale.LC_ALL, 'C')
+try:
+    locale.setlocale(locale.LC_TIME, 'de_DE.utf8')
+except Exception:
+    locale.setlocale(locale.LC_ALL, 'C')
 now = datetime.datetime.now()
 import calendar
 
