@@ -184,9 +184,10 @@ COMMAND_ITEM_ATTRS = (CMD_IATTR_RG_LEVELS, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_ATTR
 PATTERN_LOOKUP               = 'LOOKUP'                 # replace with lookup values    
 PATTERN_VALID_LIST           = 'VALID_LIST'             # replace with valid_list items
 PATTERN_VALID_LIST_CI        = 'VALID_LIST_CI'          # replace with valid_list_ci items
+PATTERN_VALID_LIST_RE        = 'VALID_LIST_RE'          # replace with valid_list_re patterns
 PATTERN_CUSTOM_PATTERN       = 'CUSTOM_PATTERN'         # replace with custom pattern <x>
 
-PATTERN_MARKERS = (PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_CUSTOM_PATTERN)
+PATTERN_MARKERS = (PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_VALID_LIST_RE, PATTERN_CUSTOM_PATTERN)
 
 # command string substitution tokens, set token in {<token>}
 CMD_STR_VAL_RAW              = 'RAW_VALUE'              # replace with raw value

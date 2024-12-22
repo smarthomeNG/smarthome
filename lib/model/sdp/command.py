@@ -180,6 +180,9 @@ class SDPCommand(object):
                     elif self.cmd_settings.get('valid_list', None):
                         if data not in self.cmd_settings['valid_list']:
                             raise ValueError(f'value {data} not in list {self.cmd_settings["valid_list"]}')
+                    elif self.cmd_settings.get('valid_list_re', None):
+                        if not any(pat.match(data) for pat in self.cmd_settings['valid_list_re_compiled']):
+                            raise ValueError(f'value {data} not matching any of {self.cmd_settings["valid_list_re_compiled"]}')
                     # min/max not in addition to valid_list
                     elif any(key in self.cmd_settings.keys() for key in MINMAXKEYS):
                         for key in MINMAXKEYS:

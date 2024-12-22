@@ -33,7 +33,7 @@ from lib.model.sdp.globals import (
     CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE,
     CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_REPLY_PATTERN, CMD_ATTR_WRITE,
     CMD_ATTR_WRITE_CMD, COMMAND_PARAMS, COMMAND_SEP, INDEX_GENERIC,
-    PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI,
+    PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_VALID_LIST_RE,
     PATTERN_CUSTOM_PATTERN, PLUGIN_PATH)
 from lib.model.sdp.command import SDPCommand
 import lib.model.sdp.datatypes as DT
@@ -381,8 +381,6 @@ class SDPCommands(object):
             # 'control' is only a section, and the only valid 'content' apart from sections or commands is 'item_attrs' to provide
             # for read triggers or other extensions. If 'item_attrs' is defined, it is syntactically identical to the following
             # commands, so the identifier 'item_attrs' is read as command name.
-# TODO: unnecessary complicated? check for cmd == CMD_ATTR_ITEM_ATTRS
-            # if cmd[-len(CMD_ATTR_ITEM_ATTRS) - len(COMMAND_SEP):] == COMMAND_SEP + CMD_ATTR_ITEM_ATTRS:
             if cmd == CMD_ATTR_ITEM_ATTRS:
                 continue
 
@@ -397,6 +395,10 @@ class SDPCommands(object):
             # if valid_list_ci is present in settings, convert all str elements to lowercase only once
             if CMD_ATTR_CMD_SETTINGS in cmd_params and 'valid_list_ci' in cmd_params[CMD_ATTR_CMD_SETTINGS]:
                 cmd_params[CMD_ATTR_CMD_SETTINGS]['valid_list_ci'] = [entry.lower() if isinstance(entry, str) else entry for entry in cmd_params[CMD_ATTR_CMD_SETTINGS]['valid_list_ci']]
+
+            # if valid_list_re is present in settings, compile all patterns for later reuse
+            if CMD_ATTR_CMD_SETTINGS in cmd_params and 'valid_list_re' in cmd_params[CMD_ATTR_CMD_SETTINGS]:
+                cmd_params[CMD_ATTR_CMD_SETTINGS]['valid_list_re_compiled'] = [re.compile(entry) for entry in cmd_params[CMD_ATTR_CMD_SETTINGS]['valid_list_re']]
 
             dt_class = None
             dev_datatype = cmd_params.get(CMD_ATTR_DEV_TYPE, '')
@@ -433,6 +435,12 @@ class SDPCommands(object):
 
                         vl_pattern = '((?i:' + '|'.join(re.escape(key) for key in cmd_dict[CMD_ATTR_CMD_SETTINGS]['valid_list_ci']) + '))'
                         pattern = pattern.replace('{' + PATTERN_VALID_LIST_CI + '}', vl_pattern)
+
+                    if cmd_dict.get(CMD_ATTR_CMD_SETTINGS) and 'valid_list_re' in cmd_dict[CMD_ATTR_CMD_SETTINGS] and '{' + PATTERN_VALID_LIST_RE + '}' in pattern:
+
+                        vl_pattern = '(' + '|'.join(cmd_dict[CMD_ATTR_CMD_SETTINGS]['valid_list_re']) + ')'
+                        pattern = pattern.replace('{' + PATTERN_VALID_LIST_RE + '}', vl_pattern)
+
 
                     processed_patterns.append(pattern)
 
