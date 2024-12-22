@@ -71,6 +71,7 @@ commands = {
         #         Consider bounding the pattern like ``{LOOKUP}$`` or similar
         # - ``{VALID_LIST}`` to replace with all valid values according to the cmd_settings
         # - ``{VALID_LIST_CI}`` ditto, with case-insensitive flag set
+        # - ``{VALID_LIST_RE}`` ditto, but matches against regexes from valid_list_re
         # - ``{CUSTOM_PATTERN1}``...``{CUSTOM_PATTERN3}`` to replace with the respective
         #   custom pattern as defined in the device class to identify one of the custom tokens
         'reply_pattern': [],
@@ -82,6 +83,7 @@ commands = {
         # - 'force_max': maximum value, set to this value is above (precedence over max)
         # - 'valid_list': list of allowed values, error if not in list
         # - 'valid_list_ci': ditto, but case insensitive
+        # - 'valid_list_re': ditto, but all values are read as regexes
         'cmd_settings': {'valid_min': 0, 'valid_max': 255, 'force_min': 0, 'force_max': 255, 'valid_list': [1, 2, 3, 4, 5]},
 
         # optional, specifies lookup table to use (see below)
