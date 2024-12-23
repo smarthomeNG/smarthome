@@ -703,7 +703,7 @@ class SmartDevicePlugin(SmartPlugin):
         :return: True if send was successful, False otherwise
         :rtype: bool
         """
-        def is_regex(pattern):
+        def captures_value(pattern):
             try:
                 re.compile(pattern)
                 # Check for non-empty unescaped parentheses indicating capture groups
@@ -787,14 +787,14 @@ class SmartDevicePlugin(SmartPlugin):
         if reply_pattern is None or value is None:
             resend_info = {'command': resend_command, 'returnvalue': None, 'read_cmd': read_cmd}
         # if reply_pattern has no lookup or capture group, put it in resend_info as expected reply
-        elif not isinstance(reply_pattern, list) and not is_regex(reply_pattern):
-            resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
+        elif not isinstance(reply_pattern, list) and not captures_value(reply_pattern):
+            resend_info = {'command': resend_command, 'returnvalue': re.compile(reply_pattern), 'read_cmd': read_cmd}
         # if reply_pattern is list, check if one of the entries has capture group
         elif isinstance(reply_pattern, list):
             return_list = []
             for r in reply_pattern:
-                if not is_regex(r):
-                    return_list.append(r)
+                if not captures_value(r):
+                    return_list.append(re.compile(r))
                 elif value not in return_list:
                     return_list.append(value)
             reply_pattern = None if None in return_list else return_list

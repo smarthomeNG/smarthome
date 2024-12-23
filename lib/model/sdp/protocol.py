@@ -39,6 +39,7 @@ from time import time
 import threading
 import queue
 import json
+import re
 
 
 #############################################################################################################################################################################################################################################
@@ -530,7 +531,11 @@ class SDPProtocolResend(SDPProtocol):
                 for c in compare:
                     self.logger.debug(f'Comparing expected reply {c} ({type(c)}) with value {value} ({type(value)}).')
                     # check if expected value equals received value or both are None (only happens with lists in reply_pattern)
-                    if c is None or type(c)(value) == c:
+                    if isinstance(c, re.Pattern):
+                        cond = re.search(c, str(value))
+                    else:
+                        cond = type(c)(value) == c
+                    if c is None or cond:
                         # remove command from _sending dict
                         self._sending.pop(command)
                         self._sending_retries.pop(command)
