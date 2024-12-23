@@ -34,7 +34,7 @@ from lib.model.sdp.globals import (
     CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_REPLY_PATTERN, CMD_ATTR_WRITE,
     CMD_ATTR_WRITE_CMD, COMMAND_PARAMS, COMMAND_SEP, INDEX_GENERIC,
     PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_VALID_LIST_RE,
-    PATTERN_CUSTOM_PATTERN, PLUGIN_PATH)
+    PATTERN_CUSTOM_PATTERN, PLUGIN_PATH, CUSTOM_SEP)
 from lib.model.sdp.command import SDPCommand
 import lib.model.sdp.datatypes as DT
 
@@ -118,6 +118,25 @@ class SDPCommands(object):
 
         raise Exception(f'command {command} not found in commands')
 
+    def custom_is_enabled_for(self, command: str) -> bool:
+        """
+        return if custom handling is allowed or disabled for given command
+
+        If a custom command <cmd>#<custval> is given, also check the base command.
+        This seems nonsensical, but might help discover configuration errors
+        """
+        cmd = self._commands.get(command)
+        if cmd:
+            return not cmd.custom_disabled
+        else:
+            try:
+                cmd, _ = cmd.split(CUSTOM_SEP)
+                return self.custom_is_enabled_for(cmd)
+            except ValueError:
+                pass
+            self.logger.warning(f'command {command} not found while checking for custom handling')
+            return True
+
     def get_commands_from_reply(self, data):
         """ return list of commands for received data """
         if data is None:
@@ -137,7 +156,7 @@ class SDPCommands(object):
                     if pattern:
                         try:
                             regex = re.compile(pattern)
-                            if regex.match(data) is not None:
+                            if regex.search(data) is not None:
                                 self.logger.debug(f'matched reply_pattern {pattern} as regex against data {data}, found command {command}')
                                 commands.append(command)
                         except Exception as e:

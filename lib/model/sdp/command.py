@@ -65,6 +65,8 @@ class SDPCommand(object):
     reply_pattern = ''
     cmd_settings = None
     lookup = None
+    custom_disable = False
+
     _DT = None
 
     def __init__(self, command, dt_class, **kwargs):
@@ -181,7 +183,7 @@ class SDPCommand(object):
                         if data not in self.cmd_settings['valid_list']:
                             raise ValueError(f'value {data} not in list {self.cmd_settings["valid_list"]}')
                     elif self.cmd_settings.get('valid_list_re', None):
-                        if not any(pat.match(data) for pat in self.cmd_settings['valid_list_re_compiled']):
+                        if not any(pat.fullmatch(data) for pat in self.cmd_settings['valid_list_re_compiled']):
                             raise ValueError(f'value {data} not matching any of {self.cmd_settings["valid_list_re_compiled"]}')
                     # min/max not in addition to valid_list
                     elif any(key in self.cmd_settings.keys() for key in MINMAXKEYS):
@@ -279,11 +281,11 @@ class SDPCommandStr(SDPCommand):
         string = string.replace('{' + CMD_STR_OPCODE + '}', self.opcode)
 
         regex = r'(\{' + CMD_STR_PARAM + r'([^}]+)\})'
-        while re.match('.*' + regex + '.*', string):
+        while re.search(regex, string):
             string = re.sub(regex, repl_func, string)
 
         regex = r'(\{' + CMD_STR_CUSTOM + r'([123])\})'
-        while re.match('.*' + regex + '.*', string):
+        while re.search(regex, string):
             string = re.sub(regex, cust_func, string)
 
         if data is not None:

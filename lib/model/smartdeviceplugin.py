@@ -480,7 +480,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self._items_custom[item.property.path][index] = val
 
         custom_token = ''
-        if self.custom_commands and self._items_custom[item.property.path][self.custom_commands]:
+        if self._commands.custom_is_enabled_for(command) and self.custom_commands and self._items_custom[item.property.path][self.custom_commands]:
             custom_token = CUSTOM_SEP + self._items_custom[item.property.path][self.custom_commands]
 
         if command:
@@ -718,7 +718,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         kwargs.update(self._parameters)
         custom_value = None
-        if self.custom_commands:
+        if self._commands.custom_is_enabled_for(command) and self.custom_commands:
             try:
                 command, custom_value = command.split(CUSTOM_SEP)
                 if 'custom' not in kwargs:
@@ -863,7 +863,7 @@ class SmartDevicePlugin(SmartPlugin):
         """ convert received data and handle custom token """
 
         custom = None
-        if self.custom_commands:
+        if self._commands.custom_is_enabled_for(command) and self.custom_commands:
             custom = self._get_custom_value(command, data)
 
         value = None
@@ -934,7 +934,7 @@ class SmartDevicePlugin(SmartPlugin):
         :return: True if command is valid, False otherwise
         :rtype: bool
         """
-        if self.custom_commands:
+        if self._commands.custom_is_enabled_for(command) and self.custom_commands:
             try:
                 command, custom_value = command.split(CUSTOM_SEP)
                 if custom_value not in self._custom_values[self.custom_commands]:
@@ -1064,7 +1064,7 @@ class SmartDevicePlugin(SmartPlugin):
         extract custom value from data
         At least PATTERN needs to be overwritten
         """
-        if not self.custom_commands:
+        if not self.custom_commands or not self._commands.custom_is_enabled_for(command):
             return
         if not isinstance(data, str):
             return

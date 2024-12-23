@@ -157,6 +157,7 @@ CMD_ATTR_CMD_SETTINGS        = 'cmd_settings'           # additional settings fo
 CMD_ATTR_LOOKUP              = 'lookup'                 # use lookup table <foo> to translate between plugin and items
 CMD_ATTR_PARAMS              = 'params'                 # parameters to send (e.g. in JSON-RPC)
 CMD_ATTR_ITEM_ATTRS          = 'item_attrs'             # item attributes for struct generation (see below)
+CMD_ATTR_CUSTOM_DISABLE      = 'custom_disable'         # disable custom token detection for this command
 
 CMD_IATTR_RG_LEVELS          = 'read_group_levels'      # include this number of read groups (max, 0=no read groups)
 CMD_IATTR_LOOKUP_ITEM        = 'lookup_item'            # create lookup item <item>.lookup
@@ -174,7 +175,7 @@ CMD_IATTR_CUSTOM3            = 'custom3'                # add item-specific cust
 # commands definition parameters
 COMMAND_PARAMS = (CMD_ATTR_OPCODE, CMD_ATTR_READ, CMD_ATTR_WRITE, CMD_ATTR_ITEM_TYPE, CMD_ATTR_DEV_TYPE,
                   CMD_ATTR_READ_CMD, CMD_ATTR_WRITE_CMD, CMD_ATTR_REPLY_PATTERN, CMD_ATTR_CMD_SETTINGS,
-                  CMD_ATTR_LOOKUP, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS)
+                  CMD_ATTR_LOOKUP, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS, CMD_ATTR_CUSTOM_DISABLE)
 
 COMMAND_ITEM_ATTRS = (CMD_IATTR_RG_LEVELS, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_ATTRIBUTES, CMD_IATTR_TEMPLATE,
                       CMD_IATTR_READ_GROUPS, CMD_IATTR_CYCLE, CMD_IATTR_INITIAL, CMD_IATTR_ENFORCE,
