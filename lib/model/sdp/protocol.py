@@ -528,9 +528,10 @@ class SDPProtocolResend(SDPProtocol):
                 compare = self._sending[command].get('returnvalue')
                 compare = [compare] if not isinstance(compare, list) else compare
                 for c in compare:
-                    self.logger.debug(f'Comparing expected reply {c} ({type(c)}) with value {value} ({type(value)})')
-                    if type(c)(value) == c:
-                        # if received value equals expexted value, remove command from _sending dict
+                    self.logger.debug(f'Comparing expected reply {c} ({type(c)}) with value {value} ({type(value)}).')
+                    # check if expected value equals received value or both are None (only happens with lists in reply_pattern)
+                    if c is None or type(c)(value) == c:
+                        # remove command from _sending dict
                         self._sending.pop(command)
                         self._sending_retries.pop(command)
                         self.logger.debug(f'Got correct response for {command}, '

@@ -703,6 +703,17 @@ class SmartDevicePlugin(SmartPlugin):
         :return: True if send was successful, False otherwise
         :rtype: bool
         """
+        def is_regex(pattern):
+            try:
+                re.compile(pattern)
+                # Check for non-empty unescaped parentheses indicating capture groups
+                has_nonempty_parentheses = bool(re.search(r'(?<!\\)\((?!\?:)[^)]{1,}\)', pattern))
+                # Check for non-empty unescaped curly braces, for lookups
+                has_nonempty_braces = bool(re.search(r'(?<!\\)\{[^}]{1,}\}', pattern))
+                return has_nonempty_parentheses or has_nonempty_braces
+            except re.error:
+                # Not a valid regex
+                return False
 
         if not self.alive:
             self.logger.warning(f'trying to send command {command} with value {value}, but plugin is not active.')
@@ -766,28 +777,32 @@ class SmartDevicePlugin(SmartPlugin):
 
                     if isinstance(reply_pattern, list):
                         reply_pattern = [r.replace(pattern, custom_replacement) for r in reply_pattern]
+                        if len(reply_pattern) == 1:
+                            reply_pattern = reply_pattern[0]
                     else:
                         reply_pattern = reply_pattern.replace(pattern, custom_replacement)
         read_cmd = self._transform_send_data(self._commands.get_send_data(command, None, **kwargs), **kwargs)
         resend_command = command if custom_value is None else f'{command}#{custom_value}'
         # if no reply_pattern given, no response is expected
-        if reply_pattern is None:
+        if reply_pattern is None or value is None:
             resend_info = {'command': resend_command, 'returnvalue': None, 'read_cmd': read_cmd}
-        # if no reply_pattern has lookup or capture group, put it in resend_info
-        elif not isinstance(reply_pattern, list) and '(' not in reply_pattern and '{' not in reply_pattern:
+        # if reply_pattern has no lookup or capture group, put it in resend_info as expected reply
+        elif not isinstance(reply_pattern, list) and not is_regex(reply_pattern):
             resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
         # if reply_pattern is list, check if one of the entries has capture group
         elif isinstance(reply_pattern, list):
             return_list = []
             for r in reply_pattern:
-                if '(' not in r and '{' not in r:
+                if not is_regex(r):
                     return_list.append(r)
-            reply_pattern = return_list if return_list else value
+                elif value not in return_list:
+                    return_list.append(value)
+            reply_pattern = None if None in return_list else return_list
             resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
         # if reply pattern does not expect a specific value, use value as expected reply
         else:
             resend_info = {'command': resend_command, 'returnvalue': value, 'read_cmd': read_cmd}
-        # if an error occurs on sending, an exception is thrown "below"
+        # if an error occurs on sending, an exception is thrownn below
         try:
             result = self._send(data_dict, resend_info=resend_info)
         except (RuntimeError, OSError) as e:  # Exception as e:
