@@ -17,8 +17,8 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 22. März 2024
-           (Bumped core version to 1.10.0.2...)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 28. Dezember 2024
+           (...)
          - Berücksichtigt sind Commits im plugins Repository bis incl. 13. März 2024
            (...)
 
@@ -57,19 +57,29 @@ zu unterstützten Python Versionen)
 Allgmein
 --------
 
-* Workflows:
+* github:
 
-  * Fix unittest for forked repos in core
+  * Workflows: Fix unittest for forked repos in core
+  * Modify gitignore structure
+
 
 
 Bugfixes im CORE
 ----------------
 
-* ...
+* Fix pathname/conffile access
 
 
 Updates in the CORE
 -------------------
+
+* Move templates for logics and userfucntions to new template dir, adjust api_files
+* Replace static file/dir references by constants
+* Move to get_config_dir/get_config_file
+* Rename templates_dir var
+* Add metadata checks for sdp version
+* Add pyrightconfig.json to gitignore
+
 
 * bin
 
@@ -93,14 +103,26 @@ Updates in the CORE
 
 * Libs:
 
+  * requirements.txt: Some libs received overhauling and bugs were fixed
+
   * lib.backup:
 
       * Added support for option -e (--config_etc)
+      * Added the output of 'pip list' to the configuration backup file
 
   * lib.config:
 
     * Remove name attribute from struct root before merging
     * Add struct syntax checking
+
+  * lib.db:
+
+    * Handle numeric passwords and OrderedDict lists
+
+  * lib.env:
+
+    * Modified error handling for location_name()
+    * Added some logging
 
   * lib.item:
 
@@ -109,6 +131,23 @@ Updates in the CORE
     * Speedup name collision check
     * Add methods for list/dict manipulation
     * Remove old list/dict methods
+    * Add ancestor item/attr methods
+    * Replace return_parent and _get_attribute_value
+    * Rename find_attr to find_attribute
+    * find_attribute: Return default value
+    * Allow log level to be set by eval expression
+    * Fader introduce stop_fade, continue_fade, instant_set and update functionality
+    * Fader check if stop/continue_fade is list and handle issues
+    * on_update and on_change now support special vars 'caller', 'source' and 'dest' in addition to 'value'
+    * Fix dynamic log_level
+    * Allow for default log text in smarthome.yaml, used by log_change
+    * log_mapping and log_rules are now expected to be stated as a list. However, putting a dict as string is still possible (non-breaking)
+    * Revert _items_instance.return_item
+    * Fader method: fix caching after successful fade
+    * Log rules: log warning if invalid parameter is set
+    * Remove debug code
+    * log_rules: Detailed warnings on wrong configuration, only log the same entry once
+    * log_rules: Ignore same low- and highlimit values, only lowlimit counts
 
   * lib.log:
 
@@ -116,6 +155,12 @@ Updates in the CORE
     * Log issues with logging.yaml to standard shng logger additionally
     * Allow weekly, monthly and yearly rotation when using DateTimeRotatingFileHandler
     * Fix for bug introduced with v 1.10 in ShngTimedRotatingFileHandler: Log content and file name had an offset
+    * custom_replace function: add r in front of regex including \d
+    * Add develop level (9) for easier debugging when developing
+
+  * lib.logic:
+
+    * Introduce class-wide logic conf filename
 
   * lib.model:
 
@@ -130,31 +175,120 @@ Updates in the CORE
       * Implement read after write
       * Fix attr resolving
       * Fix long cyclic recovery
+      * Several minor fixes/updates
+      * Adjust to smartplugin changes
+      * suspend/resume
+      * Fix missing parameter
+      * Move to sdp v1.0.2
+      * Pass plugin reference to connection/protocol
+      * Change to scheduler_remove_all
+      * Modify run logics
+      * Propose resend protocol
+      * Move command storing
+      * Set protocol to resend if send_retries > 0
+      * Query current value for command that was not successfully sent
+      * Fix and improve read command for querying after resend is not successful
+      * Rename check_command to check_reply as this is more suitable
+      * Join resend/jsonrpc parameters, cleanup
+      * Add minimum version check
+      * Make resending work with custom command values
+      * Correctly handle reply_patterns defined as lists for resend protocol
+      * Parse custom_parameters correctly for reply_pattern used for resend protocol
+      * Improve struct generation
+      * Add delivery queue to serial connection for better timing
+      * Connection.py aktualisieren
+      * Fix order of connect initialization, fix struct generation
+      * Fix sdp references
 
     * smartplugin:
 
       * Replace item.path() with item.property.path
       * Added support for the use of asyncio in plugins
+      * Improved error handling in stop_asyncio()
+      * run_async_coro can now return the result of the coro to the calling method
+      * Added option to run_async_coro to return Exception to the calling method
+      * Added method asyncio_state()
+      * Implemented _start_known_asyncio_coro()
+      * Implemented put_command_to_run_queue() and get_command_from_run_queue()
+      * Alternative way to track schedulers
+      * Move suspend item to pause item, cleanup
+      * Add mqttplugin
+      * Fix default _cycle
+      * Remove warning if scheduler entry not found
+
+  * lib.network:
+
+    * Add serial connection reset error handling
+
+  * lib.shpypi:
+
+    * Bugfix to prevent plugin requirements from being written to base.txt
+    * Calculate versions for requiremens above/below given version
+    * Added the output of 'pip list' to the configuration backup file
+    * Removed logging from create_pip_list method
+    * Fixed bug in installing requirements, when a wrong pip-command was used
 
   * lib.smarthome:
 
-      * Added support for option -e (--config_etc)
-      * Log issues with logging.yaml to standard shng logger additionally
+    * Added support for option -e (--config_etc)
+    * Log issues with logging.yaml to standard shng logger additionally
+    * Added state print when running in forground mode
+    * Catched exception in objects_refcount()
+    * **c1**
+    * Clean up directory vars
+    * Add generic get conffile/confdir method
+    * Create necessary dirs
+    * Skip deprecation warnings for decrepit ciphers on macOS
 
   * lib.struct:
 
     * Add struct syntax checking
 
+  * lib.utils:
+
+    * Added functions to return lists with all local ipv4/ipv6 addresses
+    * Removed logging info and changed parameter typing to be compatible with Python 3.9 and under
+
+  * lib.whocalledme:
+
+    * New module to help debugging core and plugin code
+
 * Modules:
+
+  * module.admin:
+
+    * Adjusted a loglevel
+    * Display all local ipv4 addresses in systemdata
+    * Added option to handle a second webinterface (admin gui)
+    * Implemented CORS support in rest.py
+    * Addition to /api/server
+    * api_config.py updates hashed_password for running instance after password change
+    * Added SystemController()
+    * Added gui_type for boolean parameters
+    * Changed requirements for pyjwt because new version of pyjwt has a breaking change
 
   * modules.http:
 
     * Extended base_plugin to support 8 tabs in webinterface
     * Fix issue with datatable when bodytab count changed after cookies have been set
+    * Ensure that actual value of password_hash is used for login
+    * Added gui_type for boolean parameters
+    * Not only update responsive cell when hidden but also when visible
 
   * modules.mqtt:
 
     * Changed requirements - the lately released paho client 2.0 has breaking changes
+    * Added gui_type for boolean parameters
+
+  * modules.websocket:
+
+    * Added attributes to identity message in smartvisu payload protocol
+    * Added gui_type for boolean parameters
+    * Added some logging to smartvisu payload protocol
+    * Fix for smartvisu protocol
+    * Fix item access for smartvisu protocol
+    * Requirements: Limit websocket version to prevent error due to incompatible changes in websocket lib with version 13.0
+    * Fix smartvisu item monitoring
 
 * Plugins:
 
@@ -162,7 +296,7 @@ Updates in the CORE
 
 * tests:
 
-  * ...
+  * Update mock core
 
 * tools:
 
@@ -390,7 +524,22 @@ Tools
 Dokumentation
 -------------
 
-* ...
-* ...
+* Sample Plugin: Updated with asyncio handling
+* Sample plugins: Aet version numbers in quotes
+* Sample MQTT Plugin: Fix pause item name
+* Update crontab description for items and logics
+* Updates for asyncio support for plugins
+* Added installation of ESPHome dashboard
+* Extended lib.backup to backup and restore ESPHome configurations
+* Added info for ESPHome
+* Updated/corrected docu on log_text
+* Add info on log_level via eval expression
+* Fader update docu for new functionality
+* Update NGINX Reverse Proxy
+* Fix log_change default
+* Komplettanleitung smartVISU updated
+
+* Build doc local: make script work on Mac OS X, too
+* Build docu: Fallback for locale
 
 
