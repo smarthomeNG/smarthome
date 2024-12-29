@@ -37,7 +37,7 @@ und folgenden Text hineinkopieren:
 
    [Unit]
    Description=SmartHomeNG daemon
-   After=network.target
+   After=network-online.target
    After=knxd.service
    After=knxd.socket
 

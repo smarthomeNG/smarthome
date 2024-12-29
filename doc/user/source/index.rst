@@ -33,7 +33,7 @@ Diese Dokumentation reflektiert das aktuelle Release:
 - **Version der Plugins**: |version|
 
 Hilfe zu SmartHomeNG gibt es im `Supportforum im KNX-User-Forum <https://knx-user-forum.de/forum/supportforen/smarthome-py>`_
-oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
+oder im `Chat auf gitter.im <https://app.gitter.im/#/room/#smarthomeNG_smarthome:gitter.im>`_ .
 
 .. note::
 
