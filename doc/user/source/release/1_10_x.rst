@@ -19,7 +19,7 @@ sowie einige neue Plugins.
 
          - Berücksichtigt sind Commits im smarthome Repository bis incl. 28. Dezember 2024
            (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 13. März 2024
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 10. September 2024
            (...)
 
 
@@ -234,7 +234,7 @@ Updates in the CORE
     * Log issues with logging.yaml to standard shng logger additionally
     * Added state print when running in forground mode
     * Catched exception in objects_refcount()
-    * **c1**
+    * Fix directory calculation for external configuration
     * Clean up directory vars
     * Add generic get conffile/confdir method
     * Create necessary dirs
@@ -315,7 +315,7 @@ Allgmein
 
 * Workflows:
 
-  * ...
+  * Removed Python3.8 from unittests
 
 
 .. _releasenotes_1_10_x_neue_plugins:
@@ -326,8 +326,22 @@ Neue Plugins
 Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-* <Name>: ...
+* hue4:
 
+  * Initial commit of hue_apiv2 plugin - plugin is not feature complete at the moment
+  * Connecting to and disconnecting from bridge implemented
+  * Bumped version to 0.4.0
+  * Completed zigbee_connectivity sensors and some updtaes to user_doc.rst
+  * Updated user_doc.rst
+  * Bumped version to 0.6.5
+  * Changed plugin to final name (from hue_apv2)
+  * set version fo 3.0.0
+  * Code cleanup and documentation fixes
+
+* panasonic_ac:
+
+  * New plugin to control Panasonic air conditioning units, still in develop state
+  * Updated user_doc.rst and added plugin logo
 
 .. _releasenotes_1_10_x_updates_plugins:
 
@@ -340,10 +354,23 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * avm:
 
   * Catch exception after maximum retries exceeded
+  * Bugfix get_calllist and get_contact_name_by_phone_number
+  * Compatibility edit
+
+* beolink:
+
+  * Bug fixes
+  * Bumped version to 0.8.1
 
 * database:
 
   * Corrected inline comment
+  * Fix logging error
+  * Fixed log message during exception
+  * Improve getting sqlite3 file method
+  * Copy_database does not disable itself after success anymore (why should it...?)
+  * Change log message of copy database to info (instead of warning)
+  * Added logging
 
 * db_addon:
 
@@ -352,15 +379,65 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix bug in database queries for "next"-function
   * Fix bug in kaeltesumme
   * Bugfix in wachstumsgradtage and docu update
+  * Bugfix in _query_log_timestamp for "next" function
+  * Changed to 1.2.9
+  * Bugfix handling on-change items
+  * Ease dbaddon function parameter set
+  * Adjust to smartplugin changes
+  * Bugfix use of oldest entry
+
+* denon:
+
+  * Fix initial maxvolume check (it's not available)
+  * Add readafterwrite parameter
+  * Add resend options on plugin.yaml
+  * Query most relevant commands after powering on a zone
+  * Add resend function
+  * Add on_suspend/resume functions
+  * Implement delay for initial value read
+  * Fix resend_info
+  * Add resume_initial_read and protocol (for resend)
+  * Revert resend changes as it is now included as a protocol on a global level
+  * Remove reading of volumemax from structs (it is not available)
+  * Remove threading import
+  * Remove protocol and command_class from plugin.yaml
+  * Auto set command class
+  * Add sdp metadata
+  * Move custom inputnames to dataype
+  * Update plugin.yaml
+  * Do not overwrite on_connect anymore, but read custom inputs with other "initial reads"
+  * Update commands and plugin.yaml
+
+* dlms:
+
+  * Fix typos in user_doc
+
+* drexelundweiss:
+
+  * Prevent division by 0
+  * Fix all configs were divisor is 0
 
 * enocean:
 
   * Adapted caller to global smarthomeNG convention -> enocean instead of EnOcean
+  * Modify connect logics, include refactoring by hasenradball
+  * Added 0 connect retries for unlimited
+  * Update plugin.yaml
+  * Fix sh min version number
+  * Marked the plugin as being restartable
 
 * homematic:
 
   * Added name to an unnamed thread
   * Fixed webinterface for items with the same name
+
+* hue2:
+
+  * Small improvement to webinterface
+
+* husky2:
+
+  * Fixed loop caused by caller name check
 
 * ical:
 
@@ -374,9 +451,41 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Remove pyminversion
   * Bump version to 1.0.4
 
+* knx:
+
+  * Improve logging for sending and polling
+  * Only log poll when plugin is alive
+  * Add super().__init__() to init
+
+* kodi:
+
+  * Update plugin.yaml
+  * Adjust to current sdp version
+  * Adjust to latest sdp changes, cleanup plugin.yaml
+
 * ksemmodbus:
 
   * Removed support for pymodbus2
+
+* lms:
+
+  * Fix commands for querying data
+  * Fix reply pattern for some commands
+  * Fix and update structs
+  * Autoset command class and connection
+  * Add resend and initial read parameters
+  * Add sdp metadata
+  * Adjust sdp metadata
+  * Convert specific replies to correct boolean
+
+* modbus_tcp:
+
+  * Fixed error writing registers, conversion byte/word to endian
+  * Reduced logger output during repeated connection issues, connection pause/resume controllable
+  * Suspend and resume the connection via item
+  * Fixed issue with writing without modBusObjectType
+  * Fixed startup issue with active suspend
+  * Move to pause_item support
 
 * neato:
 
@@ -391,6 +500,40 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Renamed remotestart_1/2.path to remotestart_1/2.rstart_path
   * Added timeout to request handling against api to prevent unlimited blocks of lock
 
+* onewire:
+
+  * Changed some Log levels from info to dbghigh
+
+* oppo:
+
+  * Remove _send method, not needed
+  * Set command class automatically, remove some unneccessary entries from plugin.yaml
+  * Add parameters to plugin.yaml
+  * Add min_sdp_version and bump version to 1.0.1
+  * Fix metadata, remove protocol from plugin.yaml
+  * Fix command class
+  * Add sdp metadata
+  * Remove useless lists in commands
+
+* pioneer:
+
+  * Set command class automatically
+  * Add resend and initial_read parameters
+  * Bump version to 1.0.3
+  * Add sdp metadata
+  * Adjust sdp metadata
+  * Fix command class handling
+  * Fix multizone command
+  * Fix plugin.yaml (instance included, other fixes)
+
+* raumfeld_ng:
+
+  * Fix typos in user_doc
+
+* resol:
+
+  * Fixed an issue preventing the plugin from being restartable
+
 * robonect:
 
   * Removed strange / in version number
@@ -400,12 +543,17 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Remove useless webinterface code and folder
   * Fix docu
 
+* russound:
+
+  * Move to pause_item support
+
 * shelly:
 
   * Extended plugin to support generation 3 devices
   * Catch exception in update_item if ID is not known yet
   * Minor typo fixes in documentation
   * Fix docu
+  * Bumped version to 1.8.3
 
 * simulation:
 
@@ -418,22 +566,73 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * smartvisu:
 
   * Fix for display of datetime object
+  * Avoid nested anchors
+  * Improve z-index
+  * Added attributes to identity message in smartvisu payload protocol
+  * Bumped version to 1.8.15
+  * Fixed version-check bug in widget installation
+  * Bumped version to 1.8.16
 
 * solarforecast:
 
   * Catch exception if return value is not json conform
+  * Add hourly forecase and power checks as items and plugin function
 
 * sonos:
 
   * Minor robustness fix
+  * Adjusted requirements
+  * Update to SoCo 0.30.4 (refer to SoCo changelog for a full list of robustness fixes)
+  * Bumped to version 1.8.7
+  * Fix for collections import for python >= 3.10
+  * Removed debug logs with warning level
 
 * stateengine:
 
   * Fix logging of header when directory is not created yet
+  * Update logging
+  * Remove status from action log, not needed
+  * Correct eval_status evaluation order
+  * Fix issues finding attributes when using se_use
+  * Fix status_eval
+  * try/except finding parent item as this is not always possible (esp. when using structs)
+  * Get correct current item for action when using se_eval
+  * Fix value conversion for strings!
+  * Fix se_status_eval when using structs (e.g. in se_use)
+  * Add se_name to attribute parameters
+  * Fix docu
+  * Fix web interface.. corrct handling of "force set", delay and conditions
+  * Fix condition handling, now it's working as OR, was AND first by accident
+  * Update SetForce Action
+  * Code cleanup, fixes, improvements
+  * Write log message when log is turned off (set to 0)
+  * Bump version to 2.0.1
+  * Improve and extend issue reporting when getting values
+  * Attributes from items, structs, etc. referenced by se_use are now evaluated correctly, even if they are defined as lists
+  * Don't expand item pathes at beginning so relative item attributes are correctly assigned when using structs and se_use
+  * Improve se_use handling when searching for attributes (gets evaluated only once in the beginning)
+  * "set" function now also returns original value, necessary for optimal "se_use" handling
+  * set_from_attribute function now takes an ignore list of entries that should not be checked
+  * Massive update of se_use handling. Now the item config gets correctly scanned and only at init. Multiple fixes, improvements and better issue handling
+  * Bump version to 2.1 as there were quite some edits
+  * Improve condition check of actions (much faster)
+  * Fix previousstate_conditions set valuation
+  * Introduce next_conditionset to check conditionset of upcoming state(condition)
+  * Update docu for next conditionset
+  * Introduce caching of eval results to improve performance
+  * Add nextconditionset to web interface
+  * Add nextcondition to source evaluation method
+  * Minor improvements
+  * Add action_type to action(s) for better webif handling (coming)
+  * Fix previousonditionset variable
 
 * tasmota:
 
   * Add input button
+
+* telegram:
+
+  * Plugin controllable with stop/run/pause_item
 
 * uzsu:
 
@@ -441,23 +640,79 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Improve handling of invalid items
   * Improve logging
   * Bump version to 2.0.1
+  * Remove old version due to scipy security issues
+  * Add seconds to info on next UZSU setting
+  * Add "next" item to struct to read value and time of next UZSU setting
+  * Update parameters for plugin functions
+  * Bump version to 2.0.2
+  * Remove English user doc as it is outdated
+  * Update docu on new struct as well as item functions
+  * Add super().__init__() to init
+  * Improve struct for "next" item
 
 * vicare:
 
   * If multiple devices are available, readout the first device with valid boiler serial number
   * Added list of available devices to webinterface
+  * Allow commands without additional parameters (only command urls)
+  * Minor fixes for update_item function shortly after start-up (commands are not read out yet)
+  * Added control helper items for "one time charge" command feature to plugin.yaml struct
+  * Added preliminary webinterface feature description
+  * Further work on plugin docu
+  * Fix table in user_doc
+
+* withings_health:
+
+  * Changed methode to derive callback IPv4 address
 
 * zigbee2mqtt:
 
   * Add new structs
+  * Accept mixed case topics
+  * Shorten bridge messages for INFO logging
+  * Adjust for suspend updates
+  * Add pause_item functions
+  * Fix pause item
 
 * Multiple plugins:
 
   * Replace item.path() with item.property.path
+  * Move sh|py_min|max_version to str definition in plugin.yaml
+
 
 
 Outdated Plugins
 ----------------
+
+Die folgenden Plugins wurden als veraltet (deprecated markiert und werden in einem der nächsten Releases
+aus dem Plugin-Repo entfernt und in das Archive-Repo verschoben:
+
+* System Plugins
+
+  * datalog
+  * influxdata
+  * memlog
+  * operationlog
+  * visu_smartvisu
+  * visu_websocket
+
+* Gateway Plugins
+
+  * raumfeld
+
+* Interface Plugins
+
+  * avdevice
+  * avm_smarthome
+  * husky
+
+* Web/Cloud Plugins
+
+  * alexa
+  * darksky - the free API is not provided anymore - switch to the **piratewthr** or **openweathermap** plugin
+
+
+
 
 Die folgenden Plugins wurden bereits in v1.6 als *deprecated* (veraltet) markiert. Das bedeutet, dass diese
 Plugins zwar noch funktionsfähig sind, aber nicht mehr weiter entwickelt werden. Sie werden in einem kommenden
@@ -466,38 +721,11 @@ wechseln.
 
 * System Plugins
 
-  * backend - use the administration interface instead
   * sqlite_visu2_8 - switch to the **database** plugin
 
 * Web Plugins
 
-  * wunderground - the free API is not provided anymore by Wunderground
-
-
-Die folgenden Plugins wurden in v1.7 als *deprecated* (veraltet) markiert, weil kein Nutzer oder Tester
-dieser Plugins gefunden werden konnte:
-
-* Gateway Plugins
-
-  * ecmd
-  * elro
-  * iaqstick
-  * snom
-  * tellstick
-
-* Interface Plugins
-
-  * easymeter
-  * smawb
-  * vr100
-
-* Web Plugins
-
-  * nma
-
-Weiterhin wurde das bisherige mqtt Plugin zu mqtt1 umbenannt und als *deprecated* markiert, da das neue mqtt
-Plugin diese Funktionalität übernimmt. Das neue mqtt Plugin nutzt dazu das mqtt Modul des aktuellen Cores
-von SmartHomeNG.
+  * wunderground - the free API is not provided anymore by Wunderground - switch to the **piratewthr** or **openweathermap** plugin
 
 
 Retired Plugins
