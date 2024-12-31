@@ -430,7 +430,7 @@ def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
             _logger.warning("location_name: " + translate("Response '{response}' is not in valid json format: {e}", {'response': response, 'e': e}))
             return ''
     else:
-        _logger.warning(f"location_name: openstreetmap.org responded with '{response.status_code}' when trying to get locatio name for {lat=} / {lon=}")
+        _logger.info(f"location_name: openstreetmap.org responded with '{response.status_code}' when trying to get locatio name for {lat=} / {lon=}")
         return ''
 
     if json_obj.get('address', None) is None:
