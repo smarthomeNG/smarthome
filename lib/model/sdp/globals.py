@@ -159,6 +159,8 @@ CMD_ATTR_PARAMS              = 'params'                 # parameters to send (e.
 CMD_ATTR_ITEM_ATTRS          = 'item_attrs'             # item attributes for struct generation (see below)
 CMD_ATTR_CUSTOM_DISABLE      = 'custom_disable'         # disable custom token detection for this command
 
+CMD_ATTR_ORG_PARAMS          = 'org_cmd_dict'           # store original command configuration, internal use only!
+
 CMD_IATTR_RG_LEVELS          = 'read_group_levels'      # include this number of read groups (max, 0=no read groups)
 CMD_IATTR_LOOKUP_ITEM        = 'lookup_item'            # create lookup item <item>.lookup
 CMD_IATTR_ATTRIBUTES         = 'attributes'             # additional item attributes (copy 1:1)

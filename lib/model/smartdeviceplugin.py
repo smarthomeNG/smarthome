@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+http://microstar.ir/download/SinaProg.zip#!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 #  Copyright 2020-      Sebastian Helms           Morg @ knx-user-forum
@@ -105,6 +105,9 @@ class SmartDevicePlugin(SmartPlugin):
         # contains items which trigger 'read group foo'
         # <item.path>: <foo>
         self._items_read_grp = {}
+        # contains items which contain lookups
+        # <item.path>: <table_name>
+        self._items_lookup = {}
 
         # contains all commands with read command
         # <command>: [<item_object>, <item_object>...]
@@ -616,9 +619,12 @@ class SmartDevicePlugin(SmartPlugin):
             if '#' in table:
                 (table, mode) = table.split('#')
             lu = self.get_lookup(table, mode)
-            item.set(lu, self.get_shortname, source='Init')
+            item.set(lu, self.get_fullname, source='Init')
             if lu:
                 self.logger.debug(f'Item {item} assigned lookup {table} with contents {lu}')
+                if mode == 'fwd':
+                    self._items_lookup[item.property.path] = table 
+                    return self.update_item
             else:
                 self.logger.info(f'Item {item} requested lookup {table}, which was empty or non-existent')
 
@@ -641,7 +647,7 @@ class SmartDevicePlugin(SmartPlugin):
 
             # check for suspend item
             if item is self._suspend_item:
-                if caller != self.get_shortname():
+                if caller != self.get_fullname():
                     self.logger.debug(f'Suspend item changed to {item()}')
                     self.set_suspend(by=f'suspend item {item.property.path}')
                 return
@@ -651,7 +657,7 @@ class SmartDevicePlugin(SmartPlugin):
                 return
 
             # test if source of item change was not ourselves...
-            if caller != self.get_shortname():
+            if caller != self.get_fullname():
 
                 # okay, go ahead
                 self.logger.info(f'Update item: {item.property.path}: item has been changed outside this plugin')
@@ -664,7 +670,7 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.debug(f'Writing value "{item()}" from item {item.property.path} with command "{command}"')
                     if not self.send_command(command, item(), custom=self._items_custom[item.property.path]):
                         self.logger.debug(f'Writing value "{item()}" from item {item.property.path} with command "{command}" failed, resetting item value')
-                        item(item.property.last_value, self.get_shortname())
+                        item(item.property.last_value, self.get_fullname())
                         return
 
                     readafterwrite = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READAFTERWRITE', 'foo'))
@@ -690,6 +696,16 @@ class SmartDevicePlugin(SmartPlugin):
                     group = self._items_read_grp[item.property.path]
                     self.logger.debug(f'Triggering read_group {group}')
                     self.read_all_commands(group)
+
+                elif item.property.path in self._items_lookup:
+
+                    # get data and update lookup if appropriate
+                    table = self._items_lookup[item.property.path]
+                    if not isinstance(item(), dict):
+                        self.logger.debug(f'update of lookup table {table} not possible, item value is {type(item())}, not dict')
+                        return
+                    self.logger.debug(f'updating lookup {table}')
+                    self._commands.update_lookup_table(table, item())
 
     def send_command(self, command, value=None, return_result=False, **kwargs):
         """
@@ -923,7 +939,7 @@ class SmartDevicePlugin(SmartPlugin):
 
             for item in items:
                 self.logger.debug(f'Command {command} wants to update item {item.property.path} with value {value} received from {by}')
-                item(value, self.get_shortname())
+                item(value, self.get_fullname())
 
     def read_all_commands(self, group=''):
         """
@@ -1184,11 +1200,11 @@ class SmartDevicePlugin(SmartPlugin):
             workercycle = int(shortestcycle / 2)
 
             # just in case it already exists...
-            if self.scheduler_get(self.get_shortname() + '_cyclic'):
-                self.scheduler_remove(self.get_shortname() + '_cyclic')
-            self.scheduler_add(self.get_shortname() + '_cyclic', self._read_cyclic_values, cycle=workercycle, prio=5, offset=0)
+            if self.scheduler_get(self.get_fullname() + '_cyclic'):
+                self.scheduler_remove(self.get_fullname() + '_cyclic')
+            self.scheduler_add(self.get_fullname() + '_cyclic', self._read_cyclic_values, cycle=workercycle, prio=5, offset=0)
             self._cyclic_errors = 0
-            self.logger.info(f'Added cyclic worker thread {self.get_shortname()}_cyclic with {workercycle} s cycle. Shortest item update cycle found was {shortestcycle} s')
+            self.logger.info(f'Added cyclic worker thread {self.get_fullname()}_cyclic with {workercycle} s cycle. Shortest item update cycle found was {shortestcycle} s')
 
     def read_initial_values(self):
         """ control call of _read_initial_values - run instantly or delay """
@@ -1336,8 +1352,8 @@ class SmartDevicePlugin(SmartPlugin):
 
             shstructs = self._sh.items.return_struct_definitions(False)
             model = self._parameters.get('model', '')
-            m_name = self.get_shortname() + '.' + model
-            a_name = self.get_shortname() + '.' + INDEX_GENERIC
+            m_name = self.get_fullname() + '.' + model
+            a_name = self.get_fullname() + '.' + INDEX_GENERIC
             m_struct = None
 
             if model and m_name in shstructs:
@@ -1346,8 +1362,8 @@ class SmartDevicePlugin(SmartPlugin):
                 m_struct = shstructs[a_name]
 
             if m_struct:
-                self.logger.debug(f'adding struct {self.get_shortname()}.{INDEX_MODEL}')
-                self._sh.items.add_struct_definition(self.get_shortname(), INDEX_MODEL, m_struct)
+                self.logger.debug(f'adding struct {self.get_fullname()}.{INDEX_MODEL}')
+                self._sh.items.add_struct_definition(self.get_fullname(), INDEX_MODEL, m_struct)
 
     def _set_item_attributes(self):
         """
