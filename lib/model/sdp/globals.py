@@ -157,7 +157,7 @@ CMD_ATTR_CMD_SETTINGS        = 'cmd_settings'           # additional settings fo
 CMD_ATTR_LOOKUP              = 'lookup'                 # use lookup table <foo> to translate between plugin and items
 CMD_ATTR_PARAMS              = 'params'                 # parameters to send (e.g. in JSON-RPC)
 CMD_ATTR_ITEM_ATTRS          = 'item_attrs'             # item attributes for struct generation (see below)
-CMD_ATTR_CUSTOM_DISABLE      = 'custom_disable'         # disable custom token detection for this command
+CMD_ATTR_CUSTOM_DISABLE      = 'custom_disabled'        # disable custom token detection for this command
 
 CMD_ATTR_ORG_PARAMS          = 'org_cmd_dict'           # store original command configuration, internal use only!
 

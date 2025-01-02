@@ -126,6 +126,8 @@ class SDPCommands(object):
         If a custom command <cmd>#<custval> is given, also check the base command.
         This seems nonsensical, but might help discover configuration errors
         """
+        if not command:
+            return True
         cmd = self._commands.get(command)
         if cmd:
             return not cmd.custom_disabled
@@ -133,7 +135,7 @@ class SDPCommands(object):
             try:
                 cmd, _ = cmd.split(CUSTOM_SEP)
                 return self.custom_is_enabled_for(cmd)
-            except ValueError:
+            except (AttributeError, ValueError):
                 pass
             self.logger.warning(f'command {command} not found while checking for custom handling')
             return True

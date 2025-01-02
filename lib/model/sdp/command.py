@@ -65,7 +65,7 @@ class SDPCommand(object):
     reply_pattern = ''
     cmd_settings = None
     lookup = None
-    custom_disable = False
+    custom_disabled = False
 
     _DT = None
 
