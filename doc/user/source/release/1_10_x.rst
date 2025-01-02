@@ -17,9 +17,9 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 28. Dezember 2024
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 31. Dezember 2024
            (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 10. September 2024
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 31. Dezember 2024
            (...)
 
 
@@ -35,10 +35,10 @@ Minimum Python Version
 
 Die absolute Minimum Python Version in der SmartHomeNG startet, ist **Python 3.8**.
 
-Für das SmartHomeNG Release 1.10 wird die absolute Minimum Python Version auf **Python 3.8** angehoben, da der
+Bereits für das SmartHomeNG Release 1.10 wurde die absolute Minimum Python Version auf **Python 3.8** angehoben, da der
 Community Support für Python 3.7 am 27. Juni 2023 endete.
 
-Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Versionen (3.9 oder 3.10) aufzusetzen.
+Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Versionen (3.10 oder 3.11) aufzusetzen.
 
 
 Unterstützte Python Versionen
@@ -107,13 +107,15 @@ Updates in the CORE
 
   * lib.backup:
 
-      * Added support for option -e (--config_etc)
-      * Added the output of 'pip list' to the configuration backup file
+    * Added support for option -e (--config_etc)
+    * Added the output of 'pip list' to the configuration backup file
+    * Added support for subdirectory common in esphome_config directory
 
   * lib.config:
 
     * Remove name attribute from struct root before merging
     * Add struct syntax checking
+    * Small fix
 
   * lib.db:
 
@@ -123,6 +125,7 @@ Updates in the CORE
 
     * Modified error handling for location_name()
     * Added some logging
+    * Adjusted a log level
 
   * lib.item:
 
@@ -215,6 +218,7 @@ Updates in the CORE
       * Add mqttplugin
       * Fix default _cycle
       * Remove warning if scheduler entry not found
+      * Added timeout parameter to run_asyncio_coro
 
   * lib.network:
 
@@ -317,6 +321,10 @@ Allgmein
 
   * Removed Python3.8 from unittests
 
+* gitignore:
+
+  * Adjust gitignore for symlinked priv_* dirs
+
 
 .. _releasenotes_1_10_x_neue_plugins:
 
@@ -325,6 +333,40 @@ Neue Plugins
 
 Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* githubplugin:
+
+  * Initial commit
+  * Improve api, add binding methods, add error checking
+  * Webif part 1
+  * Implemented plugin selection
+  * Implemented plugin installation
+  * Webif, install working
+  * Bumped version to 1.0.0
+  * Enable updating forks/branches/PRs from github
+  * Use user-definable name as plugin name, removed repoitem item
+  * Improve code, show rate limit, check clean work tree
+  * Rework error signaling, refactor WebIf code
+  * Fixed error signaling
+  * Let github signal rate limits
+  * Fix WebIf error display, name suggestion, cleanup code
+  * Fix integrating of datatables
+  * Fix dir scanning for branches with underscores
+  * Fix datatables init, sort fork list
+  * Remove init_repos, update error handling, improve rate limit display
+  * Fix error handling, add pull repo feature
+  * Updated docs, added plugin logo
+  * Prepare dynamic datatable (still disabled)
+  * Create priv_repos dir at startup
+  * Fix possible path/cwd issues
+  * Use get_basedir
+  * Fix all occurrences, not only one...
+  * [wip] rename old version, disable install on rate limit
+  * Rename old version, improve error logging
+  * Keep wt if still used, fix permissions for rmtree
+  * Try to solve non-empty dir problem
+  * Final changes for v1.0.0
+  * Fix detection of clean/ahead/behind
 
 * hue4:
 
@@ -342,6 +384,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * New plugin to control Panasonic air conditioning units, still in develop state
   * Updated user_doc.rst and added plugin logo
+  * Update to use released package pcomfortcloud from pypi
+
 
 .. _releasenotes_1_10_x_updates_plugins:
 
@@ -350,6 +394,11 @@ Plugin Updates
 
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* alexa4p3:
+
+  * Added description for alexa-item-properties
+  * Update plugin.yaml: Removed duplicate entry for alexa_item_range
 
 * avm:
 
@@ -371,6 +420,19 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Copy_database does not disable itself after success anymore (why should it...?)
   * Change log message of copy database to info (instead of warning)
   * Added logging
+  * Add orphan reassignment
+  * Remove debug code
+  * Move to REST communication
+  * Remove debug info from index.html
+  * Raw string for regex
+  * Add max_reassign_logentries parameter
+  * Fix sql query
+  * Added time_precision in plugin.yaml
+  * Added _time_precision_query
+  * Applied _time_precision_query
+  * Typo fix
+  * Bumped version to 1.16.14
+  * Added min and max values for plugin time precision plugin attribute
 
 * db_addon:
 
@@ -385,6 +447,18 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Ease dbaddon function parameter set
   * Adjust to smartplugin changes
   * Bugfix use of oldest entry
+  * use item_attributes direct from item_attributes_master.py
+  * Add handling of pause_item
+  * Add deinit() if plugin start fails
+  * Rework parse_item sub methods
+  * Extend some functions to get result as sum or list
+  * Use item_attributes direct from item_attributes_master.py
+  * Aadd handling of pause_item
+  * Add deinit() if plugin start fails
+  * Rework parse_item sub methods
+  * Extend some functions to get result as sum or list
+  * Bump to 1.2..10 in plugin.yaml
+  * Bugfix verbrauch
 
 * denon:
 
@@ -425,6 +499,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Update plugin.yaml
   * Fix sh min version number
   * Marked the plugin as being restartable
+  * Fix shift errors
 
 * homematic:
 
@@ -434,6 +509,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * hue2:
 
   * Small improvement to webinterface
+  * Modified requirements.txt for zeroconf
 
 * husky2:
 
@@ -477,6 +553,20 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Add sdp metadata
   * Adjust sdp metadata
   * Convert specific replies to correct boolean
+  * Update some commands
+  * Test current playlist rename
+  * Improve/fix database scan commands
+  * Fix alarm circle of death
+  * Fix syncgroup commands/items
+  * Fix/improve alarm commands
+  * Fix mute and volume commands
+  * Update commands, min SDP 1.0.4
+  * Bump version
+  * Further commands updates
+  * Trigger syncgroups query when syncing two players, update syncgroups with empty value if currently no groups exist
+  * Query power at startup
+  * Query shuffle and repeat at start
+  * Adjust clear command, however should still not be used (might depend on setup/server?)
 
 * modbus_tcp:
 
@@ -487,10 +577,22 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fixed startup issue with active suspend
   * Move to pause_item support
 
+* mqtt:
+
+  * Added item attribute mqtt_topic_prefix
+  * Bumped version to 2.0.6
+
+* mvg_live:
+
+  * Fixed an issue in station_id setting when not using async io with pypi lib
+  * Updated dependency, as MVG lib was updated to new api endpoints
+
 * neato:
 
   * Removed debug output
   * Added proper backend online status decoding
+  * Marked as restartable
+  * Minor fix for plugin online status after plugin stop
 
 * nuki:
 
@@ -504,6 +606,12 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Changed some Log levels from info to dbghigh
 
+* openweathermap:
+
+  * Fix struct items
+  * Bump version to 1.8.8
+  * Move beaufort calculation from struct to plugin
+
 * oppo:
 
   * Remove _send method, not needed
@@ -514,6 +622,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix command class
   * Add sdp metadata
   * Remove useless lists in commands
+  * Fix reply for current subtitle
 
 * pioneer:
 
@@ -546,6 +655,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * russound:
 
   * Move to pause_item support
+  * Fix lib.network response handling
 
 * shelly:
 
@@ -572,6 +682,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Bumped version to 1.8.15
   * Fixed version-check bug in widget installation
   * Bumped version to 1.8.16
+  * Important fix in logger message when visu style unknown
 
 * solarforecast:
 
@@ -586,6 +697,14 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Bumped to version 1.8.7
   * Fix for collections import for python >= 3.10
   * Removed debug logs with warning level
+  * Bump to 1.8.8
+  * Introduce item handling from smartplugin
+  * Code cleanup
+  * Update WebIf
+  * Bugfix
+  * Bump to 1.8.9
+  * Improve _handle_dpt3
+  * Make plugin restartable
 
 * stateengine:
 
@@ -625,6 +744,49 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Minor improvements
   * Add action_type to action(s) for better webif handling (coming)
   * Fix previousonditionset variable
+  * Import fix when checking regexes for conditions
+  * Improve web interface
+  * Major code updates, introduce eval cache feature, improve web interface update, improve data handling when writing logs, etc.
+  * Introduce actions_pass, first step
+  * Run pass actions
+  * Important fix when logging wrongly defined item for action
+  * Fix on_pass actions and implement function to suspend state
+  * Improve on_pass actions
+  * Fix variable logging/handling
+  * Improve web interface - include pass actions, optimize visualization, optimize info text for actions that are not run, some fixes
+  * Introduce delta attribute for single actions, introduce minagedelta to run actions in a specific interval only
+  * Simplify log entry when having issues with value casting
+  * Highly improve and simplify issue finder and logger at startup
+  * Improve struct and add se_minagedelta to plugin.yaml
+  * Bump version to 2.2.0
+  * Fix pass_state webif handling on first run
+  * Re-fix next conditionset when using released_by states
+  * Improve logging (e.g. for handling released_by), introducing internal prefix for log messages
+  * Fix and improve logging
+  * Introduce regex casting, used for conditionset comparison for actions
+  * Fix/improve conversion of lists in items
+  * Correctly parse values in item, you can now also define regex, eval, etc. in an item(value)!
+  * Fix string to list conversion
+  * Reset issues list when setting a value (internal use only)
+  * Fix logging of action count
+  * Fix list actions
+  * Fix issue tracking for action definitions, minor updates
+  * Re-fix time handling
+  * Make it possible to set value of list item by se_set_..: [foo, bar]
+  * Improve zoom/scroll handling (esp. on page update, using cookies now)
+  * Improve visu compactness
+  * Use sh.items.return_item instead of sh.return_item
+  * Important fix for issue tracking at init
+  * Further issue handling fixes
+  * Improve visu, now compressed and less white space, no overlaps hopefully
+  * Adjust conditionlist content in visu to avoid overlap
+  * Use itemsApi approach for diverse methods (return_item, find_items)
+  * Avoid overlaps in visu when only one conditionset given
+  * Improve visu overlap for actions
+  * Logging update
+  * Add empty icon for visu to make all entries the same height (nicer visu)
+  * Highly improve visu overlapping and white space, some additional visu fixes
+  * Minor code improvement
 
 * tasmota:
 
@@ -649,6 +811,39 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Update docu on new struct as well as item functions
   * Add super().__init__() to init
   * Improve struct for "next" item
+  * "once" feature to trigger uzsu entry only once and deactivate afterwards
+  * Logging improvement
+  * Make once work with individual list entries
+  * Make 'once' work with interpolation
+  * Implement once for series, part 1
+  * Make once work with series
+  * Bump version to 2.1.0
+  * Fix scheduling for series once
+  * Fix once for series
+  * Update webif and docu
+  * Fix series interval calculation. Actually, now end of series is the last time the series is triggered
+  * Implement activeToday for smartvisu, fix once for series
+  * Fix comparison of new and old dictionary
+  * Update handling of once for series. might work now? ;)
+  * Fix once handling . . again
+  * Adjust struct
+  * Introduce "perday" interpolation feature
+  * Minimize/optimize dict writing to item
+  * Improve web interface
+  * Fix extra-long debug messages
+  * Code improvements, fix lastvalue handling, update activeToday on first run to False if time is in the future, etc.
+  * Further lastvalue improvements/fixes
+  * Improve documentation, add info on once feature
+  * Fix evaluation of upcoming setting when once feature is used
+  * Global once deactivates uzsu on first setting, no matter if it is a series or not
+  * Introduce set_activetoday plugin function
+  * Introduce ignore_once_entries parameter for (not) using once set entries for interpolation
+  * Fix and improve perday interpolation
+  * Avoid wrong value when 2 entries set a value at the same time and interpolation is activated
+  * Update docu
+  * Fix wrong logger entry
+  * Improve item writing, fix issue when uzsu has no active entries
+  * Avoid cycle of schedule and item update
 
 * vicare:
 
@@ -661,9 +856,19 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Further work on plugin docu
   * Fix table in user_doc
 
+* visu_smartvisu:
+
+  * Important log message updates when visu style unknoen and copying template failed
+
 * withings_health:
 
   * Changed methode to derive callback IPv4 address
+  * Updated Doku
+
+* yamahayxc:
+
+  * Minor fixes
+  * Fix startup
 
 * zigbee2mqtt:
 
@@ -673,6 +878,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Adjust for suspend updates
   * Add pause_item functions
   * Fix pause item
+  * Fix item() caller settings
 
 * Multiple plugins:
 
