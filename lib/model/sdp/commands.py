@@ -517,7 +517,7 @@ class SDPCommands(object):
             # store in self.parsed_commands for access by webif
             # skip sections only including section settings
             if not cmd.endswith('.' + CMD_ATTR_ITEM_ATTRS):
-                self._parsed_commands[cmd] = cmd_dict
+                self._parsed_commands[cmd] = cmd_params
 
     def _create_lookup_tables(self, name, table) -> bool:
         """ create and store all partial lookup tables for the given one """
