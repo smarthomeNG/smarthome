@@ -133,7 +133,7 @@ class SDPCommands(object):
             return not cmd.custom_disabled
         else:
             try:
-                cmd, _ = cmd.split(CUSTOM_SEP)
+                cmd, _ = command.split(CUSTOM_SEP)
                 return self.custom_is_enabled_for(cmd)
             except (AttributeError, ValueError):
                 pass
