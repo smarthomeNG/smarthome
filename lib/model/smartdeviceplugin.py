@@ -32,7 +32,7 @@ import time
 import json
 import datetime
 from copy import deepcopy
-from ast import literal_eval
+from ast import Attribute, literal_eval
 from collections import OrderedDict
 import ruamel.yaml as yaml
 
@@ -108,6 +108,10 @@ class SmartDevicePlugin(SmartPlugin):
         # contains items which contain lookups
         # <item.path>: <table_name>
         self._items_lookup = {}
+
+        # reverse-stored lookup items to find items belonging to changed table
+        # <table_name>: {<mode>: <item.path>}
+        self._items_by_lookup = {}
 
         # contains all commands with read command
         # <command>: [<item_object>, <item_object>...]
@@ -617,13 +621,20 @@ class SmartDevicePlugin(SmartPlugin):
 
             mode = 'fwd'
             if '#' in table:
-                (table, mode) = table.split('#')
+                table, mode = table.split('#')
             lu = self.get_lookup(table, mode)
             item.set(lu, self.get_fullname, source='Init')
             if lu:
                 self.logger.debug(f'Item {item} assigned lookup {table} with contents {lu}')
+
+                # store reverse-accessible items
+                if table not in self._items_by_lookup:
+                    self._items_by_lookup[table] = {}
+                self._items_by_lookup[table][mode] = item.property.path
+
                 if mode == 'fwd':
-                    self._items_lookup[item.property.path] = table 
+                    # only store item for update_items if mode is 'fwd'
+                    self._items_lookup[item.property.path] = table
                     return self.update_item
             else:
                 self.logger.info(f'Item {item} requested lookup {table}, which was empty or non-existent')
@@ -652,7 +663,7 @@ class SmartDevicePlugin(SmartPlugin):
                     self.set_suspend(by=f'suspend item {item.property.path}')
                 return
 
-            if not (self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo')) or self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_READ_GRP', 'foo'))):
+            if not any(self.has_iattr(item.conf, self._item_attrs.get(key, 'foo')) for key in ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ_GRP', 'ITEM_ATTR_LOOKUP')):
                 self.logger.warning(f'Update_item was called with item {item}, which is not configured for this plugin. This shouldn\'t happen...')
                 return
 
@@ -706,6 +717,15 @@ class SmartDevicePlugin(SmartPlugin):
                         return
                     self.logger.debug(f'updating lookup {table}')
                     self._commands.update_lookup_table(table, item())
+                    # update the other mode tables, if there are associated items
+                    for mode in ('rev', 'rci', 'list'):
+                        lu_item = None
+                        try:
+                            self.logger.debug(f'trying to set item for lookup {table} and mode {mode}')
+                            lu_item = self._items_by_lookup[table][mode]
+                            lu_item(self.get_lookup(table, mode), self.get_fullname())
+                        except (KeyError, AttributeError):
+                            pass
 
     def send_command(self, command, value=None, return_result=False, **kwargs):
         """
