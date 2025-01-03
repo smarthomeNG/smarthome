@@ -1,5 +1,5 @@
 =============================
-Release 1.10.x - tt. mmm 2024
+Release 1.11.0 - tt. mmm 2025
 =============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -15,7 +15,7 @@ sowie einige neue Plugins.
 
     .. note::
 
-        Diese Release Notes sind ein Arbeitsstand.
+        Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
 
          - Berücksichtigt sind Commits im smarthome Repository bis incl. 31. Dezember 2024
            (...)
@@ -44,7 +44,7 @@ Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Ver
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.10.x ist **Python 3.8**.
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.11.0 ist **Python 3.8**.
 Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
 (Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
 zu unterstützten Python Versionen)
@@ -90,6 +90,7 @@ Updates in the CORE
   * shngversion:
 
     * Bumped core version to 1.10.0.2 -> added support for asyncio in plugins
+    * Bumped core version to 1.10.0.3 -> Added support for suspend/resume and functions for pause_item
 
 
 
@@ -342,7 +343,6 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Implemented plugin selection
   * Implemented plugin installation
   * Webif, install working
-  * Bumped version to 1.0.0
   * Enable updating forks/branches/PRs from github
   * Use user-definable name as plugin name, removed repoitem item
   * Improve code, show rate limit, check clean work tree
@@ -368,17 +368,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Final changes for v1.0.0
   * Fix detection of clean/ahead/behind
 
-* hue4:
+* hue3: Anbindung des Philips/Signify Hue Systems über eine Hue Bridge unter Nutzung des neuen API v2
 
-  * Initial commit of hue_apiv2 plugin - plugin is not feature complete at the moment
-  * Connecting to and disconnecting from bridge implemented
-  * Bumped version to 0.4.0
-  * Completed zigbee_connectivity sensors and some updtaes to user_doc.rst
-  * Updated user_doc.rst
-  * Bumped version to 0.6.5
-  * Changed plugin to final name (from hue_apv2)
-  * set version fo 3.0.0
-  * Code cleanup and documentation fixes
+  * set version to 3.0.1
 
 * panasonic_ac:
 
@@ -442,7 +434,6 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix bug in kaeltesumme
   * Bugfix in wachstumsgradtage and docu update
   * Bugfix in _query_log_timestamp for "next" function
-  * Changed to 1.2.9
   * Bugfix handling on-change items
   * Ease dbaddon function parameter set
   * Adjust to smartplugin changes
@@ -457,7 +448,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Add deinit() if plugin start fails
   * Rework parse_item sub methods
   * Extend some functions to get result as sum or list
-  * Bump to 1.2..10 in plugin.yaml
+  * Bump to 1.2.10
   * Bugfix verbrauch
 
 * denon:
@@ -679,7 +670,6 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Avoid nested anchors
   * Improve z-index
   * Added attributes to identity message in smartvisu payload protocol
-  * Bumped version to 1.8.15
   * Fixed version-check bug in widget installation
   * Bumped version to 1.8.16
   * Important fix in logger message when visu style unknown
@@ -694,10 +684,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Minor robustness fix
   * Adjusted requirements
   * Update to SoCo 0.30.4 (refer to SoCo changelog for a full list of robustness fixes)
-  * Bumped to version 1.8.7
   * Fix for collections import for python >= 3.10
   * Removed debug logs with warning level
-  * Bump to 1.8.8
   * Introduce item handling from smartplugin
   * Code cleanup
   * Update WebIf
@@ -725,7 +713,6 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Update SetForce Action
   * Code cleanup, fixes, improvements
   * Write log message when log is turned off (set to 0)
-  * Bump version to 2.0.1
   * Improve and extend issue reporting when getting values
   * Attributes from items, structs, etc. referenced by se_use are now evaluated correctly, even if they are defined as lists
   * Don't expand item pathes at beginning so relative item attributes are correctly assigned when using structs and se_use
@@ -733,7 +720,6 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * "set" function now also returns original value, necessary for optimal "se_use" handling
   * set_from_attribute function now takes an ignore list of entries that should not be checked
   * Massive update of se_use handling. Now the item config gets correctly scanned and only at init. Multiple fixes, improvements and better issue handling
-  * Bump version to 2.1 as there were quite some edits
   * Improve condition check of actions (much faster)
   * Fix previousstate_conditions set valuation
   * Introduce next_conditionset to check conditionset of upcoming state(condition)
@@ -801,12 +787,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix previously introduced problem with series rrule
   * Improve handling of invalid items
   * Improve logging
-  * Bump version to 2.0.1
   * Remove old version due to scipy security issues
   * Add seconds to info on next UZSU setting
   * Add "next" item to struct to read value and time of next UZSU setting
   * Update parameters for plugin functions
-  * Bump version to 2.0.2
   * Remove English user doc as it is outdated
   * Update docu on new struct as well as item functions
   * Add super().__init__() to init
