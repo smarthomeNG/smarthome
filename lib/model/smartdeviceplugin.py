@@ -904,9 +904,9 @@ class SmartDevicePlugin(SmartPlugin):
             except SDPResultError:
                 pass
             else:
-                if custom:
+                if custom and self._commands.custom_is_enabled_for(command):
                     command = command + CUSTOM_SEP + custom
-                self._connection.check_reply(command, value) # needed for resend protocol
+                self._connection.check_reply(command, value)  # needed for resend protocol
                 self._dispatch_callback(command, value, by)
                 self._process_additional_data(command, data, value, custom, by)
 
