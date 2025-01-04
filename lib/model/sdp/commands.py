@@ -213,7 +213,7 @@ class SDPCommands(object):
         for cmd in self._commands:
             cmd_dict = self._commands[cmd]._cmd_params[CMD_ATTR_ORG_PARAMS]
             if any('{LOOKUP}' in pat for pat in cmd_dict.get(CMD_ATTR_REPLY_PATTERN, [])):
-                patterns = self._parse_command_reply_patterns(cmd, cmd_dict, cmd_dict)
+                patterns = self._parse_command_reply_patterns(cmd_dict[CMD_ATTR_REPLY_PATTERN], cmd_dict)
                 setattr(self._commands[cmd], CMD_ATTR_REPLY_PATTERN, patterns)
 
     def _lookup(self, data, table, rev=False, ci=True):
@@ -407,13 +407,13 @@ class SDPCommands(object):
 
         return True
 
-    def _parse_command_reply_patterns(self, cmd: str, cmd_params: dict, cmd_dict: dict) -> list:
+    def _parse_command_reply_patterns(self, reply_patterns: list, cmd_dict: dict) -> list:
         """ parse command's reply patterns and return parsed patterns as list """
         custom_patterns = self._params.get('custom_patterns')
 
         processed_patterns = []
 
-        for pattern in cmd_params[CMD_ATTR_REPLY_PATTERN]:
+        for pattern in reply_patterns:
 
             if pattern == '*':
                 pattern = cmd_dict.get(CMD_ATTR_READ_CMD, cmd_dict.get(CMD_ATTR_OPCODE, ''))
@@ -475,12 +475,13 @@ class SDPCommands(object):
             # preset default values
             cmd_params = {CMD_ATTR_READ: True, CMD_ATTR_WRITE: False, CMD_ATTR_OPCODE: '', CMD_ATTR_ITEM_TYPE: 'bool', CMD_ATTR_DEV_TYPE: 'raw'}
 
+            # sanitize patterns if not stored as list
+            if CMD_ATTR_REPLY_PATTERN in cmd_dict and not isinstance(cmd_dict[CMD_ATTR_REPLY_PATTERN], list):
+                self.logger.warning(f'error reading commands.py: for {cmd}, reply_patterns should be a list, is {type(cmd_dict[CMD_ATTR_REPLY_PATTERN])}. Please fix.')
+                cmd_dict[CMD_ATTR_REPLY_PATTERN] = [cmd_dict[CMD_ATTR_REPLY_PATTERN]]
+
             # update with command attributes
             cmd_params.update({arg: cmd_dict[arg] for arg in COMMAND_PARAMS if arg in cmd_dict})
-
-            # sanitize patterns if not stored as list
-            if CMD_ATTR_REPLY_PATTERN in cmd_params and not isinstance(cmd_params[CMD_ATTR_REPLY_PATTERN], list):
-                cmd_params[CMD_ATTR_REPLY_PATTERN] = [cmd_params[CMD_ATTR_REPLY_PATTERN]]
 
             # store original config for later parsing
             cmd_params[CMD_ATTR_ORG_PARAMS] = deepcopy(cmd_dict)
@@ -503,7 +504,7 @@ class SDPCommands(object):
             if CMD_ATTR_REPLY_PATTERN in cmd_params:
 
                 # store processed reply patterns
-                cmd_params[CMD_ATTR_REPLY_PATTERN] = self._parse_command_reply_patterns(cmd, cmd_params, cmd_dict)
+                cmd_params[CMD_ATTR_REPLY_PATTERN] = self._parse_command_reply_patterns(cmd_params[CMD_ATTR_REPLY_PATTERN], cmd_dict)
 
             if cmd_params.get(CMD_ATTR_READ, False) and cmd_params.get(CMD_ATTR_OPCODE, '') == '' and cmd_params.get(CMD_ATTR_READ_CMD, '') == '':
                 self.logger.info(f'command {cmd} will not create a command for reading values. Check commands.py configuration...')
