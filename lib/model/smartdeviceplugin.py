@@ -623,14 +623,14 @@ class SmartDevicePlugin(SmartPlugin):
             if '#' in table:
                 table, mode = table.split('#')
             lu = self.get_lookup(table, mode)
-            item.set(lu, self.get_fullname, source='Init')
+            item.set(lu, self.get_fullname(), source='Init')
             if lu:
                 self.logger.debug(f'Item {item} assigned lookup {table} with contents {lu}')
 
                 # store reverse-accessible items
                 if table not in self._items_by_lookup:
                     self._items_by_lookup[table] = {}
-                self._items_by_lookup[table][mode] = item.property.path
+                self._items_by_lookup[table][mode] = item
 
                 if mode == 'fwd':
                     # only store item for update_items if mode is 'fwd'
