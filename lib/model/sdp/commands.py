@@ -477,7 +477,8 @@ class SDPCommands(object):
 
             # sanitize patterns if not stored as list
             if CMD_ATTR_REPLY_PATTERN in cmd_dict and not isinstance(cmd_dict[CMD_ATTR_REPLY_PATTERN], list):
-                self.logger.warning(f'error reading commands.py: for {cmd}, reply_patterns should be a list, is {type(cmd_dict[CMD_ATTR_REPLY_PATTERN])}. Please fix.')
+                # reply_pattern can be supplied as list or str, so don't warn...
+                # self.logger.warning(f'error reading commands.py: for {cmd}, reply_patterns should be a list, is {type(cmd_dict[CMD_ATTR_REPLY_PATTERN])}. Please fix.')
                 cmd_dict[CMD_ATTR_REPLY_PATTERN] = [cmd_dict[CMD_ATTR_REPLY_PATTERN]]
 
             # update with command attributes
