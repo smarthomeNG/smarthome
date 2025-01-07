@@ -30,7 +30,7 @@ from copy import deepcopy
 
 from lib.model.sdp.globals import (
     CMD_ATTR_PARAMS, CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW,
-    CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM,
+    CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM, CMD_STR_CUSTOM_PARAM,
     CMD_STR_CUSTOM, COMMAND_PARAMS, MINMAXKEYS)
 import lib.model.sdp.datatypes as DT
 
@@ -264,6 +264,7 @@ class SDPCommandStr(SDPCommand):
         parse string and replace
         - ``{OPCODE}`` with the command opcode
         - ``{PARAM:<elem>}`` with the plugin parameter
+        - ``{CUSTOM_PARAM[123]:<elem>}`` with the plugin parameter based on a dict entry <elem>: {<custom[123]>: <parameter>}
         - ``{VALUE}`` with the data value
         - ``{CUSTOM_ATTR[123]}`` with the respective custom token value
 
@@ -272,6 +273,16 @@ class SDPCommandStr(SDPCommand):
         """
         def repl_func(matchobj):
             return str(self._plugin_params.get(matchobj.group(2), ''))
+
+        def cust_param(matchobj):
+            if kwargs and 'custom' in kwargs:
+                custom_entry = kwargs['custom'].get(int(matchobj.group(2)))
+                try:
+                    return str(self._plugin_params.get(matchobj.group(3)).get(custom_entry))
+                except TypeError as e:
+                    self.logger.warning(f'Issue getting custom parameter. Plugin parameter must contain an entry like '
+                                        f'"{matchobj.group(3)}": {{"{custom_entry}": "<parameter>"}}. {e}')
+            return ''
 
         def cust_func(matchobj):
             if kwargs and 'custom' in kwargs:
@@ -283,6 +294,10 @@ class SDPCommandStr(SDPCommand):
         regex = r'(\{' + CMD_STR_PARAM + r'([^}]+)\})'
         while re.search(regex, string):
             string = re.sub(regex, repl_func, string)
+
+        regex = r'(\{' + CMD_STR_CUSTOM_PARAM + r'([123]):([^}]+)\})'
+        while re.search(regex, string):
+            string = re.sub(regex, cust_param, string)
 
         regex = r'(\{' + CMD_STR_CUSTOM + r'([123])\})'
         while re.search(regex, string):

@@ -200,9 +200,10 @@ CMD_STR_VAL_CAP              = 'RAW_VALUE_CAP'          # replace with raw value
 CMD_STR_VALUE                = 'VALUE'                  # replace with DT converted value
 CMD_STR_OPCODE               = 'OPCODE'                 # replace with opcode string/bytes
 CMD_STR_PARAM                = 'PARAM:'                 # replace with kwargs[foo] (``{PARAM:foo}``)
+CMD_STR_CUSTOM_PARAM         = 'CUSTOM_PARAM'           # replace with kwargs[<custom>][foo] (``{CUSTOM_PARAM[123]:{<custom>: foo}}``)
 CMD_STR_CUSTOM               = 'CUSTOM_ATTR'            # replace with value of custom attribute <x>
 
-CMD_STRINGS = (CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW, CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM, CMD_STR_CUSTOM)
+CMD_STRINGS = (CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW, CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM, CMD_STR_CUSTOM_PARAM, CMD_STR_CUSTOM)
 
 # JSON keys to move from dict root to data.params
 JSON_MOVE_KEYS               = 'json_move_keys'
