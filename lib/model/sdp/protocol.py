@@ -40,6 +40,7 @@ import threading
 import queue
 import json
 import re
+import ast
 
 
 #############################################################################################################################################################################################################################################
@@ -521,6 +522,49 @@ class SDPProtocolResend(SDPProtocol):
         :return: False by default, True if received expected response
         :rtype: bool
         """
+
+        def convert_and_compare(value, compare_value):
+            value_type = type(value)
+            if value_type == type(compare_value):
+                return compare_value == value
+
+            if value_type == int:
+                try:
+                    converted_value = int(compare_value)
+                except ValueError:
+                    return False
+            elif value_type == float:
+                try:
+                    converted_value = float(compare_value)
+                except ValueError:
+                    return False
+            elif value_type == bool:
+                if compare_value.lower() == "true":
+                    converted_value = True
+                elif compare_value.lower() == "false":
+                    converted_value = False
+                else:
+                    converted_value = None
+            elif value_type == list:
+                try:
+                    converted_value = ast.literal_eval(compare_value)
+                    if not isinstance(converted_value, list):
+                        return False
+                except (ValueError, SyntaxError):
+                    return False
+            elif value_type == dict:
+                try:
+                    converted_value = ast.literal_eval(compare_value)
+                    if not isinstance(converted_value, dict):
+                        return False
+                except (ValueError, SyntaxError):
+                    return False
+            elif value_type == str:
+                converted_value = compare_value
+            else:
+                return None
+            return converted_value == value
+        
         if command in self._sending:
             with self._sending_lock:
                 # getting current retries for current command
@@ -534,7 +578,7 @@ class SDPProtocolResend(SDPProtocol):
                     if isinstance(c, re.Pattern):
                         cond = re.search(c, str(value))
                     else:
-                        cond = type(c)(value) == c
+                        cond = convert_and_compare(c, value)
                     if c is None or cond:
                         # remove command from _sending dict
                         self._sending.pop(command)
