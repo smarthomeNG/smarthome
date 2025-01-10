@@ -433,7 +433,6 @@ class SDPCommands(object):
                 regex = r'(\{' + CMD_STR_PARAM + r'([^}]+)\})'
                 while re.search(regex, pattern):
                     pattern = re.sub(regex, get_param, pattern)
-                self.logger.debug(f"reply pattern {pattern} {CMD_STR_PARAM} in pattern, new: {pattern}")
 
             if cmd_dict.get(CMD_ATTR_LOOKUP) and '{' + PATTERN_LOOKUP + '}' in pattern:
 

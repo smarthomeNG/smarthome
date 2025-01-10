@@ -503,6 +503,10 @@ class SDPProtocolResend(SDPProtocol):
             resend_info = {}
         else:
             resend_info['data_dict'] = data_dict
+        if resend_info.get('send_retries') is None:
+            resend_info['send_retries'] = self._send_retries
+        if resend_info.get('send_retries') <= 0:
+            return False
         if resend_info.get('returnvalue') is not None:
             self._sending.update({resend_info.get('command'): resend_info})
             if resend_info.get('command') not in self._sending_retries:
@@ -586,7 +590,7 @@ class SDPProtocolResend(SDPProtocol):
                         self.logger.debug(f'Got correct response for {command}, '
                                           f'removing from send. Resending queue is {self._sending}')
                         return True
-                if retry is not None and retry <= self._send_retries:
+                if retry is not None and retry <= self._sending[command].get('send_retries'):
                     # return False and log info if response is not the same as the expected response
                     self.logger.debug(f'Should send again {self._sending}...')
                     return False
@@ -606,11 +610,11 @@ class SDPProtocolResend(SDPProtocol):
             for command in list(self._sending.keys()):
                 retry = self._sending_retries.get(command, 0)
                 sent = True
-                if retry < self._send_retries:
-                    self.logger.debug(f'Resending {command}, retries {retry}.')
+                if retry < self._sending[command].get('send_retries'):
+                    self.logger.debug(f'Resending {command}, retries {retry}/{self._sending[command].get("send_retries")}.')
                     sent = self._send(self._sending[command].get("data_dict"))
                     self._sending_retries[command] = retry + 1
-                elif retry >= self._send_retries:
+                elif retry >= self._sending[command].get('send_retries'):
                     sent = False
                 if sent is False:
                     remove_commands.append(command)

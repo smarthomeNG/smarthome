@@ -45,7 +45,7 @@ from lib.shtime import Shtime
 from lib.model.sdp.globals import (
     update, PLUGIN_ATTR_SEND_TIMEOUT, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
     CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS,
-    CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES,
+    CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES, CMD_ATTR_SEND_RETRIES,
     CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_ATTR_REPLY_PATTERN,
     CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS,
     CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3, PATTERN_CUSTOM_PATTERN,
@@ -838,6 +838,13 @@ class SmartDevicePlugin(SmartPlugin):
         # if reply pattern does not expect a specific value, use value as expected reply
         else:
             resend_info = {'command': resend_command, 'returnvalue': value, 'read_cmd': read_cmd}
+        send_retries = self._commands.get_commandlist(command).get(CMD_ATTR_SEND_RETRIES)
+        try:
+            send_retries = int(send_retries)
+        except Exception:
+            send_retries = None
+        if send_retries is not None:
+            resend_info.update({'send_retries': send_retries})
         # if an error occurs on sending, an exception is thrownn below
         try:
             result = self._send(data_dict, resend_info=resend_info)
