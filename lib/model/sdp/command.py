@@ -271,20 +271,24 @@ class SDPCommandStr(SDPCommand):
         The replacement order ensures that PARAM-patterns from the opcode
         can be replaced as well as VALUE-pattern in any of the strings.
         """
-        def repl_func(matchobj):
-            return str(self._plugin_params.get(matchobj.group(2), ''))
+        def get_param(matchobj):
+            returnvalue = self._plugin_params.get(matchobj.group(2))
+            if returnvalue is None:
+                returnvalue = ''
+                self.logger.warning(f'Parameter {matchobj.group(2)} does not exist.')
+            return str(returnvalue)
 
-        def cust_param(matchobj):
+        def get_cust_param(matchobj):
             if kwargs and 'custom' in kwargs:
                 custom_entry = kwargs['custom'].get(int(matchobj.group(2)))
                 try:
-                    return str(self._plugin_params.get(matchobj.group(3)).get(custom_entry))
+                    return str(self._plugin_params.get(matchobj.group(3)).get(custom_entry, ''))
                 except TypeError as e:
                     self.logger.warning(f'Issue getting custom parameter. Plugin parameter must contain an entry like '
                                         f'"{matchobj.group(3)}": {{"{custom_entry}": "<parameter>"}}. {e}')
             return ''
 
-        def cust_func(matchobj):
+        def get_custom(matchobj):
             if kwargs and 'custom' in kwargs:
                 return str(kwargs['custom'].get(int(matchobj.group(2))))
             return ''
@@ -293,15 +297,15 @@ class SDPCommandStr(SDPCommand):
 
         regex = r'(\{' + CMD_STR_PARAM + r'([^}]+)\})'
         while re.search(regex, string):
-            string = re.sub(regex, repl_func, string)
+            string = re.sub(regex, get_param, string)
 
         regex = r'(\{' + CMD_STR_CUSTOM_PARAM + r'([123]):([^}]+)\})'
         while re.search(regex, string):
-            string = re.sub(regex, cust_param, string)
+            string = re.sub(regex, get_cust_param, string)
 
         regex = r'(\{' + CMD_STR_CUSTOM + r'([123])\})'
         while re.search(regex, string):
-            string = re.sub(regex, cust_func, string)
+            string = re.sub(regex, get_custom, string)
 
         if data is not None:
             string = string.replace('{' + CMD_STR_VALUE + '}', str(self._DT.get_send_data(data)))
