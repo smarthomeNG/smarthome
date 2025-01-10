@@ -510,7 +510,7 @@ class SDPProtocolResend(SDPProtocol):
         if resend_info.get('returnvalue') is not None:
             self._sending.update({resend_info.get('command'): resend_info})
             if resend_info.get('command') not in self._sending_retries:
-                self._sending_retries.update({resend_info.get('command'): 0})
+                self._sending_retries.update({resend_info.get('command'): 1})
             self.logger.debug(f'Saving {resend_info}, resending queue is {self._sending}')
             return True
         return False
@@ -608,7 +608,7 @@ class SDPProtocolResend(SDPProtocol):
             remove_commands = []
             # Iterate through resend queue
             for command in list(self._sending.keys()):
-                retry = self._sending_retries.get(command, 0)
+                retry = self._sending_retries.get(command, 1)
                 sent = True
                 if retry < self._sending[command].get('send_retries'):
                     self.logger.debug(f'Resending {command}, retries {retry}/{self._sending[command].get("send_retries")}.')
