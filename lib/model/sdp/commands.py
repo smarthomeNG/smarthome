@@ -31,7 +31,7 @@ from pydoc import locate
 
 from lib.model.sdp.globals import (
     update, CommandsError, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_DEV_TYPE,
-    CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE,
+    CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_STR_PARAM,
     CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_REPLY_PATTERN, CMD_ATTR_WRITE,
     CMD_ATTR_WRITE_CMD, CMD_ATTR_ORG_PARAMS, COMMAND_PARAMS, COMMAND_SEP, INDEX_GENERIC,
     PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_VALID_LIST_RE,
@@ -409,6 +409,13 @@ class SDPCommands(object):
 
     def _parse_command_reply_patterns(self, reply_patterns: list, cmd_dict: dict) -> list:
         """ parse command's reply patterns and return parsed patterns as list """
+        def get_param(matchobj):
+            returnvalue = self._params.get(matchobj.group(2))
+            if returnvalue is None:
+                self.logger.warning(f'Parameter {matchobj.group(2)} does not exist.')
+                returnvalue = ''
+            return str(returnvalue)
+
         custom_patterns = self._params.get('custom_patterns')
 
         processed_patterns = []
@@ -421,6 +428,12 @@ class SDPCommands(object):
             if custom_patterns and PATTERN_CUSTOM_PATTERN in pattern:
                 for index in (1, 2, 3):
                     pattern = pattern.replace('{' + PATTERN_CUSTOM_PATTERN + str(index) + '}', custom_patterns[index])
+
+            if CMD_STR_PARAM in pattern:
+                regex = r'(\{' + CMD_STR_PARAM + r'([^}]+)\})'
+                while re.search(regex, pattern):
+                    pattern = re.sub(regex, get_param, pattern)
+                self.logger.debug(f"reply pattern {pattern} {CMD_STR_PARAM} in pattern, new: {pattern}")
 
             if cmd_dict.get(CMD_ATTR_LOOKUP) and '{' + PATTERN_LOOKUP + '}' in pattern:
 
