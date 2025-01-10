@@ -286,6 +286,8 @@ class SDPCommandStr(SDPCommand):
                 except TypeError as e:
                     self.logger.warning(f'Issue getting custom parameter. Plugin parameter must contain an entry like '
                                         f'"{matchobj.group(3)}": {{"{custom_entry}": "<parameter>"}}. {e}')
+                except AttributeError:
+                    self.logger.warning(f'Parameter {matchobj.group(3)} does not exist.')
             return ''
 
         def get_custom(matchobj):
