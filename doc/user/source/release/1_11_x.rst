@@ -44,7 +44,7 @@ Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Ver
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.11.0 ist **Python 3.8**.
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.11.0 ist **Python 3.10**.
 Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
 (Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
 zu unterstützten Python Versionen)
@@ -485,7 +485,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * enocean:
 
   * Adapted caller to global smarthomeNG convention -> enocean instead of EnOcean
-  * Modify connect logics, include refactoring by hasenradball
+  * Modify connect logics, refactored
   * Added 0 connect retries for unlimited
   * Update plugin.yaml
   * Fix sh min version number

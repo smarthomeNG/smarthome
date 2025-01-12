@@ -50,8 +50,8 @@ virtuelle Maschine mit 512MB RAM und zwischen 40GB und 80GB
 Plattenplatz.
 
 
-Raspberry Pi 3 oder 4
----------------------
+Raspberry Pi 3, 4 oder 5
+------------------------
 
 SmartHomeNG ist auf einem Raspberry Pi 1 oder Pi 2 zwar lauffähig, sollte dann aber nur in einer Minimalkonfiguration
 eingesetzt werden.
