@@ -73,7 +73,7 @@ class ConfigController(RESTResource):
     #  Read holidays
     #
     def read_holidays(self):
-        self.holidays_confdata = shyaml.yaml_load(self._sh.get_config_file(BASE_HOLIDAYS))
+        self.holidays_confdata = shyaml.yaml_load(self._sh.get_config_file(BASE_HOLIDAY))
         if self.holidays_confdata.get('location', None) is not None:
             self.core_confdata['holidays_country'] = self.holidays_confdata['location'].get('country', '')
             self.core_confdata['holidays_province'] = self.holidays_confdata['location'].get('province', '')
