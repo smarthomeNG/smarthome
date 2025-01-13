@@ -17,10 +17,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 31. Dezember 2024
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 12. Januar 2025
            (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 31. Dezember 2024
-           (...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 13. Januar 2025
+           (Merge pull request #981 from SergeoLacruz/develop)
 
 
 Überblick
@@ -271,6 +271,8 @@ Updates in the CORE
     * Added SystemController()
     * Added gui_type for boolean parameters
     * Changed requirements for pyjwt because new version of pyjwt has a breaking change
+    * Fix typo in de translation
+    * Fixed bug in api_config that was introduced in summer 2024
 
   * modules.http:
 
@@ -321,13 +323,14 @@ Allgmein
 * Workflows:
 
   * Removed Python3.8 from unittests
+  * Ceckout fallback to plugins/develop
 
 * gitignore:
 
   * Adjust gitignore for symlinked priv_* dirs
 
 
-.. _releasenotes_1_10_x_neue_plugins:
+.. _releasenotes_1_11_x_neue_plugins:
 
 Neue Plugins
 ------------
@@ -335,51 +338,12 @@ Neue Plugins
 Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-* githubplugin:
-
-  * Initial commit
-  * Improve api, add binding methods, add error checking
-  * Webif part 1
-  * Implemented plugin selection
-  * Implemented plugin installation
-  * Webif, install working
-  * Enable updating forks/branches/PRs from github
-  * Use user-definable name as plugin name, removed repoitem item
-  * Improve code, show rate limit, check clean work tree
-  * Rework error signaling, refactor WebIf code
-  * Fixed error signaling
-  * Let github signal rate limits
-  * Fix WebIf error display, name suggestion, cleanup code
-  * Fix integrating of datatables
-  * Fix dir scanning for branches with underscores
-  * Fix datatables init, sort fork list
-  * Remove init_repos, update error handling, improve rate limit display
-  * Fix error handling, add pull repo feature
-  * Updated docs, added plugin logo
-  * Prepare dynamic datatable (still disabled)
-  * Create priv_repos dir at startup
-  * Fix possible path/cwd issues
-  * Use get_basedir
-  * Fix all occurrences, not only one...
-  * [wip] rename old version, disable install on rate limit
-  * Rename old version, improve error logging
-  * Keep wt if still used, fix permissions for rmtree
-  * Try to solve non-empty dir problem
-  * Final changes for v1.0.0
-  * Fix detection of clean/ahead/behind
-
+* githubplugin: Plugin to install plugins from foreign GitHub repositories
 * hue3: Anbindung des Philips/Signify Hue Systems über eine Hue Bridge unter Nutzung des neuen API v2
+* panasonic_ac: New plugin to control Panasonic air conditioning units, still in develop state
+* piusv: Plugin zum Auslesen Informationen aus der PIUSV+
 
-  * set version to 3.0.1
-
-* panasonic_ac:
-
-  * New plugin to control Panasonic air conditioning units, still in develop state
-  * Updated user_doc.rst and added plugin logo
-  * Update to use released package pcomfortcloud from pypi
-
-
-.. _releasenotes_1_10_x_updates_plugins:
+.. _releasenotes_1_11_x_updates_plugins:
 
 Plugin Updates
 --------------
@@ -491,6 +455,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix sh min version number
   * Marked the plugin as being restartable
   * Fix shift errors
+
+* executor:
+
+  * Fix example
 
 * homematic:
 
@@ -664,6 +632,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Removed support for pymodbus2
 
+* smartmeter:
+
+  * Disabled DLMS asyncio
+
 * smartvisu:
 
   * Fix for display of datetime object
@@ -690,9 +662,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Code cleanup
   * Update WebIf
   * Bugfix
-  * Bump to 1.8.9
-  * Improve _handle_dpt3
+ * Improve _handle_dpt3
   * Make plugin restartable
+  * Bump to 1.8.10
+  * Bbugfix for dpt3 handling
 
 * stateengine:
 
