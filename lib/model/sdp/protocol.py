@@ -578,16 +578,21 @@ class SDPProtocolResend(SDPProtocol):
                 compare = [compare] if not isinstance(compare, list) else compare
                 for c in compare:
                     self.logger.debug(f'Comparing expected reply {c} ({type(c)}) with value {value} ({type(value)}).')
+                    lookup_log = ""
                     # check if expected value equals received value or both are None (only happens with lists in reply_pattern)
                     if isinstance(c, re.Pattern):
                         cond = re.search(c, str(value))
                     else:
                         cond = convert_and_compare(c, value)
+                        lookup = self._sending[command].get('lookup')
+                        if cond is False and lookup:
+                            cond = c in lookup and lookup.get(c) == value
+                            lookup_log = f" after checking lookup table {lookup}"
                     if c is None or cond:
                         # remove command from _sending dict
                         self._sending.pop(command)
                         self._sending_retries.pop(command)
-                        self.logger.debug(f'Got correct response for {command}, '
+                        self.logger.debug(f'Got correct response for {command}{lookup_log}, '
                                           f'removing from send. Resending queue is {self._sending}')
                         return True
                 if retry is not None and retry <= self._sending[command].get('send_retries'):
