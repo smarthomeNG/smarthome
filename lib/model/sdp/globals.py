@@ -26,10 +26,11 @@
 
 """ Global definitions of constants and functions for SmartDevicePlugin """
 
-from lib.utils import Utils
+import types
 from ast import literal_eval
 from collections import abc
-import types
+
+from lib.utils import Utils
 
 #############################################################################################################################################################################################################################################
 #
@@ -38,6 +39,8 @@ import types
 # do not change if not absolutely sure about the consequences!
 #
 #############################################################################################################################################################################################################################################
+
+# flake8: noqa
 
 # this is the internal SDP version
 SDP_VERSION = '1.0.4'
@@ -127,16 +130,19 @@ ITEM_ATTR_WRITE              = '_write'               # command can be called fo
 ITEM_ATTR_READAFTERWRITE     = '_readafterwrite'      # after writing: read value from device after x seconds
 ITEM_ATTR_READ_GRP           = '_read_group_trigger'  # item triggers reading of read group <foo>
 ITEM_ATTR_LOOKUP             = '_lookup'              # create lookup item <item>.lookup
+ITEM_ATTR_VALID_LIST         = '_valid_list'          # read/update valid_list for command
 ITEM_ATTR_CUSTOM1            = '_custom1'             # custom attribute 1
 ITEM_ATTR_CUSTOM2            = '_custom2'             # custom attribute 2
 ITEM_ATTR_CUSTOM3            = '_custom3'             # custom attribute 3
 
 ITEM_ATTRS = (ITEM_ATTR_COMMAND, ITEM_ATTR_READ, ITEM_ATTR_CYCLIC, ITEM_ATTR_CYCLE, ITEM_ATTR_READAFTERWRITE,
               ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, ITEM_ATTR_READ_GRP, ITEM_ATTR_GROUP,
-              ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3)
+              ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3,
+              ITEM_ATTR_VALID_LIST)
 ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLIC', 'ITEM_ATTR_CYCLE', 'ITEM_ATTR_READAFTERWRITE',
               'ITEM_ATTR_READ_INIT', 'ITEM_ATTR_GROUP', 'ITEM_ATTR_WRITE', 'ITEM_ATTR_READ_GRP',
-              'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3')
+              'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3',
+              'ITEM_ATTR_VALID_LIST')
 
 # command definition
 COMMAND_READ                 = True                     # used internally

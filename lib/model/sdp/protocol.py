@@ -24,23 +24,25 @@
 #
 #########################################################################
 
-import logging
+from __future__ import annotations
+
+import ast
+import json
+import queue
+import re
+import sys
+from collections import OrderedDict
+from collections.abc import Callable
+from threading import Lock
+from time import time
+from typing import Any
 
 from lib.model.sdp.globals import (
     CONN_NET_TCP_CLI, JSON_MOVE_KEYS, PLUGIN_ATTR_CB_ON_CONNECT,
-    PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION,
-    PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES,
-    PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
-    PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE, PLUGIN_ATTR_SEND_TIMEOUT)
+    PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_NET_PORT,
+    PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE, PLUGIN_ATTR_SEND_TIMEOUT,
+    PLUGIN_ATTR_PROTOCOL, PROTOCOL_TYPES, PROTO_NULL)
 from lib.model.sdp.connection import SDPConnection
-
-from collections import OrderedDict
-from time import time
-import threading
-import queue
-import json
-import re
-import ast
 
 
 #############################################################################################################################################################################################################################################
@@ -64,7 +66,7 @@ class SDPProtocol(SDPConnection):
     of the device and the connection classes.
     """
 
-    def __init__(self, data_received_callback, name=None, **kwargs):
+    def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
 
         # init super, get logger
         super().__init__(data_received_callback, name, **kwargs)
@@ -86,7 +88,7 @@ class SDPProtocol(SDPConnection):
         # tell someone about our actual class
         self.logger.debug(f'protocol initialized from {self.__class__.__name__}')
 
-    def _open(self):
+    def _open(self) -> bool:
         self.logger.debug(f'{self.__class__.__name__} _open called, opening protocol with params {self._params}')
         if not self._connection.connected():
             self._connection.open()
@@ -99,11 +101,11 @@ class SDPProtocol(SDPConnection):
         self._connection.close()
         self._is_connected = False
 
-    def _send(self, data_dict, **kwargs):
+    def _send(self, data_dict: dict, **kwargs) -> Any:
         self.logger.debug(f'{self.__class__.__name__} _send called with {data_dict}')
         return self._connection.send(data_dict, **kwargs)
 
-    def _get_connection(self, use_callbacks=False, name=None):
+    def _get_connection(self, use_callbacks: bool = False, name: str | None = None):
         conn_params = self._params.copy()
 
         cb_data = self.on_data_received if use_callbacks else None
@@ -113,6 +115,62 @@ class SDPProtocol(SDPConnection):
 
         conn_cls = self._get_connection_class(**conn_params)
         self._connection = conn_cls(cb_data, name=name, **conn_params)
+
+    @staticmethod
+    def _get_protocol_class(
+            protocol_cls: type[SDPProtocol] | None = None,
+            protocol_classname: str | None = None,
+            protocol_type: str | None = None,
+            **params) -> type[SDPProtocol] | None:
+
+        protocol_module = sys.modules.get('lib.model.sdp.protocol', '')
+        if not protocol_module:
+            raise RuntimeError('unable to get object handle of SDPProtocol module')
+
+        # class not set
+        if not protocol_cls:
+
+            # do we have a class type from params?
+            if PLUGIN_ATTR_PROTOCOL in params and type(params[PLUGIN_ATTR_PROTOCOL]) is type and issubclass(params[PLUGIN_ATTR_PROTOCOL], SDPConnection):
+
+                # directly use given class
+                protocol_cls = params[PLUGIN_ATTR_PROTOCOL]
+                protocol_classname = protocol_cls.__name__  # type: ignore (previous assignment makes protocol_cls type SDPProtocol)
+
+            else:
+                # classname not known
+                if not protocol_classname:
+
+                    # do we have a protocol name
+                    if PLUGIN_ATTR_PROTOCOL in params and isinstance(params[PLUGIN_ATTR_PROTOCOL], str):
+                        if params[PLUGIN_ATTR_PROTOCOL] not in PROTOCOL_TYPES:
+                            protocol_classname = params[PLUGIN_ATTR_PROTOCOL]
+                            protocol_type = 'manual'
+
+                    # wanted connection type not known
+                    if not protocol_type:
+
+                        if PLUGIN_ATTR_PROTOCOL in params and params[PLUGIN_ATTR_PROTOCOL] in PROTOCOL_TYPES:
+                            protocol_type = params[PLUGIN_ATTR_PROTOCOL]
+                        else:
+                            protocol_type = PROTO_NULL
+
+                    # got unknown protocol type
+                    if protocol_type not in PROTOCOL_TYPES:
+                        # self.logger.error(f'protocol "{protocol_type}" specified, but unknown and not class type or class name. Using default protocol')
+                        # just set default
+                        protocol_type = PROTO_NULL
+
+                    # get classname from type
+                    protocol_classname = 'SDPProtocol' + ''.join([tok.capitalize() for tok in protocol_type.split('_')])
+
+                # get class from classname
+                protocol_cls = getattr(protocol_module, protocol_classname, None)
+
+        if not protocol_cls:
+            raise RuntimeError(f'protocol {params[PLUGIN_ATTR_PROTOCOL]} specified, but not loadable.')
+
+        return protocol_cls
 
 
 class SDPProtocolJsonrpc(SDPProtocol):
@@ -136,7 +194,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
     If callbacks are class members, they need the additional first parameter 'self'
 
     """
-    def __init__(self, data_received_callback, name=None, **kwargs):
+    def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
 
         # init super, get logger
         super().__init__(data_received_callback, name, **kwargs)
@@ -156,11 +214,11 @@ class SDPProtocolJsonrpc(SDPProtocol):
         self._shutdown_active = False
 
         self._message_id = 0
-        self._msgid_lock = threading.Lock()
+        self._msgid_lock = Lock()
         self._send_queue = queue.Queue()
-        self._stale_lock = threading.Lock()
+        self._stale_lock = Lock()
 
-        self._receive_buffer = b''
+        self._receive_buffer = bytes()
 
         # self._message_archive[str message_id] = [time() sendtime, str method, str params or None, int repeat]
         self._message_archive = {}
@@ -190,7 +248,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
             self._stale_lock.release()
             self._shutdown_active = False
 
-    def on_data_received(self, connection, response):
+    def on_data_received(self, by: str | None, data: Any, command: str | None = None):
         """
         Handle received data
 
@@ -212,23 +270,23 @@ class SDPProtocolJsonrpc(SDPProtocol):
                 self.logger.debug('chunk not valid json')
                 return False
 
-        self.logger.debug(f'data received before encode: {response}')
+        self.logger.debug(f'data received before encode: {data}')
 
         # if isinstance(response, (bytes, bytearray)):
         #     response = str(response, 'utf-8').strip()
 
-        self.logger.debug(f'adding response to buffer: {response}')
-        self._receive_buffer += response
+        self.logger.debug(f'adding response to buffer: {data}')
+        self._receive_buffer += data
 
         datalist = []
         if b'}{' in self._receive_buffer:
 
             # split multi-response data into list items
             try:
-                self.logger.debug(f'attempting to split buffer')
+                self.logger.debug('attempting to split buffer')
                 tmplist = self._receive_buffer.replace(b'}{', b'}-#-{').split(b'-#-')
                 datalist = list(OrderedDict((x, True) for x in tmplist).keys())
-                self._receive_buffer = b''
+                self._receive_buffer = bytes()
             except Exception:
                 pass
         # checking for bytes[0] == b'{' fails for some reason, so check for byte value instead... need to check char encoding?
@@ -242,17 +300,17 @@ class SDPProtocolJsonrpc(SDPProtocol):
             self.logger.debug(f'received {len(datalist)} data items')
 
         # process all response items
-        for data in datalist:
-            self.logger.debug(f'Processing received data item #{datalist.index(data)}: {data}')
+        for ldata in datalist:
+            self.logger.debug(f'Processing received data item #{datalist.index(ldata)}: {data}')
 
             try:
-                jdata = json.loads(str(data, 'utf-8').strip())
+                jdata = json.loads(str(ldata, 'utf-8').strip())
             except Exception as err:
                 if data == datalist[-1]:
-                    self.logger.debug(f'returning incomplete data to buffer: {data}')
-                    self._receive_buffer = data
+                    self.logger.debug(f'returning incomplete data to buffer: {ldata}')
+                    self._receive_buffer = ldata
                 else:
-                    self.logger.warning(f'Could not json.load data item {data} with error {err}')
+                    self.logger.warning(f'Could not json.load data item {ldata} with error {err}')
                 continue
 
             command = None
@@ -281,7 +339,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
 
             # process data
             if self._data_received_callback:
-                self._data_received_callback(connection, jdata, command)
+                self._data_received_callback(by, jdata, command)
 
         # check _message_archive for old commands - check time reached?
         if self._next_stale_check < time():
@@ -298,7 +356,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
                 # self._message_archive[message_id] = [time(), command, params, repeat]
                 self.logger.debug(f'Checking for unanswered commands, last check was {int(time()) - self._last_stale_check} seconds ago, {len(self._message_archive)} commands saved')
                 # !! self.logger.debug('Stale commands: {}'.format(stale_messages))
-                for (message_id, (send_time, command, params, repeat)) in stale_messages.items():
+                for (message_id, (send_time, cmd, params, repeat)) in stale_messages.items():
 
                     if send_time + self._params[PLUGIN_ATTR_SEND_TIMEOUT] < time():
 
@@ -306,10 +364,10 @@ class SDPProtocolJsonrpc(SDPProtocol):
                         if repeat <= self._params[PLUGIN_ATTR_SEND_RETRIES]:
 
                             # send again, increase counter
-                            self.logger.info(f'Repeating unanswered command {command} ({params}), try {repeat + 1}')
-                            requeue_cmds.append([command, params, message_id, repeat + 1])
+                            self.logger.info(f'Repeating unanswered command {cmd} ({params}), try {repeat + 1}')
+                            requeue_cmds.append([cmd, params, message_id, repeat + 1])
                         else:
-                            self.logger.info(f'Unanswered command {command} ({params}) repeated {repeat} times, giving up.')
+                            self.logger.info(f'Unanswered command {cmd} ({params}) repeated {repeat} times, giving up.')
                             remove_ids.append(message_id)
 
                 for msgid in remove_ids:
@@ -322,8 +380,8 @@ class SDPProtocolJsonrpc(SDPProtocol):
                         pass
 
                 # resend pending repeats - after original
-                for (command, params, message_id, repeat) in requeue_cmds:
-                    self._send_rpc_message(command, params, message_id, repeat)
+                for (cmd, params, message_id, repeat) in requeue_cmds:
+                    self._send_rpc_message(cmd, params, message_id, repeat)
 
                 # set next stale check time
                 self._last_stale_check = time()
@@ -337,7 +395,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
             else:
                 self.logger.debug(f'Skipping stale check {time() - self._last_stale_check} seconds after last check')
 
-    def _send(self, data_dict, **kwargs):
+    def _send(self, data_dict: dict, **kwargs) -> Any:
         """
         wrapper to prepare json rpc message to send. extracts command, id, repeat and
         params (data) from data_dict and call send_rpc_message(command, params, id, repeat)
@@ -351,7 +409,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
         # we don't return a response (this goes via on_data_received)
         return None
 
-    def _send_rpc_message(self, command, ddict=None, message_id=None, repeat=0):
+    def _send_rpc_message(self, command: str, ddict: dict = {}, message_id: str | None = None, repeat: int = 0):
         """
         Send a JSON RPC message.
         The JSON string is extracted from the supplied command and the given parameters.
@@ -430,51 +488,50 @@ class SDPProtocolJsonrpc(SDPProtocol):
 
 
 class SDPProtocolResend(SDPProtocol):
-    """ Protocol supporting resend of command and checking reply_pattern
+    """
+    Protocol supporting resend of command and checking reply_pattern
 
     This class implements a protocol to resend commands if reply does not align with reply_pattern
-
     """
-
-    def __init__(self, data_received_callback, name=None, **kwargs):
+    def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
 
         # init super, get logger
         super().__init__(data_received_callback, name, **kwargs)
+
         # get relevant plugin parameters
         self._send_retries = int(self._params.get(PLUGIN_ATTR_SEND_RETRIES) or 0)
         self._send_retries_cycle = int(self._params.get(PLUGIN_ATTR_SEND_RETRY_CYCLE) or 1)
         self._sending = {}
         self._sending_retries = {}
-        self._sending_lock = threading.Lock()
+        self._sending_lock = Lock()
 
         # tell someone about our actual class
         self.logger.debug(f'protocol initialized from {self.__class__.__name__}')
 
-    def on_connect(self, by=None):
+    def on_connect(self, by: str | None = None):
         """
         When connecting, remove resend scheduler first. If send_retries is set > 0, add new scheduler with given cycle
         """
         super().on_connect(by)
         self.logger.info(f'connect called, resending queue is {self._sending}')
-        if self._plugin.scheduler_get('resend'):
-            self._plugin.scheduler_remove('resend')
+        if self._plugin.scheduler_get('resend'):  # type: ignore (circular import of SmartDevicePlugin)
+            self._plugin.scheduler_remove('resend')  # type: ignore
         self._sending = {}
         if self._send_retries >= 1:
-            self._plugin.scheduler_add('resend', self.resend, cycle=self._send_retries_cycle)
-            self.logger.dbghigh(
-                f"Adding resend scheduler with cycle {self._send_retries_cycle}.")
+            self._plugin.scheduler_add('resend', self.resend, cycle=self._send_retries_cycle)  # type: ignore
+            self.logger.dbghigh(f'Adding resend scheduler with cycle {self._send_retries_cycle}.')
 
-    def on_disconnect(self, by=None):
+    def on_disconnect(self, by: str | None = None):
         """
         Remove resend scheduler on disconnect
         """
-        if self._plugin.scheduler_get('resend'):
-            self._plugin.scheduler_remove('resend')
+        if self._plugin.scheduler_get('resend'):  # type: ignore
+            self._plugin.scheduler_remove('resend')  # type: ignore
         self._sending = {}
         self.logger.info('on_disconnect called')
         super().on_disconnect(by)
 
-    def _send(self, data_dict, **kwargs):
+    def _send(self, data_dict: dict, **kwargs) -> Any:
         """
         Send data, possibly return response
 
@@ -483,11 +540,11 @@ class SDPProtocolResend(SDPProtocol):
         :param kwargs: additional information needed for checking the reply_pattern
         :return: raw response data if applicable, None otherwise.
         """
-        self._store_commands(kwargs.get('resend_info'), data_dict)
+        self._store_commands(kwargs.get('resend_info', {}), data_dict)
         self.logger.debug(f'Sending {data_dict}, kwargs {kwargs}')
         return self._connection.send(data_dict, **kwargs)
 
-    def _store_commands(self, resend_info, data_dict):
+    def _store_commands(self, resend_info: dict, data_dict: dict) -> bool:
         """
         Store the command in _sending dict and the number of retries is _sending_retries dict
 
@@ -505,7 +562,7 @@ class SDPProtocolResend(SDPProtocol):
             resend_info['data_dict'] = data_dict
         if resend_info.get('send_retries') is None:
             resend_info['send_retries'] = self._send_retries
-        if resend_info.get('send_retries') <= 0:
+        if resend_info['send_retries'] <= 0:
             return False
         if resend_info.get('returnvalue') is not None:
             self._sending.update({resend_info.get('command'): resend_info})
@@ -515,7 +572,7 @@ class SDPProtocolResend(SDPProtocol):
             return True
         return False
 
-    def check_reply(self, command, value):
+    def check_reply(self, command: str, value: Any) -> bool:
         """
         Check if the command is in _sending dict and if response is same as expected or not
 
@@ -527,7 +584,7 @@ class SDPProtocolResend(SDPProtocol):
         :rtype: bool
         """
 
-        def convert_and_compare(value, compare_value):
+        def convert_and_compare(value: Any, compare_value: Any) -> bool:
             value_type = type(value)
             if value_type == type(compare_value):
                 return compare_value == value
@@ -566,9 +623,9 @@ class SDPProtocolResend(SDPProtocol):
             elif value_type == str:
                 converted_value = compare_value
             else:
-                return None
+                return False
             return converted_value == value
-        
+
         if command in self._sending:
             with self._sending_lock:
                 # getting current retries for current command
