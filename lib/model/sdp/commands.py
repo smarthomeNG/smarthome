@@ -256,6 +256,13 @@ class SDPCommands(object):
         if data in lu:
             return lu[data]
 
+        # lookup data not found; check if data might be valid "raw" data
+        if rev:
+            lu = self.get_lookup(table)
+            if not lu:
+                raise ValueError(f'Lookup table {table} not found.')
+            if data in lu:
+                return data
         raise ValueError(f'Lookup of value {data} in table {table} failed, entry not found.')
 
     def _get_cmd_lookup(self, command):
