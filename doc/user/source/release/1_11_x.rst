@@ -342,6 +342,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * hue3: Anbindung des Philips/Signify Hue Systems über eine Hue Bridge unter Nutzung des neuen API v2
 * panasonic_ac: New plugin to control Panasonic air conditioning units, still in develop state
 * piusv: Plugin zum Auslesen Informationen aus der PIUSV+
+* smartmeter: Plugin to read data from SML / DLMS smartmeters
 
 .. _releasenotes_1_11_x_updates_plugins:
 
@@ -631,10 +632,6 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * sma_mb:
 
   * Removed support for pymodbus2
-
-* smartmeter:
-
-  * Disabled DLMS asyncio
 
 * smartvisu:
 
