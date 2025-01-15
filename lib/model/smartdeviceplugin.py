@@ -1003,7 +1003,7 @@ class SmartDevicePlugin(SmartPlugin):
             items += self._commands_pseudo.get(command, [])
 
             if not items:
-                self.logger.warning(f'Command {command} yielded value {value} by {by}, not assigned to any item, discarding data')
+                self.logger.info(f'Command {command} yielded value {value} by {by}, not assigned to any item, discarding data')
                 return
 
             if self.suspended:
