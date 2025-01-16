@@ -234,10 +234,26 @@ class SDPCommands(object):
             # valid_list of a different type already set -> only allow one list
             raise RuntimeError(f'command {command} already has other type of valid_list, new list not set')
 
-        # update reply patterns to reflect changed valid_list contents
-        cmd_dict = self._commands[command]._cmd_params[CMD_ATTR_ORG_PARAMS]
-        patterns = self._parse_command_reply_patterns(cmd_dict[CMD_ATTR_REPLY_PATTERN], cmd_dict)
-        setattr(self._commands[command], CMD_ATTR_REPLY_PATTERN, patterns)
+        self.update_reply_patterns(command)
+
+    def update_reply_patterns(self, command: str | list | None):
+        if isinstance(command, str):
+            """ update reply_patterns for selected command(s) or all commands """
+            if command not in self._commands:
+                raise RuntimeError(f'command {command} not found in commands')
+
+            cmds = [command]
+        elif not command:
+            cmds = self._commands.keys()
+        else:
+            cmds = command
+
+        for cmd in cmds:
+            if cmd in self._commands:
+                # update reply patterns to reflect changed valid_list contents
+                cmd_dict = self._commands[cmd]._cmd_params[CMD_ATTR_ORG_PARAMS]
+                patterns = self._parse_command_reply_patterns(cmd_dict[CMD_ATTR_REPLY_PATTERN], cmd_dict)
+                setattr(self._commands[cmd], CMD_ATTR_REPLY_PATTERN, patterns)
 
     def _lookup(self, data: str, table: str, rev: bool = False, ci: bool = True) -> Any:
         """
