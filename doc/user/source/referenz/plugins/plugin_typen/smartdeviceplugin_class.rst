@@ -8,14 +8,11 @@
 Class SmartDevicePlugin
 =======================
 
-Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und jedes neue Gerät aufs Neue das
-ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit
-Netzwerk- oder seriellen Treibern oder Libraries.
+Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.
 
 Hierzu bietet die sdp-Klasse ein fertiges Plugin, aus dem mit minimalem Aufwand ein eigenes Plugin erstellt werden kann.
 
-Dazu besteht sdp aus mehreren modularen Ebenen, die hier zusammen mit den jeweiligen ausgetauschten Daten dargestellt
-werden:
+Dazu besteht sdp aus mehreren modularen Ebenen, die hier zusammen mit den jeweiligen ausgetauschten Daten dargestellt werden:
 
 .. list-table:: Ebenen von SDP
    :header-rows: 1

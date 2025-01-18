@@ -26,10 +26,11 @@
 
 """ Global definitions of constants and functions for SmartDevicePlugin """
 
-from lib.utils import Utils
+import types
 from ast import literal_eval
 from collections import abc
-import types
+
+from lib.utils import Utils
 
 #############################################################################################################################################################################################################################################
 #
@@ -39,8 +40,10 @@ import types
 #
 #############################################################################################################################################################################################################################################
 
+# flake8: noqa
+
 # this is the internal SDP version
-SDP_VERSION = '1.0.3'
+SDP_VERSION = '1.0.4'
 
 # plugin attributes, used in plugin config 'device' and instance creation (**kwargs)
 
@@ -127,16 +130,19 @@ ITEM_ATTR_WRITE              = '_write'               # command can be called fo
 ITEM_ATTR_READAFTERWRITE     = '_readafterwrite'      # after writing: read value from device after x seconds
 ITEM_ATTR_READ_GRP           = '_read_group_trigger'  # item triggers reading of read group <foo>
 ITEM_ATTR_LOOKUP             = '_lookup'              # create lookup item <item>.lookup
+ITEM_ATTR_VALID_LIST         = '_valid_list'          # read/update valid_list for command
 ITEM_ATTR_CUSTOM1            = '_custom1'             # custom attribute 1
 ITEM_ATTR_CUSTOM2            = '_custom2'             # custom attribute 2
 ITEM_ATTR_CUSTOM3            = '_custom3'             # custom attribute 3
 
 ITEM_ATTRS = (ITEM_ATTR_COMMAND, ITEM_ATTR_READ, ITEM_ATTR_CYCLIC, ITEM_ATTR_CYCLE, ITEM_ATTR_READAFTERWRITE,
               ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, ITEM_ATTR_READ_GRP, ITEM_ATTR_GROUP,
-              ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3)
+              ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3,
+              ITEM_ATTR_VALID_LIST)
 ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLIC', 'ITEM_ATTR_CYCLE', 'ITEM_ATTR_READAFTERWRITE',
               'ITEM_ATTR_READ_INIT', 'ITEM_ATTR_GROUP', 'ITEM_ATTR_WRITE', 'ITEM_ATTR_READ_GRP',
-              'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3')
+              'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3',
+              'ITEM_ATTR_VALID_LIST')
 
 # command definition
 COMMAND_READ                 = True                     # used internally
@@ -157,6 +163,10 @@ CMD_ATTR_CMD_SETTINGS        = 'cmd_settings'           # additional settings fo
 CMD_ATTR_LOOKUP              = 'lookup'                 # use lookup table <foo> to translate between plugin and items
 CMD_ATTR_PARAMS              = 'params'                 # parameters to send (e.g. in JSON-RPC)
 CMD_ATTR_ITEM_ATTRS          = 'item_attrs'             # item attributes for struct generation (see below)
+CMD_ATTR_CUSTOM_DISABLE      = 'custom_disabled'        # disable custom token detection for this command
+CMD_ATTR_SEND_RETRIES        = 'send_retries'           # how often should a command be resent when not receiving expected answer (resend protocol only, overwriting default plugin parameter)
+
+CMD_ATTR_ORG_PARAMS          = 'org_cmd_dict'           # store original command configuration, internal use only!
 
 CMD_IATTR_RG_LEVELS          = 'read_group_levels'      # include this number of read groups (max, 0=no read groups)
 CMD_IATTR_LOOKUP_ITEM        = 'lookup_item'            # create lookup item <item>.lookup
@@ -174,7 +184,7 @@ CMD_IATTR_CUSTOM3            = 'custom3'                # add item-specific cust
 # commands definition parameters
 COMMAND_PARAMS = (CMD_ATTR_OPCODE, CMD_ATTR_READ, CMD_ATTR_WRITE, CMD_ATTR_ITEM_TYPE, CMD_ATTR_DEV_TYPE,
                   CMD_ATTR_READ_CMD, CMD_ATTR_WRITE_CMD, CMD_ATTR_REPLY_PATTERN, CMD_ATTR_CMD_SETTINGS,
-                  CMD_ATTR_LOOKUP, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS)
+                  CMD_ATTR_LOOKUP, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS, CMD_ATTR_CUSTOM_DISABLE, CMD_ATTR_SEND_RETRIES)
 
 COMMAND_ITEM_ATTRS = (CMD_IATTR_RG_LEVELS, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_ATTRIBUTES, CMD_IATTR_TEMPLATE,
                       CMD_IATTR_READ_GROUPS, CMD_IATTR_CYCLE, CMD_IATTR_INITIAL, CMD_IATTR_ENFORCE,
@@ -184,9 +194,10 @@ COMMAND_ITEM_ATTRS = (CMD_IATTR_RG_LEVELS, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_ATTR
 PATTERN_LOOKUP               = 'LOOKUP'                 # replace with lookup values    
 PATTERN_VALID_LIST           = 'VALID_LIST'             # replace with valid_list items
 PATTERN_VALID_LIST_CI        = 'VALID_LIST_CI'          # replace with valid_list_ci items
+PATTERN_VALID_LIST_RE        = 'VALID_LIST_RE'          # replace with valid_list_re patterns
 PATTERN_CUSTOM_PATTERN       = 'CUSTOM_PATTERN'         # replace with custom pattern <x>
 
-PATTERN_MARKERS = (PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_CUSTOM_PATTERN)
+PATTERN_MARKERS = (PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_VALID_LIST_RE, PATTERN_CUSTOM_PATTERN)
 
 # command string substitution tokens, set token in {<token>}
 CMD_STR_VAL_RAW              = 'RAW_VALUE'              # replace with raw value
@@ -196,9 +207,10 @@ CMD_STR_VAL_CAP              = 'RAW_VALUE_CAP'          # replace with raw value
 CMD_STR_VALUE                = 'VALUE'                  # replace with DT converted value
 CMD_STR_OPCODE               = 'OPCODE'                 # replace with opcode string/bytes
 CMD_STR_PARAM                = 'PARAM:'                 # replace with kwargs[foo] (``{PARAM:foo}``)
+CMD_STR_CUSTOM_PARAM         = 'CUSTOM_PARAM'           # replace with kwargs[<custom>][foo] (``{CUSTOM_PARAM[123]:{<custom>: foo}}``)
 CMD_STR_CUSTOM               = 'CUSTOM_ATTR'            # replace with value of custom attribute <x>
 
-CMD_STRINGS = (CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW, CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM, CMD_STR_CUSTOM)
+CMD_STRINGS = (CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW, CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM, CMD_STR_CUSTOM_PARAM, CMD_STR_CUSTOM)
 
 # JSON keys to move from dict root to data.params
 JSON_MOVE_KEYS               = 'json_move_keys'
