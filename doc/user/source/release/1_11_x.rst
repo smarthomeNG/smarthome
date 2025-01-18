@@ -174,21 +174,24 @@ Updates in the CORE
 
     * sdp:
 
-      * Improvements
-      * Add version, cyclic error detection/reconnect
-      * Implement read after write
-      * Fix attr resolving
-      * Fix long cyclic recovery
-      * Several minor fixes/updates
-      * Adjust to smartplugin changes
-      * suspend/resume
-      * Fix missing parameter
-      * Move to sdp v1.0.2
-      * Pass plugin reference to connection/protocol
+      * Bump version number to 1.0.4
+      * Add valid_list item attribute, complete type hinting
+      * Enable raw sending of lookup values
+      * Improve reply pattern processing
+      * Add editable lookup tables
+      * Add regex-capable valid_list_re to command patterns
+      * Add delivery queue to serial connection for better timing
+      * Improve struct generation
+      * Fix automatic resend protocol detection
       * Change to scheduler_remove_all
-      * Modify run logics
-      * Propose resend protocol
-      * Move command storing
+      * Suspend/resume
+      * Minor fixes/updates
+      * Implement read after write
+      * Update documentation
+      * Add version, cyclic error detection/reconnect
+      * Fix long cyclic recovery
+      * Adjust to smartplugin changes
+      * Pass plugin reference to connection/protocol
       * Set protocol to resend if send_retries > 0
       * Query current value for command that was not successfully sent
       * Fix and improve read command for querying after resend is not successful
@@ -196,13 +199,7 @@ Updates in the CORE
       * Join resend/jsonrpc parameters, cleanup
       * Add minimum version check
       * Make resending work with custom command values
-      * Correctly handle reply_patterns defined as lists for resend protocol
-      * Parse custom_parameters correctly for reply_pattern used for resend protocol
-      * Improve struct generation
-      * Add delivery queue to serial connection for better timing
-      * Connection.py aktualisieren
       * Fix order of connect initialization, fix struct generation
-      * Fix sdp references
 
     * smartplugin:
 
