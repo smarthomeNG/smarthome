@@ -55,6 +55,7 @@ jobs:
       with:
         repository: smarthomeNG/plugins
         ref: ${{ steps.extract_branch.outputs.branch }}
+        path: plugins
 
     - name: Checkout plugins from branch 'develop' (for pull request or push on unknown smarthomeNG/smarthome branch)
       if: github.event_name == 'pull_request' || steps.plugins_branch_check.outputs.code == '2'
@@ -62,6 +63,7 @@ jobs:
       with:
         repository: smarthomeNG/plugins
         ref: develop
+        path: plugins
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
