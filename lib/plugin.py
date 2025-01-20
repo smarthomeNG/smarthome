@@ -55,12 +55,13 @@ import threading
 import collections
 import os.path		# until Backend is modified
 
+from importlib import import_module
+
 import lib.config
 import lib.translation as translation
 from lib.model.smartplugin import SmartPlugin
 from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, YAML_FILE, CONF_FILE, DIR_PLUGINS)
 from lib.metadata import Metadata
-import plugins
 
 logger = logging.getLogger(__name__)
 
@@ -643,7 +644,7 @@ class PluginWrapper(threading.Thread):
 
         try:
             # exec("import {0}".format(classpath))
-            module = __import__(classpath)
+            module = import_module(classpath)
         except ImportError as e:
             logger.error(f"Plugin '{plg_section}' error importing Python package: {e}")
             logger.error(f"Plugin '{plg_section}' initialization failed, plugin not loaded")
@@ -656,12 +657,17 @@ class PluginWrapper(threading.Thread):
             logger.error(f"Plugin '{plg_section}' import didn't return a module.")
             logger.error(f"Plugin '{plg_section}' initialization failed, plugin not loaded")
             return
+        cls = getattr(module, classname)
+        if not cls:
+            logger.error(f"Plugin '{plg_section}' errorclass name '{classname}' defined in metadata, but not found in plugin code")
+            return
+
         try:
             # exec("self.plugin = {0}.{1}.__new__({0}.{1})".format(classpath, classname))
-            self.plugin = getattr(module, classname).__new__(f"{classpath}.{classname}")
+            self.plugin = cls.__new__(cls)
         except Exception as e:
-            logger.error(f"Plugin '{plg_section}' class name '{classname}' defined in metadata, but not found in plugin code: {e}")
-            logger.error(f"Plugin '{plg_section}' initialization failed, plugin not loaded")
+            logger.error(f"Plugin '{plg_section}' initialization failed: {e}")
+            logger.error(f"Plugin '{plg_section}' not loaded")
             return
 
         # load plugin-specific translations
@@ -713,7 +719,7 @@ class PluginWrapper(threading.Thread):
         logger.debug(f"Plugin '{classname}': args = '{str(args)}'")
 
         # make kwargs dict for all args which are arguments to __init__
-        kwargs = {name: args[name] for name in [name for name, val in plg_class_args if name in args]}
+        kwargs = {name: args[name] for name in [name for name in plg_class_args if name in args]}
 
         self.get_implementation()._init_complete = False
         plugin_params, params_ok, hide_params = self.meta.check_parameters(args)
