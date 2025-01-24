@@ -352,11 +352,6 @@ class Plugins():
         return _plugins_instance
 
 
-    def __call__(self, plugin_name, instance=None):
-        """ get plugin object by name """
-        return self.get(plugin_name, instance)
-
-
     def get(self, plugin_name, instance=None):
         """
         Get plugin object by plugin name and instance (optional)
@@ -369,6 +364,11 @@ class Plugins():
         if instance is None:
             return self._plugindict.get(plugin_name)
         return self._plugindict.get(plugin_name + '#' + instance)
+
+
+    def __call__(self, config_name):
+        """ get plugin object by name """
+        return self.return_plugin(config_name)
 
 
     def return_plugin(self, configname):
@@ -747,7 +747,21 @@ class PluginWrapper(threading.Thread):
         self._init_complete = self.get_implementation()._init_complete
         if self.get_implementation()._init_complete:
             # make the plugin a method/function of the main smarthome object
+            # might be deprecated some day, no warning yet
             setattr(smarthome, self.name, self.plugin)
+
+            # new: make the plugin a method/function of the main plugins object
+            # don't overwrite existing names
+            global _plugins_instance
+            if _plugins_instance:
+                if not hasattr(_plugins_instance, self.name):
+                    setattr(_plugins_instance, self.name, self.plugin)
+                else:
+                    if type(getattr(_plugins_instance, self.name)) == type(self.__init__):
+                        logger.warning(f'plugin identifier {self.name} colliding with sh.plugins method {self.name}(), not referencing in sh.plugins')
+                    else:
+                        logger.warning(f'plugin identifier {self.name} colliding with sh.plugins attribute {self.name}, not referencing in sh.plugins')
+
             try:
                 code_version = self.get_implementation().PLUGIN_VERSION
             except Exception:
