@@ -12,8 +12,12 @@ Logiken :bluesup:`under construction`
 =====================================
 
 Eine Logik besteht aus einem Python Skript sowie einer Reihe von Parametern die den Aufruf (das Triggern) der Logik
-steuern. Eine Logik kan während der Laufzeit von SmartHomeNG geladen und entladen werden. Dadurch sind Veränderungen
+steuern. Eine Logik kann während der Laufzeit von SmartHomeNG geladen und entladen werden. Dadurch sind Veränderungen
 ein einer Logik möglich, ohne SmartHomeNG neu starten zu müssen.
+
+Wird ein zusätzliches Python Modul in einer Logik benötigt, so kann eine ``requirements.txt`` im Verzeichnis ``logics`` erstellt 
+und in dieser Datei Namen und Versionen für die Installation via PIP notiert werden.
+In diesem Fall muss SmartHomeNG auf jeden Fall neu gestartet werden da die Überprüfung nur beim Start von SmartHomeNG erfolgt.
 
 
 Einführung
