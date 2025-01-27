@@ -132,7 +132,7 @@ Die Methoden von ``SmartDevicePlugin`` sind hier dokumentiert:
    :maxdepth: 5
    :titlesonly:
 
-   /referenz/plugins/plugin_typen/smartdeviceplugin
+   /referenz/plugins/plugin_typen/smartdeviceplugin_class
 
 |
 

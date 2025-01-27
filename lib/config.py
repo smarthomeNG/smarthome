@@ -366,6 +366,8 @@ def nested_put(output_dict, path, value):
     :return:
     """
     internal_dict_value = output_dict
+    if isinstance(path, int):
+        path = str(path)
     nested_key = path.split('.')
     internal_last_dict_value = None
     # if struct_merging_active:

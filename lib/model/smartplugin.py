@@ -1186,7 +1186,7 @@ class SmartPlugin(SmartObject, Utils):
         self._asyncio_loop = None
         self.logger.debug("_asyncio main task of plugin finished")
 
-    def run_asyncio_coro(self, coro: Coroutine, return_exeption: bool = False) -> Any:
+    def run_asyncio_coro(self, coro: Coroutine, timeout=60, return_exeption: bool = False) -> Any:
         """
         Run a coroutine in the eventloop of the plugin
 
@@ -1204,15 +1204,26 @@ class SmartPlugin(SmartObject, Utils):
         if self._asyncio_loop is None:
             self.logger.error(f"run_asyncio_coro: Cannot run coro '{coro}' because no eventloop is active")
             return
-        try:
-            future = asyncio.run_coroutine_threadsafe(coro, self._asyncio_loop)
-            result = future.result(timeout=60)
-        except Exception as ex:
-            result = None
-            if return_exeption:
-                raise Exception( ex )
-            else:
-                self.logger.exception(f"run_asyncio_coro: Exception {ex} ({coro=}, loop={self._asyncio_loop})")
+        future = asyncio.run_coroutine_threadsafe(coro, self._asyncio_loop)
+        # try:
+        #     future = asyncio.run_coroutine_threadsafe(coro, self._asyncio_loop)
+        # except Exception as ex:
+        #     result = None
+        #     if return_exeption:
+        #         raise Exception( f"Exception running coro: {ex}" )
+        #     else:
+        #         self.logger.exception(f"run_asyncio_coro: Exception {ex} running coro ({coro=}, loop={self._asyncio_loop})")
+        result = future.result(timeout=timeout)
+        # try:
+        #     result = future.result(timeout=timeout)
+        # except asyncio.TimeoutError:
+        #     raise asyncio.TimeoutError(f"Timeout in getting result of coro {coro}")
+        # except Exception as ex:
+        #     result = None
+        #     if return_exeption:
+        #         raise Exception( f"Exception getting coro result: {ex}" )
+        #     else:
+        #         self.logger.exception(f"run_asyncio_coro: Exception {ex} getting coro result ({coro=}, loop={self._asyncio_loop})")
         return result
 
     async def wait_for_asyncio_termination(self) -> None:

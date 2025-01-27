@@ -73,7 +73,7 @@ class ConfigController(RESTResource):
     #  Read holidays
     #
     def read_holidays(self):
-        self.holidays_confdata = shyaml.yaml_load(self._sh.get_config_file(BASE_HOLIDAYS))
+        self.holidays_confdata = shyaml.yaml_load(self._sh.get_config_file(BASE_HOLIDAY))
         if self.holidays_confdata.get('location', None) is not None:
             self.core_confdata['holidays_country'] = self.holidays_confdata['location'].get('country', '')
             self.core_confdata['holidays_province'] = self.holidays_confdata['location'].get('province', '')
@@ -96,7 +96,7 @@ class ConfigController(RESTResource):
     #  Update holidays
     #
     def update_holidays(self, data):
-        filename = self._sh.get_config_file(BASE_HOLIDAYS)
+        filename = self._sh.get_config_file(BASE_HOLIDAY)
         self.holidays_confdata = shyaml.yaml_load_roundtrip(filename)
         self.logger.info("update_holidays: self.holidays_confdata = '{}'".format(self.holidays_confdata))
         self.logger.info("update_holidays: data['common']['data'] = '{}'".format(data['common']['data']))

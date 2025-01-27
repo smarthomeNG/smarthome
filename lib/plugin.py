@@ -46,23 +46,24 @@ They can be used the following way: To call eg. **xxx()**, use the following syn
 """
 import gc
 import ctypes
+import inspect
 import sys
 
 import json
 import logging
 import threading
-import inspect
 import collections
 import os.path		# until Backend is modified
 
+from importlib import import_module, reload
+
+from git import exc
+
 import lib.config
 import lib.translation as translation
-import lib.shyaml as shyaml
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, KEY_WEBIF_PAGELENGTH, YAML_FILE, CONF_FILE, DIR_PLUGINS)
-#from lib.utils import Utils
+from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, YAML_FILE, CONF_FILE, DIR_PLUGINS, PLUGIN_PARSE_ITEM)
 from lib.metadata import Metadata
-#import lib.item
 
 logger = logging.getLogger(__name__)
 
@@ -70,8 +71,13 @@ logger = logging.getLogger(__name__)
 _plugins_instance = None    # Pointer to the initialized instance of the Plugins class (for use by static methods)
 _SH = None
 
+
 def namestr(obj, namespace):
     return [name for name in namespace if namespace[name] is obj]
+
+
+class PyObject(ctypes.Structure):
+    _fields_ = [("refcnt", ctypes.c_long)]
 
 
 class Plugins():
@@ -84,12 +90,13 @@ class Plugins():
     :type configfile: str
 
     """
+
     _plugins = []
     _threads = []
 
     _plugindict = {}
 
-    def __init__(self, smarthome, configfile):
+    def __init__(self, smarthome, configfile: str):
         self._sh = smarthome
         self._configfile = configfile
 
@@ -98,7 +105,7 @@ class Plugins():
             import inspect
             curframe = inspect.currentframe()
             calframe = inspect.getouterframes(curframe, 4)
-            logger.critical("A second 'plugins' object has been created. There should only be ONE instance of class 'Plugins'!!! Called from: {} ({})".format(calframe[1][1], calframe[1][3]))
+            logger.critical(f"A second 'plugins' object has been created. There should only be ONE instance of class 'Plugins'!!! Called from: {calframe[1][1]} ({calframe[1][3]})")
 
         _plugins_instance = self
 
@@ -107,7 +114,7 @@ class Plugins():
             self._plugin_conf_filename = configfile + YAML_FILE
         else:
             self._plugin_conf_filename = configfile + CONF_FILE
-        smarthome._plugin_conf = self._plugin_conf_filename
+        smarthome._plugin_conf = self._plugin_conf_filename  # type: ignore
 
         # read plugin configuration (from etc/plugin.yaml)
         _conf = lib.config.parse_basename(configfile, configtype='plugin')
@@ -115,94 +122,22 @@ class Plugins():
             return
 
         logger.info('Load plugins')
-        threads_early = []
-        threads_late = []
+        self.threads_early = []
+        self.threads_late = []
 
         # for every section (plugin) in the plugin.yaml file
         for plugin in _conf:
-            logger.debug("Plugins, section: {}".format(plugin))
-            plugin_name, self.meta = self._get_pluginname_and_metadata(plugin, _conf[plugin])
-            self._sh.shng_status['details'] = plugin_name   # Namen des Plugins übertragen
-            #self._sh.shng_status['details'] = plugin        # Namen der Plugin Section übertragen
-
-            # test if plugin defines item attributes
-            item_attributes = self.meta.itemdefinitions
-            if item_attributes is not None:
-                attribute_keys = list(item_attributes.keys())
-                for attribute_name in attribute_keys:
-                    self._sh.items.add_plugin_attribute(plugin_name, attribute_name, item_attributes[attribute_name])
-
-            # test if plugin defines item attribute prefixes (e.g. stateengine)
-            item_attribute_prefixes = self.meta.itemprefixdefinitions
-            if item_attribute_prefixes is not None:
-                attribute_prefixes_keys = list(item_attribute_prefixes.keys())
-                for attribute_prefix in attribute_prefixes_keys:
-                    #logger.warning(f"plugin_name={plugin_name}, attribute_prefix={attribute_prefix}, item_attribute_prefixes[attribute_prefix]={item_attribute_prefixes[attribute_prefix]}")
-                    self._sh.items.add_plugin_attribute_prefix(plugin_name, attribute_prefix, item_attribute_prefixes[attribute_prefix])
-
-            # Test if plugin defines item structs
-            item_structs = self.meta.itemstructs
-            if item_structs is not None:
-                struct_keys = list(item_structs.keys())
-                for struct_name in struct_keys:
-                    self._sh.items.add_struct_definition(plugin_name, struct_name, item_structs[struct_name])
-                    # add struct again for plugin "id", marked as optional
-                    self._sh.items.add_struct_definition(plugin, struct_name, item_structs[struct_name], optional=True)
-            # Test if plugin is disabled
-            if str(_conf[plugin].get('plugin_enabled', None)).lower() == 'false':
-                logger.info("Section {} (plugin_name {}) is disabled - Plugin not loaded".format(plugin, _conf[plugin].get('plugin_name', None)))
-            elif self.meta.test_shngcompatibility() and self.meta.test_pythoncompatibility() and self.meta.test_sdpcompatibility():
-                classname, classpath = self._get_classname_and_classpath(_conf[plugin], plugin_name)
-                if (classname == '') and (classpath == ''):
-                    logger.error("Plugins, section {}: plugin_name is not defined".format(plugin))
-                elif classname == '':
-                    logger.error("Plugins, section {}: class_name is not defined".format(plugin))
-                elif classpath == '':
-                    logger.error("Plugins, section {}: class_path is not defined".format(plugin))
-                else:
-                    args = self._get_conf_args(_conf[plugin])
-#                    logger.warning("Plugin '{}' from section '{}': classname = {}, classpath = {}".format( str(classpath).split('.')[1], plugin, classname, classpath ) )
-                    instance = self._get_instancename(_conf[plugin]).lower()
-                    try:
-                        plugin_version = self.meta.pluginsettings.get('version', 'ersion unknown')
-                        plugin_version = 'v' + plugin_version
-                    except Exception as e:
-                        plugin_version = 'version unknown'
-                    dummy = self._test_duplicate_pluginconfiguration(plugin, classname, instance)
-                    os.chdir((self._sh._base_dir))
-                    try:
-                        plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta, self._configfile)
-                        if plugin_thread._init_complete is True:
-                            try:
-                                try:
-                                    startorder = self.meta.pluginsettings.get('startorder', 'normal').lower()
-                                except Exception as e:
-                                    logger.warning(f"Plugin {str(classpath).split('.')[1]} error on getting startorder: {e}")
-                                    startorder = 'normal'
-                                self._plugins.append(plugin_thread.plugin)
-                                # dict to get a handle to the plugin code by plugin name:
-                                if self._plugindict.get(classpath.split('.')[1], None) is None:
-                                    self._plugindict[classpath.split('.')[1]] = plugin_thread.plugin
-                                self._plugindict[classpath.split('.')[1]+'#'+instance] = plugin_thread.plugin
-                                if startorder == 'early':
-                                    threads_early.append(plugin_thread)
-                                elif startorder == 'late':
-                                    threads_late.append(plugin_thread)
-                                else:
-                                    self._threads.append(plugin_thread)
-                                if instance == '':
-                                    logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' from section '{plugin}'")
-                                else:
-                                    logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' instance '{instance}' from section '{plugin}'")
-                            except Exception as e:
-                                logger.warning(f"Plugin '{str(classpath).split('.')[1]}' from section '{plugin}' not loaded - exception {e}" )
-                    except Exception as e:
-                        logger.exception(f"Plugin '{str(classpath).split('.')[1]}' {plugin_version} from section '{plugin}'\nException: {e}\nrunning SmartHomeNG {self._sh.version} / plugins {self._sh.plugins_version}")
+            logger.debug(f'Plugins, section: {plugin}')
+            self.load_plugin(plugin, _conf[plugin])
 
         # join the start_early and start_late lists with the main thread list
-        self._threads = threads_early + self._threads + threads_late
+        self._threads = self.threads_early + self._threads + self.threads_late
+
+        # cleanup early/late startup
+        self.threads_early = self.threads_late = []
+
         logger.info('Load of plugins finished')
-        del(_conf)  # clean up
+        del _conf  # clean up
         os.chdir((self._sh._base_dir))
 
         # Tests für logic-Parameter Metadaten
@@ -212,38 +147,9 @@ class Plugins():
 
             if self._plugins[i]._metadata.logic_parameters is not None:
                 for param in self._plugins[i]._metadata.logic_parameters:
-                    logger.debug("Plugins.__init__: Plugin '{}' logic_param '{}' = {}".format(self._plugins[i]._shortname, param, json.loads(json.dumps(self._plugins[i]._metadata.logic_parameters[param]))))
+                    logger.debug(f"Plugins.__init__: Plugin '{self._plugins[i]._shortname}' logic_param '{param}' = {json.loads(json.dumps(self._plugins[i]._metadata.logic_parameters[param]))}")
                     self.logic_parameters[param] = json.loads(json.dumps(self._plugins[i]._metadata.logic_parameters[param]))
                     self.logic_parameters[param]['plugin'] = self._plugins[i]._shortname
-
-        return
-
-
-    def get(self, plugin_name, instance=None):
-        """
-        Get plugin object by plugin name and instance (optional)
-
-        :param plugin_name: name of the plugin (not the plugin configuration)
-        :param instance: name of the instance of the plugin (optional)
-
-        :return: plugin object
-        """
-        if instance is None:
-            return self._plugindict.get(plugin_name, None)
-        return self._plugindict.get(plugin_name+'#'+instance, None)
-
-
-    def get_logic_parameters(self):
-        """
-        Returns the list of all logic parameter definitions of all configured/loaded plugins
-
-        :return:
-        """
-        paramdict = collections.OrderedDict(sorted(self.logic_parameters.items()))
-        for p in paramdict:
-            logger.debug("Plugins.get_logic_parameters(): {} = {}".format(p, paramdict[p]))
-
-        return paramdict
 
 
     def _get_pluginname_and_metadata(self, plg_section, plg_conf):
@@ -256,24 +162,24 @@ class Plugins():
         :return: plugin_name and metadata_instance
         :rtype: string, object
         """
-        plugin_name = plg_conf.get('plugin_name','').lower()
-        plugin_version = plg_conf.get('plugin_version','').lower()
+        plugin_name = plg_conf.get('plugin_name', '').lower()
+        plugin_version = plg_conf.get('plugin_version', '').lower()
         if plugin_version != '':
-            plugin_version = '._pv_' + plugin_version.replace('.','_')
+            plugin_version = '._pv_' + plugin_version.replace('.', '_')
         if plugin_name != '':
-            meta = Metadata(self._sh, (plugin_name+plugin_version).replace('.',os.sep), 'plugin')
+            meta = Metadata(self._sh, (plugin_name + plugin_version).replace('.', os.sep), 'plugin')
         else:
-            classpath = plg_conf.get(KEY_CLASS_PATH,'')
+            classpath = plg_conf.get(KEY_CLASS_PATH, '')
             if classpath != '':
-                plugin_name = classpath.split('.')[len(classpath.split('.'))-1].lower()
+                plugin_name = classpath.split('.')[len(classpath.split('.')) - 1].lower()
                 if plugin_name.startswith('_pv'):
-                    plugin_name = classpath.split('.')[len(classpath.split('.'))-2].lower()
-                logger.debug("Plugins __init__: pluginname = '{}', classpath '{}'".format(plugin_name, classpath))
-                meta = Metadata(self._sh, plugin_name, 'plugin', (classpath+plugin_version).replace('.',os.sep))
+                    plugin_name = classpath.split('.')[len(classpath.split('.')) - 2].lower()
+                logger.debug(f"Plugins __init__: pluginname = '{plugin_name}', classpath '{classpath}'")
+                meta = Metadata(self._sh, plugin_name, 'plugin', (classpath + plugin_version).replace('.', os.sep))
             else:
-                logger.error("Plugin configuration section '{}': Neither 'plugin_name' nor '{}' are defined.".format( plg_section, KEY_CLASS_PATH ))
+                logger.error(f"Plugin configuration section '{plg_section}': Neither 'plugin_name' nor '{KEY_CLASS_PATH}' are defined.")
                 meta = Metadata(self._sh, plugin_name, 'plugin', classpath)
-        return (plugin_name+plugin_version, meta)
+        return (plugin_name + plugin_version, meta)
 
 
     def _get_conf_args(self, plg_conf):
@@ -309,24 +215,24 @@ class Plugins():
         :return: classname, classpass
         :rtype: str, str
         """
-        classname = plg_conf.get(KEY_CLASS_NAME,'')
+        classname = plg_conf.get(KEY_CLASS_NAME, '')
         plugin_version = ''
         if plugin_name == '':
-            plugin_version = plg_conf.get('plugin_version','').lower()
+            plugin_version = plg_conf.get('plugin_version', '').lower()
             if plugin_version != '':
-                plugin_version = '._pv_' + plugin_version.replace('.','_')
+                plugin_version = '._pv_' + plugin_version.replace('.', '_')
 
         if classname == '':
             classname = self.meta.get_string('classname')
         try:
             classpath = plg_conf[KEY_CLASS_PATH]
-        except:
+        except Exception:
             if plugin_name == '':
                 classpath = ''
             else:
                 classpath = DIR_PLUGINS + '.' + plugin_name
 #        logger.warning("_get_classname_and_classpath: plugin_name = {}, classpath = {}, classname = {}".format(plugin_name, classpath, classname))
-        return (classname, classpath+plugin_version)
+        return (classname, classpath + plugin_version)
 
 
     def _get_instancename(self, plg_conf):
@@ -370,13 +276,12 @@ class Plugins():
                             if t.plugin.__class__.__name__ == classname:
                                 duplicate = True
                                 prev_plugin = t._name
-                                logger.warning("Plugin section '{}' uses same class '{}' and instance '{}' as plugin section '{}'".format(plugin, p.__class__.__name__, 'default' if instance == '' else instance, prev_plugin))
+                                logger.warning(f"Plugin section '{plugin}' uses same class '{p.__class__.__name__}' and instance '{'default' if instance == '' else instance}' as plugin section '{prev_plugin}'")
                                 break
 
             elif p.__class__.__name__ == classname:
-                logger.warning("Multiple classic plugin instances of class '{}' detected".format(classname))
+                logger.warning(f'Multiple classic plugin instances of class "{classname}" detected')
         return duplicate
-
 
 
     def __iter__(self):
@@ -396,7 +301,7 @@ class Plugins():
         plgs = []
         for plugin in self._plugins:
             plgname = plugin.get_shortname()
-            if not plgname in plgs:
+            if plgname not in plgs:
                 plgs.append(plgname)
         return sorted(plgs)
 
@@ -414,6 +319,13 @@ class Plugins():
             insname = plugin.get_instance_name()
             plgs.append((plgname, insname))
         return sorted(plgs)
+
+
+    def _get_plugin_conf_filename(self):
+        """
+        Returns the name of the logic configuration file
+        """
+        return self._plugin_conf_filename
 
 
     # ------------------------------------------------------------------------------------
@@ -439,10 +351,26 @@ class Plugins():
         :return: logics instance
         :rtype: object of None
         """
-        if _plugins_instance == None:
-            return None
-        else:
-            return _plugins_instance
+        return _plugins_instance
+
+
+    def get(self, plugin_name, instance=None):
+        """
+        Get plugin object by plugin name and instance (optional)
+
+        :param plugin_name: name of the plugin (not the plugin configuration)
+        :param instance: name of the instance of the plugin (optional)
+
+        :return: plugin object
+        """
+        if instance is None:
+            return self._plugindict.get(plugin_name)
+        return self._plugindict.get(plugin_name + '#' + instance)
+
+
+    def __call__(self, config_name):
+        """ get plugin object by name """
+        return self.return_plugin(config_name)
 
 
     def return_plugin(self, configname):
@@ -459,15 +387,13 @@ class Plugins():
             try:
                 if plugin.get_configname() == configname:
                     return plugin
-            except:
+            except Exception:
                 pass
-        return None
-#        return self._plugins[name]
 
 
     def return_plugins(self):
         """
-        Returns a list with the instances of all loaded plugins
+        Returns each of all loaded plugins (including instances)
 
         :return: list of plugin names
         :rtype: list
@@ -477,18 +403,104 @@ class Plugins():
             yield plugin
 
 
-    def _get_plugin_conf_filename(self):
+    def get_logic_parameters(self):
         """
-        Returns the name of the logic configuration file
+        Returns the list of all logic parameter definitions of all configured/loaded plugins
+
+        :return:
         """
-        return self._plugin_conf_filename
+        paramdict = collections.OrderedDict(sorted(self.logic_parameters.items()))
+        for p in paramdict:
+            logger.debug(f"Plugins.get_logic_parameters(): {p} = {paramdict[p]}")
+
+        return paramdict
+
+    def load_plugin(self, configname: str, conf: dict) -> bool:
+        """
+        load plugin for given section with given config
+
+        return True if plugin was loaded successfully, False if not (even if disabled)
+        """
+        logger.debug(f'Attempting to load plugin "{conf.get("plugin_name", "(unknown)")}" from section {configname}')
+        plugin_name, self.meta = self._get_pluginname_and_metadata(configname, conf)
+        self._sh.shng_status['details'] = plugin_name   # Namen des Plugins übertragen
+
+        # test if plugin defines item attributes
+        item_attributes = self.meta.itemdefinitions
+        if item_attributes is not None:
+            attribute_keys = list(item_attributes.keys())
+            for attribute_name in attribute_keys:
+                self._sh.items.add_plugin_attribute(plugin_name, attribute_name, item_attributes[attribute_name])
+
+        # test if plugin defines item attribute prefixes (e.g. stateengine)
+        item_attribute_prefixes = self.meta.itemprefixdefinitions
+        if item_attribute_prefixes is not None:
+            attribute_prefixes_keys = list(item_attribute_prefixes.keys())
+            for attribute_prefix in attribute_prefixes_keys:
+                self._sh.items.add_plugin_attribute_prefix(plugin_name, attribute_prefix, item_attribute_prefixes[attribute_prefix])
+
+        # Test if plugin defines item structs
+        item_structs = self.meta.itemstructs
+        if item_structs is not None:
+            struct_keys = list(item_structs.keys())
+            for struct_name in struct_keys:
+                self._sh.items.add_struct_definition(plugin_name, struct_name, item_structs[struct_name])
+
+        # Test if plugin is disabled
+        if str(conf.get('plugin_enabled', None)).lower() == 'false':
+            logger.info(f'Section {configname} (plugin_name {conf.get("plugin_name", "unknown")}) is disabled - plugin not loaded')
+        elif self.meta.test_shngcompatibility() and self.meta.test_pythoncompatibility() and self.meta.test_sdpcompatibility():
+            classname, classpath = self._get_classname_and_classpath(conf, plugin_name)
+            if (classname == '') and (classpath == ''):
+                logger.error(f'Plugins, section {configname}: plugin_name is not defined')
+            elif classname == '':
+                logger.error(f'Plugins, section {configname}: class_name is not defined')
+            elif classpath == '':
+                logger.error(f'Plugins, section {configname}: class_path is not defined')
+            else:
+                args = self._get_conf_args(conf)
+                instance = self._get_instancename(conf).lower()
+                try:
+                    plugin_version = self.meta.pluginsettings.get('version', 'ersion unknown')
+                    plugin_version = 'v' + plugin_version
+                except Exception:
+                    plugin_version = 'version unknown'
+                self._test_duplicate_pluginconfiguration(configname, classname, instance)
+                os.chdir((self._sh._base_dir))
+                try:
+                    plugin_thread = PluginWrapper(self._sh, configname, classname, classpath, args, instance, self.meta, self._configfile)
+                    if plugin_thread._init_complete:
+                        try:
+                            try:
+                                startorder = self.meta.pluginsettings.get('startorder', 'normal').lower()
+                            except Exception as e:
+                                logger.warning(f'Plugin {str(classpath).split(".")[1]} error on getting startorder: {e}')
+                                startorder = 'normal'
+                            self._plugins.append(plugin_thread.plugin)  # type: ignore (plugin is set via eval)
+                            # dict to get a handle to the plugin code by plugin name:
+                            if self._plugindict.get(classpath.split('.')[1], None) is None:
+                                self._plugindict[classpath.split('.')[1]] = plugin_thread.plugin  # type: ignore
+                            self._plugindict[classpath.split('.')[1] + '#' + instance] = plugin_thread.plugin  # type: ignore
+                            if startorder == 'early':
+                                self.threads_early.append(plugin_thread)
+                            elif startorder == 'late':
+                                self.threads_late.append(plugin_thread)
+                            else:
+                                self._threads.append(plugin_thread)
+                            if instance == '':
+                                logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' from section '{configname}'")
+                            else:
+                                logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' instance '{instance}' from section '{configname}'")
+                            return True
+                        except Exception as e:
+                            logger.warning(f"Plugin '{str(classpath).split('.')[1]}' from section '{configname}' not loaded - exception {e}")
+                except Exception as e:
+                    logger.exception(f"Plugin '{str(classpath).split('.')[1]}' {plugin_version} from section '{configname}'\nException: {e}\nrunning SmartHomeNG {self._sh.version} / plugins {self._sh.plugins_version}")
+
+        return False
 
 
-    class PyObject(ctypes.Structure):
-        _fields_ = [("refcnt", ctypes.c_long)]
-
-
-    def unload_plugin(self, configname):
+    def unload_plugin(self, configname: str) -> bool:
         """
         Unloads (the object of) one loaded plugin with given configname
 
@@ -501,50 +513,155 @@ class Plugins():
         logger.info("unload_plugin -------------------------------------------------")
 
         myplugin = self.return_plugin(configname)
+        if not myplugin:
+            logger.warning(f'Plugin {configname} not found, aborting')
+            return False
+
         mythread = self.get_pluginthread(configname)
+
+        instance = myplugin.get_instance_name()
+        plgname = myplugin.get_shortname()
+
         if myplugin.alive:
             myplugin.stop()
 
         logger.info("unload_plugin: configname = {}, myplugin = {}".format(configname, myplugin))
 
-        logger.info("Plugins._plugins ({}) = {}".format(len(self._plugins), self._plugins))
-        logger.info("Plugins._threads ({}) = {}".format(len(self._threads), self._threads))
+        logger.debug("Plugins._plugins ({}) = {}".format(len(self._plugins), self._plugins))
+        logger.debug("Plugins._threads ({}) = {}".format(len(self._threads), self._threads))
 
         # execute de-initialization code of the plugin
         myplugin.deinit()
 
         self._threads.remove(mythread)
         self._plugins.remove(myplugin)
-        logger.info("Plugins._plugins nach remove ({}) = {}".format(len(self._plugins), self._plugins))
-        logger.info("Plugins._threads nach remove ({}) = {}".format(len(self._threads), self._threads))
+        logger.debug("Plugins._plugins nach remove ({}) = {}".format(len(self._plugins), self._plugins))
+        logger.debug("Plugins._threads nach remove ({}) = {}".format(len(self._threads), self._threads))
 
         myplugin_address = id(myplugin)
-        logger.info("myplugin sizeof       = {}".format(sys.getsizeof(myplugin)))
-        logger.info("myplugin refcnt       = {}".format(self.PyObject.from_address(myplugin_address).refcnt))
-        logger.info("myplugin referrer     = {}".format(gc.get_referrers(myplugin)))
-        logger.info("myplugin referrer cnt = {}".format(len(gc.get_referrers(myplugin))))
+        logger.debug(f'myplugin sizeof       = {sys.getsizeof(myplugin)}')
+        logger.debug(f'myplugin refcnt       = {PyObject.from_address(myplugin_address).refcnt}')
+        logger.debug(f'myplugin referrer     = {gc.get_referrers(myplugin)}')
+        logger.debug(f'myplugin referrer cnt = {len(gc.get_referrers(myplugin))}')
         for r in gc.get_referrers(myplugin):
-            logger.info("myplugin referrer     = {} / {} / {}".format(r, namestr(r, globals()), namestr(r, locals())))
+            logger.debug("myplugin referrer     = {} / {} / {}".format(r, namestr(r, globals()), namestr(r, locals())))
         gc.collect()
-        logger.info("myplugin referrer cnt2= {}".format(len(gc.get_referrers(myplugin))))
+        logger.debug(f'myplugin referrer cnt2= {len(gc.get_referrers(myplugin))}')
 
+        # remove references in plugins data
+        try:
+            del self._plugindict[plgname]
+        except Exception as e:
+            logger.warning(f'error on removing {plgname} from plugindict: {e}')
+        try:
+            del self._plugindict[plgname + '#' + instance]
+        except Exception as e:
+            logger.warning(f'error on removing {plgname + "#" + instance} from plugindict: {e}')
+
+        # remove references in sh and plugins objects
+        if getattr(self._sh, configname, None) is myplugin:
+            try:
+                delattr(self._sh, configname)
+            except Exception as e:
+                logger.warning(f'error on removing {configname} ref from sh object: {e}')
+
+        if getattr(self, configname, None) is myplugin:
+            try:
+                delattr(self, configname)
+            except Exception as e:
+                logger.warning(f'error on removing {configname} ref from plugins object: {e}')
+
+        # remove objects itselves
         del mythread
         del myplugin
-        logger.warning("myplugin refcnt nach del    = {}".format(self.PyObject.from_address(myplugin_address).refcnt))
+
         try:
-            logger.info("myplugin referrer cnt = {}".format(len(gc.get_referrers(myplugin))))
-            for r in gc.get_referrers(myplugin):
-                logger.info("myplugin referrer     = {}".format(r))
-        except:
+            logger.warning(f"myplugin refcnt nach del    = {PyObject.from_address(myplugin_address).refcnt}")
+        except Exception:
             pass
 
-        logger.info("Plugins._plugins nach del ({}) = {}".format(len(self._plugins), self._plugins))
-        logger.info("Plugins._threads nach del ({}) = {}".format(len(self._threads), self._threads))
+        # 'myplugin' was deleted above, so this will always raise an exception. Might as well skip it outright...
+        # try:
+        #     logger.info(f'myplugin referrer cnt = {len(gc.get_referrers(myplugin))}')
+        #     for r in gc.get_referrers(myplugin):
+        #         logger.info(f'myplugin referrer     = {r}')
+        # except Exception:
+        #     pass
+
+        logger.debug(f"Plugins._plugins nach del ({len(self._plugins)}) = {self._plugins}")
+        logger.debug(f"Plugins._threads nach del ({len(self._threads)}) = {self._threads}")
+
+        # TODO: find proper point to return True on success...?!
         return False
 
 
+    def reload_plugin(self, configname: str) -> bool:
+        """
+        attempt to reload plugin code
 
-    # ------------------------------------------------------------------------------------
+        plugin will be unloaded, code reloaded and re-loaded. It it was running, it will be restarted.
+        """
+        logger.warning(f'Reloading plugin {configname}, step 1: get/check data')
+
+        myplugin = self.return_plugin(configname)
+        if not myplugin:
+            logger.info(f'Plugin {configname} not found, aborting')
+            return False
+
+        mymodule = myplugin.__module__
+        alive = myplugin.alive
+
+        # read plugin configuration (from etc/plugin.yaml)
+        _conf = lib.config.parse_basename(self._configfile, configtype='plugin')
+        if _conf == {}:
+            logger.warning(f'Reading plugin config {self._configfile} returned no data, check config')
+            return False
+
+        conf = _conf.get(configname)
+        if conf is None:
+            logger.warning(f'No config section {configname} found, check config')
+            return False
+        if 'plugin_name' not in conf:
+            logger.warning(f'No plugin_name configured for {configname}, check config')
+            return False
+
+        logger.info(f'Reloading plugin {configname}, step 2: unload plugin')
+        del myplugin
+        self.unload_plugin(configname)
+
+        logger.info(f'Reloading plugin {configname}, step 3: reload plugin code')
+        myplugin = None
+        try:
+            reload(sys.modules[mymodule])
+        except Exception as e:
+            logger.warning(f'error on reloading plugin {configname} from {mymodule}: {e}')
+            return False
+
+        logger.info(f'Reloading plugin {configname}, step 4: load plugin')
+        self.load_plugin(configname, conf)
+        myplugin = self.return_plugin(configname)
+
+        logger.info(f'Reloading plugin {configname}, step 5: (re)init items')
+        if hasattr(myplugin, PLUGIN_PARSE_ITEM):
+            for item in self._sh.items.return_items():
+                update = myplugin.parse_item(item)
+                if update:
+                    try:
+                        myplugin.add_item(item, updating=True)
+                    except Exception:
+                        pass
+                    item.add_method_trigger(update)
+
+        if alive:
+            logger.info(f'Reloading plugin {configname}, step 6: start plugin')
+            try:
+                myplugin.run()
+            except Exception as e:
+                logger.warning(f'error on starting plugin {configname}: {e}')
+
+        logger.info(f'Reloading plugin {configname} complete')
+        return True
+
 
     def start(self):
         logger.info('Start plugins')
@@ -552,10 +669,10 @@ class Plugins():
             try:
                 instance = plugin.get_implementation().get_instance_name()
                 if instance != '':
-                    instance = ", instance '"+instance+"'"
-                logger.debug("Starting plugin '{}'{}".format(plugin.get_implementation().get_shortname(), instance))
-            except:
-                logger.debug("Starting classic-plugin from section '{}'".format(plugin.name))
+                    instance = ", instance '" + instance + "'"
+                logger.debug(f"Starting plugin '{plugin.get_implementation().get_shortname()}'{instance}")
+            except Exception:
+                logger.debug(f"Starting classic-plugin from section '{plugin.name}'")
             plugin.start()
         logger.info('Start of plugins finished')
 
@@ -563,17 +680,18 @@ class Plugins():
     def stop(self):
         logger.info('Stop plugins')
         for plugin in list(reversed(self._threads)):
+            instance = ''
             try:
                 instance = plugin.get_implementation().get_instance_name()
                 if instance != '':
-                    instance = ", instance '"+instance+"'"
+                    instance = ", instance '" + instance + "'"
                 logger.debug(f"Stopping plugin '{plugin.get_implementation().get_shortname()}'{instance}")
-            except:
+            except Exception:
                 logger.debug(f"Stopping classic-plugin from section '{plugin.name}'")
             try:
                 plugin.stop()
-            except:
-                logger.warning("Error while stopping plugin '{}'{}'".format(plugin.get_implementation().get_shortname(), instance))
+            except Exception as e:
+                logger.warning(f"Error while stopping plugin '{plugin.get_implementation().get_shortname()}'{instance}': {e}")
         logger.info('Stop of plugins finished')
 
 
@@ -587,7 +705,6 @@ class Plugins():
         for thread in self._threads:
             if thread.name == configname:
                return thread
-        return None
 
 
 class PluginWrapper(threading.Thread):
@@ -595,14 +712,14 @@ class PluginWrapper(threading.Thread):
     Wrapper class for loading plugins
 
     :param smarthome: Instance of the smarthome master-object
-    :param name: Section name in plugin configuration file (etc/plugin.yaml)
+    :param plg_section: Section name in plugin configuration file (etc/plugin.yaml)
     :param classname: Name of the (main) class in the plugin
     :param classpath: Path to the Python file containing the class
     :param args: Parameter as specified in the configuration file (etc/plugin.yaml)
     :param instance: Name of the instance of the plugin
     :param meta:
     :type samrthome: object
-    :type name: str
+    :type plg_section: str
     :type classname: str
     :type classpath: str
     :type args: dict
@@ -610,94 +727,102 @@ class PluginWrapper(threading.Thread):
     :type meta: object
     """
 
-    def __init__(self, smarthome, name, classname, classpath, args, instance, meta, configfile):
+    def __init__(self, smarthome, plg_section: str, classname: str, classpath: str, args: dict, instance: str, meta: Metadata, configfile: str):
         """
         Initialization of wrapper class
         """
-        logger.debug("PluginWrapper __init__: Section {name}, classname {classname}, classpath {classpath}")
-        threading.Thread.__init__(self, name=name)
+        logger.debug(f"PluginWrapper __init__: Section {plg_section}, classname {classname}, classpath {classpath}")
+        threading.Thread.__init__(self, name=plg_section)
 
         self._sh = smarthome
         self._init_complete = False
         self.meta = meta
         # Load an instance of the plugin
+
+        module = None
+
         try:
-            exec("import {0}".format(classpath))
+            # exec("import {0}".format(classpath))
+            module = import_module(classpath)
         except ImportError as e:
-            logger.error("Plugin '{}' error importing Python package: {}".format(name, e))
-            logger.error("Plugin '{}' initialization failed, plugin not loaded".format(name))
+            logger.error(f"Plugin '{plg_section}' error importing Python package: {e}")
+            logger.error(f"Plugin '{plg_section}' initialization failed, plugin not loaded")
             return
         except Exception as e:
-            logger.exception("Plugin '{}' exception during import of __init__.py: {}".format(name, e))
+            logger.exception(f"Plugin '{plg_section}' exception during import: {e}")
+            logger.error(f"Plugin '{plg_section}' initialization failed, plugin not loaded")
             return
+        if not module:
+            logger.error(f"Plugin '{plg_section}' import didn't return a module.")
+            logger.error(f"Plugin '{plg_section}' initialization failed, plugin not loaded")
+            return
+        cls = getattr(module, classname)
+        if not cls:
+            logger.error(f"Plugin '{plg_section}' errorclass name '{classname}' defined in metadata, but not found in plugin code")
+            return
+
         try:
-            exec("self.plugin = {0}.{1}.__new__({0}.{1})".format(classpath, classname))
+            # exec("self.plugin = {0}.{1}.__new__({0}.{1})".format(classpath, classname))
+            self.plugin = cls.__new__(cls)
         except Exception as e:
-            logger.error("Plugin '{}' class name '{}' defined in metadata, but not found in plugin code".format(name, classname))
-            logger.error("Plugin '{}' initialization failed, plugin not loaded".format(name))
+            logger.error(f"Plugin '{plg_section}' initialization failed: {e}")
+            logger.error(f"Plugin '{plg_section}' not loaded")
             return
 
         # load plugin-specific translations
-        self._ptrans = translation.load_translations('plugin', classpath.replace('.', '/'), 'plugin/'+classpath.split('.')[1])
+        self._ptrans = translation.load_translations('plugin', classpath.replace('.', '/'), 'plugin/' + classpath.split('.')[1])
 
-        # make the plugin a method/function of the main smarthome object  (MS: Ist das zu früh? Falls Init fehlschlägt?)
-#        setattr(smarthome, self.name, self.plugin)
         if self.meta.get_string('state') == 'deprecated':
-            logger.warning("Plugin '{}' (section '{}') is deprecated. Consider to use a replacement instead".format(classpath.split('.')[1], name))
+            logger.warning(f"Plugin '{classpath.split('.')[1]}' (section '{plg_section}') is deprecated. Consider to use a replacement instead")
+
         # initialize attributes of the newly created plugin object instance
         if isinstance(self.get_implementation(), SmartPlugin):
+
+            # SmartPlugin
             self.get_implementation()._configfilename = configfile
-            self.get_implementation()._set_configname(name)
-#            self.get_implementation()._config_section = name
+            self.get_implementation()._set_configname(plg_section)
             self.get_implementation()._set_shortname(str(classpath).split('.')[1])
             self.get_implementation()._classpath = classpath
             self.get_implementation()._set_classname(classname)
-            # if instance != '' war auskommentiert, reaktiviert: 26.01.2018 MS
             if self.get_implementation().ALLOW_MULTIINSTANCE is None:
                 self.get_implementation().ALLOW_MULTIINSTANCE = self.meta.get_bool('multi_instance')
             if instance != '':
-                logger.debug("set plugin {0} instance to {1}".format(name, instance ))
+                logger.debug(f"set plugin {plg_section} instance to {instance}")
                 self.get_implementation()._set_instance_name(instance)
-#           addition by smai
+
             # Customized logger instance for plugin to append name of plugin instance to log text
-            # addition by msinn
             global _SH
             _SH = self._sh
-            # end addition by msinn
             self.get_implementation().logger = PluginLoggingAdapter(logging.getLogger(classpath), {'plugininstance': self.get_implementation().get_loginstance()})
-#           end addition by smai
             self.get_implementation()._set_sh(smarthome)
-            self.get_implementation()._set_plugin_dir( os.path.join( os.path.dirname( os.path.dirname(os.path.abspath(__file__)) ), classpath.replace('.',os.sep) ) )
+            self.get_implementation()._set_plugin_dir(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), classpath.replace('.', os.sep)))
             self.get_implementation()._plgtype = self.meta.get_string('type')
             self.get_implementation().metadata = self.meta
         else:
+
             # classic plugin
-#            self.get_implementation()._config_section = name
             self.get_implementation()._configfilename = configfile
-            self.get_implementation()._configname = name
+            self.get_implementation()._configname = plg_section
             self.get_implementation()._shortname = str(classpath).split('.')[1]
             self.get_implementation()._classpath = classpath
             self.get_implementation()._classname = classname
             self.get_implementation()._plgtype = ''
+
         self.get_implementation()._itemlist = []
 
         # get arguments defined in __init__ of plugin's class to self.args
-#        exec("self.args = inspect.getargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
-        exec("self.args = inspect.getfullargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
-        #logger.warning("- self.args = '{}'".format(self.args))
+        # exec("self.args = inspect.getfullargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
+        plg_class_args = inspect.getfullargspec(getattr(module, classname).__init__)[0][1:]
 
         # get list of argument used names, if they are defined in the plugin's class
-        logger.debug("Plugin '{}': args = '{}'".format(classname, str(args)))
-        arglist = [name for name in self.args if name in args]
-        argstring = ",".join(["{}={}".format(name, args[name]) for name in arglist])
-#        logger.debug("Plugin '{}' using arguments {}".format(str(classpath).split('.')[1], arglist))
+        logger.debug(f"Plugin '{classname}': args = '{str(args)}'")
+
+        # make kwargs dict for all args which are arguments to __init__
+        kwargs = {name: args[name] for name in [name for name in plg_class_args if name in args]}
 
         self.get_implementation()._init_complete = False
-        (plugin_params, params_ok, hide_params) = self.meta.check_parameters(args)
-        if params_ok == True:
-            if plugin_params != {}:
-                # initialize parameters the old way
-                argstring = ",".join(["{}={}".format(name, '"'+str(plugin_params.get(name,''))+'"') for name in arglist])
+        plugin_params, params_ok, hide_params = self.meta.check_parameters(args)
+        if params_ok:
             # initialize parameters the new way: Define a dict within the instance
             self.get_implementation()._parameters = plugin_params
             self.get_implementation()._hide_parameters = hide_params
@@ -707,46 +832,63 @@ class PluginWrapper(threading.Thread):
             self.get_implementation()._init_complete = True   # set to false by plugin, if an initalization error occurs
 
             # initialize the loaded instance of the plugin
-            exec("self.plugin.__init__(smarthome{0}{1})".format("," if len(arglist) else "", argstring))
+            # exec("self.plugin.__init__(smarthome{0}{1})".format("," if len(arglist) else "", argstring))
+            self.plugin.__init__(smarthome, **kwargs)
 
             # set level to make logger appear in internal list of loggers (if not configured by logging.yaml)
-            try: # skip classic plugins
+            try:  # skip classic plugins
                 if self.get_implementation().logger.level == 0:
                     self.get_implementation().logger.setLevel('WARNING')
-            except:
+            except Exception:
                 pass
 
         # set the initialization complete status for the wrapper instance
         self._init_complete = self.get_implementation()._init_complete
-        if self.get_implementation()._init_complete == True:
-            # make the plugin a method/function of the main smarthome object  (MS: Ist das zu früh? Falls Init fehlschlägt?)
-            setattr(smarthome, self.name, self.plugin)
+        if self.get_implementation()._init_complete:
+            # make the plugin a method/function of the main smarthome object
+            # might be deprecated some day, no warning yet
+            # new: don't overwrite items. If we run after initializing items, items might be hidden.
+            if not hasattr(smarthome, self.name):
+                setattr(smarthome, self.name, self.plugin)
+
+            # new: make the plugin a method/function of the main plugins object
+            # don't overwrite existing names
+            global _plugins_instance
+            if _plugins_instance:
+                if not hasattr(_plugins_instance, self.name):
+                    setattr(_plugins_instance, self.name, self.plugin)
+                else:
+                    if type(getattr(_plugins_instance, self.name)) is type(self.__init__):
+                        logger.warning(f'plugin identifier {self.name} colliding with sh.plugins method {self.name}(), not referencing in sh.plugins')
+                    else:
+                        logger.warning(f'plugin identifier {self.name} colliding with sh.plugins attribute {self.name}, not referencing in sh.plugins')
+
             try:
                 code_version = self.get_implementation().PLUGIN_VERSION
-            except:
+            except Exception:
                 code_version = None    # if plugin code without version
             if isinstance(self.get_implementation(), SmartPlugin):
                 if self.meta.test_version(code_version):
                     # set version in plugin instance (if not defined in code)
-                    if code_version == None:
+                    if code_version is None:
                         self.get_implementation().PLUGIN_VERSION = self.meta.get_version()
                     # set multiinstance in plugin instance (if not defined in code)
                     try:
-                        dummy = self.get_implementation().ALLOW_MULTIINSTANCE
-                    except:
-#                        logger.warning("self.meta.get_bool('multi_instance') = {}".format(self.meta.get_bool('multi_instance')))
+                        self.get_implementation().ALLOW_MULTIINSTANCE
+                    except Exception:
+                        # logger.warning(f'self.meta.get_bool('multi_instance') = {self.meta.get_bool('multi_instance')}')
                         self.get_implementation().ALLOW_MULTIINSTANCE = self.meta.get_bool('multi_instance')
-#                        logger.warning("get_implementation().ALLOW_MULTIINSTANCE = {}".format(self.get_implementation().ALLOW_MULTIINSTANCE))
+                        # logger.warning(f'get_implementation().ALLOW_MULTIINSTANCE = {self.get_implementation().ALLOW_MULTIINSTANCE}')
                     if not self.get_implementation()._set_multi_instance_capable(self.meta.get_bool('multi_instance')):
-                        logger.error("Plugins: Loaded plugin '{}' ALLOW_MULTIINSTANCE differs between metadata ({}) and Python code ({})".format(name, self.meta.get_bool('multi_instance'), self.get_implementation().ALLOW_MULTIINSTANCE ))
-                    logger.debug("Plugins: Loaded plugin '{}' (class '{}') v{}: {}".format( name, str(self.get_implementation().__class__.__name__), self.meta.get_version(), self.meta.get_mlstring('description') ) )
+                        logger.error(f"Plugins: Loaded plugin '{plg_section}' ALLOW_MULTIINSTANCE differs between metadata ({self.meta.get_bool('multi_instance')}) and Python code ({self.get_implementation().ALLOW_MULTIINSTANCE})")
+                    logger.debug(f"Plugins: Loaded plugin '{plg_section}' (class '{str(self.get_implementation().__class__.__name__)}') v{self.meta.get_version()}: {self.meta.get_mlstring('description')}")
             else:
-                logger.debug("Plugins: Loaded classic-plugin '{}' (class '{}')".format( name, str(self.get_implementation().__class__.__name__) ) )
+                logger.debug(f"Plugins: Loaded classic-plugin '{plg_section}' (class '{str(self.get_implementation().__class__.__name__)}')")
             if instance != '':
-                logger.debug("set plugin {0} instance to {1}".format(name, instance ))
+                logger.debug(f"set plugin {plg_section} instance to {instance}")
                 self.get_implementation()._set_instance_name(instance)
         else:
-            logger.error("Plugin '{}' initialization failed, plugin not loaded".format(classpath.split('.')[1]))
+            logger.error(f"Plugin '{classpath.split('.')[1]}' initialization failed, plugin not loaded")
 
 
     def run(self):
@@ -756,7 +898,7 @@ class PluginWrapper(threading.Thread):
         try:
             self.plugin.run()
         except Exception as e:
-            logger.exception("Plugin '{}' exception in run() method: {}".format(self.plugin.get_shortname(), e))
+            logger.exception(f"Plugin '{self.plugin.get_shortname()}' exception in run() method: {e}")
 
     def stop(self):
         """
@@ -765,7 +907,7 @@ class PluginWrapper(threading.Thread):
         try:
             self.plugin.stop()
         except Exception as e:
-            logger.exception("Plugin '{}' exception in stop() method: {}".format(self.plugin.get_shortname(), e))
+            logger.exception(f"Plugin '{self.plugin.get_shortname()}' exception in stop() method: {e}")
 
 
     def get_name(self):

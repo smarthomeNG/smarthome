@@ -18,7 +18,9 @@ develop: [![Aktuelles Release](https://img.shields.io/github/actions/workflow/st
 
 SmartHomeNG [1] ist eine Software die eine Basis für eine Heimautomation bereitstellt. Über Plugins können spezielle Schnittstellen angesprochen und damit die Funktionalität des Gesamtsystems erweitert werden.
 
-Auf der ([Webseite des Projektes](https://www.smarthomeNG.de)) kann eine [Benutzerdokumentation](https://www.smarthomeNG.de) eingesehen werden.
+Über der ([Webseite des Projektes](https://www.smarthomeNG.de)) kann eine [Benutzerdokumentation](https://docs.smarthomeNG.de) eingesehen werden.
+
+Unterstützung gibt es im [Supportforum](https://knx-user-forum.de/forum/supportforen/smarthome-py).
 
 Ein [Wiki](https://github.com/smarthomeNG/smarthome/wiki) existiert zumeist in deutscher Sprache.
 
@@ -39,7 +41,9 @@ Die Kernfunktionalität wird alle 6-9 Monate in einem Release erweitert und frei
 
 SmartHomeNG [1] is a software that serves as a basis for home automation. It interconnects multiple devices using plugins to access their specific interfaces.
 
-User documentation ([german](http://docs.smarthomeNG.de)) and developer documentation ([now part of the unified documentation](http://docs.smarthomeng.de/entwicklung/entwicklung.html)) can be found on [www.smarthomeNG.de](https://www.smarthomeNG.de)
+User [documentation ](http://docs.smarthomeNG.de)) can be found on [www.smarthomeNG.de](https://www.smarthomeNG.de)
+
+A support forum can be found [here](https://knx-user-forum.de/forum/supportforen/smarthome-py).
 
 Additional information can be found in the [SmartHomeNG Wiki](https://github.com/smarthomeNG/smarthome/wiki).
 

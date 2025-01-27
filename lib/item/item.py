@@ -48,10 +48,11 @@ from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_
                            KEY_EVAL, KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_DESCRIPTION, KEY_TYPE,
                            KEY_STRUCT, KEY_REMARK, KEY_INSTANCE, KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM,
                            KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE, KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT,
-                           KEY_LOG_MAPPING, KEY_LOG_RULES, KEY_THRESHOLD, KEY_EVAL_TRIGGER_ONLY,
-                           KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST, PLUGIN_REMOVE_ITEM,
-                           KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD,
-                           ATTRIBUTE_SEPARATOR)
+                           KEY_LOG_MAPPING, KEY_LOG_RULES, KEY_LOG_RULES_LOWLIMIT, KEY_LOG_RULES_HIGHLIMIT,
+                           KEY_LOG_RULES_FILTER, KEY_LOG_RULES_EXCLUDE, KEY_LOG_RULES_ITEMVALUE, KEY_THRESHOLD,
+                           KEY_EVAL_TRIGGER_ONLY, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
+                           PLUGIN_REMOVE_ITEM, KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD,
+                           KEY_HYSTERESIS_LOWER_THRESHOLD, ATTRIBUTE_SEPARATOR)
 
 
 from lib.utils import Utils
@@ -261,7 +262,7 @@ class Item():
         self._eval_unexpanded = ''
         self._eval_trigger = False
         self._eval_on_trigger_only = False
-        self._trigger = False
+        self._trigger = None
         self._trigger_unexpanded = []
         self._trigger_condition_raw = []
         self._trigger_condition = None
@@ -294,6 +295,7 @@ class Item():
         self._log_level_name = None
         self._log_mapping = {}
         self._log_rules = {}
+        self._log_rules_cache = {}
         self._log_text = None
         self._fading = False
         self._fadingdetails = {}
@@ -381,6 +383,8 @@ class Item():
         #############################################################
         for attr, value in config.items():
             if not isinstance(value, dict):
+                log_rules_keys = [KEY_LOG_RULES_LOWLIMIT, KEY_LOG_RULES_HIGHLIMIT, KEY_LOG_RULES_EXCLUDE,
+                                  KEY_LOG_RULES_FILTER, KEY_LOG_RULES_ITEMVALUE]
                 if attr in [KEY_NAME, KEY_DESCRIPTION, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE, KEY_EVAL_TRIGGER_ONLY]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
@@ -442,14 +446,32 @@ class Item():
                             setattr(self, '_log_level_name', 'INFO')
                             setattr(self, '_log_level', logging.getLevelName('INFO'))
                 elif attr in [KEY_LOG_MAPPING]:
-                    if value != '':
+                    if isinstance(value, list):
+                        try:
+                            value_dict = {k: v for od in value for k, v in od.items()}
+                            setattr(self, '_log_mapping', value_dict)
+                        except Exception as e:
+                            logger.warning(f"Item {self._path}: Invalid list data for attribute '{KEY_LOG_MAPPING}': {value} - Exception: {e}")
+                    elif value != '':
                         try:
                             value_dict = ast.literal_eval(value)
                             setattr(self, '_log_mapping', value_dict)
                         except Exception as e:
                             logger.warning(f"Item {self._path}: Invalid data for attribute '{KEY_LOG_MAPPING}': {value} - Exception: {e}")
                 elif attr in [KEY_LOG_RULES]:
-                    if value != '':
+                    if isinstance(value, list):
+                        try:
+                            value_dict = {}
+                            for od in value:
+                                for k, v in od.items():
+                                    if k in log_rules_keys:
+                                        value_dict[k] = v
+                                    else:
+                                        logger.warning(f"Item {self._path}: Ignoring '{k}' as it is not a valid log rule")
+                            setattr(self, '_log_rules', value_dict)
+                        except Exception as e:
+                            logger.warning(f"Item {self._path}: Invalid list data for attribute '{KEY_LOG_RULES}': {value} - Exception: {e}")
+                    elif value != '':
                         try:
                             value_dict = ast.literal_eval(value)
                             setattr(self, '_log_rules', value_dict)
@@ -2158,7 +2180,9 @@ class Item():
 
 
     def _log_build_standardtext(self, value, caller, source=None, dest=None):
-
+        if self._sh.get_defaultlogtext() is not None:
+            self._log_text = self._sh.get_defaultlogtext().replace("'", '"')
+            return self._log_build_text(value, caller, source, dest)
         log_src = ''
         if source is not None:
             log_src += ' (' + source + ')'
@@ -2187,11 +2211,10 @@ class Item():
             pname = self.__parent._name
             pid = self.__parent._path
         mvalue = self._log_mapping.get(value, value)
-        lowlimit = self._get_rule('lowlimit')
-        highlimit = self._get_rule('highlimit')
-        filter = self._get_rule('filter')
-        exclude = self._get_rule('exclude')
-
+        lowlimit = self._log_rules_cache.get('lowlimit')
+        highlimit = self._log_rules_cache.get('highlimit')
+        filter = self._log_rules_cache.get('filter')
+        exclude = self._log_rules_cache.get('exclude')
         sh = self._sh
         shtime = self.shtime
         time = shtime.now().strftime("%H:%M:%S")
@@ -2203,24 +2226,23 @@ class Item():
         try:
             entry = self._log_rules.get('itemvalue', None)
             if entry is not None:
-                item = self.get_absolutepath(entry.strip().replace("sh.", ""), "log_rules")
+                item = self.get_absolutepath(entry.strip().replace("sh.", ""), KEY_LOG_CHANGE)
                 itemvalue = str(_items_instance.return_item(item).property.value)
             else:
                 itemvalue = None
         except Exception as e:
             logger.error(f"{id}: Invalid item in log_text '{self._log_text}'"
-                         f" or log_rules '{self._log_rules}' - (Exception: {e})")
+                         f" or log_rules '{self._log_rules}' - Exception: {e}")
             itemvalue = "INVALID"
-
         import math
         import lib.userfunctions as uf
         env = lib.env
-
+        self._log_text = self._log_text.replace("'", '"')
         try:
             #logger.warning(f"self._log_text: {self._log_text}, type={type(self._log_text)}")
             txt = eval(f"f'{self._log_text}'")
         except Exception as e:
-            logger.error(f"{id}: Invalid log_text template '{self._log_text}' - (Exception: {e})")
+            logger.error(f"{id}: Invalid log_text template '{self._log_text}' - Exception: {e}")
             txt = self._log_text
         return txt
 
@@ -2231,21 +2253,24 @@ class Item():
             if isinstance(returnvalue, str) and to != "str":
                 try:
                     # try to get value from item
-                    item = self.get_absolutepath(entry.strip().replace("sh.", ""), "log_rules")
+                    item = self.get_absolutepath(entry.strip().replace("sh.", ""), KEY_LOG_CHANGE)
                     returnvalue = _items_instance.return_item(item).property.value
-                except Exception as e:
-                    pass
+                except Exception:
+                    if to == "list":
+                        returnvalue = [entry]
             if isinstance(returnvalue, (str, int)) and to == "num":
                 try:
                     returnvalue = float(returnvalue)
-                except ValueError as e:
+                except ValueError:
                     returnvalue = None
             elif isinstance(entry, list):
                 entry = [convert_entry(val, self._type) for val in entry]
+            elif not isinstance(returnvalue, list) and to == "list":
+                returnvalue = [returnvalue]
             elif isinstance(returnvalue, (float, int)) and to == "str":
                 returnvalue = str(returnvalue)
             if returnvalue is None:
-                logger.warning(f"Given log_rules entry '{entry}' is invalid.")
+                returnvalue = {'value': None, 'issue': f"Given log_rules entry '{entry}' for {rule_entry} is invalid"}
             return returnvalue
 
         defaults = {'filter': [], 'exclude': [], 'lowlimit': None, 'highlimit': None}
@@ -2261,21 +2286,70 @@ class Item():
         Write log, if Item has attribute log_change set
         :return:
         """
-
         if self._log_change_logger is not None:
+            issue_list = []
+            low_limit = self._get_rule('lowlimit')
+            if isinstance(low_limit, dict):
+                issue = low_limit.get('issue')
+                issue_list.append(issue)
+                low_limit = None
+            high_limit = self._get_rule('highlimit')
+            if isinstance(high_limit, dict):
+                issue = high_limit.get('issue')
+                issue_list.append(issue)
+                high_limit = None
+            if self._type != 'num' and low_limit:
+                issue = f"Low limit {low_limit} given, however item is not num type - ignoring"
+                issue_list.append(issue)
+                low_limit = None
+            if self._type != 'num' and high_limit:
+                issue = f"High limit {high_limit} given, however item is not num type - ignoring"
+                issue_list.append(issue)
+                high_limit = None
+            if low_limit is not None and high_limit is not None and low_limit >= high_limit:
+                issue = f"Low limit {low_limit} >= High limit {high_limit} - ignoring high limit"
+                issue_list.append(issue)
+                high_limit = None
             filter_list = self._get_rule('filter')
+            if isinstance(filter_list, dict):
+                issue = filter_list.get('issue')
+                issue_list.append(issue)
+                filter_list = []
+            f_list = []
+            for f in filter_list:
+                if type(value) != type(f):
+                    issue = f"Filter entry {f} is type {type(f)}, item is {self._type} - ignoring"
+                    issue_list.append(issue)
+                else:
+                    f_list.append(f)
+            filter_list = f_list
             exclude_list = self._get_rule('exclude')
+            if isinstance(exclude_list, dict):
+                issue = exclude_list.get('issue')
+                issue_list.append(issue)
+                exclude_list = []
+            e_list = []
+            for e in exclude_list:
+                if type(value) != type(e):
+                    issue = f"Exclude entry {e} is type {type(e)}, item is {self._type} - ignoring"
+                    issue_list.append(issue)
+                else:
+                    e_list.append(e)
+            exclude_list = e_list
             if filter_list != [] and exclude_list != []:
-                logger.warning(f"Defining filter AND exclude does not work. "
-                               f"Ignoring exclude list {exclude_list} "
-                               f"Using filter: {filter_list}")
+                issue = f"Defining filter AND exclude does not work - ignoring exclude list"
+                issue_list.append(issue)
+                exclude_list = []
+            if issue_list and self._log_rules_cache.get('issues') != issue_list:
+                logger.warning(f"Item {self._path} log_rules has issues: {', '.join(issue_list)}. "
+                               f"Cleaned log_rules: lowlimit = {low_limit}, highlimit = {high_limit}, filter = {filter_list}, exclude = {exclude_list}")
+
+            self._log_rules_cache = {'issues': issue_list, 'filter': filter_list, 'exclude': exclude_list, 'lowlimit': low_limit, 'highlimit': high_limit}
 
             if self._type == 'num':
-                low_limit =  self._get_rule('lowlimit')
                 if low_limit is not None:
                     if low_limit > float(value):
                         return
-                high_limit =  self._get_rule('highlimit')
                 if high_limit is not None:
                     if high_limit <= float(value):
                         return
@@ -2292,7 +2366,6 @@ class Item():
                 elif exclude_list != []:
                     if value in exclude_list:
                         return
-
             if self._log_text is None:
                 txt = self._log_build_standardtext(value, caller, source, dest)
             else:
@@ -2310,7 +2383,7 @@ class Item():
                 log_level = eval(f"f'{val}'")
             except Exception as e:
                 log_level = self._log_level_attrib
-                logger.error(f"{id}: Invalid log_level template '{log_level}' - (Exception: {e})")
+                logger.error(f"Item {self._path}: Invalid log_level template '{log_level}' - (Exception: {e})")
             level = log_level.upper()
             level_name = level
             if Utils.is_int(level):

@@ -2,8 +2,6 @@
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 #  Copyright 2020-      Sebastian Helms           Morg @ knx-user-forum
-#  Copyright 2017-      Martin Sinn                       m.sinn@gmx.de
-#  Copyright 2016       Christian Strassburg      c.strassburg(a)gmx.de
 #########################################################################
 #  This file is part of SmartHomeNG
 #
@@ -23,6 +21,9 @@
 #  along with SmartHomeNG  If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+# allow "modern" type hints in Python 3.9
+from __future__ import annotations
+
 import logging
 import importlib
 import re
@@ -31,35 +32,37 @@ import sys
 import time
 import json
 import datetime
+import ruamel.yaml as yaml
 from copy import deepcopy
 from ast import literal_eval
 from collections import OrderedDict
-import ruamel.yaml as yaml
-
-from lib.model.smartplugin import SmartPlugin
+from collections.abc import Callable
+from typing import Any, Tuple
 
 import lib.shyaml as shyaml
+from lib.model.smartplugin import SmartPlugin, SmartPluginWebIf
+from lib.item.item import Item
 from lib.plugin import Plugins
 from lib.shtime import Shtime
 
 from lib.model.sdp.globals import (
     update, PLUGIN_ATTR_SEND_TIMEOUT, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
     CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS,
-    CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES,
+    CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES, CMD_ATTR_SEND_RETRIES,
     CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_ATTR_REPLY_PATTERN,
     CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS,
     CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3, PATTERN_CUSTOM_PATTERN,
     CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CUSTOM_SEP,
     INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM1,
     ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ,
-    ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE,
+    ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, 
     PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_DELAY_INITIAL,
     PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_REREAD_INITIAL,
     PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
-    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_CYCLIC,
+    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_CYCLIC, ITEM_ATTR_VALID_LIST,
     PROTO_RESEND, PROTO_JSONRPC, PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE)
-
+from lib.smarthome import SmartHome
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
 from lib.model.sdp.connection import SDPConnection
@@ -87,7 +90,7 @@ class SmartDevicePlugin(SmartPlugin):
     The implemented methods are described below, inherited methods are only
     described if changed/overwritten.
     """
-    def __init__(self, sh, logger=None, **kwargs):
+    def __init__(self, sh: SmartHome, logger=None, **kwargs):
         """
         Initalizes the plugin.
         """
@@ -105,6 +108,17 @@ class SmartDevicePlugin(SmartPlugin):
         # contains items which trigger 'read group foo'
         # <item.path>: <foo>
         self._items_read_grp = {}
+
+        # contains items which contain lookups
+        # <item.path>: <table_name>
+        self._items_lookup = {}
+        # reverse-stored lookup items to find items belonging to changed table
+        # <table_name>: {<mode>: <item.path>}
+        self._items_by_lookup = {}
+
+        # contains items which contain valid_lists
+        # <item.path>: {'command': <command>, 'ci': bool, 're': bool}
+        self._items_vlist = {}
 
         # contains all commands with read command
         # <command>: [<item_object>, <item_object>...]
@@ -132,7 +146,7 @@ class SmartDevicePlugin(SmartPlugin):
         self._items_custom = {}
 
         # None for normal operations, 1..3 for combined custom commands
-        self.custom_commands = None
+        self.custom_commands: int | None = None
 
         # for extraction of custom token from reply
         self._token_pattern = ''
@@ -149,17 +163,17 @@ class SmartDevicePlugin(SmartPlugin):
 
         # suspend mode properties
         self._suspend_item_path = self.get_parameter_value(PLUGIN_ATTR_SUSPEND_ITEM)
-        self._suspend_item = None
+        self._suspend_item: Item | None = None
         self.suspended = False
 
         # connection instance
-        self._connection = None
+        # self._connection: SDPConnection | None = None
         # commands instance
-        self._commands = None
+        # self._commands: SDPCommands | None = None
         # keep custom123 values
         self._custom_values = {1: [], 2: [], 3: []}
 
-        self._command_class = None
+        self._command_class: type[SDPCommand] | None = None
 
         # by default, discard data not assignable to known command
         self._discard_unknown_command = True
@@ -181,24 +195,27 @@ class SmartDevicePlugin(SmartPlugin):
         # set (overwritable) callback
         self._dispatch_callback = self.dispatch_data
 
-        self._webif = None
+        self._webif: SmartPluginWebIf | None = None
 
         self._shtime = Shtime.get_instance()
 
         # init parameters in standalone mode
-        if SDP_standalone:
+        if SDP_standalone:  # noqa  # type: ignore  (set by plugin implementation on load via builtins module)
             self._parameters = kwargs
 
         if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_CONN, None) is None:
             self._parameters[PLUGIN_ATTR_CONN_AUTO_CONN] = self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False)
 
         if hasattr(self, '_classpath'):
-            self._parameters[PLUGIN_PATH] = self._classpath
+            self._parameters[PLUGIN_PATH] = getattr(self, '_classpath')
         else:
             self._plugin_dir = self._parameters[PLUGIN_PATH].replace('.', '/')
 
         # Call init code of parent class (SmartPlugin)
         super().__init__()
+
+        # make sure we have a proper SmartHome reference
+        self._sh = sh
 
         # init device
 
@@ -224,7 +241,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         self.logger.debug(f'device initialized from {self.__class__.__name__}')
 
-    def remove_item(self, item):
+    def remove_item(self, item: Item) -> bool:
         """
         remove item references from plugin
         """
@@ -274,7 +291,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         return True
 
-    def update_plugin_config(self, **kwargs):
+    def update_plugin_config(self, **kwargs) -> bool:
         """
         update plugin configuration parameters and (re)run relevant
         configuration methods
@@ -313,7 +330,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         return True
 
-    def suspend(self, by=None):
+    def suspend(self, by: str | None = None):
         """
         sets plugin into suspended mode, no network/serial activity and no item changed
         """
@@ -328,7 +345,7 @@ class SmartDevicePlugin(SmartPlugin):
             # call user-defined suspend actions
             self.on_suspend()
 
-    def resume(self, by=None):
+    def resume(self, by: str | None = None):
         """
         disabled suspended mode, network/serial connections are resumed
         """
@@ -350,7 +367,7 @@ class SmartDevicePlugin(SmartPlugin):
         """ called when suspend is disabled. Overwrite as needed """
         pass
 
-    def set_suspend(self, suspend_active=None, by=None):
+    def set_suspend(self, suspend_active: bool | None = None, by: str | None = None):
         """
         enable / disable suspend mode: open/close connections, schedulers
         """
@@ -428,7 +445,7 @@ class SmartDevicePlugin(SmartPlugin):
     #     """
     #     pass
 
-    def parse_item(self, item):
+    def parse_item(self, item) -> Callable | None:
         """
         Default plugin parse_item method. Is called when the plugin is
         initialized. The plugin can, corresponding to its attribute keywords,
@@ -438,7 +455,7 @@ class SmartDevicePlugin(SmartPlugin):
         :return:        Recall function for item updates
         """
 
-        def find_custom_attr(item, index=1):
+        def find_custom_attr(item: Item, index: int = 1) -> str | None:
             """ find custom item attribute recursively.
             Returns attribute or None
             """
@@ -480,7 +497,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self._items_custom[item.property.path][index] = val
 
         custom_token = ''
-        if self.custom_commands and self._items_custom[item.property.path][self.custom_commands]:
+        if self._commands.custom_is_enabled_for(command) and self.custom_commands and self._items_custom[item.property.path][self.custom_commands]:
             custom_token = CUSTOM_SEP + self._items_custom[item.property.path][self.custom_commands]
 
         if command:
@@ -614,15 +631,52 @@ class SmartDevicePlugin(SmartPlugin):
 
             mode = 'fwd'
             if '#' in table:
-                (table, mode) = table.split('#')
+                table, mode = table.split('#')
             lu = self.get_lookup(table, mode)
-            item.set(lu, self.get_shortname, source='Init')
-            if lu:
+            if mode in ('fwd', 'rev', 'rci') and item.type() != 'dict':
+                self.logger.warning(f'Item {item} requested lookup and should be of type dict, but is type {item.type()}. Ignoring.')
+            elif mode == 'list' and item.type() != 'list':
+                self.logger.warning(f'Item {item} requested list lookup and should be of type list, but is type {item.type()}. Ignoring.')
+            elif lu:
+                item.set(lu, self.get_fullname(), source='Init')
                 self.logger.debug(f'Item {item} assigned lookup {table} with contents {lu}')
+
+                # store reverse-accessible items
+                if table not in self._items_by_lookup:
+                    self._items_by_lookup[table] = {}
+                self._items_by_lookup[table][mode] = item
+
+                if mode == 'fwd':
+                    # only store item for update_items if mode is 'fwd'
+                    self._items_lookup[item.property.path] = table
+                    return self.update_item
             else:
                 self.logger.info(f'Item {item} requested lookup {table}, which was empty or non-existent')
 
-    def update_item(self, item, caller=None, source=None, dest=None):
+        vlist_cmd = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_VALID_LIST', 'foo'))
+        if vlist_cmd:
+            if item.type() != 'list':
+                self.logger.warning(f'Item {item} requested valid_list for command {vlist_cmd}, should be of type list but is type {item.type()}. Ignoring.')
+            elif vlist_cmd in self._commands._commands:
+                cmd = self._commands._commands[vlist_cmd]
+                if CMD_ATTR_CMD_SETTINGS in cmd._cmd_params:
+                    vlist, ci, re = self._commands.get_valid_list(vlist_cmd)
+                    if vlist:
+                        # store command
+                        self._items_vlist[item.property.path] = {'command': vlist_cmd, 'ci': ci, 're': re}
+                        vl = 'valid_list'
+                        if ci:
+                            vl += '_ci'
+                        elif re:
+                            vl += '_re'
+                        self.logger.debug(f'Item {item} assigned {vl} for command {vlist_cmd} with contents {vlist}')
+                        item(vlist, self.get_fullname(), source='Init')
+                        return self.update_item
+                self.logger.info(f'Item {item} requested valid_list for command {vlist_cmd}, but no valid_list present, ignoring.')
+            else:
+                self.logger.info(f'Item {item} requested valid_list for command {vlist_cmd}, but command not found. Ignoring.')
+
+    def update_item(self, item: Item, caller: str | None = None, source: str | None = None, dest: str | None = None):
         """
         Item has been updated
 
@@ -641,17 +695,17 @@ class SmartDevicePlugin(SmartPlugin):
 
             # check for suspend item
             if item is self._suspend_item:
-                if caller != self.get_shortname():
+                if caller != self.get_fullname():
                     self.logger.debug(f'Suspend item changed to {item()}')
                     self.set_suspend(by=f'suspend item {item.property.path}')
                 return
 
-            if not (self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo')) or self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_READ_GRP', 'foo'))):
+            if not any(self.has_iattr(item.conf, self._item_attrs.get(key, 'foo')) for key in ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ_GRP', 'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_VALID_LIST')):
                 self.logger.warning(f'Update_item was called with item {item}, which is not configured for this plugin. This shouldn\'t happen...')
                 return
 
             # test if source of item change was not ourselves...
-            if caller != self.get_shortname():
+            if caller != self.get_fullname():
 
                 # okay, go ahead
                 self.logger.info(f'Update item: {item.property.path}: item has been changed outside this plugin')
@@ -664,7 +718,7 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.debug(f'Writing value "{item()}" from item {item.property.path} with command "{command}"')
                     if not self.send_command(command, item(), custom=self._items_custom[item.property.path]):
                         self.logger.debug(f'Writing value "{item()}" from item {item.property.path} with command "{command}" failed, resetting item value')
-                        item(item.property.last_value, self.get_shortname())
+                        item(item.property.last_value, self.get_fullname())
                         return
 
                     readafterwrite = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READAFTERWRITE', 'foo'))
@@ -691,7 +745,34 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.debug(f'Triggering read_group {group}')
                     self.read_all_commands(group)
 
-    def send_command(self, command, value=None, return_result=False, **kwargs):
+                elif item.property.path in self._items_lookup:
+
+                    # get data and update lookup if appropriate
+                    table = self._items_lookup[item.property.path]
+                    if not isinstance(item(), dict):
+                        self.logger.debug(f'update of lookup table {table} not possible, item value is {type(item())}, not dict')
+                        return
+                    self.logger.debug(f'updating lookup {table}')
+                    self._commands.update_lookup_table(table, item())
+                    # update the other mode tables, if there are associated items
+                    for mode in ('rev', 'rci', 'list'):
+                        lu_item = None
+                        try:
+                            self.logger.debug(f'trying to set item for lookup {table} and mode {mode}')
+                            lu_item = self._items_by_lookup[table][mode]
+                            lu_item(self.get_lookup(table, mode), self.get_fullname())
+                        except (KeyError, AttributeError):
+                            pass
+
+                elif item.property.path in self._items_vlist:
+                    cmd, ci, re = self._items_vlist[item.property.path].values()
+                    try:
+                        self.logger.debug(f'trying to set valid_list (ci: {ci}, re: {re}) for command {cmd} to {item()}')
+                        self._commands.set_valid_list(cmd, item(), ci, re)
+                    except RuntimeError as e:
+                        self.logger.warning(f'error while updating valid_list for command {cmd} from item {item}: {e}')
+
+    def send_command(self, command: str, value: Any = None, return_result: bool = False, **kwargs):
         """
         Sends the specified command to the device providing <value> as data
         Not providing data will issue a read command, trying to read the value
@@ -703,6 +784,17 @@ class SmartDevicePlugin(SmartPlugin):
         :return: True if send was successful, False otherwise
         :rtype: bool
         """
+        def captures_value(pattern):
+            try:
+                re.compile(pattern)
+                # Check for non-empty unescaped parentheses indicating capture groups
+                has_nonempty_parentheses = bool(re.search(r'(?<!\\)\((?!\?:)[^)]{1,}\)', pattern))
+                # Check for non-empty unescaped curly braces, for lookups
+                has_nonempty_braces = bool(re.search(r'(?<!\\)\{[^}]{1,}\}', pattern))
+                return has_nonempty_parentheses or has_nonempty_braces
+            except re.error:
+                # Not a valid regex
+                return False
 
         if not self.alive:
             self.logger.warning(f'trying to send command {command} with value {value}, but plugin is not active.')
@@ -718,7 +810,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         kwargs.update(self._parameters)
         custom_value = None
-        if self.custom_commands:
+        if self._commands.custom_is_enabled_for(command) and self.custom_commands:
             try:
                 command, custom_value = command.split(CUSTOM_SEP)
                 if 'custom' not in kwargs:
@@ -766,28 +858,40 @@ class SmartDevicePlugin(SmartPlugin):
 
                     if isinstance(reply_pattern, list):
                         reply_pattern = [r.replace(pattern, custom_replacement) for r in reply_pattern]
+                        if len(reply_pattern) == 1:
+                            reply_pattern = reply_pattern[0]
                     else:
                         reply_pattern = reply_pattern.replace(pattern, custom_replacement)
         read_cmd = self._transform_send_data(self._commands.get_send_data(command, None, **kwargs), **kwargs)
         resend_command = command if custom_value is None else f'{command}#{custom_value}'
+        lookup = self._commands.get_lookup(self._commands._get_cmd_lookup(command))
         # if no reply_pattern given, no response is expected
-        if reply_pattern is None:
-            resend_info = {'command': resend_command, 'returnvalue': None, 'read_cmd': read_cmd}
-        # if no reply_pattern has lookup or capture group, put it in resend_info
-        elif not isinstance(reply_pattern, list) and '(' not in reply_pattern and '{' not in reply_pattern:
-            resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
+        if reply_pattern is None or value is None:
+            resend_info = {'command': resend_command, 'returnvalue': None, 'read_cmd': read_cmd, 'lookup': lookup}
+        # if reply_pattern has no lookup or capture group, put it in resend_info as expected reply
+        elif not isinstance(reply_pattern, list) and not captures_value(reply_pattern):
+            resend_info = {'command': resend_command, 'returnvalue': re.compile(reply_pattern), 'read_cmd': read_cmd, 'lookup': lookup}
         # if reply_pattern is list, check if one of the entries has capture group
         elif isinstance(reply_pattern, list):
             return_list = []
             for r in reply_pattern:
-                if '(' not in r and '{' not in r:
-                    return_list.append(r)
-            reply_pattern = return_list if return_list else value
-            resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd}
+                if not captures_value(r):
+                    return_list.append(re.compile(r))
+                elif value not in return_list:
+                    return_list.append(value)
+            reply_pattern = None if None in return_list else return_list
+            resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd, 'lookup': lookup}
         # if reply pattern does not expect a specific value, use value as expected reply
         else:
-            resend_info = {'command': resend_command, 'returnvalue': value, 'read_cmd': read_cmd}
-        # if an error occurs on sending, an exception is thrown "below"
+            resend_info = {'command': resend_command, 'returnvalue': value, 'read_cmd': read_cmd, 'lookup': lookup}
+        send_retries = self._commands.get_commandlist(command).get(CMD_ATTR_SEND_RETRIES)
+        try:
+            send_retries = int(send_retries)
+        except Exception:
+            send_retries = None
+        if send_retries is not None:
+            resend_info.update({'send_retries': send_retries})
+        # if an error occurs on sending, an exception is thrownn below
         try:
             result = self._send(data_dict, resend_info=resend_info)
         except (RuntimeError, OSError) as e:  # Exception as e:
@@ -805,7 +909,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         return True
 
-    def on_data_received(self, by, data, command=None):
+    def on_data_received(self, by: str | None, data: Any, command: str | None = None):
         """
         Callback function for received data e.g. from an event loop
         Processes data and dispatches value to plugin class
@@ -846,24 +950,24 @@ class SmartDevicePlugin(SmartPlugin):
             return
 
         # process all commands
-        for command in commands:
+        for cmd in commands:
 
             try:
-                value, custom = self._process_received_data(data, command)
+                value, custom = self._process_received_data(data, cmd)
             except SDPResultError:
                 pass
             else:
-                if custom:
-                    command = command + CUSTOM_SEP + custom
-                self._connection.check_reply(command, value) # needed for resend protocol
-                self._dispatch_callback(command, value, by)
-                self._process_additional_data(command, data, value, custom, by)
+                if custom and self._commands.custom_is_enabled_for(cmd):
+                    cmd = cmd + CUSTOM_SEP + custom
+                self._connection.check_reply(cmd, value)  # needed for resend protocol
+                self._dispatch_callback(cmd, value, by)
+                self._process_additional_data(cmd, data, value, custom, by)
 
-    def _process_received_data(self, data, command):
+    def _process_received_data(self, data: Any, command: str) -> Tuple[Any, Any]:
         """ convert received data and handle custom token """
 
         custom = None
-        if self.custom_commands:
+        if self._commands.custom_is_enabled_for(command) and self.custom_commands:
             custom = self._get_custom_value(command, data)
 
         value = None
@@ -879,7 +983,7 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.debug(f'received data "{data}" for command {command} converted to value {value}')
             return value, custom
 
-    def dispatch_data(self, command, value, by=None):
+    def dispatch_data(self, command: str, value: Any, by: str | None = None):
         """
         Callback function - new data has been received from device.
         Value is already in item-compatible format, so find appropriate item
@@ -899,18 +1003,18 @@ class SmartDevicePlugin(SmartPlugin):
             items += self._commands_pseudo.get(command, [])
 
             if not items:
-                self.logger.warning(f'Command {command} yielded value {value} by {by}, not assigned to any item, discarding data')
+                self.logger.info(f'Command {command} yielded value {value} by {by}, not assigned to any item, discarding data')
                 return
 
             if self.suspended:
-                self.logger.error(f'Trying to update item {item.property.path}, but suspended. This should not happen, please report to developer.')
+                self.logger.error('Trying to update item, but suspended. This should not happen, please report to developer.')
                 return
 
             for item in items:
                 self.logger.debug(f'Command {command} wants to update item {item.property.path} with value {value} received from {by}')
-                item(value, self.get_shortname())
+                item(value, self.get_fullname())
 
-    def read_all_commands(self, group=''):
+    def read_all_commands(self, group: str = ''):
         """
         Triggers all configured read commands or all configured commands of given group
         """
@@ -922,7 +1026,7 @@ class SmartDevicePlugin(SmartPlugin):
                 for cmd in self._commands_read_grp[group]:
                     self.send_command(cmd)
 
-    def is_valid_command(self, command, read=None):
+    def is_valid_command(self, command: str, read: bool | None = None) -> bool | None:
         """
         Validate if 'command' is a valid command for this device
         Possible to check only for reading or writing
@@ -934,7 +1038,7 @@ class SmartDevicePlugin(SmartPlugin):
         :return: True if command is valid, False otherwise
         :rtype: bool
         """
-        if self.custom_commands:
+        if self._commands.custom_is_enabled_for(command) and self.custom_commands:
             try:
                 command, custom_value = command.split(CUSTOM_SEP)
                 if custom_value not in self._custom_values[self.custom_commands]:
@@ -948,21 +1052,21 @@ class SmartDevicePlugin(SmartPlugin):
         else:
             return False
 
-    def get_lookup(self, lookup, mode='fwd'):
+    def get_lookup(self, lookup: str, mode: str = 'fwd') -> list | None:
         """ returns the lookup table for name <lookup>, None on error """
         if self._commands:
             return self._commands.get_lookup(lookup, mode)
         else:
             return
 
-    def has_recursive_custom_attribute(self, index=1):
+    def has_recursive_custom_attribute(self, index: int = 1) -> bool:
         rec = self._parameters.get(PLUGIN_ATTR_RECURSIVE, [])
         if isinstance(rec, list):
             return index in rec
         else:
             return rec == index
 
-    def set_custom_item(self, item, command, index, value):
+    def set_custom_item(self, item: Item, command: str, index: int, value: Any):
         """ this is called by parse_items if xx_custom[123] is found. """
         self._custom_values[index].append(value)
         self._custom_values[index] = list(set(self._custom_values[index]))
@@ -984,7 +1088,7 @@ class SmartDevicePlugin(SmartPlugin):
         """ do something after default initializing is done. Overwrite it """
         pass
 
-    def _transform_send_data(self, data_dict, **kwargs):
+    def _transform_send_data(self, data_dict: dict, **kwargs) -> dict:
         """
         This method provides a way to adjust, modify or transform all data before
         it is sent to the device.
@@ -994,7 +1098,7 @@ class SmartDevicePlugin(SmartPlugin):
         """
         return data_dict
 
-    def _transform_received_data(self, data):
+    def _transform_received_data(self, data: Any) -> Any:
         """
         This method provides a way to adjust, modify or transform all data as soon
         as it is received from the device.
@@ -1003,7 +1107,7 @@ class SmartDevicePlugin(SmartPlugin):
         """
         return data
 
-    def _do_before_send(self, command, value, kwargs):
+    def _do_before_send(self, command: str, value: Any, kwargs) -> Tuple[bool, bool]:
         """
         This method provides a way to act before send_command actually sends
         anything, e.g. checking for "special commands" which are internal
@@ -1017,7 +1121,7 @@ class SmartDevicePlugin(SmartPlugin):
         return (True, True)
         # return (False, True)
 
-    def _send(self, data_dict, **kwargs):
+    def _send(self, data_dict: dict, **kwargs) -> Any:
         """
         This method acts as a overwritable intermediate between the handling
         logic of send_command() and the connection layer.
@@ -1030,21 +1134,21 @@ class SmartDevicePlugin(SmartPlugin):
         self.logger.debug(f'sending {data_dict}, kwargs {kwargs}')
         return self._connection.send(data_dict, **kwargs)
 
-    def on_connect(self, by=None):
+    def on_connect(self, by: str | None = None):
         """ callback if connection is made. """
         if self._connection.connected():
             if self._resume_initial_read:
                 # make sure to read again on resume (if configured)
                 self._initial_value_read_done = False
                 self.read_initial_values()
-            if not SDP_standalone:
+            if not SDP_standalone:  # noqa  # type: ignore
                 self._create_cyclic_scheduler()
 
-    def on_disconnect(self, by=None):
+    def on_disconnect(self, by: str | None = None):
         """ callback if connection is broken. """
         pass
 
-    def _process_additional_data(self, command, data, value, custom, by):
+    def _process_additional_data(self, command: str, data: Any, value: Any, custom: int, by: str | None = None):
         """ do additional processing of received data
 
         Here you can do additional data examinating, filtering and possibly
@@ -1059,12 +1163,12 @@ class SmartDevicePlugin(SmartPlugin):
     #
     #
 
-    def _get_custom_value(self, command, data):
+    def _get_custom_value(self, command: str, data: Any) -> str | None:
         """
         extract custom value from data
         At least PATTERN needs to be overwritten
         """
-        if not self.custom_commands:
+        if not self.custom_commands or not self._commands.custom_is_enabled_for(command):
             return
         if not isinstance(data, str):
             return
@@ -1078,7 +1182,15 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.debug(f'received custom token {res[0]}, not in list of known tokens {self._custom_values[self.custom_commands]}')
             return
 
-    def _get_connection(self, conn_type=None, conn_classname=None, conn_cls=None, proto_type=None, proto_classname=None, proto_cls=None, name=None):
+    def _get_connection(
+            self,
+            conn_type: str | None = None,
+            conn_classname: str | None = None,
+            conn_cls: type[SDPConnection] | None = None,
+            proto_type: str | None = None,
+            proto_classname: str | None = None,
+            proto_cls: type[SDPProtocol] | None = None,
+            name: str | None = None) -> SDPConnection:
         """
         return connection object.
 
@@ -1103,9 +1215,14 @@ class SmartDevicePlugin(SmartPlugin):
             self._parameters[PLUGIN_ATTR_CB_ON_DISCONNECT] = self.on_disconnect
 
         params = self._parameters.copy()
-        conn_cls = SDPConnection._get_connection_class(self, conn_cls, conn_classname, conn_type, **params)
+        try:
+            conn_cls = SDPConnection._get_connection_class(conn_cls, conn_classname, conn_type, **params)
+        except RuntimeError as e:
+            self.logger.error(f'error on getting connection: {e}')
+
+        # not having a connection is an unnecessary complication. Just go with the - stub - default
         if not conn_cls:
-            return
+            conn_cls = SDPConnection
 
         # check for resend protocol
         resend = self.get_parameter_value(PLUGIN_ATTR_SEND_RETRIES)
@@ -1121,7 +1238,7 @@ class SmartDevicePlugin(SmartPlugin):
             # Set protocol to resend only if protocol is not (yet) defined
             if not protocol:
                 self._parameters[PLUGIN_ATTR_PROTOCOL] = 'resend'
-            # if send_retries is set and protocl is not set to resend, log info that protocol is overruling the parameter
+            # if send_retries is set and protocol is not set to resend, log info that protocol is overruling the parameter
             elif protocol not in (PROTO_JSONRPC, PROTO_RESEND):
                 self.logger.debug(f'{PLUGIN_ATTR_SEND_RETRIES} is set to {resend}, but protocol {protocol} is requested, so resend may not apply')
 
@@ -1129,9 +1246,15 @@ class SmartDevicePlugin(SmartPlugin):
         if PLUGIN_ATTR_PROTOCOL in self._parameters:
 
             params = self._parameters.copy()
-            proto_cls = SDPConnection._get_protocol_class(self, proto_cls, proto_classname, proto_type, **params)
+            try:
+                proto_cls = SDPProtocol._get_protocol_class(proto_cls, proto_classname, proto_type, **params)
+            except RuntimeError as e:
+                self.logger.error(f'error on getting protocol: {e}')
+
+            # if protocol is needed but not possible to obtain, just bail out. we don't know
+            # if the plugin works without a protocol layer (e.g. jsonrpc), so don't even try
             if not proto_cls:
-                return
+                raise RuntimeError(f'protocol {self._parameters["PLUGIN_ATTR_PROTOCOL"]} requested, but no protocol class returned. Giving up.')
 
             # set connection class in self._parameters dict for protocol class to use
             self._parameters[PLUGIN_ATTR_CONNECTION] = conn_cls
@@ -1169,11 +1292,11 @@ class SmartDevicePlugin(SmartPlugin):
             workercycle = int(shortestcycle / 2)
 
             # just in case it already exists...
-            if self.scheduler_get(self.get_shortname() + '_cyclic'):
-                self.scheduler_remove(self.get_shortname() + '_cyclic')
-            self.scheduler_add(self.get_shortname() + '_cyclic', self._read_cyclic_values, cycle=workercycle, prio=5, offset=0)
+            if self.scheduler_get(self.get_fullname() + '_cyclic'):
+                self.scheduler_remove(self.get_fullname() + '_cyclic')
+            self.scheduler_add(self.get_fullname() + '_cyclic', self._read_cyclic_values, cycle=workercycle, prio=5, offset=0)
             self._cyclic_errors = 0
-            self.logger.info(f'Added cyclic worker thread {self.get_shortname()}_cyclic with {workercycle} s cycle. Shortest item update cycle found was {shortestcycle} s')
+            self.logger.info(f'Added cyclic worker thread {self.get_fullname()}_cyclic with {workercycle} s cycle. Shortest item update cycle found was {shortestcycle} s')
 
     def read_initial_values(self):
         """ control call of _read_initial_values - run instantly or delay """
@@ -1317,12 +1440,12 @@ class SmartDevicePlugin(SmartPlugin):
         """ check if additional MODEL struct is needed and insert it """
 
         # check for and load struct definitions
-        if not SDP_standalone:
+        if not SDP_standalone:  # noqa  # type: ignore
 
-            shstructs = self._sh.items.return_struct_definitions(False)
+            shstructs = self._sh.items.return_struct_definitions(False)  # type: ignore (if we don't have items in shng, we're really fubar)
             model = self._parameters.get('model', '')
-            m_name = self.get_shortname() + '.' + model
-            a_name = self.get_shortname() + '.' + INDEX_GENERIC
+            m_name = self.get_fullname() + '.' + model
+            a_name = self.get_fullname() + '.' + INDEX_GENERIC
             m_struct = None
 
             if model and m_name in shstructs:
@@ -1331,8 +1454,8 @@ class SmartDevicePlugin(SmartPlugin):
                 m_struct = shstructs[a_name]
 
             if m_struct:
-                self.logger.debug(f'adding struct {self.get_shortname()}.{INDEX_MODEL}')
-                self._sh.items.add_struct_definition(self.get_shortname(), INDEX_MODEL, m_struct)
+                self.logger.debug(f'adding struct {self.get_fullname()}.{INDEX_MODEL}')
+                self._sh.items.add_struct_definition(self.get_fullname(), INDEX_MODEL, m_struct)  # type: ignore (see above)
 
     def _set_item_attributes(self):
         """
@@ -1351,7 +1474,7 @@ class SmartDevicePlugin(SmartPlugin):
         self._item_attrs = {}
 
         if plugins and globals_mod:
-            keys = list(self.metadata.itemdefinitions.keys())
+            keys = list(self.metadata.itemdefinitions.keys())  # type: ignore (metadata member is dynamically inserted by lib.plugins on plugin load)
             for attr in ATTR_NAMES:
                 attr_val = getattr(globals_mod, attr)
                 for key in keys:
@@ -1725,8 +1848,10 @@ class Standalone:
             # 'level node' -> print read item
             elif node_name not in (CMD_ATTR_CMD_SETTINGS, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS, CMD_IATTR_ATTRIBUTES, CMD_IATTR_READ_GROUPS):
 
-                item['read'] = {'type': 'bool'}
-                item['read']['enforce_updates'] = True
+                item['read'] = {
+                    'type': 'bool',
+                    'enforce_updates': True
+                }
                 item['read'][ITEM_ATTR_READ_GRP + '@instance'] = path if path else node_name
                 try:
                     # set sub-node for readability
@@ -1842,7 +1967,7 @@ class Standalone:
 
             # create flat commands, 'valid command' needs full cmd path
             flat_commands = deepcopy(commands)
-            SDPCommands._flatten_cmds(None, flat_commands)
+            SDPCommands._flatten_cmds(flat_commands)
 
             # output sections separately and unchanged
             for section in top_level_entries:
@@ -1871,7 +1996,7 @@ class Standalone:
                 # add generic commands to every other model
                 if model != INDEX_GENERIC:
                     self.cmdlist += models.get(INDEX_GENERIC, [])
-                self.cmdlist = SDPCommands._get_cmdlist(None, flat_commands, self.cmdlist)
+                self.cmdlist = SDPCommands._get_cmdlist(flat_commands, self.cmdlist)
 
                 # create new obj for model m, include m['ALL']
                 # as we modify obj, we need to copy this

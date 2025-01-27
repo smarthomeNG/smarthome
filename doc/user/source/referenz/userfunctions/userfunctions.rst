@@ -251,3 +251,11 @@ Man kann auch alle benutzerdefinierte Dateien neu laden, indem man **uf.reload_a
 
 Über die reload Funktionalität für Userfunctions können auch Userfunction Module neu geladen werden, die erst nach dem Start von
 SmartHomeNG erstellt wurden.
+
+Zusätzliche Python Module
+=========================
+
+Wird ein zusätzliches Python Modul in einer Userfunction benötigt, so kann eine ``requirements.txt`` im Verzeichnis ``functions`` erstellt 
+und in dieser Datei Namen und Versionen für die Installation via PIP notiert werden.
+In diesem Fall muss SmartHomeNG auf jeden Fall neu gestartet werden da die Überprüfung nur beim Start von SmartHomeNG erfolgt.
+

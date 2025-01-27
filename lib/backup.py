@@ -175,6 +175,8 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
 
     # backup files from /var/esphome/config
     backup_directory(backupzip, esphome_conf_dir, '.yaml', 'esphome_config')
+    esphome_common_dir = os.path.join(esphome_conf_dir, 'common')
+    backup_directory(backupzip, esphome_common_dir, '.yaml', 'esphome_config/common')
 
     # create and backup list of installed pip packages
     shpypi = Shpypi.get_instance()
@@ -342,6 +344,8 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
 
     # restore files to /var/esphome/config
     restore_directory(restorezip, 'esphome_config', esphome_conf_dir, overwrite)
+    esphome_common_dir = os.path.join(esphome_conf_dir, 'common')
+    restore_directory(restorezip, 'esphome_config/common', esphome_common_dir, overwrite)
 
     # mark zip-file as restored
     logger.info("- marking zip-file as restored")
@@ -374,17 +378,24 @@ def restore_file(restorezip, arc_dir, filename, dest_dir, overwrite=False):
         logger.error("File {} not restored - it already exists at destination {}".format(filename, dest_dir))
         return False
 
-    logger.info("Restoring file {} to {} overwrite={}".format(filename, dest_dir, overwrite))
+    logger.info(f"Restoring file {filename} to {dest_dir} overwrite={overwrite} from arc_dir {arc_dir}")
 
     # copy file (taken from zipfile's extract)
-    zip_info = restorezip.getinfo(os.path.join(arc_dir, filename))
-    if not zip_info.filename[-1] == '/':
-        zip_info.filename = os.path.basename(zip_info.filename)
-    restorezip.extract(zip_info, path=dest_dir, pwd=None)
-
-    # restore original timestamp
-    date_time = time.mktime(zip_info.date_time + (0, 0, -1))
-    os.utime(os.path.join(dest_dir, filename), (date_time, date_time))
+    try:
+        zip_info = restorezip.getinfo(os.path.join(arc_dir, filename))
+        if not zip_info.filename[-1] == '/':
+            zip_info.filename = os.path.basename(zip_info.filename)
+    except Exception as ex:
+        #logger.warning(f"Cannot get info for {arc_dir} file {filename} from zip")
+        # don't try to restore a file stored in a subfolder from the parent folder
+        return
+    try:
+        restorezip.extract(zip_info, path=dest_dir, pwd=None)
+        # restore original timestamp
+        date_time = time.mktime(zip_info.date_time + (0, 0, -1))
+        os.utime(os.path.join(dest_dir, filename), (date_time, date_time))
+    except PermissionError as ex:
+        logger.error(f"Cannot restore '{filename}' to '{dest_dir}': {ex} ")
 
 
 def restore_directory(restorezip, arc_dir, dest_dir, overwrite=False):

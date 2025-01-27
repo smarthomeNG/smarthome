@@ -89,7 +89,12 @@ $(window).bind('datatables_defaults', function() {
 					//setTimeout(function() { $(window).resize();  }, 2000);
 
 				},
-        responsive: {details: {type: 'column', renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
+        responsive: {
+					details: {
+						type: 'column',
+						renderer: $.fn.dataTable.Responsive.renderer.listHidden()
+						}
+					}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				preDrawCallback: function (oSettings) {
 
 					// scroll
