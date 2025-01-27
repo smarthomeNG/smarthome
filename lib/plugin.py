@@ -57,8 +57,6 @@ import os.path		# until Backend is modified
 
 from importlib import import_module, reload
 
-from git import exc
-
 import lib.config
 import lib.translation as translation
 from lib.model.smartplugin import SmartPlugin
