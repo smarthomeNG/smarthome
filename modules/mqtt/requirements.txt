@@ -1,2 +1,2 @@
 # modules: mqtt
-paho-mqtt>=1.2.2,<2.0.0
+paho-mqtt>=1.2.2
