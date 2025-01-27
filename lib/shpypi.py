@@ -1216,8 +1216,6 @@ class Requirements_files():
         packagelist = []
         self.logger.debug("_build_packagelist: Req_files: requirements = '{}'".format(requirements))
         for key in requirements:
-#
-            self.logger.warning(f'{key} -> {requirements[key]}')
             packaged = {}
             wrk = re.split('<|>|=', key)
             packaged['pkg'] = wrk[0].strip()
