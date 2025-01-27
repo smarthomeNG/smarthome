@@ -17,10 +17,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 12. Januar 2025
-           (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 13. Januar 2025
-           (Merge pull request #981 from SergeoLacruz/develop)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 27. Januar 2025
+           (modules.mqtt: allow paho_mqtt 2.x)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 27. Januar 2025
+           (Merge pull request #996 from onkelandy/denon)
 
 
 Überblick
@@ -60,6 +60,7 @@ Allgmein
 * github:
 
   * Workflows: Fix unittest for forked repos in core
+  * Workflows: Update codeql.yml, remove set-output
   * Modify gitignore structure
 
 
@@ -175,6 +176,7 @@ Updates in the CORE
     * sdp:
 
       * Bump version number to 1.0.4
+      * Add method to update reply_patterns
       * Add valid_list item attribute, complete type hinting
       * Enable raw sending of lookup values
       * Improve reply pattern processing
@@ -221,6 +223,12 @@ Updates in the CORE
   * lib.network:
 
     * Add serial connection reset error handling
+
+  * lib.plugin:
+
+    * Add reload_plugin method
+    * Insert plugin references into sh.plugins also
+    * Refactor load_plugin
 
   * lib.shpypi:
 
@@ -281,6 +289,8 @@ Updates in the CORE
 
   * modules.mqtt:
 
+    * Allow paho_mqtt 2.x
+    * Add compatibility to paho_mqtt 2.x
     * Changed requirements - the lately released paho client 2.0 has breaking changes
     * Added gui_type for boolean parameters
 
@@ -524,6 +534,17 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Query power at startup
   * Query shuffle and repeat at start
   * Adjust clear command, however should still not be used (might depend on setup/server?)
+  * put older version 1.5.2 as backup in folder
+  * update playlists.available command
+  * update plugin.yaml struct
+  * add newclient command so players lookup gets correctly updated when new client is connected
+  * fix reading commands when getting new title info
+  * rename command playsong to playitem
+  * update docu
+  * update and restructure commands and structs. bump version to 2.0.0
+  * update, fix and improve commands, rename some correctly
+  * fix transform received data (keep %20 for spaces)
+  * update method code in init using type hint
 
 * modbus_tcp:
 
