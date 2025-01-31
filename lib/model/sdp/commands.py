@@ -73,7 +73,7 @@ class SDPCommands(object):
         self._params.update(kwargs)
         self._parsed_commands = {}
 
-        self._model: str | None = None
+        self._model: str | None = self._params.get('model', None)
 
         self._dt = {}
         self._cust_dt = {}
