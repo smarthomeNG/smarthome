@@ -289,6 +289,7 @@ class SDPCommands(object):
         if lu is None:
             raise ValueError(f'Lookup table {table} not found.')
 
+        orig_data = data
         if rev and ci and isinstance(data, str):
             data = data.lower()
 
@@ -300,8 +301,8 @@ class SDPCommands(object):
             lu = self.get_lookup(table)
             if not lu:
                 raise ValueError(f'Lookup table {table} not found.')
-            if data in lu:
-                return data
+            if orig_data in lu:
+                return orig_data
         raise ValueError(f'Lookup of value {data} in table {table} failed, entry not found.')
 
     def _get_cmd_lookup(self, command: str) -> str | None:
