@@ -634,7 +634,7 @@ class SDPProtocolResend(SDPProtocol):
                 compare = self._sending[command].get('returnvalue')
                 compare = [compare] if not isinstance(compare, list) else compare
                 for c in compare:
-                    self.logger.debug(f'Comparing expected reply {c} ({type(c)}) with value {value} ({type(value)}).')
+                    self.logger.debug(f'Comparing expected reply {c} ({type(c)}) with received value {value} ({type(value)}).')
                     lookup_log = ""
                     # check if expected value equals received value or both are None (only happens with lists in reply_pattern)
                     if isinstance(c, re.Pattern):
@@ -645,6 +645,12 @@ class SDPProtocolResend(SDPProtocol):
                         if cond is False and lookup:
                             cond = c in lookup and lookup.get(c) == value
                             lookup_log = f" after checking lookup table {lookup}"
+                            if cond is False:
+                                lookup_ci = self._sending[command].get('lookup_ci')
+                                if isinstance(value, str):
+                                    value = value.lower()
+                                cond = value in lookup_ci and c == value
+                                lookup_log = f" after checking ci reverse lookup table {lookup_ci}"
                     if c is None or cond:
                         # remove command from _sending dict
                         self._sending.pop(command)
@@ -654,7 +660,7 @@ class SDPProtocolResend(SDPProtocol):
                         return True
                 if retry is not None and retry <= self._sending[command].get('send_retries'):
                     # return False and log info if response is not the same as the expected response
-                    self.logger.debug(f'Should send again {self._sending}...')
+                    self.logger.debug(f'Should send again {self._sending[command]}...')
                     return False
         return False
 
