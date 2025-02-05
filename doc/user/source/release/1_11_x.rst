@@ -17,10 +17,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 27. Januar 2025
-           (modules.mqtt: allow paho_mqtt 2.x)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 27. Januar 2025
-           (Merge pull request #996 from onkelandy/denon)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 05. Februar 2025
+           (Merge pull request #714 from Morg42/develop)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 05. Februar 2025
+           (Merge pull request #999 from onkelandy/lms)
 
 
 Überblick
@@ -330,7 +330,7 @@ Allgmein
 * Workflows:
 
   * Removed Python3.8 from unittests
-  * Ceckout fallback to plugins/develop
+  * Checkout fallback to plugins/develop
 
 * gitignore:
 
@@ -545,6 +545,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * update, fix and improve commands, rename some correctly
   * fix transform received data (keep %20 for spaces)
   * update method code in init using type hint
+  * breaking change rename prefix "sqb_" to "lms_"
+  * re-read players on new client and player (dis)connect as well as rename
+  * rename conflicting commands/items: id, path, remove and custom_skip.active, playlist.url, playlist.name
+  * update newclient command so it also rereads the players when a client gets "forgotten"/disabled
 
 * modbus_tcp:
 
