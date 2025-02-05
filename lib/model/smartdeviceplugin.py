@@ -642,9 +642,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self.logger.debug(f'Item {item} assigned lookup {table} with contents {lu}')
 
                 # store reverse-accessible items
-                if table not in self._items_by_lookup:
-                    self._items_by_lookup[table] = {}
-                self._items_by_lookup[table][mode] = item
+                self._items_by_lookup.setdefault(table, {}).setdefault(mode, []).append(item)
 
                 if mode == 'fwd':
                     # only store item for update_items if mode is 'fwd'
@@ -756,11 +754,10 @@ class SmartDevicePlugin(SmartPlugin):
                     self._commands.update_lookup_table(table, item())
                     # update the other mode tables, if there are associated items
                     for mode in ('rev', 'rci', 'list'):
-                        lu_item = None
                         try:
-                            self.logger.debug(f'trying to set item for lookup {table} and mode {mode}')
-                            lu_item = self._items_by_lookup[table][mode]
-                            lu_item(self.get_lookup(table, mode), self.get_fullname())
+                            self.logger.debug(f'trying to set item(s) for lookup {table} and mode {mode}')
+                            for lu_item in self._items_by_lookup[table][mode]:
+                                lu_item(self.get_lookup(table, mode), self.get_fullname())
                         except (KeyError, AttributeError):
                             pass
 
@@ -1053,7 +1050,7 @@ class SmartDevicePlugin(SmartPlugin):
         else:
             return False
 
-    def get_lookup(self, lookup: str, mode: str = 'fwd') -> list | None:
+    def get_lookup(self, lookup: str, mode: str = 'fwd') -> dict | list | None:
         """ returns the lookup table for name <lookup>, None on error """
         if self._commands:
             return self._commands.get_lookup(lookup, mode)
