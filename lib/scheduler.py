@@ -519,29 +519,37 @@ class Scheduler(threading.Thread):
                         self._cycle_items.setdefault(item.property.path, []).append(name)
                         item.add_method_trigger(self.update_item)
                         if isinstance(item(), int):
-                            cycle = item()
+                            cycle = int(item())
                         else:
                             cycle = item._castduration(item())
-                    # end cycle item mod
+                            if cycle is False:
+                                logger.warning(f'item {item} yielded False while trying to convert {item()} to time, ignoring')
+                                return
+                    else:
+                        try:
+                            cycle = int(cycle.strip())
+                        except Exception as e:
+                            logger.warning(f"Scheduler: Exception {e}: Invalid cycle entry for {name} {cycle}")
+                            return
+                        if _value != '':
+                            _value = _value.strip()
+                        else:
+                            _value = cycle
+                        cycle = {cycle: _value}
+                        source = {'source': 'cycle', 'details': _value}
+                # end cycle item mod
 
                 # test cycle again in case the item yielded int value
                 if isinstance(cycle, int):
                     source = {'source': 'cycle1', 'details': cycle}
                     cycle = {cycle: cycle}
 
-                    try:
-                        cycle = int(cycle.strip())
-                    except Exception as e:
-                        logger.warning(f"Scheduler: Exception {e}: Invalid cycle entry for {name} {cycle}")
-                        return
-                    if _value != '':
-                        _value = _value.strip()
-                    else:
-                        _value = cycle
-                    cycle = {cycle: _value}
-                    source = {'source': 'cycle', 'details': _value}
                 if cycle is not None and offset is None:  # spread cycle jobs
                     offset = random.randint(10, 15)
+                # TODO: remove debug code later
+                if not isinstance(cycle, dict):
+                    logger.error(f'cycle not in dict format: {cycle} ({type(cycle)}) for scheduler {name}')
+                    return
                 self._scheduler[name] = {'prio': prio, 'obj': obj, 'source': source, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
                 if next is None:
                     self._next_time(name, offset)
