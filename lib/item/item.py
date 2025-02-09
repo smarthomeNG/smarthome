@@ -821,7 +821,18 @@ class Item():
         :return: number of seconds as an integer
         """
         if isinstance(time, str):
-            time_in_sec= self.shtime.to_seconds(time, test=True)
+            if time.startswith("sh."):
+                time_item = None
+                err = None
+                try:
+                    time_item = _items_instance.return_item(time.removeprefix('sh.').removesuffix('()'))
+                except Exception as e:
+                    err = e
+                if not time_item or err:
+                    logger.warning(f"Item {self._path} - problem casting duration {time}: {e}")
+                    return (False)  # parentheses to match with final return statement. nonfunctional afaict
+
+            time_in_sec = self.shtime.to_seconds(time, test=True)
             if time_in_sec == -1:
                 if not test:
                     logger.warning(f"Item {self._path} - _cast_duration: Unable to convert parameter 'time' to seconds (time={time})")
@@ -836,6 +847,7 @@ class Item():
                     f"Item {self._path} - _cast_duration: Unable to convert parameter 'time' to int (time={time})")
             time_in_sec = False
 
+        # TODO: why the parentheses?
         return (time_in_sec)
 
 

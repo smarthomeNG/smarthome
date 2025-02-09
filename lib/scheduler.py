@@ -148,6 +148,7 @@ class Scheduler(threading.Thread):
         self._sh = smarthome
         self._lock = threading.Lock()
         self._runc = threading.Condition()
+        self._cycle_items = {}          # store items for dynamic cycles {'item2.property.path': [name1, name2, ...]}
 
         global _scheduler_instance
         if _scheduler_instance is not None:
@@ -487,11 +488,47 @@ class Scheduler(threading.Thread):
                     else:
                         cron = _cron
 
+                # NOTE: moved up so the full name is present for registering cycle items
+                # change name for multi instance plugins
+                if obj.__class__.__name__ == 'method':
+                    if isinstance(obj.__self__, SmartPlugin):
+                        if obj.__self__.get_instance_name() != '':
+                            #if not (name).startswith(self._pluginname_prefix):
+                            if not from_smartplugin:
+                                name = name +'_'+ obj.__self__.get_instance_name()
+                            logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
+
+                # check if cycle time is valid
+                if isinstance(cycle, dict):
+                    if list(cycle.keys())[0] is False:
+                        logger.error(f"Scheduler {name}: can't add cycle with length False, check cycle assignment (obj {obj}, source {source}).")
+                        return
+
+                if isinstance(cycle, str):
+                    cycle, __, _value = cycle.partition('=')
+
+                    # cycle is given as item, so try getting item
+                    if cycle.startswith('sh.'):
+                        items = self._sh.items.get_instance()
+                        item = items.return_item(cycle.removeprefix('sh.').removesuffix('()'))
+                        if not item:
+                            logger.warning(f'Item {cycle} for scheduler {name} not found, check cycle assignment')
+                            return
+
+                        # store item for callback
+                        self._cycle_items.setdefault(item.property.path, []).append(name)
+                        item.add_method_trigger(self.update_item)
+                        if isinstance(item(), int):
+                            cycle = item()
+                        else:
+                            cycle = item._castduration(item())
+                    # end cycle item mod
+
+                # test cycle again in case the item yielded int value
                 if isinstance(cycle, int):
                     source = {'source': 'cycle1', 'details': cycle}
                     cycle = {cycle: cycle}
-                elif isinstance(cycle, str):
-                    cycle, __, _value = cycle.partition('=')
+
                     try:
                         cycle = int(cycle.strip())
                     except Exception as e:
@@ -505,14 +542,6 @@ class Scheduler(threading.Thread):
                     source = {'source': 'cycle', 'details': _value}
                 if cycle is not None and offset is None:  # spread cycle jobs
                     offset = random.randint(10, 15)
-                # change name for multi instance plugins
-                if obj.__class__.__name__ == 'method':
-                    if isinstance(obj.__self__, SmartPlugin):
-                        if obj.__self__.get_instance_name() != '':
-                            #if not (name).startswith(self._pluginname_prefix):
-                            if not from_smartplugin:
-                                name = name +'_'+ obj.__self__.get_instance_name()
-                            logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
                 self._scheduler[name] = {'prio': prio, 'obj': obj, 'source': source, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
                 if next is None:
                     self._next_time(name, offset)
@@ -521,7 +550,30 @@ class Scheduler(threading.Thread):
             finally:
                 self._lock.release()
         else:
-            logger.error(f"Could not aquire lock to add a new entry to scheduler")
+            logger.error("Could not aquire lock to add a new entry to scheduler")
+
+    def update_item(self, item, caller=None, source=None, dest=None):
+        """ provide a mechanism to handle changes of cycle item references """
+        if item.property.path not in self._cycle_items:
+            logger.warning(f'item {item} not registered for cycle update, ignoring.')
+            return
+
+        if isinstance(item(), int):
+            cycle = item()
+        else:
+            try:
+                cycle = item._castduration(item())
+            except Exception as e:
+                logger.warning(f'item {item} for cycle update: error on converting data: {e}, ignoring')
+                return
+        if cycle is False:
+            logger.warning(f'item {item} for cycle update return invalid cycle data {item()}, ignoring.')
+            return
+
+        for name in self._cycle_items[item.property.path]:
+            self._scheduler[name]['cycle'] = cycle
+            # as we don't know the last execution time, we start anew from now
+            self._next_time(name)
 
     def get(self, name, from_smartplugin=False):
         """
