@@ -301,12 +301,12 @@ class SDPProtocolJsonrpc(SDPProtocol):
 
         # process all response items
         for ldata in datalist:
-            self.logger.debug(f'Processing received data item #{datalist.index(ldata)}: {data}')
+            self.logger.debug(f'Processing received data item #{datalist.index(ldata)}: {ldata}')
 
             try:
                 jdata = json.loads(str(ldata, 'utf-8').strip())
             except Exception as err:
-                if data == datalist[-1]:
+                if ldata == datalist[-1]:
                     self.logger.debug(f'returning incomplete data to buffer: {ldata}')
                     self._receive_buffer = ldata
                 else:
