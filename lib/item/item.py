@@ -829,7 +829,8 @@ class Item():
                 except Exception as e:
                     err = e
                 if not time_item or err:
-                    logger.warning(f"Item {self._path} - problem casting duration {time}: {e}")
+                    if not test:
+                        logger.warning(f"Item {self._path} - problem casting duration {time}: {e}")
                     return (False)  # parentheses to match with final return statement. nonfunctional afaict
 
             time_in_sec = self.shtime.to_seconds(time, test=True)
