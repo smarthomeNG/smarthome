@@ -547,7 +547,7 @@ class Scheduler(threading.Thread):
                 if cycle is not None and offset is None:  # spread cycle jobs
                     offset = random.randint(10, 15)
                 # TODO: remove debug code later
-                if not isinstance(cycle, dict):
+                if cycle is not None and not isinstance(cycle, dict):
                     logger.error(f'cycle not in dict format: {cycle} ({type(cycle)}) for scheduler {name}')
                     return
                 self._scheduler[name] = {'prio': prio, 'obj': obj, 'source': source, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
