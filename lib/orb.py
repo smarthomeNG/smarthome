@@ -3,7 +3,7 @@
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 # Copyright 2011-2014 Marcus Popp                          marcus@popp.mx
-# Copyright 2021-2022 Bernd Meiners                 Bernd.Meiners@mail.de
+# Copyright 2021-2025 Bernd Meiners                 Bernd.Meiners@mail.de
 #########################################################################
 #  This file is part of SmartHomeNG.    https://github.com/smarthomeNG//
 #
@@ -60,7 +60,7 @@ class Orb():
         `pressure` - 1010 mBar
     """
 
-    def __init__(self, orb, lon, lat, elev=False):
+    def __init__(self, orb, lon, lat, elev=False, neverup_delta=0.00001):
         """
         Save location and celestial body
         
@@ -77,6 +77,12 @@ class Orb():
         self.lat = lat
         self.lon = lon
         self.elev = elev
+        if self.orb == 'sun':
+            self.neverup_delta = neverup_delta
+            if not neverup_delta == 0.00001:
+                logger.warning(f"neverup_delta was adjusted to {neverup_delta} for sun calculations")
+        else:
+            self.neverup_delta = None
 
     def get_observer_and_orb(self):
         """
@@ -140,7 +146,7 @@ class Orb():
                                 self.pos(offset=None, degree=True, dt=noon)[1]
 
         # Limit degree offset to the highest or lowest possible for the given date
-        doff = max(doff, max_altitude + 0.00001) if doff < 0 else min(doff, max_altitude - 0.00001) if doff > 0 else doff
+        doff = max(doff, max_altitude + self.neverup_delta) if doff < 0 else min(doff, max_altitude - self.neverup_delta) if doff > 0 else doff
         if not originaldoff == doff:
             logger.notice(f"offset {originaldoff} truncated to {doff}")
         return doff

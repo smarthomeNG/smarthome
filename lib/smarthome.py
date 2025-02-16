@@ -4,7 +4,7 @@
 # Copyright 2011-2014 Marcus Popp                          marcus@popp.mx
 # Copyright 2016      Christian Strassburg            c.strassburg@gmx.de
 # Copyright 2016-     Martin Sinn                           m.sinn@gmx.de
-# Copyright 2020-     Bernd Meiners                 bernd.meiners@mail.de
+# Copyright 2020-2025 Bernd Meiners                 bernd.meiners@mail.de
 #########################################################################
 #  This file is part of SmartHomeNG.
 #
@@ -458,14 +458,21 @@ class SmartHome():
         # Link Sun and Moon
         self.sun = False
         self.moon = False
+
+        # optional in smarthome,yaml but needed for orbital calculations
+        if not hasattr(self, '_elev'):
+            self._elev = None
+        if hasattr(self, '_sun_neverup_delta'):
+            self._sun_neverup_delta = float(self._sun_neverup_delta)
+        else:
+            self._sun_neverup_delta = 0.00001
+
         if lib.orb.ephem is None:
             self._logger.warning("Could not find/use ephem!")
-        elif not hasattr(self, '_lon') and hasattr(self, '_lat'):
+        elif not (hasattr(self, '_lon') and hasattr(self, '_lat')):
             self._logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
         else:
-            if not hasattr(self, '_elev'):
-                self._elev = None
-            self.sun = lib.orb.Orb('sun', self._lon, self._lat, self._elev)
+            self.sun = lib.orb.Orb('sun', self._lon, self._lat, self._elev, self._sun_neverup_delta)
             self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev)
 
 
