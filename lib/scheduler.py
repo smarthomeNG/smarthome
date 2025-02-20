@@ -444,7 +444,7 @@ class Scheduler(threading.Thread):
             pass
         return (False, None)
 
-    def add(self, name, obj, prio=3, cron=None, cycle=None, value=None, offset=None, next=None, from_smartplugin=False):
+    def add(self, name, obj, prio=3, cron=None, cycle=None, value=None, offset=None, next=None, from_smartplugin=False, items=None):
         """
         Adds an entry to the scheduler.
 
@@ -452,11 +452,12 @@ class Scheduler(threading.Thread):
         :param obj: Method to call by the scheduler
         :param prio: a priority with default of 3 having 1 as most important and higher numbers less important
         :param cron: a crontab entry of type string or a list of entries
-        :param cycle: a time given as integer in seconds or a string with a time given in seconds and a value after an equal sign
+        :param cycle: a time given as integer in seconds or a string with a time given in seconds and a value after an equal sign or
         :param value: Value that an item should be set to or to be handed to a logic, otherwise: None
         :param offset: an optional offset for cycle. If not given, cycle start point will be varied between 10..15 seconds to prevent too many scheduler entries with the same starting times
         :param next:
         :param from_smartplugin: Only to set to True, if called from the internal method in SmartPlugin class
+        :param items: None or list of items to register for update_item calls (if cycle time is calculated from expression containing item(s))
         """
         # set shtime and items if they were initialized to None in __init__  (potenital timing problem in init of shng)
         if self.shtime == None:
@@ -507,32 +508,60 @@ class Scheduler(threading.Thread):
                                 name = name + '_' + obj.__self__.get_instance_name()
                             logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
 
-                cycle_t = cycle
-                logger.debug(f'set cycle_t to {cycle_t}')
+                item = None
+                if isinstance(cycle, int):
+                    source = {'source': 'cycle1', 'details': cycle}
+                    if value is None:
+                        cycle = {cycle: cycle}
+                    else:
+                        cycle = {cycle: value}
 
-                # check if cycle time is valid
-                if isinstance(cycle, dict):
-                    c, v = self.__get_first(cycle)
-                    logger.debug(f'dict returned {c}, {v}')
-                    if c is False:
-                        logger.error(f"Scheduler {name}: can't add cycle with length False, check cycle assignment (obj {obj}, source {source}).")
-                        return
-                    if isinstance(c, str):
-                        cycle_t, value = self._get_cycle_from_str(f'{c}={v}', name)  # type: ignore (cycle is type dict)
-                        logger.debug(f'got {cycle_t}, {value} from str in dict')
+                # this should not occur anymore, as it should have been done in lib.item.item
+                # just in case, and only for static values...
                 elif isinstance(cycle, str):
-                    cycle_t, value = self._get_cycle_from_str(cycle, name)  # type: ignore
-                    logger.debug(f'got {cycle_t}, {value} from str')
+                    # TODO: could be ; instead of = according to the docs!
+                    if '=' in cycle:
+                        cycle, __, _value = cycle.partition('=')
+                    elif ';' in cycle:
+                        cycle, __, _value = cycle.partition(';')
+                    elif ':' in cycle:
+                        cycle, __, _value = cycle.partition(':')
+                    else:
+                        _value = ''
+                    try:
+                        cycle = int(cycle.strip())
+                    except Exception as e:
+                        logger.warning(f"Scheduler: Exception {e}: Invalid cycle entry for {name} {cycle}")
+                        return
+                    if _value != '':
+                        _value = _value.strip()
+                    else:
+                        _value = cycle
+                    cycle = {cycle: _value}
+                    source = {'source': 'cycle', 'details': _value}
 
-                # test cycle again in case the item yielded int value
-                if isinstance(cycle_t, int):
-                    source = {'source': 'cycle1', 'details': cycle_t}
-                    cycle = {cycle_t: cycle_t}
+                elif isinstance(cycle, dict) and False in cycle:
+                    logger.warning(f"scheduler {name}: can't add cycle with length False, check cycle assignment (obj {obj}, source {source}).")
+                    return
 
-                logger.debug(f'using cycle {cycle} with cycle time {cycle_t}')
+                # check if lib.item found an item reference for duration
+                if items:
+                    for item in items:
+                        if not item:
+                            logger.warning(f'Item {item} for scheduler {name} not found, check cycle assignment, skipping item')
+                            continue
+
+                        # store item for callback
+                        if name not in self._cycle_items.get(item.property.path, []):
+                            logger.debug(f'registering item {item} for updating for {name}')
+                            self._cycle_items.setdefault(item.property.path, set()).add(name)
+                            logger.debug(f'cycle_items is {self._cycle_items}')
+                            item.add_method_trigger(self.update_item)
+                            logger.debug(f'result is {item.get_method_triggers()}')
 
                 if cycle is not None and offset is None:  # spread cycle jobs
                     offset = random.randint(10, 15)
+
                 # TODO: remove debug code later
                 if cycle is not None and not isinstance(cycle, dict):
                     logger.error(f'cycle not in dict format: {cycle} ({type(cycle)}) for scheduler {name}')
@@ -548,48 +577,6 @@ class Scheduler(threading.Thread):
         else:
             logger.error("Could not aquire lock to add a new entry to scheduler")
 
-    def _get_cycle_from_str(self, str_cycle, name, value=None):
-        """ parse cycle dict and try to extrace cycle time, possibly from item """
-        cycle, __, _value = str_cycle.partition('=')
-
-        # override with given value
-        if value is not None:
-            _value = value
-
-        # cycle is given as item, so try getting item
-        if cycle.startswith('sh.'):
-            items = self._sh.items.get_instance()
-            # TODO: generalize this throughout shng
-            item = items.return_item(cycle.removeprefix('sh.').removesuffix('()'))
-            if not item:
-                logger.warning(f'Item {cycle} for scheduler {name} not found, check cycle assignment')
-                return None, None
-
-            # store item for callback
-            if name not in self._cycle_items.get(item.property.path, []):
-                self._cycle_items.setdefault(item.property.path, set()).add(name)
-                item.add_method_trigger(self.update_item)
-            if isinstance(item(), int):
-                cycle_t = int(item())
-            else:
-                cycle_t = item._castduration(item())
-                if cycle_t is False:
-                    logger.warning(f'item {item} yielded False while trying to convert {item()} to time, ignoring')
-                    return None, None
-        else:
-            try:
-                cycle_t = int(cycle.strip())
-            except Exception as e:
-                logger.warning(f"Scheduler: Exception {e}: Invalid cycle entry for {name} {cycle}")
-                return
-
-        if _value != '':
-            _value = _value.strip()
-        else:
-            _value = cycle_t
-
-        return cycle_t, _value
-
     def update_item(self, item, caller=None, source=None, dest=None):
         """ provide a mechanism to handle changes of cycle item references """
         logger.debug(f'called update_item for {item} ({type(item)}, value {item()})')
@@ -597,28 +584,24 @@ class Scheduler(threading.Thread):
             logger.warning(f'item {item} not registered for cycle update, ignoring.')
             return
 
-        if isinstance(item(), int):
-            cycle = item()
-        else:
-            try:
-                cycle = item._castduration(item())
-            except Exception as e:
-                logger.warning(f'item {item} for cycle update: error on converting data: {e}, ignoring')
-                return
-        if cycle is False:
-            logger.warning(f'item {item} for cycle update return invalid cycle data {item()}, ignoring.')
-            return
-
         for name in self._cycle_items[item.property.path]:
+
+            cycle_item = self._scheduler[name]['obj']
+            logger.debug(f'using item {cycle_item.property.path} for getting cycle values')
+            cycle = cycle_item.get_cycle_time()
+            logger.debug(f'got cycle time {cycle}')
+            if cycle is None:
+                logger.warning(f'item {cycle_item} for cycle update return invalid cycle data {cycle}, ignoring.')
+                return
+
+            value = cycle_item.get_cycle_value()
+
             c = self._scheduler[name]['cycle']
             if isinstance(c, int):
                 self._scheduler[name]['cycle'] = cycle
+                self._scheduler[name]['value'] = value
             else:
-                try:
-                    _, v = c.items()
-                except Exception:
-                    v = self._scheduler[name].get('value', cycle)
-                self._scheduler[name]['cycle'] = {cycle: v}
+                self._scheduler[name]['cycle'] = {cycle: value}
 
             # as we don't know the last execution time, we start anew from now
             self._next_time(name)
@@ -711,7 +694,10 @@ class Scheduler(threading.Thread):
         :param offset: if a cycle attribute is present, then this value offsets the next execution time of a cycle
         """
         job = self._scheduler[name]
-        if None is job['cron'] is job['cycle']:
+# debug
+        logger.debug(f'next_time for {name} running with {job}')
+
+        if job['cron'] is None and job['cycle'] is None:
             logger.warning('neither cron or cycle, setting next to None')
             self._scheduler[name]['next'] = None
             return
@@ -720,11 +706,28 @@ class Scheduler(threading.Thread):
         now = self.shtime.now()
         if job['cycle'] is not None:
             cycle, v = self.__get_first(job['cycle'])
-            # set value only, if it is an item scheduler
+
+            logger.debug(f'got {cycle} and {v} from {job}')
             if job['obj'].__class__.__name__ == 'Item':
+                # set value only, if it is an item scheduler
                 value = v
+
+                # check if item is stored in cycle_items
+                item = job['obj']
+                logger.debug(f'processing item {item}')
+                if item.property.path in self._cycle_items:
+
+                    cycle = item.get_cycle_time()
+                    value = item.get_cycle_value()
+
+                    logger.debug(f'found {item} in cycle_items, got {cycle} and {value}')
+                    # update dynamic cycle value
+                    self._scheduler[name]['cycle'] = cycle
+
             if offset is None:
                 offset = cycle
+            # TODO: if offset is not None: will cycle be completely ignored?
+            logger.debug(f'{name}: value {value} offset {offset} cycle {cycle}')
             next_time = now + datetime.timedelta(seconds=offset)
             job['source'] = {'source': 'cycle', 'details': str(cycle)}
         if job['cron'] is not None:

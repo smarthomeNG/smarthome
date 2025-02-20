@@ -21,6 +21,7 @@
 #  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+from __future__ import annotations
 
 import logging
 import datetime
@@ -37,7 +38,6 @@ import inspect
 import time             # for calls to time in eval
 import math             # for calls to math in eval
 from math import *
-
 
 from lib.shtime import Shtime
 import lib.env
@@ -1635,13 +1635,15 @@ class Item():
         args, _, _, value_dict = inspect.getargvalues(fr)
         # we check the first parameter for the frame function is
         # named 'self'
-        if len(args) and args[0] == 'self' and False:    # Don't execute this if-branch
-            # in that case, 'self' will be referenced in value_dict
-            instance = value_dict.get('self', None)
-            if instance:
-                # return its class
-#                return getattr(instance, '__class__', None)
-                return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+
+        # if len(args) and args[0] == 'self' and False:    # Don't execute this if-branch
+        #     # in that case, 'self' will be referenced in value_dict
+        #     instance = value_dict.get('self', None)
+        #     if instance:
+        #         # return its class
+#       #          return getattr(instance, '__class__', None)
+        #         return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+
         # return None otherwise
         return f"args={args}  - value_dict={value_dict}"
 
@@ -1651,11 +1653,13 @@ class Item():
         args, _, _, value_dict = inspect.getargvalues(fr)
         # we check the first parameter for the frame function is
         # named 'self'
-        if len(args) and args[0] == 'self' and False:
-            # in that case, 'self' will be referenced in value_dict
-            instance = value_dict.get('self', None)
-            if instance:
-                return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+
+        # if len(args) and args[0] == 'self' and False:
+        #     # in that case, 'self' will be referenced in value_dict
+        #     instance = value_dict.get('self', None)
+        #     if instance:
+        #         return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+
         return f"{value_dict.get('self', None)}"
 
     def get_stack_info(self):
@@ -1777,17 +1781,80 @@ class Item():
         # Crontab/Cycle
         #############################################################
         if self._crontab is not None or self._cycle_time is not None:
-            cycle = None
-            if self._cycle_time is not None:
-                #cycle = self._build_cycledict(cycle)
-                if self._cycle_value is None:
-                    cycle = {self._cast_duration(self._cycle_time): self._value}
-                else:
-                    cycle = {self._cast_duration(self._cycle_time): self._cycle_value}
-            self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle)
+            cycle_time = self.get_cycle_time()
+            cycle_value = None
+            if cycle_time is not None:
+                cycle_value = self.get_cycle_value()
+                if cycle_value is None:
+                    cycle_value = cycle_time
 
-        return
+            items = self.__get_items_from_string(self._cycle_time) + self.__get_items_from_string(self._cycle_value)
+            self._sh.scheduler.add(self._itemname_prefix + self._path, self, cron=self._crontab, cycle=cycle_time, value=cycle_value, items=items)
 
+    def __get_items_from_string(self, string):
+        """ return a list of all item references `sh.path.to.item()` in string """
+        global _items_instance
+        res = []
+        pos = 0
+        while (pos := string.find('sh.')) >= 0:
+            print(f'{string}: {pos}')
+            end = string.find('()', pos)
+            print(f'{string}: {end}')
+            if end > 0:
+                item = _items_instance.return_item(string[pos + 3:end])  # type: ignore (_items_instance is set on initialize)
+                if item:
+                    res.append(item)
+                string = string[end + 1:]
+            else:
+                break
+
+        return res
+
+    def get_cycle_time(self) -> int | None:
+        """ return cycle time, possibly recalculated at call time """
+        if isinstance(self._cycle_time, int) or self._cycle_time is None:
+            return self._cycle_time
+
+        try:
+            res = self.__cycle_eval(self._cycle_time, 'get_cycle_time')
+# debug
+            logger.debug(f'get_cycle_time got {res} from eval of {self._cycle_time}')
+            if res is not None:
+                return int(res)
+        except Exception as e:
+            logger.warning(f'error on evaluation cycle time "{self._cycle_time}" for item {self._path}: {e}')
+
+    def get_cycle_value(self):
+        """ return cycle value, possibly recalculated at call time """
+        if not isinstance(self._cycle_value, str):
+            return self._cycle_value
+
+        try:
+            res = self.__cycle_eval(self._cycle_value, 'get_cycle_value')
+# debug
+            logger.debug(f'get_cycle_value got {res} from eval of {self._cycle_value}')
+            return res
+        except Exception as e:
+            logger.warning(f'error on evaluation cycle value "{self._cycle_value}" for item {self._path}: {e}')
+
+    def __cycle_eval(self, expr, caller):
+        sh = self._sh
+        shtime = self.shtime
+        items = _items_instance
+        import math
+        import lib.userfunctions as uf
+        env = lib.env
+
+        try:
+            value = eval(expr)
+        except Exception as e:
+            if e.__class__.__name__ == 'KeyError':
+                log_msg = f"Item '{self._path}': problem evaluating '{expr}' - KeyError (in dict)"
+            else:
+                log_msg = f"Item '{self._path}': problem evaluating '{expr}' - {e.__class__.__name__}: {e}"
+            logger.warning(log_msg)
+        else:
+            return value
 
     def _init_run(self):
         """
