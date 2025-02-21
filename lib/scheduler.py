@@ -511,10 +511,7 @@ class Scheduler(threading.Thread):
                 item = None
                 if isinstance(cycle, int):
                     source = {'source': 'cycle1', 'details': cycle}
-                    if value is None:
-                        cycle = {cycle: cycle}
-                    else:
-                        cycle = {cycle: value}
+                    cycle = {cycle: value}
 
                 # this should not occur anymore, as it should have been done in lib.item.item
                 # just in case, and only for static values...
@@ -536,7 +533,7 @@ class Scheduler(threading.Thread):
                     if _value != '':
                         _value = _value.strip()
                     else:
-                        _value = cycle
+                        _value = None
                     cycle = {cycle: _value}
                     source = {'source': 'cycle', 'details': _value}
 
@@ -641,9 +638,7 @@ class Scheduler(threading.Thread):
                                         kwargs[key] = _cron
                             elif key == 'cycle':
                                 _cycle = kwargs[key]
-                                if isinstance(kwargs[key], dict):
-                                    _cycle = kwargs[key]
-                                elif isinstance(kwargs[key], int):
+                                if isinstance(kwargs[key], int):
                                     _cycle = {kwargs[key]: None}
                                 elif isinstance(kwargs[key], str):
                                     _param = kwargs[key].strip()
@@ -796,8 +791,9 @@ class Scheduler(threading.Thread):
                     scheduler_source = str(source.get('source', ''))
                     if scheduler_source != '':
                         scheduler_source = ':' + scheduler_source + ':' + str(source.get('details', ''))
-                if value is not None:
-                    obj(value, caller=("Scheduler" + scheduler_source))
+                if value is None:
+                    value = obj()
+                obj(value, caller=("Scheduler" + scheduler_source))
             except Exception as e:
                 tasks_logger.exception(f"Item {name} exception: {e}")
 
