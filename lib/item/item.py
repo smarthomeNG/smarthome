@@ -1793,21 +1793,21 @@ class Item():
 
     def __get_items_from_string(self, string):
         """ return a list of all item references `sh.path.to.item()` in string """
+        if not string:
+            return []
+
         global _items_instance
         res = []
         pos = 0
         while (pos := string.find('sh.')) >= 0:
-            print(f'{string}: {pos}')
             end = string.find('()', pos)
-            print(f'{string}: {end}')
             if end > 0:
                 item = _items_instance.return_item(string[pos + 3:end])  # type: ignore (_items_instance is set on initialize)
-                if item:
+                if item is not None:
                     res.append(item)
                 string = string[end + 1:]
             else:
                 break
-
         return res
 
     def get_cycle_time(self) -> int | None:

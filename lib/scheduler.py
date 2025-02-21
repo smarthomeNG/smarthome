@@ -547,7 +547,7 @@ class Scheduler(threading.Thread):
                 # check if lib.item found an item reference for duration
                 if items:
                     for item in items:
-                        if not item:
+                        if item is None:
                             logger.warning(f'Item {item} for scheduler {name} not found, check cycle assignment, skipping item')
                             continue
 
@@ -793,11 +793,11 @@ class Scheduler(threading.Thread):
                 if isinstance(source, str):
                     scheduler_source = source
                 else:
-                    scheduler_source = source.get('source', '')
+                    scheduler_source = str(source.get('source', ''))
                     if scheduler_source != '':
-                        scheduler_source = ':'+scheduler_source+':'+source.get('details','')
+                        scheduler_source = ':' + scheduler_source + ':' + str(source.get('details', ''))
                 if value is not None:
-                    obj(value, caller=("Scheduler"+scheduler_source))
+                    obj(value, caller=("Scheduler" + scheduler_source))
             except Exception as e:
                 tasks_logger.exception(f"Item {name} exception: {e}")
 
