@@ -873,10 +873,11 @@ class SmartDevicePlugin(SmartPlugin):
         elif isinstance(reply_pattern, list):
             return_list = []
             for r in reply_pattern:
+                checked_value = self._commands._commands[command]._check_value(value)
                 if not captures_value(r):
                     return_list.append(re.compile(r))
-                elif value not in return_list:
-                    return_list.append(value)
+                elif checked_value not in return_list:
+                    return_list.append(checked_value)
             reply_pattern = None if None in return_list else return_list
             resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd, 'lookup': lookup, 'lookup_ci': lookup_ci}
         # if reply pattern does not expect a specific value, use value as expected reply

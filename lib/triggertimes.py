@@ -135,6 +135,30 @@ class TriggerTimes():
         self.logger.debug(tt)
         return tt.get_next(starttime)
 
+    def remove_eventually_known_triggertime( self, triggertime: str, starttime: datetime, location = None):
+        """
+        remove a possibly known triggertime from list of known triggertimes
+
+
+        :param triggertime: a user defined time description when to trigger
+        :type triggertime: str
+        :param start: starttime and date for the beginning of the search
+        :type start: datetime
+        :param location: Location information (not implemented yet), defaults to None
+        :type location: tupel with (lat,lon,elev), optional
+        :return: the time and date of next event
+        :rtype: datetime
+        """
+        triggertime = TriggerTimes.normalize(triggertime)
+        for tt in self.__known_triggertimes:
+            if tt.get_triggertime() == triggertime:
+                #self.logger.debug(f"Element found in list for {triggertime}")
+                break
+        else:
+            return
+
+        self.__known_triggertimes.remove(tt)
+
     @staticmethod
     def normalize(triggertime):
         """
@@ -918,7 +942,9 @@ class Skytime(TriggerTime):
                             # now get the skyevent time and see if it fits for this day.
                             if self.event in mappings:
                                 try:
+                                    logger.debug(f"get next eventtime for {self.event} with degree offset {self.doff}, minute offset {self.moff} beginning with {searchtime}")
                                     eventtime = mappings[self.event](self.doff, self.moff, dt=searchtime)
+                                    logger.debug(f"eventtime found is {eventtime.astimezone(Skytime.sh.shtime.tzinfo())}")
                                 except:
                                     eventtime = None
                                 if eventtime is None:
@@ -938,18 +964,20 @@ class Skytime(TriggerTime):
                             #  - searchtime must be smaller than eventtime and
                             #  - eventtime might be one or more day(s) later
 
-                            logger.debug(f"starting with {starttime} the next {self.event}({self.doff},{self.moff}) is {eventtime}")
+                            logger.debug(f"starting with {starttime} the current next {self.event}({self.doff},{self.moff}) is {eventtime}, searchtime is {searchtime}")
 
                             # if the dates differ then it must be certain that the new date adheres to the
                             # constraints of the day range.
                             if eventtime.date() > searchtime.date():
-                                logger.debug(f"eventtime ({eventtime.date()}) is at least a day later than current searchtime ({searchtime}), skip to eventtime's early morning")
+                                logger.debug(f"starting with {starttime} the eventtime date({eventtime}) is at least a day later than current searchtime date ({searchtime}), skip to eventtime's early morning")
                                 searchtime = eventtime.replace(hour=0, minute=0, second=0, microsecond=0)
+                                logger.debug(f"set searchtime to {searchtime}")
                                 continue # need to start over for a matching date
 
                             if eventtime.date() < searchtime.date():
-                                logger.debug(f"eventtime ({eventtime.date()}) is at least a day earlier than current searchtime ({searchtime}), skip to searchtime's early morning")
+                                logger.debug(f"starting with {starttime} the eventtime date ({eventtime}) is at least a day earlier than current searchtime date ({searchtime}), skip to searchtime's early morning")
                                 searchtime = searchtime.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
+                                logger.debug(f"set searchtime to {searchtime}")
                                 continue
 
                             # eventtime and searchtime have the same day
@@ -983,6 +1011,7 @@ class Skytime(TriggerTime):
                             if eventtime < searchtime:
                                 logger.debug(f"eventtime ({eventtime}) is still earlier than current searchtime ({searchtime}), skip to searchtime's early morning")
                                 searchtime = searchtime.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
+                                logger.debug(f"searchtime is now {searchtime}")
                                 continue
 
                             #logger.debug(f"next trigger time found: {eventtime}")

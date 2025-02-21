@@ -17,9 +17,9 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 05. Februar 2025
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 05. Februar 2025
            (Merge pull request #714 from Morg42/develop)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 05. Februar 2025
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. 12. Februar 2025
            (Merge pull request #999 from onkelandy/lms)
 
 
@@ -377,24 +377,18 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
 * database:
 
-  * Corrected inline comment
-  * Fix logging error
-  * Fixed log message during exception
+  * Fixed and added logging, typo and inline comment
   * Improve getting sqlite3 file method
   * Copy_database does not disable itself after success anymore (why should it...?)
   * Change log message of copy database to info (instead of warning)
-  * Added logging
   * Add orphan reassignment
-  * Remove debug code
   * Move to REST communication
-  * Remove debug info from index.html
   * Raw string for regex
   * Add max_reassign_logentries parameter
   * Fix sql query
   * Added time_precision in plugin.yaml
   * Added _time_precision_query
   * Applied _time_precision_query
-  * Typo fix
   * Bumped version to 1.16.14
   * Added min and max values for plugin time precision plugin attribute
 
@@ -427,23 +421,19 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Fix initial maxvolume check (it's not available)
   * Add readafterwrite parameter
-  * Add resend options on plugin.yaml
+  * Add resend options in plugin.yaml
   * Query most relevant commands after powering on a zone
-  * Add resend function
   * Add on_suspend/resume functions
   * Implement delay for initial value read
-  * Fix resend_info
-  * Add resume_initial_read and protocol (for resend)
-  * Revert resend changes as it is now included as a protocol on a global level
-  * Remove reading of volumemax from structs (it is not available)
   * Remove threading import
   * Remove protocol and command_class from plugin.yaml
   * Auto set command class
   * Add sdp metadata
-  * Move custom inputnames to dataype
-  * Update plugin.yaml
   * Do not overwrite on_connect anymore, but read custom inputs with other "initial reads"
-  * Update commands and plugin.yaml
+  * Update multiple commands and queries, as well as plugin.yaml
+  * Improve custom inputnames (using dynamic lookup table and better reply handling)
+  * distinguish between EU and US model
+  * improve tuner commands
 
 * dlms:
 
@@ -452,7 +442,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * drexelundweiss:
 
   * Prevent division by 0
-  * Fix all configs were divisor is 0
+  * Fix all configs where divisor is 0
 
 * enocean:
 
@@ -518,31 +508,21 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Autoset command class and connection
   * Add resend and initial read parameters
   * Add sdp metadata
-  * Adjust sdp metadata
   * Convert specific replies to correct boolean
-  * Update some commands
-  * Test current playlist rename
   * Improve/fix database scan commands
-  * Fix alarm circle of death
   * Fix syncgroup commands/items
   * Fix/improve alarm commands
   * Fix mute and volume commands
   * Update commands, min SDP 1.0.4
-  * Bump version
-  * Further commands updates
   * Trigger syncgroups query when syncing two players, update syncgroups with empty value if currently no groups exist
   * Query power at startup
   * Query shuffle and repeat at start
   * Adjust clear command, however should still not be used (might depend on setup/server?)
   * put older version 1.5.2 as backup in folder
-  * update playlists.available command
-  * update plugin.yaml struct
   * add newclient command so players lookup gets correctly updated when new client is connected
   * fix reading commands when getting new title info
   * rename command playsong to playitem
-  * update docu
   * update and restructure commands and structs. bump version to 2.0.0
-  * update, fix and improve commands, rename some correctly
   * fix transform received data (keep %20 for spaces)
   * update method code in init using type hint
   * breaking change rename prefix "sqb_" to "lms_"
@@ -597,7 +577,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * oppo:
 
   * Remove _send method, not needed
-  * Set command class automatically, remove some unneccessary entries from plugin.yaml
+  * Set command class automatically, remove some unnecessary entries from plugin.yaml
   * Add parameters to plugin.yaml
   * Add min_sdp_version and bump version to 1.0.1
   * Fix metadata, remove protocol from plugin.yaml
@@ -689,81 +669,49 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * stateengine:
 
   * Fix logging of header when directory is not created yet
-  * Update logging
-  * Remove status from action log, not needed
+  * Update logging, Remove status from action log, not needed
   * Correct eval_status evaluation order
-  * Fix issues finding attributes when using se_use
-  * Fix status_eval
   * try/except finding parent item as this is not always possible (esp. when using structs)
   * Get correct current item for action when using se_eval
   * Fix value conversion for strings!
   * Fix se_status_eval when using structs (e.g. in se_use)
   * Add se_name to attribute parameters
-  * Fix docu
-  * Fix web interface.. corrct handling of "force set", delay and conditions
+  * Fix web interface.. correct handling of "force set", delay and conditions
   * Fix condition handling, now it's working as OR, was AND first by accident
   * Update SetForce Action
   * Code cleanup, fixes, improvements
-  * Write log message when log is turned off (set to 0)
   * Improve and extend issue reporting when getting values
   * Attributes from items, structs, etc. referenced by se_use are now evaluated correctly, even if they are defined as lists
-  * Don't expand item pathes at beginning so relative item attributes are correctly assigned when using structs and se_use
-  * Improve se_use handling when searching for attributes (gets evaluated only once in the beginning)
+  * Don't expand item paths at beginning so relative item attributes are correctly assigned when using structs and se_use
   * "set" function now also returns original value, necessary for optimal "se_use" handling
   * set_from_attribute function now takes an ignore list of entries that should not be checked
   * Massive update of se_use handling. Now the item config gets correctly scanned and only at init. Multiple fixes, improvements and better issue handling
   * Improve condition check of actions (much faster)
   * Fix previousstate_conditions set valuation
   * Introduce next_conditionset to check conditionset of upcoming state(condition)
-  * Update docu for next conditionset
   * Introduce caching of eval results to improve performance
-  * Add nextconditionset to web interface
-  * Add nextcondition to source evaluation method
-  * Minor improvements
-  * Add action_type to action(s) for better webif handling (coming)
+  * Add action_type to action(s) for better webif handling
   * Fix previousonditionset variable
   * Import fix when checking regexes for conditions
-  * Improve web interface
   * Major code updates, introduce eval cache feature, improve web interface update, improve data handling when writing logs, etc.
-  * Introduce actions_pass, first step
-  * Run pass actions
+  * Introduce actions_pass
   * Important fix when logging wrongly defined item for action
-  * Fix on_pass actions and implement function to suspend state
-  * Improve on_pass actions
   * Fix variable logging/handling
   * Improve web interface - include pass actions, optimize visualization, optimize info text for actions that are not run, some fixes
   * Introduce delta attribute for single actions, introduce minagedelta to run actions in a specific interval only
   * Simplify log entry when having issues with value casting
   * Highly improve and simplify issue finder and logger at startup
   * Improve struct and add se_minagedelta to plugin.yaml
-  * Bump version to 2.2.0
-  * Fix pass_state webif handling on first run
-  * Re-fix next conditionset when using released_by states
-  * Improve logging (e.g. for handling released_by), introducing internal prefix for log messages
-  * Fix and improve logging
   * Introduce regex casting, used for conditionset comparison for actions
   * Fix/improve conversion of lists in items
   * Correctly parse values in item, you can now also define regex, eval, etc. in an item(value)!
   * Fix string to list conversion
-  * Reset issues list when setting a value (internal use only)
   * Fix logging of action count
   * Fix list actions
   * Fix issue tracking for action definitions, minor updates
-  * Re-fix time handling
   * Make it possible to set value of list item by se_set_..: [foo, bar]
   * Improve zoom/scroll handling (esp. on page update, using cookies now)
-  * Improve visu compactness
-  * Use sh.items.return_item instead of sh.return_item
-  * Important fix for issue tracking at init
-  * Further issue handling fixes
-  * Improve visu, now compressed and less white space, no overlaps hopefully
-  * Adjust conditionlist content in visu to avoid overlap
-  * Use itemsApi approach for diverse methods (return_item, find_items)
-  * Avoid overlaps in visu when only one conditionset given
-  * Improve visu overlap for actions
-  * Logging update
-  * Add empty icon for visu to make all entries the same height (nicer visu)
-  * Highly improve visu overlapping and white space, some additional visu fixes
+  * Improve visu, now compressed and less white space, no overlaps
   * Minor code improvement
 
 * tasmota:
@@ -776,7 +724,6 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
 * uzsu:
 
-  * Fix previously introduced problem with series rrule
   * Improve handling of invalid items
   * Improve logging
   * Remove old version due to scipy security issues
@@ -789,35 +736,19 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Improve struct for "next" item
   * "once" feature to trigger uzsu entry only once and deactivate afterwards
   * Logging improvement
-  * Make once work with individual list entries
-  * Make 'once' work with interpolation
-  * Implement once for series, part 1
-  * Make once work with series
-  * Bump version to 2.1.0
-  * Fix scheduling for series once
-  * Fix once for series
-  * Update webif and docu
   * Fix series interval calculation. Actually, now end of series is the last time the series is triggered
   * Implement activeToday for smartvisu, fix once for series
   * Fix comparison of new and old dictionary
-  * Update handling of once for series. might work now? ;)
-  * Fix once handling . . again
-  * Adjust struct
   * Introduce "perday" interpolation feature
   * Minimize/optimize dict writing to item
   * Improve web interface
   * Fix extra-long debug messages
   * Code improvements, fix lastvalue handling, update activeToday on first run to False if time is in the future, etc.
   * Further lastvalue improvements/fixes
-  * Improve documentation, add info on once feature
-  * Fix evaluation of upcoming setting when once feature is used
   * Global once deactivates uzsu on first setting, no matter if it is a series or not
   * Introduce set_activetoday plugin function
   * Introduce ignore_once_entries parameter for (not) using once set entries for interpolation
-  * Fix and improve perday interpolation
   * Avoid wrong value when 2 entries set a value at the same time and interpolation is activated
-  * Update docu
-  * Fix wrong logger entry
   * Improve item writing, fix issue when uzsu has no active entries
   * Avoid cycle of schedule and item update
 
@@ -951,5 +882,3 @@ Dokumentation
 
 * Build doc local: make script work on Mac OS X, too
 * Build docu: Fallback for locale
-
-
