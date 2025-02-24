@@ -1785,8 +1785,8 @@ class Item():
             cycle_value = None
             if cycle_time is not None:
                 cycle_value = self.get_cycle_value()
-                if cycle_value is None:
-                    cycle_value = cycle_time
+                # if cycle_value is None:
+                #     cycle_value = cycle_time
 
             items = self.__get_items_from_string(self._cycle_time) + self.__get_items_from_string(self._cycle_value)
             self._sh.scheduler.add(self._itemname_prefix + self._path, self, cron=self._crontab, cycle=cycle_time, value=cycle_value, items=items)
@@ -1811,6 +1811,14 @@ class Item():
             return self._cycle_time
 
         try:
+            res = self._cast_duration(self._cycle_time, test=True)
+# debug
+            logger.debug(f'{self._path}: cast_duration returned {res}')
+            if isinstance(res, int):
+# debug
+                logger.debug(f'{self._path}: get_cycle_time immediately got {res} from cast_duration of {self._cycle_time}')
+                return res
+
             res = self.__cycle_eval(self._cycle_time, 'get_cycle_time')
 # debug
             logger.debug(f'{self._path}: get_cycle_time got {res} from eval of {self._cycle_time}')
