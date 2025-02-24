@@ -550,19 +550,17 @@ class Scheduler(threading.Thread):
 
                         # store item for callback
                         if name not in self._cycle_items.get(item.property.path, []):
-                            logger.debug(f'registering item {item} for updating for {name}')
                             self._cycle_items.setdefault(item.property.path, set()).add(name)
-                            logger.debug(f'cycle_items is {self._cycle_items}')
                             item.add_method_trigger(self.update_item)
-                            logger.debug(f'result is {item.get_method_triggers()}')
 
                 if cycle is not None and offset is None:  # spread cycle jobs
                     offset = random.randint(10, 15)
 
                 # TODO: remove debug code later
-                if cycle is not None and not isinstance(cycle, dict):
-                    logger.error(f'cycle not in dict format: {cycle} ({type(cycle)}) for scheduler {name}')
-                    return
+                # if cycle is not None and not isinstance(cycle, dict):
+                #     logger.error(f'cycle not in dict format: {cycle} ({type(cycle)}) for scheduler {name}')
+                #     return
+
                 self._scheduler[name] = {'prio': prio, 'obj': obj, 'source': source, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
                 if next is None:
                     self._next_time(name, offset)
@@ -576,7 +574,6 @@ class Scheduler(threading.Thread):
 
     def update_item(self, item, caller=None, source=None, dest=None):
         """ provide a mechanism to handle changes of cycle item references """
-        logger.debug(f'called update_item for {item} ({type(item)}, value {item()})')
         if item.property.path not in self._cycle_items:
             logger.warning(f'item {item} not registered for cycle update, ignoring.')
             return
@@ -584,9 +581,7 @@ class Scheduler(threading.Thread):
         for name in self._cycle_items[item.property.path]:
 
             cycle_item = self._scheduler[name]['obj']
-            logger.debug(f'using item {cycle_item.property.path} for getting cycle values')
             cycle = cycle_item.get_cycle_time()
-            logger.debug(f'got cycle time {cycle}')
             if cycle is None:
                 logger.warning(f'item {cycle_item} for cycle update return invalid cycle data {cycle}, ignoring.')
                 return
@@ -689,10 +684,9 @@ class Scheduler(threading.Thread):
         :param offset: if a cycle attribute is present, then this value offsets the next execution time of a cycle
         """
         job = self._scheduler[name]
-# debug
-        logger.debug(f'next_time for {name} running with {job}')
 
-        if job['cron'] is None and job['cycle'] is None:
+        # don't warn for logics as these get schedulers even without crontab or cycle
+        if job['obj'].__class__.__name__ != 'Logic' and job['cron'] is None and job['cycle'] is None:
             logger.warning('neither cron or cycle, setting next to None')
             self._scheduler[name]['next'] = None
             return
@@ -702,27 +696,24 @@ class Scheduler(threading.Thread):
         if job['cycle'] is not None:
             cycle, v = self.__get_first(job['cycle'])
 
-            logger.debug(f'got {cycle} and {v} from {job}')
+            # set value only if it is an item scheduler
             if job['obj'].__class__.__name__ == 'Item':
-                # set value only, if it is an item scheduler
                 value = v
 
                 # check if item is stored in cycle_items
                 item = job['obj']
-                logger.debug(f'processing item {item}')
                 if item.property.path in self._cycle_items:
 
                     cycle = item.get_cycle_time()
                     value = item.get_cycle_value()
 
-                    logger.debug(f'found {item} in cycle_items, got {cycle} and {value}')
                     # update dynamic cycle value
                     self._scheduler[name]['cycle'] = cycle
 
+            # TODO: if offset is not None: will cycle be completely ignored?
             if offset is None:
                 offset = cycle
-            # TODO: if offset is not None: will cycle be completely ignored?
-            logger.debug(f'{name}: value {value} offset {offset} cycle {cycle}')
+
             next_time = now + datetime.timedelta(seconds=offset)
             job['source'] = {'source': 'cycle', 'details': str(cycle)}
         if job['cron'] is not None:
@@ -744,8 +735,6 @@ class Scheduler(threading.Thread):
 
         if value is not None:
             self._scheduler[name]['value'] = value
-
-        logger.debug(f"{name} next time: {next_time}")
 
     def __iter__(self):
         for job in self._scheduler:

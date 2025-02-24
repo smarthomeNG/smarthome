@@ -1797,18 +1797,13 @@ class Item():
             return []
 
         global _items_instance
-        res = []
-        pos = 0
-        while (pos := string.find('sh.')) >= 0:
-            end = string.find('()', pos)
-            if end > 0:
-                item = _items_instance.return_item(string[pos + 3:end])  # type: ignore (_items_instance is set on initialize)
-                if item is not None:
-                    res.append(item)
-                string = string[end + 1:]
-            else:
-                break
-        return res
+
+        regex = re.compile(r'sh\.([a-zA-Z0-9_.]+)(?:\(\)|\.property\.[a-zA-Z_]+)')
+        result = regex.findall(string)
+
+        # could easily be written in a single line, but gets kind of unreadable...
+        items = {_items_instance.return_item(entry) for entry in result if entry}
+        return list({item for item in items if item is not None})
 
     def get_cycle_time(self) -> int | None:
         """ return cycle time, possibly recalculated at call time """
@@ -1818,8 +1813,11 @@ class Item():
         try:
             res = self.__cycle_eval(self._cycle_time, 'get_cycle_time')
 # debug
-            logger.debug(f'get_cycle_time got {res} from eval of {self._cycle_time}')
-            if res is not None:
+            logger.debug(f'{self._path}: get_cycle_time got {res} from eval of {self._cycle_time}')
+            res = self._cast_duration(res)
+# debug
+            logger.debug(f'{self._path}: get_cycle_time got {res} from cast_duration of {self._cycle_time}')
+            if res is not None and res is not False:
                 return int(res)
         except Exception as e:
             logger.warning(f'error on evaluation cycle time "{self._cycle_time}" for item {self._path}: {e}')
@@ -1832,7 +1830,7 @@ class Item():
         try:
             res = self.__cycle_eval(self._cycle_value, 'get_cycle_value')
 # debug
-            logger.debug(f'get_cycle_value got {res} from eval of {self._cycle_value}')
+            logger.debug(f'{self._path}: get_cycle_value got {res} from eval of {self._cycle_value}')
             return res
         except Exception as e:
             logger.warning(f'error on evaluation cycle value "{self._cycle_value}" for item {self._path}: {e}')
