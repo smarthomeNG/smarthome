@@ -1785,10 +1785,8 @@ class Item():
             cycle_value = None
             if cycle_time is not None:
                 cycle_value = self.get_cycle_value()
-                # if cycle_value is None:
-                #     cycle_value = cycle_time
 
-            items = self.__get_items_from_string(self._cycle_time) + self.__get_items_from_string(self._cycle_value)
+            items = self.__get_items_from_string(self._cycle_time)
             self._sh.scheduler.add(self._itemname_prefix + self._path, self, cron=self._crontab, cycle=cycle_time, value=cycle_value, items=items)
 
     def __get_items_from_string(self, string):
@@ -1814,12 +1812,12 @@ class Item():
             res = self._cast_duration(self._cycle_time, test=True)
 # debug
             logger.debug(f'{self._path}: cast_duration returned {res}')
-            if res is not False and isinstance(res, int):
+            if type(res) is int:
 # debug
                 logger.debug(f'{self._path}: get_cycle_time immediately got {res} from cast_duration of {self._cycle_time}')
                 return res
 
-            res = self.__cycle_eval(self._cycle_time, 'get_cycle_time')
+            res = self.__run_attribute_eval(self._cycle_time, result_type='str')
 # debug
             logger.debug(f'{self._path}: get_cycle_time got {res} from eval of {self._cycle_time}')
             res = self._cast_duration(res)
@@ -1832,11 +1830,13 @@ class Item():
 
     def get_cycle_value(self):
         """ return cycle value, possibly recalculated at call time """
+# debug
+        logger.debug(f'{self._path}: get_cycle_value from {self._cycle_value}')
         if not isinstance(self._cycle_value, str):
             return self._cycle_value
 
         try:
-            res = self.__cycle_eval(self._cycle_value, 'get_cycle_value')
+            res = self.__run_attribute_eval(self._cycle_value, result_type='str')
 # debug
             logger.debug(f'{self._path}: get_cycle_value got {res} from eval of {self._cycle_value}')
             return res
