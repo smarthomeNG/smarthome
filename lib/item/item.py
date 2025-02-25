@@ -1814,7 +1814,7 @@ class Item():
             res = self._cast_duration(self._cycle_time, test=True)
 # debug
             logger.debug(f'{self._path}: cast_duration returned {res}')
-            if isinstance(res, int):
+            if res is not False and isinstance(res, int):
 # debug
                 logger.debug(f'{self._path}: get_cycle_time immediately got {res} from cast_duration of {self._cycle_time}')
                 return res
