@@ -2677,20 +2677,19 @@ class Item():
 # debug
             logger.debug(f'autotimer: {self._autotimer_time} / {self._autotimer_value}')
             _time = self.get_attr_time('autotimer')
+            _value = value
             if _time is None:
                 logger.warning(f'evaluating autotimer time {self._autotimer_time} returned None, ignoring')
             elif type(_time) is not int:
                 logger.warning(f"autotimer time {self._autotimer_time} didn't result in int, but in {_time}, type {type(_time)}")
             else:
-                if self._autotimer_value is None:
-                    _value = self._value
-                else:
-                    _value = self.get_attr_value('autotimer')
-# debug
-            logger.notice(f"Item {self._path} __update: _time={_time}, _value={_value}")
+                _value = self._autotimer_value
 
-            next = self.shtime.now() + datetime.timedelta(seconds=_time)
-            self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': _value, 'caller': 'Autotimer'}, next=next)
+# debug
+                logger.notice(f"Item {self._path} __update: _time={_time}, _value={_value}")
+
+                next = self.shtime.now() + datetime.timedelta(seconds=_time)
+                self._sh.scheduler.add(self._itemname_prefix + self.id() + '-Timer', self, value={'value': _value, 'caller': 'Autotimer'}, next=next)
 
     def add_logic_trigger(self, logic):
         """

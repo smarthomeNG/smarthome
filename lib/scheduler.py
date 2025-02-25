@@ -769,6 +769,8 @@ class Scheduler(threading.Thread):
         threading.current_thread().name = name
         #logger = logging.getLogger('_task.' + name)
 
+# debug
+        logger.warning(f'task {obj} ({obj.__class__.__name__}) with {value} by {by} source {source}')
         if obj.__class__.__name__ == 'Logic':
             self._execute_logic_task(obj, by, source, dest, value)
 
@@ -780,13 +782,18 @@ class Scheduler(threading.Thread):
                     scheduler_source = str(source.get('source', ''))
                     if scheduler_source != '':
                         scheduler_source = ':' + scheduler_source + ':' + str(source.get('details', ''))
+                src = 'cycle'
+                if isinstance(value, dict) and value.get('caller') == 'Autotimer':
+                    src = 'autotimer'
                 if value is None:
                     # re-set current item value. needs enforce_updates to work properly
                     value = obj()
                 else:
                     # get current (static or evaluated) value from item itself
-                    value = obj.get_attr_value('cycle')
-                obj(value, caller=("Scheduler" + scheduler_source))
+                    value = obj.get_attr_value(src)
+# debug
+                logger.debug(f'item {obj}: src = {src}, value = {value}')
+                obj(value, caller="Autotimer")
             except Exception as e:
                 tasks_logger.exception(f"Item {name} exception: {e}")
 
