@@ -1781,10 +1781,10 @@ class Item():
         # Crontab/Cycle
         #############################################################
         if self._crontab is not None or self._cycle_time is not None:
-            cycle_time = self.get_cycle_time()
+            cycle_time = self.get_attr_time('cycle')
             cycle_value = None
             if cycle_time is not None:
-                cycle_value = self.get_cycle_value()
+                cycle_value = self.get_attr_value('cycle')
 
             items = self.__get_items_from_string(self._cycle_time)
             self._sh.scheduler.add(self._itemname_prefix + self._path, self, cron=self._crontab, cycle=cycle_time, value=cycle_value, items=items)
@@ -1803,64 +1803,79 @@ class Item():
         items = {_items_instance.return_item(entry) for entry in result if entry}
         return list({item for item in items if item is not None})
 
-    def get_cycle_time(self) -> int | None:
-        """ return cycle time, possibly recalculated at call time """
-        if isinstance(self._cycle_time, int) or self._cycle_time is None:
-            return self._cycle_time
+    def get_attr_time(self, attr: str) -> int | None:
+        """
+        return attribute time, possibly recalculated at call time
+
+        :param attr: attribute to calculate time for, e.g. "cycle" or "autotimer"
+        :type attr: str
+        """
+# debug
+        if attr not in ('cycle', 'autotimer'):
+            return
+
+        var = getattr(self, f'_{attr}_time')
+        if var is None:
+            logger.warning(f'get_attr_time({attr}) called with invalid attr {attr}')
+            return
+
+        if isinstance(var, int) or var is None:
+            return var
 
         try:
-            res = self._cast_duration(self._cycle_time, test=True)
+            res = self._cast_duration(var, test=True)
 # debug
             logger.debug(f'{self._path}: cast_duration returned {res}')
             if type(res) is int:
 # debug
-                logger.debug(f'{self._path}: get_cycle_time immediately got {res} from cast_duration of {self._cycle_time}')
+                logger.debug(f'{self._path}: get_attr_time({attr}) immediately got {res} from cast_duration of {var}')
                 return res
 
-            res = self.__run_attribute_eval(self._cycle_time, result_type='str')
+            res = self.__run_attribute_eval(var, result_type='str')
 # debug
-            logger.debug(f'{self._path}: get_cycle_time got {res} from eval of {self._cycle_time}')
+            logger.debug(f'{self._path}: get_attr_time got {res} from eval of {var}')
             res = self._cast_duration(res)
 # debug
-            logger.debug(f'{self._path}: get_cycle_time got {res} from cast_duration of {self._cycle_time}')
+            logger.debug(f'{self._path}: get_attr_time({attr}) got {res} from cast_duration of {var}')
             if res is not None and res is not False:
                 return int(res)
         except Exception as e:
-            logger.warning(f'error on evaluation cycle time "{self._cycle_time}" for item {self._path}: {e}')
+            logger.warning(f'error on evaluation {attr} time "{var}" for item {self._path}: {e}')
 
-    def get_cycle_value(self):
-        """ return cycle value, possibly recalculated at call time """
+    def get_cycle_time(self) -> int | None:
+        raise RuntimeError('remove get_cycle_time reference')
+
+    def get_attr_value(self, attr: str):
+        """
+        return attribute value, possibly recalculated at call time
+
+        :param attr: attribute to calculate value for, e.g. cycle or autotimer
+        :type attr: str
+        """
 # debug
-        logger.debug(f'{self._path}: get_cycle_value from {self._cycle_value}')
-        if not isinstance(self._cycle_value, str):
-            return self._cycle_value
+        if attr not in ('cycle', 'autotimer'):
+            return
+
+        var = getattr(self, f'_{attr}_value')
+        if var is None:
+            logger.warning(f'get_attr_time({attr}) called with invalid attr {attr}')
+            return
+
+# debug
+        logger.debug(f'{self._path}: get_attr_value({attr}) from {var}')
+        if not isinstance(var, str):
+            return var
 
         try:
-            res = self.__run_attribute_eval(self._cycle_value, result_type='str')
+            res = self.__run_attribute_eval(var, result_type='str')
 # debug
-            logger.debug(f'{self._path}: get_cycle_value got {res} from eval of {self._cycle_value}')
+            logger.debug(f'{self._path}: get_attr_value({attr}) got {res} from eval of {var}')
             return res
         except Exception as e:
-            logger.warning(f'error on evaluation cycle value "{self._cycle_value}" for item {self._path}: {e}')
+            logger.warning(f'error on evaluation {attr} value "{var}" for item {self._path}: {e}')
 
-    def __cycle_eval(self, expr, caller):
-        sh = self._sh
-        shtime = self.shtime
-        items = _items_instance
-        import math
-        import lib.userfunctions as uf
-        env = lib.env
-
-        try:
-            value = eval(expr)
-        except Exception as e:
-            if e.__class__.__name__ == 'KeyError':
-                log_msg = f"Item '{self._path}': problem evaluating '{expr}' - KeyError (in dict)"
-            else:
-                log_msg = f"Item '{self._path}': problem evaluating '{expr}' - {e.__class__.__name__}: {e}"
-            logger.warning(log_msg)
-        else:
-            return value
+    def get_cycle_value(self):
+        raise RuntimeError('remove get_cycle_value reference')
 
     def _init_run(self):
         """
@@ -2659,17 +2674,20 @@ class Item():
 
         if self._autotimer_time and caller != 'Autotimer' and not self._fading:
             # cast_duration for fixed attribute
-            _time = self._cast_duration(self._autotimer_time, test=True)
-            if _time == False:
-                _time = self._autotimer_time
-            # cast_duration for result of eval expression
-            _time = self._cast_duration(self.__run_attribute_eval(_time, 'str'))
-            if self._autotimer_value is None:
-                _value = self._value
+# debug
+            logger.debug(f'autotimer: {self._autotimer_time} / {self._autotimer_value}')
+            _time = self.get_attr_time('autotimer')
+            if _time is None:
+                logger.warning(f'evaluating autotimer time {self._autotimer_time} returned None, ignoring')
+            elif type(_time) is not int:
+                logger.warning(f"autotimer time {self._autotimer_time} didn't result in int, but in {_time}, type {type(_time)}")
             else:
-                _value = self.__run_attribute_eval(self._autotimer_value, 'str')
-
-            #logger.notice(f"Item {self._path} __update: _time={_time}, _value={_value}")
+                if self._autotimer_value is None:
+                    _value = self._value
+                else:
+                    _value = self.get_attr_value('autotimer')
+# debug
+            logger.notice(f"Item {self._path} __update: _time={_time}, _value={_value}")
 
             next = self.shtime.now() + datetime.timedelta(seconds=_time)
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': _value, 'caller': 'Autotimer'}, next=next)
@@ -2778,8 +2796,11 @@ class Item():
         :param value: Value to set the item to
         :param compat: Not used anymore, only defined for backward compatibility
         """
+# debug
+        logger.debug(f'call to autotimer: {time} / {value}')
+
         if time is not None and value is not None:
-            time = self._cast_duration(time)
+            # don't cast_duration here, this is done later in get_attr_time
             self._autotimer_time = time
             self._autotimer_value = value
         else:

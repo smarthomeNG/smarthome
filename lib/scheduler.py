@@ -581,12 +581,12 @@ class Scheduler(threading.Thread):
         for name in self._cycle_items[item.property.path]:
 
             cycle_item = self._scheduler[name]['obj']
-            cycle = cycle_item.get_cycle_time()
+            cycle = cycle_item.get_attr_time('cycle')
             if cycle is None:
                 logger.warning(f'item {cycle_item} for cycle update return invalid cycle data {cycle}, ignoring.')
                 return
 
-            value = cycle_item.get_cycle_value()
+            value = cycle_item.get_attr_value('cycle')
 
             c = self._scheduler[name]['cycle']
             if isinstance(c, int):
@@ -704,8 +704,8 @@ class Scheduler(threading.Thread):
                 item = job['obj']
                 if item.property.path in self._cycle_items:
 
-                    cycle = item.get_cycle_time()
-                    value = item.get_cycle_value()
+                    cycle = item.get_attr_time('cycle')
+                    value = item.get_attr_value('cycle')
 
                     # update dynamic cycle value
                     self._scheduler[name]['cycle'] = cycle
@@ -781,7 +781,11 @@ class Scheduler(threading.Thread):
                     if scheduler_source != '':
                         scheduler_source = ':' + scheduler_source + ':' + str(source.get('details', ''))
                 if value is None:
+                    # re-set current item value. needs enforce_updates to work properly
                     value = obj()
+                else:
+                    # get current (static or evaluated) value from item itself
+                    value = obj.get_attr_value('cycle')
                 obj(value, caller=("Scheduler" + scheduler_source))
             except Exception as e:
                 tasks_logger.exception(f"Item {name} exception: {e}")
