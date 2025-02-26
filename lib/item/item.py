@@ -22,6 +22,7 @@
 #########################################################################
 
 from __future__ import annotations
+from typing import Any
 
 import logging
 import datetime
@@ -1816,7 +1817,7 @@ class Item():
 
         var = getattr(self, f'_{attr}_time')
         if var is None:
-            logger.warning(f'get_attr_time({attr}) called with invalid attr {attr}')
+            logger.debug(f'get_attr_time({attr}): item {self._path} has no member _{attr}_time. This is weird...')
             return
 
         if isinstance(var, int) or var is None:
@@ -1831,19 +1832,23 @@ class Item():
                 logger.debug(f'{self._path}: get_attr_time({attr}) immediately got {res} from cast_duration of {var}')
                 return res
 
-            res = self.__run_attribute_eval(var, result_type='str')
+            res = self.__run_attribute_eval(var, result_type='str', result_error=None)
 # debug
             logger.debug(f'{self._path}: get_attr_time got {res} from eval of {var}')
+            if res is None:
+                return
+
             res = self._cast_duration(res)
 # debug
             logger.debug(f'{self._path}: get_attr_time({attr}) got {res} from cast_duration of {var}')
+            if attr == 'cycle' and res == 0:
+                logger.warning(f'{self._path}: cycle time returned 0 from {self._cycle_time}, ignoring')
+                return
+
             if res is not None and res is not False:
                 return int(res)
         except Exception as e:
             logger.warning(f'error on evaluation {attr} time "{var}" for item {self._path}: {e}')
-
-    def get_cycle_time(self) -> int | None:
-        raise RuntimeError('remove get_cycle_time reference')
 
     def get_attr_value(self, attr: str):
         """
@@ -1858,7 +1863,6 @@ class Item():
 
         var = getattr(self, f'_{attr}_value')
         if var is None:
-            logger.warning(f'get_attr_time({attr}) called with invalid attr {attr}')
             return
 
 # debug
@@ -1867,15 +1871,12 @@ class Item():
             return var
 
         try:
-            res = self.__run_attribute_eval(var, result_type='str')
+            res = self.__run_attribute_eval(var, result_type='str', result_error=None)
 # debug
             logger.debug(f'{self._path}: get_attr_value({attr}) got {res} from eval of {var}')
             return res
         except Exception as e:
             logger.warning(f'error on evaluation {attr} value "{var}" for item {self._path}: {e}')
-
-    def get_cycle_value(self):
-        raise RuntimeError('remove get_cycle_value reference')
 
     def _init_run(self):
         """
@@ -1892,7 +1893,7 @@ class Item():
         return False
 
 
-    def __run_attribute_eval(self, eval_expression, result_type='num'):
+    def __run_attribute_eval(self, eval_expression, result_type='num', result_error: Any = ''):
         """
         Evaluates an expression string for item attributes like
          - autotimer
@@ -1918,7 +1919,7 @@ class Item():
             result = eval(eval_expression)
         except Exception as e:
             logger.error(f"Item '{self._path}': __run_attribute_eval({eval_expression}): Problem evaluating '{eval_expression}' - Exception {e}")
-            result = ''
+            result = result_error
         if result_type == 'num':
             if not isinstance(result, (int, float)):
                 logger.error(f"Item '{self._path}': __run_attribute_eval({eval_expression}): Attribute expression '{eval_expression}' evaluated to a non-numeric value '{result}', using 0 instead")
