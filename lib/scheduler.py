@@ -560,7 +560,7 @@ class Scheduler(threading.Thread):
                 self._scheduler[name] = {'prio': prio, 'obj': obj, 'source': source, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
                 if next is None:
                     self._next_time(name, offset)
-            except Exception as e:
+            except Exception:
                 raise
                 # logger.error(f"Exception: {e} while trying to add a new entry to scheduler")
             finally:
@@ -781,12 +781,19 @@ class Scheduler(threading.Thread):
                 if isinstance(value, dict) and value.get('caller') == 'Autotimer':
                     src = 'autotimer'
                     value = obj.get_attr_value(src)
+                elif isinstance(source, dict) and source.get('source', '') == 'cron':
+                    src = 'cron'
+
                 if value is None:
                     # re-set current item value. needs enforce_updates to work properly
                     value = obj()
+# debug
+                    logger.error(f'{obj._path}: value was None, got {obj()}')
                 else:
                     # get current (static or evaluated) value from item itself
-                    value = obj.get_attr_value(src)
+                    value = obj.get_attr_value(src, value)
+# debug
+                    logger.error(f'{obj._path}: value got {value}')
 
                 # logger.debug(f'item {obj}: src = {src}, value = {value}')
                 if src == 'cycle':

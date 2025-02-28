@@ -1833,17 +1833,22 @@ class Item():
         except Exception as e:
             logger.warning(f'error on evaluation {attr} time "{var}" for item {self._path}: {e}')
 
-    def get_attr_value(self, attr: str):
+    def get_attr_value(self, attr: str, value=None):
         """
         return attribute value, possibly recalculated at call time
 
         :param attr: attribute to calculate value for, e.g. cycle or autotimer
         :type attr: str
         """
-        if attr not in ('cycle', 'autotimer'):
+        if attr not in ('cycle', 'autotimer', 'cron'):
             return
 
-        var = getattr(self, f'_{attr}_value')
+        # only for cron, the value is stored in the scheduler instead of in the item
+        # so we just use the given value to proceed (eval)
+        if value is not None:
+            var = value
+        else:
+            var = getattr(self, f'_{attr}_value')
         if var is None:
             return
 

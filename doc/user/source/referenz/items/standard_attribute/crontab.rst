@@ -100,12 +100,19 @@ Im Admin Interface können die einzelnen Parametersätze durch ``|`` getrennt we
 Durch Anhängen eines ``= value`` wird der entsprechende Wert ``value`` mitgesendet. 
 Das Beispiel setzt den Wert des Items täglich um Mitternacht auf ``20``:
 
+**Ab SmartHomeNG v1.11** werden die Konfigurationsmöglichkeiten erweitert:
+
+Für den **Wert** kann nun ein **eval** Ausdruck angegeben werden, der zur Laufzeit entsprechend neu evaluiert wird.
+Dabei können auch Item Properties genutzt werden.
 
 .. code-block:: yaml
 
    crontab:
      - '0 0 * * = 20'
      - sunrise
+
+   crontab: '0 0 * * = sh.pfad.zum.item1() * 4 + sh.pfad.zum.item2.property.last_value'
+
 
 Möchte man einen Wert im Minutentakt aktualisieren, ist es notwendig den Ausdruck ``* * * *`` unter Anführungszeichen zu setzen.
 
