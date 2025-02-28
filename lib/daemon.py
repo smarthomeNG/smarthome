@@ -118,6 +118,10 @@ def write_pidfile(pid, pidfile):
     if os.name == 'nt':
         return
 
+    # make dirs if not already present, e.g. in smarthome -d
+    if not os.path.isdir(os.path.dirname(pidfile)):
+        os.makedirs(os.path.dirname(pidfile))
+
     with open(pidfile, 'w+') as fh:
         fh.write("%s" % pid)
 
