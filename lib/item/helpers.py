@@ -138,16 +138,16 @@ def split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT):
     components are:
     - time
     - value
-    - compat
+    - possibly compat (obsolete, kept for backward compatibility)
 
-    :param value: raw attribute string containing duration, value (and compatibility)
+    :param value: raw attribute string containing duration, value
     :return: three strings, representing time, value and compatibility attribute
     """
     compat = ''
 
     if value.find(ATTRIBUTE_SEPARATOR) >= 0:
         time, __, attrvalue = value.partition(ATTRIBUTE_SEPARATOR)
-        attrvalue, __, compat = attrvalue.rpartition(ATTRIBUTE_SEPARATOR)
+        attrvalue, __, compat = attrvalue.partition(ATTRIBUTE_SEPARATOR)
     elif value.find('=') >= 0 and value[value.find('='):value.find('=') + 2] != '==':
         time, __, attrvalue = value.partition('=')
         if attrvalue.find('=') >= 0 and (attrvalue.rfind('=') != attrvalue.rfind('==')) and (attrvalue.endswith('compat') or attrvalue.endswith('compat_1.2') or attrvalue.endswith('latest')):
@@ -188,11 +188,11 @@ def join_duration_value_string(time, value, compat=''):
     """
     result = str(time)
     if value != '' or compat != '':
-        result = result + ' ='
+        result = result + ' ' + ATTRIBUTE_SEPARATOR
         if value != '':
             result = result + ' ' + value
         if compat != '':
-            result = result + ' = ' + compat
+            result = result + ' ' + ATTRIBUTE_SEPARATOR + ' ' + compat
     return result
 
 
@@ -210,7 +210,6 @@ def json_serialize(obj):
     if isinstance(obj, datetime.date):
         return obj.isoformat()
     raise TypeError("Type not serializable")
-
 
 def json_obj_hook(json_dict):
     """
@@ -239,7 +238,6 @@ def cache_read(filename, tz, cformat=CACHE_FORMAT):
             value = json.load(f, object_hook=json_obj_hook)
 
     return (dt, value)
-
 
 def cache_write(filename, value, cformat=CACHE_FORMAT):
     try:
