@@ -150,7 +150,7 @@ def split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT):
         attrvalue, __, compat = attrvalue.rpartition(ATTRIBUTE_SEPARATOR)
     elif value.find('=') >= 0 and value[value.find('='):value.find('=') + 2] != '==':
         time, __, attrvalue = value.partition('=')
-        if attrvalue.find('=') >= 0 and (attrvalue.rfind('=') != attrvalue.rfind('==')) and (attrvalue.endswith('compat') or attrvalue.endswith('latest')):
+        if attrvalue.find('=') >= 0 and (attrvalue.rfind('=') != attrvalue.rfind('==')) and (attrvalue.endswith('compat') or attrvalue.endswith('compat_1.2') or attrvalue.endswith('latest')):
             attrvalue, __, compat = attrvalue.rpartition('=')
     else:
         time = value
@@ -158,8 +158,8 @@ def split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT):
 
         # try to fix time if compat is (still) given:
         time = time.strip()
-        if time.endswith('compat') or time.endswith('latest'):
-            time = time.removesuffix('compat').removesuffix('latest').strip()[:-1]
+        if time.endswith('compat') or time.endswith('compat_1.2') or time.endswith('latest'):
+            time = time.removesuffix('compat').removesuffix('compat_1.2').removesuffix('latest').strip()[:-1]
 
     time = time.strip()
     if attrvalue is not None:
