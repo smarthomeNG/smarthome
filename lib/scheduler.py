@@ -184,7 +184,7 @@ class Scheduler(threading.Thread):
         :return: scheduler instance
         :rtype: object or None
         """
-        if _scheduler_instanceis None:
+        if _scheduler_instance is None:
             return None
         else:
             return _scheduler_instance
@@ -780,6 +780,7 @@ class Scheduler(threading.Thread):
                 src = 'cycle'
                 if isinstance(value, dict) and value.get('caller') == 'Autotimer':
                     src = 'autotimer'
+                    value = obj.get_attr_value(src)
                 if value is None:
                     # re-set current item value. needs enforce_updates to work properly
                     value = obj()
