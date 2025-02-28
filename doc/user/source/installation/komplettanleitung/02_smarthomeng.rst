@@ -370,9 +370,6 @@ Die Koordinaten für einen Standort kann man z.B. auf http://www.mapcoordinates.
    #   - mysql:pymysql
    # module_paths = /usr/local/python/lib    # list of path-entries is possible
 
-   # Version 1.3: control type casting when assiging values to items
-   # assign_compatibility = latest            # latest or compat_1.2 (compat_1.2 is default for shNG v1.3)
-
 Es bietet sich an, die default-Datei nach smarthome.yaml zu kopieren und die Daten oben auf den eigenen Standort
 anzupassen. Alternativ kann diese Anpassung später über das Admin Interface durchgeführt werden.
 

@@ -63,7 +63,6 @@ from .helpers import *
 _items_instance = None
 
 
-#ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_V12
 ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_LATEST
 ATTRIB_COMPAT_DEFAULT = ''
 
@@ -1855,7 +1854,7 @@ class Item():
             if self._hysteresis_upper_timer is None:
                 self.__update(True, caller, source, dest)
             else:
-                if not self._hysteresis_upper_timer_active and (self._value == False): ###ms value = self._value
+                if not self._hysteresis_upper_timer_active and (self._value is False): ###ms value = self._value
                     timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
                     if timer < 0:
                         logger.warning(f"Item '{self._path}': Hysteresis upper-timer evaluated to an value less than zero ({timer}), using 0 instead")
@@ -1872,7 +1871,7 @@ class Item():
             if self._hysteresis_lower_timer is None:
                 self.__update(False, caller, source, dest)
             else:
-                if not self._hysteresis_lower_timer_active and (self._value == True):
+                if not self._hysteresis_lower_timer_active and (self._value is True):
                     timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
                     if timer < 0:
                         logger.warning(f"Item '{self._path}': Hysteresis lower-timer evaluated to an value less than zero ({timer}), using 0 instead")
@@ -2040,7 +2039,7 @@ class Item():
             else:
                 cond = True
 
-            if cond == True:
+            if cond is True:
                 # set up environment for calculating eval-expression
                 sh = self._sh
                 shtime = self.shtime
@@ -2583,7 +2582,7 @@ class Item():
         if self._autotimer_time and caller != 'Autotimer' and not self._fading:
             # cast_duration for fixed attribute
             _time = self._cast_duration(self._autotimer_time, test=True)
-            if _time == False:
+            if _time is False:
                 _time = self._autotimer_time
             # cast_duration for result of eval expression
             _time = self._cast_duration(self.__run_attribute_eval(_time, 'str'))
