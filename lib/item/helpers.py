@@ -171,6 +171,7 @@ def split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT):
     # remove quotes, if present
     if value != '' and ((value[0] == "'" and value[-1] == "'") or (value[0] == '"' and value[-1] == '"')):
         value = value[1:-1]
+
     return (time, attrvalue, compat)
 
 
