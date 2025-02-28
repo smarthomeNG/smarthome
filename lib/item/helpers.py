@@ -24,7 +24,6 @@
 import logging
 import os
 import datetime
-import dateutil.parser
 import json
 
 from ast import literal_eval
@@ -37,6 +36,7 @@ logger = logging.getLogger(__name__)
 #####################################################################
 # Cast Methods
 #####################################################################
+
 
 def cast_str(value):
     if isinstance(value, (int, float)):
@@ -51,7 +51,7 @@ def cast_list(value):
     if isinstance(value, str):
         try:
             value = literal_eval(value)
-        except:
+        except Exception:
             pass
     if isinstance(value, list):
         return value
@@ -63,7 +63,7 @@ def cast_dict(value):
     if isinstance(value, str):
         try:
             value = literal_eval(value)
-        except:
+        except Exception:
             pass
     if isinstance(value, dict):
         return value
@@ -118,11 +118,11 @@ def cast_num(value):
         return value
     try:
         return int(value)
-    except:
+    except Exception:
         pass
     try:
         return float(value)
-    except:
+    except Exception:
         pass
     raise ValueError
 
@@ -192,7 +192,7 @@ def join_duration_value_string(time, value, compat=''):
         if value != '':
             result = result + ' ' + value
         if compat != '':
-           result = result + ' = ' + compat
+            result = result + ' = ' + compat
     return result
 
 
@@ -211,6 +211,7 @@ def json_serialize(obj):
         return obj.isoformat()
     raise TypeError("Type not serializable")
 
+
 def json_obj_hook(json_dict):
     """
     helper method for json deserialization
@@ -219,7 +220,7 @@ def json_obj_hook(json_dict):
     for (key, value) in json_dict.items():
         try:
             json_dict[key] = dateutil.parser.parse(value)
-        except Exception as e :
+        except Exception:
             pass
     return json_dict
 
@@ -239,15 +240,16 @@ def cache_read(filename, tz, cformat=CACHE_FORMAT):
 
     return (dt, value)
 
+
 def cache_write(filename, value, cformat=CACHE_FORMAT):
     try:
         if cformat == CACHE_PICKLE:
             with open(filename, 'wb') as f:
-                pickle.dump(value,f)
+                pickle.dump(value, f)
 
         elif cformat == CACHE_JSON:
             with open(filename, 'w', encoding='UTF-8') as f:
-                json.dump(value,f, default=json_serialize)
+                json.dump(value, f, default=json_serialize)
     except IOError:
         logger.warning("Could not write to {}".format(filename))
 

@@ -519,6 +519,8 @@ def add_struct_to_item_template(path, struct_name, template, struct_dict, instan
         #logger.debug("- add_struct_to_item_template: struct_dict = {}".format(dict(struct_dict)))
         #logger.debug("- add_struct_to_item_template: struct '{}' to item '{}'".format(struct_name, path))
         tmp_struct = copy.deepcopy(struct)
+        if '__struct_is_optional' in tmp_struct:
+            del tmp_struct['__struct_is_optional']
         if 'name' in tmp_struct and isinstance(struct["name"], str):
             from lib.smarthome import SmartHome
             _sh = SmartHome.get_instance()

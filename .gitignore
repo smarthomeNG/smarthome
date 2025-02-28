@@ -80,17 +80,17 @@ etc/*
 !etc/smarthome.yaml.default
 
 # ./items -- ignore everything
-items/
+/items/
 
 # ./logics -- ignore everything
-logics/
+/logics/
 
 # ./functions -- ignore everything
-functions/
+/functions/
 
 # ./structs -- ignore everything
-structs/
+/structs/
 
 # ./scenes -- ignore everything
-scenes/
+/scenes/
 
