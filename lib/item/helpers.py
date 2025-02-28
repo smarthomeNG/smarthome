@@ -39,12 +39,12 @@ logger = logging.getLogger(__name__)
 
 
 def cast_str(value):
+    if isinstance(value, (int, float)):
+        value = str(value)
     if isinstance(value, str):
         return value
-
-    # just "stringify" it.
-    # TODO: look for side effects
-    return str(value)
+    else:
+        raise ValueError
 
 
 def cast_list(value):
