@@ -1830,7 +1830,11 @@ class Item():
             if type(res) is int:
 # debug
                 logger.debug(f'{self._path}: get_attr_time({attr}) immediately got {res} from cast_duration of {var}')
-                return res
+                if attr == 'cycle' and res == 0:
+                    logger.warning(f'{self._path}: cycle time returned 0 from {self._cycle_time}, ignoring')
+                    return
+                else:
+                    return res
 
             res = self.__run_attribute_eval(var, result_type='str', result_error=None)
 # debug

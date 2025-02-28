@@ -687,7 +687,7 @@ class Scheduler(threading.Thread):
 
         # don't warn for logics as these get schedulers even without crontab or cycle
         if job['obj'].__class__.__name__ != 'Logic' and job['cron'] is None and job['cycle'] is None:
-            logger.warning('neither cron or cycle, setting next to None')
+            logger.warning(f'for {job["obj"]}, neither cron or cycle is given, not setting next trigger time')
             self._scheduler[name]['next'] = None
             return
         next_time = None
