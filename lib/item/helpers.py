@@ -143,16 +143,23 @@ def split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT):
     :param value: raw attribute string containing duration, value (and compatibility)
     :return: three strings, representing time, value and compatibility attribute
     """
+    compat = ''
+
     if value.find(ATTRIBUTE_SEPARATOR) >= 0:
         time, __, attrvalue = value.partition(ATTRIBUTE_SEPARATOR)
-        attrvalue, __, compat = attrvalue.partition(ATTRIBUTE_SEPARATOR)
-    elif value.find('=') >= 0:
+        attrvalue, __, compat = attrvalue.rpartition(ATTRIBUTE_SEPARATOR)
+    elif value.find('=') >= 0 and value[value.find('='):value.find('=') + 2] != '==':
         time, __, attrvalue = value.partition('=')
-        attrvalue, __, compat = attrvalue.partition('=')
+        if attrvalue.find('=') >= 0 and (attrvalue.rfind('=') != attrvalue.rfind('==')) and (attrvalue.endswith('compat') or attrvalue.endswith('latest')):
+            attrvalue, __, compat = attrvalue.rpartition('=')
     else:
         time = value
         attrvalue = None
-        compat = ''
+
+        # try to fix time if compat is (still) given:
+        time = time.strip()
+        if time.endswith('compat') or time.endswith('latest'):
+            time = time.removesuffix('compat').removesuffix('latest').strip()[:-1]
 
     time = time.strip()
     if attrvalue is not None:
