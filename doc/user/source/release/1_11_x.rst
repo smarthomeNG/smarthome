@@ -104,7 +104,9 @@ Updates in the CORE
 
 * Libs:
 
-  * requirements.txt: Some libs received overhauling and bugs were fixed
+  * requirements.txt:
+
+    * Some libs received overhauling and bugs were fixed
 
   * lib.backup:
 
