@@ -475,6 +475,8 @@ class Scheduler(threading.Thread):
                             _value = None
                         else:
                             _value = _value.strip()
+                            if obj.__class__.__name__ == 'Item':
+                                _value = obj.get_stringwithabsolutepathes(_value, 'sh.', '(')
                         if desc.lower().startswith('init'):
                             details = desc
                             offset = 5  # default init offset
@@ -787,13 +789,9 @@ class Scheduler(threading.Thread):
                 if value is None:
                     # re-set current item value. needs enforce_updates to work properly
                     value = obj()
-# debug
-                    logger.error(f'{obj._path}: value was None, got {obj()}')
                 else:
                     # get current (static or evaluated) value from item itself
                     value = obj.get_attr_value(src, value)
-# debug
-                    logger.error(f'{obj._path}: value got {value}')
 
                 # logger.debug(f'item {obj}: src = {src}, value = {value}')
                 if src == 'cycle':

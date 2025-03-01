@@ -1800,7 +1800,7 @@ class Item():
 
         var = getattr(self, f'_{attr}_time')
         if var is None:
-            logger.debug(f'get_attr_time({attr}): item {self._path} has no member _{attr}_time. This is weird...')
+            logger.debug(f'get_attr_time({attr}): item {self._path} has no member _{attr}_time.')
             return
 
         if isinstance(var, int) or var is None:
