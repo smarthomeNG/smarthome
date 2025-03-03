@@ -794,7 +794,7 @@ class Scheduler(threading.Thread):
                     value = obj.get_attr_value(src, value)
 
                 # logger.debug(f'item {obj}: src = {src}, value = {value}')
-                if src == 'cycle':
+                if src != 'autotimer':
                     src = f'Scheduler{scheduler_source}'
                 obj(value, caller=src.capitalize())
             except Exception as e:
