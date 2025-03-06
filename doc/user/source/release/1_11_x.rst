@@ -19,8 +19,8 @@ sowie einige neue Plugins.
 
          - Berücksichtigt sind Commits im smarthome Repository bis inkl. 01. März 2025
            (core: enable crontab to use eval expressions)
-         - Berücksichtigt sind Commits im plugins Repository bis inkl. 12. Februar 2025
-           (Merge pull request #999 from onkelandy/lms)
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. 06. März 2025
+           (Merge pull request from onkelandy/database)
 
 
 Überblick
@@ -408,8 +408,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Added time_precision in plugin.yaml
   * Added _time_precision_query
   * Applied _time_precision_query
-  * Bumped version to 1.16.14
   * Added min and max values for plugin time precision plugin attribute
+  * check if database item config is set to no or false -> don't write to database
+  * Bumped version to 1.16.15
 
 * db_addon:
 
