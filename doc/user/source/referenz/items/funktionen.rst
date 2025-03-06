@@ -15,13 +15,10 @@ genutzt werden können.
 +--------------------------------+--------------------------------------------------------------------------------+
 | **Funktion**                   | **Beschreibung**                                                               |
 +================================+================================================================================+
-| autotimer(time, value, compat) | Setzt einen Timer bei jedem Werte-Wechsel der Items. Angegeben wird die Zeit   |
+| autotimer(time, value)         | Setzt einen Timer bei jedem Werte-Wechsel der Items. Angegeben wird die Zeit   |
 |                                | (**time**) die vergehen soll, bis das Item auf den Wert (**value**) gesetzt    |
 |                                | wird. Die Zeitangabe erfolgt in Sekunden. Eine Angabe der Dauer in Minuten     |
-|                                | ist wie in '10m' möglich. Die Bedeutung und Wirkungsweise von **compat** bitte |
-|                                | auf der Seite                                                                  |
-|                                | :doc:`autotimer <./standard_attribute/autotimer>`                              |
-|                                | nachlesen.                                                                     |
+|                                | ist wie in '10m' möglich.                                                      |
 +--------------------------------+--------------------------------------------------------------------------------+
 | fade(end, step, delta, caller, | Blendet das Item mit der definierten Schrittweite (int oder float) und         |
 |   stop_fade, continue_fade,    | timedelta (int oder float in Sekunden) auf einen angegebenen Wert auf oder     |
@@ -40,10 +37,8 @@ genutzt werden können.
 | return_parent()                | Liefert den Item-Pfad des übergeordneten Items zurück.                         |
 |                                | Aufruf: sh.item.return_parent()                                                |
 +--------------------------------+--------------------------------------------------------------------------------+
-| timer(time, value, compat)     | Funktioniert wir **autotimer()**, ausser dass die Aktion nur einmal ausgeführt |
-|                                | wird. Die Bedeutung und Wirkungsweise von **compat** bitte auf der Seite       |
-|                                | :doc:`autotimer <./standard_attribute/autotimer>`                              |
-|                                | nachlesen.                                                                     |
+| timer(time, value)             | Funktioniert wir **autotimer()**, ausser dass die Aktion nur einmal ausgeführt |
+|                                | wird.                                                                          |
 +--------------------------------+--------------------------------------------------------------------------------+
 
 

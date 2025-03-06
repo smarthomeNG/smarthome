@@ -17,8 +17,8 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 05. Februar 2025
-           (Merge pull request #714 from Morg42/develop)
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 01. März 2025
+           (core: enable crontab to use eval expressions)
          - Berücksichtigt sind Commits im plugins Repository bis inkl. 12. Februar 2025
            (Merge pull request #999 from onkelandy/lms)
 
@@ -26,8 +26,7 @@ sowie einige neue Plugins.
 Überblick
 =========
 
-Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.10.0 sind im
-folgenden in diesen Release Notes beschrieben.
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.10.0 sind im Folgenden in diesen Release Notes beschrieben.
 
 
 Minimum Python Version
@@ -105,7 +104,9 @@ Updates in the CORE
 
 * Libs:
 
-  * requirements.txt: Some libs received overhauling and bugs were fixed
+  * requirements.txt:
+
+    * Some libs received overhauling and bugs were fixed
 
   * lib.backup:
 
@@ -119,6 +120,10 @@ Updates in the CORE
     * Add struct syntax checking
     * Small fix
 
+  * lib.daemon:
+
+    * make pidfile dir if not present
+
   * lib.db:
 
     * Handle numeric passwords and OrderedDict lists
@@ -131,6 +136,7 @@ Updates in the CORE
 
   * lib.item:
 
+    * extend cycle and autotimer attributes to accept eval expressions
     * Replace item.path() with item.property.path
     * Added warning for collision of name and class method
     * Speedup name collision check
@@ -224,11 +230,20 @@ Updates in the CORE
 
     * Add serial connection reset error handling
 
+  * lib.orb:
+
+    * neverup calculation delta can be configured
+
   * lib.plugin:
 
     * Add reload_plugin method
     * Insert plugin references into sh.plugins also
     * Refactor load_plugin
+
+  * lib.scheduler:
+
+    * enable crontab to use eval expressions
+    * implement update_item method to react to changed item cycle times
 
   * lib.shpypi:
 
@@ -253,6 +268,10 @@ Updates in the CORE
   * lib.struct:
 
     * Add struct syntax checking
+
+  * lib.triggertimes:
+
+    * update logger string
 
   * lib.utils:
 
