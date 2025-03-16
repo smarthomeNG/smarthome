@@ -2,7 +2,9 @@
 #ephem>=3.7,<=4.1.0
 #ephem>=4.1.3
 #update to prevent a found memory leak and get support for Python 3.12
-ephem>=4.1.5
+#ephem>=4.1.5
+#fix an endless loop in sun calculations
+ephem>=4.2,<5.0.0
 
 # lib.shtime:
 #python-dateutil>=2.5.3 # this is from 2016 
