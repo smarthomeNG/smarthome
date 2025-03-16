@@ -24,28 +24,32 @@
 import logging
 import datetime
 import math
+import dateutil.relativedelta
+
+from dateutil.tz import tzutc
+
+from lib.shtime import Shtime
 
 logger = logging.getLogger(__name__)
 
 try:
     import ephem
-except ImportError as e:
+except ImportError:
     ephem = None  # noqa
 
-import dateutil.relativedelta
-from dateutil.tz import tzutc
 
 """
 This library contains a class Orb for calculating sun or moon related events.
 Currently it uses ephem for calculation of the sky bound events.
 """
 
+
 class Orb():
     """
     Save an observers location and the name of a celestial body for future use
-    
+
     The Methods internally use PyEphem for computation
-    
+
     An `Observer` instance allows  to compute the positions of
     celestial bodies as seen from a particular position on the Earth's surface.
     Following attributes can be set after creation (used defaults are given):
@@ -63,7 +67,7 @@ class Orb():
     def __init__(self, orb, lon, lat, elev=False, neverup_delta=0.00001):
         """
         Save location and celestial body
-        
+
         :param orb: either 'sun' or 'moon'
         :param lon: longitude of observer in degrees
         :param lat: latitude of observer in degrees
@@ -72,7 +76,9 @@ class Orb():
         if ephem is None:
             logger.warning("Could not find/use ephem!")
             return
-        
+
+        self.shtime = Shtime.get_instance()
+
         self.orb = orb
         self.lat = lat
         self.lon = lon
@@ -92,8 +98,8 @@ class Orb():
 
         See also this thread at `Stackoverflow <https://stackoverflow.com/questions/26428904/pyephem-advances-observer-date-on-neveruperror>`_
         dated back to 2015 where the creator of pyephem writes:
-        
-        > Second answer: As long as each thread has its own Moon and Observer objects, 
+
+        > Second answer: As long as each thread has its own Moon and Observer objects,
           it should be able to do its own computations without ruining those of any other threads.
 
         :return: tuple of observer and celestial body
@@ -112,8 +118,8 @@ class Orb():
             orb = ephem.Moon()
             self.phase = self._phase
             self.light = self._light
-            
-        return observer,orb
+
+        return observer, orb
 
     def _avoid_neverup(self, dt, date_utc, doff):
         """
@@ -135,7 +141,7 @@ class Orb():
         # Get times for noon and midnight
         midnight = self.midnight(0, 0, dt=dt)
         noon = self.noon(0, 0, dt=dt)
-        
+
         # If the altitudes are calculated from previous or next day, set the correct day for the observer query
         noon = noon if noon >= date_utc else \
             self.noon(0, 0, dt=date_utc + dateutil.relativedelta.relativedelta(days=1))
@@ -157,7 +163,7 @@ class Orb():
             observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
-            observer.date = datetime.datetime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
+            observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         if not doff == 0:
             doff = self._avoid_neverup(dt, date_utc, doff)
@@ -174,7 +180,7 @@ class Orb():
             observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
-            observer.date = datetime.datetime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
+            observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         if not doff == 0:
             doff = self._avoid_neverup(dt, date_utc, doff)
@@ -200,7 +206,7 @@ class Orb():
             observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
-            observer.date = datetime.datetime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
+            observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         if not doff == 0:
             doff = self._avoid_neverup(dt, date_utc, doff)
@@ -229,7 +235,7 @@ class Orb():
             observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
-            observer.date = datetime.datetime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
+            observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         # avoid NeverUp error
         if not doff == 0:
@@ -254,7 +260,7 @@ class Orb():
         """
         observer, orb = self.get_observer_and_orb()
         if dt is None:
-            date = datetime.datetime.utcnow()
+            date = self.shtime.utcnow()
         else:
             date = dt.replace(tzinfo=tzutc())
         if offset:
@@ -273,7 +279,7 @@ class Orb():
         :param offset: an offset given in minutes
         """
         observer, orb = self.get_observer_and_orb()
-        date = datetime.datetime.utcnow()
+        date = self.shtime.utcnow()
         if offset:
             date += dateutil.relativedelta.relativedelta(minutes=offset)
         observer.date = date
@@ -288,7 +294,7 @@ class Orb():
         :param offset: an offset given in minutes
         """
         observer, orb = self.get_observer_and_orb()
-        date = datetime.datetime.utcnow()
+        date = self.shtime.utcnow()
         cycle = 29.530588861
         if offset:
             date += dateutil.relativedelta.relativedelta(minutes=offset)
