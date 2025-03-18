@@ -17,10 +17,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 01. März 2025
-           (core: enable crontab to use eval expressions)
-         - Berücksichtigt sind Commits im plugins Repository bis inkl. 12. Februar 2025
-           (Merge pull request #999 from onkelandy/lms)
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 18. März 2025
+           (updated release notes)
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. 18. März 2025
+           (Merge pull request #1005 from Morg42/develop)
 
 
 Überblick
@@ -127,6 +127,7 @@ Updates in the CORE
   * lib.db:
 
     * Handle numeric passwords and OrderedDict lists
+    * replace deprecated datetime.utcnow with lib.shtime variant
 
   * lib.env:
 
@@ -233,6 +234,7 @@ Updates in the CORE
   * lib.orb:
 
     * neverup calculation delta can be configured
+    * replace deprecated datetime.utcnow with lib.shtime variant
 
   * lib.plugin:
 
@@ -252,6 +254,10 @@ Updates in the CORE
     * Added the output of 'pip list' to the configuration backup file
     * Removed logging from create_pip_list method
     * Fixed bug in installing requirements, when a wrong pip-command was used
+
+  * lib.shtime:
+
+    * add utcfromtimestamp as replacement for deprecated datetime.utcfromtimestamp
 
   * lib.smarthome:
 
@@ -408,8 +414,9 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Added time_precision in plugin.yaml
   * Added _time_precision_query
   * Applied _time_precision_query
-  * Bumped version to 1.16.14
   * Added min and max values for plugin time precision plugin attribute
+  * Check if database item config is set to no or false -> don't write to database
+  * Bumped version to 1.16.15
 
 * db_addon:
 
@@ -592,6 +599,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix struct items
   * Bump version to 1.8.8
   * Move beaufort calculation from struct to plugin
+  * Replace deprecated datetime.utcnow with lib.shtime variant
 
 * oppo:
 
@@ -649,6 +657,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * simulation:
 
   * sv_widget option to avoid block with headline
+
+* sma:
+
+  * Replace deprecated datetime.utcnow with lib.shtime variant
 
 * sma_mb:
 
@@ -790,6 +802,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Changed methode to derive callback IPv4 address
   * Updated Doku
+  * Replace deprecated datetime.utcnow with lib.shtime variant
 
 * yamahayxc:
 
@@ -859,27 +872,10 @@ wechseln.
 
   * wunderground - the free API is not provided anymore by Wunderground - switch to the **piratewthr** or **openweathermap** plugin
 
-
-Retired Plugins
----------------
-
-Die folgenden Plugins wurden *retired* (in den RUhestand geschickt). Sie waren in einem der vorangegangenen
-Releases von SmartHomeNG als *deprecated* markiert worden. Diese Plugins wurden aus dem **plugins** Repository
-entfernt, stehen jedoch als Referenz weiterhin zur Verfügung. Diese Plugins wurden in das **plugin_archive**
-Repositiory aufgenommen.
-
-* ...
-
 |
 
 Weitere Änderungen
 ==================
-
-Tools
------
-
-* ...
-
 
 Dokumentation
 -------------
