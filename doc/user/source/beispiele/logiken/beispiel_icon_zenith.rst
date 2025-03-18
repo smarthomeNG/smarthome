@@ -20,8 +20,9 @@ Berechnungen für icon.zenith:
 
    #!/usr/bin/env python3
    # zenith.py
+   import shtime
 
-   now = datetime.datetime.utcnow().hour * 60 + datetime.datetime.utcnow().minute
+   now = shtime.utcnow().hour * 60 + shtime.utcnow().minute
    sunrise = sh.sun.rise().hour * 60 + sh.sun.rise().minute
    sunset = sh.sun.set().hour * 60 + sh.sun.set().minute
 

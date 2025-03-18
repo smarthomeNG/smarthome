@@ -27,7 +27,10 @@ import time
 import threading
 import collections
 import re
+
 from typing import OrderedDict
+
+from lib.shtime import Shtime
 
 
 class Database():
@@ -146,6 +149,7 @@ class Database():
         of formatting (see DB-API spec) which defaults to 'pyformat'.
         """
         self.logger = logging.getLogger(__name__)
+        self.shtime = Shtime.get_instance()
 
         self._name = name
         self._dbapi = dbapi
@@ -270,7 +274,7 @@ class Database():
                 self.logger.info("Database [{}]: Upgrading to version {}".format(self._name, v))
                 self.execute(queries[v][0], cur=cur)
 
-                dt = datetime.datetime.utcnow()
+                dt = self.shtime.utcnow()  # type: ignore (shtime is set dynamically)
                 ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
                 self.execute("INSERT INTO " + version_table + "(version, updated, rollout, rollback) VALUES(?, ?, ?, ?);", (v, ts, queries[v][0], queries[v][1]), formatting='qmark', cur=cur)
 
