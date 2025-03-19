@@ -273,7 +273,7 @@ class Shtime:
         """
         if self._utctz is None:
             self._utctz = tz.gettz('UTC')
-        return datetime.fromtimestamp(ts, self._utctz)
+        return datetime.datetime.fromtimestamp(ts, self._utctz)
 
 
     def utcinfo(self):
