@@ -151,6 +151,10 @@ class Database():
         self.logger = logging.getLogger(__name__)
         self.shtime = Shtime.get_instance()
 
+        # this should not happen in normal operations, but is needed for testing
+        if self.shtime is None:
+            self.shtime = Shtime(None)
+
         self._name = name
         self._dbapi = dbapi
         self._dbapi_name = dbapi

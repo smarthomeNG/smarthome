@@ -2,8 +2,8 @@
 .. index:: Standard-Attribute; autotimer
 .. index:: autotimer
 
-*autotimer*
-===========
+*autotimer* :redsup:`neu`
+=========================
 
 Das Attribut setzt den Wert des Items nach einer Zeitspanne auf einen bestimmten Wert. Der Timer beginnt zu laufen,
 wenn dem Item ein Wert zugewiesen wird. Wenn während der Autotimer läuft dem Item erneut ein Wert zugewiesen wird,
@@ -43,7 +43,7 @@ Der Trenner (Delimiter) zwischen **Dauer** und **Wert** ist ab SmartHomeNG v1.10
 Es kann jedoch auch der alte Delimiter (das Gleichheitszeichen) verwendet werden.
 
 
-**Ab SmartHomeNG v1.11** werden die Konfigurationsmöglichkeiten erweitert:
+**Ab SmartHomeNG v1.11** werden die Konfigurationsmöglichkeiten erweitert: :redsup:`neu`
 
 
 Für **Dauer** und **Wert** können nun **eval** Ausdrücke angegeben werden, die zur Laufzeit entsprechend der Itemänderungen neu evaluiert werden.
@@ -83,4 +83,4 @@ Wert nach Ablauf der Dauer geschrieben.
 .. hint:
 
    Möchte man komplexere eval-Ausdrücke mit Rechenoperationen angeben, ist zu beachten, dass nur numerische Werte korrekt berechnet werden,
-   nicht jedoch Angaben als String wie 1m oder 5s, etc. Eine Dauer von ``1s + 1h`` wird zu Fehlern führen, wodurch der Autotimer nicht ausgeführt wird.
+   nicht jedoch mit Angaben als String wie 1m oder 5s etc. gerechnet werden kann. Eine Dauer von ``1s + 1h`` wird zu Fehlern führen, wodurch der Autotimer nicht ausgeführt wird. 
