@@ -3,8 +3,8 @@
 
 .. role:: bluesup
 
-crontab :bluesup:`Update`
-===========================
+crontab :bluesup:`Update` :redsup:`neu`
+=======================================
 
 Es gibt drei verschiedene Parametersätze für ein crontab Attribut:
 
@@ -100,7 +100,7 @@ Im Admin Interface können die einzelnen Parametersätze durch ``|`` getrennt we
 Durch Anhängen eines ``= value`` wird der entsprechende Wert ``value`` mitgesendet. 
 Das Beispiel setzt den Wert des Items täglich um Mitternacht auf ``20``:
 
-**Ab SmartHomeNG v1.11** werden die Konfigurationsmöglichkeiten erweitert:
+**Ab SmartHomeNG v1.11** werden die Konfigurationsmöglichkeiten erweitert: :redsup:`neu`
 
 Für den **Wert** kann nun ein **eval** Ausdruck angegeben werden, der zur Laufzeit entsprechend neu evaluiert wird.
 Dabei können auch Item Properties genutzt werden.
