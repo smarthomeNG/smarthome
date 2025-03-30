@@ -50,8 +50,8 @@ virtuelle Maschine mit 512MB RAM und zwischen 40GB und 80GB
 Plattenplatz.
 
 
-Raspberry Pi 3 oder 4
----------------------
+Raspberry Pi 3, 4 oder 5
+------------------------
 
 SmartHomeNG ist auf einem Raspberry Pi 1 oder Pi 2 zwar lauffähig, sollte dann aber nur in einer Minimalkonfiguration
 eingesetzt werden.
@@ -171,19 +171,20 @@ Python Versionen
 Minimum Python Version
 ----------------------
 
-Die absolute Minimum Python Version in der SmartHomeNG startet wurde mit SmartHomeNG v1.9 auf **Python 3.7** angehoben,
-da Features verwendet werden, die Unter Python 3.6 und davor nicht vorhanden sind und da Python 3.6 im Dezember 2021
-End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer der
-neueren Python Versionen (3.8, 3.9 oder 3.10) aufzusetzen.
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde bereits mit SmartHomeNG v1.10 auf **Python 3.8**
+angehoben.
+Da auch Python 3.8 im Oktober 2024 den Status **End-of-Life** (End of security fixes) erreicht, wird empfohlen
+bei einer Neuinstallation auf einer der neueren offizell in SmartHomeNG unterstützten Python Versionen
+(3.10, 3.11 oder 3.12) aufzusetzen.
 
-Die aktuelle Version von SmartHomeNG setzt Python der **Version 3.7** oder neuer voraus. Bei Einsatz einer älteren
+Die aktuelle Version von SmartHomeNG setzt Python der **Version 3.8** oder neuer voraus. Bei Einsatz einer älteren
 Python Version, startet SmartHomeNG nicht.
 
 
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9.x ist **Python 3.7**. (Diese Version
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.11.x ist **Python 3.10**. (Diese Version
 muss nicht mit der *Minimum Python Version* übereinstimmen.
 
 Die Grundregel nach der sich der Support für Python Versionen richten
@@ -195,14 +196,13 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
 .. csv-table:: Zur Verdeutlichung
   :header: "SmartHomeNG", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen", "minimale Python Version"
 
-  "v1.4",            "Python 3.6",  "Python 3.4, 3.5, 3.6",    "Python 3.3"
-  "v1.5",            "Python 3.6",  "Python 3.4, 3.5, 3.6",    "Python 3.4"
   "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.4"
   "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.5"
   "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8",    "Python 3.6"
   "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9",    "Python 3.7"
-  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.7"
-  "v1.11",           "Python 3.12", "Python 3.10, 3.11, 3.12", "tbd"
+  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.8"
+  "v1.11",           "Python 3.12", "Python 3.10, 3.11, 3.12", "Python 3.8"
+  "v1.12",           "Python 3.13", "Python 3.11, 3.12, 3.13", "tbd"
 
 Wenn die eingesetzte Python Version nicht in den unterstützen Python Versionen aufgelistet ist, bedeutet das nicht
 automatisch, dass SmartHomeNG mit älteren/neueren Python Versionen nicht funktioniert. Die Entwicklung wird nur
@@ -221,14 +221,14 @@ ist in der folgenden Tabelle aufgelistet:
 .. csv-table:: Aktive Python Releases (wie auf python.org dokumentiert)
   :header: "Python Version", "Maintenance Status", "Erstes Release", "Support Ende"
 
-  "3.6",   "end of life",  "22\. Dezember 2016",   "13\. Dezember 2021"
   "3.7",   "end of life",  "27\. Juni 2018",       "27\. Juni 2023"
-  "3.8",   "security",     "14\. Oktober 2019",    "Oktober 2024"
+  "3.8",   "end of life",  "14\. Oktober 2019",    "Oktober 2024"
   "3.9",   "security",     "5\. Oktober 2020",     "Oktober 2025"
   "3.10",  "security",     "4\. Oktober 2021",     "Oktober 2026"
-  "3.11",  "bugfix",       "24\. Oktober 2022",    "Oktober 2027"
+  "3.11",  "security",     "24\. Oktober 2022",    "Oktober 2027"
   "3.12",  "bugfix",       "2\. Oktober 2023",     "Oktober 2028"
-  "3.13",  "prerelease",   "1\. Oktober 2024",     "Oktober 2029"
+  "3.13",  "bugfix",       "7\. Oktober 2024",     "Oktober 2029"
+  "3.14",  "development",  "1\. Oktober 2025",     "Oktober 2030"
 
 
 Python (und PHP) Versionen unter Linux
@@ -242,17 +242,20 @@ Python Versionen zu installieren (Sies Abschnitt Referenz).
 Hier sind einige Beispiele für Linux-System und mitgeliefere Software Versionen:
 
 .. csv-table:: Distributionen und enthaltene Python und PHP Versionen
-  :header: "Distribution", "Python Version", "PHP Version"
+  :header: "Distribution", "Release Date", "End of Support", "Python Version", "PHP Version"
 
-   "Debian 10 (Buster)",                  "Python 3.7",   "PHP 7.3"
-   "Debian 11 (Bullseye)",                "Python 3.9",   "PHP 7.4"
-   "Debian 12 (Bookworm)",                "Python 3.11",  "PHP 8.2"
-   "Ubuntu 18.04 LTS (Bionic Beaver)",    "Python 3.6",   "PHP 7.2"
-   "Ubuntu 20.04 LTS (Focal Fossa)",      "Python 3.8",   "PHP 7.4"
-   "Ubuntu 22.04 LTS (Jammy Jellyfish)",  "Python 3.10",  "PHP 8.1"
+   "Debian 10 (Buster)",                     "06. Jul 2019", "Sep 2022 / Jun 2024", "Python 3.7",   "PHP 7.3"
+   "Debian 11 (Bullseye)",                   "14. Aug 2021", "Aug 2026",            "Python 3.9",   "PHP 7.4"
+   "Debian 12 (Bookworm)",                   "10. Jun 2023", "Jun 2028",            "Python 3.11",  "PHP 8.2"
+
+   "Ubuntu 18.04 LTS (Bionic Beaver)",       "Apr 201",      "Apr 2023 / Apr 2028", "Python 3.6",   "PHP 8.3, 8.2, 8.1, 8.0, 7.4"
+   "Ubuntu 20.04 LTS (Focal Fossa)",         "Apr 2020",     "Apr 2025 / Apr 2030", "Python 3.8",   "PHP 8.4, 8.3, 8.2, 8.1, 8.0, 7.4"
+   "**Ubuntu 22.04 LTS (Jammy Jellyfish)**", "Apr 2022",     "Apr 2027 / Apr 2032", "Python 3.10",  "PHP 8.4, 8.3, 8.2, 8.1, 8.0, 7.4"
+   "**Ubuntu 24.04 LTS (Noble Numbat)**",    "Apr 2024",     "Jan 2029 / Apr 2034", "Python 3.12",  "PHP 8.4, 8.3, 8.2, 8.1, 8.0, 7.4"
+   "Ubuntu 24.10 (Oracular Oriole)",         "Oct 2024",     "Jul 2025",            "Python 3.12",  "PHP 8.4, 8.3, 8.2, 8.1, 8.0, 7.4"
 
 
-Aus den Beispielen ist ersichtlich, das Debian Stretch nicht mehr für Neuinstallationen verwendet werden sollte.
+Aus den Beispielen ist ersichtlich, das Debian Buster nicht mehr für Neuinstallationen verwendet werden sollte.
 Bei Ubuntu sollte man die LTS (Long Term Support) Varianten bevorzugen um nicht andauern mit Systemänderungen konfrontiert zu werden
 
 PHP wird für SmartHomeNG selbst nicht benötigt, ist jedoch eine Voraussetzung für den Einsatz der

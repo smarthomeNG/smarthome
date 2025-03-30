@@ -44,6 +44,8 @@ Die Syntax ist wie folgt:
   Wert des Items zugegriffen werden soll, geht das mit der Item-Methode **prev_value()** oder dem
   Item Property **property.last_value**. Um das Item selbst zu adressieren kann am einfachsten
   die relative Adressierung mittels **sh..self.prev_value()** eingesetzt werden.
+- Zusätzlich zur Spezialvariable **value** werden ab SmartHomeNG 1.11 die Spazialvariablen **caller**, **source**
+  und **dest** unterstützt, um Wertzuweisungen in Abhängigkeit von dem auslösenden Item zu ermöglichen
 
 .. attention::
 

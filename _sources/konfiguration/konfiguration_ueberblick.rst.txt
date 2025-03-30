@@ -85,17 +85,19 @@ Die Verzeichnisse sind im Hauptverzeichnis von SmartHomeNG zu finden, für gewö
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
 | ``examples``  | Beispiele für Items                                                                                                         |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| ``functions`` | In diesem Verzeichnis werden benutzerdefinierte Funktionen (Userfunctions) gespeichert                                      |
+| ``functions`` | In diesem Verzeichnis werden benutzerdefinierte Funktionen (Userfunctions) gespeichert (*)                                  |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| ``items``     | Items                                                                                                                       |
+| ``items``     | Items (*)                                                                                                                   |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
 | ``lib``       | Modulbibliothek für das Hauptprogramm                                                                                       |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| ``logics``    | Jede Logik bekommt hier eine kleine Datei mit Python Code                                                                   |
+| ``logics``    | Jede Logik bekommt hier eine kleine Datei mit Python Code (*)                                                               |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
 | ``plugins``   | Modulbibliothek für die Plugins. Jedes Plugin hat sein eigenes Unterverzeichnis                                             |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| ``scenes``    | Gespeicherte Szenen                                                                                                         |
+| ``scenes``    | Gespeicherte Szenen (*)                                                                                                     |
++---------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``structs``   | Benutzerdefinierte Structs (*)                                                                                              |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
 | ``tests``     | Hilfsprogramme zum Testen von Modulen des Systems                                                                           |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
@@ -103,6 +105,20 @@ Die Verzeichnisse sind im Hauptverzeichnis von SmartHomeNG zu finden, für gewö
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
 | ``var``       | Daten die vom SmartHomeNG zur Laufzeit gespeichert und gelesen werden  also z.B. Logdateien, cache, sqlite Datenbank, etc.  |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
+
+
+Mit (*) gekennzeichnete Verzeichnisse enthalten die vom Benutzer zu erstellenden/zu ändernden Daten (Konfiguration).
+
+Durch Verwenden der Konfigurationsoption ``-e`` bzw. ``--config_etc`` wird SmartHomeNG angewiesen, diese Verzeichnisse nicht im Hauptverzeichnis
+von SmartHomeNG (z.B. `/usr/local/smarthome/`) zu suchen, sondern im Unterverzeichnis `etc`. So wären Item-Dateien beispielsweise nicht in
+`/usr/local/smarthome/items/`, sondern in `/usr/local/smarthome/etc/items/` abzulegen.
+
+Der Vorteil ist, dass sich alle vom Benutzer zu ändernden Daten innerhalb eines Verzeichnisses (mit Unterverzeichnissen) befinden (`etc/`) und
+dieses damit einfach nach eigenen Wünschen verwaltet werden kann. Weiterhin wird mit dieser Option die Nutzung der Verzeichnisstruktur stärker
+an die im Unix-Bereich übliche Aufteilung angepasst - in `etc/` befinden sich Konfigurationsdateien (die der Benutzer ändert), in `var/`
+befinden sich Dateien, die durch SmartHomeNG geändert werden, und die restlichen Dateien sind statisch, d.h. im Programmablauf unverändert.
+
+Da bestehende Referenzen aber auf die seit Beginn von SmartHomeNG festgelegten Pfade verweisen, ist diese Konfiguration optional und kein Standard.
 
 
 Dateien im Verzeichnis *../etc*

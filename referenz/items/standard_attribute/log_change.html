@@ -4,11 +4,10 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>log_change und log_text &mdash; Dokumentation v1.10.0 v1.10.0 (Stand 19. Januar 2024) Dokumentation</title>
+  <title>log_change und log_text &mdash; Dokumentation v1.11.0 v1.11.0 (Stand 30. März 2025) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
@@ -39,7 +38,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Dokumentation v1.10.0
+            Dokumentation v1.11.0
               <img src="../../../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -52,9 +51,16 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../was_ist_neu.html">Neuerungen im Release v1.10</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../was_ist_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../was_ist_neu.html#tipps-tricks">Tipps &amp; Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../was_ist_neu.html">Neuerungen im Release v1.11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-fur-plugin-entwickler">Neuerungen für Plugin Entwickler</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../was_war_neu.html#tipps-tricks">Tipps &amp; Tricks</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation/installation.html">Installation</a><ul>
@@ -111,7 +117,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html">smartVISU installieren</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#zusatzliche-pakete-installieren">zusätzliche Pakete installieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#webserver-und-zusatzliche-pakete-installieren">Webserver und zusätzliche Pakete installieren</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#smartvisu-quellcode-laden">SmartVISU Quellcode laden</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#zugriff-auf-die-smartvisu-testen">Zugriff auf die SmartVISU testen</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#eigene-visu-seiten-anlegen">Eigene Visu Seiten anlegen</a></li>
@@ -145,6 +151,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/08_shng_daemon.html#einrechten-des-dienstes">Einrechten des Dienstes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/08_shng_daemon.html#nutzung-eines-virtuellen-environments-neu">Nutzung eines virtuellen Environments <span class="redsup">neu</span></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/08_shng_daemon.html#starten-des-dienstes">Starten des Dienstes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation/komplettanleitung/09_esphome.html">ESPHome Dashboard <span class="redsup">new</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/09_esphome.html#esphome-dashboard-starten-und-testen">ESPHome Dashboard starten und testen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/09_esphome.html#esphome-dashboard-als-dienst-einrichten">ESPHome Dashboard als Dienst einrichten</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/09_esphome.html#starten-des-dienstes">Starten des Dienstes</a></li>
 </ul>
 </li>
 </ul>
@@ -274,9 +286,9 @@
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="autotimer.html"><em>autotimer</em></a></li>
-<li class="toctree-l4"><a class="reference internal" href="crontab.html">crontab <span class="bluesup">Update</span></a></li>
-<li class="toctree-l4"><a class="reference internal" href="cycle.html">cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autotimer.html"><em>autotimer</em> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="crontab.html">crontab <span class="bluesup">Update</span> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cycle.html">cycle <span class="redsup">neu</span></a></li>
 <li class="toctree-l4"><a class="reference internal" href="enforce_updates.html">enforce_updates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="enforce_change.html">enforce_change</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eval.html"><em>eval</em> und <em>eval_trigger</em></a><ul>
@@ -312,7 +324,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../item_zugriff.html">Zugriff auf die Werte von Items</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../item_zugriff.html#lesen-einer-item-wertes">Lesen einer Item Wertes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../item_zugriff.html#lesen-eines-item-wertes">Lesen eines Item Wertes</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../item_zugriff.html#zugriff-auf-ein-listen-element-neu">Zugriff auf ein Listen-Element <span class="redsup">neu</span></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../item_zugriff.html#zugriff-auf-ein-dict-element-neu">Zugriff auf ein Dict-Element <span class="redsup">neu</span></a></li>
 </ul>
@@ -323,6 +335,11 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../item_zugriff.html#weitere-parameter-item-zugriff">Weitere Parameter Item Zugriff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../item_zugriff.html#erweiterter-zugriff-auf-list-und-dict-items-neu">Erweiterter Zugriff auf List- und Dict-Items <span class="redsup">neu</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../item_zugriff.html#list-items">List-Items</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../item_zugriff.html#dict-items">Dict-Items</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../plugin_attribute.html">Plugin-spezifische Attribute</a><ul>
@@ -4043,15 +4060,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../beispiele/structs/item_strukturen_kopieren.html">Item Strukturen bequem kopieren</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../beispiele/plugins/plugins.html">Plugins</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html">Ein Plugin aus develop installieren</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../beispiele/plugins/plugins.html">Plugins <span class="greensup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html">Ein Plugin aus develop installieren <span class="greensup">Update</span></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#konfiguration-anpassen">Konfiguration anpassen</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#plugin-manuell-installieren">Plugin manuell installieren</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#plugins-repository-aufrufen">Plugins Repository aufrufen</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#plugins-repository-download">Plugins Repository Download</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#gewunschtes-plugin-installieren">Gewünschtes Plugin installieren</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -4167,14 +4178,27 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html">Plugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#kommandos">Kommandos</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#protokoll">Protokoll</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#verbindung">Verbindung</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#datatypes">DataTypes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#commands">Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartplugin_class.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/mqttplugin_class.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html#plugin">Plugin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html#protokoll">Protokoll</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html#verbindung">Verbindung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html#datatypes">DataTypes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin"><code class="docutils literal notranslate"><span class="pre">SmartDevicePlugin</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#plugin">plugin</a></li>
@@ -4251,8 +4275,19 @@
 <li class="toctree-l3"><a class="reference internal" href="../../module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#metadaten">Metadaten</a></li>
@@ -4284,7 +4319,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../entwicklung/core/core.html">Entwicklung des Core</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/core/core_shng.html#lib-item">lib.item</a></li>
 </ul>
 </li>
@@ -4308,13 +4346,22 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.remove_reserved"><code class="docutils literal notranslate"><span class="pre">remove_reserved()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.remove_special_listentries"><code class="docutils literal notranslate"><span class="pre">remove_special_listentries()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.replace_struct_instance"><code class="docutils literal notranslate"><span class="pre">replace_struct_instance()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.sanitize_items"><code class="docutils literal notranslate"><span class="pre">sanitize_items()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.search_for_struct_in_items"><code class="docutils literal notranslate"><span class="pre">search_for_struct_in_items()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.set_attr_for_subtree"><code class="docutils literal notranslate"><span class="pre">set_attr_for_subtree()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.strip_quotes"><code class="docutils literal notranslate"><span class="pre">strip_quotes()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/daemon.html">lib.daemon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/daemon.html">lib.daemon</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -4338,7 +4385,10 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/scene.html">lib.scene</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/scene.html">lib.scene</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -4375,8 +4425,20 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html">lib.network</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html">lib.network</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/tools.html">lib.tools</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a></li>
 </ul>
@@ -4444,9 +4506,9 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../items.html">Items</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="autotimer.html"><em>autotimer</em></a></li>
-<li class="toctree-l4"><a class="reference internal" href="crontab.html">crontab <span class="bluesup">Update</span></a></li>
-<li class="toctree-l4"><a class="reference internal" href="cycle.html">cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autotimer.html"><em>autotimer</em> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="crontab.html">crontab <span class="bluesup">Update</span> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cycle.html">cycle <span class="redsup">neu</span></a></li>
 <li class="toctree-l4"><a class="reference internal" href="enforce_updates.html">enforce_updates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="enforce_change.html">enforce_change</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eval.html"><em>eval</em> und <em>eval_trigger</em></a><ul>
@@ -4482,7 +4544,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../item_zugriff.html">Zugriff auf die Werte von Items</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../item_zugriff.html#lesen-einer-item-wertes">Lesen einer Item Wertes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../item_zugriff.html#lesen-eines-item-wertes">Lesen eines Item Wertes</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../item_zugriff.html#zugriff-auf-ein-listen-element-neu">Zugriff auf ein Listen-Element <span class="redsup">neu</span></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../item_zugriff.html#zugriff-auf-ein-dict-element-neu">Zugriff auf ein Dict-Element <span class="redsup">neu</span></a></li>
 </ul>
@@ -4493,6 +4555,11 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../item_zugriff.html#weitere-parameter-item-zugriff">Weitere Parameter Item Zugriff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../item_zugriff.html#erweiterter-zugriff-auf-list-und-dict-items-neu">Erweiterter Zugriff auf List- und Dict-Items <span class="redsup">neu</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../item_zugriff.html#list-items">List-Items</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../item_zugriff.html#dict-items">Dict-Items</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../plugin_attribute.html">Plugin-spezifische Attribute</a><ul>
@@ -4679,7 +4746,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_http.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_http.html#module-modules.http">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4687,15 +4759,29 @@
 <li class="toctree-l3"><a class="reference internal" href="../../module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4763,7 +4849,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../netzwerk.html#ports">Ports</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../plugins/plugins.html">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../plugins/plugins.html">Plugins <span class="greensup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../plugins/asyncio_support.html">asyncio Unterstützung in Plugins <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../plugins/asyncio_support.html#methoden-zur-unterstutzung-von-asyncio">Methoden zur Unterstützung von asyncio</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/asyncio_support.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../plugins/plugin_typen/plugin_typen.html">Plugin Typen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/plugin_typen.html#classic-plugin">Classic Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/plugin_typen.html#smartplugin">SmartPlugin</a><ul>
@@ -4775,13 +4868,8 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../plugins/plugin_typen/plugin_typen.html#smartdeviceplugin">SmartDevicePlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html">Plugin</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#kommandos">Kommandos</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#protokoll">Protokoll</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#verbindung">Verbindung</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#datatypes">DataTypes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin.html#commands">Commands</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a></li>
 </ul>
 </li>
 </ul>
@@ -4835,6 +4923,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../userfunctions/userfunctions.html#reload-von-userfunctions">Reload von Userfunctions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../userfunctions/userfunctions.html#zusatzliche-python-module">Zusätzliche Python Module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../python/python.html">Python Environment <span class="bluesup">Update</span></a><ul>
@@ -4891,8 +4980,88 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../lib/network.html">lib.network</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lib/network.html">lib.network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.ip_port_to_socket"><code class="docutils literal notranslate"><span class="pre">Network.ip_port_to_socket()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.family_to_string"><code class="docutils literal notranslate"><span class="pre">Network.family_to_string()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.ping"><code class="docutils literal notranslate"><span class="pre">Network.ping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.ping_port"><code class="docutils literal notranslate"><span class="pre">Network.ping_port()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.send_wol"><code class="docutils literal notranslate"><span class="pre">Network.send_wol()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.validate_inet_addr"><code class="docutils literal notranslate"><span class="pre">Network.validate_inet_addr()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.clean_uri"><code class="docutils literal notranslate"><span class="pre">Network.clean_uri()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections.monitor"><code class="docutils literal notranslate"><span class="pre">Connections.monitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections.unmonitor"><code class="docutils literal notranslate"><span class="pre">Connections.unmonitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections.check"><code class="docutils literal notranslate"><span class="pre">Connections.check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.HTTPDigestAuth"><code class="docutils literal notranslate"><span class="pre">Http.HTTPDigestAuth()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.post_json"><code class="docutils literal notranslate"><span class="pre">Http.post_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.get_json"><code class="docutils literal notranslate"><span class="pre">Http.get_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.get_text"><code class="docutils literal notranslate"><span class="pre">Http.get_text()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.download"><code class="docutils literal notranslate"><span class="pre">Http.download()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.get_binary"><code class="docutils literal notranslate"><span class="pre">Http.get_binary()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.response_status"><code class="docutils literal notranslate"><span class="pre">Http.response_status()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.response_headers"><code class="docutils literal notranslate"><span class="pre">Http.response_headers()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.response_cookies"><code class="docutils literal notranslate"><span class="pre">Http.response_cookies()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.response_object"><code class="docutils literal notranslate"><span class="pre">Http.response_object()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_client.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.open"><code class="docutils literal notranslate"><span class="pre">Tcp_client.open()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.connect"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.connected"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connected()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.send"><code class="docutils literal notranslate"><span class="pre">Tcp_client.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.close"><code class="docutils literal notranslate"><span class="pre">Tcp_client.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.socket"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.socket</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.set_callbacks"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.send"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.send_echo_off"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_off()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.send_echo_on"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_on()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.close"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.MODE_TEXT"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.MODE_TEXT_LINE"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT_LINE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.MODE_BINARY"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_BINARY</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.MODE_FIXED_LENGTH"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_FIXED_LENGTH</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.start"><code class="docutils literal notranslate"><span class="pre">Tcp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.listening"><code class="docutils literal notranslate"><span class="pre">Tcp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.send"><code class="docutils literal notranslate"><span class="pre">Tcp_server.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.disconnect"><code class="docutils literal notranslate"><span class="pre">Tcp_server.disconnect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.close"><code class="docutils literal notranslate"><span class="pre">Tcp_server.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server.start"><code class="docutils literal notranslate"><span class="pre">Udp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Udp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server.listening"><code class="docutils literal notranslate"><span class="pre">Udp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server.close"><code class="docutils literal notranslate"><span class="pre">Udp_server.close()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/env.html">lib.env</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/env.html#lib.env.kn_to_kmh"><code class="docutils literal notranslate"><span class="pre">kn_to_kmh()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/env.html#lib.env.kmh_to_kn"><code class="docutils literal notranslate"><span class="pre">kmh_to_kn()</span></code></a></li>
@@ -4936,6 +5105,9 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.check_hashed_password"><code class="docutils literal notranslate"><span class="pre">Utils.check_hashed_password()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.create_hash"><code class="docutils literal notranslate"><span class="pre">Utils.create_hash()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.execute_subprocess"><code class="docutils literal notranslate"><span class="pre">Utils.execute_subprocess()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_addresses_for_addressfamily"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_addresses_for_addressfamily()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_local_ipv4_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv4_addresses()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_local_ipv6_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv6_addresses()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_local_ipv4_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv4_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_local_ipv6_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv6_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_type"><code class="docutils literal notranslate"><span class="pre">Utils.get_type()</span></code></a></li>
@@ -4974,7 +5146,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/item.html#lib-item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/item.html#module-lib.item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item.html#class-item">class Item</a></li>
@@ -4984,7 +5156,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/plugin.html#module-lib.plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/plugin.html#lib-plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -4994,15 +5166,26 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/shtime.html#lib-shtime">lib.shtime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/shtime.html#module-lib.shtime">lib.shtime</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/logic.html#lib-logic">lib.logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/logic.html#module-lib.logic">lib.logic</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/scheduler.html#lib-scheduler">lib.scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/env.html">lib.env</a><ul>
@@ -5048,6 +5231,9 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.check_hashed_password"><code class="docutils literal notranslate"><span class="pre">Utils.check_hashed_password()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.create_hash"><code class="docutils literal notranslate"><span class="pre">Utils.create_hash()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.execute_subprocess"><code class="docutils literal notranslate"><span class="pre">Utils.execute_subprocess()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_addresses_for_addressfamily"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_addresses_for_addressfamily()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_local_ipv4_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv4_addresses()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_local_ipv6_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv6_addresses()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_local_ipv4_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv4_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_local_ipv6_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv6_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_type"><code class="docutils literal notranslate"><span class="pre">Utils.get_type()</span></code></a></li>
@@ -5088,6 +5274,31 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">FAQ - Häufig gestellte Fragen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../release/release.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../release/1_11_0.html">Release 1.11.0 - 30. Mär 2025</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_11_0.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_11_0.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#bugfixes-im-core">Bugfixes im CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_11_0.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#outdated-plugins">Outdated Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_11_0.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../release/1_10.html">Release 1.10 - 29. Jan 2024</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../release/1_10.html#uberblick">Überblick</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../release/1_10.html#minimum-python-version">Minimum Python Version</a></li>
@@ -5428,7 +5639,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Dokumentation v1.10.0</a>
+          <a href="../../../index.html">Dokumentation v1.11.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -5464,15 +5675,25 @@ Bedürfnisse angepasst werden.</p>
 festzulegen. Der angegebene Loglevel kann jeder in SmartHomeNG unterstützte Python Loglevel sein (DEBUG, INFO, WARNING,
 ERROR, CRITICAL). Die Angabe kann durch den Namen oder den Integer Wert des Loglevels erfolgen.</p>
 <p><strong>Beispiel:</strong> <code class="docutils literal notranslate"><span class="pre">log_level:</span> <span class="pre">WARNING</span></code></p>
+<section id="eval-ausduck-in-log-level">
+<h3>eval-Ausduck in log_level<a class="headerlink" href="#eval-ausduck-in-log-level" title="Permalink to this heading"></a></h3>
+<p>Ab <strong>SmarthomeNG v1.10.1</strong> ist es möglich, das Loglevel variabel mittels Eval-Ausdruck festzulegen. Es wird dadurch
+vor dem Schreiben eines jeden Logging-Eintrags neu evaluiert.</p>
+<p><strong>Beispiel:</strong> <code class="docutils literal notranslate"><span class="pre">log_level:</span> <span class="pre">'{10</span> <span class="pre">if</span> <span class="pre">value</span> <span class="pre">==</span> <span class="pre">5</span> <span class="pre">else</span> <span class="pre">&quot;WARNING&quot;</span> <span class="pre">if</span> <span class="pre">value</span> <span class="pre">==</span> <span class="pre">1</span> <span class="pre">else</span> <span class="pre">&quot;INFO&quot;}'</span></code></p>
+</section>
 </section>
 <section id="attribut-log-text">
 <h2>Attribut <em>log_text</em><a class="headerlink" href="#attribut-log-text" title="Permalink to this heading"></a></h2>
-<p>Das Attribut <strong>log_text</strong> ermöglicht es einen eigenen Text für den Logeintrag festzulegen. <strong>log_text</strong> kann dabei
-eine Reihe von Variablen und eval-Ausdrücken enthalten.</p>
+<p>Das Attribut <strong>log_text</strong> ermöglicht es, einen eigenen Text für den Logeintrag festzulegen.
+Wird das Attribut nicht angegeben, wird versucht, das im smarthome.yaml hinterlegte Attribut <code class="docutils literal notranslate"><span class="pre">default_logtext</span></code>
+heranzuziehen. Dieses kann die unten angegebenen Variablen enthalten. Ist auch dieses
+Attribut nicht angegeben, wird folgende Muster herangezogen:
+<code class="docutils literal notranslate"><span class="pre">Item</span> <span class="pre">Change:</span> <span class="pre">{id}</span> <span class="pre">=</span> <span class="pre">{value}</span>&#160; <span class="pre">-</span>&#160; <span class="pre">caller:</span> <span class="pre">{caller}{source}{dest}</span></code></p>
+<p>Wird <strong>log_text</strong> angegeben, kann dabei eine Reihe von Variablen und eval-Ausdrücken genutzt werden.</p>
 <div class="admonition attention">
 <p class="admonition-title">Achtung</p>
 <p><strong>Achtung:</strong> log_text darf keine Single-Quotes (<code class="docutils literal notranslate"><span class="pre">'</span></code>) enthalten!</p>
-<p>Falls es aufgrund des YAML Syntaxes notwendig kann der gesamte String für log_text in Single-Quotes (‚)
+<p>Falls es aufgrund des YAML Syntaxes notwendig ist, kann der gesamte String für log_text in Single-Quotes (‚)
 eingeschlossen werden.</p>
 <p><strong>Beispiel:</strong> <code class="docutils literal notranslate"><span class="pre">log_text:</span> <span class="pre">'Alter={age}'</span></code></p>
 </div>
@@ -5557,43 +5778,40 @@ eingeschlossen werden.</p>
 </section>
 <section id="eval-ausdrucke-in-log-text">
 <h3>eval-Ausdrücke in log_text<a class="headerlink" href="#eval-ausdrucke-in-log-text" title="Permalink to this heading"></a></h3>
-<p>Zusätzlich zu den Variaben, können in den Log Text auch eval Ausdrücke eingeschlossen werden. Der Syntax dazu ist
-folgender: <code class="docutils literal notranslate"><span class="pre">{eval(&lt;Ausdruck&gt;)}</span></code>. Dabei muss sicher gestellt sein, dass der Ausdruck ein String ist. Wenn man
-zum Beispiel nur Zahlen addiert <code class="docutils literal notranslate"><span class="pre">3+5</span></code>, muss dieser Ausdruck in <strong>doppelte</strong> Anführungszeichen (<code class="docutils literal notranslate"><span class="pre">&quot;</span></code>) gesetzt werden:
-<code class="docutils literal notranslate"><span class="pre">{eval(&quot;3+5&quot;)}</span></code>.</p>
+<p>Zusätzlich zu den Variaben, können in den Log Text auch eval Ausdrücke eingeschlossen werden. Diese sind in
+geschwungene Klammern zu setzen.</p>
 <p>Es können auch mehrere eval-Ausdrücke in einen Log Text eingebunden und mit Variablen konfiguriert werden.</p>
-<p><strong>Beispiel:</strong> <code class="docutils literal notranslate"><span class="pre">log_text:</span> <span class="pre">Ergebnis={eval(&quot;1+4&quot;)}</span> <span class="pre">für</span> <span class="pre">item</span> <span class="pre">{id}</span></code></p>
+<p><strong>Beispiel:</strong> <code class="docutils literal notranslate"><span class="pre">log_text:</span> <span class="pre">Ergebnis={1+value}</span> <span class="pre">für</span> <span class="pre">item</span> <span class="pre">{id}</span></code></p>
+<p><strong>Beispiel:</strong> <code class="docutils literal notranslate"><span class="pre">log_text:</span> <span class="pre">Ergebnis={&quot;Eins&quot;</span> <span class="pre">if</span> <span class="pre">value</span> <span class="pre">==</span> <span class="pre">1</span> <span class="pre">else</span> <span class="pre">&quot;Zwei&quot;</span> <span class="pre">if</span> <span class="pre">value</span> <span class="pre">==</span> <span class="pre">2</span> <span class="pre">else</span> <span class="pre">1+value}</span> <span class="pre">für</span> <span class="pre">item</span> <span class="pre">{id}</span></code></p>
 </section>
 </section>
 <section id="attribut-log-mapping">
 <h2>Attribut <em>log_mapping</em><a class="headerlink" href="#attribut-log-mapping" title="Permalink to this heading"></a></h2>
 <p>Über das <strong>log_mapping</strong> Attribut kann festgelegt werden, auf welche Werte/Strings der Wert eines Items für das
-Logging gemappt werden soll. Das Attribut <strong>log_mapping</strong> enthält dazu in einem String die Beschreibung eines
-dicts. Wobei der Key den zu übersetzenden/mappenden Wert angibt und der dazu gehörige Value des dicts den String
-angibt, der über die Variable <code class="docutils literal notranslate"><span class="pre">{mvalue}</span></code> ausgegeben wird.</p>
+Logging gemappt werden soll. Das Attribut <strong>log_mapping</strong> enthält dazu eine Liste mit Wertzuweisungen im folgenden Format:
+zu übersetzender/mappender Wert: String, der über die Variable <code class="docutils literal notranslate"><span class="pre">{mvalue}</span></code> ausgegeben wird</p>
 <p><strong>Beispiel:</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">log_mapping</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{</span>
-<span class="w">    </span><span class="s">&#39;1&#39;:</span><span class="nv"> </span><span class="s">&#39;Eins&#39;,</span>
-<span class="w">    </span><span class="s">&#39;2&#39;:</span><span class="nv"> </span><span class="s">&#39;Zwei&#39;,</span>
-<span class="w">    </span><span class="s">&#39;3&#39;:</span><span class="nv"> </span><span class="s">&#39;Drei&#39;</span>
-<span class="w">    </span><span class="s">}&quot;</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">log_mapping</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Eins&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Zwei&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Drei&#39;</span>
 </pre></div>
 </div>
 </section>
 <section id="attribut-log-rules">
 <h2>Attribut <em>log_rules</em><a class="headerlink" href="#attribut-log-rules" title="Permalink to this heading"></a></h2>
 <p>Über das <strong>log_rules</strong> Attribut kann festgelegt werden, welche zusätzliche Regeln für das Erzeugen des Log-Eintrages
-anzuwenden sind. Das Attribut <strong>log_rules</strong> enthält dazu in einem String die Beschreibung eines dicts.</p>
+anzuwenden sind. Das Attribut <strong>log_rules</strong> enthält dazu eine Liste mit den folgenden möglichen Definitionen:
+<code class="docutils literal notranslate"><span class="pre">lowlimit</span></code>, <code class="docutils literal notranslate"><span class="pre">highlimit</span></code>, <code class="docutils literal notranslate"><span class="pre">filter</span></code>, <code class="docutils literal notranslate"><span class="pre">exclude</span></code>, <code class="docutils literal notranslate"><span class="pre">itemvalue</span></code></p>
 <p><strong>Beispiel:</strong></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
-<span class="w">    </span><span class="nt">log_rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{</span>
-<span class="w">        </span><span class="s">&#39;lowlimit&#39;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">-1.0,</span>
-<span class="w">        </span><span class="s">&#39;highlimit&#39;:</span><span class="nv"> </span><span class="s">10.0,</span>
-<span class="w">        </span><span class="s">&#39;filter&#39;:</span><span class="nv"> </span><span class="s">[1,</span><span class="nv"> </span><span class="s">2,</span><span class="nv"> </span><span class="s">5],</span>
-<span class="w">        </span><span class="s">&#39;exclude&#39;:</span><span class="nv"> </span><span class="s">&#39;.exclude_values&#39;,</span>
-<span class="w">        </span><span class="s">&#39;itemvalue&#39;:</span><span class="nv"> </span><span class="s">&#39;.text&#39;</span>
-<span class="w">        </span><span class="s">}&quot;</span>
+<span class="w">    </span><span class="nt">log_rules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;lowlimit&#39;</span><span class="w"> </span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1.0</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;highlimit&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;filter&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;exclude&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;.exclude_values&#39;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;itemvalue&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;.text&#39;</span>
 
 <span class="w">    </span><span class="nt">exclude_values</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span>
@@ -5615,33 +5833,33 @@ Der Verweis auf das jeweilige Item erfolgt dabei durch den absoluten oder relati
 </div>
 <section id="lowlimit">
 <h3>lowlimit<a class="headerlink" href="#lowlimit" title="Permalink to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">lowlimit</span></code> Ein Wert, der angibt, unterhalb welchen Wertes des Items <strong>kein</strong> Logeintrag geschrieben werden soll.
+<p>Ein Wert, der angibt, unterhalb welchen Wertes des Items <strong>kein</strong> Logeintrag geschrieben werden soll.
 Werte werden geschrieben, Wenn <strong>lowlimit</strong> &lt;= <strong>value</strong> ist.</p>
 <p><strong>low_limit</strong> kann nur auf Items vom Typ <strong>num</strong> angewendet werden.</p>
 </section>
 <section id="highlimit">
 <h3>highlimit<a class="headerlink" href="#highlimit" title="Permalink to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">highlimit</span></code> Ein Wert, der angibt, oberhalb welchen Wertes des Items <strong>kein</strong> Logeintrag geschrieben werden soll.
+<p>Ein Wert, der angibt, oberhalb welchen Wertes des Items <strong>kein</strong> Logeintrag geschrieben werden soll.
 Werte werden geschrieben, Wenn <strong>value</strong> &lt; <strong>highlimit</strong> ist.</p>
 <p><strong>highlimit</strong> kann nur auf Items vom Typ <strong>num</strong> angewendet werden.</p>
 </section>
 <section id="filter">
 <h3>filter<a class="headerlink" href="#filter" title="Permalink to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">filter</span></code> Eine Werteliste, die angibt, bei welchen Werten des Items ein Logeintrag geschrieben werden soll.</p>
+<p>Eine Werteliste, die angibt, bei welchen Werten des Items ein Logeintrag geschrieben werden soll.</p>
 <p>Wenn das Item vom Typ <strong>num</strong> ist, muss die Liste auch numerische Werte (int oder float) enthalten
 (<code class="docutils literal notranslate"><span class="pre">'filter':</span> <span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">5,</span> <span class="pre">2.1]</span></code>). Falls das Item von einem anderen Datentyp ist, muss die Liste Strings
 enthalten (<code class="docutils literal notranslate"><span class="pre">'filter':</span> <span class="pre">['1',</span> <span class="pre">'2',</span> <span class="pre">'5']</span></code>).</p>
 </section>
 <section id="exclude">
 <h3>exclude<a class="headerlink" href="#exclude" title="Permalink to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">exclude</span></code> Eine Werteliste, die angibt, bei welchen Werten des Items ein Logeintrag nicht geschrieben werden soll.</p>
+<p>Eine Werteliste, die angibt, bei welchen Werten des Items ein Logeintrag nicht geschrieben werden soll.</p>
 <p>Wenn das Item vom Typ <strong>num</strong> ist, muss die Liste auch numerische Werte (int oder float) enthalten
 (<code class="docutils literal notranslate"><span class="pre">'exclude':</span> <span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">5,</span> <span class="pre">2.1]</span></code>). Falls das Item von einem anderen Datentyp ist, muss die Liste Strings
 enthalten (<code class="docutils literal notranslate"><span class="pre">'exclude':</span> <span class="pre">['1',</span> <span class="pre">'2',</span> <span class="pre">'5']</span></code>).</p>
 </section>
 <section id="itemvalue">
 <h3>itemvalue<a class="headerlink" href="#itemvalue" title="Permalink to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">itemvalue</span></code> Der absolute oder relative Pfad zu einem Item, dessen Wert ausgelesen werden soll.
+<p>Der absolute oder relative Pfad zu einem Item, dessen Wert ausgelesen werden soll.
 Dies kann beispielsweise dazu genutzt werden, die Lognachricht zur Laufzeit anzupassen.</p>
 </section>
 </section>
@@ -5658,7 +5876,7 @@ Dies kann beispielsweise dazu genutzt werden, die Lognachricht zur Laufzeit anzu
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2016-2024 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp.</p>
+    <p>&#169; Copyright 2016-2025 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp.</p>
   </div>
 
    

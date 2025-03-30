@@ -4,11 +4,10 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Class Item &mdash; Dokumentation v1.10.0 v1.10.0 (Stand 19. Januar 2024) Dokumentation</title>
+  <title>Class Item &mdash; Dokumentation v1.11.0 v1.11.0 (Stand 30. März 2025) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
@@ -39,7 +38,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            Dokumentation v1.10.0
+            Dokumentation v1.11.0
               <img src="../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -52,9 +51,16 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../was_ist_neu.html">Neuerungen im Release v1.10</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../was_ist_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../was_ist_neu.html#tipps-tricks">Tipps &amp; Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../was_ist_neu.html">Neuerungen im Release v1.11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../was_war_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../was_war_neu.html#neuerungen-fur-plugin-entwickler">Neuerungen für Plugin Entwickler</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../was_war_neu.html#tipps-tricks">Tipps &amp; Tricks</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a><ul>
@@ -111,7 +117,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../installation/komplettanleitung/04_smartvisu.html">smartVISU installieren</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/04_smartvisu.html#zusatzliche-pakete-installieren">zusätzliche Pakete installieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/04_smartvisu.html#webserver-und-zusatzliche-pakete-installieren">Webserver und zusätzliche Pakete installieren</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/04_smartvisu.html#smartvisu-quellcode-laden">SmartVISU Quellcode laden</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/04_smartvisu.html#zugriff-auf-die-smartvisu-testen">Zugriff auf die SmartVISU testen</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/04_smartvisu.html#eigene-visu-seiten-anlegen">Eigene Visu Seiten anlegen</a></li>
@@ -145,6 +151,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/08_shng_daemon.html#einrechten-des-dienstes">Einrechten des Dienstes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/08_shng_daemon.html#nutzung-eines-virtuellen-environments-neu">Nutzung eines virtuellen Environments <span class="redsup">neu</span></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/08_shng_daemon.html#starten-des-dienstes">Starten des Dienstes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../installation/komplettanleitung/09_esphome.html">ESPHome Dashboard <span class="redsup">new</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/09_esphome.html#esphome-dashboard-starten-und-testen">ESPHome Dashboard starten und testen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/09_esphome.html#esphome-dashboard-als-dienst-einrichten">ESPHome Dashboard als Dienst einrichten</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../installation/komplettanleitung/09_esphome.html#starten-des-dienstes">Starten des Dienstes</a></li>
 </ul>
 </li>
 </ul>
@@ -274,9 +286,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/standard_attribute/standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html"><em>autotimer</em></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html">cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html"><em>autotimer</em> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html">cycle <span class="redsup">neu</span></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/enforce_updates.html">enforce_updates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/enforce_change.html">enforce_change</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html"><em>eval</em> und <em>eval_trigger</em></a><ul>
@@ -312,7 +324,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/item_zugriff.html">Zugriff auf die Werte von Items</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#lesen-einer-item-wertes">Lesen einer Item Wertes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#lesen-eines-item-wertes">Lesen eines Item Wertes</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#zugriff-auf-ein-listen-element-neu">Zugriff auf ein Listen-Element <span class="redsup">neu</span></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#zugriff-auf-ein-dict-element-neu">Zugriff auf ein Dict-Element <span class="redsup">neu</span></a></li>
 </ul>
@@ -323,6 +335,11 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#weitere-parameter-item-zugriff">Weitere Parameter Item Zugriff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#erweiterter-zugriff-auf-list-und-dict-items-neu">Erweiterter Zugriff auf List- und Dict-Items <span class="redsup">neu</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#list-items">List-Items</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#dict-items">Dict-Items</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/plugin_attribute.html">Plugin-spezifische Attribute</a><ul>
@@ -4043,15 +4060,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../beispiele/structs/item_strukturen_kopieren.html">Item Strukturen bequem kopieren</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../beispiele/plugins/plugins.html">Plugins</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html">Ein Plugin aus develop installieren</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beispiele/plugins/plugins.html">Plugins <span class="greensup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html">Ein Plugin aus develop installieren <span class="greensup">Update</span></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#konfiguration-anpassen">Konfiguration anpassen</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#plugin-manuell-installieren">Plugin manuell installieren</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#plugins-repository-aufrufen">Plugins Repository aufrufen</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#plugins-repository-download">Plugins Repository Download</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../beispiele/plugins/plugin_aus_develop.html#gewunschtes-plugin-installieren">Gewünschtes Plugin installieren</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -4167,14 +4178,27 @@
 <li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html">Plugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#kommandos">Kommandos</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#protokoll">Protokoll</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#verbindung">Verbindung</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#datatypes">DataTypes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#commands">Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartplugin_class.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/mqttplugin_class.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#plugin">Plugin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#protokoll">Protokoll</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#verbindung">Verbindung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#datatypes">DataTypes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin"><code class="docutils literal notranslate"><span class="pre">SmartDevicePlugin</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#plugin">plugin</a></li>
@@ -4251,8 +4275,19 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
@@ -4284,7 +4319,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../entwicklung/core/core.html">Entwicklung des Core</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#lib-item">lib.item</a></li>
 </ul>
 </li>
@@ -4308,13 +4346,22 @@
 <li class="toctree-l5"><a class="reference internal" href="config.html#lib.config.remove_reserved"><code class="docutils literal notranslate"><span class="pre">remove_reserved()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="config.html#lib.config.remove_special_listentries"><code class="docutils literal notranslate"><span class="pre">remove_special_listentries()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="config.html#lib.config.replace_struct_instance"><code class="docutils literal notranslate"><span class="pre">replace_struct_instance()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="config.html#lib.config.sanitize_items"><code class="docutils literal notranslate"><span class="pre">sanitize_items()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="config.html#lib.config.search_for_struct_in_items"><code class="docutils literal notranslate"><span class="pre">search_for_struct_in_items()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="config.html#lib.config.set_attr_for_subtree"><code class="docutils literal notranslate"><span class="pre">set_attr_for_subtree()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="config.html#lib.config.strip_quotes"><code class="docutils literal notranslate"><span class="pre">strip_quotes()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="daemon.html">lib.daemon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="daemon.html">lib.daemon</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -4338,7 +4385,10 @@
 <li class="toctree-l5"><a class="reference internal" href="module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="scene.html">lib.scene</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scene.html">lib.scene</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -4375,8 +4425,20 @@
 <li class="toctree-l5"><a class="reference internal" href="logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="network.html">lib.network</a></li>
-<li class="toctree-l4"><a class="reference internal" href="orb.html">lib.orb</a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html">lib.network</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="orb.html">lib.orb</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="tools.html">lib.tools</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a></li>
 </ul>
@@ -4444,9 +4506,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/items/items.html">Items</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/standard_attribute/standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html"><em>autotimer</em></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html">cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/autotimer.html"><em>autotimer</em> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/cycle.html">cycle <span class="redsup">neu</span></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/enforce_updates.html">enforce_updates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/enforce_change.html">enforce_change</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/standard_attribute/eval.html"><em>eval</em> und <em>eval_trigger</em></a><ul>
@@ -4482,7 +4544,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/item_zugriff.html">Zugriff auf die Werte von Items</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#lesen-einer-item-wertes">Lesen einer Item Wertes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#lesen-eines-item-wertes">Lesen eines Item Wertes</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#zugriff-auf-ein-listen-element-neu">Zugriff auf ein Listen-Element <span class="redsup">neu</span></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#zugriff-auf-ein-dict-element-neu">Zugriff auf ein Dict-Element <span class="redsup">neu</span></a></li>
 </ul>
@@ -4493,6 +4555,11 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#weitere-parameter-item-zugriff">Weitere Parameter Item Zugriff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/items/item_zugriff.html#erweiterter-zugriff-auf-list-und-dict-items-neu">Erweiterter Zugriff auf List- und Dict-Items <span class="redsup">neu</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#list-items">List-Items</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/items/item_zugriff.html#dict-items">Dict-Items</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/items/plugin_attribute.html">Plugin-spezifische Attribute</a><ul>
@@ -4679,7 +4746,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#module-modules.http">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4687,15 +4759,29 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4763,7 +4849,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/netzwerk.html#ports">Ports</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../referenz/plugins/plugins.html">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../referenz/plugins/plugins.html">Plugins <span class="greensup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/plugins/asyncio_support.html">asyncio Unterstützung in Plugins <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/asyncio_support.html#methoden-zur-unterstutzung-von-asyncio">Methoden zur Unterstützung von asyncio</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/asyncio_support.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/plugins/plugin_typen/plugin_typen.html">Plugin Typen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/plugin_typen.html#classic-plugin">Classic Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/plugin_typen.html#smartplugin">SmartPlugin</a><ul>
@@ -4775,13 +4868,8 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/plugin_typen.html#smartdeviceplugin">SmartDevicePlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html">Plugin</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#kommandos">Kommandos</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#protokoll">Protokoll</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#verbindung">Verbindung</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#datatypes">DataTypes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin.html#commands">Commands</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a></li>
 </ul>
 </li>
 </ul>
@@ -4835,6 +4923,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/userfunctions/userfunctions.html#reload-von-userfunctions">Reload von Userfunctions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/userfunctions/userfunctions.html#zusatzliche-python-module">Zusätzliche Python Module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/python/python.html">Python Environment <span class="bluesup">Update</span></a><ul>
@@ -4891,8 +4980,88 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="network.html">lib.network</a></li>
-<li class="toctree-l3"><a class="reference internal" href="orb.html">lib.orb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="network.html">lib.network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.ip_port_to_socket"><code class="docutils literal notranslate"><span class="pre">Network.ip_port_to_socket()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.family_to_string"><code class="docutils literal notranslate"><span class="pre">Network.family_to_string()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.ping"><code class="docutils literal notranslate"><span class="pre">Network.ping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.ping_port"><code class="docutils literal notranslate"><span class="pre">Network.ping_port()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.send_wol"><code class="docutils literal notranslate"><span class="pre">Network.send_wol()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.validate_inet_addr"><code class="docutils literal notranslate"><span class="pre">Network.validate_inet_addr()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Network.clean_uri"><code class="docutils literal notranslate"><span class="pre">Network.clean_uri()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Connections.monitor"><code class="docutils literal notranslate"><span class="pre">Connections.monitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Connections.unmonitor"><code class="docutils literal notranslate"><span class="pre">Connections.unmonitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Connections.check"><code class="docutils literal notranslate"><span class="pre">Connections.check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.HTTPDigestAuth"><code class="docutils literal notranslate"><span class="pre">Http.HTTPDigestAuth()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.post_json"><code class="docutils literal notranslate"><span class="pre">Http.post_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.get_json"><code class="docutils literal notranslate"><span class="pre">Http.get_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.get_text"><code class="docutils literal notranslate"><span class="pre">Http.get_text()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.download"><code class="docutils literal notranslate"><span class="pre">Http.download()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.get_binary"><code class="docutils literal notranslate"><span class="pre">Http.get_binary()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.response_status"><code class="docutils literal notranslate"><span class="pre">Http.response_status()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.response_headers"><code class="docutils literal notranslate"><span class="pre">Http.response_headers()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.response_cookies"><code class="docutils literal notranslate"><span class="pre">Http.response_cookies()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Http.response_object"><code class="docutils literal notranslate"><span class="pre">Http.response_object()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_client.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.open"><code class="docutils literal notranslate"><span class="pre">Tcp_client.open()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.connect"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.connected"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connected()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.send"><code class="docutils literal notranslate"><span class="pre">Tcp_client.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_client.close"><code class="docutils literal notranslate"><span class="pre">Tcp_client.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.socket"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.socket</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.set_callbacks"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.send"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.send_echo_off"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_off()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.send_echo_on"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_on()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.ConnectionClient.close"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.MODE_TEXT"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.MODE_TEXT_LINE"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT_LINE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.MODE_BINARY"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_BINARY</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.MODE_FIXED_LENGTH"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_FIXED_LENGTH</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.start"><code class="docutils literal notranslate"><span class="pre">Tcp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.listening"><code class="docutils literal notranslate"><span class="pre">Tcp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.send"><code class="docutils literal notranslate"><span class="pre">Tcp_server.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.disconnect"><code class="docutils literal notranslate"><span class="pre">Tcp_server.disconnect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Tcp_server.close"><code class="docutils literal notranslate"><span class="pre">Tcp_server.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server.start"><code class="docutils literal notranslate"><span class="pre">Udp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Udp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server.listening"><code class="docutils literal notranslate"><span class="pre">Udp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="network.html#lib.network.Udp_server.close"><code class="docutils literal notranslate"><span class="pre">Udp_server.close()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="orb.html">lib.orb</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="env.html">lib.env</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kn_to_kmh"><code class="docutils literal notranslate"><span class="pre">kn_to_kmh()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="env.html#lib.env.kmh_to_kn"><code class="docutils literal notranslate"><span class="pre">kmh_to_kn()</span></code></a></li>
@@ -4936,6 +5105,9 @@
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.check_hashed_password"><code class="docutils literal notranslate"><span class="pre">Utils.check_hashed_password()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.create_hash"><code class="docutils literal notranslate"><span class="pre">Utils.create_hash()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.execute_subprocess"><code class="docutils literal notranslate"><span class="pre">Utils.execute_subprocess()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_all_addresses_for_addressfamily"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_addresses_for_addressfamily()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_all_local_ipv4_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv4_addresses()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_all_local_ipv6_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv6_addresses()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_local_ipv4_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv4_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_local_ipv6_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv6_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_type"><code class="docutils literal notranslate"><span class="pre">Utils.get_type()</span></code></a></li>
@@ -4974,7 +5146,7 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../referenz/APIs.html">APIs von SmartHomeNG</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="item.html">Items-API</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="item.html#lib-item">lib.item</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="item.html#module-lib.item">lib.item</a><ul class="current">
 <li class="toctree-l5 current"><a class="current reference internal" href="#">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="item.html#class-item">class Item</a></li>
@@ -4984,7 +5156,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="plugin.html#module-lib.plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="plugin.html#lib-plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -4994,15 +5166,26 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="shtime.html#lib-shtime">lib.shtime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shtime.html#module-lib.shtime">lib.shtime</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="logic.html#lib-logic">lib.logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="logic.html#module-lib.logic">lib.logic</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.html#lib-scheduler">lib.scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="env.html">lib.env</a><ul>
@@ -5048,6 +5231,9 @@
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.check_hashed_password"><code class="docutils literal notranslate"><span class="pre">Utils.check_hashed_password()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.create_hash"><code class="docutils literal notranslate"><span class="pre">Utils.create_hash()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.execute_subprocess"><code class="docutils literal notranslate"><span class="pre">Utils.execute_subprocess()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_all_addresses_for_addressfamily"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_addresses_for_addressfamily()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_all_local_ipv4_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv4_addresses()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_all_local_ipv6_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv6_addresses()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_local_ipv4_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv4_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_local_ipv6_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv6_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="utils.html#lib.utils.Utils.get_type"><code class="docutils literal notranslate"><span class="pre">Utils.get_type()</span></code></a></li>
@@ -5088,6 +5274,31 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ - Häufig gestellte Fragen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../release/release.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_11_0.html">Release 1.11.0 - 30. Mär 2025</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_11_0.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_11_0.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#bugfixes-im-core">Bugfixes im CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_11_0.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#outdated-plugins">Outdated Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_11_0.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_11_0.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../release/1_10.html">Release 1.10 - 29. Jan 2024</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../release/1_10.html#uberblick">Überblick</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../release/1_10.html#minimum-python-version">Minimum Python Version</a></li>
@@ -5428,7 +5639,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Dokumentation v1.10.0</a>
+          <a href="../index.html">Dokumentation v1.11.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -5451,6 +5662,765 @@
   <section id="class-item">
 <h1>Class Item<a class="headerlink" href="#class-item" title="Permalink to this heading"></a></h1>
 <p>This class implements the following methods and properties:</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.item.item.Item">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.item.item.</span></span><span class="sig-name descname"><span class="pre">Item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smarthome</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items_instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class from which item objects are created</p>
+<p>The class <code class="docutils literal notranslate"><span class="pre">Item</span></code> implements the methods and attributes of an item. Each item is represented by an instance
+of the class <code class="docutils literal notranslate"><span class="pre">Item</span></code>. For an item to be valid and usable, it has to be part of the item tree, which is
+maintained by an object of class <code class="docutils literal notranslate"><span class="pre">Items</span></code>.</p>
+<p>This class is used by the method <code class="docutils literal notranslate"><span class="pre">`load_itemdefinitions()</span></code> of the <strong>Items</strong> object.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.item.item.Item.TypeHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TypeHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.TypeHandler"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.TypeHandler" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for dict/list type item handling</p>
+<p>This class is a base class to enable modifying lists or dicts stored
+in item values. As item() yields a copy of the stored objects, changes
+are not written back to the item. This set of classes provides methods
+which handle storing the modified object and at the same time ensure that
+all item metadata handling (updated, changed, changed_age etc) are properly
+set.</p>
+<p>The class method for either object type correspond to the Python list/
+dict class methods for easy usage.</p>
+<p>When an item of type list/dict is created, the appropriate sub-class is
+instantiated as &lt;item&gt;.list resp. &lt;item&gt;.dict as to minimize collisions
+between item methods and names of sub-items (e.g. update).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lib.item.item.Item.TypeHandler.item_functions">
+<span class="sig-name descname"><span class="pre">item_functions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#lib.item.item.Item.TypeHandler.item_functions" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ListHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.ListHandler"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.ListHandler" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lib.item.item.Item.TypeHandler" title="lib.item.item.Item.TypeHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeHandler</span></code></a></p>
+<p>handle list type items</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler.item_functions">
+<span class="sig-name descname"><span class="pre">item_functions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['append',</span> <span class="pre">'prepend',</span> <span class="pre">'insert',</span> <span class="pre">'pop',</span> <span class="pre">'extend',</span> <span class="pre">'clear',</span> <span class="pre">'delete',</span> <span class="pre">'remove']</span></em><a class="headerlink" href="#lib.item.item.Item.ListHandler.item_functions" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.ListHandler.append"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.ListHandler.append" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler.prepend">
+<span class="sig-name descname"><span class="pre">prepend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.ListHandler.prepend"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.ListHandler.prepend" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.ListHandler.insert"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.ListHandler.insert" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler.pop">
+<span class="sig-name descname"><span class="pre">pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.ListHandler.pop"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.ListHandler.pop" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler.extend">
+<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.ListHandler.extend"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.ListHandler.extend" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.ListHandler.clear"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.ListHandler.clear" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.ListHandler.delete"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.ListHandler.delete" title="Link zu dieser Definition"></a></dt>
+<dd><p>mimic the del list[x:y] behaviour - supply „x:y“ as value
+needs to be called delete instead of del for syntax reasons</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.ListHandler.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.ListHandler.remove"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.ListHandler.remove" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.item.item.Item.DictHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DictHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.DictHandler"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.DictHandler" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lib.item.item.Item.TypeHandler" title="lib.item.item.Item.TypeHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeHandler</span></code></a></p>
+<p>handle dict type items</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lib.item.item.Item.DictHandler.item_functions">
+<span class="sig-name descname"><span class="pre">item_functions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['get',</span> <span class="pre">'delete',</span> <span class="pre">'clear',</span> <span class="pre">'pop',</span> <span class="pre">'popitem',</span> <span class="pre">'update']</span></em><a class="headerlink" href="#lib.item.item.Item.DictHandler.item_functions" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.DictHandler.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.DictHandler.get"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.DictHandler.get" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.DictHandler.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.DictHandler.delete"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.DictHandler.delete" title="Link zu dieser Definition"></a></dt>
+<dd><p>needs to be called delete instead of del for syntax reasons</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.DictHandler.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.DictHandler.clear"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.DictHandler.clear" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.DictHandler.pop">
+<span class="sig-name descname"><span class="pre">pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.DictHandler.pop"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.DictHandler.pop" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.DictHandler.popitem">
+<span class="sig-name descname"><span class="pre">popitem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.DictHandler.popitem"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.DictHandler.popitem" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.DictHandler.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.DictHandler.update"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.DictHandler.update" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.remove"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.remove" title="Link zu dieser Definition"></a></dt>
+<dd><p>Cleanup item usage before item deletion
+Calls all plugins to remove the item and its references.
+:return: success
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.find_attribute">
+<span class="sig-name descname"><span class="pre">find_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.find_attribute"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.find_attribute" title="Link zu dieser Definition"></a></dt>
+<dd><p>Find attribute value from item (level == 0) or parent item of given level</p>
+<p>If level &lt; 0, search up the whole item tree
+If strict is set and level is not reached, return ‚‘</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> – Get the value from this attribute of the parent item</p></li>
+<li><p><strong>level</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – number of parent-levels</p></li>
+<li><p><strong>strict</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – define if level is max-level or exact level</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>value from attribute of parent item</p>
+</dd>
+<dt class="field-odd">Ptype level<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Ptype strict<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>attribute value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.path">
+<span class="sig-name descname"><span class="pre">path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.path"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.path" title="Link zu dieser Definition"></a></dt>
+<dd><p>Path of the item</p>
+<p>Available only in SmartHomeNG v1.6, not in versions above</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>String with the path of the item</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.id"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.id" title="Link zu dieser Definition"></a></dt>
+<dd><p>Old method name - Use item.property.path instead of item.property.path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.type">
+<span class="sig-name descname"><span class="pre">type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.type"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.type" title="Link zu dieser Definition"></a></dt>
+<dd><p>Datatype of the item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Datatype of the item</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.last_change">
+<span class="sig-name descname"><span class="pre">last_change</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.last_change"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.last_change" title="Link zu dieser Definition"></a></dt>
+<dd><p>Timestamp of last change of item’s value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Timestamp of last change</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.age">
+<span class="sig-name descname"><span class="pre">age</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.age"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.age" title="Link zu dieser Definition"></a></dt>
+<dd><p>Age of the item’s actual value. Returns the time in seconds since the last change of the value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Age of the value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.last_update">
+<span class="sig-name descname"><span class="pre">last_update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.last_update"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.last_update" title="Link zu dieser Definition"></a></dt>
+<dd><p>Timestamp of last update of item’s value (not necessarily change)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Timestamp of last update</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.update_age">
+<span class="sig-name descname"><span class="pre">update_age</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.update_age"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.update_age" title="Link zu dieser Definition"></a></dt>
+<dd><p>Update-age of the item’s actual value. Returns the time in seconds since the value has been updated (not necessarily changed)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Update-age of the value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.last_trigger">
+<span class="sig-name descname"><span class="pre">last_trigger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.last_trigger"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.last_trigger" title="Link zu dieser Definition"></a></dt>
+<dd><p>Timestamp of last trigger of item’s eval expression (if available)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Timestamp of last update</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.trigger_age">
+<span class="sig-name descname"><span class="pre">trigger_age</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.trigger_age"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.trigger_age" title="Link zu dieser Definition"></a></dt>
+<dd><p>Trigger-age of the item’s last eval trigger. Returns the time in seconds since the eval has been triggered</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Update-age of the value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.prev_change">
+<span class="sig-name descname"><span class="pre">prev_change</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.prev_change"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.prev_change" title="Link zu dieser Definition"></a></dt>
+<dd><p>Timestamp of the previous (next-to-last) change of item’s value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Timestamp of previous change</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.prev_age">
+<span class="sig-name descname"><span class="pre">prev_age</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.prev_age"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.prev_age" title="Link zu dieser Definition"></a></dt>
+<dd><p>Age of the item’s previous value. Returns the time in seconds the item had the the previous value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Age of the previous value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.prev_update">
+<span class="sig-name descname"><span class="pre">prev_update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.prev_update"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.prev_update" title="Link zu dieser Definition"></a></dt>
+<dd><p>Timestamp of previous (next-to-last) update of item’s value (not necessarily change)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Timestamp of previous update</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.prev_update_age">
+<span class="sig-name descname"><span class="pre">prev_update_age</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.prev_update_age"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.prev_update_age" title="Link zu dieser Definition"></a></dt>
+<dd><p>Update-age of the item’s previous value. Returns the time in seconds the previous value existed
+since it had been updated (not necessarily changed)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Update-age of the previous value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.prev_trigger">
+<span class="sig-name descname"><span class="pre">prev_trigger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.prev_trigger"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.prev_trigger" title="Link zu dieser Definition"></a></dt>
+<dd><p>Timestamp of previous (next-to-last) trigger of item’s eval</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Timestamp of previous update</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.prev_trigger_age">
+<span class="sig-name descname"><span class="pre">prev_trigger_age</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.prev_trigger_age"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.prev_trigger_age" title="Link zu dieser Definition"></a></dt>
+<dd><p>Trigger-age of the item’s previous eval trigger. Returns the time in seconds of the previous eval trigger</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Update-age of the previous value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.prev_value">
+<span class="sig-name descname"><span class="pre">prev_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.prev_value"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.prev_value" title="Link zu dieser Definition"></a></dt>
+<dd><p>Next-to-last value of the item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Next-to-last value of the item</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.changed_by">
+<span class="sig-name descname"><span class="pre">changed_by</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.changed_by"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.changed_by" title="Link zu dieser Definition"></a></dt>
+<dd><p>Returns an indication, which plugin, logic or event changed the item’s value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Changer of item’s value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.updated_by">
+<span class="sig-name descname"><span class="pre">updated_by</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.updated_by"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.updated_by" title="Link zu dieser Definition"></a></dt>
+<dd><p>Returns an indication, which plugin, logic or event updated (not necessarily changed) the item’s value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Updater of item’s value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.triggered_by">
+<span class="sig-name descname"><span class="pre">triggered_by</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.triggered_by"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.triggered_by" title="Link zu dieser Definition"></a></dt>
+<dd><p>Returns an indication, which plugin, logic or event triggered the item’s eval</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Updater of item’s value</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_absolutepath">
+<span class="sig-name descname"><span class="pre">get_absolutepath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relativepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_absolutepath"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_absolutepath" title="Link zu dieser Definition"></a></dt>
+<dd><p>Builds an absolute item path relative to the current item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relativepath</strong> – string with the relative item path</p></li>
+<li><p><strong>attribute</strong> – string with the name of the item’s attribute, which contains the relative path (for log entries)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>string with the absolute item path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.expand_relativepathes">
+<span class="sig-name descname"><span class="pre">expand_relativepathes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">begintag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endtag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.expand_relativepathes"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.expand_relativepathes" title="Link zu dieser Definition"></a></dt>
+<dd><p>converts a configuration attribute containing relative item paths
+to absolute paths</p>
+<p>The item’s attribute can be of type str or list (of strings)</p>
+<p>The begintag and the endtag remain in the result string!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> – Name of the attribute. Use * as a wildcard at the end</p></li>
+<li><p><strong>begintag</strong> – string or list of strings that signals the beginning of a relative path is following</p></li>
+<li><p><strong>endtag</strong> – string or list of strings that signals the end of a relative path</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_stringwithabsolutepathes">
+<span class="sig-name descname"><span class="pre">get_stringwithabsolutepathes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evalstr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">begintag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endtag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_stringwithabsolutepathes"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_stringwithabsolutepathes" title="Link zu dieser Definition"></a></dt>
+<dd><p>converts a string containing relative item paths
+to a string with absolute item paths</p>
+<p>The begintag and the endtag remain in the result string!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evalstr</strong> – string with the statement that may contain relative item paths</p></li>
+<li><p><strong>begintag</strong> – string that signals the beginning of a relative path is following</p></li>
+<li><p><strong>endtag</strong> – string that signals the end of a relative path</p></li>
+<li><p><strong>attribute</strong> – string with the name of the item’s attribute, which contains the relative path</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>string with the statement containing absolute item paths</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_class_from_frame">
+<span class="sig-name descname"><span class="pre">get_class_from_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_class_from_frame"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_class_from_frame" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_calling_item_from_frame">
+<span class="sig-name descname"><span class="pre">get_calling_item_from_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_calling_item_from_frame"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_calling_item_from_frame" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_stack_info">
+<span class="sig-name descname"><span class="pre">get_stack_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_stack_info"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_stack_info" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_attr_time">
+<span class="sig-name descname"><span class="pre">get_attr_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_attr_time"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_attr_time" title="Link zu dieser Definition"></a></dt>
+<dd><p>return attribute time, possibly recalculated at call time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – attribute to calculate time for, e.g. „cycle“ or „autotimer“</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>int | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_attr_value">
+<span class="sig-name descname"><span class="pre">get_attr_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_attr_value"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_attr_value" title="Link zu dieser Definition"></a></dt>
+<dd><p>return attribute value, possibly recalculated at call time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – attribute to calculate value for, e.g. cycle or autotimer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.hysteresis_state">
+<span class="sig-name descname"><span class="pre">hysteresis_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.hysteresis_state"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.hysteresis_state" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return the inner hysteresis_state</p>
+<p>Available in SmartHomeNG v1.10 and above</p>
+<p>TODO: Return right state, if value is from init:cache</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>hysteresis state of the item</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.hysteresis_data">
+<span class="sig-name descname"><span class="pre">hysteresis_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.hysteresis_data"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.hysteresis_data" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return the inner hysteresis_state</p>
+<p>returns a dict with the current hysteresis data
+(lower threshold, upper threshold, input value, output value and internal state)</p>
+<p>Available in SmartHomeNG v1.10 and above</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>hysteresis state of the item</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.add_logic_trigger">
+<span class="sig-name descname"><span class="pre">add_logic_trigger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logic</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.add_logic_trigger"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.add_logic_trigger" title="Link zu dieser Definition"></a></dt>
+<dd><p>Add a logic trigger to the item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>logic</strong> – </p>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.remove_logic_trigger">
+<span class="sig-name descname"><span class="pre">remove_logic_trigger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logic</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.remove_logic_trigger"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.remove_logic_trigger" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_logic_triggers">
+<span class="sig-name descname"><span class="pre">get_logic_triggers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_logic_triggers"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_logic_triggers" title="Link zu dieser Definition"></a></dt>
+<dd><p>Returns a list of logics to trigger, if the item gets changed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Logics to trigger</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.add_method_trigger">
+<span class="sig-name descname"><span class="pre">add_method_trigger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.add_method_trigger"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.add_method_trigger" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.remove_method_trigger">
+<span class="sig-name descname"><span class="pre">remove_method_trigger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.remove_method_trigger"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.remove_method_trigger" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_method_triggers">
+<span class="sig-name descname"><span class="pre">get_method_triggers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_method_triggers"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_method_triggers" title="Link zu dieser Definition"></a></dt>
+<dd><p>Returns a list of plugin methods to trigger, if this item gets changed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>methods to trigger</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_item_triggers">
+<span class="sig-name descname"><span class="pre">get_item_triggers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_item_triggers"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_item_triggers" title="Link zu dieser Definition"></a></dt>
+<dd><p>Returns a list of items to trigger, if this item gets changed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>methods to trigger</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_hysteresis_item_triggers">
+<span class="sig-name descname"><span class="pre">get_hysteresis_item_triggers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_hysteresis_item_triggers"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_hysteresis_item_triggers" title="Link zu dieser Definition"></a></dt>
+<dd><p>Returns a list of items to trigger, if this item gets changed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>methods to trigger</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.timer">
+<span class="sig-name descname"><span class="pre">timer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.timer"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.timer" title="Link zu dieser Definition"></a></dt>
+<dd><p>Starts a timer for this item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – Duration till the value of the item is set</p></li>
+<li><p><strong>value</strong> – Value the item should be set to</p></li>
+<li><p><strong>auto</strong> – Optional: If False a single timer is started, else the duration/value information is set as an autotimer</p></li>
+<li><p><strong>caller</strong> – Optional: The caller of this function</p></li>
+<li><p><strong>source</strong> – Optional: The source of the timer-request</p></li>
+<li><p><strong>compat</strong> – Not used anymore, only defined for backward compatibility</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.remove_timer">
+<span class="sig-name descname"><span class="pre">remove_timer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.remove_timer"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.remove_timer" title="Link zu dieser Definition"></a></dt>
+<dd><p>Remove a running timer for this item from the scheduler</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.autotimer">
+<span class="sig-name descname"><span class="pre">autotimer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.autotimer"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.autotimer" title="Link zu dieser Definition"></a></dt>
+<dd><p>Defines or removes an autotimer for the item</p>
+<p>If time and value are not given (or None), an existing autotimer is removed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – Time until the value is set</p></li>
+<li><p><strong>value</strong> – Value to set the item to</p></li>
+<li><p><strong>compat</strong> – Not used anymore, only defined for backward compatibility</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.fade">
+<span class="sig-name descname"><span class="pre">fade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_fade</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continue_fade</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instant_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.fade"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.fade" title="Link zu dieser Definition"></a></dt>
+<dd><p>fades an item value to a given destination value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dest</strong> – destination value of fade job</p></li>
+<li><p><strong>step</strong> – step size for fading</p></li>
+<li><p><strong>delta</strong> – time interval between value changes</p></li>
+<li><p><strong>caller</strong> – Used as a source for upcoming item changes. Caller will always be „Fader“</p></li>
+<li><p><strong>stop_fade</strong> – list of callers that can stop the fading (all others won’t stop it!)</p></li>
+<li><p><strong>continue_fade</strong> – list of callers that can continue fading exclusively (all others will stop it)</p></li>
+<li><p><strong>instant_set</strong> – If set to True, first fade value is set immediately after fade method is called, otherwise only after delta time</p></li>
+<li><p><strong>update</strong> – If set to True, an ongoing fade will be updated by the new parameters on the fly</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.return_children">
+<span class="sig-name descname"><span class="pre">return_children</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.return_children"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.return_children" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.return_parent">
+<span class="sig-name descname"><span class="pre">return_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.return_parent"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.return_parent" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return ancestor item of given level</p>
+<p>If item doesn’t have &lt;level&gt; ancestors, and…
+- strict is set, return None
+- strict is not set, return the highest found ancestor</p>
+<p>If level is &lt; 1, method returns this item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>level</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – number of parent-levels</p></li>
+<li><p><strong>strict</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – define if level is max-level or exact level</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ptype level<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">Ptype strict<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>ancestor item (or this item, or None)</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Logic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_change</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_change</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.set"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.set" title="Link zu dieser Definition"></a></dt>
+<dd><p>Set an Item value and optionally set prev_change and last_change timestamps</p>
+<p>(This method is called eg. by the database plugin to initialize items from the database on start)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – </p></li>
+<li><p><strong>caller</strong> – </p></li>
+<li><p><strong>source</strong> – </p></li>
+<li><p><strong>dest</strong> – </p></li>
+<li><p><strong>prev_change</strong> – </p></li>
+<li><p><strong>last_change</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.get_children_path">
+<span class="sig-name descname"><span class="pre">get_children_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.get_children_path"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.get_children_path" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.jsonvars">
+<span class="sig-name descname"><span class="pre">jsonvars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.jsonvars"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.jsonvars" title="Link zu dieser Definition"></a></dt>
+<dd><p>Translation method from object members to json
+:return: Key / Value pairs from object members</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.item.item.Item.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/item/item.html#Item.to_json"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.item.item.Item.to_json" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -5464,7 +6434,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2016-2024 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp.</p>
+    <p>&#169; Copyright 2016-2025 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp.</p>
   </div>
 
    

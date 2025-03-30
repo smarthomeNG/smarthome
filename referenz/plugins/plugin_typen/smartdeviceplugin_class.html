@@ -4,11 +4,10 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Class SmartDevicePlugin &mdash; Dokumentation v1.10.0 v1.10.0 (Stand 19. Januar 2024) Dokumentation</title>
+  <title>Class SmartDevicePlugin &mdash; Dokumentation v1.11.0 v1.11.0 (Stand 30. März 2025) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
@@ -26,8 +25,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Stichwortverzeichnis" href="../../../genindex.html" />
     <link rel="search" title="Suche" href="../../../search.html" />
-    <link rel="next" title="Metadaten für Plugins" href="../plugin_metadata.html" />
-    <link rel="prev" title="Plugin Typen" href="plugin_typen.html" /> 
+    <link rel="next" title="Plugin-Metadata update" href="../../../entwicklung/plugins/kurzanleitung/plugin_metadata.html" />
+    <link rel="prev" title="Class MqttPlugin" href="mqttplugin_class.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,7 +38,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Dokumentation v1.10.0
+            Dokumentation v1.11.0
               <img src="../../../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -52,9 +51,16 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../was_ist_neu.html">Neuerungen im Release v1.10</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../was_ist_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../was_ist_neu.html#tipps-tricks">Tipps &amp; Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../was_ist_neu.html">Neuerungen im Release v1.11</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-fur-plugin-entwickler">Neuerungen für Plugin Entwickler</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../was_war_neu.html#tipps-tricks">Tipps &amp; Tricks</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation/installation.html">Installation</a><ul>
@@ -111,7 +117,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html">smartVISU installieren</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#zusatzliche-pakete-installieren">zusätzliche Pakete installieren</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#webserver-und-zusatzliche-pakete-installieren">Webserver und zusätzliche Pakete installieren</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#smartvisu-quellcode-laden">SmartVISU Quellcode laden</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#zugriff-auf-die-smartvisu-testen">Zugriff auf die SmartVISU testen</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/04_smartvisu.html#eigene-visu-seiten-anlegen">Eigene Visu Seiten anlegen</a></li>
@@ -145,6 +151,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/08_shng_daemon.html#einrechten-des-dienstes">Einrechten des Dienstes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/08_shng_daemon.html#nutzung-eines-virtuellen-environments-neu">Nutzung eines virtuellen Environments <span class="redsup">neu</span></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/08_shng_daemon.html#starten-des-dienstes">Starten des Dienstes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation/komplettanleitung/09_esphome.html">ESPHome Dashboard <span class="redsup">new</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/09_esphome.html#esphome-dashboard-starten-und-testen">ESPHome Dashboard starten und testen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/09_esphome.html#esphome-dashboard-als-dienst-einrichten">ESPHome Dashboard als Dienst einrichten</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../installation/komplettanleitung/09_esphome.html#starten-des-dienstes">Starten des Dienstes</a></li>
 </ul>
 </li>
 </ul>
@@ -274,9 +286,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../items/standard_attribute/standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/autotimer.html"><em>autotimer</em></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/cycle.html">cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/autotimer.html"><em>autotimer</em> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/cycle.html">cycle <span class="redsup">neu</span></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/enforce_updates.html">enforce_updates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/enforce_change.html">enforce_change</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/eval.html"><em>eval</em> und <em>eval_trigger</em></a><ul>
@@ -312,7 +324,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../items/item_zugriff.html">Zugriff auf die Werte von Items</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../items/item_zugriff.html#lesen-einer-item-wertes">Lesen einer Item Wertes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../items/item_zugriff.html#lesen-eines-item-wertes">Lesen eines Item Wertes</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../items/item_zugriff.html#zugriff-auf-ein-listen-element-neu">Zugriff auf ein Listen-Element <span class="redsup">neu</span></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../items/item_zugriff.html#zugriff-auf-ein-dict-element-neu">Zugriff auf ein Dict-Element <span class="redsup">neu</span></a></li>
 </ul>
@@ -323,6 +335,11 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../items/item_zugriff.html#weitere-parameter-item-zugriff">Weitere Parameter Item Zugriff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../items/item_zugriff.html#erweiterter-zugriff-auf-list-und-dict-items-neu">Erweiterter Zugriff auf List- und Dict-Items <span class="redsup">neu</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../items/item_zugriff.html#list-items">List-Items</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../items/item_zugriff.html#dict-items">Dict-Items</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../items/plugin_attribute.html">Plugin-spezifische Attribute</a><ul>
@@ -4043,15 +4060,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../beispiele/structs/item_strukturen_kopieren.html">Item Strukturen bequem kopieren</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../beispiele/plugins/plugins.html">Plugins</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html">Ein Plugin aus develop installieren</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../beispiele/plugins/plugins.html">Plugins <span class="greensup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html">Ein Plugin aus develop installieren <span class="greensup">Update</span></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#konfiguration-anpassen">Konfiguration anpassen</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#plugin-manuell-installieren">Plugin manuell installieren</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#plugins-repository-aufrufen">Plugins Repository aufrufen</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#plugins-repository-download">Plugins Repository Download</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../beispiele/plugins/plugin_aus_develop.html#gewunschtes-plugin-installieren">Gewünschtes Plugin installieren</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -4109,7 +4120,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../fehlersuche.html">Fehlersuche</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../entwicklung/entwicklung.html">Entwicklung</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../entwicklung/entwicklung.html">Entwicklung</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../../entwicklung/logiken/logiken.html">Logiken <span class="bluesup">under construction</span></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../entwicklung/logiken/logiken.html#einfuhrung">Einführung</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/logiken/logiken.html#behandlung-von-fehlern-in-der-logik">Behandlung von Fehlern in der Logik</a><ul>
@@ -4124,7 +4135,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../entwicklung/logiken/logiken.html#beispiele">Beispiele</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../entwicklung/plugins/plugins.html">Plugins <span class="bluesup">Update</span></a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="../../../entwicklung/plugins/plugins.html">Plugins <span class="bluesup">Update</span></a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../../../entwicklung/plugins/vorueberlegungen.html">Vorüberlegungen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/plugins/vorueberlegungen.html#fragestellungen">Fragestellungen</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/plugins/vorueberlegungen.html#typ-des-plugins">Typ des Plugins</a><ul>
@@ -4160,21 +4171,34 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../entwicklung/plugins/plugin_checker.html">Plugin-Checker <span class="redsup">neu</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/kurzanleitung.html">Kurzanleitung  <span class="bluesup">update</span></a><ul>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/kurzanleitung.html">Kurzanleitung  <span class="bluesup">update</span></a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html">In wenigen Minuten zum eigenen Plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#beschreibung-des-plugins">Beschreibung des Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#vordefinierte-funktionen-des-plugins">Vordefinierte Funktionen des Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="smartplugin_class.html">Class SmartPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mqttplugin_class.html">Class MqttPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smartdeviceplugin.html">Plugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smartdeviceplugin.html#kommandos">Kommandos</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smartdeviceplugin.html#protokoll">Protokoll</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smartdeviceplugin.html#verbindung">Verbindung</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smartdeviceplugin.html#datatypes">DataTypes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smartdeviceplugin.html#commands">Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smartplugin_class.html">Class SmartPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="smartplugin_class.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="mqttplugin_class.html">Class MqttPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="mqttplugin_class.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Class SmartDevicePlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#plugin">Plugin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#kommandos">Kommandos</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#protokoll">Protokoll</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#verbindung">Verbindung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#datatypes">DataTypes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#commands">Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#klassendefinition">Klassendefinition</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lib.model.smartdeviceplugin.SmartDevicePlugin"><code class="docutils literal notranslate"><span class="pre">SmartDevicePlugin</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#plugin">plugin</a></li>
@@ -4251,8 +4275,19 @@
 <li class="toctree-l3"><a class="reference internal" href="../../module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#metadaten">Metadaten</a></li>
@@ -4284,7 +4319,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../entwicklung/core/core.html">Entwicklung des Core</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../entwicklung/core/core_shng.html#lib-item">lib.item</a></li>
 </ul>
 </li>
@@ -4308,13 +4346,22 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.remove_reserved"><code class="docutils literal notranslate"><span class="pre">remove_reserved()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.remove_special_listentries"><code class="docutils literal notranslate"><span class="pre">remove_special_listentries()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.replace_struct_instance"><code class="docutils literal notranslate"><span class="pre">replace_struct_instance()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.sanitize_items"><code class="docutils literal notranslate"><span class="pre">sanitize_items()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.search_for_struct_in_items"><code class="docutils literal notranslate"><span class="pre">search_for_struct_in_items()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.set_attr_for_subtree"><code class="docutils literal notranslate"><span class="pre">set_attr_for_subtree()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/config.html#lib.config.strip_quotes"><code class="docutils literal notranslate"><span class="pre">strip_quotes()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/daemon.html">lib.daemon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/daemon.html">lib.daemon</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -4338,7 +4385,10 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/scene.html">lib.scene</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/scene.html">lib.scene</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -4375,8 +4425,20 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html">lib.network</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html">lib.network</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/tools.html">lib.tools</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a></li>
 </ul>
@@ -4444,9 +4506,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../items/items.html">Items</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../items/standard_attribute/standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/autotimer.html"><em>autotimer</em></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/cycle.html">cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/autotimer.html"><em>autotimer</em> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/crontab.html">crontab <span class="bluesup">Update</span> <span class="redsup">neu</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/cycle.html">cycle <span class="redsup">neu</span></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/enforce_updates.html">enforce_updates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/enforce_change.html">enforce_change</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../items/standard_attribute/eval.html"><em>eval</em> und <em>eval_trigger</em></a><ul>
@@ -4482,7 +4544,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../items/item_zugriff.html">Zugriff auf die Werte von Items</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../items/item_zugriff.html#lesen-einer-item-wertes">Lesen einer Item Wertes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../items/item_zugriff.html#lesen-eines-item-wertes">Lesen eines Item Wertes</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../items/item_zugriff.html#zugriff-auf-ein-listen-element-neu">Zugriff auf ein Listen-Element <span class="redsup">neu</span></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../items/item_zugriff.html#zugriff-auf-ein-dict-element-neu">Zugriff auf ein Dict-Element <span class="redsup">neu</span></a></li>
 </ul>
@@ -4493,6 +4555,11 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../items/item_zugriff.html#weitere-parameter-item-zugriff">Weitere Parameter Item Zugriff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../items/item_zugriff.html#erweiterter-zugriff-auf-list-und-dict-items-neu">Erweiterter Zugriff auf List- und Dict-Items <span class="redsup">neu</span></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../items/item_zugriff.html#list-items">List-Items</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../items/item_zugriff.html#dict-items">Dict-Items</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../items/plugin_attribute.html">Plugin-spezifische Attribute</a><ul>
@@ -4679,7 +4746,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_http.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_http.html#module-modules.http">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4687,15 +4759,29 @@
 <li class="toctree-l3"><a class="reference internal" href="../../module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4763,7 +4849,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../netzwerk.html#ports">Ports</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../plugins.html">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../plugins.html">Plugins <span class="greensup">Update</span></a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../asyncio_support.html">asyncio Unterstützung in Plugins <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../asyncio_support.html#methoden-zur-unterstutzung-von-asyncio">Methoden zur Unterstützung von asyncio</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../asyncio_support.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3 current"><a class="reference internal" href="plugin_typen.html">Plugin Typen</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="plugin_typen.html#classic-plugin">Classic Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="plugin_typen.html#smartplugin">SmartPlugin</a><ul>
@@ -4775,13 +4868,8 @@
 </ul>
 </li>
 <li class="toctree-l4 current"><a class="reference internal" href="plugin_typen.html#smartdeviceplugin">SmartDevicePlugin</a><ul class="current">
-<li class="toctree-l5"><a class="reference internal" href="smartdeviceplugin.html">Plugin</a></li>
-<li class="toctree-l5"><a class="reference internal" href="smartdeviceplugin.html#kommandos">Kommandos</a></li>
-<li class="toctree-l5"><a class="reference internal" href="smartdeviceplugin.html#protokoll">Protokoll</a></li>
-<li class="toctree-l5"><a class="reference internal" href="smartdeviceplugin.html#verbindung">Verbindung</a></li>
-<li class="toctree-l5"><a class="reference internal" href="smartdeviceplugin.html#datatypes">DataTypes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="smartdeviceplugin.html#commands">Commands</a></li>
 <li class="toctree-l5 current"><a class="current reference internal" href="#">Class SmartDevicePlugin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#klassendefinition">Klassendefinition</a></li>
 </ul>
 </li>
 </ul>
@@ -4835,6 +4923,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../userfunctions/userfunctions.html#reload-von-userfunctions">Reload von Userfunctions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../userfunctions/userfunctions.html#zusatzliche-python-module">Zusätzliche Python Module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../python/python.html">Python Environment <span class="bluesup">Update</span></a><ul>
@@ -4891,8 +4980,88 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../lib/network.html">lib.network</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lib/network.html">lib.network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.ip_port_to_socket"><code class="docutils literal notranslate"><span class="pre">Network.ip_port_to_socket()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.family_to_string"><code class="docutils literal notranslate"><span class="pre">Network.family_to_string()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.ping"><code class="docutils literal notranslate"><span class="pre">Network.ping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.ping_port"><code class="docutils literal notranslate"><span class="pre">Network.ping_port()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.send_wol"><code class="docutils literal notranslate"><span class="pre">Network.send_wol()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.validate_inet_addr"><code class="docutils literal notranslate"><span class="pre">Network.validate_inet_addr()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Network.clean_uri"><code class="docutils literal notranslate"><span class="pre">Network.clean_uri()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections.monitor"><code class="docutils literal notranslate"><span class="pre">Connections.monitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections.unmonitor"><code class="docutils literal notranslate"><span class="pre">Connections.unmonitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Connections.check"><code class="docutils literal notranslate"><span class="pre">Connections.check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.HTTPDigestAuth"><code class="docutils literal notranslate"><span class="pre">Http.HTTPDigestAuth()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.post_json"><code class="docutils literal notranslate"><span class="pre">Http.post_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.get_json"><code class="docutils literal notranslate"><span class="pre">Http.get_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.get_text"><code class="docutils literal notranslate"><span class="pre">Http.get_text()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.download"><code class="docutils literal notranslate"><span class="pre">Http.download()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.get_binary"><code class="docutils literal notranslate"><span class="pre">Http.get_binary()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.response_status"><code class="docutils literal notranslate"><span class="pre">Http.response_status()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.response_headers"><code class="docutils literal notranslate"><span class="pre">Http.response_headers()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.response_cookies"><code class="docutils literal notranslate"><span class="pre">Http.response_cookies()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Http.response_object"><code class="docutils literal notranslate"><span class="pre">Http.response_object()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_client.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.open"><code class="docutils literal notranslate"><span class="pre">Tcp_client.open()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.connect"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.connected"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connected()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.send"><code class="docutils literal notranslate"><span class="pre">Tcp_client.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_client.close"><code class="docutils literal notranslate"><span class="pre">Tcp_client.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.socket"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.socket</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.set_callbacks"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.send"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.send_echo_off"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_off()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.send_echo_on"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_on()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.ConnectionClient.close"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.MODE_TEXT"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.MODE_TEXT_LINE"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT_LINE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.MODE_BINARY"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_BINARY</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.MODE_FIXED_LENGTH"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_FIXED_LENGTH</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.start"><code class="docutils literal notranslate"><span class="pre">Tcp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.listening"><code class="docutils literal notranslate"><span class="pre">Tcp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.send"><code class="docutils literal notranslate"><span class="pre">Tcp_server.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.disconnect"><code class="docutils literal notranslate"><span class="pre">Tcp_server.disconnect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Tcp_server.close"><code class="docutils literal notranslate"><span class="pre">Tcp_server.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server.start"><code class="docutils literal notranslate"><span class="pre">Udp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Udp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server.listening"><code class="docutils literal notranslate"><span class="pre">Udp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server.close"><code class="docutils literal notranslate"><span class="pre">Udp_server.close()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/env.html">lib.env</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/env.html#lib.env.kn_to_kmh"><code class="docutils literal notranslate"><span class="pre">kn_to_kmh()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/env.html#lib.env.kmh_to_kn"><code class="docutils literal notranslate"><span class="pre">kmh_to_kn()</span></code></a></li>
@@ -4936,6 +5105,9 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.check_hashed_password"><code class="docutils literal notranslate"><span class="pre">Utils.check_hashed_password()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.create_hash"><code class="docutils literal notranslate"><span class="pre">Utils.create_hash()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.execute_subprocess"><code class="docutils literal notranslate"><span class="pre">Utils.execute_subprocess()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_addresses_for_addressfamily"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_addresses_for_addressfamily()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_local_ipv4_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv4_addresses()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_local_ipv6_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv6_addresses()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_local_ipv4_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv4_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_local_ipv6_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv6_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_type"><code class="docutils literal notranslate"><span class="pre">Utils.get_type()</span></code></a></li>
@@ -4974,7 +5146,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/item.html#lib-item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/item.html#module-lib.item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item.html#class-item">class Item</a></li>
@@ -4984,7 +5156,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/plugin.html#module-lib.plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/plugin.html#lib-plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -4994,15 +5166,26 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/shtime.html#lib-shtime">lib.shtime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/shtime.html#module-lib.shtime">lib.shtime</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/logic.html#lib-logic">lib.logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/logic.html#module-lib.logic">lib.logic</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/scheduler.html#lib-scheduler">lib.scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/env.html">lib.env</a><ul>
@@ -5048,6 +5231,9 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.check_hashed_password"><code class="docutils literal notranslate"><span class="pre">Utils.check_hashed_password()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.create_hash"><code class="docutils literal notranslate"><span class="pre">Utils.create_hash()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.execute_subprocess"><code class="docutils literal notranslate"><span class="pre">Utils.execute_subprocess()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_addresses_for_addressfamily"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_addresses_for_addressfamily()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_local_ipv4_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv4_addresses()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_all_local_ipv6_addresses"><code class="docutils literal notranslate"><span class="pre">Utils.get_all_local_ipv6_addresses()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_local_ipv4_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv4_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_local_ipv6_address"><code class="docutils literal notranslate"><span class="pre">Utils.get_local_ipv6_address()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/utils.html#lib.utils.Utils.get_type"><code class="docutils literal notranslate"><span class="pre">Utils.get_type()</span></code></a></li>
@@ -5088,6 +5274,31 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">FAQ - Häufig gestellte Fragen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../release/release.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../release/1_11_0.html">Release 1.11.0 - 30. Mär 2025</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_11_0.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_11_0.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#bugfixes-im-core">Bugfixes im CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_11_0.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#outdated-plugins">Outdated Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_11_0.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_11_0.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../release/1_10.html">Release 1.10 - 29. Jan 2024</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../release/1_10.html#uberblick">Überblick</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../release/1_10.html#minimum-python-version">Minimum Python Version</a></li>
@@ -5428,7 +5639,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Dokumentation v1.10.0</a>
+          <a href="../../../index.html">Dokumentation v1.11.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -5436,9 +5647,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../../referenz.html">Referenz <span class="greensup">Update</span></a></li>
-          <li class="breadcrumb-item"><a href="../plugins.html">Plugins</a></li>
-          <li class="breadcrumb-item"><a href="plugin_typen.html">Plugin Typen</a></li>
+          <li class="breadcrumb-item"><a href="../../../entwicklung/entwicklung.html">Entwicklung</a></li>
+          <li class="breadcrumb-item"><a href="../../../entwicklung/plugins/plugins.html">Plugins <span class="bluesup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../../entwicklung/plugins/kurzanleitung/kurzanleitung.html">Kurzanleitung  <span class="bluesup">update</span></a></li>
       <li class="breadcrumb-item active">Class SmartDevicePlugin</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -5450,23 +5661,453 @@
              
   <span class="target" id="index-0"></span><span class="target" id="index-1"></span><section id="class-smartdeviceplugin">
 <span id="index-2"></span><h1>Class SmartDevicePlugin<a class="headerlink" href="#class-smartdeviceplugin" title="Permalink to this heading"></a></h1>
+<p>Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.</p>
+<p>Hierzu bietet die sdp-Klasse ein fertiges Plugin, aus dem mit minimalem Aufwand ein eigenes Plugin erstellt werden kann.</p>
+<p>Dazu besteht sdp aus mehreren modularen Ebenen, die hier zusammen mit den jeweiligen ausgetauschten Daten dargestellt werden:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Ebenen von SDP</span><a class="headerlink" href="#id1" title="Link zu dieser Tabelle"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ebene</p></th>
+<th class="head"><p>arbeitet mit Daten</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SmartHomeNG</p></td>
+<td><p>Items</p></td>
+</tr>
+<tr class="row-odd"><td><p>Plugin</p></td>
+<td><p>Kommandos</p></td>
+</tr>
+<tr class="row-even"><td><p>class SDPCommands (fasst commands zusammen, aus commands.py)</p></td>
+<td><p>Werte</p></td>
+</tr>
+<tr class="row-odd"><td><p>class SDPCommand (stellt einzelnes command dar, aus commands.py)</p></td>
+<td><p>(ggf. transformierte) Werte</p></td>
+</tr>
+<tr class="row-even"><td><p>class DataType (kann beliebige Datentransformation nach Bedarf vornehmen)</p></td>
+<td><p>gerätespezifisch transformierte Werte</p></td>
+</tr>
+<tr class="row-odd"><td><p>class SDPProtocol (optional, z.B. JSON-RPC, Binärprotokoll mit Verbindungsaufbau…)</p></td>
+<td><p>gerätespezifisch transformierte Werte</p></td>
+</tr>
+<tr class="row-even"><td><p>class SDPConnection (stellt die konkrete Verbindungsebene dar)</p></td>
+<td><p>gerätespezifisch transformierte Werte</p></td>
+</tr>
+<tr class="row-odd"><td><p>Kommunikationsmodul (z.B. lib.network, serial, …)</p></td>
+<td><p>gerätespezifisch transformierte Werte</p></td>
+</tr>
+<tr class="row-even"><td><p>Gerät</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Das Plugin besteht aus dem (vererbten) Plugin-Code in <cite>__init__.py</cite>, der commands-Definition in <cite>commands.py</cite>, ggf.
+pluginspezifischer Protokolldefinition in <cite>protocol.py</cite>, ggf. pluginspezifischen Datentypen in <cite>datatypes.py</cite> und den
+Standarddateien <cite>plugin.yaml</cite> und ggf. <cite>user_doc.rst</cite>.</p>
+<section id="plugin">
+<h2>Plugin<a class="headerlink" href="#plugin" title="Permalink to this heading"></a></h2>
+<p>Der folgende Code stellt ein minimales, uneingeschränkt lauffähiges Plugin dar (hier aus dem Beispielplugin
+sdp_viessmann entnommen):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lib.model.smartdeviceplugin</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartDevicePlugin</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">sdp_viessmann</span><span class="p">(</span><span class="n">SmartDevicePlugin</span><span class="p">):</span>
+<span class="sd">&quot;&quot;&quot; Device class for Viessmann heating systems.&quot;&quot;&quot;</span>
+<span class="n">PLUGIN_VERSION</span> <span class="o">=</span> <span class="s1">&#39;1.0.0&#39;</span>
+</pre></div>
+</div>
+<p>Nun wäre es naiv zu glauben, dass nur eine Codezeile ein beliebiges Plugin darstellen kann. Für ein nicht nur
+lauffähiges, sondern auf funktionales Plugin bedarf es noch der wesentlichen Konfiguration, die im Zusammenhang mit sdp benötigt wird - den commands in der <cite>commands.py</cite>.</p>
+</section>
+<section id="kommandos">
+<h2>Kommandos<a class="headerlink" href="#kommandos" title="Permalink to this heading"></a></h2>
+<p>Hier wird nach einer vorgegebenen Struktur definiert, welche Befehle wie für das Gerät „übersetzt“ werden müssen.
+Dabei gibt es eine Reihe von - zunehmend komplexen - Optionen, die in der Referenz im Detail behandelt werden. Im
+Wesentlichen wird in der <cite>commands.py</cite> das dict <cite>commands</cite> definiert, dessen Inhalte die Intelligenz des Plugins
+definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des sdp_viessmann-Plugins:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">commands</span><span class="p">:</span>
+    <span class="s1">&#39;Allgemein&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;item_attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cycle&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">},</span>
+        <span class="s1">&#39;Temperatur&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;Aussen&#39;</span><span class="p">:</span>             <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;0101&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempA -- Information - Allgemein: Aussentemperatur (-40..70)</span>
+        <span class="p">},</span>
+        <span class="c1"># Anlagenstatus</span>
+        <span class="s1">&#39;Betriebsart&#39;</span><span class="p">:</span>            <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;b000&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="s1">&#39;operatingmodes&#39;</span><span class="p">,</span> <span class="s1">&#39;item_attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;attributes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;md_read_initial&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="s1">&#39;lookup_item&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>     <span class="c1"># getBetriebsart -- Bedienung HK1 - Heizkreis 1: Betriebsart (Textstring)</span>
+        <span class="s1">&#39;Manuell&#39;</span><span class="p">:</span>                <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;b020&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s1">&#39;cmd_settings&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;force_min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;force_max&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getManuell / setManuell -- 0 = normal, 1 = manueller Heizbetrieb, 2 = 1x Warmwasser auf Temp2</span>
+        <span class="c1"># Allgemein</span>
+        <span class="s1">&#39;Outdoor_Fanspeed&#39;</span><span class="p">:</span>       <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;1a52&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}},</span>     <span class="c1"># getSpdFanOut -- Outdoor Fanspeed</span>
+        <span class="s1">&#39;Status_Fanspeed&#39;</span><span class="p">:</span>        <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;1a53&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}},</span>     <span class="c1"># getSpdFan -- Geschwindigkeit Luefter</span>
+        <span class="s1">&#39;Kompressor_Freq&#39;</span><span class="p">:</span>        <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;1a54&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}},</span>     <span class="c1"># getSpdKomp -- Compressor Frequency</span>
+        <span class="s1">&#39;SollLeistungVerdichter&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;5030&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}},</span>     <span class="c1"># getPwrSollVerdichter -- Diagnose - Anlagenuebersicht: Soll-Leistung Verdichter 1 (0..100)</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Pumpen&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;Sekundaer&#39;</span><span class="p">:</span>              <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;0484&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="s1">&#39;returnstatus&#39;</span><span class="p">},</span>     <span class="c1"># getStatusSekP -- Diagnose - Anlagenuebersicht: Sekundaerpumpe 1 (0..1)</span>
+        <span class="s1">&#39;Heizkreis&#39;</span><span class="p">:</span>              <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;048d&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="s1">&#39;returnstatus&#39;</span><span class="p">},</span>     <span class="c1"># getStatusPumpe -- Information - Heizkreis HK1: Heizkreispumpe (0..1)</span>
+        <span class="s1">&#39;Zirkulation&#39;</span><span class="p">:</span>            <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;0490&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="s1">&#39;returnstatus&#39;</span><span class="p">},</span>     <span class="c1"># getStatusPumpeZirk -- Information - Warmwasser: Zirkulationspumpe (0..1)</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Heizkreis&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;Temperatur&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;Raum&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;Soll&#39;</span><span class="p">:</span>           <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempRaumSollNormal -- Bedienung HK1 - Heizkreis 1: Raumsolltemperatur normal (10..30)</span>
+                <span class="s1">&#39;Soll_Reduziert&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;2001&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempRaumSollRed -- Bedienung HK1 - Heizkreis 1: Raumsolltemperatur reduzierter Betrieb (10..30)</span>
+                <span class="s1">&#39;Soll_Party&#39;</span><span class="p">:</span>     <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;2022&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempRaumSollParty -- Bedienung HK1 - Heizkreis 1: Party Solltemperatur (10..30)</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;Vorlauf&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;Ist&#39;</span><span class="p">:</span>            <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;0105&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempSekVL -- Information - Heizkreis HK1: Vorlauftemperatur Sekundaer 1 (0..95)</span>
+                <span class="s1">&#39;Soll&#39;</span><span class="p">:</span>           <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;1800&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempVLSoll -- Diagnose - Heizkreis HK1: Vorlaufsolltemperatur HK1 (0..95)</span>
+                <span class="s1">&#39;Mittel&#39;</span><span class="p">:</span>         <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;16b2&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempSekVLMittel -- Statistik - Energiebilanz: mittlere sek. Vorlauftemperatur (0..95)</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;Ruecklauf&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;Ist&#39;</span><span class="p">:</span>            <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;0106&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempSekRL -- Diagnose - Anlagenuebersicht: Ruecklauftemperatur Sekundaer 1 (0..95)</span>
+                <span class="s1">&#39;Mittel&#39;</span><span class="p">:</span>         <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;16b3&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempSekRLMittel -- Statistik - Energiebilanz: mittlere sek.Temperatur RL1 (0..95)</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Heizkennlinie&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;Niveau&#39;</span><span class="p">:</span>             <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;2006&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getHKLNiveau -- Bedienung HK1 - Heizkreis 1: Niveau der Heizkennlinie (-15..40)</span>
+            <span class="s1">&#39;Neigung&#39;</span><span class="p">:</span>            <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;2007&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getHKLNeigung -- Bedienung HK1 - Heizkreis 1: Neigung der Heizkennlinie (0..35)</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Warmwasser&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;Ist&#39;</span><span class="p">:</span>                    <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;010d&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>     <span class="c1"># getTempWWIstOben -- Information - Warmwasser: Warmwassertemperatur oben (0..95)</span>
+        <span class="s1">&#39;Soll&#39;</span><span class="p">:</span>                   <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;6000&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span>  <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;mult&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;signed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="s1">&#39;cmd_settings&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;force_min&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;force_max&#39;</span><span class="p">:</span> <span class="mi">60</span><span class="p">}},</span>     <span class="c1"># getTempWWSoll -- Bedienung WW - Betriebsdaten WW: Warmwassersolltemperatur (10..60 (95))</span>
+        <span class="s1">&#39;Ventil&#39;</span><span class="p">:</span>                 <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">:</span> <span class="s1">&#39;0494&#39;</span><span class="p">,</span> <span class="s1">&#39;reply_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">:</span> <span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;dev_datatype&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="s1">&#39;returnstatus&#39;</span><span class="p">},</span>     <span class="c1"># getStatusVentilWW -- Diagnose - Waermepumpe: 3-W-Ventil Heizen WW1 (0 (Heizen)..1 (WW))</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;Aussen&quot;</span><span class="p p-Indicator">:</span><span class="w">                   </span><span class="c1"># Name des Kommandos, Code für das Item-Attribut</span>
+<span class="w">    </span><span class="s">&quot;read&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">            </span><span class="c1"># Kommando kann Wert vom Gerät lesen</span>
+<span class="w">    </span><span class="s">&quot;write&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1"># Kommando kann Wert - nicht - auf Gerät schreiben</span>
+<span class="w">    </span><span class="s">&quot;opcode&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;0101&quot;</span><span class="w">        </span><span class="c1"># &quot;Code&quot;, der an das Gerät gesendet wird</span>
+<span class="w">    </span><span class="s">&quot;reply_pattern&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span><span class="w">    </span><span class="c1"># Identifier, um Antwort auf dieses Kommando zu erkennen</span>
+<span class="w">    </span><span class="s">&quot;item_type&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;num&quot;</span><span class="w">      </span><span class="c1"># Datentyp, der an SmartHomeNG gesendet wird</span>
+<span class="w">    </span><span class="s">&quot;dev_datatype&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;V&quot;</span><span class="w">     </span><span class="c1"># Datentyp, der zur Kommunikation mit dem Gerät verwendet wird</span>
+<span class="w">    </span><span class="s">&quot;params&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&quot;value&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;VAL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;mult&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">10</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;signed&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">True</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;len&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">}</span>
+<span class="w">                            </span><span class="c1"># Werttransformation: signed int, 2 Bytes (&quot;word&quot;)</span>
+<span class="w">                            </span><span class="c1"># Wert vom Gerät wird durch 10 geteilt (ergibt eine Nachkommastelle)</span>
+</pre></div>
+</div>
+<p>Die einzelnen Attribute der command-Definitionen sind in der Datei <cite>./dev/sample_smartdevice_plugin/commands.py</cite> im
+Detail erklärt.</p>
+</section>
+<section id="protokoll">
+<h2>Protokoll<a class="headerlink" href="#protokoll" title="Permalink to this heading"></a></h2>
+<p>Standardmäßig wird kein Protokoll benötigt und somit nicht konfiguriert. Wenn Protokolle konfiguriert werden, so sind
+sie sowohl für das Plugin als auch für die konfigurierte Verbindung transparent.</p>
+<p>Zum Lieferumfang gehören die Protokollklassen <cite>SDPProtocol</cite> (keine gesonderte Funktion, Basisklasse, kann zum Testen
+verwendet werden) sowie <cite>SDPProtocolJsonrpc</cite> (stellt transparente Format- und Datenformatierung nach Json-RPC-Standard
+zur Verfügung).</p>
+<p>Eigene Protokolle können definiert werden - im Beispiel sdp_viessmann z.B. die binären Protokolltypen P300 und KW2,
+die einen Verbindungsaufbau mit Handshake benötigen.</p>
+</section>
+<section id="verbindung">
+<h2>Verbindung<a class="headerlink" href="#verbindung" title="Permalink to this heading"></a></h2>
+<p>Die <cite>SDPConnection</cite>- sowie die davon abgeleiteten Klassen stellen die Verbindungsschicht zum Gerät dar. Durch die
+standardisierte Schnittstelle ist das Plugin unabhängig von der konkret gewählten Verbindung. So ist es z.B. kein
+Problem, wahlweise netzwerkbasierte oder serielle Verbindungen im selben Plugin zu nutzen, indem nur die Konfiguration
+in der plugin.yaml entsprechend angepasst wird.</p>
+<p>Zum Lieferumfang gehörten die Verbindungsklassen <cite>SDPConnection</cite> (keine Funktion, Basisklasse, kann zum Testen
+verwendet werde), <cite>SDPConnectionNetTcpRequest</cite> (Netzwerkverbindung mit HTTP-Requests und -Antworten über TCP),
+<cite>SDPConnectionNetTcpClient</cite> (direkte TCP-Verbindung mit persistenter Sendeverbindung und Listener zum
+asnychronen Datenempfang), <cite>SDPConnectionNetUdpRequest</cite> (wie SDPConnectionNetTcpRequest, aber mit zusätzlichem
+UDP-Listener, z.B. für Multicast), <cite>SDPConnectionSerial</cite> (Anfrage-Antwort-Verbindung über serielle Schnittstelle)
+sowie <cite>SDPConnectionSerialAsync</cite> (serielle Verbindung mit Listener, der eingehende Daten unabhängig von gesendeten
+Kommandos empfangen kann).</p>
+</section>
+<section id="datatypes">
+<h2>DataTypes<a class="headerlink" href="#datatypes" title="Permalink to this heading"></a></h2>
+<p>Die Basisklasse <cite>DataType</cite> und die davon abgeleiteten Klassen bieten eine Schnittstelle, Datenformate zwischen
+SmartHomeNG und Gerät zu konvertieren. Eine Reihe von vorgefertigten Datentypen werden bereits mitgeliefert, eigene
+Datentypen können zusätzlich definiert werden.</p>
+<p>Zum Lieferumfang gehören neben der Basisklasse <cite>DataType</cite> die abgeleiteten Klassen <cite>DT_none</cite> (Testklasse, keine
+Datenweitergabe), <cite>DT_raw</cite>, <cite>DT_bool</cite>, <cite>DT_int</cite>, <cite>DT_num</cite>, <cite>DT_str</cite>, <cite>DT_list</cite>, <cite>DT_dict</cite>, <cite>DT_tuple</cite>, <cite>DT_bytes</cite>,
+<cite>DT_bytearray</cite>, <cite>DT_json</cite> und <cite>DT_webservices</cite>. Die meisten der gelisteten Klassen funktionieren wie ein einfaches
+typecast, JSON und Webservices sind spezielle Formate für JSON-RPC und das Webservices-Plugin.</p>
+</section>
+<section id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Permalink to this heading"></a></h2>
+<p>Die Klasse <cite>SDPCommands</cite> ist ein „intelligentes“ dict, das die <cite>commands.py</cite> liest und verarbeitet und strukturieren
+Zugriff auf die konfigurierten Kommandos ermöglicht.</p>
+<p>Die Klasse <cite>SDPCommand</cite> stellt für jedes konfigurierte Kommando eine eigene Instanz dar, die die notwendigen
+Informationen und Methoden zum Zugriff und zur notwendigen Datentransformation bereitstellt. Die einzelnen Instanzen
+werden durch die <cite>SDPCommands</cite>-Klasse erstellt und entsprechend den Angaben in <cite>commands.py</cite> konfiguriert.</p>
+<p>Auf Plugin-Ebene kann festgelegt werden, ob die Standardklasse <cite>SDPCommand</cite> oder bei Bedarf eine abgeleitete Klasse
+verwendet werden soll. Die abgeleiteten Klassen umfassen <cite>SDPCommandStr</cite> für Kommandos, die textbasiert arbeiten
+(z.B. HTTP oder Textprotokolle), <cite>SDPCommandParseStr</cite> mit zusätzlichen Möglichkeiten zur Text- und Datenextraktion,
+SDPCommandJSON für JSON-RPC-Kommunikation sowie SDPCommandViessmann für die binären Datenformate der
+Viessmann-Heizungen.</p>
+</section>
+</section>
+<section id="klassendefinition">
+<h1>Klassendefinition<a class="headerlink" href="#klassendefinition" title="Permalink to this heading"></a></h1>
 <p>Die Klasse <code class="docutils literal notranslate"><span class="pre">SmartDevicePlugin</span></code> implementiert die Basisklasse aller Device-Plugins.
 Die vorhandenen Methoden sind im Folgenden beschrieben.</p>
 <p>Zusätzlich werden die Methoden der Klasse <code class="docutils literal notranslate"><span class="pre">lib.utils.Utils</span></code> vererbt.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.model.smartdeviceplugin.</span></span><span class="sig-name descname"><span class="pre">SmartDevicePlugin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="smartplugin_class.html#lib.model.smartplugin.SmartPlugin" title="lib.model.smartplugin.SmartPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></p>
+<p>The class SmartDevicePlugin implements the base class of smart-plugins
+designed especially for device connectivity.</p>
+<p>It implements a fully functional plugin with all necessary methods to
+set up network or serial connections, handle item parsing and updating
+and converting data from shng to the device and vice versa.</p>
+<p>In the easiest cases, only the command specifications in <code class="docutils literal notranslate"><span class="pre">commands.py</span></code>
+and possibly DT-* datatype classes are needed; additional command classes
+or plugin code can be added if necessary or desired.</p>
+<p>The implemented methods are described below, inherited methods are only
+described if changed/overwritten.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.remove_item">
+<span class="sig-name descname"><span class="pre">remove_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.remove_item"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.remove_item" title="Link zu dieser Definition"></a></dt>
+<dd><p>remove item references from plugin</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.update_plugin_config">
+<span class="sig-name descname"><span class="pre">update_plugin_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.update_plugin_config"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.update_plugin_config" title="Link zu dieser Definition"></a></dt>
+<dd><p>update plugin configuration parameters and (re)run relevant
+configuration methods</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.suspend">
+<span class="sig-name descname"><span class="pre">suspend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.suspend"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.suspend" title="Link zu dieser Definition"></a></dt>
+<dd><p>sets plugin into suspended mode, no network/serial activity and no item changed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.resume">
+<span class="sig-name descname"><span class="pre">resume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.resume"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.resume" title="Link zu dieser Definition"></a></dt>
+<dd><p>disabled suspended mode, network/serial connections are resumed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.on_suspend">
+<span class="sig-name descname"><span class="pre">on_suspend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.on_suspend"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.on_suspend" title="Link zu dieser Definition"></a></dt>
+<dd><p>called when suspend is enabled. Overwrite as needed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.on_resume">
+<span class="sig-name descname"><span class="pre">on_resume</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.on_resume"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.on_resume" title="Link zu dieser Definition"></a></dt>
+<dd><p>called when suspend is disabled. Overwrite as needed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.set_suspend">
+<span class="sig-name descname"><span class="pre">set_suspend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suspend_active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.set_suspend"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.set_suspend" title="Link zu dieser Definition"></a></dt>
+<dd><p>enable / disable suspend mode: open/close connections, schedulers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.run"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.run" title="Link zu dieser Definition"></a></dt>
+<dd><p>Run method for the plugin</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.stop"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.stop" title="Link zu dieser Definition"></a></dt>
+<dd><p>Stop method for the plugin</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.connect"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.connect" title="Link zu dieser Definition"></a></dt>
+<dd><p>Open connection</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.disconnect">
+<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.disconnect"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.disconnect" title="Link zu dieser Definition"></a></dt>
+<dd><p>Close connection</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.parse_item">
+<span class="sig-name descname"><span class="pre">parse_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.parse_item"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.parse_item" title="Link zu dieser Definition"></a></dt>
+<dd><p>Default plugin parse_item method. Is called when the plugin is
+initialized. The plugin can, corresponding to its attribute keywords,
+decide what to do with the item in future, like adding it to an
+internal array for future reference
+:type item: 
+:param item:    The item to process.
+:rtype: Callable | None
+:return:        Recall function for item updates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.update_item">
+<span class="sig-name descname"><span class="pre">update_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.update_item"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.update_item" title="Link zu dieser Definition"></a></dt>
+<dd><p>Item has been updated</p>
+<p>This method is called, if the value of an item has been updated by
+SmartHomeNG. It should write the changed value out to the device
+(hardware/interface) that is managed by this plugin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> (<a class="reference internal" href="../../../lib/item_class_item.html#lib.item.item.Item" title="lib.item.item.Item"><em>Item</em></a>) – item to be updated towards the plugin</p></li>
+<li><p><strong>caller</strong> (<em>str</em><em> | </em><em>None</em>) – if given it represents the callers name</p></li>
+<li><p><strong>source</strong> (<em>str</em><em> | </em><em>None</em>) – if given it represents the source</p></li>
+<li><p><strong>dest</strong> (<em>str</em><em> | </em><em>None</em>) – if given it represents the dest</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.send_command">
+<span class="sig-name descname"><span class="pre">send_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.send_command"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.send_command" title="Link zu dieser Definition"></a></dt>
+<dd><p>Sends the specified command to the device providing &lt;value&gt; as data
+Not providing data will issue a read command, trying to read the value
+from the device and writing it to the associated item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<em>str</em>) – the command to send</p></li>
+<li><p><strong>value</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – the data to send, if applicable</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if send was successful, False otherwise</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.on_data_received">
+<span class="sig-name descname"><span class="pre">on_data_received</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.on_data_received"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.on_data_received" title="Link zu dieser Definition"></a></dt>
+<dd><p>Callback function for received data e.g. from an event loop
+Processes data and dispatches value to plugin class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<em>str</em>) – the command in reply to which data was received</p></li>
+<li><p><strong>data</strong> (<em>Any</em>) – received data in ‚raw‘ connection format</p></li>
+<li><p><strong>by</strong> (<em>str</em><em> | </em><em>None</em>) – client object / name / identifier</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.dispatch_data">
+<span class="sig-name descname"><span class="pre">dispatch_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.dispatch_data"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.dispatch_data" title="Link zu dieser Definition"></a></dt>
+<dd><p>Callback function - new data has been received from device.
+Value is already in item-compatible format, so find appropriate item
+and update value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<em>str</em>) – command for or in reply to which data was received</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – data</p></li>
+<li><p><strong>by</strong> (<em>str</em><em> | </em><em>None</em>) – str</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.read_all_commands">
+<span class="sig-name descname"><span class="pre">read_all_commands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.read_all_commands"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.read_all_commands" title="Link zu dieser Definition"></a></dt>
+<dd><p>Triggers all configured read commands or all configured commands of given group</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.is_valid_command">
+<span class="sig-name descname"><span class="pre">is_valid_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.is_valid_command"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.is_valid_command" title="Link zu dieser Definition"></a></dt>
+<dd><p>Validate if ‚command‘ is a valid command for this device
+Possible to check only for reading or writing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<em>str</em>) – the command to test</p></li>
+<li><p><strong>read</strong> (<em>bool</em><em> | </em><em>NoneType</em>) – check for read (True) or write (False), or both (None)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if command is valid, False otherwise</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.get_lookup">
+<span class="sig-name descname"><span class="pre">get_lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lookup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fwd'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.get_lookup"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.get_lookup" title="Link zu dieser Definition"></a></dt>
+<dd><p>returns the lookup table for name &lt;lookup&gt;, None on error</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict | list | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.has_recursive_custom_attribute">
+<span class="sig-name descname"><span class="pre">has_recursive_custom_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.has_recursive_custom_attribute"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.has_recursive_custom_attribute" title="Link zu dieser Definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.set_custom_item">
+<span class="sig-name descname"><span class="pre">set_custom_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.set_custom_item"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.set_custom_item" title="Link zu dieser Definition"></a></dt>
+<dd><p>this is called by parse_items if xx_custom[123] is found.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.on_connect">
+<span class="sig-name descname"><span class="pre">on_connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.on_connect"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.on_connect" title="Link zu dieser Definition"></a></dt>
+<dd><p>callback if connection is made.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.on_disconnect">
+<span class="sig-name descname"><span class="pre">on_disconnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.on_disconnect"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.on_disconnect" title="Link zu dieser Definition"></a></dt>
+<dd><p>callback if connection is broken.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.model.smartdeviceplugin.SmartDevicePlugin.read_initial_values">
+<span class="sig-name descname"><span class="pre">read_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lib/model/smartdeviceplugin.html#SmartDevicePlugin.read_initial_values"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.model.smartdeviceplugin.SmartDevicePlugin.read_initial_values" title="Link zu dieser Definition"></a></dt>
+<dd><p>control call of _read_initial_values - run instantly or delay</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="plugin_typen.html" class="btn btn-neutral float-left" title="Plugin Typen" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Zurück</a>
-        <a href="../plugin_metadata.html" class="btn btn-neutral float-right" title="Metadaten für Plugins" accesskey="n" rel="next">Weiter <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mqttplugin_class.html" class="btn btn-neutral float-left" title="Class MqttPlugin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Zurück</a>
+        <a href="../../../entwicklung/plugins/kurzanleitung/plugin_metadata.html" class="btn btn-neutral float-right" title="Plugin-Metadata update" accesskey="n" rel="next">Weiter <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2016-2024 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp.</p>
+    <p>&#169; Copyright 2016-2025 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp.</p>
   </div>
 
    

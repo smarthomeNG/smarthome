@@ -1,0 +1,888 @@
+=============================
+Release 1.11.0 - 30. Mär 2025
+=============================
+
+.. only: comment
+
+    Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
+    sowie einige neue Plugins.
+
+Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+|
+
+.. only: comment
+    .. only:: develop_branch
+
+    .. note::
+
+        Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
+
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 18. März 2025
+           (updated release notes)
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. 18. März 2025
+           (Merge pull request #1005 from Morg42/develop)
+
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.10.0 sind im Folgenden in diesen Release Notes beschrieben.
+
+
+Minimum Python Version
+----------------------
+
+Die absolute Minimum Python Version in der SmartHomeNG startet, ist **Python 3.8**.
+
+Bereits für das SmartHomeNG Release 1.10 wurde die absolute Minimum Python Version auf **Python 3.8** angehoben, da der
+Community Support für Python 3.7 am 27. Juni 2023 endete.
+
+Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Versionen (3.11 oder 3.12) aufzusetzen.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Offiziell unterstützt werden im SmartHomeNG Release 1.11.0 die Python Versionen 3.10, 3.11 und 3.12.
+Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
+(Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
+zu unterstützten Python Versionen)
+
+|
+
+Änderungen am Core
+==================
+
+Allgmein
+--------
+
+* github:
+
+  * Workflows: Fix unittest for forked repos in core
+  * Workflows: Update codeql.yml, remove set-output
+  * Modify gitignore structure
+
+
+
+Bugfixes im CORE
+----------------
+
+* Fix pathname/conffile access
+
+
+Updates in the CORE
+-------------------
+
+* Move templates for logics and userfucntions to new template dir, adjust api_files
+* Replace static file/dir references by constants
+* Move to get_config_dir/get_config_file
+* Rename templates_dir var
+* Add metadata checks for sdp version
+* Add pyrightconfig.json to gitignore
+
+
+* bin
+
+  * smarthome
+
+    * Added option -e (--config_etc)
+
+  * shngversion:
+
+    * Bumped core version to 1.10.0.2 -> added support for asyncio in plugins
+    * Bumped core version to 1.10.0.3 -> Added support for suspend/resume and functions for pause_item
+
+
+
+* Libs:
+
+  * requirements.txt:
+
+    * Some libs received overhauling and bugs were fixed
+
+  * lib.backup:
+
+    * Added support for option -e (--config_etc)
+    * Added the output of 'pip list' to the configuration backup file
+    * Added support for subdirectory common in esphome_config directory
+
+  * lib.config:
+
+    * Remove name attribute from struct root before merging
+    * Add struct syntax checking
+    * Small fix
+
+  * lib.daemon:
+
+    * make pidfile dir if not present
+
+  * lib.db:
+
+    * Handle numeric passwords and OrderedDict lists
+    * replace deprecated datetime.utcnow with lib.shtime variant
+
+  * lib.env:
+
+    * Modified error handling for location_name()
+    * Added some logging
+    * Adjusted a log level
+
+  * lib.item:
+
+    * extend cycle and autotimer attributes to accept eval expressions
+    * Replace item.path() with item.property.path
+    * Added warning for collision of name and class method
+    * Speedup name collision check
+    * Add methods for list/dict manipulation
+    * Remove old list/dict methods
+    * Add ancestor item/attr methods
+    * Replace return_parent and _get_attribute_value
+    * Rename find_attr to find_attribute
+    * find_attribute: Return default value
+    * Allow log level to be set by eval expression
+    * Fader introduce stop_fade, continue_fade, instant_set and update functionality
+    * Fader check if stop/continue_fade is list and handle issues
+    * on_update and on_change now support special vars 'caller', 'source' and 'dest' in addition to 'value'
+    * Fix dynamic log_level
+    * Allow for default log text in smarthome.yaml, used by log_change
+    * log_mapping and log_rules are now expected to be stated as a list. However, putting a dict as string is still possible (non-breaking)
+    * Revert _items_instance.return_item
+    * Fader method: fix caching after successful fade
+    * Log rules: log warning if invalid parameter is set
+    * Remove debug code
+    * log_rules: Detailed warnings on wrong configuration, only log the same entry once
+    * log_rules: Ignore same low- and highlimit values, only lowlimit counts
+
+  * lib.log:
+
+    * Mutable etc_dir not persited in lib/log.py
+    * Log issues with logging.yaml to standard shng logger additionally
+    * Allow weekly, monthly and yearly rotation when using DateTimeRotatingFileHandler
+    * Fix for bug introduced with v 1.10 in ShngTimedRotatingFileHandler: Log content and file name had an offset
+    * custom_replace function: add r in front of regex including \d
+    * Add develop level (9) for easier debugging when developing
+
+  * lib.logic:
+
+    * Introduce class-wide logic conf filename
+
+  * lib.model:
+
+    * mqttplugin:
+
+      * Replace item.path() with item.property.path
+
+    * sdp:
+
+      * Bump version number to 1.0.4
+      * Add method to update reply_patterns
+      * Add valid_list item attribute, complete type hinting
+      * Enable raw sending of lookup values
+      * Improve reply pattern processing
+      * Add editable lookup tables
+      * Add regex-capable valid_list_re to command patterns
+      * Add delivery queue to serial connection for better timing
+      * Improve struct generation
+      * Fix automatic resend protocol detection
+      * Change to scheduler_remove_all
+      * Suspend/resume
+      * Minor fixes/updates
+      * Implement read after write
+      * Update documentation
+      * Add version, cyclic error detection/reconnect
+      * Fix long cyclic recovery
+      * Adjust to smartplugin changes
+      * Pass plugin reference to connection/protocol
+      * Set protocol to resend if send_retries > 0
+      * Query current value for command that was not successfully sent
+      * Fix and improve read command for querying after resend is not successful
+      * Rename check_command to check_reply as this is more suitable
+      * Join resend/jsonrpc parameters, cleanup
+      * Add minimum version check
+      * Make resending work with custom command values
+      * Fix order of connect initialization, fix struct generation
+
+    * smartplugin:
+
+      * Replace item.path() with item.property.path
+      * Added support for the use of asyncio in plugins
+      * Improved error handling in stop_asyncio()
+      * run_async_coro can now return the result of the coro to the calling method
+      * Added option to run_async_coro to return Exception to the calling method
+      * Added method asyncio_state()
+      * Implemented _start_known_asyncio_coro()
+      * Implemented put_command_to_run_queue() and get_command_from_run_queue()
+      * Alternative way to track schedulers
+      * Move suspend item to pause item, cleanup
+      * Add mqttplugin
+      * Fix default _cycle
+      * Remove warning if scheduler entry not found
+      * Added timeout parameter to run_asyncio_coro
+
+  * lib.network:
+
+    * Add serial connection reset error handling
+
+  * lib.orb:
+
+    * neverup calculation delta can be configured
+    * replace deprecated datetime.utcnow with lib.shtime variant
+
+  * lib.plugin:
+
+    * Add reload_plugin method
+    * Insert plugin references into sh.plugins also
+    * Refactor load_plugin
+
+  * lib.scheduler:
+
+    * enable crontab to use eval expressions
+    * implement update_item method to react to changed item cycle times
+
+  * lib.shpypi:
+
+    * Bugfix to prevent plugin requirements from being written to base.txt
+    * Calculate versions for requiremens above/below given version
+    * Added the output of 'pip list' to the configuration backup file
+    * Removed logging from create_pip_list method
+    * Fixed bug in installing requirements, when a wrong pip-command was used
+
+  * lib.shtime:
+
+    * add utcfromtimestamp as replacement for deprecated datetime.utcfromtimestamp
+
+  * lib.smarthome:
+
+    * Added support for option -e (--config_etc)
+    * Log issues with logging.yaml to standard shng logger additionally
+    * Added state print when running in forground mode
+    * Catched exception in objects_refcount()
+    * Fix directory calculation for external configuration
+    * Clean up directory vars
+    * Add generic get conffile/confdir method
+    * Create necessary dirs
+    * Skip deprecation warnings for decrepit ciphers on macOS
+
+  * lib.struct:
+
+    * Add struct syntax checking
+
+  * lib.triggertimes:
+
+    * update logger string
+
+  * lib.utils:
+
+    * Added functions to return lists with all local ipv4/ipv6 addresses
+    * Removed logging info and changed parameter typing to be compatible with Python 3.9 and under
+
+  * lib.whocalledme:
+
+    * New module to help debugging core and plugin code
+
+* Modules:
+
+  * module.admin:
+
+    * Adjusted a loglevel
+    * Display all local ipv4 addresses in systemdata
+    * Added option to handle a second webinterface (admin gui)
+    * Implemented CORS support in rest.py
+    * Addition to /api/server
+    * api_config.py updates hashed_password for running instance after password change
+    * Added SystemController()
+    * Added gui_type for boolean parameters
+    * Changed requirements for pyjwt because new version of pyjwt has a breaking change
+    * Fix typo in de translation
+    * Fixed bug in api_config that was introduced in summer 2024
+
+  * modules.http:
+
+    * Extended base_plugin to support 8 tabs in webinterface
+    * Fix issue with datatable when bodytab count changed after cookies have been set
+    * Ensure that actual value of password_hash is used for login
+    * Added gui_type for boolean parameters
+    * Not only update responsive cell when hidden but also when visible
+
+  * modules.mqtt:
+
+    * Allow paho_mqtt 2.x
+    * Add compatibility to paho_mqtt 2.x
+    * Changed requirements - the lately released paho client 2.0 has breaking changes
+    * Added gui_type for boolean parameters
+
+  * modules.websocket:
+
+    * Added attributes to identity message in smartvisu payload protocol
+    * Added gui_type for boolean parameters
+    * Added some logging to smartvisu payload protocol
+    * Fix for smartvisu protocol
+    * Fix item access for smartvisu protocol
+    * Requirements: Limit websocket version to prevent error due to incompatible changes in websocket lib with version 13.0
+    * Fix smartvisu item monitoring
+
+* tests:
+
+  * Update mock core
+
+* tools:
+
+  * tools/cpuusage:
+
+    * Wait for pid file creation
+    * Fix output buffering
+
+|
+
+Änderungen bei Plugins
+======================
+
+Allgmein
+--------
+
+* Workflows:
+
+  * Removed Python3.8 from unittests
+  * Checkout fallback to plugins/develop
+
+* gitignore:
+
+  * Adjust gitignore for symlinked priv_* dirs
+
+
+.. _releasenotes_1_11_0_neue_plugins:
+
+Neue Plugins
+------------
+
+Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* githubplugin: Plugin to install plugins from foreign GitHub repositories
+* hue3: Anbindung des Philips/Signify Hue Systems über eine Hue Bridge unter Nutzung des neuen API v2
+* panasonic_ac: New plugin to control Panasonic air conditioning units, still in develop state
+* piusv: Plugin zum Auslesen Informationen aus der PIUSV+
+* smartmeter: Plugin to read data from SML / DLMS smartmeters
+
+.. _releasenotes_1_11_x_updates_plugins:
+
+Plugin Updates
+--------------
+
+Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* alexa4p3:
+
+  * Added description for alexa-item-properties
+  * Update plugin.yaml: Removed duplicate entry for alexa_item_range
+
+* avm:
+
+  * Catch exception after maximum retries exceeded
+  * Bugfix get_calllist and get_contact_name_by_phone_number
+  * Compatibility edit
+
+* beolink:
+
+  * Bug fixes
+  * Bumped version to 0.8.1
+
+* database:
+
+  * Fixed and added logging, typo and inline comment
+  * Improve getting sqlite3 file method
+  * Copy_database does not disable itself after success anymore (why should it...?)
+  * Change log message of copy database to info (instead of warning)
+  * Add orphan reassignment
+  * Move to REST communication
+  * Raw string for regex
+  * Add max_reassign_logentries parameter
+  * Fix sql query
+  * Added time_precision in plugin.yaml
+  * Added _time_precision_query
+  * Applied _time_precision_query
+  * Added min and max values for plugin time precision plugin attribute
+  * Check if database item config is set to no or false -> don't write to database
+  * Bumped version to 1.16.15
+
+* db_addon:
+
+  * Fix bug in wachstumsgradtage
+  * Fix bug in database queries for "next"-function
+  * Fix bug in database queries for "next"-function
+  * Fix bug in kaeltesumme
+  * Bugfix in wachstumsgradtage and docu update
+  * Bugfix in _query_log_timestamp for "next" function
+  * Bugfix handling on-change items
+  * Ease dbaddon function parameter set
+  * Adjust to smartplugin changes
+  * Bugfix use of oldest entry
+  * use item_attributes direct from item_attributes_master.py
+  * Add handling of pause_item
+  * Add deinit() if plugin start fails
+  * Rework parse_item sub methods
+  * Extend some functions to get result as sum or list
+  * Use item_attributes direct from item_attributes_master.py
+  * Aadd handling of pause_item
+  * Add deinit() if plugin start fails
+  * Rework parse_item sub methods
+  * Extend some functions to get result as sum or list
+  * Bump to 1.2.10
+  * Bugfix verbrauch
+
+* denon:
+
+  * Fix initial maxvolume check (it's not available)
+  * Add readafterwrite parameter
+  * Add resend options in plugin.yaml
+  * Query most relevant commands after powering on a zone
+  * Add on_suspend/resume functions
+  * Implement delay for initial value read
+  * Remove threading import
+  * Remove protocol and command_class from plugin.yaml
+  * Auto set command class
+  * Add sdp metadata
+  * Do not overwrite on_connect anymore, but read custom inputs with other "initial reads"
+  * Update multiple commands and queries, as well as plugin.yaml
+  * Improve custom inputnames (using dynamic lookup table and better reply handling)
+  * distinguish between EU and US model
+  * improve tuner commands
+
+* dlms:
+
+  * Fix typos in user_doc
+
+* drexelundweiss:
+
+  * Prevent division by 0
+  * Fix all configs where divisor is 0
+
+* enocean:
+
+  * Adapted caller to global smarthomeNG convention -> enocean instead of EnOcean
+  * Modify connect logics, refactored
+  * Added 0 connect retries for unlimited
+  * Update plugin.yaml
+  * Fix sh min version number
+  * Marked the plugin as being restartable
+  * Fix shift errors
+
+* executor:
+
+  * Fix example
+
+* homematic:
+
+  * Added name to an unnamed thread
+  * Fixed webinterface for items with the same name
+
+* hue2:
+
+  * Small improvement to webinterface
+  * Modified requirements.txt for zeroconf
+
+* husky2:
+
+  * Fixed loop caused by caller name check
+
+* ical:
+
+  * Fix issue when timezone info contains : e.g. "timezone://..."
+  * Bump v to 1.6.4
+
+* jsonread:
+
+  * Update docu
+  * Update maintainer, tester
+  * Remove pyminversion
+  * Bump version to 1.0.4
+
+* knx:
+
+  * Improve logging for sending and polling
+  * Only log poll when plugin is alive
+  * Add super().__init__() to init
+
+* kodi:
+
+  * Update plugin.yaml
+  * Adjust to current sdp version
+  * Adjust to latest sdp changes, cleanup plugin.yaml
+
+* ksemmodbus:
+
+  * Removed support for pymodbus2
+
+* lms:
+
+  * Fix commands for querying data
+  * Fix reply pattern for some commands
+  * Fix and update structs
+  * Autoset command class and connection
+  * Add resend and initial read parameters
+  * Add sdp metadata
+  * Convert specific replies to correct boolean
+  * Improve/fix database scan commands
+  * Fix syncgroup commands/items
+  * Fix/improve alarm commands
+  * Fix mute and volume commands
+  * Update commands, min SDP 1.0.4
+  * Trigger syncgroups query when syncing two players, update syncgroups with empty value if currently no groups exist
+  * Query power at startup
+  * Query shuffle and repeat at start
+  * Adjust clear command, however should still not be used (might depend on setup/server?)
+  * put older version 1.5.2 as backup in folder
+  * add newclient command so players lookup gets correctly updated when new client is connected
+  * fix reading commands when getting new title info
+  * rename command playsong to playitem
+  * update and restructure commands and structs. bump version to 2.0.0
+  * fix transform received data (keep %20 for spaces)
+  * update method code in init using type hint
+  * breaking change rename prefix "sqb_" to "lms_"
+  * re-read players on new client and player (dis)connect as well as rename
+  * rename conflicting commands/items: id, path, remove and custom_skip.active, playlist.url, playlist.name
+  * update newclient command so it also rereads the players when a client gets "forgotten"/disabled
+
+* modbus_tcp:
+
+  * Fixed error writing registers, conversion byte/word to endian
+  * Reduced logger output during repeated connection issues, connection pause/resume controllable
+  * Suspend and resume the connection via item
+  * Fixed issue with writing without modBusObjectType
+  * Fixed startup issue with active suspend
+  * Move to pause_item support
+
+* mqtt:
+
+  * Added item attribute mqtt_topic_prefix
+  * Bumped version to 2.0.6
+
+* mvg_live:
+
+  * Fixed an issue in station_id setting when not using async io with pypi lib
+  * Updated dependency, as MVG lib was updated to new api endpoints
+
+* neato:
+
+  * Removed debug output
+  * Added proper backend online status decoding
+  * Marked as restartable
+  * Minor fix for plugin online status after plugin stop
+
+* nuki:
+
+  * Changes on request lock mechanism
+  * Added debug logging
+  * Fixed README.md
+  * Renamed remotestart_1/2.path to remotestart_1/2.rstart_path
+  * Added timeout to request handling against api to prevent unlimited blocks of lock
+
+* onewire:
+
+  * Changed some Log levels from info to dbghigh
+
+* openweathermap:
+
+  * Fix struct items
+  * Bump version to 1.8.8
+  * Move beaufort calculation from struct to plugin
+  * Replace deprecated datetime.utcnow with lib.shtime variant
+
+* oppo:
+
+  * Remove _send method, not needed
+  * Set command class automatically, remove some unnecessary entries from plugin.yaml
+  * Add parameters to plugin.yaml
+  * Add min_sdp_version and bump version to 1.0.1
+  * Fix metadata, remove protocol from plugin.yaml
+  * Fix command class
+  * Add sdp metadata
+  * Remove useless lists in commands
+  * Fix reply for current subtitle
+
+* pioneer:
+
+  * Set command class automatically
+  * Add resend and initial_read parameters
+  * Bump version to 1.0.3
+  * Add sdp metadata
+  * Adjust sdp metadata
+  * Fix command class handling
+  * Fix multizone command
+  * Fix plugin.yaml (instance included, other fixes)
+
+* raumfeld_ng:
+
+  * Fix typos in user_doc
+
+* resol:
+
+  * Fixed an issue preventing the plugin from being restartable
+
+* robonect:
+
+  * Removed strange / in version number
+
+* rrd:
+
+  * Remove useless webinterface code and folder
+  * Fix docu
+
+* russound:
+
+  * Move to pause_item support
+  * Fix lib.network response handling
+
+* shelly:
+
+  * Extended plugin to support generation 3 devices
+  * Catch exception in update_item if ID is not known yet
+  * Minor typo fixes in documentation
+  * Fix docu
+  * Bumped version to 1.8.3
+
+* simulation:
+
+  * sv_widget option to avoid block with headline
+
+* sma:
+
+  * Replace deprecated datetime.utcnow with lib.shtime variant
+
+* sma_mb:
+
+  * Removed support for pymodbus2
+
+* smartvisu:
+
+  * Fix for display of datetime object
+  * Avoid nested anchors
+  * Improve z-index
+  * Added attributes to identity message in smartvisu payload protocol
+  * Fixed version-check bug in widget installation
+  * Bumped version to 1.8.16
+  * Important fix in logger message when visu style unknown
+
+* solarforecast:
+
+  * Catch exception if return value is not json conform
+  * Add hourly forecase and power checks as items and plugin function
+
+* sonos:
+
+  * Minor robustness fix
+  * Adjusted requirements
+  * Update to SoCo 0.30.4 (refer to SoCo changelog for a full list of robustness fixes)
+  * Fix for collections import for python >= 3.10
+  * Removed debug logs with warning level
+  * Introduce item handling from smartplugin
+  * Code cleanup
+  * Update WebIf
+  * Bugfix
+ * Improve _handle_dpt3
+  * Make plugin restartable
+  * Bump to 1.8.10
+  * Bbugfix for dpt3 handling
+
+* stateengine:
+
+  * Fix logging of header when directory is not created yet
+  * Update logging, Remove status from action log, not needed
+  * Correct eval_status evaluation order
+  * try/except finding parent item as this is not always possible (esp. when using structs)
+  * Get correct current item for action when using se_eval
+  * Fix value conversion for strings!
+  * Fix se_status_eval when using structs (e.g. in se_use)
+  * Add se_name to attribute parameters
+  * Fix web interface.. correct handling of "force set", delay and conditions
+  * Fix condition handling, now it's working as OR, was AND first by accident
+  * Update SetForce Action
+  * Code cleanup, fixes, improvements
+  * Improve and extend issue reporting when getting values
+  * Attributes from items, structs, etc. referenced by se_use are now evaluated correctly, even if they are defined as lists
+  * Don't expand item paths at beginning so relative item attributes are correctly assigned when using structs and se_use
+  * "set" function now also returns original value, necessary for optimal "se_use" handling
+  * set_from_attribute function now takes an ignore list of entries that should not be checked
+  * Massive update of se_use handling. Now the item config gets correctly scanned and only at init. Multiple fixes, improvements and better issue handling
+  * Improve condition check of actions (much faster)
+  * Fix previousstate_conditions set valuation
+  * Introduce next_conditionset to check conditionset of upcoming state(condition)
+  * Introduce caching of eval results to improve performance
+  * Add action_type to action(s) for better webif handling
+  * Fix previousonditionset variable
+  * Import fix when checking regexes for conditions
+  * Major code updates, introduce eval cache feature, improve web interface update, improve data handling when writing logs, etc.
+  * Introduce actions_pass
+  * Important fix when logging wrongly defined item for action
+  * Fix variable logging/handling
+  * Improve web interface - include pass actions, optimize visualization, optimize info text for actions that are not run, some fixes
+  * Introduce delta attribute for single actions, introduce minagedelta to run actions in a specific interval only
+  * Simplify log entry when having issues with value casting
+  * Highly improve and simplify issue finder and logger at startup
+  * Improve struct and add se_minagedelta to plugin.yaml
+  * Introduce regex casting, used for conditionset comparison for actions
+  * Fix/improve conversion of lists in items
+  * Correctly parse values in item, you can now also define regex, eval, etc. in an item(value)!
+  * Fix string to list conversion
+  * Fix logging of action count
+  * Fix list actions
+  * Fix issue tracking for action definitions, minor updates
+  * Make it possible to set value of list item by se_set_..: [foo, bar]
+  * Improve zoom/scroll handling (esp. on page update, using cookies now)
+  * Improve visu, now compressed and less white space, no overlaps
+  * Minor code improvement
+
+* tasmota:
+
+  * Add input button
+
+* telegram:
+
+  * Plugin controllable with stop/run/pause_item
+
+* uzsu:
+
+  * Improve handling of invalid items
+  * Improve logging
+  * Remove old version due to scipy security issues
+  * Add seconds to info on next UZSU setting
+  * Add "next" item to struct to read value and time of next UZSU setting
+  * Update parameters for plugin functions
+  * Remove English user doc as it is outdated
+  * Update docu on new struct as well as item functions
+  * Add super().__init__() to init
+  * Improve struct for "next" item
+  * "once" feature to trigger uzsu entry only once and deactivate afterwards
+  * Logging improvement
+  * Fix series interval calculation. Actually, now end of series is the last time the series is triggered
+  * Implement activeToday for smartvisu, fix once for series
+  * Fix comparison of new and old dictionary
+  * Introduce "perday" interpolation feature
+  * Minimize/optimize dict writing to item
+  * Improve web interface
+  * Fix extra-long debug messages
+  * Code improvements, fix lastvalue handling, update activeToday on first run to False if time is in the future, etc.
+  * Further lastvalue improvements/fixes
+  * Global once deactivates uzsu on first setting, no matter if it is a series or not
+  * Introduce set_activetoday plugin function
+  * Introduce ignore_once_entries parameter for (not) using once set entries for interpolation
+  * Avoid wrong value when 2 entries set a value at the same time and interpolation is activated
+  * Improve item writing, fix issue when uzsu has no active entries
+  * Avoid cycle of schedule and item update
+
+* vicare:
+
+  * If multiple devices are available, readout the first device with valid boiler serial number
+  * Added list of available devices to webinterface
+  * Allow commands without additional parameters (only command urls)
+  * Minor fixes for update_item function shortly after start-up (commands are not read out yet)
+  * Added control helper items for "one time charge" command feature to plugin.yaml struct
+  * Added preliminary webinterface feature description
+  * Further work on plugin docu
+  * Fix table in user_doc
+
+* visu_smartvisu:
+
+  * Important log message updates when visu style unknoen and copying template failed
+
+* withings_health:
+
+  * Changed methode to derive callback IPv4 address
+  * Updated Doku
+  * Replace deprecated datetime.utcnow with lib.shtime variant
+
+* yamahayxc:
+
+  * Minor fixes
+  * Fix startup
+
+* zigbee2mqtt:
+
+  * Add new structs
+  * Accept mixed case topics
+  * Shorten bridge messages for INFO logging
+  * Adjust for suspend updates
+  * Add pause_item functions
+  * Fix pause item
+  * Fix item() caller settings
+
+* Multiple plugins:
+
+  * Replace item.path() with item.property.path
+  * Move sh|py_min|max_version to str definition in plugin.yaml
+
+
+
+Outdated Plugins
+----------------
+
+Die folgenden Plugins wurden als veraltet (deprecated markiert und werden in einem der nächsten Releases
+aus dem Plugin-Repo entfernt und in das Archive-Repo verschoben:
+
+* System Plugins
+
+  * datalog
+  * influxdata
+  * memlog
+  * operationlog
+  * visu_smartvisu
+  * visu_websocket
+
+* Gateway Plugins
+
+  * raumfeld
+
+* Interface Plugins
+
+  * avdevice
+  * avm_smarthome
+  * husky
+
+* Web/Cloud Plugins
+
+  * alexa
+  * darksky - the free API is not provided anymore - switch to the **piratewthr** or **openweathermap** plugin
+
+
+
+
+Die folgenden Plugins wurden bereits in v1.6 als *deprecated* (veraltet) markiert. Das bedeutet, dass diese
+Plugins zwar noch funktionsfähig sind, aber nicht mehr weiter entwickelt werden. Sie werden in einem kommenden
+Release von SmartHomeNG entfernt werden. Anwender dieser Plugins sollten auf geeignete Nachfolge-Plugins
+wechseln.
+
+* System Plugins
+
+  * sqlite_visu2_8 - switch to the **database** plugin
+
+* Web Plugins
+
+  * wunderground - the free API is not provided anymore by Wunderground - switch to the **piratewthr** or **openweathermap** plugin
+
+|
+
+Weitere Änderungen
+==================
+
+Dokumentation
+-------------
+
+* Sample Plugin: Updated with asyncio handling
+* Sample plugins: Aet version numbers in quotes
+* Sample MQTT Plugin: Fix pause item name
+* Update crontab description for items and logics
+* Updates for asyncio support for plugins
+* Added installation of ESPHome dashboard
+* Extended lib.backup to backup and restore ESPHome configurations
+* Added info for ESPHome
+* Updated/corrected docu on log_text
+* Add info on log_level via eval expression
+* Fader update docu for new functionality
+* Update NGINX Reverse Proxy
+* Fix log_change default
+* Komplettanleitung smartVISU updated
+
+* Build doc local: make script work on Mac OS X, too
+* Build docu: Fallback for locale
