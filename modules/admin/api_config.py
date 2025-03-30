@@ -25,7 +25,9 @@ import logging
 import json
 import cherrypy
 
+from lib.module import Modules
 import lib.shyaml as shyaml
+from lib.constants import (DIR_ETC, DIR_MODULES, BASE_SH, BASE_HOLIDAY, BASE_MODULE)
 
 from .rest import RESTResource
 
@@ -41,8 +43,8 @@ class ConfigController(RESTResource):
         self.base_dir = self._sh.get_basedir()
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
-        self.etc_dir = self._sh._etc_dir
-        self.modules_dir = os.path.join(self.base_dir, 'modules')
+        self.etc_dir = self._sh.get_config_dir(DIR_ETC)
+        self.modules_dir = self._sh.get_config_dir(DIR_MODULES)
 
         self.core_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'core', 'module.yaml'))
         self.http_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'http', 'module.yaml'))
@@ -71,7 +73,7 @@ class ConfigController(RESTResource):
     #  Read holidays
     #
     def read_holidays(self):
-        self.holidays_confdata = shyaml.yaml_load(os.path.join(self.etc_dir, 'holidays.yaml'))
+        self.holidays_confdata = shyaml.yaml_load(self._sh.get_config_file(BASE_HOLIDAY))
         if self.holidays_confdata.get('location', None) is not None:
             self.core_confdata['holidays_country'] = self.holidays_confdata['location'].get('country', '')
             self.core_confdata['holidays_province'] = self.holidays_confdata['location'].get('province', '')
@@ -94,7 +96,7 @@ class ConfigController(RESTResource):
     #  Update holidays
     #
     def update_holidays(self, data):
-        filename = os.path.join(self.etc_dir, 'holidays.yaml')
+        filename = self._sh.get_config_file(BASE_HOLIDAY)
         self.holidays_confdata = shyaml.yaml_load_roundtrip(filename)
         self.logger.info("update_holidays: self.holidays_confdata = '{}'".format(self.holidays_confdata))
         self.logger.info("update_holidays: data['common']['data'] = '{}'".format(data['common']['data']))
@@ -151,10 +153,10 @@ class ConfigController(RESTResource):
         """
         self.logger.info("ConfigController.read(): config = {}".format(id))
 
-        self.core_confdata = shyaml.yaml_load(os.path.join(self.etc_dir, 'smarthome.yaml'))
+        self.core_confdata = shyaml.yaml_load(self._sh.get_config_file(BASE_SH))
         self.read_holidays()
 
-        self.module_confdata = shyaml.yaml_load(os.path.join(self.etc_dir, 'module.yaml'))
+        self.module_confdata = shyaml.yaml_load(self._sh.get_config_file(BASE_MODULE))
 
         result = {}
         if (not id) or id == 'core':
@@ -238,13 +240,18 @@ class ConfigController(RESTResource):
             self.update_holidays(data)
 
             # update etc/smarthome.yaml with data from admin frontend
-            self.core_confdata = shyaml.yaml_load_roundtrip(os.path.join(self.etc_dir, 'smarthome.yaml'))
+            self.core_confdata = shyaml.yaml_load_roundtrip(self._sh.get_config_file(BASE_SH))
             self.update_configdict(self.core_confdata, data, 'common')
-            shyaml.yaml_save_roundtrip(os.path.join(self.etc_dir, 'smarthome.yaml'), self.core_confdata, create_backup=True)
+            shyaml.yaml_save_roundtrip(self._sh.get_config_file(BASE_SH), self.core_confdata, create_backup=True)
 
             # update etc/module.yaml with data from admin frontend
-            self.module_confdata = shyaml.yaml_load_roundtrip(os.path.join(self.etc_dir, 'module.yaml'))
+            self.module_confdata = shyaml.yaml_load_roundtrip(self._sh.get_config_file(BASE_MODULE))
             self.update_configdict(self.module_confdata['http'], data, 'http')
+            self.mod_http = Modules.get_instance().get_module('http')
+            hashed_password = data.get('http', {}).get('data', {}).get('hashed_password', '')
+            if hashed_password is None:
+                hashed_password = ''
+            self.mod_http._hashed_password = hashed_password
             self.update_configdict(self.module_confdata['admin'], data, 'admin')
 
             if self.module_confdata.get('websocket', None) is None:
@@ -270,7 +277,7 @@ class ConfigController(RESTResource):
                 self.module_confdata['mqtt'].pop('enabled', None)
             self.logger.info("Update: ['mqtt'] = {}".format(self.module_confdata['mqtt']))
             self.logger.info("Update: - enabled = {}".format(self.module_confdata['mqtt'].get('enabled', None)))
-            shyaml.yaml_save_roundtrip(os.path.join(self.etc_dir, 'module.yaml'), self.module_confdata, create_backup=True)
+            shyaml.yaml_save_roundtrip(self._sh.get_config_file(BASE_MODULE), self.module_confdata, create_backup=True)
 
             result = {"result": "ok"}
             return json.dumps(result)

@@ -21,22 +21,21 @@
 #  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+from __future__ import annotations
+from typing import Any
 
 import logging
 import datetime
-import dateutil.parser
 import os
 import copy
 import json
 import threading
 import ast
+import re
 
 import inspect
 
 import time             # for calls to time in eval
-import math             # for calls to math in eval
-from math import *
-
 
 from lib.shtime import Shtime
 import lib.env
@@ -47,26 +46,29 @@ from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_
                            KEY_EVAL, KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_DESCRIPTION, KEY_TYPE,
                            KEY_STRUCT, KEY_REMARK, KEY_INSTANCE, KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM,
                            KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE, KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT,
-                           KEY_LOG_MAPPING, KEY_LOG_RULES, KEY_THRESHOLD, KEY_EVAL_TRIGGER_ONLY,
-                           KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
-                           KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD,
-                           ATTRIBUTE_SEPARATOR)
+                           KEY_LOG_MAPPING, KEY_LOG_RULES, KEY_LOG_RULES_LOWLIMIT, KEY_LOG_RULES_HIGHLIMIT,
+                           KEY_LOG_RULES_FILTER, KEY_LOG_RULES_EXCLUDE, KEY_LOG_RULES_ITEMVALUE, KEY_THRESHOLD,
+                           KEY_EVAL_TRIGGER_ONLY, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
+                           PLUGIN_REMOVE_ITEM, KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD,
+                           KEY_HYSTERESIS_LOWER_THRESHOLD, ATTRIBUTE_SEPARATOR)
 
 
 from lib.utils import Utils
 
 from .property import Property
-from .helpers import *
+from .helpers import (  # noqa - cast_foo methods are accessed via globals()
+    cast_str, cast_list, cast_dict, cast_foo, cast_bool, cast_scene, cast_num,
+    split_duration_value_string, cache_read, cache_write, fadejob)
 
 _items_instance = None
 
 
-#ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_V12
 ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_LATEST
 ATTRIB_COMPAT_DEFAULT = ''
 
 logger = logging.getLogger(__name__)
 items_count = 0
+
 
 #####################################################################
 # Item Class
@@ -75,6 +77,7 @@ items_count = 0
 """
 The class ``Item`` implements the methods and attributes of an item. Each item is represented by an instance of the class ``Item``.
 """
+
 
 class Item():
     """
@@ -89,6 +92,131 @@ class Item():
 
     _itemname_prefix = 'items.'     # prefix for scheduler names
 
+    class TypeHandler():
+        """
+        Class for dict/list type item handling
+
+        This class is a base class to enable modifying lists or dicts stored
+        in item values. As item() yields a copy of the stored objects, changes
+        are not written back to the item. This set of classes provides methods
+        which handle storing the modified object and at the same time ensure that
+        all item metadata handling (updated, changed, changed_age etc) are properly
+        set.
+
+        The class method for either object type correspond to the Python list/
+        dict class methods for easy usage.
+
+        When an item of type list/dict is created, the appropriate sub-class is
+        instantiated as <item>.list resp. <item>.dict as to minimize collisions
+        between item methods and names of sub-items (e.g. update).
+        """
+
+        # base class, so only initialize class members
+        _type = ''
+        item_functions = []
+
+        def __init__(self, item):
+            if item is None:
+                raise ValueError(f'{self.__class__.__name__}: no item given')
+            if item._type != self._type:
+                raise ValueError(f'{self.__class__.__name__}: item not of type {self._type}')
+            self._item = item
+
+    class ListHandler(TypeHandler):
+        """ handle list type items """
+        _type = 'list'
+        item_functions = ['append', 'prepend', 'insert', 'pop', 'extend', 'clear', 'delete', 'remove']
+
+        # list functions all use item.__call__() to ensure that all proper
+        # item update handling is applied
+        def append(self, value, caller='Logic', source=None, dest=None):
+            self._item.__call__(value, caller, source, dest, index='append')
+
+        def prepend(self, value, caller='Logic', source=None, dest=None):
+            self._item.__call__(value, caller, source, dest, index='prepend')
+
+        def insert(self, index, value, caller='Logic', source=None, dest=None):
+            tmplist = copy.deepcopy(self._item._value)
+            tmplist.insert(index, value)
+            self._item.__call__(tmplist, caller, source, dest)
+
+        def pop(self, index=None, caller='Logic', source=None, dest=None):
+            tmplist = copy.deepcopy(self._item._value)
+            if index is None:
+                ret = tmplist.pop()
+            else:
+                ret = tmplist.pop(index)
+            self._item.__call__(tmplist, caller, source, dest)
+            return ret
+
+        def extend(self, value, caller='Logic', source=None, dest=None):
+            tmplist = copy.deepcopy(self._item._value)
+            tmplist.extend(value)
+            self._item.__call__(tmplist, caller, source, dest)
+
+        def clear(self, caller='Logic', source=None, dest=None):
+            self._item.__call__([], caller, source, dest)
+
+        def delete(self, value, caller='Logic', source=None, dest=None):
+            """
+                mimic the del list[x:y] behaviour - supply "x:y" as value
+                needs to be called delete instead of del for syntax reasons
+            """
+            splits = str(value).count(':')
+            tmplist = copy.deepcopy(self._item._value)
+            if splits == 0:
+                x = int(value)
+                del tmplist[x]
+            if splits == 1:
+                x, y = [int(i) for i in value.split(':')]
+                del tmplist[x:y]
+            elif splits == 2:
+                x, y, z = [int(i) for i in value.split(':')]
+                del tmplist[x:y:z]
+            self._item.__call__(tmplist, caller, source, dest)
+
+        def remove(self, value, caller='Logic', source=None, dest=None):
+            tmplist = copy.deepcopy(self._item._value)
+            tmplist.remove(value)
+            self._item.__call__(tmplist, caller, source, dest)
+
+    class DictHandler(TypeHandler):
+        """ handle dict type items """
+        _type = 'dict'
+        item_functions = ['get', 'delete', 'clear', 'pop', 'popitem', 'update']
+
+        # dict functions all use item.__call__() to ensure that all proper
+        # item update handling is applied
+        def get(self, key, default=None):
+            return self._item().get(key, default)
+
+        def delete(self, key, caller='Logic', source=None, dest=None):
+            """ needs to be called delete instead of del for syntax reasons """
+            tmpdict = copy.deepcopy(self._item._value)
+            del tmpdict[key]
+            self._item.__call__(tmpdict, caller, source, dest)
+
+        def clear(self, caller='Logic', source=None, dest=None):
+            self._item.__call__({}, caller, source, dest)
+
+        def pop(self, key, caller='Logic', source=None, dest=None, default=None):
+            tmpdict = copy.deepcopy(self._item._value)
+            ret = tmpdict.pop(key, default)
+            self._item.__call__(tmpdict, caller, source, dest)
+            return ret
+
+        def popitem(self, caller='Logic', source=None, dest=None):
+            tmpdict = copy.deepcopy(self._item._value)
+            ret = tmpdict.popitem()
+            self._item.__call__(tmpdict, caller, source, dest)
+            return ret
+
+        def update(self, value, caller='Logic', source=None, dest=None):
+            tmpdict = copy.deepcopy(self._item._value)
+            tmpdict.update(value)
+            self._item.__call__(tmpdict, caller, source, dest)
+
+    # class Item
     def __init__(self, smarthome, parent, path, config, items_instance=None):
 
         global _items_instance
@@ -104,12 +232,13 @@ class Item():
         try:
             if self._sh._use_conditional_triggers.lower() == 'true':
                 self._use_conditional_triggers = True
-        except: pass
+        except Exception:
+            pass
 
         self.plugins = Plugins.get_instance()
         self.shtime = Shtime.get_instance()
 
-        #count items on creation
+        # count items on creation
         global items_count
         items_count += 1
         if items_count % 50 == 0:
@@ -135,7 +264,7 @@ class Item():
         self._eval_unexpanded = ''
         self._eval_trigger = False
         self._eval_on_trigger_only = False
-        self._trigger = False
+        self._trigger = None
         self._trigger_unexpanded = []
         self._trigger_condition_raw = []
         self._trigger_condition = None
@@ -152,23 +281,25 @@ class Item():
         self._hysteresis_items_to_trigger = []
         self._hysteresis_log = False
 
-
-        self._on_update = None				# -> KEY_ON_UPDATE eval expression
-        self._on_change = None				# -> KEY_ON_CHANGE eval expression
-        self._on_update_dest_var = None		# -> KEY_ON_UPDATE destination var (list: only filled if '=' syntax is used)
-        self._on_change_dest_var = None		# -> KEY_ON_CHANGE destination var (list: only filled if '=' syntax is used)
-        self._on_update_unexpanded = [] 	# -> KEY_ON_UPDATE eval expression (with unexpanded item references)
-        self._on_change_unexpanded = [] 	# -> KEY_ON_CHANGE eval expression (with unexpanded item references)
-        self._on_update_dest_var_unexp = []	# -> KEY_ON_UPDATE destination var (with unexpanded item reference)
-        self._on_change_dest_var_unexp = []	# -> KEY_ON_CHANGE destination var (with unexpanded item reference)
+        self._on_update = None				 # -> KEY_ON_UPDATE eval expression
+        self._on_change = None				 # -> KEY_ON_CHANGE eval expression
+        self._on_update_dest_var = None		 # -> KEY_ON_UPDATE destination var (list: only filled if '=' syntax is used)
+        self._on_change_dest_var = None		 # -> KEY_ON_CHANGE destination var (list: only filled if '=' syntax is used)
+        self._on_update_unexpanded = [] 	 # -> KEY_ON_UPDATE eval expression (with unexpanded item references)
+        self._on_change_unexpanded = [] 	 # -> KEY_ON_CHANGE eval expression (with unexpanded item references)
+        self._on_update_dest_var_unexp = []	 # -> KEY_ON_UPDATE destination var (with unexpanded item reference)
+        self._on_change_dest_var_unexp = []	 # -> KEY_ON_CHANGE destination var (with unexpanded item reference)
         self._log_change = None
         self._log_change_logger = None
+        self._log_level_attrib = "INFO"
         self._log_level = None
         self._log_level_name = None
         self._log_mapping = {}
         self._log_rules = {}
+        self._log_rules_cache = {}
         self._log_text = None
         self._fading = False
+        self._fadingdetails = {}
         self._items_to_trigger = []
         self.__last_change = self.shtime.now()
         self.__last_update = self.__last_change
@@ -187,7 +318,7 @@ class Item():
         self._path = path
         self._sh = smarthome
         self._threshold = False
-        self._threshold_data = [0,0,False]
+        self._threshold_data = [0, 0, False]
         self._description = None
         self._type = None
         self._struct = None
@@ -200,12 +331,13 @@ class Item():
         # TODO: create history Arrays for some values (value, last_change, last_update  (usage: multiklick,...)
         # self.__history = [None, None, None, None, None]
         #
-        # def getValue(num):
-        #    return (str(self.__history[(num - 1)]))
+        # def getValue(num: int = 0):
+        #    pos = max(0, len(self.__history) - 1 - num)
+        #    return self.__history[pos]
         #
         # def addValue(avalue):
         #    self.__history.append(avalue)
-        #    if len(self.__history) > 5:
+        #    if len(self.__history) > HISTORY_MAX:
         #        self.__history.pop(0)
         #
 
@@ -215,13 +347,17 @@ class Item():
         else:
             self._change_logger = logger.debug
 
+        if not self._sh._ignore_item_collision:
+            if self._path.split('.')[-1] in _items_instance._item_methods:
+                logger.notice(f'Name of item {self._path} collides with Item class member. Unexpected behaviour might occur, renaming the item is recommended.')
+
         #############################################################
         # Initialize attribute assignment compatibility
         #############################################################
         global ATTRIB_COMPAT_DEFAULT
         if ATTRIB_COMPAT_DEFAULT == '':
-            if hasattr(smarthome, '_'+KEY_ATTRIB_COMPAT):
-                config_attrib = getattr(smarthome,'_'+KEY_ATTRIB_COMPAT)
+            if hasattr(smarthome, '_' + KEY_ATTRIB_COMPAT):
+                config_attrib = getattr(smarthome, '_' + KEY_ATTRIB_COMPAT)
                 if str(config_attrib) in [ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST]:
                     logger.info("Global configuration: '{}' = '{}'.".format(KEY_ATTRIB_COMPAT, str(config_attrib)))
                     ATTRIB_COMPAT_DEFAULT = config_attrib
@@ -238,7 +374,7 @@ class Item():
         setattr(self, '_type', dict(config.items()).get(KEY_TYPE))
         if self._type is None:
             self._type = FOO  # Every item has a type, type is FOO, if not defined in item
-        #__defaults = {'num': 0, 'str': '', 'bool': False, 'list': [], 'dict': {}, 'foo': None, 'scene': 0}
+        # __defaults = {'num': 0, 'str': '', 'bool': False, 'list': [], 'dict': {}, 'foo': None, 'scene': 0}
         if self._type not in ITEM_DEFAULTS:
             logger.error(f"Item {self._path}: type '{self._type}' unknown. Please use one of: {', '.join(list(ITEM_DEFAULTS.keys()))}.")
             raise AttributeError
@@ -249,6 +385,8 @@ class Item():
         #############################################################
         for attr, value in config.items():
             if not isinstance(value, dict):
+                log_rules_keys = [KEY_LOG_RULES_LOWLIMIT, KEY_LOG_RULES_HIGHLIMIT, KEY_LOG_RULES_EXCLUDE,
+                                  KEY_LOG_RULES_FILTER, KEY_LOG_RULES_ITEMVALUE]
                 if attr in [KEY_NAME, KEY_DESCRIPTION, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE, KEY_EVAL_TRIGGER_ONLY]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
@@ -256,7 +394,7 @@ class Item():
                 elif attr in [KEY_CACHE, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE]:  # cast to bool
                     try:
                         setattr(self, '_' + attr, cast_bool(value))
-                    except:
+                    except Exception:
                         logger.warning("Item '{0}': problem parsing '{1}'.".format(self._path, attr))
                         continue
                 elif attr in [KEY_CRONTAB]:  # cast to list
@@ -291,18 +429,8 @@ class Item():
 
                 elif attr in [KEY_LOG_LEVEL]:
                     if value != '':
-                        level = value.upper()
-                        level_name = level
-                        if Utils.is_int(level):
-                            level = int(level)
-                            level_name = logging.getLevelName(level)
-                        if logging.getLevelName(level) == 'Level ' + str(level):
-                            logger.warning(f"Item {self._path}: Invalid loglevel '{value}' defined in attribute '{KEY_LOG_LEVEL}' - Level 'INFO' will be used instead")
-                            setattr(self, '_log_level_name', 'INFO')
-                            setattr(self, '_log_level', logging.getLevelName('INFO'))
-                        else:
-                            setattr(self, '_log_level_name', level_name)
-                            setattr(self, '_log_level', logging.getLevelName(level_name))
+                        setattr(self, '_log_level_attrib', value)
+
                 elif attr in [KEY_LOG_CHANGE]:
                     if value != '':
                         setattr(self, '_log_change', value)
@@ -320,14 +448,32 @@ class Item():
                             setattr(self, '_log_level_name', 'INFO')
                             setattr(self, '_log_level', logging.getLevelName('INFO'))
                 elif attr in [KEY_LOG_MAPPING]:
-                    if value != '':
+                    if isinstance(value, list):
+                        try:
+                            value_dict = {k: v for od in value for k, v in od.items()}
+                            setattr(self, '_log_mapping', value_dict)
+                        except Exception as e:
+                            logger.warning(f"Item {self._path}: Invalid list data for attribute '{KEY_LOG_MAPPING}': {value} - Exception: {e}")
+                    elif value != '':
                         try:
                             value_dict = ast.literal_eval(value)
                             setattr(self, '_log_mapping', value_dict)
                         except Exception as e:
                             logger.warning(f"Item {self._path}: Invalid data for attribute '{KEY_LOG_MAPPING}': {value} - Exception: {e}")
                 elif attr in [KEY_LOG_RULES]:
-                    if value != '':
+                    if isinstance(value, list):
+                        try:
+                            value_dict = {}
+                            for od in value:
+                                for k, v in od.items():
+                                    if k in log_rules_keys:
+                                        value_dict[k] = v
+                                    else:
+                                        logger.warning(f"Item {self._path}: Ignoring '{k}' as it is not a valid log rule")
+                            setattr(self, '_log_rules', value_dict)
+                        except Exception as e:
+                            logger.warning(f"Item {self._path}: Invalid list data for attribute '{KEY_LOG_RULES}': {value} - Exception: {e}")
+                    elif value != '':
                         try:
                             value_dict = ast.literal_eval(value)
                             setattr(self, '_log_rules', value_dict)
@@ -361,7 +507,7 @@ class Item():
                     pass
                 elif attr == '_filename':
                     # name of file, which defines this item
-                    #setattr(self, attr, value)    # assignment moved to top (before for loop)
+                    # setattr(self, attr, value)    # assignment moved to top (before for loop)
                     pass
                 else:
                     #------------------------------------------------------------
@@ -452,7 +598,7 @@ class Item():
                 self.__updated_by = self.__changed_by
                 # Write item value to log, if Item has attribute log_change set
                 self._log_on_change(self._value, 'Init', 'Initial_Value', None)
-        except:
+        except Exception:
             logger.error("Item {}: value {} does not match type {}.".format(self._path, self._value, self._type))
             raise
         self.__prev_value = self.__last_value
@@ -496,16 +642,27 @@ class Item():
                 logger.notice(f"Created cache for item {self._cache} in file {self._cache}")
 
         #############################################################
+        # add list/dict methods
+        #############################################################
+        if self._type in ['list', 'dict']:
+            # get proper subclass - ListHandler / DictHandler
+            type_class = getattr(self, self._type.capitalize() + 'Handler')
+            # instantiate class
+            obj = type_class(item=self)
+            # create item member <item>.list / <item>.dict
+            setattr(self, self._type, obj)
+
+        #############################################################
         # Plugins
         #############################################################
         for plugin in self.plugins.return_plugins():
-            #plugin.xxx = []  # Empty reference list list of items
+            # plugin.xxx = []  # Empty reference list list of items
             if hasattr(plugin, PLUGIN_PARSE_ITEM):
                 update = plugin.parse_item(self)
                 if update:
                     try:
                         plugin.add_item(self, updating=True)
-                    except:
+                    except Exception:
                         pass
                     self.add_method_trigger(update)
 
@@ -533,34 +690,60 @@ class Item():
 
         return True
 
-    def _get_attribute_value(self, attr_ref: str, current_attr: str, default: str='', ignore_current_item: bool=False) -> str:
+    def _get_attribute_value(self, attr_ref: str, current_attr: str, default: str = '', ignore_current_item: bool = False) -> str:
         """
         Get the value of an other attribute using a relative reference
-
-        at the moment only the current, parent, grandparent and greatgrandparent items are supported
 
         :param attr_ref: Reference to attribute
         :param ignore_current_item: Skip attributes of current item (needed in attr loop)
 
-        :return: Value of the referenced attribute
+        :return: Value of the referenced attribute or '' if given number of parents are not present
         """
         value = attr_ref
         attr_ref = attr_ref.strip()
-        if attr_ref.startswith( ('.:', '..:', '...:', '....:') ):
-            fromitem = attr_ref.split(':')[0]
+        if ':' in attr_ref:
             fromattr = attr_ref.split(':')[1]
             if fromattr in ['', '.']:
                 fromattr = current_attr
-            if fromitem == '.':
-                if not ignore_current_item:
-                    value = self._get_attr(fromattr, default)
-            elif fromitem == '..':
-                value = self._get_attr_from_parent(fromattr, default)
-            elif fromitem == '...':
-                value = self._get_attr_from_grandparent(fromattr, default)
-            elif fromitem == '....':
-                value = self._get_attr_from_greatgrandparent(fromattr, default)
+
+            fromitem = attr_ref.split(':')[0]
+            # needed for attr loop
+            if fromitem == '.' and ignore_current_item:
+                return value
+
+            # if fromitem is only dots
+            if all(x == '.' for x in fromitem):
+                level = len(fromitem) - 1
+                value = self.find_attribute(fromattr, default, level=level, strict=True)
         return value
+
+
+    def find_attribute(self, attr, default: str = '', level: int = -1, strict: bool = False) -> str:
+        """
+        Find attribute value from item (level == 0) or parent item of given level
+
+        If level < 0, search up the whole item tree
+        If strict is set and level is not reached, return ''
+
+        :param attr: Get the value from this attribute of the parent item
+        :return: value from attribute of parent item
+        :param level: number of parent-levels
+        :ptype level: int
+        :param strict: define if level is max-level or exact level
+        :ptype strict: bool
+        :return: attribute value
+        :rtype: str
+        """
+        item = self
+        nolimit = level < 0
+        while (level >= 1 or nolimit) and (strict or attr not in item.conf):
+            if item._is_top_of_item_tree():
+                return default
+            item = item.return_parent()
+            level -= 1
+
+        attr_value = item.conf.get(attr, default)
+        return attr_value
 
 
     def _split_destitem_from_value(self, value):
@@ -582,11 +765,11 @@ class Item():
                 if value.find('=') < value.find('=='):
                     # assignment operator exists in front of equal operator
                     dest_item = value[:value.find('=')].strip()
-                    value = value[value.find('=')+1:].strip()
+                    value = value[value.find('=') + 1:].strip()
             else:
                 # if equal operator does not exist
                 dest_item = value[:value.find('=')]
-                value = value[value.find('=')+1:].strip()
+                value = value[value.find('=') + 1:].strip()
         return dest_item, value
 
 
@@ -603,11 +786,11 @@ class Item():
         """
         # casting of value, if compat = latest
         if compat == ATTRIB_COMPAT_LATEST:
-            if self._type != None:
+            if self._type is not None:
                 mycast = globals()['cast_' + self._type]
                 try:
                     value = mycast(value)
-                except:
+                except Exception:
                     logger.warning(f"Item {self._path}: Unable to cast '{str(value)}' to {self._type}")
                     if isinstance(value, list):
                         value = []
@@ -640,7 +823,11 @@ class Item():
         :return: number of seconds as an integer
         """
         if isinstance(time, str):
-            time_in_sec= self.shtime.to_seconds(time, test=True)
+            if time.startswith("sh."):
+                # time is given as item reference, just pass it along, lib.scheduler needs to handle it
+                return time
+
+            time_in_sec = self.shtime.to_seconds(time, test=True)
             if time_in_sec == -1:
                 if not test:
                     logger.warning(f"Item {self._path} - _cast_duration: Unable to convert parameter 'time' to seconds (time={time})")
@@ -655,7 +842,7 @@ class Item():
                     f"Item {self._path} - _cast_duration: Unable to convert parameter 'time' to int (time={time})")
             time_in_sec = False
 
-        return (time_in_sec)
+        return time_in_sec
 
 
     def _cast_duration_old(self, time, test=False):
@@ -678,7 +865,7 @@ class Item():
                 wrk = time.split('s')
                 if len(wrk) > 1:
                     time_in_sec += int(wrk[0])
-                    #time = wrk[1].strip()
+                    # time = wrk[1].strip()
                 elif wrk[0] != '':
                     time_in_sec += int(wrk[0])
             except Exception as e:
@@ -694,7 +881,7 @@ class Item():
             if not test:
                 logger.warning(f"Item {self._path} - _cast_duration: (time={time}) problem: unable to convert to int")
             time_in_sec = False
-        return(time_in_sec)
+        return time_in_sec
 
 
     def _build_cycledict(self, value):
@@ -745,7 +932,7 @@ class Item():
         else:
             self._eval_unexpanded = value
             value = self.get_stringwithabsolutepathes(value, 'sh.', '(', attribute_name)
-            #value = self.get_stringwithabsolutepathes(value, 'sh.', '.property', KEY_EVAL)
+            # value = self.get_stringwithabsolutepathes(value, 'sh.', '.property', KEY_EVAL)
             self._eval = value
 
 
@@ -811,7 +998,7 @@ class Item():
             #                        val = 'sh.'+dest_item+'( '+ self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE) +' )'
             val_list_unexpanded.append(val)
             val = self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE)
-            #val = self.get_stringwithabsolutepathes(val, 'sh.', '.property', KEY_ON_CHANGE)
+            # val = self.get_stringwithabsolutepathes(val, 'sh.', '.property', KEY_ON_CHANGE)
             #                        logger.warning("Item __init__: {}: for attr '{}', dest_item '{}', val '{}'".format(self._path, attr, dest_item, val))
             val_list.append(val)
             dest_var_list.append(dest_item)
@@ -827,7 +1014,7 @@ class Item():
         cycle_time, cycle_value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
         self._cycle_time = self.get_stringwithabsolutepathes(cycle_time, 'sh.', '(', attr)
         self._cycle_value = self.get_stringwithabsolutepathes(cycle_value, 'sh.', '(', attr)
-        #logger.notice(f"_parse_cycle_attribute: {self._path} - value={value} -> _cycle_time={self._cycle_time}, _cycle_value={self._cycle_value}")
+        # logger.notice(f"_parse_cycle_attribute: {self._path} - value={value} -> _cycle_time={self._cycle_time}, _cycle_value={self._cycle_value}")
 
 
     def _parse_autotimer_attribute(self, attr, value):
@@ -835,7 +1022,7 @@ class Item():
         auto_time, auto_value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
         self._autotimer_time = self.get_stringwithabsolutepathes(auto_time, 'sh.', '(', attr)
         self._autotimer_value = self.get_stringwithabsolutepathes(auto_value, 'sh.', '(', attr)
-        #logger.notice(f"_parse_autotimer_attribute: {self._path} - value={value} -> _autotimer_time={self._autotimer_time}, _autotimer_value={self._autotimer_value}")
+        # logger.notice(f"_parse_autotimer_attribute: {self._path} - value={value} -> _autotimer_time={self._autotimer_time}, _autotimer_value={self._autotimer_value}")
 
 
     """
@@ -862,7 +1049,6 @@ class Item():
                 else:
                     on_list.append(on_eval_list)
         return on_list
-
 
     def _get_last_change(self):
         return self.__last_change
@@ -956,7 +1142,7 @@ class Item():
 
     def id(self):
         """
-        Old method name - Use item.path() instead of item.id()
+        Old method name - Use item.property.path instead of item.property.path
         """
         return self.property.path
 
@@ -1144,7 +1330,7 @@ class Item():
 
         trailing_str = ''
         if relpath.startswith('self') and len(relpath) > 4:
-            if relpath[4]  in "() +-*/<>!=&%":
+            if relpath[4] in "() +-*/<>!=&%":
                 trailing_str = relpath[4:]
                 relpath = ''
 
@@ -1187,7 +1373,7 @@ class Item():
                 for a in self.conf[attr]:
                     # Convert accidentally wrong dict entries to string
                     if isinstance(a, dict):
-                        a = list("{!s}:{!s}".format(k,v) for (k,v) in a.items())[0]
+                        a = list("{!s}:{!s}".format(k, v) for (k, v) in a.items())[0]
                     logger.debug("expand_relativepathes: before : to expand={}".format(a))
                     if (begintag != '') and (endtag != ''):
                         a = self.get_stringwithabsolutepathes(a, begintag, endtag, attr)
@@ -1228,9 +1414,9 @@ class Item():
 
             pref = ''
             rest = evalstr
-            while (rest.find(begintag+'.') != -1):
-                pref += rest[:rest.find(begintag+'.')+len(begintag)]
-                rest = rest[rest.find(begintag+'.')+len(begintag):]
+            while (rest.find(begintag + '.') != -1):
+                pref += rest[:rest.find(begintag + '.') + len(begintag)]
+                rest = rest[rest.find(begintag + '.') + len(begintag):]
                 if endtag == '' or rest.find(endtag) == -1:
                     rel = rest
                     rest = ''
@@ -1239,14 +1425,13 @@ class Item():
                 rest = rest[rest.find(endtag):]
                 pref += self.get_absolutepath(rel, attribute)
                 # Re-combine string for next loop
-                rest = pref+rest
+                rest = pref + rest
                 pref = ''
 
             pref += rest
             logger.debug("{}.get_stringwithabsolutepathes('{}') with begintag = '{}', endtag = '{}': result = '{}'".format(
                 self._path, evalstr, begintag, endtag, pref))
-            return pref # end of __checkfortags(...)
-
+            return pref  # end of __checkfortags(...)
 
         if not isinstance(evalstr, str):
             return evalstr
@@ -1257,11 +1442,11 @@ class Item():
             begintag = begintag + [''] * abs(diff_len) if diff_len < 0 else begintag
             endtag = endtag + [''] * diff_len if diff_len > 0 else endtag
             for i, _ in enumerate(begintag):
-                if not evalstr.find(begintag[i]+'.') == -1:
+                if not evalstr.find(begintag[i] + '.') == -1:
                     evalstr = __checkfortags(evalstr, begintag[i], endtag[i])
             pref = evalstr
         else:
-            if evalstr.find(begintag+'.') == -1:
+            if evalstr.find(begintag + '.') == -1:
                 return evalstr
             pref = __checkfortags(evalstr, begintag, endtag)
         return pref
@@ -1341,14 +1526,14 @@ class Item():
 
                         p = wrk.lower().find('true')
                         if p != -1:
-                            wrk = wrk[:p]+'True'+wrk[p+4:]
+                            wrk = wrk[:p] + 'True' + wrk[p + 4:]
                         p = wrk.lower().find('false')
                         if p != -1:
-                            wrk = wrk[:p]+'False'+wrk[p+5:]
+                            wrk = wrk[:p] + 'False' + wrk[p + 5:]
 
                         # expand relative item paths
                         wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '(', KEY_CONDITION)
-                        #wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '.property', KEY_CONDITION)
+                        # wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '.property', KEY_CONDITION)
 
                         and_cond.append(wrk)
 
@@ -1364,7 +1549,6 @@ class Item():
             result = '(' + result + ')'
 
         return result
-
 
     def __call__(self, value=None, caller='Logic', source=None, dest=None, key=None, index=None, default=None):
         # return value
@@ -1447,17 +1631,19 @@ class Item():
 
     def get_class_from_frame(self, fr):
         # https://stackoverflow.com/questions/2203424/python-how-to-retrieve-class-information-from-a-frame-object
-        #import inspect
+        # import inspect
         args, _, _, value_dict = inspect.getargvalues(fr)
         # we check the first parameter for the frame function is
         # named 'self'
-        if len(args) and args[0] == 'self' and False:    # Don't execute this if-branch
-            # in that case, 'self' will be referenced in value_dict
-            instance = value_dict.get('self', None)
-            if instance:
-                # return its class
-#                return getattr(instance, '__class__', None)
-                return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+
+        # if len(args) and args[0] == 'self' and False:    # Don't execute this if-branch
+        #     # in that case, 'self' will be referenced in value_dict
+        #     instance = value_dict.get('self', None)
+        #     if instance:
+        #         # return its class
+#       #          return getattr(instance, '__class__', None)
+        #         return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+
         # return None otherwise
         return f"args={args}  - value_dict={value_dict}"
 
@@ -1467,23 +1653,25 @@ class Item():
         args, _, _, value_dict = inspect.getargvalues(fr)
         # we check the first parameter for the frame function is
         # named 'self'
-        if len(args) and args[0] == 'self' and False:
-            # in that case, 'self' will be referenced in value_dict
-            instance = value_dict.get('self', None)
-            if instance:
-                return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+
+        # if len(args) and args[0] == 'self' and False:
+        #     # in that case, 'self' will be referenced in value_dict
+        #     instance = value_dict.get('self', None)
+        #     if instance:
+        #         return getattr(instance, '__class__', f"args={args}  - value_dict={value_dict}")
+
         return f"{value_dict.get('self', None)}"
 
     def get_stack_info(self):
 
         # msg = "call stack:"
-        #msg += f" {inspect.stack()[1][3]}() / {inspect.stack()[2][3]}() / {inspect.stack()[3][3]}() / {inspect.stack()[4][4]}() / {inspect.stack()[5][5]}()"
-        for level in range(4,5):
-            msg = ''
+        # msg += f" {inspect.stack()[1][3]}() / {inspect.stack()[2][3]}() / {inspect.stack()[3][3]}() / {inspect.stack()[4][4]}() / {inspect.stack()[5][5]}()"
+        msg = ''
+        for level in range(4, 5):
             try:
                 # f_code.__class__.__name__ == 'code'
                 # f_code.__class__.__class__.__name__ == 'type'
-                #msg += f" - f_code={inspect.stack()[level].frame.f_code}   -  classname={inspect.stack()[level].frame.f_code.__class__.__class__.__class__.__name__}   -   dir(__class__.__class__.__class__)={dir(inspect.stack()[level].frame.f_code.__class__.__class__.__class__)}"
+                # msg += f" - f_code={inspect.stack()[level].frame.f_code}   -  classname={inspect.stack()[level].frame.f_code.__class__.__class__.__class__.__name__}   -   dir(__class__.__class__.__class__)={dir(inspect.stack()[level].frame.f_code.__class__.__class__.__class__)}"
                 if inspect.stack()[level].function == '__run_eval':
                     msg += f"Item '{self.get_calling_item_from_frame(inspect.stack()[level].frame)}'"
                 else:
@@ -1515,25 +1703,6 @@ class Item():
         return valuedict
 
 
-    # feature moved to lib.metadata
-    # def _test_attribute_existance(self):
-    #     """
-    #
-    #     :return:
-    #     """
-    #     for attr in self.conf:
-    #         if not self._sh.items.plugin_attribute_exists(attr.split('@')[0]):
-    #             if not (self._path.startswith('env')):
-    #                 value = self.conf[attr]
-    #                 log_msg = "Undefined attribute '{}' with value '{}' used by item {}".format(attr, value, self._path)
-    #                 if self._filename:
-    #                     log_msg += " (defined in {})".format(self._filename)
-    #                 if hasattr(self._sh, '_undef_item_attr_loglevel_info') and self._sh._undef_item_attr_loglevel_info:
-    #                     logger.info(log_msg)
-    #                 else:
-    #                     logger.warning(log_msg)
-
-
     def _init_prerun(self):
         """
         Build eval expressions from special functions and triggers before first run
@@ -1549,7 +1718,7 @@ class Item():
                 _items.extend(_items_instance.match_items(trigger))
             for item in _items:
                 if item != self:  # prevent loop
-                        item._items_to_trigger.append(self)
+                    item._items_to_trigger.append(self)
             if self._eval:
                 # Build eval statement from trigger items (joined by given function)
                 items = ['sh.' + str(x.id()) + '()' for x in _items]
@@ -1569,9 +1738,9 @@ class Item():
         if self._hysteresis_input:
             # Only if item has a hysteresis_input attribute
             triggering_item = _items_instance.return_item(self._hysteresis_input)
-            if triggering_item is None: # triggering item was not found
+            if triggering_item is None:  # triggering item was not found
                 logger.error(f"item '{self._path}': trigger item '{self._hysteresis_input}' not found for function 'hysteresis'")
-            #elif self._hysteresis_upper_threshold < self._hysteresis_lower_threshold:
+            # elif self._hysteresis_upper_threshold < self._hysteresis_lower_threshold:
             #    logger.error(f"item '{self._path}': Hysteresis upper threshod is lower than lower threshod")
             else:
                 if triggering_item != self:  # prevent loop
@@ -1593,17 +1762,106 @@ class Item():
         # Crontab/Cycle
         #############################################################
         if self._crontab is not None or self._cycle_time is not None:
-            cycle = None
-            if self._cycle_time is not None:
-                #cycle = self._build_cycledict(cycle)
-                if self._cycle_value is None:
-                    cycle = {self._cast_duration(self._cycle_time): self._value}
+            cycle_time = self.get_attr_time('cycle')
+            cycle_value = None
+            if cycle_time is not None:
+                cycle_value = self.get_attr_value('cycle')
+
+            items = self.__get_items_from_string(self._cycle_time)
+            self._sh.scheduler.add(self._itemname_prefix + self._path, self, cron=self._crontab, cycle=cycle_time, value=cycle_value, items=items)
+
+    def __get_items_from_string(self, string):
+        """ return a list of all item references `sh.path.to.item()` in string """
+        if not string:
+            return []
+
+        global _items_instance
+
+        regex = re.compile(r'sh\.([a-zA-Z0-9_.]+)(?:\(\)|\.property\.[a-zA-Z_]+)')
+        result = regex.findall(string)
+
+        # could easily be written in a single line, but gets kind of unreadable...
+        items = {_items_instance.return_item(entry) for entry in result if entry}
+        return list({item for item in items if item is not None})
+
+    def get_attr_time(self, attr: str) -> int | None:
+        """
+        return attribute time, possibly recalculated at call time
+
+        :param attr: attribute to calculate time for, e.g. "cycle" or "autotimer"
+        :type attr: str
+        """
+
+        # debug logging commented out for performance reasons
+        # usually only needed for development/debugging, not in any production scenario
+
+        if attr not in ('cycle', 'autotimer'):
+            return
+
+        var = getattr(self, f'_{attr}_time')
+        if var is None:
+            logger.debug(f'get_attr_time({attr}): item {self._path} has no member _{attr}_time.')
+            return
+
+        if isinstance(var, int) or var is None:
+            return var
+
+        try:
+            res = self._cast_duration(var, test=True)
+            # logger.debug(f'{self._path}: cast_duration returned {res}')
+            if type(res) is int:
+                # logger.debug(f'{self._path}: get_attr_time({attr}) immediately got {res} from cast_duration of {var}')
+                if attr == 'cycle' and res == 0:
+                    logger.warning(f'{self._path}: cycle time returned 0 from {self._cycle_time}, ignoring')
+                    return
                 else:
-                    cycle = {self._cast_duration(self._cycle_time): self._cycle_value}
-            self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle)
+                    return res
 
-        return
+            res = self.__run_attribute_eval(var, result_type='str', result_error=None)
+            # logger.debug(f'{self._path}: get_attr_time got {res} from eval of {var}')
+            if res is None:
+                return
 
+            res = self._cast_duration(res)
+            # logger.debug(f'{self._path}: get_attr_time({attr}) got {res} from cast_duration of {var}')
+            if attr == 'cycle' and res == 0:
+                logger.warning(f'{self._path}: cycle time returned 0 from {self._cycle_time}, ignoring')
+                return
+
+            if res is not None and res is not False:
+                return int(res)
+        except Exception as e:
+            logger.warning(f'error on evaluation {attr} time "{var}" for item {self._path}: {e}')
+
+    def get_attr_value(self, attr: str, value=None):
+        """
+        return attribute value, possibly recalculated at call time
+
+        :param attr: attribute to calculate value for, e.g. cycle or autotimer
+        :type attr: str
+        """
+        if attr not in ('cycle', 'autotimer', 'cron'):
+            return
+
+        # only for cron, the value is stored in the scheduler instead of in the item
+        # so we just use the given value to proceed (eval)
+        if value is not None:
+            var = value
+        else:
+            var = getattr(self, f'_{attr}_value')
+        if var is None:
+            return
+
+        # logger.debug(f'{self._path}: get_attr_value({attr}) from {var}')
+        if not isinstance(var, str):
+            return var
+
+        try:
+            res = self.__run_attribute_eval(var, result_type='str', result_error=None)
+            # logger.debug(f'{self._path}: get_attr_value({attr}) got {res} from eval of {var}')
+            return res
+        except Exception as e:
+            logger.warning(f'error on evaluation {attr} value "{var}" for item {self._path}: {e}')
 
     def _init_run(self):
         """
@@ -1620,7 +1878,7 @@ class Item():
         return False
 
 
-    def __run_attribute_eval(self, eval_expression, result_type='num'):
+    def __run_attribute_eval(self, eval_expression, result_type='num', result_error: Any = ''):
         """
         Evaluates an expression string for item attributes like
          - autotimer
@@ -1634,19 +1892,19 @@ class Item():
         """
 
         # set up environment for calculating eval-expression
-        sh = self._sh
-        shtime = self.shtime
-        items = _items_instance
-        import math
-        import lib.userfunctions as uf
-        env = lib.env
+        sh = self._sh                   # noqa (needed for eval environment)
+        shtime = self.shtime            # noqa (needed for eval environment)
+        items = _items_instance         # noqa (needed for eval environment)
+        import math                     # noqa (needed for eval environment)
+        import lib.userfunctions as uf  # noqa (needed for eval environment)
+        env = lib.env                   # noqa (needed for eval environment)
 
         eval_expression = str(eval_expression)
         try:
             result = eval(eval_expression)
         except Exception as e:
             logger.error(f"Item '{self._path}': __run_attribute_eval({eval_expression}): Problem evaluating '{eval_expression}' - Exception {e}")
-            result = ''
+            result = result_error
         if result_type == 'num':
             if not isinstance(result, (int, float)):
                 logger.error(f"Item '{self._path}': __run_attribute_eval({eval_expression}): Attribute expression '{eval_expression}' evaluated to a non-numeric value '{result}', using 0 instead")
@@ -1657,7 +1915,7 @@ class Item():
 
     def __run_hysteresis(self, value=None, caller='Hysteresis', source=None, dest=None):
         """
-        evaluate the 'hysteresis' entry of the actual item
+        evaluate the 'hysteresis' entry of the item
         """
         upper = self.__run_attribute_eval(self._hysteresis_upper_threshold)
         lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
@@ -1675,7 +1933,7 @@ class Item():
             if self._hysteresis_upper_timer is None:
                 self.__update(True, caller, source, dest)
             else:
-                if not self._hysteresis_upper_timer_active and (self._value == False): ###ms value = self._value
+                if not self._hysteresis_upper_timer_active and (self._value is False):  # ms value = self._value
                     timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
                     if timer < 0:
                         logger.warning(f"Item '{self._path}': Hysteresis upper-timer evaluated to an value less than zero ({timer}), using 0 instead")
@@ -1683,16 +1941,16 @@ class Item():
                     self._hysteresis_upper_timer_active = True
                     next = self.shtime.now() + datetime.timedelta(seconds=timer)
                     self.active_timer_ends = next
-                    #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_upper_timer)
+                    # next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_upper_timer)
                     if self._hysteresis_log:
                         logger.notice(f"__run_hysteresis {self._path}: scheduler.add {self._path}-UpTimer")
-                    self._sh.scheduler.add(self._itemname_prefix+self.id() + '-UpTimer', self.__call__, value={'value': True, 'caller': 'Hysteresis'}, next=next)
+                    self._sh.scheduler.add(self._itemname_prefix + self.id() + '-UpTimer', self.__call__, value={'value': True, 'caller': 'Hysteresis'}, next=next)
 
         if value < lower:
             if self._hysteresis_lower_timer is None:
                 self.__update(False, caller, source, dest)
             else:
-                if not self._hysteresis_lower_timer_active and (self._value == True):
+                if not self._hysteresis_lower_timer_active and (self._value is True):
                     timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
                     if timer < 0:
                         logger.warning(f"Item '{self._path}': Hysteresis lower-timer evaluated to an value less than zero ({timer}), using 0 instead")
@@ -1700,19 +1958,18 @@ class Item():
                     self._hysteresis_lower_timer_active = True
                     next = self.shtime.now() + datetime.timedelta(seconds=timer)
                     self._hysteresis_active_timer_ends = next
-                    #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_lower_timer)
+                    # next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_lower_timer)
                     if self._hysteresis_log:
                         logger.notice(f"__run_hysteresis {self._path}: scheduler.add {self._path}-LoTimer")
                     self._sh.scheduler.add(self._itemname_prefix + self.id() + '-LoTimer', self.__call__, value={'value': False, 'caller': 'Hysteresis'}, next=next)
         return
-
 
     def _onoff(self, value: bool) -> str:
         if value:
             return 'On'
         return 'Off'
 
-    def _get_hysterisis_state_string(self, lower: float, upper: float, input_value: float, log: bool=False, txt: str='') -> str:
+    def _get_hysterisis_state_string(self, lower: float, upper: float, input_value: float, log: bool = False, txt: str = '') -> str:
         """
         Helper method to return the inner hysteresis-state as a readable string
 
@@ -1837,7 +2094,7 @@ class Item():
         if self._eval:
             # Test if a conditional trigger is defined
             if self._trigger_condition is not None:
-                #logger.warning("Item {}: Evaluating trigger condition {}".format(self._path, self._trigger_condition))
+                # logger.warning("Item {}: Evaluating trigger condition {}".format(self._path, self._trigger_condition))
                 try:
                     # set up environment for calculating eval-expression
                     sh = self._sh
@@ -1845,7 +2102,6 @@ class Item():
                     items = _items_instance
                     import math
                     import lib.userfunctions as uf
-                    # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
                     env = lib.env
 
                     cond = eval(self._trigger_condition)
@@ -1860,14 +2116,13 @@ class Item():
             else:
                 cond = True
 
-            if cond == True:
+            if cond is True:
                 # set up environment for calculating eval-expression
                 sh = self._sh
                 shtime = self.shtime
                 items = _items_instance
                 import math
                 import lib.userfunctions as uf
-                # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
                 env = lib.env
 
                 try:
@@ -1878,7 +2133,7 @@ class Item():
 
                     try:
                         triggered = source in self._trigger
-                    except:
+                    except Exception:
                         triggered = False
 
                     if self._eval_on_trigger_only and not triggered:
@@ -1890,8 +2145,8 @@ class Item():
                         # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
                         try:
                             value = eval(self._eval)
-                        except Exception as e:
-                            #value = self._value = self.cast(value)
+                        except Exception:
+                            # value = self._value = self.cast(value)
                             value = self.cast(value)
                             value = eval(self._eval)
                         # ms end
@@ -1915,7 +2170,7 @@ class Item():
 
 
     # New for on_update / on_change
-    def _run_on_xxx(self, path, value, on_dest, on_eval, attr='?'):
+    def _run_on_xxx(self, path, value, on_dest, on_eval, attr='?', caller=None, source=None, dest=None):
         """
         common method for __run_on_update and __run_on_change
 
@@ -1933,7 +2188,7 @@ class Item():
         items = _items_instance
         import math
         import lib.userfunctions as uf
-        #uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
+        # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
         env = lib.env
 
         logger.info(f"Item '{self._path}': '{attr}' evaluating {on_dest} = {on_eval}")
@@ -1970,37 +2225,39 @@ class Item():
                     else:
                         logger.error(f"Item {self._path}: '{attr}' has not found dest_item '{on_dest}' = {on_eval}, result={dest_value}")
                 else:
-                    dummy = eval(on_eval)
+                    _ = eval(on_eval)
                     logger.debug(" - : '{}' finally evaluating {}, result={}".format(attr, on_eval, dest_value))
             else:
                 logger.debug(" - : '{}' {} not set (cause: eval=None)".format(attr, on_dest))
                 pass
 
 
-    def __run_on_update(self, value=None):
+    def __run_on_update(self, value=None, caller=None, source=None, dest=None):
         """
         evaluate all 'on_update' entries of the actual item
         """
         if self._on_update:
             # sh = self._sh  # noqa
-#            logger.info("Item {}: 'on_update' evaluating {} = {}".format(self._path, self._on_update_dest_var, self._on_update))
+            # logger.info("Item {}: 'on_update' evaluating {} = {}".format(self._path, self._on_update_dest_var, self._on_update))
             for on_update_dest, on_update_eval in zip(self._on_update_dest_var, self._on_update):
-                self._run_on_xxx(self._path, value, on_update_dest, on_update_eval, 'On_Update')
+                self._run_on_xxx(self._path, value, on_update_dest, on_update_eval, 'On_Update', caller=caller, source=source, dest=dest)
 
 
-    def __run_on_change(self, value=None):
+    def __run_on_change(self, value=None, caller=None, source=None, dest=None):
         """
         evaluate all 'on_change' entries of the actual item
         """
         if self._on_change:
             # sh = self._sh  # noqa
-#            logger.info("Item {}: 'on_change' evaluating lists {} = {}".format(self._path, self._on_change_dest_var, self._on_change))
+            # logger.info("Item {}: 'on_change' evaluating lists {} = {}".format(self._path, self._on_change_dest_var, self._on_change))
             for on_change_dest, on_change_eval in zip(self._on_change_dest_var, self._on_change):
-                self._run_on_xxx(self._path, value, on_change_dest, on_change_eval, 'On_Change')
+                self._run_on_xxx(self._path, value, on_change_dest, on_change_eval, 'On_Change', caller=caller, source=source, dest=dest)
 
 
     def _log_build_standardtext(self, value, caller, source=None, dest=None):
-
+        if self._sh.get_defaultlogtext() is not None:
+            self._log_text = self._sh.get_defaultlogtext().replace("'", '"')
+            return self._log_build_text(value, caller, source, dest)
         log_src = ''
         if source is not None:
             log_src += ' (' + source + ')'
@@ -2029,11 +2286,10 @@ class Item():
             pname = self.__parent._name
             pid = self.__parent._path
         mvalue = self._log_mapping.get(value, value)
-        lowlimit = self._get_rule('lowlimit')
-        highlimit = self._get_rule('highlimit')
-        filter = self._get_rule('filter')
-        exclude = self._get_rule('exclude')
-
+        lowlimit = self._log_rules_cache.get('lowlimit')
+        highlimit = self._log_rules_cache.get('highlimit')
+        filter = self._log_rules_cache.get('filter')
+        exclude = self._log_rules_cache.get('exclude')
         sh = self._sh
         shtime = self.shtime
         time = shtime.now().strftime("%H:%M:%S")
@@ -2045,24 +2301,23 @@ class Item():
         try:
             entry = self._log_rules.get('itemvalue', None)
             if entry is not None:
-                item = self.get_absolutepath(entry.strip().replace("sh.", ""), "log_rules")
+                item = self.get_absolutepath(entry.strip().replace("sh.", ""), KEY_LOG_CHANGE)
                 itemvalue = str(_items_instance.return_item(item).property.value)
             else:
                 itemvalue = None
         except Exception as e:
             logger.error(f"{id}: Invalid item in log_text '{self._log_text}'"
-                         f" or log_rules '{self._log_rules}' - (Exception: {e})")
+                         f" or log_rules '{self._log_rules}' - Exception: {e}")
             itemvalue = "INVALID"
-
         import math
         import lib.userfunctions as uf
         env = lib.env
-
+        self._log_text = self._log_text.replace("'", '"')
         try:
-            #logger.warning(f"self._log_text: {self._log_text}, type={type(self._log_text)}")
+            # logger.warning(f"self._log_text: {self._log_text}, type={type(self._log_text)}")
             txt = eval(f"f'{self._log_text}'")
         except Exception as e:
-            logger.error(f"{id}: Invalid log_text template ' {self._log_text}' - (Exception: {e})")
+            logger.error(f"{id}: Invalid log_text template '{self._log_text}' - Exception: {e}")
             txt = self._log_text
         return txt
 
@@ -2073,26 +2328,29 @@ class Item():
             if isinstance(returnvalue, str) and to != "str":
                 try:
                     # try to get value from item
-                    item = self.get_absolutepath(entry.strip().replace("sh.", ""), "log_rules")
+                    item = self.get_absolutepath(entry.strip().replace("sh.", ""), KEY_LOG_CHANGE)
                     returnvalue = _items_instance.return_item(item).property.value
-                except Exception as e:
-                    pass
+                except Exception:
+                    if to == "list":
+                        returnvalue = [entry]
             if isinstance(returnvalue, (str, int)) and to == "num":
                 try:
                     returnvalue = float(returnvalue)
-                except ValueError as e:
+                except ValueError:
                     returnvalue = None
             elif isinstance(entry, list):
                 entry = [convert_entry(val, self._type) for val in entry]
+            elif not isinstance(returnvalue, list) and to == "list":
+                returnvalue = [returnvalue]
             elif isinstance(returnvalue, (float, int)) and to == "str":
                 returnvalue = str(returnvalue)
             if returnvalue is None:
-                logger.warning(f"Given log_rules entry '{entry}' is invalid.")
+                returnvalue = {'value': None, 'issue': f"Given log_rules entry '{entry}' for {rule_entry} is invalid"}
             return returnvalue
 
         defaults = {'filter': [], 'exclude': [], 'lowlimit': None, 'highlimit': None}
         types = {'filter': 'list', 'exclude': 'list', 'lowlimit': 'num', 'highlimit': 'num'}
-        entry =  self._log_rules.get(rule_entry, defaults.get(rule_entry))
+        entry = self._log_rules.get(rule_entry, defaults.get(rule_entry))
         if entry is not None and entry != []:
             entry = convert_entry(entry, types.get(rule_entry) or self._type)
 
@@ -2103,21 +2361,70 @@ class Item():
         Write log, if Item has attribute log_change set
         :return:
         """
-
         if self._log_change_logger is not None:
+            issue_list = []
+            low_limit = self._get_rule('lowlimit')
+            if isinstance(low_limit, dict):
+                issue = low_limit.get('issue')
+                issue_list.append(issue)
+                low_limit = None
+            high_limit = self._get_rule('highlimit')
+            if isinstance(high_limit, dict):
+                issue = high_limit.get('issue')
+                issue_list.append(issue)
+                high_limit = None
+            if self._type != 'num' and low_limit:
+                issue = f"Low limit {low_limit} given, however item is not num type - ignoring"
+                issue_list.append(issue)
+                low_limit = None
+            if self._type != 'num' and high_limit:
+                issue = f"High limit {high_limit} given, however item is not num type - ignoring"
+                issue_list.append(issue)
+                high_limit = None
+            if low_limit is not None and high_limit is not None and low_limit >= high_limit:
+                issue = f"Low limit {low_limit} >= High limit {high_limit} - ignoring high limit"
+                issue_list.append(issue)
+                high_limit = None
             filter_list = self._get_rule('filter')
+            if isinstance(filter_list, dict):
+                issue = filter_list.get('issue')
+                issue_list.append(issue)
+                filter_list = []
+            f_list = []
+            for f in filter_list:
+                if type(value) is not type(f):
+                    issue = f"Filter entry {f} is type {type(f)}, item is {self._type} - ignoring"
+                    issue_list.append(issue)
+                else:
+                    f_list.append(f)
+            filter_list = f_list
             exclude_list = self._get_rule('exclude')
+            if isinstance(exclude_list, dict):
+                issue = exclude_list.get('issue')
+                issue_list.append(issue)
+                exclude_list = []
+            e_list = []
+            for e in exclude_list:
+                if type(value) is not type(e):
+                    issue = f"Exclude entry {e} is type {type(e)}, item is {self._type} - ignoring"
+                    issue_list.append(issue)
+                else:
+                    e_list.append(e)
+            exclude_list = e_list
             if filter_list != [] and exclude_list != []:
-                logger.warning(f"Defining filter AND exclude does not work. "
-                               f"Ignoring exclude list {exclude_list} "
-                               f"Using filter: {filter_list}")
+                issue = "Defining filter AND exclude does not work - ignoring exclude list"
+                issue_list.append(issue)
+                exclude_list = []
+            if issue_list and self._log_rules_cache.get('issues') != issue_list:
+                logger.warning(f"Item {self._path} log_rules has issues: {', '.join(issue_list)}. "
+                               f"Cleaned log_rules: lowlimit = {low_limit}, highlimit = {high_limit}, filter = {filter_list}, exclude = {exclude_list}")
+
+            self._log_rules_cache = {'issues': issue_list, 'filter': filter_list, 'exclude': exclude_list, 'lowlimit': low_limit, 'highlimit': high_limit}
 
             if self._type == 'num':
-                low_limit =  self._get_rule('lowlimit')
                 if low_limit is not None:
                     if low_limit > float(value):
                         return
-                high_limit =  self._get_rule('highlimit')
                 if high_limit is not None:
                     if high_limit <= float(value):
                         return
@@ -2129,12 +2436,11 @@ class Item():
                         return
             else:
                 if filter_list != []:
-                    if not value in filter_list:
+                    if value not in filter_list:
                         return
                 elif exclude_list != []:
                     if value in exclude_list:
                         return
-
             if self._log_text is None:
                 txt = self._log_build_standardtext(value, caller, source, dest)
             else:
@@ -2146,22 +2452,37 @@ class Item():
             # log_dst = ''
             # if dest is not None:
             #     log_dst += ', dest: ' + dest
-            #self._log_change_logger.log(self._log_level, "Item Change: {} = {}  -  caller: {}{}{}".format(self._path, value, caller, log_src, log_dst))
+            # self._log_change_logger.log(self._log_level, "Item Change: {} = {}  -  caller: {}{}{}".format(self._path, value, caller, log_src, log_dst))
+            try:
+                val = self._log_level_attrib.replace("'", '"')
+                log_level = eval(f"f'{val}'")
+            except Exception as e:
+                log_level = self._log_level_attrib
+                logger.error(f"Item {self._path}: Invalid log_level template '{log_level}' - (Exception: {e})")
+            level = log_level.upper()
+            level_name = level
+            if Utils.is_int(level):
+                level = int(level)
+                level_name = logging.getLevelName(level)
+            if logging.getLevelName(level) == 'Level ' + str(level):
+                logger.warning(f"Item {self._path}: Invalid loglevel '{log_level}' defined in attribute '{KEY_LOG_LEVEL}' - Level 'INFO' will be used instead")
+                setattr(self, '_log_level_name', 'INFO')
+                setattr(self, '_log_level', logging.getLevelName('INFO'))
+            else:
+                setattr(self, '_log_level_name', level_name)
+                setattr(self, '_log_level', logging.getLevelName(level_name))
             self._log_change_logger.log(self._log_level, txt)
 
 
     def __trigger_logics(self, source_details=None):
-        source={'item': self._path, 'details': source_details}
+        source = {'item': self._path, 'details': source_details}
         for logic in self.__logics_to_trigger:
-#            logic.trigger(by='Item', source=self._path, value=self._value)
             logic.trigger(by='Item', source=source, value=self._value)
-
-    # logic.trigger(by='Logic', source=None, value=None, dest=None, dt=None):
 
 
     def _set_value(self, value, caller, source=None, dest=None, prev_change=None, last_change=None):
         """
-        Set item value, update last aund prev information and perform log_change for item
+        Set item value, update last and prev information and perform log_change for item
 
         :param value:
         :param caller:
@@ -2193,7 +2514,7 @@ class Item():
         self.__updated_by = "{0}:{1}".format(caller, source)
         self.__triggered_by = "{0}:{1}".format(caller, source)
 
-        if caller != "fader":
+        if caller != "Fader":
             # log every item change to standard logger, if level is DEBUG
             # log with level INFO, if 'item_change_log' is set in etc/smarthome.yaml
             self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
@@ -2204,6 +2525,21 @@ class Item():
 
 
     def __update(self, value, caller='Logic', source=None, dest=None, key=None, index=None):
+        def check_external_change(entry_type, entry_value):
+            matches = []
+            for pattern in entry_value:
+                regex = re.compile(pattern, re.IGNORECASE)
+                if regex.match(f'{caller}:{source}'):
+                    if entry_type == "stop_fade":
+                        matches.append(True)  # Match in stop_fade, should stop
+                    else:
+                        matches.append(False)  # Match in continue_fade, should continue fading
+                else:
+                    if entry_type == "continue_fade":
+                        matches.append(True)  # No match in continue_fade -> we can stop
+                    else:
+                        matches.append(False)  # No match in stop_fade -> keep fading
+            return matches
 
         # special handling, if item is a hysteresys item (has a hysteresis_input attribute)
         if self._hysteresis_input is not None:
@@ -2222,10 +2558,10 @@ class Item():
             # don't cast for elements of complex types
             try:
                 value = self.cast(value)
-            except:
+            except Exception:
                 try:
                     logger.warning(f'Item {self._path}: value "{value}" does not match type {self._type}. Via caller {caller}, source {source}')
-                except:
+                except Exception:
                     pass
                 return
 
@@ -2233,33 +2569,57 @@ class Item():
         _changed = False
         trigger_source_details = self.__updated_by
 
-
         if key is not None and self._type == 'dict':
             # Update a dict item element or add an element (selected by key)
             value = self.__set_dictentry(value, key)
         elif index is not None and self._type == 'list':
             # Update a list item element (selected by index)
             value = self.__set_listentry(value, index)
+        if self._fading:
+            stop_fade = self._fadingdetails.get("stop_fade")
+            continue_fade = self._fadingdetails.get("continue_fade")
+            stopping = check_external_change("stop_fade", stop_fade) if stop_fade else [False]
+            continuing = check_external_change("continue_fade", continue_fade) if continue_fade else [True]
+            # If stop_fade is set and there's a match, stop fading immediately
+            if stop_fade and True in stopping:
+                logger.dbghigh(f"Item {self._path}: Stopping fade loop, {caller} matches stop list {stop_fade}")
+                self._fading = False
+                self._lock.notify_all()
+
+            # If continue_fade is set and there is no match, stop fading immediately
+            elif continue_fade and False not in continuing and caller != "Fader":
+                logger.dbghigh(f"Item {self._path}: Stopping fade loop, {caller} matches no value in continue list {continue_fade}")
+                self._fading = False
+                self._lock.notify_all()
+
+            # If nothing is set, stop (original behaviour)
+            elif not continue_fade and not stop_fade and caller != "Fader":
+                logger.dbghigh(f"Item {self._path}: Stopping fade loop by {caller}, current value {value}")
+                self._fading = False
+                self._lock.notify_all()
+
+            elif value == self._fadingdetails.get("value"):
+                pass
+            else:
+                logger.dbghigh(f"Item {self._path}: Ignoring update by {caller} as item is fading")
+                self._lock.release()
+                return
 
         if value != self._value or self._enforce_change:
             _changed = True
             self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
             trigger_source_details = self.__changed_by
-            if caller != "fader":
-                self._fading = False
-                self._lock.notify_all()
         else:
             self.__prev_update = self.__last_update
             self.__last_update = self.shtime.now()
             self.__prev_update_by = self.__updated_by
             self.__updated_by = "{0}:{1}".format(caller, source)
         self._lock.release()
-
         # ms: call run_on_update() from here
-        self.__run_on_update(value)
+        self.__run_on_update(value, caller=caller, source=source, dest=dest)
         if _changed or self._enforce_updates or self._type == 'scene':
             # ms: call run_on_change() from here -> noved down
-            #self.__run_on_change(value)
+            # self.__run_on_change(value)
             for method in self.__methods_to_trigger:
                 try:
                     method(self, caller, source, dest)
@@ -2278,12 +2638,12 @@ class Item():
                 self.__trigger_logics(trigger_source_details)
             for item in self._items_to_trigger:
                 args = {'value': value, 'source': self._path}
-                self._sh.trigger(name='items.' + item.id(), obj=item.__run_eval, value=args, by=caller, source=source, dest=dest)
+                self._sh.trigger(name='items.' + item.property.path, obj=item.__run_eval, value=args, by=caller, source=source, dest=dest)
             for item in self._hysteresis_items_to_trigger:
                 args = {'value': value, 'source': self._path}
-                self._sh.trigger(name='items.' + item.id(), obj=item.__run_hysteresis, value=args, by=caller, source=source, dest=dest)
+                self._sh.trigger(name='items.' + item.property.path, obj=item.__run_hysteresis, value=args, by=caller, source=source, dest=dest)
             # ms: call run_on_change() from here - after eval is run
-            self.__run_on_change(value)
+            self.__run_on_change(value, caller=caller, source=source, dest=dest)
 
         if _changed and self._cache and not self._fading:
             try:
@@ -2293,21 +2653,20 @@ class Item():
 
         if self._autotimer_time and caller != 'Autotimer' and not self._fading:
             # cast_duration for fixed attribute
-            _time = self._cast_duration(self._autotimer_time, test=True)
-            if _time == False:
-                _time = self._autotimer_time
-            # cast_duration for result of eval expression
-            _time = self._cast_duration(self.__run_attribute_eval(_time, 'str'))
-            if self._autotimer_value is None:
-                _value = self._value
+            # logger.debug(f'autotimer: {self._autotimer_time} / {self._autotimer_value}')
+            _time = self.get_attr_time('autotimer')
+            _value = value
+            if _time is None:
+                logger.warning(f'evaluating autotimer time {self._autotimer_time} returned None, ignoring')
+            elif type(_time) is not int:
+                logger.warning(f"autotimer time {self._autotimer_time} didn't result in int, but in {_time}, type {type(_time)}")
             else:
-                _value = self.__run_attribute_eval(self._autotimer_value, 'str')
+                _value = self._autotimer_value
 
-            #logger.notice(f"Item {self._path} __update: _time={_time}, _value={_value}")
+                # logger.notice(f"Item {self._path} __update: _time={_time}, _value={_value}")
 
-            next = self.shtime.now() + datetime.timedelta(seconds=_time)
-            self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': _value, 'caller': 'Autotimer'}, next=next)
-
+                next = self.shtime.now() + datetime.timedelta(seconds=_time)
+                self._sh.scheduler.add(self._itemname_prefix + self.id() + '-Timer', self, value={'value': _value, 'caller': 'Autotimer'}, next=next)
 
     def add_logic_trigger(self, logic):
         """
@@ -2389,9 +2748,9 @@ class Item():
                 caller = 'Timer'
         next = self.shtime.now() + datetime.timedelta(seconds=time)
         if source is None:
-            self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller}, next=next)
+            self._sh.scheduler.add(self._itemname_prefix + self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller}, next=next)
         else:
-            self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller, 'source': source}, next=next)
+            self._sh.scheduler.add(self._itemname_prefix + self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller, 'source': source}, next=next)
         return
 
 
@@ -2399,7 +2758,7 @@ class Item():
         """
         Remove a running timer for this item from the scheduler
         """
-        self._sh.scheduler.remove(self._itemname_prefix+self.id() + '-Timer')
+        self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-Timer')
         return
 
 
@@ -2413,8 +2772,10 @@ class Item():
         :param value: Value to set the item to
         :param compat: Not used anymore, only defined for backward compatibility
         """
+        # logger.debug(f'call to autotimer: {time} / {value}')
+
         if time is not None and value is not None:
-            time = self._cast_duration(time)
+            # don't cast_duration here, this is done later in get_attr_time
             self._autotimer_time = time
             self._autotimer_value = value
         else:
@@ -2422,17 +2783,72 @@ class Item():
             self._autotimer_value = None
 
 
-    def fade(self, dest, step=1, delta=1):
+    def fade(self, dest, step=1, delta=1, caller=None, stop_fade=None, continue_fade=None, instant_set=True, update=False):
+        """
+        fades an item value to a given destination value
+
+        :param dest: destination value of fade job
+        :param step: step size for fading
+        :param delta: time interval between value changes
+        :param caller: Used as a source for upcoming item changes. Caller will always be "Fader"
+        :param stop_fade: list of callers that can stop the fading (all others won't stop it!)
+        :param continue_fade: list of callers that can continue fading exclusively (all others will stop it)
+        :param instant_set: If set to True, first fade value is set immediately after fade method is called, otherwise only after delta time
+        :param update: If set to True, an ongoing fade will be updated by the new parameters on the fly
+        """
+        if stop_fade and not isinstance(stop_fade, list):
+            logger.warning(f"stop_fade parameter {stop_fade} for fader {self} has to be a list. Ignoring")
+            stop_fade = None
+        if continue_fade and not isinstance(continue_fade, list):
+            logger.warning(f"continue_fade parameter {continue_fade} for fader {self} has to be a list. Ignoring")
+            continue_fade = None
         dest = float(dest)
-        self._sh.trigger(self._path, fadejob, value={'item': self, 'dest': dest, 'step': step, 'delta': delta})
+        if not self._fading or (self._fading and update):
+            self._fadingdetails = {'value': self._value, 'dest': dest, 'step': step, 'delta': delta, 'caller': caller, 'stop_fade': stop_fade, 'continue_fade': continue_fade, 'instant_set': instant_set}
+        self._sh.trigger(self._path, fadejob, value={'item': self})
 
     def return_children(self):
         for child in self.__children:
             yield child
 
-    def return_parent(self):
-        return self.__parent
+    def return_parent(self, level: int = 1, strict: bool = False):
+        """
+        Return ancestor item of given level
 
+        If item doesn't have <level> ancestors, and...
+        - strict is set, return None
+        - strict is not set, return the highest found ancestor
+
+        If level is < 1, method returns this item
+
+        :param level: number of parent-levels
+        :ptype level: int
+        :param strict: define if level is max-level or exact level
+        :ptype strict: bool
+        :return: ancestor item (or this item, or None)
+        :rtype: object | None
+        """
+
+        # for performance reasons, add a shortcut
+        # also for compatibility, as self.__parent is not accessible from outside
+        if level == 1:
+            return self.__parent
+
+        item = self
+        while level >= 1:
+            if item._is_top_of_item_tree():
+                if strict:
+                    return
+                else:
+                    return item
+            item = item.return_parent()
+            level -= 1
+
+        return item
+
+    def _is_top_of_item_tree(self):
+        global _items_instance
+        return self.__parent is None or self.__parent is _items_instance
 
     def set(self, value, caller='Logic', source=None, dest=None, prev_change=None, last_change=None):
         """
@@ -2450,10 +2866,10 @@ class Item():
         """
         try:
             value = self.cast(value)
-        except:
+        except Exception:
             try:
                 logger.warning("Item {}: value {} does not match type {}. Via {} {}".format(self._path, value, self._type, caller, source))
-            except:
+            except Exception:
                 pass
             return
         self._lock.acquire()
@@ -2471,20 +2887,13 @@ class Item():
         Translation method from object members to json
         :return: Key / Value pairs from object members
         """
-        return { "id": self._path,
-                 "name": self._name,
-                 "value" : self._value,
-                 "type": self._type,
-                 "attributes": self.conf,
-                 "children": self.get_children_path() }
-
-# alternative method to get all class members
-#    @staticmethod
-#    def get_members(instance):
-#        return {k: v
-#                for k, v in vars(instance).items()
-#                if str(k) in ["_value", "conf"] }
-#                #if not str(k).startswith('_')}
+        return {"id": self._path,
+                "name": self._name,
+                "value": self._value,
+                "type": self._type,
+                "attributes": self.conf,
+                "children": self.get_children_path()
+                }
 
     def to_json(self):
-       return json.dumps(self.jsonvars(), sort_keys=True, indent=2)
+        return json.dumps(self.jsonvars(), sort_keys=True, indent=2)

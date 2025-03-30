@@ -1,3 +1,6 @@
 # modules: websocket
-websockets>=8.1
+
+# websocket module has breaking change in 13.0: 
+# see at https://websockets.readthedocs.io/en/stable/project/changelog.html#id14
+websockets>=8.1,<13.0
 janus>=0.5.0

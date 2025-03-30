@@ -35,7 +35,8 @@ jobs:
     
     - name: Extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      # run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" > $GITHUB_OUTPUT
       id: extract_branch
 
     - name: Checkout repository SMARTHOME ${{steps.extract_branch.outputs.branch}} Branch
@@ -44,17 +45,30 @@ jobs:
           repository: smarthomeNG/smarthome
           ref: ${{steps.extract_branch.outputs.branch}}
           path: smarthomeng
-    
-    - name: Checkout repository PLUGINS ${{steps.extract_branch.outputs.branch}} Branch
+
+    - name: Check if branch '${{ steps.extract_branch.outputs.branch }}' exists in smarthomeNG/plugins
+      run: echo "code=$(git ls-remote --exit-code --heads https://github.com/smarthomeNG/plugins ${{ steps.extract_branch.outputs.branch }} > /dev/null; echo $? )" >>$GITHUB_OUTPUT
+      id: plugins_branch_check
+
+    - name: Checkout plugins from branch '${{ steps.extract_branch.outputs.branch }}' (for push on known smarthomeNG/smarthome branch)
+      if: github.event_name != 'pull_request' && steps.plugins_branch_check.outputs.code == '0'
       uses: actions/checkout@v3
       with:
-          repository: smarthomeNG/smarthome
-          ref: ${{steps.extract_branch.outputs.branch}}
-          path: plugins
-    
+        repository: smarthomeNG/plugins
+        ref: ${{ steps.extract_branch.outputs.branch }}
+        path: plugins
+
+    - name: Checkout plugins from branch 'develop' (for pull request or push on unknown smarthomeNG/smarthome branch)
+      if: github.event_name == 'pull_request' || steps.plugins_branch_check.outputs.code == '2'
+      uses: actions/checkout@v3
+      with:
+        repository: smarthomeNG/plugins
+        ref: develop
+        path: plugins
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
         queries: security-and-quality   #,octo-org/python-qlpack/show_ifs.ql@main
@@ -62,11 +76,15 @@ jobs:
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
+        # Verzeichnis ausschließen
+        config: |
+          paths-ignore: 
+            - '**/executor/examples/**'
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+      uses: github/codeql-action/autobuild@v3
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
@@ -80,4 +98,4 @@ jobs:
     #   make release
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3

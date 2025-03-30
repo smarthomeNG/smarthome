@@ -28,6 +28,10 @@ import threading
 import collections
 import re
 
+from typing import OrderedDict
+
+from lib.shtime import Shtime
+
 
 class Database():
     """A database abstraction layer based on DB-API2 specification.
@@ -145,6 +149,11 @@ class Database():
         of formatting (see DB-API spec) which defaults to 'pyformat'.
         """
         self.logger = logging.getLogger(__name__)
+        self.shtime = Shtime.get_instance()
+
+        # this should not happen in normal operations, but is needed for testing
+        if self.shtime is None:
+            self.shtime = Shtime(None)
 
         self._name = name
         self._dbapi = dbapi
@@ -173,16 +182,20 @@ class Database():
             connect = [p.strip() for p in connect.split('|')]
 
         # Deprecated, remove with 1.7 or 1.8
+        # -> but keep list of ordered dict as "default" returned by yaml parser!
         if type(connect) is list:
-            for arg in connect:
-               key, sep, value = arg.partition(':')
-               for t in int, float, str:
-                 try:
-                   v = t(value)
-                   break
-                 except:
-                   pass
-               self._params[key] = v
+            if isinstance(connect[0], str):
+                for arg in connect:
+                    key, sep, value = arg.partition(':')
+                    for t in int, float, str:
+                        try:
+                            v = t(value)
+                            break
+                        except:
+                            pass
+                    self._params[key] = v
+            elif isinstance(connect[0], OrderedDict):
+                self._params = {k: str(v) for item in connect for k, v in item.items()}
 
         elif type(connect) in [dict, collections.OrderedDict]:
             self._params = connect
@@ -265,7 +278,7 @@ class Database():
                 self.logger.info("Database [{}]: Upgrading to version {}".format(self._name, v))
                 self.execute(queries[v][0], cur=cur)
 
-                dt = datetime.datetime.utcnow()
+                dt = self.shtime.utcnow()  # type: ignore (shtime is set dynamically)
                 ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
                 self.execute("INSERT INTO " + version_table + "(version, updated, rollout, rollback) VALUES(?, ?, ?, ?);", (v, ts, queries[v][0], queries[v][1]), formatting='qmark', cur=cur)
 

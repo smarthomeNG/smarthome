@@ -56,12 +56,16 @@ KEY_AUTOTIMER = 'autotimer'
 KEY_ON_UPDATE = 'on_update'
 KEY_ON_CHANGE = 'on_change'
 
-KEY_LOG_CHANGE =  'log_change'
-KEY_LOG_LEVEL =   'log_level'
-KEY_LOG_TEXT =    'log_text'
+KEY_LOG_CHANGE = 'log_change'
+KEY_LOG_LEVEL = 'log_level'
+KEY_LOG_TEXT = 'log_text'
 KEY_LOG_MAPPING = 'log_mapping'
-KEY_LOG_RULES =   'log_rules'
-
+KEY_LOG_RULES = 'log_rules'
+KEY_LOG_RULES_LOWLIMIT = 'lowlimit'
+KEY_LOG_RULES_HIGHLIMIT = 'highlimit'
+KEY_LOG_RULES_FILTER = 'filter'
+KEY_LOG_RULES_EXCLUDE = 'exclude'
+KEY_LOG_RULES_ITEMVALUE = 'itemvalue'
 KEY_HYSTERESIS_INPUT = 'hysteresis_input'
 KEY_HYSTERESIS_UPPER_THRESHOLD = 'hysteresis_upper_threshold'
 KEY_HYSTERESIS_LOWER_THRESHOLD = 'hysteresis_lower_threshold'
@@ -91,6 +95,32 @@ CONF_FILE = '.conf'
 YAML_FILE = '.yaml'
 DEFAULT_FILE = '.default'
 
+DIR_VAR = 'var'
+DIR_LIB = 'lib'
+DIR_CACHE = 'cache'
+DIR_ENV = 'env'
+DIR_TPL = 'templates'
+DIR_PLUGINS = 'plugins'
+DIR_MODULES = 'modules'
+DIR_ETC = 'etc'
+DIR_ITEMS = 'items'
+DIR_STRUCTS = 'structs'
+DIR_LOGICS = 'logics'
+DIR_UF = 'functions'
+DIR_SCENES = 'scenes'
+
+BASE_SH = 'smarthome'
+BASE_LOG = 'logging'
+BASE_MODULE = 'module'
+BASE_PLUGIN = 'plugin'
+BASE_LOGIC = 'logic'
+BASE_STRUCT = 'struct'
+BASE_HOLIDAY = 'holidays'
+BASE_ADMIN = 'admin'
+
+DIRS = (DIR_VAR, DIR_LIB, DIR_CACHE, DIR_ENV, DIR_TPL, DIR_PLUGINS, DIR_MODULES, DIR_ETC, DIR_ITEMS, DIR_STRUCTS, DIR_LOGICS, DIR_UF, DIR_SCENES)
+BASES = (BASE_SH, BASE_LOG, BASE_MODULE, BASE_PLUGIN, BASE_LOGIC, BASE_STRUCT, BASE_HOLIDAY, BASE_ADMIN)
+FILES = DIRS + BASES
 
 #attributes for 'autotimer' parameter
 KEY_ATTRIB_COMPAT     = 'assign_compatibility'	# name of key in smarthome.yaml

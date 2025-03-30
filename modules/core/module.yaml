@@ -69,6 +69,7 @@ parameters:
 
     use_conditional_triggers:
         type: bool
+        gui_type: yes_no
         default: False
         description:
             de: 'Advanced: Verwendung konditionaler Trigger zulassen'
@@ -78,6 +79,7 @@ parameters:
     deprecated_warnings:
         type: bool
         default: False
+        gui_type: yes_no
         description:
             de: 'Advanced: Warnungen loggen, wenn Funktionen/Methoden aufgerufen werden, die als veraltet gekennzeichnet sind'
             en: 'Advanced: Log warnings, if functions/methods are used which are flaged as deprecated'

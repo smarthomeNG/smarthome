@@ -62,7 +62,7 @@ class example(SmartDevicePlugin):
     def _set_device_defaults(self):
 
         # you can add initialisations and internal defaults here
-        
+
         # for demonstation purposes, we want to use the null connection
         self._parameters[PLUGIN_ATTR_CONNECTION] = CONN_NULL
         self._use_callbacks = True
@@ -86,6 +86,18 @@ class example(SmartDevicePlugin):
     def on_disconnect(self, by=None):
         """ callback if connection is broken. """
         self.logger.info('example plugin disconnected')
+
+    # if you want to use the suspend/resume feature, you can overwrite these
+    # methods and customize to your liking. If not, you can safely delete them
+    # These are then called after suspending or resuming the plugin.
+
+    def on_suspend(self):
+        """ called when suspend is enabled. Overwrite as needed """
+        self.logger.info('suspend enabled, on_suspend called')
+
+    def on_resume(self):
+        """ called when suspend is disabled. Overwrite as needed """
+        self.logger.info('suspend disabled, plugin resumed, on_resume called')
 
 
 # needed to start operation in standalone mode

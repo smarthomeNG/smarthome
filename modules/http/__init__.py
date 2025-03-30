@@ -146,8 +146,9 @@ class Http(Module):
         self._cert_file = os.path.join(self._cert_dir, self._cert_name)
         self._privkey_file = os.path.join(self._cert_dir, self._privkey_name)
 
-        if self._ip == '0.0.0.0':
-            self._ip = self._get_local_ip_address()
+        # don't disallow binding on all interfaces
+        # if self._ip == '0.0.0.0':
+        #     self._ip = self._get_local_ip_address()
 
         if self.is_port_in_use(int(self._port)):
             self.logger.critical("Error starting http module: port {} is already in use".format(self._port))
@@ -208,8 +209,9 @@ class Http(Module):
         if self._servicesport == 0:
             self._servicesport = self._port
 
-        if self._ip == '0.0.0.0':
-            self._ip = self._get_local_ip_address()
+        # don't disallow binding on all interfaces
+        # if self._ip == '0.0.0.0':
+        #     self._ip = self._get_local_ip_address()
 
         if self.is_port_in_use(int(self._servicesport)):
             self.logger.critical("Error starting http module: servicesport {} is already in use".format(self._servicesport))
@@ -321,7 +323,7 @@ class Http(Module):
             },
             '/static': {
                 'tools.staticdir.on': True,
-                'tools.staticdir.dir': 'static'
+                'tools.staticdir.dir': 'static',
             }
         }
 
@@ -347,7 +349,7 @@ class Http(Module):
             },
             '/static': {
                 'tools.staticdir.on': True,
-                'tools.staticdir.dir': 'static'
+                'tools.staticdir.dir': 'static',
             },
             '/gstatic': {
                 'tools.staticdir.on': True,
@@ -363,7 +365,7 @@ class Http(Module):
             },
             '/static': {
                 'tools.staticdir.on': True,
-                'tools.staticdir.dir': 'static'
+                'tools.staticdir.dir': 'static',
             }
         }
         self.logger.info("Module http: config dict: '{}'".format( config ) )
@@ -447,6 +449,8 @@ class Http(Module):
         :return: Information of defined users
         :rtype: dict
         """
+        # ensure that actual value of password_hash is used
+        self._user_dict[self._user] = {'password_hash': self._hashed_password, 'name': 'Administrator', 'groups': ['admin']}
         return self._user_dict
 
 

@@ -84,6 +84,8 @@ class Items():
 
     structs = None
 
+    _item_methods = [name for name in dir(Item) if name[0] != '_']
+
     def __init__(self, smarthome):
         self._sh = smarthome
         self.logger = logging.getLogger(__name__)
@@ -97,6 +99,8 @@ class Items():
 
         _items_instance = self
         self.structs = Structs(self._sh)
+
+        self._sh._ignore_item_collision = getattr(self._sh, '_ignore_item_collision', 'False') == 'True'
 
 
     # -----------------------------------------------------------------------------------------
@@ -129,8 +133,8 @@ class Items():
     #   Following methods handle structs
     # -----------------------------------------------------------------------------------------
 
-    def add_struct_definition(self, plugin_name, struct_name, struct, from_dir='plugins'):
-        self.structs.add_struct_definition(plugin_name, struct_name, struct, from_dir)
+    def add_struct_definition(self, plugin_name, struct_name, struct, from_dir='plugins', optional=False):
+        self.structs.add_struct_definition(plugin_name, struct_name, struct, from_dir, optional)
 
 
     def return_struct_definitions(self, all=True):
@@ -274,15 +278,15 @@ class Items():
         :type item: object
         """
 
-        if item.path() not in self.__items:
+        if item.property.path not in self.__items:
             return
         
         # remove item from Items data
         try:
-            del self.__item_dict[item.path()]
-            self.__items.remove(item.path())
+            del self.__item_dict[item.property.path]
+            self.__items.remove(item.property.path)
         except Exception as e:
-            self.logger.warning(f"Error occured while trying to remove item {item.path()}: {e}")
+            self.logger.warning(f"Error occured while trying to remove item {item.property.path}: {e}")
 
         # remove item bindings in plugins
         if item.remove():
@@ -290,7 +294,7 @@ class Items():
             # delete item
             del item
         else:
-            self.logger.warning(f"Item {item.path()} could not be removed due to incompatible plugins.")
+            self.logger.warning(f"Item {item.property.path} could not be removed due to incompatible plugins.")
 
 
     def get_toplevel_items(self):
@@ -469,6 +473,8 @@ class Items():
         """
         for item in self.__items:
             self.__item_dict[item]._fading = False
+            with self.__item_dict[item]._lock:
+                self.__item_dict[item]._lock.notify_all()
 
 
     def add_plugin_attribute(self, plugin_name, attribute_name, attribute):

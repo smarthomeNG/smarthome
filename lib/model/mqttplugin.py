@@ -40,7 +40,7 @@ class MqttPlugin(SmartPlugin):
         """
         Initialization Routine for the mqtt extension class to SmartPlugin
         """
-        SmartPlugin.__init__(self)
+        super().__init__()
 
         # get instance of MQTT module
         try:
@@ -59,8 +59,6 @@ class MqttPlugin(SmartPlugin):
 
         # get broker configuration (for display in web interface)
         self.broker_config = self.mod_mqtt.get_broker_config()
-
-        return True
 
 
     def translate(self, txt, vars=None, block=None):
@@ -156,7 +154,7 @@ class MqttPlugin(SmartPlugin):
             if item is None:
                 item_path = '*no_item*'
             else:
-                item_path = item.path()
+                item_path = item.property.path
             self._subscribed_topics[topic][item_path] = {}
             self._subscribe_current_number += 1
             self._subscribed_topics[topic][item_path]['current'] = self._subscribe_current_number
@@ -189,7 +187,7 @@ class MqttPlugin(SmartPlugin):
         """
         self.mod_mqtt.publish_topic(self.get_shortname(), topic, payload, qos, retain, bool_values)
         if item is not None:
-            self.logger.dbghigh(f"publish_topic: Item '{item.id()}' -> topic '{topic}', payload '{payload}', QoS '{qos}', retain '{retain}'")
+            self.logger.dbghigh(f"publish_topic: Item '{item.property.path}' -> topic '{topic}', payload '{payload}', QoS '{qos}', retain '{retain}'")
             # Update dict for periodic updates of the web interface
             self._update_item_values(item, payload)
         else:
@@ -258,9 +256,9 @@ class MqttPlugin(SmartPlugin):
                     except:
                         log_info = (str(payload) != str(item()))
                     if log_info:
-                        self.logger.dbghigh(f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.id()}' (value={item()})")
+                        self.logger.dbghigh(f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.property.path}' (value={item()})")
                     else:
-                        self.logger.debug(f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.id()}' (value={item()})")
+                        self.logger.debug(f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.property.path}' (value={item()})")
                     item(payload, self.get_shortname())
                     # Update dict for periodic updates of the web interface
                     self._update_item_values(item, payload)
@@ -276,14 +274,14 @@ class MqttPlugin(SmartPlugin):
         :param item:
         :param payload:
         """
-        if not self._item_values.get(item.id()):
-            self._item_values[item.id()] = {}
+        if not self._item_values.get(item.property.path):
+            self._item_values[item.property.path] = {}
         if isinstance(payload, bool):
-            self._item_values[item.id()]['value'] = str(payload)
+            self._item_values[item.property.path]['value'] = str(payload)
         else:
-            self._item_values[item.id()]['value'] = payload
-        self._item_values[item.id()]['last_update'] = item.last_update().strftime('%d.%m.%Y %H:%M:%S')
-        self._item_values[item.id()]['last_change'] = item.last_change().strftime('%d.%m.%Y %H:%M:%S')
+            self._item_values[item.property.path]['value'] = payload
+        self._item_values[item.property.path]['last_update'] = item.last_update().strftime('%d.%m.%Y %H:%M:%S')
+        self._item_values[item.property.path]['last_change'] = item.last_change().strftime('%d.%m.%Y %H:%M:%S')
         return
 
 

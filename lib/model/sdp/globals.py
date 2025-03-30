@@ -26,10 +26,11 @@
 
 """ Global definitions of constants and functions for SmartDevicePlugin """
 
-from lib.utils import Utils
+import types
 from ast import literal_eval
 from collections import abc
-import types
+
+from lib.utils import Utils
 
 #############################################################################################################################################################################################################################################
 #
@@ -39,6 +40,11 @@ import types
 #
 #############################################################################################################################################################################################################################################
 
+# flake8: noqa
+
+# this is the internal SDP version
+SDP_VERSION = '1.0.4'
+
 # plugin attributes, used in plugin config 'device' and instance creation (**kwargs)
 
 # general attributes
@@ -47,6 +53,8 @@ PLUGIN_ATTR_CMD_CLASS        = 'command_class'           # name of class to use 
 PLUGIN_ATTR_RECURSIVE        = 'recursive_custom'        # indices of custom item attributes for which to enable recursive lookup (number or list of numbers)
 PLUGIN_ATTR_SUSPEND_ITEM     = 'suspend_item'            # item to toggle suspend/resume mode
 PLUGIN_ATTR_CYCLE            = 'cycle'                   # plugin-wide cyclic update interval
+PLUGIN_ATTR_DELAY_INITIAL    = 'delay_initial_read'      # delay reading of initial commands
+PLUGIN_ATTR_REREAD_INITIAL   = 'resume_initial_read'     # repeat initial read on resume
 
 # general connection attributes
 PLUGIN_ATTR_CONNECTION       = 'conn_type'               # manually set connection class, classname or type (see below)
@@ -73,8 +81,9 @@ PLUGIN_ATTR_SERIAL_STOP      = 'stopbits'                # stopbits for serial c
 
 # protocol attributes
 PLUGIN_ATTR_PROTOCOL         = 'protocol'                # manually choose protocol class, classname or type (see below). Don't set if not necessary!
-PLUGIN_ATTR_MSG_TIMEOUT      = 'message_timeout'         # how many seconds to wait for reply to command (JSON-RPC only)
-PLUGIN_ATTR_MSG_REPEAT       = 'message_repeat'          # how often to repeat command till reply is received? (JSON-RPC only)
+PLUGIN_ATTR_SEND_RETRIES     = 'send_retries'            # how often should a command be resent when not receiving expected answer (JSON-RPC/resend protocols only)
+PLUGIN_ATTR_SEND_RETRY_CYCLE = 'send_retries_cycle'      # if using resend protocol: how many seconds to wait between resend rounds (JSON-RPC/resend protocols only)
+PLUGIN_ATTR_SEND_TIMEOUT     = 'send_retries_timeout'    # how many seconds to wait for reply to command? (JSON-RPC/resend protocols only)
 
 # callback functions, not in plugin.yaml
 PLUGIN_ATTR_CB_ON_CONNECT    = 'connected_callback'      # callback function, called if connection is established
@@ -82,13 +91,14 @@ PLUGIN_ATTR_CB_ON_DISCONNECT = 'disconnected_callback'   # callback function, ca
 PLUGIN_ATTR_CB_SUSPEND       = 'suspend_callback'        # callback function, called if connection attempts are aborted
 
 PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE, PLUGIN_ATTR_CYCLE,
-                PLUGIN_ATTR_SUSPEND_ITEM, PLUGIN_ATTR_CONNECTION,
+                PLUGIN_ATTR_SUSPEND_ITEM, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_DELAY_INITIAL, PLUGIN_ATTR_REREAD_INITIAL,
                 PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_BINARY,
                 PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
                 PLUGIN_ATTR_CONN_RETRY_CYCLE, PLUGIN_ATTR_CONN_RETRY_SUSPD, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
                 PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY,
-                PLUGIN_ATTR_SERIAL_STOP, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_MSG_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT,
-                PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CB_SUSPEND)
+                PLUGIN_ATTR_SERIAL_STOP, PLUGIN_ATTR_PROTOCOL, 
+                PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CB_SUSPEND,
+                PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE, PLUGIN_ATTR_SEND_TIMEOUT)
 
 # connection types for PLUGIN_ATTR_CONNECTION
 CONN_NULL                    = ''                 # use base connection class without real connection functionality, for testing
@@ -105,8 +115,9 @@ CONNECTION_TYPES = (CONN_NULL, CONN_NET_TCP_REQ, CONN_NET_TCP_CLI, CONN_NET_TCP_
 PROTO_NULL                   = ''                 # use base protocol class without added functionality (why??)
 PROTO_JSONRPC                = 'jsonrpc'          # JSON-RPC 2.0 support with send queue, msgid and resend of unanswered commands
 PROTO_VIESSMANN              = 'viessmann'        # Viessmann P300 / KW
+PROTO_RESEND                 = 'resend'           # protocol implementing resending commands which are not answered (in time)
 
-PROTOCOL_TYPES = (PROTO_NULL, PROTO_JSONRPC, PROTO_VIESSMANN)
+PROTOCOL_TYPES = (PROTO_NULL, PROTO_JSONRPC, PROTO_VIESSMANN, PROTO_RESEND)
 
 # item attribute suffixes (as defined with individual prefix in plugin.yaml)
 ITEM_ATTR_COMMAND            = '_command'             # command to issue/read for the item
@@ -116,18 +127,22 @@ ITEM_ATTR_CYCLE              = '_read_cycle'          # trigger cyclic read ever
 ITEM_ATTR_READ_INIT          = '_read_initial'        # trigger read on initial connect
 ITEM_ATTR_GROUP              = '_read_group'          # trigger read with read group <foo>
 ITEM_ATTR_WRITE              = '_write'               # command can be called for writing values
+ITEM_ATTR_READAFTERWRITE     = '_readafterwrite'      # after writing: read value from device after x seconds
 ITEM_ATTR_READ_GRP           = '_read_group_trigger'  # item triggers reading of read group <foo>
 ITEM_ATTR_LOOKUP             = '_lookup'              # create lookup item <item>.lookup
+ITEM_ATTR_VALID_LIST         = '_valid_list'          # read/update valid_list for command
 ITEM_ATTR_CUSTOM1            = '_custom1'             # custom attribute 1
 ITEM_ATTR_CUSTOM2            = '_custom2'             # custom attribute 2
 ITEM_ATTR_CUSTOM3            = '_custom3'             # custom attribute 3
 
-ITEM_ATTRS = (ITEM_ATTR_COMMAND, ITEM_ATTR_READ, ITEM_ATTR_CYCLIC, ITEM_ATTR_CYCLE,
+ITEM_ATTRS = (ITEM_ATTR_COMMAND, ITEM_ATTR_READ, ITEM_ATTR_CYCLIC, ITEM_ATTR_CYCLE, ITEM_ATTR_READAFTERWRITE,
               ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, ITEM_ATTR_READ_GRP, ITEM_ATTR_GROUP,
-              ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3)
-ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLIC', 'ITEM_ATTR_CYCLE',
+              ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3,
+              ITEM_ATTR_VALID_LIST)
+ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLIC', 'ITEM_ATTR_CYCLE', 'ITEM_ATTR_READAFTERWRITE',
               'ITEM_ATTR_READ_INIT', 'ITEM_ATTR_GROUP', 'ITEM_ATTR_WRITE', 'ITEM_ATTR_READ_GRP',
-              'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3')
+              'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3',
+              'ITEM_ATTR_VALID_LIST')
 
 # command definition
 COMMAND_READ                 = True                     # used internally
@@ -148,6 +163,10 @@ CMD_ATTR_CMD_SETTINGS        = 'cmd_settings'           # additional settings fo
 CMD_ATTR_LOOKUP              = 'lookup'                 # use lookup table <foo> to translate between plugin and items
 CMD_ATTR_PARAMS              = 'params'                 # parameters to send (e.g. in JSON-RPC)
 CMD_ATTR_ITEM_ATTRS          = 'item_attrs'             # item attributes for struct generation (see below)
+CMD_ATTR_CUSTOM_DISABLE      = 'custom_disabled'        # disable custom token detection for this command
+CMD_ATTR_SEND_RETRIES        = 'send_retries'           # how often should a command be resent when not receiving expected answer (resend protocol only, overwriting default plugin parameter)
+
+CMD_ATTR_ORG_PARAMS          = 'org_cmd_dict'           # store original command configuration, internal use only!
 
 CMD_IATTR_RG_LEVELS          = 'read_group_levels'      # include this number of read groups (max, 0=no read groups)
 CMD_IATTR_LOOKUP_ITEM        = 'lookup_item'            # create lookup item <item>.lookup
@@ -165,7 +184,7 @@ CMD_IATTR_CUSTOM3            = 'custom3'                # add item-specific cust
 # commands definition parameters
 COMMAND_PARAMS = (CMD_ATTR_OPCODE, CMD_ATTR_READ, CMD_ATTR_WRITE, CMD_ATTR_ITEM_TYPE, CMD_ATTR_DEV_TYPE,
                   CMD_ATTR_READ_CMD, CMD_ATTR_WRITE_CMD, CMD_ATTR_REPLY_PATTERN, CMD_ATTR_CMD_SETTINGS,
-                  CMD_ATTR_LOOKUP, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS)
+                  CMD_ATTR_LOOKUP, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS, CMD_ATTR_CUSTOM_DISABLE, CMD_ATTR_SEND_RETRIES)
 
 COMMAND_ITEM_ATTRS = (CMD_IATTR_RG_LEVELS, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_ATTRIBUTES, CMD_IATTR_TEMPLATE,
                       CMD_IATTR_READ_GROUPS, CMD_IATTR_CYCLE, CMD_IATTR_INITIAL, CMD_IATTR_ENFORCE,
@@ -175,9 +194,10 @@ COMMAND_ITEM_ATTRS = (CMD_IATTR_RG_LEVELS, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_ATTR
 PATTERN_LOOKUP               = 'LOOKUP'                 # replace with lookup values    
 PATTERN_VALID_LIST           = 'VALID_LIST'             # replace with valid_list items
 PATTERN_VALID_LIST_CI        = 'VALID_LIST_CI'          # replace with valid_list_ci items
+PATTERN_VALID_LIST_RE        = 'VALID_LIST_RE'          # replace with valid_list_re patterns
 PATTERN_CUSTOM_PATTERN       = 'CUSTOM_PATTERN'         # replace with custom pattern <x>
 
-PATTERN_MARKERS = (PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_CUSTOM_PATTERN)
+PATTERN_MARKERS = (PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_VALID_LIST_RE, PATTERN_CUSTOM_PATTERN)
 
 # command string substitution tokens, set token in {<token>}
 CMD_STR_VAL_RAW              = 'RAW_VALUE'              # replace with raw value
@@ -187,9 +207,10 @@ CMD_STR_VAL_CAP              = 'RAW_VALUE_CAP'          # replace with raw value
 CMD_STR_VALUE                = 'VALUE'                  # replace with DT converted value
 CMD_STR_OPCODE               = 'OPCODE'                 # replace with opcode string/bytes
 CMD_STR_PARAM                = 'PARAM:'                 # replace with kwargs[foo] (``{PARAM:foo}``)
+CMD_STR_CUSTOM_PARAM         = 'CUSTOM_PARAM'           # replace with kwargs[<custom>][foo] (``{CUSTOM_PARAM[123]:{<custom>: foo}}``)
 CMD_STR_CUSTOM               = 'CUSTOM_ATTR'            # replace with value of custom attribute <x>
 
-CMD_STRINGS = (CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW, CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM, CMD_STR_CUSTOM)
+CMD_STRINGS = (CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW, CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM, CMD_STR_CUSTOM_PARAM, CMD_STR_CUSTOM)
 
 # JSON keys to move from dict root to data.params
 JSON_MOVE_KEYS               = 'json_move_keys'

@@ -14,6 +14,7 @@ nosetests.xml
 *.egg-info
 test.cache
 /.pytest_cache
+pyrightconfig.json
 
 # OSX specific files
 .DS_Store
@@ -25,6 +26,9 @@ test.cache
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# PyCharm
+*.srctrl*
 
 # Don't check in built documentation
 /doc/user/build
@@ -62,3 +66,31 @@ requirements/conf_all.txt
 **/.vscode/
 /custom_plugins
 /priv_tools
+
+
+# ./etc -- ignore everything
+etc/*
+# except yaml default-files
+!etc/admin.yaml.default
+!etc/holidays.yaml.default
+!etc/logging.yaml.default
+!etc/logic.yaml.default
+!etc/module.yaml.default
+!etc/plugin.yaml.default
+!etc/smarthome.yaml.default
+
+# ./items -- ignore everything
+/items/
+
+# ./logics -- ignore everything
+/logics/
+
+# ./functions -- ignore everything
+/functions/
+
+# ./structs -- ignore everything
+/structs/
+
+# ./scenes -- ignore everything
+/scenes/
+

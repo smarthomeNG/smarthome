@@ -24,15 +24,18 @@
 #
 #########################################################################
 
+from __future__ import annotations
+
 import logging
 import re
 from copy import deepcopy
+from typing import Any
 
+import lib.model.sdp.datatypes as DT
 from lib.model.sdp.globals import (
     CMD_ATTR_PARAMS, CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW,
-    CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM,
+    CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM, CMD_STR_CUSTOM_PARAM,
     CMD_STR_CUSTOM, COMMAND_PARAMS, MINMAXKEYS)
-import lib.model.sdp.datatypes as DT
 
 
 #############################################################################################################################################################################################################################################
@@ -63,11 +66,11 @@ class SDPCommand(object):
     item_type = None
     reply_token = None
     reply_pattern = ''
-    cmd_settings = None
-    lookup = None
-    _DT = None
+    cmd_settings = {}
+    lookup: str | None = None
+    custom_disabled = False
 
-    def __init__(self, command, dt_class, **kwargs):
+    def __init__(self, command: str, dt_class: type[DT.Datatype], **kwargs):
 
         if not hasattr(self, 'logger'):
             self.logger = logging.getLogger(__name__)
@@ -82,7 +85,7 @@ class SDPCommand(object):
         self._cmd_params = kwargs['cmd']
         self._plugin_params = kwargs['plugin']
 
-        self._get_kwargs(COMMAND_PARAMS, **(kwargs.get('cmd', {})))
+        self._apply_kwargs(COMMAND_PARAMS, **(kwargs.get('cmd', {})))
 
         try:
             self._DT = dt_class()
@@ -94,7 +97,7 @@ class SDPCommand(object):
         if self.__class__ is SDPCommand:
             self.logger.debug(f'learned command {command} with device datatype {dt_class} in {self.__class__.__name__}')
 
-    def get_send_data(self, data, **kwargs):
+    def get_send_data(self, data: Any, **kwargs) -> dict:
 
         cmd = None
 
@@ -114,15 +117,15 @@ class SDPCommand(object):
 
         return {'payload': cmd, 'data': self._DT.get_send_data(data)}
 
-    def get_shng_data(self, data, **kwargs):
+    def get_shng_data(self, data: Any, **kwargs) -> Any:
         value = self._DT.get_shng_data(data, **kwargs)
         return value
 
-    def get_lookup(self):
+    def get_lookup(self) -> str | None:
         """ getter for lookup """
         return self.lookup
 
-    def _get_kwargs(self, args, **kwargs):
+    def _apply_kwargs(self, args: list | tuple, **kwargs):
         """
         check if any items from args is present in kwargs and set the class property
         of the same name to its value.
@@ -134,7 +137,7 @@ class SDPCommand(object):
             if kwargs.get(arg, None):
                 setattr(self, arg, kwargs[arg])
 
-    def _check_min_max(self, data, key, min=True, force=False):
+    def _check_min_max(self, data: Any, key: str, min: bool = True, force: bool = False) -> Any:
         """ helper routine to check for min/max compliance and int/float type """
         if key in self.cmd_settings:
             bound = self.cmd_settings[key]
@@ -153,7 +156,7 @@ class SDPCommand(object):
             raise ValueError(f'value {data} not adhering to {"min" if min else "max"} value {bound}')
         return data
 
-    def _check_value(self, data):
+    def _check_value(self, data: Any) -> Any:
         """
         check if value settings are defined and if so, if they are followed
         possibly adjust data in accordance with settings
@@ -180,6 +183,9 @@ class SDPCommand(object):
                     elif self.cmd_settings.get('valid_list', None):
                         if data not in self.cmd_settings['valid_list']:
                             raise ValueError(f'value {data} not in list {self.cmd_settings["valid_list"]}')
+                    elif self.cmd_settings.get('valid_list_re', None):
+                        if not any(pat.fullmatch(data) for pat in self.cmd_settings['valid_list_re_compiled']):
+                            raise ValueError(f'value {data} not matching any of {self.cmd_settings["valid_list_re_compiled"]}')
                     # min/max not in addition to valid_list
                     elif any(key in self.cmd_settings.keys() for key in MINMAXKEYS):
                         for key in MINMAXKEYS:
@@ -189,6 +195,38 @@ class SDPCommand(object):
                 raise ValueError(f'Given invalid value for command {self.name} due to settings. Error was: {e}')
 
         return data
+
+    def get_valid_list(self) -> tuple[list, bool, bool]:
+        """ return valid_list parameter and type (ci, re) """
+        if self.cmd_settings:
+            if 'valid_list' in self.cmd_settings:
+                return self.cmd_settings['valid_list'], False, False
+            elif 'valid_list_ci' in self.cmd_settings:
+                return self.cmd_settings['valid_list_ci'], True, False
+            elif 'valid_list_re' in self.cmd_settings:
+                return self.cmd_settings['valid_list_re'], False, True
+        return [], False, False
+
+    def set_valid_list(self, vl: list, ci: bool = False, re: bool = False) -> bool:
+        """ set/change valid_list[_ci|_re] values """
+        if not self.cmd_settings:
+            self.cmd_settings = {}
+
+        key = 'valid_list'
+        if ci:
+            key += '_ci'
+        elif re:
+            key += '_re'
+
+        all_keys = ['valid_list', 'valid_list_ci', 'valid_list_re']
+        all_keys.remove(key)
+
+        if any(k in self.cmd_settings for k in all_keys):
+            # other valid_list already present
+            return False
+
+        self.cmd_settings[key] = vl
+        return True
 
 
 class SDPCommandStr(SDPCommand):
@@ -223,7 +261,7 @@ class SDPCommandStr(SDPCommand):
     """
     read_data = None
 
-    def get_send_data(self, data, **kwargs):
+    def get_send_data(self, data: Any, **kwargs) -> dict:
 
         self._plugin_params.update(kwargs)
         data = self._check_value(data)
@@ -248,27 +286,44 @@ class SDPCommandStr(SDPCommand):
 
         return data_dict
 
-    def get_shng_data(self, data, **kwargs):
+    def get_shng_data(self, data: Any, **kwargs) -> Any:
         if isinstance(data, (bytes, bytearray)):
             data = data.decode('utf-8')
         value = self._DT.get_shng_data(data, **kwargs)
         return value
 
-    def _parse_str(self, string, data=None, **kwargs):
+    def _parse_str(self, string: str, data: Any = None, **kwargs) -> str:
         """
         parse string and replace
         - ``{OPCODE}`` with the command opcode
         - ``{PARAM:<elem>}`` with the plugin parameter
+        - ``{CUSTOM_PARAM[123]:<elem>}`` with the plugin parameter based on a dict entry <elem>: {<custom[123]>: <parameter>}
         - ``{VALUE}`` with the data value
         - ``{CUSTOM_ATTR[123]}`` with the respective custom token value
 
         The replacement order ensures that PARAM-patterns from the opcode
         can be replaced as well as VALUE-pattern in any of the strings.
         """
-        def repl_func(matchobj):
-            return str(self._plugin_params.get(matchobj.group(2), ''))
+        def get_param(matchobj):
+            returnvalue = self._plugin_params.get(matchobj.group(2))
+            if returnvalue is None:
+                returnvalue = ''
+                self.logger.warning(f'Parameter {matchobj.group(2)} does not exist.')
+            return str(returnvalue)
 
-        def cust_func(matchobj):
+        def get_cust_param(matchobj):
+            if kwargs and 'custom' in kwargs:
+                custom_entry = kwargs['custom'].get(int(matchobj.group(2)))
+                try:
+                    return str(self._plugin_params.get(matchobj.group(3)).get(custom_entry, ''))
+                except TypeError as e:
+                    self.logger.warning(f'Issue getting custom parameter. Plugin parameter must contain an entry like '
+                                        f'"{matchobj.group(3)}": {{"{custom_entry}": "<parameter>"}}. {e}')
+                except AttributeError:
+                    self.logger.warning(f'Parameter {matchobj.group(3)} does not exist.')
+            return ''
+
+        def get_custom(matchobj):
             if kwargs and 'custom' in kwargs:
                 return str(kwargs['custom'].get(int(matchobj.group(2))))
             return ''
@@ -276,19 +331,23 @@ class SDPCommandStr(SDPCommand):
         string = string.replace('{' + CMD_STR_OPCODE + '}', self.opcode)
 
         regex = r'(\{' + CMD_STR_PARAM + r'([^}]+)\})'
-        while re.match('.*' + regex + '.*', string):
-            string = re.sub(regex, repl_func, string)
+        while re.search(regex, string):
+            string = re.sub(regex, get_param, string)
+
+        regex = r'(\{' + CMD_STR_CUSTOM_PARAM + r'([123]):([^}]+)\})'
+        while re.search(regex, string):
+            string = re.sub(regex, get_cust_param, string)
 
         regex = r'(\{' + CMD_STR_CUSTOM + r'([123])\})'
-        while re.match('.*' + regex + '.*', string):
-            string = re.sub(regex, cust_func, string)
+        while re.search(regex, string):
+            string = re.sub(regex, get_custom, string)
 
         if data is not None:
             string = string.replace('{' + CMD_STR_VALUE + '}', str(self._DT.get_send_data(data)))
 
         return string
 
-    def _parse_tree(self, node, data, **kwargs):
+    def _parse_tree(self, node: Any, data: Any, **kwargs) -> Any:
         """
         traverse node and
         - apply _parse_str to strings
@@ -296,15 +355,15 @@ class SDPCommandStr(SDPCommand):
         - return unknown or unparseable elements unchanged
         """
         if issubclass(node, str):
-            return self._parse_str(node, data, **kwargs)
+            return self._parse_str(node, data, **kwargs)  # type: ignore (type is checked)
         elif issubclass(node, list):
-            return [self._parse_tree(k, data, **kwargs) for k in node]
+            return [self._parse_tree(k, data, **kwargs) for k in node]  # type: ignore
         elif issubclass(node, tuple):
-            return (self._parse_tree(k, data, **kwargs) for k in node)
+            return (self._parse_tree(k, data, **kwargs) for k in node)  # type: ignore
         elif issubclass(node, dict):
             new_dict = {}
-            for k in node.keys():
-                new_dict[k] = self._parse_tree(node[k], data, **kwargs)
+            for k in node.keys():  # type: ignore
+                new_dict[k] = self._parse_tree(node[k], data, **kwargs)  # type: ignore
             return new_dict
         else:
             return node
@@ -348,7 +407,7 @@ class SDPCommandParseStr(SDPCommandStr):
     MRE by JF properly :)
     """
 
-    def get_send_data(self, data, **kwargs):
+    def get_send_data(self, data: Any, **kwargs) -> dict:
 
         self._plugin_params.update(kwargs)
         data = self._check_value(data)
@@ -379,7 +438,7 @@ class SDPCommandParseStr(SDPCommandStr):
 
         return {'payload': cmd_str, 'data': None if data is None else self._DT.get_send_data(data)}
 
-    def get_shng_data(self, data, **kwargs):
+    def get_shng_data(self, data: Any, **kwargs) -> Any:
         """
         Try to match data to reply_pattern if reply_pattern is set.
 
@@ -423,7 +482,7 @@ class SDPCommandParseStr(SDPCommandStr):
                         found = True
                         break
             if not found:
-                raise ValueError(f'reply_pattern {pattern} could not get a match on {data}')
+                raise ValueError(f'reply_pattern(s) {self.reply_pattern} could not get a match on {data}')
         else:
             value = self._DT.get_shng_data(data, **kwargs)
         return value
@@ -445,7 +504,7 @@ class SDPCommandJSON(SDPCommand):
     params needs to be None or a dict.
     """
 
-    def get_send_data(self, data, **kwargs):
+    def get_send_data(self, data: Any, **kwargs) -> dict:
 
         cmd = None
         data = self._check_value(data)
@@ -463,11 +522,11 @@ class SDPCommandJSON(SDPCommand):
         ddict = self._build_dict(self._DT.get_send_data(data), **kwargs)
         return {'payload': cmd, 'data': ddict}
 
-    def get_shng_data(self, data, **kwargs):
+    def get_shng_data(self, data: Any, **kwargs) -> Any:
         value = self._DT.get_shng_data(data.get('result'), **kwargs)
         return value
 
-    def _build_dict(self, data, **kwargs):
+    def _build_dict(self, data: Any, **kwargs) -> dict | list:
         """
         build param array for JSON RPC from provided value and kwargs
 
@@ -476,7 +535,7 @@ class SDPCommandJSON(SDPCommand):
         :return: params-dict (or None)
         :rtype: dict
         """
-        def check_value(val, data):
+        def check_value(val: Any, data: Any) -> Any:
 
             if isinstance(val, list):
                 # recursively check list
@@ -498,9 +557,8 @@ class SDPCommandJSON(SDPCommand):
             return val
 
         if not hasattr(self, CMD_ATTR_PARAMS):
-            return None
-# TODO: why plugin_params? why not command-params in self.params (after checking for it!)?
-        # params = deepcopy(self._plugin_params)
+            return {}
+
         params = deepcopy(getattr(self, CMD_ATTR_PARAMS))
 
         if isinstance(params, list):
@@ -538,7 +596,7 @@ class SDPCommandViessmann(SDPCommand):
 
     params and param_value need to be None or lists of the same length.
     """
-    def __init__(self, command, dt_class, **kwargs):
+    def __init__(self, command: str, dt_class: type[DT.Datatype], **kwargs):
 
         super().__init__(command, dt_class, **kwargs)
 
@@ -552,7 +610,7 @@ class SDPCommandViessmann(SDPCommand):
                 if attr in cp:
                     setattr(self, attr, cp[attr])
 
-    def get_send_data(self, data, **kwargs):
+    def get_send_data(self, data: Any, **kwargs) -> dict:
 
         data = self._check_value(data)
         # create read data
@@ -570,11 +628,11 @@ class SDPCommandViessmann(SDPCommand):
         ddict = self._build_dict(self._DT.get_send_data(data, len=self.len, mult=self.mult, signed=self.signed), **kwargs)
         return {'payload': cmd, 'data': ddict}
 
-    def get_shng_data(self, data, **kwargs):
+    def get_shng_data(self, data: Any, **kwargs) -> Any:
         value = self._DT.get_shng_data(data, len=self.len, mult=self.mult, signed=self.signed, **kwargs)
         return value
 
-    def _build_dict(self, data, **kwargs):
+    def _build_dict(self, data: Any, **kwargs) -> dict:
         """
         build param array for JSON RPC from provided value and kwargs
 
@@ -585,7 +643,7 @@ class SDPCommandViessmann(SDPCommand):
         """
         params = {}
         if not hasattr(self, CMD_ATTR_PARAMS):
-            return None
+            return {}
 
         cmd_params = getattr(self, CMD_ATTR_PARAMS)
 

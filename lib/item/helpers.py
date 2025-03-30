@@ -24,7 +24,6 @@
 import logging
 import os
 import datetime
-import dateutil.parser
 import json
 
 from ast import literal_eval
@@ -37,6 +36,7 @@ logger = logging.getLogger(__name__)
 #####################################################################
 # Cast Methods
 #####################################################################
+
 
 def cast_str(value):
     if isinstance(value, (int, float)):
@@ -51,7 +51,7 @@ def cast_list(value):
     if isinstance(value, str):
         try:
             value = literal_eval(value)
-        except:
+        except Exception:
             pass
     if isinstance(value, list):
         return value
@@ -63,7 +63,7 @@ def cast_dict(value):
     if isinstance(value, str):
         try:
             value = literal_eval(value)
-        except:
+        except Exception:
             pass
     if isinstance(value, dict):
         return value
@@ -118,11 +118,11 @@ def cast_num(value):
         return value
     try:
         return int(value)
-    except:
+    except Exception:
         pass
     try:
         return float(value)
-    except:
+    except Exception:
         pass
     raise ValueError
 
@@ -138,21 +138,28 @@ def split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT):
     components are:
     - time
     - value
-    - compat
+    - possibly compat (obsolete, kept for backward compatibility)
 
-    :param value: raw attribute string containing duration, value (and compatibility)
+    :param value: raw attribute string containing duration, value
     :return: three strings, representing time, value and compatibility attribute
     """
+    compat = ''
+
     if value.find(ATTRIBUTE_SEPARATOR) >= 0:
         time, __, attrvalue = value.partition(ATTRIBUTE_SEPARATOR)
         attrvalue, __, compat = attrvalue.partition(ATTRIBUTE_SEPARATOR)
-    elif value.find('=') >= 0:
+    elif value.find('=') >= 0 and value[value.find('='):value.find('=') + 2] != '==':
         time, __, attrvalue = value.partition('=')
-        attrvalue, __, compat = attrvalue.partition('=')
+        if attrvalue.find('=') >= 0 and (attrvalue.rfind('=') != attrvalue.rfind('==')) and (attrvalue.endswith('compat') or attrvalue.endswith('compat_1.2') or attrvalue.endswith('latest')):
+            attrvalue, __, compat = attrvalue.rpartition('=')
     else:
         time = value
         attrvalue = None
-        compat = ''
+
+        # try to fix time if compat is (still) given:
+        time = time.strip()
+        if time.endswith('compat') or time.endswith('compat_1.2') or time.endswith('latest'):
+            time = time.removesuffix('compat').removesuffix('compat_1.2').removesuffix('latest').strip()[:-1]
 
     time = time.strip()
     if attrvalue is not None:
@@ -164,6 +171,7 @@ def split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT):
     # remove quotes, if present
     if value != '' and ((value[0] == "'" and value[-1] == "'") or (value[0] == '"' and value[-1] == '"')):
         value = value[1:-1]
+
     return (time, attrvalue, compat)
 
 
@@ -181,11 +189,11 @@ def join_duration_value_string(time, value, compat=''):
     """
     result = str(time)
     if value != '' or compat != '':
-        result = result + ' ='
+        result = result + ' ' + ATTRIBUTE_SEPARATOR
         if value != '':
             result = result + ' ' + value
         if compat != '':
-           result = result + ' = ' + compat
+            result = result + ' ' + ATTRIBUTE_SEPARATOR + ' ' + compat
     return result
 
 
@@ -212,7 +220,7 @@ def json_obj_hook(json_dict):
     for (key, value) in json_dict.items():
         try:
             json_dict[key] = dateutil.parser.parse(value)
-        except Exception as e :
+        except Exception:
             pass
     return json_dict
 
@@ -236,11 +244,11 @@ def cache_write(filename, value, cformat=CACHE_FORMAT):
     try:
         if cformat == CACHE_PICKLE:
             with open(filename, 'wb') as f:
-                pickle.dump(value,f)
+                pickle.dump(value, f)
 
         elif cformat == CACHE_JSON:
             with open(filename, 'w', encoding='UTF-8') as f:
-                json.dump(value,f, default=json_serialize)
+                json.dump(value, f, default=json_serialize)
     except IOError:
         logger.warning("Could not write to {}".format(filename))
 
@@ -248,23 +256,54 @@ def cache_write(filename, value, cformat=CACHE_FORMAT):
 #####################################################################
 # Fade Method
 #####################################################################
-def fadejob(item, dest, step, delta, caller=None):
+def fadejob(item):
     if item._fading:
         return
     else:
         item._fading = True
-    if item._value < dest:
-        while (item._value + step) < dest and item._fading:
-            item(item._value + step, 'fader')
-            item._lock.acquire()
-            item._lock.wait(delta)
-            item._lock.release()
-    else:
-        while (item._value - step) > dest and item._fading:
-            item(item._value - step, 'fader')
-            item._lock.acquire()
-            item._lock.wait(delta)
-            item._lock.release()
+
+    # Determine if instant_set is needed
+    instant_set = item._fadingdetails.get('instant_set', False)
+    while item._fading:
+        current_value = item._value
+        target_dest = item._fadingdetails.get('dest')
+        fade_step = item._fadingdetails.get('step')
+        delta_time = item._fadingdetails.get('delta')
+        caller = item._fadingdetails.get('caller')
+
+        # Determine the direction of the fade (increase or decrease)
+        if current_value < target_dest:
+            # If fading upwards, but next step overshoots, set value to target_dest
+            if (current_value + fade_step) >= target_dest:
+                break
+            else:
+                fade_value = current_value + fade_step
+        elif current_value > target_dest:
+            # If fading downwards, but next step overshoots, set value to target_dest
+            if (current_value - fade_step) <= target_dest:
+                break
+            else:
+                fade_value = current_value - fade_step
+        else:
+            # If the current value has reached the destination, stop fading
+            break
+
+        # Set the new value at the beginning
+        if instant_set and item._fading:
+            item._fadingdetails['value'] = fade_value
+            item(fade_value, 'Fader', caller)
+        else:
+            instant_set = True  # Enable instant_set for the next loop iteration
+
+        # Wait for the delta time before continuing to the next step
+        item._lock.acquire()
+        item._lock.wait(delta_time)
+        item._lock.release()
+
+        if fade_value == target_dest:
+            break
+
+    # Stop fading
     if item._fading:
         item._fading = False
-        item(dest, 'Fader')
+        item(item._fadingdetails.get('dest'), 'Fader', item._fadingdetails.get('caller'))

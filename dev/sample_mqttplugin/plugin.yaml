@@ -13,26 +13,28 @@ plugin:
 #    support: https://knx-user-forum.de/forum/supportforen/smarthome-py
 
     version: 1.0.0                  # Plugin version
-    sh_minversion: 1.8              # minimum shNG version to use this plugin
-#    sh_maxversion:                 # maximum shNG version to use this plugin (leave empty if latest)
-#    py_minversion: 3.6             # minimum Python version to use for this plugin
-#    py_maxversion:                 # maximum Python version to use for this plugin (leave empty if latest)
+
+    # these min/max-versions MUST be given in quotes, or e.g. 3.10 will be interpreted as 3.1 (3.1 < 3.9 < 3.10)
+    sh_minversion: '1.10'           # minimum shNG version to use this plugin
+#    sh_maxversion: '1.11'          # maximum shNG version to use this plugin (omit if latest)
+#    py_minversion: '3.10'          # minimum Python version to use for this plugin
+#    py_maxversion: '4.25'          # maximum Python version to use for this plugin (omit if latest)
+
     multi_instance: false           # plugin supports multi instance
-    restartable: unknown
-    suspendable: false              # plugin can be suspended, must be implemented in code
+    restartable: unknown            # plugin supports stopping and starting again, must be implemented
     classname: SamplePlugin         # class containing the plugin
 
 parameters:
     # Definition of parameters to be configured in etc/plugin.yaml (enter 'parameters: NONE', if section should be empty)
 
-    # item to toggle suspend mode
-    suspend_item:
+    # item to toggle plugin execution, remove if not wanted
+    # (needs plugin to be restartable)
+    pause_item:
         type: str
         default: ''
         description:
-            de: 'Item zum Schalten des Suspend-Modus'
-            en: 'item for toggling suspend mode'
-
+            de: 'Item, um die Ausführung des Plugins zu steuern'
+            en: 'item for controlling plugin execution'
 
 item_attributes:
     # Definition of item attributes defined by this plugin (enter 'item_attributes: NONE', if section should be empty)

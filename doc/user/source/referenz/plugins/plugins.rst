@@ -8,9 +8,9 @@
 .. role:: blacksup
 
 
-=======
-Plugins
-=======
+==========================
+Plugins :greensup:`Update`
+==========================
 
 Durch Plugins kann die Funktionalität von SmartHomeNG erweitert werden und SmartHomeNG kann mit zu steuernden
 Komponenten bzw. Systemen verbunden werden.
@@ -27,6 +27,7 @@ Die möglichen Einträge für die Definition der Metadaten der Plugins sind hier
    :glob:
    :titlesonly:
 
+   asyncio_support
    plugin_typen/plugin_typen
    plugin_metadata
    plugin_user_doc

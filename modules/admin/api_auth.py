@@ -31,6 +31,7 @@ import jwt
 
 # from lib.item import Items
 from lib.utils import Utils
+from lib.constants import (DIR_ETC, DIR_MODULES)
 
 from .rest import RESTResource
 
@@ -44,8 +45,8 @@ class AuthController(RESTResource):
         self.base_dir = self._sh.get_basedir()
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
-        self.etc_dir = self._sh._etc_dir
-        self.modules_dir = os.path.join(self.base_dir, 'modules')
+        self.etc_dir = self._sh.get_config_dir(DIR_ETC)
+        self.modules_dir = self._sh.get_config_dir(DIR_MODULES)
 
         if self.module.rest_dispatch_force_exception:
             self.logger.notice(f"REST_dispatch_execute warnlevel is set to EXCEPTION")

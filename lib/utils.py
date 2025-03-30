@@ -195,9 +195,46 @@ class Utils(object):
                 s.close()
         return IP
 
+    @staticmethod
+    def get_all_addresses_for_addressfamily(af: int) -> list:
+        """
+        Get all addresses for an address-family as a list
+
+        https://stackoverflow.com/questions/270745/how-do-i-determine-all-of-my-ip-addresses-when-i-have-multiple-nics/274644#274644
+
+        :return: addresses
+        """
+        from netifaces import interfaces, ifaddresses
+
+        ip_list = []
+        for interface in interfaces():
+            if af in ifaddresses(interface).keys():
+                for link in ifaddresses(interface)[af]:
+                    ip_list.append(link['addr'])
+        return ip_list
 
     @staticmethod
-    def is_knx_groupaddress(groupaddress):
+    def get_all_local_ipv4_addresses() -> list:
+        """
+        Get ipv4 addresses of all interfaces as a list
+
+        :return: ipv4 addresses
+        """
+        from netifaces import AF_INET
+        return Utils.get_all_addresses_for_addressfamily(AF_INET)
+
+    @staticmethod
+    def get_all_local_ipv6_addresses() -> list:
+        """
+        Get ipv6 addresses of all interfaces as a list
+
+        :return: ipv6 addresses
+        """
+        from netifaces import AF_INET6
+        return Utils.get_all_addresses_for_addressfamily(AF_INET6)
+
+    @staticmethod
+    def is_knx_groupaddress(groupaddress: str) -> bool:
         """
         Checks if the passed string is a valid knx goup address
 
@@ -233,7 +270,7 @@ class Utils(object):
 
 
     @staticmethod
-    def is_timeframe(string):
+    def is_timeframe(string: str) -> bool:
         """
         Checks if a string is a timeframe. A timeframe consists of a
         number and an optional unit identifier (e.g. 2h, 30m, ...).
@@ -254,7 +291,8 @@ class Utils(object):
             return False
 
     @staticmethod
-    def to_timeframe(value):
+    def to_timeframe(value: str) -> int:        # works for Python 3.9 and under
+#    def to_timeframe(value: str | int) -> int:  # works for Python 3.10 and above
         """
         Converts a timeframe value to milliseconds. See is_timeframe() method.
         The special value 'now' is supported for the current time.
@@ -263,7 +301,6 @@ class Utils(object):
         :type value: str, int, ...
 
         :return: True if cant be converted and is true, False otherwise.
-        :rtype: bool
         """
 
         minute = 60 * 1000
@@ -287,15 +324,13 @@ class Utils(object):
             return int(amount)
 
     @staticmethod
-    def is_int(string):
+    def is_int(string: str) -> bool:
         """
         Checks if a string is a integer.
 
         :param string: String to check.
-        :type string: str
 
         :return: True if a cast to int works, false otherwise.
-        :rtype: bool
         """
 
         try:
@@ -307,15 +342,13 @@ class Utils(object):
             return False
 
     @staticmethod
-    def is_float(string):
+    def is_float(string: str) -> bool:
         """
         Checks if a string is a float.
 
         :param string: String to check.
-        :type string: str
 
         :return: True if a cast to float works, false otherwise.
-        :rtype: bool
         """
 
         try:
@@ -327,7 +360,9 @@ class Utils(object):
             return False
 
     @staticmethod
-    def to_bool(value, default='exception'):
+    def to_bool(value: str, default: bool = 'exception') -> bool:           # works for Python 3.9 and under
+#    def to_bool(value: str|int|float, default: bool='exception') -> bool:   # works for Python 3.10 and above
+
         """
         Converts a value to boolean.
 
@@ -339,11 +374,8 @@ class Utils(object):
 
         :param value : value to convert
         :param default: optional, value to return if value can not be parsed, if default is not set this method throws an exception
-        :type value: str, object, int, ...
-        :type value: str, object, int, ...
 
         :return: True if cant be converted and is true, False otherwise.
-        :rtype: bool
         """
         # -> should it be possible to cast strings: 0 -> False and non-0 -> True (analog to integer values)?
         if isinstance(value, str):
@@ -358,15 +390,13 @@ class Utils(object):
         return bool(value)
 
     @staticmethod
-    def create_hash(plaintext):
+    def create_hash(plaintext: str) -> str:
         """
         Create hash (currently sha512) for given plaintext value
 
         :param plaintext: plaintext
-        :type plaintext: str
 
         :return: hash of plaintext, lowercase letters
-        :rtype: str
         """
 
         hashfunc = hashlib.sha512()
@@ -374,15 +404,13 @@ class Utils(object):
         return "".join(format(b, "02x") for b in hashfunc.digest())
 
     @staticmethod
-    def is_hash(value):
+    def is_hash(value: str) -> bool:
         """
         Check if value is a valid hash (currently sha512) value
 
         :param value: value to check
-        :type value: str
 
         :return: True: given value can be a sha512 hash, False: given value can not be a sha512 hash
-        :rtype: bool
         """
 
         # a valid sha512 hash is a 128 charcter long string value
@@ -397,18 +425,15 @@ class Utils(object):
             return False
 
     @staticmethod
-    def check_hashed_password(pwd_to_check, hashed_pwd):
+    def check_hashed_password(pwd_to_check: str, hashed_pwd: str) -> bool:
         """
         Check if given plaintext password matches the hashed password
         An empty password is always rejected
 
         :param pwd_to_check: plaintext password to check
-        :type pwd_to_check: str
         :param hashed_pwd: hashed password
-        :type hashed_pwd: str
 
         :return: True: password matches, False: password does not match
-        :rtype: bool
         """
 
         if pwd_to_check is None or pwd_to_check == '':
@@ -420,16 +445,14 @@ class Utils(object):
         return Utils.create_hash(pwd_to_check) == hashed_pwd.lower()
 
     @staticmethod
-    def strip_quotes(string):
+    def strip_quotes(string: str) -> str:
         """
         If a string contains quotes as first and last character, this function
         returns the string without quotes, otherwise the string is returned unchanged
 
         :param string: string to check for quotes
-        :type string: str
 
         :return: string with quotes stripped
-        :rtype: str
         """
         if type(string) is str:
             string = string.strip()

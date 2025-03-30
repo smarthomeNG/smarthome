@@ -51,7 +51,7 @@ from lib.shtime import Shtime
 
 class Protocol():
 
-    version = '1.0.4'
+    version = '1.0.5'
 
     protocol_id = 'sv'
     protocol_name = 'smartvisu'
@@ -249,6 +249,7 @@ class Protocol():
                         path = data['item']
                         item = self.items.return_item(path)
                         if item is not None:
+                            self.logger.dbghigh(f"command == 'series': {data=} ")
                             answer = await self.prepare_series(data, client_addr)
                             if answer == {}:
                                 self.logger.warning(f"command 'series' -> No reply from prepare_series() (for request {data})")
@@ -295,6 +296,12 @@ class Protocol():
                             self.sv_clients[client_addr]['hostname'] = data.get('hostname', '')
                         self.sv_clients[client_addr]['browser'] = data.get('browser', '')
                         self.sv_clients[client_addr]['bver'] = data.get('bver', '')
+
+                        self.sv_clients[client_addr]['os_name'] = data.get('os_name', '')
+                        self.sv_clients[client_addr]['os_vers'] = data.get('os_vers', '')
+                        self.sv_clients[client_addr]['os_vname'] = data.get('os_vname', '')
+                        self.sv_clients[client_addr]['pl_type'] = data.get('pl_type', '')
+                        self.sv_clients[client_addr]['pl_vendor'] = data.get('pl_vendor', '')
                         self.logger.info(f"Client {self.build_client_info(client_addr)} identified as {self.build_sw_info(client_addr)}")
                         answer = {}
 
@@ -393,32 +400,39 @@ class Protocol():
         items = []
         newmonitor_items = []
         for path in list(data['items']):
-            path_parts = 0 if path is None else path.split('.property.')
+            path_parts = [] if path is None else path.split('.property.')
+
+            # first identify item
+            item = self.items.return_item(path_parts[0])
+            if item is None:
+                self.logger.error(f"prepare_monitor: No item '{path}' found (requested by client {self.build_log_info(client_addr)}")
+                continue
+
+            # get item visu acl
+            item_acl = item.conf.get('acl', None)
+            if item_acl is None:
+                item_acl = self.sv_acl
+
+            # if acl is deny, don't add item or property
+            if item_acl == 'deny':
+                # log deny to indicate feature, not bug?
+                continue
+
+            newmonitor_items.append(path)
+
             if len(path_parts) == 1:
                 self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]}")
-                try:
-                    item = self.items.return_item(path)
-                    if item is not None:
-                        item_acl = item.conf.get('acl', None)
-                        if item_acl is None:
-                            item_acl = self.sv_acl
-                        if item_acl != 'deny':
-                            items.append([path, item()])
-                        if self.update_visuitem not in item.get_method_triggers():
-                            item.add_method_trigger(self.update_visuitem)
-                    else:
-                        self.logger.error(f"prepare_monitor: No item '{path}' found (requested by client {self.build_log_info(client_addr)}")
-                except KeyError as e:
-                    self.logger.warning(f"KeyError: Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]} which can not be found")
-                else:
-                    newmonitor_items.append(path)
+                items.append([path, item()])
+                if self.update_visuitem not in item.get_method_triggers():
+                    item.add_method_trigger(self.update_visuitem)
             elif len(path_parts) == 2:
-                self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[1]} with property {path_parts[0]}")
+                self.logger.debug(f"Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]} with property {path_parts[1]}")
                 try:
                     prop = self.items.return_item(path_parts[0]).property
                     prop_attr = getattr(prop, path_parts[1])
                     items.append([path, prop_attr])
-                    newmonitor_items.append(path)
+                    if self.update_visuitem not in item.get_method_triggers():
+                        item.add_method_trigger(self.update_visuitem)
                 except KeyError as e:
                     self.logger.warning(f"Property KeyError: Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]} with property {path_parts[1]}")
                 except AttributeError as e:
@@ -540,6 +554,7 @@ class Protocol():
             if self.sv_update_series.get(client_addr, None) is None:
                 self.sv_update_series[client_addr] = {}
             self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
+            self.logger.info(f"set_periodic_series_updates: {reply['sid']=}")
         return
 
 
@@ -558,19 +573,21 @@ class Protocol():
         while keep_running:
             remove = []
             series_list = list(self.sv_update_series.keys())
+            self.logger.info(f"update_all_series: {series_list=}")
             if series_list != []:
                 txt = ''
                 if self.sv_ser_upd_cycle > 0:
                     txt = " - Fixed update-cycle time"
                 #self.logger.info("update_all_series: series_list={}{}".format(series_list, txt))
             for client_addr in series_list:
+                self.logger.dbgmed(f"update_all_series: Updating client {self.build_log_info(client_addr)}")
                 if (client_addr in self.sv_clients) and not (client_addr in remove):
-                    self.logger.debug(f"update_all_series: Updating client {self.build_log_info(client_addr)}...")
-                    websocket = self.sv_clients[client_addr]['websocket']
                     replys = await self.loop.run_in_executor(None, self.update_series, client_addr)
+                    self.logger.dbgmed(f" - Updating {client_addr},  {replys=}...")
+                    websocket = self.sv_clients[client_addr]['websocket']
                     for reply in replys:
                         if (client_addr in self.sv_clients) and not (client_addr in remove):
-                            self.logger.dbgmed(f"update_all_series: reply {reply}  -->  Replys for client {self.build_log_info(client_addr)}: {replys}")
+                            self.logger.dbgmed(f"   - reply {reply}  -->  Replys for client {client_addr}: {replys}")
                             try:
                                 await websocket.send(json.dumps(reply, default=self.json_serial))
                                 self.logger.debug(f">SerUp {reply}: {self.build_log_info(client_addr)}")
@@ -625,7 +642,9 @@ class Protocol():
             series_replys = []
 
             series_entry = self.sv_update_series.get(client_addr, None)
+            self.logger.dbgmed(f"update_series: {client_addr=} - {series_entry=}")
             if series_entry is not None:
+                self.logger.dbgmed(f" - {client_addr=} - items={self.sv_update_series[client_addr].items()}")
                 for sid, series in self.sv_update_series[client_addr].items():
                     if (series['update'] < now) or self.sv_ser_upd_cycle > 0:
                         # self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))
@@ -823,8 +842,8 @@ class Protocol():
 
                     if len(path_parts) == 2:
                         self.logger.debug(f"Send update to Client {self.build_log_info(client_addr)} for item {path_parts[0]} with property {path_parts[1]}")
-                        prop = self.items[path_parts[0]]['item'].property
-                        prop_attr = getattr(prop,path_parts[1])
+                        prop = self.items.return_item(path_parts[0]).property
+                        prop_attr = getattr(prop, path_parts[1])
                         items.append([candidate, prop_attr])
                         continue
 
@@ -977,7 +996,7 @@ class Protocol():
         :param dest: Destination for the change (usually None)
         :return:
         """
-        item_data = (item.id(), item(), caller, source)
+        item_data = (item.property.path, item(), caller, source)
         if self.janus_queue:
             # if queue has been created from the async side
             self.janus_queue.sync_q.put(['item', item_data])
@@ -1046,6 +1065,11 @@ class Protocol():
             infos['browser'] = self.sv_clients[client_addr].get('browser', '')
             infos['browserversion'] = self.sv_clients[client_addr].get('bver', '')
 
+            infos['os_name'] = self.sv_clients[client_addr].get('os_name', '')
+            infos['os_vers'] = self.sv_clients[client_addr].get('os_vers', '')
+            infos['os_vname'] = self.sv_clients[client_addr].get('os_vname', '')
+            infos['pl_type'] = self.sv_clients[client_addr].get('pl_type', '')
+            infos['pl_vendor'] = self.sv_clients[client_addr].get('pl_vendor', '')
             client_list.append(infos)
 
         return client_list

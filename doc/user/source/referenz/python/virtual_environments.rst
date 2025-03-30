@@ -70,7 +70,7 @@ Jetzt kann mit dem folgenden Befehl ein virtual Environment erstellt werden, wel
 
 .. code-block:: bash
 
-    $ make_env 3.10
+    $ make_venv 3.10
 
 Während der Anlage wird das Environment aktiviert, um einige norwendige Python Packages in das Environment zu
 installieren bzw. zu aktualisieren.

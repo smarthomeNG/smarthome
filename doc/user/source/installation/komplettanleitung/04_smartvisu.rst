@@ -9,30 +9,89 @@ smartVISU installieren
 ======================
 
 Die SmartVISU ist eine Sammlung von HTML-Dateien und PHP Skripten die es ermöglicht Items vom SmartHomeNG
-anzuzeigen. Im Wesentlichen wird dazu ein Webserver benötigt, hier der Apache2 und für die variablen Daten
+anzuzeigen. Im Wesentlichen wird dazu ein Webserver benötigt, Apache2 oder NGINX und für die variablen Daten
 des SmartHomeNG braucht die SmartVisu noch eine Websocket-Verbindung zum SmartHomeNG.
 
 .. contents:: Schritte der Installation
    :local:
 
 
-zusätzliche Pakete installieren
-===============================
+Webserver und zusätzliche Pakete installieren
+=============================================
 
-Der Apache2 braucht noch ein paar Pakete wie PHP um die Webseiten der
-SmartVISU liefern zu können:
+.. tabs::
+
+    .. tab:: Apache2
+
+        Auf einigen Debian Distributionen ist Apache2 bereits vorinstalliert, dennoch braucht es jedenfalls noch
+        einige zusätzliche Pakete, insbesondere PHP.
+
+        .. code-block:: bash
+
+           sudo apt-get install apache2 libawl-php php-curl php8.2-fpm php-json php-xml php-mbstring
+           sudo systemctl restart apache2
+
+    .. tab:: NGINX
+
+        Wer auf die Visu auch über das Internet (ohne VPN) zugreifen möchte, sollte NGINX installieren und
+        dann der Anleitung zum :doc:`Reverse Proxy </visualisierung/reverse_proxy>` folgen. Jedenfalls
+        sind das Paket für den Webserver und PHP 8.2 zu installieren.
+
+        .. code-block:: bash
+
+          sudo apt-get install nginx-full php8.2-fpm
+          sudo nano /etc/nginx/sites-available/default
+
+        Bei der Standardkonfiguration von NGINX kann auf die entsprechenden Handbücher zum Paket zurückgegriffen
+        werden. Wichtig ist jedenfalls das korrekte Handling von PHP Dateien, das wie folgt im ``server`` Abschnitt konfiguriert wird:
+
+        .. code-block:: bash
+
+          location ~ \.php$ {
+              try_files $uri =404;
+              fastcgi_split_path_info ^(.+\.php)(/.+)$;
+              fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+              fastcgi_index index.php;
+              fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+              include fastcgi_params;
+
+          }
+
+        Schließlich müssen noch die Rechte richtig gesetzt werden.
+
+        .. code-block:: bash
+
+          sudo chown www-data:www-data /etc/nginx/sites-available/default
+
+
+Sollte es Probleme mit PHP geben, sind folgende Schritte durchzuführen:
 
 .. code-block:: bash
 
-   sudo apt-get install libawl-php php-curl php php-json php-xml php-mbstring
-   sudo service apache2 restart
+  sudo mkdir /etc/systemd/system/php8.2-fpm.service.d/
+  sudo nano /etc/systemd/system/php8.2-fpm.service.d/service_php_fix.conf
+
+Hier ist folgender Inhalt einzutragen. Danach die Datei speichern und schließen.
+
+.. code-block:: bash
+
+  [Service]
+    RuntimeDirectory=php
+    RuntimeDirectoryMode=755
+
+Schließlich sollte PHP und der Webserver neu gestartet werden.
+
+.. code-block:: bash
+
+   sudo systemctl restart php8.2-fpm.service
+   sudo systemctl restart nginx ODER sudo systemctl restart apache2
 
 
 SmartVISU Quellcode laden
 =========================
 
 Die Dateien der SmartVISU werden in einem Unterverzeichnis abgelegt,
-das für den **Apache2** Webserver zugänglich ist:
+das für den Webserver zugänglich ist:
 
 .. code-block:: bash
 
@@ -148,4 +207,3 @@ Mischung von generierten und manuell erstellten Seiten
 Es ist möglich automatisch generierte und manuell erstellte Seiten zu mischen. Das Vorgehen hierzu ist
 in unter :doc:`Visualisierung </visualisierung/visualisierung>` und in der
 :doc:`Dokumentation des Plugins </plugins/visu_smartvisu/user_doc>` beschrieben.
-

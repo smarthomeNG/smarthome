@@ -45,6 +45,10 @@ weitere Packages von pypi.org:
 | ``ephem``       | Compute positions of the planets and stars     |
 +-----------------+------------------------------------------------+
 
+Wird ein zusätzliches Python Modul in einer Logik benötigt, so kann eine ``requirements.txt`` im Verzeichnis ``logics`` erstellt 
+und in dieser Datei Namen und Versionen für die Installation via PIP notiert werden.
+In diesem Fall muss SmartHomeNG auf jeden Fall neu gestartet werden da die Überprüfung nur beim Start von SmartHomeNG erfolgt.
+
 
 Import weiterer Python Module
 =============================

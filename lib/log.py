@@ -24,6 +24,7 @@ import time
 import logging
 import logging.handlers
 import logging.config
+import calendar
 import os
 import datetime
 import pickle
@@ -33,6 +34,7 @@ from pathlib import Path
 import collections
 
 import lib.shyaml as shyaml
+from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG, DIR_ETC, DIR_VAR
 
 logs_instance = None
 
@@ -47,6 +49,7 @@ class Logs():
     DBGHIGH_level = 13
     DBGMED_level = 12
     DBGLOW_level = 11
+    DEVELOP_level = 9
 
     _all_handlers_logger_name = '_shng_all_handlers_logger'
     _all_handlers = {}
@@ -63,17 +66,18 @@ class Logs():
             self.logger.error(f"Another instance of Logs class already exists: {logs_instance}")
 
         self._sh = sh
-        self.etc_dir = self._sh.get_etcdir()
         return
 
 
-    def configure_logging(self, config_filename='logging.yaml'):
+    def configure_logging(self, config_filename=''):
 
+        if not config_filename:
+            config_filename = self._sh.get_config_file(BASE_LOG)
         config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
 
         if config_dict == None:
             print()
-            print(f"ERROR: Invalid logging configuration in file '{os.path.join(self.etc_dir, config_filename)}'")
+            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
             print()
             exit(1)
 
@@ -91,6 +95,7 @@ class Logs():
         #  - DBGHIGH      13   Debug high level
         #  - DBGMED       12   Debug medium level
         #  - DBGLOW       11   Debug low level
+        #  - DEVELOP       9   Developer level
 
         self.logging_levels = {}
         self.logging_levels[50] = 'CRITICAL'
@@ -105,6 +110,7 @@ class Logs():
         # self.logging_levels[13] = 'DBGHIGH'
         # self.logging_levels[12] = 'DBGMED'
         # self.logging_levels[11] = 'DBGLOW'
+        # self.logging_levels[9] = 'DEVELOP'
 
         # adjust config dict from logging.yaml:
         # if logger 'lib.smarthome' is not defined or no level is defined for it,
@@ -129,22 +135,23 @@ class Logs():
         self.DBGHIGH_level = 13
         self.DBGMED_level = 12
         self.DBGLOW_level = 11
+        self.DEVELOP_level = 9
 
         # add SmartHomeNG specific loglevels
         self.add_logging_level('NOTICE', self.NOTICE_level)
         self.add_logging_level('DBGHIGH', self.DBGHIGH_level)
         self.add_logging_level('DBGMED', self.DBGMED_level)
         self.add_logging_level('DBGLOW', self.DBGLOW_level)
+        self.add_logging_level('DEVELOP', self.DEVELOP_level)
 
         try:
             logging.config.dictConfig(config_dict)
         except Exception as e:
-            #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
             print()
-            print(f"ERROR: dictConfig: Invalid logging configuration in file '{os.path.join(self.etc_dir, config_filename)}'")
+            print(f"ERROR: dictConfig: Invalid logging configuration in file '{config_filename}'")
             print(f"       Exception: {e}")
             print()
-            return False
+            return e
 
         #self.logger.notice(f"Logs.configure_logging: Level NOTICE = {notice_level} / root_handler_level={root_handler_level}")
 
@@ -238,15 +245,18 @@ class Logs():
 
     # ---------------------------------------------------------------------------
 
-    def load_logging_config(self, filename='logging', ignore_notfound=False):
+    def load_logging_config(self, filename='', ignore_notfound=False):
         """
         Load config from logging.yaml to a dict
 
         If logging.yaml does not contain a 'shng_version' key, a backup is created
         """
-        conf_filename = os.path.join(self.etc_dir, filename)
-        if not conf_filename.endswith('.yaml') and not conf_filename.endswith('.default'):
-            conf_filename += '.yaml'
+        if not filename:
+            conf_filename = self._sh.get_config_file(BASE_LOG)
+        else:
+            conf_filename = os.path.join(self._sh.get_config_dir(DIR_ETC), filename)
+        if not conf_filename.endswith(YAML_FILE) and not conf_filename.endswith(DEFAULT_FILE):
+            conf_filename += YAML_FILE
         result = shyaml.yaml_load(conf_filename, ignore_notfound)
 
         return result
@@ -258,7 +268,7 @@ class Logs():
         """
         if logging_config is not None:
             logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
-            conf_filename = os.path.join(self.etc_dir, 'logging')
+            conf_filename = self._sh.get_config_file(BASE_LOG)
             shyaml.yaml_save_roundtrip(conf_filename, logging_config, create_backup=create_backup)
         return
 
@@ -270,7 +280,7 @@ class Logs():
         If logging.yaml does not contain a 'shng_version' key, a backup is created
         """
         #self.etc_dir = self._sh.get_etcdir()
-        conf_filename = os.path.join(self.etc_dir, 'logging')
+        conf_filename = self._sh.get_config_file(BASE_LOG)
         logging_config = shyaml.yaml_load_roundtrip(conf_filename)
         self.logger.info("load_logging_config_for_edit: shng_version={}".format(logging_config.get('shng_version', None)))
 
@@ -425,7 +435,11 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
         # M - Minutes
         # H - Hours
         # D - Days
+        # W or W0..W6 - Week
+        # MO - Month
+        # Y - Year
         # midnight - roll over at midnight
+        now = self._shtime.now()
         if self._when == 'S':
             self.time_unit = datetime.timedelta(seconds=1)  # one second
             self.suffix = "%Y-%m-%d-%H.%M.%S"
@@ -442,6 +456,23 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
             self.time_unit = datetime.timedelta(days=1)  # one day
             self.suffix = "%Y-%m-%d"
             self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}", re.ASCII)
+        elif self._when.startswith('W'):
+            day = 0 if len(self._when) == 1 else int(self._when[1:])
+            days_until_next = (day - now.weekday()) % 7
+            days_until_next = 7 if days_until_next == 0 else days_until_next
+            self.time_unit = datetime.timedelta(days=days_until_next)  # one week
+            self.suffix = "%Y-%m-%d"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}\-\d{2}", re.ASCII)
+        elif self._when == 'MO':
+            _, days_in_month = calendar.monthrange(now.year, now.month)
+            self.time_unit = datetime.timedelta(days=days_in_month)  # one month
+            self.suffix = "%Y-%m"
+            self.ext_pat = re.compile(r"^\d{4}\-\d{2}", re.ASCII)
+        elif self._when == 'Y':
+            days_in_year = (datetime.datetime(now.year + 1, 1, 1) - datetime.datetime(now.year, 1, 1)).days
+            self.time_unit = datetime.timedelta(days=days_in_year)  # one year
+            self.suffix = "%Y"
+            self.ext_pat = re.compile(r"^\d{4}", re.ASCII)
         else:
             raise ValueError(f"Invalid rollover interval specified: {self._when}")
 
@@ -515,8 +546,12 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
             t = t.replace(second=0, microsecond=0)
         elif self._when == 'H':
             t = t.replace(minute=0, second=0, microsecond=0)
-        elif self._when == 'D' or self._when == 'MIDNIGHT':
+        elif self._when == 'D' or self._when == 'MIDNIGHT' or self._when.startswith('W'):
             t = t.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif self._when == 'MO':
+            t = t.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        elif self._when == 'Y':
+            t = t.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
         return t + self.interval
 
     def get_files_to_delete(self):
@@ -526,15 +561,15 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
         def custom_replace(match):
             # Replace based on different patterns
             if any(match.group(i) for i in (1, 2, 3)):
-                return '\d{4}'
+                return r'\d{4}'
             elif any(match.group(i) for i in (4, 7, 10, 13)):
-                return '\d{1,2}'
+                return r'\d{1,2}'
             elif any(match.group(i) for i in (6, 9, 12, 15)):
-                return '\d{2}'
+                return r'\d{2}'
             elif any(match.group(i) for i in (5, 8, 11, 14)):
-                return '\d{1}'
+                return r'\d{1}'
             elif match.group(16):
-                return '\d+'
+                return r'\d+'
             else:
                 return '[0-9.]'
 
@@ -632,7 +667,7 @@ class ShngTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
     """
     TimedRotatingFilehandler with a different naming scheme for rotated files
     """
-    def __init__(self, filename, when='MIDNIGHT', interval=0, backupCount=0, encoding=None, delay=False, utc=False):
+    def __init__(self, filename, when='MIDNIGHT', interval=1, backupCount=0, encoding=None, delay=False, utc=False):
         year = datetime.datetime.now().strftime("%Y")
         month = datetime.datetime.now().strftime("%m")
         day = datetime.datetime.now().strftime("%d")
@@ -763,7 +798,7 @@ class ShngMemLogHandler(logging.StreamHandler):
         self._cache = cache
         self._maxlen = maxlen
         # save cache files in var/log/cache directory
-        cache_directory = os.path.join(logs_instance._sh.get_vardir(), 'log'+os.path.sep, 'cache'+os.path.sep)
+        cache_directory = os.path.join(logs_instance._sh.get_config_dir(DIR_VAR), 'log'+os.path.sep, 'cache'+os.path.sep)
         if cache is True:
             if not os.path.isdir(cache_directory):
                 os.makedirs(cache_directory)

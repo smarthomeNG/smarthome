@@ -16,8 +16,14 @@ plugin:
     # documentation: https://github.com/smarthomeNG/smarthome/wiki/
     # support: https://knx-user-forum.de/forum/supportforen/smarthome-py/
     version: 0.0.1                  # !! adjust
-    sh_minversion: 1.9.5
-    py_minversion: 3.6
+
+    # these min/max-versions MUST be given in quotes, or e.g. 3.10 will be interpreted as 3.1 (3.1 < 3.9 < 3.10)
+    sh_minversion: '1.10'           # minimum shNG version to use this plugin
+#    sh_maxversion: '1.11'          # maximum shNG version to use this plugin (omit if latest)
+#    py_minversion: '3.10'          # minimum Python version to use for this plugin
+#    py_maxversion: '4.25'          # maximum Python version to use for this plugin (omit if latest)
+    sdp_minversion: '1.0.4'         # minimum SDP version to use this plugin
+
     multi_instance: true
     restartable: true
     suspendable: true              # plugin can be suspended, implemented in sdp
@@ -53,6 +59,20 @@ parameters:
         description:
             de: 'Intervall für regelmäßiges Lesen'
             en: 'interval for cyclic reading'
+
+    delay_initial_read:
+        type: num
+        default: 0
+        description:
+            de: 'Verzögerung für das erstmalige Lesen beim Start (in Sekunden)'
+            en: 'delay for initial command read on start (in seconds)'
+
+    resume_initial_read:
+        type: bool
+        defaul: false
+        description:
+            de: 'Bei resume vom Plugin erstmaliges Lesen erneut durchführen'
+            en: 'Repeat initial read on resume'
 
     # select if ex_custom1/2/3 item attributes should be inherited by sub-items
     # !! irrelevant if ex_custom1/2/3 not implemented
@@ -258,27 +278,31 @@ item_attributes:
     ex_lookup:
         type: str
         description:
-            de: 'Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.'
-            en: 'The lookup table with the given name will be assigned to the item in dict or list format once on startup.'
+            de: 'Item beinhaltet die Werte der Lookup-Tabelle mit dem angegebenen Namen.'
+            en: 'Item contains values of the lookup table with the given name.'
         description_long:
-            de: 'Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim
-                 Start einmalig als dict oder list in das Item geschrieben.
+            de: 'Item beinhaltet die Werte der Lookup-Tabelle mit dem angegebenen Namen.
 
                  Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art
                  der Tabelle ausgewählt werden:
                  - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard)
                  - rev liefert die Tabelle SmartHomeNG -> Gerät
                  - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben
-                 - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)'
-            en: 'The lookup table with the given name will be assigned to the item
-                 in dict or list format once on startup.
+                 - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
+
+                 Beim Typ "fwd" kann dem Item ein neues dict als Wert zugewiesen werden. Dann werden
+                 die Lookup-Tabellen und ggf. definierte Items (rev, rci, list) aktualisiert.'
+            en: 'Item contains values of the lookup table with the given name.
 
                  By appending "#<mode>" to the tables name the type of table can
                  be selected:
                  - fwd returns the table device -> SmartHomeNG (default)
                  - rev returns the table SmartHomeNG -> device
                  - rci returns the table SmartHomeNG -> device in lower case
-                 - list return the list of names for SmartHomeNG (e.g. for selection dropdowns in visu applications)'
+                 - list return the list of names for SmartHomeNG (e.g. for selection dropdowns in visu applications)
+
+                 For "fwd" type lookups the item can be assigned a new dict which will
+                 update the lookup tables and all associated items (rev, rci, list).'
     # !! if these attributes are supported by (implemented in) the plugin, adjust the
     # !! description(s) to match the intended use
     ex_custom1:

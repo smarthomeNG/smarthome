@@ -115,7 +115,10 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
           }
           // update datatable cell
           if (new_content) {
-            $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(text);
+            let table = $('#' + table_id).DataTable();
+            table.cell( $('#' + $.escapeSelector(id)) ).data(text).invalidate();
+            table.responsive.rebuild();
+            table.responsive.recalc();
             console.log("Updating table because new cell data found: " + text + " for id " + id + ", old text: " + old_text);
             // $('#' + table_id).DataTable().draw(false);
           }

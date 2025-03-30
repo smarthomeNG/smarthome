@@ -34,6 +34,8 @@ from lib.utils import Utils
 from lib.logic import Logics
 from lib.plugin import Plugins
 from lib.scheduler import Scheduler
+from lib.constants import (DIR_ETC, DIR_LOGICS, DIR_TPL, BASE_LOGIC)
+
 from .rest import RESTResource
 
 
@@ -47,9 +49,10 @@ class LogicsController(RESTResource):
         self.base_dir = self._sh.get_basedir()
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
-        self.etc_dir = self._sh._etc_dir
+        self.etc_dir = self._sh.get_config_dir(DIR_ETC)
 
-        self.logics_dir = os.path.join(self.base_dir, 'logics')
+        self.logics_dir = self._sh.get_config_dir(DIR_LOGICS)
+        self.template_dir = self._sh.get_config_dir(DIR_TPL)
         self.logics = Logics.get_instance()
         self.logger.info("__init__ self.logics = {}".format(self.logics))
         self.plugins = Plugins.get_instance()
@@ -61,7 +64,6 @@ class LogicsController(RESTResource):
         self.logics_data = {}
 
         self.logics = Logics.get_instance()
-        return
 
 
     def get_body(self, text=False):
@@ -116,7 +118,6 @@ class LogicsController(RESTResource):
                         self.blockly_plugin_loaded = True
                 except:
                     pass
-        return
 
     def fill_logicdict(self, logicname):
         """
@@ -282,8 +283,7 @@ class LogicsController(RESTResource):
         """
         Get code of a logic from file
         """
-        config_filename = os.path.join(self.etc_dir, 'logic.yaml')
-        wrk = shyaml.yaml_load(config_filename)
+        wrk = shyaml.yaml_load(self._sh.get_config_file(BASE_LOGIC))
         logic_conf = wrk.get(logicname, {})
 
         if Utils.get_type(logic_conf.get('watch_item', None)) == 'str':
@@ -318,7 +318,6 @@ class LogicsController(RESTResource):
         f = open(pathname, 'w', encoding='UTF-8')
         f.write(logics_code)
         f.close()
-
         return True
 
 
@@ -331,7 +330,6 @@ class LogicsController(RESTResource):
         config_list.append(['enabled', False, ''])
         self.logics.update_config_section(True, logicname, config_list)
         #        self.logics.set_config_section_key(logicname, 'visu_acl', False)
-        return
 
 
     def get_logic_state(self, logicname):
@@ -347,6 +345,17 @@ class LogicsController(RESTResource):
         logic_status = {}
         logic_status['is_loaded'] = self.logics.is_logic_loaded(logicname)
         return json.dumps(logic_status)
+
+
+    def get_logic_template(self, logicname):
+        filename = os.path.join(self.template_dir, 'logic.tpl')
+        read_data = None
+        try:
+            with open(filename, encoding='UTF-8') as f:
+                read_data = f.read().replace('example_logic.py', logicname)
+        except Exception:
+            read_data = '#!/usr/bin/env python3\n' + '# ' + logicname + '\n\n'
+        return read_data
 
 
     def set_logic_state(self, logicname, action, filename):
@@ -403,9 +412,9 @@ class LogicsController(RESTResource):
                 self.logger.warning("LogicsController.set_logic_state(create): Logic name {} is already used".format(logicname))
                 return json.dumps({"result": "error", "description": "Logic name {} is already used".format(logicname)})
             else:
-                if not os.path.isfile(os.path.join(self.logics.get_logics_dir(), filename)):
+                if not os.path.isfile(os.path.join(self._sh.get_config_dir(DIR_LOGICS), filename)):
                     #create new logic code file, if none is found
-                    logics_code = '#!/usr/bin/env python3\n' + '# ' + filename + '\n\n'
+                    logics_code = self.get_logic_template(filename)
                     if not self.logic_create_codefile(filename, logics_code):
                         self.logger.error(f"Could not create code-file '{filename}'")
                         return json.dumps({"result": "error", "description": f"Could not create code-file '{filename}'"})
@@ -430,8 +439,7 @@ class LogicsController(RESTResource):
         #params = self.get_body()
         self.logger.info(f"LogicsController.save_logic_parameters: logic = {logicname}, params = {params}")
 
-        config_filename = os.path.join(self.etc_dir, 'logic')
-        logic_conf = shyaml.yaml_load_roundtrip(config_filename)
+        logic_conf = shyaml.yaml_load_roundtrip(self._sh.get_config_file(BASE_LOGIC))
         sect = logic_conf.get(logicname)
         if sect is None:
             response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(logicname)}
@@ -464,7 +472,7 @@ class LogicsController(RESTResource):
             self.logger.info("LogicsController.save_logic_parameters: logic = {}, neue params = {}".format(logicname, dict(sect)))
 
 
-            shyaml.yaml_save_roundtrip(config_filename, logic_conf, False)
+            shyaml.yaml_save_roundtrip(self._sh.get_config_file(BASE_LOGIC), logic_conf, False)
             response = {'result': 'ok'}
 
         return json.dumps(response)

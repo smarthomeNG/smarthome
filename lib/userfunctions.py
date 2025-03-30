@@ -27,11 +27,12 @@ import os
 import logging
 
 from lib.translation import translate
+from lib.constants import DIR_UF
 
 _logger = logging.getLogger(__name__)
 
 
-_uf_subdir = 'functions'
+_uf_subdir = DIR_UF
 
 _func_dir = None
 _sh = None
@@ -91,7 +92,10 @@ def init_lib(shng_base_dir=None, sh=None):
     else:
         base_dir = os.getcwd()
 
-    _func_dir = os.path.join(base_dir, _uf_subdir)
+    if _sh:
+        _func_dir = _sh.get_config_dir(DIR_UF)
+    else:
+        _func_dir = os.path.join(base_dir, _uf_subdir)
 
     user_modules = []
     if os.path.isdir(_func_dir):

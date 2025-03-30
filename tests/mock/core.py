@@ -16,7 +16,7 @@ from lib.shtime import Shtime
 from lib.module import Modules
 import lib.utils
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
+from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE, BASES, DIRS)
 
 from tests.common import BASE
 
@@ -59,6 +59,7 @@ class MockSmartHome():
     _base_dir = BASE
     base_dir = _base_dir     # for external modules using that var (backend, ...?)
     _default_language = 'de'
+    _default_logtext = None
 
     shng_status = {'code': 20, 'text': 'Running'}
 
@@ -80,6 +81,8 @@ class MockSmartHome():
 #    _items_dir = os.path.join(_base_dir, 'items'+os.path.sep)
     _logic_conf_basename = os.path.join(_etc_dir, 'logic')
     _logic_dir = os.path.join(_base_dir, 'tests', 'resources', 'logics'+os.path.sep)
+    # for now, later remove _logic_dir, see lib/smarthome.py
+    _logics_dir = _logic_dir
 #    _cache_dir = os.path.join(_var_dir,'cache'+os.path.sep)
     _log_conf_basename = os.path.join(_etc_dir, 'logging')
 #    _smarthome_conf_basename = None
@@ -179,6 +182,12 @@ class MockSmartHome():
     def set_defaultlanguage(self, language):
         self._default_language = language
 
+    def set_defaultlogtext(self, log_text):
+        self._default_logtext = log_text
+
+    def get_defaultlogtext(self):
+        return self._default_logtext
+
     def get_basedir(self):
         """
         Function to return the base directory of the running SmartHomeNG installation
@@ -215,6 +224,24 @@ class MockSmartHome():
         """
         return self._structs_dir
 
+
+    def get_logicsdir(self) -> str:
+        """
+        Function to return the logics config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._logic_dir
+
+
+    def get_functionsdir(self) -> str:
+        """
+        Function to return the userfunctions config directory
+
+        :return: Config directory as an absolute path
+        """
+        return self._functions_dir
+
     def get_vardir(self):
         """
         Function to return the var directory used by SmartHomeNG
@@ -234,6 +261,45 @@ class MockSmartHome():
         :rtype: str
         """
         return self._base_dir
+
+    def get_config_dir(self, config):
+        """
+        Function to return a config dir used by SmartHomeNG
+        replace / prevent a plethora of get_<foo>dir() functions
+
+        Returns '' for invalid config strings.
+
+        :return: directory as an absolute path
+        :rtype: str
+        """
+        # method would work fine without this check, but...
+        # make sure we don't allow "any" function call here
+        if config not in DIRS:
+            return ''
+
+        if hasattr(self, f'get_{config}dir'):
+            return getattr(self, f'get_{config}dir')()
+        elif hasattr(self, f'_{config}_dir'):
+            return getattr(self, f'_{config}_dir')
+        
+        return ''
+
+
+    def get_config_file(self, config, extension=YAML_FILE):
+        """
+        Function to return a config file used by SmartHomeNG
+
+        Returns '' for invalid config strings.
+
+        :return: file name as an absolute path
+        :rtype: str
+        """
+        # method would work fine without this check, but...
+        # make sure we don't allow "any" function call here
+        if config not in BASES:
+            return ''
+
+        return os.path.join(self.get_etcdir(), config + extension)
 
     def trigger(self, name, obj=None, by='Logic', source=None, value=None, dest=None, prio=3, dt=None):
         logger.warning('MockSmartHome (trigger): {}'.format(str(obj)))

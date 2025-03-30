@@ -42,7 +42,7 @@ import logging
 import os
 
 import lib.shyaml as shyaml
-from lib.constants import (YAML_FILE)
+from lib.constants import (YAML_FILE, BASE_HOLIDAY)
 #from lib.translation import translate
 from lib.translation import translate as lib_translate
 
@@ -252,7 +252,7 @@ class Shtime:
         """
         Returns the actual time in GMT
 
-        :return: Actual time in GMT
+        :return: Current time in GMT
         :rtype: datetime.datetime
         """
 
@@ -260,6 +260,20 @@ class Shtime:
         if self._utctz is None:
             self._utctz = tz.gettz('UTC')
         return datetime.datetime.now(self._utctz)
+
+
+    def utcfromtimestamp(self, ts):
+        """
+        Returns UTC datetime from unix timestamp
+
+        :param ts: unix timestamp
+        :type ts: int
+        :return: datetime object for given timestamp
+        :rtype: datetime.datetime
+        """
+        if self._utctz is None:
+            self._utctz = tz.gettz('UTC')
+        return datetime.datetime.fromtimestamp(ts, self._utctz)
 
 
     def utcinfo(self):
@@ -533,7 +547,7 @@ class Shtime:
         elif isinstance(key, datetime.date):
             key = datetime.datetime(key.year, key.month, key.day, 0, 0, 0)
         elif isinstance(key, int) or isinstance(key, float):
-            key = datetime.datetime.utcfromtimestamp(key)
+            key = self.utcfromtimestamp(key)
         elif isinstance(key, str):
             dayfirst = True
             yearfirst = False
@@ -1140,9 +1154,7 @@ class Shtime:
         """
 
         if self.holidays is None:
-            self._etc_dir = self._sh._etc_dir
-            conf_filename = os.path.join(self._sh._etc_dir, 'holidays'+YAML_FILE)
-            self.config = shyaml.yaml_load(conf_filename)
+            self.config = shyaml.yaml_load(self._sh.get_config_file(BASE_HOLIDAY))
             location = self.config.get('location', None)
 
             # prepopulate holidays for following years

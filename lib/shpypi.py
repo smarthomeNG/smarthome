@@ -335,6 +335,8 @@ class Shpypi:
         #req_files = Requirements_files(self.sh)
         self.req_files.set_conf_plugin_files(self._conf_plugin_filelist)
         self.req_files.create_requirementsfile('conf_all')
+        # clear list to prevent adding plugin requirements to base.txt
+        self.req_files.set_conf_plugin_files([])
 
         requirements_met = self.test_requirements(os.path.join(self._sh_dir, 'requirements', 'conf_all.txt'), True)
         if requirements_met:
@@ -379,6 +381,20 @@ class Shpypi:
                 pass
 
         return str(pip_command)
+
+
+    def create_pip_list(self, dest_file):
+        pip_command = self.get_pip_command()
+
+        command_line = pip_command +' list >' + dest_file
+        if logging:
+            self.logger.info('> '+command_line)
+        else:
+            #print('> ' + command_line)
+            pass
+        stdout, stderr = Utils.execute_subprocess(command_line)
+        return
+
 
     def install_requirements(self, req_type, logging=True, pip3_command=None):
         req_type_display = req_type
@@ -437,7 +453,7 @@ class Shpypi:
                     print()
                     print("Running in a virtual environment environment,")
                     print("installing "+req_type_display+" requirements only to current virtual environment, please wait...")
-                stdout, stderr = Utils.execute_subprocess('pip3 install -r '+req_filepath)
+                stdout, stderr = Utils.execute_subprocess(pip_command+' install -r '+req_filepath)
         if logging:
             self.logger.debug("stdout = 'Output from PIP command:\n{}'".format(stdout))
         if not logging:
@@ -476,7 +492,7 @@ class Shpypi:
         return False
 
 
-    def parse_requirementsfile(self, file_path):
+    def parse_requirementsfile(self, file_path) -> dict:
         """
         Parses the requirements file and returns the requirements as a dict
 
@@ -1006,13 +1022,62 @@ class Shpypi:
         reqs = requirement.split(',')
         for req in reqs:
             operator, version = self._split_operator(req)
-            if operator in ['>=', '==', '>']:
+            if operator in ['>=', '==']:
                 result['min'] = version
-            if operator in ['<', '<=', '==']:
+            if operator in ['<=', '==']:
                 result['max'] = version
+            if operator == '>':
+                result['min'] = self._get_bounding_version(version, above=True)
+            if operator == '<':
+                result['max'] = self._get_bounding_version(version, below=True)
 
         return result
 
+    def _get_bounding_version(self, version: str, below: bool = False, above: bool = False) -> str:
+        """
+        calculate bounding version number to store requirements like
+        version < 2.0 --> bounding version will be 1.999
+        version < 2.2.0 --> bounding version will be 2.1.999
+
+        If below == above, version is returned unchanged
+
+        :param version: version number
+        :param below: True means bounding version below given version
+        :param above: True means bounding version above given version
+        :type version: str
+        :type below: bool
+        :type above: bool
+
+        :return: modified version number
+        :rtype: str
+        """
+
+        def _to_num(vl: list) -> int:
+            """ convert version number in list form to 1000-based decimal """
+            vi = int(vl[0])
+            for d in vl[1:]:
+                vi = vi * 1000
+                vi = vi + int(d)
+            return vi
+
+        def _to_str(vi: int) -> str:
+            """ convert 1000-based decimal to reduced string """
+            vl = []
+            vs = str(vi)
+            while vs:
+                vl = [str(int(vs[-3:]))] + vl
+                vs = vs[:-3]
+            return ".".join(vl)
+
+        if above == below:
+            return version
+        vers_org = self._version_to_list(version)
+        vers_num = _to_num(vers_org)
+        if above:
+            vers_num += 1
+        if below:
+            vers_num -= 1
+        return _to_str(vers_num)
 
 
     def _compare_versions(self, vers1, vers2, operator):
@@ -1119,12 +1184,18 @@ class Requirements_files():
         if op_vers.startswith('>='):
             op = '>='
             vers = op_vers[2:]
+        elif op_vers.startswith('>'):
+            op = '>'
+            vers = op_vers[1:]
         elif op_vers.startswith('=='):
             op = '=='
             vers = op_vers[2:]
         elif op_vers.startswith('<='):
             op = '<='
             vers = op_vers[2:]
+        elif op_vers.startswith('<'):
+            op = '<'
+            vers = op_vers[1:]
         else:
             op = ''
             vers = op_vers
@@ -1303,6 +1374,9 @@ class Requirements_files():
             # Read requirements for userfunctions and logics
             self._user_files = self._get_filelist('functions')
             self._user_files += self._get_filelist('logics')
+
+        #self.logger.warning(f"_build_filelists: selection={selection=}\n- {self._module_files=}\n- {self._core_files=}\n- {self._plugin_files=}\n- {self._user_files=}\n- {self._plugin_files=}\n- {self._conf_plugin_files=}")
+
         return
 
 

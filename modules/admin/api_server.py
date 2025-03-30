@@ -30,6 +30,7 @@ from .rest import RESTResource
 import bin.shngversion
 import lib.daemon
 import lib.backup as backup
+from lib.constants import (DIR_ETC, DIR_MODULES)
 
 
 # ======================================================================
@@ -75,9 +76,8 @@ class ServerController(RESTResource):
         self.base_dir = self._sh.get_basedir()
         self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
-        self.etc_dir = self._sh._etc_dir
-        self.modules_dir = os.path.join(self.base_dir, 'modules')
-        return
+        self.etc_dir = self._sh.get_config_dir(DIR_ETC)  # not used?
+        self.modules_dir = self._sh.get_config_dir(DIR_ETC)  # not used?
 
 
     # ======================================================================
@@ -94,6 +94,9 @@ class ServerController(RESTResource):
         response = {}
         response['default_language'] = self._sh.get_defaultlanguage()
         response['client_ip'] = client_ip
+        http_user_dict = self.module.mod_http.get_user_dict()
+        response['login_required'] = http_user_dict.get('admin', {"password_hash": ""}).get("password_hash", "") != ""
+
         return json.dumps(response)
 
 
@@ -110,6 +113,17 @@ class ServerController(RESTResource):
 
         response = {}
         response['default_language'] = self._sh.get_defaultlanguage()
+        def_lang = response['default_language'].lower()
+        if def_lang == 'de':
+            response['locale'] = 'de-DE'
+        elif def_lang == 'en':
+            response['locale'] = 'en-GB'
+        elif def_lang == 'fr':
+            response['locale'] = 'fr-FR'
+        elif def_lang == 'es':
+            response['locale'] = 'es-ES'
+        else:
+            response['locale'] = ''
         response['fallback_language_order'] = self._sh._fallback_language_order
         response['client_ip'] = client_ip
         response['itemtree_fullpath'] = self.module.itemtree_fullpath

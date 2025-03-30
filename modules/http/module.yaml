@@ -86,6 +86,7 @@ parameters:
             fr: Numéro de port pour l'accès à l'interface web si utilisation de https
     use_tls:
         type: bool
+        gui_type: yes_no
         default: False
         description:
             de: Auf True setzen, um Zugriffe über https:// zu ermöglichen (Zertifikat muss installiert sein)
@@ -118,6 +119,7 @@ parameters:
 
     showpluginlist:
         type: bool
+        gui_type: yes_no
         default: True
         description:
             de: Anzeige einer Liste der Plugins mit Webinterfaces unter der url /plugins
@@ -126,6 +128,7 @@ parameters:
 
     showservicelist:
         type: bool
+        gui_type: yes_no
         default: False
         description:
             de: Anzeige einer Liste der Plugins mit Webservices unter der url /services
@@ -158,6 +161,7 @@ parameters:
 
     showtraceback:
         type: bool
+        gui_type: yes_no
         default: False
         description:
             de: Traceback bei Python Exceptions in der Fehlermeldung im Browser anzeigen. (Sollte in Produktionsinstallationen False sein)

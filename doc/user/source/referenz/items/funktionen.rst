@@ -15,19 +15,18 @@ genutzt werden können.
 +--------------------------------+--------------------------------------------------------------------------------+
 | **Funktion**                   | **Beschreibung**                                                               |
 +================================+================================================================================+
-| autotimer(time, value, compat) | Setzt einen Timer bei jedem Werte-Wechsel der Items. Angegeben wird die Zeit   |
+| autotimer(time, value)         | Setzt einen Timer bei jedem Werte-Wechsel der Items. Angegeben wird die Zeit   |
 |                                | (**time**) die vergehen soll, bis das Item auf den Wert (**value**) gesetzt    |
 |                                | wird. Die Zeitangabe erfolgt in Sekunden. Eine Angabe der Dauer in Minuten     |
-|                                | ist wie in '10m' möglich. Die Bedeutung und Wirkungsweise von **compat** bitte |
-|                                | auf der Seite                                                                  |
-|                                | :doc:`autotimer <./standard_attribute/autotimer>`                              |
-|                                | nachlesen.                                                                     |
+|                                | ist wie in '10m' möglich.                                                      |
 +--------------------------------+--------------------------------------------------------------------------------+
-| fade(end, step, delta)         | Blendet das Item mit der definierten Schrittweite (int oder float) und         |
-|                                | timedelta (int oder float in Sekunden) auf einen angegebenen Wert auf oder     |
-|                                | ab. So wird z.B.: **sh.living.light.fade(100, 1, 2.5)** das Licht im           |
+| fade(end, step, delta, caller, | Blendet das Item mit der definierten Schrittweite (int oder float) und         |
+|   stop_fade, continue_fade,    | timedelta (int oder float in Sekunden) auf einen angegebenen Wert auf oder     |
+|   instant_set, update)         | ab. So wird z.B.: **sh.living.light.fade(100, 1, 2.5)** das Licht im           |
 |                                | Wohnzimmer mit einer Schrittweite von **1** und einem Zeitdelta von **2,5**    |
-|                                | Sekunden auf **100** herunterregeln.                                           |
+|                                | Sekunden auf **100** herunter regeln. Bei manueller Änderung wird der Prozess  |
+|                                | gestoppt. Dieses Verhalten kann jedoch durch stop_fade oder continue_fade      |
+|                                | geändert werden. Genaueres dazu ist in den Beispielen unten zu finden.         |
 +--------------------------------+--------------------------------------------------------------------------------+
 | remove_timer()                 | Entfernen eines vorher mit der Funktion timer() gestarteten Timers ohne dessen |
 |                                | Ablauf abzuwarten und die mit dem Ablauf verbundene Aktion auszuführen.        |
@@ -38,10 +37,8 @@ genutzt werden können.
 | return_parent()                | Liefert den Item-Pfad des übergeordneten Items zurück.                         |
 |                                | Aufruf: sh.item.return_parent()                                                |
 +--------------------------------+--------------------------------------------------------------------------------+
-| timer(time, value, compat)     | Funktioniert wir **autotimer()**, ausser dass die Aktion nur einmal ausgeführt |
-|                                | wird. Die Bedeutung und Wirkungsweise von **compat** bitte auf der Seite       |
-|                                | :doc:`autotimer <./standard_attribute/autotimer>`                              |
-|                                | nachlesen.                                                                     |
+| timer(time, value)             | Funktioniert wir **autotimer()**, ausser dass die Aktion nur einmal ausgeführt |
+|                                | wird.                                                                          |
 +--------------------------------+--------------------------------------------------------------------------------+
 
 
@@ -135,7 +132,37 @@ Die folgende Beispiel Logik nutzt einige der oben beschriebenen Funktionen:
    sh.item.autotimer()
 
    # will in- or decrement the living room light to 100 by a stepping of ``1`` and a timedelta of ``2.5`` seconds.
+   # As soon as the item living.light gets changed manually, the fader stops.
    sh.living.light.fade(100, 1, 2.5)
+
+Die folgenden Beispiele erläutern die fade-Funktion im Detail. stop_fade und continue_fade werden als
+reguläre Ausdrücke angegeben/verglichen (case insensitive).
+Beispiel 1: Der Fade-Prozess wird nur gestoppt, wenn ein manueller Item-Wert über das Admin-Interface
+eingegeben wurde. Wird das Item von einem anderen Caller aktualisiert, wird normal weiter gefadet.
+Beispiel 2: Der Fade-Prozess wird durch sämtliche manuelle Item-Änderungen gestoppt, außer die Änderung
+kommt von einem Caller, der "KNX" beinhaltet.
+Beispiel 3: Der Fade-Prozess wird bei jeder manuellen Item-Änderung gestoppt. Die erste Wertänderung
+findet erst nach Ablauf der delta Zeit statt, in dem Fall wird der Wert also (erst) nach 2,5 Sekunden um 1 erhöht/verringert.
+Beispiel 4: Wird die Fade-Funktion für das gleiche Item erneut mit anderen Werten aufgerufen und
+der update Parameter ist auf True gesetzt, dann wird das Fading "on the fly" den neuen Werten angepasst.
+So könnte während eines Hochfadens durch Setzen eines niedrigeren Wertes der Itemwert direkt abwärts gefadet werden.
+Auch die anderen Parameter werden für den aktuellen Fade-Vorgang überschrieben/aktualisiert.
+
+   .. code-block:: python
+      :caption:  logics/fading.py
+
+      # erstes Beispiel
+      sh.living.light.fade(100, 1, 2.5, stop_fade=["admin:*"])
+
+      # zweites Beispiel
+      sh.living.light.fade(100, 1, 2.5, continue_fade=["KNX"])
+
+      # drittes Beispiel
+      sh.living.light.fade(100, 1, 2.5, instant_set=False)
+
+      # viertes Beispiel
+      sh.living.light.fade(100, 1, 2.5, update=True)
+      sh.living.light.fade(5, 2, 5.5, update=True)
 
 Der folgende Beispiel eval Ausdruck sorgt dafür, dass ein Item den zugewiesenen Wert nur dann übernimmt,
 wenn die Wertänderung bzw. das Anstoßen der eval Funktion über das Admin Interface erfolgt ist und das
