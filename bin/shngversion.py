@@ -110,8 +110,9 @@ from lib.utils import Version
 # Update auf 1.10.0.3  wg. smartplugin: Added support for suspend/resume and functions for pause_item
 
 # Update auf 1.11.0    wg. Release
-shNG_version = '1.11.0'
-shNG_branch = 'master'
+# Update auf 1.10.0.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.11.0 Release"
+shNG_version = '1.11.0.1'
+shNG_branch = 'develop'
 shNG_releasedate = '30. März 2025'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
 # ---------------------------------------------------------------------------------
