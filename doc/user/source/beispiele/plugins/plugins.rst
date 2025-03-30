@@ -2,9 +2,9 @@
 .. index:: Tipps & Tricks; Plugins
 .. index:: Plugins; Tipps & Tricks
 
-=======
-Plugins
-=======
+==========================
+Plugins :greensup:`Update`
+==========================
 
 Hier finden sich einige Tipps & Tricks zu Plugins.
 
