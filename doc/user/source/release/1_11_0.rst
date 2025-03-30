@@ -1,17 +1,18 @@
 =============================
-Release 1.11.0 - tt. mmm 2025
+Release 1.11.0 - 30. Mär 2025
 =============================
-
-Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
-sowie einige neue Plugins.
 
 .. only: comment
 
-    Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+    Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
+    sowie einige neue Plugins.
+
+Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
 |
 
-.. only:: develop_branch
+.. only: comment
+    .. only:: develop_branch
 
     .. note::
 
@@ -37,13 +38,13 @@ Die absolute Minimum Python Version in der SmartHomeNG startet, ist **Python 3.8
 Bereits für das SmartHomeNG Release 1.10 wurde die absolute Minimum Python Version auf **Python 3.8** angehoben, da der
 Community Support für Python 3.7 am 27. Juni 2023 endete.
 
-Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Versionen (3.10 oder 3.11) aufzusetzen.
+Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Versionen (3.11 oder 3.12) aufzusetzen.
 
 
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.11.0 ist **Python 3.10**.
+Offiziell unterstützt werden im SmartHomeNG Release 1.11.0 die Python Versionen 3.10, 3.11 und 3.12.
 Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
 (Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
 zu unterstützten Python Versionen)
@@ -93,14 +94,6 @@ Updates in the CORE
     * Bumped core version to 1.10.0.3 -> Added support for suspend/resume and functions for pause_item
 
 
-
-* Items:
-
-  * ...
-
-* Logics:
-
-  * ...
 
 * Libs:
 
@@ -328,10 +321,6 @@ Updates in the CORE
     * Fix item access for smartvisu protocol
     * Requirements: Limit websocket version to prevent error due to incompatible changes in websocket lib with version 13.0
     * Fix smartvisu item monitoring
-
-* Plugins:
-
-  * ...
 
 * tests:
 
