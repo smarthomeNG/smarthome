@@ -38,7 +38,7 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.9.3.5**
- - Minimum Python Version: **3.8**
+ - Minimum Python Version: **3.9**
 
 Konfiguration
 =============
@@ -93,6 +93,15 @@ Optimierung der gesetzen als Plugin-Parameter oder/und Item-Attribute gesetzten 
 
  - Datentyp: **bool**
  - Standardwert: **True**
+
+
+pause_item
+==========
+
+
+Item, um die Ausführung des Plugins zu steuern
+
+ - Datentyp: **str**
 
 
 startup_run_delay

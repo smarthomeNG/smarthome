@@ -23,8 +23,6 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **web Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
-
 
 
 Beschreibung
@@ -39,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.8.0**
+ - Minimum SmartHomeNG Version: **1.10.0**
 
 Konfiguration
 =============
@@ -60,7 +58,7 @@ azimuth
 =======
 
 
-Azimutwinkel der Panelausrichtung (-180 bis 180 Grad). 0 Grad entspricht Süden
+Azimutwinkel der Panelausrichtung (-180 bis 180 Grad). 0 Grad entspricht Süden, (-180 = north, -90 = east, 0 = south, 90 = west, 180 = north)
 
  - Datentyp: **num**
 
@@ -95,7 +93,6 @@ latitude
 (Optional) Breitengrad der Solaranlage in dezimalen Grad
 
  - Datentyp: **num**
- - Standardwert: **0.0**
 
  - Minimalwert: **-90**
  - Maximalwert: **90**
@@ -107,7 +104,6 @@ longitude
 (Optional) Längengrad der Solaranlage in dezimalen Grad.
 
  - Datentyp: **num**
- - Standardwert: **0.0**
 
  - Minimalwert: **-180**
  - Maximalwert: **180**
@@ -138,7 +134,7 @@ solarforecast_attribute
 =======================
 
 
-Solarforecast Attribute: Vorhersage Energie in Wh morgen Vorhersage Energie in Wh heute Datum morgen Datum heute
+Solarforecast Attribute: Vorhersage Energie in Wh morgen Vorhersage Energie in Wh heute Datum morgen Datum heute stündliche Vorhersage und Leistungchecks
 
  - Datentyp: **str**
 
@@ -148,6 +144,7 @@ Solarforecast Attribute: Vorhersage Energie in Wh morgen Vorhersage Energie in W
    - **energy_today**
    - **date_tomorrow**
    - **date_today**
+   - **watts_hourly**
 
 
 ===============
@@ -166,6 +163,33 @@ Plugin Functions
 
 Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
 
-**Keine**
+
+is_power_available(power, hours=2)
+==================================
+
+
+Prüft, ob die angegebene Leistung für die angegebene Zahl an Stunden voraussichtlich erreicht wird
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+power
+-----
+
+Geforderte Leistung in Watt
+
+ - Datentyp: **int**
+
+ - Minimalwert: **0**
+
+hours
+-----
+
+Geforderte Anzahl an Stunden ab jetzt bzw. der nächsten vollen Stunde
+
+ - Datentyp: **int**
+ - Standardwert: **2**
+
+ - Minimalwert: **1**
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

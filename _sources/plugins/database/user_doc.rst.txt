@@ -226,13 +226,13 @@ Datenbankfunktionen für Datenreihen/Plots
 Nachfolgende Tabelle zeigt die implementierten Datenbankfunktionen für Plots. Die Funktionen werden dabei auf die verfügbaren Datenbankwerte eines bestimmten Intervalls, definiert
 mit t_start und t_end, ausgeführt und liefern Datenreihen zurück.
 
-=============== ================================================================
+=============== =====================================================================
 Funktion                Bedeutung
-=============== ================================================================
+=============== =====================================================================
 avg                  Mittelwert       
 integrate            Diskretes Integral der Werte über der Zeit
 differentiate        Diskretes Differential der Werte über der Zeit
-diff                 Differenz zu dem vorherigen Wert
+diff                 Differenz zu dem vorherigen Wert, funktioniert nur bei Monotonie
 duration             Dauer des Wertes
 count                Anzahl aller Werte, die eine bestimmte Bedingung erfüllen
 countall             Anzahl aller Werte
@@ -241,7 +241,7 @@ max                  Maximalwert
 on                   Prozentzahl der Werte > 0
 sum                  Summe der Werte
 raw                  Rohwerte ohne Berechnung
-=============== ================================================================
+=============== =====================================================================
 
 Über das SmartVisu Widget plot.period können die genannten Datenbankfunktionen genutzt werden, um Plots der Werte zu erstellen. 
 Beispiele finden sich in der SmartVisu Dokumentation unter plot.period.
@@ -263,7 +263,7 @@ count                   Anzahl aller Werte, die eine bestimmte Bedingung erfüll
 countall                Anzahl aller Werte
 min                     Minimalwert
 max                     Maximalwert
-diff                    Differenz 
+diff                    Differenz, funktioniert nur bei Monotonie
 on                      Prozentzahl der Werte > 0
 sum                     Summe aller Werte
 raw                     Rohwerte

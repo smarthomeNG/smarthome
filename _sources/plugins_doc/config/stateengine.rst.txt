@@ -277,6 +277,16 @@ Das global angegebene Loglevel kann für jedes SE item individuell überschriebe
  - Datentyp: **foo**
 
 
+se_name
+=======
+
+
+**Zustandsname, überschreibt den im Attribut "name" angegebene Wert**
+Dies kann beispielsweise nützlich sein, um den Namen abhängig von einer Bedingungsgruppe zu ändern.
+
+ - Datentyp: **str**
+
+
 se_plugin
 =========
 

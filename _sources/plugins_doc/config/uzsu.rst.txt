@@ -66,6 +66,16 @@ Standardmaximalalter eines UZSU Eintrags in Minuten, um beim Plugin-Start versä
 
  - Minimalwert: **0**
 
+ignore_once_entries
+===================
+
+
+Falls False, werden Einträge, die durch "Once" heute inaktiv geschaltet wurden, für eine etwaige Interpolation oder Berechnung des letzten Werts herangezogen.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
 interpolation_interval
 ======================
 
@@ -160,51 +170,88 @@ Plugin Functions
 Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
 
 
-activate()
-==========
+activate(activevalue, item)
+===========================
 
 
-Abfrage oder Setzen, ob die uzsu aktiv ist oder nicht.
- - Leer: Abfrage
- - True: aktivieren
- - False: deaktivieren
-
+Abfrage oder Setzen, ob die UZSU aktiv ist oder nicht.
 
  - Ergebnistyp der Funktion: **bool**
 
 
-clear()
-=======
+activevalue
+-----------
+
+Abfragen oder Setzen des UZSU Status
+
+ - Datentyp: **foo**
+
+ - Mögliche Werte:
+
+   - **None** |_| - |_| Abfrage
+   - **True** |_| - |_| Aktivieren
+   - **False** |_| - |_| Deaktivieren
+
+
+item
+----
+
+Das Item-Objekt
+
+ - Datentyp: **foo**
+
+
+clear(clear, item)
+==================
 
 
 Löschen der UZSU Einträge eines Items.
- - Leer: nichts ausführen
+ - Leer/False: nichts ausführen
  - True: löschen
 
 
  - Ergebnistyp der Funktion: **bool**
 
 
-interpolation(type= 'none', interval=5, backintime=0)
-=====================================================
+clear
+-----
+
+True, um die UZSU Einträge zu löschen.
+
+ - Datentyp: **bool**
 
 
-Abfrage (leerer Parameter) oder Setzen der Interpolationseinstellungen
+item
+----
+
+Das Item-Objekt
+
+ - Datentyp: **foo**
+
+
+interpolation(intpl_type=None, interval=5, backintime=0)
+========================================================
+
+
+Abfrage oder Setzen der Interpolationseinstellungen
 
  - Ergebnistyp der Funktion: **dict**
 
 
-type
-----
+intpl_type
+----------
 
-Interpolationstyp:
- - linear: konstant gleiche Zwischenberechnung
- - cubic: Spline-Interpolation mit verzögertem Start und sanftem Verlangsamen
- - none: keine Interpolation
+Interpolationstyp
 
+ - Datentyp: **foo**
+ - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **none**
+ - Mögliche Werte:
+
+   - **None** |_| - |_| Abfrage
+   - **linear** |_| - |_| konstant gleiche Zwischenberechnung
+   - **cubic** |_| - |_| Spline-Interpolation mit verzögertem Start und sanftem Verlangsamen
+   - **none** |_| - |_| keine Interpolation
 
 
 interval
@@ -215,6 +262,7 @@ Intervall in Minuten, in dem der interpolierte Wert aktualisiert werden soll
  - Datentyp: **int**
  - Standardwert: **5**
 
+ - Minimalwert: **1**
 
 backintime
 ----------
@@ -224,12 +272,42 @@ Maximales Alter eines UZSU Eintrags in Minuten, um beim Plugin-Start versäumte 
  - Datentyp: **int**
  - Standardwert: **0**
 
+ - Minimalwert: **0**
 
-lastvalue(by= 'None')
-=====================
+itpl(clear=False, item)
+=======================
 
 
-Abfrage des zuletzt gesetzten Werts. Kann z.B. beim Aktivieren der UZSU genutzt werden, um sofort auf den gewünschten Wert zu schalten.
+Löschen oder Abrufen der internen Interpolationswerte.
+ - Leer/False: Internes Dictionary mit Interpolationswerten
+ - True: löschen
+
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+clear
+-----
+
+Löschen oder nicht
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+item
+----
+
+Das Item-Objekt
+
+ - Datentyp: **foo**
+
+
+lastvalue(by= 'None', item)
+===========================
+
+
+Abfrage des zuletzt gesetzten/evaluierten Werts. Kann z.B. beim Aktivieren der UZSU genutzt werden, um sofort auf den gewünschten Wert zu schalten.
 
  - Ergebnistyp der Funktion: **foo**
 
@@ -243,8 +321,16 @@ Für eine entsprechende Info im Logfile kann hier z.B. der Itemname, der den Wer
  - Standardwert: **None**
 
 
-planned()
-=========
+item
+----
+
+Das Item-Objekt
+
+ - Datentyp: **foo**
+
+
+planned(item)
+=============
 
 
 Abfrage des nächsten Aktualisierungszeitpunkts. Ist keine Aktualisierung geplant, z.B. weil das UZSU Item nicht aktiviert ist, wird None zurückgegeben, ansonsten ein Dictionary mit den Einträgen Zeit und Wert.
@@ -252,13 +338,65 @@ Abfrage des nächsten Aktualisierungszeitpunkts. Ist keine Aktualisierung geplan
  - Ergebnistyp der Funktion: **dict**
 
 
-resume()
-========
+item
+----
+
+Das Item-Objekt
+
+ - Datentyp: **foo**
+
+
+resume(activevalue, item)
+=========================
 
 
 Fortsetzen der UZSU Evaluierung: Aktivieren des Items und Setzen des zuletzt festgelegten Wertes.
 
  - Ergebnistyp der Funktion: **foo**
+
+
+activevalue
+-----------
+
+True, um die UZSU fortzusetzen; False, um sie zu pausieren
+
+ - Datentyp: **bool**
+
+
+item
+----
+
+Das Item-Objekt
+
+ - Datentyp: **foo**
+
+
+set_activetoday(set, item)
+==========================
+
+
+Setzen der activeToday Einträge eines Items.
+ - False: Setzen der Einträge auf False, praktisch ein Reset
+ - True: Setzen der Einträge auf True - im Normalfall nicht hilfreich, lediglich für Debuggingzwecke
+
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+set
+---
+
+True, um die activeToday Einträge zu aktivieren, False um sie zu deaktivieren/zurückzusetzen.
+
+ - Datentyp: **bool**
+
+
+item
+----
+
+Das Item-Objekt
+
+ - Datentyp: **foo**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

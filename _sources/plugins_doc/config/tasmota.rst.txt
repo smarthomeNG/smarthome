@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.3**
+ - Minimum SmartHomeNG Version: **1.10.0.3**
 
 Konfiguration
 =============
@@ -107,6 +107,18 @@ Zu lesendes/schreibendes Attribut des Tasmota Devices. Achtung: Nicht jedes Attr
  - Datentyp: **str**
  - Standardwert: **relay**
 
+
+tasmota_button
+==============
+
+
+Nummer der gedrückten Taste im Tasmota Device
+
+ - Datentyp: **int**
+ - Standardwert: **1**
+
+ - Minimalwert: **1**
+ - Maximalwert: **4**
 
 tasmota_relay
 =============

@@ -19,8 +19,8 @@ Zurzeit werden folgende Shelly Devices mit Gen1 API im **Backward-Compatibility 
 - Shelly Flood
 - Shelly Door/Window 2
 
-Diese Devices werden konfiguriert, wie es bis zur Version 1.2.0 des shally Plugins üblich war (durch Angabe der
-Attributee ``shelly_id``, ``shelly_type`` und ``shelly_attr``). So konfigurierte Items sind im internen Handling
+Diese Devices werden konfiguriert, wie es bis zur Version 1.2.0 des shelly Plugins üblich war (durch Angabe der
+Attribute ``shelly_id``, ``shelly_type`` und ``shelly_attr``). So konfigurierte Items sind im internen Handling
 kompatibel zur alten Version des Plugins.
 
 Es werden dabei alle Relays eines Shelly Devices (bis zu 4) unterstützt. Weiterhin werden die folgenden
@@ -46,15 +46,18 @@ sowie der online-Status.
 Aktueller Konfigurations Modus
 ------------------------------
 
-Weitere Gen1 Devices werden unterstützt, wenn Sie analog zu Gen2 Devices konfiguriert werden. Dieser Modus ist
+Weitere Gen1 Devices werden unterstützt, wenn sie analog zu Gen2 Devices konfiguriert werden. Dieser Modus ist
 für Gen1 Devices noch experimentell.
 
-Devices mit dem Gen2 API werden **ohne** Angabe von ``shelly_type`` konfiguriert. Die Information über den Typ des
-Devices erhält das Plugin vpm Device.
+Devices mit dem Gen2 und Gen3 API werden **ohne** Angabe von ``shelly_type`` konfiguriert. Die Information über den Typ des
+Devices erhält das Plugin vom Device.
 
-...
+Es wird eine große Anzahl von Shelly Devices mit Gen3 API unterstützt. Getestet wurden bisher
+folgenden Gen3 Devices:
 
-Es wird eine große Anzahl von Shelly Devices mit Gen2 API unterstützt. Getestet wurde es allerdings nur mit
+- Shelly Mini1G3
+
+Es wird eine große Anzahl von Shelly Devices mit Gen2 API unterstützt. Getestet wurden bisher
 folgenden Gen2 Devices:
 
 - Shelly Plus Plug S
@@ -63,7 +66,7 @@ folgenden Gen2 Devices:
 - Shelly Plus Add-On (getestet am Shelly Plus 2PM)
 
 Es wird Anzahl von Shelly Devices mit Gen1 API im experimentellen Modus (konfiguriert analog zu Gen2 Devices)
-unterstützt. Getestet wurde es allerdings bisher nur mit folgenden Gen1 Devices:
+unterstützt. Getestet wurden bisher folgenden Gen1 Devices:
 
 - Shelly Plug S
 - Shelly Button1
@@ -74,9 +77,9 @@ Unterschiede zwischen Plugin Modi
 ---------------------------------
 
 Das Attribut ``online`` wird durch das Plugin im Modus für Gen2 Devices nicht durchgehend unterstützt. Das Attribut ist
-auf den verschiedenen Shelly Devices zu unterschiedlich implementiert, als das es sinnvoll genutzt werden könnte.
-Einige batterie betriebene Devices melden ``online``=False bevor sie sich schlafen legen, andere lassen den Status
-auf True. Andere Decives hingegen haben den ``online`` Status gar nicht implementiert.
+auf den verschiedenen Shelly Devices zu unterschiedlich implementiert, als dass es sinnvoll genutzt werden könnte.
+Einige batteriebetriebene Devices melden ``online`` = False bevor sie sich schlafen legen, andere lassen den Status
+auf True. Andere Devices hingegen haben den ``online`` Status gar nicht implementiert.
 
 Im **Backward-Compatibility Mode** für Gen1 Devices steht das ``online`` Attribut (falls es im Plugin
 v1.20 implementiert war) weiterhin zur Verfügung.
@@ -114,7 +117,7 @@ Ermitteln der unterstützten Status Attribute
 Um die Attribute zu ermitteln, die ein Shelly Device sendet (also Attribute, die einen Status des Devices übermitteln),
 muss folgendermaßen vorgegangen werden:
 
-- Ein Item konfigurieren, welches nur die folgenden zwei Attribute bsitzt:
+- Ein Item konfigurieren, welches nur die folgenden zwei Attribute besitzt:
 
 .. code-block:: yaml
 
@@ -125,11 +128,11 @@ muss folgendermaßen vorgegangen werden:
 Außerdem muß der Logger **plugins.shelly** auf den Level INFO konfiguriert werden. Anschließend werden dann die
 Attribute, wenn sie vom Shelly Device gesendet werden, in das **smarthome-details.log** geschrieben.
 Die Logeinträge enthalten den Namen des Attributes, optional den Namen der Gruppe und den Typ, den das SmartHomeNG Item
-haben muß. Falls der Typ **num** ist, wird als Zusatzinfo geloggt, ob der vom Device gelieferte Wert in Integer oder
+haben muß. Falls der Typ **num** ist, wird als Zusatzinfo geloggt, ob der vom Device gelieferte Wert ein Integer oder
 ein Float Wert ist.
 
-Das kann einige Zeit in Anspruch nehmen, da die Devices nicht ständig alle Attribute senden und einige Batterie
-betriebene Devices zum Teil mehrere Stunden schweigen (z.B.Shelly Plus H&T), oder wie der Shelly Button1 nur senden,
+Das kann einige Zeit in Anspruch nehmen, da die Devices nicht ständig alle Attribute senden und einige batteriebetriebene
+Devices zum Teil mehrere Stunden schweigen (z.B.Shelly Plus H&T), oder wie der Shelly Button1 nur senden,
 wenn der Button gedrückt wird.
 
 Einige Devices senden den Status eines Attributes auch nur bei einer Änderung des Zustandes

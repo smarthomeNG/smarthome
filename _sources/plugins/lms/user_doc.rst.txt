@@ -53,28 +53,39 @@ Struct Vorlagen
 
 Der Itembaum sollte jedenfalls über die structs Funktion eingebunden werden. Mittels `ALL`
 werden die Ebenen Server, Database und Player unter dem selben Hauptitem angelegt, was aber
-nur in den seltensten Fällen Sinn machen dürfte. Stattdessen sollte ein einzigartiges Item für
-`lms.server` und `lms.database` angelegt werden. Das struct `lms.player` wird dann
-pro Abspielgerät genutzt, wobei hier wichtig ist, mittels `lms.sqb_custom1` die MAC Adresse
+nur in den seltensten Fällen Sinn machen dürfte.
+Stattdessen sollte ein einzigartiges Item für
+`lms.server` und `lms.database` angelegt werden. Es gibt noch ein optionales Struct namens `lms.server_plugins`.
+
+Das struct `lms.player` (sowie das optionale `lms.player_plugins`) wird dann
+pro Abspielgerät genutzt, wobei hier wichtig ist, mittels `lms.lms_custom1` die MAC Adresse
 des Players mit anzugeben.
+
+In Version 2.0.0 wurde die interne Struktur der Structs etwas abgeändert, weshalb Zugriffe auf die Items in
+der Visu, in Logiken, etc. angepasst werden müssen. Außerdem wurde der `sqb_` Prefix durch `lms_` ersetzt.
 
 .. code-block:: yaml
 
     # items/my.yaml
     squeezebox:
       struct:
-        - sdp_squeezebox.database
-        - sdp_squeezebox.server
+        - lms.database
+        - lms.server
+        #- lms.server_plugins
 
     squeezebox_player1:
-        sqb_custom1: <MAC Adresse>
+        lms_custom1: <MAC Adresse>
 
-        struct: sdp_squeezebox.player
+        struct:
+          - lms.player
+          - lms.player_plugins
 
     squeezebox_player2:
-        sqb_custom1: <MAC Adresse>
+        lms_custom1: <MAC Adresse>
 
-        struct: sdp_squeezebox.player
+        struct:
+          - lms.player
+          - lms.player_plugins
 
 
 Kommandos

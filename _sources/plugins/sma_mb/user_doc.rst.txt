@@ -23,7 +23,7 @@ Notwendige Software
 
 Folgende Python Packages werden benötigt:
 
-* pymodbus >= 2.5.3
+* pymodbus >= 3.5.2
 
 
 Unterstützte Geräte

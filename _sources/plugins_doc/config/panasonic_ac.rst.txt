@@ -1,0 +1,146 @@
+.. |_| unicode:: 0xA0
+
+
+===================================
+Plugin 'panasonic_ac' Konfiguration
+===================================
+
+
+.. index:: Plugins; panasonic_ac Konfiguration
+
+.. image:: /plugins/panasonic_ac/webif/static/img/plugin_logo.jpg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **panasonic_ac** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Ansteuerung von Panasonic Klimaanlagen über die Panasonic Comfort Cloud
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.10.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **panasonic_ac** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Poll Cycle
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+password
+========
+
+
+Login Password für die Panasonic Comfort Cloud
+
+ - Datentyp: **str**
+
+
+username
+========
+
+
+Login name für die Panasonic Comfort Cloud
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+pcc_index
+=========
+
+
+Index der anzusteuernden Klimaanlage
+
+ - Datentyp: **str**
+
+
+pcc_parameter
+=============
+
+
+Parameter der über pcc_index gewählten Klimaanlage
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **name**
+   - **temperatureInside**
+   - **temperatureOutside**
+   - **temperature**
+   - **power**
+   - **mode**
+   - **fanSpeed**
+   - **airSwingHorizontal**
+   - **airSwingVertical**
+   - **eco**
+   - **nanoe**
+   - **connected**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

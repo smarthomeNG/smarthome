@@ -37,7 +37,8 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.5**
+ - Minimum SmartHomeNG Version: **1.10**
+ - Minimum Python Version: **3.6**
 
 Konfiguration
 =============
@@ -102,6 +103,15 @@ Mitteilung die der Telegram Benutzer erhält, weil der chat id keine Schreibrech
 
  - Datentyp: **str**
  - Standardwert: **This bot knows your chat id but you are not allowed to use this bot to write to items**
+
+
+pause_item
+==========
+
+
+Item, um die Ausführung des Plugins zu steuern
+
+ - Datentyp: **str**
 
 
 pretty_thread_names

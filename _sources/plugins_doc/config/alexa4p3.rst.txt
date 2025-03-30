@@ -112,9 +112,9 @@ alexa_color_temp_delta
 ======================
 
 
+Wert in Kelvin um den ein Tunable White Licht wärmer / kälter gestellt werden soll - Bsp.: 2200
 
-
- - Datentyp: **str**
+ - Datentyp: **num**
 
 
 alexa_color_value_type
@@ -202,9 +202,9 @@ alexa_range_delta
 =================
 
 
+Wert für das Stufenweise erhöhen eines Range-Controllers - z.b. Rolladen fahre hoch  - Wert von range_delta wird verwendet
 
-
- - Datentyp: **str**
+ - Datentyp: **num**
 
 
 alexa_retrievable

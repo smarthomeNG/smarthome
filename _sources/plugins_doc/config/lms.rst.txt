@@ -30,7 +30,7 @@ Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 Beschreibung
 ============
 
-
+Logitech Mediaserver
 
 
 Anforderungen
@@ -76,36 +76,6 @@ Automatisches Neuverbinden bei Abbruch
  - Standardwert: **True**
 
 
-command_class
-=============
-
-
-Klasse für Verarbeitung von Kommandos
-
- - Datentyp: **str**
- - Standardwert: **SDPCommandParseStr**
-
- - Mögliche Werte:
-
-   - **SDPCommand**
-   - **SDPCommandParseStr**
-
-
-conn_type
-=========
-
-
-Verbindungstyp
-
- - Datentyp: **str**
- - Standardwert: **net_tcp_client**
-
- - Mögliche Werte:
-
-   - 
-   - **net_tcp_client**
-
-
 connect_cycle
 =============
 
@@ -124,6 +94,16 @@ Anzahl Verbindungsversuche
 
  - Datentyp: **num**
  - Standardwert: **5**
+
+
+delay_initial_read
+==================
+
+
+Warte nach Verbindungsaufbau mit dem Abfragen von Werten
+
+ - Datentyp: **num**
+ - Standardwert: **0**
 
 
 host
@@ -155,6 +135,15 @@ Vererbung von "custom" Itemattributen an untergeordnete Items aktivieren
  - Standardwert: **True**
 
 
+resume_initial_read
+===================
+
+
+Bei resume vom Plugin erstmaliges Lesen erneut durchführen
+
+ - Datentyp: **bool**
+
+
 retry_cycle
 ===========
 
@@ -174,6 +163,29 @@ Anzahl von Durchgängen vor Verbindungsabbruch oder Suspend-Modus
  - Datentyp: **num**
  - Standardwert: **3**
 
+
+send_retries
+============
+
+
+Anzahl Sendeversuche
+ Kommt keine (passende) Antwort nach dem Senden  eines Commands zurück, wird das Kommando nochmals  gesendet, sofern der Wert über 0 liegt.
+
+ - Datentyp: **num**
+ - Standardwert: **0**
+
+
+send_retries_cycle
+==================
+
+
+Pause zwischen Durchgängen von Sendeversuchen
+ Sind Send Retries aktiv, wird ein Scheduler erstellt,  der im angegebenen Sekundentakt Kommandos erneut sendet,  zu denen keine (passenden) Antworten erhalten wurden.
+
+ - Datentyp: **num**
+ - Standardwert: **1**
+
+ - Minimalwert: **1**
 
 suspend_item
 ============
@@ -231,7 +243,7 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
-sqb_command
+lms_command
 ===========
 
 
@@ -240,7 +252,7 @@ Legt das angegebene Kommando für das Item fest
  - Datentyp: **str**
 
 
-sqb_custom1
+lms_custom1
 ===========
 
 
@@ -249,16 +261,16 @@ MAC-Adresse des Wiedergabegerätes
  - Datentyp: **str**
 
 
-sqb_lookup
+lms_lookup
 ==========
 
 
-Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.   Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art der Tabelle ausgewählt werden: - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard) - rev liefert die Tabelle SmartHomeNG -> Gerät - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
+Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim  Start einmalig als dict oder list in das Item geschrieben.    Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art  der Tabelle ausgewählt werden:  - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard)  - rev liefert die Tabelle SmartHomeNG -> Gerät  - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben  - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
 
  - Datentyp: **str**
 
 
-sqb_read
+lms_read
 ========
 
 
@@ -267,7 +279,7 @@ Item liest/erhält Werte vom Gerät
  - Datentyp: **bool**
 
 
-sqb_read_cycle
+lms_read_cycle
 ==============
 
 
@@ -276,7 +288,7 @@ Konfiguriert ein Intervall in Sekunden für regelmäßiges Lesen
  - Datentyp: **num**
 
 
-sqb_read_group
+lms_read_group
 ==============
 
 
@@ -285,16 +297,16 @@ Weist das Item der angegebenen Gruppe zum gesammelten Lesen zu. Mehrere Gruppen 
  - Datentyp: **list(str)**
 
 
-sqb_read_group_trigger
+lms_read_group_trigger
 ======================
 
 
-Wenn diesem Item ein beliebiger Wert zugewiesen wird, werden alle zum Lesen konfigurierten Items der angegebenen Gruppe neu vom Gerät gelesen, bei Gruppe 0 werden alle zum Lesen konfigurierten Items neu gelesen. Das Item kann nicht gleichzeitig mit sqb_command belegt werden.
+Wenn diesem Item ein beliebiger Wert zugewiesen wird, werden alle zum Lesen konfigurierten Items der angegebenen Gruppe neu vom Gerät gelesen, bei Gruppe 0 werden alle zum Lesen konfigurierten Items neu gelesen. Das Item kann nicht gleichzeitig mit lms_command belegt werden.
 
  - Datentyp: **str**
 
 
-sqb_read_initial
+lms_read_initial
 ================
 
 
@@ -303,7 +315,16 @@ Legt fest, dass der Wert beim Start vom Gerät gelesen wird
  - Datentyp: **bool**
 
 
-sqb_write
+lms_valid_list
+==============
+
+
+Kommando, das eine valid_list(_re/_ci) definiert hat. Der Inhalt dieses Items ersetzt die Liste des entsprechenden Befehls.
+
+ - Datentyp: **str**
+
+
+lms_write
 =========
 
 

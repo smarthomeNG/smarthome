@@ -127,6 +127,7 @@ Neato Attributes: Name Befehl Zustand Alarm Text Zustand Aktion ist angedockt Re
    - **command_goToBaseAvailable**
    - **command_startAvailable**
    - **clean_room**
+   - **online_status**
 
 
 ===============

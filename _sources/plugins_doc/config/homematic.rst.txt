@@ -55,6 +55,47 @@ Parameter
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
 
+callbackHost
+============
+
+
+IP Adresse bzw. Hostname, an die die HomeMatric CCU2 Zentrale Nachrichten senden soll (z.B. Docker Host)
+
+ - Datentyp: **ip**
+ - Standardwert: **127.0.0.1**
+
+
+callbackPort
+============
+
+
+Port Nummer, an die die HomeMatric CCU2 Zentrale Nachrichten senden soll (z.B. Docker Host)
+
+ - Datentyp: **int**
+ - Standardwert: **30000**
+
+ - Minimalwert: **0**
+
+callbackPort_hmip
+=================
+
+
+Port Nummer, an die die HomeMatric CCU2 Zentrale Nachrichten senden soll (z.B. Docker Host) für HomeMaticIP Geräte
+
+ - Datentyp: **int**
+ - Standardwert: **30001**
+
+ - Minimalwert: **0**
+
+customCallbackHost
+==================
+
+
+Legt fest, ob Callbacks umgeleitet werden soll (z.B. Docker Host), default FALSE
+
+ - Datentyp: **bool**
+
+
 host
 ====
 
@@ -85,6 +126,28 @@ Passwort für das Login
 
  - Datentyp: **str**
 
+
+proxyPort
+=========
+
+
+Port Nummer für eingehende Nachrichten von der HomeMatric CCU2 Zentrale
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+
+proxyPort_hmip
+==============
+
+
+Port Nummer für eingehende Nachrichten von der HomeMatric CCU2 Zentrale für HomeMaticIP Geräte
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
 
 username
 ========

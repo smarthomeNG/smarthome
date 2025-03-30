@@ -327,7 +327,7 @@ Eine Beispielhafte **item.yaml** für die OBIS Codes aus **Beispiel A** könnte 
        Seriennummer:
            type: str
            dlms_obis_code:
-               - '1-1:0.0.0
+               - '1-1:0.0.0'
                - 0
                - 'Value'
                - 'str'
@@ -409,9 +409,9 @@ Die Syntax für das Item Attribut **dlms_obis_code** ist wie folgt:
 
    my_item:
       dlms_obis_code:
-         - 1-1:1.6.2*01
+         - '1-1:1.6.2*01'
          - Index
-         - 'Value' or 'Unit'
+         - Value_oder_Unit
          - Value Type
 
 dabei ist

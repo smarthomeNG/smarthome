@@ -37,8 +37,8 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.8**
- - Minimum Python Version: **3.6**
+ - Minimum SmartHomeNG Version: **1.10**
+ - Minimum Python Version: **3.8**
 
 Konfiguration
 =============
@@ -84,6 +84,15 @@ IP Adresse des Modbus-Geraetes
  - Datentyp: **ipv4**
 
 
+pause_item
+==========
+
+
+Item, um die Ausführung des Plugins zu steuern
+
+ - Datentyp: **str**
+
+
 port
 ====
 
@@ -101,7 +110,7 @@ slaveUnit
 
 Slave-Addresse der zu lesenden Modbus-Einheit
 
- - Datentyp: **num**
+ - Datentyp: **int**
  - Standardwert: **1**
 
 
@@ -126,15 +135,15 @@ modBusByteOrder
 ===============
 
 
-Endian.Big oder Endian.Little
+Endian.BIG oder Endian.LITTLE
 
  - Datentyp: **str**
- - Standardwert: **Endian.Big**
+ - Standardwert: **Endian.BIG**
 
  - Mögliche Werte:
 
-   - **Endian.Big**
-   - **Endian.Little**
+   - **Endian.BIG**
+   - **Endian.LITTLE**
 
 
 modBusDataType
@@ -204,15 +213,15 @@ modBusWordOrder
 ===============
 
 
-Endian.Big oder Endian.Little
+Endian.BIG oder Endian.LITTLE
 
  - Datentyp: **str**
- - Standardwert: **Endian.Big**
+ - Standardwert: **Endian.BIG**
 
  - Mögliche Werte:
 
-   - **Endian.Big**
-   - **Endian.Little**
+   - **Endian.BIG**
+   - **Endian.LITTLE**
 
 
 ===============

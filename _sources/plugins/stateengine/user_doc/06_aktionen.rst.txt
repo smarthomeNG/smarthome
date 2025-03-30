@@ -18,8 +18,9 @@ definiert und benannt wurde. Die Herangehensweise ähnelt also stark der Deklara
 
 Zusätzlich zu ``se_item_<Bedingungsname/Aktionsname>`` lässt sich über den Eintrag
 ``se_mindelta_<Bedingungsname/Aktionsname>`` definieren, um welchen Wert
-sich ein Item mindestens geändert haben muss, um neu gesetzt zu werden. Im unten
-stehenden Beispiel wird der Lamellenwert abhängig vom Sonnenstand berechnet. Ohne mindelta
+sich ein Item mindestens geändert haben muss, um neu gesetzt zu werden. Diese Konfiguration
+kann für einzelne Aktionen individuell über die Angabe ``mindelta`` überschrieben werden.
+Im unten stehenden Beispiel wird der Lamellenwert abhängig vom Sonnenstand berechnet. Ohne mindelta
 würden sich die Lamellen ständig um wenige Grad(bruchteile) ändern. Wird jedoch mindelta
 beispielsweise auf den Wert 10 gesetzt, findet eine Änderung erst statt, wenn sich der
 errechnete Wert um mindestens 10 Grad vom aktuellen Lamellenwert unterscheidet.
@@ -37,7 +38,7 @@ Das folgende Beispiel führt je nach Zustand folgende Aktionen aus:
 
 - Daemmerung: Höhe des Raffstores: 100(%), Lamellendrehung: 25(%)
 - Nachfuehren: Höhe des Raffstores: 100(%), Lamellendrehung: je nach Sonnenausrichtung, aber erst, wenn eine Mindeständerung von 10 Grad vorhanden ist.
-- Sonder: Ausführen der Logic myLogic mit dem Wert 42 und einer Verzögerung von 10 Sekunden.
+- Sonder: Ausführen der Logic myLogic mit dem Wert 42 und einer Verzögerung von 10 Sekunden. Setzen eines Bool-Items auf True.
 
 .. code-block:: yaml
 
@@ -46,6 +47,7 @@ Das folgende Beispiel führt je nach Zustand folgende Aktionen aus:
         automatik:
             struct: stateengine.general
             rules:
+                se_item_boolean: raffstore1.updown # Definition eines boolschen Items
                 se_item_height: raffstore1.hoehe # Definition des zu ändernden Höhe-Items
                 se_item_lamella: raffstore1.lamelle # Definition des zu ändernden Lamellen-Items
                 se_status_lamella: raffstore1.lamelle.status # Definition des Lamellen Statusitems
@@ -75,6 +77,9 @@ Das folgende Beispiel führt je nach Zustand folgende Aktionen aus:
                         - 'logic: myLogic'
                         - 'value: 42'
                         - 'delay: 10'
+                    se_action_boolean:
+                        - 'function: set'
+                        - 'to: value:True'
                     <...>
 
 Aufbau von Aktionen
@@ -300,6 +305,7 @@ ursprünglichen Zustands (regen) gesetzt werden soll, kann der Parameter ``insta
 
 .. code-block:: yaml
 
+       'repeat: <eval>/<item>' --> Ergebnis eines Eval-Ausdrucks oder eines Items
        'repeat: [True|False]'
 
 Über das Attribut wird unabhängig vom globalen Setting für das
@@ -348,11 +354,11 @@ Die einzelnen Angaben einer Liste werden als ``OR`` evaluiert.
     screens:
         conditionset_to_check:
             type: str
-            value: "screens.osten_s1.automatik.rules.abend.enter_abend"
+            initial_value: "screens.osten_s1.automatik.rules.abend.enter_abend"
 
           conditionset:
             - regex:enter_(.*)_test
-            - eval:sh.screens.conditionset_to_check.property.name
+            - eval:sh.screens.conditionset_to_check.property.value
 
 Der gesamte Pfad könnte wie folgt evaluiert werden:
 
@@ -393,7 +399,7 @@ regnet hingegen auf den Wert, der in den Settings hinterlegt ist.
 
 .. code-block:: yaml
 
-      previousconditionset: regex:enter_(.*)_test"
+      "previousconditionset: regex:enter_(.*)_test"
 
 Über das Attribut wird festgelegt, dass die Aktion nur dann ausgeführt werden
 soll, wenn die vorherige Bedingungsgruppe des aktuellen Zustands mit dem angegebenen Ausdruck übereinstimmt.
@@ -403,11 +409,64 @@ Die Abfrage erfolgt dabei nach den gleichen Regeln wie bei ``conditionset`` oben
 
 .. code-block:: yaml
 
-      previousstate_conditionset: regex:enter_(.*)_test"
+      "previousstate_conditionset: regex:enter_(.*)_test"
 
 Über das Attribut wird festgelegt, dass die Aktion nur dann ausgeführt werden
 soll, wenn die Bedingungsgruppe, mit der der vorherige Zustand eingenommen wurde, mit dem angegebenen Ausdruck übereinstimmt.
 Die Abfrage erfolgt dabei ebenfalls nach den gleichen Regeln wie bei ``conditionset`` oben angegeben.
+
+**next_conditionset: <conditionset regex>**
+
+.. code-block:: yaml
+
+      "next_conditionset: regex:enter_(.*)_test"
+
+Über das Attribut wird festgelegt, dass die Aktion nur dann ausgeführt werden
+soll, wenn die Bedingungsgruppe, mit der der zukünftige Zustand eingenommen wird, mit dem angegebenen Ausdruck übereinstimmt.
+Die Abfrage erfolgt dabei ebenfalls nach den gleichen Regeln wie bei ``conditionset`` oben angegeben.
+Diese Angabe ist primär bei leave_actions sinnvoll.
+
+**mindelta: <num>**
+
+Im folgenden Beispiel wird mindelta für eine einzelne Aktion gesetzt. Anstatt also eine minimale Änderung
+für alle Aktionen mit bestimmtem Namen festzulegen, wird eine einzelne Aktion nur dann ausgeführt,
+wenn sich der Wert um mindestens den angegeben Wert geändert hat.
+Wird mindelta beispielsweise auf den Wert 10 gesetzt, findet eine Änderung erst statt, wenn sich der
+errechnete Wert um mindestens 10 Grad vom aktuellen Lamellenwert unterscheidet.
+
+.. code-block:: yaml
+
+    #items/item.yaml
+    raffstore1:
+        automatik:
+            struct: stateengine.general
+            rules:
+                se_item_height: raffstore1.hoehe # Definition des zu ändernden Höhe-Items
+                se_item_lamella: raffstore1.lamelle # Definition des zu ändernden Lamellen-Items
+                se_status_lamella: raffstore1.lamelle.status # Definition des Lamellen Statusitems
+                Daemmerung:
+                    <...>
+                    se_action_height:
+                        - 'function: set'
+                        - 'to: value:100'
+                    se_action_lamella:
+                        - 'function: set'
+                        - 'to: value:25'
+                        - 'mindelta: 10'
+                    <...>
+
+**minagedelta: <num>**
+
+.. code-block:: yaml
+
+      minagedelta: 300
+
+Über das Attribut wird festgelegt, dass eine Aktion nur in einem vorgegebenen Intervall ausgeführt wird.
+Im angegebenen Beispiel wird die Aktion also nur ausgeführt, wenn der letzte Ausführungszeitpunkt mindestens
+5 Minuten zurück liegt. So kann verhindert werden, dass die Aktion bei jeder Neuevaluierung des Status ausgeführt wird.
+Ein Neustart des Plugins setzt den Counter wieder zurück, der letzte Ausführungszeitpunkt wird also nur bei laufendem
+Betrieb gespeichert und überdauert einen Neustart nicht.
+
 
 Templates für Aktionen
 ----------------------

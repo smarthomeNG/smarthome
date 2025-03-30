@@ -1,4 +1,7 @@
 # Robonect Plugin
+#### Version 1.0.5
+
+Renamed remotestart_1/2.path to remotestart_1/2.rstart_path because of collissions with path attribute of item class
 
 #### Version 1.0.3
 

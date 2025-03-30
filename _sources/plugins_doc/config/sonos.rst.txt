@@ -37,8 +37,8 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.5.1**
- - Minimum Python Version: **3.8**
+ - Minimum SmartHomeNG Version: **1.10.0.3**
+ - Minimum Python Version: **3.9**
 
 Konfiguration
 =============
@@ -88,6 +88,15 @@ von "local_webservice_path" für Snippets benutzt.
  - Datentyp: **str**
 
 
+pause_item
+==========
+
+
+Item, um die Ausführung des Plugins zu steuern
+
+ - Datentyp: **str**
+
+
 snippet_duration_offset
 =======================
 
@@ -125,7 +134,7 @@ webservice_ip
 (optional) Für TTS und die Audio-Snippet-Funktionalität wird ein simpler Webservice gestartet. 
 Die IP-Adresse wird per default automatisch ermittelt, kann hier aber manuell gesetzt werden.
 
- - Datentyp: **ip**
+ - Datentyp: **ipv4**
 
 
 webservice_port
@@ -179,6 +188,7 @@ sonos_dpt3_step
 Relatives dpt3 Inkrement
 
  - Datentyp: **int**
+ - Standardwert: **2**
 
 
 sonos_dpt3_time
@@ -188,6 +198,7 @@ sonos_dpt3_time
 Dpt3 Zeitinkrement
 
  - Datentyp: **int**
+ - Standardwert: **1**
 
 
 sonos_recv

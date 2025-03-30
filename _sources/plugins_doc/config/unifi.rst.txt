@@ -66,6 +66,21 @@ poll_cycle_time
  - Standardwert: **60**
 
 
+unifi_controller_type
+=====================
+
+
+Basis URL des Controller, z.B. https://unifi:8443
+
+ - Datentyp: **str**
+ - Standardwert: **software**
+
+ - Mögliche Werte:
+
+   - **device**
+   - **software**
+
+
 unifi_controller_url
 ====================
 

@@ -1,38 +1,44 @@
+.. index:: Plugins; jsonread
+.. index:: jsonread
+
+========
 jsonread
 ========
 
-Das vorliegende Plugin ist in der Lage aus einer Datei oder von einer URL JSON Daten zu lesen
+.. image:: webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+Das vorliegende Plugin ist in der Lage aus einer Datei oder von einer
+URL JSON Daten zu lesen
 und anhand einer Abfrageanweisung einen Datenpunkt an ein Item zu übergeben.
 
 Anforderungen
--------------
+=============
 
 Für die Auswertung des JSON Datensatzes wird der flexible JSON Prozessor
 `JQ <https://stedolan.github.io/jq/>`_ verwendet.
 
-Notwendige Software
-~~~~~~~~~~~~~~~~~~~
-
-* requests
-* requests-file
-* `pyjq <https://stedolan.github.io/jq/>`_
-
-Unterstützte Geräte
-~~~~~~~~~~~~~~~~~~~~~
-
-Jede Webseite die JSON formatierte Daten liefern kann oder jede Datei die JSON formatierte
-Daten enthält kann als Datenquelle für das Plugin verwendet werden
+Jede Webseite, die JSON formatierte Daten liefern kann oder
+jede Datei die JSON formatierte
+Daten enthält, kann als Datenquelle für das Plugin verwendet werden.
 
 
 Konfiguration
--------------
+=============
+
+.. important::
+
+      Detaillierte Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/config/jsonread` zu finden.
 
 plugin.yaml
-~~~~~~~~~~~
+-----------
 
-Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
-
-Es können beliebig viele Instanzen des Plugins erstellt werden. Für jede Datenquelle muß eine Instanz konfiguriert werden.
+Es können beliebig viele Instanzen des Plugins erstellt werden.
+Für jede Datenquelle muß eine Instanz konfiguriert werden.
 
 URL
 ^^^
@@ -46,12 +52,12 @@ Der Ursprung der Daten. Aktuell werden ``http://``, ``https://`` und ``file://``
 Beispiele verschiedener Datenquellen
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Die folgenden Beispiele nutzen openweathermap `openweathermap <https://openweathermap.org/current>`_  und den Beispiel API Schlüssel. 
-Der Schlüssel sollte wirklich **nur** für Testzwecke verwendet werden
+Die folgenden Beispiele nutzen `openweathermap <https://openweathermap.org/current>`_  und den Beispiel API Schlüssel.
+Der Schlüssel sollte wirklich **nur** für Testzwecke verwendet werden.
 
 **http Quelle**
 
-.. code:: yaml
+.. code-block:: yaml
 
    jsonread:
       plugin_name: jsonread
@@ -60,7 +66,7 @@ Der Schlüssel sollte wirklich **nur** für Testzwecke verwendet werden
 
 **Dateiquelle**
 
-.. code:: yaml
+.. code-block:: yaml
 
    jsonread:
       plugin_name: jsonread
@@ -69,7 +75,7 @@ Der Schlüssel sollte wirklich **nur** für Testzwecke verwendet werden
 
 **Mehrere Instanzen**
 
-.. code:: yaml
+.. code-block:: yaml
 
     jsonreadlon:
        plugin_name: jsonread
@@ -83,17 +89,15 @@ Der Schlüssel sollte wirklich **nur** für Testzwecke verwendet werden
 
 
 items.yaml
-~~~~~~~~~~
-
-Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
+----------
 
 Beispiel Klimaabfrage
 ^^^^^^^^^^^^^^^^^^^^^
 
-Die Abfrage ``https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22`` 
+Die Abfrage ``https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22``
 ergibt ein Ergebnis in etwa wie folgt:
 
-.. code:: json
+.. code-block:: json
 
     {
     "coord": {
@@ -138,9 +142,9 @@ ergibt ein Ergebnis in etwa wie folgt:
     "cod": 200
     }
 
-Mit der Definition 
+Mit der Definition
 
-.. code:: yaml
+.. code-block:: yaml
 
     temperature:
         type: num
@@ -152,10 +156,11 @@ Mit der Definition
 
 werden den entsprechenden Items die Temperatur und die Windgeschwindigkeit zugewiesen.
 
-Wenn mehrere Instanzen für das Plugin definiert werden, so muss das ``jsonread_filter`` Attribut
+Wenn mehrere Instanzen für das Plugin definiert werden,
+so muss das ``jsonread_filter`` Attribut
 erweitert werden mit ``@`` und dem Instanznamen
 
-.. code:: yaml
+.. code-block:: yaml
 
     temperature:
        london:
@@ -165,24 +170,29 @@ erweitert werden mit ``@`` und dem Instanznamen
           type: num
           jsonread_filter@cairns: .main.temp
 
-Der Attributwert für ``jsonread_filter`` wird direkt an jq weitergegeben. Auf diese Art und Weise ist es möglich
-recht komplexe Filter zu erstellen und für die Item Befüllung zu verwenden.
-Dabei muss darauf geachtet werden, das nur ein einzelner Wert zurückgegeben werden darf.
-Für komplexe JSON Strukturen kann es recht kompliziert sein entsprechende Filter zu definieren, daher
-könnte es einfacher sein diese Filter auf der Kommandozeile zu entwickeln:
+Der Attributwert für ``jsonread_filter`` wird direkt an jq weitergegeben.
+Auf diese Art und Weise ist es möglich
+recht komplexe Filter zu erstellen und für die Itembefüllung zu verwenden.
+Dabei muss darauf geachtet werden, dass nur ein einzelner Wert
+zurückgegeben werden darf.
+Für komplexe JSON Strukturen kann es recht kompliziert sein,
+entsprechende Filter zu definieren, daher
+könnte es einfacher sein, diese Filter auf der Kommandozeile zu entwickeln:
 
-.. code:: bash
+.. code-block:: bash
 
     curl https://json.server.org/data.json | jq '.object'
 
-Es lohnt ein Blick ins `Tutorial für jq <https://stedolan.github.io/jq/tutorial/>`_ um für die Verwendung der Filter einen Eindruck zu bekommen.
+Es lohnt ein Blick ins
+`Tutorial für jq <https://jqlang.github.io/jq/tutorial/>`_
+um für die Verwendung der Filter einen Eindruck zu bekommen.
 
 Beispiel Batteriedaten
 ^^^^^^^^^^^^^^^^^^^^^^
 
 In der ``etc/plugin.yaml`` wird das Plugin definiert als:
 
-.. code:: yaml
+.. code-block:: yaml
 
     myreserve:
         plugin_name: jsonread
@@ -190,9 +200,10 @@ In der ``etc/plugin.yaml`` wird das Plugin definiert als:
         instance: myreserve
         cycle: 10
 
-die Datei ``/tmp/BMSData.shtml`` wird dabei vom Prozess ``receiveBLE.py`` auf einem Raspi erzeugt (SolarWatt):
+Die Datei ``/tmp/BMSData.shtml`` wird dabei vom Prozess
+``receiveBLE.py`` auf einem Raspi erzeugt (SolarWatt):
 
-.. code:: json
+.. code-block:: json
 
     {
     "FData": {
@@ -211,10 +222,11 @@ die Datei ``/tmp/BMSData.shtml`` wird dabei vom Prozess ``receiveBLE.py`` auf ei
         }
     }
 
-Um die Spannung, den aktuellen Ladestrom und die Ladeleistung zu erhalten, werden folgende Items für 
+Um die Spannung, den aktuellen Ladestrom und die Ladeleistung zu erhalten,
+werden folgende Items für
 die Instanz ``myreserve`` definiert:
 
-.. code:: yaml
+.. code-block:: yaml
 
     battery:
         u:
@@ -227,15 +239,14 @@ die Instanz ``myreserve`` definiert:
             remark: etwas einfache Mathematik kann verwendet werden:
             type: num
             jsonread_filter@myreserve: (.FData.VBat * .FData.IBat * -1)
-    
-    
+
 
 Beispiel Energiemanager
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 In der ``etc/plugin.yaml`` wird das Plugin definiert als:
 
-.. code:: yaml
+.. code-block:: yaml
 
     swem:
       plugin_name: jsonread
@@ -243,11 +254,10 @@ In der ``etc/plugin.yaml`` wird das Plugin definiert als:
       instance: swem
       cycle: 30
 
-Die Abfrage der URL liefert ein ziemliche grosses JSON Datenpaket mit mehr als
+Die Abfrage der URL liefert ein ziemliche großes JSON Datenpaket mit mehr als
 4500 Zeilen. Ein Auszug ist im folgenden dargestellt:
-      
-      
-.. code::json
+
+.. code-block:: json
 
     {
     "result": {
@@ -263,23 +273,28 @@ Die Abfrage der URL liefert ein ziemliche grosses JSON Datenpaket mit mehr als
             }
         ]
     }
-    
-Um die aktuelle Inverter AC Ausgangsleistung zu erhalten wird folgendes Item mit einem komplexen Filter definiert:
 
-.. code:: yaml
+Um die aktuelle Inverter AC Ausgangsleistung zu erhalten,
+wird folgendes Item mit einem komplexen Filter definiert:
+
+.. code-block:: yaml
 
     inverter:
         type: num
         jsonread_filter@swem: (.result.items[] | select(.guid == "urn:your-inverter-guid").tagValues.PowerACOut.value)
 
-Auswählen des Arrays ``.result.items``, dann auswählen des Zweiges bei dem das Element ``guid`` mit dem eigenen
-``your-inverter-guid`` übereinstimmt und im Zweig weitergehen und den Wert von ``.tagValues.PowerACOut.value`` 
+Auswählen des Arrays ``.result.items``,
+dann auswählen des Zweiges, bei dem das Element ``guid`` mit dem eigenen
+``your-inverter-guid`` übereinstimmt, und im Zweig weitergehen
+und den Wert von ``.tagValues.PowerACOut.value``
 abfragen und ins Item schreiben.
 
-Das ``jsonread_filter`` Attribut kann mit Hilfe des `Blockstils für mehrzeilige Strings <https://yaml-multiline.info/>`_ 
-eben auf auf mehrere Zeilen aufgeteilt werden. So ist folgende komplexe Berechnung über einen Filter möglich:
+Das ``jsonread_filter`` Attribut kann mit Hilfe des
+`Blockstils für mehrzeilige Strings <https://yaml-multiline.info/>`_
+eben auf mehrere Zeilen aufgeteilt werden.
+So ist folgende komplexe Berechnung über einen Filter möglich:
 
-.. code:: yaml
+.. code-block:: yaml
 
     grid:
         type: num
@@ -289,21 +304,17 @@ eben auf auf mehrere Zeilen aufgeteilt werden. So ist folgende komplexe Berechnu
             (.result.items[] |
             select(.deviceModel[].deviceClass == "com.kiwigrid.devices.solarwatt.MyReservePowermeter").tagValues.PowerIn.value)
 
-
-logic.yaml
-~~~~~~~~~~
-
-Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
-
-
-Funktionen
-~~~~~~~~~~
-
-Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.
-
-
 Web Interface
--------------
+=============
 
-Todo: Im Webinterface wird das Ergebnis der letzten Abfrage der Quelle dargestellt sowie die Items mit dem entsprechenden 
-``jsonread_filter`` Attribut und dem aktuell zugewiesenen Wert.
+.. image:: assets/jsonread_webif.png
+   :height: 1292px
+   :width: 3330px
+   :scale: 25%
+   :alt: Web Interface
+   :align: center
+
+Im Webinterface wird das Ergebnis der letzten Abfrage der Quelle
+im Original sowie als vereinfachte .jq Abfragesyntax dargestellt.
+Außerdem werden die Items mit dem entsprechenden
+``jsonread_filter`` Attribut und dem aktuell zugewiesenen Wert angezeigt.

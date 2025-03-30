@@ -1,88 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 28.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 426 426" style="enable-background:new 0 0 426 426;" xml:space="preserve">
+	 viewBox="0 0 367 395.6" style="enable-background:new 0 0 367 395.6;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#EBEBEB;stroke:#707070;stroke-width:13.4;}
-	.st1{fill:#6DCFF6;stroke:#00AEEF;stroke-width:6.35;}
-	.st2{fill:#A0410D;stroke:#F26522;stroke-width:6.35;}
-	.st3{fill:#707070;stroke:#FFFFFF;stroke-width:6.35;}
-	.st4{fill:#FFF1DF;stroke:#574739;stroke-width:8;}
-	.st5{fill:none;stroke:#F26522;stroke-width:2;}
-	.st6{fill:none;stroke:#00AEEF;stroke-width:2;}
-	.st7{fill:#6DCFF6;}
-	.st8{fill:#232D49;}
-	.st9{fill:#FEFEFE;}
-	.st10{fill:#FDFDFD;}
-	.st11{fill:#A4D4D6;}
-	.st12{fill:#A6D5D7;}
-	.st13{fill:#E45765;}
-	.st14{fill:#262F4B;}
-	.st15{fill:#FDCDCE;}
-	.st16{fill:#F6F7F7;}
-	.st17{fill:#2E3B59;}
-	.st18{fill:#8B93A3;}
-	.st19{font-family:'MuktaMahee-SemiBold';}
-	.st20{font-size:60px;}
+	.st0{fill:#FFFFFF;stroke:#414042;stroke-width:3;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#414042;stroke-width:3;stroke-miterlimit:10;}
+	.st2{fill:#939598;stroke:#414042;stroke-width:3;stroke-miterlimit:10;}
+	.st3{font-family:'ArialRoundedMTBold';}
+	.st4{font-size:24px;}
 </style>
-<g id="AV_x5F_Device">
-	<path id="Rounded_Rectangle_1" class="st0" d="M16.6,235.7h235.2c2.8,0,5,2.2,5,5v70.4c0,2.8-2.2,5-5,5H16.6c-2.8,0-5-2.2-5-5
-		v-70.4C11.6,238,13.8,235.7,16.6,235.7z"/>
-	<circle class="st1" cx="48" cy="276.2" r="18.8"/>
-	<circle id="Ellipse_1_copy" class="st1" cx="220.9" cy="276.2" r="18.8"/>
-	<rect x="84.5" y="257.3" class="st2" width="100" height="25.6"/>
-	<rect x="78.4" y="295" class="st3" width="20.6" height="8"/>
-	<rect id="Rectangle_2_copy" x="108.1" y="295" class="st3" width="20.6" height="8"/>
-	<rect id="Rectangle_2_copy_2" x="136.7" y="295" class="st3" width="20.6" height="8"/>
-	<rect id="Rectangle_2_copy_3" x="166.9" y="295" class="st3" width="20.6" height="8"/>
-</g>
-<g id="Player">
-	<path id="Rounded_Rectangle_1_00000124863460574047768320000008249764423171749781_" class="st4" d="M16.6,84.7h235.2
-		c2.8,0,5,2.2,5,5v70.4c0,2.8-2.2,5-5,5H16.6c-2.8,0-5-2.2-5-5V89.8C11.6,87,13.8,84.7,16.6,84.7z"/>
-	<g>
-		<circle class="st5" cx="82.6" cy="134.3" r="16.4"/>
-		<polygon class="st5" points="92,134.3 76.8,125.5 76.8,143.1 		"/>
-	</g>
-	<g>
-		<circle class="st5" cx="120.9" cy="134.3" r="16.4"/>
-		<line class="st5" x1="110.2" y1="127.6" x2="110.2" y2="141"/>
-		<polygon class="st5" points="133.5,134.3 119.6,127.6 119.6,141 		"/>
-		<polygon class="st5" points="119.6,132.1 119.6,136.6 110.2,141 110.2,127.6 		"/>
-	</g>
-	<g>
-		<circle class="st5" cx="43.4" cy="135.1" r="16.4"/>
-		<polygon class="st5" points="31,134.3 45,141 45,127.6 		"/>
-		<polygon class="st5" points="45,136.6 45,132.1 54.3,127.6 54.3,141 		"/>
-	</g>
-	<rect x="220.9" y="97.6" class="st6" width="7.4" height="53.2"/>
-	<g>
-		<path class="st7" d="M209.9,130.5c0-1.6,1.3-2.8,2.8-2.8h24.2c1.6,0,2.8,1.3,2.8,2.8v4.5c0,1.6-1.3,2.8-2.8,2.8h-24.2
-			c-1.6,0-2.8-1.3-2.8-2.8V130.5z"/>
-		<path class="st6" d="M209.9,130.5c0-1.6,1.3-2.8,2.8-2.8h24.2c1.6,0,2.8,1.3,2.8,2.8v4.5c0,1.6-1.3,2.8-2.8,2.8h-24.2
-			c-1.6,0-2.8-1.3-2.8-2.8V130.5z"/>
-	</g>
-</g>
-<g id="Heizung">
-	<path class="st8" d="M282.5,80.5c41,0,82.4,0,123.8,0c2.1,0,4.1,0.8,5.7,2.2c1,0.9,1.6,2.1,1.8,3.4c0.2,2.4,0.7,4.8,0.7,7.2
-		c-0.1,72-0.1,144,0,215.9c0,4.4-1.4,7.8-4.5,10.6c-0.5,0-1,0.2-1.5,0.3c-1.5,0.7-3.1,1-4.7,1c-38.9,0-77.8,0-116.7,0
-		c-1.6,0-3.3-0.2-4.8-0.6c-0.8-0.3-1.5-0.7-2.1-1.3c-0.8-0.7-1.6-1.5-2.4-2.4c-0.1-0.5-0.2-1.1-0.4-1.6c-0.7-1.5-1-3.1-0.9-4.7
-		c0-73.6,0-147.2,0-220.7c0-1.6,0-3.4,0.8-4.8c0.9-1.5,1.7-3.3,3.7-3.9C281.4,81,281.8,80.8,282.5,80.5z M289.7,84.7h-8.3
-		c-0.5,12-0.3,201.8,0.2,204.6h128c0.5-12,0.3-201.8-0.2-204.6H289.7z M409.7,293.6H281.4v19l2.6,1.8h123.1l2.6-1.9V293.6z"/>
-	<path class="st9" d="M401.3,289.3H289.7V84.7h111.6V289.3z"/>
-	<path class="st10" d="M409.7,293.6v18.9l-2.6,1.9H284l-2.6-1.8v-19.1H409.7z M343,308.5v-8.3c-9.5-0.4-27.4-0.2-29.8,0.2v8.1H343z
-		 M301.2,311.5c2.1-1,3.8-2.6,4.7-4.7c-0.2-2.6,0.6-5.5-2-7.9c-2.5-2.4-5.2-1.5-7.3-1.7c-2.6,1-4,2.5-5.1,5c0,0.8,0,2.2,0,3.6
-		c0.1,2.7,3.1,5.7,5.8,5.8C298.7,311.5,300.1,311.5,301.2,311.5z"/>
-	<path class="st11" d="M401.3,289.3V84.7h8.1c0.5,2.8,0.7,192.6,0.2,204.6H401.3z"/>
-	<path class="st12" d="M289.7,84.7v204.6h-8.1c-0.5-2.8-0.7-192.6-0.2-204.6H289.7z"/>
-	<path class="st13" d="M343,308.5h-29.8v-8.1c2.4-0.4,20.3-0.6,29.8-0.2L343,308.5z"/>
-	<path class="st14" d="M301.2,311.5c-1.1,0-2.5,0-3.9,0c-2.7-0.1-5.7-3.1-5.8-5.8c0-1.4,0-2.8,0-3.6c1.1-2.4,2.5-4,5.1-5
-		c2.1,0.2,4.8-0.6,7.3,1.7c2.6,2.5,1.8,5.3,2,7.9C305,308.9,303.3,310.6,301.2,311.5z M303.4,306.5c0.4-3,0.1-5.7-3.8-7
-		c-3.7-0.6-6.4,2.4-5.8,5.5c1.5,4.2,4.2,4.5,7.1,4.1L303.4,306.5z"/>
-	<path class="st15" d="M356.5,266.7l0.5,1.5C356.4,268.3,356.4,268.3,356.5,266.7z"/>
-	<path class="st16" d="M303.4,306.5l-2.5,2.5c-3,0.4-5.7,0.1-7.1-4.1c-0.6-3.1,2.1-6.1,5.8-5.5C303.5,300.9,303.8,303.5,303.4,306.5
-		z M299.3,304.3v-2.9h-1.2c0,1,0,2,0,2.9l-0.8,1.5l1.1,1C300.1,305.6,300.1,305.6,299.3,304.3z"/>
-	<path class="st17" d="M299.3,304.3c0.8,1.2,0.8,1.2-0.9,2.6l-1.1-1l0.8-1.5H299.3z"/>
-	<path class="st18" d="M299.3,304.3h-1.2v-2.9h1.2V304.3z"/>
-</g>
-<text transform="matrix(1 0 0 1 63.4111 402.8902)" class="st19 st20">Multidevice</text>
+<polygon class="st0" points="297.4,352 59.5,352 59.5,43.6 249.5,43.6 273.2,64 297.4,85.1 "/>
+<polyline class="st1" points="297.4,85.1 250.5,86.7 250.6,43.6 "/>
+<line class="st1" x1="91.5" y1="86.2" x2="226.1" y2="86.2"/>
+<line class="st1" x1="91.5" y1="121.1" x2="224.4" y2="121.1"/>
+<line class="st1" x1="91.5" y1="157.7" x2="258" y2="157.7"/>
+<line class="st1" x1="91.5" y1="193.6" x2="258" y2="193.6"/>
+<rect x="60.8" y="239.7" class="st2" width="235.4" height="65.2"/>
+<text transform="matrix(1 0 0 1 82.9207 280.2771)" class="st3 st4">OPERATIONLOG</text>
 </svg>

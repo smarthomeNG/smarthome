@@ -39,7 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.5.6**
+ - Minimum SmartHomeNG Version: **1.10.0**
  - Minimum Python Version: **3.8**
 
 Konfiguration
@@ -67,6 +67,15 @@ Topic, um mit dem ZigBee2MQTT-Gateway zu kommunizieren (%topic%)
  - Standardwert: **zigbee2mqtt**
 
 
+pause_item
+==========
+
+
+Pfad zum Pause-Item
+
+ - Datentyp: **str**
+
+
 poll_period
 ===========
 
@@ -87,15 +96,6 @@ Einlesen aller Werte beim Start
 
  - Datentyp: **bool**
  - Standardwert: **True**
-
-
-suspend_item
-============
-
-
-Pfad zum Suspend-Item
-
- - Datentyp: **str**
 
 
 z2m_gui

@@ -134,6 +134,17 @@ Maximal auf einmal zu löschende Anzahl an Log Einträgen mit dem database_maxag
 
  - Minimalwert: **1000**
 
+max_reassign_logentries
+=======================
+
+
+Maximal auf einmal neu zuzuweisende Anzahl an Log Einträgen, reduziert die Belastung der Datenbank bei großen Datenbeständen
+
+ - Datentyp: **int**
+ - Standardwert: **20**
+
+ - Minimalwert: **10**
+
 precision
 =========
 
@@ -162,6 +173,18 @@ Remove old Cycle bestimmt wie oft die Prüfung auf veraltete Daten gestartet wer
  - Datentyp: **int**
  - Standardwert: **91**
 
+
+time_precision
+==============
+
+
+Genauigkeit der aus der Datenbank ausgelesenen Zeitwerte (Nachkommastellen (für Sekunden)).
+
+ - Datentyp: **int**
+ - Standardwert: **3**
+
+ - Minimalwert: **0**
+ - Maximalwert: **3**
 
 ==============
 Item Attribute

@@ -39,8 +39,8 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.6**
- - Minimum Python Version: **3.6**
+ - Minimum SmartHomeNG Version: **1.8**
+ - Minimum Python Version: **3.8**
 
 Konfiguration
 =============

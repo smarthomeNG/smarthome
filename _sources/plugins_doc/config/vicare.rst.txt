@@ -126,6 +126,8 @@ Key für den Empfang von Statusinformationen aus dem Viessmann Backend
    - **heating.circuits.1.operating.modes.heating**
    - **heating.circuits.1.operating.modes.active**
    - **heating.gas.consumption.total**
+   - **heating.gas.consumption.summary.dhw**
+   - **heating.gas.consumption.summary.heating**
    - **heating.circuits.1.operating.programs.comfort**
    - **heating.circuits.1.operating.programs.normal**
    - **heating.circuits.1.operating.programs.reduced**
@@ -160,6 +162,7 @@ Key für das Senden von Kommandos an das Viessmann Backend
    - **heating.dhw.temperature.main**
    - **heating.dhw.operating.modes.active**
    - **heating.circuits.1.operating.modes.active**
+   - **heating.dhw.oneTimeCharge**
 
 
 vicare_tx_path

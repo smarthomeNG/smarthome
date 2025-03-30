@@ -39,7 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.0**
+ - Minimum SmartHomeNG Version: **1.10.0**
 
 Konfiguration
 =============
@@ -66,6 +66,15 @@ Russound Hostname oder IP Adresse
  - Standardwert: **127.0.0.1**
 
 
+pause_item
+==========
+
+
+Item zum Anhalten/Fortsetzen des Plugins
+
+ - Datentyp: **str**
+
+
 port
 ====
 
@@ -74,15 +83,6 @@ Russound Port
 
  - Datentyp: **int**
  - Standardwert: **9621**
-
-
-standby_item
-============
-
-
-Item zum Aktivieren des Suspend-Modus
-
- - Datentyp: **str**
 
 
 ==============

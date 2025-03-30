@@ -1,0 +1,208 @@
+.. |_| unicode:: 0xA0
+
+
+============================
+Plugin 'piusv' Konfiguration
+============================
+
+
+.. index:: Plugins; piusv Konfiguration
+
+.. image:: /plugins/piusv/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **piusv** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin zum Auslesen Informationen aus der PIUSV+
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **piusv** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+i2c_address
+===========
+
+
+I2C Adresse der PIUPS+
+
+ - Datentyp: **int**
+ - Standardwert: **24**
+
+
+poll_cycle
+==========
+
+
+Zyklus, in dem die Informationen abgefragt werden sollen.
+
+ - Datentyp: **int**
+ - Standardwert: **120**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+piusv_func
+==========
+
+
+Funktion des piusv Plugins
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **u_batt**
+   - **i_rasp**
+   - **u_rasp**
+   - **u_usb**
+   - **u_ext**
+   - **piusv_status**
+   - **piusv_firmware**
+
+
+piusv_sys
+=========
+
+
+Attribut für globale Plugin Items zum Triggern eines Update
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **update** |_| - |_| Startet bei Triggerung ein Update der Daten
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+i_rasp()
+========
+
+
+Stromaufnahme von Raspberry
+
+ - Ergebnistyp der Funktion: **int**
+
+
+piusv_firmware()
+================
+
+
+Firmware version der PIUSV+
+
+ - Ergebnistyp der Funktion: **str**
+
+
+piusv_status()
+==============
+
+
+Status der PIUSV+
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+suspend()
+=========
+
+
+Pausiert das Plugins
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+u_batt()
+========
+
+
+Batteriespannung
+
+ - Ergebnistyp der Funktion: **int**
+
+
+u_ext()
+=======
+
+
+Versorgungsspannung der PIUSV+
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+u_rasp()
+========
+
+
+Versorgungsspannung des Raspberry
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+u_usb()
+=======
+
+
+USB voltage
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

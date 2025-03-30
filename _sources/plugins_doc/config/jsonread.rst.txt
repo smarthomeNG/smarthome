@@ -32,7 +32,7 @@ json Parser Plugin basierend auf jq
 
 .. attention::
 
-    Die aktuellste Version (2.5.2, released Mai 2021) des benötigten Packages 'pyjq' ist nicht kompatibel mit Python 3.10
+    Die aktuellste Version (2.6.0, released August 2022) des benötigten Packages 'pyjq' ist nicht kompatibel mit Python 3.12
 
 
 
@@ -43,7 +43,7 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.4**
- - Maximum Python Version: **3.9**
+ - Maximum Python Version: **3.11**
 
 Konfiguration
 =============

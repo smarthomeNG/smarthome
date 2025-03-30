@@ -23,7 +23,8 @@ Vorbereitung
 Dieses Plugin benötigt die withings-api.
 
 Sie müssen sich unter `Withings Account <https://account.withings.com/>`_ registrieren und im Dashboard
-eine Applikation anlegen. Der Name ist frei wählbar, die (lokale) Callback-URL wird über die Weboberfläche des Plugins angezeigt: http://<IP>:<Webinterface-Port>/plugin/withings_health.
+eine Applikation anlegen. Der Name ist frei wählbar, die (lokale) Callback-URL wird über die Weboberfläche des Plugins
+angezeigt: http://<IP>:<Webinterface-Port>/plugin/withings_health (Die IP sollte die von SmartHomeNG sein!).
 Wenn Sie sich bei der `Withings App <https://app.withings.com/>`_ einloggen, kann die achtstellige Zahl
 in der URL ausgelesen und in der Pluginkonfiguration als user_id angegeben werden.
 

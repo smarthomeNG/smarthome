@@ -282,13 +282,10 @@ die Situation deutlich vereinfachen würde.
 **current.conditionset_name:**
 *Der Name der Bedingungsgruppe, die gerade geprüft wird*
 
-Beide current.conditionset Variablen können ebenso wie die oben erwähnten current.state_id/name
-nur während der Prüfung der Bedingungen genutzt werden, nicht jedoch für Aktionen.
-
 Das Beispiel zeigt einen Windzustand. Dieser übernimmt keine Funktionen,
 sondern dient lediglich der Visualisierung (Sicherheitsrelevante Features
 sollten unbedingt z.B. über den KNX Bus erfolgen!). Außerdem wird davon
-ausgegangen, dass es einen untergeordneten Zustand names x gibt.
+ausgegangen, dass es einen untergeordneten Zustand namens x gibt.
 
 - enter_normal wird angenommen, sobald das Wind-Item aktiv ist, zuvor aber
   nicht der x-Zustand aktiv war.
@@ -363,6 +360,14 @@ Zustand aktiv gewesen ist. Ansonsten gelten alle vorhin beschriebenen Regeln.
 
 **previous.state_conditionset_name:**
 *Der Name der Bedingungsgruppe, die beim vorigen Zustand zuletzt aktiv war*
+
+**next.conditionset_id:**
+*Die Id der Bedingungsgruppe, die für einen Zustandswechsel verantwortlich ist*
+
+**next.conditionset_name:**
+*Der Name der Bedingungsgruppe, die für einen Zustandswechsel verantwortlich ist*
+
+Beide next.conditionset Variablen können sinnvoll nur für Aktionen genutzt werden.
 
 **release.can_be_released_by:**
 *Die Definitionen, die den aktuellen Zustand generell auflösen könnten*

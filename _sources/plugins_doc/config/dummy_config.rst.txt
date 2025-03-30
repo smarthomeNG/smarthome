@@ -45,6 +45,7 @@
    eta_pu.rst
    executor.rst
    garminconnect.rst
+   githubplugin.rst
    gpio.rst
    harmony.rst
    helios.rst
@@ -53,6 +54,7 @@
    homematic.rst
    hue.rst
    hue2.rst
+   hue3.rst
    husky.rst
    husky2.rst
    ical.rst
@@ -97,9 +99,11 @@
    openweathermap.rst
    operationlog.rst
    oppo.rst
+   panasonic_ac.rst
    philips_tv.rst
    pioneer.rst
    piratewthr.rst
+   piusv.rst
    plex.rst
    pluggit.rst
    prowl.rst
@@ -126,6 +130,7 @@
    sma.rst
    sma_em.rst
    sma_mb.rst
+   smartmeter.rst
    smarttv.rst
    smartvisu.rst
    sml.rst

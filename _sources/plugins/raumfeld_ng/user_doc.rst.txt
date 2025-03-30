@@ -71,10 +71,11 @@ Beispiel:
         # read / write the powerstate of the device 
         rf_power_state_kueche:
             type: bool 
-            rf_renderer_name: “Kueche” 
+            rf_renderer_name: "Kueche"
             rf_attr: power_state 
             rf_scope: room 
-            initial_value: False enforce_updates: ‘yes’
+            initial_value: False
+            enforce_updates: ‘yes’
 
         # read / write the volume of the device
         rf_volume_kueche:
@@ -100,7 +101,7 @@ Zonen Attribute
 .. code:: yaml
 
     zone_kueche:
-        # read / writei the play state of the zone
+        # read / write the play state of the zone
         rf_play_state_kueche:
             type: str
             rf_renderer_name: "Kueche"

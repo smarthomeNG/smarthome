@@ -1,0 +1,204 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'hue3' Konfiguration
+===========================
+
+
+.. index:: Plugins; hue3 Konfiguration
+
+.. image:: /plugins/hue3/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **hue3** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Anbindung des Philips/Signify Hue Systems über eine Hue Bridge unter Nutzung des neuen API v2
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.10.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **hue3** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+bridge_ip
+=========
+
+
+IP Adresse der Philips/Signify Hue Bridge Dieser Parameter wird durch das Plugins in den Konfigurationsdaten abgelegt. Er ist in der Admin GUI nicht änderbar
+
+ - Datentyp: **ip**
+
+
+bridge_serial
+=============
+
+
+Seriennummer der Philips/Signify Hue Bridge Dieser Parameter wird durch das Plugins in den Konfigurationsdaten abgelegt. Er ist in der Admin GUI nicht änderbar
+
+ - Datentyp: **str**
+
+
+bridge_user
+===========
+
+
+Username/Anwendungsschlüssel um auf die Philips/Signify Hue Bridge zuzugreifen Dieser Parameter wird durch das Plugins in den Konfigurationsdaten abgelegt. Er ist in der Admin GUI nicht änderbar
+
+ - Datentyp: **str**
+
+
+default_transitionTime
+======================
+
+
+Zeit in sekunden welche die Leuchte benötigt um in einen neuen Zustand überzugehen
+
+ - Datentyp: **float**
+ - Standardwert: **0.4**
+
+ - Minimalwert: **0**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+hue3_function
+=============
+
+
+Anzusteuernde Funktion für die gewählte Resource/ID
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   -  |_| - |_| <noch keine Funktion gewählt>
+   - **on** |_| - |_| Ein-/Ausschalten -> bool, r/w (resource: light, group)
+   - **bri** |_| - |_| Helligkeit in Prozent, 0 … 100 -> num, r/w (resource: light, group)
+   - **bri_inc** |_| - |_| Relative Helligkeitsveränderung 0 … 254, w/o (resource: light, group)
+   - **xy** |_| - |_| xy Werte -> list, r/w (resource: light, group)
+   - **ct** |_| - |_| ct Wert -> num, w/o (resource: light, group)
+   - **dict** |_| - |_| Mehrere Funktionen auf einmal -> dict, w/o (resource: light, group)
+   - **name** |_| - |_| Name -> str, r/w (resource: light, group, scene, sensor)
+   - **reachable** |_| - |_| Erreichbar -> bool, r/o (resource: light)
+   - **connectivity** |_| - |_| Connectivity status -> str, r/o (resource: light)
+   - **type** |_| - |_| Typ des Leuchtmittels -> str, r/o (resource: light)
+   - **modelid** |_| - |_| Model Id des Leuchtmittels -> str, r/o (resource: light)
+   - **swversion** |_| - |_| Software Version des Leuchtmittels -> str, r/o (resource: light)
+   - **activate** |_| - |_| Aktivieren einer Szene für Leuchten -> bool w/o (resource: scene)
+   - **activate_scene** |_| - |_| Aktivieren einer Szene (Szenen-Id aus dem Item Wert) für Leuchten -> str w/o (resource: scene)
+   - **modify_scene** |_| - |_| Anpassen einer Szene für Leuchten in der selektierten Gruppe (hue3_id) -> str w/o (resource: group)
+   - **alert** |_| - |_| Benachrichtigung -> str (Werte: none, select, lselect) (resource: light, group)
+   - **effect** |_| - |_| Lichteffekt -> str (Werte: none, colorloop) (resource: light, group)
+   - **daylight** |_| - |_| Tageslicht -> bool, r/o (resource: sensor)
+   - **sunriseoffset** |_| - |_| Tageslicht: sunriseoffset -> num r/o (resource: sensor)
+   - **sunsetoffset** |_| - |_| Tageslicht: sunsetoffset -> num r/o (resource: sensor)
+   - **temperature** |_| - |_| Temperatur -> num r/o (resource: sensor)
+   - **presence** |_| - |_| Präsenz -> bool, r/o (resource: sensor)
+   - **lightlevel** |_| - |_| Sensor 'lightlevel' -> num r/o (resource: sensor)
+   - **status** |_| - |_| Sensor 'status' -> num, r/o (resource: sensor)
+   - **event** |_| - |_| Event, welches der Button sendet -> str, r/o (resource: button)
+   - **initial_press** |_| - |_| True, wenn der Button gerade gedrückt wurde -> bool, r/o (resource: button)
+   - **repeat** |_| - |_| True, wenn der Button repeat sendet -> bool, r/o (resource: button)
+   - **short_release** |_| - |_| True, wenn der Button kurz gedrückt wurde -> bool, r/o (resource: button)
+   - **long_release** |_| - |_| True, wenn der Button lang gedrückt wurde -> bool, r/o (resource: button)
+   - **power_status** |_| - |_| Power Status -> str, r/o (resource: device_power)
+   - **battery_level** |_| - |_| Batterie Ladung in Prozent -> num, r/o (resource: device_power)
+
+
+hue3_id
+=======
+
+
+ID der anzusteuernden resouce. Der Typ der resource wird mit 'hue3_recource' festgelegt.
+
+ - Datentyp: **str**
+
+
+hue3_resource
+=============
+
+
+Anzusteuernde Resource, falls nicht angegeben wird 'light' angenommen
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **light**
+   - **group**
+   - **scene**
+   - **sensor**
+   - **button**
+   - **device**
+   - **device_power**
+
+
+hue3_transition_time
+====================
+
+
+Zeit für Übergang (in sec)
+
+ - Datentyp: **num**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

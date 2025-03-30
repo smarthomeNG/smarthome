@@ -134,6 +134,33 @@ mqtt_topic_out definiert das MQTT Topic unter dem der Wert des Items als Payload
  - Datentyp: **str**
 
 
+mqtt_topic_prefix
+=================
+
+
+Präfix für Sende- und Empfangs-Topic
+
+ - Datentyp: **str**
+
+
+mqtt_topic_prefix_in
+====================
+
+
+Präfix für Empfangs-Topic
+
+ - Datentyp: **str**
+
+
+mqtt_topic_prefix_out
+=====================
+
+
+Präfix für Sende-Topic
+
+ - Datentyp: **str**
+
+
 ===============
 Logik Parameter
 ===============

@@ -30,7 +30,7 @@ Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 Beschreibung
 ============
 
-
+Pioneer AV-Receiver
 
 
 Anforderungen
@@ -106,21 +106,6 @@ Anzahl Datenbits
  - Standardwert: **8**
 
 
-command_class
-=============
-
-
-Klasse für Verarbeitung von Kommandos
-
- - Datentyp: **str**
- - Standardwert: **SDPCommandParseStr**
-
- - Mögliche Werte:
-
-   - **SDPCommand**
-   - **SDPCommandParseStr**
-
-
 conn_type
 =========
 
@@ -154,6 +139,16 @@ Anzahl Verbindungsversuche
 
  - Datentyp: **num**
  - Standardwert: **5**
+
+
+delay_initial_read
+==================
+
+
+Warte nach Verbindungsaufbau mit dem Abfragen von Werten
+
+ - Datentyp: **num**
+ - Standardwert: **0**
 
 
 host
@@ -213,6 +208,15 @@ Port für Netzwerkverbindung
  - Standardwert: **8102**
 
 
+resume_initial_read
+===================
+
+
+Bei resume vom Plugin erstmaliges Lesen erneut durchführen
+
+ - Datentyp: **bool**
+
+
 retry_cycle
 ===========
 
@@ -232,6 +236,29 @@ Anzahl von Durchgängen vor Verbindungsabbruch oder Suspend-Modus
  - Datentyp: **num**
  - Standardwert: **3**
 
+
+send_retries
+============
+
+
+Anzahl Sendeversuche
+ Kommt keine (passende) Antwort nach dem Senden  eines Commands zurück, wird das Kommando nochmals  gesendet, sofern der Wert über 0 liegt.
+
+ - Datentyp: **num**
+ - Standardwert: **0**
+
+
+send_retries_cycle
+==================
+
+
+Pause zwischen Durchgängen von Sendeversuchen
+ Sind Send Retries aktiv, wird ein Scheduler erstellt,  der im angegebenen Sekundentakt Kommandos erneut sendet,  zu denen keine (passenden) Antworten erhalten wurden.
+
+ - Datentyp: **num**
+ - Standardwert: **1**
+
+ - Minimalwert: **1**
 
 serialport
 ==========
@@ -302,7 +329,7 @@ pioneer_lookup
 ==============
 
 
-Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.   Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art der Tabelle ausgewählt werden: - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard) - rev liefert die Tabelle SmartHomeNG -> Gerät - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
+Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim  Start einmalig als dict oder list in das Item geschrieben.    Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art  der Tabelle ausgewählt werden:  - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard)  - rev liefert die Tabelle SmartHomeNG -> Gerät  - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben  - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
 
  - Datentyp: **str**
 

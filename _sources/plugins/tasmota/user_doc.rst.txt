@@ -12,6 +12,7 @@ bitte die Dokumentation des jeweiligen Devices zu Rate ziehen.
 
 Unterstützte Funktionen sind:
     * Relays eines Tasmota Devices (bis zu 4)
+    * Tasten eines Tasmota Devices (bis zu 4)
     * DS18B20 Temperatursensoren
     * AM2301 Sensoren für Temperatur und Luftfeuchte
     * SHT3X Sensoren für Temperatur und Luftfeuchte
@@ -58,6 +59,15 @@ folgenden Beispiel gezeigt:
         tasmota_topic: SONOFF_ZB1
         tasmota_zb_device: snzb02_01
         tasmota_zb_attr: Temperature
+
+Das Plugin versucht eine ZigBee-Bridge automatisch zu erkennen. Zudem kann diese auch per Attribut dediziert definiert werden:
+
+.. code-block:: yaml
+
+    temp:
+        type: num
+        tasmota_topic: ZB-GW03_01
+        tasmota_zb_device: bridge
 
 Für die Nutzung von SML Devices über ein Tasmota-Gerät müssen in dem entsprechenden Item die drei Attribute
 ``tasmota_topic``, ``tasmota_sml_device`` und ``tasmota_sml_attr`` konfiguriert werden, wie im
@@ -127,6 +137,7 @@ Bekannte tasmota-Attribute
 Die folgenden Attribute (Werte für das Item-Attribut ``tasmota-attr``) sind bisher bekannt und unterstützt:
 
     * "relay": Schalten des Relais -> bool, r/w
+    * "button": Drücken einer Taste -> str, r/o
     * "online": Online Status des Tasmota Devices -> bool, r/o
     * "voltage": Spannung in Volt bei Tasmota Devices mit ENERGY Sensor -> num, r/o
     * "current": Strom in Ampere bei Tasmota Devices mit ENERGY Sensor -> num, r/o
@@ -145,7 +156,7 @@ Die folgenden Attribute (Werte für das Item-Attribut ``tasmota-attr``) sind bis
     * "rf_send": Zu sendende RF Daten bei Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> dict {'RfSync': 12220, 'RfLow': 440, 'RfHigh': 1210, 'RfCode':'#F06104'}, r/w
     * "rf_key_send": Zu sendender RF-Key Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> num [1-16], r/w
     * "rf_key_recv": Zu empfangender RF-Key Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> num [1-16], r/w
-    * rf_key: 'RF Key'
+    * "rf_key": RF Key
     * "zb_permit_join": Schaltet das Pairing an der ZigBee Bridge ein/aus -> bool, r/w
     * "zb_forget": Löscht das Zigbee-Gerät aus dem Item Wert aus der Liste bekannter Geräte in der Zigbee-Bridge -> str, r/w
     * "zb_ping": Sendet ein Ping zum Zigbee-Gerät aus dem Item Wert -> str, r/w

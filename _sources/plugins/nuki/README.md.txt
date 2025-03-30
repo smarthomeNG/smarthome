@@ -97,7 +97,7 @@ whenever these door state was changed (only Nuki 2.0!). Find the list with the p
 
 
 ##### battery
-If you declare an item with the attribute `nuki_trigger: state`, this item holds the actual battery state of your
+If you declare an item with the attribute `nuki_trigger: battery`, this item holds the actual battery state of your
 Nuki lock.
 
 * 0     (Batteries are good. No need to replace it.)

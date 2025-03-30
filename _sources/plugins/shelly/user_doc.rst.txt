@@ -23,7 +23,7 @@ Konfiguration
 
 Zurzeit werden eine Reihe von Shelly Devices mit Gen1 API im **Backward-Co^mpatibility Mode** unterstützt. Dabei handelt
 es sich um die Devices, die bereits in der v1.2.0 des Plugins unterstützt wurden. Diese Devices werden konfiguriert,
-wie es bis zur v1.2.0 des shally Plugins üblich war.
+wie es bis zur v1.2.0 des Shelly Plugins üblich war.
 
 
 Es werden alle Relays eines Shelly Devices (bis zu 4) unterstützt. Weiterhin werden die folgenden

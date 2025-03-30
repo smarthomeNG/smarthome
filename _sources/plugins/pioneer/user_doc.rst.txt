@@ -50,6 +50,10 @@ plugin.yaml
         bytesize: 8
         parity: N
         stopbits: 1
+        send_retries: 0
+        send_retries_cycle: 2
+        delay_initial_read: 5
+        resume_initial_read: True
         autoreconnect: true
         autoconnect: true
         connect_retries: 5
@@ -69,7 +73,7 @@ Varianten, wobei die letzte die optimale Lösung darstellt:
 
 - einzelne Struct-Teile wie pioneer.info, pioneer.general, pioneer.tuner, pioneer.zone1, pioneer.zone2, pioneer.zone3
 - pioneer.ALL: Hierbei werden sämtliche Kommandos eingebunden, die vom Plugin vorgesehen sind
-- pioneer.AVR-X6300H bzw. die anderen unterstützten Modelle, um nur die relevanten Items einzubinden
+- pioneer.VSX-923 bzw. die anderen unterstützten Modelle, um nur die relevanten Items einzubinden
 - pioneer.MODEL: Es wird automatisch der Itembaum für das Modell geladen, das im plugin.yaml angegeben ist.
 
 Sollte das selbst verwendete Modell nicht im Plugin vorhanden sein, kann der Plugin Maintainer
@@ -94,6 +98,10 @@ direkt ins Plugin einfließen, damit diese auch von anderen Nutzer:innen eingese
 bereits sämtliche nötige Konvertierungen abgedeckt. So werden
 beispielsweise Lautstärkeangaben mit Kommawerten oder boolsche Werte automatisch
 korrekt interpretiert.
+
+Zu beachten ist, dass bei manchen Modellen die Funktion für mehrere Zonen etwas komplizierter gestaltet ist.
+So kann es sein, dass man - bevor man tatsächlich z.B. die HD Zone aktivieren kann, zuvor das
+Speakersystem auf Zone2 stellen und unter General/HDMI das Item "hdzone" aktivieren muss.
 
 
 Web Interface

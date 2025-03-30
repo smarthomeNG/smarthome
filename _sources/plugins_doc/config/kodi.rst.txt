@@ -76,36 +76,6 @@ Automatisches Neuverbinden bei Abbruch
  - Standardwert: **True**
 
 
-command_class
-=============
-
-
-Klasse für Verarbeitung von Kommandos
-
- - Datentyp: **str**
- - Standardwert: **SDPCommandJSON**
-
- - Mögliche Werte:
-
-   - **SDPCommand**
-   - **SDPCommandJSON**
-
-
-conn_type
-=========
-
-
-Verbindungstyp
-
- - Datentyp: **str**
- - Standardwert: **net_tcp_client**
-
- - Mögliche Werte:
-
-   - 
-   - **net_tcp_client**
-
-
 connect_cycle
 =============
 
@@ -126,6 +96,16 @@ Anzahl Verbindungsversuche
  - Standardwert: **5**
 
 
+delay_initial_read
+==================
+
+
+Verzögerung für das erstmalige Lesen beim Start (in Sekunden)
+
+ - Datentyp: **num**
+ - Standardwert: **10**
+
+
 host
 ====
 
@@ -133,26 +113,6 @@ host
 Netzwerkziel/-host
 
  - Datentyp: **str**
-
-
-message_repeat
-==============
-
-
-Anzahl Sendewiederholungen auf Protokollebene
-
- - Datentyp: **num**
- - Standardwert: **3**
-
-
-message_timeout
-===============
-
-
-Timeout für Antwort auf Protokollebene
-
- - Datentyp: **num**
- - Standardwert: **5**
 
 
 port
@@ -165,19 +125,13 @@ Port für Netzwerkverbindung
  - Standardwert: **9090**
 
 
-protocol
-========
+resume_initial_read
+===================
 
 
-Protokolltyp für Verbindung
+Bei resume vom Plugin erstmaliges Lesen erneut durchführen
 
- - Datentyp: **str**
- - Standardwert: **jsonrpc**
-
- - Mögliche Werte:
-
-   - 
-   - **jsonrpc**
+ - Datentyp: **bool**
 
 
 retry_cycle
@@ -198,6 +152,26 @@ Anzahl von Durchgängen vor Verbindungsabbruch oder Suspend-Modus
 
  - Datentyp: **num**
  - Standardwert: **3**
+
+
+send_retries
+============
+
+
+Anzahl Sendewiederholungen auf Protokollebene
+
+ - Datentyp: **num**
+ - Standardwert: **3**
+
+
+send_timeout
+============
+
+
+Timeout für Antwort auf Protokollebene
+
+ - Datentyp: **num**
+ - Standardwert: **5**
 
 
 suspend_item

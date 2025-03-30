@@ -30,6 +30,8 @@ Getestet mit:
 * UniFi Controller 5.10.23 im Docker Container auf Synology
 * UniFi UAP AC Lite, Mesh, Longrange, Pro
 * UniFi Switch US-8-60W
+* Unifi Express
+
 
 Konfiguration
 =============

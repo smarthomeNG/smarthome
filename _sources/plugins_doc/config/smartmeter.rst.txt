@@ -1,0 +1,383 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'smartmeter' Konfiguration
+=================================
+
+
+.. index:: Plugins; smartmeter Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **smartmeter** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Unterstützung für Smartmeter, die DLMS (Device Language Message Specification, IEC 62056-21) oder SML (Smart Message Language) nutzen und OBIS Codes liefern
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.10.0.3**
+ - Minimum Python Version: **3.9**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **smartmeter** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+autoreconnect
+=============
+
+
+Bei Beenden der Verbindung automatisch erneut verbinden (nur bei ständigem Empfang)
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+baudrate
+========
+
+
+Baudrate, bei der die Kommunikation erfolgen soll
+
+ - Datentyp: **int**
+ - Standardwert: **9600**
+
+ - Minimalwert: **50**
+
+baudrate_min
+============
+
+
+Baudrate, bei der die Kommunikation zuerst erfolgen soll (nur DLMS)
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+ - Minimalwert: **50**
+
+buffersize
+==========
+
+
+Größe des Lesepuffers. Mindestens doppelte Größe der maximalen Nachrichtenlänge in Bytes (nur SML)
+
+ - Datentyp: **int**
+ - Standardwert: **1024**
+
+
+crontab
+=======
+
+
+Abfragen des Smartmeters mit Festlegung via Crontab
+
+ - Datentyp: **str**
+
+
+cycle
+=====
+
+
+Zeitlicher Abstand zwischen zwei Abfragen des Smartmeters in Sekunden, setzen auf 0 schaltet cycle aus
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+ - Minimalwert: **0**
+
+date_offset
+===========
+
+
+Unix timestamp der Smartmeter Inbetriebnahme (nur SML)
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+device_address
+==============
+
+
+Interne Unteradresse des Smartmeters (nur DLMS)
+
+ - Datentyp: **str**
+
+
+device_type
+===========
+
+
+Typ des Gerätes, ggf. notwendig für spezielle Behandlung (nur SML)
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - 
+
+
+host
+====
+
+
+Host der eine IP Schnittstelle bereitstellt (nur SML)
+
+ - Datentyp: **str**
+
+
+normalize
+=========
+
+
+Wenn Einheiten mit Zehnerpräfix geliefert werden, werden Einheit und Wert in die entsprechende Basiseinheit konvertiert (z.B. 12.7 kWh -> 12700 Wh)
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+only_listen
+===========
+
+
+Manche Smartmeter können nicht abgefragt werden sondern senden von sich aus Informationen. Für diese Smartmeter auf True setzen und die Baudrate anpassen (nur DLMS)
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+poll
+====
+
+
+Gerät regelmäßig abfragen (cycle/crontab) statt ständigem Empfang (nur SML)
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+port
+====
+
+
+Port für die Kommunikation (nur SML)
+
+ - Datentyp: **int**
+
+
+protocol
+========
+
+
+Protokoll zur Kommunikation mit dem Smartmeter. Leerer Wert bedeutet automatische Erkennung (soweit erfolgreich).
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **DLMS**
+   - **SML**
+   - **dlms**
+   - **sml**
+   - 
+
+
+querycode
+=========
+
+
+Abfragecode für den Smartmeter, default ist `?`, einige Smartmeter akzeptieren z.B. `2` (nur DLMS)
+
+ - Datentyp: **str**
+ - Standardwert: **?**
+
+
+serialport
+==========
+
+
+Serieller Port, an dem das Smartmeter angeschlossen ist
+
+ - Datentyp: **str**
+
+
+time_filter
+===========
+
+
+Im "ständig empfangen"-Modus Item-Updates nur alle x Sekunden senden. x = 0: alle Updates senden. x = -1: den Wert von "cycle" verwenden.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+timeout
+=======
+
+
+Timeout in Sekunden nach dem der Lesevorgang automatisch beendet wird
+
+ - Datentyp: **int**
+ - Standardwert: **2**
+
+
+use_checksum
+============
+
+
+Wenn wahr, wird eine Prüfsumme über die ausgelesenen Daten gebildet (nur DLMS)
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+obis_code
+=========
+
+
+OBIS-Code, dessen Wert gelesen werden soll
+
+ - Datentyp: **str**
+
+
+obis_index
+==========
+
+
+Index des OBIS-Werts, der gelesen werden soll
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+ - Maximalwert: **10**
+
+obis_property
+=============
+
+
+Eigenschaft des gelesenen Wertes: * value: korrigierter Wert (Skalierungsfaktor, SI-Basiseinheit) * valueRaw: vom Gerät gelieferter (Roh-)Wert * unit: zurückgegebene Einheit des Wertes * unitCode: Code der Einheit gem. smllib.const.UNITS * scaler: Multiplikationsfaktor für valueRaw * status: Status-Bitfeld * valTime: Zeitstempel des Wertes * actTime: korrigierter Zeitstempel des Wertes * signature: tbd Nicht alle Eigenschaften sind in jedem Datenpunkt vorhanden.
+
+ - Datentyp: **str**
+ - Standardwert: **value**
+
+ - Mögliche Werte:
+
+   - **value**
+   - **valueRaw**
+   - **unit**
+   - **unitCode**
+   - **name**
+   - **obis**
+   - **valTime**
+   - **actTime**
+   - **scaler**
+   - **signature**
+   - **status**
+   - **statRun**
+   - **statFraudMagnet**
+   - **statFraudCover**
+   - **statEnergyTotal**
+   - **statEnergyL1**
+   - **statEnergyL2**
+   - **statEnergyL3**
+   - **statRotaryField**
+   - **statBackstop**
+   - **statCalFault**
+   - **statVoltageL1**
+   - **statVoltageL2**
+   - **statVoltageL3**
+
+
+obis_readout
+============
+
+
+Der komplette Auslesepuffer wird für eigene Untersuchungen gespeichert (nur DLMS)
+
+ - Datentyp: **str**
+
+
+obis_vtype
+==========
+
+
+Konvertierungsart des gelesenen Wertes: * str: eine Zeichenkette * num: numerisch, entweder Ganzzahl oder Fließkommazahl * int: Ganzzahl * float: Fließkommazahl * ZST12: Datum und Zeit codiert als YYMMDDhhmmss * ZST10: Datum und Zeit codiert als YYMMDDhhmm * D6: Datum codiert als YYMMDD * Z4: Zeit codiert als hhmm * Z6: Zeit codiert als hhmmss
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **str**
+   - **num**
+   - **int**
+   - **float**
+   - **ZST12**
+   - **ZST10**
+   - **D6**
+   - **Z6**
+   - **Z4**
+   - 
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

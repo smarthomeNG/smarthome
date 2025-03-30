@@ -1,24 +1,21 @@
 # Modbus Plugin for Kostal inverters
 
-#### Version 1.6.2
+#### Version 1.6.3
 
 This plugin connects your Kostal inverter (https://www.kostal-solar-electric.com/) via ModBus with SmarthomeNG.
 - read out all inverter data
 
+
 ## Change history
 
-- work with newer versions of pymodbus too
-
-### Changes Since version 1.x.x
-
-- No Changes so far
+- support for pymodbus 2 dropped
 
 
 ### Requirements needed software
 
-* Python > 3.5
+* Python >= 3.8
 * pip install pymodbus
-* SmarthomeNG >= 1.6.0
+* SmarthomeNG >= 1.8.0
 
 
 ### Supported Inverters
