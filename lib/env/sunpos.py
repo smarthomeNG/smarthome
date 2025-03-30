@@ -1,4 +1,3 @@
-
 # lib/env/sunpos.py
 
 import math
@@ -7,8 +6,6 @@ if sh.sun:
     # setting altitude/azimut
     # azimut, elevation = sh.sun.pos()
 
-    #time = datetime.datetime.utcnow()
-    #azimut_radians, elevation_radians = sh.sun.pos(dt=time)
     # by default sh.sun.pos() will return the current position of sun in radians
     azimut_radians, elevation_radians = sh.sun.pos()
 
