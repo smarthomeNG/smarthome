@@ -71,20 +71,31 @@ function print_installed_pythonversions() {
     print_pythonversion '3.9'
     print_pythonversion '3.10'
     print_pythonversion '3.11'
+    print_pythonversion '3.12'
+    print_pythonversion '3.13'
+    print_pythonversion '3.14'
 }
 
 function get_pythonversion_for_shng() {
-    if [ "`which python3.10`" != "" ]; then
-        echo 3.10
+    if [ "`which python3.11`" != "" ]; then
+        echo 3.11
     else
-        if [ "`which python3.9`" != "" ]; then
-            echo 3.9
+        if [ "`which python3.12`" != "" ]; then
+            echo 3.12
         else
-            if [ "`which python3.8`" != "" ]; then
-                echo 3.8
+            if [ "`which python3.10`" != "" ]; then
+                echo 3.10
             else
-                if [ "`which python3.11`" != "" ]; then
-                    echo 3.11
+                if [ "`which python3.9`" != "" ]; then
+                    echo 3.9
+                else
+                    if [ "`which python3.8`" != "" ]; then
+                        echo 3.8
+                    else
+                        if [ "`which python3.13`" != "" ]; then
+                            echo 3.13
+                        fi
+                    fi
                 fi
             fi
         fi
