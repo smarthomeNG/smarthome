@@ -26,7 +26,10 @@ Ein [Wiki](https://github.com/smarthomeNG/smarthome/wiki) existiert zumeist in d
 
 Die Kernfunktionalität wird alle 6-9 Monate in einem Release erweitert und freigegeben.
 
-## Benutzte Werkzeuge
+## Bis zur Version v1.11 benutzte Werkzeuge
+
+Bis zum Release v1.11 wurden die folgenden Werkzeuge von JetBrains genutzt, die uns JetBrains dankenswerterweise kostenfrei zur Verfügung gestellt hatte.
+Leider hat JetBrains uns diese Lizenzen nicht weiter verlängert, so dass wir uns, Stand April 2025, neue Tools suchen müssen. 
 
 | Werkzeug | beschreibung |
 | ---     | :--- |
