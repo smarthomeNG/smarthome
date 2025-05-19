@@ -160,7 +160,7 @@ class Orb():
     def noon(self, doff=0, moff=0, dt=None):
         observer, orb = self.get_observer_and_orb()
         if dt is not None:
-            observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
+            observer.date = dt - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
             observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
@@ -177,7 +177,7 @@ class Orb():
     def midnight(self, doff=0, moff=0, dt=None):
         observer, orb = self.get_observer_and_orb()
         if dt is not None:
-            observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
+            observer.date = dt - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
             observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
@@ -203,7 +203,7 @@ class Orb():
         observer, orb = self.get_observer_and_orb()
         # workaround if rise is 0.001 seconds in the past
         if dt is not None:
-            observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
+            observer.date = dt - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
             observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
@@ -232,7 +232,7 @@ class Orb():
         observer, orb = self.get_observer_and_orb()
         # workaround if set is 0.001 seconds in the past
         if dt is not None:
-            observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
+            observer.date = dt - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
             observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
