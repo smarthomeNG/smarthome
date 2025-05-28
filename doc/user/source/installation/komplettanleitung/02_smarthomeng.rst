@@ -59,6 +59,10 @@ SmartHomeNG Quellcode laden
 
            bash tools/postinstall
 
+        .. important::
+
+            bash tools/postinstall **NICHT** mit sudo aufrufen
+
         Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
 
         Das Skript postinstall erzeugt ein virtuelles Environment **py_shng**.

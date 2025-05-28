@@ -55,7 +55,11 @@ It is possible to read the documentation with [Google's translation service](htt
 This readme file contains basic information about the root directories of SmartHomeNG for an overview.
 
 
-## Used Tools
+## Used Tools, up to v1.11 of SmartHomeNG
+
+Up to release v1.11 of SmartHomeNG, we used the following tools from JetBrains, which JetBrains kindly provided to 
+us free of charge. Unfortunately, JetBrains did not renew these licenses, so as of April 2025, we have to find 
+new tools.
 
 | Tool | Description |
 | ---     | :--- |

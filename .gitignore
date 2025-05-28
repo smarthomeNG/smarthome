@@ -21,6 +21,8 @@ pyrightconfig.json
 .DS_Store?
 .AppleDouble
 .LSOverride
+.VolumeIcon.icns
+favicon.icns
 ._*
 .Spotlight-V100
 .Trashes
