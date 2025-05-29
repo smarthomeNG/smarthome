@@ -66,6 +66,9 @@ Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmab
    * - DEBUG
      - 10
      - Informationen für die Fehlersuche, die normalerweise nicht benötigt werden
+   * - DEVELOP
+     - 9
+     - Informationen für die Fehlersuche, die exklusiv für die Entwicklung relevant sind
    * - NOTSET
      - 0
      - Es wird kein Logeintrag erzeugt
@@ -106,9 +109,10 @@ Die einzelnen Konfigurationseinträge haben die folgende Bedeutung:
 +=================+====================================================================================================+
 | **formatters:** | Definiert das Ausgabeformat der einzelnen Loggingeinträge. Mehrere unterschiedliche                |
 |                 | **formatter** können dazu verwendet werden, um unterschiedlich aussehende Logdateien               |
-|                 | zu erzeugen. In der Konfigurationsdatei **etc/logging.yaml** sind die Formatter                    |
+|                 | zu erzeugen. In der Konfigurationsdatei **etc/logging.yaml** sind ua. die Formatter                |
 |                 | **`simple`** und **`detail`** vorkonfiguriert. Weitere Formatter können bei Bedarf                 |
 |                 | hinzugefügt werden.                                                                                |
+|                 | Weitere Infos sind unter :doc:`Logging Formatter </referenz/logging/logging_formatter>` zu finden. |
 +-----------------+----------------------------------------------------------------------------------------------------+
 | **handlers:**   | Handler definieren die Log-Behandlungsroutinen/Ausgabekanäle die verwendet werden.                 |
 |                 | In Python gibt es bereits mehrere vorimplementierte und mächtige Handler-Typen, die in der         |
@@ -159,7 +163,7 @@ dann nur noch über den zusätzlichen Handler.
 Logging Handler und Filter
 ==========================
 
-Zusätzlich zu den Logging Handlern, die im Standard Logging Modul von Python definiert, bringt
+Zusätzlich zu den Logging Handlern, die im Standard Logging Modul von Python definiert sind, bringt
 SmartHomeNG weitere Handler und Filter mit, die bei der Konfiguration in ../etc/logging.yaml verwendet werden
 können.
 
