@@ -7,6 +7,15 @@ formatters:
 
     # The following sections define the output formats to be used in the different logs
     #
+    shng_local_month:
+        format: '%(asctime)s %(levelname)-8s %(name)-17s %(message)s'
+        datefmt: '%b %d %H:%M:%S'
+
+    shng_english_month:
+        (): lib.log.EnglishLocale
+        format: '%(asctime)s %(levelname)-8s %(name)-17s %(message)s'
+        datefmt: '%b %d %H:%M:%S'
+
     shng_simple:
         format: '%(asctime)s %(levelname)-8s %(name)-19s %(message)s'
         datefmt: '%Y-%m-%d  %H:%M:%S'
