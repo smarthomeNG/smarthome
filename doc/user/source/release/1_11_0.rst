@@ -540,7 +540,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * update and restructure commands and structs. bump version to 2.0.0
   * fix transform received data (keep %20 for spaces)
   * update method code in init using type hint
-  * breaking change rename prefix "sqb_" to "lms_"
+  * breaking change rename prefix ``"sqb_"`` to ``"lms_"``
   * re-read players on new client and player (dis)connect as well as rename
   * rename conflicting commands/items: id, path, remove and custom_skip.active, playlist.url, playlist.name
   * update newclient command so it also rereads the players when a client gets "forgotten"/disabled
@@ -681,7 +681,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Code cleanup
   * Update WebIf
   * Bugfix
- * Improve _handle_dpt3
+  * Improve _handle_dpt3
   * Make plugin restartable
   * Bump to 1.8.10
   * Bbugfix for dpt3 handling
@@ -729,7 +729,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix logging of action count
   * Fix list actions
   * Fix issue tracking for action definitions, minor updates
-  * Make it possible to set value of list item by se_set_..: [foo, bar]
+  * Make it possible to set value of list item by ``se_set_..: [foo, bar]``
   * Improve zoom/scroll handling (esp. on page update, using cookies now)
   * Improve visu, now compressed and less white space, no overlaps
   * Minor code improvement
