@@ -29,6 +29,7 @@ import os
 import datetime
 import pickle
 import re
+import locale
 from pathlib import Path
 
 import collections
@@ -662,6 +663,19 @@ class DateTimeRotatingFileHandler(logging.StreamHandler):
 """
 In the following part of the code, logging handlers are defined
 """
+
+class EnglishLocale(logging.Formatter):
+    """
+    Use English month names for logging
+    """
+    def formatTime(self, record, datefmt=None):
+        current_locale = locale.setlocale(locale.LC_TIME)
+        try:
+            locale.setlocale(locale.LC_TIME, 'C')  # Forces English (Jan, Feb, etc.)
+            return time.strftime(datefmt, self.converter(record.created)) if datefmt else super().formatTime(record, datefmt)
+        finally:
+            locale.setlocale(locale.LC_TIME, current_locale)
+
 
 class ShngTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
     """
