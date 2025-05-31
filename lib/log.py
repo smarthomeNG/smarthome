@@ -29,7 +29,9 @@ import os
 import datetime
 import pickle
 import re
-import locale
+import pytz
+from babel.dates import format_datetime, get_timezone_name
+
 from pathlib import Path
 
 import collections
@@ -668,13 +670,65 @@ class EnglishLocale(logging.Formatter):
     """
     Use English month names for logging
     """
+    def __init__(self, fmt=None, datefmt=None, style='%', tzinfo=None):
+        super().__init__(fmt=fmt, datefmt=datefmt, style=style)
+        self.tzinfo = tzinfo  # Optional: pytz-compatible timezone info
+        self._strftime_format = datefmt
+        self._babel_format = self._convert_strftime_to_babel(datefmt) if datefmt else None
+
     def formatTime(self, record, datefmt=None):
-        current_locale = locale.setlocale(locale.LC_TIME)
-        try:
-            locale.setlocale(locale.LC_TIME, 'C')  # Forces English (Jan, Feb, etc.)
-            return time.strftime(datefmt, self.converter(record.created)) if datefmt else super().formatTime(record, datefmt)
-        finally:
-            locale.setlocale(locale.LC_TIME, current_locale)
+        datefmt = self._strftime_format or datefmt
+        babel_fmt = self._babel_format or self._convert_strftime_to_babel(datefmt)
+
+        # Ensure that we get a timezone-aware datetime
+        if self.tzinfo:
+            dt = datetime.datetime.fromtimestamp(record.created, tz=self.tzinfo)
+        else:
+            dt = datetime.datetime.fromtimestamp(record.created)
+
+        # Only add timezone info if %Z or %z is in the format
+        babel_kwargs = {
+            'format': babel_fmt,
+            'locale': 'en_US',
+            'tzinfo': None  # Start with None for tzinfo
+        }
+
+        # Use pytz to ensure the correct label
+        dt = dt.astimezone(self.tzinfo)
+        babel_kwargs['tzinfo'] = dt.tzinfo
+
+        formatted = format_datetime(dt, **babel_kwargs)
+
+        # Manually handle week numbers and day-of-year (unsupported by Babel)
+        if '%U' in datefmt:
+            formatted = formatted.replace('%%U', dt.strftime('%U'))
+        if '%W' in datefmt:
+            formatted = formatted.replace('%%W', dt.strftime('%W'))
+        if '%j' in datefmt:
+            formatted = formatted.replace('%%j', dt.strftime('%j'))
+        if '%Z' in datefmt:
+            formatted = formatted.replace('%%Z', dt.strftime('%Z'))
+
+        return formatted
+
+    def _convert_strftime_to_babel(self, fmt: str) -> str:
+        mapping = {
+            '%a': 'EEE', '%A': 'EEEE',
+            '%w': 'e', '%d': 'dd',
+            '%b': 'MMM', '%B': 'MMMM',
+            '%m': 'MM', '%y': 'yy', '%Y': 'yyyy',
+            '%H': 'HH', '%I': 'hh', '%p': 'a',
+            '%M': 'mm', '%S': 'ss', '%f': 'SSSSSS',
+            '%z': 'Z', '%Z': "'%%Z'",
+            '%c': 'medium', '%x': 'short', '%X': 'medium',
+            '%%': '%',
+            '%U': "'%%U'", '%W': "'%%W'", '%j': "'%%j'"  # handled manually
+        }
+
+        def replacer(match):
+            return mapping.get(match.group(0), match.group(0))
+
+        return re.sub(r'%[a-zA-Z%]', replacer, fmt)
 
 
 class ShngTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
