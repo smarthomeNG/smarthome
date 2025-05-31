@@ -6,9 +6,9 @@
 .. role:: redsup
 
 
-=================
-Logging Formatter
-=================
+===================================
+Logging Formatter :bluesup:`Update`
+===================================
 
 Mit **Logging Formattern** wird festgelegt, wie die Informationen aufbereitet werden sollen, wenn sie in ein
 Log geschrieben werden.
@@ -40,9 +40,25 @@ werden:
             format: '%(asctime)s %(levelname)-8s %(name)-19s %(message)s'
             datefmt: '%Y-%m-%d  %H:%M:%S %Z'
 
+Möchte man den Zeitstempel anders gestalten, ist dies einfach über den Parameter `datefmt` zu bewerkstelligen.
+Das folgende Beispiel formatiert den Zeitstempel als `Mai 29 12:59:51`. Die Sprache für den Monatsnamen
+hängt dabei von der Systemlokalisierung ab. Möchte man unabhängig von der Lokalisierung die Monate jedenfalls
+auf English geloggt haben (z.B. für eine automatisierte Analyse), ist die `EnglishLocale` Klasse zu nutzen,
+wie im Beispiel `shng_english_month` zu sehen.
+
+.. code-block:: yaml
+
+    formatters:
+        shng_local_month:
+            format: '%(asctime)s %(levelname)-8s %(name)-17s %(message)s'
+            datefmt: '%b %d %H:%M:%S'
+
+        shng_english_month:
+            (): lib.log.EnglishLocale
+            format: '%(asctime)s %(levelname)-8s %(name)-17s %(message)s'
+            datefmt: '%b %d %H:%M:%S'
 
 Eine vollständige Liste der Attribute eines Log-Records kann in der Python Dokumentation unter
 `logging - Logging facility for Python <https://docs.python.org/3/library/logging.html>`_ nachgelesen werden.
 
 |
-
