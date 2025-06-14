@@ -2620,11 +2620,21 @@ class Item():
         if _changed or self._enforce_updates or self._type == 'scene':
             # ms: call run_on_change() from here -> noved down
             # self.__run_on_change(value)
+
+            # Trigger methods (update_item methods of plugins)
+            ### Test for fix for unwanted plugin retrigger in combination with eval expressions
+            caller_for_update_item = caller
+            if caller.lower().startswith('eval:'):
+                # clean up caller for update_item methods
+                caller_for_update_item = caller[5:]
             for method in self.__methods_to_trigger:
+                # shortname={method.__self__._shortname} - not every plugin has a var _shortname !!!
                 try:
-                    method(self, caller, source, dest)
+                    method(self, caller_for_update_item, source, dest)
                 except Exception as e:
-                    logger.exception("Item {}: problem running {}: {}".format(self._path, method, e))
+                    logger.exception(f"Item {self._path}: problem running {method}: {e}")
+            ### END Test for fix for unwanted plugin retrigger in combination with eval expressions
+
             if self._threshold and self.__logics_to_trigger:
                 if self.__th_crossed and self._value <= self.__th_low:  # cross lower bound
                     self.__th_crossed = False
