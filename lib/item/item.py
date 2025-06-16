@@ -2615,22 +2615,24 @@ class Item():
             self.__prev_update_by = self.__updated_by
             self.__updated_by = "{0}:{1}".format(caller, source)
         self._lock.release()
-        # ms: call run_on_update() from here
-        self.__run_on_update(value, caller=caller, source=source, dest=dest)
-        if _changed or self._enforce_updates or self._type == 'scene':
-            # ms: call run_on_change() from here -> noved down
-            # self.__run_on_change(value)
 
+        ### Test for fix for unwanted plugin retrigger in combination with eval expressions
+        # remove existing profix from caller
+        caller_without_prefix = caller
+        if caller.lower().startswith('eval:'):
+            # clean up caller for update_item methods
+            caller_without_prefix = caller[5:]
+        ### END Test for fix for unwanted plugin retrigger in combination with eval expressions
+
+        self.__run_on_update(value, caller=caller, source=source, dest=dest)
+
+        if _changed or self._enforce_updates or self._type == 'scene':
             # Trigger methods (update_item methods of plugins)
             ### Test for fix for unwanted plugin retrigger in combination with eval expressions
-            caller_for_update_item = caller
-            if caller.lower().startswith('eval:'):
-                # clean up caller for update_item methods
-                caller_for_update_item = caller[5:]
             for method in self.__methods_to_trigger:
                 # shortname={method.__self__._shortname} - not every plugin has a var _shortname !!!
                 try:
-                    method(self, caller_for_update_item, source, dest)
+                    method(self, caller_without_prefix, source, dest)
                 except Exception as e:
                     logger.exception(f"Item {self._path}: problem running {method}: {e}")
             ### END Test for fix for unwanted plugin retrigger in combination with eval expressions
@@ -2661,7 +2663,7 @@ class Item():
             except Exception as e:
                 logger.warning("Item: {}: could not update cache {}".format(self._path, e))
 
-        if self._autotimer_time and caller != 'Autotimer' and not self._fading:
+        if self._autotimer_time and caller_without_prefix != 'Autotimer' and not self._fading:
             # cast_duration for fixed attribute
             # logger.debug(f'autotimer: {self._autotimer_time} / {self._autotimer_value}')
             _time = self.get_attr_time('autotimer')
