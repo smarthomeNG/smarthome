@@ -63,21 +63,21 @@ class Orb():
         `temp` - 15 degrees Celsius
         `pressure` - 1010 mBar
 
-    All calculations by ephem will be based on utc time. 
+    All calculations by ephem will be based on utc time.
     Changelog of pypehem:
     > Version 4.1.1 (2021 November 27)
     > When you provide PyEphem with a Python datetime that has a time zone attached,
     > PyEphem now detects the time zone and converts the date and time to UTC automatically.
-    
-    To prevent side effects by this behaviour every datetime object given to any function in class Orb 
-    will be converted to utc. 
-    In case the given datetime is 
+
+    To prevent side effects by this behaviour every datetime object given to any function in class Orb
+    will be converted to utc.
+    In case the given datetime is
     - naive (no timezone attached) --> the current timezone of SmartHomeNG will be used and the datetime will be converted to utc
     - has a timezone other than utc --> dt will be converted to utc
     - has utc timezone --> dt will not be changed and has always an offset of 0:00
-    
+
     TODO:
-    It can be that datetime conversion from and to utc is ambigous: 
+    It can be that datetime conversion from and to utc is ambigous:
     Imagine October 27th, in 2024, at 2:30 in the night.
     dt = datetime(2024, 10, 27, 2, 30, tzinfo=berlin)
     This is ambigous because it could well be summertime having still utc+2 hours or wintertime with utc+1 hours
@@ -107,7 +107,7 @@ class Orb():
         self.lon = lon
         self.elev = elev
         self.neverup_delta = None
-        
+
         if self.orb == 'sun':
             self.neverup_delta = neverup_delta
             if not neverup_delta == 0.00001:
@@ -270,7 +270,7 @@ class Orb():
         # attention: _avoid_neverup itself calls noon(), this might well get circular in some circumstances
         if not doff == 0:
             doff = self._avoid_neverup(dt, date_utc, doff)
-            
+
         observer.horizon = str(doff)
         next_antitransit = observer.next_antitransit(orb).datetime()
         next_antitransit = next_antitransit + dateutil.relativedelta.relativedelta(minutes=moff)
@@ -290,16 +290,16 @@ class Orb():
         observer, orb = self.get_observer_and_orb()
         # workaround if rise is 0.001 seconds in the past
         if dt is None:
-            observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
+            observer.date = self.shtime.utcnow() + dateutil.relativedelta.relativedelta(seconds=2)
             logger.debug(f"ephem: rise for {self.orb} with doff={doff}, moff={moff}, dt is None, using observer.date={observer.date}")
         else:
             if dt.tzinfo is None:
                 # unaware datetime
                 logger.debug(f"ephem: rise for {self.orb} with doff={doff}, moff={moff}, dt={dt}, dt is unaware of timezone, assuming local time")
-                observer.date = self.unaware_datetime_to_utc(dt) - dateutil.relativedelta.relativedelta(minutes=moff)
+                observer.date = self.unaware_datetime_to_utc(dt)
             else:
                 logger.debug(f"ephem: rise for {self.orb} with doff={doff}, moff={moff}, dt={dt}, dt timezone is {dt.tzinfo}")
-                observer.date = self.aware_datetime_to_utc(dt) - dateutil.relativedelta.relativedelta(minutes=moff)
+                observer.date = self.aware_datetime_to_utc(dt)
 
         date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
 
@@ -309,6 +309,9 @@ class Orb():
         observer.horizon = str(doff)
         if not doff == 0:
             next_rising = observer.next_rising(orb, use_center=center).datetime()
+            if next_rising.astimezone(tzutc()) >= date_utc:
+                next_rising -= datetime.timedelta(days=1)
+                logger.debug(f"ephem: adjusted next_rising {next_rising} to previous day, dt {dt}")
         else:
             next_rising = observer.next_rising(orb).datetime()
         next_rising = next_rising + dateutil.relativedelta.relativedelta(minutes=moff)
@@ -328,16 +331,16 @@ class Orb():
         observer, orb = self.get_observer_and_orb()
         # workaround if set is 0.001 seconds in the past
         if dt is None:
-            observer.date = self.shtime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
+            observer.date = self.shtime.utcnow() + dateutil.relativedelta.relativedelta(seconds=2)
             logger.debug(f"ephem: set for {self.orb} with doff={doff}, moff={moff}, dt is None, using observer.date={observer.date}")
         else:
             if dt.tzinfo is None:
                 # unaware datetime
                 logger.debug(f"ephem: set for {self.orb} with doff={doff}, moff={moff}, dt={dt}, dt is unaware of timezone, assuming local time")
-                observer.date = self.unaware_datetime_to_utc(dt) - dateutil.relativedelta.relativedelta(minutes=moff)
+                observer.date = self.unaware_datetime_to_utc(dt)
             else:
                 logger.debug(f"ephem: set for {self.orb} with doff={doff}, moff={moff}, dt={dt}, dt timezone is {dt.tzinfo}")
-                observer.date = self.aware_datetime_to_utc(dt) - dateutil.relativedelta.relativedelta(minutes=moff)
+                observer.date = self.aware_datetime_to_utc(dt)
 
         date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
 
@@ -347,6 +350,9 @@ class Orb():
         observer.horizon = str(doff)
         if not doff == 0:
             next_setting = observer.next_setting(orb, use_center=center).datetime()
+            if next_setting.astimezone(tzutc()) <= date_utc:
+                next_setting += datetime.timedelta(days=1)
+                logger.debug(f"ephem: adjusted next_setting {next_setting} to next day, dt {dt}")
         else:
             next_setting = observer.next_setting(orb).datetime()
         next_setting = next_setting + dateutil.relativedelta.relativedelta(minutes=moff)
@@ -380,7 +386,7 @@ class Orb():
 
         observer.date = date
         orb.compute(observer)
-        
+
         if degree:
             return (math.degrees(orb.az), math.degrees(orb.alt))
         else:
