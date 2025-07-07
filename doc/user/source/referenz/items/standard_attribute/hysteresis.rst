@@ -3,9 +3,9 @@
 .. index:: Items; Hysterese
 .. index:: Hysterese
 
-=========
-Hysterese
-=========
+===========================
+Hysterese :bluesup:`Update`
+===========================
 
 Mit Hilfe der drei folgenden Attribute kann eine Hysterese konfiguriert werden.
 
@@ -196,6 +196,6 @@ zurück gegeben, der die folgenden Werte haben kann:
   "Stay (Off)",      "Der Wert des **hysteresis_input** Items liegt zwischen unterem und oberen Schwellwert und lag vorher unterhalb des unteren Schwellwertes"
   "Timer -> Off",    "Der Wert des **hysteresis_input** Items liegt zwar unterhalb des unteren Schwellwertes, aber der Timer für die Mindestdauer ist noch nicht abgelaufen"
   "Off",             "Der Wert des **hysteresis_input** Items liegt unterhalb des unteren Schwellwertes"
-  "Set (On)",        "Der Wert des Hysterese Items wurde direkt auf ``True``gesetzt"
+  "Set (On)",        "Der Wert des Hysterese Items wurde direkt auf ``True`` gesetzt"
   "Set (Off)",       "Der Wert des Hysterese Items wurde direkt auf ``False`` gesetzt"
 

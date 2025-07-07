@@ -2,8 +2,8 @@
 .. index:: Standard-Attribute; cycle
 .. index:: cycle
 
-cycle :redsup:`neu`
-===================
+cycle
+=====
 
 Das Attribut definiert ein regelmäßiges Aufrufen des Items (und damit der verknüpften Logik oder Eval-Funktion).
 

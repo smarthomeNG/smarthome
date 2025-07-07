@@ -3,8 +3,8 @@
 
 .. role:: bluesup
 
-crontab :bluesup:`Update` :redsup:`neu`
-=======================================
+crontab
+=======
 
 Es gibt drei verschiedene Parametersätze für ein crontab Attribut:
 

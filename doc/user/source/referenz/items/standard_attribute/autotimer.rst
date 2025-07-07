@@ -2,8 +2,8 @@
 .. index:: Standard-Attribute; autotimer
 .. index:: autotimer
 
-*autotimer* :redsup:`neu`
-=========================
+autotimer
+=========
 
 Das Attribut setzt den Wert des Items nach einer Zeitspanne auf einen bestimmten Wert. Der Timer beginnt zu laufen,
 wenn dem Item ein Wert zugewiesen wird. Wenn während der Autotimer läuft dem Item erneut ein Wert zugewiesen wird,
