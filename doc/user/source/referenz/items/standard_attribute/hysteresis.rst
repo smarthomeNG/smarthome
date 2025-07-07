@@ -166,6 +166,16 @@ wechselt bei unterschreiten eines Verbrauchs von 10 Watt auf False (ausgeschalte
 
 |
 
+Initialisierung eines Hysterese Items
+=====================================
+
+Das Hysterese Item kann durch direkte Zuweisung eines Bool Wertes initialisiert werden. Der State des Hysterese Items
+nimmt dann den Wert **Set (On)** bzw. **Set (Off)** an. Ein eventuell aktiver Timer wird dabei beendet.
+
+Anschließend reagiert das Hysterese Item normal auf das unter ``hysteresis_input`` konfigurierte Item.
+
+|
+
 zusätzliche Statusinformationen
 ===============================
 
@@ -186,4 +196,6 @@ zurück gegeben, der die folgenden Werte haben kann:
   "Stay (Off)",      "Der Wert des **hysteresis_input** Items liegt zwischen unterem und oberen Schwellwert und lag vorher unterhalb des unteren Schwellwertes"
   "Timer -> Off",    "Der Wert des **hysteresis_input** Items liegt zwar unterhalb des unteren Schwellwertes, aber der Timer für die Mindestdauer ist noch nicht abgelaufen"
   "Off",             "Der Wert des **hysteresis_input** Items liegt unterhalb des unteren Schwellwertes"
+  "Set (On)",        "Der Wert des Hysterese Items wurde direkt auf ``True``gesetzt"
+  "Set (Off)",       "Der Wert des Hysterese Items wurde direkt auf ``False`` gesetzt"
 

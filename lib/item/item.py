@@ -269,6 +269,7 @@ class Item():
         self._trigger_condition_raw = []
         self._trigger_condition = None
 
+        self._hysteresis_state_set = None   # is internally set, when the output value is set (e.g. for initialization)
         self._hysteresis_input = None
         self._hysteresis_input_unexpanded = None
         self._hysteresis_upper_threshold = None
@@ -1917,6 +1918,8 @@ class Item():
         """
         evaluate the 'hysteresis' entry of the item
         """
+        self._hysteresis_state_set = None
+
         upper = self.__run_attribute_eval(self._hysteresis_upper_threshold)
         lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
 
@@ -2012,6 +2015,32 @@ class Item():
 
         return state
 
+    # def hysteresis_set_state(self, state: bool, caller='hysteresis_set_state', source=None, dest=None):
+    #     """
+    #     Set the hysteresis state directly
+    #     e.g. by a locic for initialization purposes
+    #
+    #     The state of the hysteresis is set directly and without using the timers.
+    #     If a timer is active when setting the state, it is canceled
+    #
+    #     :param state: state to be set to
+    #     """
+    #     if self._hysteresis_upper_timer_active:
+    #         self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-UpTimer')
+    #         self._hysteresis_upper_timer_active = False
+    #         self._hysteresis_active_timer_ends = None
+    #     if self._hysteresis_lower_timer_active:
+    #         self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-LoTimer')
+    #         self._hysteresis_lower_timer_active = False
+    #         self._hysteresis_active_timer_ends = None
+    #
+    #     self._hysteresis_state_set = state
+    #     self.__update(state, caller, source, dest)
+    #     if self._hysteresis_log:
+    #         logger.notice(f"hysteresis_set_state {self._path}: State set to '{state}'")
+    #
+    #     return
+
 
     def hysteresis_state(self):
         """
@@ -2030,7 +2059,11 @@ class Item():
         lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
         input_value = _items_instance.return_item(self._hysteresis_input)()
 
-        state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_state')
+        #state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_state')
+        if self._hysteresis_state_set is None:
+            state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_state')
+        else:
+            state = ['Set (Off)', 'Set (On)'][self._hysteresis_state_set]
 
         if self._hysteresis_log:
             logger.notice(f"hysteresis_state ({self._path}): state={state}, input_value={input_value}, value={self._value}, __updated_by={self.__updated_by}")
@@ -2063,9 +2096,12 @@ class Item():
             lower_timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
         input_value = _items_instance.return_item(self._hysteresis_input)()
 
-        state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_data')
+        if self._hysteresis_state_set is None:
+            state = self._get_hysterisis_state_string(lower, upper, input_value, log=self._hysteresis_log, txt='hysteresis_data')
+        else:
+            state = ['Set (Off)', 'Set (On)'][self._hysteresis_state_set]
 
-        data = {'lower_threshold': lower, 'lower_timer': lower_timer, 'upper_threshold': upper, 'upper_timer': upper_timer, 'input': input_value, 'output': self._value, 'state': state, 'lower_timer_active': self._hysteresis_lower_timer_active, 'upper_timer_active': self._hysteresis_upper_timer_active}
+        data = {'lower_threshold': lower, 'lower_timer': lower_timer, 'upper_threshold': upper, 'upper_timer': upper_timer, 'input': input_value, 'output': self._value, 'state': state, 'lower_timer_active': self._hysteresis_lower_timer_active, 'upper_timer_active': self._hysteresis_upper_timer_active, 'state_set': self._hysteresis_state_set}
         if (self._hysteresis_lower_timer_active or self._hysteresis_upper_timer_active) and self._hysteresis_active_timer_ends is not None:
             data['active_timer_ends'] = self._hysteresis_active_timer_ends.strftime("%d.%m.%Y %H:%M:%S") + " " + self._hysteresis_active_timer_ends.tzname()
         if self._hysteresis_log:
@@ -2546,13 +2582,16 @@ class Item():
             if self._hysteresis_upper_timer_active:
                 if self._hysteresis_log:
                     logger.notice(f"__update: upper_timer caller={caller}, value={value}")
+                self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-UpTimer')
                 self._hysteresis_upper_timer_active = False
                 self.active_timer_ends = None
             if self._hysteresis_lower_timer_active:
+                self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-LoTimer')
                 self._hysteresis_lower_timer_active = False
                 self.active_timer_ends = None
                 if self._hysteresis_log:
                     logger.notice(f"__update: lower_timer caller={caller}, value={value}")
+            self._hysteresis_state_set = cast_bool(value)
 
         if key is None and index is None:
             # don't cast for elements of complex types
