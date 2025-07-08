@@ -2577,7 +2577,7 @@ class Item():
                         matches.append(False)  # No match in stop_fade -> keep fading
             return matches
 
-        # special handling, if item is a hysteresys item (has a hysteresis_input attribute)
+        # special handling, if item is a hysteresis item (has a hysteresis_input attribute)
         if self._hysteresis_input is not None:
             if self._hysteresis_upper_timer_active:
                 if self._hysteresis_log:
@@ -2591,7 +2591,8 @@ class Item():
                 self.active_timer_ends = None
                 if self._hysteresis_log:
                     logger.notice(f"__update: lower_timer caller={caller}, value={value}")
-            self._hysteresis_state_set = cast_bool(value)
+            if caller != 'Hysteresis':
+                self._hysteresis_state_set = cast_bool(value)
 
         if key is None and index is None:
             # don't cast for elements of complex types
