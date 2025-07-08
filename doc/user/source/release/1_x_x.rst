@@ -17,9 +17,9 @@ Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Cor
 
         Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis inkl. x. xxxx 2025
-           (...)
-         - Berücksichtigt sind Commits im plugins Repository bis inkl. x. xxxx 2025
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 7. Juli 2025
+           (Implemented initialization for hysteresis ...)
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. 6. Juli 2025
            (...)
 
 
@@ -93,7 +93,9 @@ Updates in the CORE
     * ...
 
   * lib.item:
-    * ...
+    * Remove 'eval:' from caller (if it exists) before calling update_item of a plugin
+    * Remove 'eval:' from caller (if it exists) for autotimer
+    * Implemented initialization for hysteresis item and extended documentation
 
 * Modules:
 
@@ -103,9 +105,9 @@ Updates in the CORE
 
 * tools:
 
-  * tools/...:
+  * tools/postinstall:
 
-    * ...
+    * Added handling for newer of Python to postinstall script
 
 |
 
@@ -117,7 +119,9 @@ Allgmein
 
 * Workflows:
 
-  * ...
+  * Updated unittests to newer Ubuntu version
+  * Updated build scripts for documentation to newer Ubuntu version
+  * Updated workflows to build documentation to use a newer version of Ubuntu
 
 
 .. _releasenotes_1_xx_x_neue_plugins:
@@ -138,12 +142,54 @@ Plugin Updates
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-* ...:
+* enocean:
 
-  * ...
+  * Completed decoding of EEP A5_08_01 and added decoding for A5_07_01
+  * Temporary fix for unwanted plugin retrigger in combination with eval expressions
 
+* hue2:
 
+  * Changed requirement for zeroconf to resolve conflict
+  * Revoked changed requirement for zeroconf to resolve conflict; xiaomi_vac: Changed requirement for
+    zeroconf to resolve conflict
 
+* hue3:
+
+  * Added support for outdoor motion sensor
+  * Bumepd version to 3.0.2
+
+* nuki:
+
+  * Added MQTT support for newer versions of the lock
+  * New parameter 'mode' for operation types of plugin: 1 - MQTT, 2 - Nuki Bridge, 3 - MQTT and Nuki Bridge
+  * Updates to documentation and logging
+
+* philips_tv:
+
+  * Minor webif fix
+
+* rtr2:
+
+  * Added comments to widgets
+
+* sma_mb:
+
+  * Update read methods for pymodbus and add crontab as poll time generator
+
+* sonos:
+
+  * Revert required minimum python version back to 3.8; upgraded SoCo to v0.30.9; catching exception for speakers
+    with unknown ip address
+
+* vicare:
+
+  * Minor fix for online status after plugin restart; added specific log message if refresh token has expired
+
+* xiaomi_vac:
+
+  * Changed requirement for zeroconf to resolve conflict
+
+|
 
 Outdated Plugins
 ----------------
@@ -205,4 +251,6 @@ Weitere Änderungen
 Dokumentation
 -------------
 
-* ...
+* Modified README.md to reflect, that the JetBrains licenses expired
+* Doku Fixes für logging
+
