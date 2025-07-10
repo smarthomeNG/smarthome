@@ -309,13 +309,16 @@ class Orb():
         observer.horizon = str(doff)
         if not doff == 0:
             next_rising = observer.next_rising(orb, use_center=center).datetime()
-            if next_rising.astimezone(tzutc()) >= date_utc:
-                next_rising -= datetime.timedelta(days=1)
-                logger.debug(f"ephem: adjusted next_rising {next_rising} to previous day, dt {dt}")
+            observer.horizon = 0
+            next_real_rising = observer.next_rising(orb, use_center=center).datetime().replace(tzinfo=tzutc())
         else:
             next_rising = observer.next_rising(orb).datetime()
+            next_real_rising = next_rising.replace(tzinfo=tzutc())
         next_rising = next_rising + dateutil.relativedelta.relativedelta(minutes=moff)
         next_rising = next_rising.replace(tzinfo=tzutc())
+        if doff < 0 and next_rising > next_real_rising:
+            logger.debug(f"ephem: adjusted next_rising {next_rising} to previous day as it is later than {next_real_rising}")
+            next_rising -= datetime.timedelta(days=1)
         logger.debug(f"ephem: next_rising for {self.orb} with doff={doff}, moff={moff}, center={center}, dt={dt} will be {next_rising}")
         return next_rising
 
@@ -350,13 +353,16 @@ class Orb():
         observer.horizon = str(doff)
         if not doff == 0:
             next_setting = observer.next_setting(orb, use_center=center).datetime()
-            if next_setting.astimezone(tzutc()) <= date_utc:
-                next_setting += datetime.timedelta(days=1)
-                logger.debug(f"ephem: adjusted next_setting {next_setting} to next day, dt {dt}")
+            observer.horizon = 0
+            next_real_setting = observer.next_setting(orb, use_center=center).datetime().replace(tzinfo=tzutc())
         else:
             next_setting = observer.next_setting(orb).datetime()
+            next_real_setting = next_setting.replace(tzinfo=tzutc())
         next_setting = next_setting + dateutil.relativedelta.relativedelta(minutes=moff)
         next_setting = next_setting.replace(tzinfo=tzutc())
+        if doff < 0 and next_setting < next_real_setting:
+            logger.debug(f"ephem: adjusted next_setting {next_setting} to next day as it is earlier than actual sunset at {next_real_setting}")
+            next_setting += datetime.timedelta(days=1)
         logger.debug(f"ephem: next_setting for {self.orb} with doff={doff}, moff={moff}, center={center}, dt={dt} will be {next_setting}")
         return next_setting
 
