@@ -387,14 +387,14 @@ class Shtime:
         :rtype: int|float|tuple
         """
         dt = self.datetime_transform(dt)
-        if type(dt) is datetime:
+        if type(dt) is datetime.datetime:
             delta = dt - self.now()
             if delta.days < 0:
                 self.logger.error("time_until: "+self.translate("Called with point in time that is earlier than now: {dt}").format(dt=dt))
                 return (0, 0)
             return self._build_timediff_resulttype(delta, resulttype)
         else:
-            self.logger.error("time_since: "+self.translate("Called with parameter that is not of type 'datetime': {dt}").format(dt=dt))
+            self.logger.error("time_until: "+self.translate("Called with parameter that is not of type 'datetime': {dt}").format(dt=dt))
             return -1
 
 
