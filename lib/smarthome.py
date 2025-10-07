@@ -79,7 +79,6 @@ PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
 # Import SmartHomeNG Modules
 #####################################################################
 import lib.config
-import lib.connection
 import lib.daemon
 import lib.item
 import lib.log
@@ -720,9 +719,7 @@ class SmartHome():
         #############################################################
         # Init Connections
         #############################################################
-        self.connections = lib.connection.Connections()
-        # self.connections = lib.network.Connections()
-        # switch on removing lib.connection
+        self.connections = lib.network.Connections()
 
         #############################################################
         # Init and start loadable Modules
@@ -784,10 +781,6 @@ class SmartHome():
         #############################################################
         self.scenes = lib.scene.Scenes(self)
 
-        #############################################################
-        # Start Connections - remove with lib.connection
-        #############################################################
-        self.scheduler.add('sh.connections', self.connections.check, cycle=10, offset=0)
         self._export_threadinfo()
 
         #############################################################
@@ -799,9 +792,9 @@ class SmartHome():
         self.plugin_start_complete = True
 
         #############################################################
-        # Start connection monitoring - enable on removing lib.connection
+        # Start connection monitoring
         #############################################################
-        # self.scheduler.add('sh.connection_monitor', self.connections.check, cycle=10, offset=0)
+        self.scheduler.add('sh.connection_monitor', self.connections.check, cycle=10, offset=0)
 
         #############################################################
         # Execute Maintenance Method
@@ -818,12 +811,15 @@ class SmartHome():
             print("--------------------   SmartHomeNG initialization finished   --------------------")
         self._logger_main.notice("--------------------   SmartHomeNG initialization finished   --------------------")
 
-        # modify/replace on removing lib.connection
-        while self.alive:
-            try:
-                self.connections.poll()
-            except Exception as e:
-                self._logger.exception(f"Connection polling failed: {e}")
+        # disabled on switching from lib.connection to lib.network
+        # as of today, no plugin using sh.connections seems to rely on poll()
+        # while self.alive:
+            # need to "do" anything here"
+            # pass
+            # try:
+            #     self.connections.poll()
+            # except Exception as e:
+            #     self._logger.exception(f"Connection polling failed: {e}")
 
 
     def stop(self, signum=None, frame=None):

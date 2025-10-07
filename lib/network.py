@@ -268,6 +268,15 @@ class Connections(object):
             if obj.alive and not obj.connected:
                 obj.connect()
 
+    def close(self):
+        logger = logging.getLogger(__name__)
+        for obj in self._monitor:
+            try:
+                obj.disconnect()
+            except Exception as e:
+                # possibly remove later
+                logger.info(f'error on shutdown disconnect for {obj}: {e}')
+
 
 class Http(object):
     """
