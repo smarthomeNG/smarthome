@@ -420,7 +420,7 @@ class Shtime:
                 delta = dt1 - dt2
             return self._build_timediff_resulttype(delta, resulttype)
         else:
-            self.logger.error("time_since: "+self.translate("Called with parameter that is not of type 'datetime': {dt1}, {dt2}").format(dt1=dt2, dt2=dt2))
+            self.logger.error("time_diff: "+self.translate("Called with parameter that is not of type 'datetime': {dt1}, {dt2}").format(dt1=dt2, dt2=dt2))
             return -1
 
 
