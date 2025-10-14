@@ -25,7 +25,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **ESPHome**: Im Release sind Tools zur Installation und Verwaltung von ESPHome enthalten.
       Wenn ESPHome Devices durch Plugins angesteuert werden sollen kann es hilfreich sein, das ESPHome Dashboard
       zur Verwaltung der ESPHome Devices zu nutzen.
-      (Siehe auch :doc:`ESPHome Dashboard </installation/komplettanleitung/09_esphome>`)
+      (Siehe auch :doc:`ESPHome Dashboard </installation/komplettanleitung/10_esphome>`)
 
 |
 

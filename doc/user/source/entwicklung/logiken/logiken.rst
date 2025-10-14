@@ -106,13 +106,13 @@ Template für eine neue Logik
 ----------------------------
 
 Eine neue Logik sollte möglichst auf der folgenden Vorlage ``logic.tpl`` aufbauen.
-Die Template Datei ist im Verzeichnis ``logics/`` abgelegt:
+Die Template Datei ist im Verzeichnis ``templates/`` abgelegt:
 
-.. literalinclude:: /logics/logic.tpl
-   :caption: /logics/logic.tpl
+.. literalinclude:: /templates/logic.tpl
+   :caption: /templates/logic.tpl
    :language: python
 
-Um zum Beispiel eine Logik ``example`` zu erzeugen, muss zuerst die Datei ``logics/logic.tpl`` auf die
+Um zum Beispiel eine Logik ``example`` zu erzeugen, muss zuerst die Datei ``templates/logic.tpl`` auf die
 Datei ``logics/example.py`` kopiert werden und in der erstellten Datei der eigentliche Code der Logik erfasst werden.
 
 Anschließend muss noch in der Konfigurationsdatei ``etc/logic.yaml`` die Konfiguration für die Logik festgelegt

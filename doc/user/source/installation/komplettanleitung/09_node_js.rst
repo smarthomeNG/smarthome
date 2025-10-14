@@ -122,7 +122,7 @@ Im Verzeichnis /opt/ma/maserver eine Datei mit dem Namen config.json anlegen und
       "serverPostPassword": null,
       "locale": "en-US"
     }
-<Username für den Broker>
+
 Nun noch die Angaben für ``mqtt``, ``mqtt_username`` und ``mqtt_password`` auf die eigene Umgebung anpassen. Wenn
 der Broker auf dem selben System läuft, kann als IP Adresse in ``mqtt`` der Wert ``127.0.0.1`` angegeben werden.
 

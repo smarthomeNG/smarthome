@@ -89,9 +89,11 @@ Updates in the CORE
 
 * Libs:
 
-  *...:
-
+  * ...:
     * ...
+
+  * lib.connection:
+    * Remove lib.connection
 
   * lib.item:
     * Remove 'eval:' from caller (if it exists) before calling update_item of a plugin
