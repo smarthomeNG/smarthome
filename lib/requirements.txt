@@ -1,5 +1,7 @@
 # lib.orb:
 ephem>=4.2,<5.0.0
+pytz
+babel
 
 # lib.shtime:
 python-dateutil>=2.9.0 # this contains at least tzdata from 2024 only for python_version<'3.13'
