@@ -9,10 +9,6 @@ holidays>=0.59
 psutil>=6.1.1,<8.0.0
 portalocker>=3.2.0,<4.0.0
 
-# lib.connection.py
-# remove upon retirement of connection.py
-iowait
-
 # lib.network, lib.shpypi:
 #most recent version is 2.31.0 as of May 22nd, 2023 all prior versions have an unintended leak of Proxy-Authorization header
 requests>=2.31.0
