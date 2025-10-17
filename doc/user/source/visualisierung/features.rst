@@ -183,7 +183,7 @@ für smartVISU generierten Seiten.
 
 Bisher wurden Blöcke generiert, die so aussahen (Style \‘Standard\’):
 
-.. figure:: assets/style_std.jpg
+.. figure:: assets/style_std1.jpg
    :alt: Style Standard
 
    Style Standard
