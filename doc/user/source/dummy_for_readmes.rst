@@ -15,7 +15,6 @@
    /dev/sample_plugin/user_doc.rst
    /dev/sample_smartdevice_plugin/user_doc.rst
    /dev/sample_smartdevice_standalone_plugin/user_doc.rst
-   /lib/connection.rst
    /modules/admin/README.md
    /modules/http/README.md
    /modules/mqtt/README.md
@@ -33,8 +32,6 @@
    /plugins/alexa/nginx.md
    /plugins/buderus/URLs.md
    /plugins/wunderground/README_OLD.md
-   /plugins/visu_smartvisu/developer_doc.md
-   /plugins/visu_websocket/developer_doc.rst
 
 .. toctree::
    :maxdepth: 2

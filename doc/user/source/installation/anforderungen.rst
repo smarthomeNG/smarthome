@@ -233,7 +233,7 @@ Hier sind einige Beispiele für Linux-System und mitgeliefere Software Versionen
    "Debian 10 (Buster)",                     "06. Jul 2019", "Sep 2022 / Jun 2024", "Python 3.7",   "PHP 7.3"
    "Debian 11 (Bullseye)",                   "14. Aug 2021", "Aug 2026",            "Python 3.9",   "PHP 7.4"
    "Debian 12 (Bookworm)",                   "10. Jun 2023", "Jun 2028",            "Python 3.11",  "PHP 8.2"
-   "Debian 13 (Trixie)",                     "09. Aug 2025", "t.b.d."  ,            "Python 3.13",  "PHP 8.4"
+   "Debian 13 (Trixie)",                     "09. Aug 2025", "t.b.d.",              "Python 3.13",  "PHP 8.4"
 
    "Ubuntu 18.04 LTS (Bionic Beaver)",       "Apr 201",      "Apr 2023 / Apr 2028", "Python 3.6",   "PHP 8.3, 8.2, 8.1, 8.0, 7.4"
    "Ubuntu 20.04 LTS (Focal Fossa)",         "Apr 2020",     "Apr 2025 / Apr 2030", "Python 3.8",   "PHP 8.4, 8.3, 8.2, 8.1, 8.0, 7.4"

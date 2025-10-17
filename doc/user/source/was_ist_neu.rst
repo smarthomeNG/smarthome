@@ -12,7 +12,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       Nun können in generierten Seiten Buttons als Top Navigation eingerichtet werden. Damit ist es möglich
       Seiten zu generieren, die sich unterhalb der Top Navigation mit unterschiedlichen Inhalten füllen
       lassen.
-      (Siehe auch :doc:`Visualisierung/Automatische Generierung </visualisierung/automatic_generation/automatic_generation>`)
+      (Siehe auch :doc:`Visualisierung/Automatische Generierung </visualisierung/automatic_generation>`)
 
 |
 
