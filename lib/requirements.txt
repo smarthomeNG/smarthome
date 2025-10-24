@@ -16,7 +16,8 @@ portalocker>=3.2.0,<4.0.0
 requests>=2.31.0
 
 # lib.utils
-netifaces
+#netifaces was abandonned by it's maintainer, netifaces2 is a drop-in replacement
+netifaces2
 
 # lib.shpypi
 xmltodict

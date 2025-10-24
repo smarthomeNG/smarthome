@@ -93,12 +93,24 @@ eingerichtet werden.
 Konfiguration sichern/übertragen
 ================================
 
-Nachdem Samba konfiguriert wurde, können auf einem Desktop Rechner die SmartHomeNG Verzeichnisse des alten und des
-neuen Systems gemountet werden. Im Anschluß können die Dateien einfach vom alten auf das neue System kopiert werden.
+Um Daten vom alten SmartHomeNG System auf das neue System zu übertragen, muss auf dem neuen System noch Software
+installiert werden, damit es als SMB Client auf das alte System zugreifen kann:
+
+.. code-block:: bash
+
+    sudo apt-get install smbclient
+    sudo apt-get install cifs-utils
+
+
+
+Nachdem Samba konfiguriert und die Client Software installiert wurde, können auf einem Desktop Rechner die
+SmartHomeNG Verzeichnisse des alten und des neuen Systems gemountet werden. Im Anschluß können die Dateien
+einfach vom alten auf das neue System kopiert werden.
 
 Um ein SMB Share des alten Systems auf dem neuen System zu mounten, kann folgendermaßen vorgegangen werden:
 
 Der auf dem neuen System eingegebene Befehl
+
 .. code-block:: bash
 
     smbclient -L //oldSystemIpAdress
@@ -106,11 +118,12 @@ Der auf dem neuen System eingegebene Befehl
 Listet die Shares auf dem alten System.
 
 Das gefünschte Share kann mit den folgenden Befehlen gemountet werden
+
 .. code-block:: bash
 
-    sudo mkdir /mnt/mshng_old
+    sudo mkdir /mnt/shng_old
 
-    sudo mount -t cifs -o username=smarthome //oldSystemIpAdress/sharename /mnt/mshng_old/
+    sudo mount -t cifs -o username=smarthome //oldSystemIpAdress/sharename /mnt/shng_old/
 
 |
 

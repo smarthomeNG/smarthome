@@ -76,7 +76,6 @@ Mit der Version 1.8 von SmartHomeNG gibt es hier einige Neuerungen.
 
    changes_in_1.8
    automatic_generation
-   features
    navigation_structure
    multiple_subtrees
    deprecated_widgets

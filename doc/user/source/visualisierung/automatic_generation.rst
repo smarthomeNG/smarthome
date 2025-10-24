@@ -7,9 +7,9 @@
 
 .. index:: smartVISU; Automatische Generierung
 
-===========================================
-Automatische Generierung :greensup:`Update`
-===========================================
+========================
+Automatische Generierung
+========================
 
 Im Vergleich zum **visu_smartvisu** Plugin der vorhergehenden SmartHomeNG Releases, wurden die
 Möglichkeiten zur automatischen Generierung von Seiten für die smartVISU erweitert. Die

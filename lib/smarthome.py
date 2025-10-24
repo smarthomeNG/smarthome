@@ -811,16 +811,9 @@ class SmartHome():
             print("--------------------   SmartHomeNG initialization finished   --------------------")
         self._logger_main.notice("--------------------   SmartHomeNG initialization finished   --------------------")
 
-        # disabled on switching from lib.connection to lib.network
-        # as of today, no plugin using sh.connections seems to rely on poll()
-        # while self.alive:
-            # need to "do" anything here"
-            # pass
-            # try:
-            #     self.connections.poll()
-            # except Exception as e:
-            #     self._logger.exception(f"Connection polling failed: {e}")
-
+        # need to keep the main thread running, so just do nothing...
+        while self.alive:
+            time.sleep(1)
 
     def stop(self, signum=None, frame=None):
         """

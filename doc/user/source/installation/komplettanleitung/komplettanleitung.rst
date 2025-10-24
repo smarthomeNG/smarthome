@@ -27,9 +27,9 @@ Es bietet sich an die allererste Installation einfach in einer virtuellen Maschi
    :hidden:
 
    01_debian
-   02_smarthomeng
-   03_mosquitto
-   04_smartvisu
+   02_smartvisu
+   03_smarthomeng
+   04_mosquitto
    05_knxd
    06_onewire
    07_samba

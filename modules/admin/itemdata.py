@@ -342,6 +342,8 @@ class ItemData:
             if "." in value or "," in value:
                 value = float(value)
             else:
+                if value == '':
+                    value = 0
                 value = int(value)
         item(value, caller='admin')
 
