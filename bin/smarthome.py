@@ -144,7 +144,7 @@ if args.config_etc:
             ndir.mkdir(exist_ok=True)
 
             # move files individually
-            for file in odir.glob('*.*'):
+            for file in odir.glob('*'):
                 target = ndir.joinpath(file.name)
                 # keep existing files, remember names
                 if target.exists():
