@@ -109,7 +109,7 @@ Die Verzeichnisse sind im Hauptverzeichnis von SmartHomeNG zu finden, für gewö
 
 Mit (*) gekennzeichnete Verzeichnisse enthalten die vom Benutzer zu erstellenden/zu ändernden Daten (Konfiguration).
 
-Durch Setzen der Konfigurationsoption ``config_etc: true` in der `etc/smarthome.yaml` wird SmartHomeNG angewiesen, diese Verzeichnisse nicht im Hauptverzeichnis
+Durch Setzen der Konfigurationsoption ``config_etc: true`` in der `etc/smarthome.yaml` wird SmartHomeNG angewiesen, diese Verzeichnisse nicht im Hauptverzeichnis
 von SmartHomeNG (z.B. `/usr/local/smarthome/`) zu suchen, sondern im Unterverzeichnis `etc`. So wären Item-Dateien beispielsweise nicht in
 `/usr/local/smarthome/items/`, sondern in `/usr/local/smarthome/etc/items/` abzulegen. 
 
