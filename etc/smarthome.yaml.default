@@ -17,6 +17,13 @@ tz: 'Europe/Berlin'      # timezone, the example will be fine for most parts of 
 default_language: de     # default_language is used, where multiple languages are supported (de, if not specified)
 #default_logtext: "Item {id} wurde geändert."
 
+# by default, SmartHomeNG looks for config directories items/structs/logics/scenes/functions
+# in the SmartHomeNG base directory
+# By setting this option, SmartHomeNG looks for them below the etc directory
+# setting this option does NOT migrate old files, use command line option -e to migrate files
+# config_etc = true
+
+# 
 # control type casting when assiging values to items
 # latest or compat_1.2 (compat_1.2 is default for shNG v1.3, latest is default for higher versions)
 #assign_compatibility: latest

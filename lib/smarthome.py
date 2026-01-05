@@ -148,6 +148,8 @@ class SmartHome():
         self.modules = None
         self.__children = []
 
+        self._config_etc = False
+
 
     def initialize_dir_vars(self):
         self._base_dir = BASE
@@ -189,16 +191,20 @@ class SmartHome():
         self._logic_conf_basename = os.path.join(self._etc_dir, BASE_LOGIC)
         self._env_logic_conf_basename = os.path.join(self._env_dir, BASE_LOGIC)
 
-
-    def create_directories(self):
+    def create_conf_directories(self):
         """
-        Create directories used by SmartHomeNG if they don't exist
+        Create directories for config files if they don't exist
         """
         os.makedirs(self._items_dir, mode=0o775, exist_ok=True)
         os.makedirs(self._scenes_dir, mode=0o775, exist_ok=True)
         os.makedirs(self._functions_dir, mode=0o775, exist_ok=True)
         os.makedirs(self._structs_dir, mode=0o775, exist_ok=True)
+        os.makedirs(self._logics_dir, mode=0o775, exist_ok=True)
 
+    def create_directories(self):
+        """
+        Create directories used by SmartHomeNG if they don't exist
+        """
         os.makedirs(self._var_dir, mode=0o775, exist_ok=True)
         os.makedirs(self._cache_dir, mode=0o775, exist_ok=True)
         os.makedirs(os.path.join(self._var_dir, 'backup'), mode=0o775, exist_ok=True)
@@ -227,7 +233,6 @@ class SmartHome():
         # keep for checking on restart command
         self._mode = MODE
 
-        self._config_etc = config_etc
         self._extern_conf_dir = BASE
         if extern_conf_dir != '':
             self._extern_conf_dir = extern_conf_dir
@@ -282,6 +287,20 @@ class SmartHome():
             exit(1)
         if hasattr(self, '_module_paths'):
             sys.path.extend(self._module_paths if type(self._module_paths) is list else [self._module_paths])
+
+        #############################################################
+        # check / set config_etc option from cmdline or config file
+        # re-check / re-set affected directories
+        if config_etc:
+            # manual set from cmdline overrides config file setting
+            self._config_etc = config_etc
+        elif hasattr(self, '_config_etc'):
+            # set by smarthome.yaml
+            self._config_etc = lib.utils.Utils.to_bool(self._config_etc, False)
+
+        # at this point is of type bool
+        self.initialize_dir_vars()
+        self.create_conf_directories()
 
         #############################################################
         # Setting (local) tz if set in smarthome.yaml
