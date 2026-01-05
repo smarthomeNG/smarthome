@@ -48,7 +48,8 @@ def import_user_module(m):
     :return: True, if import was successful
     """
     modulename = _uf_subdir + '.' + m
-
+#
+    print(f'import uf {m}')
     import importlib
     try:
         exec(f"globals()['{m}']=importlib.import_module('{modulename}')")
@@ -82,6 +83,7 @@ def init_lib(shng_base_dir=None, sh=None):
     :param shng_base_dir: Base dir of SmartHomeNG installation
     """
 
+    global _uf_subdir
     global _func_dir
     global _user_modules
     global _sh
@@ -94,6 +96,9 @@ def init_lib(shng_base_dir=None, sh=None):
 
     if _sh:
         _func_dir = _sh.get_config_dir(DIR_UF)
+        if _sh._config_etc:
+            _uf_subdir = 'etc.' + _uf_subdir
+            print('added etc to uf_subdir')
     else:
         _func_dir = os.path.join(base_dir, _uf_subdir)
 
