@@ -34,6 +34,12 @@ nicht notwendig ein laufendes SmartHomeNG vorher zu beenden.
 
    Es werden keine Konfigurationsdateien des alten .CONF Formats gesichert, sondern ausschließlich YAML Dateien.
 
+Ab SmartHomeNG v1.12 werden nun, falls vorhanden, die privaten Plugins (Plugins, deren Name mit **priv_** beginnt)
+und die privaten Tools (das Verzeichnis priv_tools) mit gesichert und beim Wiederherstellen aus der Zip Datei zurück
+kopiert.
+
+Dadurch steht jetzt eine einfache Möglichkeit der Sicherung dieser Dateien, die nicht in git gesichert werden,
+zur Verfügung.
 
 .. index:: Restore; Kommandozeile
 .. index:: Wiederherstellen; Kommandozeile
@@ -90,6 +96,12 @@ Beim sichern werden folgende Daten in das zip-Archiv übernommen:
   - /structs
 
     - \*.yaml
+  - /plugins/priv_*
+
+    - \*.*  mit Subdirectories
+  - /priv_tools
+
+    - \*.*
 
 .. attention::
 

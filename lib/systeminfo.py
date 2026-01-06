@@ -327,7 +327,7 @@ class Systeminfo:
 
         if cpu_duration > 120:
             cpu_speed_class = 'slow'
-        elif cpu_duration > 50:
+        elif cpu_duration > 27:
             cpu_speed_class = 'medium'
         else:
             cpu_speed_class = 'fast'

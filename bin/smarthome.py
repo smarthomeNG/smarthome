@@ -354,3 +354,6 @@ if __name__ == '__main__':
     sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir, config_etc=args.config_etc)
     sh.start()
 
+#    while True:
+#        time.sleep(1)
+    

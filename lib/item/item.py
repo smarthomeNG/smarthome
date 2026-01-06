@@ -4,6 +4,7 @@
 # Copyright 2016-2020   Martin Sinn                         m.sinn@gmx.de
 # Copyright 2016        Christian Straßburg           c.strassburg@gmx.de
 # Copyright 2012-2013   Marcus Popp                        marcus@popp.mx
+# Copyright 2025        Bernd Meiners
 #########################################################################
 #  This file is part of SmartHomeNG.
 #
@@ -2556,7 +2557,15 @@ class Item():
         if caller != "Fader":
             # log every item change to standard logger, if level is DEBUG
             # log with level INFO, if 'item_change_log' is set in etc/smarthome.yaml
-            self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
+            # attention:
+            # huge int values (created e.g. by eval) get dimensions above 4300 digits
+            # when converted to strings and will raise a Value error. 
+            # This will stop threads and kill SHNG
+            if isinstance(value, int) and value.bit_length() > 14300:
+                logger.warning(f"int value is too large to convert to string: {value.bit_length()} bits → ignored for logging")
+                self._change_logger("Item {} = {} via {} {} {}".format(self._path, 'too large int', caller, source, dest))
+            else:
+                self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
 
             # Write item value to log, if Item has attribute log_change set
             self._log_on_change(value, caller, source, dest)

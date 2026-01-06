@@ -107,6 +107,7 @@ DIR_ITEMS = 'items'
 DIR_STRUCTS = 'structs'
 DIR_LOGICS = 'logics'
 DIR_UF = 'functions'
+DIR_PRIV_TOOLS = 'priv_tools'
 DIR_SCENES = 'scenes'
 
 BASE_SH = 'smarthome'

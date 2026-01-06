@@ -6,6 +6,16 @@ Neuerungen im Release v1.12
 Hier ist eine Kurzübersicht über größere Neuerungen im aktuellen Release. Eine vollständige Übersicht der Änderungen in
 diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/release>` zu finden.
 
+  - **Core**:
+
+    - **Backup der Konfiguration**: Das Sichern und Wiederherstellen der Konfiguration wurde erweitert.
+      Beim sichern der Konfiguration werden nun, falls vorhanden, die privaten Plugins (Plugins, deren
+      Name mit **priv_** beginnt) und die privaten Tools (das Verzeichnis priv_tools) mit gesichert und
+      beim Wiederherstellen aus der Zip Datei zurück kopiert.
+
+      Dadurch steht jetzt eine einfache Möglichkeit der Sicherung dieser Dateien, die nicht in git
+      gesichert werden, zur Verfügung.
+
   - **Plugins**:
 
     - **smartvisu**: Im smartvisu Plugin wurde die Generierung erweitert.
