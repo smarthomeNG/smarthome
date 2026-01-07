@@ -124,14 +124,16 @@ class Plugins():
         # TODO: think about central plugin config?
 
         # get all unique plugin names
-        __plugins = set(_conf[p].get('plugin_name', 'unknown') for p in _conf)
+        # __plugins = set(_conf[p].get('plugin_name', 'unknown') for p in _conf)
+        # to keep "old" config compatibility (class_name/class_path), also check for class_name
+        __plugins = set(_conf[p].get('plugin_name', _conf[p].get('class_name', 'unknown')) for p in _conf)
 
         # prepopulate counter dict
         self._plugins_count = {p: 0 for p in __plugins}
 
         # count plugin usage
         for plugin in _conf:
-            self._plugins_count[_conf[plugin].get('plugin_name', 'unknown')] += 1
+            self._plugins_count[_conf[plugin].get('plugin_name', _conf[plugin].get('class_name', 'unknown'))] += 1
 
         logger.info('Load plugins')
         self.threads_early = []
@@ -259,7 +261,7 @@ class Plugins():
         :return: instance name
         :rtype: str
         """
-        count = self._plugins_count.get(plg_conf.get('plugin_name', 'unknown'), 0)
+        count = self._plugins_count.get(plg_conf.get('plugin_name', plg_conf.get('class_name', 'unknown')), 0)
 
         # rewrite should retain prior instance naming, but enable
         # "automagic instances" if nothing is explicitly given
