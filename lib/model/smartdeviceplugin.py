@@ -55,7 +55,7 @@ from lib.model.sdp.globals import (
     CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CUSTOM_SEP,
     INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM1,
     ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ,
-    ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, 
+    ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE,
     PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_DELAY_INITIAL,
     PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
     PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_REREAD_INITIAL,
@@ -975,7 +975,7 @@ class SmartDevicePlugin(SmartPlugin):
 
             if custom:
                 command = command + CUSTOM_SEP + custom
-        except OSError as e:  # Exception as e:
+        except (ValueError, OSError) as e:  # Exception as e:
             self.logger.info(f'received data "{data}" for command {command}, error {e} occurred while converting. Discarding data.')
             raise SDPResultError
         else:
