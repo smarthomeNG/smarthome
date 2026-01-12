@@ -14,6 +14,7 @@ auch beschrieben (r/w) werden.
 
 Properties sind **ab SmartHomeNG v1.6** verfügbar.
 Die Properties ``last/prev_trigger(_by/_age)`` sind **ab SmartHomeNG v1.9.1** verfügbar.
+Die Property ``remark`` ist **ab SmartHomeNG v12** verfügbar.
 
 
 Properties werden in Logiken und eval-Ausdrücken folgendermaßen abgerufen:
@@ -128,6 +129,9 @@ Werte für Properties, die auch geschrieben werden können (z.B. in Logiken), we
 |                      |            |          | Item das vorletzte Mal ein Update erfahren hat.                              |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 | prev_value           | r/o        | str      | Liefert den Wert des Items zurück, den es vor der vorletzten Änderung hatte. |
++----------------------+------------+----------+------------------------------------------------------------------------------+
+| remark               | r/o        | str      | Liefert den Kommentar des Items zurück, der in der Item-Konfiguration        |
+|                      |            |          | angegeben wurde.                                                             |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 | trigger              | r/w        | list     | Erlaubt das Abfragen oder Setzen der Liste der Trigger (eval_trigger) des    |
 |                      |            |          | Items.                                                                       |

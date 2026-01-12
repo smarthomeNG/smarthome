@@ -327,6 +327,7 @@ class Item():
         self._value = None
         self.__last_value = None
         self.__prev_value = None
+        self._remark = None
 
         self.property = Property(self)
         # history
@@ -504,7 +505,7 @@ class Item():
                     self._threshold_data[2] = self.__th_crossed
                     logger.debug("Item {}: set threshold => low: {} high: {}".format(self._path, self.__th_low, self.__th_high))
                 elif attr == KEY_REMARK:
-                    pass
+                    self._remark = value
                 elif attr == KEY_INSTANCE:
                     pass
                 elif attr == '_filename':

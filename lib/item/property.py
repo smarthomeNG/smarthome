@@ -424,6 +424,23 @@ class Property:
         return
 
     @property
+    def remark(self):
+        """
+        Read-Only Property: remark
+
+        Available in SmartHomeNG v1.12 and above
+
+        :return: remark as set in item configuration
+        :rtype: str
+        """
+        return self._item._remark
+
+    @remark.setter
+    def remark(self, value):
+        self._ro_error()
+        return
+
+    @property
     def type(self):
         """
         Read-Only Property: type
