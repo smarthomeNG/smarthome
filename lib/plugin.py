@@ -60,7 +60,7 @@ from importlib import import_module, reload
 import lib.config
 import lib.translation as translation
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_DEFAULT_INSTANCE, KEY_INSTANCE, YAML_FILE, CONF_FILE, DIR_PLUGINS, PLUGIN_PARSE_ITEM)
+from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, YAML_FILE, CONF_FILE, DIR_PLUGINS, PLUGIN_PARSE_ITEM)
 from lib.metadata import Metadata
 
 logger = logging.getLogger(__name__)
@@ -118,20 +118,6 @@ class Plugins():
         _conf = lib.config.parse_basename(configfile, configtype='plugin')
         if _conf == {}:
             return
-
-        # count plugin usage in plugin conf
-        # do this here and now because _conf isn't available later or elsewhere
-        # TODO: think about central plugin config?
-
-        # get all unique plugin names
-        __plugins = set(_conf[p].get('plugin_name', 'unknown') for p in _conf)
-
-        # prepopulate counter dict
-        self._plugins_count = {p: 0 for p in __plugins}
-
-        # count plugin usage
-        for plugin in _conf:
-            self._plugins_count[_conf[plugin].get('plugin_name', 'unknown')] += 1
 
         logger.info('Load plugins')
         self.threads_early = []
@@ -247,40 +233,23 @@ class Plugins():
         return (classname, classpath + plugin_version)
 
 
-    def _get_instancename(self, plg_name: str, plg_conf: dict):
+    def _get_instancename(self, plg_conf):
         """
-        Returns the instance name for the actual plugin
+        Returns the instancename for the actual plugin
 
-        :param plg_name: section of the plugin.yaml for the current plugin
-        :type plg_name: str
-        :param plg_conf: loaded section of the plugin.yaml for the current plugin
+        :param plg_conf: loaded section of the plugin.yaml for the actual plugin
         :type plg_conf: dict
 
         :return: instance name
         :rtype: str
         """
-        count = self._plugins_count.get(plg_conf.get('plugin_name', 'unknown'), 0)
+        instance = ''
+        if KEY_INSTANCE in plg_conf:
+            instance = plg_conf[KEY_INSTANCE].strip()
+            if instance == 'default':
+                instance = ''
+        return instance
 
-        # rewrite should retain prior instance naming, but enable
-        # "automagic instances" if nothing is explicitly given
-
-        # first priority: manual instance setting (use given instance name)
-        if KEY_INSTANCE in plg_conf and plg_conf[KEY_INSTANCE] != 'default':
-            return plg_conf[KEY_INSTANCE]
-
-        # second priority: manual default setting -- or no setting and single plugin use (use no instance name)
-        if KEY_DEFAULT_INSTANCE in plg_conf or plg_conf.get(KEY_INSTANCE, 'foo') == 'default' or count == 1:
-            return ''
-
-        # third priority: no manual settings, multiple plugins (use section name)
-        if count > 1:
-            # plugin is used multiple times and not default, return identifier
-            return plg_name
-
-        # we should not get here - we counted wrong or this is called after new plugins are loaded on the fly
-        logger.warning(f'lib.plugins._get_instancename got a plugin usage count of 0 for plugin {plg_name} ({plg_conf.get("plugin_name", "unknown")}). This should never happen.')
-        # don't set instance, this isn't sensible anyway
-        return ''
 
     def _test_duplicate_pluginconfiguration(self, plugin, classname, instance):
         """
@@ -488,7 +457,7 @@ class Plugins():
                 logger.error(f'Plugins, section {configname}: class_path is not defined')
             else:
                 args = self._get_conf_args(conf)
-                instance = self._get_instancename(configname, conf).lower()
+                instance = self._get_instancename(conf).lower()
                 try:
                     plugin_version = self.meta.pluginsettings.get('version', 'ersion unknown')
                     plugin_version = 'v' + plugin_version
@@ -525,6 +494,7 @@ class Plugins():
                             logger.warning(f"Plugin '{str(classpath).split('.')[1]}' from section '{configname}' not loaded - exception {e}")
                 except Exception as e:
                     logger.exception(f"Plugin '{str(classpath).split('.')[1]}' {plugin_version} from section '{configname}'\nException: {e}\nrunning SmartHomeNG {self._sh.version} / plugins {self._sh.plugins_version}")
+
         return False
 
 
