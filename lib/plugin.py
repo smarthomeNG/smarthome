@@ -261,20 +261,26 @@ class Plugins():
         :return: instance name
         :rtype: str
         """
+        # handle legacy instance naming - deprecated, to be removed later
+        if self._sh._legacy_instances:
+            instance = ''
+            if KEY_INSTANCE in plg_conf:
+                instance = plg_conf[KEY_INSTANCE].strip()
+                if instance == 'default':
+                    instance = ''
+            return instance
+
         count = self._plugins_count.get(plg_conf.get('plugin_name', plg_conf.get('class_name', 'unknown')), 0)
 
         # rewrite should retain prior instance naming, but enable
         # "automagic instances" if nothing is explicitly given
 
-        # first priority: manual instance setting (use given instance name)
-        if KEY_INSTANCE in plg_conf and plg_conf[KEY_INSTANCE] != 'default':
-            return plg_conf[KEY_INSTANCE]
-
-        # second priority: manual default setting -- or no setting and single plugin use (use no instance name)
+        # first priority: manual default setting -- or no setting and single plugin use (use no instance name)
+        # we retain "instance: default" as the only recognized use of "instance:" now
         if KEY_DEFAULT_INSTANCE in plg_conf or plg_conf.get(KEY_INSTANCE, 'foo') == 'default' or count == 1:
             return ''
 
-        # third priority: no manual settings, multiple plugins (use section name)
+        # second priority: no manual settings, multiple plugins (use section name)
         if count > 1:
             # plugin is used multiple times and not default, return identifier
             return plg_name

@@ -149,7 +149,7 @@ class SmartHome():
         self.__children = []
 
         self._config_etc = False
-
+        self._legacy_instances = True
 
     def initialize_dir_vars(self):
         self._base_dir = BASE
@@ -287,6 +287,10 @@ class SmartHome():
             exit(1)
         if hasattr(self, '_module_paths'):
             sys.path.extend(self._module_paths if type(self._module_paths) is list else [self._module_paths])
+
+        #############################################################
+        # check / set legacy_instance option from config file
+        self._legacy_instances = lib.utils.Utils.to_bool(self._legacy_instances, True)
 
         #############################################################
         # check / set config_etc option from cmdline or config file
