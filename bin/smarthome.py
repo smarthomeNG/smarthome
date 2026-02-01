@@ -215,32 +215,15 @@ elif core_reqs == -1:
 #####################################################################
 # Import SmartHomeNG Modules
 #####################################################################
-#import lib.config
 import lib.daemon
-#import lib.item
-#import lib.log
-#import lib.logic
-#import lib.module
-#import lib.network
-#import lib.plugin
-#import lib.scene
-#import lib.scheduler
-#import lib.tools
-#import lib.orb
 import lib.backup
-#import lib.translation
-#import lib.shyaml
 
 from lib.smarthome import SmartHome
-
 
 #####################################################################
 # Globals
 #####################################################################
-
 MODE = 'default'
-#TZ = gettz('UTC')
-
 
 #####################################################################
 # Private Methods
@@ -261,7 +244,6 @@ def _reload_logics():
 
 if __name__ == '__main__':
     try:
-        #if locale.getdefaultlocale() == (None, None):   # getdefaultlocale() is deprecated since Python 3.11
         if locale.getlocale() == (None, None):
             locale.setlocale(locale.LC_ALL, 'C')
         else:
@@ -353,7 +335,3 @@ if __name__ == '__main__':
     # Starting SmartHomeNG
     sh = SmartHome(MODE=MODE, extern_conf_dir=extern_conf_dir, config_etc=args.config_etc)
     sh.start()
-
-#    while True:
-#        time.sleep(1)
-    

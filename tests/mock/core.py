@@ -16,7 +16,7 @@ from lib.shtime import Shtime
 from lib.module import Modules
 import lib.utils
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE, BASES, DIRS)
+from lib.constants import (YAML_FILE, DEFAULT_FILE, BASES, DIRS)
 
 from tests.common import BASE
 

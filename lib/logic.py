@@ -59,7 +59,7 @@ import lib.shyaml as shyaml
 from lib.utils import Utils
 
 from lib.constants import PLUGIN_PARSE_LOGIC
-from lib.constants import (YAML_FILE, CONF_FILE, DIR_LOGICS, DIR_ETC, BASE_LOGIC, BASE_ADMIN)
+from lib.constants import (YAML_FILE, DIR_LOGICS, DIR_ETC, BASE_LOGIC, BASE_ADMIN)
 
 from lib.item import Items
 from lib.plugin import Plugins
@@ -154,10 +154,7 @@ class Logics():
         logger.debug("Reading Logics from {}.*".format(filename))
         config = lib.config.parse_basename(filename, configtype='logics')
         if config != {}:
-            if os.path.isfile(filename+YAML_FILE):
-                self._config_type = YAML_FILE
-            else:
-                self._config_type = CONF_FILE
+            self._config_type = YAML_FILE
 
             for name in config:
                 if 'filename' in config[name]:

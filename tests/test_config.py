@@ -113,24 +113,6 @@ class ConfigBaseTests:
         self.assertTrue('child2' in conf['parent2'])
         self.assertTrue('attr6' in conf['parent2']['child2'])
         self.assertEqual('value6', conf['parent2']['child2']['attr6'])
-
-
-class TestConfigConf( unittest.TestCase,ConfigBaseTests):
-
-    fmt = 'conf'
-
-    def test_confread_ignores_empty_name(self):
-        if verbose == True:
-            print()
-            print('=== TestConfigConf:')
-        conf = self.config('empty')
-        self.assertEqual(0, len(conf['empty']))
-
-    def test_confread_multiline(self):
-        conf = self.config('keyvalues')
-        self.assertEqual(conf['section']['key_multiline'], 'line1line2')
-        self.assertEqual(conf['section']['key_multiline_space'], 'line1 line2')
-        self.assertEqual(conf['section']['key_multiline_quotes'], 'line1line2')
     
 
 class TestConfigYaml(unittest.TestCase,ConfigBaseTests):

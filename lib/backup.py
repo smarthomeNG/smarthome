@@ -31,7 +31,7 @@ import os
 from datetime import datetime
 from lib.shtime import Shtime
 from lib.shpypi import Shpypi
-from lib.constants import (BASE_LOG, BASE_LOGIC, BASE_MODULE, BASE_PLUGIN, BASE_SH, BASE_STRUCT, BASE_HOLIDAY, DIR_ETC, DIR_ITEMS, DIR_LOGICS, DIR_SCENES, DIR_STRUCTS, DIR_UF, DIR_VAR, DIR_PRIV_TOOLS, YAML_FILE, CONF_FILE)
+from lib.constants import (BASE_LOG, BASE_LOGIC, BASE_MODULE, BASE_PLUGIN, BASE_SH, BASE_STRUCT, BASE_HOLIDAY, DIR_ETC, DIR_ITEMS, DIR_LOGICS, DIR_SCENES, DIR_STRUCTS, DIR_UF, DIR_VAR, DIR_PRIV_TOOLS, YAML_FILE)
 
 logger = logging.getLogger(__name__)
 
@@ -137,7 +137,6 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
 
     # backup files from /scenes
     backup_directory(backupzip, scenes_dir, YAML_FILE)
-    backup_directory(backupzip, scenes_dir, CONF_FILE)
 
     # backup files from /structs
     backup_directory(backupzip, structs_dir, YAML_FILE)
@@ -150,12 +149,11 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
 
     # backup private plugins
     source_dir = plugins_dir
-    dest_dir= 'plugins'
+    dest_dir = 'plugins'
     for filename in sorted(os.listdir(source_dir)):
         if filename.startswith('priv_'):
             logger.dbghigh(f"Backup private plugin: {filename}")
             backup_directory2(backupzip, os.path.join(source_dir, filename), '.*', dest_dir=os.path.join(dest_dir, filename))
-    #arc_dir = 'plugins/priv_widgets'
 
     # backup files from /var/esphome/config
     backup_directory(backupzip, esphome_conf_dir, '.yaml', 'esphome_config')
@@ -179,7 +177,6 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     logger.info("Zipped files: {}".format(zipped_files))
     backupzip.close()
 
-
     # Test code: List directory names of private plugins
     # z = zipfile.ZipFile(backup_dir + os.path.sep + backup_filename, 'r')
     #
@@ -197,7 +194,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     # logger.warning("- backup_dir = {}".format(backup_dir))
 
     shtime = Shtime.get_instance()
-    if shtime == None:
+    if shtime is None:
         shtime = Shtime(None)
 
     now = shtime.now()
