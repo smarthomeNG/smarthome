@@ -60,7 +60,7 @@ from importlib import import_module, reload
 import lib.config
 import lib.translation as translation
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_DEFAULT_INSTANCE, KEY_INSTANCE, YAML_FILE, CONF_FILE, DIR_PLUGINS, PLUGIN_PARSE_ITEM)
+from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_DEFAULT_INSTANCE, KEY_INSTANCE, YAML_FILE, DIR_PLUGINS, PLUGIN_PARSE_ITEM)
 from lib.metadata import Metadata
 
 logger = logging.getLogger(__name__)
@@ -108,10 +108,7 @@ class Plugins():
         _plugins_instance = self
 
         # until Backend plugin is modified
-        if os.path.isfile(configfile + YAML_FILE):
-            self._plugin_conf_filename = configfile + YAML_FILE
-        else:
-            self._plugin_conf_filename = configfile + CONF_FILE
+        self._plugin_conf_filename = configfile + YAML_FILE
         smarthome._plugin_conf = self._plugin_conf_filename  # type: ignore
 
         # read plugin configuration (from etc/plugin.yaml)

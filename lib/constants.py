@@ -92,7 +92,6 @@ PLUGIN_PARSE_LOGIC = 'parse_logic'
 PLUGIN_REMOVE_ITEM = 'remove_item'
 
 #file extensions
-CONF_FILE = '.conf'
 YAML_FILE = '.yaml'
 DEFAULT_FILE = '.default'
 

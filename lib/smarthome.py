@@ -58,7 +58,6 @@ import json
 import logging
 import logging.handlers
 import logging.config
-# import platform  # TODO: remove? unused
 import shutil
 
 import signal
@@ -66,10 +65,6 @@ import subprocess
 import threading
 import time
 import traceback
-# try:
-#     import psutil  # TODO: remove? unused
-# except ImportError:
-#     pass
 
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
@@ -97,7 +92,7 @@ from lib.shtime import Shtime
 import lib.shyaml
 from lib.shpypi import Shpypi
 from lib.triggertimes import TriggerTimes
-from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE, DIRS, BASES, BASE_LOG, BASE_LOGIC, BASE_MODULE, BASE_PLUGIN, BASE_SH, DIR_CACHE, DIR_ENV, DIR_ETC, DIR_ITEMS, DIR_LIB, DIR_LOGICS, DIR_MODULES, DIR_PLUGINS, DIR_SCENES, DIR_STRUCTS, DIR_TPL, DIR_UF, DIR_VAR)
+from lib.constants import (YAML_FILE, DEFAULT_FILE, DIRS, BASES, BASE_LOG, BASE_LOGIC, BASE_MODULE, BASE_PLUGIN, BASE_SH, DIR_CACHE, DIR_ENV, DIR_ETC, DIR_ITEMS, DIR_LIB, DIR_LOGICS, DIR_MODULES, DIR_PLUGINS, DIR_SCENES, DIR_STRUCTS, DIR_TPL, DIR_UF, DIR_VAR)
 import lib.userfunctions as uf
 from lib.systeminfo import Systeminfo
 
@@ -302,7 +297,7 @@ class SmartHome():
             # set by smarthome.yaml
             self._config_etc = lib.utils.Utils.to_bool(self._config_etc, False)
 
-        # at this point is of type bool
+        # at this point self._config_etc is of type bool
         self.initialize_dir_vars()
         self.create_conf_directories()
 
@@ -313,20 +308,6 @@ class SmartHome():
             self.shtime.set_tz(self._tz)
 
         #############################################################
-        # test if needed Python packages are installed
-        # - core requirements = libs
-        # self.shpypi = Shpypi(self)
-        # core_reqs = shpypi.test_core_requirements(logging=False)
-        # if core_reqs == 0:
-        #     print("Trying to restart shng")
-        #     print()
-        #     exit(0)
-        # elif core_reqs == -1:
-        #     print("Unable to install core requirements")
-        #     print()
-        #     exit(1)
-
-        #############################################################
         # setup logging
         logsetup = self.init_logging(self._log_conf_basename, MODE)
 
@@ -334,7 +315,6 @@ class SmartHome():
         # get shng version information
         # shngversion.get_plugins_version() may only be called after logging is initialized
         import bin.shngversion as shngversion
-        # VERSION = shngversion.get_shng_version()
         self.branch = shngversion.get_shng_branch()
         self.version = shngversion.get_shng_version()
         self.plugins_version = shngversion.get_plugins_version()
@@ -609,7 +589,7 @@ class SmartHome():
             return getattr(self, f'get_{config}dir')()
         elif hasattr(self, f'_{config}_dir'):
             return getattr(self, f'_{config}_dir')
-        
+
         return ''
 
 
@@ -663,8 +643,7 @@ class SmartHome():
         for c in configs:
             default = os.path.join(self._base_dir, 'etc', c + YAML_FILE + DEFAULT_FILE)
             conf_basename = os.path.join(self._etc_dir, c)
-            if ((c == 'logging' and not (os.path.isfile(conf_basename + YAML_FILE))) or
-               (c != 'logging' and not (os.path.isfile(conf_basename + YAML_FILE)) and not (os.path.isfile(conf_basename + CONF_FILE)))):
+            if not os.path.isfile(conf_basename + YAML_FILE):
                 if os.path.isfile(default):
                     shutil.copy2(default, conf_basename + YAML_FILE)
 
@@ -675,7 +654,6 @@ class SmartHome():
         """
         if conf_basename == '':
             conf_basename = self._log_conf_basename
-        # conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
         logsetup = self.logs.configure_logging()
 
         if logsetup is not True:
@@ -683,7 +661,6 @@ class SmartHome():
             print("       Trying default logging configuration from:")
             print(f"       {conf_basename}")
             print()
-            # conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
             if not self.logs.configure_logging('logging.yaml.default'):
                 print("ABORTING")
                 print()
@@ -988,7 +965,6 @@ class SmartHome():
         else:
             return []
 
-
     #################################################################
     # Helper Methods
     #################################################################
@@ -1008,7 +984,6 @@ class SmartHome():
     def _garbage_collection(self):
         c = gc.collect()
         self._logger.dbghigh(f"Garbage collector: collected {c} objects.")
-
 
     def _export_threadinfo(self):
         filename = os.path.join(self.base_dir, 'var', 'run', 'threadinfo.json')
@@ -1048,7 +1023,6 @@ class SmartHome():
             self._logger.info(f"object_refcount - sort: Exception {ex}")
         return objects
 
-
     def _object_refcount(self):
         objects = {}
         for module in list(sys.modules.values()):
@@ -1064,19 +1038,19 @@ class SmartHome():
                     pass
         return objects
 
-
     #####################################################################
     # Diplay DEPRECATED warning
     #####################################################################
+
     def _deprecated_warning(self, n_func=''):
         """
         Display function deprecated warning
         """
         if hasattr(self, '_deprecated_warnings'):
-            if lib.utils.Utils.to_bool(self._deprecated_warnings) == False:
+            if not lib.utils.Utils.to_bool(self._deprecated_warnings):
                 return
         else:
-            return # if parameter is not defined
+            return  # if parameter is not defined
 
         d_func = 'sh.' + str(sys._getframe(1).f_code.co_name) + '()'
         if n_func != '':
@@ -1117,7 +1091,7 @@ class SmartHome():
 
 
     #####################################################################
-    # THE FOLLOWING METHODS ARE DEPRECATED
+    # THE FOLLOWING METHODS ARE DEPRECATED, remove in 1.12
     #####################################################################
 
     # obsolete by utils.

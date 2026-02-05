@@ -35,7 +35,7 @@ import os
 
 from lib.utils import Utils
 import lib.shyaml as shyaml
-from lib.constants import (YAML_FILE, CONF_FILE)
+from lib.constants import YAML_FILE
 logger = logging.getLogger(__name__)
 
 valid_item_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
@@ -63,8 +63,6 @@ def parse_basename(basename, configtype=''):
     :rtype: OrderedDict
     """
     config = parse(basename + YAML_FILE)
-    if config == {}:
-        config = parse(basename + CONF_FILE)
     if config == {}:
         if configtype == 'module':
             logger.warning(f"No valid file '{basename}{YAML_FILE}' found with {configtype} configuration")
@@ -95,7 +93,7 @@ def parse_itemsdir(itemsdir, item_conf, addfilenames=False, struct_dict={}):
     logger.info(f"parse_itemsdir: Beginning to parse items directory {itemsdir}")
     for item_file in sorted(os.listdir(itemsdir)):
         if not item_file.startswith('.'):
-            if item_file.endswith(CONF_FILE) or item_file.endswith(YAML_FILE):
+            if item_file.endswith(YAML_FILE):
                 if item_file == 'logic' + YAML_FILE and itemsdir.find(os.path.join('lib', 'env')) > -1:
                     logger.info(f"parse_itemsdir: skipping logic definition file = {itemsdir + item_file}")
                 else:
@@ -123,11 +121,10 @@ def parse(filename, config=None, addfilenames=False, parseitems=False, struct_di
     :return: The resulting merged OrderedDict tree
     :rtype: OrderedDict
     """
-    if not filename.startswith('.'):
-        if filename.endswith(YAML_FILE) and os.path.isfile(filename):
-            return parse_yaml(filename, config, addfilenames, parseitems, struct_dict)
-        elif filename.endswith(CONF_FILE) and os.path.isfile(filename):
-            return parse_conf(filename, config)
+    if filename.startswith('.'):
+        return {}
+    if filename.endswith(YAML_FILE) and os.path.isfile(filename):
+        return parse_yaml(filename, config, addfilenames, parseitems, struct_dict)
     return {}
 
 
@@ -314,8 +311,6 @@ def merge(source, destination, source_name='', dest_name='', filename=''):
                 else:
                     merge(value, node, source_name, dest_name)
             else:
-                # if struct_merging_active:
-                # logger.warning(f"merge: - value={value}, destination.get(key, None)={destination.get(key, None)}")
                 if isinstance(value, list) or isinstance(destination.get(key, None), list):
                     if destination.get(key, None) is None:
                         destination[key] = value
@@ -326,16 +321,7 @@ def merge(source, destination, source_name='', dest_name='', filename=''):
                 else:
                     # convert to string and remove newlines from multiline attributes
                     destination[key] = str(value).replace('\n', '')
-                    # if destination.get(key, None) is None:
-                    #     destination[key] = str(value).replace('\n', '')
 
-                # if type(value).__name__ == 'list':
-                #     destination[key] = value
-                # else:
-                #     # convert to string and remove newlines from multiline attributes
-                #     destination[key] = str(value).replace('\n','')
-                # if struct_merging_active:
-                #     logger.warning(f"merge: - destination={dict(destination)}")
         except Exception as e:
             logger.error(f"Problem merging subtrees (key={key}), probably invalid YAML file '{source_name}' with entry '{destination}'. Error: {e}")
 
@@ -511,7 +497,6 @@ def add_struct_to_item_template(path, struct_name, template, struct_dict, instan
         # no struct/template with this name
         nf = collections.OrderedDict()
         nf['name'] = "ERROR: struct '" + struct_name + "' not found!"
-        # nf['value'] = nf['name']
         nested_put(template, path, nf)
         logger.error(f"add_struct_to_item_template: Struct definition for '{struct_name}' not found (referenced in item {path})")
     else:
@@ -683,133 +668,3 @@ def strip_quotes(string):
                 if string.count(string[0]) == 2:  # if they are the only one
                     string = string[1:-1]  # remove them
     return string
-
-
-def parse_conf(filename, config=None):
-    """
-    Load and parse a configuration file which is in the old .conf format of smarthome.py
-    and merge it to the configuration tree
-
-    :param filename: Name of the configuration file
-    :param config: Optional OrderedDict tree, into which the configuration should be merged
-    :type filename: str
-    :type config: bool
-
-    :return: The resulting merged OrderedDict tree
-    :rtype: OrderedDict
-
-
-    The config file should stick to the following setup:
-
-    .. code-block:: ini
-
-       [firstlevel]
-           attribute1 = xyz
-           attribute2 = foo
-           attribute3 = bar
-
-           [[secondlevel]]
-               attribute1 = abc
-               attribute2 = bar
-               attribute3 = foo
-
-               [[[thirdlevel]]]
-                   attribute1 = def
-                   attribute2 = barfoo
-                   attribute3 = foobar
-
-           [[anothersecondlevel]]
-               attribute1 = and so on
-
-    where firstlevel, secondlevel, thirdlevel and anothersecondlevel are defined as items and attribute are their respective attribute - value pairs
-
-    Valid characters for the items are a-z and A-Z plus any digit and underscore as second or further characters.
-    Valid characters for the attributes are the same as for an item plus @ and *
-    """
-
-    valid_set = set(valid_attr_chars)
-    if config is None:
-        config = collections.OrderedDict()
-    item = config
-    with open(filename, 'r', encoding='UTF-8') as f:
-        linenu = 0
-        parent = collections.OrderedDict()
-        lines = iter(f.readlines())
-        for raw in lines:
-            linenu += 1
-            line = raw.lstrip('\ufeff')  # remove BOM
-            while line.rstrip().endswith('\\'):
-                linenu += 1
-                line = line.rstrip().rstrip('\\') + next(lines, '').lstrip()
-            line = line.partition('#')[0].strip()
-            if line == '':
-                continue
-            if line[0] == '[':  # item
-                brackets = 0
-                level = 0
-                closing = False
-                for index in range(len(line)):
-                    if line[index] == '[' and not closing:
-                        brackets += 1
-                        level += 1
-                    elif line[index] == ']':
-                        closing = True
-                        brackets -= 1
-                    else:
-                        closing = True
-                        if line[index] not in valid_item_chars + "'":
-                            logger.error(f"Problem parsing '{filename}' invalid character in line {linenu}: {line}. Valid characters are: {valid_item_chars}")
-                            return config
-                if brackets != 0:
-                    logger.error(f"Problem parsing '{filename}' unbalanced brackets in line {linenu}: {line}")
-                    return config
-                name = line.strip("[]")
-                name = strip_quotes(name)
-
-                if len(name) == 0:
-                    logger.error(f"Problem parsing '{filename}' tried to use an empty item name in line {linenu}: {line}")
-                    return config
-                elif name[0] in digits:
-                    logger.error(f"Problem parsing '{filename}': item starts with digit '{name[0]}' in line {linenu}: {line}")
-                    return config
-                elif name in reserved:
-                    logger.error(f"Problem parsing '{filename}': item using reserved word set/get in line {linenu}: {line}")
-                    return config
-                elif keyword.iskeyword(name):
-                    logger.error(f"Problem parsing '{filename}': item using reserved Python keyword {name} in line {linenu}: {line}")
-                    return config
-
-                if level == 1:
-                    if name not in config:
-                        config[name] = collections.OrderedDict()
-                    item = config[name]
-                    parents = collections.OrderedDict()
-                    parents[level] = item
-                else:
-                    if level - 1 not in parents:
-                        logger.error(f"Problem parsing '{filename}' no parent item defined for item in line {linenu}: {line}")
-                        return config
-                    parent = parents[level - 1]
-                    if name not in parent:
-                        parent[name] = collections.OrderedDict()
-                    item = parent[name]
-                    parents[level] = item
-
-            else:  # attribute
-                attr, __, value = line.partition('=')
-                if not value:
-                    continue
-                attr = attr.strip()
-                if not set(attr).issubset(valid_set):
-                    logger.error(f"Problem parsing '{filename}' invalid character in line {linenu}: {attr}. Valid characters are: {valid_attr_chars}")
-                    continue
-
-                if len(attr) > 0:
-                    if attr[0] in digits:
-                        logger.error(f"Problem parsing '{filename}' attrib starts with a digit '{attr[0]}' in line {linenu}: {attr }.")
-                        continue
-                if '|' in value:
-                    item[attr] = [strip_quotes(x) for x in value.split('|')]
-                else:
-                    item[attr] = strip_quotes(value)
-        return config

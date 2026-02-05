@@ -31,11 +31,10 @@ import lib.item
 from lib.model.smartplugin import SmartPlugin
 import threading
 
-from lib.constants import (CONF_FILE, YAML_FILE)
+from lib.constants import YAML_FILE
 
 from tests.mock.core import MockSmartHome
 
-#ITEM_FILE_TYPE = CONF_FILE
 ITEM_FILE_TYPE = YAML_FILE
 
 verbose = False
