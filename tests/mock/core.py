@@ -65,6 +65,8 @@ class MockSmartHome():
 
     _restart_on_num_workers = 30
 
+    _legacy_instances = False
+
     _etc_dir = os.path.join(_base_dir, 'tests', 'resources', 'etc')
     _structs_dir = os.path.join(_base_dir, 'tests', 'resources', 'structs')
     _var_dir = os.path.join(_base_dir, 'var')

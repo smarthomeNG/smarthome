@@ -22,7 +22,7 @@ item3:
 
         item3b1:
             type: bool
-            #wol_mac: 11:22:33:44:55:66
+            wol_mac: 11:22:33:44:55:66
 
             item3b1a:
                 type: bool

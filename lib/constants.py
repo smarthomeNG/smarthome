@@ -77,6 +77,7 @@ KEY_REMARK = 'remark'
 
 #global config params for plugins
 KEY_INSTANCE =         'instance'
+KEY_DEFAULT_INSTANCE = 'default_instance'
 KEY_WEBIF_PAGELENGTH = 'webif_pagelength'
 KEY_CLASS_PATH = 'class_path'
 KEY_CLASS_NAME = 'class_name'
