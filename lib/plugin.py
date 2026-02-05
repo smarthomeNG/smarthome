@@ -513,6 +513,7 @@ class Plugins():
                             self._plugins.append(plugin_thread.plugin)  # type: ignore (plugin is set via eval)
                             # dict to get a handle to the plugin code by plugin name:
                             if self._plugindict.get(classpath.split('.')[1], None) is None:
+                                # plugin not yet in plugindict
                                 self._plugindict[classpath.split('.')[1]] = plugin_thread.plugin  # type: ignore
                             self._plugindict[classpath.split('.')[1] + '#' + instance] = plugin_thread.plugin  # type: ignore
                             if startorder == 'early':
@@ -555,78 +556,83 @@ class Plugins():
         instance = myplugin.get_instance_name()
         plgname = myplugin.get_shortname()
 
-        if myplugin.alive:
-            myplugin.stop()
-
-        logger.info("unload_plugin: configname = {}, myplugin = {}".format(configname, myplugin))
-
-        logger.debug("Plugins._plugins ({}) = {}".format(len(self._plugins), self._plugins))
-        logger.debug("Plugins._threads ({}) = {}".format(len(self._threads), self._threads))
-
-        # execute de-initialization code of the plugin
-        myplugin.deinit()
-
-        self._threads.remove(mythread)
-        self._plugins.remove(myplugin)
-        logger.debug("Plugins._plugins nach remove ({}) = {}".format(len(self._plugins), self._plugins))
-        logger.debug("Plugins._threads nach remove ({}) = {}".format(len(self._threads), self._threads))
-
-        myplugin_address = id(myplugin)
-        logger.debug(f'myplugin sizeof       = {sys.getsizeof(myplugin)}')
-        logger.debug(f'myplugin refcnt       = {PyObject.from_address(myplugin_address).refcnt}')
-        logger.debug(f'myplugin referrer     = {gc.get_referrers(myplugin)}')
-        logger.debug(f'myplugin referrer cnt = {len(gc.get_referrers(myplugin))}')
-        for r in gc.get_referrers(myplugin):
-            logger.debug("myplugin referrer     = {} / {} / {}".format(r, namestr(r, globals()), namestr(r, locals())))
-        gc.collect()
-        logger.debug(f'myplugin referrer cnt2= {len(gc.get_referrers(myplugin))}')
-
-        # remove references in plugins data
         try:
-            del self._plugindict[plgname]
-        except Exception as e:
-            logger.warning(f'error on removing {plgname} from plugindict: {e}')
-        try:
-            del self._plugindict[plgname + '#' + instance]
-        except Exception as e:
-            logger.warning(f'error on removing {plgname + "#" + instance} from plugindict: {e}')
+            if myplugin.alive:
+                myplugin.stop()
 
-        # remove references in sh and plugins objects
-        if getattr(self._sh, configname, None) is myplugin:
+            logger.info("unload_plugin: configname = {}, myplugin = {}".format(configname, myplugin))
+
+            logger.debug("Plugins._plugins ({}) = {}".format(len(self._plugins), self._plugins))
+            logger.debug("Plugins._threads ({}) = {}".format(len(self._threads), self._threads))
+
+            # execute de-initialization code of the plugin
+            myplugin.deinit()
+
+            self._threads.remove(mythread)
+            self._plugins.remove(myplugin)
+            logger.debug("Plugins._plugins nach remove ({}) = {}".format(len(self._plugins), self._plugins))
+            logger.debug("Plugins._threads nach remove ({}) = {}".format(len(self._threads), self._threads))
+
+            myplugin_address = id(myplugin)
+            logger.debug(f'myplugin sizeof       = {sys.getsizeof(myplugin)}')
+            logger.debug(f'myplugin refcnt       = {PyObject.from_address(myplugin_address).refcnt}')
+            logger.debug(f'myplugin referrer     = {gc.get_referrers(myplugin)}')
+            logger.debug(f'myplugin referrer cnt = {len(gc.get_referrers(myplugin))}')
+            for r in gc.get_referrers(myplugin):
+                logger.debug("myplugin referrer     = {} / {} / {}".format(r, namestr(r, globals()), namestr(r, locals())))
+            gc.collect()
+            logger.debug(f'myplugin referrer cnt2= {len(gc.get_referrers(myplugin))}')
+
+            # remove references in plugins data
+            if getattr(self._plugindict, plgname, None) is myplugin:
+                try:
+                    del self._plugindict[plgname]
+                except Exception as e:
+                    logger.warning(f'error on removing {plgname} from plugindict: {e}')
+
+            if getattr(self._plugindict, plgname + "#" + instance, None) is myplugin:
+                try:
+                    del self._plugindict[plgname + '#' + instance]
+                except Exception as e:
+                    logger.warning(f'error on removing {plgname + "#" + instance} from plugindict: {e}')
+
+            # remove references in sh and plugins objects
+            if getattr(self._sh, configname, None) is myplugin:
+                try:
+                    delattr(self._sh, configname)
+                except Exception as e:
+                    logger.warning(f'error on removing {configname} ref from sh object: {e}')
+
+            if getattr(self, configname, None) is myplugin:
+                try:
+                    delattr(self, configname)
+                except Exception as e:
+                    logger.warning(f'error on removing {configname} ref from plugins object: {e}')
+
+            # remove objects itselves
+            del mythread
+            del myplugin
+
             try:
-                delattr(self._sh, configname)
-            except Exception as e:
-                logger.warning(f'error on removing {configname} ref from sh object: {e}')
+                logger.warning(f"myplugin refcnt nach del    = {PyObject.from_address(myplugin_address).refcnt}")
+            except Exception:
+                pass
 
-        if getattr(self, configname, None) is myplugin:
-            try:
-                delattr(self, configname)
-            except Exception as e:
-                logger.warning(f'error on removing {configname} ref from plugins object: {e}')
+            # 'myplugin' was deleted above, so this will always raise an exception. Might as well skip it outright...
+            # try:
+            #     logger.info(f'myplugin referrer cnt = {len(gc.get_referrers(myplugin))}')
+            #     for r in gc.get_referrers(myplugin):
+            #         logger.info(f'myplugin referrer     = {r}')
+            # except Exception:
+            #     pass
 
-        # remove objects itselves
-        del mythread
-        del myplugin
+            logger.debug(f"Plugins._plugins nach del ({len(self._plugins)}) = {self._plugins}")
+            logger.debug(f"Plugins._threads nach del ({len(self._threads)}) = {self._threads}")
 
-        try:
-            logger.warning(f"myplugin refcnt nach del    = {PyObject.from_address(myplugin_address).refcnt}")
-        except Exception:
-            pass
-
-        # 'myplugin' was deleted above, so this will always raise an exception. Might as well skip it outright...
-        # try:
-        #     logger.info(f'myplugin referrer cnt = {len(gc.get_referrers(myplugin))}')
-        #     for r in gc.get_referrers(myplugin):
-        #         logger.info(f'myplugin referrer     = {r}')
-        # except Exception:
-        #     pass
-
-        logger.debug(f"Plugins._plugins nach del ({len(self._plugins)}) = {self._plugins}")
-        logger.debug(f"Plugins._threads nach del ({len(self._threads)}) = {self._threads}")
-
-        # TODO: find proper point to return True on success...?!
-        return False
-
+            return True
+        except Exception as e:
+            logger.error(f'While unloading plugin {configname} ({plgname}#{instance}), the following error occurred: {e}')
+            return False
 
     def reload_plugin(self, configname: str) -> bool:
         """
@@ -650,13 +656,20 @@ class Plugins():
             logger.warning(f'Reading plugin config {self._configfile} returned no data, check config')
             return False
 
-        conf = _conf.get(configname)
-        if conf is None:
+        plg_conf = _conf.get(configname)
+        if plg_conf is None:
             logger.warning(f'No config section {configname} found, check config')
             return False
-        if 'plugin_name' not in conf:
+        if 'plugin_name' not in plg_conf:
             logger.warning(f'No plugin_name configured for {configname}, check config')
             return False
+
+        logger.info(f'Reloading plugin {configname}, step 1a: checking multi instance loading')
+        for plg in _conf:
+            if plg.__module__ == mymodule and plg != configname:
+                # TODO: possibly allow direct unloading of all plugin instances, possibly config option?
+                logger.error(f'Plugin {configname} also loaded as {plg} - unload all other instances first!')
+                return False
 
         logger.info(f'Reloading plugin {configname}, step 2: unload plugin')
         del myplugin
@@ -671,7 +684,7 @@ class Plugins():
             return False
 
         logger.info(f'Reloading plugin {configname}, step 4: load plugin')
-        self.load_plugin(configname, conf)
+        self.load_plugin(configname, plg_conf)
         myplugin = self.return_plugin(configname)
 
         logger.info(f'Reloading plugin {configname}, step 5: (re)init items')
