@@ -21,7 +21,14 @@ default_language: de     # default_language is used, where multiple languages ar
 # in the SmartHomeNG base directory
 # By setting this option, SmartHomeNG looks for them below the etc directory
 # setting this option does NOT migrate old files, use command line option -e to migrate files
-# config_etc = true
+# This is planned to become a default in a future release.
+# config_etc: true
+
+# Instance names are configured via the "instance" parameter in plugin.yaml
+# The future setting will be derived from the section name of each instance. This
+# behaviour can already be activated by setting the following option.
+# This is planned to become a default in a future release.
+# legacy_instances: false
 
 # 
 # control type casting when assiging values to items

@@ -12,23 +12,6 @@ die Konfigurationsdateien beschrieben, die in diesen Verzeichnissen gespeichert 
 
 Die Konfiguration erfolgt im weit verbreiteten `yaml <https://en.wikipedia.org/wiki/YAML>`_ Format.
 
-Ältere Versionen von smarthome.py und SmartHomeNG benutzten das `configobj <http://www.voidspace.org.uk/python/articles/configobj.shtml>`_
-Dateiformat, welches ähnlich zum bekannten `ini-file <https://en.wikipedia.org/wiki/INI_file>`_ Format
-ist, jedoch die Möglichkeit hat, Abschnitte mit Unterstrukturen in Multilevel Strukturen anzulegen.
-Dieses Dateiformat ist von SmartHomeNG noch unterstützt. Es ist jedoch veraltet und wird nur für Umsteiger aus
-älteren Versionen beschrieben. Dieses Dateiformat wird in zukünftigen Versionen von SmartHomeNG
-nicht mehr unterstützt werden. Ab welcher Version die Unterstützung entfallen wird, ist noch nicht festgelegt.
-
-Wenn das Backend-Plugin konfiguriert ist, können damit Abschnitte des alten .conf Dateiformats in das yaml Format
-überführt werden.
-
-Es gibt außerdem ein Service Tool im Verzeichnis ***../tools***, welches dazu dient, die gesamte Konfiguration zu
-konvertieren. Hierbei kann gewählt werden, ob die Inhalte des ***../etc*** Verzeichnisses, des ***../items*** Verzeichnisses
-oder beide konvertiert werden sollen.
-
-Genaueres bitte unter :doc:`../../tools/tools` nachlesen.
-
-
 Verzeichnisse
 =============
 
@@ -91,42 +74,6 @@ Diese Seite beschäftigt sich mit dem grundlegenden Format der
 Konfigurationsdateien. Für die vollständigen
 Konfigurationsmöglichkeiten, bitte auf den jeweiligen Wiki Seiten
 nachsehen.
-
-Seit dem Release 1.3 von SmartHomeNG können zur Konfiguration von
-**Items**, **Logiken** und **Plugins** auch Dateien im YAML Format
-eingesetzt werden. Dieses ist das ab Release 1.5 das Standardformat. Das
-Format der YAML Dateien (Endung **.yaml**) wird im folgenden
-beschrieben.
-
-Bisher erfolgt die Konfiguration in **.conf** Dateien in einem
-smarthome-spezifischen Format. Das **.conf** Format wird noch weiterhin
-unterstützt. Dokumentiert wird jedoch nur noch das **yaml** Format. Das
-**.conf** Format wird ab einem späteren Release (voraussichtlich v2.0)
-nicht mehr unterstützt werden.
-
-Ganz neu war die Nutzung des YAML Formats für SmartHomeNG im Release 1.3
-nicht. Seit dem Übergang von smarthome.py zu SmartHomeNG wird bereits
-dass Logging in einer YAML Datei konfiguriert.
-
-Zur Konvertierung von **.conf** in **.yaml** Dateien, ist ab Release 1.3
-von SmartHomeNG ein Tool beigefügt, welches diese Konvertierung für die
-Item Dateien durchführt.
-
-**.conf** und **.yaml** Dateien können gemischt eingesetzt werden. Es
-ist dabei unbedingt darauf zu achten, dass keine Konfiguration doppelt
-(1 mal in .conf und 1 mal in .yaml) vorgenommen wird bzw. von
-SmartHomeNG eingelesen werden kann. Es darf für Plugins und Logiken also
-nur entweder eine .conf oder .yaml Datei geben. Sollte doch eine .conf
-und eine .yaml Datei für Plugins oder Logiken im /etc Verzeichnis
-liegen, so wird die .conf Datei ignoriert und die Konfiguration aus der
-.yaml Datei gelesen. Im Items-Verzeichnis können beide Dateitypen
-gleichzeitig vorkommen. Hier ist bei der Umstellung nur darauf zu
-achten, dass nicht aus Versehen ein Item sowohl in einer .conf **und**
-einer .yaml Datei definiert ist.
-
-
-Neues Dateiformat - .yaml Dateien
----------------------------------
 
 Das YAML Format wird seit SmartHomeNG **Release 1.3** unterstützt.
 
@@ -222,8 +169,8 @@ gibt man jetzt folgendes an:
          - value1
          - value2
 
-Beispiel von Item Definitionen in YAML
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Beispiel von Item Definitionen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: yaml
 
@@ -297,101 +244,6 @@ Beispiel:
                name: Downlights Tresen
                sv_widget: "{{ device.dimmer('wohnung.kochen.dl_aussen', 'Äußere Downlights', 'wohnung.kochen.dl_aussen', 'wohnung.kochen.dl_aussen.level') }}"
 
-Konvertierung von .conf Dateien in das YAML Format
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Im Verzeichnis **../tools** von SmartHomeNG liegt ein Tool
-(conf_to_yaml_converter.py) zur Konvertierung der .conf Dateien in YAML
-Dateien.
-
-Der Konverter konvertiert sowohl die .conf Dateien im **../items**
-Verzeichnis, als auch die .conf Dateien im **../etc** Verzeichnis. Nach
-dem Start des Konverters fragt er für jedes der beiden Verzeichnisse ab,
-ob die Dateien in dem Verzeichnis konvertiert werden sollen. Wichtig:
-Der Konverter muss vom Verzeichnis tools gestartet werden.
-
-   Wenn in den .conf Dateien Blöcke auskommentiert sind, so werden diese
-   als Kommentare übernommen und nicht konvertiert. Falls es gewünscht
-   ist diese Blöcke zu konvertieren, so muss die Auskommentierung der
-   Zeilen vor der Konvertierung entfernt werden und nach der
-   Konvertierung wieder hinzugefügt werden.
-
-Die ursprünglichen .conf Dateien bleiben bei der Konvertierung
-unverändert in den Verzeichnissen liegen.
-
-Nacharbeiten
-^^^^^^^^^^^^
-
-**../items**-Verzeichnis: Als Nacharbeiten **müssen** die .conf Dateien
-aus dem **../items** Verzeichnis heraus bewegt werden, da SmartHomeNG im
-**../items** Verzeichnis alle .conf und alle .yaml Dateien einliest.
-Dabei würden die Definitionen der Items zweimal eingelesen (einmal aus
-der .conf Datei und einmal aus der .yaml Datei).
-
-**../etc**-Verzeichnis: Als Nacharbeiten sollten die .conf Dateien aus
-dem **../etc** Verzeichnis heraus bewegt werden, um Verwirrungen zu
-vermeiden. Das herausbewegen ist nicht unbedingt notwendig, da die
-SmartHomeNG beim Einlesen der Konfigurationsdateien nur eine Version
-einliest. Ist eine .yaml Datei vorhanden, wird diese eingelesen. Nur
-wenn keine .yaml Datei vorhanden ist, wird die .conf Datei gelesen.
-
-
-Vorteile von YAML
------------------
-
--  Standard Dateiformat
--  bessere Lesbarkeit
--  Tools zur formalen Prüfung der YAML-Konformität von Dateien verfügbar
--  leichtere Editierbarkeit:
-
-   -  Sytax Highlighting mit diversen Editoren möglich
-   -  Code-Faltung zur besser Übersicht in großen Dateien mit diversen
-      Editoren möglich
-   -  Ein- und Ausrücken von Items (bzw. Item-Strukturen) mit diversen
-      einfach möglich, ohne Notwendigkeit weiterer Anpassungen (Anzahl
-      eckiger Klammern bei jedem bewegtem Item)
-
-- Neue Features von SmartHomeNG werden zum Teil nur bei Verwendung von
-  YAML Dateien verfügbar sein.
-
-
-Altes Dateiformat - .conf Dateien
----------------------------------
-
-Die .conf Dateien bestehen aus einer Reihe von Sektionen (Plugin- bzw.
-Logikdefinitionen), die Key/Value-Listen enthalten. Für Plugins und
-Logiken sind Sektionen nur auf der obersten Ebene zulässig.
-
-::
-
-   [section1]
-       key1 = value1
-       key2 = value2
-
-   [section2]
-       key3 = value3
-       key4 = value4
-
-Für Items können Sektionen (Itemdefinitionen) weitere Unter-Sektionen
-(weitere Itemdefinitionen) enthalten.
-
-::
-
-   [section]
-       key1 = value1
-       key2 = value2
-
-       [[subsection]]
-           key3 = value3
-
-           [[[sub_subsection]]]
-               key4 = value4
-
-
-
-.. index:: YAML Syntax
-
-.. _`YAML Syntax`:
 
 YAML Syntax
 ===========

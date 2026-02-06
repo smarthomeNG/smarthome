@@ -41,7 +41,7 @@ im Abschnitt **Konfiguration/Plugins** zu finden.
 Referenzierung eines Plugins in der Konfiguration
 -------------------------------------------------
 
-Ab v1.4 ist es Standard, das Plugin über den einzigen Parameter ``plugin_name`` zu spezifizieren.
+Seit v1.4 ist es Standard, das Plugin über den einzigen Parameter ``plugin_name`` zu spezifizieren.
 Dabei ist der Wert der Wert des früheren Parameters ``class_path`` ohne den Präfix ``plugins.``,
 also der Name des Plugin Verzeichnisses. Da alle Plugins im Verzeichnis **../plugins** liegen, ist
 **plugins.** redundante Information.

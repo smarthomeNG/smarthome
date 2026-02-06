@@ -85,14 +85,12 @@ Beim sichern werden folgende Daten in das zip-Archiv übernommen:
   - /items
 
     - items\*.yaml
-    - items\*.conf
   - /logic
 
     - \*.yaml
   - /scenes
 
     - \*.yaml
-    - \*.conf
   - /structs
 
     - \*.yaml

@@ -23,22 +23,6 @@ Für das oft benutzte KNX-Plugin sieht das z.B. so aus:
        date_ga: 8/0/1
 
 
-bzw. im alten Format:
-
-.. code::
-
-   # etc/plugin.conf
-   [knx]
-      plugin_name = knx
-   #   instance = knx_1
-   #   host = 127.0.0.1
-   #   port = 6720
-   #   webif_pagelength = 0
-      send_time = 600 # update date/time every 600 seconds, default none
-      time_ga = 8/0/0
-      date_ga = 8/0/1
-
-
 Dabei kann der Name der **Plugin-Instanz** (Name des Abschnitts) frei gewählt werden. Es muss
 nur darauf geachtet werden, dass er eindeutig ist, also nur einmal vorkommt. Der Name der Instanz
 sollte auch so gewählt werden, dass es zu keiner Namensgleichheit mit Top-Level Items kommt.
@@ -72,12 +56,18 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 |                  | geladen werden. Dazu muss die Versionsnummer des Plugins angegeben werden.          |
 |                  | (z.B.  **plugin_version: 1.4.9**)                                                   |
 +------------------+-------------------------------------------------------------------------------------+
-| instance         | Optional: Dieser Parameter muss nur verwendet werden, wenn mehrere Instanzen des    |
-|                  | selben Plugins geladen werden sollen. Das Plugin selbst muss dazu **Multiinstance** |
-|                  | fähig sein. Damit die Items der richtigen Plugin-Instanz zugeordnet werden, muss    |
-|                  | in der jeweiligen Item Definition der Name des Plugin-spezifische Attributes um     |
-|                  | die Angabe der Instanz ergänzt werden. Also z.B.: Statt **avm_data_type: uptime**   |
-|                  | muss **avm_data_type@<instance>: uptime** geschrieben werden.                       |
+| instance         | **DEPRECATED** Optional: Dieser Parameter muss nur verwendet werden, wenn mehrere   |
+|                  | Instanzen des selben Plugins geladen werden sollen. Das Plugin selbst muss dazu     |
+|                  | **Multiinstance**-fähig sein. Damit die Items der richtigen Plugin-Instanz          |
+|                  | izugeordnet werden, muss in der jeweiligen Item Definition der Name des Plugin-     |
+|                  | spezifische Attributes um die Angabe der Instanz ergänzt werden. Also z.B.: Statt   |
+|                  | **avm_data_type: uptime** muss **avm_data_type@<instance>: uptime** geschrieben     |
+|                  | werden.                                                                             |
+|                  | Zukünftig wird bei mehrfacher Einbindung desselben Plugins der Bezeichner des       |
+|                  | Abschnitts in der **plugin.yaml** als Instanzbezeichner verwendet werden.           |
++------------------+-------------------------------------------------------------------------------------+
+| default_instance | Optional: Kann zukünftig festlegen, welche Instanz von mehreren den leeren Instanz- |
+|                  | bezeichner erhält (für Item-Attribute ohne Instanzangabe)                           |
 +------------------+-------------------------------------------------------------------------------------+
 | webif_pagelength | Optional: Anzahl an Tabellenreihen, die im Plugin Webinterface standardmäßig        |
 |                  | pro Seite angezeigt werden sollen. Bei **-1** werden alle Einträge auf einer Seite  |
@@ -86,6 +76,12 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 |                  | für das **http Modul** im /etc/module.yaml File über den gleichnamigen Parameter    |
 |                  | definierten globalen Wert.                                                          |
 +------------------+-------------------------------------------------------------------------------------+
+
+
+.. note::
+
+    Die zukünftigen Konfigurationsmöglichkeiten für Multiinstanz-Plugins können jetzt schon aktiviert
+    werden, wenn in der **etc/smarthome.yaml** der Eintrag **legacy_instances: false** angegeben wird.
 
 
 Die weiteren Einträge sind Plugin spezifisch. Welche Parameter ein Plugin kennt ist auch der
