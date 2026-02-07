@@ -16,6 +16,28 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       Dadurch steht jetzt eine einfache Möglichkeit der Sicherung dieser Dateien, die nicht in git
       gesichert werden, zur Verfügung.
 
+    - **Konfiguration unterhalb von etc mit Migration**: Wenn SmartHomeNG mit der Kommandozeilenoption **-e** gestartet
+      wird, sucht es die Konfigurationsverzeichnisse `items, `structs`, `logics`, `uf` und `scenes`
+      nicht mehr im Stammverzeichnis, sondern unterhalb von `etc`. Dies ist auch durch die Option
+      **config_etc: true** in der `etc/smarthome.yaml` möglich.
+
+      Nur beim Aufruf mit Kommandozeilenoption **-e** wird außerdem versucht, vorhandene Konfigurationsdateien
+      nach `etc/<Verzeichnis>`` zu verschieben.
+
+      Die Konfiguration unterhalb von `etc` soll in zukünftigen Releases Standard werden.
+
+    - **Anpassung der Plugin-Instanzbenennung**: Bisher wurde der Instanzname eines Plugins aus der Angabe
+      **instance: <name>** in der `etc/plugin.yaml` ermittelt. Im - derzeit optional verfügbaren - neuen
+      System wird stattdessen der Name des entsprechenden Abschnitts in der `etc/plugin.yaml` verwendet.
+      Damit erhält standardmäßig jedes Plugin, das mehrfach eingebunden wird, einen Instanzbezeichner. Wenn
+      das für einzelne Instanzen nicht gewollt ist, kann mit **default_instance: true** für einzelne Plugins
+      weiterhin der leere Instanzname verwendet werden.
+
+      Um dieses System jetzt schon zu aktivieren, muss in der `etc/smarthome.yaml` die Option
+      **legacy_instances: false** gesetzt werden.
+
+      Diese Methode der Instanzbenennung soll in zukünftigen Releases Standard werden.
+
   - **Plugins**:
 
     - **smartvisu**: Im smartvisu Plugin wurde die Generierung erweitert.
