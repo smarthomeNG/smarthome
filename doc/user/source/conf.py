@@ -45,8 +45,12 @@ extensions = [
   'sphinx.ext.githubpages',
   'sphinx_autodoc_typehints',
   'sphinx_tabs.tabs',
-  'myst_parser']
+  'myst_parser',
+  'sphinx_treeview']
 #  'rst2pdf.pdfbuilder']
+
+# for sphinx-treeview
+myst_enable_extensions = ["colon_fence"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
