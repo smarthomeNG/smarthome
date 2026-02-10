@@ -43,7 +43,7 @@ konfigurieren.
 SmartHomeNG installieren
 ------------------------
 
-SmartHomeNG gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/02_smarthomeng>` installieren und
+SmartHomeNG gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/03_smarthomeng>` installieren und
 rudimentär konfigurieren. SmartHomeNG sollte dabei, wie in der Anleitung beschrieben, gestartet worden sein, damit
 die im folgenden benötigten Verzeichnisse angelegt werden.
 
@@ -51,7 +51,7 @@ die im folgenden benötigten Verzeichnisse angelegt werden.
 Mosquitto installieren
 ----------------------
 
-Den MQTT Broker Mosquitto gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/03_mosquitto>` installieren.
+Den MQTT Broker Mosquitto gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/04_mosquitto>` installieren.
 Mosquitto braucht nicht konfiguriert zu werden. Die Konfiguration wird in einem späteren Schritt vom alten System
 übernommen.
 
@@ -59,7 +59,7 @@ Mosquitto braucht nicht konfiguriert zu werden. Die Konfiguration wird in einem 
 smartVISU installieren
 ----------------------
 
-Die smartVISU gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/04_smartvisu>` installieren und
+Die smartVISU gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/02_smartvisu>` installieren und
 konfigurieren.
 
 Falls die Seiten der smartVISU nicht durch das entsprechende SmartHomeNG Plugin generiert werden, müssen die
@@ -351,4 +351,3 @@ SmartHomeNG als Dienst einrichten
 
 Zum Abschluß smartHomeNG als Dienst einrichten, damit es bei einem Systemstart wieder gestartet wird. Das Vorgehen
 ist in der :doc:`Komplettanleitung </installation/komplettanleitung/08_shng_daemon>` beschrieben.
-

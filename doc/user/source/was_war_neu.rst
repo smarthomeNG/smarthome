@@ -40,7 +40,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     - **postinstall Skript**: Ab Debian 12/Python 3.11 können in die systemseitige Installation nicht mehr beliebig
       Python Packages installiert werden. Es gibt jetzt ein neues Skript ``tools/postinstall`` welches ein Standard
       Environment anlegt, in dem SmartHomeNG später läuft/laufen soll.
-      (Siehe auch :doc:`Komplettanleitung </installation/komplettanleitung/02_smarthomeng>`)
+      (Siehe auch :doc:`Komplettanleitung </installation/komplettanleitung/03_smarthomeng>`)
 
     - **virtuelle Environments**: Skripte zum Anlegen und Aktivieren von virtuellen Python Environments
   - **Items**:
@@ -148,4 +148,3 @@ Folgende Tipps sind in der Doku hinzugekommen:
   - :ref:`SmartHomeNG umziehen <shng_umziehen>`
 
 |
-

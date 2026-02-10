@@ -168,9 +168,9 @@ installieren sein aber sicher ist sicher.
    Hierfür sei `auf diese Seite verwiesen <https://wiki.debian.org/NetworkConfiguration>`__
 
 
-.. tabs::
+.. tab-set::
 
-    .. tab:: Tools für VMWare
+    .. tab-item:: Tools für VMWare
 
         Wenn die Installation in einer virtuellen Maschine unter VMWare erfolgt ist, so werden für
         Debian bullseye 11.3 bereits die open-vm-tools mitinstalliert.
@@ -192,7 +192,7 @@ installieren sein aber sicher ist sicher.
         Die automatische Anpassung der Bildschirmgröße funktioniert erst nach einem Neustart.
 
 
-    .. tab:: VirtualBox Gasterweiterungen
+    .. tab-item:: VirtualBox Gasterweiterungen
 
         Um die Gästeerweiterungen zu installieren zuerst unter **Geräte** ->
         **Gästeerweiterungen einlegen** anklicken. Diese nun via Terminal/Shell
@@ -288,4 +288,3 @@ System ausschalten mit:
 .. code-block:: bash
 
    sudo poweroff
-

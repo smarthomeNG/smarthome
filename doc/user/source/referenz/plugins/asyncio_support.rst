@@ -31,10 +31,8 @@ Methoden zur Unterstützung von asyncio
 Im folgenden sind die Methoden beschrieben, die zur asyncio Unterstützung zur SmartPlugin Klasse hinzugekommen sind.
 
 .. autoclass:: lib.model.smartplugin.SmartPlugin
-    :members: asyncio_state, start_asyncio, stop_asyncio, run_asyncio_coro, wait_for_asyncio_termination,
-              put_command_to_run_queue, get_command_from_run_queue,
-              list_asyncio_tasks
-    :undoc-members:
-    :show-inheritance:
-    :member-order: bysource
-
+  :members:
+  :noindex:
+  :undoc-members:
+  :show-inheritance:
+  :member-order: bysource
