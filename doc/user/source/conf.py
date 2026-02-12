@@ -47,6 +47,7 @@ extensions = [
   'sphinx_tabs.tabs',
   'myst_parser',
   'sphinx_treeview']
+  'sphinx_design']
 #  'rst2pdf.pdfbuilder']
 
 # for sphinx-treeview

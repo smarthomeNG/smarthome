@@ -19,9 +19,9 @@ des SmartHomeNG braucht die SmartVisu noch eine Websocket-Verbindung zum SmartHo
 Webserver und zusätzliche Pakete installieren
 =============================================
 
-.. tabs::
+.. tab-set::
 
-    .. tab:: Apache2
+    .. tab-item:: Apache2
 
         Auf einigen Debian Distributionen ist Apache2 bereits vorinstalliert, dennoch braucht es jedenfalls noch
         einige zusätzliche Pakete, insbesondere PHP.
@@ -34,7 +34,7 @@ Webserver und zusätzliche Pakete installieren
            # nun zur Sicherheit den apache nu starten
            sudo systemctl restart apache2
 
-    .. tab:: NGINX
+    .. tab-item:: NGINX
 
         Wer auf die Visu auch über das Internet (ohne VPN) zugreifen möchte, sollte NGINX installieren und
         dann der Anleitung zum :doc:`Reverse Proxy </visualisierung/reverse_proxy>` folgen. Jedenfalls

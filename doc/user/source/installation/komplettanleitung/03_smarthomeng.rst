@@ -32,9 +32,9 @@ Zunächst müssen einige zusätzliche Pakete installiert werden:
 SmartHomeNG Quellcode laden
 ===========================
 
-.. tabs::
+.. tab-set::
 
-    .. tab:: SmartHomeNG ab v1.10
+    .. tab-item:: SmartHomeNG ab v1.10
 
         SmartHomeNG Dateien vom github holen:
 
@@ -89,7 +89,7 @@ SmartHomeNG Quellcode laden
 
 
 
-    .. tab:: SmartHomeNG vor v1.10
+    .. tab-item:: SmartHomeNG vor v1.10
 
         SmartHomeNG Dateien vom github holen:
 
@@ -115,9 +115,9 @@ SmartHomeNG Quellcode laden
 Weitere Python Bibliotheken installieren
 ========================================
 
-.. tabs::
+.. tab-set::
 
-   .. tab:: SmartHomeNG ab v1.7
+   .. tab-item:: SmartHomeNG ab v1.7
 
       SmartHomeNG kann benötigte Pakete selbst nachinstallieren.
 
@@ -161,7 +161,7 @@ Weitere Python Bibliotheken installieren
       Start die CPU Geschwindigkeit des Rechners bestimmt wird.
 
 
-   .. tab:: SmartHomeNG vor v1.7
+   .. tab-item:: SmartHomeNG vor v1.7
 
       Für den ersten Start müssen noch einige Python Packages nachgeladen werden.
       Im Unterordner ``requirements`` befindet sich dafür eine Datei ``base.txt``.

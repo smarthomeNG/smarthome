@@ -81,9 +81,9 @@ crontab :bluesup:`Update`
 
 Es gibt drei verschiedene Parametersätze für ein crontab Attribut:
 
-.. tabs::
+.. tab-set::
 
-    .. tab:: init
+    .. tab-item:: init
         Das Item wird zum Start von SmarthomeNG aktualisiert und triggert
         dadurch unter Umständen eine zugewiesene Logik:
 
@@ -98,7 +98,7 @@ Es gibt drei verschiedene Parametersätze für ein crontab Attribut:
 
           crontab: 'init+10'    # 10 Sekunden nach Start
 
-    .. tab:: Zeitpunkte
+    .. tab-item:: Zeitpunkte
 
         Das Item soll zu bestimmten Zeitpunkten aktualisiert werden.
         Die Schreibweise ist an Linux Crontab angelehnt, entspricht diesem aber nicht genau.
@@ -135,9 +135,9 @@ Es gibt drei verschiedene Parametersätze für ein crontab Attribut:
         * einen Interval, z.B. ``*/4`` → immer alle 4 Sekunden/Minuten/Stunden/Tage/Wochentage
         * einen Stern, z.B. ``*`` → jede Sekunde/Minute/Stunde/Tag/Monat/Wochentag
 
-    .. tab:: Zeitpunkte bezogen auf Aufgang von Sonne oder Mond 
+    .. tab-item:: Zeitpunkte bezogen auf Aufgang von Sonne oder Mond
 
-        Nach dem Muster ``[H:M<](sunrise|sunset|moonrise|moonset)[+|-][offset][<H:M] (<day> <month> <weekday>)`` kann ein Triggerpunkt bezogen 
+        Nach dem Muster ``[H:M<](sunrise|sunset|moonrise|moonset)[+|-][offset][<H:M] (<day> <month> <weekday>)`` kann ein Triggerpunkt bezogen
         auf Sonne oder Mond berechnet werden:
 
         * ``sunrise`` → immer zum Sonnenaufgang
@@ -167,10 +167,10 @@ Es gibt drei verschiedene Parametersätze für ein crontab Attribut:
           crontab: 'sunset'
 
 
-Sämtliche Optionen können in einer ``*.yaml`` durch Listenbildung erstellt werden. 
+Sämtliche Optionen können in einer ``*.yaml`` durch Listenbildung erstellt werden.
 Im Admin Interface können die einzelnen Parametersätze durch ``|`` getrennt werden.
 
-Durch Anhängen eines ``= value`` wird der entsprechende Wert ``value`` mitgesendet. 
+Durch Anhängen eines ``= value`` wird der entsprechende Wert ``value`` mitgesendet.
 Das Beispiel setzt den Wert des Items täglich um Mitternacht auf ``20``:
 
 
@@ -191,7 +191,7 @@ Folgendes Beispiel zeigt wie alle 15 Sekunden der Wert ``42`` gesendet wird:
 .. code-block:: yaml
 
    crontab: '*/15 * * * * * = 42'
-  
+
 
 .. _logik_parameter_enabled:
 

@@ -16,9 +16,9 @@ Dazu gibt es im Prinzip drei Wege, das Plugin zu installieren:
 - das `githubplugin`-Plugin
 - die manuelle Installation
 
-.. tabs::
+.. tab-set::
 
-    .. tab:: Skript
+    .. tab-item:: Skript
 
         Im tools Verzeichnis gibt es ein Skript, welches ein gewähltes Plugin aus dem develop branch zusätzlich in die
         aktuelle Installation von SmartHomeNG kopiert. Damit kein Namenskonflikt mit einem bestehenden Plugin entsteht,
@@ -33,13 +33,13 @@ Dazu gibt es im Prinzip drei Wege, das Plugin zu installieren:
 
         Nachdem das Skript erfolgreich endet, ist ein zusätzliches Plugin **xyz_dev** in der Installation vorhanden.
 
-    .. tab:: githubplugin
+    .. tab-item:: githubplugin
 
         Das Plugin `githubplugin` ist seit Version 1.11 standardmäßig installiert und kann ohne weitere Konfiguration
         genutzt werden, wenn es in der ``etc/plugin.yaml`` aktiviert wurde. Die Dokumentation des Plugins befindet
         sich in :doc:`Plugins/githubplugin </plugins/githubplugin/user_doc>`.
 
-    .. tab:: manuelle Installation
+    .. tab-item:: manuelle Installation
 
         Alternativ kann das Plugin manuell installiert werden. Im folgenden wird ein mögliches Vorgehen beschrieben,
         um ein Plugin aus dem develop Branch in eine Release Installation zu installieren. Dazu sind folgende Schritte
@@ -105,4 +105,3 @@ Logger für das Plugin **xyz_dev** konfiguriert werden. Dazu einfach den Abschni
 kopieren und in der Kopie den Namen in ``plugins.xyz_dev`` oder ``plugins.<Namen aus githubplugin>`` ändern.
 
 |
-

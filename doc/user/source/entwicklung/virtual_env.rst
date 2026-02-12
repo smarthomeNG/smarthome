@@ -21,7 +21,7 @@ Danach werden aktuell (Stand November 2020) empfohlen:
 .. hint::
 
     Seit SmartHomeNG v1.10 wird der Betrieb von SmartHomeNG in virtuellen standardmäßig unterstützt und empfohlen
-    (siehe auch :doc:`Komplettanleitung </installation/komplettanleitung/02_smarthomeng>`).
+    (siehe auch :doc:`Komplettanleitung </installation/komplettanleitung/03_smarthomeng>`).
 
     Eine ausführlichere Beschreibung zur Unterstützung virtueller Environments in SmartHomeNG ist in der
     :doc:`Referenz </referenz/python/virtual_environments>` zu finden.
@@ -88,6 +88,3 @@ um verschiedene Versionen von Python für jedes Projekt zu installieren und zu v
 
 Unter `Pipenv: A Guide to the New Python Packaging Tool <https://realpython.com/pipenv-guide/>`__
 gibt es eine englischsprachige Einführung.
-
-
-
