@@ -116,3 +116,7 @@ img.screenshot {
     border-style: solid;
     border-width: 1px;
 }
+
+.rst-content section div.treeview :is(ul,li) {
+    list-style-type: none
+}
