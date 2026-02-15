@@ -33,3 +33,6 @@ ruamel.yaml>=0.15.78,<=0.16.8;python_version>='3.8'
 # svglib
 # but there is no fully working lib to convert svg to pdf currently so we can
 # not create pdf files at the moment
+
+# imghdr was removed from standard function as of Python 3.13
+standard-imghdr;python_version>='3.13'

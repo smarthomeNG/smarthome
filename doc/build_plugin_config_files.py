@@ -217,10 +217,6 @@ def build_pluginlist(plugin_type='all'):
     result = []
     plugin_type = plugin_type.lower()
     for metaplugin in plugins_git:
-#
-        if metaplugin not in ['viessmann', 'stateengine']:
-            continue
-#
         metafile = metaplugin + '/plugin.yaml'
         plg_dict = {}
         if metaplugin in plugins_git:    # pluginsyaml_git
@@ -651,10 +647,6 @@ def write_configfile(plg, configfile_dir, language='de'):
                     fh.write('   - ' + bold(str(v)) + desc + '\n')
                 fh.write('\n')
 
-#
-#
-#
-
     # ---------------------------------
     # write item_structs section
     # ---------------------------------
@@ -667,9 +659,6 @@ def write_configfile(plg, configfile_dir, language='de'):
         fh.write('**Keine**\n')
     else:
         for struct in sorted(structs_yaml):
-            # ---------------------------------
-            # write info for one attribute
-            # ---------------------------------
             write_heading(fh, struct, 2)
             conf = structs_yaml[struct]
             try:
@@ -681,9 +670,6 @@ def write_configfile(plg, configfile_dir, language='de'):
             fh.write('\n')
             write_struct(fh, structs_yaml[struct], struct, language)
 
-#
-#
-#
     # ---------------------------------
     # write logic_parameter section
     # ---------------------------------

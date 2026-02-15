@@ -52,6 +52,7 @@ html:
 	@test ! -L "source/modules" && echo "creating a link to the module directory" && ln -s ../../../modules source/modules || echo "link to modules directory already exists"
 	@test ! -L "source/dev" && echo "creating a link to the dev directory" && ln -s ../../../dev source/dev || echo "link to dev directory already exists"
 	@test ! -L "source/logics" && echo "creating a link to the logics directory" && ln -s ../../../logics source/logics || echo "link to logics directory already exists"
+	@test ! -L "source/templates" && echo "creating a link to the templates directory" && ln -s ../../../templates source/templates || echo "link to templates directory already exists"
 	@echo
 	@python3 -V
 	@python3 ../build_plugin_config_files.py de
@@ -63,6 +64,7 @@ html:
 	@test -L "source/modules" && echo "removing link to the modules directory" && unlink source/modules
 	@test -L "source/plugins" && echo "removing link to the plugin directory" && unlink source/plugins
 	@test -L "source/logics" && echo "removing link to the logics directory" && unlink source/logics
+	@test -L "source/templates" && echo "removing link to the templates directory" && unlink source/templates
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 

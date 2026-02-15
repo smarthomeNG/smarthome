@@ -46,7 +46,7 @@ extensions = [
   'sphinx_autodoc_typehints',
   'sphinx_tabs.tabs',
   'myst_parser',
-  'sphinx_treeview']
+  'sphinx_treeview',
   'sphinx_design']
 #  'rst2pdf.pdfbuilder']
 
