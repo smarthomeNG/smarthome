@@ -49,11 +49,9 @@ import datetime
 import gc
 import locale
 
-
 #####################################################################
 # Import Python Core Modules
 #####################################################################
-
 import json
 import logging
 import logging.handlers
@@ -68,7 +66,6 @@ import traceback
 
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
-
 
 #####################################################################
 # Import SmartHomeNG Modules
@@ -95,10 +92,10 @@ from lib.triggertimes import TriggerTimes
 from lib.constants import (YAML_FILE, DEFAULT_FILE, DIRS, BASES, BASE_LOG, BASE_LOGIC, BASE_MODULE, BASE_PLUGIN, BASE_SH, DIR_CACHE, DIR_ENV, DIR_ETC, DIR_ITEMS, DIR_LIB, DIR_LOGICS, DIR_MODULES, DIR_PLUGINS, DIR_SCENES, DIR_STRUCTS, DIR_TPL, DIR_UF, DIR_VAR)
 import lib.userfunctions as uf
 from lib.systeminfo import Systeminfo
-
+from pathlib import Path
+import lib.shyaml as shyaml
 
 _sh_instance = None
-
 
 #####################################################################
 # Classes
@@ -119,10 +116,7 @@ class SmartHome():
     # for scheduler
     _restart_on_num_workers = 30
 
-    # ---
-
     BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
-
 
     def initialize_vars(self):
         # the APIs available though the smarthome object instance:
@@ -207,6 +201,63 @@ class SmartHome():
         os.makedirs(os.path.join(self._var_dir, 'log'), mode=0o775, exist_ok=True)
         os.makedirs(os.path.join(self._var_dir, 'run'), mode=0o775, exist_ok=True)
 
+    def check_migrate_config(self):
+        """ test for new directory setup and migrate if config_etc is set """
+        if self._config_etc:
+
+            # setup dir names
+            dirnames = ['items', 'logics', 'structs', 'scenes', 'functions']
+            old_dirs = {dir: os.path.join(BASE, dir) for dir in dirnames}
+            new_dirs = {dir: os.path.join(self._etc_dir, dir) for dir in dirnames}
+
+            errs = False
+
+            for conf in old_dirs:
+                odir = Path(old_dirs[conf])
+                ndir = Path(new_dirs[conf])
+                err_files = []
+
+                if odir.exists() and odir.is_dir():
+                    print(f'Migrating {conf} dir {odir} to {ndir}...')
+                    ndir.mkdir(exist_ok=True)
+
+                    # move files individually
+                    for file in odir.glob('*'):
+                        target = ndir.joinpath(file.name)
+                        # keep existing files, remember names
+                        if target.exists():
+                            try:
+                                # try to show relative file names
+                                rfile = file.relative_to(BASE)
+                                rtarget = target.relative_to(BASE)
+                            except ValueError:
+                                rfile = file
+                                rtarget = target
+                            err_files.append([str(rfile), str(rtarget)])
+                        else:
+                            file.rename(ndir.joinpath(file.name))
+
+                    if err_files:
+                        many = len(err_files) > 1
+                        print(f"While migrating {conf} dir, the following file{'s' if many else ''} caused conflicts with existing files: ");
+                        print("\n".join([f'{of} (existing target: {nf})' for of, nf in err_files]))
+                        print("Please check and move or remove files manually")
+                        errs = True
+                    else:
+                        odir.rmdir()
+
+            if errs:
+                # give nonstandard exit code to distinguish from restart exit
+                sys.exit(255)
+            else:
+                # update etc/smarthome.yaml with config_etc = true
+                conf = shyaml.yaml_load_roundtrip(self.get_config_file(BASE_SH))
+                try:
+                    if 'config_etc' not in conf or not lib.utils.Utils.to_bool(conf['config_etc']):
+                        conf['config_etc'] = True
+                        shyaml.yaml_save_roundtrip(self.get_config_file(BASE_SH), conf, create_backup=True)
+                except Exception as e:
+                    self._logger.warning(f'Unable to set config_etc in smarthome.yaml: {e}')
 
     def __init__(self, MODE, extern_conf_dir='', config_etc=False):
         """
@@ -300,6 +351,7 @@ class SmartHome():
         # at this point self._config_etc is of type bool
         self.initialize_dir_vars()
         self.create_conf_directories()
+        self.check_migrate_config()            
 
         #############################################################
         # Setting (local) tz if set in smarthome.yaml
@@ -641,11 +693,11 @@ class SmartHome():
         configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'admin', 'smarthome']
 
         for c in configs:
-            default = os.path.join(self._base_dir, 'etc', c + YAML_FILE + DEFAULT_FILE)
-            conf_basename = os.path.join(self._etc_dir, c)
-            if not os.path.isfile(conf_basename + YAML_FILE):
+            default = os.path.join(self._templates_dir, c + YAML_FILE + DEFAULT_FILE)
+            conf_basename = os.path.join(self._etc_dir, c + YAML_FILE)
+            if not os.path.isfile(conf_basename):
                 if os.path.isfile(default):
-                    shutil.copy2(default, conf_basename + YAML_FILE)
+                    shutil.copy2(default, conf_basename)
 
 
     def init_logging(self, conf_basename='', MODE='default'):
@@ -815,7 +867,7 @@ class SmartHome():
         while self.alive:
             time.sleep(1)
 
-    def stop(self, signum=None, frame=None):
+    def stop(self, signum=None, frame=None, exitcode=5):
         """
         This method is used to stop SmartHomeNG and all it's threads
         """
@@ -864,8 +916,7 @@ class SmartHome():
         lib.daemon.remove_pidfile(PIDFILE)
 
         logging.shutdown()
-        exit(5)  # exit code 5 -> for systemctl to restart SmartHomeNG
-
+        exit(exitcode)  # default exit code 5 -> for systemctl to restart SmartHomeNG
 
     def restart(self, source=''):
         """

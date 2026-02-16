@@ -114,63 +114,6 @@ import bin.shngversion
 VERSION = bin.shngversion.get_shng_version()
 
 
-###############################################################
-# test for new directory setup and migrate if config_etc is set
-###############################################################
-
-# only migrate if -e is given!
-if args.config_etc:
-
-    # how much do we want to "say"?
-    verb = args.verbose or args.foreground or args.debug or args.interactive
-
-    # setup dir names
-    dirnames = ['items', 'logics', 'structs', 'scenes', 'functions']
-    etc_dir = os.path.join(BASE, 'etc')
-    old_dirs = {dir: os.path.join(BASE, dir) for dir in dirnames}
-    new_dirs = {dir: os.path.join(etc_dir, dir) for dir in dirnames}
-
-    errs = False
-
-    for conf in old_dirs:
-        odir = Path(old_dirs[conf])
-        ndir = Path(new_dirs[conf])
-        err_files = []
-
-        if odir.exists() and odir.is_dir():
-            if verb:
-                # logging needs configuration we don't have yet, so just print()
-                print(f'Migrating {conf} dir {odir} to {ndir}...')
-            ndir.mkdir(exist_ok=True)
-
-            # move files individually
-            for file in odir.glob('*'):
-                target = ndir.joinpath(file.name)
-                # keep existing files, remember names
-                if target.exists():
-                    try:
-                        # try to show relative file names
-                        rfile = file.relative_to(BASE)
-                        rtarget = target.relative_to(BASE)
-                    except ValueError:
-                        rfile = file
-                        rtarget = target
-                    err_files.append([str(rfile), str(rtarget)])
-                else:
-                    file.rename(ndir.joinpath(file.name))
-
-            if err_files:
-                many = len(err_files) > 1
-                print(f"While migrating {conf} dir, the following file{'s' if many else ''} could not be moved, because {'files' if many else 'a file'} with the same {'names exist' if many else 'name exists'} in the target dirextory:")
-                print("\n".join([f'{of} (existing target: {nf})' for of, nf in err_files]))
-                print("Please check and move or remove files manually")
-                errs = True
-            else:
-                odir.rmdir()
-
-    if errs:
-        sys.exit(1)
-
 #############################################################
 # test if needed Python packages are installed
 # - core requirements = libs

@@ -43,9 +43,6 @@ Thumbs.db
 !/doc/user/source/plugins_doc/plugins_unclassified_header.rst
 !/doc/user/source/plugins_doc/plugins_all_header.rst
 
-/doc/developer/build
-/doc/developer/source/plugins_doc
-
 # Don't check in plugins to core repository
 /plugins/
 
@@ -68,18 +65,10 @@ requirements/conf_all.txt
 **/.vscode/
 /custom_plugins
 /priv_tools
-
+/*.toml
 
 # ./etc -- ignore everything
-etc/*
-# except yaml default-files
-!etc/admin.yaml.default
-!etc/holidays.yaml.default
-!etc/logging.yaml.default
-!etc/logic.yaml.default
-!etc/module.yaml.default
-!etc/plugin.yaml.default
-!etc/smarthome.yaml.default
+/etc/
 
 # ./items -- ignore everything
 /items/
