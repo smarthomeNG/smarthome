@@ -449,6 +449,7 @@ def search_for_struct_in_items(items, struct_dict, config, source_name='', paren
 
             instance = items.get('instance', '')
             template = collections.OrderedDict()
+            # attr_struct_names = [list(x.keys())[0] for x in struct_attrs]
 
             global struct_merging_active
             struct_merging_active = True
@@ -456,9 +457,10 @@ def search_for_struct_in_items(items, struct_dict, config, source_name='', paren
                 try:
                     # get the first (only) entry out of the value for key(struct_name) in list position equal to for-loop index
                     str_dict = struct_attrs[struct_names.index(struct_name)][struct_name][0]
-                except (ValueError, IndexError) as e:
+                except (ValueError, IndexError):
                     str_dict = None
-                    logger.warning(f"Couldn't get struct attributes for struct {struct_name}: {e}")
+                    # we get here if no item attributes are defined, so don't log, just ignore
+                    # logger.warning(f"Couldn't get struct attributes for struct {struct_name}: {e}")
                 wrk = struct_name.find('@')
                 if wrk > -1:
                     add_struct_to_item_template(parent, struct_name[:wrk], template, struct_dict, struct_name[wrk + 1:], struct_attrs=str_dict)
