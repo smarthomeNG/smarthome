@@ -3,11 +3,12 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
 
-=========================
-structs (Item Strukturen)
-=========================
+============================================
+structs (Item Strukturen) :greensup:`Update`
+============================================
 
 
 Überblick
@@ -57,6 +58,38 @@ die Template Strukturen in der Reihenfolge angewendet, in der sie in der Liste a
             - mein_wetter1
             - mein_wetter2
             - ....
+
+
+Vererbte Attribute :redsup:`new`
+--------------------------------
+
+Seit SmartHomeNG 1.12 gibt es die Möglichkeit, Item-Attribute an alle Items in einer Template-Struktur zu vererben. 
+Häufige Anwendungsfälle können z.B. Item-Attribute wie **database: init**, **cache: yes** oder **enforce_updates: true** sein.
+
+Für die Vererbung müssen die Attribute als Kind-Elemente des Struktur-Namens angegeben werden:
+
+.. code-block:: yaml
+
+    aussen:
+        struct:
+            - mein_wetter1:
+                - database: init
+            - mein_wetter2:
+                - cache: true
+
+
+In diesem Fall erhalten alle Items der Struktur `mein_wetter1` das Item-Attribut **database: init**, während alle Items
+der Struktur `mein_wetter2` das Item-Attribut **cache: true** erhalten.
+
+.. note::
+
+    1. Falls das jeweilige Item-Attribut in der Template-Struktur für einzelne (oder alle) Items bereits enthalten ist,
+       wird es mit dem vererbten Attribut überschrieben.
+
+    2. Beachte den Doppelpunkt hinter dem Namen der Struktur - dies ist für die Angabe der Item-Attribute zwingend notwendig,
+       ansonsten kann die yaml-Datei nicht gelesen werden. Wenn keine Item-Attribute vererbt werden sollen, darf dort hingegen
+       - wie bisher - kein Doppelpunkt stehen.
+
 
 struct-Templates in Plugins
 ===========================
@@ -268,7 +301,7 @@ Das **individual_item** wird an die Struktur des Templates angefügt.
 Verschachtelte struct Definitionen (nested structs)
 ---------------------------------------------------
 
-Ab SmartHomeNG v1.10 könntn Strukturdefinitionen beliebig verschachtelt werden. Wie Items, die mithilfe des Attributs
+Ab SmartHomeNG v1.10 können Strukturdefinitionen beliebig verschachtelt werden. Wie Items, die mithilfe des Attributs
 **struct:** auf eine Strukturdefinition verweisen, können dies auch Strukturen selbst tun. Dabei kann das **struct*:**
 Attribut an beliebiger Stelle einer struct eingefügt werden, nicht nur auf der obersten Ebene (wie dieses bereits ab
 SmartHomeNG v1.7 möglich war).

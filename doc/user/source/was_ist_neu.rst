@@ -21,8 +21,9 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       nicht mehr im Stammverzeichnis, sondern unterhalb von `etc`. Dies ist auch durch die Option
       **config_etc: true** in der `etc/smarthome.yaml` möglich.
 
-      Nur beim Aufruf mit Kommandozeilenoption **-e** wird außerdem versucht, vorhandene Konfigurationsdateien
-      nach `etc/<Verzeichnis>`` zu verschieben.
+      Gleichzeitig wird versucht, vorhandene Konfigurationsdateien nach `etc/<Verzeichnis>`` zu verschieben und -
+      beim Aufruf mit **-e** - den Eintrag **config_etc: true** in der `etc/smarthome.yaml` einzutragen, da nach
+      der Migration der Konfigurationsdateien der bisherige Aufruf nicht mehr funktionieren würde.
 
       Die Konfiguration unterhalb von `etc` soll in zukünftigen Releases Standard werden.
 
@@ -37,6 +38,10 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       **legacy_instances: false** gesetzt werden.
 
       Diese Methode der Instanzbenennung soll in zukünftigen Releases Standard werden.
+
+    - **Vererbbare Item-Attribute**: Bei der Einbindung von Item-Template-Strukturen können Item-Attribute
+      definiert werden, die an alle Items der Struktur vererbt werden. Häufige Beispiele können z.B. 
+      die Attribute `database`, `cache` oder `enforce_updates` sein.
 
   - **Plugins**:
 
