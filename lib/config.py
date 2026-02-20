@@ -404,6 +404,10 @@ def search_for_struct_in_items(items, struct_dict, config, source_name='', paren
     :return: True, if a struct attribute was expanded
     """
 
+    def first(s):
+        """ return first item of iterable """
+        return next(iter(s), None)
+
     if source_name.startswith('test_struct'):
         logger.info(f"search_for_struct_in_items: items.keys()={list(dict(items).keys())}, source_name={source_name}, parent={parent}")
 
@@ -417,14 +421,13 @@ def search_for_struct_in_items(items, struct_dict, config, source_name='', paren
 
         if key == 'struct':
             # item is a struct
-            struct_attrs = []
-            # we check for subkeys containing attribute inheritance
-            # first, keep a compatible list...
+
+            struct_attr_list = []
 
             if isinstance(value, list) and any(isinstance(x, dict) for x in value):
 
                 # we have a list of dicts
-                struct_attrs = copy.deepcopy(value)
+                struct_attr_list = copy.deepcopy(value)
                 s = []
                 # do a thorough conversion if we have a mix of strs and dicts
                 for entry in value:
@@ -438,8 +441,8 @@ def search_for_struct_in_items(items, struct_dict, config, source_name='', paren
             elif isinstance(value, dict):
 
                 # we have a single dict
-                import json
-                struct_attrs = [copy.deepcopy(value)]
+                struct_attr_list = [copy.deepcopy(value)]
+                logger.warning(f'found struct attrs as dict in {parent}, tell developer')
                 struct_names = list(value.keys())
             else:
                 struct_names = value
@@ -449,23 +452,29 @@ def search_for_struct_in_items(items, struct_dict, config, source_name='', paren
 
             instance = items.get('instance', '')
             template = collections.OrderedDict()
-            # attr_struct_names = [list(x.keys())[0] for x in struct_attrs]
+
+            # we need a joined OrderedDict()...
+            struct_attrs = collections.OrderedDict()
+            for item in struct_attr_list:
+                if not isinstance(item, collections.OrderedDict):
+                    continue
+                try:
+                    s_name = first(item)
+                    struct_attrs.setdefault(s_name, collections.OrderedDict())
+                    for subitem in item[s_name]:
+                        struct_attrs[s_name].update(subitem)
+                except (ValueError, IndexError, KeyError) as e:
+                    # this shouldn't happen, just log something on debug.
+                    logger.debug(f'Problem joining struct attr data from {struct_attr_list} for {item}: {e}')
 
             global struct_merging_active
             struct_merging_active = True
             for struct_name in struct_names:
-                try:
-                    # get the first (only) entry out of the value for key(struct_name) in list position equal to for-loop index
-                    str_dict = struct_attrs[struct_names.index(struct_name)][struct_name][0]
-                except (ValueError, IndexError):
-                    str_dict = None
-                    # we get here if no item attributes are defined, so don't log, just ignore
-                    # logger.warning(f"Couldn't get struct attributes for struct {struct_name}: {e}")
                 wrk = struct_name.find('@')
                 if wrk > -1:
-                    add_struct_to_item_template(parent, struct_name[:wrk], template, struct_dict, struct_name[wrk + 1:], struct_attrs=str_dict)
+                    add_struct_to_item_template(parent, struct_name[:wrk], template, struct_dict, struct_name[wrk + 1:], struct_attrs=struct_attrs.get(struct_name))
                 else:
-                    add_struct_to_item_template(parent, struct_name, template, struct_dict, instance, struct_attrs=str_dict)
+                    add_struct_to_item_template(parent, struct_name, template, struct_dict, instance, struct_attrs=struct_attrs.get(struct_name))
             if template != {}:
                 config = merge(template, config, source_name, 'Item-Tree')
             struct_merging_active = False
