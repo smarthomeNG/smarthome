@@ -274,16 +274,18 @@ def merge_structlists(l1, l2, key=''):
         return l1 + l2
 
 
-def merge(source, destination, source_name='', dest_name='', filename='', add=None):
+def merge(source, destination, source_name='', dest_name='', filename='', add=None, top=False):
     """
     Merges an OrderedDict Tree into another one
 
     :param source: source tree to merge into another one
     :param destination: destination tree to merge into
     :param add: Data to insert into every node
+    :param top: don't add <add> if at top of tree
     :type source: OrderedDict
     :type destination: OrderedDict
     :type add: OrderedDict|None
+    :type top: bool
 
     :return: Merged configuration tree
     :rtype: OrderedDict
@@ -324,7 +326,7 @@ def merge(source, destination, source_name='', dest_name='', filename='', add=No
                     # convert to string and remove newlines from multiline attributes
                     destination[key] = str(value).replace('\n', '')
             # if "add" dict is supplied, insert into every node, overwriting existing values
-            if add:
+            if add and not top:
                 destination.update(add)
         except Exception as e:
             logger.error(f"Problem merging subtrees (key={key}), probably invalid YAML file '{source_name}' with entry '{destination}'. Error: {e}")
@@ -354,6 +356,7 @@ def nested_put(output_dict, path, value, add=None):
     :param path: path to write to
     :param value: value to write to the nested key
     :param add: data to insert into every node
+    :param top: at top of tree, don't add <add> here
     :return:
     """
     internal_dict_value = output_dict
@@ -379,7 +382,7 @@ def nested_put(output_dict, path, value, add=None):
         #     logger.warning(f"nested_put: - merge struct = {dict(value)}")
 
         # internal_last_dict_value[nested_key[len(nested_key)-1]] = value
-        merge(value, internal_last_dict_value[nested_key[len(nested_key) - 1]], 'struct-tree', 'sub-tree', add=add)
+        merge(value, internal_last_dict_value[nested_key[len(nested_key) - 1]], 'struct-tree', 'sub-tree', add=add, top=True)
 
         # if struct_merging_active:
         #     logger.warning(f"nested_put: - dest result  = {dict(internal_last_dict_value[nested_key[len(nested_key)-1]])}")
@@ -545,7 +548,7 @@ def add_struct_to_item_template(path, struct_name, template, struct_dict, instan
         # no struct/template with this name
         nf = collections.OrderedDict()
         nf['name'] = "ERROR: struct '" + struct_name + "' not found!"
-        nested_put(template, path, nf, add=struct_attrs)
+        nested_put(template, path, nf)
         logger.error(f"add_struct_to_item_template: Struct definition for '{struct_name}' not found (referenced in item {path})")
     else:
         # add struct/template to temporary item(template) tree
