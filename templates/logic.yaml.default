@@ -3,18 +3,22 @@
 #
 # etc/logic.yaml
 #
-check_items:
-    logic_description: "Logik die prüft, ob Items durch fehlerhafte Zuweisungen überschrieben wurden"
-    filename: check_items.py
-    logic_groupname: tools
 
-ex_logging:
-    logic_description: "Beispiel-Logik welche zeigt, wie Logeinträge verschiedener Levels in die Logdateien eingetragen werden"
-    filename: example_logging.py
-    logic_groupname: beispiele
+# Die folgenden Logiken sind im Verzeichnis examples/logics vorhanden und müssen zur Nutzung
+# ins Verzeichnis etc/logics (oder logics) kopiert werden.
 
-ex_persist:
-    logic_description: "Beispiel-Logik welche zeigt, wie Variablen definiert werden müssen, um den Lauf einer Logik zu überdauern"
-    filename: example_persistance.py
-    logic_groupname: beispiele
+# check_items:
+#     logic_description: "Logik die prüft, ob Items durch fehlerhafte Zuweisungen überschrieben wurden"
+#     filename: check_items.py
+#     logic_groupname: tools
+# 
+# ex_logging:
+#     logic_description: "Beispiel-Logik welche zeigt, wie Logeinträge verschiedener Levels in die Logdateien eingetragen werden"
+#     filename: example_logging.py
+#     logic_groupname: beispiele
+# 
+# ex_persist:
+#     logic_description: "Beispiel-Logik welche zeigt, wie Variablen definiert werden müssen, um den Lauf einer Logik zu überdauern"
+#     filename: example_persistance.py
+#     logic_groupname: beispiele
 
