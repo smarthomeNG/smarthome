@@ -133,6 +133,9 @@ class MockSmartHome():
 
         self.initialize_vars()
 
+        # make sure we have an etc directory
+        os.makedirs(self._etc_dir, exist_ok=True)
+        
         self.python_bin = os.environ.get('_','')
         self.__logs = {}
 #        self.__item_dict = {}
