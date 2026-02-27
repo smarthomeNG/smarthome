@@ -13,7 +13,7 @@ werden kann. Zum Start reicht es die Einstellungen zu verwenden, wie sie in der 
 vorgegeben sind. Einfach diese Datei zu ``logging.yaml`` kopieren und nach den eigenen Bedürfnissen
 anpassen. Die Konfiguration sollte in etwa so aussehen:
 
-.. literalinclude:: ../../../../../etc/logging.yaml.default
+.. literalinclude:: ../../../../../templates/logging.yaml.default
    :caption: logging.yaml
    :language: yaml
 

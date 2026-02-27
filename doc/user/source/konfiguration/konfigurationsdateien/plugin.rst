@@ -20,7 +20,7 @@ In diesem Fall ist der Name der Plugin Instanz **knx** und das Plugin wird im Ve
 Verzeichnis **../plugins** gesucht.
 
 
-.. literalinclude:: ../../../../../etc/plugin.yaml.default
+.. literalinclude:: ../../../../../templates/plugin.yaml.default
    :caption: plugin.yaml
    :language: yaml
 

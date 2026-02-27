@@ -94,7 +94,7 @@ besser umbenannt werden und wird dann beim nächsten Neustart durch den Inhalt d
 
 Ein Beispiel für **etc/logging.yaml.default** im Folgenden:
 
-.. literalinclude:: ../../../../etc/logging.yaml.default
+.. literalinclude:: ../../../../templates/logging.yaml.default
    :caption: ../etc/logging.yaml
    :language: yaml
 

@@ -119,7 +119,7 @@ einem Sektions-/Key-Namen folgt, kann direkt nach diesem Namen folgen.
 Er **muss** jedoch von einem Leerzeichen gefolgt werden
 
 Formate von Values in YAML Dateien
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------
 
 Values können in YAML Dateien alles, von einfachen Werten über binäre
 Daten bis hin zu Python Objekten sein. Für die Konfigurationsdateien
@@ -295,7 +295,7 @@ Dazu gehören: PHP, Python, Perl, JavaScript und Ruby.
 
 
 Skalare
-~~~~~~~
+^^^^^^^
 
 Skalare sind ein ziemlich grundlegendes Konzept. Sie sind die Zeichenfolgen und Zahlen, aus denen
 sich die Daten auf der Seite zusammensetzen. Ein Skalar könnte eine boolesche Eigenschaft sein,
@@ -319,7 +319,7 @@ Darstellung von ASCII- und Unicode-Zeichen.
 
 
 Sequenzen
-~~~~~~~~~
+^^^^^^^^^
 
 Hier ist eine einfache Sequenz, die Sie in SmartHomeNG finden können. Es ist eine einfache Liste,
 bei der jeder Eintrag in der Liste in einer eigenen Zeile steht und mit einem öffnenden Bindestrich
@@ -352,7 +352,7 @@ Bindestrich in den Unterelementen ein einzelnes Leerzeichen einfügen. YAML verw
 
 
 Zuordnungen
-~~~~~~~~~~~
+^^^^^^^^^^^
 
 Mit der Zuordnung können Sie Schlüssel mit Werten auflisten. Dies ist nützlich, wenn Sie einem
 bestimmten Element einen Namen oder eine Eigenschaft zuweisen.
@@ -373,7 +373,7 @@ kann eine Zuordnung folgendermaßen aussehen:
 
 
 Kommentare
-~~~~~~~~~~
+^^^^^^^^^^
 
 YAML Dateien können Kommentare enthalten. Kommentare beginnen mit einem #-Zeichen und reichen
 immer bis zum Ende der Zeile.
