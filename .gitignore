@@ -69,6 +69,8 @@ requirements/conf_all.txt
 
 # ./etc -- ignore everything
 /etc/
+# but keep "empty" etc directory
+!/etc/.empty
 
 # ./items -- ignore everything
 /items/
