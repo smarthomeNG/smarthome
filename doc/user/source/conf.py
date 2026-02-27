@@ -44,7 +44,7 @@ extensions = [
   'sphinx.ext.viewcode',
   'sphinx.ext.githubpages',
   'sphinx_autodoc_typehints',
-  'sphinx_tabs.tabs',
+#  'sphinx_tabs.tabs',
   'myst_parser',
   'sphinx_treeview',
   'sphinx_design']
