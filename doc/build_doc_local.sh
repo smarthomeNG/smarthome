@@ -13,8 +13,6 @@ if [ "$1" == "-h" ]; then
   echo
   echo Optionen:
   echo   -h  -  Anzeigen dieser Hilfe
-  echo   -u  -  Nur die Anwender Dokumentation erzeugen
-  echo   -d  -  Nur die Entwickler Dokumentation erzeugen
   echo
   exit
 fi
@@ -25,13 +23,6 @@ KEEP_REPO=True
 #fi
 
 DOC=user
-if [ "$1" == "-u" ] || [ "$2" == "-u" ] || [ "$3" == "-u" ]; then
-  DOC=user
-fi
-if [ "$1" == "-d" ] || [ "$2" == "-d" ] || [ "$3" == "-d" ]; then
-  DOC=developer
-fi
-
 DESTBRANCH=develop
 #if [ "$1" == "-m" ] || [ "$2" == "-m" ] || [ "$3" == "-m" ]; then
 #  DESTBRANCH=master
@@ -46,9 +37,7 @@ REPO=smarthome
 LOCALREPO=
 #LOCALREPO=work
 
-DEVELOPDOC=developer
 USERDOC=user
-
 
 GIT_CHECKOUT=False
 #GIT_CHECKOUT=True
@@ -63,19 +52,8 @@ cd $DIR
 
 echo
 echo
-if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "all" ]; then
-  echo Erzeugen der vollständigen Dokumentation für SmartHomeNG
-  echo ========================================================
-fi
-echo
-if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "developer" ]; then
-  echo Erzeugen der Entwicklerdokumentation für SmartHomeNG
-  echo ====================================================
-fi
-if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "user" ]; then
-  echo Erzeugen der Anwenderdokumentation für SmartHomeNG
-  echo ==================================================
-fi
+echo Erzeugen der Dokumentation für SmartHomeNG
+echo ==========================================
 echo
 python3 -V
 python3 -c "import sphinx" 2> /dev/null
@@ -83,16 +61,9 @@ if [ "$?" == "1" ]; then
   echo Vor Ausführung dieses Skriptes zum Erstellen der $ACCOUNT/$REPO Doku
   echo \(branch $DESTBRANCH\), bitte prüfen ob Sphinx installiert ist.
   echo
-  echo Die Installation folgender Pakete ist notwendig:
-  echo
-  echo -e "\t Sphinx (Version >= 3.0)"
-  echo -e "\t sphinx_rtd_theme"
-  echo -e "\t recommonmark (Version >= 0.6.0)"
-  echo -e "\t ruamel.yaml (passend zur Python Version)"
-  echo
   echo Die Installation von Sphinx kann mit folgendem Kommando durchgeführt werden:
   echo
-  echo -e "\t $ cd /usr/local/smarthome/doc"
+  echo -e "\t $ cd $DIR"
   echo -e "\t $ pip3 install -r requirements.txt"
   echo
   exit
@@ -159,37 +130,19 @@ read -rsp $'Um fortzufahren ENTER drücken, zum Abbruch ^C drücken...\n'
 #fi
 
 
-if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "developer" ] || [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "all" ]; then
-  cd $DIR/
+cd $DIR/
 #  cd $LOCALREPO
 #  cd doc
-  echo
-  echo Bau der Entwickler-Dokumentation:
-  cd $DEVELOPDOC
-  rm -r build
-  make clean || exit
-  make html || exit
-  echo
-  echo Bau der Entwickler-Dokumentation ist abgeschlossen!
-  echo
-  echo Die Startseite ist: \'${DIR}/user/build/html/index.html\'
-fi
-
-if [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "user" ] || [ "$(echo "$DOC" | tr '[:upper:]' '[:lower:]')" == "all" ]; then
-  cd $DIR/
-#  cd $LOCALREPO
-#  cd doc
-  echo
-  echo Bau der Anwender-Dokumentation:
-  cd $USERDOC
-  rm -r build
-  make clean || exit
-  make html || exit
-  echo
-  echo Bau der Anwender-Dokumentation ist abgeschlossen!
-  echo
-  echo Die Startseite ist: \'${DIR}/user/build/html/index.html\'
-fi
+echo
+echo Bau der Dokumentation:
+cd $USERDOC
+rm -r build
+make clean || exit
+make html || exit
+echo
+echo Bau der Dokumentation ist abgeschlossen!
+echo
+echo Die Startseite ist: \'${DIR}/user/build/html/index.html\'
 
 
 cd $DIR

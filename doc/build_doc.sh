@@ -14,8 +14,6 @@ if [ "$1" == "-h" ]; then
   echo Optionen:
   echo   -h  -  Anzeigen dieser Hilfe
   echo   -f  -  Github Repos erneut auschecken \(auch wenn bereits lokale Clones vorhanden sind\)
-  echo   -u  -  Nur die Anwender Dokumentation erzeugen
-  echo   -d  -  Nur die Entwickler Dokumentation erzeugen
   echo   -m  -  Die Dokumentation aus dem master Branch bauen \(statt aus dem develop Branch\)
   echo
   exit
@@ -27,12 +25,6 @@ if [ "$1" == "-f" ] || [ "$2" == "-f" ] || [ "$3" == "-f" ]; then
 fi
 
 DOC=user
-if [ "$1" == "-u" ] || [ "$2" == "-u" ] || [ "$3" == "-u" ]; then
-  DOC=user
-fi
-if [ "$1" == "-d" ] || [ "$2" == "-d" ] || [ "$3" == "-d" ]; then
-  DOC=developer
-fi
 
 DESTBRANCH=develop
 if [ "$1" == "-m" ] || [ "$2" == "-m" ] || [ "$3" == "-m" ]; then
@@ -46,8 +38,6 @@ DIR=$DIR
 ACCOUNT=smarthomeNG
 REPO=smarthome
 LOCALREPO=work
-
-DEVELOPDOC=developer
 USERDOC=user
 
 
@@ -63,19 +53,8 @@ cd $DIR
 
 echo
 echo
-if [ "${DOC,,}" == "all" ]; then
-  echo Erzeugen der vollständigen Dokumentation für SmartHomeNG
-  echo ========================================================
-fi
-echo
-if [ "${DOC,,}" == "developer" ]; then
-  echo Erzeugen der Entwicklerdokumentation für SmartHomeNG
-  echo ====================================================
-fi
-if [ "${DOC,,}" == "user" ]; then
-  echo Erzeugen der Anwenderdokumentation für SmartHomeNG
-  echo ==================================================
-fi
+echo Erzeugen der Dokumentation für SmartHomeNG
+echo ==========================================
 echo
 python3 -V
 python3 -c "import sphinx" 2> /dev/null
@@ -83,10 +62,9 @@ if [ "$?" == "1" ]; then
   echo Vor Ausführung dieses Skriptes zum Erstellen der $ACCOUNT/$REPO Doku
   echo \(branch $DESTBRANCH\), bitte prüfen ob Sphinx installiert ist.
   echo
-  echo Die Installation von Sphinx kann mit folgendem Kommando durchgeführt werden:
+  echo Die Installation der notwendigen Pakete kann mit folgendem Kommando durchgeführt werden:
   echo
-  echo -e "\t $ sudo pip3 install sphinx sphinx_rtd_theme recommonmark"
-  echo -e "\t $ sudo pip3 install 'ruamel.yaml>=0.13.7,<=0.15'"
+  echo -e "\t $ sudo pip3 install -r requirements.txt"
   echo
   exit
 fi
@@ -152,32 +130,16 @@ if [ "${GIT_CHECKOUT,,}" == "true" ]; then
   git status
 fi
 
-
-if [ "${DOC,,}" == "developer" ] || [ "${DOC,,}" == "all" ]; then
-  cd $DIR/
-  cd $LOCALREPO
-  cd doc
-  echo
-  echo Bau der Entwickler-Dokumentation:
-  cd $DEVELOPDOC
-  make clean || exit
-  make html || exit
-  echo
-  echo Bau der Entwickler-Dokumentation ist abgeschlossen!
-fi
-
-if [ "${DOC,,}" == "user" ] || [ "${DOC,,}" == "all" ]; then
-  cd $DIR/
-  cd $LOCALREPO
-  cd doc
-  echo
-  echo Bau der Anwender-Dokumentation:
-  cd $USERDOC
-  make clean || exit
-  make html || exit
-  echo
-  echo Bau der Anwender-Dokumentation ist abgeschlossen!
-fi
+cd $DIR/
+cd $LOCALREPO
+cd doc
+echo
+echo Bau der Dokumentation:
+cd $USERDOC
+make clean || exit
+make html || exit
+echo
+echo Bau der Dokumentation ist abgeschlossen!
 
 
 cd $DIR
