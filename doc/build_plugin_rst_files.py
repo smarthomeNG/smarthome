@@ -201,81 +201,90 @@ def html_escape(str):
     return html
 
 
-def build_pluginlist(plugin_type='all'):
+def build_pluginlist():
     """
     Return a list of dicts with a dict for each plugin of the requested type
     The dict contains the plugin name, type and description
     """
-    result = []
-    plugin_type = plugin_type.lower()
+    results = {type_: [] for type_ in plugin_types if type_ != 'all'}
+    changed = {type_: False for type_ in plugin_types if type_ != all}
+
+    # read all plugins once
     for metaplugin in plugins_git:
         metafile = metaplugin + '/plugin.yaml'
         plg_dict = {}
+        plg_dict['type'] = type_unclassified
         plgtype = type_unclassified
-        if metaplugin in plugins_git:    # pluginsyaml_git
-            if os.path.isfile(metafile):
-                plugin_yaml = shyaml.yaml_load(metafile)
-            else:
-                plugin_yaml = ''
-            if plugin_yaml != '':
-                section_dict = plugin_yaml.get('plugin')
-                if section_dict is not None:
-                    plg_dict['name'] = metaplugin.lower()
-                    plg_dict['version'] = get_version(section_dict)
-                    plg_dict['sh_minversion'] = str(section_dict.get('sh_minversion', ''))
-                    plg_dict['sh_maxversion'] = str(section_dict.get('sh_maxversion', ''))
-                    plg_dict['py_minversion'] = str(section_dict.get('py_minversion', ''))
-                    plg_dict['py_maxversion'] = str(section_dict.get('py_maxversion', ''))
-
-                    if section_dict.get('type') is not None:
-                        if section_dict.get('type').lower() in plugin_types:
-                            plgtype = section_dict.get('type').lower()
-                            plg_dict['type'] = plgtype
-                            plg_dict['state'] = get_state(section_dict)
-                            plg_dict['desc'] = get_description(section_dict, 85, language)
-                            plg_dict['maint'] = get_maintainer(section_dict, 15)
-                            plg_dict['test'] = get_tester(section_dict, 15)
-                            plg_dict['doc'] = html_escape(section_dict.get('documentation', ''))
-                            plg_dict['sup'] = html_escape(section_dict.get('support', ''))
-                        plg_dict['type'] = plgtype
-                    else:
-                        if plugin_type == type_unclassified:
-                            print("not found: plugin type '{}' defined in plugin '{}'".format(section_dict.get('type'), metaplugin))
-
-                if (plgtype == type_unclassified) and (plugin_yaml != ''):
-                    plg_dict['type'] = type_unclassified
-                    plg_dict['desc'] = get_description(section_dict, 85, language)
-                    plg_dict['maint'] = get_maintainer(section_dict, 15)
-                    plg_dict['test'] = get_tester(section_dict, 15)
-                    plg_dict['doc'] = html_escape(section_dict.get('documentation', ''))
-                    plg_dict['sup'] = html_escape(section_dict.get('support', ''))
-                    print("")
-                    print("> unclassified plugin: metafile = {}, plg_dict = {}".format(metafile, str(plg_dict)))
-
-                plg_dict['desc'].append('')
-            else:
+        if os.path.isfile(metafile):
+            plugin_yaml = shyaml.yaml_load(metafile)
+        else:
+            plugin_yaml = ''
+        if plugin_yaml != '':
+            section_dict = plugin_yaml.get('plugin')
+            if section_dict is not None:
                 plg_dict['name'] = metaplugin.lower()
-                plg_dict['version'] = ''
-                plg_dict['type'] = type_unclassified
-                plg_dict['desc'] = ['No metadata (plugin.yaml) was provided for this plugin!']
-                plg_dict['maint'] = ['']
-                plg_dict['test'] = ['']
-                plg_dict['doc'] = ''
-                plg_dict['sup'] = ''
+                plg_dict['version'] = get_version(section_dict)
+                plg_dict['sh_minversion'] = str(section_dict.get('sh_minversion', ''))
+                plg_dict['sh_maxversion'] = str(section_dict.get('sh_maxversion', ''))
+                plg_dict['py_minversion'] = str(section_dict.get('py_minversion', ''))
+                plg_dict['py_maxversion'] = str(section_dict.get('py_maxversion', ''))
 
-            # Adjust list lengths
-            maxlen = max(len(plg_dict['desc']), len(plg_dict['maint']), len(plg_dict['test']))
-            while len(plg_dict['desc']) < maxlen:
-                plg_dict['desc'].append('')
-            while len(plg_dict['maint']) < maxlen:
-                plg_dict['maint'].append('')
-            while len(plg_dict['test']) < maxlen:
-                plg_dict['test'].append('')
+                if section_dict.get('type') is not None:
+                    if section_dict.get('type').lower() in plugin_types:
+                        plgtype = section_dict.get('type').lower()
+                        plg_dict['state'] = get_state(section_dict)
+                        plg_dict['desc'] = get_description(section_dict, 85, language)
+                        plg_dict['maint'] = get_maintainer(section_dict, 15)
+                        plg_dict['test'] = get_tester(section_dict, 15)
+                        plg_dict['doc'] = html_escape(section_dict.get('documentation', ''))
+                        plg_dict['sup'] = html_escape(section_dict.get('support', ''))
+                    plg_dict['type'] = plgtype
 
-        if (plgtype == plugin_type) or (plugin_type == 'all'):
-            # result.append(metaplugin)
-            result.append(plg_dict)
-    return result
+            if (plgtype == type_unclassified) and (plugin_yaml != ''):
+                plg_dict['desc'] = get_description(section_dict, 85, language)
+                plg_dict['maint'] = get_maintainer(section_dict, 15)
+                plg_dict['test'] = get_tester(section_dict, 15)
+                plg_dict['doc'] = html_escape(section_dict.get('documentation', ''))
+                plg_dict['sup'] = html_escape(section_dict.get('support', ''))
+                print("")
+                print("> unclassified plugin: metafile = {}, plg_dict = {}".format(metafile, str(plg_dict)))
+
+            plg_dict['desc'].append('')
+        else:
+            plg_dict['name'] = metaplugin.lower()
+            plg_dict['version'] = ''
+            plg_dict['type'] = type_unclassified
+            plg_dict['desc'] = ['No metadata (plugin.yaml) was provided for this plugin!']
+            plg_dict['maint'] = ['']
+            plg_dict['test'] = ['']
+            plg_dict['doc'] = ''
+            plg_dict['sup'] = ''
+
+        # Adjust list lengths
+        maxlen = max(len(plg_dict['desc']), len(plg_dict['maint']), len(plg_dict['test']))
+        while len(plg_dict['desc']) < maxlen:
+            plg_dict['desc'].append('')
+        while len(plg_dict['maint']) < maxlen:
+            plg_dict['maint'].append('')
+        while len(plg_dict['test']) < maxlen:
+            plg_dict['test'].append('')
+
+
+        # check if plugin.yaml is older than plgtype rst file -> skip
+        # plg_file = metafile
+        rst_filename = os.path.join(plugin_rst_dir, 'plugins_doc', 'plugins_' + plgtype + '.rst')
+        if not os.path.exists(rst_filename) or os.path.getmtime(metafile) > os.path.getmtime(rst_filename):
+            changed[plgtype] = True
+
+        if plgtype != 'all':
+            results[plgtype].append(plg_dict)
+            # print(f'added {metaplugin} to {plgtype}')
+
+    for plgtype in changed:
+        if not changed[plgtype]:
+            results[plgtype] = []
+
+    return results
 
 
 def write_rstfile(plgtype='all', plgtype_print='', heading=''):
@@ -289,11 +298,14 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
     else:
         title = heading
 
+    if plgtype == 'all':
+        plglist = [plg_dict for type_ in results for plg_dict in results[type_]]
+    else:
+        plglist = [plg_dict for plg_dict in results[plgtype]]
+
     rst_filename = 'plugins_doc/plugins_' + plgtype.lower() + '.rst'
     rst_dummyname = 'plugins_doc/dummy_' + plgtype.lower() + '.rst'
-    print('Datei: ' + rst_filename + ' ' * (26 - len(rst_filename)) + '  -  ' + title)
-
-    plglist = build_pluginlist(plgtype)
+    print(f'Datei: {rst_filename}{" " * (26 - len(rst_filename))}  -  {len(plglist)} {title}')
 
     #    print("> Opening file "+plugin_rst_dir+'/'+rst_filename)
     fh = open(plugin_rst_dir + '/' + rst_filename, "w")
@@ -505,12 +517,15 @@ if __name__ == '__main__':
     print('--- Liste der Plugins mit Metadaten auf github (' + str(len(pluginsyaml_git)) + '):')
     print()
 
-    plugin_rst_dir = start_dir + '/source'
+    if docu_type == 'doc':
+        plugin_rst_dir = os.path.join(start_dir, 'user', 'source')
+    else:
+        plugin_rst_dir = os.path.join(start_dir, 'source')
     print('zu schreiben in: ' + plugin_rst_dir)
 
-    plugin_types = []
-    for pl in plugin_sections:
-        plugin_types.append(pl[0])
+    plugin_types = [x for x, _, _ in plugin_sections]
+
+    results = build_pluginlist()
 
     for pl in plugin_sections:
         # write_rstfile(pl[0], pl[1])
