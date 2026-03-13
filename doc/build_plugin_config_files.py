@@ -115,21 +115,19 @@ def get_pluginyamllist_fromgit():
 
 def get_description(section_dict, maxlen=70, lang='en', textkey='description'):
     desc = ''
-    lang2 = 'de' if lang == 'en' else 'en'
     try:
         desc = section_dict[textkey]['lang']
     except Exception:
         pass
     if desc == '':
         try:
+            lang2 = 'de' if lang == 'en' else 'en'
             desc = section_dict[textkey]['lang2']
         except Exception:
             pass
 
     if type(desc) is list:
         return desc
-
-    import textwrap
 
     lines = textwrap.wrap(desc, maxlen, break_long_words=False)
     return lines or ['']
@@ -202,7 +200,17 @@ def build_pluginlist(plugin_type='all'):
     """
     result = []
     plugin_type = plugin_type.lower()
+
+    # avoid division by zero in for loop
+    if not plugins_git:
+        return []
+
+    num_pl = len(plugins_git)
+    count = 0
+
     for metaplugin in plugins_git:
+        count += 1
+        print(f'Lese Metadaten: {int(100 * count / num_pl)}%\r', end='')
         metafile = metaplugin + '/plugin.yaml'
         plg_dict = {}
         plgtype = type_unclassified
@@ -264,6 +272,7 @@ def build_pluginlist(plugin_type='all'):
         if (plgtype == plugin_type) or (plugin_type == 'all'):
             # result.append(metaplugin)
             result.append(plg_dict)
+    print('\n')
     return result
 
 
@@ -937,6 +946,7 @@ if __name__ == '__main__':
         plugins_git = plugins_new
     else:
         os.makedirs(configfile_dir)
+    print('\n')
 
     print(f'zu schreiben: {len(plugins_git)} Dateien, {skip} noch aktuell')
 

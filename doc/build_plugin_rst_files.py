@@ -223,8 +223,17 @@ def build_pluginlist():
     results = {type_: [] for type_ in plugin_types if type_ != 'all'}
     changed = {type_: False for type_ in plugin_types if type_ != all}
 
+    # prevent division by zero
+    if not plugins_git:
+        return results
+
+    num_pl = len(plugins_git)
+    count = 0
+
     # read all plugins once
     for metaplugin in plugins_git:
+        count += 1
+        print(f'Lese Metadaten: {int(100 * count / num_pl)}%\r', end='')
         metafile = metaplugin + '/plugin.yaml'
         plg_dict = {}
         plg_dict['type'] = type_unclassified
@@ -295,9 +304,11 @@ def build_pluginlist():
             results[plgtype].append(plg_dict)
             # print(f'added {metaplugin} to {plgtype}')
 
+    print('\n')
+
     for plgtype in changed:
         if not changed[plgtype]:
-            results[plgtype] = []
+            results[plgtype] = None
 
     return results
 
@@ -610,6 +621,8 @@ if __name__ == '__main__':
     results = build_pluginlist()
 
     for pl in plugin_sections:
-        # write_rstfile(pl[0], pl[1])
-        write_rstfile(pl[0], pl[2])
+        if results[pl[0]] is None:
+            print(f'Datei: plugins_doc/plugins_{pl[0].lower()}.rst: Daten unverändert, übersprungen')
+        else:
+            write_rstfile(pl[0], pl[2])
     print()
