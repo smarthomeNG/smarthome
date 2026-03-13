@@ -66,22 +66,28 @@ import shyaml  # noqa
 
 
 type_unclassified = 'unclassified'
-plugin_sections = [['gateway', 'Gateway', 'Gateway'],
-                   ['interface', 'Interface', 'Interface'],
-                   ['protocol', 'Protocol', 'Protokoll'],
-                   ['system', 'System', 'System'],
-                   ['web', 'Web/Cloud', 'Web/Cloud'],
-                   [type_unclassified, 'Non classified', 'nicht klassifizierte'],
-                   ['all', 'All plugins', 'Alle Plugins']]
+plugin_sections = [
+    ['gateway', 'Gateway', 'Gateway'],
+    ['interface', 'Interface', 'Interface'],
+    ['protocol', 'Protocol', 'Protokoll'],
+    ['system', 'System', 'System'],
+    ['web', 'Web/Cloud', 'Web/Cloud'],
+    [type_unclassified, 'Non classified', 'nicht klassifizierte'],
+    ['all', 'All plugins', 'Alle Plugins'],
+]
 
 
 def bold(s):
-    return "**" + s + "**" if s else ""
+    return '**' + s + '**' if s else ''
 
 
 def get_pluginlist_fromgit():
     plglist = []
-    plg_git = subprocess.check_output(['git', 'ls-files', '*/__init__.py'], stderr=subprocess.STDOUT).decode().strip('\n')
+    plg_git = (
+        subprocess.check_output(['git', 'ls-files', '*/__init__.py'], stderr=subprocess.STDOUT)
+        .decode()
+        .strip('\n')
+    )
     for plg in plg_git.split('\n'):
         if plg.split('/')[1] == '__init__.py':
             # print(plg.split('/')[0], '   -   ', plg)
@@ -106,7 +112,11 @@ def get_local_pluginlist():
 
 def get_pluginyamllist_fromgit():
     plglist = []
-    plg_git = subprocess.check_output(['git', 'ls-files', '*/plugin.yaml'], stderr=subprocess.STDOUT).decode().strip('\n')
+    plg_git = (
+        subprocess.check_output(['git', 'ls-files', '*/plugin.yaml'], stderr=subprocess.STDOUT)
+        .decode()
+        .strip('\n')
+    )
     for plg in plg_git.split('\n'):
         if plg.split('/')[1] == 'plugin.yaml':
             plglist.append(plg.split('/')[0])
@@ -170,7 +180,7 @@ def get_tester(section_dict, maxlen=20):
         lines = textwrap.wrap(str(maint), maxlen, break_long_words=False)
     except Exception:
         print()
-        print("section_dict: {}, maint: {}".format(section_dict, maint))
+        print(f'section_dict: {section_dict}, maint: {maint}')
         print()
     if lines == []:
         lines.append('')
@@ -197,7 +207,11 @@ def html_escape(str):
     #    str = str.rstrip().replace('<', '&lt;').replace('>', '&gt;')
     #    str = str.rstrip().replace('(', '&#40;').replace(')', '&#41;')
     #    str = str.rstrip().replace("'", '&#39;').replace('"', '&quot;')
-    html = str.rstrip().replace("ä", '&auml;').replace("ö", '&ouml;').replace("ü", '&uuml;') if str else ""
+    html = (
+        str.rstrip().replace('ä', '&auml;').replace('ö', '&ouml;').replace('ü', '&uuml;')
+        if str
+        else ''
+    )
     return html
 
 
@@ -246,8 +260,8 @@ def build_pluginlist():
                 plg_dict['test'] = get_tester(section_dict, 15)
                 plg_dict['doc'] = html_escape(section_dict.get('documentation', ''))
                 plg_dict['sup'] = html_escape(section_dict.get('support', ''))
-                print("")
-                print("> unclassified plugin: metafile = {}, plg_dict = {}".format(metafile, str(plg_dict)))
+                print('')
+                print(f'> unclassified plugin: metafile = {metafile}, plg_dict = {plg_dict!s}')
 
             plg_dict['desc'].append('')
         else:
@@ -269,11 +283,12 @@ def build_pluginlist():
         while len(plg_dict['test']) < maxlen:
             plg_dict['test'].append('')
 
-
         # check if plugin.yaml is older than plgtype rst file -> skip
         # plg_file = metafile
         rst_filename = os.path.join(plugin_rst_dir, 'plugins_doc', 'plugins_' + plgtype + '.rst')
-        if not os.path.exists(rst_filename) or os.path.getmtime(metafile) > os.path.getmtime(rst_filename):
+        if not os.path.exists(rst_filename) or os.path.getmtime(metafile) > os.path.getmtime(
+            rst_filename
+        ):
             changed[plgtype] = True
 
         if plgtype != 'all':
@@ -308,7 +323,7 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
     print(f'Datei: {rst_filename}{" " * (26 - len(rst_filename))}  -  {len(plglist)} {title}')
 
     #    print("> Opening file "+plugin_rst_dir+'/'+rst_filename)
-    fh = open(plugin_rst_dir + '/' + rst_filename, "w")
+    fh = open(plugin_rst_dir + '/' + rst_filename, 'w')
 
     #    fh.write(title+'\n')
     #    fh.write('-'*len(title)+'\n')
@@ -318,19 +333,21 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
     fh.write('.. include:: /plugins_doc/plugins_' + plgtype + '_header.rst\n')
     fh.write('\n')
 
-    if (len(plglist) == 0):
+    if len(plglist) == 0:
         if language == 'de':
             fh.write('Zurzeit gibt es keine noch nicht klassifizierten Plugins.\n')
         else:
             fh.write('At the moments there are no plugins that have not been classified.\n')
     else:
         if not fh_dummy_used:
-            fh_dummy = open(plugin_rst_dir + '/' + rst_dummyname, "w")
+            fh_dummy = open(plugin_rst_dir + '/' + rst_dummyname, 'w')
             fh_dummy_used = True
         # write toctree to dummy file to suppress warnings for not included README.md files.
         fh_dummy.write(':orphan:\n')
         fh_dummy.write('\n')
-        fh_dummy.write('.. This file is only created to suppress Sphinx warnings about README.md files not beeing included in any toctree.\n')
+        fh_dummy.write(
+            '.. This file is only created to suppress Sphinx warnings about README.md files not beeing included in any toctree.\n'
+        )
         fh_dummy.write('\n')
         fh_dummy.write('.. toctree::\n')
         fh_dummy.write('   :maxdepth: 2\n')
@@ -352,7 +369,7 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
             if docu_type == 'user':
                 fp = plg['name'] + '/user_doc'
                 # fp_ignore = plg['name']+'/developer_doc'
-                if os.path.isfile(fp + '.rst') or os.path.isfile(fp +'.md'):
+                if os.path.isfile(fp + '.rst') or os.path.isfile(fp + '.md'):
                     fh.write('   /plugins/' + fp + '\n')
                 # if os.path.isfile(fp_ignore+'.rst') or os.path.isfile(fp_ignore+'.md'):
                 # fh_dummy.write('   /plugins/'+fp_ignore+'\n')
@@ -378,13 +395,33 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
         fh.write('.. table:: \n')
         fh.write('   :widths: grid\n')
         fh.write('\n')
-        fh.write('   +-' + '-' * 65 + '-+-' + '-' * 8 + '-+-' + '-' * 165 + '-+-----------------+-----------------+\n')
+        fh.write(
+            '   +-'
+            + '-' * 65
+            + '-+-'
+            + '-' * 8
+            + '-+-'
+            + '-' * 165
+            + '-+-----------------+-----------------+\n'
+        )
         if language == 'de':
-            fh.write(f"   | {'Plugin (Konfiguration)':<65.65} | Version  | {'Beschreibung':<165.165} | Maintainer      | Tester          |\n")
+            fh.write(
+                f'   | {"Plugin (Konfiguration)":<65.65} | Version  | {"Beschreibung":<165.165} | Maintainer      | Tester          |\n'
+            )
         else:
-            fh.write(f"   | {'Plugin (Configuration)':<65.65} | Version  | {'Description':<165.165} | Maintainer      | Tester          |\n")
+            fh.write(
+                f'   | {"Plugin (Configuration)":<65.65} | Version  | {"Description":<165.165} | Maintainer      | Tester          |\n'
+            )
             # fh.write('   | {p:<65.65} | Version  | {b:<165.165} | Maintainer      | Tester          |\n'.format(p='Plugin', b='Description'))
-        fh.write('   +=' + '=' * 65 + '=+=' + '=' * 8 + '=+=' + '=' * 165 + '=+=================+=================+\n')
+        fh.write(
+            '   +='
+            + '=' * 65
+            + '=+='
+            + '=' * 8
+            + '=+='
+            + '=' * 165
+            + '=+=================+=================+\n'
+        )
         for plg in plglist:
             plg_readme_link = ':doc:`' + plg['name'] + ' </plugins/' + plg['name'] + '/README.md>`'
             plg_readme_link = ':doc:`' + plg['name'] + ' <../plugins/' + plg['name'] + '/README>`'
@@ -398,26 +435,38 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
                     plg_readme_link = plg['name']
 
             # fh.write('   | {plg:<65.65} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg=plg['name'], desc=plg['desc'][0], maint=plg['maint'][0], test=plg['test'][0]))
-            fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg=plg_readme_link, vers=plg['version'][0], desc=plg['desc'][0], maint=plg['maint'][0], test=plg['test'][0]))
+            fh.write(
+                f'   | {plg_readme_link:<65.65} | {plg["version"][0]:<8.8} | {plg["desc"][0]:<165.165} | {plg["maint"][0]:<15.15} | {plg["test"][0]:<15.15} |\n'
+            )
             for lr in range(1, len(plg['desc'])):
-                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=plg['desc'][lr], maint=plg['maint'][lr], test=plg['test'][lr]))
+                fh.write(
+                    f'   | {"":<65.65} | {"":<8.8} | {plg["desc"][lr]:<165.165} | {plg["maint"][lr]:<15.15} | {plg["test"][lr]:<15.15} |\n'
+                )
             if plg['doc'] != '':
                 if language == 'de':
-                    plg['doc'] = "`" + plg['name'] + " zusätzliche Infos <" + plg['doc'] + ">`_"
+                    plg['doc'] = '`' + plg['name'] + ' zusätzliche Infos <' + plg['doc'] + '>`_'
                 else:
-                    plg['doc'] = "`" + plg['name'] + " additional info <" + plg['doc'] + ">`_"
-                fh.write('   | {plg:<65.65} | {vers:<8.8} | - {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=plg['doc'], maint='', test=''))
+                    plg['doc'] = '`' + plg['name'] + ' additional info <' + plg['doc'] + '>`_'
+                fh.write(
+                    f'   | {"":<65.65} | {"":<8.8} | - {plg["doc"]:<163.163} | {"":<15.15} | {"":<15.15} |\n'
+                )
             if plg['sup'] != '':
                 # if plg['doc'] != '':
                 #     fh.write('   | {plg:<65.65} |   {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', desc='', maint='', test=''))
                 if language == 'de':
-                    plg['sup'] = "`" + plg['name'] + " Unterstützung <" + plg['sup'] + ">`_"
+                    plg['sup'] = '`' + plg['name'] + ' Unterstützung <' + plg['sup'] + '>`_'
                 else:
-                    plg['sup'] = "`" + plg['name'] + " support <" + plg['sup'] + ">`_"
-                fh.write('   | {plg:<65.65} | {vers:<8.8} | - {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=plg['sup'], maint='', test=''))
+                    plg['sup'] = '`' + plg['name'] + ' support <' + plg['sup'] + '>`_'
+                fh.write(
+                    f'   | {"":<65.65} | {"":<8.8} | - {plg["sup"]:<163.163} | {"":<15.15} | {"":<15.15} |\n'
+                )
             else:
-                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
-                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'.':<165.165} | {'':<15.15} | {'':<15.15} |\n")
+                fh.write(
+                    f'   | {"":<65.65} | {"":<8.8} | {"":<165.165} | {"":<15.15} | {"":<15.15} |\n'
+                )
+                fh.write(
+                    f'   | {"":<65.65} | {"":<8.8} | {".":<165.165} | {"":<15.15} | {"":<15.15} |\n'
+                )
 
             leerzeileausgegeben = False
             if plgtype == 'all':
@@ -426,8 +475,14 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
                 else:
                     desc = 'Plugin type: **' + plg['type'] + '**'
                 leerzeileausgegeben = True
-                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
-                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=desc, maint='', test=''))
+                fh.write(
+                    f'   | {"":<65.65} | {"":<8.8} | {"":<165.165} | {"":<15.15} | {"":<15.15} |\n'
+                )
+                fh.write(
+                    '   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(
+                        plg='', vers='', desc=desc, maint='', test=''
+                    )
+                )
 
             py_maxversion = plg['py_maxversion']
             if py_maxversion != '':
@@ -436,8 +491,14 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
                 else:
                     desc = 'maximum Python version: **' + py_maxversion + '**'
                 leerzeileausgegeben = True
-                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
-                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=desc, maint='', test=''))
+                fh.write(
+                    f'   | {"":<65.65} | {"":<8.8} | {"":<165.165} | {"":<15.15} | {"":<15.15} |\n'
+                )
+                fh.write(
+                    '   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(
+                        plg='', vers='', desc=desc, maint='', test=''
+                    )
+                )
 
             sh_maxversion = plg['sh_maxversion']
             if sh_maxversion != '':
@@ -446,8 +507,14 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
                 else:
                     desc = 'maximum version of SmartHomeNG: **' + sh_maxversion + '**'
                 leerzeileausgegeben = True
-                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
-                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=desc, maint='', test=''))
+                fh.write(
+                    f'   | {"":<65.65} | {"":<8.8} | {"":<165.165} | {"":<15.15} | {"":<15.15} |\n'
+                )
+                fh.write(
+                    '   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(
+                        plg='', vers='', desc=desc, maint='', test=''
+                    )
+                )
 
             if plg['state'] in ['deprecated', 'develop']:
                 if language == 'de':
@@ -455,11 +522,27 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
                 else:
                     desc = 'Plugin Status: **' + plg['state'] + '**'
                 if not leerzeileausgegeben:
-                    fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
-                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
-                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=desc, maint='', test=''))
+                    fh.write(
+                        f'   | {"":<65.65} | {"":<8.8} | {"":<165.165} | {"":<15.15} | {"":<15.15} |\n'
+                    )
+                fh.write(
+                    f'   | {"":<65.65} | {"":<8.8} | {"":<165.165} | {"":<15.15} | {"":<15.15} |\n'
+                )
+                fh.write(
+                    '   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(
+                        plg='', vers='', desc=desc, maint='', test=''
+                    )
+                )
 
-            fh.write('   +-' + '-' * 65 + '-+-' + '-' * 8 + '-+-' + '-' * 165 + '-+-----------------+-----------------+\n')
+            fh.write(
+                '   +-'
+                + '-' * 65
+                + '-+-'
+                + '-' * 8
+                + '-+-'
+                + '-' * 165
+                + '-+-----------------+-----------------+\n'
+            )
 
         fh.write('\n')
         fh.write('\n')
@@ -476,7 +559,6 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
 #
 
 if __name__ == '__main__':
-
     #    print ('Number of arguments:', len(sys.argv), 'arguments.')
     #    print ('Argument List:', str(sys.argv))
 
@@ -489,7 +571,7 @@ if __name__ == '__main__':
         language = 'en'
 
     global docu_type
-    docu_type = start_dir.split('/')[-1:][0]     # developer / user
+    docu_type = start_dir.split('/')[-1:][0]  # developer / user
 
     print('Start directory        = ' + start_dir)
     print('Documentation type     = ' + docu_type)
