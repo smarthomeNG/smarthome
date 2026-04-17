@@ -91,7 +91,7 @@ Updates in the CORE
 
 * Libs:
 
-  *...:
+  * ...:
 
     * ...
 

@@ -163,11 +163,11 @@ Updates in the CORE
 
 * Modules:
 
-  * admin:
+  * modules.admin:
 
     * allow filter logs by develop level
 
-  * module.http:
+  * modules.http:
 
     * fix css import for bootstrap-treeview
     * fix datatable auto adjust handling for tables in tabs
