@@ -1,0 +1,447 @@
+=============================
+Release 1.12.0 - 01. Mai 2026
+=============================
+
+Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core
+von SmartHomeNG und den Plugins.
+
+|
+
+.. only:: develop_branch
+
+.. note::
+
+        Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
+
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 16. April 2026
+
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. 16. April 2026
+
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release 
+v1.11.0 sind im Folgenden in diesen Release Notes beschrieben.
+
+
+Minimum Python Version
+----------------------
+
+Die minimale Python-Version, die von SmartHomeNG unterstützt wird, ist **Python 3.10**.
+
+Es ist ggf. möglich, SmartHomeNG auch auf früheren Python-Versionen laufen zu lassen. 
+Dies ist aber nicht getestet, und möglicherweise nutzen z.B. einzelne Plugins Sprachfeatures,
+die erst ab Python 3.10 unterstützt werden. 
+Insofern kann für Versuche in dieser Hinsicht kein Support geleistet werden. 
+
+Bei einer Neuinstallation wird jedoch empfohlen, auf einer der neueren
+Python-Versionen (3.12 oder 3.13) aufzusetzen.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Offiziell unterstützt werden im SmartHomeNG Release 1.12.0 die Python-Versionen 3.10, 3.11, 3.12 und 3.13.
+Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
+(Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
+zu unterstützten Python Versionen)
+
+|
+
+Änderungen am Core
+==================
+
+Allgmein
+--------
+
+* Workflows:
+
+  * Unittests: Added Python 3.13 and removed Python 3.8
+  * builddevdoc: Changed to run under 3.11 instead of Python 3.9
+
+Bugfixes im CORE
+----------------
+
+* prevent huge int from killing SHNG while conversion to string
+
+Updates in the CORE
+-------------------
+
+* Changed absolut minimum Python version to 3.9
+
+* add itemtypes datetime and timestamp
+
+* add smarthome.yaml option "config_etc", modify lib.smarthome behaviour to correctly keep setting over restarts
+
+* prepare etc/ to keep all user-generated config files
+
+* automatically migrate files to etc/ paths if run with -e
+
+* move default config files to templates/ dir
+
+* move example logics to examples/ dir
+
+* update default logics.yaml
+
+* modify instance processing in plugin.yaml
+
+* remove config file format "conf"
+
+* warn if SmartHomeNG is run by root user or root group member, #729
+
+* bin
+
+  * smarthome
+
+    * Changed some loglevels
+
+* Libs:
+
+  * lib.backup:
+
+    * Added private plugins and private tools to configuration backup and restore
+    * Adjusted some loglevels
+
+  * lib.config:
+
+    * allow attributes to be recursively applied to struct items
+
+  * lib.connection:
+
+    * Remove lib.connection
+
+  * lib.env:
+
+    * adjust datetime formats
+
+  * lib.item:
+
+    * Remove 'eval:' from caller (if it exists) before calling update_item of a plugin
+    * Remove 'eval:' from caller (if it exists) for autotimer
+    * Implemented initialization for hysteresis item and extended documentation
+    * Small fix for hysteresis
+    * Small fix in hysteresis_state()
+    * add "remark" property from item configuration
+
+  * lib.log:
+
+    * add possibility to use logger.develop("..")
+    * introduce EnglishLocale formatter (to name months in English even if locale is set differently). This is useful for log analysis or processing using promtail, loki, etc.
+    * update EnglishLocale to be thread-save
+
+  * lib.orb:
+
+    * change sun setting and rising calculation so it gives back correct day when using offsets. Not sure if this is good..?
+    * fix calculation of next sunset and sunrise when doff is given. Was messed up in last commit.
+    * improve timezone handling and code
+    * remove utcoffset() from sun calculation so they are correct again with ephem >= 4.1.1
+
+  * lib.plugin:
+
+    * adapt plugin handling
+    * fix un-/reloading plugins for multi-instance plugins
+    * update for plugins tests
+    * change instance naming
+
+  * lib.smarthome: 
+
+    * prevent main loop from quitting prematurely to avoid async problems
+    * update list of ignored crypto modules
+
+  * lib.systeminfo:
+
+    * get_osname(), get_os_version() return the full version for Debian (eg. 13.1 instead of 13)
+
+  * lib.userfunctions:
+
+    * respect config_etc option for import dir
+
+  * lib.utils:
+
+    * Changed requirement from netifaces to netifaces2 because netifaces was abandonned by it's maintainer, netifaces2 is a drop-in replacement
+
+* Modules:
+
+  * admin:
+
+    * allow filter logs by develop level
+
+  * module.http:
+
+    * fix css import for bootstrap-treeview
+    * fix datatable auto adjust handling for tables in tabs
+    * introduce humanBytes macro and function for being available in web interfaces. converts bytes to KB, MB, etc.
+    * remove bootstrap-4.3.1 folder
+    * update base_plugin to work with bootstrap 5.
+    * update bootstrap datepicker from 1.9.0 to 1.10.0
+    * update bootstrap from 4.6.0 to 5.3.8
+    * update bootstrap treeview from 1.2.0 to 1.2.1
+    * update codemirror from 5.46.0 to 5.65.21
+    * update datatables from 1.13.5 to 2.3.7 incl. addons, etc.
+    * update disclosure with new versions of used packages
+    * update fontawesome from 5.15.4 to 7.1.0
+    * update jquery from 3.7.0 to 4.0.0
+    * update jquery-ui from 1.13.2 to 1.14.2
+
+* tools:
+
+  * tools/postinstall:
+
+    * Added handling for newer of Python to postinstall script
+    * Changed for Python versions (3.8 dropped, 3.14 added)
+
+  * tools/conf_to_yaml_converter: 
+
+    * adjusted to use old and new etc/ config scheme
+    * improve, search more directories
+
+  * tools/make_venv: 
+
+    * Changed to install setuptools, which is not installed by Python 3.12 and Python 3.13
+
+  * tools/postinstall:
+
+    * changed for python versions (3.8 dropped, 3.14 added)
+
+  * tools/act:
+
+    * small improvement
+
+|
+
+Änderungen bei Plugins
+======================
+
+Allgmein
+--------
+
+* Workflows:
+
+  * Updated unittests to newer Ubuntu version
+  * Updated build scripts for documentation to newer Ubuntu version
+  * Updated workflows to build documentation to use a newer version of Ubuntu
+  * Change runner to Ubuntu 24.04 and update Python versions
+  * install libglib2.0 in unittests workflow
+  * updated to build documentation to use a newer version of Ubuntu
+  * added Python 3.13
+
+.. _releasenotes_1_12_0_updates_plugins:
+
+Plugin Updates
+--------------
+
+Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* avm:
+
+  * **For testing**: Set lxml requirement to lxml 5.x under Python 3.13
+
+* casambi_bt:
+
+  * added initial version of a casambi/occhio bluetooth plugin controlling devices locally with no backend connection.
+
+* db_addon:
+
+  * add query param 'end' at get_query_parameters_from_db_addon_params
+  * Bugfix
+
+* enocean:
+
+  * completed decoding of EEP A5_08_01 and added decoding for A5_07_01
+  * removed eval check in update function as this was fixed in the core
+  * temporary fix for unwanted plugin retrigger in combination with eval expressions.
+
+* gpio:
+
+  * backup v2.0.0 for python 3.12
+  * complete overhaul using lgpio and gpiozero modules to work with Debian Bookworm
+  * fix webif
+  * improve logging, fix output
+  * make it work under python 3.13
+  * put v 1.5.4 in "archive"
+  * set max Python version to 3.12 because package lgpio does not work under Python 3.13
+  * update copyright info
+  * update to work with Bookworm
+  * use gpiod, get rid of init retries, new requirement
+
+* hue2:
+
+  * Changed requirement for zeroconf to resolve conflict
+  * Revoked changed requirement for zeroconf to resolve conflict; xiaomi_vac: Changed requirement for
+    zeroconf to resolve conflict
+
+* hue3:
+
+  * Added support for outdoor motion sensor
+  * Bumepd version to 3.0.2
+  * Changed some logentries from notice to info
+
+* jsonread:
+
+  * make it work without pyjq under python 3.13 (limited functionality)
+  * rename scheduler
+  * support url
+
+* knx:
+
+  * update type check due to xmltodict no longer returning OrderedDict#
+
+* lms:
+
+  * fix struct definition for doc conversion
+
+* modbus_tcp:
+
+  * added modBusDirection: write
+  * raise ModbusError when read structure is wrong
+
+* neato:
+
+  * minor bugfix for exception warning output
+
+* nuki:
+
+  * Added MQTT support for newer versions of the lock
+  * New parameter 'mode' for operation types of plugin: 1 - MQTT, 2 - Nuki Bridge, 3 - MQTT and Nuki Bridge
+  * Updates to documentation and logging
+
+* philips_tv:
+
+  * Minor webif fix
+
+* piusv:
+
+  * Create requirements.txt
+
+* rrd:
+
+  * include changes from PR# 1018 and add webinterface
+
+* rtr2:
+
+  * Added comments to widgets
+
+* sma_mb:
+
+  * Update read methods for pymodbus and add crontab as poll time generator
+
+* smartmeter:
+
+  * add discovery log display, item file name display, update docs
+  * improve webif feedback
+
+* smartvisu:
+
+  * Added item attribute 'sv_display_name'; Implemented text buttons for top-navigation of room pages
+  * Added item attribute 'sv_page_in_navi' control if a generated page should be added to the navigation; added documentation to plugin code
+  * Added top navigation for category pages; Bumped version to 1.9.1
+  * Bugfix for 5th button of top-navigation
+  * Bumped version to 1.9.0
+  * Implemented top-navigation for room pages. Added item attribute 'sv_heading_buttons' to configure the top-navigation.
+
+* sonos:
+
+  * Revert required minimum python version back to 3.8; upgraded SoCo to v0.30.9; catching exception for speakers
+    with unknown ip address
+  * **For testing**: Set lxml requirement to lxml 5.x under Python 3.13
+
+* stateengine:
+
+  * bump version to 2.2.2
+  * fix instanteval handling
+  * fix regex
+  * fix SV widget functionality for lock/release
+  * global scheduler for delayed actions to decrease scheduler threads.
+  * improve action scheduler
+  * improve delayed action handling
+  * introduce overwrite parameter for actions
+  * introduce se_ignore possibility to ignore conditions. Minor log improvement.
+  * simplify code for condition checks, fix web interface updates
+
+* tankerkoenig:
+
+  * change log level of diverse logs from error to notice
+  * Loglevel Change
+
+* tasmota:
+
+  * bugfix Wifi-Signal
+
+* uzsu:
+
+  * Fix issue when calculated sun event is on next day (due to offset)
+
+* vicare:
+
+  * connected to new Vissmann API. Old one is deprecated.
+  * minor fix for online status after plugin restart; added specific log message if refresh token has expired
+  * minor improvement of error messages
+  * minor typo fixes
+  * switched to new Viessmann API version v2.
+
+* webservices:
+
+  * switch user_doc from sphinx-tabs to sphinx-design
+
+* xiaomi_vac:
+
+  * Changed requirement for zeroconf to resolve conflict
+
+* yamaha:
+
+  * **For testing**: Set lxml requirement to lxml 5.x under Python 3.13
+
+|
+
+Outdated Plugins
+----------------
+
+Die folgenden Plugins wurden in das plugin_archive Repository verschoben:
+
+* Gateway Plugins
+
+  * raumfeld
+
+* Interface Plugins
+
+  * avdevice
+  * avm_smarthome
+  * husky
+  * sml
+
+* System Plugins
+
+  * datalog
+  * influxdata
+  * memlog
+  * operationlog
+  * sqlite_visu2_8 - switch to the **database** plugin
+  * visu_smartvisu
+  * visu_websocket
+
+* Web/Cloud Plugins
+
+  * alexa
+  * darksky - the free API is not provided anymore - switch to the **piratewthr** or **openweathermap** plugin
+  * wunderground - the free API is not provided anymore by Wunderground - switch to the **piratewthr** or **openweathermap** plugin
+
+
+
+|
+
+Weitere Änderungen
+==================
+
+Dokumentation
+-------------
+
+* Modified README.md to reflect, that the JetBrains licenses expired
+* Doku Fixes für logging
+* Small fix in hysteresis_state()
+* Added info for ssh passwordless login
+* Updated documentation for installation/configuration of mosquitto
+* Added documentation for node.js and MobileAlerts to complete installation
+* Fixes for complete installation and installing Python versions
+
