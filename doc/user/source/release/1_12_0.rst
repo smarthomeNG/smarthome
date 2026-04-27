@@ -275,7 +275,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * hue3:
 
   * Added support for outdoor motion sensor
-  * Bumepd version to 3.0.2
+  * Bumped version to 3.0.2
   * Changed some logentries from notice to info
 
 * jsonread:
