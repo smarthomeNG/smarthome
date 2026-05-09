@@ -23,23 +23,17 @@ Varianten können parallel genutzt werden.
     Eine Alternative ist eine Client-Spezifische Konfiguration (cookie) in der Smartvisu.
 
 
-Anforderungen
-=============
-
-Dieses Modul läuft unter SmartHomeNG v1.8 und neuer und benötigt Python in der Version 3.6 oder neuer.
-
-
-.. index:: Konfigurationsdateien; /etc/module.yaml (websocket)
+.. index:: Konfigurationsdateien; etc/module.yaml (websocket)
 
 Konfiguration
 =============
 
---------------------------
-Datei *../etc/module.yaml*
---------------------------
+-----------------------
+Datei *etc/module.yaml*
+-----------------------
 
 .. code-block:: yaml
-   :caption: ../etc/module.yaml
+   :caption: etc/module.yaml
 
    # etc/module.yaml
    websocket:
@@ -81,10 +75,10 @@ Datei *../etc/module.yaml*
 |                         | Für die verschlüsselte Kommunikation müssen die Zertifikats- und Schlüssel-Datei konfiguriert sein.  |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | tls_cert                | **Optional**: Name der Zertifikatsdatei mit der Endung '.cer' oder '.pem'. Die Datei muss im         |
-|                         | Verzeichnis ../etc liegen. Dieser Parameter muss konfiguriert sein, damit eine verschlüsselte        |
+|                         | Verzeichnis ``etc`` liegen. Dieser Parameter muss konfiguriert sein, damit eine verschlüsselte       |
 |                         | Kommunikation möglich ist.                                                                           |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | tls_key                 | **Optional**: Name der Datei mit dem privaten Schlüssel und der Endung '.key'. Die Datei muss im     |
-|                         | Verzeichnis ../etc liegen. Dieser Parameter muss konfiguriert sein, damit eine verschlüsselte        |
+|                         | Verzeichnis ``etc`` liegen. Dieser Parameter muss konfiguriert sein, damit eine verschlüsselte       |
 |                         | Kommunikation möglich ist.                                                                           |
 +-------------------------+------------------------------------------------------------------------------------------------------+

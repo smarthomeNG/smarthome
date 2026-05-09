@@ -42,7 +42,7 @@ Beispiel
 Eine Logik sieht prinzipiell folgendermaßen aus:
 
 .. code-block:: python
-   :caption: /usr/local/smarthome/logics/testlogik1.py
+   :caption: etc/logics/testlogik1.py
 
    #!/usr/bin/env python3
    # testlogik1.py

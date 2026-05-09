@@ -12,7 +12,7 @@ Plugin 'rtr2' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -192,7 +192,7 @@ rtr2_controller_settings
 ========================
 
 
-Initale Einstellungen für den Controller, falls abweichend von den Plugin Standardwerten     [<Kp>, <Ki>]
+Initale Einstellungen für den Controller, falls abweichend von den Plugin Standardwerten     [<Kp>, <Ki>] 
 
  - Datentyp: **list**
 
@@ -207,26 +207,26 @@ Anzusteuernde Funktion für den gewählten rtr
 
  - Mögliche Werte:
 
-   -  |_| - |_| <noch keine Funktion gewählt>
-   - **comfort_mode** |_| - |_| Mode 'comfort' setzen -> bool, r/w
-   - **standby_mode** |_| - |_| Mode 'standby' setzen -> bool, r/w
-   - **night_mode** |_| - |_| Mode 'night' setzen -> bool, r/w
-   - **frost_mode** |_| - |_| Mode 'frost' setzen -> bool, r/w
-   - **hvac_mode** |_| - |_| Mode 'hvac' setzen -> num, r/w
-   - **heating_status** |_| - |_| Heiz Status -> bool, r/o
-   - **lock_status** |_| - |_| Sperr Status -> bool, r/w (r/o)
-   - **temp_set** |_| - |_| Soll Temp setzen -> num, r/o
-   - **temp_actual** |_| - |_| Ist Temp setzen -> num, w/o
-   - **control_output** |_| - |_| Stellwert -> num, r/o
-   - **setting_temp_comfort** |_| - |_| Setting: Komfort Temp setzen -> num, r/w
-   - **setting_temp_standby** |_| - |_| Setting: Standby Temp setzen -> num, r/w
-   - **setting_temp_night** |_| - |_| Setting: Nacht Temp setzen -> num, r/w
-   - **setting_night_reduction** |_| - |_| Setting: Nachtabsenkung setzen -> num, r/w
-   - **setting_standby_reduction** |_| - |_| Setting: Standby-Absenkung setzen -> num, r/w
-   - **setting_fixed_reduction** |_| - |_| Setting: Feste Absenkung -> bool, r/w
-   - **setting_temp_frost** |_| - |_| Setting: Frostschutz Temp setzen -> num, r/w
-   - **setting_min_output** |_| - |_| Setting: Minimaler Stellwert -> num(0-25), r/w
-   - **setting_max_output** |_| - |_| Setting: Maximaler Stellwert -> num(25-100), r/w
+   - 
+   - **comfort_mode**
+   - **standby_mode**
+   - **night_mode**
+   - **frost_mode**
+   - **hvac_mode**
+   - **heating_status**
+   - **lock_status**
+   - **temp_set**
+   - **temp_actual**
+   - **control_output**
+   - **setting_temp_comfort**
+   - **setting_temp_standby**
+   - **setting_temp_night**
+   - **setting_night_reduction**
+   - **setting_standby_reduction**
+   - **setting_fixed_reduction**
+   - **setting_temp_frost**
+   - **setting_min_output**
+   - **setting_max_output**
 
 
 rtr2_id
@@ -242,9 +242,47 @@ rtr2_settings
 =============
 
 
-Initale Einstellungen für den Rtr. Bitte beachten: Wenn die Werte über dieses Attribut gesetzt werdeen, werden sie bei jedem Neustart von SmartHomeNG wieder gesetzt.     [<comfort_temp>, <night_reduction>, <standby_reduction>, <fixed_reduction>, <hvac_mode>, <frost_temp>]
+Initale Einstellungen für den Rtr. Bitte beachten: Wenn die Werte über dieses Attribut gesetzt werdeen, werden sie bei jedem Neustart von SmartHomeNG wieder gesetzt.     [<comfort_temp>, <night_reduction>, <standby_reduction>, <fixed_reduction>, <hvac_mode>, <frost_temp>] 
 
  - Datentyp: **list**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+rtr
+===
+
+Vorlage-Struktur für einen Raumtemperatur Regler
+
+.. treeview::
+     - :dir:`folder` **rtr** (`foo`, Vorlage-Struktur für einen Raumtemperatur Regler)
+         - :dir:`file` **komfort** (`bool`, ---)
+         - :dir:`file` **normal** (`bool`, ---)
+         - :dir:`file` **nacht** (`bool`, ---)
+         - :dir:`file` **frost** (`bool`, ---)
+         - :dir:`file` **hvac** (`num`, ---)
+         - :dir:`file` **heizt** (`bool`, ---)
+         - :dir:`file` **gesperrt** (`bool`, ---)
+         - :dir:`file` **soll_temp** (`num`, ---)
+         - :dir:`file` **ist_temp** (`num`, ---)
+         - :dir:`file` **stellwert** (`num`, ---)
+         - :dir:`file` **stellwert_text** (`str`, ---)
+         - :dir:`folder` **settings** (`foo`, ---)
+             - :dir:`file` **komfort_temp** (`num`, ---)
+             - :dir:`file` **standby_temp** (`num`, ---)
+             - :dir:`file` **nacht_temp** (`num`, ---)
+             - :dir:`file` **feste_absenkung** (`bool`, ---)
+             - :dir:`file` **nacht_absenkung** (`num`, ---)
+             - :dir:`file` **standby_absenkung** (`num`, ---)
+             - :dir:`file` **frost_temp** (`num`, ---)
+             - :dir:`file` **min_stellwert** (`num`, ---)
+             - :dir:`file` **max_stellwert** (`num`, ---)
 
 
 ===============

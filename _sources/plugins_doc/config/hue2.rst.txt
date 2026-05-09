@@ -12,7 +12,7 @@ Plugin 'hue2' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -162,32 +162,32 @@ Anzusteuernde Funktion für die gewählte Resource/ID
 
  - Mögliche Werte:
 
-   -  |_| - |_| <noch keine Funktion gewählt>
-   - **on** |_| - |_| Mehrere Funktionen auf einmal -> dict, r/w (resource: light, group)
-   - **bri** |_| - |_| Ein-/Ausschalten -> bool, r/w (resource: light, group)
-   - **bri_inc** |_| - |_| Helligkeit, 0 … 255 -> num, r/w (resource: light, group)
-   - **hue** |_| - |_| Relative Helligkeitsveränderung 0 … 254, w/o (resource: light, group)
-   - **sat** |_| - |_| Farbton, 0 … 65535 -> num, r/w (resource: light), group
-   - **ct** |_| - |_| Sättigung, 0 … 255 -> num, r/w (resource: light, group)
-   - **dict** |_| - |_| ct Wert -> num, r/w (resource: light, group)
-   - **name** |_| - |_| Name -> str, r/w (resource: light, group, scene, sensor)
-   - **reachable** |_| - |_| Erreichbar -> bool, r/o (resource: light)
-   - **colormode** |_| - |_| Farb-Mode -> str (Werte: ct, hs, xy), r/o (resource: light, group)
-   - **xy** |_| - |_| xy Werte -> list, r/w (resource: light, group)
-   - **type** |_| - |_| Typ des Leuchtmittels -> str, r/o (resource: light)
-   - **modelid** |_| - |_| Model Id des Leuchtmittels -> str, r/o (resource: light)
-   - **swversion** |_| - |_| Software Version des Leuchtmittels -> str, r/o (resource: light)
-   - **activate_scene** |_| - |_| Aktivieren einer Szene für Leuchten in der selektierten Gruppe (hue2_id) -> str w/o (resource: group)
-   - **modify_scene** |_| - |_| Anpassen einer Szene für Leuchten in der selektierten Gruppe (hue2_id) -> str w/o (resource: group)
-   - **alert** |_| - |_| Benachrichtigung -> str (Werte: none, select, lselect) (resource: light, group)
-   - **effect** |_| - |_| Lichteffekt -> str (Werte: none, colorloop) (resource: light, group)
-   - **daylight** |_| - |_| Tageslicht -> bool, r/o (resource: sensor)
-   - **sunriseoffset** |_| - |_| Tageslicht: sunriseoffset -> num r/o (resource: sensor)
-   - **sunsetoffset** |_| - |_| Tageslicht: sunsetoffset -> num r/o (resource: sensor)
-   - **temperature** |_| - |_| Temperatur -> num r/o (resource: sensor)
-   - **presence** |_| - |_| Präsenz -> bool, r/o (resource: sensor)
-   - **lightlevel** |_| - |_| Sensor 'lightlevel' -> num r/o (resource: sensor)
-   - **status** |_| - |_| Sensor 'status' -> num, r/o (resource: sensor)
+   - 
+   - **on**
+   - **bri**
+   - **bri_inc**
+   - **hue**
+   - **sat**
+   - **ct**
+   - **dict**
+   - **name**
+   - **reachable**
+   - **colormode**
+   - **xy**
+   - **type**
+   - **modelid**
+   - **swversion**
+   - **activate_scene**
+   - **modify_scene**
+   - **alert**
+   - **effect**
+   - **daylight**
+   - **sunriseoffset**
+   - **sunsetoffset**
+   - **temperature**
+   - **presence**
+   - **lightlevel**
+   - **status**
 
 
 hue2_id
@@ -231,6 +231,128 @@ hue2_transitionTime
 Zeit für Übergang (in sec)
 
  - Datentyp: **num**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+_light_basic
+============
+
+interne Vorlage-Struktur für eine Hue Leuchte (basic)
+
+.. treeview::
+     - :dir:`folder` **_light_basic** (`foo`, interne Vorlage-Struktur für eine Hue Leuchte (basic))
+         - :dir:`file` **onoff** (`bool`, ---)
+         - :dir:`file` **level** (`num`, ---)
+         - :dir:`file` **level_inc** (`num`, ---)
+         - :dir:`file` **ct** (`num`, ---)
+         - :dir:`file` **colormode** (`str`, ---)
+         - :dir:`file` **dict** (`dict`, ---)
+         - :dir:`file` **alert** (`str`, ---)
+         - :dir:`file` **effect** (`str`, ---)
+
+
+_light_extended
+===============
+
+interne Vorlage-Struktur für eine Hue Leuchte (extended attributes)
+
+.. treeview::
+     - :dir:`folder` **_light_extended** (`foo`, interne Vorlage-Struktur für eine Hue Leuchte (extended attributes))
+         - :dir:`file` **lightname** (`str`, ---)
+         - :dir:`file` **reachable** (`bool`, ---)
+         - :dir:`file` **lighttype** (`str`, ---)
+         - :dir:`file` **modelid** (`str`, ---)
+         - :dir:`file` **swversion** (`str`, ---)
+
+
+group
+=====
+
+Vorlage-Struktur für eine Hue Gruppe
+
+.. treeview::
+     - :dir:`folder` **group** (`foo`, Vorlage-Struktur für eine Hue Gruppe)
+         - :dir:`file` **onoff** (`bool`, ---)
+         - :dir:`file` **level** (`num`, ---)
+         - :dir:`file` **hue** (`num`, ---)
+         - :dir:`file` **sat** (`num`, ---)
+         - :dir:`file` **ct** (`num`, ---)
+         - :dir:`file` **colormode** (`str`, ---)
+         - :dir:`file` **xy** (`list`, ---)
+
+
+group_activate_scene
+====================
+
+Vorlage-Struktur zum aktivieren von Hue Szenen
+
+.. treeview::
+     - :dir:`file` **group_activate_scene** (`str`, Vorlage-Struktur zum aktivieren von Hue Szenen)
+
+
+light
+=====
+
+Vorlage-Struktur für eine Hue Leuchte
+
+.. treeview::
+     - :dir:`folder` **light** (`foo`, Vorlage-Struktur für eine Hue Leuchte)
+         - :dir:`file` **hue** (`num`, ---)
+         - :dir:`file` **sat** (`num`, ---)
+         - :dir:`file` **xy** (`list`, ---)
+
+
+light_extended
+==============
+
+Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items
+
+.. treeview::
+     - :dir:`file` **light_extended** (`foo`, Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items)
+
+
+light_ww
+========
+
+Vorlage-Struktur für eine Hue Leuchte (warm white)
+
+.. treeview::
+     - :dir:`file` **light_ww** (`foo`, Vorlage-Struktur für eine Hue Leuchte (warm white))
+
+
+light_ww_extended
+=================
+
+Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items (warm white)
+
+.. treeview::
+     - :dir:`file` **light_ww_extended** (`foo`, Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items (warm white))
+
+
+light_xy
+========
+
+Vorlage-Struktur für eine Hue Leuchte (Farbe nur über xy)
+
+.. treeview::
+     - :dir:`folder` **light_xy** (`foo`, Vorlage-Struktur für eine Hue Leuchte (Farbe nur über xy))
+         - :dir:`file` **xy** (`list`, ---)
+
+
+light_xy_extended
+=================
+
+Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items (Farbe nur über xy)
+
+.. treeview::
+     - :dir:`file` **light_xy_extended** (`foo`, Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items (Farbe nur über xy))
 
 
 ===============

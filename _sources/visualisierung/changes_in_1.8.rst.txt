@@ -6,7 +6,7 @@ Ab SmartHomeNG v1.8 sind für die vollständige smartVISU Unterstützung das **w
 das **smartvisu** Plugins zu konfigurieren.
 
 .. code-block:: yaml
-   :caption: Ausschnitt aus **../etc/module.yaml**
+   :caption: Ausschnitt aus ``etc/module.yaml``
 
    websocket:
        module_name: websocket
@@ -19,7 +19,7 @@ das **smartvisu** Plugins zu konfigurieren.
 
 
 .. code-block:: yaml
-   :caption: Ausschnitt aus **../etc/plugin.yaml**
+   :caption: Ausschnitt aus ``etc/plugin.yaml``
 
    smartvisu:
        plugin_name: smartvisu

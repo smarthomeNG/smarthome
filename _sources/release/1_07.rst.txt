@@ -126,7 +126,7 @@ Updates in the CORE
 
 * Plugins:
 
-  * Configuration parameter **class_name** and **class_path** in **/etc/plugin.yaml** are now DEPRECATED
+  * Configuration parameter **class_name** and **class_path** in ``/etc/plugin.yaml`` are now DEPRECATED
   * Support for MQTT implemented
   * Web interfaces: make all tabs sticky on web interface for better scroll appearance
 

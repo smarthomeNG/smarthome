@@ -27,7 +27,7 @@ genutzt werden, den das http Modul mitbringt.
 Benutzung des Filters
 ---------------------
 
-In der Datei ``../etc/logging.yaml`` wird der **CherryPyFilter** im Abschnitt ``filters:`` zur Nutzung
+In der Datei ``etc/logging.yaml`` wird der **CherryPyFilter** im Abschnitt ``filters:`` zur Nutzung
 konfiguriert.
 
 .. code-block:: yaml
@@ -64,7 +64,7 @@ und nur den ersten Log Eintrag wirklich in das Log zu schreiben. Diese Aufgabe e
 Benutzung des Filters
 ---------------------
 
-In der Datei ``../etc/logging.yaml`` wird der **DuplicateFilter** im Abschnitt ``filters:`` zur Nutzung
+In der Datei ``etc/logging.yaml`` wird der **DuplicateFilter** im Abschnitt ``filters:`` zur Nutzung
 konfiguriert.
 
 .. code-block:: yaml
@@ -94,7 +94,7 @@ Bis auf **invert** können alle Parameter Listen von Regular Expressions sein.
 Benutzung des Filters
 ---------------------
 
-In der Datei ``../etc/logging.yaml`` wird der **Filter** im Abschnitt ``filters:`` zur Nutzung
+In der Datei ``etc/logging.yaml`` wird der **Filter** im Abschnitt ``filters:`` zur Nutzung
 konfiguriert. Dabei ist die erste Zeile `(): lib.logutils.Filter` zwingend anzugeben,
 außerdem zumindest eine der darauffolgenden Zeilen (module, msg, timestamp). Die Angaben
 sind dabei als reguläre Ausdrücke anzugeben und können sogar in Listenform erfolgen.

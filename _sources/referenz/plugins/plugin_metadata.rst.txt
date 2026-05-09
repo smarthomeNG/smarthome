@@ -2,7 +2,7 @@
 Metadaten für Plugins
 =====================
 
-Plugins werden in der Datei ``../etc/plugin.yaml`` bzw. über die Admit GUI konfiguriert. Die Parameter sind in
+Plugins werden in der Datei ``etc/plugin.yaml`` bzw. über die Admit GUI konfiguriert. Die Parameter sind in
 der Dokumentation des Plugins beschrieben.
 
 
@@ -15,7 +15,7 @@ Ein Plugin besteht im minimum aus drei Dateien:
 Eine genaue Beschreibung welche weiteren Dateien und Unterverzeichnisse ein Plugin haben kann, ist im Abschnitt
 :doc:`Entwicklung </entwicklung/plugins/plugins>` beschrieben.
 
-Alle drei Dateien sind in einem Verzeichnis unterhalb von ``../plugins`` gespeichert, welches den Namen des
+Alle drei Dateien sind in einem Verzeichnis unterhalb von ``plugins`` gespeichert, welches den Namen des
 Plugins trägt (nur in Kleinbuchstaben).
 
 
@@ -23,7 +23,7 @@ Die **Metadaten** Datei eines Plugins heißt ``/plugins/<name of the plugin>/plu
 Abschnitte, die im folgenden beschrieben sind.
 
 - ``plugin:`` - Globale Metadaten des Plugins
-- ``parameters:`` - Definition der Parameter, welche zur Konfiguration des Plugins in der Datei ``../etc/plugin.yaml``
+- ``parameters:`` - Definition der Parameter, welche zur Konfiguration des Plugins in der Datei ``etc/plugin.yaml``
   benutzt werden können
 - ``item_attributes:`` - Definition der Item Attribute, die durch das Plugin genutzt/unterstützt werden
 - ``item_structs:`` - Definition von Item Strukturen, welche im Zusammenhang mit dem Plugin genutzt werden können

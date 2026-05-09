@@ -71,7 +71,7 @@ Die Metadaten werden weiterhin vorgesehen
 
 .. hint::
 
-    Zum Validieren der Metadaten in plugin.yaml kann das Tool /tools/plugin_metadata_checker.py genutzt werden. Dies
+    Zum Validieren der Metadaten in ``plugin.yaml`` kann das Tool ``tools/plugin_metadata_checker.py`` genutzt werden. Dies
     prüft die Metadaten auf Vollständigkeit und Fehlerfreiheit.
 
 

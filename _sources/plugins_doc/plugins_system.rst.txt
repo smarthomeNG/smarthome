@@ -1,5 +1,3 @@
-.. index:: Plugin Type; System
-
 .. include:: /plugins_doc/plugins_system_header.rst
 
 .. toctree::
@@ -11,14 +9,11 @@
    /plugins/blockly/user_doc
    /plugins/cli/user_doc
    /plugins/database/user_doc
-   /plugins/datalog/user_doc
    /plugins/db_addon/user_doc
    /plugins/executor/user_doc
    /plugins/githubplugin/user_doc
    /plugins/influxdb/user_doc
    /plugins/influxdb2/user_doc
-   /plugins/memlog/user_doc
-   /plugins/operationlog/user_doc
    /plugins/rrd/user_doc
    /plugins/rtr2/user_doc
    /plugins/simulation/user_doc
@@ -27,175 +22,254 @@
    /plugins/text_display/user_doc
    /plugins/timmy/user_doc
    /plugins/uzsu/user_doc
-   /plugins/visu_smartvisu/user_doc
-   /plugins/visu_websocket/user_doc
 
 
 
-.. table:: 
-   :widths: grid
 
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | Plugin (Konfiguration)                                            | Version  | Beschreibung                                                                                                                                                          | Maintainer      | Tester          |
-   +===================================================================+==========+=======================================================================================================================================================================+=================+=================+
-   | :doc:`blockly <config/blockly>`                                   | v1.5.0   | Blockly - graphischer Editor für Logiken - Noch in der Entwicklung, nicht für die                                                                                     | msinn, psilo909 | onkelandy       |
-   |                                                                   |          | Nutzung gedacht                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`cli <config/cli>`                                           | v1.8.2   | Command Line Interface für SmartHomeNG - Funktioniert mit SmartHomeNG v1.4 und höher                                                                                  | msinn, foxi352  | onkelandy,      |
-   |                                                                   |          |                                                                                                                                                                       |                 | Sandman60,      |
-   |                                                                   |          |                                                                                                                                                                       |                 | ohinckel        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`database <config/database>`                                 | v1.6.15  | Database plugin, mit Unterstützung für SQLite 3 und MySQL                                                                                                             | ohinckel,       | psilo909,       |
-   |                                                                   |          |                                                                                                                                                                       | msinn,          | brandst,        |
-   |                                                                   |          |                                                                                                                                                                       | onkelandy       | aschwith        |
-   |                                                                   |          | - `database Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1021844-neues-database-plugin>`_                                                 |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`datalog <config/datalog>`                                   | v1.5.2   | Loggen von Daten in ein anderes Logfile als das Standard Log                                                                                                          | ohinckel        | bmxp            |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`db_addon <config/db_addon>`                                 | v1.2.10  | Add-On für das database Plugin zur Datenauswertung                                                                                                                    | sisamiwe        | bmx, onkelandy  |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `db_addon Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1848494-support-thread-databaseaddon-plugin>`_                                   |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`executor <config/executor>`                                 | v1.2.1   | Ausführen von Python Statements im Kontext von SmartHomeNG v1.5 und höher                                                                                             | bmxp            | onkelandy       |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `executor zusätzliche Infos <https://www.smarthomeng.de/user/plugins/executor/user_doc.html>`_                                                                      |                 |                 |
-   |                                                                   |          | - `executor Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1425152-support-thread-plugin-executor>`_                                        |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`githubplugin <config/githubplugin>`                         | v1.0.1   | Plugin zur Installation von Plugins aus fremden GitHub-Repositories                                                                                                   | Morg42          |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`influxdata <config/influxdata>`                             | v1.0.0   | Ermöglicht Speicherung von Daten in InfluxData TSDB z.B. zur Erzeugung von Graphen                                                                                    | rthill          | brandst         |
-   |                                                                   |          | mit Grafana oder Chronograf (Plugin aus 2016)                                                                                                                         |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`influxdb <config/influxdb>`                                 | v1.0.3   | Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank                                                                                      | Kai Meder       | chrisr79,       |
-   |                                                                   |          |                                                                                                                                                                       |                 | onkelandy       |
-   |                                                                   |          | - `influxdb Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1498207-support-thread-f%C3%BCr-influxdb-plugin>`_                               |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`influxdb2 <config/influxdb2>`                               | v0.1.0   | Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank                                                                                      | msinn           | msinn           |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `influxdb2 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1498207-support-thread-f&uuml;r-influxdb-plugin>`_                              |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`memlog <config/memlog>`                                     | v1.6.1   | Speichern der Logeinträge im Speicher (zur Anzeige in der VISU). Durch Bordmittel                                                                                     | ohinckel        | cmalo           |
-   |                                                                   |          | ersetzbar.                                                                                                                                                            |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`operationlog <config/operationlog>`                         | v1.3.6   | Implementierung separater Logs                                                                                                                                        | bmxp            | Sandman60,      |
-   |                                                                   |          |                                                                                                                                                                       |                 | onkelandy, Morg |
-   |                                                                   |          | - `operationlog Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1496323-support-thread-f&uuml;r-operationlog-plugin>`_                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`rrd <config/rrd>`                                           | v1.6.2   | Unterstützung für Round Robin Datenbanken (rrdtool)                                                                                                                   | bmxp            | nobody          |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `rrd zusätzliche Infos <https://github.com/smarthomeNG/plugins/blob/develop/rrd/README.md>`_                                                                        |                 |                 |
-   |                                                                   |          | - `rrd Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/rrd-plugin>`_                                                                         |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`rtr <config/rtr>`                                           | v1.6.0   | Raum Temperatur Regler                                                                                                                                                | Thomas Creutz / | bmxp            |
-   |                                                                   |          |                                                                                                                                                                       | bmxp            |                 |
-   |                                                                   |          | - `rtr zusätzliche Infos <https://www.smarthomeng.de/dev/user/plugins/rtr/README.html>`_                                                                              |                 |                 |
-   |                                                                   |          | - `rtr Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/31450-rtr-heizungs-plugin>`_                                                          |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`rtr2 <config/rtr2>`                                         | v2.2.0   | Raum Temperatur Regler v2                                                                                                                                             | msinn           | msinn           |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `rtr2 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1586747-support-thread-f&uuml;r-das-rtr2-plugin>`_                                   |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`simulation <config/simulation>`                             | v1.5.1   | Aufnahme und Abspielen von Aktionsreihenfolgen.                                                                                                                       | MichaelBu (?)   | psilo909,       |
-   |                                                                   |          |                                                                                                                                                                       |                 | Sandman60,      |
-   |                                                                   |          |                                                                                                                                                                       |                 | cmalo           |
-   |                                                                   |          | - `simulation zusätzliche Infos <https://www.smarthomeng.de/user/plugins/simulation/user_doc.html>`_                                                                  |                 |                 |
-   |                                                                   |          | - `simulation Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/841097>`_                                                                      |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`smartvisu <config/smartvisu>`                               | v1.8.16  | smartVISU Unterstützung: Autogenerierung von Seiten; Widget Handling                                                                                                  | msinn           | wvhn, onkelandy |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `smartvisu Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1586800-support-thread-f&uuml;r-das-smartvisu-plugin>`_                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`sqlite_visu2_8 <config/sqlite_visu2_8>`                     | v1.3.1   | Integration einer SQLite Datenbank - zu verwenden für smartVISU v2.8 und höher                                                                                        | ?               | ?               |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`stateengine <config/stateengine>`                           | v2.2.1   | Zustandsautomat für SmarthomeNG, ehemals AutoBlind                                                                                                                    | onkelandy       | Morg42, bmxp    |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `stateengine Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1303071-stateengine-plugin-support>`_                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`text_display <config/text_display>`                         | v1.8.1   | Plugin um Text Nachrichten auf Displays (z.B. KNX RTR oder Taster) nacheinander                                                                                       | jentz1986       | jentz1986       |
-   |                                                                   |          | anzuzeigen                                                                                                                                                            |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `text_display Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1678358-meldungsplugin-f%C3%BCr-textmeldungen-auf-knx-tastern>`_             |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`timmy <config/timmy>`                                       | v1.8.1   | Plugin für Ein-/Ausschaltverzögerung und Blinken                                                                                                                      | jentz1986       | jentz1986       |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`uzsu <config/uzsu>`                                         | v2.1.0   | Universelle Zeitschaltuhr                                                                                                                                             | cmalo, bmxp,    | Sandman60,      |
-   |                                                                   |          |                                                                                                                                                                       | onkelandy,      | cmalo, schuma,  |
-   |                                                                   |          |                                                                                                                                                                       | andrek, morg42  | morg42          |
-   |                                                                   |          | - `uzsu Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1364692-supportthread-f&uuml;r-uzsu-plugin>`_                                        |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`visu_smartvisu <config/visu_smartvisu>`                     | v1.3.4   | smartVISU Unterstützung: Autogenerierung von Seiten; Widget Handling                                                                                                  | msinn           | psilo909        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`visu_websocket <config/visu_websocket>`                     | v1.5.3   | Websocket Protokoll für Visus (smartVISU, etc.)                                                                                                                       | msinn           | psilo909        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `visu_websocket zusätzliche Infos <http://smarthomeng.de/user/plugins/visu_websocket/user_doc.html>`_                                                               |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
+.. list-table::
+   :header-rows: 1
 
+   * - Plugin (Konfiguration)
+     - Version
+     - Beschreibung
+     - Maintainer
+     - Tester
+   * - :doc:`blockly <config/blockly>`
+     - v1.5.0
+     - Blockly - graphischer Editor für Logiken - Noch in der Entwicklung, nicht für die Nutzung gedacht
+       
+       |br|
+       
+       
+       Plugin-Status: **develop**
+     - msinn
+   
+       psilo909
+   
+     - onkelandy
+   
+   * - :doc:`cli <config/cli>`
+     - v1.8.2
+     - Command Line Interface für SmartHomeNG - Funktioniert mit SmartHomeNG v1.4 und höher
+       
+       |br|
+       
+     - msinn
+   
+       foxi352
+   
+     - onkelandy
+   
+       Sandman60
+   
+       ohinckel
+   
+   * - :doc:`database <config/database>`
+     - v1.6.15
+     - Database plugin, mit Unterstützung für SQLite 3 und MySQL
+       
+       + `database Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1021844-neues-database-plugin>`_
+       
+     - ohinckel
+   
+       msinn
+   
+       onkelandy
+   
+     - psilo909
+   
+       brandst
+   
+       aschwith
+   
+   * - :doc:`db_addon <config/db_addon>`
+     - v1.2.11
+     - Add-On für das database Plugin zur Datenauswertung
+       
+       + `db_addon Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1848494-support-thread-databaseaddon-plugin>`_
+       
+     - sisamiwe
+   
+     - bmx
+   
+       onkelandy
+   
+   * - :doc:`esphome <config/esphome>`
+     - v0.0.2
+     - Plugin zur Anzeige von Informationen von ESPHome Devices
+       
+       |br|
+       
+       
+       Plugin-Status: **develop**
+     - msinn
+   
+     - 
+   
+   * - :doc:`executor <config/executor>`
+     - v1.2.1
+     - Ausführen von Python Statements im Kontext von SmartHomeNG v1.5 und höher
+       
+       + `executor zusätzliche Infos <https://www.smarthomeng.de/user/plugins/executor/user_doc.html>`_
+       + `executor Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1425152-support-thread-plugin-executor>`_
+       
+     - bmxp
+   
+     - onkelandy
+   
+   * - :doc:`githubplugin <config/githubplugin>`
+     - v1.0.1
+     - Plugin zur Installation von Plugins aus fremden GitHub-Repositories
+       
+       |br|
+       
+     - Morg
+   
+     - 
+   
+   * - :doc:`influxdb <config/influxdb>`
+     - v1.0.3
+     - Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank
+       
+       + `influxdb Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1498207-support-thread-f%C3%BCr-influxdb-plugin>`_
+       
+     - Kai Meder
+   
+     - chrisr79
+   
+       onkelandy
+   
+   * - :doc:`influxdb2 <config/influxdb2>`
+     - v0.1.0
+     - Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank
+       
+       + `influxdb2 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1498207-support-thread-für-influxdb-plugin>`_
+       
+       
+       Plugin-Status: **develop**
+     - msinn
+   
+     - msinn
+   
+   * - :doc:`rrd <config/rrd>`
+     - v1.7.0
+     - Unterstützung für Round Robin Datenbanken (rrdtool)
+       
+       + `rrd Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/rrd-plugin>`_
+       
+       
+       Plugin-Status: **develop**
+     - bmxp
+   
+     - nobody
+   
+   * - :doc:`rtr <config/rtr>`
+     - v1.6.0
+     - Raum Temperatur Regler
+       
+       + `rtr zusätzliche Infos <https://www.smarthomeng.de/dev/user/plugins/rtr/README.html>`_
+       + `rtr Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/31450-rtr-heizungs-plugin>`_
+       
+     - Thomas Creutz / bmxp
+   
+     - bmxp
+   
+   * - :doc:`rtr2 <config/rtr2>`
+     - v2.2.0
+     - Raum Temperatur Regler v2
+       
+       + `rtr2 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1586747-support-thread-für-das-rtr2-plugin>`_
+       
+     - msinn
+   
+     - msinn
+   
+   * - :doc:`simulation <config/simulation>`
+     - v1.5.1
+     - Aufnahme und Abspielen von Aktionsreihenfolgen.
+       
+       + `simulation zusätzliche Infos <https://www.smarthomeng.de/user/plugins/simulation/user_doc.html>`_
+       + `simulation Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/841097>`_
+       
+     - MichaelBu (?)
+   
+     - psilo909
+   
+       Sandman60
+   
+       cmalo
+   
+   * - :doc:`smartvisu <config/smartvisu>`
+     - v1.9.0
+     - smartVISU Unterstützung: Autogenerierung von Seiten; Widget Handling
+       
+       + `smartvisu Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1586800-support-thread-für-das-smartvisu-plugin>`_
+       
+     - msinn
+   
+     - wvhn
+   
+       onkelandy
+   
+   * - :doc:`stateengine <config/stateengine>`
+     - v2.2.2
+     - Zustandsautomat für SmarthomeNG, ehemals AutoBlind
+       
+       + `stateengine Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1303071-stateengine-plugin-support>`_
+       
+     - onkelandy
+   
+     - Morg
+   
+       bmxp
+   
+   * - :doc:`text_display <config/text_display>`
+     - v1.8.1
+     - Plugin um Text Nachrichten auf Displays (z.B. KNX RTR oder Taster) nacheinander anzuzeigen
+       
+       + `text_display Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1678358-meldungsplugin-f%C3%BCr-textmeldungen-auf-knx-tastern>`_
+       
+       
+       Plugin-Status: **develop**
+     - jentz1986
+   
+     - jentz1986
+   
+   * - :doc:`timmy <config/timmy>`
+     - v1.8.1
+     - Plugin für Ein-/Ausschaltverzögerung und Blinken
+       
+       |br|
+       
+       
+       Plugin-Status: **develop**
+     - jentz1986
+   
+     - jentz1986
+   
+   * - :doc:`uzsu <config/uzsu>`
+     - v2.1.0
+     - Universelle Zeitschaltuhr
+       
+       + `uzsu Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1364692-supportthread-für-uzsu-plugin>`_
+       
+     - cmalo
+   
+       bmxp
+   
+       onkelandy
+   
+       andrek
+   
+       Morg
+   
+     - Sandman60
+   
+       cmalo
+   
+       schuma
+   
+       Morg
+   
 
 .. include:: /plugins_doc/plugins_footer.rst

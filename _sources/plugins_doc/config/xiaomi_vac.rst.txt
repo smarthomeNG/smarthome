@@ -12,7 +12,7 @@ Plugin 'xiaomi_vac' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -36,7 +36,7 @@ Anforderungen
 
 
 Das Plugin benötigt das python-miio Modul. Die richtige Version wird automatisch beim Start von smarthomeNG installiert.
-Die Bibliothek benötigt den Token des Roboters zur Kommunikation. Hierzu ist bitte die `Anleitung auf github <https://python-miio.readthedocs.io/en/latest/discovery.html#installation>`_ zu befolgen. Bei neueren Valetudo Versionen ist das Token im Log als LocalSecret hinterlegt. Dieses muss hier https://gchq.github.io/CyberChef/#recipe=To_Hex in ein 32 Zeichen langes Token umgewandelt werden.
+Die Bibliothek benötigt den Token des Roboters zur Kommunikation. Hierzu ist bitte die `Anleitung auf github <https://python-miio.readthedocs.io/en/latest/discovery.html#installation>`_ zu befolgen. Bei neueren Valetudo Versionen ist das Token im Log als LocalSecret hinterlegt. Dieses muss hier https://gchq.github.io/CyberChef/#recipe=To_Hex in ein 32 Zeichen langes Token umgewandelt werden. 
 
  - Minimum SmartHomeNG Version: **1.4**
 
@@ -59,7 +59,7 @@ ip
 ==
 
 
-IP Adresse des Saug-Roboters
+IP Adresse des Saug-Roboters 
 
  - Datentyp: **ipv4**
 
@@ -96,7 +96,7 @@ robvac
 
 
 **Befehl oder Abfrage, die an den Roboter gesendet werden soll.**
-Die Befehle richten sich nach der python-miio Bibliothek. Es wird empfohlen, die im Plugin vorhandenen Befehle über ``struct: xiaomi_vac.saugroboter`` einzubinden.
+Die Befehle richten sich nach der python-miio Bibliothek. Es wird empfohlen, die im Plugin vorhandenen Befehle über ``struct: xiaomi_vac.saugroboter`` einzubinden. 
 
  - Datentyp: **str**
 
@@ -185,6 +185,150 @@ Die Befehle richten sich nach der python-miio Bibliothek. Es wird empfohlen, die
    - **filter_left**
    - **sensor_dirty**
    - **sensor_dirty_left**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+befehl
+======
+
+
+.. treeview::
+     - :dir:`folder` **befehl** (`foo`, ---)
+         - :dir:`folder` **befehl** (`foo`, Befehle zum Saugroboter)
+             - :dir:`file` **start** (`bool`, ---)
+             - :dir:`file` **stop** (`bool`, ---)
+             - :dir:`file` **pause** (`bool`, ---)
+             - :dir:`file` **basis** (`bool`, ---)
+             - :dir:`file` **spot_cleaner** (`bool`, ---)
+             - :dir:`file` **find** (`bool`, ---)
+             - :dir:`file` **reset_filtertimer** (`bool`, ---)
+             - :dir:`file` **disable_dnd** (`bool`, ---)
+             - :dir:`file` **set_dnd** (`list`, ---)
+             - :dir:`file` **goto** (`list`, ---)
+             - :dir:`file` **clean_zone** (`list`, ---)
+             - :dir:`file` **segment_clean** (`list`, ---)
+
+
+einstellungen
+=============
+
+
+.. treeview::
+     - :dir:`folder` **einstellungen** (`foo`, ---)
+         - :dir:`folder` **einstellungen** (`foo`, Einstellbare Parameter)
+             - :dir:`file` **luefter_speed** (`num`, ---)
+             - :dir:`file` **teppichmodus** (`bool`, ---)
+             - :dir:`file` **volume** (`num`, ---)
+             - :dir:`file` **dnd** (`bool`, ---)
+             - :dir:`file` **timezone** (`str`, ---)
+             - :dir:`file` **timer** (`foo`, ---)
+             - :dir:`file` **reset** (`str`, Use these values to reset consumables - main_brush, side_brush, filter, sensor_dirty)
+
+
+live
+====
+
+
+.. treeview::
+     - :dir:`folder` **live** (`foo`, ---)
+         - :dir:`folder` **live** (`foo`, Aktuelle Werte des Saugroboters)
+             - :dir:`file` **batterie_status** (`num`, Batterie Status)
+             - :dir:`file` **reinigt** (`bool`, aktuell am reinigen?)
+             - :dir:`file` **zustand** (`str`, Betriebszustand)
+             - :dir:`file` **flaeche** (`num`, gereinigte Fläche)
+             - :dir:`file` **reinigungszeit** (`num`, ---)
+             - :dir:`file` **carpetmode_high** (`num`, ---)
+             - :dir:`file` **carpetmode_integral** (`num`, ---)
+             - :dir:`file` **carpetmode_low** (`num`, ---)
+             - :dir:`file` **carpetmode_enabled** (`num`, ---)
+             - :dir:`file` **carpetmode_stall_time** (`num`, ---)
+             - :dir:`file` **errorcode** (`num`, ---)
+             - :dir:`file` **error** (`bool`, ---)
+             - :dir:`file` **dnd_status** (`bool`, ---)
+             - :dir:`file` **dnd_start** (`foo`, ---)
+             - :dir:`file` **dnd_end** (`foo`, ---)
+             - :dir:`file` **zonen_reinigung** (`bool`, ---)
+             - :dir:`file` **pausiert** (`bool`, ---)
+             - :dir:`file` **segment_status** (`list`, ---)
+
+
+saugroboter
+===========
+
+Vorlage-Struktur für die Ansteuerung eines Xiaomi Saugroboters
+
+.. treeview::
+     - :dir:`folder` **saugroboter** (`foo`, Vorlage-Struktur für die Ansteuerung eines Xiaomi Saugroboters)
+         - :dir:`file` **serial** (`str`, ---)
+
+
+statistik
+=========
+
+
+.. treeview::
+     - :dir:`folder` **statistik** (`foo`, ---)
+         - :dir:`folder` **statistik** (`foo`, Reinigungsstatistiken)
+             - :dir:`file` **anzahl_reinigungen** (`num`, ---)
+             - :dir:`file` **gereinigte_flaeche** (`num`, ---)
+             - :dir:`file` **gesamtlaufzeit** (`num`, ---)
+             - :dir:`file` **reinigungsids** (`foo`, ---)
+             - :dir:`folder` **reinigungsdetails0** (`foo`, ---)
+                 - :dir:`file` **flaeche** (`num`, gereinigte Fläche)
+                 - :dir:`file` **complete** (`bool`, ---)
+                 - :dir:`file` **reinigungszeit** (`num`, ---)
+                 - :dir:`file` **start_date** (`str`, ---)
+                 - :dir:`file` **start_time** (`str`, ---)
+                 - :dir:`file` **end_date** (`str`, ---)
+                 - :dir:`file` **end_time** (`str`, ---)
+             - :dir:`folder` **reinigungsdetails1** (`foo`, ---)
+                 - :dir:`file` **flaeche** (`num`, gereinigte Fläche)
+                 - :dir:`file` **complete** (`bool`, ---)
+                 - :dir:`file` **reinigungszeit** (`num`, ---)
+                 - :dir:`file` **start_date** (`str`, ---)
+                 - :dir:`file` **start_time** (`str`, ---)
+                 - :dir:`file` **end_date** (`str`, ---)
+                 - :dir:`file` **end_time** (`str`, ---)
+             - :dir:`folder` **reinigungsdetails2** (`foo`, ---)
+                 - :dir:`file` **flaeche** (`num`, gereinigte Fläche)
+                 - :dir:`file` **complete** (`bool`, ---)
+                 - :dir:`file` **reinigungszeit** (`num`, ---)
+                 - :dir:`file` **start_date** (`str`, ---)
+                 - :dir:`file` **start_time** (`str`, ---)
+                 - :dir:`file` **end_date** (`str`, ---)
+                 - :dir:`file` **end_time** (`str`, ---)
+             - :dir:`folder` **reinigungsdetails3** (`foo`, ---)
+                 - :dir:`file` **flaeche** (`num`, gereinigte Fläche)
+                 - :dir:`file` **complete** (`bool`, ---)
+                 - :dir:`file` **reinigungszeit** (`num`, ---)
+                 - :dir:`file` **start_date** (`str`, ---)
+                 - :dir:`file` **start_time** (`str`, ---)
+                 - :dir:`file` **end_date** (`str`, ---)
+                 - :dir:`file` **end_time** (`str`, ---)
+
+
+stundenzaehler
+==============
+
+
+.. treeview::
+     - :dir:`folder` **stundenzaehler** (`foo`, ---)
+         - :dir:`folder` **stundenzaehler** (`foo`, ---)
+             - :dir:`file` **buerste_seite** (`num`, ---)
+             - :dir:`file` **buerste_seite_verbleibend** (`num`, ---)
+             - :dir:`file` **buerste_haupt** (`num`, ---)
+             - :dir:`file` **buerste_haupt_verbleibend** (`num`, ---)
+             - :dir:`file` **filter** (`num`, ---)
+             - :dir:`file` **filter_verbleibend** (`num`, ---)
+             - :dir:`file` **sensor_reinigen** (`num`, ---)
+             - :dir:`file` **sensor_reinigen_verbleibend** (`num`, ---)
 
 
 ===============

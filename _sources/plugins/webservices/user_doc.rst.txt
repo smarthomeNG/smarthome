@@ -54,13 +54,13 @@ Beispiele und Nutzungshinweise
 Das Webservices Plugin unterstützt drei leicht unterschiedliche Arten von
 Zugriffen, die im Folgenden beschrieben werden.
 
-.. tabs::
+.. tab-set::
 
-   .. tab:: Einfaches Interface
+   .. tab-item:: Einfaches Interface
 
-      .. tabs::
+      .. tab-set::
 
-         .. tab:: Itemwert abfragen
+         .. tab-item:: Itemwert abfragen
 
             Mit einer URL ``http://{SmartHomeNG IP}:{http_modul_services_port}/ws/items/{item_path}``
             wird ein Datensatz inklusive Metadaten abgefragt.
@@ -74,7 +74,7 @@ Zugriffen, die im Folgenden beschrieben werden.
 
             Sollte das Attribut ``webservices_data`` des Items auf ``val`` gesetzt sein, liefert die Abfrage nur den Wert des Items.
 
-         .. tab:: Itemwert setzen
+         .. tab-item:: Itemwert setzen
 
             Mit der URL ``http://{SmartHomeNG IP}:{http_modul_services_port}/ws/items/{item_path}/{value}``
             wird der Wert eines Items auf den Wert ``value`` gesetzt.
@@ -94,13 +94,13 @@ Zugriffen, die im Folgenden beschrieben werden.
 
          {"Success": "Item with item path <itemname> set to <value>."}
 
-   .. tab:: REST Interface
+   .. tab-item:: REST Interface
 
       Hinweis: Die unten dokumentierten POST und PUT Requests via REST Standard können bspw. mit dem Tool **Postman** getestet werden.
 
-      .. tabs::
+      .. tab-set::
 
-         .. tab:: Gesamte Itemliste abfragen (HTTP GET)
+         .. tab-item:: Gesamte Itemliste abfragen (HTTP GET)
 
             Mit der URL ``http://\<SmartHomeNG IP}:\<http_modul_services_port}/rest/items/``
             wird eine Liste aller Items ausgegeben, deren Werte abgefragt oder gesetzt werden können.
@@ -115,7 +115,7 @@ Zugriffen, die im Folgenden beschrieben werden.
 
                { "A_Crontab.OneBool": { "path": "A_Crontab.OneBool", "name": "A_Crontab.OneBool", "type": "bool", "value": true, "age": 113731.985496, "last_update": "2020-04-25 00:00:00.361957+02:00", "last_change": "2020-04-24 09:06:15.333481+02:00", "changed_by": "Init:Initial_Value", "previous_value": true, "previous_age": 0, "previous_change": "2020-04-24 09:06:15.333481+02:00", "enforce_updates": "False", "cache": "False", "eval": "None", "eval_trigger": "False", "cycle": "", "crontab": "", "autotimer": "False", "threshold": "False", "config": {}, "logics": [], "triggers": [], "url": "http://192.168.x.y:8383/rest/items/A_Crontab.OneBool" }}
 
-         .. tab:: Einzelnen Itemwert abfragen (HTTP GET)
+         .. tab-item:: Einzelnen Itemwert abfragen (HTTP GET)
 
             Mit der URL ``http://{SmartHomeNG IP}:{http_modul_services_port}/rest/items/{item_path}``
             (HTTP GET) wird ein Datensatz inklusive Metadaten abgefragt.
@@ -129,7 +129,7 @@ Zugriffen, die im Folgenden beschrieben werden.
 
             Sollte das Attribut ``webservices_data`` des Items auf ``val`` gesetzt sein, liefert die Abfrage nur den Wert des Items.
 
-         .. tab:: Itemgruppe abfragen (HTTP GET)
+         .. tab-item:: Itemgruppe abfragen (HTTP GET)
 
             Ähnlich wie bei der Abfrage eines einzelnen Items gibt es die Möglichkeit eine bestimmte Gruppe von Items
             gleichzeitig abzufragen. Dazu muss beim Item ein Attribut ``webservices_set`` mit dem Namen der Gruppe definiert werden.
@@ -137,7 +137,7 @@ Zugriffen, die im Folgenden beschrieben werden.
             Beispielsweise sorgt eine Abfrage ``http://192.168.1.1:8384/rest/itemset/lights`` dafür, dass
             die Daten der Items mit dem Attribut ``webservices_set: lights`` als JSON formatierte Daten zurückgeliefert werden.
 
-         .. tab:: Itemwert ändern (HTTP PUT)
+         .. tab-item:: Itemwert ändern (HTTP PUT)
 
             Ein HTTP PUT Request verändert (setzt) den Wert eines Items. Nur String, Numerisch und Boolean Items werden hierbei unterstützt.
             Für boolsche Items können die Integer Werte 0 und 1, aber auch "yes", "no", "y", "n", "true" für **Wahr** oder
@@ -150,7 +150,7 @@ Zugriffen, die im Folgenden beschrieben werden.
 
             Beispielsweise könnte ein HTTP PUT Request mit 0 als Argument ``http://192.168.1.1:8384/rest/items/office.light`` das Licht ausschalten.
 
-         .. tab:: Itemwert ändern (HTTP POST)
+         .. tab-item:: Itemwert ändern (HTTP POST)
 
             Ein HTTP POST Request an die URL setzt den Wert eines Items genauso, wie beim HTTP PUT. Dabei werden nur Items der Typen String, Numerisch und Boolean.
             Der HTTP POST Request legt derzeit noch keine neuen Items an, wie man das bei REST eigentlich erwarten würde.

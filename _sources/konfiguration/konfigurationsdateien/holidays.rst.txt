@@ -89,7 +89,7 @@ Konfigurationsdatei
 Statt in der Admin GUI kann die Konfiguration auch in der Konfigurationsdatei vorgenommen werden. Sie sollte in
 etwa so aussehen:
 
-.. literalinclude:: ../../../../../etc/holidays.yaml.default
+.. literalinclude:: ../../../../../templates/holidays.yaml.default
    :caption: holidays.yaml
    :language: yaml
 

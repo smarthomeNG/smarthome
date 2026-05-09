@@ -12,7 +12,7 @@ Plugin 'xmpp' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -118,6 +118,15 @@ Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichn
 
 **Keine**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -145,7 +154,7 @@ Eine Messgae via xmpp senden
 
 
 to
---
+ -  - 
 
 An wen, z.B. 'skender@haxhimolla.im'
 
@@ -153,7 +162,7 @@ An wen, z.B. 'skender@haxhimolla.im'
 
 
 msgsend
--------
+ -  -  -  -  -  -  - 
 
 Text der Message, z.B. 'Hello world'
 
@@ -161,7 +170,7 @@ Text der Message, z.B. 'Hello world'
 
 
 mt
---
+ -  - 
 
 Message Typ, kann 'chat' oder 'groupchat' sein
 

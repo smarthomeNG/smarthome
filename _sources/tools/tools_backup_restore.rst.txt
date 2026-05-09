@@ -11,7 +11,7 @@ backup_restore.py
 
 
 Dieses Skript kann ein Backup der Konfiguration erzeugen, indem es die Konfigurationsdateien
-aus den Verzeichnissen **../etc**, **../items** und **../scenes** in eine tar.gz Datei
+aus den Verzeichnissen ``etc``, ``etc/items`` und ``etc/scenes`` in eine tar.gz Datei
 zusammenführt.
 
 Alternativ kann das Skript die Konfigurationsdateien aus einem früheren Backup wiederherstellen.

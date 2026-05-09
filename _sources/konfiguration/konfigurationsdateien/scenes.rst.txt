@@ -6,10 +6,10 @@ scenes/\*.yaml
 .. _`scene configuration files`:
 
 
-Szenen Definitionen im Verzeichnis **../scenes**
-================================================
+Szenen Definitionen im Verzeichnis ``etc/scenes``
+=================================================
 
-Im Verzeichnis **../scenes** kann eine beliebige Anzahl von Konfigurationsdateien für Szenen
+Im Verzeichnis ``etc/scenes`` kann eine beliebige Anzahl von Konfigurationsdateien für Szenen
 erzeugt werden. Jede Konfigurationsdatei kann dabei nur die Konfiguration einer Szene enthalten.
 Das Verzeichnis enthält yaml Dateien (oder Dateien im alten .conf Format) mit den Definitionen
 der Szenen, die durch SmartHomeNG genutzt werden sollen. Der Name der yaml Datei kann beliebig sein,
@@ -169,9 +169,9 @@ Dafür muss ein Szenen-Item angelegt werden:
            szenen:
                type: scene
 
-Um festzulegen wie die Szenen aussehen sollen, muss im Verzeichnis **../scenes** eine
+Um festzulegen wie die Szenen aussehen sollen, muss im Verzeichnis ``etc/scenes`` eine
 Konfigurationsdatei für die Szene-Definition angelegt werden. Für das obige
-Beispiel muss die Datei den Namen **wohnung.buero.szenen.yaml** tragen.
+Beispiel muss die Datei den Namen ``wohnung.buero.szenen.yaml`` tragen.
 
 
 .. code-block:: yaml

@@ -12,7 +12,7 @@ Plugin 'smartvisu' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -76,9 +76,9 @@ Steuert den Zugriff über smartVISU Nutzdaten-Protokoll - Voreinstellung für al
 
  - Mögliche Werte:
 
-   - **rw** |_| - |_| Lesen/Schreiben
-   - **ro** |_| - |_| Nur Lesen
-   - **deny** |_| - |_| Kein Zugriff
+   - **rw**
+   - **ro**
+   - **deny**
 
 
 generate_pages
@@ -154,6 +154,15 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
+description
+===========
+
+
+
+
+ - Datentyp: 
+
+
 sv_blocksize
 ============
 
@@ -169,11 +178,29 @@ Größe des Widget-Blocks auf der smartVISU Seite
    - **3**
 
 
+sv_display_name
+===============
+
+
+Display Name, wenn mehrer Seiten die selbe Überschrift haben sollen (z.B. bei Verwendung von Top-Navigation)
+
+ - Datentyp: **str**
+
+
+sv_heading_buttons
+==================
+
+
+
+
+ - Datentyp: **list**
+
+
 sv_heading_center
 =================
 
 
-erlaubt die Angabe eines Widgets, das oben auf einer Raumseite angezeigt wird. Dieses Widget wird angezeigt, ohne in einem Block gekapselt zu sein. Das Widget wird zentriert
+erlaubt die Angabe eines Widgets, das oben auf einer Raumseite angezeigt wird. Dieses Widget wird angezeigt, ohne in einem Block gekapselt zu sein. Das Widget wird zentriert. Achtung: heading_center wird nur ausgewertet, wenn heading_buttons nicht definiert ist.
 
  - Datentyp: **str**
 
@@ -182,7 +209,7 @@ sv_heading_left
 ===============
 
 
-erlaubt die Angabe eines Widgets, das oben auf einer Raumseite angezeigt wird. Dieses Widget wird angezeigt, ohne in einem Block gekapselt zu sein. Das Widget ist nach links ausgerichtet
+erlaubt die Angabe eines Widgets, das oben auf einer Raumseite angezeigt wird. Dieses Widget wird angezeigt, ohne in einem Block gekapselt zu sein. Das Widget ist nach links ausgerichtet. Achtung: heading_left wird nur ausgewertet, wenn heading_buttons nicht definiert ist.
 
  - Datentyp: **str**
 
@@ -191,7 +218,7 @@ sv_heading_right
 ================
 
 
-erlaubt die Angabe eines Widgets, das oben auf einer Raumseite angezeigt wird. Dieses Widget wird angezeigt, ohne in einem Block gekapselt zu sein. Das Widget ist nach rechts ausgerichtet
+Erlaubt die Angabe eines Widgets, das oben auf einer Raumseite angezeigt wird. Dieses Widget wird angezeigt, ohne in einem Block gekapselt zu sein. Das Widget ist nach rechts ausgerichtet. Achtung: heading_right wird nur ausgewertet, wenn heading_buttons nicht definiert ist.
 
  - Datentyp: **str**
 
@@ -277,11 +304,21 @@ Setzen Sie 'sv_page' auf einen der angegebenen Werte, um eine Seite für dieses 
    - **room_lite**
 
 
+sv_page_in_navi
+===============
+
+
+Wenn auf True gesetzt, die generierte Visu-Seite in die Navigation aufnehmen
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
 sv_widget
 =========
 
 
-Definition des Widgets, welches für das Item verwendet wird. Es können meherere Widgets angegeben werden. Anzeige erfolgt in einem ausklappbaren Block vom Typ 2. Relative Adressierung der items wird unterstützt.
+Definition des Widgets, welches für das Item verwendet wird. Es können meherere Widgets angegeben werden. Anzeige erfolgt in einem ausklappbaren Block vom Typ 2. Relative Adressierung der items wird unterstützt.  
 
  - Datentyp: **str**
 
@@ -305,11 +342,20 @@ Das Attribut visu_acl steuert die Zugriffsrechte der smartVISU auf das einzelene
 
  - Mögliche Werte:
 
-   - **rw** |_| - |_| Lesen/Schreiben
-   - **ro** |_| - |_| Nur Lesen
-   - **deny** |_| - |_| Kein Zugriff
-   -  |_| - |_| Standardeinstellung nutzen
+   - **rw**
+   - **ro**
+   - **deny**
+   - 
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter
@@ -338,7 +384,7 @@ Diese Funktion weist smartVISU Clients an, auf die angegebene Url (Visu Seite) z
 
 
 url
----
+ -  -  - 
 
 Die URL zu der smartVISU wechseln soll
 
@@ -346,9 +392,9 @@ Die URL zu der smartVISU wechseln soll
 
 
 clientip
---------
+ -  -  -  -  -  -  -  - 
 
-Falls angegeben, werden nur Clients (Browser) die auf dem Host mit der angegebenen IP Adresse laufen angewiesen die Seite zu wechseln.
+Falls angegeben, werden nur Clients (Browser) die auf dem Host mit der angegebenen IP Adresse laufen angewiesen die Seite zu wechseln. 
 
  - Datentyp: **str**
 

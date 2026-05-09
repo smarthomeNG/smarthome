@@ -12,7 +12,7 @@ Plugin 'sonos' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -38,7 +38,7 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.10.0.3**
- - Minimum Python Version: **3.9**
+ - Minimum Python Version: **3.8**
 
 Konfiguration
 =============
@@ -328,6 +328,214 @@ Sonos eindeutige Geräte/Zone Identifikation (Unique Device ID)
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+basic_control
+=============
+
+
+.. treeview::
+     - :dir:`folder` **basic_control** (`foo`, ---)
+         - :dir:`folder` **volume** (`num`, ---)
+             - :dir:`file` **group_command** (`bool`, ---)
+             - :dir:`file` **max_volume** (`num`, ---)
+             - :dir:`folder` **volume_dpt3** (`list`, ---)
+                 - :dir:`file` **helper** (`num`, ---)
+         - :dir:`file` **play** (`bool`, ---)
+         - :dir:`file` **stop** (`bool`, ---)
+         - :dir:`file` **pause** (`bool`, ---)
+         - :dir:`file` **next** (`bool`, ---)
+         - :dir:`file` **previous** (`bool`, ---)
+         - :dir:`file` **mute** (`bool`, ---)
+         - :dir:`file` **play_mode** (`str`, ---)
+
+
+content
+=======
+
+
+.. treeview::
+     - :dir:`folder` **content** (`foo`, ---)
+         - :dir:`file` **track_uri** (`str`, ---)
+         - :dir:`file` **streamtype** (`str`, ---)
+         - :dir:`file` **switch_linein** (`bool`, ---)
+         - :dir:`file` **switch_tv** (`bool`, ---)
+         - :dir:`file` **track_artist** (`str`, ---)
+         - :dir:`file` **track_title** (`str`, ---)
+         - :dir:`file` **track_album** (`str`, ---)
+         - :dir:`file` **track_album_art** (`str`, ---)
+         - :dir:`file` **radio_station** (`str`, ---)
+         - :dir:`file` **radio_show** (`str`, ---)
+         - :dir:`file` **current_track** (`num`, ---)
+         - :dir:`file` **number_of_tracks** (`num`, ---)
+         - :dir:`file` **current_track_duration** (`str`, ---)
+         - :dir:`file` **current_transport_actions** (`str`, ---)
+         - :dir:`file` **current_valid_play_modes** (`str`, ---)
+         - :dir:`file` **stream_content** (`str`, ---)
+         - :dir:`folder` **play_tunein** (`str`, ---)
+             - :dir:`file` **start_after** (`bool`, ---)
+         - :dir:`folder` **play_sonos_radio** (`str`, ---)
+             - :dir:`file` **start_after** (`bool`, ---)
+         - :dir:`folder` **play_url** (`str`, ---)
+             - :dir:`file` **start_after** (`bool`, ---)
+         - :dir:`file` **sonos_playlists** (`list`, ---)
+         - :dir:`folder` **load_sonos_playlist** (`str`, ---)
+             - :dir:`file` **start_after** (`bool`, ---)
+             - :dir:`file` **start_track** (`num`, ---)
+             - :dir:`file` **clear_queue** (`bool`, ---)
+         - :dir:`file` **sonos_favorites** (`list`, ---)
+         - :dir:`file` **favorite_radio_stations:** (`list`, ---)
+
+
+play_favorites
+==============
+
+
+.. treeview::
+     - :dir:`folder` **play_favorites** (`foo`, ---)
+         - :dir:`file` **play_favorite_title** (`str`, ---)
+         - :dir:`file` **play_favorite_number** (`num`, ---)
+         - :dir:`file` **play_favorite_radio_title** (`str`, ---)
+         - :dir:`file` **play_favorite_radio_number** (`num`, ---)
+
+
+play_snippet
+============
+
+
+.. treeview::
+     - :dir:`folder` **play_snippet** (`str`, ---)
+         - :dir:`file` **snippet_volume** (`num`, ---)
+         - :dir:`file` **snippet_fade_in** (`bool`, ---)
+
+
+play_tts
+========
+
+
+.. treeview::
+     - :dir:`folder` **play_tts** (`str`, ---)
+         - :dir:`file` **tts_language** (`str`, ---)
+         - :dir:`file` **tts_volume** (`num`, ---)
+         - :dir:`file` **tts_fade_in** (`bool`, ---)
+
+
+settings
+========
+
+
+.. treeview::
+     - :dir:`folder` **settings** (`foo`, ---)
+         - :dir:`folder` **bass** (`num`, ---)
+             - :dir:`file` **group_command** (`bool`, ---)
+         - :dir:`folder` **treble** (`num`, ---)
+             - :dir:`file` **group_command** (`bool`, ---)
+         - :dir:`folder` **loudness** (`bool`, ---)
+             - :dir:`file` **group_command** (`bool`, ---)
+         - :dir:`file` **night_mode** (`bool`, ---)
+         - :dir:`file` **dialog_mode** (`bool`, ---)
+         - :dir:`file` **cross_fade** (`bool`, ---)
+         - :dir:`file` **snooze** (`num`, ---)
+         - :dir:`file` **status_light** (`bool`, ---)
+         - :dir:`file` **join** (`str`, ---)
+         - :dir:`folder` **unjoin** (`bool`, ---)
+             - :dir:`file` **start_after** (`bool`, ---)
+
+
+standard
+========
+
+
+.. treeview::
+     - :dir:`folder` **standard** (`foo`, ---)
+         - :dir:`file` **is_initialized** (`bool`, ---)
+         - :dir:`folder` **volume** (`num`, ---)
+             - :dir:`file` **group_command** (`bool`, ---)
+             - :dir:`file` **max_volume** (`num`, ---)
+             - :dir:`folder` **volume_dpt3** (`list`, ---)
+                 - :dir:`file` **helper** (`num`, ---)
+         - :dir:`file` **play** (`bool`, ---)
+         - :dir:`file` **stop** (`bool`, ---)
+         - :dir:`file` **pause** (`bool`, ---)
+         - :dir:`file` **next** (`bool`, ---)
+         - :dir:`file` **previous** (`bool`, ---)
+         - :dir:`file` **mute** (`bool`, ---)
+         - :dir:`file` **play_mode** (`str`, ---)
+         - :dir:`folder` **bass** (`num`, ---)
+             - :dir:`file` **group_command** (`bool`, ---)
+         - :dir:`folder` **treble** (`num`, ---)
+             - :dir:`file` **group_command** (`bool`, ---)
+         - :dir:`folder` **loudness** (`bool`, ---)
+             - :dir:`file` **group_command** (`bool`, ---)
+         - :dir:`file` **night_mode** (`bool`, ---)
+         - :dir:`file` **dialog_mode** (`bool`, ---)
+         - :dir:`file` **cross_fade** (`bool`, ---)
+         - :dir:`file` **snooze** (`num`, ---)
+         - :dir:`file` **is_coordinator** (`bool`, ---)
+         - :dir:`file` **coordinator** (`str`, ---)
+         - :dir:`file` **zone_group_members** (`list`, ---)
+         - :dir:`file` **status_light** (`bool`, ---)
+         - :dir:`file` **player_name** (`str`, ---)
+         - :dir:`file` **household_id** (`str`, ---)
+         - :dir:`file` **track_uri** (`str`, ---)
+         - :dir:`file` **streamtype** (`str`, ---)
+         - :dir:`file` **switch_linein** (`bool`, ---)
+         - :dir:`file` **switch_tv** (`bool`, ---)
+         - :dir:`file` **track_artist** (`str`, ---)
+         - :dir:`file` **track_title** (`str`, ---)
+         - :dir:`file` **track_album** (`str`, ---)
+         - :dir:`file` **track_album_art** (`str`, ---)
+         - :dir:`file` **radio_station** (`str`, ---)
+         - :dir:`file` **radio_show** (`str`, ---)
+         - :dir:`file` **current_track** (`num`, ---)
+         - :dir:`file` **number_of_tracks** (`num`, ---)
+         - :dir:`file` **current_track_duration** (`str`, ---)
+         - :dir:`file` **current_transport_actions** (`str`, ---)
+         - :dir:`file` **current_valid_play_modes** (`str`, ---)
+         - :dir:`file` **stream_content** (`str`, ---)
+         - :dir:`folder` **play_tunein** (`str`, ---)
+             - :dir:`file` **start_after** (`bool`, ---)
+         - :dir:`folder` **play_url** (`str`, ---)
+             - :dir:`file` **start_after** (`bool`, ---)
+         - :dir:`file` **join** (`str`, ---)
+         - :dir:`folder` **unjoin** (`bool`, ---)
+             - :dir:`file` **start_after** (`bool`, ---)
+         - :dir:`file` **sonos_playlists** (`list`, ---)
+         - :dir:`folder` **load_sonos_playlist** (`str`, ---)
+             - :dir:`file` **start_after** (`bool`, ---)
+             - :dir:`file` **start_track** (`num`, ---)
+             - :dir:`file` **clear_queue** (`bool`, ---)
+         - :dir:`file` **uid** (`str`, ---)
+         - :dir:`folder` **play_tts** (`str`, ---)
+             - :dir:`file` **tts_language** (`str`, ---)
+             - :dir:`file` **tts_volume** (`num`, ---)
+             - :dir:`file` **tts_fade_in** (`bool`, ---)
+         - :dir:`folder` **play_snippet** (`str`, ---)
+             - :dir:`file` **snippet_volume** (`num`, ---)
+             - :dir:`file` **snippet_fade_in** (`bool`, ---)
+
+
+status
+======
+
+
+.. treeview::
+     - :dir:`folder` **status** (`foo`, ---)
+         - :dir:`file` **uid** (`str`, ---)
+         - :dir:`file` **is_initialized** (`bool`, ---)
+         - :dir:`file` **is_coordinator** (`bool`, ---)
+         - :dir:`file` **coordinator** (`str`, ---)
+         - :dir:`file` **zone_group_members** (`list`, ---)
+         - :dir:`file` **player_name** (`str`, ---)
+         - :dir:`file` **household_id** (`str`, ---)
+
+
 ===============
 Logik Parameter
 ===============
@@ -355,7 +563,7 @@ Spiel eine URL auf allen Speakern, oder einer Untermenge, ab
 
 
 alert_uri
----------
+ -  -  -  -  -  -  -  -  - 
 
 URL die Sonos abspielen soll
 
@@ -363,7 +571,7 @@ URL die Sonos abspielen soll
 
 
 speaker_list
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 Liste mit Speaker Namen, auf denen der Sound abgespielt werden soll
 
@@ -371,7 +579,7 @@ Liste mit Speaker Namen, auf denen der Sound abgespielt werden soll
 
 
 alert_volume
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 Volumenlevel (0-100)
 
@@ -379,7 +587,7 @@ Volumenlevel (0-100)
 
 
 alert_duration
---------------
+ -  -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Länge der Ansage in Sekunden (wenn 0, dann gleich Tracklänge)
 
@@ -387,7 +595,7 @@ Länge der Ansage in Sekunden (wenn 0, dann gleich Tracklänge)
 
 
 fade_back
----------
+ -  -  -  -  -  -  -  -  - 
 
 auf True setzen, um den Sound nach der Ansage ansteigen zu lassen
 

@@ -41,9 +41,9 @@ Schritte größer-gleich 10 und kleiner als 20 identifizieren Schritte innerhalb
 
 Das smarthome Objekt wird erzeugt und initialisiert. Dazu werden die grundlegenden Variablen initialisiert.
 Anschließend wird geprüft ob die benötigten Konfigurationsdateien existieren. Falls nicht, werden die
-entsprechenden **<name>.yaml.default** Dateien umkopiert.
+entsprechenden ``<name>.yaml.default`` Dateien umkopiert.
 
-Es werden die Konfigurationsdateienb **smarthome.yaml** und **logging.yaml** eingelesen und das Logging wird
+Es werden die Konfigurationsdateienb ``smarthome.yaml`` und ``logging.yaml`` eingelesen und das Logging wird
 initialisiert.
 
 
@@ -88,7 +88,7 @@ durchgeführt wird, es sei denn die Hardware hat sich geändert.
 ------------
 
 Es wird der Scheduler initialisiert und gestartet.
-Es wird die Class für lib.connections initialisiert.
+Es wird die Class für lib.network (connections) initialisiert.
 
 
 11 - Startet: Initialisiert und startet ladbare Module
@@ -140,7 +140,7 @@ Es werden die parse_logic() Methoden aller geladenen Plugins aufgerufen und es w
 die in **watch_items** definierten Trigger gesetzt.
 
 Anschließend werden die Szenen initialisiert.
-Weiterhin wird der **Connections** Scheduler für lib.connection gestartet.
+Weiterhin wird der **Connections** Scheduler für lib.network gestartet.
 
 
 16 - Startet: Startet Plugins

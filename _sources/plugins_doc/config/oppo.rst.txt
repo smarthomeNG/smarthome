@@ -12,7 +12,7 @@ Plugin 'oppo' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -221,7 +221,7 @@ send_retries
 
 
 Anzahl Sendeversuche
- Kommt keine (passende) Antwort nach dem Senden  eines Commands zurück, wird das Kommando nochmals  gesendet, sofern der Wert über 0 liegt.
+ Kommt keine (passende) Antwort nach dem Senden  eines Commands zurück, wird das Kommando nochmals  gesendet, sofern der Wert über 0 liegt. 
 
  - Datentyp: **num**
  - Standardwert: **0**
@@ -232,7 +232,7 @@ send_retries_cycle
 
 
 Pause zwischen Durchgängen von Sendeversuchen
- Sind Send Retries aktiv, wird ein Scheduler erstellt,  der im angegebenen Sekundentakt Kommandos erneut sendet,  zu denen keine (passenden) Antworten erhalten wurden.
+ Sind Send Retries aktiv, wird ein Scheduler erstellt,  der im angegebenen Sekundentakt Kommandos erneut sendet,  zu denen keine (passenden) Antworten erhalten wurden. 
 
  - Datentyp: **num**
  - Standardwert: **1**
@@ -365,6 +365,282 @@ oppo_write
 Änderung des Items werden an das Gerät gesendet
 
  - Datentyp: **bool**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+ALL
+===
+
+
+.. treeview::
+     - :dir:`folder` **ALL** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`folder` **info** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **time** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **totalelapsed** (`str`, ---)
+                 - :dir:`file` **totalremaining** (`str`, ---)
+                 - :dir:`file` **chapterelapsed** (`str`, ---)
+                 - :dir:`file` **chapterremaining** (`str`, ---)
+                 - :dir:`file` **titleelapsed** (`str`, ---)
+                 - :dir:`file` **titleremaining** (`str`, ---)
+             - :dir:`folder` **audio** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **current** (`num`, ---)
+                 - :dir:`file` **available** (`num`, ---)
+                 - :dir:`file` **language** (`str`, ---)
+             - :dir:`folder` **subtitle** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **current** (`num`, ---)
+                 - :dir:`file` **available** (`num`, ---)
+                 - :dir:`file` **language** (`str`, ---)
+             - :dir:`file` **firmware** (`str`, ---)
+             - :dir:`file` **status** (`str`, ---)
+             - :dir:`file` **disctype** (`str`, ---)
+             - :dir:`file` **totaltracks** (`num`, ---)
+             - :dir:`file` **displaytype** (`str`, ---)
+             - :dir:`file` **audiotype** (`str`, ---)
+             - :dir:`file` **channels** (`str`, ---)
+             - :dir:`file` **trackinfo** (`num`, ---)
+             - :dir:`file` **inputresolution** (`str`, ---)
+             - :dir:`file` **outputresolution** (`str`, ---)
+             - :dir:`file` **aspectratio** (`str`, ---)
+             - :dir:`file` **U3D** (`str`, ---)
+         - :dir:`folder` **general** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **verbose** (`num`, ---)
+             - :dir:`file` **hdmiresolution** (`str`, ---)
+         - :dir:`folder` **control** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **power** (`bool`, ---)
+             - :dir:`file` **pureaudio** (`bool`, ---)
+             - :dir:`file` **playpause** (`bool`, ---)
+             - :dir:`file` **stop** (`bool`, ---)
+             - :dir:`file` **eject** (`bool`, ---)
+             - :dir:`file` **chapter** (`num`, ---)
+             - :dir:`file` **title** (`num`, ---)
+             - :dir:`file` **next** (`bool`, ---)
+             - :dir:`file` **previous** (`bool`, ---)
+             - :dir:`file` **forward** (`bool`, ---)
+             - :dir:`file` **reverse** (`bool`, ---)
+             - :dir:`file` **audio** (`bool`, ---)
+             - :dir:`file` **subtitle** (`bool`, ---)
+             - :dir:`file` **repeat** (`num`, ---)
+             - :dir:`file` **input** (`num`, ---)
+         - :dir:`folder` **menu** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **home** (`bool`, ---)
+             - :dir:`file` **setup** (`bool`, ---)
+             - :dir:`file` **option** (`bool`, ---)
+             - :dir:`file` **info** (`bool`, ---)
+             - :dir:`file` **popup** (`bool`, ---)
+             - :dir:`file` **top** (`bool`, ---)
+             - :dir:`file` **osd** (`bool`, ---)
+             - :dir:`file` **pageup** (`bool`, ---)
+             - :dir:`file` **pagedown** (`bool`, ---)
+             - :dir:`file` **up** (`bool`, ---)
+             - :dir:`file` **down** (`bool`, ---)
+             - :dir:`file` **left** (`bool`, ---)
+             - :dir:`file` **right** (`bool`, ---)
+             - :dir:`file` **select** (`bool`, ---)
+             - :dir:`file` **back** (`bool`, ---)
+             - :dir:`file` **red** (`bool`, ---)
+             - :dir:`file` **green** (`bool`, ---)
+             - :dir:`file` **blue** (`bool`, ---)
+             - :dir:`file` **yellow** (`bool`, ---)
+
+
+UDP-203
+=======
+
+
+.. treeview::
+     - :dir:`folder` **UDP-203** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`folder` **info** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **time** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **totalelapsed** (`str`, ---)
+                 - :dir:`file` **totalremaining** (`str`, ---)
+                 - :dir:`file` **chapterelapsed** (`str`, ---)
+                 - :dir:`file` **chapterremaining** (`str`, ---)
+                 - :dir:`file` **titleelapsed** (`str`, ---)
+                 - :dir:`file` **titleremaining** (`str`, ---)
+             - :dir:`folder` **audio** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **current** (`num`, ---)
+                 - :dir:`file` **available** (`num`, ---)
+                 - :dir:`file` **language** (`str`, ---)
+             - :dir:`folder` **subtitle** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **current** (`num`, ---)
+                 - :dir:`file` **available** (`num`, ---)
+                 - :dir:`file` **language** (`str`, ---)
+             - :dir:`file` **firmware** (`str`, ---)
+             - :dir:`file` **status** (`str`, ---)
+             - :dir:`file` **disctype** (`str`, ---)
+             - :dir:`file` **totaltracks** (`num`, ---)
+             - :dir:`file` **displaytype** (`str`, ---)
+             - :dir:`file` **audiotype** (`str`, ---)
+             - :dir:`file` **channels** (`str`, ---)
+             - :dir:`file` **trackinfo** (`num`, ---)
+             - :dir:`file` **inputresolution** (`str`, ---)
+             - :dir:`file` **outputresolution** (`str`, ---)
+             - :dir:`file` **aspectratio** (`str`, ---)
+             - :dir:`file` **U3D** (`str`, ---)
+         - :dir:`folder` **general** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **verbose** (`num`, ---)
+             - :dir:`file` **hdmiresolution** (`str`, ---)
+         - :dir:`folder` **control** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **power** (`bool`, ---)
+             - :dir:`file` **pureaudio** (`bool`, ---)
+             - :dir:`file` **playpause** (`bool`, ---)
+             - :dir:`file` **stop** (`bool`, ---)
+             - :dir:`file` **eject** (`bool`, ---)
+             - :dir:`file` **chapter** (`num`, ---)
+             - :dir:`file` **title** (`num`, ---)
+             - :dir:`file` **next** (`bool`, ---)
+             - :dir:`file` **previous** (`bool`, ---)
+             - :dir:`file` **forward** (`bool`, ---)
+             - :dir:`file` **reverse** (`bool`, ---)
+             - :dir:`file` **audio** (`bool`, ---)
+             - :dir:`file` **subtitle** (`bool`, ---)
+             - :dir:`file` **repeat** (`num`, ---)
+             - :dir:`file` **input** (`num`, ---)
+         - :dir:`folder` **menu** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **home** (`bool`, ---)
+             - :dir:`file` **setup** (`bool`, ---)
+             - :dir:`file` **option** (`bool`, ---)
+             - :dir:`file` **info** (`bool`, ---)
+             - :dir:`file` **popup** (`bool`, ---)
+             - :dir:`file` **top** (`bool`, ---)
+             - :dir:`file` **osd** (`bool`, ---)
+             - :dir:`file` **pageup** (`bool`, ---)
+             - :dir:`file` **pagedown** (`bool`, ---)
+             - :dir:`file` **up** (`bool`, ---)
+             - :dir:`file` **down** (`bool`, ---)
+             - :dir:`file` **left** (`bool`, ---)
+             - :dir:`file` **right** (`bool`, ---)
+             - :dir:`file` **select** (`bool`, ---)
+             - :dir:`file` **back** (`bool`, ---)
+             - :dir:`file` **red** (`bool`, ---)
+             - :dir:`file` **green** (`bool`, ---)
+             - :dir:`file` **blue** (`bool`, ---)
+             - :dir:`file` **yellow** (`bool`, ---)
+
+
+control
+=======
+
+
+.. treeview::
+     - :dir:`folder` **control** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`file` **power** (`bool`, ---)
+         - :dir:`file` **pureaudio** (`bool`, ---)
+         - :dir:`file` **playpause** (`bool`, ---)
+         - :dir:`file` **stop** (`bool`, ---)
+         - :dir:`file` **eject** (`bool`, ---)
+         - :dir:`file` **chapter** (`num`, ---)
+         - :dir:`file` **title** (`num`, ---)
+         - :dir:`file` **next** (`bool`, ---)
+         - :dir:`file` **previous** (`bool`, ---)
+         - :dir:`file` **forward** (`bool`, ---)
+         - :dir:`file` **reverse** (`bool`, ---)
+         - :dir:`file` **audio** (`bool`, ---)
+         - :dir:`file` **subtitle** (`bool`, ---)
+         - :dir:`file` **repeat** (`num`, ---)
+         - :dir:`file` **input** (`num`, ---)
+
+
+general
+=======
+
+
+.. treeview::
+     - :dir:`folder` **general** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`file` **verbose** (`num`, ---)
+         - :dir:`file` **hdmiresolution** (`str`, ---)
+
+
+info
+====
+
+
+.. treeview::
+     - :dir:`folder` **info** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`folder` **time** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **totalelapsed** (`str`, ---)
+             - :dir:`file` **totalremaining** (`str`, ---)
+             - :dir:`file` **chapterelapsed** (`str`, ---)
+             - :dir:`file` **chapterremaining** (`str`, ---)
+             - :dir:`file` **titleelapsed** (`str`, ---)
+             - :dir:`file` **titleremaining** (`str`, ---)
+         - :dir:`folder` **audio** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **current** (`num`, ---)
+             - :dir:`file` **available** (`num`, ---)
+             - :dir:`file` **language** (`str`, ---)
+         - :dir:`folder` **subtitle** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **current** (`num`, ---)
+             - :dir:`file` **available** (`num`, ---)
+             - :dir:`file` **language** (`str`, ---)
+         - :dir:`file` **firmware** (`str`, ---)
+         - :dir:`file` **status** (`str`, ---)
+         - :dir:`file` **disctype** (`str`, ---)
+         - :dir:`file` **totaltracks** (`num`, ---)
+         - :dir:`file` **displaytype** (`str`, ---)
+         - :dir:`file` **audiotype** (`str`, ---)
+         - :dir:`file` **channels** (`str`, ---)
+         - :dir:`file` **trackinfo** (`num`, ---)
+         - :dir:`file` **inputresolution** (`str`, ---)
+         - :dir:`file` **outputresolution** (`str`, ---)
+         - :dir:`file` **aspectratio** (`str`, ---)
+         - :dir:`file` **U3D** (`str`, ---)
+
+
+menu
+====
+
+
+.. treeview::
+     - :dir:`folder` **menu** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`file` **home** (`bool`, ---)
+         - :dir:`file` **setup** (`bool`, ---)
+         - :dir:`file` **option** (`bool`, ---)
+         - :dir:`file` **info** (`bool`, ---)
+         - :dir:`file` **popup** (`bool`, ---)
+         - :dir:`file` **top** (`bool`, ---)
+         - :dir:`file` **osd** (`bool`, ---)
+         - :dir:`file` **pageup** (`bool`, ---)
+         - :dir:`file` **pagedown** (`bool`, ---)
+         - :dir:`file` **up** (`bool`, ---)
+         - :dir:`file` **down** (`bool`, ---)
+         - :dir:`file` **left** (`bool`, ---)
+         - :dir:`file` **right** (`bool`, ---)
+         - :dir:`file` **select** (`bool`, ---)
+         - :dir:`file` **back** (`bool`, ---)
+         - :dir:`file` **red** (`bool`, ---)
+         - :dir:`file` **green** (`bool`, ---)
+         - :dir:`file` **blue** (`bool`, ---)
+         - :dir:`file` **yellow** (`bool`, ---)
 
 
 ===============

@@ -16,7 +16,7 @@ Ein kleines Beispiel: Eine Lampe soll über KNX ein- und
 ausgeschaltet werden. Dazu braucht es zwei Schritte:
 
 1)  Das **KNX Plugin** muss installiert und aktiviert werden.
-    Das geschieht in der Datei ``./etc/plugins.yaml``.
+    Das geschieht in der Datei ``etc/plugins.yaml``.
     Typischerweise sieht der entsprechende Eintrag dann so aus:
 
     .. code-block:: yaml
@@ -26,8 +26,8 @@ ausgeschaltet werden. Dazu braucht es zwei Schritte:
           host: 127.0.0.1
 
 2)  Die Lampe muss nun als **Item** im SmartHomeNG angelegt werden.
-    Dazu wird eine Datei mit beliebigem Namen im Verzeichnis ``./items``
-    mit der Endung ``.yaml`` angelegt. z.B. die Datei ``./items/Lampen.yaml``.
+    Dazu wird eine Datei mit beliebigem Namen im Verzeichnis ``etc/items``
+    mit der Endung ``.yaml`` angelegt. z.B. die Datei ``etc/items/Lampen.yaml``.
     In dieser Datei wird das Item angelegt indem den Name des Items gefolgt von
     einem Doppelpunkt notiert wird. Der Inhalt der Datei wäre also:
 
@@ -130,7 +130,7 @@ Ein solches Schema hat den Vorteil, dass man mit
 beispielsweise um eine Logik auszulösen.
 
 Möchte man nun das Beispiel erweitern um z.B. mit der SmartVISU die Lampe zu schalten,
-muss man zunächst das Plugin **visu_websocket** in der ``./etc/plugin.yaml``
+muss man zunächst das Plugin **visu_websocket** in der ``etc/plugin.yaml``
 durch folgenden Eintrag aktivieren:
 
 .. code-block:: yaml
@@ -184,7 +184,7 @@ D.h. man kann die Lampe nun via KNX, SmartVISU oder Dashbutton ein- und
 ausschalten.
 
 Wie man grundsätzlich die verschiedenen Plugins in der
-``./etc/plugin.yaml`` konfiguriert, steht im Abschnitt **Konfiguration/Plugins**
+``etc/plugin.yaml`` konfiguriert, steht im Abschnitt **Konfiguration/Plugins**
 der Doku. Auch wie die Attribute in den Items
 gesetzt werden müssen, ist für jedes Plugin in der Doku der **Plugins**
 zu finden.

@@ -16,8 +16,8 @@ Logiken dienen dazu, komplexere Zustände und Abläufe zu steuern, die über Ite
 können. Logiken für SmartHomeNG sind Python Skripte. Zur Erstellung von Logiken müssen Sie über Kenntnisse
 der Programmiersprache Python verfügen.
 
-Die Logik-Skripte müssen im Verzeichnis **../logics** der SmartHomeNG Installation abgelegt werden. Damit die Logiken
-getriggert und ausgeführt werden, müssen sie zusätzlich in der Konfigurationsdatei **../etc/logic.yaml** konfiguriert
+Die Logik-Skripte müssen im Verzeichnis ``etc/logics`` der SmartHomeNG Installation abgelegt werden. Damit die Logiken
+getriggert und ausgeführt werden, müssen sie zusätzlich in der Konfigurationsdatei ``etc/logic.yaml`` konfiguriert
 werden.
 
 

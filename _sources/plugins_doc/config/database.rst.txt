@@ -12,7 +12,7 @@ Plugin 'database' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -233,6 +233,15 @@ Muss normalerweise nicht konfiguriert werden, dann wird der Standard 'True' genu
  - Standardwert: **True**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -254,7 +263,7 @@ cleanup()
 =========
 
 
-Datenbank aufräumen (löscht ungenutzte Item/Log Einträge aus der Datenbank)   Diese Methode entfernt alle Elemente und Logs aus der Datenbank der Elemente, welche derzeit nicht für die Protokollierung in der Datenbank konfiguriert sind. Vorsicht vor dieser Verwendung in einem Setup mit mehreren Plugin Instanzen, da eine Instanz die Items der anderen Instanz nicht kennt!
+Datenbank aufräumen (löscht ungenutzte Item/Log Einträge aus der Datenbank)   Diese Methode entfernt alle Elemente und Logs aus der Datenbank der Elemente, welche derzeit nicht für die Protokollierung in der Datenbank konfiguriert sind. Vorsicht vor dieser Verwendung in einem Setup mit mehreren Plugin Instanzen, da eine Instanz die Items der anderen Instanz nicht kennt! 
 
  - Die Funktion liefert kein Ergebnis
 
@@ -278,7 +287,7 @@ Löschen eines Item-Datenbankeintrags und von dessen Log Daten
 
 
 id
---
+ -  - 
 
 Datenbank-ID des Items für das der Eintrag gelöscht werden soll
 
@@ -295,7 +304,7 @@ Log-Datenbankeinträge für angegebene Datenbank-ID löschen
 
 
 id
---
+ -  - 
 
 Datenbank-ID für die Einträge gelöscht werden sollen
 
@@ -303,7 +312,7 @@ Datenbank-ID für die Einträge gelöscht werden sollen
 
 
 time
-----
+ -  -  -  - 
 
 Löschen auf angegebene Zeit eingeschränken (optional)
 
@@ -311,7 +320,7 @@ Löschen auf angegebene Zeit eingeschränken (optional)
 
 
 time_start
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Löschen auf angegebene Startzeit eingeschränken eingeschränken (optional)
 
@@ -319,7 +328,7 @@ Löschen auf angegebene Startzeit eingeschränken eingeschränken (optional)
 
 
 time_end
---------
+ -  -  -  -  -  -  -  - 
 
 Löschen auf angegebene Endzeit eingeschränken eingeschränken (optional)
 
@@ -327,7 +336,7 @@ Löschen auf angegebene Endzeit eingeschränken eingeschränken (optional)
 
 
 changed
--------
+ -  -  -  -  -  -  - 
 
 Löschen auf angegebene Änderungszeit eingeschränken (optional)
 
@@ -335,7 +344,7 @@ Löschen auf angegebene Änderungszeit eingeschränken (optional)
 
 
 changed_start
--------------
+ -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Löschen auf angegebene Start der Änderungszeit eingeschränken eingeschränken (optional)
 
@@ -343,7 +352,7 @@ Löschen auf angegebene Start der Änderungszeit eingeschränken eingeschränken
 
 
 changed_end
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Löschen auf angegebene Ende der Änderungszeit eingeschränken eingeschränken (optional)
 
@@ -351,7 +360,7 @@ Löschen auf angegebene Ende der Änderungszeit eingeschränken eingeschränken 
 
 
 cur
----
+ -  -  - 
 
 Ein Datenbankcursor Objekt, falls vorhanden (optional)
 
@@ -368,7 +377,7 @@ Erzeugt einen Datenbank-Dump für angegebene Kriterien
 
 
 dumpfile
---------
+ -  -  -  -  -  -  -  - 
 
 Dateiname in die der Dump geschrieben werden soll
 
@@ -376,7 +385,7 @@ Dateiname in die der Dump geschrieben werden soll
 
 
 id
---
+ -  - 
 
 Dump auf angegebene Item-ID eingeschränken (optional)
 
@@ -384,7 +393,7 @@ Dump auf angegebene Item-ID eingeschränken (optional)
 
 
 time
-----
+ -  -  -  - 
 
 Dump auf die angegebene Zeit eingeschränken (optional)
 
@@ -392,7 +401,7 @@ Dump auf die angegebene Zeit eingeschränken (optional)
 
 
 time_start
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Dump auf die Startzeit eingeschränken (optional)
 
@@ -400,7 +409,7 @@ Dump auf die Startzeit eingeschränken (optional)
 
 
 time_end
---------
+ -  -  -  -  -  -  -  - 
 
 Dump auf die Endzeit eingeschränken (optional)
 
@@ -408,7 +417,7 @@ Dump auf die Endzeit eingeschränken (optional)
 
 
 changed
--------
+ -  -  -  -  -  -  - 
 
 Dump auf die angegebene Zeit einer Änderung eingeschränken (optional)
 
@@ -416,7 +425,7 @@ Dump auf die angegebene Zeit einer Änderung eingeschränken (optional)
 
 
 changed_start
--------------
+ -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Dump auf die angegebene Startzeit von Änderungen eingeschränken (optional)
 
@@ -424,7 +433,7 @@ Dump auf die angegebene Startzeit von Änderungen eingeschränken (optional)
 
 
 changed_end
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Dump auf die angegebene Endzeit von Änderungen eingeschränken (optional)
 
@@ -432,7 +441,7 @@ Dump auf die angegebene Endzeit von Änderungen eingeschränken (optional)
 
 
 cur
----
+ -  -  - 
 
 Ein Datenbankcursor Objekt, falls vorhanden (optional)
 
@@ -449,7 +458,7 @@ Liefert für das angegebene Item die Datenbank-ID zurück
 
 
 item
-----
+ -  -  -  - 
 
 Das Item-Objekt
 
@@ -466,7 +475,7 @@ Item-Datenbankeintrag für angegebene Datenbank-ID anlegen
 
 
 name
-----
+ -  -  -  - 
 
 Name des Items für das ein Eintrag angelegt werden soll
 
@@ -474,7 +483,7 @@ Name des Items für das ein Eintrag angelegt werden soll
 
 
 cur
----
+ -  -  - 
 
 Ein Datenbankcursor Objekt, falls vorhanden (optional)
 
@@ -491,7 +500,7 @@ Log-Datenbankeintrag für angegebene Datenbank-ID anlegen
 
 
 id
---
+ -  - 
 
 Datenbank-ID des Items für das ein Eintrag angelegt werden soll
 
@@ -499,7 +508,7 @@ Datenbank-ID des Items für das ein Eintrag angelegt werden soll
 
 
 time
-----
+ -  -  -  - 
 
 Zeitpunkt an dem der Wert aktiv war
 
@@ -507,7 +516,7 @@ Zeitpunkt an dem der Wert aktiv war
 
 
 duration
---------
+ -  -  -  -  -  -  -  - 
 
 Zeitintervall für den der Wert aktiv war
 
@@ -515,7 +524,7 @@ Zeitintervall für den der Wert aktiv war
 
 
 val
----
+ -  -  - 
 
 Der Wert der in die Datenbank geschrieben werden soll
 
@@ -523,7 +532,7 @@ Der Wert der in die Datenbank geschrieben werden soll
 
 
 it
---
+ -  - 
 
 Der Item-Typ des Wertes ('str', 'num', 'bool')
 
@@ -531,7 +540,7 @@ Der Item-Typ des Wertes ('str', 'num', 'bool')
 
 
 changed
--------
+ -  -  -  -  -  -  - 
 
 Zeitstempel der Änderung
 
@@ -539,7 +548,7 @@ Zeitstempel der Änderung
 
 
 cur
----
+ -  -  - 
 
 Ein Datenbankcursor Objekt, falls vorhanden (optional)
 
@@ -550,13 +559,13 @@ readItem(id, cur)
 =================
 
 
-Item-Datenbankeintrag für angegebene Datenbank-ID auslesen   Diese Methode liest die Item-Daten einschließlich aller Felder. Wenn der ID Parameter ein String ist, wird angenommen, dass das Element über den Item Namen ausgewählt werden soll und nicht die Item-ID.
+Item-Datenbankeintrag für angegebene Datenbank-ID auslesen   Diese Methode liest die Item-Daten einschließlich aller Felder. Wenn der ID Parameter ein String ist, wird angenommen, dass das Element über den Item Namen ausgewählt werden soll und nicht die Item-ID. 
 
  - Ergebnistyp der Funktion: **foo**
 
 
 id
---
+ -  - 
 
 Datenbank-ID des Items für das der Eintrag ausgelesen werden soll
 
@@ -564,7 +573,7 @@ Datenbank-ID des Items für das der Eintrag ausgelesen werden soll
 
 
 cur
----
+ -  -  - 
 
 Ein Datenbankcursor Objekt, falls vorhanden (optional)
 
@@ -581,7 +590,7 @@ Alle Item-Datenbankeinträge incl. aller Felder auslesen
 
 
 cur
----
+ -  -  - 
 
 Ein Datenbankcursor Objekt, falls vorhanden (optional)
 
@@ -598,7 +607,7 @@ Log-Datenbankeintrag für angegebene Datenbank-ID auslesen
 
 
 id
---
+ -  - 
 
 Datenbank-ID des Logs für das der Eintrag gelesen werden soll
 
@@ -606,7 +615,7 @@ Datenbank-ID des Logs für das der Eintrag gelesen werden soll
 
 
 time
-----
+ -  -  -  - 
 
 Zeitpunkt an dem der Wert aktiv war
 
@@ -623,7 +632,7 @@ Log-Datenbankeinträge für angegebene Datenbank-ID auslesen
 
 
 id
---
+ -  - 
 
 Datenbank-ID des Logs für das der Eintrag aktualisiert werden soll
 
@@ -631,7 +640,7 @@ Datenbank-ID des Logs für das der Eintrag aktualisiert werden soll
 
 
 time
-----
+ -  -  -  - 
 
 Auslesen auf angegebene Zeit eingeschränken (optional)
 
@@ -639,7 +648,7 @@ Auslesen auf angegebene Zeit eingeschränken (optional)
 
 
 time_start
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Auslesen auf angegebene Startzeit eingeschränken eingeschränken (optional)
 
@@ -647,7 +656,7 @@ Auslesen auf angegebene Startzeit eingeschränken eingeschränken (optional)
 
 
 time_end
---------
+ -  -  -  -  -  -  -  - 
 
 Auslesen auf angegebene Endzeit eingeschränken eingeschränken (optional)
 
@@ -655,7 +664,7 @@ Auslesen auf angegebene Endzeit eingeschränken eingeschränken (optional)
 
 
 changed
--------
+ -  -  -  -  -  -  - 
 
 Auslesen auf angegebene Änderungszeit eingeschränken (optional)
 
@@ -663,7 +672,7 @@ Auslesen auf angegebene Änderungszeit eingeschränken (optional)
 
 
 changed_start
--------------
+ -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Auslesen auf angegebene Start der Änderungszeit eingeschränken eingeschränken (optional)
 
@@ -671,7 +680,7 @@ Auslesen auf angegebene Start der Änderungszeit eingeschränken eingeschränken
 
 
 changed_end
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Auslesen auf angegebene Ende der Änderungszeit eingeschränken eingeschränken (optional)
 
@@ -679,7 +688,7 @@ Auslesen auf angegebene Ende der Änderungszeit eingeschränken eingeschränken 
 
 
 cur
----
+ -  -  - 
 
 Ein Datenbankcursor Objekt, falls vorhanden (optional)
 
@@ -696,7 +705,7 @@ Item-Datenbankeintrag für angegebene Datenbank-ID aktualisieren
 
 
 id
---
+ -  - 
 
 Datenbank-ID des Items für das der Eintrag aktualisiert werden soll
 
@@ -704,7 +713,7 @@ Datenbank-ID des Items für das der Eintrag aktualisiert werden soll
 
 
 time
-----
+ -  -  -  - 
 
 Zeitpunkt an dem der Wert aktiv war
 
@@ -712,7 +721,7 @@ Zeitpunkt an dem der Wert aktiv war
 
 
 duration
---------
+ -  -  -  -  -  -  -  - 
 
 Zeitintervall für den der Wert aktiv war
 
@@ -720,7 +729,7 @@ Zeitintervall für den der Wert aktiv war
 
 
 val
----
+ -  -  - 
 
 Der Wert der in die Datenbank geschrieben werden soll
 
@@ -728,7 +737,7 @@ Der Wert der in die Datenbank geschrieben werden soll
 
 
 it
---
+ -  - 
 
 Der Item-Typ des Wertes ('str', 'num', 'bool')
 
@@ -736,7 +745,7 @@ Der Item-Typ des Wertes ('str', 'num', 'bool')
 
 
 changed
--------
+ -  -  -  -  -  -  - 
 
 Zeitstempel der Änderung
 
@@ -744,7 +753,7 @@ Zeitstempel der Änderung
 
 
 cur
----
+ -  -  - 
 
 Ein Datenbankcursor Objekt, falls vorhanden (optional)
 
@@ -761,7 +770,7 @@ Log-Datenbankeintrag für angegebene Datenbank-ID aktualisieren
 
 
 id
---
+ -  - 
 
 Datenbank-ID des Items für das der Eintrag aktualisiert werden soll
 
@@ -769,7 +778,7 @@ Datenbank-ID des Items für das der Eintrag aktualisiert werden soll
 
 
 time
-----
+ -  -  -  - 
 
 Zeitpunkt an dem der Wert aktiv war
 
@@ -777,7 +786,7 @@ Zeitpunkt an dem der Wert aktiv war
 
 
 duration
---------
+ -  -  -  -  -  -  -  - 
 
 Zeitintervall für den der Wert aktiv war
 
@@ -785,7 +794,7 @@ Zeitintervall für den der Wert aktiv war
 
 
 val
----
+ -  -  - 
 
 Der Wert der in die Datenbank geschrieben werden soll
 
@@ -793,7 +802,7 @@ Der Wert der in die Datenbank geschrieben werden soll
 
 
 it
---
+ -  - 
 
 Der Item-Typ des Wertes ('str', 'num', 'bool')
 
@@ -801,7 +810,7 @@ Der Item-Typ des Wertes ('str', 'num', 'bool')
 
 
 changed
--------
+ -  -  -  -  -  -  - 
 
 Zeitstempel der Änderung
 
@@ -809,7 +818,7 @@ Zeitstempel der Änderung
 
 
 cur
----
+ -  -  - 
 
 Ein Datenbankcursor Objekt, falls vorhanden (optional)
 

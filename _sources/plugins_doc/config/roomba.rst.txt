@@ -12,7 +12,7 @@ Plugin 'roomba' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -166,6 +166,65 @@ roomba_raw
 Sendet die angegebene Folge an den Roomba
 
  - Datentyp: **list(str)**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+commands
+========
+
+
+.. treeview::
+     - :dir:`folder` **commands** (`foo`, ---)
+         - :dir:`file` **clean** (`bool`, clean)
+         - :dir:`file` **dock** (`bool`, dock)
+         - :dir:`file` **power_off** (`bool`, power_off)
+         - :dir:`file` **spot** (`bool`, spot)
+         - :dir:`file` **max** (`bool`, max)
+
+
+sensors
+=======
+
+
+.. treeview::
+     - :dir:`folder` **sensors** (`foo`, ---)
+         - :dir:`file` **current** (`num`, ---)
+         - :dir:`file` **temperature** (`num`, ---)
+         - :dir:`file` **voltage** (`num`, ---)
+         - :dir:`file` **button_clean** (`bool`, ---)
+         - :dir:`file` **capacity** (`num`, ---)
+         - :dir:`file` **charge** (`num`, ---)
+         - :dir:`file` **angle** (`num`, ---)
+         - :dir:`file` **distance** (`num`, ---)
+         - :dir:`file` **buttons_max** (`bool`, ---)
+         - :dir:`file` **buttons_clean** (`bool`, ---)
+         - :dir:`file` **buttons_spot** (`bool`, ---)
+         - :dir:`file` **buttons_power** (`bool`, ---)
+         - :dir:`file` **remote_opcode** (`num`, ---)
+         - :dir:`file` **dirt_detect_right** (`bool`, ---)
+         - :dir:`file` **dirt_detect_left** (`bool`, ---)
+         - :dir:`file` **motor_overcurrent_side_brush** (`bool`, ---)
+         - :dir:`file` **motor_overcurrent_vacuum** (`bool`, ---)
+         - :dir:`file` **motor_overcurrent_main_brush** (`bool`, ---)
+         - :dir:`file` **motor_overcurrent_drive_left** (`bool`, ---)
+         - :dir:`file` **virtual_wall** (`bool`, ---)
+         - :dir:`file` **cliff_right** (`bool`, ---)
+         - :dir:`file` **cliff_front_right** (`bool`, ---)
+         - :dir:`file` **cliff_front_left** (`bool`, ---)
+         - :dir:`file` **cliff_left** (`bool`, ---)
+         - :dir:`file` **wall** (`bool`, ---)
+         - :dir:`file` **bumps_wheeldrops_bump_right** (`bool`, ---)
+         - :dir:`file` **bumps_wheeldrops_bump_left** (`bool`, ---)
+         - :dir:`file` **bumps_wheeldrops_wheeldrop_right** (`bool`, ---)
+         - :dir:`file` **bumps_wheeldrops_wheeldrop_left** (`bool`, ---)
+         - :dir:`file` **bumps_wheeldrops_wheeldrop_caster** (`bool`, ---)
 
 
 ===============

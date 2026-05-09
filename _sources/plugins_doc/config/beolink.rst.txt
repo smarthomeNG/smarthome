@@ -12,7 +12,7 @@ Plugin 'beolink' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -129,6 +129,64 @@ Auszulesende Statusinformation des B&O Gerätes
    - **muted**
    - **FriendlyName**
    - **productType**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+beodevice
+=========
+
+Vorlage-Struktur für ein Bang & Olufsen Device
+
+.. treeview::
+     - :dir:`folder` **beodevice** (`foo`, Vorlage-Struktur für ein Bang & Olufsen Device)
+         - :dir:`file` **beoname** (`str`, ---)
+         - :dir:`file` **beotype** (`str`, ---)
+         - :dir:`file` **powerstate** (`str`, ---)
+         - :dir:`file` **source** (`str`, ---)
+         - :dir:`file` **videomode** (`str`, ---)
+         - :dir:`file` **audiomode** (`str`, ---)
+
+
+beosound
+========
+
+Vorlage-Struktur für ein Bang & Olufsen Audio Device (BeoSound)
+
+.. treeview::
+     - :dir:`folder` **beosound** (`foo`, Vorlage-Struktur für ein Bang & Olufsen Audio Device (BeoSound))
+         - :dir:`file` **volume** (`num`, ---)
+         - :dir:`file` **volume_rel** (`num`, ---)
+         - :dir:`file` **muted** (`bool`, ---)
+
+
+beovision
+=========
+
+Vorlage-Struktur für ein Bang & Olufsen Video Device (BeoVision & BeoPlay)
+
+.. treeview::
+     - :dir:`folder` **beovision** (`foo`, Vorlage-Struktur für ein Bang & Olufsen Video Device (BeoVision & BeoPlay))
+         - :dir:`file` **stand** (`str`, ---)
+
+
+device_extended
+===============
+
+
+.. treeview::
+     - :dir:`folder` **device_extended** (`foo`, ---)
+         - :dir:`file` **videomode_nr** (`num`, ---)
+         - :dir:`file` **audiomode_nr** (`num`, ---)
+         - :dir:`file` **stand_nr** (`num`, ---)
+         - :dir:`file` **step_up** (`bool`, ---)
+         - :dir:`file` **step_dn** (`bool`, ---)
 
 
 ===============

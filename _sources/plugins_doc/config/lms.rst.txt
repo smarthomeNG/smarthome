@@ -12,7 +12,7 @@ Plugin 'lms' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -169,7 +169,7 @@ send_retries
 
 
 Anzahl Sendeversuche
- Kommt keine (passende) Antwort nach dem Senden  eines Commands zurück, wird das Kommando nochmals  gesendet, sofern der Wert über 0 liegt.
+ Kommt keine (passende) Antwort nach dem Senden  eines Commands zurück, wird das Kommando nochmals  gesendet, sofern der Wert über 0 liegt. 
 
  - Datentyp: **num**
  - Standardwert: **0**
@@ -180,7 +180,7 @@ send_retries_cycle
 
 
 Pause zwischen Durchgängen von Sendeversuchen
- Sind Send Retries aktiv, wird ein Scheduler erstellt,  der im angegebenen Sekundentakt Kommandos erneut sendet,  zu denen keine (passenden) Antworten erhalten wurden.
+ Sind Send Retries aktiv, wird ein Scheduler erstellt,  der im angegebenen Sekundentakt Kommandos erneut sendet,  zu denen keine (passenden) Antworten erhalten wurden. 
 
  - Datentyp: **num**
  - Standardwert: **1**
@@ -331,6 +331,346 @@ lms_write
 Änderung des Items werden an das Gerät gesendet
 
  - Datentyp: **bool**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+ALL
+===
+
+
+.. treeview::
+     - :dir:`folder` **ALL** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`folder` **server** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **version** (`str`, ---)
+             - :dir:`file` **restart** (`bool`, ---)
+             - :dir:`file` **listenmode** (`bool`, ---)
+             - :dir:`file` **playercount** (`num`, ---)
+             - :dir:`file` **favoritescount** (`num`, ---)
+             - :dir:`folder` **syncgroups** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **members** (`list`, ---)
+                 - :dir:`file` **names** (`list`, ---)
+             - :dir:`file` **newclient** (`str`, ---)
+             - :dir:`file` **forgetclient** (`str`, ---)
+             - :dir:`folder` **players** (`dict`, ---)
+                 - :dir:`folder` **lu_names** (`dict`, ---)
+                     - :dir:`file` **lookup** (`list`, ---)
+             - :dir:`folder` **playlists** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`folder` **available** (`dict`, ---)
+                     - :dir:`folder` **lu_ids** (`dict`, ---)
+                         - :dir:`file` **lookup** (`list`, ---)
+                     - :dir:`folder` **lu_urls** (`dict`, ---)
+                         - :dir:`file` **lookup** (`list`, ---)
+                 - :dir:`file` **rename** (`str`, "needed value:<playlist_id> <newname> with a space inbetween")
+                 - :dir:`folder` **delete** (`str`, ---)
+                     - :dir:`file` **lookup** (`list`, ---)
+         - :dir:`folder` **database** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **rescan** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **start** (`str`, "playlists|onlinelibrary|external|full|full file://some/path")
+                 - :dir:`file` **running** (`bool`, ---)
+                 - :dir:`folder` **progress** (`str`, ---)
+                     - :dir:`file` **poll** (`bool`, ---)
+                     - :dir:`file` **starttime** (`str`, ---)
+                     - :dir:`file` **info** (`str`, ---)
+                     - :dir:`file` **step** (`num`, ---)
+                     - :dir:`file` **totalsteps** (`num`, ---)
+                 - :dir:`file` **runningtime** (`str`, ---)
+                 - :dir:`file` **fail** (`str`, ---)
+                 - :dir:`file` **abortscan** (`bool`, ---)
+                 - :dir:`file` **wipecache** (`bool`, Be aware - this starts a complete library rescan)
+             - :dir:`file` **totalgenres** (`num`, ---)
+             - :dir:`folder` **totalduration** (`num`, ---)
+                 - :dir:`file` **duration_format** (`str`, ---)
+             - :dir:`file` **totalartists** (`num`, ---)
+             - :dir:`file` **totalalbums** (`num`, ---)
+             - :dir:`file` **totalsongs** (`num`, ---)
+             - :dir:`file` **totalplaylists** (`num`, ---)
+         - :dir:`folder` **server_plugins** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **trackstat** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **get_rating** (`str`, ---)
+                 - :dir:`file` **set_rating** (`str`, ---)
+         - :dir:`folder` **player_plugins** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **customskip** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **active_filter** (`str`, ---)
+                 - :dir:`file` **remove_filter** (`bool`, ---)
+         - :dir:`folder` **player** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **control** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **power** (`bool`, ---)
+                 - :dir:`file` **playmode** (`str`, ---)
+                 - :dir:`file` **playpause** (`bool`, ---)
+                 - :dir:`file` **stop** (`bool`, ---)
+                 - :dir:`file` **mute** (`bool`, ---)
+                 - :dir:`file` **volume** (`num`, ---)
+                 - :dir:`folder` **volume_fading** (`num`, ---)
+                     - :dir:`file` **goal** (`num`, ---)
+                 - :dir:`file` **volume_low** (`num`, ---)
+                 - :dir:`file` **volume_high** (`num`, ---)
+                 - :dir:`file` **volumeup** (`num`, ---)
+                 - :dir:`file` **volumedown** (`num`, ---)
+                 - :dir:`file` **set_alarm** (`str`, ---)
+                 - :dir:`folder` **alarms** (`dict`, ---)
+                     - :dir:`file` **query** (`bool`, ---)
+                 - :dir:`file` **sync** (`str`, This can be either a name or MAC address of a connected player. Make sure to include the server struct to fill the lookup table correctly.)
+                 - :dir:`file` **sync_status** (`list`, ---)
+                 - :dir:`file` **unsync** (`bool`, ---)
+                 - :dir:`file` **display** (`str`, ---)
+                 - :dir:`file` **connect** (`str`, ip|www.mysqueezebox.com|www.test.mysqueezebox.com)
+                 - :dir:`file` **disconnect** (`str`, ip|www.mysqueezebox.com|www.test.mysqueezebox.com)
+                 - :dir:`folder` **time** (`num`, ---)
+                     - :dir:`file` **poll** (`bool`, ---)
+                 - :dir:`file` **forward** (`num`, ---)
+                 - :dir:`file` **rewind** (`num`, ---)
+                 - :dir:`file` **playitem** (`str`, provide specified song URL, playlist or directory. Gets player right away.)
+                 - :dir:`file` **sleep** (`num`, ---)
+             - :dir:`folder` **playlist** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **rename_current** (`str`, ---)
+                 - :dir:`file` **delete_current** (`bool`, Be careful, instantly deletes the current playlist!)
+                 - :dir:`folder` **repeat** (`str`, 0 = Off, 1 = Song, 2 = Playlist)
+                     - :dir:`file` **lookup** (`list`, ---)
+                 - :dir:`folder` **shuffle** (`str`, 0 = Off, 1 = Song, 2 = Album)
+                     - :dir:`file` **lookup** (`list`, ---)
+                 - :dir:`file` **index** (`str`, ---)
+                 - :dir:`file` **current_name** (`str`, ---)
+                 - :dir:`file` **current_url** (`str`, ---)
+                 - :dir:`file` **current_id** (`num`, ---)
+                 - :dir:`file` **save** (`str`, ---)
+                 - :dir:`file` **load** (`str`, ---)
+                 - :dir:`file` **loadalbum** (`str`, <Genre> <Artist> <Album>. You can use * for any of the entries. Spaces need to be replaced by %20)
+                 - :dir:`file` **loadtracks** (`str`, loads and plays all songs matching the specified searchparam criteria directly)
+                 - :dir:`file` **additem** (`str`, provide specified song URL, playlist or directory)
+                 - :dir:`file` **addalbum** (`str`, <Genre> <Artist> <Album>. You can use * for any of the entries. Spaces need to be replaced by %20)
+                 - :dir:`file` **addtracks** (`str`, appends all songs matching the specified searchparam criteria onto the end of the playlist)
+                 - :dir:`file` **insertalbum** (`str`, <Genre> <Artist> <Album>. You can use * for any of the entries. Spaces need to be replaced by %20)
+                 - :dir:`file` **insertitem** (`str`, provide specified song URL, playlist or directory)
+                 - :dir:`file` **deletesong** (`num`, provide songindex that should be deleted)
+                 - :dir:`file` **deletealbum** (`str`, <Genre> <Artist> <Album>. You can use * for any of the entries. Spaces need to be replaced by %20)
+                 - :dir:`file` **deleteitem** (`str`, provide specified song URL, playlist or directory)
+                 - :dir:`file` **tracks** (`num`, ---)
+                 - :dir:`file` **clear** (`bool`, Might go berserk, use with care!)
+                 - :dir:`file` **preview** (`str`, ---)
+                 - :dir:`file` **next** (`num`, ---)
+                 - :dir:`file` **previous** (`num`, ---)
+                 - :dir:`file` **modified** (`bool`, ---)
+             - :dir:`folder` **info** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`folder` **player** (`foo`, OrderedDict([('type', 'str'), ('lms_command@instance', 'player.info.player.name'), ('lms_read@instance', True), ('lms_write@instance', True), ('lms_read_group@instance', ['ALL', 'ALL.player', 'ALL.player.info', 'ALL.player.info.player'])]))
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **status_subscribe** (`bool`, ---)
+                     - :dir:`file` **status** (`str`, ---)
+                     - :dir:`file` **connected** (`bool`, ---)
+                     - :dir:`file` **ip** (`str`, ---)
+                     - :dir:`file` **modelname** (`str`, ---)
+                     - :dir:`file` **firmware** (`str`, ---)
+                     - :dir:`file` **name** (`str`, ---)
+                     - :dir:`file` **signalstrength** (`num`, ---)
+                     - :dir:`file` **albumarturl** (`str`, This item gets automatically defined and overwritten based on 'web_host'/'host' and 'web_port')
+                 - :dir:`folder` **currentsong** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **genre** (`str`, ---)
+                     - :dir:`file` **artist** (`str`, ---)
+                     - :dir:`file` **album** (`str`, ---)
+                     - :dir:`file` **title** (`str`, ---)
+                     - :dir:`file` **file_path** (`str`, ---)
+                     - :dir:`folder` **duration** (`num`, ---)
+                         - :dir:`file` **duration_format** (`str`, ---)
+
+
+database
+========
+
+
+.. treeview::
+     - :dir:`folder` **database** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`folder` **rescan** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **start** (`str`, "playlists|onlinelibrary|external|full|full file://some/path")
+             - :dir:`file` **running** (`bool`, ---)
+             - :dir:`folder` **progress** (`str`, ---)
+                 - :dir:`file` **poll** (`bool`, ---)
+                 - :dir:`file` **starttime** (`str`, ---)
+                 - :dir:`file` **info** (`str`, ---)
+                 - :dir:`file` **step** (`num`, ---)
+                 - :dir:`file` **totalsteps** (`num`, ---)
+             - :dir:`file` **runningtime** (`str`, ---)
+             - :dir:`file` **fail** (`str`, ---)
+             - :dir:`file` **abortscan** (`bool`, ---)
+             - :dir:`file` **wipecache** (`bool`, Be aware - this starts a complete library rescan)
+         - :dir:`file` **totalgenres** (`num`, ---)
+         - :dir:`folder` **totalduration** (`num`, ---)
+             - :dir:`file` **duration_format** (`str`, ---)
+         - :dir:`file` **totalartists** (`num`, ---)
+         - :dir:`file` **totalalbums** (`num`, ---)
+         - :dir:`file` **totalsongs** (`num`, ---)
+         - :dir:`file` **totalplaylists** (`num`, ---)
+
+
+player
+======
+
+
+.. treeview::
+     - :dir:`folder` **player** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`folder` **control** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **power** (`bool`, ---)
+             - :dir:`file` **playmode** (`str`, ---)
+             - :dir:`file` **playpause** (`bool`, ---)
+             - :dir:`file` **stop** (`bool`, ---)
+             - :dir:`file` **mute** (`bool`, ---)
+             - :dir:`file` **volume** (`num`, ---)
+             - :dir:`folder` **volume_fading** (`num`, ---)
+                 - :dir:`file` **goal** (`num`, ---)
+             - :dir:`file` **volume_low** (`num`, ---)
+             - :dir:`file` **volume_high** (`num`, ---)
+             - :dir:`file` **volumeup** (`num`, ---)
+             - :dir:`file` **volumedown** (`num`, ---)
+             - :dir:`file` **set_alarm** (`str`, ---)
+             - :dir:`folder` **alarms** (`dict`, ---)
+                 - :dir:`file` **query** (`bool`, ---)
+             - :dir:`file` **sync** (`str`, This can be either a name or MAC address of a connected player. Make sure to include the server struct to fill the lookup table correctly.)
+             - :dir:`file` **sync_status** (`list`, ---)
+             - :dir:`file` **unsync** (`bool`, ---)
+             - :dir:`file` **display** (`str`, ---)
+             - :dir:`file` **connect** (`str`, ip|www.mysqueezebox.com|www.test.mysqueezebox.com)
+             - :dir:`file` **disconnect** (`str`, ip|www.mysqueezebox.com|www.test.mysqueezebox.com)
+             - :dir:`folder` **time** (`num`, ---)
+                 - :dir:`file` **poll** (`bool`, ---)
+             - :dir:`file` **forward** (`num`, ---)
+             - :dir:`file` **rewind** (`num`, ---)
+             - :dir:`file` **playitem** (`str`, provide specified song URL, playlist or directory. Gets player right away.)
+             - :dir:`file` **sleep** (`num`, ---)
+         - :dir:`folder` **playlist** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **rename_current** (`str`, ---)
+             - :dir:`file` **delete_current** (`bool`, Be careful, instantly deletes the current playlist!)
+             - :dir:`folder` **repeat** (`str`, 0 = Off, 1 = Song, 2 = Playlist)
+                 - :dir:`file` **lookup** (`list`, ---)
+             - :dir:`folder` **shuffle** (`str`, 0 = Off, 1 = Song, 2 = Album)
+                 - :dir:`file` **lookup** (`list`, ---)
+             - :dir:`file` **index** (`str`, ---)
+             - :dir:`file` **current_name** (`str`, ---)
+             - :dir:`file` **current_url** (`str`, ---)
+             - :dir:`file` **current_id** (`num`, ---)
+             - :dir:`file` **save** (`str`, ---)
+             - :dir:`file` **load** (`str`, ---)
+             - :dir:`file` **loadalbum** (`str`, <Genre> <Artist> <Album>. You can use * for any of the entries. Spaces need to be replaced by %20)
+             - :dir:`file` **loadtracks** (`str`, loads and plays all songs matching the specified searchparam criteria directly)
+             - :dir:`file` **additem** (`str`, provide specified song URL, playlist or directory)
+             - :dir:`file` **addalbum** (`str`, <Genre> <Artist> <Album>. You can use * for any of the entries. Spaces need to be replaced by %20)
+             - :dir:`file` **addtracks** (`str`, appends all songs matching the specified searchparam criteria onto the end of the playlist)
+             - :dir:`file` **insertalbum** (`str`, <Genre> <Artist> <Album>. You can use * for any of the entries. Spaces need to be replaced by %20)
+             - :dir:`file` **insertitem** (`str`, provide specified song URL, playlist or directory)
+             - :dir:`file` **deletesong** (`num`, provide songindex that should be deleted)
+             - :dir:`file` **deletealbum** (`str`, <Genre> <Artist> <Album>. You can use * for any of the entries. Spaces need to be replaced by %20)
+             - :dir:`file` **deleteitem** (`str`, provide specified song URL, playlist or directory)
+             - :dir:`file` **tracks** (`num`, ---)
+             - :dir:`file` **clear** (`bool`, Might go berserk, use with care!)
+             - :dir:`file` **preview** (`str`, ---)
+             - :dir:`file` **next** (`num`, ---)
+             - :dir:`file` **previous** (`num`, ---)
+             - :dir:`file` **modified** (`bool`, ---)
+         - :dir:`folder` **info** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **player** (`foo`, OrderedDict([('type', 'str'), ('lms_command@instance', 'player.info.player.name'), ('lms_read@instance', True), ('lms_write@instance', True), ('lms_read_group@instance', ['player', 'player.info', 'player.info.player'])]))
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **status_subscribe** (`bool`, ---)
+                 - :dir:`file` **status** (`str`, ---)
+                 - :dir:`file` **connected** (`bool`, ---)
+                 - :dir:`file` **ip** (`str`, ---)
+                 - :dir:`file` **modelname** (`str`, ---)
+                 - :dir:`file` **firmware** (`str`, ---)
+                 - :dir:`file` **name** (`str`, ---)
+                 - :dir:`file` **signalstrength** (`num`, ---)
+                 - :dir:`file` **albumarturl** (`str`, This item gets automatically defined and overwritten based on 'web_host'/'host' and 'web_port')
+             - :dir:`folder` **currentsong** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **genre** (`str`, ---)
+                 - :dir:`file` **artist** (`str`, ---)
+                 - :dir:`file` **album** (`str`, ---)
+                 - :dir:`file` **title** (`str`, ---)
+                 - :dir:`file` **file_path** (`str`, ---)
+                 - :dir:`folder` **duration** (`num`, ---)
+                     - :dir:`file` **duration_format** (`str`, ---)
+
+
+player_plugins
+==============
+
+
+.. treeview::
+     - :dir:`folder` **player_plugins** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`folder` **customskip** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **active_filter** (`str`, ---)
+             - :dir:`file` **remove_filter** (`bool`, ---)
+
+
+server
+======
+
+
+.. treeview::
+     - :dir:`folder` **server** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`file` **version** (`str`, ---)
+         - :dir:`file` **restart** (`bool`, ---)
+         - :dir:`file` **listenmode** (`bool`, ---)
+         - :dir:`file` **playercount** (`num`, ---)
+         - :dir:`file` **favoritescount** (`num`, ---)
+         - :dir:`folder` **syncgroups** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **members** (`list`, ---)
+             - :dir:`file` **names** (`list`, ---)
+         - :dir:`file` **newclient** (`str`, ---)
+         - :dir:`file` **forgetclient** (`str`, ---)
+         - :dir:`folder` **players** (`dict`, ---)
+             - :dir:`folder` **lu_names** (`dict`, ---)
+                 - :dir:`file` **lookup** (`list`, ---)
+         - :dir:`folder` **playlists** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **available** (`dict`, ---)
+                 - :dir:`folder` **lu_ids** (`dict`, ---)
+                     - :dir:`file` **lookup** (`list`, ---)
+                 - :dir:`folder` **lu_urls** (`dict`, ---)
+                     - :dir:`file` **lookup** (`list`, ---)
+             - :dir:`file` **rename** (`str`, "needed value:<playlist_id> <newname> with a space inbetween")
+             - :dir:`folder` **delete** (`str`, ---)
+                 - :dir:`file` **lookup** (`list`, ---)
+
+
+server_plugins
+==============
+
+
+.. treeview::
+     - :dir:`folder` **server_plugins** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`folder` **trackstat** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **get_rating** (`str`, ---)
+             - :dir:`file` **set_rating** (`str`, ---)
 
 
 ===============

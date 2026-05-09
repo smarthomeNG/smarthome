@@ -12,7 +12,7 @@ Plugin 'helios_tcp' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -171,6 +171,35 @@ Name des Attributs der Lüftungsanlage, welches auf das Item geschrieben wird
    - **sleep_level**
    - **sleep_on**
    - **preheating_status**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+Lueftung
+========
+
+Lüftungsanlage
+
+.. treeview::
+     - :dir:`folder` **Lueftung** (`foo`, Lüftungsanlage)
+         - :dir:`folder` **Temperatur** (`foo`, ---)
+             - :dir:`file` **Frischluft** (`num`, ---)
+             - :dir:`file` **Zuluft** (`num`, ---)
+             - :dir:`file` **Abluft** (`num`, ---)
+             - :dir:`file` **Fortluft** (`num`, ---)
+         - :dir:`file` **Luftfeuchtigkeit** (`num`, ---)
+         - :dir:`file` **Luefterstufe** (`num`, ---)
+         - :dir:`file` **Manuell** (`bool`, ---)
+         - :dir:`folder` **Status** (`foo`, ---)
+             - :dir:`file` **AnzahlFehler** (`num`, ---)
+         - :dir:`file` **AnzahlWarnungen** (`num`, ---)
+         - :dir:`file` **AnzahlInfos** (`num`, ---)
 
 
 ===============

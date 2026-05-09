@@ -49,6 +49,6 @@ Für Details zur Definition benutzerspezifischer Feiertage bitte den Abschnitt *
 dieser Dokumentation konsultieren.
 
 Dieser Abschnitt wird vervollständigt, nachdem das Administations-Interface einen Dialog zur Konfiguration der Feiertage
-erhalten hat. Bis dahin müssen die Feiertage direkt in der Konfigurationsdatei **etc/holidays.yaml** konfiguriert werden.
+erhalten hat. Bis dahin müssen die Feiertage direkt in der Konfigurationsdatei ``etc/holidays.yaml`` konfiguriert werden.
 
 

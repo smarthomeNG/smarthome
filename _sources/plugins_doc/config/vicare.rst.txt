@@ -12,7 +12,7 @@ Plugin 'vicare' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -172,6 +172,48 @@ vicare_tx_path
 Array mit Einträgen zum Pfad des Sendekommandos im Feature command
 
  - Datentyp: **list**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+heizung_Vitodens_200
+====================
+
+
+.. treeview::
+     - :dir:`folder` **heizung_Vitodens_200** (`foo`, ---)
+         - :dir:`file` **serial** (`str`, serial number)
+         - :dir:`file` **online_status** (`bool`, online status)
+         - :dir:`file` **heating_set_temperature_comfort** (`num`, set temperature comfort)
+         - :dir:`file` **heating_set_temperature_normal** (`num`, set temperature normal)
+         - :dir:`file` **heating_set_temperature_reduced** (`num`, heating set temperature reduced)
+         - :dir:`file` **heating_ruecklauf_temperature** (`num`, Heizung Rücklauftemperatur)
+         - :dir:`file` **heating_mode** (`bool`, Heizmodus)
+         - :dir:`file` **heating_circulation_pump** (`str`, Heizmodus, z.B. on)
+         - :dir:`file` **heating_mode_str** (`str`, Heizmodus, (heating or standby))
+         - :dir:`file` **heating_program** (`str`, Heizprogramm, z.B. holiday, normal)
+         - :dir:`file` **hw_mode** (`str`, Warmwasser Modus (balanced or off))
+         - :dir:`file` **hw_active** (`bool`, Warmwasser Aktiv)
+         - :dir:`file` **hw_status** (`str`, Warmwasser Status)
+         - :dir:`file` **hw_set_temperature** (`num`, Warmwasser Solltemperatur normal)
+         - :dir:`folder` **hw_einmalaufladung** (`bool`, Heisswasser Einmalaufladung)
+             - :dir:`file` **activate** (`bool`, ---)
+             - :dir:`file` **deactivate** (`bool`, ---)
+         - :dir:`file` **sensor_hw_cylinder** (`num`, Sensor Warmwasser Zylinder, Celsius)
+         - :dir:`file` **sensor_hw_storage** (`num`, Sensor Warmwasser Storage, Celsius)
+         - :dir:`file` **sensor_boiler_common_supply** (`num`, Sensor boiler common supply, Celsius)
+         - :dir:`file` **heating_boiler_temperature** (`num`, Heizung Boiler Temperatur, Celsius)
+         - :dir:`file` **sensor_outside** (`num`, Außensensor, Celsius)
+         - :dir:`file` **gas_consumption_year** (`num`, Gasverbrauch, Jahr)
+         - :dir:`file` **heating_power_consumption_year** (`num`, Stromverbrauch Heizung in kWh, Jahr)
+         - :dir:`file` **heating_power_consumption_total_year** (`num`, Stromverbrauch Heizung Warmwasser in kWh, Jahr)
+         - :dir:`file` **device_error_messages** (`list`, Array Fehlermeldungen)
 
 
 ===============

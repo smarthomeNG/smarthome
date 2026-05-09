@@ -17,7 +17,7 @@ Bearbeiten von Werten
 
 Wird einem Item ein neuer Wert zugewiesen, wird dieser erst einmal als **value** zwischengespeichert.
 Ist ein **eval** vorhanden, wird dies erst ausgeführt, bevor dem Item der Wert final zugewiesen wird.
-Das kann man sich für Nachbearbeitungen zu nutze machen, bspw. wenn der zugewiesene Wert zu viele
+Das kann man sich für Nachbearbeitungen zunutze machen, bspw. wenn der zugewiesene Wert zu viele
 Nachkommastellen hat. In folgenden Beispiel wird auf eine Nachkommastelle gerundet.
 
 .. code-block:: yaml
@@ -230,22 +230,22 @@ wird als "value" mit übergeben. Das eval ergibt True, wenn "value" einer 2 ents
         FolgeA:
             type: bool
             eval: value == 2
-    ​​​​​​​        eval_trigger: ..
+            eval_trigger: ..
 
         FolgeB:
             type: bool
             eval: value == 3
-    ​​​​​​​        eval_trigger: ..
+            eval_trigger: ..
 
         FolgeC:
             type: bool
             eval: value == 4
-    ​​​​​​​        eval_trigger: ..
+            eval_trigger: ..
 
         FolgeD:
             type: bool
             eval: value == 5
-    ​​​​​​​        eval_trigger: ..
+            eval_trigger: ..
 
 
 Berechnung einer Zeitdauer in Sekunden von beliebigen datetime bis jetzt

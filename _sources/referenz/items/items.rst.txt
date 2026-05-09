@@ -8,9 +8,9 @@
 .. role:: blacksup
 
 
-=====
-Items
-=====
+=======================
+Items :bluesup:`Update`
+=======================
 
 In den folgenden Abschnitten sind Informationen zu den Items in SmartHomeNG zu finden.
 

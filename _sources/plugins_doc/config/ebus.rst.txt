@@ -12,7 +12,7 @@ Plugin 'ebus' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -28,7 +28,7 @@ Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 Beschreibung
 ============
 
-Unterstützt eBus Heizungen (z.B. Vailant, Wolf, Kromschroeder) Dieses Plugin verbindet sich zu einem ebusd Deamon (https://ebusd.de/), welcher mit einer eBus Heizung kommuniziert. Voraussetzungen: Ein ebusd Deamon läuft auf dem Netzwerk. Anmerkung: Der ebusd benötigt ein ebus-Interface um mit ihm zu kommunizieren.
+Unterstützt eBus Heizungen (z.B. Vailant, Wolf, Kromschroeder) Dieses Plugin verbindet sich zu einem ebusd Deamon (https://ebusd.de/), welcher mit einer eBus Heizung kommuniziert. Voraussetzungen: Ein ebusd Deamon läuft auf dem Netzwerk. Anmerkung: Der ebusd benötigt ein ebus-Interface um mit ihm zu kommunizieren. 
 
 
 Anforderungen
@@ -114,9 +114,18 @@ ebus_type legt fest, ob vom ebusd Deamon nur gelesen werden soll oder ob auch Da
 
  - Mögliche Werte:
 
-   - **get** |_| - |_| get
-   - **set** |_| - |_| set
+   - **get**
+   - **set**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

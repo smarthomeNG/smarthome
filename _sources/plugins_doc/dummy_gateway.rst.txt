@@ -16,7 +16,6 @@
    /plugins/hue/README.md
    /plugins/milight/README.md
    /plugins/mlgw/README.md
-   /plugins/raumfeld/README.md
    /plugins/rcswitch/README.md
    /plugins/squeezebox/README.md
    /plugins/zwave/README.md

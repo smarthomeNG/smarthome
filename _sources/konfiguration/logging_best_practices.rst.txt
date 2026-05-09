@@ -99,9 +99,9 @@ nicht beschrieben. Diese Grundkonfiguration definiert drei handler
 (Ziele für Logausgaben):
 
 -  Die Konsole
--  Das Logfile **smarthome-warnings.log**, welches nur Warnungen und
+-  Das Logfile ``smarthome-warnings.log``, welches nur Warnungen und
    Fehler aufnimmt
--  Das Logfile **smarthome-additional.log**, welches prinzipiell alle
+-  Das Logfile ``smarthome-additional.log``, welches prinzipiell alle
    Logmeldungen (von DEBUG bis CRITICAL) aufnimmt
 
 Die beiden Handler die Logfiles schreiben, sind als rotierende Handler
@@ -124,7 +124,7 @@ Um zusätzliche Logausgaben zu konfigurieren, muss nur der Abschnitt
 **logger:** der Logging Konfiguration angepasst/erweitert werden.
 
 Die meisten Plugins schreiben ihre Logausgaben in einen eigenen Logger,
-falls dieser in **logging.yaml** definiert ist. Die Logausgaben werden
+falls dieser in ``logging.yaml`` definiert ist. Die Logausgaben werden
 dann in diesen eigenen Logger und in den root-Logger geschrieben. Die
 Konfiguration des root-Loggers verhindert, das INFO und DEBUG ausgaben
 ins Hauptlog kommen.

@@ -12,7 +12,7 @@ Plugin 'join' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -81,6 +81,15 @@ Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichn
 
 **Keine**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -108,7 +117,7 @@ send Funktion
 
 
 title
------
+ -  -  -  -  - 
 
 Titel
 
@@ -117,7 +126,7 @@ Titel
 
 
 text
-----
+ -  -  -  - 
 
 Text
 
@@ -126,7 +135,7 @@ Text
 
 
 icon
-----
+ -  -  -  - 
 
 Icon
 
@@ -135,7 +144,7 @@ Icon
 
 
 find
-----
+ -  -  -  - 
 
 Find
 
@@ -144,7 +153,7 @@ Find
 
 
 smallicon
----------
+ -  -  -  -  -  -  -  -  - 
 
 Smallicon
 
@@ -153,7 +162,7 @@ Smallicon
 
 
 device_id
----------
+ -  -  -  -  -  -  -  -  - 
 
 Device_id
 
@@ -162,7 +171,7 @@ Device_id
 
 
 device_ids
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Device_ids
 
@@ -171,7 +180,7 @@ Device_ids
 
 
 device_name
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Device_names
 
@@ -180,7 +189,7 @@ Device_names
 
 
 url
----
+ -  -  - 
 
 Url
 
@@ -189,7 +198,7 @@ Url
 
 
 image
------
+ -  -  -  -  - 
 
 Image
 
@@ -198,7 +207,7 @@ Image
 
 
 sound
------
+ -  -  -  -  - 
 
 Sound
 
@@ -207,7 +216,7 @@ Sound
 
 
 group
------
+ -  -  -  -  - 
 
 Group
 
@@ -216,7 +225,7 @@ Group
 
 
 clipboard
----------
+ -  -  -  -  -  -  -  -  - 
 
 Clipboard
 
@@ -225,7 +234,7 @@ Clipboard
 
 
 file
-----
+ -  -  -  - 
 
 File
 
@@ -234,7 +243,7 @@ File
 
 
 callnumber
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Callnumber
 
@@ -243,7 +252,7 @@ Callnumber
 
 
 smsnumber
----------
+ -  -  -  -  -  -  -  -  - 
 
 Smsnumber
 
@@ -252,7 +261,7 @@ Smsnumber
 
 
 smstext
--------
+ -  -  -  -  -  -  - 
 
 Smstext
 
@@ -261,7 +270,7 @@ Smstext
 
 
 mmsfile
--------
+ -  -  -  -  -  -  - 
 
 Mmsfile
 
@@ -270,7 +279,7 @@ Mmsfile
 
 
 wallpaper
----------
+ -  -  -  -  -  -  -  -  - 
 
 Wallpaper
 
@@ -279,7 +288,7 @@ Wallpaper
 
 
 lockwallpaper
--------------
+ -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Lockwallpaper
 
@@ -288,7 +297,7 @@ Lockwallpaper
 
 
 interruptionFilter
-------------------
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 InterruptionFilter
 
@@ -297,7 +306,7 @@ InterruptionFilter
 
 
 mediaVolume
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 MediaVolume
 
@@ -306,7 +315,7 @@ MediaVolume
 
 
 ringVolume
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 RingVolume
 
@@ -315,7 +324,7 @@ RingVolume
 
 
 alarmVolume
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 AlarmVolume
 

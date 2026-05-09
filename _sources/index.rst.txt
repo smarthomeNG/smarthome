@@ -35,6 +35,15 @@ Diese Dokumentation reflektiert das aktuelle Release:
 Hilfe zu SmartHomeNG gibt es im `Supportforum im KNX-User-Forum <https://knx-user-forum.de/forum/supportforen/smarthome-py>`_
 oder im `Chat auf gitter.im <https://app.gitter.im/#/room/#smarthomeNG_smarthome:gitter.im>`_ .
 
+.. hint::
+
+   Mit Release der Version 1.12 wurden die folgenden Konventionen in der Dokumentation eingeführt:
+
+   - Datei- und Ordnernamen werden relativ zum SmartHomeNG-Stammverzeichnis (standardmäßig ``/usr/local/smarthome/``) angegeben
+   - Dateien und Ordner, die Nutzerkonfigurationen enthalten, werden unterhalb von ``etc`` referenziert. Dies entspricht
+     dem zukünftigen Standard, der mit der Kommandozeilenoption **-e** / **--config-etc** oder mit der Option
+     **config_etc: true**  in der ``etc/smarthome.yaml`` aktiviert werden kann.
+
 .. note::
 
    **Anmerkungen** und **Änderungswünsche** zu dieser Dokumentation bitte auf

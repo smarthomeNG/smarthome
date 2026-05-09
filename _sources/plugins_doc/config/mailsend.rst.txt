@@ -12,7 +12,7 @@ Plugin 'mailsend' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -121,6 +121,15 @@ Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichn
 
 **Keine**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -148,7 +157,7 @@ Diese Funktion versendet eine eMail - Beispiel: sh.mail('admin@smart.home', 'Tes
 
 
 to
---
+ -  - 
 
 Empfänger der eMail (admin@smart.home)
 
@@ -156,7 +165,7 @@ Empfänger der eMail (admin@smart.home)
 
 
 subject
--------
+ -  -  -  -  -  -  - 
 
 Betreff der eMail
 
@@ -164,7 +173,7 @@ Betreff der eMail
 
 
 message
--------
+ -  -  -  -  -  -  - 
 
 Nachrichtentext der eMail
 

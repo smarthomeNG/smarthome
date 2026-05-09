@@ -13,10 +13,10 @@ von SmartHomeNG.
    Die Kommunikation findet zwischen dem Browser und SmartHomeNG statt, NICHT zwischen dem
    Webserver und SmartHomeNG. Der Webserver liefert nur den statischen Kontent der Visu aus.
 
-Das Modul **websocket** muss in **../etc/module.yaml** konfiguriert werden.
+Das Modul **websocket** muss in ``etc/module.yaml`` konfiguriert werden.
 
 .. code-block:: yaml
-   :caption: Ausschnitt aus **../etc/module.yaml**
+   :caption: Ausschnitt aus ``etc/module.yaml``
 
    websocket:
        module_name: websocket
@@ -50,14 +50,14 @@ Das Modul **websocket** muss in **../etc/module.yaml** konfiguriert werden.
 +-------------+-----------------------------------------------------------------------------------+
 | use_tls     | Muss normalerweise nicht angegeben werden. Wenn use_tls auf True gesetzt wird,    |
 |             | wird die verschlüsselte Kommunikation über **tls_port** aktiviert. Dazu müssen    |
-|             | im Verzeichnis **../etc** gültige Zertifikatdateien **shng.cer** und **shng.key** |
+|             | im Verzeichnis ``etc`` gültige Zertifikatdateien ``shng.cer`` und ``shng.key``    |
 |             | abgelegt werden.                                                                  |
 +-------------+-----------------------------------------------------------------------------------+
 | tls_cert    | Muss normalerweise nicht angegeben werden. Hiermit wird der Name der Zertifikat-  |
-|             | Datei festgelegt. Wird kein Name angegeben, wird **shng.cer** verwendet.          |
+|             | Datei festgelegt. Wird kein Name angegeben, wird ``shng.cer`` verwendet.          |
 +-------------+-----------------------------------------------------------------------------------+
 | tls_key     | Muss normalerweise nicht angegeben werden. Hiermit wird der Name der Datei mit    |
-|             | dem privaten Schlüssel festgelegt. Wird kein Name angegeben, wird **shng.key**    |
+|             | dem privaten Schlüssel festgelegt. Wird kein Name angegeben, wird ``shng.key``    |
 |             | verwendet.                                                                        |
 +-------------+-----------------------------------------------------------------------------------+
 | sv_enabled  | Muss normalerweise nicht angegeben werden. Hiermit wird festgelegt, ob das        |

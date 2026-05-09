@@ -12,7 +12,7 @@ Plugin 'hue3' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -112,38 +112,39 @@ Anzusteuernde Funktion für die gewählte Resource/ID
 
  - Mögliche Werte:
 
-   -  |_| - |_| <noch keine Funktion gewählt>
-   - **on** |_| - |_| Ein-/Ausschalten -> bool, r/w (resource: light, group)
-   - **bri** |_| - |_| Helligkeit in Prozent, 0 … 100 -> num, r/w (resource: light, group)
-   - **bri_inc** |_| - |_| Relative Helligkeitsveränderung 0 … 254, w/o (resource: light, group)
-   - **xy** |_| - |_| xy Werte -> list, r/w (resource: light, group)
-   - **ct** |_| - |_| ct Wert -> num, w/o (resource: light, group)
-   - **dict** |_| - |_| Mehrere Funktionen auf einmal -> dict, w/o (resource: light, group)
-   - **name** |_| - |_| Name -> str, r/w (resource: light, group, scene, sensor)
-   - **reachable** |_| - |_| Erreichbar -> bool, r/o (resource: light)
-   - **connectivity** |_| - |_| Connectivity status -> str, r/o (resource: light)
-   - **type** |_| - |_| Typ des Leuchtmittels -> str, r/o (resource: light)
-   - **modelid** |_| - |_| Model Id des Leuchtmittels -> str, r/o (resource: light)
-   - **swversion** |_| - |_| Software Version des Leuchtmittels -> str, r/o (resource: light)
-   - **activate** |_| - |_| Aktivieren einer Szene für Leuchten -> bool w/o (resource: scene)
-   - **activate_scene** |_| - |_| Aktivieren einer Szene (Szenen-Id aus dem Item Wert) für Leuchten -> str w/o (resource: scene)
-   - **modify_scene** |_| - |_| Anpassen einer Szene für Leuchten in der selektierten Gruppe (hue3_id) -> str w/o (resource: group)
-   - **alert** |_| - |_| Benachrichtigung -> str (Werte: none, select, lselect) (resource: light, group)
-   - **effect** |_| - |_| Lichteffekt -> str (Werte: none, colorloop) (resource: light, group)
-   - **daylight** |_| - |_| Tageslicht -> bool, r/o (resource: sensor)
-   - **sunriseoffset** |_| - |_| Tageslicht: sunriseoffset -> num r/o (resource: sensor)
-   - **sunsetoffset** |_| - |_| Tageslicht: sunsetoffset -> num r/o (resource: sensor)
-   - **temperature** |_| - |_| Temperatur -> num r/o (resource: sensor)
-   - **presence** |_| - |_| Präsenz -> bool, r/o (resource: sensor)
-   - **lightlevel** |_| - |_| Sensor 'lightlevel' -> num r/o (resource: sensor)
-   - **status** |_| - |_| Sensor 'status' -> num, r/o (resource: sensor)
-   - **event** |_| - |_| Event, welches der Button sendet -> str, r/o (resource: button)
-   - **initial_press** |_| - |_| True, wenn der Button gerade gedrückt wurde -> bool, r/o (resource: button)
-   - **repeat** |_| - |_| True, wenn der Button repeat sendet -> bool, r/o (resource: button)
-   - **short_release** |_| - |_| True, wenn der Button kurz gedrückt wurde -> bool, r/o (resource: button)
-   - **long_release** |_| - |_| True, wenn der Button lang gedrückt wurde -> bool, r/o (resource: button)
-   - **power_status** |_| - |_| Power Status -> str, r/o (resource: device_power)
-   - **battery_level** |_| - |_| Batterie Ladung in Prozent -> num, r/o (resource: device_power)
+   - 
+   - **on**
+   - **bri**
+   - **bri_inc**
+   - **xy**
+   - **ct**
+   - **dict**
+   - **name**
+   - **reachable**
+   - **connectivity**
+   - **type**
+   - **modelid**
+   - **swversion**
+   - **activate**
+   - **activate_scene**
+   - **modify_scene**
+   - **alert**
+   - **effect**
+   - **daylight**
+   - **sunriseoffset**
+   - **sunsetoffset**
+   - **temperature**
+   - **motion**
+   - **presence**
+   - **lightlevel**
+   - **status**
+   - **event**
+   - **initial_press**
+   - **repeat**
+   - **short_release**
+   - **long_release**
+   - **power_status**
+   - **battery_level**
 
 
 hue3_id
@@ -181,6 +182,119 @@ hue3_transition_time
 Zeit für Übergang (in sec)
 
  - Datentyp: **num**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+_light_basic
+============
+
+interne Vorlage-Struktur für eine Hue Leuchte (basic)
+
+.. treeview::
+     - :dir:`folder` **_light_basic** (`foo`, interne Vorlage-Struktur für eine Hue Leuchte (basic))
+         - :dir:`file` **onoff** (`bool`, ---)
+         - :dir:`file` **level** (`num`, ---)
+         - :dir:`file` **level_inc** (`num`, ---)
+         - :dir:`file` **ct** (`num`, ---)
+         - :dir:`file` **dict** (`dict`, ---)
+         - :dir:`file` **alert** (`str`, ---)
+         - :dir:`file` **effect** (`str`, ---)
+
+
+_light_extended
+===============
+
+interne Vorlage-Struktur für eine Hue Leuchte (extended attributes)
+
+.. treeview::
+     - :dir:`folder` **_light_extended** (`foo`, interne Vorlage-Struktur für eine Hue Leuchte (extended attributes))
+         - :dir:`file` **lightname** (`str`, ---)
+         - :dir:`file` **reachable** (`bool`, ---)
+         - :dir:`file` **connectivity** (`str`, ---)
+
+
+group
+=====
+
+Vorlage-Struktur für eine Hue Gruppe
+
+.. treeview::
+     - :dir:`folder` **group** (`foo`, Vorlage-Struktur für eine Hue Gruppe)
+         - :dir:`file` **onoff** (`bool`, ---)
+         - :dir:`file` **level** (`num`, ---)
+         - :dir:`file` **alert** (`str`, ---)
+
+
+group_activate_scene
+====================
+
+Vorlage-Struktur zum aktivieren von Hue Szenen
+
+.. treeview::
+     - :dir:`file` **group_activate_scene** (`str`, Vorlage-Struktur zum aktivieren von Hue Szenen)
+
+
+light
+=====
+
+Vorlage-Struktur für eine Hue Leuchte
+
+.. treeview::
+     - :dir:`folder` **light** (`foo`, Vorlage-Struktur für eine Hue Leuchte)
+         - :dir:`file` **xy** (`list`, ---)
+
+
+light_extended
+==============
+
+Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items
+
+.. treeview::
+     - :dir:`file` **light_extended** (`foo`, Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items)
+
+
+light_ww
+========
+
+Vorlage-Struktur für eine Hue Leuchte (warm white)
+
+.. treeview::
+     - :dir:`file` **light_ww** (`foo`, Vorlage-Struktur für eine Hue Leuchte (warm white))
+
+
+light_ww_extended
+=================
+
+Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items (warm white)
+
+.. treeview::
+     - :dir:`file` **light_ww_extended** (`foo`, Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items (warm white))
+
+
+light_xy
+========
+
+Vorlage-Struktur für eine Hue Leuchte (Farbe nur über xy)
+
+.. treeview::
+     - :dir:`folder` **light_xy** (`foo`, Vorlage-Struktur für eine Hue Leuchte (Farbe nur über xy))
+         - :dir:`file` **xy** (`list`, ---)
+
+
+light_xy_extended
+=================
+
+Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items (Farbe nur über xy)
+
+.. treeview::
+     - :dir:`file` **light_xy_extended** (`foo`, Vorlage-Struktur für eine Hue Leuchte mit erweiteten Attributen/Sub-Items (Farbe nur über xy))
 
 
 ===============

@@ -46,7 +46,7 @@ Namensvergabe
 Bei der Wahl von Itemnamen ist folgendes zu beachten:
 
 Plugin-Instanzen und Items der obersten Ebene (Top-Level) teilen sich den Namensraum. Es sollte
-vermieden werden, Top-Level Items einen Namen zu geben, der in **../etc/plugin.yaml** (bzw. **../etc/plugin.conf**)
+vermieden werden, Top-Level Items einen Namen zu geben, der in ``etc/plugin.yaml`` (bzw. ``etc/plugin.conf``)
 bereits für eine Plugin-Instanz gewählt wurde. Dieses kann zu unvorhergesehenen Problemen führen.
 
 z.B.: Wenn ein Plugin Funktionen implementiert hat, wird dies beim Aufruf dieser Funktionen zu
@@ -67,17 +67,11 @@ Attribute eines Items werden in der Konfigurationsdatei in der Form
 
 
 angegeben. Normalerweise sind Attribut-Werte einzeilig. Es wird alles bis zum Zeilenende oder bis
-zum Beginn eines Kommentars (`#`) angenommen. (Seit dem Release 1.3 werden auch mehrzeilige Attribute
-unterstützt.)
+zum Beginn eines Kommentars (`#`) angenommen. 
 
-.. hint::
-
-   **Ab SmartHomeNG v1.3** wird ein neues Dateiformat für Konfigurationsdateien
-   unterstützt. Das bisherige Format der Konfigurationsdateien wird vorerst weiter unterstützt.
-
-   Informationen zum :doc:`alten und neuen Dateiformat </konfiguration/konfigurationsdateien/konfigdateien>`
-   finden Sie :doc:`hier </konfiguration/konfigurationsdateien/konfigdateien>` unter
-   **Aufbau der Konfigurationsdateien**.
+Informationen zum :doc:`Dateiformat </konfiguration/konfigurationsdateien/konfigdateien>`
+finden sich :doc:`hier </konfiguration/konfigurationsdateien/konfigdateien>` unter
+**Aufbau der Konfigurationsdateien**.
 
 
 Properties und Funktionen

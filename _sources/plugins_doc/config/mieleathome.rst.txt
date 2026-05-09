@@ -12,7 +12,7 @@ Plugin 'mieleathome' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -154,6 +154,132 @@ miele_visu_function
 Eine interne Funktion des Miele@Home-Plugins
 
  - Datentyp: **str**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+child
+=====
+
+Vorlage Struktur Miele Geräte
+
+.. treeview::
+     - :dir:`folder` **child** (`foo`, Vorlage Struktur Miele Geräte)
+         - :dir:`folder` **ident** (`foo`, ---)
+             - :dir:`folder` **device_type** (`foo`, ---)
+                 - :dir:`file` **value_raw** (`num`, ---)
+                 - :dir:`file` **value_localized** (`str`, ---)
+             - :dir:`file` **deviceName** (`str`, ---)
+             - :dir:`folder` **deviceIdentLabel** (`foo`, ---)
+                 - :dir:`file` **fabNumber** (`str`, ---)
+                 - :dir:`file` **fabIndex** (`str`, ---)
+                 - :dir:`file` **techType** (`str`, ---)
+                 - :dir:`file` **matNumber** (`str`, ---)
+             - :dir:`folder` **xkmIdentLabel** (`foo`, ---)
+                 - :dir:`file` **techType** (`str`, ---)
+                 - :dir:`file` **releaseVersion** (`str`, ---)
+         - :dir:`folder` **state** (`foo`, ---)
+             - :dir:`folder` **ProgramID** (`foo`, ---)
+                 - :dir:`file` **value_localized** (`str`, ---)
+             - :dir:`folder` **status** (`foo`, ---)
+                 - :dir:`file` **value_localized** (`str`, ---)
+                 - :dir:`file` **value_raw** (`num`, ---)
+             - :dir:`folder` **programType** (`foo`, ---)
+                 - :dir:`file` **value_localized** (`str`, ---)
+             - :dir:`folder` **programPhase** (`foo`, ---)
+                 - :dir:`file` **value_localized** (`str`, ---)
+             - :dir:`file` **remainingTime** (`list`, ---)
+             - :dir:`file` **startTime** (`list`, ---)
+             - :dir:`file` **targetTemperature** (`list`, ---)
+             - :dir:`file` **temperature** (`list`, ---)
+             - :dir:`file` **signalInfo** (`bool`, ---)
+             - :dir:`file` **signalFailure** (`bool`, ---)
+             - :dir:`file` **signalDoor** (`bool`, ---)
+             - :dir:`folder` **dryingStep** (`foo`, ---)
+                 - :dir:`file` **value_localized** (`str`, ---)
+                 - :dir:`file` **value_raw** (`num`, ---)
+             - :dir:`file` **elapsedTime** (`list`, ---)
+             - :dir:`folder` **ecoFeedback** (`foo`, ---)
+                 - :dir:`folder` **currentWaterConsumption** (`foo`, ---)
+                     - :dir:`file` **unit** (`str`, ---)
+                     - :dir:`file` **value** (`num`, ---)
+                 - :dir:`folder` **currentEnergyConsumption** (`foo`, ---)
+                     - :dir:`file` **unit** (`str`, ---)
+                     - :dir:`file` **value** (`num`, ---)
+                 - :dir:`file` **waterForecast** (`num`, ---)
+                 - :dir:`file` **energyForecast** (`num`, ---)
+             - :dir:`file` **batteryLevel** (`num`, ---)
+         - :dir:`folder` **actions** (`foo`, ---)
+             - :dir:`file` **processAction** (`list`, ---)
+             - :dir:`file` **light** (`list`, ---)
+             - :dir:`file` **ventilationStep** (`list`, ---)
+             - :dir:`file` **programId** (`list`, ---)
+             - :dir:`file` **targetTemperature** (`list`, ---)
+             - :dir:`file` **startTime** (`list`, ---)
+             - :dir:`file` **deviceName** (`bool`, ---)
+             - :dir:`file` **powerOn** (`bool`, ---)
+             - :dir:`file` **powerOff** (`bool`, ---)
+             - :dir:`file` **modes** (`list`, ---)
+         - :dir:`folder` **visu** (`foo`, ---)
+             - :dir:`folder` **times** (`foo`, ---)
+                 - :dir:`file` **scheduled_startTime** (`str`, ---)
+                 - :dir:`file` **startTime** (`str`, ---)
+                 - :dir:`file` **stopTime** (`str`, ---)
+                 - :dir:`file` **elapsedTime** (`str`, ---)
+                 - :dir:`file` **remainingTime** (`str`, ---)
+             - :dir:`folder` **values** (`foo`, ---)
+                 - :dir:`folder` **temperatur_zone_1** (`foo`, ---)
+                     - :dir:`file` **target_temperature** (`num`, ---)
+                     - :dir:`file` **temperature** (`num`, ---)
+                     - :dir:`file` **unit** (`str`, ---)
+                 - :dir:`folder` **temperatur_zone_2** (`foo`, ---)
+                     - :dir:`file` **target_temperature** (`num`, ---)
+                     - :dir:`file` **temperature** (`num`, ---)
+                     - :dir:`file` **unit** (`str`, ---)
+                 - :dir:`folder` **temperatur_zone_3** (`foo`, ---)
+                     - :dir:`file` **target_temperature** (`num`, ---)
+                     - :dir:`file` **temperature** (`num`, ---)
+                     - :dir:`file` **unit** (`str`, ---)
+             - :dir:`folder` **allowed_actions** (`foo`, ---)
+                 - :dir:`file` **start** (`bool`, ---)
+                 - :dir:`file` **stop** (`bool`, ---)
+                 - :dir:`file` **pause** (`bool`, ---)
+                 - :dir:`file` **start_superfreezing** (`bool`, ---)
+                 - :dir:`file` **stop_superfreezing** (`bool`, ---)
+                 - :dir:`file` **start_supercooling** (`bool`, ---)
+                 - :dir:`file` **stop_supercooling** (`bool`, ---)
+                 - :dir:`file` **deviceName** (`bool`, ---)
+                 - :dir:`file` **powerOn** (`bool`, ---)
+                 - :dir:`file` **powerOff** (`bool`, ---)
+                 - :dir:`file` **temp_Zone1** (`bool`, ---)
+                 - :dir:`file` **temp_Zone2** (`bool`, ---)
+                 - :dir:`file` **temp_Zone3** (`bool`, ---)
+             - :dir:`folder` **action_buttons** (`foo`, ---)
+                 - :dir:`file` **start** (`bool`, ---)
+                 - :dir:`file` **stop** (`bool`, ---)
+                 - :dir:`file` **pause** (`bool`, ---)
+                 - :dir:`file` **start_superfreezing** (`bool`, ---)
+                 - :dir:`file` **stop_superfreezing** (`bool`, ---)
+                 - :dir:`file` **start_supercooling** (`bool`, ---)
+                 - :dir:`file` **stop_supercooling** (`bool`, ---)
+                 - :dir:`file` **powerOn** (`bool`, ---)
+                 - :dir:`file` **powerOff** (`bool`, ---)
+         - :dir:`folder` **values** (`foo`, ---)
+             - :dir:`folder` **temperatur_zone_1** (`foo`, ---)
+                 - :dir:`file` **range_index** (`list`, ---)
+                 - :dir:`file` **range_description** (`list`, ---)
+             - :dir:`folder` **temperatur_zone_2** (`foo`, ---)
+                 - :dir:`file` **range_index** (`list`, ---)
+                 - :dir:`file` **range_description** (`list`, ---)
+             - :dir:`folder` **temperatur_zone_3** (`foo`, ---)
+                 - :dir:`file` **range_index** (`list`, ---)
+                 - :dir:`file` **range_description** (`list`, ---)
 
 
 ===============

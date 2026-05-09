@@ -14,18 +14,18 @@ schreiben und in eval Statements sowie in Logiken zu verwenden.
 Erstellung und Speicherung
 ==========================
 
-Die Python Dateien mit den Funktionen müssen dazu im Verzeichnis **../functions** abgelegt werden. Es sind normale
+Die Python Dateien mit den Funktionen müssen dazu im Verzeichnis ``../functions`` abgelegt werden. Es sind normale
 Python Dateien, die mehrere Funktionen enthalten können. Als formale Anforderung sind nur Informationen zur Version
 und eine kurze Beschreibung des Zwecks der Funktionen dieser Datei anzugeben. Diese müssen in der Python Datei
 als globale Variablen **_VERSION** und **_DESCRIPTION** definiert werden.
 
-Im folgenden Beispiel wird eine Datei (Funktionssammlung) mit dem Namen **anhalter.py** im Verzeichnis **../functions**
+Im folgenden Beispiel wird eine Datei (Funktionssammlung) mit dem Namen ``anhalter.py`` im Verzeichnis ``etc/functions``
 erzeugt:
 
 Die Python Datei sieht folgendermaßen aus:
 
 .. code-block:: python
-   :caption: /usr/local/smarthome/functions/anhalter.py
+   :caption: etc/functions/anhalter.py
 
    #!/usr/bin/env python3
    # anhalter.py
@@ -87,7 +87,7 @@ Als Hilfestellung bei der Erstellung und dem Testen von Funktionen kann aus den 
 Dazu muss das Logging Modul importiert und ein Logger definiert werden:
 
 .. code-block:: python
-   :caption: /usr/local/smarthome/functions/anhalter.py
+   :caption: etc/functions/anhalter.py
 
    #!/usr/bin/env python3
    # anhalter.py
@@ -113,7 +113,7 @@ Der Name des Loggers im obigen Beispiel ist **functions.anhalter**:
 
 
 Damit aus Funktionen ein Logging mit Leveln kleiner als WARNING erfolgt, muss in der Logging Konfiguration
-../etc/logging.yaml ein entsprechender Logger für **functions** ergänzt werden:
+``etc/logging.yaml`` ein entsprechender Logger für **functions** ergänzt werden:
 
 .. code:: yaml
 
@@ -148,7 +148,7 @@ werden:
 Die Userfunction dazu kann z.B. folgendermaßen aussehen:
 
 .. code-block:: python
-   :caption: /usr/local/smarthome/functions/beschattung.py
+   :caption: etc/functions/beschattung.py
 
    _VERSION     = '0.1.0'
    _DESCRIPTION = 'Hilfsfunktionen zur Beschattungssteuerung per Stateengine'
@@ -185,7 +185,7 @@ Das folgende Beispiel zeigt beide Varianten (übergabe der Item Werte und Refere
 
 
 .. code-block:: python
-   :caption: /usr/local/smarthome/functions/beschattung.py
+   :caption: etc/functions/beschattung.py
 
    _VERSION     = '0.2.0'
    _DESCRIPTION = 'Hilfsfunktionen zur Beschattungssteuerung per Stateengine'
@@ -218,7 +218,7 @@ kann das Smarthome-Objekt übergeben werden. Das würde dann folgendermaßen aus
 Die Userfunction dazu kann z.B. folgendermaßen aussehen:
 
 .. code-block:: python
-   :caption: /usr/local/smarthome/functions/beschattung.py
+   :caption: etc/functions/beschattung.py
 
    _VERSION     = '0.2.1'
    _DESCRIPTION = 'Hilfsfunktionen zur Beschattungssteuerung per Stateengine'
@@ -255,7 +255,7 @@ SmartHomeNG erstellt wurden.
 Zusätzliche Python Module
 =========================
 
-Wird ein zusätzliches Python Modul in einer Userfunction benötigt, so kann eine ``requirements.txt`` im Verzeichnis ``functions`` erstellt 
+Wird ein zusätzliches Python Modul in einer Userfunction benötigt, so kann eine ``requirements.txt`` im Verzeichnis ``etc/functions`` erstellt 
 und in dieser Datei Namen und Versionen für die Installation via PIP notiert werden.
 In diesem Fall muss SmartHomeNG auf jeden Fall neu gestartet werden da die Überprüfung nur beim Start von SmartHomeNG erfolgt.
 

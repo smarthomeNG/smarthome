@@ -9,7 +9,7 @@
 structs (Item Strukturen)
 =========================
 
-Durch folgende Einträge in der Datei **../structs/global_structs.yaml** werden diverse Templates bereit gestellt,
+Durch folgende Einträge in der Datei ``etc/structs/global_structs.yaml`` werden diverse Templates bereit gestellt,
 auf die von Items referenziert werden kann. Es gibt hier auch keine erkennbare Unterscheidung zwischen
 Structs und Sub-Structs, alle Deklarationen sind gleichwertig und können nach Belieben verschachtelt werden.
 

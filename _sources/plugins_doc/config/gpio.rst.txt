@@ -12,7 +12,7 @@ Plugin 'gpio' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -29,16 +29,17 @@ Beschreibung
 ============
 
 GPIO-Unterstützung für den Raspberry Pi.
-Dieses Plugin unterstützt über das RPi.GPIO-Modul das Einbinden von externen Sensoren und Aktoren, die direkt am Raspberry Pi angeschlossen werden. Damit ist es beispielsweise möglich, den Zustand von Reedkontakten einzulesen oder LEDs zu aktivieren und beispielsweise eine `Posteinwurferkennung <https://redaktion.knx-user-forum.de/posteinwurferkennung/>`_ zu basteln. Leider sind die GPIOs für die Raspberry Pi <=3+ rein digital, sodass analoge Signale z.B. eines Distanzsensors nur über Umwege abgegriffen werden können.
+Dieses Plugin unterstützt über das gpiod-Modul das Einbinden von externen Sensoren und Aktoren, die direkt am Raspberry Pi angeschlossen werden. Damit ist es beispielsweise möglich, den Zustand von Reedkontakten einzulesen oder LEDs zu aktivieren und beispielsweise eine `Posteinwurferkennung <https://redaktion.knx-user-forum.de/posteinwurferkennung/>`_ zu basteln. Leider sind die GPIOs für die Raspberry Pi <=3+ rein digital, sodass analoge Signale z.B. eines Distanzsensors nur über Umwege abgegriffen werden können. 
 
 
 Anforderungen
 =============
 
 
-RPi.GPIO Python Modul
+gpiod Python Module
 
  - Minimum SmartHomeNG Version: **1.4**
+ - Maximum Python Version: **3.13**
 
 Konfiguration
 =============
@@ -65,22 +66,24 @@ Prellzeit in ms, um Änderungen innerhalb kurzer Zeit zu verhindern.
  - Standardwert: **300**
 
 
-initretries
-===========
+chip
+====
 
 
-Anzahl an Versuchen zum Pluginstart, Listen-Events für die Pins zu erstellen.
+Pfad zum GPIO Chipdevice, 0 verweist auf /dev/gpiochip0
 
  - Datentyp: **int**
- - Standardwert: **10**
+ - Standardwert: **0**
 
+ - Minimalwert: **0**
+ - Maximalwert: **4**
 
 mode
 ====
 
 
 **Zuweisungsmethode der Pinbelegung.**
-Hier wird der GPIO PIN Modus deklariert, der die Nummerierung der Pins definiert. `Mehr Infos über GPIO Header <https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/>`_
+Hier wird der GPIO PIN Modus deklariert, der die Nummerierung der Pins definiert. `Mehr Infos über GPIO Header <https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/>`_ 
 
  - Datentyp: **str**
  - Standardwert: **BOARD**
@@ -98,7 +101,7 @@ pullupdown
 
 
 **Globale Pullup-/Pulldown-Konfiguration**
-Hier wird festgelegt, was die systemweite Vorgabe der Pullup-/Pulldown-Konfiguration sein soll. Diese Einstellung kann je Item individuell überschrieben werden.
+Hier wird festgelegt, was die systemweite Vorgabe der Pullup-/Pulldown-Konfiguration sein soll. Diese Einstellung kann je Item individuell überschrieben werden. 
 
  - Datentyp: **str**
  - Standardwert: **up**
@@ -117,7 +120,7 @@ gpio_in
 
 
 **Pin Nummer für den GPIO Eingang.**
-Angabe der Pin Nummer, an der beispielsweise ein Sensor o.ä. angeschlossen ist. Die Nummer hängt vom Modus in den Plugin-Paramtern ab!
+Angabe der Pin Nummer, an der beispielsweise ein Sensor o.ä. angeschlossen ist. Die Nummer hängt vom Modus in den Plugin-Paramtern ab! 
 
  - Datentyp: **int**
 
@@ -127,7 +130,7 @@ gpio_init
 
 
 **Startwert für GPIO Ausgang**
-Dieser Wert wird bei Initialisierung des Plugins auf dem Ausgang gesetzt.
+Dieser Wert wird bei Initialisierung des Plugins auf dem Ausgang gesetzt. 
 
  - Datentyp: **bool**
 
@@ -137,7 +140,7 @@ gpio_invert
 
 
 **Ein-/Ausgabewerte an/aus invertieren**
-Vertauscht die Zuordnung von Itemwert zu GPIO-Ein-/Ausgabe zu True->low/0, False->high/1. Beachte: ein konfigurierter Initialwert wird auch invertiert.
+Vertauscht die Zuordnung von Itemwert zu GPIO-Ein-/Ausgabe zu True->low/0, False->high/1. Beachte: ein konfigurierter Initialwert wird auch invertiert. 
 
  - Datentyp: **bool**
 
@@ -147,7 +150,7 @@ gpio_out
 
 
 **Pin Nummer für den GPIO Ausgang.**
-Die Nummer hängt vom Modus in den Plugin-Paramtern ab! Der Ausgang wird zum Pluginstart automatisch aktualisiert, sollte also nicht im Item als gpio_in und gpio_out definiert werden.
+Die Nummer hängt vom Modus in den Plugin-Paramtern ab! Der Ausgang wird zum Pluginstart automatisch aktualisiert, sollte also nicht im Item als gpio_in und gpio_out definiert werden. 
 
  - Datentyp: **int**
 
@@ -157,7 +160,7 @@ gpio_pud
 
 
 **Pullup-/Pulldown-Konfiguration**
-Hier wird festgelegt, ob der jeweilige Pin den Software-Pullup bzw. -Pulldown aktivieren soll oder nicht. Wenn keine Angabe erfolgt, wird die globale Voreinstellung übernommen (vgl. Plugin-Parameter "pullupdown").
+Hier wird festgelegt, ob der jeweilige Pin den Software-Pullup bzw. -Pulldown aktivieren soll oder nicht. Wenn keine Angabe erfolgt, wird die globale Voreinstellung übernommen (vgl. Plugin-Parameter "pullupdown"). 
 
  - Datentyp: **str**
 
@@ -170,6 +173,15 @@ Hier wird festgelegt, ob der jeweilige Pin den Software-Pullup bzw. -Pulldown ak
    - **none**
    - **NONE**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

@@ -17,7 +17,7 @@ Wenn sich der Wert eines Items ändert, löst das eine Reihe von Aktionen aus:
     - *eval* Statements in anderen Items werden getriggert, wenn in anderen in den Items ein *eval_trigger* auf das geänderte Item verweist.
     - *on_change* Definitionen des Items werden ausgewertet
     - *on_update* Definitionen des Items werden ausgewertet
-    - Logiken werden getriggert, wenn der Trigger der Logik (in ../etc/logic.yaml) auf das geänderte Item verweist.
+    - Logiken werden getriggert, wenn der Trigger der Logik (in ``etc/logic.yaml``) auf das geänderte Item verweist.
     - Plugins, die mit diesem Item verbunden sind, erhalten eine Info über den neuen Wert
 
 

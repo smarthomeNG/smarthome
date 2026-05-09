@@ -12,7 +12,7 @@ Plugin 'thz' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -141,6 +141,136 @@ thz
 Beschreibt einen Parameter Typ als Zeichenkette (z.B. comPortStatus, logRegister, logFullScan)
 
  - Datentyp: **str**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+thz
+===
+
+
+.. treeview::
+     - :dir:`folder` **thz** (`foo`, ---)
+         - :dir:`file` **comPortStatus** (`num`, ---)
+         - :dir:`file` **comPortReopenAttempts** (`num`, ---)
+         - :dir:`file` **rxCount** (`num`, ---)
+         - :dir:`file` **txCount** (`num`, ---)
+         - :dir:`file` **rxChecksumErrorCount** (`num`, ---)
+         - :dir:`file` **rxNackCount** (`num`, ---)
+         - :dir:`file` **rxTimeoutCount** (`num`, ---)
+         - :dir:`file` **rxFramingErrorCount** (`num`, ---)
+         - :dir:`file` **logRegister** (`str`, ---)
+         - :dir:`file` **logFullScan** (`str`, ---)
+         - :dir:`file` **outsideTemp** (`num`, ---)
+         - :dir:`file` **flowTemp** (`num`, ---)
+         - :dir:`file` **returnTemp** (`num`, ---)
+         - :dir:`file` **dhwTemp** (`num`, ---)
+         - :dir:`file` **hotGasTemp** (`num`, ---)
+         - :dir:`file` **evaporatorTemp** (`num`, ---)
+         - :dir:`file` **condenserTemp** (`num`, ---)
+         - :dir:`file` **mixerOpen** (`bool`, ---)
+         - :dir:`file` **mixerClosed** (`bool`, ---)
+         - :dir:`file` **heatPipeValve** (`bool`, ---)
+         - :dir:`file` **diverterValve** (`bool`, ---)
+         - :dir:`file` **dhwPumpOn** (`bool`, ---)
+         - :dir:`file` **heatingCircuitPumpOn** (`bool`, ---)
+         - :dir:`file` **compressorOn** (`bool`, ---)
+         - :dir:`file` **boosterStage1On** (`bool`, ---)
+         - :dir:`file` **boosterStage2On** (`bool`, ---)
+         - :dir:`file` **boosterStage3On** (`bool`, ---)
+         - :dir:`file` **highPressureSensorOn** (`bool`, ---)
+         - :dir:`file` **lowPressureSensorOn** (`bool`, ---)
+         - :dir:`file` **evaporatorIceMonitorOn** (`bool`, ---)
+         - :dir:`file` **signalAnodeOn** (`bool`, ---)
+         - :dir:`file` **evuEnable** (`bool`, ---)
+         - :dir:`file` **ovenFireplaceOn** (`bool`, ---)
+         - :dir:`file` **STB_On** (`bool`, ---)
+         - :dir:`file` **outputVentilatorPower** (`num`, ---)
+         - :dir:`file` **inputVentilatorPower** (`num`, ---)
+         - :dir:`file` **mainVentilatorPower** (`num`, ---)
+         - :dir:`file` **outputVentilatorSpeed** (`num`, ---)
+         - :dir:`file` **inputVentilatorSpeed** (`num`, ---)
+         - :dir:`file` **mainVentilatorSpeed** (`num`, ---)
+         - :dir:`file` **outside_tempFiltered** (`num`, ---)
+         - :dir:`file` **relHumidity** (`num`, ---)
+         - :dir:`file` **dewPoint** (`num`, ---)
+         - :dir:`file` **P_Nd** (`num`, ---)
+         - :dir:`file` **P_Hd** (`num`, ---)
+         - :dir:`file` **actualPower_Qc** (`num`, ---)
+         - :dir:`file` **actualPower_Pel** (`num`, ---)
+         - :dir:`file` **roomTempRC** (`num`, ---)
+         - :dir:`file` **compressorHeatingCycles** (`num`, ---)
+         - :dir:`file` **compressorCoolingCycles** (`num`, ---)
+         - :dir:`file` **compressorDHWCycles** (`num`, ---)
+         - :dir:`file` **boosterDHWCycles** (`num`, ---)
+         - :dir:`file` **boosterHeatingCycles** (`num`, ---)
+         - :dir:`file` **dhwSetTemp** (`num`, ---)
+         - :dir:`file` **compBlockTime** (`num`, ---)
+         - :dir:`file` **heatBlockTime** (`num`, ---)
+         - :dir:`file` **opModeHC** (`str`, ---)
+         - :dir:`file` **returnTempHC1** (`num`, ---)
+         - :dir:`file` **integralHeatHC1** (`num`, ---)
+         - :dir:`file` **flowTempHC1** (`num`, ---)
+         - :dir:`file` **heatSetTempHC1** (`num`, ---)
+         - :dir:`file` **heatTempHC1** (`num`, ---)
+         - :dir:`file` **onHysteresisNo** (`num`, ---)
+         - :dir:`file` **offHysteresisNo** (`num`, ---)
+         - :dir:`file` **HCBoosterStage** (`num`, ---)
+         - :dir:`file` **numberOfFaults** (`num`, ---)
+         - :dir:`file` **fault0Code** (`num`, ---)
+         - :dir:`file` **fault0Time** (`str`, ---)
+         - :dir:`file` **fault0Date** (`str`, ---)
+         - :dir:`file` **fault1Code** (`num`, ---)
+         - :dir:`file` **fault1Time** (`str`, ---)
+         - :dir:`file` **fault1Date** (`str`, ---)
+         - :dir:`file` **fault2Code** (`num`, ---)
+         - :dir:`file` **fault2Time** (`str`, ---)
+         - :dir:`file` **fault2Date** (`str`, ---)
+         - :dir:`file` **fault3Code** (`num`, ---)
+         - :dir:`file` **fault3Time** (`str`, ---)
+         - :dir:`file` **fault3Date** (`str`, ---)
+         - :dir:`file` **time** (`str`, ---)
+         - :dir:`file` **date** (`str`, ---)
+         - :dir:`file` **version** (`num`, ---)
+         - :dir:`file` **prodDate** (`str`, ---)
+         - :dir:`file` **flowRateHC1** (`num`, ---)
+         - :dir:`file` **softwareID** (`num`, ---)
+         - :dir:`file` **iconCompressor** (`bool`, ---)
+         - :dir:`file` **iconHeating** (`bool`, ---)
+         - :dir:`file` **iconCooling** (`bool`, ---)
+         - :dir:`file` **iconDHW** (`bool`, ---)
+         - :dir:`file` **iconBooster** (`bool`, ---)
+         - :dir:`file` **iconService** (`bool`, ---)
+         - :dir:`file` **iconBothFilters** (`bool`, ---)
+         - :dir:`file` **iconCirculationPump** (`bool`, ---)
+         - :dir:`file` **iconDeicingCondenser** (`bool`, ---)
+         - :dir:`file` **iconUpperFilter** (`bool`, ---)
+         - :dir:`file` **iconLowerFilter** (`bool`, ---)
+         - :dir:`file` **boostDHWTotal** (`num`, ---)
+         - :dir:`file` **boostHCTotal** (`num`, ---)
+         - :dir:`file` **heatRecoveredDay** (`num`, ---)
+         - :dir:`file` **heatRecoveredTotal** (`num`, ---)
+         - :dir:`file` **heatDHWDay** (`num`, ---)
+         - :dir:`file` **heatDHWTotal** (`num`, ---)
+         - :dir:`file` **heatHCDay** (`num`, ---)
+         - :dir:`file` **heatHCTotal** (`num`, ---)
+         - :dir:`file` **ePowerDHWDay** (`num`, ---)
+         - :dir:`file` **ePowerDHWTotal** (`num`, ---)
+         - :dir:`file` **ePowerHCDay** (`num`, ---)
+         - :dir:`file` **ePowerHCTotal** (`num`, ---)
+         - :dir:`file` **pOpMode** (`str`, ---)
+         - :dir:`file` **p07FanStageDay** (`num`, ---)
+         - :dir:`file` **p13GradientHC1** (`num`, ---)
+         - :dir:`file` **p14LowEndHC1** (`num`, ---)
+         - :dir:`file` **p15RoomInfluenceHC1** (`num`, ---)
+         - :dir:`file` **p37FanStage1AirIn** (`num`, ---)
+         - :dir:`file` **p40FanStage1AirOut** (`num`, ---)
 
 
 ===============

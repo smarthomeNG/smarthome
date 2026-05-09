@@ -35,7 +35,7 @@ smarthome.py kann mit folgenden Kommandozeilen Optionen gestartet werden:
 +------------+----------------------+--------------------------------------------------------------------------------+
 | -e         | --config_etc         | Die Verzeichnisse mit benutzerdefinierter Konfiguration (items, structs,       |
 |            |                      | logics, scenes, uf) unterhalb von etc suchen                                   |
-|            |                      | (/etc/items/ statt /items/, /etc/structs/ statt /structs/ usw.)                |
+|            |                      | (``etc/items/`` statt ``items/``, ``etc/structs/`` statt ``structs/`` usw.)    |
 +------------+----------------------+--------------------------------------------------------------------------------+
 | -v         | --verbose            | Ausführliches Logging - DEPRECATED bitte die Logging-Konfiguration benutzen    |
 +------------+----------------------+--------------------------------------------------------------------------------+

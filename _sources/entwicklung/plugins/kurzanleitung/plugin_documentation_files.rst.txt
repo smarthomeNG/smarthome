@@ -20,7 +20,7 @@ user_doc.rst
 
 Die ``user_doc.rst``-Datei soll im Dateiformat restructured text (rST) erstellt werden. Die Dokumentation sollte
 durchgängig auf Deutsch erfolgen; nur wenn der Plugin-Autor kein Deutsch spricht, kann die Dokumentation auf
-Englisch erfolgen. Der Grund dafür ist, dass die englischsprachige Dokuemntation mit Hilfe von Google-Translate
+Englisch erfolgen. Der Grund dafür ist, dass die englischsprachige Dokumentation mit Hilfe von Google-Translate
 erstellt wird.
 
 Die Datei ``user_doc.rst`` wird im Rahmen des Build-Prozesses dynamisch in die Nutzerdokumentation von SmartHomeNG
@@ -33,21 +33,6 @@ integriert, u.a. auch auf der Homepage.
 
    Dieser Eintrag wird als Einstiegspunkt für die Navigation in der Dokumentation genutzt.
    Ein anderer Eintrag als Überschrift sorgt für Inkonsistenzen in den Navigationselementen.
-
-
-Zum Beispiel:
-
-Das ``backend`` Plugin beinhaltet eine Datei ``user_doc.rst``.
-Diese Datei ist in den Navigationsbaum der Dokumentation integriert.
-Dieser Eintrag wird angezeigt, wenn die entsprechende Plugin-Kategorie ausgewählt wird:
-
-.. image:: ../assets/backend_user_doc_tree.png
-
-
-Wenn der Eintrag im Navigationspanel ausgewählt wird, wird die Seite aufgerufen:
-
-.. image:: ../assets/backend_user_doc_page.png
-
 
 Die Dokumentation kann Bilder enthalten. Diese müssten in eim Unterordner ``assets`` des Plugin-Ordners abgelegt werden.
 

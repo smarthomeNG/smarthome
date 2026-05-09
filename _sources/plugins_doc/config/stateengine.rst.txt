@@ -12,7 +12,7 @@ Plugin 'stateengine' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -28,7 +28,7 @@ Es handelt sich bei diesem Plugin um ein **system Plugin**.
 Beschreibung
 ============
 
-Der ursprüngliche Zweck dieses Plugins war es, Jalousien zu steuern. Mit den steigenden Anforderungen hat es sich jedoch zu einem flexiblen Zustandsautomaten entwickelt, mit dem nahezu alles gesteuert werden kann. Im Prinzip ist es ein `endlicher Automat <https://de.wikipedia.org/wiki/Endlicher_Automat>`_. Dabei arbeitet das Plugin nicht mit Events, die zu konkreten Zuständen führen, sondern mit einer hierarchischen Evaluierung der Zustände.
+Der ursprüngliche Zweck dieses Plugins war es, Jalousien zu steuern. Mit den steigenden Anforderungen hat es sich jedoch zu einem flexiblen Zustandsautomaten entwickelt, mit dem nahezu alles gesteuert werden kann. Im Prinzip ist es ein `endlicher Automat <https://de.wikipedia.org/wiki/Endlicher_Automat>`_. Dabei arbeitet das Plugin nicht mit Events, die zu konkreten Zuständen führen, sondern mit einer hierarchischen Evaluierung der Zustände. 
 
 
 Anforderungen
@@ -99,7 +99,7 @@ log_directory
 **Verzeichnis für die Protokolldateien:**
 Die Logdateien der erweiterten Protokollierung werden in das hier angegebene Verzeichnis geschrieben.
 Wenn der angegebene Verzeichnisname mit "/" beginnt wird er als absoluter Verzeichnisname behandelt. Alle anderen Verzeichnisnamen werden als Unterverzeichnisse des smarthomeNG Basisverzeichnisses behandelt. Das angegebene Verzeichnis wird angelegt, wenn es nicht existiert.
-Wenn hier kein abweichendes Verzeichnis angegeben ist, wird das Verzeichnis ``<smarthome_base_directory>/var/log/stateengine/`` verwendet.
+Wenn hier kein abweichendes Verzeichnis angegeben ist, wird das Verzeichnis ``<smarthome_base_directory>/var/log/stateengine/`` verwendet. 
 
  - Datentyp: **str**
  - Standardwert: **var/log/stateengine/**
@@ -110,18 +110,18 @@ log_level
 
 
 **Erweiterte Protokollierung:**
-Bei einem Wert von 1, 2 oder 3 wird pro Item eine eigene Logdatei im unter log_directory angegebenen Verzeichnis angelegt. Wenn der Parameter nicht angegeben oder auf 0 gestellt ist, ist die erweiterte Protokollierung deaktiviert.
+Bei einem Wert von 1, 2 oder 3 wird pro Item eine eigene Logdatei im unter log_directory angegebenen Verzeichnis angelegt. Wenn der Parameter nicht angegeben oder auf 0 gestellt ist, ist die erweiterte Protokollierung deaktiviert. 
 
  - Datentyp: **int**
  - Standardwert: **0**
 
  - Mögliche Werte:
 
-   - **-1** |_| - |_| Standardlevel aus plugin.yaml
-   - **0** |_| - |_| deaktiviert
-   - **1** |_| - |_| Info
-   - **2** |_| - |_| Debug
-   - **3** |_| - |_| Develop
+   - **-1**
+   - **0**
+   - **1**
+   - **2**
+   - **3**
 
 
 log_maxage
@@ -132,7 +132,7 @@ log_maxage
 Alte Protokolldateien können nach einer bestimmten Zeit automatisch gelöscht werden. Durch diesen Parameter wird die Anzahl der Tage festgelegt, nach der die Dateien gelöscht werden sollen. Das Löschen ist ausgesetzt, solange der Parameter den Wert 0 hat. Wenn der Parameter auf einen anderen Wert gesetzt wird, wird das Alter der Dateien im Protokollverzeichnis ``log_directory`` täglich geprüft und überalterte Dateien werden gelöscht.
 
 **Achtung:**
-Die Löschfunktionalität prüft und löscht alle Dateien im Protokollverzeichnis, ob sie Protokolldateien sind oder nicht. Daher sollten keine anderen Dateien in diesem Verzeichnis abgelegt werden!
+Die Löschfunktionalität prüft und löscht alle Dateien im Protokollverzeichnis, ob sie Protokolldateien sind oder nicht. Daher sollten keine anderen Dateien in diesem Verzeichnis abgelegt werden! 
 
  - Datentyp: **int**
  - Standardwert: **0**
@@ -150,7 +150,7 @@ Beim Starten von smarthomeNG dauert es üblicherweise einige Sekunden, bis alle 
  - 0: Keine Startverzögerung. Die erste Zustandsermittlung wird direkt nach der Initialisierung des Objekt-Items durchgeführt.
  - -1: Es wird keine erste Zustandsermittlung durchgeführt.
 
-Ohne Angabe dieses Parameters wird der Standardwert von 10 Sekunden angenommen.
+Ohne Angabe dieses Parameters wird der Standardwert von 10 Sekunden angenommen. 
 
  - Datentyp: **int**
  - Standardwert: **10**
@@ -163,18 +163,18 @@ startup_log_level
 
 
 **Erweiterte Protokollierung:**
-Bei einem Wert von 1, 2 oder 3 wird pro Item eine eigene Logdatei im unter log_directory angegebenen Verzeichnis angelegt. Ist die Initialisierung eines Stateengine Items abgeschlossen, wird der über se_log_level oder den Standard Loglevel im plugin.yaml eingestellt.
+Bei einem Wert von 1, 2 oder 3 wird pro Item eine eigene Logdatei im unter log_directory angegebenen Verzeichnis angelegt. Ist die Initialisierung eines Stateengine Items abgeschlossen, wird der über se_log_level oder den Standard Loglevel im plugin.yaml eingestellt. 
 
  - Datentyp: **int**
  - Standardwert: **2**
 
  - Mögliche Werte:
 
-   - **-1** |_| - |_| Standardlevel aus plugin.yaml
-   - **0** |_| - |_| deaktiviert
-   - **1** |_| - |_| Info
-   - **2** |_| - |_| Debug
-   - **3** |_| - |_| Develop
+   - **-1**
+   - **0**
+   - **1**
+   - **2**
+   - **3**
 
 
 suspend_time_default
@@ -182,7 +182,7 @@ suspend_time_default
 
 
 **Vorgabezeit zur Unterbrechung der automatischen Steuerung nach manuellen Aktionen:**
-Nach manuellen Aktionen kann die Automatik für eine bestimmte Zeit Unterbrochen werden. Die Dauer dieser Unterbrechungen kann bei den Objekt-Items angegeben werden. Die Einheit für den Wert sind Sekunden. Wenn bei einem Objekt-Item kein Wert angegeben ist, wird der hier angegebene Standardwert verwendet. Wenn kein abweichender Standardwert in der Plugin-Konfiguration angegeben ist, ist der Vorgabewert 3600 Sekunden (1 Stunde)
+Nach manuellen Aktionen kann die Automatik für eine bestimmte Zeit Unterbrochen werden. Die Dauer dieser Unterbrechungen kann bei den Objekt-Items angegeben werden. Die Einheit für den Wert sind Sekunden. Wenn bei einem Objekt-Item kein Wert angegeben ist, wird der hier angegebene Standardwert verwendet. Wenn kein abweichender Standardwert in der Plugin-Konfiguration angegeben ist, ist der Vorgabewert 3600 Sekunden (1 Stunde) 
 
  - Datentyp: **int**
  - Standardwert: **3600**
@@ -202,7 +202,7 @@ se_instant_leaveaction
 ======================
 
 
-Ist dieser Parameter auf True bzw. 1 gesetzt, werden "on leave" Aktionen sofort ausgeführt, wenn der aktuelle Zustand nicht mehr eingenommen wird. Standardmäßig werden die Aktionen erst direkt vor dem Eintreten in einen neuen Zustand getriggert. Kann auch über ein Item zur Laufzeit geändert werden, beispielsweise durch item:..settings.instant_leaveaction. Der Wert -1 sorgt dafür, dass der in der plugin.yaml angegebene Standardwert herangezogen wird.
+Ist dieser Parameter auf True bzw. 1 gesetzt, werden "on leave" Aktionen sofort ausgeführt, wenn der aktuelle Zustand nicht mehr eingenommen wird. Standardmäßig werden die Aktionen erst direkt vor dem Eintreten in einen neuen Zustand getriggert. Kann auch über ein Item zur Laufzeit geändert werden, beispielsweise durch item:..settings.instant_leaveaction. Der Wert -1 sorgt dafür, dass der in der plugin.yaml angegebene Standardwert herangezogen wird. 
 
  - Datentyp: **foo**
  - Standardwert: **False**
@@ -213,7 +213,7 @@ se_item_suspend_end
 
 
 **Id des Items, in dem das Ende der Suspendzeit abgelegt werden soll:**
-Für Visualisierungszwecke kann der Inhalt des hier verknüpften Items angezeigt werden. Dadurch ist ersichtlich, bis wann die Statusevaluierung noch ausgesetzt wird.
+Für Visualisierungszwecke kann der Inhalt des hier verknüpften Items angezeigt werden. Dadurch ist ersichtlich, bis wann die Statusevaluierung noch ausgesetzt wird. 
 
  - Datentyp: **str**
 
@@ -223,7 +223,7 @@ se_item_suspend_start
 
 
 **Id des Items, in dem der Start der Suspendzeit abgelegt werden soll:**
-Für Visualisierungszwecke kann der Inhalt des hier verknüpften Items z.B. im clock.countdown Widget der SmartVisu genutzt werden.
+Für Visualisierungszwecke kann der Inhalt des hier verknüpften Items z.B. im clock.countdown Widget der SmartVisu genutzt werden. 
 
  - Datentyp: **str**
 
@@ -233,7 +233,7 @@ se_lastconditionset_item_id
 
 
 **ID des Items, in dem der Name des aktuellen Zustandsets abgelegt wird:**
-In das hier verknüpfte Item wird der Name des zuletzt aktiven Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+In das hier verknüpfte Item wird der Name des zuletzt aktiven Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden. 
 
  - Datentyp: **str**
 
@@ -243,7 +243,7 @@ se_lastconditionset_item_name
 
 
 **Name des Items, in dem der Name des aktuellen Zustandsets abgelegt wird:**
-In das hier verknüpfte Item wird der Name des zuletzt aktiven Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+In das hier verknüpfte Item wird der Name des zuletzt aktiven Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden. 
 
  - Datentyp: **str**
 
@@ -253,7 +253,7 @@ se_laststate_item_id
 
 
 **Id des Items, in dem der aktuelle Zustand abgelegt wird:**
-In das hier verknüpfte Item wird die Id des aktuellen Zustands abgelegt. Das Item kann mit dem Attribut ``cache: yes`` versehen werden, dann bleibt der vorherige Zustand bei einem Neustart von smarthomeNG erhalten.
+In das hier verknüpfte Item wird die Id des aktuellen Zustands abgelegt. Das Item kann mit dem Attribut ``cache: yes`` versehen werden, dann bleibt der vorherige Zustand bei einem Neustart von smarthomeNG erhalten. 
 
  - Datentyp: **str**
 
@@ -263,7 +263,7 @@ se_laststate_item_name
 
 
 **Id des Items, in dem der Name des aktuellen Zustands abgelegt wird:**
-In das hier verknüpfte Item wird der Name des aktuellen Zustands abgelegt. Das Item kann für Displayzwecke und Bedingungen verwendet werden.
+In das hier verknüpfte Item wird der Name des aktuellen Zustands abgelegt. Das Item kann für Displayzwecke und Bedingungen verwendet werden. 
 
  - Datentyp: **str**
 
@@ -272,7 +272,7 @@ se_log_level
 ============
 
 
-Das global angegebene Loglevel kann für jedes SE item individuell überschrieben werden. Somit ist es einfacher möglich, bestimme State Engines zu debuggen. Das Loglevel kann durch das Settings Item log_level im laufenden Betrieb angepasst werden. Ist der Wert auf -1 gesetzt, wird der Standardwert aus dem plugin.yaml übernommen.
+Das global angegebene Loglevel kann für jedes SE item individuell überschrieben werden. Somit ist es einfacher möglich, bestimme State Engines zu debuggen. Das Loglevel kann durch das Settings Item log_level im laufenden Betrieb angepasst werden. Ist der Wert auf -1 gesetzt, wird der Standardwert aus dem plugin.yaml übernommen. 
 
  - Datentyp: **foo**
 
@@ -282,7 +282,7 @@ se_name
 
 
 **Zustandsname, überschreibt den im Attribut "name" angegebene Wert**
-Dies kann beispielsweise nützlich sein, um den Namen abhängig von einer Bedingungsgruppe zu ändern.
+Dies kann beispielsweise nützlich sein, um den Namen abhängig von einer Bedingungsgruppe zu ändern. 
 
  - Datentyp: **str**
 
@@ -297,8 +297,8 @@ Kennzeichnet das Item als Objekt-Item des StateEngine-Plugins. Ist der Wert nich
 
  - Mögliche Werte:
 
-   - **active** |_| - |_| Aktiviert die State Machine
-   - **inactive** |_| - |_| Jeder andere Wert deaktiviert die State Machine
+   - **active**
+   - **inactive**
 
 
 se_previousconditionset_item_id
@@ -306,7 +306,7 @@ se_previousconditionset_item_id
 
 
 **ID des Items, in dem der Name des vorherigen Zustandsets abgelegt wird:**
-In das hier verknüpfte Item wird der Name des vorherigen Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+In das hier verknüpfte Item wird der Name des vorherigen Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden. 
 
  - Datentyp: **str**
 
@@ -316,7 +316,7 @@ se_previousconditionset_item_name
 
 
 **Name des Items, in dem der Name des vorherigen Zustandsets abgelegt wird:**
-In das hier verknüpfte Item wird der Name des vorherigen Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+In das hier verknüpfte Item wird der Name des vorherigen Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden. 
 
  - Datentyp: **str**
 
@@ -326,7 +326,7 @@ se_previousstate_conditionset_item_id
 
 
 **ID des Items, in dem der Name des Zustandsets vom vorherigen Zustand abgelegt wird:**
-In das hier verknüpfte Item wird der Name des Zustandssets des vorherigen Zustands abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+In das hier verknüpfte Item wird der Name des Zustandssets des vorherigen Zustands abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden. 
 
  - Datentyp: **str**
 
@@ -336,7 +336,7 @@ se_previousstate_conditionset_item_name
 
 
 **Name des Items, in dem der Name des Zustandsets vom vorherigen Zustand abgelegt wird:**
-In das hier verknüpfte Item wird der Name des Zustandssets des vorherigen Zustands abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+In das hier verknüpfte Item wird der Name des Zustandssets des vorherigen Zustands abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden. 
 
  - Datentyp: **str**
 
@@ -346,7 +346,7 @@ se_previousstate_item_id
 
 
 **Id des Items, in dem der vorherige Zustand abgelegt wird:**
-In das hier verknüpfte Item wird die Id des vorherigen Zustands abgelegt. Das Item kann mit dem Attribut ``cache: yes`` versehen werden, dann bleibt der vor-vorherige Zustand bei einem Neustart von smarthomeNG erhalten.
+In das hier verknüpfte Item wird die Id des vorherigen Zustands abgelegt. Das Item kann mit dem Attribut ``cache: yes`` versehen werden, dann bleibt der vor-vorherige Zustand bei einem Neustart von smarthomeNG erhalten. 
 
  - Datentyp: **str**
 
@@ -356,7 +356,7 @@ se_previousstate_item_name
 
 
 **Id des Items, in dem der Name des vorherigen Zustands abgelegt wird:**
-In das hier verknüpfte Item wird der Name des vorigen Zustands abgelegt. Das Item kann für Displayzwecke und Bedingungen verwendet werden.
+In das hier verknüpfte Item wird der Name des vorigen Zustands abgelegt. Das Item kann für Displayzwecke und Bedingungen verwendet werden. 
 
  - Datentyp: **str**
 
@@ -365,7 +365,7 @@ se_released_by
 ==============
 
 
-Durch Setzen dieses Attributs können Zustände durch untergeordnete Zustände aufgelöst werden. Sobald ein durch das Attribut definierter untergeordneter Zustand neu eingenommen werden könnte, wird der aktuelle Zustand verlassen und eine neue Zustandsevaluierung ausgeführt.
+Durch Setzen dieses Attributs können Zustände durch untergeordnete Zustände aufgelöst werden. Sobald ein durch das Attribut definierter untergeordneter Zustand neu eingenommen werden könnte, wird der aktuelle Zustand verlassen und eine neue Zustandsevaluierung ausgeführt. 
 
  - Datentyp: **list(str)**
 
@@ -375,7 +375,7 @@ se_repeat_actions
 
 
 **Wiederholen der Aktionen bei unverändertem Zustand:**
-Im Normalfall werden Aktionen jedesmal ausgeführt wenn der aktuelle Zustand neu ermittelt wurde. Dies ist unabhängig davon, ob sich der Zustand bei der Neuermittlung geändert hat oder nicht. Durch die Angabe von ``se_repeat_actions: false`` werden die Aktionen nur beim erstmaligen Aktivieren des Zustands ausgeführt. Diese Option ist auch für jede Aktion separat verfügbar, um vom hier angegebenen Wert abzuweichen.
+Im Normalfall werden Aktionen jedesmal ausgeführt wenn der aktuelle Zustand neu ermittelt wurde. Dies ist unabhängig davon, ob sich der Zustand bei der Neuermittlung geändert hat oder nicht. Durch die Angabe von ``se_repeat_actions: false`` werden die Aktionen nur beim erstmaligen Aktivieren des Zustands ausgeführt. Diese Option ist auch für jede Aktion separat verfügbar, um vom hier angegebenen Wert abzuweichen. 
 
  - Datentyp: **bool**
 
@@ -385,7 +385,7 @@ se_startup_delay
 
 
 **Startverzögerung der ersten Zustandsermittlung beim Start von smarthomeNG:**
-Beim Starten von smarthomeNG dauert es üblicherweise einige Sekunden, bis alle Items initialisiert sind. Um zu verhindern, dass die erste Zustandsermittlung stattfindet, bevor alle Items ihren Initialwert haben, wird die erste Zustandsermittlung verzögert. Zustandsermittlungen, die durch Items oder Timer vor Ablauf der Startverzögerung ausgelöst werden, werden nicht durchgeführt. Die zulässigen Werte für ``se_startup_delay`` sind identisch mit den zulässigen Werten für den Plugin-Parameter ``startup_delay_default``.
+Beim Starten von smarthomeNG dauert es üblicherweise einige Sekunden, bis alle Items initialisiert sind. Um zu verhindern, dass die erste Zustandsermittlung stattfindet, bevor alle Items ihren Initialwert haben, wird die erste Zustandsermittlung verzögert. Zustandsermittlungen, die durch Items oder Timer vor Ablauf der Startverzögerung ausgelöst werden, werden nicht durchgeführt. Die zulässigen Werte für ``se_startup_delay`` sind identisch mit den zulässigen Werten für den Plugin-Parameter ``startup_delay_default``. 
 
  - Datentyp: **int**
 
@@ -396,7 +396,7 @@ se_stateorder
 =============
 
 
-Durch diesen Wert wird bestimmt, an welcher Position der Status eingeordnet wird. Normalerweise ist die Sortierung abhängig von der Angabe der Stati innerhalb des rules Items. Durch diesen Wert kann die Sortierung zur Laufzeit abgeändert werden. Der Wert kann als Zahl, item oder eval deklariert werden.
+Durch diesen Wert wird bestimmt, an welcher Position der Status eingeordnet wird. Normalerweise ist die Sortierung abhängig von der Angabe der Stati innerhalb des rules Items. Durch diesen Wert kann die Sortierung zur Laufzeit abgeändert werden. Der Wert kann als Zahl, item oder eval deklariert werden. 
 
  - Datentyp: **foo**
 
@@ -407,7 +407,7 @@ se_suspend_time
 
 
 **Unterbrechung der automatischen Steuerung nach manuellen Aktionen:**
-Nach manuellen Aktionen kann die Automatik für eine bestimmte Zeit Unterbrochen werden. Wird die Dauer nicht im Objekt-Item definiert, wird die Standarddauer aus der Plugin Konfiguration oder der Standardwert von 3600 Sekunden (1 Stunde) angenommen.
+Nach manuellen Aktionen kann die Automatik für eine bestimmte Zeit Unterbrochen werden. Wird die Dauer nicht im Objekt-Item definiert, wird die Standarddauer aus der Plugin Konfiguration oder der Standardwert von 3600 Sekunden (1 Stunde) angenommen. 
 
  - Datentyp: **foo**
 
@@ -418,7 +418,7 @@ se_use
 ======
 
 
-Vorgabezustände werden als Item an beliebiger Stelle innerhalb der Item-Struktur definiert. Im konkreten Zustands-Item kann das Vorgabezustand-Item oder ein beliebiges struct über das Attribut se_use referenziert werden. Die zu nützenden Templates können auch über die **eval:** Deklaration zu Beginn des Werts unter Einbezug eines validen Eval-Ausdrucks dynamisch zur Laufzeit gesetzt werden.
+Vorgabezustände werden als Item an beliebiger Stelle innerhalb der Item-Struktur definiert. Im konkreten Zustands-Item kann das Vorgabezustand-Item oder ein beliebiges struct über das Attribut se_use referenziert werden. Die zu nützenden Templates können auch über die **eval:** Deklaration zu Beginn des Werts unter Einbezug eines validen Eval-Ausdrucks dynamisch zur Laufzeit gesetzt werden. 
 
  - Datentyp: **list(str)**
 
@@ -433,7 +433,169 @@ Datentyp des Objekt-Items. Muss "bool" sein.
 
  - Mögliche Werte:
 
-   - **bool** |_| - |_| Der Item Typ muss auf bool gestellt werden!
+   - **bool**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+general
+=======
+
+Vorlage-Struktur für einen Zustandsautomaten
+
+.. treeview::
+     - :dir:`folder` **general** (`foo`, Vorlage-Struktur für einen Zustandsautomaten)
+         - :dir:`file` **state_id** (`str`, The id/path of the actual state is assigned to this item by the stateengine)
+         - :dir:`file` **state_name** (`str`, The name of the actual state is assigned to this item by the stateengine)
+         - :dir:`file` **conditionset_id** (`str`, The id/path of the actual condition set is assigned to this item by the stateengine)
+         - :dir:`file` **conditionset_name** (`str`, The name of the actual condition set is assigned to this item by the stateengine)
+         - :dir:`file` **previousconditionset_id** (`str`, The id/path of the previous condition set is assigned to this item by the stateengine)
+         - :dir:`file` **previousconditionset_name** (`str`, The name of the previous condition set is assigned to this item by the stateengine)
+         - :dir:`file` **previousstate_id** (`str`, The id/path of the previous state is assigned to this item by the stateengine)
+         - :dir:`file` **previousstate_name** (`str`, The name of the previous state is assigned to this item by the stateengine)
+         - :dir:`file` **previousstate_conditionset_id** (`str`, The id/path of the condition set of the previous state is assigned to this item by the stateengine)
+         - :dir:`file` **previousstate_conditionset_name** (`str`, The name of the condition set of the previous state is assigned to this item by the stateengine)
+         - :dir:`file` **retrigger** (`bool`, Item to retrigger the rule set evaluation)
+         - :dir:`folder` **settings** (`foo`, ---)
+             - :dir:`file` **log_level** (`num`, ---)
+             - :dir:`file` **instant_leaveaction** (`num`, ---)
+         - :dir:`file` **rules** (`bool`, Zustandsautomat)
+
+
+state_lock
+==========
+
+Zustandsvorlage zum Sperren der Evaluierung
+
+.. treeview::
+     - :dir:`folder` **state_lock** (`foo`, Zustandsvorlage zum Sperren der Evaluierung)
+         - :dir:`file` **lock** (`bool`, ---)
+         - :dir:`folder` **rules** (`foo`, ---)
+             - :dir:`folder` **lock** (`foo`, gesperrt)
+                 - :dir:`file` **enter** (`foo`, ---)
+
+
+state_release
+=============
+
+Zustandsvorlage für Deaktivieren von Suspend und Lock und erneutes Evaluieren der Regeln
+
+.. treeview::
+     - :dir:`folder` **state_release** (`foo`, Zustandsvorlage für Deaktivieren von Suspend und Lock und erneutes Evaluieren der Regeln)
+         - :dir:`file` **release** (`bool`, ---)
+         - :dir:`folder` **suspend** (`bool`, ---)
+             - :dir:`file` **visu** (`bool`, ---)
+         - :dir:`folder` **suspend_end** (`str`, ---)
+             - :dir:`file` **date_time** (`str`, ---)
+             - :dir:`file` **unix_timestamp** (`num`, ---)
+         - :dir:`folder` **suspend_start** (`str`, ---)
+             - :dir:`file` **date_time** (`str`, ---)
+             - :dir:`file` **unix_timestamp** (`num`, Can be used for the clock.countdown widget)
+         - :dir:`folder` **rules** (`foo`, ---)
+             - :dir:`folder` **release** (`foo`, release)
+                 - :dir:`file` **on_enter** (`foo`, ---)
+                 - :dir:`file` **enter** (`foo`, ---)
+
+
+state_standard
+==============
+
+leerer Zustand (z.B. Standard)
+
+.. treeview::
+     - :dir:`folder` **state_standard** (`foo`, leerer Zustand (z.B. Standard))
+         - :dir:`folder` **rules** (`foo`, ---)
+             - :dir:`folder` **standard** (`foo`, standard)
+                 - :dir:`file` **enter_manuell** (`foo`, ---)
+
+
+state_suspend
+=============
+
+Zustandsvorlage für manuelles Aussetzen
+
+.. treeview::
+     - :dir:`folder` **state_suspend** (`foo`, Zustandsvorlage für manuelles Aussetzen)
+         - :dir:`folder` **suspend** (`bool`, ---)
+             - :dir:`file` **visu** (`bool`, ---)
+         - :dir:`folder` **suspend_end** (`str`, ---)
+             - :dir:`file` **date_time** (`str`, ---)
+             - :dir:`file` **unix_timestamp** (`num`, ---)
+         - :dir:`folder` **suspend_start** (`str`, ---)
+             - :dir:`file` **date_time** (`str`, ---)
+             - :dir:`file` **unix_timestamp** (`num`, Can be used for the clock.countdown widget)
+         - :dir:`file` **manuell** (`bool`, manuell)
+         - :dir:`file` **retrigger** (`bool`, Item to retrigger the rule set evaluation)
+         - :dir:`folder` **settings** (`bool`, Use these settings for your condition values)
+             - :dir:`folder` **conditionset_leaveactions** (`foo`, ---)
+                 - :dir:`file` **suspend** (`str`, ---)
+             - :dir:`folder` **suspendduration** (`num`, duration of suspend mode in minutes (gets converted automatically))
+                 - :dir:`file` **duration_format** (`str`, Can be used for the clock.countdown widget and smartvisu)
+                 - :dir:`file` **seconds** (`num`, duration of suspend mode in seconds (gets converted automatically))
+             - :dir:`file` **suspend_active** (`bool`, Use this to (de)activate suspend mode in general)
+             - :dir:`file` **settings_edited** (`bool`, settings editiert)
+         - :dir:`folder` **rules** (`foo`, ---)
+             - :dir:`folder` **suspend** (`foo`, ausgesetzt)
+                 - :dir:`file` **on_enter** (`foo`, ---)
+                 - :dir:`file` **on_enter_or_stay** (`foo`, ---)
+                 - :dir:`file` **on_pass** (`foo`, ---)
+                 - :dir:`file` **on_leave** (`foo`, ---)
+                 - :dir:`file` **enter_manuell** (`foo`, ---)
+                 - :dir:`file` **enter_stay** (`foo`, ---)
+
+
+state_suspend_dynamic
+=====================
+
+Zustandsvorlage für manuelles Aussetzen mit dynamischen Parametern
+
+.. treeview::
+     - :dir:`folder` **state_suspend_dynamic** (`foo`, Zustandsvorlage für manuelles Aussetzen mit dynamischen Parametern)
+         - :dir:`folder` **suspend** (`bool`, ---)
+             - :dir:`file` **visu** (`bool`, ---)
+         - :dir:`folder` **suspend_end** (`str`, ---)
+             - :dir:`file` **date_time** (`str`, ---)
+             - :dir:`file` **unix_timestamp** (`num`, ---)
+         - :dir:`folder` **suspend_start** (`str`, ---)
+             - :dir:`file` **date_time** (`str`, ---)
+             - :dir:`file` **unix_timestamp** (`num`, Can be used for the clock.countdown widget)
+         - :dir:`file` **manuell** (`bool`, manuell)
+         - :dir:`file` **retrigger** (`bool`, Item to retrigger the rule set evaluation)
+         - :dir:`folder` **settings** (`bool`, Use these settings for your condition values)
+             - :dir:`folder` **conditionset_leaveactions** (`foo`, ---)
+                 - :dir:`file` **suspend** (`str`, ---)
+             - :dir:`folder` **suspendvariant** (`num`, number between 0 and 2 to define which suspendduration should be used)
+                 - :dir:`folder` **suspendduration0** (`num`, duration of suspend mode in minutes (gets converted automatically))
+                     - :dir:`file` **duration_format** (`str`, Can be used for the clock.countdown widget and smartvisu)
+                     - :dir:`file` **seconds** (`num`, duration of suspend mode in seconds (gets converted automatically))
+                 - :dir:`folder` **suspendduration1** (`num`, duration of suspend mode in minutes (gets converted automatically))
+                     - :dir:`file` **duration_format** (`str`, Can be used for the clock.countdown widget and smartvisu)
+                     - :dir:`file` **seconds** (`num`, duration of suspend mode in seconds (gets converted automatically))
+                 - :dir:`folder` **suspendduration2** (`num`, duration of suspend mode in minutes (gets converted automatically))
+                     - :dir:`file` **duration_format** (`str`, Can be used for the clock.countdown widget and smartvisu)
+                     - :dir:`file` **seconds** (`num`, duration of suspend mode in seconds (gets converted automatically))
+                 - :dir:`file` **additionaluse0** (`str`, set this value to a struct or (relative) state that should be added to the condition sets if suspendvariant is 0)
+                 - :dir:`file` **additionaluse1** (`str`, set this value to a struct or (relative) state that should be added to the condition sets if suspendvariant is 1)
+                 - :dir:`file` **additionaluse2** (`str`, set this value to a struct or (relative) state that should be added to the condition sets if suspendvariant is 2)
+             - :dir:`folder` **suspendduration** (`num`, duration of suspend mode in minutes (gets converted automatically))
+                 - :dir:`file` **duration_format** (`str`, Can be used for the clock.countdown widget and smartvisu)
+                 - :dir:`file` **seconds** (`num`, duration of suspend mode in seconds (gets converted automatically))
+             - :dir:`file` **suspend_active** (`bool`, Use this to (de)activate suspend mode in general)
+             - :dir:`file` **settings_edited** (`bool`, settings editiert)
+         - :dir:`folder` **rules** (`foo`, ---)
+             - :dir:`folder` **suspend** (`foo`, ausgesetzt)
+                 - :dir:`file` **on_enter** (`foo`, ---)
+                 - :dir:`file` **on_enter_or_stay** (`foo`, ---)
+                 - :dir:`file` **on_pass** (`foo`, ---)
+                 - :dir:`file` **on_leave** (`foo`, ---)
+                 - :dir:`file` **enter_manuell** (`foo`, ---)
+                 - :dir:`file` **enter_stay** (`foo`, ---)
 
 
 ===============

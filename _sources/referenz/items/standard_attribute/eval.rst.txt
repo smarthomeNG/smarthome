@@ -171,18 +171,18 @@ Beispiel:
 
 .. code-block:: yaml
 
-   eval: value if value>0 else 0
+   eval: value if value > 0 else 0
 
-Die Expression setzt den Item-Wert auf den bisherigen Wert, falls er >0 ist, sonst wird der Wert auf 0 gesetzt.
+Die Expression setzt den Item-Wert auf den neuen Wert, falls er größer als 0 ist, sonst wird der Wert auf 0 gesetzt.
 Damit findet eine Zuweisung statt und on_change bzw. on_update Trigger werden ausgelöst.
 
 Wenn das Beispiel folgendermaßen formuliert wird:
 
 .. code-block:: yaml
 
-   eval: 0 if value<0 else None
+   eval: value if value > 0 else None
 
-Hätte es auf den Item-Wert letztlich die selben Auswirkungen: Hier wird der Item-Wert auf 0 gesetzt, falls der Wert <0 ist,
+wird der Item-Wert auf den neuen Wert gesetzt, falls der Wert größer als 0 ist,
 sonst (None) wird keine Aktion ausgeführt (damit bleibt der Wert unverändert erhalten).
 Damit werden on_change bzw. on_update Trigger nur ausgelöst, wenn der Wert vorher <0 war. Bei Erhalt des Wertes (None),
 werden keine Trigger ausgelöst.

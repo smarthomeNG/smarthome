@@ -12,7 +12,7 @@ Plugin 'waterkotte' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -113,59 +113,68 @@ Derzeit implementierte Tags und deren Bedeutung
 
  - Mögliche Werte:
 
-   - **temp_aussen** |_| - |_| Außentemperatur aktuell
-   - **temp_aussen_1h** |_| - |_| Außentemperatur Mittelwert 1h
-   - **temp_aussen_24h** |_| - |_| Außentemperatur Mittelwert 24h
-   - **temp_quelle_ein** |_| - |_| Temperatur Quelle Eingang
-   - **temp_quelle_aus** |_| - |_| Temperatur Quelle Ausgang
-   - **temp_verdampfung** |_| - |_| Temperatur Verdampfung
-   - **temp_sauggas** |_| - |_| Temperatur Sauggas
-   - **druck_verdampfung** |_| - |_| Druck Verdampfung
-   - **temp_soll** |_| - |_| Temperatur Soll ?
-   - **temp_ruecklauf** |_| - |_| Temperatur Rücklauf
-   - **temp_vorlauf** |_| - |_| Temperatur Vorlauf
-   - **temp_kondensation** |_| - |_| Temperatur Kondensation
-   - **druck_kondensation** |_| - |_| Druck Kondensation
-   - **temp_speicher** |_| - |_| Temperatur Speicher ?
-   - **temp_raum** |_| - |_| Raumtemperatur
-   - **temp_raum_1h** |_| - |_| Raumtemperatur Mittelwert 1h
-   - **temp_ww** |_| - |_| Temperatur Warmwasser
-   - **temp_sk** |_| - |_| Temperatur Pool
-   - **pow_comp** |_| - |_| Leistung Kompressor
-   - **pow_therm** |_| - |_| Leistung thermisch gesamt
-   - **pow_cool** |_| - |_| Leistung Kälte
-   - **cop_comp** |_| - |_| Aktueller COP
-   - **cop_cool** |_| - |_| COP Kühlung ?
-   - **temp_hk** |_| - |_| Temperatur Heizkreis
-   - **temp_gefordert_hk** |_| - |_| Temperatur gefordert Heizkreis
-   - **temp_gefordert_ww** |_| - |_| Temperatur gefordert Warmwasser
-   - **temp_soll_ww** |_| - |_| Temperatur Soll Warmwasser
-   - **rpm_hk** |_| - |_| Drehzahl % Heizkreispumpe
-   - **rpm_sole** |_| - |_| Drehzahl % Quellenpumpe
-   - **valve_exp** |_| - |_| Expansionsventil Öffnung %
-   - **jaz_wp** |_| - |_| Jahresarbeitszahl Wärmepumpe
-   - **oh1_verdichter** |_| - |_| Betriebsstunden Verdichter 31..16
-   - **oh2_verdichter** |_| - |_| Betriebsstunden Verdichter 15..0
-   - **oh1_heizstab** |_| - |_| Betriebsstunden Heizstab 31..16
-   - **oh2_heizstab** |_| - |_| Betriebsstunden Heizstab 15..0
-   - **oh1_heizpumpe** |_| - |_| Betriebsstunden Heizkreispumpe 31..16
-   - **oh2_heizpumpe** |_| - |_| Betriebsstunden Heizkreispumpe 15..0
-   - **oh1_solepumpe** |_| - |_| Betriebsstunden Quellenpumpe 31..16
-   - **oh2_solepumpe** |_| - |_| Betriebsstunden Quellenpumpe 15..0
-   - **cop_jan** |_| - |_| COP Januar
-   - **cop_feb** |_| - |_| COP Februar
-   - **cop_mar** |_| - |_| COP März
-   - **cop_apr** |_| - |_| COP April
-   - **cop_may** |_| - |_| COP Mai
-   - **cop_jun** |_| - |_| COP Juni
-   - **cop_jul** |_| - |_| COP Juli
-   - **cop_aug** |_| - |_| COP August
-   - **cop_sep** |_| - |_| COP September
-   - **cop_oct** |_| - |_| COP Oktober
-   - **cop_nov** |_| - |_| COP November
-   - **cop_dec** |_| - |_| COP Dezember
-   - **f121** |_| - |_| Fehler F121
+   - **temp_aussen**
+   - **temp_aussen_1h**
+   - **temp_aussen_24h**
+   - **temp_quelle_ein**
+   - **temp_quelle_aus**
+   - **temp_verdampfung**
+   - **temp_sauggas**
+   - **druck_verdampfung**
+   - **temp_soll**
+   - **temp_ruecklauf**
+   - **temp_vorlauf**
+   - **temp_kondensation**
+   - **druck_kondensation**
+   - **temp_speicher**
+   - **temp_raum**
+   - **temp_raum_1h**
+   - **temp_ww**
+   - **temp_sk**
+   - **pow_comp**
+   - **pow_therm**
+   - **pow_cool**
+   - **cop_comp**
+   - **cop_cool**
+   - **temp_hk**
+   - **temp_gefordert_hk**
+   - **temp_gefordert_ww**
+   - **temp_soll_ww**
+   - **rpm_hk**
+   - **rpm_sole**
+   - **valve_exp**
+   - **jaz_wp**
+   - **oh1_verdichter**
+   - **oh2_verdichter**
+   - **oh1_heizstab**
+   - **oh2_heizstab**
+   - **oh1_heizpumpe**
+   - **oh2_heizpumpe**
+   - **oh1_solepumpe**
+   - **oh2_solepumpe**
+   - **cop_jan**
+   - **cop_feb**
+   - **cop_mar**
+   - **cop_apr**
+   - **cop_may**
+   - **cop_jun**
+   - **cop_jul**
+   - **cop_aug**
+   - **cop_sep**
+   - **cop_oct**
+   - **cop_nov**
+   - **cop_dec**
+   - **f121**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

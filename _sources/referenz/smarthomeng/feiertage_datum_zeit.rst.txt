@@ -13,7 +13,7 @@ Feiertage, Daten und Zeiten
 ===========================
 
 Das Modul **shtime** stellt eine Reihe von Funktionen zur Verfügung, die es erlauben festzustellen ob ein Datum ein
-Feiertag ist (und welcher). Dazu muss die Verwendung von Feiertagen in **/etc/holidays.yaml** konfiguriert sein.
+Feiertag ist (und welcher). Dazu muss die Verwendung von Feiertagen in ``/etc/holidays.yaml`` konfiguriert sein.
 
 Weiterhin gibt es Funktionen, die den Umgang mit Datums- und Zeitangaben vereinfachen.
 

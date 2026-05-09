@@ -10,8 +10,8 @@
 .. role:: blacksup
 
 
-Administrations-Interface :greensup:`Update`
-============================================
+Administrations-Interface
+=========================
 
 Seit SmartHomeNG v1.6 steht ein graphisches Administrations-Interface zur Verfügung, welches die vollständige
 Administration von SmartHomeNG ermöglicht.

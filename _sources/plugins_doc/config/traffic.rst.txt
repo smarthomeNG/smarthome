@@ -12,7 +12,7 @@ Plugin 'traffic' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -82,6 +82,15 @@ Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichn
 
 **Keine**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -109,7 +118,7 @@ Ermittelt Infos zu einer Fahrtroute via Google Directions.
 
 
 origin
-------
+ -  -  -  -  -  - 
 
 Startpunkt der Route, kann eine Adresse, Geokoordinaten, etc. sein.
 
@@ -117,7 +126,7 @@ Startpunkt der Route, kann eine Adresse, Geokoordinaten, etc. sein.
 
 
 destination
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Ziel der Route, kann eine Adresse, Geokoordinaten, etc. sein.
 
@@ -125,7 +134,7 @@ Ziel der Route, kann eine Adresse, Geokoordinaten, etc. sein.
 
 
 alternatives
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 Rückgabe alternativer Routen. Default: False
 
@@ -133,7 +142,7 @@ Rückgabe alternativer Routen. Default: False
 
 
 departure_time
---------------
+ -  -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Spezifiziert die gewünschte Abfahrtszeit als Timestamp (Sekunden seit 1.1.1970 UTC). Alternativ kann 'now' für den aktuellen Zeitpunkt gesetzt werden. Default: 'now'.
 
@@ -141,7 +150,7 @@ Spezifiziert die gewünschte Abfahrtszeit als Timestamp (Sekunden seit 1.1.1970 
 
 
 mode
-----
+ -  -  -  - 
 
 Travel Mode, mögliche Werte 'driving', 'walking', 'bicycling', 'transit'. Default: 'driving'.
 

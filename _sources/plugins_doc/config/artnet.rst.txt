@@ -12,7 +12,7 @@ Plugin 'artnet' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -152,6 +152,15 @@ Definition der DMX Adresse
  - Minimalwert: **1**
  - Maximalwert: **512**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -179,7 +188,7 @@ Sendet einen vollständingen DMX-Frame
 
 
 values
-------
+ -  -  -  -  -  - 
 
 Wertemenge
 
@@ -196,7 +205,7 @@ Sendet einen Satz an DMX Kanalwerten, beginnend bei einer Startadresse
 
 
 adr
----
+ -  -  - 
 
 Erster zu adressierender DMX-Kanal
 
@@ -206,7 +215,7 @@ Erster zu adressierender DMX-Kanal
  - Maximalwert: **512**
 
 values
-------
+ -  -  -  -  -  - 
 
 Werte die ab dem Startkanal gesetzt werden sollen
 
@@ -223,7 +232,7 @@ Sendet einen einzelnen DMX Kanalwert
 
 
 adr
----
+ -  -  - 
 
 Zu adressierender DMX-Kanal
 
@@ -233,7 +242,7 @@ Zu adressierender DMX-Kanal
  - Maximalwert: **512**
 
 value
------
+ -  -  -  -  - 
 
 Wert auf den der Kanal gesetzt werden soll
 

@@ -28,13 +28,12 @@ Auf diesem Tab können folgende Funktionen ausgelöst werden:
 
 * **Backup**: Herunterladen der Konfigurationsdaten von SmartHomeNG als Zip Archiv
 
-  Das Zip-Archiv enthält die yaml Konfigurationsdateien aus dem /etc Verzeichnis (logging.yaml, logic.yaml,
-  module.yaml, plugin.yaml, smarthome.yaml und struct.yaml). Weiterhin sind alle yaml Dateien der Verzeichnisse
-  /items und /scenes enthalten. Außerdem enthält das Archiv den Python Code der Logiken aus dem Verzeichnis /logics.
-  Ab SmartHomeNG v1.7 werden auch die Zertifikats- und Key Dateien (\*.cer, \*.key) für tls/https aus dem /etc
-  Verzeichnis mit gesichert.
+  Das Zip-Archiv enthält die yaml Konfigurationsdateien aus dem ``/etc`` Verzeichnis (``logging.yaml``, ``logic.yaml``,
+  ``module.yaml``, ``plugin.yaml``, ``smarthome.yaml`` und ``struct.yaml``). Weiterhin sind alle yaml Dateien der Verzeichnisse
+  ``items`` und ``scenes`` enthalten. Außerdem enthält das Archiv den Python Code der Logiken aus dem Verzeichnis ``logics``.
+  Ab SmartHomeNG v1.7 werden auch die Zertifikats- und Key Dateien (``\*.cer``, ``\*.key``) für tls/https aus dem ``etc`` Verzeichnis mit gesichert.
 
-  Das heruntergeladene Archiv trägt den Namen shng_config_backup_<Jahr>-<Monat>-<Tag>-<Stunde>-<Minuten>.zip
+  Das heruntergeladene Archiv trägt den Namen ``shng_config_backup_<Jahr>-<Monat>-<Tag>-<Stunde>-<Minuten>.zip``
 
   Links neben dem **Herunterladen** Button wird Datum/Uhrzeit des letzten Backups angezeigt.
 
@@ -48,8 +47,8 @@ Auf diesem Tab können folgende Funktionen ausgelöst werden:
   wird die in dem Zip Archiv gesicherte Konfiguration wiederhergestellt. Als Vorsichtsmaßnahme wird vor Beginn der
   Wiederherstellung ein Backup der aktuellen Konfiguration vorgenommen. Dieses verbleibt auf dem SmartHomeNG Server
   um im Notfall die aktuelle Konfiguration wiederherstellen zu können, falls die hochgeladene Datei nicht die gewünschte
-  Konfiguration enthielt. Dieses Backup wird im Verzeichnis ../var/backup abgelegt und trägt den Dateinamen
-  shng_config_backup_before_restore_<Jahr>-<Monat>-<Tag>-<Stunde>-<Minuten>.zip
+  Konfiguration enthielt. Dieses Backup wird im Verzeichnis var/backup abgelegt und trägt den Dateinamen
+  ``shng_config_backup_before_restore_<Jahr>-<Monat>-<Tag>-<Stunde>-<Minuten>.zip``
 
 
 .. image:: assets/services.jpg
@@ -116,7 +115,7 @@ Der CONF-YAML Konverter dient dazu, Snippets die im alten CONF Format vorliegen 
 Cache Prüfung
 =============
 
-Auf diesem Tab kann der SmartHomeNG Item-Cache überprüft werden. Dazu werden alle im Directory ../var/cache vorhandenen
+Auf diesem Tab kann der SmartHomeNG Item-Cache überprüft werden. Dazu werden alle im Directory ``var/cache`` vorhandenen
 Dateien angezeigt, zu denen es kein Item gibt oder zu denen es zwar ein Item gibt, bei dem jedoch das cache Attribut
 nicht gesetzt ist.
 

@@ -8,8 +8,8 @@
 Komplettanleitung
 =================
 
-Diese Anleitung beschreibt eine komplette Installation von **SmartHomeNG v1.10** auf
-einem Linuxsystem mit Debian 12 (bookworm).
+Diese Anleitung beschreibt eine komplette Installation von **SmartHomeNG v1.12** auf
+einem Linuxsystem mit Debian 13 (trixie).
 
 Zusätzlich wird die Installation folgender weiterer Pakete beschrieben:
 
@@ -27,12 +27,13 @@ Es bietet sich an die allererste Installation einfach in einer virtuellen Maschi
    :hidden:
 
    01_debian
-   02_smarthomeng
-   03_mosquitto
-   04_smartvisu
+   02_smartvisu
+   03_smarthomeng
+   04_mosquitto
    05_knxd
    06_onewire
    07_samba
    08_shng_daemon
-   09_esphome
+   09_node_js
+   10_esphome
 

@@ -48,7 +48,7 @@ Der eigentliche Bau der Dokumentation erfolgt mit dem folgenden Befehl:
    ./build_doc.sh
 
 
-Dieses Skript erzeugt einen Unterordner **work** in welchem der eigentliche Build Prozess abläuft und die
+Dieses Skript erzeugt einen Unterordner ``work`` in welchem der eigentliche Build Prozess abläuft und die
 Ergebnisse gespeichert werden.
 
 Nachdem das Skript beendet ist, ist die Anwender Dokumentation im Ordner
@@ -73,9 +73,6 @@ werden soll.
 Wenn das Build Skript ein zweiter mal gestartet wird, wird die Dokumentation aus den Dateien gebaut, die bereits
 bei einem vorangegangenen Bau aus github ausgecheckt wurden. Wenn die Dateien erneut ausgecheckt werden sollen, muss
 das Skript build_doc.sh mit der Option **-f** aufgerufen werden. (-f = force checkout)
-
-Falls nur eine Dokumentation gebaut werden soll (**user** oder **developer**), muss das Skript mit den
-Optionen **-u** oder --*d** aufgerufen werden.
 
 Falls die Dokumentation aus dem **master** Branch gebaut werden soll, muss die Option **-m** angegeben werden.
 Das sollte mit der Option **force checkout** kombiniert werden, um sicherzustellen, dass die richtigen Dateien

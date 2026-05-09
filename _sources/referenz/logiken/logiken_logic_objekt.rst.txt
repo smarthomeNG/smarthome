@@ -11,7 +11,7 @@ Die Objekte **logic** und **logics**
 .. index:: logic Objekt; Logiken
 .. index:: Logiken; logic Objekt
 
-Das ``logic`` Objekt
+Das **logic** Objekt
 ====================
 
 Dieses Objekt bietet Zugriff auf das aktuelle Logikobjekt. Es ist möglich, während der Laufzeit die meisten
@@ -26,7 +26,7 @@ Definierte Methoden des Logikobjekts:
 +----------------------+--------------------------------------------------------------------------------------------------------+
 | Methode              | Erläuterung                                                                                            |
 +======================+========================================================================================================+
-| ``logic.id()``       | Diese Methode liefert dem Namen der Logik wie in **../etc/logic.yaml** angegeben.                      |
+| ``logic.id()``       | Diese Methode liefert dem Namen der Logik wie in ``etc/logic.yaml`` angegeben.                         |
 +----------------------+--------------------------------------------------------------------------------------------------------+
 | ``logic.last_run()`` | Diese Methode liefert den letzten Lauf dieser Logik (vor aktuellen Lauf).                              |
 +----------------------+--------------------------------------------------------------------------------------------------------+
@@ -64,10 +64,10 @@ der Logik getriggert wurde.
 .. index:: trigger dict; Logiken
 .. index:: Logiken; trigger dict
 
-Das ``trigger`` Dictionary
+Das **trigger** Dictionary
 --------------------------
 
-Das ``trigger`` dict ist ein Python-Dictionary, welches als Laufzeitumgebung einige Informationen über das
+Das **trigger** dict ist ein Python-Dictionary, welches als Laufzeitumgebung einige Informationen über das
 Ereignis liefert, das die Logik ausgelöst hat.
 
 Das Dictionary enthält folgende Informationen:
@@ -94,7 +94,7 @@ Das Dictionary enthält folgende Informationen:
 .. index:: logics Objekt; Logiken
 .. index:: Logiken; logics Objekt
 
-Das ``logics`` Objekt
+Das **logics** Objekt
 =====================
 
 Zugriff auf das Logics-API über das logics Objekt:
@@ -115,7 +115,7 @@ Zugriff auf das Logics-API über das logics Objekt:
 +---------------------------------+---------------------------------------------------------------------------------------------------------+
 | logics.trigger()                | Triggern einer im Logik                                                                                 |
 +---------------------------------+---------------------------------------------------------------------------------------------------------+
-| logics.set_config_section_key() | Setzt den Wert eines Schlüssels für eine angegebene Logik (Abschnitt) permanent in ../etc/logic.yaml    |
+| logics.set_config_section_key() | Setzt den Wert eines Schlüssels für eine angegebene Logik (Abschnitt) permanent in etc/logic.yaml       |
 +---------------------------------+---------------------------------------------------------------------------------------------------------+
 
 Der vollständige Syntax der Methoden kann im Abschnitt :doc:`Entwicklung/APIs von SmartHomeNG </referenz/APIs>`

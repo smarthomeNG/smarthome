@@ -12,7 +12,7 @@ Plugin 'tankerkoenig' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -141,6 +141,27 @@ Id der Tankstelle auf tankerkoenig.de
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+petrol_station
+==============
+
+
+.. treeview::
+     - :dir:`folder` **petrol_station** (`foo`, ---)
+         - :dir:`file` **isopen** (`bool`, ---)
+         - :dir:`file` **e5** (`num`, ---)
+         - :dir:`file` **e10** (`num`, ---)
+         - :dir:`file` **diesel** (`num`, ---)
+         - :dir:`file` **adresse** (`str`, ---)
+
+
 ===============
 Logik Parameter
 ===============
@@ -168,7 +189,7 @@ Diese Funktion gibt Details über eine Tankstelle als DICT mit folgenden Keys zu
 
 
 id
---
+ -  - 
 
 UUID für die anzufragende Tankstelle.
 
@@ -185,7 +206,7 @@ Diese Funktion gibt Details über eine Tankstelle als DICT mit folgenden Keys zu
 
 
 id
---
+ -  - 
 
 UUID für die anzufragende Tankstelle.
 
@@ -202,7 +223,7 @@ Gibt ein DICT mit Preisen für ein Array an Tankstellen-IDs zurück. Benutzung w
 
 
 ids
----
+ -  -  - 
 
 Array der Tankstellen IDs, für die Preise angefragt werden sollen.
 
@@ -219,7 +240,7 @@ Diese Funktion liefert ein DICT mit den Tankstellen im Umkreis.
 
 
 lat
----
+ -  -  - 
 
 Breitengrad des Mittelpunkts der Anfrage.
 
@@ -227,7 +248,7 @@ Breitengrad des Mittelpunkts der Anfrage.
 
 
 lon
----
+ -  -  - 
 
 Längengrad des Mittelpunkts der Anfrage.
 
@@ -235,7 +256,7 @@ Längengrad des Mittelpunkts der Anfrage.
 
 
 type
-----
+ -  -  -  - 
 
 Typ des Benzins: 'e5', 'e10', 'diesel' oder 'all'.
 
@@ -243,7 +264,7 @@ Typ des Benzins: 'e5', 'e10', 'diesel' oder 'all'.
 
 
 sort
-----
+ -  -  -  - 
 
 Sortierreihenfolge der Ergebnisse, 'price' oder 'dist'.
 
@@ -251,7 +272,7 @@ Sortierreihenfolge der Ergebnisse, 'price' oder 'dist'.
 
 
 rad
----
+ -  -  - 
 
 Suchradius in km, Max: 25
 

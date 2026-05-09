@@ -12,7 +12,7 @@ Plugin 'plex' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -92,6 +92,15 @@ Port Nummer auf dem Plex Host
 
  - Minimalwert: **0**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -119,7 +128,7 @@ Nachrichten an Plex senden
 
 
 title
------
+ -  -  -  -  - 
 
 Titel der Nachricht
 
@@ -127,7 +136,7 @@ Titel der Nachricht
 
 
 message
--------
+ -  -  -  -  -  -  - 
 
 Nachrichten-text
 
@@ -135,7 +144,7 @@ Nachrichten-text
 
 
 image
------
+ -  -  -  -  - 
 
 Name des Biled, welches im Nachrichten Dialgo angezeigt werden soll
 

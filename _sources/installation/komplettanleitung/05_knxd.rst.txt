@@ -36,7 +36,7 @@ knxd konfigurieren
 
 Als nächstes muss die Konfiguration des knxd für die zu verwendende
 Schnittstelle angepasst werden. Dazu wird bei Systemen mit systemd die
-Datei **/etc/knxd.conf** bearbeitet:
+Datei ``/etc/knxd.conf`` bearbeitet:
 
 .. code-block:: bash
 
@@ -68,6 +68,8 @@ zu vermeiden. Der Parameter **--no-tunnel-client-queuing** ist obsolet und sollt
 
 knxd testen
 ============
+
+Vor dem testen muss der Dienst im Zweifelsfall neu gestartet werden. Wie das geht, ist weiter unten beschrieben.
 
 Nachdem knxd installiert, konfiguriert und der Dienst **(neu) gestartet** ist, kann mit folgendem Kommando geprüft
 werden, ob eine funktionsfähige Verbindung zum KNX Bus besteht. Dazu das folgende Kommando eingeben:
@@ -177,7 +179,7 @@ SmartHomeNG Plugin konfigurieren
 ================================
 
 Damit das KNX-Plugin von SmartHomeNG genutzt werden kann, muss in der
-**../etc/plugin.yaml** noch folgendes eingefügt werden:
+``etc/plugin.yaml`` noch folgendes eingefügt werden:
 
 .. code-block:: yaml
 

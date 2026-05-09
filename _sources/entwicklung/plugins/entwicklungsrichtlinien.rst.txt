@@ -122,13 +122,13 @@ Testen und Dokumentieren
 
 Bitte den Code des Plugins ausgiebig testen und dokumentieren!
 
-In Ihrem Plugin-Verzeichnis sollte sich eine Datei **user_doc.rst** (aus dem Verzeichnis „sample_plugin“) befinden.
+In Ihrem Plugin-Verzeichnis sollte sich eine Datei ``user_doc.rst`` (aus dem Verzeichnis „sample_plugin“) befinden.
 Bitte diese Datei mit die notwendigen Informationen befüllen. ``viplugins/myplugin/user_doc.rst``
 
 Methoden und Funktionen sollten mit einem Docstring versehen werden, der den Zweck der Methode/Funktion, die
 Aufrufparameter und den Rückgabewert beschreibt.
 
-Weiterhin ist es sinnvoll **Unittests** für das Plugin zu erstellen.
+Weiterhin ist es sinnvoll, **Unittests** für das Plugin zu erstellen.
 
 
 Basic Rules
@@ -143,7 +143,7 @@ Basic Rules
 Fork erstellen
 --------------
 
-    * Gehen Sie aif GitHub zum `SmartHome Repo <https://github.com/smarthomeNG/smarthome/>`_ und melden Sie sich mit
+    * Gehen Sie auf GitHub zum `SmartHome Repo <https://github.com/smarthomeNG/smarthome/>`_ und melden Sie sich mit
       Ihrem Benutzernamen/Passwort an
     * Klicken Sie rechts oben auf „Fork“.
     * Wechseln Sie zu Ihrem Terminal und geben Sie „git clone https://USER:PASSWORD@github.com/USER/smarthome“ ein
@@ -168,7 +168,7 @@ Mitglieder des Core Teams von SmartHomeNG können dann den Pull-Request prüfen 
 .git/config (description is deprecated, has to be updated)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Falls Probleme beim pushen auf GitHub bestehen, bitte die **config**-Datei im **.git** Verzeichnis überprüfen.
+Falls Probleme beim pushen auf GitHub bestehen, bitte die ``config``-Datei im ``.git`` Verzeichnis überprüfen.
 Sie sollte zum Beispiel folgendermaßen aussehen:
 
 .. code-block:: ini
@@ -187,7 +187,7 @@ Sie sollte zum Beispiel folgendermaßen aussehen:
 
 Falls der Code für GitHub verifizierbar signiert werden soll, muss noch die gpg Signierung auf GitHub und in der
 Entwicklungsumgebung konfiguriert sein. In dem Fall gibt es noch die beiden folgenden Abschnitte in der git
-**config**-Datei:
+``config``-Datei:
 
 .. code-block:: ini
 

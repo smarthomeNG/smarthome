@@ -13,7 +13,7 @@ Ladbare Code Module (SmartHomeNG Module) stellen zusätzliche Funktionalitäten 
 von Plugins und Logiken genutzt werden können. Sie implementieren Funktionalitäten, die nicht unbedingt benötigt
 werden und deshalb nicht direkt im Core implementiert und zwangsweise geladen werden.
 
-Module werden in der Datei ``../etc/modules.yaml`` oder in der Admin GUI konfiguriert. Die Parameter sind in
+Module werden in der Datei ``etc/modules.yaml`` oder in der Admin GUI konfiguriert. Die Parameter sind in
 der jeweiligen README.md beschrieben.
 
 Bisher existieren die folgenden Module:
@@ -33,18 +33,18 @@ Ein Modul besteht aus mindestens zwei Dateien:
 - dem Programm Code: __init__.py
 - den Metadaten: module.yaml
 
-Beide Dateien lliegen in einem Unterordnet des Ordners ``../modules`` und dieser Unterordnet trägt den Namen des
-Mooduls.
+Beide Dateien liegen in einem Unterordner des Ordners ``modules`` und dieser Unterordner trägt den Namen des
+Moduls.
 
 Metadaten
 =========
 
-Die **Metadaten** Datei trägt den Namen ``../modules/<name of the module>/module.yaml``. Sie hat zwei
+Die **Metadaten** Datei trägt den Namen ``modules/<name of the module>/module.yaml``. Sie hat zwei
 Haupt Abschnitte:
 
 
 - ``module:`` - Globale Metadaten des Moduls
-- ``parameters:`` - Definition der Parameter welche in ``../etc/module.yaml`` zur Konfiguration des Moduls
+- ``parameters:`` - Definition der Parameter welche in ``etc/module.yaml`` zur Konfiguration des Moduls
   genutzt werden können.
 
 .. include:: /referenz/metadata/module_global.rst
@@ -53,5 +53,5 @@ Haupt Abschnitte:
 
 
 Falls ein Modul ein Python Package nutzt, welches nicht in der Standardinstallation von Python enthalten ist,
-muss diese Anforderung in der Datei ``../modules/<name of the module>/requirements.txt`` dokumentiert werden.
+muss diese Anforderung in der Datei ``modules/<name of the module>/requirements.txt`` dokumentiert werden.
 

@@ -12,7 +12,7 @@ Plugin 'knx' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -65,13 +65,13 @@ Wenn auf 'on'/'true' gesetzt, wird jedes KNX-Paket im Standard-Logger protokolli
 
  - Mögliche Werte:
 
-   - **on** |_| - |_| Ein
-   - **off** |_| - |_| Aus
-   - **logger** |_| - |_| in eigenen Logger
-   - **true** |_| - |_| Ein
-   - **false** |_| - |_| Aus
-   - **True** |_| - |_| Ein
-   - **False** |_| - |_| Aus
+   - **on**
+   - **off**
+   - **logger**
+   - **true**
+   - **false**
+   - **True**
+   - **False**
 
 
 date_ga
@@ -117,18 +117,18 @@ loglevel_knxd_cache_problems
 ============================
 
 
-Beim Start von SmartHomeNG werden Items mit dem Attribut knx_cache direkt vom knxd eingelesen. Wenn die Werte der Gruppenadressen nicht verfügbar sind, liefert der knxd ein fehlerhaftes Paket. Mit dem hier festgelegten Loglevel wird dieses Paket protokolliert.
+Beim Start von SmartHomeNG werden Items mit dem Attribut knx_cache direkt vom knxd eingelesen. Wenn die Werte der Gruppenadressen nicht verfügbar sind, liefert der knxd ein fehlerhaftes Paket. Mit dem hier festgelegten Loglevel wird dieses Paket protokolliert. 
 
  - Datentyp: **str**
  - Standardwert: **INFO**
 
  - Mögliche Werte:
 
-   - **DEBUG** |_| - |_| DEBUG
-   - **WARNING** |_| - |_| WARNING
-   - **INFO** |_| - |_| INFO
-   - **ERROR** |_| - |_| ERROR
-   - **NOTSET** |_| - |_| NOTSET
+   - **DEBUG**
+   - **WARNING**
+   - **INFO**
+   - **ERROR**
+   - **NOTSET**
 
 
 port
@@ -173,9 +173,9 @@ Dienst, der die Schnittstelle zum KNX bereitstellt. Das kann der eibd/knxd sein,
 
  - Mögliche Werte:
 
-   - **knxd** |_| - |_| eib oder knxd
-   - **IP Interface** |_| - |_| IP Schnittstelle
-   - **IP Router** |_| - |_| IP Router mit Multicast
+   - **knxd**
+   - **IP Interface**
+   - **IP Router**
 
 
 readonly
@@ -245,43 +245,43 @@ Dieses Attribut setzt den Typ des KNX-Datenpunktes, der für die Konvertierung d
 
  - Mögliche Werte:
 
-   - **1** |_| - |_| Schalten (1 Bit) -> bool
-   - **2** |_| - |_| Zwangssteuerung (2 Bit) -> list
-   - **3** |_| - |_| Dimmen (4 Bit) -> list
-   - **4002** |_| - |_| Zeichen [8859_1] (8 Bit) -> str
-   - **4.002** |_| - |_| Zeichen [8859_1] (8 Bit) -> str
-   - **5** |_| - |_| Relativwert, 0 … 255 (8 Bit) -> num
-   - **5001** |_| - |_| Relativwert, 0 … 100 % (8 Bit) -> num
-   - **5.001** |_| - |_| Relativwert, 0 … 100 % (8 Bit) -> num
-   - **5003** |_| - |_| Winkel, 0 … 360 ° (8 Bit) -> num
-   - **5.003** |_| - |_| Winkel, 0 … 360 ° (8 Bit) -> num
-   - **5999** |_| - |_| Spezial DPT für Tebis TS Systeme, (8 Bit) -> num
-   - **5.999** |_| - |_| Spezial DPT für Tebis TS Systeme, (8 Bit) -> num
-   - **6** |_| - |_| Ganzzahl -128 - 127 (8 Bit) -> num
-   - **7** |_| - |_| Ganzzahl 0 - 65535 (16 Bit) -> num
-   - **8** |_| - |_| Ganzzahl -32768 - 32767 (16 Bit) -> num
-   - **9** |_| - |_| Gleitkomma -671088,64 - 670760,96 (16 Bit) -> num
-   - **10** |_| - |_| Uhrzeit [datetime.time] (24 Bit) -> foo
-   - **11** |_| - |_| Datum [datetime.date] (24 Bit) -> foo
-   - **12** |_| - |_| Ganzzahl 0 - 4294967295 (32 Bit) -> num
-   - **13** |_| - |_| Ganzzahl -2147483648 - 2147483647(32 Bit) -> num
-   - **14** |_| - |_| Gleitkommazahl (32 Bit) -> num
-   - **16000** |_| - |_| Zeichenkette [ASCII] (14 Byte) -> str
-   - **16** |_| - |_| Zeichenkette [ASCII] (14 Byte) -> str
-   - **16001** |_| - |_| Zeichenkette [8859_1] (14 Byte) -> str
-   - **16.001** |_| - |_| Zeichenkette [8859_1] (14 Byte) -> str
-   - **17** |_| - |_| Szenennummer: 0 - 63 (8 Bit) -> num
-   - **17001** |_| - |_| Szenennummer: 1 - 64 (8 Bit) -> num
-   - **17.001** |_| - |_| Szenennummer: 1 - 64 (8 Bit) -> num
-   - **18001** |_| - |_| Szenen-Kontrolle: 1 - 64 (Aufruf) 129-192 (Speichern) (8 Bit) -> num
-   - **18.001** |_| - |_| Szenen-Kontrolle: 1 - 64 (Aufruf) 129-192 (Speichern) (8 Bit) -> num
-   - **20** |_| - |_| HVAC: 0 - 255 (8 Bit) -> num
-   - **24** |_| - |_| Unlimitierte Zeichenkette [8859_1] (var) -> str
-   - **229** |_| - |_| Smartmeter Werte Tripel: [Ganzzahl -2147483648 - 2147483647(32 Bit), 0-255 (8 Bit), 0-255 (8 Bit)] (6 Byte) -> list
-   - **232** |_| - |_| RGB: [0, 0, 0] - [255, 255, 255] (3 Byte) -> list
-   - **251** |_| - |_| RGBW: [0, 0, 0, 0] - [255, 255, 255, 255] (4 Byte)-> list
-   - **275.100** |_| - |_| Quadrupel mit Solltemperaturen für Komfort, Standby, Nachtabsenkung, Frostschutz (4 Fließkommazahlen mit 16 Bit) -> list
-   - **hex** |_| - |_| Empfangen von Roh-/Hex-Daten (um Key IDs des alten Winkhaus Schließsystems auszulesen
+   - **1**
+   - **2**
+   - **3**
+   - **4002**
+   - **4.002**
+   - **5**
+   - **5001**
+   - **5.001**
+   - **5003**
+   - **5.003**
+   - **5999**
+   - **5.999**
+   - **6**
+   - **7**
+   - **8**
+   - **9**
+   - **10**
+   - **11**
+   - **12**
+   - **13**
+   - **14**
+   - **16000**
+   - **16**
+   - **16001**
+   - **16.001**
+   - **17**
+   - **17001**
+   - **17.001**
+   - **18001**
+   - **18.001**
+   - **20**
+   - **24**
+   - **229**
+   - **232**
+   - **251**
+   - **275.100**
+   - **hex**
 
 
 knx_init
@@ -338,6 +338,15 @@ knx_status
  - Datentyp: **list(knx_ga)**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -365,7 +374,7 @@ Diese Funktion codiert Ihre Daten entsprechend dem angegebenen Datenpunkt - Beis
 
 
 data
-----
+ -  -  -  - 
 
 Zu codierende Daten
 
@@ -373,7 +382,7 @@ Zu codierende Daten
 
 
 dpt
----
+ -  -  - 
 
 KNX Datenpunkttyp
 
@@ -390,7 +399,7 @@ Diese Funktion löst eine Leseanforderung für die angegebene Gruppenadresse aus
 
 
 ga
---
+ -  - 
 
 Gruppenadresse von der gelesen werden soll
 
@@ -398,7 +407,7 @@ Gruppenadresse von der gelesen werden soll
 
 
 cache
------
+ -  -  -  -  - 
 
 Versuchen den Wert aus dem Cache von KNXD zu lesen?
 
@@ -416,7 +425,7 @@ Mit dieser Funktion könnten Sie die Daten an die angegebene Gruppenadresse send
 
 
 ga
---
+ -  - 
 
 Gruppenadresse an die der Wert gesendet werden soll
 
@@ -424,7 +433,7 @@ Gruppenadresse an die der Wert gesendet werden soll
 
 
 data
-----
+ -  -  -  - 
 
 Zu sendende Daten. Der Datentyp wird durch den Parameter 'dpt' bestimmt.
 
@@ -432,7 +441,7 @@ Zu sendende Daten. Der Datentyp wird durch den Parameter 'dpt' bestimmt.
 
 
 dpt
----
+ -  -  - 
 
 KNX Datenpunkttyp
 
@@ -440,42 +449,42 @@ KNX Datenpunkttyp
 
  - Mögliche Werte:
 
-   - **1** |_| - |_| Schalten (1 Bit) -> bool
-   - **2** |_| - |_| Zwangssteuerung (2 Bit) -> list
-   - **3** |_| - |_| Dimmen (4 Bit) -> list
-   - **4002** |_| - |_| Zeichen [8859_1] (8 Bit) -> str
-   - **4.002** |_| - |_| Zeichen [8859_1] (8 Bit) -> str
-   - **5** |_| - |_| Relativwert, 0 … 255 (8 Bit) -> num
-   - **5001** |_| - |_| Relativwert, 0 … 100 % (8 Bit) -> num
-   - **5.001** |_| - |_| Relativwert, 0 … 100 % (8 Bit) -> num
-   - **5003** |_| - |_| Winkel, 0 … 360 ° (8 Bit) -> num
-   - **5.003** |_| - |_| Winkel, 0 … 360 ° (8 Bit) -> num
-   - **5999** |_| - |_| Spezial DPT für Tebis TS Systeme, (8 Bit) -> num
-   - **5.999** |_| - |_| Spezial DPT für Tebis TS Systeme, (8 Bit) -> num
-   - **6** |_| - |_| Ganzzahl -128 - 127 (8 Bit) -> num
-   - **7** |_| - |_| Ganzzahl 0 - 65535 (16 Bit) -> num
-   - **8** |_| - |_| Ganzzahl -32768 - 32767 (16 Bit) -> num
-   - **9** |_| - |_| Gleitkomma -671088,64 - 670760,96 (16 Bit) -> num
-   - **10** |_| - |_| Uhrzeit [datetime.time] (24 Bit) -> foo
-   - **11** |_| - |_| Datum [datetime.date] (24 Bit) -> foo
-   - **12** |_| - |_| Ganzzahl 0 - 4294967295 (32 Bit) -> num
-   - **13** |_| - |_| Ganzzahl -2147483648 - 2147483647(32 Bit) -> num
-   - **14** |_| - |_| Gleitkommazahl (32 Bit) -> num
-   - **16000** |_| - |_| Zeichenkette [ASCII] (14 Byte) -> str
-   - **16** |_| - |_| Zeichenkette [ASCII] (14 Byte) -> str
-   - **16001** |_| - |_| Zeichenkette [8859_1] (14 Byte) -> str
-   - **16.001** |_| - |_| Zeichenkette [8859_1] (14 Byte) -> str
-   - **17** |_| - |_| Szenennummer: 0 - 63 (8 Bit) -> num
-   - **17001** |_| - |_| Szenennummer: 1 - 64 (8 Bit) -> num
-   - **17.001** |_| - |_| Szenennummer: 1 - 64 (8 Bit) -> num
-   - **18001** |_| - |_| Szenen-Kontrolle: 1 - 64 (Aufruf) 129-192 (Speichern) (8 Bit) -> num
-   - **18.001** |_| - |_| Szenen-Kontrolle: 1 - 64 (Aufruf) 129-192 (Speichern) (8 Bit) -> num
-   - **20** |_| - |_| HVAC: 0 - 255 (8 Bit) -> num
-   - **24** |_| - |_| Unlimitierte Zeichenkette [8859_1] (var) -> str
-   - **229** |_| - |_| Smartmeter Werte Tripel: [Ganzzahl -2147483648 - 2147483647(32 Bit), 0-255 (8 Bit), 0-255 (8 Bit)] (6 Byte) -> list
-   - **232** |_| - |_| RGB: [0, 0, 0] - [255, 255, 255] (3 Byte) -> list
-   - **251** |_| - |_| RGBW: [0, 0, 0, 0] - [255, 255, 255, 255] (4 Byte)-> list
-   - **275.100** |_| - |_| Quadrupel mit Solltemperaturen für Komfort, Standby, Nachtabsenkung, Frostschutz (4 Fließkommazahlen mit 16 Bit) -> list
+   - **1**
+   - **2**
+   - **3**
+   - **4002**
+   - **4.002**
+   - **5**
+   - **5001**
+   - **5.001**
+   - **5003**
+   - **5.003**
+   - **5999**
+   - **5.999**
+   - **6**
+   - **7**
+   - **8**
+   - **9**
+   - **10**
+   - **11**
+   - **12**
+   - **13**
+   - **14**
+   - **16000**
+   - **16**
+   - **16001**
+   - **16.001**
+   - **17**
+   - **17001**
+   - **17.001**
+   - **18001**
+   - **18.001**
+   - **20**
+   - **24**
+   - **229**
+   - **232**
+   - **251**
+   - **275.100**
 
 
 send_time(time_ga, date_ga)
@@ -488,7 +497,7 @@ Diese Funktion sendet die aktuelle Uhrzeit und/oder das aktuelle Datum an die an
 
 
 time_ga
--------
+ -  -  -  -  -  -  - 
 
 Gruppenadresse an die die Uhrzeit gesendet wird
 
@@ -496,7 +505,7 @@ Gruppenadresse an die die Uhrzeit gesendet wird
 
 
 date_ga
--------
+ -  -  -  -  -  -  - 
 
 Gruppenadresse an die das Datum gesendet wird
 

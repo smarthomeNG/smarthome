@@ -12,7 +12,7 @@ Plugin 'prowl' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -116,6 +116,15 @@ Eine Liste von Wert: "Text"-Paaren. Wenn der Item-Wert einem angegebenen Wert en
  - Datentyp: **list(dict)**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -143,7 +152,7 @@ Diese Funktion versendet eine Nachricht an Prowl.
 
 
 event
------
+ -  -  -  -  - 
 
 Typ des Ereignisses
 
@@ -151,7 +160,7 @@ Typ des Ereignisses
 
 
 description
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Beschreibung des Ereignisses
 
@@ -159,7 +168,7 @@ Beschreibung des Ereignisses
 
 
 priority
---------
+ -  -  -  -  -  -  -  - 
 
 Es kann eine Priorität (0-2) angegeben werden, um zwischen Ereignissen auf dem Mobile Device zu differenzieren
 
@@ -170,7 +179,7 @@ Es kann eine Priorität (0-2) angegeben werden, um zwischen Ereignissen auf dem 
  - Maximalwert: **2**
 
 url
----
+ -  -  - 
 
 Diese URL wird mit der Notification verbunden
 
@@ -179,7 +188,7 @@ Diese URL wird mit der Notification verbunden
 
 
 apikey
-------
+ -  -  -  -  -  - 
 
 Hier kann ein individueller apikey angegeben werden
 
@@ -188,7 +197,7 @@ Hier kann ein individueller apikey angegeben werden
 
 
 application
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Name der sendenden Applikation
 

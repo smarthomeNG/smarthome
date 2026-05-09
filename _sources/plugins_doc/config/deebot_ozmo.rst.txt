@@ -12,7 +12,7 @@ Plugin 'deebot_ozmo' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -121,6 +121,92 @@ Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichn
 
 **Keine**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+components
+==========
+
+Components lifespan item_structs
+
+.. treeview::
+     - :dir:`folder` **components** (`foo`, Components lifespan item_structs)
+         - :dir:`file` **brush** (`num`, ---)
+         - :dir:`file` **sideBrush** (`num`, ---)
+         - :dir:`file` **filter** (`num`, ---)
+
+
+controls
+========
+
+Remote control items
+
+.. treeview::
+     - :dir:`folder` **controls** (`foo`, Remote control items)
+         - :dir:`file` **clean** (`bool`, ---)
+         - :dir:`file` **pause** (`bool`, ---)
+         - :dir:`file` **stop** (`bool`, ---)
+         - :dir:`file` **charge** (`bool`, ---)
+         - :dir:`file` **locate** (`bool`, ---)
+
+
+general
+=======
+
+General information
+
+.. treeview::
+     - :dir:`folder` **general** (`foo`, General information)
+         - :dir:`file` **nick** (`str`, ---)
+         - :dir:`file` **did** (`str`, ---)
+         - :dir:`file` **model** (`str`, ---)
+         - :dir:`file` **icon_URL** (`str`, ---)
+         - :dir:`file` **available** (`bool`, ---)
+         - :dir:`file` **state** (`str`, ---)
+         - :dir:`file` **state_text** (`str`, ---)
+         - :dir:`file` **battery_level** (`num`, ---)
+
+
+history
+=======
+
+Logs
+
+.. treeview::
+     - :dir:`folder` **history** (`foo`, Logs)
+         - :dir:`file` **last_clean_logs** (`list`, ---)
+
+
+maps
+====
+
+Maps and rooms
+
+.. treeview::
+     - :dir:`folder` **maps** (`foo`, Maps and rooms)
+         - :dir:`file` **live_map_base64** (`str`, ---)
+         - :dir:`file` **last_clean_map_URL** (`str`, ---)
+         - :dir:`file` **rooms** (`list`, ---)
+
+
+settings
+========
+
+Modifiable settings
+
+.. treeview::
+     - :dir:`folder` **settings** (`foo`, Modifiable settings)
+         - :dir:`file` **water_level** (`str`, ---)
+         - :dir:`file` **water_level_text** (`str`, ---)
+         - :dir:`file` **fan_speed** (`str`, ---)
+         - :dir:`file` **fan_speed_text** (`str`, ---)
+
+
 ===============
 Logik Parameter
 ===============
@@ -166,7 +252,7 @@ Reinigung starten
 
 
 area
-----
+ -  -  -  - 
 
 ID des Raumes der geputzt werden soll
 
@@ -210,7 +296,7 @@ Saugstärke einstellen
 
 
 speed
------
+ -  -  -  -  - 
 
 Saugstärke
 
@@ -227,7 +313,7 @@ Wasser Quantität einstellen
 
 
 level
------
+ -  -  -  -  - 
 
 Wasser Quanittät
 

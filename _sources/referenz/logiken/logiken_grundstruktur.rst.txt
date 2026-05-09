@@ -15,11 +15,11 @@ Eine Logik besteht aus einem Python Skript sowie einer Reihe von Parametern die 
 steuern. Eine Logik kan während der Laufzeit von SmartHomeNG geladen und entladen werden. Dadurch sind Veränderungen
 ein einer Logik möglich, ohne SmartHomeNG neu starten zu müssen.
 
-Das eigentliche Python Skript einer Logik muss im Verzeichnis ``../logics`` der SmartHomeNG Installation abgelegt
+Das eigentliche Python Skript einer Logik muss im Verzeichnis ``etc/logics`` der SmartHomeNG Installation abgelegt
 werden. Damit die Logik getriggert und ausgeführt wird, muss sie zusätzlich in der Konfigurationsdatei
-``../etc/logic.yaml`` konfiguriert werden.
+``etc/logic.yaml`` konfiguriert werden.
 
-Zur Erstellung einer neuen Logik sollte die Template Datei ``logics/logic.tpl`` als Vorlage genutzt werden.
+Zur Erstellung einer neuen Logik sollte die Template Datei ``templates/logic.tpl`` als Vorlage genutzt werden.
 
 Die einfachste Methode zu Erstellung einer neuen Logik stellt die Verwendung der Admin GUI dar. Dort kann sowohl
 das Skript erstellt werden, as auch die Parameter zur Konfiguration erfasst werden. Die Admin GUI ermöglicht auch

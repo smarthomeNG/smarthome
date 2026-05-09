@@ -12,7 +12,7 @@ Plugin 'pluggit' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -118,6 +118,123 @@ pluggit_write
 In die Pluggit-Einheit zu schreibender Wert.
 
  - Datentyp: **str**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+pluggit
+=======
+
+
+.. treeview::
+     - :dir:`folder` **pluggit** (`foo`, ---)
+         - :dir:`file` **DHCPEnabled** (`bool`, ---)
+         - :dir:`file` **IPAdress** (`str`, ---)
+         - :dir:`file` **IPMask** (`str`, ---)
+         - :dir:`file` **IPGateway** (`str`, ---)
+         - :dir:`file` **MACAdress** (`str`, ---)
+         - :dir:`folder` **SystemComponents** (`num`, ---)
+             - :dir:`file` **FP1** (`bool`, ---)
+             - :dir:`file` **Week** (`bool`, ---)
+             - :dir:`file` **Bypass** (`bool`, ---)
+             - :dir:`file` **LRSwitch** (`bool`, ---)
+             - :dir:`file` **InternalPreheater** (`bool`, ---)
+             - :dir:`file` **ServoFlow** (`bool`, ---)
+             - :dir:`file` **RHSensor** (`bool`, ---)
+             - :dir:`file` **VOCSensor** (`bool`, ---)
+             - :dir:`file` **ExtOverride** (`bool`, ---)
+             - :dir:`file` **HAC1** (`bool`, ---)
+             - :dir:`file` **HRC2** (`bool`, ---)
+             - :dir:`file` **PCTool** (`bool`, ---)
+             - :dir:`file` **Apps** (`bool`, ---)
+             - :dir:`file` **ZeegBee** (`bool`, ---)
+             - :dir:`file` **DI1Override** (`bool`, ---)
+             - :dir:`file` **DI2Override** (`bool`, ---)
+         - :dir:`file` **SystemSerialNum** (`num`, ---)
+         - :dir:`file` **SystemName** (`str`, ---)
+         - :dir:`file` **SwitchInBPosition** (`bool`, ---)
+         - :dir:`file` **SwitchInAPosition** (`bool`, ---)
+         - :dir:`file` **FirmwareVersion** (`num`, ---)
+         - :dir:`file` **HACFirmwareVersion** (`num`, ---)
+         - :dir:`folder` **SystemTime** (`num`, ---)
+             - :dir:`file` **DateTime** (`foo`, ---)
+             - :dir:`file` **Date** (`foo`, ---)
+             - :dir:`file` **Time** (`foo`, ---)
+         - :dir:`file` **WorkTime** (`num`, ---)
+         - :dir:`folder` **ExploitationDate** (`foo`, ---)
+             - :dir:`file` **Date** (`foo`, ---)
+         - :dir:`folder` **BLState** (`num`, ---)
+             - :dir:`file` **Text** (`str`, ---)
+         - :dir:`folder` **CurrentUnitMode** (`num`, ---)
+             - :dir:`file` **DemandMode** (`bool`, ---)
+             - :dir:`file` **ManualMode** (`bool`, ---)
+             - :dir:`file` **WeekProgramMode** (`bool`, ---)
+             - :dir:`file` **AwayMode** (`bool`, ---)
+             - :dir:`file` **FireplaceMode** (`bool`, ---)
+             - :dir:`file` **SummerMode** (`bool`, ---)
+             - :dir:`folder` **NightMode** (`bool`, ---)
+                 - :dir:`file` **NightMode_StartHour** (`num`, ---)
+                 - :dir:`file` **NightMode_StartMin** (`num`, ---)
+                 - :dir:`file` **NightMode_EndHour** (`num`, ---)
+                 - :dir:`file` **NightMode_EndMin** (`num`, ---)
+             - :dir:`file` **ManualBypass** (`bool`, ---)
+         - :dir:`file` **FanSpeedLevel** (`num`, ---)
+         - :dir:`file` **Fan1rpm** (`num`, ---)
+         - :dir:`file` **Fan2rpm** (`num`, ---)
+         - :dir:`file` **OutdoorTemperature** (`num`, ---)
+         - :dir:`file` **SupplyTemperature** (`num`, ---)
+         - :dir:`file` **ExtractTemperature** (`num`, ---)
+         - :dir:`file` **ExhaustTemperature** (`num`, ---)
+         - :dir:`file` **RoomTemperature** (`num`, ---)
+         - :dir:`file` **FilterRemainingLifetime** (`num`, ---)
+         - :dir:`file` **FilterDefaultTime** (`num`, ---)
+         - :dir:`file` **FilterReset** (`bool`, ---)
+         - :dir:`folder` **Alarm** (`num`, ---)
+             - :dir:`file` **Text** (`str`, ---)
+             - :dir:`file` **ClearAlarm** (`num`, ---)
+         - :dir:`folder` **WeekProgram** (`num`, ---)
+             - :dir:`file` **Monday** (`list`, ---)
+             - :dir:`file` **Tuesday** (`list`, ---)
+             - :dir:`file` **Wednesday** (`list`, ---)
+             - :dir:`file` **Thursday** (`list`, ---)
+             - :dir:`file` **Friday** (`list`, ---)
+             - :dir:`file` **Saturday** (`list`, ---)
+             - :dir:`file` **Sunday** (`list`, ---)
+         - :dir:`folder` **Bypass** (`num`, ---)
+             - :dir:`file` **Text** (`str`, ---)
+             - :dir:`file` **Open** (`bool`, ---)
+             - :dir:`file` **Tmin** (`num`, ---)
+             - :dir:`file` **Tmax** (`num`, ---)
+             - :dir:`file` **ManualMode** (`bool`, ---)
+             - :dir:`file` **ManualTimeout** (`num`, ---)
+         - :dir:`file` **PreheaterPower** (`num`, ---)
+         - :dir:`file` **ReferenceExtractFanSpeed** (`num`, ---)
+         - :dir:`file` **ReferenceSupplyFanSpeed** (`num`, ---)
+         - :dir:`file` **FireplacePresent** (`bool`, ---)
+         - :dir:`folder` **VOC_Sensor** (`foo`, ---)
+             - :dir:`file` **SensorValue** (`num`, ---)
+             - :dir:`file` **LowTreshold** (`num`, ---)
+             - :dir:`file` **MiddleTreshold** (`num`, ---)
+             - :dir:`file` **HighTreshold** (`num`, ---)
+         - :dir:`folder` **RH_Sensor** (`foo`, ---)
+             - :dir:`file` **SensorValue** (`num`, ---)
+             - :dir:`file` **SetPoint** (`num`, ---)
+         - :dir:`folder` **HAC_Parts** (`foo`, ---)
+             - :dir:`file` **SystemIDComponents** (`num`, ---)
+             - :dir:`file` **CO2_Level** (`num`, ---)
+             - :dir:`file` **CO2_LowTreshold** (`num`, ---)
+             - :dir:`file` **CO2_MiddleTreshold** (`num`, ---)
+             - :dir:`file` **CO2_HighTreshold** (`num`, ---)
+             - :dir:`file` **IdxHac1Components** (`num`, ---)
+             - :dir:`file` **SetpointT2** (`num`, ---)
+             - :dir:`file` **SetpointT3** (`num`, ---)
+             - :dir:`file` **SetpointT5** (`num`, ---)
 
 
 ===============

@@ -12,7 +12,7 @@ Plugin 'casambi' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -130,6 +130,26 @@ Key fuer das Senden von Kommandos ins Casambi Netzwerk
    - **DIMMER**
    - **VERTICAL**
    - **CCT**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+dimmerdevice
+============
+
+Occhio light
+
+.. treeview::
+     - :dir:`folder` **dimmerdevice** (`foo`, Occhio light)
+         - :dir:`folder` **light** (`bool`, ---)
+             - :dir:`file` **level** (`num`, ---)
+             - :dir:`file` **vertical** (`num`, ---)
 
 
 ===============

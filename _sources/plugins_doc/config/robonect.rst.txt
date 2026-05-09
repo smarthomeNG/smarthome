@@ -12,7 +12,7 @@ Plugin 'robonect' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -234,6 +234,152 @@ Index des Fernstart-Punkts. Normal: 1 oder 2. Wird nur für Items mit robonect_d
  - Datentyp: **num**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+batteries
+=========
+
+
+.. treeview::
+     - :dir:`folder` **batteries** (`foo`, ---)
+         - :dir:`file` **battery_0_id** (`num`, ---)
+         - :dir:`file` **battery_0_charge** (`num`, ---)
+         - :dir:`file` **battery_0_voltage** (`num`, ---)
+         - :dir:`file` **battery_0_current** (`num`, ---)
+         - :dir:`file` **battery_0_temperature** (`num`, Battery Temperature in °C)
+         - :dir:`file` **battery_0_capacity_full** (`num`, ---)
+         - :dir:`file` **battery_0_capacity_remaining** (`num`, ---)
+
+
+main
+====
+
+Main Data From Robonect HX Module
+
+.. treeview::
+     - :dir:`folder` **main** (`foo`, Main Data From Robonect HX Module)
+         - :dir:`file` **robonect_name** (`str`, Lawnmower Nickname)
+         - :dir:`file` **robonect_id** (`str`, Robonect ID)
+         - :dir:`file` **robonect_version** (`str`, Firmware Version of the Robonect Module)
+         - :dir:`file` **robonect_version_comment** (`str`, Firmware Version Comment (e.g. Sub Version) of the Robonect Module)
+         - :dir:`file` **robonect_version_compiled** (`str`, Firmware Compilation Date of the Robonect Module)
+         - :dir:`file` **robonect_serial** (`str`, Serial Number of the Robonect Module)
+         - :dir:`folder` **mower** (`foo`, Information About the Hardware and Software of the Mower)
+             - :dir:`folder` **hardware** (`foo`, ---)
+                 - :dir:`file` **serial** (`str`, Serial of the Robotic Lawnmower)
+                 - :dir:`file` **production_date** (`str`, Production Date of the Robotic Lawnmower)
+             - :dir:`folder` **msw** (`foo`, ---)
+                 - :dir:`file` **title** (`str`, Model Name of the Automower)
+                 - :dir:`file` **version** (`str`, Firmware Version of the Automower)
+                 - :dir:`file` **compiled** (`str`, Firmware Compilation Date of the Automower)
+             - :dir:`folder` **wlan** (`foo`, ---)
+                 - :dir:`file` **at-version** (`str`, ---)
+                 - :dir:`file` **sdk-version** (`str`, ---)
+         - :dir:`folder` **remote** (`foo`, ---)
+             - :dir:`folder` **remotestart_1** (`foo`, OrderedDict([('type', 'str'), ('robonect_data_type', 'remotestart_name'), ('robonect_remote_index', 1)]))
+                 - :dir:`file` **name** (`str`, ---)
+                 - :dir:`file` **visible** (`bool`, ---)
+                 - :dir:`file` **rstart_path** (`num`, ---)
+                 - :dir:`file` **proportion** (`num`, ---)
+                 - :dir:`file` **distance** (`num`, ---)
+             - :dir:`folder` **remotestart_2** (`foo`, OrderedDict([('type', 'str'), ('robonect_data_type', 'remotestart_name'), ('robonect_remote_index', 2)]))
+                 - :dir:`file` **name** (`str`, ---)
+                 - :dir:`file` **visible** (`bool`, ---)
+                 - :dir:`file` **rstart_path** (`num`, ---)
+                 - :dir:`file` **proportion** (`num`, ---)
+                 - :dir:`file` **distance** (`num`, ---)
+         - :dir:`folder` **control** (`str`, Control of the Mower)
+             - :dir:`file` **mode** (`str`, Control Mode of the Mower)
+         - :dir:`folder` **status** (`num`, Status Code)
+             - :dir:`folder` **text** (`str`, Status of the Mower as Text)
+                 - :dir:`file` **translated** (`str`, Status of the Mower as Translated Text)
+             - :dir:`file` **distance** (`str`, ---)
+             - :dir:`file` **stopped** (`bool`, ---)
+             - :dir:`file` **duration** (`str`, Duration of Mode in Minutes)
+             - :dir:`folder` **mode** (`num`, Mode of the Mower)
+                 - :dir:`folder` **text** (`str`, Mode of the Mower as Text)
+                     - :dir:`file` **translated** (`str`, Status of the Mower as Translated Text)
+             - :dir:`file` **battery** (`str`, Battery Level in %)
+             - :dir:`file` **hours** (`num`, ---)
+             - :dir:`folder` **blades** (`foo`, ---)
+                 - :dir:`file` **quality** (`num`, Quality of Blades in %)
+                 - :dir:`file` **hours** (`num`, Runtime of Blades in hours)
+                 - :dir:`file` **days** (`num`, Age of Blades in days)
+             - :dir:`folder` **error** (`foo`, ---)
+                 - :dir:`file` **error_code** (`num`, ---)
+                 - :dir:`file` **error_message** (`str`, ---)
+                 - :dir:`file` **date** (`str`, ---)
+                 - :dir:`file` **time** (`str`, ---)
+                 - :dir:`file` **unix** (`num`, ---)
+         - :dir:`folder` **wlan** (`foo`, ---)
+             - :dir:`file` **signal** (`str`, Wifi Signal Strength)
+         - :dir:`folder` **health** (`foo`, ---)
+             - :dir:`file` **temperature** (`str`, Internal Temperature)
+             - :dir:`file` **humidity** (`str`, Internal Humidity)
+         - :dir:`folder` **clock** (`foo`, ---)
+             - :dir:`file` **date** (`str`, ---)
+             - :dir:`file` **time** (`str`, ---)
+             - :dir:`file` **unix** (`num`, ---)
+
+
+motor
+=====
+
+
+.. treeview::
+     - :dir:`folder` **motor** (`foo`, ---)
+         - :dir:`folder` **drive** (`foo`, ---)
+             - :dir:`folder` **left** (`foo`, ---)
+                 - :dir:`file` **power** (`num`, ---)
+                 - :dir:`file` **speed** (`num`, ---)
+                 - :dir:`file` **current** (`num`, ---)
+             - :dir:`folder` **right** (`foo`, ---)
+                 - :dir:`file` **power** (`num`, ---)
+                 - :dir:`file` **speed** (`num`, ---)
+                 - :dir:`file` **current** (`num`, ---)
+         - :dir:`folder` **blade** (`foo`, ---)
+             - :dir:`file` **speed** (`num`, ---)
+             - :dir:`file` **current** (`num`, ---)
+             - :dir:`file` **average** (`num`, ---)
+
+
+weather
+=======
+
+
+.. treeview::
+     - :dir:`folder` **weather** (`foo`, ---)
+         - :dir:`folder` **location** (`foo`, ---)
+             - :dir:`file` **zip** (`str`, ---)
+             - :dir:`file` **country** (`str`, ---)
+         - :dir:`folder` **weather_data** (`foo`, ---)
+             - :dir:`file` **rain** (`num`, ---)
+             - :dir:`file` **temperature** (`num`, ---)
+             - :dir:`file` **humidity** (`num`, ---)
+             - :dir:`file` **sunrise** (`num`, ---)
+             - :dir:`file` **sunset** (`num`, ---)
+             - :dir:`file` **day** (`bool`, ---)
+             - :dir:`file` **icon** (`str`, ---)
+         - :dir:`folder` **weather_condition** (`foo`, ---)
+             - :dir:`file` **toorainy** (`bool`, ---)
+             - :dir:`file` **toocold** (`bool`, ---)
+             - :dir:`file` **toowarm** (`bool`, ---)
+             - :dir:`file` **toodry** (`bool`, ---)
+             - :dir:`file` **toowet** (`bool`, ---)
+             - :dir:`file` **day** (`bool`, ---)
+             - :dir:`file` **night** (`bool`, ---)
+         - :dir:`folder` **weather_timestamp** (`foo`, ---)
+             - :dir:`file` **date** (`str`, ---)
+             - :dir:`file` **time** (`str`, ---)
+             - :dir:`file` **unix** (`num`, ---)
+
+
 ===============
 Logik Parameter
 ===============
@@ -270,7 +416,7 @@ Gibt den aktuellen Betriebsmodus des Automowers als String zurück.
 
 
 mode
-----
+ -  -  -  - 
 
 Betriebsmodus als Integer.
 
@@ -303,7 +449,7 @@ Gibt den Status des Rasenmähers als String zurück.
 
 
 status
-------
+ -  -  -  -  -  - 
 
 Status als Integer.
 
@@ -329,7 +475,7 @@ Setzt den Betriebsmodus.
 
 
 mode
-----
+ -  -  -  - 
 
 Betriebsmodus, der gesetzt werden soll ('home','eod','man','auto','job').
 
@@ -345,7 +491,7 @@ Betriebsmodus, der gesetzt werden soll ('home','eod','man','auto','job').
 
 
 remotestart
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Fernstartpunkt, entweder 0 (Standard), 1 (Fernstart 1), oder 2 (Fernstart 2) - nur mit mode=job nutzbar.
 
@@ -359,7 +505,7 @@ Fernstartpunkt, entweder 0 (Standard), 1 (Fernstart 1), oder 2 (Fernstart 2) - n
 
 
 after
------
+ -  -  -  -  - 
 
 Modus, der nach dem Mähauftrag aktiviert werden soll (Standard: letzter Modus). Mögliche Werte 1,2,3,4 (vor V1.0 Beta 8) oder 'home','eod','man','auto','job' - nur mit mode=job nutzbar.
 
@@ -379,7 +525,7 @@ Modus, der nach dem Mähauftrag aktiviert werden soll (Standard: letzter Modus).
 
 
 start
------
+ -  -  -  -  - 
 
 Startzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt: 0) - nur mit mode=job nutzbar.
 
@@ -387,7 +533,7 @@ Startzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt
 
 
 end
----
+ -  -  - 
 
 Endzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt: +1h) - nur mit mode=job nutzbar.
 
@@ -395,7 +541,7 @@ Endzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt: 
 
 
 duration
---------
+ -  -  -  -  -  -  -  - 
 
 Zeitdauer des Mähauftrags in Minuten (nur kombiniert mit dem start oder end Parameter)
 
@@ -412,7 +558,7 @@ Setzt den Namen des Automowers.
 
 
 name
-----
+ -  -  -  - 
 
 Name, der gesetzt werden soll.
 
@@ -429,7 +575,7 @@ Setzt Informationen für den jeweiligen Fernstart.
 
 
 index
------
+ -  -  -  -  - 
 
 Fernstart-Index (normal 1 oder 2)
 
@@ -437,7 +583,7 @@ Fernstart-Index (normal 1 oder 2)
 
 
 name
-----
+ -  -  -  - 
 
 Name des Fernstart-Ortes.
 
@@ -445,7 +591,7 @@ Name des Fernstart-Ortes.
 
 
 distance
---------
+ -  -  -  -  -  -  -  - 
 
 Fernstartabstand.
 
@@ -453,7 +599,7 @@ Fernstartabstand.
 
 
 visible
--------
+ -  -  -  -  -  -  - 
 
 Fernstart-Punkt sichtbar?
 
@@ -461,7 +607,7 @@ Fernstart-Punkt sichtbar?
 
 
 proportion
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Häufigkeit in %, die der Fernstartpunkt selektiert werden soll.
 
@@ -478,7 +624,7 @@ Setzt die Informationen für einen Timer.
 
 
 index
------
+ -  -  -  -  - 
 
 Index des Timers (beginnend bei 1).
 
@@ -486,7 +632,7 @@ Index des Timers (beginnend bei 1).
 
 
 enabled
--------
+ -  -  -  -  -  -  - 
 
 True: der Timer wird aktiviert, False: deaktiviert.
 
@@ -494,7 +640,7 @@ True: der Timer wird aktiviert, False: deaktiviert.
 
 
 start
------
+ -  -  -  -  - 
 
 Startzeit für den Timer, als String im Format 'HH:MM'.
 
@@ -502,7 +648,7 @@ Startzeit für den Timer, als String im Format 'HH:MM'.
 
 
 end
----
+ -  -  - 
 
 Endzeit für den Timer, als String im Format 'HH:MM'.
 
@@ -510,7 +656,7 @@ Endzeit für den Timer, als String im Format 'HH:MM'.
 
 
 mo
---
+ -  - 
 
 True: Montag aktiviert, False: deaktiviert.
 
@@ -518,7 +664,7 @@ True: Montag aktiviert, False: deaktiviert.
 
 
 tu
---
+ -  - 
 
 True: Dienstag aktiviert, False: deaktiviert.
 
@@ -526,7 +672,7 @@ True: Dienstag aktiviert, False: deaktiviert.
 
 
 we
---
+ -  - 
 
 True: Mittwoch aktiviert, False: deaktiviert.
 
@@ -534,7 +680,7 @@ True: Mittwoch aktiviert, False: deaktiviert.
 
 
 th
---
+ -  - 
 
 True: Donnerstag aktiviert, False: deaktiviert.
 
@@ -542,7 +688,7 @@ True: Donnerstag aktiviert, False: deaktiviert.
 
 
 fr
---
+ -  - 
 
 True: Freitag aktiviert, False: deaktiviert.
 
@@ -550,7 +696,7 @@ True: Freitag aktiviert, False: deaktiviert.
 
 
 sa
---
+ -  - 
 
 True: Samstag aktiviert, False: deaktiviert.
 
@@ -558,7 +704,7 @@ True: Samstag aktiviert, False: deaktiviert.
 
 
 su
---
+ -  - 
 
 True: Sonntag aktiviert, False: deaktiviert.
 

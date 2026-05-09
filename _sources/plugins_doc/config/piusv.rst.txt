@@ -12,7 +12,7 @@ Plugin 'piusv' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -113,7 +113,49 @@ Attribut für globale Plugin Items zum Triggern eines Update
 
  - Mögliche Werte:
 
-   - **update** |_| - |_| Startet bei Triggerung ein Update der Daten
+   - **update**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+piusv_info
+==========
+
+Struct für Information über die piusv
+
+.. treeview::
+     - :dir:`folder` **piusv_info** (`foo`, Struct für Information über die piusv)
+         - :dir:`file` **update_piusv_info** (`bool`, ---)
+         - :dir:`file` **u_batt** (`num`, ---)
+         - :dir:`file` **i_rasp** (`num`, ---)
+         - :dir:`file` **u_rasp** (`num`, ---)
+         - :dir:`file` **u_ext** (`num`, ---)
+         - :dir:`file` **u_usb** (`num`, ---)
+         - :dir:`file` **piusv_status** (`num`, ---)
+         - :dir:`file` **piusv_firmware** (`str`, ---)
+
+
+piusv_info_db
+=============
+
+Struct für Information über piusv mit database
+
+.. treeview::
+     - :dir:`folder` **piusv_info_db** (`foo`, Struct für Information über piusv mit database)
+         - :dir:`file` **update_piusv_info** (`bool`, ---)
+         - :dir:`file` **u_batt** (`num`, ---)
+         - :dir:`file` **i_rasp** (`num`, ---)
+         - :dir:`file` **u_rasp** (`num`, ---)
+         - :dir:`file` **u_ext** (`num`, ---)
+         - :dir:`file` **u_usb** (`num`, ---)
+         - :dir:`file` **piusv_status** (`num`, ---)
+         - :dir:`file` **piusv_firmware** (`str`, ---)
 
 
 ===============

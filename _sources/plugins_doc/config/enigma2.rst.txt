@@ -12,7 +12,7 @@ Plugin 'enigma2' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -176,6 +176,15 @@ Referenz auf Services (bspw. Sender), siehe README.
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -221,7 +230,7 @@ Sendet eine Nachricht an das Enigma2 Device - Beispiel: sh.vusolo2.send_message(
 
 
 messagetext
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Anzuzeigender Text
 
@@ -229,7 +238,7 @@ Anzuzeigender Text
 
 
 messagetype
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 messagetype bestimmt die Art, wie die Nachricht angezeigt werden soll
 
@@ -238,14 +247,14 @@ messagetype bestimmt die Art, wie die Nachricht angezeigt werden soll
 
  - Mögliche Werte:
 
-   - **0** |_| - |_| Ja/Nein
-   - **1** |_| - |_| Info
-   - **2** |_| - |_| Mitteilung
-   - **3** |_| - |_| Achtung
+   - **0**
+   - **1**
+   - **2**
+   - **3**
 
 
 timeout
--------
+ -  -  -  -  -  -  - 
 
 Anzeigedauer der Nachricht in Sekunden
 
@@ -263,7 +272,7 @@ Setzt den Power-Status auf einen bestimmten Wert - Beispiel (toggle standby): sh
 
 
 value
------
+ -  -  -  -  - 
 
 Status in den die Enigma2 Box versetzt werden soll
 
@@ -271,12 +280,12 @@ Status in den die Enigma2 Box versetzt werden soll
 
  - Mögliche Werte:
 
-   - **0** |_| - |_| Toggle Standby
-   - **1** |_| - |_| Deepstandby
-   - **2** |_| - |_| Reboot
-   - **3** |_| - |_| Restart Enigma2
-   - **4** |_| - |_| Wakeup from Standby
-   - **5** |_| - |_| Standby
+   - **0**
+   - **1**
+   - **2**
+   - **3**
+   - **4**
+   - **5**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/enigma2/README>` des Plugins zugreifen.

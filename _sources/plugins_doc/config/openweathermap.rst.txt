@@ -12,7 +12,7 @@ Plugin 'openweathermap' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -233,6 +233,371 @@ Name einer Datenquelle, der JSON hier komplett eingebunden wird
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+airpollution
+============
+
+OpenWeatherMap airpollution data
+
+.. treeview::
+     - :dir:`folder` **airpollution** (`foo`, OpenWeatherMap airpollution data)
+         - :dir:`file` **aqi** (`num`, AirQualityIndex)
+         - :dir:`file` **co** (`num`, CO Wert)
+         - :dir:`file` **no** (`num`, NO Wert)
+         - :dir:`file` **no2** (`num`, NO2 Wert)
+         - :dir:`file` **o3** (`num`, O3 Wert)
+         - :dir:`file` **so2** (`num`, SO2 Wert)
+         - :dir:`file` **pm25** (`num`, Partikel 2-5µm)
+         - :dir:`file` **pm10** (`num`, Partikel 10µm)
+         - :dir:`file` **nh3** (`num`, NH3 Wert)
+
+
+alerts
+======
+
+OpenWeatherMap national weather alerts data from major national weather warning systems
+
+.. treeview::
+     - :dir:`folder` **alerts** (`foo`, OpenWeatherMap national weather alerts data from major national weather warning systems)
+         - :dir:`file` **sender_name** (`str`, Name of the alert source.)
+         - :dir:`file` **event** (`str`, Alert event name)
+         - :dir:`file` **start** (`str`, Date and time of the start of the alert, Unix, UTC)
+         - :dir:`file` **end** (`str`, Date and time of the end of the alert, Unix, UTC)
+         - :dir:`file` **description** (`str`, Description of the alert)
+
+
+current
+=======
+
+OpenWeatherMap current weather data
+
+.. treeview::
+     - :dir:`folder` **current** (`foo`, OpenWeatherMap current weather data)
+         - :dir:`file` **dt** (`str`, Current time, Unix, UTC)
+         - :dir:`file` **sunrise** (`str`, Sunrise time, Unix, UTC)
+         - :dir:`file` **sunset** (`str`, Sunset time, Unix, UTC)
+         - :dir:`file` **temp** (`num`, Temperature. Units - default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **feels_like** (`num`, Temperature. This temperature parameter accounts for the human perception of weather. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **pressure** (`num`, Atmospheric pressure on the sea level, hPa)
+         - :dir:`file` **humidity** (`num`, Humidity, %)
+         - :dir:`file` **dew_point** (`num`, Atmospheric temperature (varying according to pressure and humidity) below which water droplets begin to condense and dew can form. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **clouds** (`num`, Cloudiness,%)
+         - :dir:`file` **uvi** (`num`, Current UV index)
+         - :dir:`file` **visibility** (`num`, Average visibility, metres)
+         - :dir:`folder` **wind_speed** (`num`, Wind speed. Wind speed. Units default metre/sec, metric metre/sec, imperial miles/hour.)
+             - :dir:`file` **beaufort_nr** (`num`, wind speed as beaufort number)
+             - :dir:`file` **beaufort_string** (`str`, wind speed as beaufort string)
+         - :dir:`folder` **wind_gust** (`num`, (where available) Wind gust. Units default metre/sec, metric metre/sec, imperial miles/hour.)
+             - :dir:`file` **beaufort_nr** (`num`, wind gusts as beaufort number)
+             - :dir:`file` **beaufort_string** (`str`, wind gusts as beaufort string)
+         - :dir:`folder` **wind_deg** (`num`, Wind direction, degrees (meteorological))
+             - :dir:`file` **wind_direction_string** (`str`, ---)
+         - :dir:`file` **rain** (`num`, (where available) Rain volume for last hour, mm)
+         - :dir:`file` **snow** (`num`, (where available) Snow volume for last hour, mm)
+         - :dir:`file` **weather_id** (`num`, Weather condition id)
+         - :dir:`file` **weather_main** (`str`, Group of weather parameters (Rain, Snow, Extreme etc.))
+         - :dir:`file` **weather_description** (`str`, Weather condition within the group (full list of weather conditions). Get the output in your language)
+         - :dir:`file` **weather_icon** (`str`, Weather icon id. How to get icons)
+
+
+darksky2owm_current_weather
+===========================
+
+Current weather of Weather report from openweathermap matching item defined in darksky-plugin struct
+
+.. treeview::
+     - :dir:`folder` **darksky2owm_current_weather** (`foo`, Current weather of Weather report from openweathermap matching item defined in darksky-plugin struct)
+         - :dir:`file` **time_epoch** (`num`, ---)
+         - :dir:`file` **time** (`str`, ---)
+         - :dir:`file` **summary** (`str`, ---)
+         - :dir:`file` **icon** (`str`, ---)
+         - :dir:`file` **icon_visu** (`str`, ---)
+         - :dir:`file` **temperature** (`num`, ---)
+         - :dir:`file` **apparenttemperature** (`num`, ---)
+         - :dir:`file` **dewpoint** (`num`, ---)
+         - :dir:`file` **humidity** (`num`, ---)
+         - :dir:`file` **pressure** (`num`, ---)
+         - :dir:`file` **windSpeed** (`num`, ---)
+         - :dir:`file` **windGust** (`num`, ---)
+         - :dir:`file` **windBearing** (`num`, ---)
+         - :dir:`file` **cloudCover** (`num`, ---)
+         - :dir:`file` **uvIndex** (`num`, ---)
+         - :dir:`file` **visibility** (`num`, ---)
+         - :dir:`file` **ozone** (`num`, ---)
+         - :dir:`file` **date** (`str`, ---)
+         - :dir:`file` **day** (`num`, ---)
+
+
+darksky2owm_forecast_daily
+==========================
+
+Daily forcast of Weather report from openweathermap matching item defined in darksky-plugin struct
+
+.. treeview::
+     - :dir:`folder` **darksky2owm_forecast_daily** (`foo`, Daily forcast of Weather report from openweathermap matching item defined in darksky-plugin struct)
+         - :dir:`file` **time_epoch** (`num`, ---)
+         - :dir:`file` **time** (`str`, ---)
+         - :dir:`file` **summary** (`str`, ---)
+         - :dir:`file` **icon** (`str`, ---)
+         - :dir:`file` **icon_visu** (`str`, ---)
+         - :dir:`file` **temperature** (`num`, ---)
+         - :dir:`file` **apparenttemperature** (`num`, ---)
+         - :dir:`file` **dewpoint** (`num`, ---)
+         - :dir:`file` **humidity** (`num`, ---)
+         - :dir:`file` **pressure** (`num`, ---)
+         - :dir:`file` **windSpeed** (`num`, ---)
+         - :dir:`file` **windGust** (`num`, ---)
+         - :dir:`file` **windBearing** (`num`, ---)
+         - :dir:`file` **cloudCover** (`num`, ---)
+         - :dir:`file` **uvIndex** (`num`, ---)
+         - :dir:`file` **temperatureMin** (`num`, ---)
+         - :dir:`file` **temperatureMax** (`num`, ---)
+         - :dir:`file` **date** (`str`, ---)
+         - :dir:`file` **weekday** (`num`, ---)
+         - :dir:`file` **precipProbability_mean** (`num`, ---)
+
+
+darksky2owm_forecast_hourly
+===========================
+
+Hourly forcast of Weather report from openweathermap matching item defined in darksky-plugin struct
+
+.. treeview::
+     - :dir:`folder` **darksky2owm_forecast_hourly** (`foo`, Hourly forcast of Weather report from openweathermap matching item defined in darksky-plugin struct)
+         - :dir:`file` **time_epoch** (`num`, ---)
+         - :dir:`file` **time** (`str`, ---)
+         - :dir:`file` **summary** (`str`, ---)
+         - :dir:`file` **icon** (`str`, ---)
+         - :dir:`file` **icon_visu** (`str`, ---)
+         - :dir:`file` **temperature** (`num`, ---)
+         - :dir:`file` **apparenttemperature** (`num`, ---)
+         - :dir:`file` **dewpoint** (`num`, ---)
+         - :dir:`file` **humidity** (`num`, ---)
+         - :dir:`file` **pressure** (`num`, ---)
+         - :dir:`file` **windSpeed** (`num`, ---)
+         - :dir:`file` **windGust** (`num`, ---)
+         - :dir:`file` **windBearing** (`num`, ---)
+         - :dir:`file` **cloudCover** (`num`, ---)
+         - :dir:`file` **uvIndex** (`num`, ---)
+         - :dir:`file` **visibility** (`num`, ---)
+         - :dir:`file` **date** (`str`, ---)
+         - :dir:`file` **weekday** (`str`, ---)
+
+
+darksky2owm_locals
+==================
+
+Locals report openweathermap matching item defined in darksky-plugin struct
+
+.. treeview::
+     - :dir:`folder` **darksky2owm_locals** (`foo`, Locals report openweathermap matching item defined in darksky-plugin struct)
+         - :dir:`file` **latitude** (`num`, ---)
+         - :dir:`file` **longitude** (`num`, ---)
+         - :dir:`file` **timezone** (`str`, ---)
+
+
+forecast_daily
+==============
+
+OpenWeatherMap daily weather forecast data
+
+.. treeview::
+     - :dir:`folder` **forecast_daily** (`foo`, OpenWeatherMap daily weather forecast data)
+         - :dir:`file` **dt** (`str`, Time of the forecasted data, Unix, UTC)
+         - :dir:`file` **dt_weekday** (`str`, Time of the forecasted data, Unix, UTC)
+         - :dir:`file` **sunrise** (`str`, Sunrise time, Unix, UTC)
+         - :dir:`file` **sunset** (`str`, Sunset time, Unix, UTC)
+         - :dir:`file` **moonrise** (`str`, The time of when the moon rises for this day, Unix, UTC)
+         - :dir:`file` **moonset** (`str`, The time of when the moon sets for this day, Unix, UTC)
+         - :dir:`file` **moon_phase** (`num`, Moon phase. 0 and 1 are 'new moon', 0.25 is 'first quarter moon', 0.5 is 'full moon' and 0.75 is 'last quarter moon'. The periods in between are called 'waxing crescent', 'waxing gibous', 'waning gibous', and 'waning crescent', respectively.)
+         - :dir:`folder` **temp** (`foo`, Temperature. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+             - :dir:`file` **temp_morn** (`num`, Morning temperature.)
+             - :dir:`file` **temp_day** (`num`, Day temperature.)
+             - :dir:`file` **temp_eve** (`num`, Evening temperature.)
+             - :dir:`file` **temp_night** (`num`, Night temperature.)
+             - :dir:`file` **temp_min** (`num`, Min daily temperature.)
+             - :dir:`file` **temp_max** (`num`, Max daily temperature.)
+         - :dir:`folder` **feels_like** (`foo`, This accounts for the human perception of weather. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+             - :dir:`file` **feels_like_morn** (`num`, Morning temperature.)
+             - :dir:`file` **feels_like_day** (`num`, Day temperature.)
+             - :dir:`file` **feels_like_eve** (`num`, Evening temperature.)
+             - :dir:`file` **feels_like_night** (`num`, Night temperature.)
+         - :dir:`file` **pressure** (`num`, Atmospheric pressure on the sea level, hPa)
+         - :dir:`file` **humidity** (`num`, Humidity, %)
+         - :dir:`file` **dew_point** (`num`, Atmospheric temperature (varying according to pressure and humidity) below which water droplets begin to condense and dew can form. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`folder` **wind_speed** (`num`, Wind speed. Units default metre/sec, metric metre/sec, imperial miles/hour.)
+             - :dir:`file` **beaufort_nr** (`num`, wind speed as beaufort number)
+             - :dir:`file` **beaufort_string** (`str`, wind speed as beaufort string)
+         - :dir:`folder` **wind_gust** (`num`, (where available) Wind gust. Units default metre/sec, metric metre/sec, imperial miles/hour.)
+             - :dir:`file` **beaufort_nr** (`num`, wind gusts as beaufort number)
+             - :dir:`file` **beaufort_string** (`str`, wind gusts as beaufort string)
+         - :dir:`folder` **wind_deg** (`num`, Wind direction, degrees (meteorological))
+             - :dir:`file` **wind_direction_string** (`str`, ---)
+         - :dir:`file` **clouds** (`num`, Cloudiness, %)
+         - :dir:`file` **uvi** (`num`, The maximum value of UV index for the day)
+         - :dir:`file` **pop** (`num`, Probability of precipitation)
+         - :dir:`file` **rain** (`num`, (where available) Precipitation volume, mm)
+         - :dir:`file` **snow** (`num`, (where available) Snow volume, mm)
+         - :dir:`file` **weather_id** (`num`, Weather condition id)
+         - :dir:`file` **weather_main** (`str`, Group of weather parameters (Rain, Snow, Extreme etc.))
+         - :dir:`file` **weather_description** (`str`, Weather condition within the group (full list of weather conditions). Get the output in your language)
+         - :dir:`file` **weather_icon** (`str`, Weather icon id. How to get icons)
+
+
+forecast_hourly
+===============
+
+OpenWeatherMap hourly weather forecast data
+
+.. treeview::
+     - :dir:`folder` **forecast_hourly** (`foo`, OpenWeatherMap hourly weather forecast data)
+         - :dir:`file` **dt** (`str`, Time of the forecasted data, Unix, UTC)
+         - :dir:`file` **temp** (`num`, Temperature. Units default kelvin, metric Celsius, imperial Fahrenheit. How to change units used)
+         - :dir:`file` **feels_like** (`num`, Temperature. This accounts for the human perception of weather. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **pressure** (`num`, Atmospheric pressure on the sea level, hPa)
+         - :dir:`file` **humidity** (`num`, Humidity, %)
+         - :dir:`file` **dew_point** (`num`, Atmospheric temperature (varying according to pressure and humidity) below which water droplets begin to condense and dew can form. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **uvi** (`num`, UV index)
+         - :dir:`file` **clouds** (`num`, Cloudiness, %)
+         - :dir:`file` **visibility** (`num`, Average visibility, metres)
+         - :dir:`file` **wind_speed** (`num`, Wind speed. Units default metre/sec, metric metre/sec, imperial miles/hour. How to change units used)
+         - :dir:`file` **wind_gust** (`num`, (where available) Wind gust. Units default metre/sec, metric metre/sec, imperial miles/hour. How to change units used)
+         - :dir:`file` **wind_deg** (`num`, Wind direction, degrees (meteorological))
+         - :dir:`file` **pop** (`num`, Probability of precipitation)
+         - :dir:`file` **rain** (`num`, (where available) Rain volume for last hour, mm)
+         - :dir:`file` **snow** (`num`, (where available) Snow volume for last hour, mm)
+         - :dir:`file` **weather_id** (`num`, Weather condition id)
+         - :dir:`file` **weather_main** (`str`, Group of weather parameters (Rain, Snow, Extreme etc.))
+         - :dir:`file` **weather_description** (`str`, Weather condition within the group (full list of weather conditions). Get the output in your language)
+         - :dir:`file` **weather_icon** (`str`, Weather icon id. How to get icons)
+
+
+historical_daily
+================
+
+OpenWeatherMap historical weather data for dedicated day
+
+.. treeview::
+     - :dir:`folder` **historical_daily** (`foo`, OpenWeatherMap historical weather data for dedicated day)
+         - :dir:`file` **dt** (`str`, Time of the forecasted data, Unix, UTC)
+         - :dir:`file` **sunrise** (`str`, Sunrise time, Unix, UTC)
+         - :dir:`file` **sunset** (`str`, Sunset time, Unix, UTC)
+         - :dir:`file` **temp** (`num`, Temperature. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **feels_like** (`num`, This accounts for the human perception of weather. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **pressure** (`num`, Atmospheric pressure on the sea level, hPa)
+         - :dir:`file` **humidity** (`num`, Humidity, %)
+         - :dir:`file` **dew_point** (`num`, Atmospheric temperature (varying according to pressure and humidity) below which water droplets begin to condense and dew can form. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **wind_speed** (`num`, Wind speed. Units default metre/sec, metric metre/sec, imperial miles/hour.)
+         - :dir:`file` **wind_gust** (`num`, (where available) Wind gust. Units default metre/sec, metric metre/sec, imperial miles/hour.)
+         - :dir:`file` **wind_deg** (`num`, Wind direction, degrees (meteorological))
+         - :dir:`file` **clouds** (`num`, Cloudiness, %)
+         - :dir:`file` **uvi** (`num`, The maximum value of UV index for the day)
+         - :dir:`file` **rain** (`num`, (where available) Precipitation volume, mm)
+         - :dir:`file` **snow** (`num`, (where available) Snow volume, mm)
+         - :dir:`file` **weather_id** (`num`, Weather condition id)
+         - :dir:`file` **weather_main** (`str`, Group of weather parameters (Rain, Snow, Extreme etc.))
+         - :dir:`file` **weather_description** (`str`, Weather condition within the group (full list of weather conditions). Get the output in your language)
+         - :dir:`file` **weather_icon** (`str`, Weather icon id. How to get icons)
+
+
+historical_hourly
+=================
+
+OpenWeatherMap historical weather data for dedicated hour
+
+.. treeview::
+     - :dir:`folder` **historical_hourly** (`foo`, OpenWeatherMap historical weather data for dedicated hour)
+         - :dir:`file` **dt** (`str`, Time of the forecasted data, Unix, UTC)
+         - :dir:`file` **temp** (`num`, Temperature. Units default kelvin, metric Celsius, imperial Fahrenheit. How to change units used)
+         - :dir:`file` **feels_like** (`num`, Temperature. This accounts for the human perception of weather. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **pressure** (`num`, Atmospheric pressure on the sea level, hPa)
+         - :dir:`file` **humidity** (`num`, Humidity, %)
+         - :dir:`file` **dew_point** (`num`, Atmospheric temperature (varying according to pressure and humidity) below which water droplets begin to condense and dew can form. Units default kelvin, metric Celsius, imperial Fahrenheit.)
+         - :dir:`file` **clouds** (`num`, Cloudiness, %)
+         - :dir:`file` **visibility** (`num`, Average visibility, metres)
+         - :dir:`file` **wind_speed** (`num`, Wind speed. Units default metre/sec, metric metre/sec, imperial miles/hour.How to change units used)
+         - :dir:`file` **wind_gust** (`num`, (where available) Wind gust. Units default metre/sec, metric metre/sec, imperial miles/hour. How to change units used)
+         - :dir:`file` **wind_deg** (`num`, Wind direction, degrees (meteorological))
+         - :dir:`file` **rain** (`num`, (where available) Rain volume for last hour, mm)
+         - :dir:`file` **snow** (`num`, (where available) Snow volume for last hour, mm)
+         - :dir:`file` **weather_id** (`num`, Weather condition id)
+         - :dir:`file` **weather_main** (`str`, Group of weather parameters (Rain, Snow, Extreme etc.))
+         - :dir:`file` **weather_description** (`str`, Weather condition within the group (full list of weather conditions). Get the output in your language)
+         - :dir:`file` **weather_icon** (`str`, Weather icon id. How to get icons)
+
+
+irrigation
+==========
+
+
+.. treeview::
+     - :dir:`folder` **irrigation** (`bool`, ---)
+         - :dir:`folder` **schedule_seconds** (`num`, ---)
+             - :dir:`file` **remaining_time** (`num`, ---)
+         - :dir:`file` **todays_water_demand_in_l** (`num`, ---)
+         - :dir:`folder` **evaporation** (`num`, ---)
+             - :dir:`file` **exposure_factor** (`num`, How exposed is your area to evaporation? Lower the factor for less exposure (e.g. shading, or wind-shields) or higher the factor if there is more sun (reflection) or wind (droughty areas).)
+         - :dir:`folder` **rain** (`num`, ---)
+             - :dir:`file` **past_12h** (`num`, ---)
+             - :dir:`file` **next_12h** (`num`, ---)
+             - :dir:`file` **exposure_factor** (`num`, How exposed is your area to rain? Lower the factor for less exposure (e.g. roofs or bushes) or higher the factor if additional water is put there (e.g. from roof-drains).)
+         - :dir:`folder` **factors** (`num`, ---)
+             - :dir:`file` **flowrate_l_per_min** (`num`, How much water is transported by your irrigation-system? liters per minute)
+             - :dir:`file` **area_in_sqm** (`num`, This is the irrigated area. This is important for the effectivity of rain vs. evaporation.)
+             - :dir:`file` **crop_coefficient** (`num`, This is the coefficient that can be set based on the plants. Typically 0.3 to 0.9)
+             - :dir:`file` **plant_density** (`num`, How dense are the plants planted? Typically 0.3 to 1.5)
+             - :dir:`file` **gut_feeling** (`num`, This is a factor that should be used to tweak irrigation based on gut-feelings, typically this should be assigned centrally for the whole yard (use eval).)
+
+
+irrigation_weekly
+=================
+
+
+.. treeview::
+     - :dir:`folder` **irrigation_weekly** (`bool`, ---)
+         - :dir:`folder` **schedule_seconds** (`num`, ---)
+             - :dir:`file` **remaining_time** (`num`, ---)
+         - :dir:`file` **weeks_water_demand_in_l** (`num`, ---)
+         - :dir:`folder` **evaporation** (`num`, ---)
+             - :dir:`file` **day_past3** (`num`, ---)
+             - :dir:`file` **day_past2** (`num`, ---)
+             - :dir:`file` **day_past1** (`num`, ---)
+             - :dir:`file` **day_past0** (`num`, ---)
+             - :dir:`file` **day_next0** (`num`, ---)
+             - :dir:`file` **day_next1** (`num`, ---)
+             - :dir:`file` **day_next2** (`num`, ---)
+             - :dir:`file` **exposure_factor** (`num`, How exposed is your area to evaporation? Lower the factor for less exposure (e.g. shading, or wind-shields) or higher the factor if there is more sun (reflection) or wind (droughty areas).)
+         - :dir:`folder` **rain** (`num`, ---)
+             - :dir:`file` **past_4d** (`num`, ---)
+             - :dir:`file` **next_3d** (`num`, ---)
+             - :dir:`file` **exposure_factor** (`num`, How exposed is your area to rain? Lower the factor for less exposure (e.g. roofs or bushes) or higher the factor if additional water is put there (e.g. from roof-drains).)
+         - :dir:`folder` **factors** (`num`, ---)
+             - :dir:`file` **flowrate_l_per_min** (`num`, How much water is transported by your irrigation-system? liters per minute)
+             - :dir:`file` **area_in_sqm** (`num`, This is the irrigated area. This is important for the effectivity of rain vs. evaporation.)
+             - :dir:`file` **gut_feeling** (`num`, This is a factor that should be used to tweak irrigation based on gut-feelings, typically this should be assigned centrally for the whole yard (use eval).)
+
+
+locals
+======
+
+OpenWeatherMap local data
+
+.. treeview::
+     - :dir:`folder` **locals** (`foo`, OpenWeatherMap local data)
+         - :dir:`file` **lat** (`num`, Geographical coordinates of the location (latitude))
+         - :dir:`file` **lon** (`num`, Geographical coordinates of the location (longitude))
+         - :dir:`file` **timezone** (`str`, Timezone name for the requested location)
+         - :dir:`file` **timezone_offset** (`num`, Shift in seconds from UTC)
+         - :dir:`file` **location** (`str`, Name of the requested location)
+
+
 ===============
 Logik Parameter
 ===============
@@ -260,7 +625,7 @@ Gibt die angegebene Windstärke als beschreibeneden Text aus
 
 
 speed_in_bft
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 Windstärke in bft, integer zwischen 0 und 12
 
@@ -277,7 +642,7 @@ Berechnet den Beaufort-Wert (0 - 12) aus der Windgeschwindigkeit in m/s
 
 
 speed_in_mps
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 Windstärke in m/s
 
@@ -294,7 +659,7 @@ Stellt die JSON-Datei der Datenquelle bereit
 
 
 data_source_key
----------------
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Datenquelle
 
@@ -311,7 +676,7 @@ Lädt einen Wert
 
 
 owm_matchstring
----------------
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Zum Beispiel /day/0/rain
 

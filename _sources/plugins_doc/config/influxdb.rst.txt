@@ -12,7 +12,7 @@ Plugin 'influxdb' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -179,6 +179,15 @@ Angabe weitere Tags, die mit dem Wert gespeichert werden sollen (z.B.: {"room": 
 
  - Datentyp: **dict**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

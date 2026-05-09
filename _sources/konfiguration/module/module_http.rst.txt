@@ -25,17 +25,17 @@ bestimmte Features anzubieten.
 Anwendungen ermöglichen (z.B. ein REST Interface).
 
 
-.. index:: Konfigurationsdateien; /etc/module.yaml (http)
+.. index:: Konfigurationsdateien; etc/module.yaml (http)
 
 Konfiguration
 =============
 
---------------------------
-Datei *../etc/module.yaml*
---------------------------
+-----------------------
+Datei *etc/module.yaml*
+-----------------------
 
 .. code-block:: yaml
-   :caption: ../etc/module.yaml
+   :caption: etc/module.yaml
 
    # etc/module.yaml
    http:
@@ -115,10 +115,10 @@ Datei *../etc/module.yaml*
 |                         | installiert sein)                                                                                    |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | tls_cert                | **Optional**: Name der Zertifikatsdatei mit der Endung '.cer' oder '.pem'. Die Datei muss            |
-|                         | im Verzeichnis ../etc liegen                                                                         |
+|                         | im Verzeichnis ``etc`` liegen                                                                        |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | tls_key                 | **Optional**: Name der Datei mit dem privaten Schlüssel und der Endung '.key'. Die Datei muss        |
-|                         | im Verzeichnis ../etc liegen                                                                         |
+|                         | im Verzeichnis ``etc`` liegen                                                                        |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | serviceport             | **Optional**: Der Port auf welchem das html Interface lauscht. Dieser Port wird für den Zugriff      |
 |                         | auf Webservices genutzt, wie ihn z.B. das Plugin Webservices zur Verfügung stellt. Standard Port     |
@@ -149,7 +149,7 @@ Datei *../etc/module.yaml*
 | webif_pagelength        | **Optional**: Anzahl an Tabellenreihen, die in den Plugin Webinterfaces standardmäßig pro Seite      |
 |                         | angezeigt werden sollen. Bei **-1** werden alle Einträge auf einer Seite gezeigt, bei **0** (default)|
 |                         | so viele, dass sie genau auf die Seite ohne Scrolling passen. Weitere mögliche Werte sind 25, 50, 100|
-|                         | Der hier angegebene Wert kann pro Plugin im /etc/plugin.yaml File über den gleichnamigen Parameter   |
+|                         | Der hier angegebene Wert kann pro Plugin im ``etc/plugin.yaml``-File über den gleichnamigen Parameter|
 |                         | überschrieben werden.                                                                                |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 

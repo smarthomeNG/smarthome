@@ -12,7 +12,7 @@ Plugin 'network' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -198,6 +198,15 @@ Dieses Attribut erlaubt es, einen Host und einen Port zu konfigurieren, an den U
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -225,7 +234,7 @@ Senden einer Nachricht über UDP
 
 
 host
-----
+ -  -  -  - 
 
 Host oder IP-Adresse des Zieles
 
@@ -233,7 +242,7 @@ Host oder IP-Adresse des Zieles
 
 
 port
-----
+ -  -  -  - 
 
 Port auf dem Zielsystem
 
@@ -241,7 +250,7 @@ Port auf dem Zielsystem
 
 
 data
-----
+ -  -  -  - 
 
 Zu übertragende Daten
 

@@ -20,7 +20,7 @@ Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/co
 Beschreibung
 ============
 
-GPIO-Unterstützung für den Raspberry Pi. Dieses Plugin unterstützt über das RPi.GPIO-Modul das Einbinden von externen Sensoren und Aktoren, die direkt am Raspberry Pi angeschlossen werden. Damit ist es beispielsweise möglich, den Zustand von Reedkontakten einzulesen oder LEDs zu aktivieren.
+GPIO-Unterstützung für den Raspberry Pi. Dieses Plugin unterstützt über das GPIOD-Modul das Einbinden von externen Sensoren und Aktoren, die direkt am Raspberry Pi angeschlossen werden. Damit ist es beispielsweise möglich, den Zustand von Reedkontakten einzulesen oder LEDs zu aktivieren.
 
 
 Web Interface

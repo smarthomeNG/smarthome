@@ -12,7 +12,7 @@ Plugin 'buderus' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -97,6 +97,81 @@ km_id
 Pfad zum Datenpunkt des Buderus Gerätes. Siehe /URLs.md für eine Liste der möglichen Werte.
 
  - Datentyp: **str**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+gateway
+=======
+
+
+.. treeview::
+     - :dir:`folder` **gateway** (`foo`, ---)
+         - :dir:`file` **uuid** (`str`, ---)
+         - :dir:`file` **datetime** (`str`, ---)
+         - :dir:`file` **firmware** (`str`, ---)
+         - :dir:`file` **hardware** (`str`, ---)
+
+
+heating_circuit_01
+==================
+
+
+.. treeview::
+     - :dir:`folder` **heating_circuit_01** (`foo`, ---)
+         - :dir:`file` **room_set** (`num`, ---)
+         - :dir:`file` **manual_set** (`num`, ---)
+         - :dir:`file` **active_program** (`str`, ---)
+         - :dir:`file` **mode** (`str`, ---)
+
+
+heating_system
+==============
+
+
+.. treeview::
+     - :dir:`folder` **heating_system** (`OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('km_id', '/system/systemType')])`, ---)
+         - :dir:`file` **brand** (`str`, ---)
+         - :dir:`file` **type** (`str`, ---)
+         - :dir:`file` **bus** (`str`, ---)
+         - :dir:`file` **health** (`str`, ---)
+         - :dir:`file` **actualSupplyTemperature** (`num`, ---)
+         - :dir:`file` **powerSetpoint** (`num`, ---)
+         - :dir:`file` **actualPower** (`num`, ---)
+         - :dir:`file` **pumpModulation** (`num`, ---)
+         - :dir:`file` **numberOfStarts** (`num`, ---)
+         - :dir:`file` **gasAirPressure** (`num`, ---)
+         - :dir:`file` **systemPressure** (`num`, ---)
+         - :dir:`folder` **workingTime** (`foo`, ---)
+             - :dir:`file` **totalSystem** (`num`, ---)
+             - :dir:`file` **secondBurner** (`num`, ---)
+             - :dir:`file` **centralHeating** (`num`, ---)
+         - :dir:`file` **nominalBurnerLoad** (`num`, ---)
+         - :dir:`folder` **sensors** (`foo`, ---)
+             - :dir:`file` **outside** (`num`, ---)
+             - :dir:`file` **supply** (`num`, ---)
+             - :dir:`file` **return** (`num`, ---)
+             - :dir:`file` **hotwater** (`num`, ---)
+             - :dir:`file` **chimney** (`num`, ---)
+             - :dir:`file` **boiler_flame** (`str`, ---)
+
+
+hot_water_circuit_01
+====================
+
+
+.. treeview::
+     - :dir:`folder` **hot_water_circuit_01** (`foo`, ---)
+         - :dir:`file` **temp** (`num`, ---)
+         - :dir:`file` **set** (`num`, ---)
+         - :dir:`file` **flow** (`num`, ---)
+         - :dir:`file` **time** (`num`, ---)
 
 
 ===============

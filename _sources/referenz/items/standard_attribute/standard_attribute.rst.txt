@@ -96,16 +96,16 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | (Also folgendermaßen: ``initial_value: "{'k1': 'v1', 'k2': 'v2'}"`` )                  |
 +----------------------------+----------------------------------------------------------------------------------------+
 | log_change                 | Ermöglicht das Loggen jeder Veränderung des Item-Wertes. **log_change** muss dazu den  |
-|                            | Namen des zu verwendeten Loggers enthalten. In **logging.yaml** muss der Logger als    |
+|                            | Namen des zu verwendeten Loggers enthalten. In ``logging.yaml`` muss der Logger als    |
 |                            | **items.<Name>** konfiguriert sein. Wertänderungen des Items werden dann mit dem Level |
-|                            | **INFO** geloggt. (siehe :doc:`log_change <./log_change>`) **Ab SmartHomeNG v1.5**     |
+|                            | **INFO** geloggt. (siehe :doc:`log_change <./log_change>`)                             |
 +----------------------------+----------------------------------------------------------------------------------------+
 | log_level                  | Ermöglicht es einen anderen Loglevel für log_change festzulegen. Der angegebene        |
 |                            | Log_level kann jeder in SmartHomeNG unterstützte Python Loglevel sein. Die Angabe kann |
-|                            | durch den Namen oder den Integer Wert des Loglevels erfolgen. **Ab SmartHomeNG v1.9**  |
+|                            | durch den Namen oder den Integer Wert des Loglevels erfolgen.                          |
 +----------------------------+----------------------------------------------------------------------------------------+
 | log_text                   | Ermöglicht es einen eigenen Text für den Logeintrag festzulegen. **log_text** kann     |
-|                            | dabei eine Reihe von Variablen und eval-Ausdrücken enthalten. **Ab SmartHomeNG v1.9**  |
+|                            | dabei eine Reihe von Variablen und eval-Ausdrücken enthalten.                          |
 |                            | Unterstützt werden folgende Variablen: value, caller, source, dest, id, name, age,     |
 |                            | mvalue, lvalue, mlvalue, pid, pname, lowlimit, highlimit                               |
 |                            |                                                                                        |
@@ -115,10 +115,10 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | ``log_text: 'Alter={age}'``                                                            |
 +----------------------------+----------------------------------------------------------------------------------------+
 | log_mapping                | Ermöglicht es im Text ein Mapping von **value** auf einen anderen Wert auszugeben      |
-|                            | (siehe :doc:`log_change <./log_change>`). **Ab SmartHomeNG v1.9**                      |
+|                            | (siehe :doc:`log_change <./log_change>`).                                              |
 +----------------------------+----------------------------------------------------------------------------------------+
 | log_rules                  | Ermöglicht es Regeln zum log_change zu definieren                                      |
-|                            | (siehe :doc:`log_change <./log_change>`).  **Ab SmartHomeNG v1.9**                     |
+|                            | (siehe :doc:`log_change <./log_change>`).                                              |
 +----------------------------+----------------------------------------------------------------------------------------+
 | name                       | ein optionaler Name für das Item                                                       |
 +----------------------------+----------------------------------------------------------------------------------------+
@@ -139,7 +139,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | eines einzelnen Items in den Item-Tree eingefügt werden. **struct** kann ein           |
 |                            | String oder eine Liste von Strings sein. Wenn eine Liste angegeben wird,               |
 |                            | werden die Template Strukturen in der Reihenfolge angewendet, in der sie in            |
-|                            | der Liste angegeben wurden. **Ab SmartHomeNG v1.6**                                    |
+|                            | der Liste angegeben wurden.                                                            |
 +----------------------------+----------------------------------------------------------------------------------------+
 | threshold                  | legt einen Schwellwert oder einen Schwellwertbereich fest. Wenn der Wert               |
 |                            | diesen Wert über- bzw. unterschreitet oder der Wert Bereich verlässt oder              |

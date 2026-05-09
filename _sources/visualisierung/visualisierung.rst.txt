@@ -1,11 +1,17 @@
 :tocdepth: 4
 
+.. role:: redsup
+.. role:: bluesup
+.. role:: darkbluesup
+.. role:: greensup
+.. role:: blacksup
+
 .. index:: Visualisierung mit smartVISU
 .. index:: smartVISU; Visualisierung mit smartVISU
 
-###############################################
-Visualisierung mit smartVISU :greensup:`Update`
-###############################################
+############################
+Visualisierung mit smartVISU
+############################
 
 
 =========
@@ -70,6 +76,11 @@ Mit der Version 1.8 von SmartHomeNG gibt es hier einige Neuerungen.
 
    changes_in_1.8
    automatic_generation
+   features
+   navigation_structure
+   multiple_subtrees
+   deprecated_widgets
+   top_navigation
    item_attributes
    beispiel
    install_widgets
@@ -106,4 +117,3 @@ statt.
 
    websocket_communication
    reverse_proxy
-

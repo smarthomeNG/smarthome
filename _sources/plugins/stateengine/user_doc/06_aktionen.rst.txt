@@ -278,6 +278,23 @@ ist es möglich, den Timer bewusst abzubrechen, ohne eine Aktion auszuführen,
 indem der Delay auf -1 gesetzt wird. Dies macht insbesondere beim Verlassen von
 Zuständen Sinn, um ungewünschte verzögerte Aktionen vom "alten" Zustand zu verhindern.
 
+**overwrite: <bool>**
+
+Über den optionalen Parameter ``overwrite`` wird für verzögerte Aktionen angegeben,
+ob bestehende Scheduler-Parameter überschrieben werden sollen oder nicht.
+Standardmäßig werden die Parameter aktualisiert. Wenn die Verzögerung (delay) länger
+dauert als das Intervall zur Zustandsberechnung (cycle des rules-Items), wird
+die Aktion niemals ausgeführt!
+
+Ist das Attribut auf ``False`` gesetzt,
+wird bei Neuberechnung des Zustands der bestehende Scheduler nicht geändert, also
+nicht mehr erneut verzögert. Dadurch wird die Aktion nach der ursprünglich
+angesetzten Verzögerung jedenfalls ausgeführt.
+
+.. code-block:: yaml
+
+       'overwrite: [True|False]'
+
 **instanteval: <bool>**
 
 Über den optionalen Parameter ``<instanteval>`` wird für verzögerte Aktionen angegeben,

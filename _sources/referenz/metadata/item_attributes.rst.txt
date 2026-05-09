@@ -13,7 +13,7 @@ beschreibt. Der Schlüssel des Unter-Abschnitts ist der Name des Attributes. Att
 Großbuchstaben und Sonderzeichen enthalten. Sie dürfen nicht mit einer Ziffer beginnen.
 
 Die Definitionen im Abschnitt ``item_attributes:``  werden für die Gültigkeitsprüfung der konfigurierten Werte in den
-Konfigurationsdateien im Verzeichnis ``../items``, sowie zur Dokumentation und in der Zukunft zur Konfiguration
+Konfigurationsdateien im Verzeichnis ``etc/items``, sowie zur Dokumentation und in der Zukunft zur Konfiguration
 in der Admin GUI benutzt.
 
 .. code:: yaml

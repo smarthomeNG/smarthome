@@ -12,7 +12,7 @@ Plugin 'husky2' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -168,6 +168,49 @@ Das Item, welches mit Status Informationen (z.B. Aktivität) durch das Plugin be
    - **longitude**
    - **latitude**
    - **gpspoints**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+basic
+=====
+
+Default Mower Template
+
+.. treeview::
+     - :dir:`folder` **basic** (`foo`, Default Mower Template)
+         - :dir:`folder` **info** (`foo`, Mower information)
+             - :dir:`file` **device** (`str`, ---)
+             - :dir:`file` **model** (`str`, ---)
+             - :dir:`file` **id** (`str`, ---)
+             - :dir:`file` **serial** (`num`, ---)
+         - :dir:`folder` **state** (`foo`, State information)
+             - :dir:`file` **connection** (`bool`, mower connection state)
+             - :dir:`file` **activity** (`str`, activity [ UNKNOWN, NOT_APPLICABLE, MOWING, GOING_HOME, CHARGING, LEAVING, PARKED_IN_CS, STOPPED_IN_GARDEN ])
+             - :dir:`file` **errormessage** (`str`, ---)
+             - :dir:`file` **message** (`str`, ---)
+             - :dir:`file` **mode** (`str`, mode [ MAIN_AREA, SECONDARY_AREA, HOME, DEMO, UNKNOWN ])
+             - :dir:`file` **state** (`str`, state [ UNKNOWN, NOT_APPLICABLE, PAUSED, IN_OPERATION, WAIT_UPDATING, WAIT_POWER_UP, RESTRICTED, OFF, STOPPED, ERROR, FATAL_ERROR, ERROR_AT_POWER_UP ])
+             - :dir:`file` **batterypercent** (`num`, ---)
+             - :dir:`file` **battery255** (`num`, ---)
+             - :dir:`file` **longitude** (`num`, mower gps longitude)
+             - :dir:`file` **latitude** (`num`, mower gps latitude)
+             - :dir:`file` **gpspoints** (`list`, mower last gps points)
+         - :dir:`folder` **control** (`foo`, Control commands)
+             - :dir:`file` **start3H** (`num`, Start)
+             - :dir:`file` **resume** (`bool`, Start)
+             - :dir:`file` **stop** (`bool`, Stop)
+             - :dir:`file` **park3H** (`num`, Park)
+             - :dir:`file` **parkPermantent** (`bool`, Park)
+             - :dir:`file` **parkUntilNext** (`bool`, Park)
+             - :dir:`file` **cuttingHeight** (`num`, cutting height [1, 2, 3, 4, 5, 6, 7, 8, 9])
+             - :dir:`file` **headLight** (`str`, headLight settings [ ALWAYS_ON, ALWAYS_OFF, EVENING_ONLY, EVENING_AND_NIGHT ])
 
 
 ===============

@@ -8,16 +8,13 @@
    :titlesonly:
    :hidden:
 
-   alexa.rst
    alexa4p3.rst
    alexarc4shng.rst
    apcups.rst
    appletv.rst
    artnet.rst
    asterisk.rst
-   avdevice.rst
    avm.rst
-   avm_smarthome.rst
    beolink.rst
    blockly.rst
    bose_soundtouch.rst
@@ -25,13 +22,13 @@
    buderus.rst
    byd_bat.rst
    casambi.rst
+   casambi_bt.rst
    cli.rst
    co2meter.rst
    comfoair.rst
    darksky.rst
    dashbutton.rst
    database.rst
-   datalog.rst
    db_addon.rst
    deebot_ozmo.rst
    denon.rst
@@ -42,6 +39,7 @@
    enigma2.rst
    enocean.rst
    epson.rst
+   esphome.rst
    eta_pu.rst
    executor.rst
    garminconnect.rst
@@ -55,12 +53,10 @@
    hue.rst
    hue2.rst
    hue3.rst
-   husky.rst
    husky2.rst
    ical.rst
    indego.rst
    indego4shng.rst
-   influxdata.rst
    influxdb.rst
    influxdb2.rst
    intercom_2n.rst
@@ -80,7 +76,6 @@
    luxtronic2.rst
    mailrcv.rst
    mailsend.rst
-   memlog.rst
    mieleathome.rst
    miflora.rst
    mikrotik.rst
@@ -97,7 +92,6 @@
    odlinfo.rst
    onewire.rst
    openweathermap.rst
-   operationlog.rst
    oppo.rst
    panasonic_ac.rst
    philips_tv.rst
@@ -109,7 +103,6 @@
    prowl.rst
    pushbullet.rst
    pushover.rst
-   raumfeld.rst
    raumfeld_ng.rst
    rcs1000n.rst
    rcswitch.rst
@@ -133,7 +126,6 @@
    smartmeter.rst
    smarttv.rst
    smartvisu.rst
-   sml.rst
    sml2.rst
    smlx.rst
    snap7_logo.rst
@@ -142,7 +134,6 @@
    solarlog.rst
    sonos.rst
    speech.rst
-   sqlite_visu2_8.rst
    squeezebox.rst
    stateengine.rst
    systemair.rst
@@ -159,8 +150,6 @@
    vacations.rst
    vicare.rst
    viessmann.rst
-   visu_smartvisu.rst
-   visu_websocket.rst
    volkszaehler.rst
    waterkotte.rst
    webpush.rst
@@ -168,7 +157,6 @@
    wettercom.rst
    withings_health.rst
    wol.rst
-   wunderground.rst
    xiaomi_vac.rst
    xmpp.rst
    yamaha.rst

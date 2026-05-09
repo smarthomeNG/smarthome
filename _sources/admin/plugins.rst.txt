@@ -50,7 +50,7 @@ durchführen zu müssen.
 Liste der konfigurierten Plugins
 ================================
 
-Die Liste der konfigurierten Plugins zeigt alle Konfigurationen an, die in ../etc/plugin.yaml gespeichert sind. Der
+Die Liste der konfigurierten Plugins zeigt alle Konfigurationen an, die in ``etc/plugin.yaml`` gespeichert sind. Der
 Schiebeschalter links in jeder Zeile zeigt ob das Plugin aktiviert ist. Falls nicht, ist es nicht geladen bzw. wird bei
 einem Neustart nicht geladen.
 

@@ -12,7 +12,7 @@ Plugin 'viessmann' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -191,6 +191,41 @@ Liest alle konfigurierten Items neu, wenn es auf True gesetzt wird
  - Datentyp: **bool**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+betriebsart
+===========
+
+Betriebsart in string wandeln
+
+.. treeview::
+     - :dir:`folder` **betriebsart** (`foo`, Betriebsart in string wandeln)
+         - :dir:`file` **betriebsart_str** (`str`, ---)
+
+
+timer
+=====
+
+Schaltzeiten in Einzelzeiten fuer An und Aus
+
+.. treeview::
+     - :dir:`folder` **timer** (`foo`, Schaltzeiten in Einzelzeiten fuer An und Aus)
+         - :dir:`file` **an1** (`str`, erste Anschaltzeit)
+         - :dir:`file` **aus1** (`str`, erste Ausschaltzeit)
+         - :dir:`file` **an2** (`str`, zweite Anschaltzeit)
+         - :dir:`file` **aus2** (`str`, zweite Ausschaltzeit)
+         - :dir:`file` **an3** (`str`, dritte Anschaltzeit)
+         - :dir:`file` **aus3** (`str`, dritte Ausschaltzeit)
+         - :dir:`file` **an4** (`str`, vierte Anschaltzeit)
+         - :dir:`file` **aus4** (`str`, vierte Ausschaltzeit)
+
+
 ===============
 Logik Parameter
 ===============
@@ -218,7 +253,7 @@ Stößt das Lesen des angegebenen Datenpunkts an, der nicht an ein Item gebunden
 
 
 addr
-----
+ -  -  -  - 
 
 Vierstellige Hex-Adresse des Datenpunktes
 
@@ -235,7 +270,7 @@ Stößt das Lesen eines beliebigen Datenpunkts an, der nicht konfiguriert oder b
 
 
 addr
-----
+ -  -  -  - 
 
 Vierstellige Hex-Adresse des Datenpunktes
 
@@ -243,7 +278,7 @@ Vierstellige Hex-Adresse des Datenpunktes
 
 
 length
-------
+ -  -  -  -  -  - 
 
 Länge der Geräteantwort in Bytes (1-8)
 
@@ -253,7 +288,7 @@ Länge der Geräteantwort in Bytes (1-8)
  - Maximalwert: **8**
 
 unit
-----
+ -  -  -  - 
 
 Einheitencode für die Konvertierung der Antwort. Muss in der Protokollkonfiguration ``unitset`` in commands.py definiert sein
 
@@ -279,7 +314,7 @@ Stößt das Schreiben des angegebenen Datenpunkts an, der nicht an ein Item gebu
 
 
 addr
-----
+ -  -  -  - 
 
 Vierstellige Hex-Adresse des Datenpunktes
 
@@ -287,7 +322,7 @@ Vierstellige Hex-Adresse des Datenpunktes
 
 
 value
------
+ -  -  -  -  - 
 
 Zu schreibender Wert
 

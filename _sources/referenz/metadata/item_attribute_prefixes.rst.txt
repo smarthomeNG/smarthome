@@ -17,7 +17,7 @@ Abschnitt der Metadaten) soll nur genutzt werden, wenn es unbedingt notwendig is
 Der ``item_attribute_prefixes:`` Abschnitt definiert die Items ansonsten analog zum Abschnitt ``item_attributes``.
 
 Die Definitionen im Abschnitt ``item_attribute_prefixes:``  werden für die Gültigkeitsprüfung der konfigurierten
-Werte in den Konfigurationsdateien im Verzeichnis ``../items``, sowie zur Dokumentation und in der Zukunft zur
+Werte in den Konfigurationsdateien im Verzeichnis **items**, sowie zur Dokumentation und in der Zukunft zur
 Konfiguration in der Admin GUI benutzt.
 
 .. code:: yaml

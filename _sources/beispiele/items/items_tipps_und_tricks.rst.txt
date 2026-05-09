@@ -126,7 +126,7 @@ dennoch leicht erhellt wird.
 
 Welches der beiden Items man nutzen will, bleibt jedem selbst überlassen. Schließlich ist der Status des
 jeweiligen Items bereits eindeutig. Wichtig dafür ist natürlich, dass die richtigen Geo-Koordinaten und die
-Zeitzone in der Datei **../etc/smarthome.yaml** hinterlegt sind sowie die aktuelle Uhrzeit auf dem Rechner
+Zeitzone in der Datei ``etc/smarthome.yaml`` hinterlegt sind sowie die aktuelle Uhrzeit auf dem Rechner
 eingestellt ist.
 
 Um Tag/Nacht-Items zu erstellen, bringt SmarthomeNG bereits alles mit. Man kann einfach auf die SmarthomeNG

@@ -25,12 +25,12 @@ Projektes auch die Version MQTT v5.0 unterstützt, wird das SmartHomeNG Modul en
 Konfiguration
 =============
 
---------------------------
-Datei *../etc/module.yaml*
---------------------------
+-----------------------
+Datei *etc/module.yaml*
+-----------------------
 
 .. code-block:: yaml
-   :caption: ../etc/module.yaml
+   :caption: etc/module.yaml
 
    # etc/module.yaml
    mqtt:

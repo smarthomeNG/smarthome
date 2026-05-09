@@ -18,9 +18,9 @@ SmarthomeNG plugin, zum Lesen von Register über ModBusTCP
 Anforderungen
 =============
 
-* Python > 3.6
-* pymodbus >= 2.5.3
-* SmarthomeNG >= 1.8.0
+* Python > 3.8
+* pymodbus < 3.10
+* SmarthomeNG >= 1.10
 
 pymodbus
 --------
@@ -164,6 +164,16 @@ siehe auch example.yaml
 
 Changelog
 ---------
+V1.0.15 Item Attribut modBusDirection erweitert: 'write' hinzugefügt für Register 
+        die nicht gelesen werden können aber beschrieben werden dürfen
+
+        pymodbus auf Version < 3.10 beschränkt
+
+V1.0.14 Fehlerwerte hinzugefügt, Exception Handling verbessert, an aktuelle Pymodbus Version
+        angepasst und minimal notwendige Python Version auf 3.8 gesetzt
+
+V1.0.13 pause_item wird nun unterstützt
+
 V1.0.12 Problem beim Schreiben ohne modBusObjectTyp behoben
         bei wiederholten Verbindungsproblemen Ausgabe vom Logger reduziert
         Verbindungstop mit supend/resume steuerbar
@@ -173,7 +183,7 @@ V1.0.11	Verbesserung Umwandlung Byte/Wordorder in Endian-Konstante
 
 V1.0.10	Mindestversion für pymodbus ist nun 3.5.2
 
-V1.0.9  
+V1.0.9  Zusätzlich zu cycle für Geräteabfrage 'crontab' Einträge erlaubt, Logeinträge abgeändert in Python f-strings
 
 V1.0.8  Neuere Pymodbus Versionen können nun verwendet werden.
         Di minimale Version für Pymodbus ist jetzt 2.5.3

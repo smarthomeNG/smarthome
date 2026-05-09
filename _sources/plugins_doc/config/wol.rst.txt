@@ -12,7 +12,7 @@ Plugin 'wol' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -68,7 +68,7 @@ wol_ip
 ======
 
 
-Optionales Attribut. Hier kann die IP Adresse des Hosts angegeben werden wenn ein Gerät eines anderen Subnetzes aufgeweckt werden soll
+Optionales Attribut. Hier kann die IP Adresse des Hosts angegeben werden wenn ein Gerät eines anderen Subnetzes aufgeweckt werden soll 
 
  - Datentyp: **ipv4**
 
@@ -77,10 +77,19 @@ wol_mac
 =======
 
 
-MAC Adresse des per WOL aufzuweckenden Gerätes. Die Trennzeichen für die einzelnen MAC Bestandteile sind beliebig wählbar oder können auch weggelassen werden
+MAC Adresse des per WOL aufzuweckenden Gerätes. Die Trennzeichen für die einzelnen MAC Bestandteile sind beliebig wählbar oder können auch weggelassen werden 
 
  - Datentyp: **mac**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter
@@ -109,7 +118,7 @@ Sendet ein Datenpaket zum Aufwecken
 
 
 mac_adr
--------
+ -  -  -  -  -  -  - 
 
 MAC Adresse des per WOL aufzuweckenden Gerätes. Die Trennzeichen für die einzelnen MAC Bestandteile sind beliebig wählbar oder können auch weggelassen werden
 
@@ -117,9 +126,9 @@ MAC Adresse des per WOL aufzuweckenden Gerätes. Die Trennzeichen für die einze
 
 
 ip_adr
-------
+ -  -  -  -  -  - 
 
-Optionales Attribut. Hier kann die IP Adresse des Hosts angegeben werden wenn ein Gerät eines anderen Subnetzes aufgeweckt werden soll
+Optionales Attribut. Hier kann die IP Adresse des Hosts angegeben werden wenn ein Gerät eines anderen Subnetzes aufgeweckt werden soll 
 
  - Datentyp: **ip4**
 

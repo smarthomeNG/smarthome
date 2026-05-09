@@ -41,7 +41,7 @@ Beispiele
 Die folgenden Beispiele beziehen sich auf diese Item Struktur:
 
 .. code-block:: yaml
-   :caption: ../items/\*.yaml
+   :caption: etc/items/\*.yaml
 
    item_tree:
        grandparent:
@@ -90,7 +90,7 @@ und zwar soll **my_item** den dreifachen Wert von **my_item.child** erhalten, so
 Attribute folgendermaßen aussehen:
 
 .. code-block:: yaml
-   :caption: ../items/\*.yaml
+   :caption: etc/items/\*.yaml
 
    my_item:
        eval: 3 * sh..child()
@@ -159,7 +159,7 @@ Im Attribut **sv_widget** des Plugins **visu_smartvisu** sind eine oder mehrere 
 enthalten.
 
 .. code-block:: yaml
-   :caption: ../items/\*.yaml
+   :caption: etc/items/\*.yaml
 
     schreibtischleuchte:
         sv_widget: {{ basic.switch('id_schreibtischleuchte', 'wohnung.buero.schreibtischleuchte.onoff') }}
@@ -177,7 +177,7 @@ Da im Beispiel oben ein absoluter Item-Pfad angegeben ist, passiert nichts. Wenn
 jedoch relativ wäre
 
 .. code-block:: yaml
-   :caption: ../items/\*.yaml
+   :caption: etc/items/\*.yaml
 
     schreibtischleuchte:
         sv_widget: {{ basic.switch('id_schreibtischleuchte', '.onoff') }}

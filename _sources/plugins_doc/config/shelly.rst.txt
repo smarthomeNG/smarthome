@@ -12,7 +12,7 @@ Plugin 'shelly' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -158,6 +158,98 @@ Nur für Gen1 Devices: Typ des Shelly Devices (z.B. Shellyplug, Shellyplug-s, Sh
    - **shellyht**
    - **shellydw2**
    - **shellyflood**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+shellydw2
+=========
+
+WLAN Tür und Fenster Sensor, mit Temperaturmessung
+
+.. treeview::
+     - :dir:`folder` **shellydw2** (`str`, WLAN Tür und Fenster Sensor, mit Temperaturmessung)
+         - :dir:`file` **open** (`bool`, ---)
+         - :dir:`file` **tilt** (`num`, ---)
+         - :dir:`file` **vibration** (`num`, ---)
+         - :dir:`file` **lux** (`num`, ---)
+         - :dir:`file` **illumination** (`str`, ---)
+         - :dir:`file` **temp** (`num`, ---)
+         - :dir:`file` **temp_f** (`num`, ---)
+         - :dir:`file` **battery** (`num`, ---)
+         - :dir:`file` **voltage** (`num`, ---)
+         - :dir:`file` **online** (`bool`, ---)
+         - :dir:`file` **act_reasons** (`list`, ---)
+         - :dir:`file` **error** (`num`, ---)
+
+
+shellyflood
+===========
+
+WLAN Flutsensor, mit Temperaturmessung
+
+.. treeview::
+     - :dir:`folder` **shellyflood** (`bool`, WLAN Flutsensor, mit Temperaturmessung)
+         - :dir:`file` **online** (`bool`, ---)
+         - :dir:`file` **temp** (`num`, ---)
+         - :dir:`file` **error** (`num`, ---)
+         - :dir:`file` **battery** (`num`, ---)
+
+
+shellyht
+========
+
+WLAN Temperatur & Feuchtesensor (Zwischenstecker)
+
+.. treeview::
+     - :dir:`folder` **shellyht** (`bool`, WLAN Temperatur & Feuchtesensor (Zwischenstecker))
+         - :dir:`file` **online** (`bool`, ---)
+         - :dir:`file` **battery** (`num`, ---)
+
+
+shellyplug
+==========
+
+WLAN Steckdose (Zwischenstecker)
+
+.. treeview::
+     - :dir:`folder` **shellyplug** (`bool`, WLAN Steckdose (Zwischenstecker))
+         - :dir:`file` **online** (`bool`, ---)
+         - :dir:`file` **power** (`num`, ---)
+         - :dir:`file` **energy** (`num`, ---)
+
+
+shellyplug_s
+============
+
+WLAN Steckdose (Zwischenstecker), mit Temperaturmessung
+
+.. treeview::
+     - :dir:`folder` **shellyplug_s** (`foo`, WLAN Steckdose (Zwischenstecker), mit Temperaturmessung)
+         - :dir:`file` **temp** (`num`, ---)
+         - :dir:`file` **temp_f** (`num`, ---)
+
+
+shellyplusplug_s
+================
+
+WLAN Steckdose (Zwischenstecker), mit Temperaturmessung
+
+.. treeview::
+     - :dir:`folder` **shellyplusplug_s** (`foo`, WLAN Steckdose (Zwischenstecker), mit Temperaturmessung)
+         - :dir:`file` **temp** (`foo`, ---)
+         - :dir:`file` **temp_f** (`foo`, ---)
+         - :dir:`file` **voltage** (`num`, ---)
+         - :dir:`file` **current** (`num`, ---)
+         - :dir:`file` **energy_by_minute** (`num`, ---)
+         - :dir:`file` **energy_wh** (`num`, ---)
+         - :dir:`file` **energy_kwh** (`num`, ---)
 
 
 ===============

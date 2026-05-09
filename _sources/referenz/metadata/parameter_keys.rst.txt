@@ -45,7 +45,7 @@ Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:
     des Plugins diesen Parameter konfiguriert.
 
 - ``default:`` Optional: Gibt einen Standardwert vor, der verwendet wird, falls bei der Konfiguration des
-  Parameters in ``../etc/plugin.yaml`` bzw. ``../etc/module.yaml`` kein Wert angegeben wird.
+  Parameters in ``etc/plugin.yaml`` bzw. ``etc/module.yaml`` kein Wert angegeben wird.
 
 - ``description:`` Mehrsprachiger Text, der die Funktion das Plugins beschreibt. Die Beschreibung wird bei der
   Generierung des Dokumentations-Seiten des Plugins verwendet - Die Texte in den verschiedenen Sprachen werden

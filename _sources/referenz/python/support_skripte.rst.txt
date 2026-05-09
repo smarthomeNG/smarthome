@@ -49,6 +49,9 @@ Um zum Beispiel ein Environment für Python 3.8 zu erzeugen, kann einfach der fo
 
 Um dieses Environment nu nutzen, muss es noch mit Hilfe des Skriptes **act** aktiviert werden.
 
+Falls das entsprechende virtual Environment bereits vor dem Aufruf von make_venv existiert, wird das exisiterende
+virtual Environment gelöscht und es wird ein neues virtual Environemnt angelegt.
+
 |
 
 act Skript

@@ -12,7 +12,7 @@ Plugin 'db_addon' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -393,6 +393,124 @@ Ausführen der Berechnung bei Plugin Start (mit zeitlichem Abstand, wie in den P
  - Datentyp: **bool**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+minmax_1
+========
+
+Struct für Auswertung der Wertehistorie bei schwankenden Werten wie bspw. Temperatur oder Leistung (Teil 1)
+
+.. treeview::
+     - :dir:`folder` **minmax_1** (`foo`, Struct für Auswertung der Wertehistorie bei schwankenden Werten wie bspw. Temperatur oder Leistung (Teil 1))
+         - :dir:`file` **tag_min** (`num`, Minimaler Wert seit Tagesbeginn)
+         - :dir:`file` **tag_max** (`num`, Maximaler Wert seit Tagesbeginn)
+         - :dir:`file` **tag_avg** (`num`, Maximaler Wert seit Tagesbeginn)
+         - :dir:`file` **last24h_min** (`num`, Minimaler Wert in den letzten 24h (gleitend))
+         - :dir:`file` **last24h_max** (`num`, Maximaler Wert in den letzten 24h (gleitend))
+         - :dir:`file` **woche_min** (`num`, Minimaler Wert seit Wochenbeginn)
+         - :dir:`file` **woche_max** (`num`, Maximaler Wert seit Wochenbeginn)
+         - :dir:`file` **monat_min** (`num`, Minimaler Wert seit Monatsbeginn)
+         - :dir:`file` **monat_max** (`num`, Maximaler Wert seit Monatsbeginn)
+         - :dir:`file` **jahr_min** (`num`, Minimaler Wert seit Jahresbeginn)
+         - :dir:`file` **jahr_max** (`num`, Maximaler Wert seit Jahresbeginn)
+         - :dir:`file` **tag_minus1_min** (`num`, Minimaler Wert gestern)
+         - :dir:`file` **tag_minus1_max** (`num`, Maximaler Wert gestern)
+         - :dir:`file` **tag_minus1_avg** (`num`, Durchschnittlicher Wert gestern)
+         - :dir:`file` **woche_minus1_min** (`num`, Minimaler Wert in der Vorwoche)
+         - :dir:`file` **woche_minus1_max** (`num`, Maximaler Wert in der Vorwoche)
+         - :dir:`file` **woche_minus1_avg** (`num`, Durchschnittlicher Wert in der Vorwoche)
+         - :dir:`file` **monat_minus1_min** (`num`, Minimaler Wert im Vormonat)
+         - :dir:`file` **monat_minus1_max** (`num`, Maximaler Wert im Vormonat)
+         - :dir:`file` **monat_minus1_avg** (`num`, Durchschnittlicher Wert im Vormonat)
+         - :dir:`file` **jahr_minus1_min** (`num`, Minimaler Wert im Vorjahr)
+         - :dir:`file` **jahr_minus1_max** (`num`, Maximaler Wert im Vorjahr)
+
+
+minmax_2
+========
+
+Struct für Auswertung der Wertehistorie bei schwankenden Werten wie bspw. Temperatur oder Leistung (Teil 2)
+
+.. treeview::
+     - :dir:`folder` **minmax_2** (`foo`, Struct für Auswertung der Wertehistorie bei schwankenden Werten wie bspw. Temperatur oder Leistung (Teil 2))
+         - :dir:`file` **tag_minus2_min** (`num`, Minimaler Wert vorgestern)
+         - :dir:`file` **tag_minus2_max** (`num`, Maximaler Wert vorgestern)
+         - :dir:`file` **tag_minus2_avg** (`num`, Durchschnittlicher Wert vorgestern)
+         - :dir:`file` **tag_minus3_min** (`num`, Minimaler Wert vor 3 Tagen)
+         - :dir:`file` **tag_minus3_max** (`num`, Maximaler Wert vor 3 Tagen)
+         - :dir:`file` **tag_minus3_avg** (`num`, Durchschnittlicher Wert vor 3 Tagen)
+         - :dir:`file` **woche_minus2_min** (`num`, Minimaler Wert in der Woche vor 2 Wochen)
+         - :dir:`file` **woche_minus2_max** (`num`, Maximaler Wert in der Woche vor 2 Wochen)
+         - :dir:`file` **woche_minus2_avg** (`num`, Durchschnittlicher Wert in der Woche vor 2 Wochen)
+         - :dir:`file` **monat_minus2_min** (`num`, Minimaler Wert im Monat vor 2 Monaten)
+         - :dir:`file` **monat_minus2_max** (`num`, Maximaler Wert im Monat vor 2 Monaten)
+         - :dir:`file` **monat_minus2_avg** (`num`, Durchschnittlicher Wert im Monat vor 2 Monaten)
+
+
+verbrauch_1
+===========
+
+Struct für Verbrauchsauswertung bei Zählern mit stetig ansteigendem Zählerstand (Teil 1)
+
+.. treeview::
+     - :dir:`folder` **verbrauch_1** (`foo`, Struct für Verbrauchsauswertung bei Zählern mit stetig ansteigendem Zählerstand (Teil 1))
+         - :dir:`file` **verbrauch_tag** (`num`, Verbrauch am heutigen Tag)
+         - :dir:`file` **verbrauch_last_24h** (`num`, Verbrauch innerhalb der letzten 24h)
+         - :dir:`file` **verbrauch_woche** (`num`, Verbrauch seit Wochenbeginn)
+         - :dir:`file` **verbrauch_monat** (`num`, Verbrauch seit Monatsbeginn)
+         - :dir:`file` **verbrauch_jahr** (`num`, Verbrauch seit Jahresbeginn)
+         - :dir:`file` **verbrauch_rolling_12m** (`num`, Verbrauch innerhalb der letzten 12 Monate ausgehend von gestern)
+         - :dir:`file` **verbrauch_tag_minus1** (`num`, Verbrauch gestern)
+         - :dir:`file` **verbrauch_tag_minus2** (`num`, Verbrauch vorgestern)
+         - :dir:`file` **verbrauch_tag_minus3** (`num`, Verbrauch vor 3 Tagen)
+         - :dir:`file` **verbrauch_woche_minus1** (`num`, Verbrauch in der Vorwoche)
+         - :dir:`file` **verbrauch_woche_minus2** (`num`, Verbrauch vor 2 Wochen)
+         - :dir:`file` **verbrauch_monat_minus1** (`num`, Verbrauch im Vormonat)
+         - :dir:`file` **verbrauch_monat_minus12** (`num`, Verbrauch vor 12 Monaten)
+         - :dir:`file` **verbrauch_vorjahreszeitraum** (`num`, Verbrauch im Jahreszeitraum 1.1. bis jetzt vor einem Jahr)
+         - :dir:`file` **verbrauch_verbrauch_rolling_12m_woche_minus1** (`num`, Verbrauch innerhalb der letzten 12 Monate ausgehend vom Ende letzter Woche)
+
+
+verbrauch_2
+===========
+
+Struct für Verbrauchsauswertung bei Zählern mit stetig ansteigendem Zählerstand (Teil 2)
+
+.. treeview::
+     - :dir:`folder` **verbrauch_2** (`foo`, Struct für Verbrauchsauswertung bei Zählern mit stetig ansteigendem Zählerstand (Teil 2))
+         - :dir:`file` **verbrauch_tag_minus4** (`num`, Verbrauch vor 4 Tagen)
+         - :dir:`file` **verbrauch_tag_minus5** (`num`, Verbrauch vor 5 Tagen)
+         - :dir:`file` **verbrauch_tag_minus6** (`num`, Verbrauch vor 6 Tagen)
+         - :dir:`file` **verbrauch_tag_minus7** (`num`, Verbrauch vor 7 Tagen)
+         - :dir:`file` **verbrauch_tag_minus8** (`num`, Verbrauch vor 8 Tagen)
+         - :dir:`file` **verbrauch_woche_minus3** (`num`, Verbrauch vor 3 Wochen)
+         - :dir:`file` **verbrauch_woche_minus4** (`num`, Verbrauch vor 4 Wochen)
+         - :dir:`file` **verbrauch_monat_minus2** (`num`, Verbrauch vor 2 Monaten)
+         - :dir:`file` **verbrauch_monat_minus3** (`num`, Verbrauch vor 3 Monaten)
+         - :dir:`file` **verbrauch_monat_minus4** (`num`, Verbrauch vor 4 Monaten)
+
+
+zaehlerstand_1
+==============
+
+Struct für die Erfassung von Zählerständen zu bestimmten Zeitpunkten bei Zählern mit stetig ansteigendem Zählerstand
+
+.. treeview::
+     - :dir:`folder` **zaehlerstand_1** (`foo`, Struct für die Erfassung von Zählerständen zu bestimmten Zeitpunkten bei Zählern mit stetig ansteigendem Zählerstand)
+         - :dir:`file` **zaehlerstand_gestern** (`num`, Zählerstand zum Ende des gestrigen Tages)
+         - :dir:`file` **zaehlerstand_woche_minus1** (`num`, Zählerstand zum Ende der vorigen Woche)
+         - :dir:`file` **zaehlerstand_monat_minus1** (`num`, Zählerstand zum Ende des Vormonates)
+         - :dir:`file` **zaehlerstand_monat_minus2** (`num`, Zählerstand zum Monatsende vor 2 Monaten)
+         - :dir:`file` **zaehlerstand_monat_minus3** (`num`, Zählerstand zum Monatsende vor 3 Monaten)
+         - :dir:`file` **zaehlerstand_jahr_minus1** (`num`, Zählerstand am Ende des vorigen Jahres)
+
+
 ===============
 Logik Parameter
 ===============
@@ -429,7 +547,7 @@ Liefert für das angegebene Item und die Parameter das Abfrageergebnis zurück
 
 
 func
-----
+ -  -  -  - 
 
 zu verwendende Abfragefunktion
 
@@ -449,7 +567,7 @@ zu verwendende Abfragefunktion
 
 
 item
-----
+ -  -  -  - 
 
 Das Item-Objekt oder die Item_ID der DB
 
@@ -457,7 +575,7 @@ Das Item-Objekt oder die Item_ID der DB
 
 
 timeframe
----------
+ -  -  -  -  -  -  -  -  - 
 
 Zeitinkrement für die DB-Abfrage
 
@@ -472,7 +590,7 @@ Zeitinkrement für die DB-Abfrage
 
 
 start
------
+ -  -  -  -  - 
 
 Zeitlicher Beginn der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenheit
 
@@ -480,7 +598,7 @@ Zeitlicher Beginn der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenhe
 
 
 end
----
+ -  -  - 
 
 Zeitliches Ende der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenheit
 
@@ -488,7 +606,7 @@ Zeitliches Ende der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenheit
 
 
 count
------
+ -  -  -  -  - 
 
 Anzahl der Zeitinkremente, vom Start in die Vergangenheit abzufragen sind. Alternative zu 'end'
 
@@ -496,7 +614,7 @@ Anzahl der Zeitinkremente, vom Start in die Vergangenheit abzufragen sind. Alter
 
 
 group
------
+ -  -  -  -  - 
 
 erste Gruppierung der DB-Abfrage
 
@@ -511,7 +629,7 @@ erste Gruppierung der DB-Abfrage
 
 
 group2
-------
+ -  -  -  -  -  - 
 
 zweite Gruppierung der DB-Abfrage
 

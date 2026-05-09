@@ -12,7 +12,7 @@ Plugin 'ical' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -29,7 +29,7 @@ Beschreibung
 ============
 
 Ermöglicht die Verwendung von Kalendern (ICS)
-Es können sowohl Dateien als auch Onlinefeeds eingebunden werden.
+Es können sowohl Dateien als auch Onlinefeeds eingebunden werden. 
 
 
 Anforderungen
@@ -122,10 +122,19 @@ ical_calendar
 =============
 
 
-Dieses Attribut konfiguriert eine Verbindung zwischen Item und entsprechendem Kalender, der entweder als Dateinamen (die Datei muss in var/ical vom smarthomeNG Verzeichnis liegen), URI oder als Kalender Alias (im etc/plugin.yaml definiert) angegeben wird. Der konfigurierte Kalender wird automatisch zum internen Kalender-Zwischenspeicher hinzugefügt und aktualisiert.    Das Item wird auf Wahr gesetzt, sobald ein Event im Moment stattfindet. Ansonsten ist es falsch.    Das Aktualisierungsintervall ist derzeit auf eine Minute festgelegt. Das beduetet, jede Minute wird der Kalender auf Events geprüft und das Item bei Bedarf aud Wahr geschaltet.
+Dieses Attribut konfiguriert eine Verbindung zwischen Item und entsprechendem Kalender, der entweder als Dateinamen (die Datei muss in var/ical vom smarthomeNG Verzeichnis liegen), URI oder als Kalender Alias (im etc/plugin.yaml definiert) angegeben wird. Der konfigurierte Kalender wird automatisch zum internen Kalender-Zwischenspeicher hinzugefügt und aktualisiert.    Das Item wird auf Wahr gesetzt, sobald ein Event im Moment stattfindet. Ansonsten ist es falsch.    Das Aktualisierungsintervall ist derzeit auf eine Minute festgelegt. Das beduetet, jede Minute wird der Kalender auf Events geprüft und das Item bei Bedarf aud Wahr geschaltet. 
 
  - Datentyp: **str**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter
@@ -148,13 +157,13 @@ ical(ics= 'None', delta=1, offset=0, prio=1, verify=True)
 =========================================================
 
 
-Es wird ein dictionary mit einem datetime.date Objekt als Key und folgenden Arraywerten zurückgeliefert:  die Event Startzeit, die Event Endzeit, die Eventkategorie (z.B. privat), die Eventzusammenfassung (z.B. die Notizen)  Start- und Endzeit werden durch das Plugin von der im Kalender verwendeten Zeitzone in die lokale smarthomeNG Zeitzone konvertiert.    Wenn ein Kalender öfters verwendet werden soll, wird empfohlen, diesen in der etc/plugin.yaml zu konfigurieren.
+Es wird ein dictionary mit einem datetime.date Objekt als Key und folgenden Arraywerten zurückgeliefert:  die Event Startzeit, die Event Endzeit, die Eventkategorie (z.B. privat), die Eventzusammenfassung (z.B. die Notizen)  Start- und Endzeit werden durch das Plugin von der im Kalender verwendeten Zeitzone in die lokale smarthomeNG Zeitzone konvertiert.    Wenn ein Kalender öfters verwendet werden soll, wird empfohlen, diesen in der etc/plugin.yaml zu konfigurieren. 
 
  - Ergebnistyp der Funktion: **dict**
 
 
 ics
----
+ -  -  - 
 
 eine lokale Datei, eine mit http://  startende URL oder ein Kalender-Alias aus der Pluginkonfiguration
 
@@ -163,7 +172,7 @@ eine lokale Datei, eine mit http://  startende URL oder ein Kalender-Alias aus d
 
 
 delta
------
+ -  -  -  -  - 
 
 wieviele zusätzliche Tage analysiert werden sollen.
 
@@ -172,7 +181,7 @@ wieviele zusätzliche Tage analysiert werden sollen.
 
 
 offset
-------
+ -  -  -  -  -  - 
 
 wann der zu analysierende Zeitrahmen starten soll.
 
@@ -181,7 +190,7 @@ wann der zu analysierende Zeitrahmen starten soll.
 
 
 prio
-----
+ -  -  -  - 
 
 Falls in einem Kalendereintrag Felder mehrfach vorkommen, kann hier bestimmt werden, das wievielte Feld priorisiert werden soll.
 
@@ -190,7 +199,7 @@ Falls in einem Kalendereintrag Felder mehrfach vorkommen, kann hier bestimmt wer
 
 
 verify
-------
+ -  -  -  -  -  - 
 
 Bestimmt, ob eine https URL per SSL verifiziert werden soll oder nicht.
 

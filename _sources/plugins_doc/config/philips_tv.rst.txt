@@ -12,7 +12,7 @@ Plugin 'philips_tv' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -124,6 +124,15 @@ Key fuer das Senden von Kommandos an den Philips TV
    - **AMBILIGHT_STATE**
    - **AMBILIGHT_HUE**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

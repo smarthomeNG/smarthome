@@ -9,7 +9,7 @@ Debian Linux installieren
 =========================
 
 Die genaue Schritt für Schritt Installation des Betriebsystems wird hier nicht beschrieben, das hier ist der falsche
-Ort dafür. Jedoch werden als Referenz die Paketauswahlen während der Installation hier beschrieben.
+Ort dafür. Jedoch werden als Referenz die Paketauswahl während der Installation hier beschrieben.
 
 Am kompaktesten ist die Netinstall ISO-Datei. Zur Installation auf einem externen Rechner (z.B. NUC o.ä.) kann die
 ISO-Datei am einfachsten mit dem Tool `Balena Etcher <https://etcher.balena.io>`__ auf einen USB-Stick übertragen werden.
@@ -19,7 +19,7 @@ Es können auch andere Tools wie z.B. `Linux Live USB Creator <http://www.linuxl
 oder `UNetbootin <https://unetbootin.github.io/>`__ dazu genutzt werden.
 
 Diese Komplettanleitung wurde auf einer virtuellen Maschine unter VMWare mit einem
-Debian bullseye 11.3 und Debian Bookworm 12.4 getestet.
+Debian trixie 13.4 getestet.
 
 Andere Linux Derivate können abweichen, man sollte dann mit den Unterschieden umgehen
 können.
@@ -120,8 +120,9 @@ kann, sind folgende Operationen notwendig:
 
 Generell wird aber empfohlen, den SSH-Zugang mit Zertifikaten abzusichern und ein Einloggen mittels
 Username/Passwort zu unterbinden.
-Informationen zum `Erstellen von Zertifikaten <https://www.thomas-krenn.com/de/wiki/SSH_Key_Login>`__
-gibt es z.B. bei Thomas Krenn.
+Informationen zum Erstellen von Zertifikaten gibt es z.B. bei `Thomas Krenn <https://www.thomas-krenn.com/de/wiki/SSH_Key_Login>`__
+oder auf `Ask Ubuntu <https://askubuntu.com/questions/46930/how-can-i-set-up-password-less-ssh-login>`__
+.
 
 |
 
@@ -167,9 +168,9 @@ installieren sein aber sicher ist sicher.
    Hierfür sei `auf diese Seite verwiesen <https://wiki.debian.org/NetworkConfiguration>`__
 
 
-.. tabs::
+.. tab-set::
 
-    .. tab:: Tools für VMWare
+    .. tab-item:: Tools für VMWare
 
         Wenn die Installation in einer virtuellen Maschine unter VMWare erfolgt ist, so werden für
         Debian bullseye 11.3 bereits die open-vm-tools mitinstalliert.
@@ -191,7 +192,7 @@ installieren sein aber sicher ist sicher.
         Die automatische Anpassung der Bildschirmgröße funktioniert erst nach einem Neustart.
 
 
-    .. tab:: VirtualBox Gasterweiterungen
+    .. tab-item:: VirtualBox Gasterweiterungen
 
         Um die Gästeerweiterungen zu installieren zuerst unter **Geräte** ->
         **Gästeerweiterungen einlegen** anklicken. Diese nun via Terminal/Shell
@@ -200,6 +201,20 @@ installieren sein aber sicher ist sicher.
         .. code-block:: bash
 
            sudo sh /media/cdrom/VBoxLinuxAdditions.run
+
+        Nach einem Neustart passt sich nun bspw. bei Verwendung einer GUI die
+        Auflösung dynamisch an.
+
+
+    .. tab-item:: QEMU Gast Agent (Proxmox etc.)
+
+        Wird die Virtuelle Maschine z.B. unter Proxmox ausgeführt
+        müssen die passenden Erweiterungen installiert werden mit:
+
+        .. code-block:: bash
+
+           sudo apt install qemu-guest-agent -y
+           sudo systemctl enable qemu-guest-agent --now
 
         Nach einem Neustart passt sich nun bspw. bei Verwendung einer GUI die
         Auflösung dynamisch an.
@@ -287,4 +302,3 @@ System ausschalten mit:
 .. code-block:: bash
 
    sudo poweroff
-

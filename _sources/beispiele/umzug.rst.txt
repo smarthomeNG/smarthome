@@ -43,7 +43,7 @@ konfigurieren.
 SmartHomeNG installieren
 ------------------------
 
-SmartHomeNG gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/02_smarthomeng>` installieren und
+SmartHomeNG gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/03_smarthomeng>` installieren und
 rudimentär konfigurieren. SmartHomeNG sollte dabei, wie in der Anleitung beschrieben, gestartet worden sein, damit
 die im folgenden benötigten Verzeichnisse angelegt werden.
 
@@ -51,7 +51,7 @@ die im folgenden benötigten Verzeichnisse angelegt werden.
 Mosquitto installieren
 ----------------------
 
-Den MQTT Broker Mosquitto gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/03_mosquitto>` installieren.
+Den MQTT Broker Mosquitto gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/04_mosquitto>` installieren.
 Mosquitto braucht nicht konfiguriert zu werden. Die Konfiguration wird in einem späteren Schritt vom alten System
 übernommen.
 
@@ -59,7 +59,7 @@ Mosquitto braucht nicht konfiguriert zu werden. Die Konfiguration wird in einem 
 smartVISU installieren
 ----------------------
 
-Die smartVISU gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/04_smartvisu>` installieren und
+Die smartVISU gemäß der :doc:`Komplettanleitung </installation/komplettanleitung/02_smartvisu>` installieren und
 konfigurieren.
 
 Falls die Seiten der smartVISU nicht durch das entsprechende SmartHomeNG Plugin generiert werden, müssen die
@@ -93,9 +93,39 @@ eingerichtet werden.
 Konfiguration sichern/übertragen
 ================================
 
-Nachdem Samba konfiguriert wurde, können auf einem Desktop Rechner die SmartHomeNG Verzeichnisse des alten und des
-neuen Systems gemountet werden. Im Anschluß können die Dateien einfach vom alten auf das neue System kopiert werden.
+Um Daten vom alten SmartHomeNG System auf das neue System zu übertragen, muss auf dem neuen System noch Software
+installiert werden, damit es als SMB Client auf das alte System zugreifen kann:
 
+.. code-block:: bash
+
+    sudo apt-get install smbclient
+    sudo apt-get install cifs-utils
+
+
+
+Nachdem Samba konfiguriert und die Client Software installiert wurde, können auf einem Desktop Rechner die
+SmartHomeNG Verzeichnisse des alten und des neuen Systems gemountet werden. Im Anschluß können die Dateien
+einfach vom alten auf das neue System kopiert werden.
+
+Um ein SMB Share des alten Systems auf dem neuen System zu mounten, kann folgendermaßen vorgegangen werden:
+
+Der auf dem neuen System eingegebene Befehl
+
+.. code-block:: bash
+
+    smbclient -L //oldSystemIpAdress
+
+Listet die Shares auf dem alten System.
+
+Das gefünschte Share kann mit den folgenden Befehlen gemountet werden
+
+.. code-block:: bash
+
+    sudo mkdir /mnt/shng_old
+
+    sudo mount -t cifs -o username=smarthome //oldSystemIpAdress/sharename /mnt/shng_old/
+
+|
 
 Dienst-Konfigurationen übertragen
 ---------------------------------
@@ -134,21 +164,77 @@ Samba
 Falls auf dem alten System weitere/andere Shares eingerichtet waren, als auf dem neuen System bisher eingerichtet sind,
 muss die Datei ``/etc/samba/smb.conf`` übertragen werden.
 
+|
 
-SmartHomeNG Konfiguration sichern
----------------------------------
+Daten vom alten System Kopieren
+-------------------------------
+
+...
+
+Kopieren privater Tools
+-----------------------
+
+Nach dem kopieren der privaten Tools noch die Tools mit dem Befehl chmod ausführbar machen:
+
+.. code-block:: bash
+
+    cd /mnt/shng_old
+    cp -r priv_tools/* /usr/local/smarthome/priv_tools
+
+    cd /usr/local/smarthome/priv_tools
+    chmod +x *
+
+
+Kopieren privater Plugins
+-------------------------
+
+.. code-block:: bash
+
+    cd /mnt/shng_old/plugins
+    cp -r priv_xxx/* /usr/local/smarthome/plugins/priv_xxx
+
+
+SmartHomeNG Konfiguration
+-------------------------
 
 Mit Hilfe der Admin GUI ein Backup der Konfiguration von SmartHomeNG erstellen.
-
 
 Kopieren weiterer Daten
 -----------------------
 
-Im folgenden werden weitere Daten, die im ``../var`` Verzeichnis von SmartHmeNG gespeichert sind, auf das neue System
+Im folgenden werden weitere Daten, die im ``var`` Verzeichnis von SmartHmeNG gespeichert sind, auf das neue System
 übertragen.
 
-Für die folgen Schritte ist es **wichtig**, dass SmartHomeNG weder auf dem alten System, noch auf dem neuen System läuft.
-Falls SmartHomeNG auf einem der Systeme läuft, bitte mit ``python3 bin/smarthome.py -s`` SmartHomeNG beenden.
+Für die folgen Schritte ist es **wichtig**, dass SmartHomeNG weder auf dem alten System, noch auf dem neuen
+System läuft. Falls SmartHomeNG auf einem der Systeme läuft, bitte mit ``python3 bin/smarthome.py -s``
+SmartHomeNG beenden. Auf dem alten System den Service mit
+
+.. code-block:: bash
+
+    sudo systemctl stop smarthome
+
+beenden.
+
+Im folgenden ist das kopieren des Verzeichnisse beschrieben, die fast bei jeder Installation vorhanden sind und
+kopiert werden müssen.
+
+Hinzu kommen Verzeichnisse, die von weiteren selterner genutzten Plugins
+im ``var`` Verzeichnis angelegt wurden (z.B. ``bo_netlink``, ``esphome``, ``panasonic_ac``). Diese
+Verzeichnisse können Unterverzeichnisse enthalten und müssen daher rekursiv kopiert werden.
+
+Nicht kopiert werden müssen die Verzeichnisse ``backup`` und ``restore``, sowie die Dateien ``pip_list.txt``
+und ``systeminfo.yaml``, die direkt im ``var`` Verzeichnis liegen.
+
+Wenn die alte SmarthomeNG Installation (das Verzeichnis ``/usr/local/smarthome``) auf dem neuen System
+als /mnt/shng_old gemountet wurde, sollten die jeweiligen Verzeichnisse unterhalb des var Verzeichnisses
+mit den folgenden Befehlen kopiert werden (hier am Beispiel des cache Verzeichnisse):
+
+.. code-block:: bash
+
+    cd /mnt/shng_old/var
+    cp -r cache/* /usr/local/smarthome/var/cache
+
+|
 
 Item cache Verzeichnis kopieren
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -265,4 +351,3 @@ SmartHomeNG als Dienst einrichten
 
 Zum Abschluß smartHomeNG als Dienst einrichten, damit es bei einem Systemstart wieder gestartet wird. Das Vorgehen
 ist in der :doc:`Komplettanleitung </installation/komplettanleitung/08_shng_daemon>` beschrieben.
-

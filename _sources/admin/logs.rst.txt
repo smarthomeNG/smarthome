@@ -64,7 +64,7 @@ Aus der Liste geht hervor, über welchen Log-Handler die Einträge in welches Lo
 Konfiguration/Logging).
 
 Auf dem Screenshot ist zu sehen, wie das Logging einzelner Logiken unterschiedlich konfiguriert ist. Es gibt einen
-Logger **logics**, der WARNINGS (oder höher) aus allen Logiken in das Logfile **smarthome-details.log** schreibt.
+Logger **logics**, der WARNINGS (oder höher) aus allen Logiken in das Logfile ``smarthome-details.log`` schreibt.
 Abweichend davon, ist ein Logger für die Logik **a_testlogic2** definiert, der INFOs (oder höher) loggt und zwar über
 den Standardhandler für Logiken (es ist in der Konfiguration kein Handler angegeben).
 
@@ -79,7 +79,7 @@ Logging Konfiguration
 =====================
 
 Unter **Konfiguration** kann das Logging vollständig konfiguriert werden. Hierzu wird die Konfigurationsdatei
-**logging.yaml** direkt editiert. Änderungen an der Konfiguration werden erst wirksam, wenn SmartHomeNG neu gestartet
+``logging.yaml`` direkt editiert. Änderungen an der Konfiguration werden erst wirksam, wenn SmartHomeNG neu gestartet
 wird.
 
 

@@ -1,3 +1,9 @@
 .. include:: /plugins_doc/plugins_unclassified_header.rst
 
-Zurzeit gibt es keine noch nicht klassifizierten Plugins.
+.. toctree::
+   :maxdepth: 2
+   :glob:
+   :titlesonly:
+   :hidden:
+
+Zur Zeit gibt es keine Plugins des Typs nicht klassifizierte.

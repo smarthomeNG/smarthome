@@ -12,7 +12,7 @@ Plugin 'jsonread' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -28,12 +28,7 @@ Es handelt sich bei diesem Plugin um ein **web Plugin**.
 Beschreibung
 ============
 
-json Parser Plugin basierend auf jq
-
-.. attention::
-
-    Die aktuellste Version (2.6.0, released August 2022) des benötigten Packages 'pyjq' ist nicht kompatibel mit Python 3.12
-
+json Parser Plugin ohne weitere Module
 
 
 Anforderungen
@@ -43,7 +38,7 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.4**
- - Maximum Python Version: **3.11**
+ - Minimum Python Version: **3.9**
 
 Konfiguration
 =============
@@ -75,7 +70,7 @@ url
 ===
 
 
-URL der JSON Datenquelle. Aktuell unterstützt werden Webprotokolle https:// und http:// sowie ein Dateiadapter file:/// (benötigt wirklich 3 Schrägstriche)
+URL der JSON Datenquelle. Aktuell unterstützt werden Webprotokolle https:// und http:// sowie ein Dateiadapter file:/// (benötigt wirklich 3 Schrägstriche) 
 
  - Datentyp: **str**
 
@@ -96,6 +91,15 @@ JQ Pfad um innerhalb eines JSON Datensatzes einen Wert auszuwählen. Dieser Wert
 
  - Datentyp: **str**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

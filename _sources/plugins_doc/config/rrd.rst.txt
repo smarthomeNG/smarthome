@@ -8,11 +8,11 @@ Plugin 'rrd' Konfiguration
 
 .. index:: Plugins; rrd Konfiguration
 
-.. image:: /_static/img/system.svg
-   :alt: plugin type logo
+.. image:: /plugins/rrd/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **system Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -39,7 +39,8 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.5**
+ - Minimum SmartHomeNG Version: **1.10**
+ - Minimum Python Version: **3.8**
 
 Konfiguration
 =============
@@ -87,7 +88,7 @@ rrd
 ===
 
 
-Wenn auf 'yes' gesetzt, werden die Werte des Items in die rrd Datenbank geschrieben.  Wenn auf 'init' gesetzt, wird zusätzlich beim Start von SmartHomeNG der Wert aus rrd gelesen.   Wenn für dieses Item ebenfalls ein Attribut 'sqlite' oder 'database' gesetzt ist,  so ist die Wahrscheinlichkeit groß, das eines der Plugins nicht funktioniert. Um dieses Problem zum umgehen kann das Attribut 'rrd_no_series' gesetzt werden.
+Wenn auf 'yes' gesetzt, werden die Werte des Items in die rrd Datenbank geschrieben.  Wenn auf 'init' gesetzt, wird zusätzlich beim Start von SmartHomeNG der Wert aus rrd gelesen.   Wenn für dieses Item ebenfalls ein Attribut 'sqlite' oder 'database' gesetzt ist,  so ist die Wahrscheinlichkeit groß, das eines der Plugins nicht funktioniert. Um dieses Problem zum umgehen kann das Attribut 'rrd_no_series' gesetzt werden. 
 
  - Datentyp: **str**
 
@@ -160,6 +161,15 @@ Gibt die Art der Datenreihe in der Datenbank an: gauge für Temperaturen, counte
    - **gauge**
    - **counter**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

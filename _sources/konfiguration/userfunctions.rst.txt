@@ -16,17 +16,17 @@ Ab Version 1.9 von SmartHomeNG ist die Möglichkeit implementiert, benutzerdefin
 schreiben und in eval Statements sowie in Logiken zu verwenden. Diese Funktionen können zur Laufzeit verändert und
 neu geladen werden.
 
-Die Python Dateien mit den Funktionen müssen dazu im Verzeichnis **../functions** abgelegt werden. Es sind normale
+Die Python Dateien mit den Funktionen müssen dazu im Verzeichnis ``etc/functions`` abgelegt werden. Es sind normale
 Python Dateien, die mehrere Funktionen enthalten können. Als formale Anforderung sind nur Informationen zur Version
 und eine kurze Beschreibung des Zwecks der Funktionen dieser Datei anzugeben.
 
-Im folgenden Beispiel wird eine Datei (Funktionssammlung) mit dem Namen **anhalter.py** im Verzeichnis **../functions**
+Im folgenden Beispiel wird eine Datei (Funktionssammlung) mit dem Namen ``anhalter.py`` im Verzeichnis ``etc/functions``
 erzeugt:
 
 Die Python Datei sieht folgendermaßen aus:
 
 .. code-block:: python
-   :caption: /usr/local/smarthome/functions/anhalter.py
+   :caption: etc/functions/anhalter.py
 
    #!/usr/bin/env python3
    # anhalter.py

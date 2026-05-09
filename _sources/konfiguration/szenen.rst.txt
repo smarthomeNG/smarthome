@@ -26,7 +26,7 @@ keine Unterstützung für die neueren Features.
 
 Die Nutzung der neuen Features ist unter :doc:`Konfiguation/Konfigurationsdateien/scenes/\*.yaml <./konfigurationsdateien/scenes>`
 beschrieben. Zu beachten ist, dass die Konfigurationsdateien für Szenen nur eingelesen werden, wenn ein Item **pfad.item**
-des Typs **scene** definiert ist und die Szenen-Datei **pfad.item.yaml** bzw. **pfad.item.conf** benannt ist.
+des Typs **scene** definiert ist und die Szenen-Datei ``pfad.item.yaml`` benannt ist.
 
 
 Funktionsweise von Szenen

@@ -115,7 +115,7 @@ SmartHomeNG Plugin konfigurieren
 Die Konfiguration des Plugins erfolgt über das Admin Interface (Siehe Abschnitt Konfiguration).
 
 Alternativ kann die Konfiguration des Onewire-Plugin natürlich auch über die Konfigurationsdatei
-**../etc/plugin.yaml** erfolgen. Dazu muss dort noch folgendes eingefügt werden:
+``etc/plugin.yaml`` erfolgen. Dazu muss dort noch folgendes eingefügt werden:
 
 .. code-block:: yaml
 

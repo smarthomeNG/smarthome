@@ -12,7 +12,7 @@ Plugin 'avm' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -431,6 +431,275 @@ avm_wlan_index
  - Minimalwert: **1**
  - Maximalwert: **3**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+aha_alert
+=========
+
+
+.. treeview::
+     - :dir:`folder` **aha_alert** (`foo`, ---)
+         - :dir:`file` **state** (`bool`, ---)
+
+
+aha_blind
+=========
+
+
+.. treeview::
+     - :dir:`folder` **aha_blind** (`foo`, ---)
+         - :dir:`file` **blind_mode** (`str`, ---)
+         - :dir:`file` **endpositionsset** (`bool`, ---)
+
+
+aha_button
+==========
+
+
+.. treeview::
+     - :dir:`folder` **aha_button** (`foo`, ---)
+         - :dir:`file` **battery_low** (`bool`, ---)
+         - :dir:`file` **battery_level** (`num`, ---)
+
+
+aha_color
+=========
+
+
+.. treeview::
+     - :dir:`folder` **aha_color** (`foo`, ---)
+         - :dir:`file` **color_mode** (`num`, ---)
+         - :dir:`file` **supported_color_mode** (`num`, ---)
+         - :dir:`file` **fullcolorsupport** (`bool`, ---)
+         - :dir:`file` **mapped** (`bool`, ---)
+         - :dir:`file` **hue** (`num`, ---)
+         - :dir:`file` **saturation** (`num`, ---)
+         - :dir:`file` **unmapped_hue** (`bool`, ---)
+         - :dir:`file` **unmapped_saturation** (`bool`, ---)
+         - :dir:`file` **colortemperature** (`num`, ---)
+
+
+aha_general
+===========
+
+
+.. treeview::
+     - :dir:`folder` **aha_general** (`foo`, OrderedDict([('type', 'str'), ('avm_data_type@instance', 'device_name'), ('avm_data_cycle@instance', 0)]))
+         - :dir:`file` **name** (`str`, ---)
+         - :dir:`file` **identifier** (`str`, ---)
+         - :dir:`file` **productname** (`str`, ---)
+         - :dir:`file` **manufacturer** (`str`, ---)
+         - :dir:`file` **firmware_version** (`str`, ---)
+         - :dir:`file` **present** (`bool`, ---)
+         - :dir:`file` **functions** (`list`, ---)
+
+
+aha_humidity_sensor
+===================
+
+
+.. treeview::
+     - :dir:`folder` **aha_humidity_sensor** (`foo`, ---)
+         - :dir:`file` **humidity** (`num`, ---)
+
+
+aha_level
+=========
+
+
+.. treeview::
+     - :dir:`folder` **aha_level** (`foo`, ---)
+         - :dir:`file` **level** (`num`, ---)
+         - :dir:`file` **level_percentage** (`num`, ---)
+
+
+aha_on_off
+==========
+
+
+.. treeview::
+     - :dir:`folder` **aha_on_off** (`foo`, ---)
+         - :dir:`file` **on_off** (`bool`, ---)
+
+
+aha_powermeter
+==============
+
+
+.. treeview::
+     - :dir:`folder` **aha_powermeter** (`foo`, ---)
+         - :dir:`file` **power** (`num`, ---)
+         - :dir:`file` **energy** (`num`, ---)
+         - :dir:`file` **voltage** (`num`, ---)
+
+
+aha_switch
+==========
+
+
+.. treeview::
+     - :dir:`folder` **aha_switch** (`foo`, ---)
+         - :dir:`file` **switch_state** (`bool`, ---)
+         - :dir:`file` **switch_mode** (`str`, ---)
+         - :dir:`file` **switch_toggle** (`bool`, ---)
+
+
+aha_temperature_sensor
+======================
+
+
+.. treeview::
+     - :dir:`folder` **aha_temperature_sensor** (`foo`, ---)
+         - :dir:`file` **current_temperature** (`num`, ---)
+         - :dir:`file` **temperature_offset** (`num`, ---)
+
+
+aha_thermostat
+==============
+
+
+.. treeview::
+     - :dir:`folder` **aha_thermostat** (`foo`, ---)
+         - :dir:`file` **target_temperature** (`num`, ---)
+         - :dir:`file` **comfort_temperature** (`num`, ---)
+         - :dir:`file` **eco_temperature** (`num`, ---)
+         - :dir:`file` **battery_low** (`bool`, ---)
+         - :dir:`file` **battery_level** (`num`, ---)
+         - :dir:`file` **window_open** (`bool`, ---)
+         - :dir:`file` **windowopenactiveendtime** (`num`, ---)
+         - :dir:`file` **summer_active** (`bool`, ---)
+         - :dir:`file` **holiday_active** (`bool`, ---)
+         - :dir:`file` **errorcode** (`num`, ---)
+         - :dir:`file` **hkr_boost** (`bool`, ---)
+         - :dir:`file` **boostactiveendtime** (`num`, ---)
+         - :dir:`file` **lock** (`bool`, ---)
+         - :dir:`file` **device_lock** (`bool`, ---)
+
+
+deflection
+==========
+
+
+.. treeview::
+     - :dir:`folder` **deflection** (`bool`, ---)
+         - :dir:`file` **deflection_type** (`str`, ---)
+         - :dir:`file` **deflection_number** (`str`, ---)
+         - :dir:`file` **deflection_to_number** (`str`, ---)
+         - :dir:`file` **deflection_mode** (`str`, ---)
+         - :dir:`file` **deflection_outgoing** (`str`, ---)
+         - :dir:`file` **deflection_phonebook_id** (`num`, ---)
+
+
+device
+======
+
+
+.. treeview::
+     - :dir:`folder` **device** (`bool`, ---)
+         - :dir:`file` **ip** (`str`, ---)
+         - :dir:`file` **connection_type** (`str`, ---)
+         - :dir:`file` **hostname** (`str`, ---)
+
+
+info
+====
+
+
+.. treeview::
+     - :dir:`folder` **info** (`foo`, ---)
+         - :dir:`file` **uptime** (`num`, ---)
+         - :dir:`file` **serial_number** (`str`, ---)
+         - :dir:`file` **firmware** (`str`, ---)
+         - :dir:`file` **hardware_version** (`str`, ---)
+         - :dir:`file` **myfritz** (`bool`, ---)
+
+
+monitor
+=======
+
+
+.. treeview::
+     - :dir:`folder` **monitor** (`foo`, ---)
+         - :dir:`file` **trigger** (`bool`, ---)
+         - :dir:`folder` **incoming** (`foo`, ---)
+             - :dir:`file` **is_call_incoming** (`bool`, ---)
+             - :dir:`file` **duration** (`num`, ---)
+             - :dir:`file` **last_caller** (`str`, ---)
+             - :dir:`file` **last_calling_number** (`str`, ---)
+             - :dir:`file` **last_called_number** (`str`, ---)
+             - :dir:`file` **last_call_date** (`str`, ---)
+             - :dir:`file` **event** (`str`, ---)
+         - :dir:`folder` **outgoing** (`foo`, ---)
+             - :dir:`file` **is_call_outgoing** (`bool`, ---)
+             - :dir:`file` **duration** (`num`, ---)
+             - :dir:`file` **last_caller** (`str`, ---)
+             - :dir:`file` **last_calling_number** (`str`, ---)
+             - :dir:`file` **last_called_number** (`str`, ---)
+             - :dir:`file` **last_call_date** (`str`, ---)
+             - :dir:`file` **event** (`str`, ---)
+         - :dir:`folder` **newest** (`foo`, ---)
+             - :dir:`file` **direction** (`str`, ---)
+             - :dir:`file` **event** (`str`, ---)
+
+
+tam
+===
+
+
+.. treeview::
+     - :dir:`folder` **tam** (`bool`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('avm_data_type@instance', 'tam_name')]))
+         - :dir:`file` **name** (`str`, ---)
+         - :dir:`file` **message_number_old** (`num`, ---)
+         - :dir:`file` **message_number_new** (`num`, ---)
+         - :dir:`file` **message_number_total** (`num`, ---)
+
+
+wan
+===
+
+
+.. treeview::
+     - :dir:`folder` **wan** (`foo`, ---)
+         - :dir:`file` **connection_status** (`str`, ---)
+         - :dir:`file` **connection_error** (`str`, ---)
+         - :dir:`file` **is_connected** (`bool`, ---)
+         - :dir:`file` **uptime** (`num`, ---)
+         - :dir:`file` **upstream** (`num`, ---)
+         - :dir:`file` **downstream** (`num`, ---)
+         - :dir:`file` **total_packets_sent** (`num`, ---)
+         - :dir:`file` **total_packets_received** (`num`, ---)
+         - :dir:`file` **total_bytes_sent** (`num`, ---)
+         - :dir:`file` **total_bytes_received** (`num`, ---)
+         - :dir:`file` **current_bytes_sent** (`num`, ---)
+         - :dir:`file` **current_bytes_receive** (`num`, ---)
+         - :dir:`file` **link** (`bool`, ---)
+         - :dir:`file` **reconnect** (`bool`, ---)
+
+
+wlan
+====
+
+
+.. treeview::
+     - :dir:`folder` **wlan** (`foo`, ---)
+         - :dir:`file` **wlan_1** (`bool`, ---)
+         - :dir:`file` **wlan_1_ssid** (`str`, ---)
+         - :dir:`file` **wlan_1_associates** (`num`, ---)
+         - :dir:`file` **wlan_2** (`bool`, ---)
+         - :dir:`file` **wlan_2_ssid** (`str`, ---)
+         - :dir:`file` **wlan_2_associates** (`num`, ---)
+         - :dir:`file` **wlan_gast** (`bool`, ---)
+         - :dir:`file` **wlan_gast_ssid** (`str`, ---)
+         - :dir:`file` **wlan_gast_associates** (`num`, ---)
+         - :dir:`file` **wlan_gast_tr** (`num`, ---)
+
+
 ===============
 Logik Parameter
 ===============
@@ -476,7 +745,7 @@ Ermittelt ein Array mit dicts aller Einträge der Anrufliste (Attribute 'Id', 'T
 
 
 filter_incoming
----------------
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Filter, um nur die Anrufe zu erhalten, die zu einer bestimmten angerufenen Nummer gehÃƒÂ¶ren.
 
@@ -484,7 +753,7 @@ Filter, um nur die Anrufe zu erhalten, die zu einer bestimmten angerufenen Numme
 
 
 phonebook_id
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 ID des Telefonbuchs, in dem nachgeschlagen werden soll.
 
@@ -502,7 +771,7 @@ Durchsucht das Telefonbuch mit einer (vollständigen) Telefonnummer nach Kontakt
 
 
 phone_number
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 Vollständige Telefonnummer
 
@@ -510,7 +779,7 @@ Vollständige Telefonnummer
 
 
 phonebook_id
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 ID des Telefonbuchs, in dem nachgeschlagen werden soll.
 
@@ -528,7 +797,7 @@ Liefert die Details der Rufumleitung der angegebenen ID zurück (Default-ID = 0)
 
 
 deflection_id
--------------
+ -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Identifikator der abzufragenden Rufumleitung.
 
@@ -572,7 +841,7 @@ Ermittelt die Informationen zu einem Host an einem angegebenen Index.
 
 
 index
------
+ -  -  -  -  - 
 
 Index
 
@@ -589,7 +858,7 @@ Ermittelt ein Array mit den Namen aller verbundener Hosts.
 
 
 only_active
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 True, wenn nur aktuell aktive Hosts zurückgegeben werden sollen.
 
@@ -606,7 +875,7 @@ Liefert Informationen aller Hosts als Dictionary
 
 
 only_active
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 True, wenn nur aktuell aktive Hosts zurückgegeben werden sollen.
 
@@ -623,7 +892,7 @@ Liefert Informationen gefilterte Information zu den verbundenen Hosts als Array
 
 
 identifier_list
----------------
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Liste von Identifiers des Hosts, die zurückgegeben werden sollen; (möglich: 'Index', 'IPAddress', 'MACAddress', 'HostName', 'FriendyName')
 
@@ -631,7 +900,7 @@ Liste von Identifiers des Hosts, die zurückgegeben werden sollen; (möglich: 'I
 
 
 filter_dict
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Dict von Filtern, für welche die Host-Identifier zurückgegeben werden sollen (bspw: filter={'Active': False} gibt alle nicht-aktiven Host zurück)
 
@@ -666,7 +935,7 @@ Gibt den Namen eines Telefons an einem Index zurück. Der zurückgegebene Wert k
 
 
 index
------
+ -  -  -  -  - 
 
 Index
 
@@ -683,7 +952,7 @@ Durchsucht das Telefonbuch mit einem Namen nach nach Kontakten und liefert die z
 
 
 name
-----
+ -  -  -  - 
 
 Anteiliger oder vollständiger Name des Kontakts.
 
@@ -691,7 +960,7 @@ Anteiliger oder vollständiger Name des Kontakts.
 
 
 phonebook_id
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 ID des Telefonbuchs, in dem nachgeschlagen werden soll.
 
@@ -709,7 +978,7 @@ Prüft, ob eine MAC Adresse auf dem Gerät aktiv ist. Das kann bspw. für die Um
 
 
 mac_address
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 MAC Adresse
 
@@ -744,7 +1013,7 @@ Setzt den 'call origin', bspw. vor dem Aufruf von 'start_call'.
 
 
 phone_name
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Identifikator des Telefons, dass als 'call origin' gesetzt werden soll. bspw. zwei Sterne gefolgt von '610' für ein internes Gerät.
 
@@ -761,7 +1030,7 @@ Schaltet die Rufumleitung mit angegebener ID an oder aus.
 
 
 deflection_id
--------------
+ -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Identifikator der abzufragenden Rufumleitung.
 
@@ -769,7 +1038,7 @@ Identifikator der abzufragenden Rufumleitung.
 
 
 enable
-------
+ -  -  -  -  -  - 
 
 An / Aus
 
@@ -786,7 +1055,7 @@ Startet einen Anruf an eine übergebene Telefonnummer (intern oder extern).
 
 
 phone_number
-------------
+ -  -  -  -  -  -  -  -  -  -  -  - 
 
 Vollständige Telefonnummer, die angerufen werden soll.
 
@@ -803,7 +1072,7 @@ Sendet einen WOL (WakeOnLAN) Befehl an eine MAC Adresse.
 
 
 mac_address
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 MAC Adresse
 

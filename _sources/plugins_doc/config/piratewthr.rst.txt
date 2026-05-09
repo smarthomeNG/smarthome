@@ -12,7 +12,7 @@ Plugin 'piratewthr' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -130,6 +130,218 @@ Matchstring basierend auf der Response des "Forecast Request" aus https://pirate
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+_dayStruct
+==========
+
+
+.. treeview::
+     - :dir:`folder` **_dayStruct** (`foo`, ---)
+         - :dir:`file` **time_epoch** (`num`, ---)
+         - :dir:`file` **time** (`str`, ---)
+         - :dir:`file` **summary** (`str`, ---)
+         - :dir:`file` **icon** (`str`, ---)
+         - :dir:`file` **icon_visu** (`str`, ---)
+         - :dir:`file` **nearestStormDistance** (`num`, ---)
+         - :dir:`file` **precipIntensity** (`num`, ---)
+         - :dir:`file` **precipIntensityError** (`num`, ---)
+         - :dir:`file` **precipProbability** (`num`, ---)
+         - :dir:`file` **precipType** (`str`, ---)
+         - :dir:`file` **temperature** (`num`, ---)
+         - :dir:`file` **apparenttemperature** (`num`, ---)
+         - :dir:`file` **dewpoint** (`num`, ---)
+         - :dir:`file` **humidity** (`num`, ---)
+         - :dir:`file` **pressure** (`num`, ---)
+         - :dir:`file` **windSpeed** (`foo`, ---)
+         - :dir:`file` **windGust** (`foo`, ---)
+         - :dir:`file` **windBearing** (`foo`, ---)
+         - :dir:`file` **cloudCover** (`num`, ---)
+         - :dir:`file` **uvIndex** (`num`, ---)
+         - :dir:`file` **rain** (`num`, Precipitation volume, mm)
+         - :dir:`file` **snow** (`num`, (where available) Snow volume, mm)
+         - :dir:`file` **visibility** (`num`, ---)
+         - :dir:`file` **ozone** (`num`, ---)
+         - :dir:`file` **temperatureMin** (`num`, ---)
+         - :dir:`file` **temperatureMinTime** (`num`, ---)
+         - :dir:`file` **temperatureMax** (`num`, ---)
+         - :dir:`file` **temperatureMaxTime** (`num`, ---)
+         - :dir:`file` **apparentTemperatureMin** (`num`, ---)
+         - :dir:`file` **apparentTemperatureMinTime** (`num`, ---)
+         - :dir:`file` **apparentTemperatureMax** (`num`, ---)
+         - :dir:`file` **apparentTemperatureMaxTime** (`num`, ---)
+         - :dir:`file` **date** (`str`, ---)
+         - :dir:`file` **weekday** (`str`, ---)
+         - :dir:`file` **precipProbability_mean** (`num`, ---)
+         - :dir:`file` **precipIntensity_mean** (`num`, ---)
+         - :dir:`file` **temperature_mean** (`num`, ---)
+         - :dir:`file` **hours** (`dict`, ---)
+
+
+_hourStruct
+===========
+
+
+.. treeview::
+     - :dir:`folder` **_hourStruct** (`foo`, ---)
+         - :dir:`file` **time_epoch** (`num`, ---)
+         - :dir:`file` **time** (`str`, ---)
+         - :dir:`file` **summary** (`str`, ---)
+         - :dir:`file` **icon** (`str`, ---)
+         - :dir:`file` **icon_visu** (`str`, ---)
+         - :dir:`file` **nearestStormDistance** (`num`, ---)
+         - :dir:`file` **precipIntensity** (`num`, ---)
+         - :dir:`file` **precipIntensityError** (`num`, ---)
+         - :dir:`file` **precipProbability** (`num`, ---)
+         - :dir:`file` **precipType** (`str`, ---)
+         - :dir:`file` **temperature** (`num`, ---)
+         - :dir:`file` **apparenttemperature** (`num`, ---)
+         - :dir:`file` **dewpoint** (`num`, ---)
+         - :dir:`file` **humidity** (`num`, ---)
+         - :dir:`file` **pressure** (`num`, ---)
+         - :dir:`file` **windSpeed** (`num`, ---)
+         - :dir:`file` **windGust** (`num`, ---)
+         - :dir:`file` **windBearing** (`num`, ---)
+         - :dir:`file` **cloudCover** (`num`, ---)
+         - :dir:`file` **uvIndex** (`num`, ---)
+         - :dir:`file` **visibility** (`num`, ---)
+         - :dir:`file` **ozone** (`num`, ---)
+         - :dir:`file` **date** (`str`, ---)
+         - :dir:`file` **weekday** (`str`, ---)
+
+
+_windBearingStruct
+==================
+
+
+.. treeview::
+     - :dir:`folder` **_windBearingStruct** (`num`, ---)
+         - :dir:`file` **windDirectionString** (`str`, ---)
+
+
+_windSpeedStruct
+================
+
+
+.. treeview::
+     - :dir:`folder` **_windSpeedStruct** (`num`, ---)
+         - :dir:`file` **beaufortNr** (`num`, Wind speed as beaufort number)
+         - :dir:`file` **beaufortString** (`str`, Wind speed as beaufort description)
+
+
+current_weather
+===============
+
+Current weather of Weather report from pirateweather.net - By default, data is not written to database
+
+.. treeview::
+     - :dir:`folder` **current_weather** (`foo`, Current weather of Weather report from pirateweather.net - By default, data is not written to database)
+         - :dir:`folder` **currently** (`foo`, ---)
+             - :dir:`file` **time_epoch** (`num`, ---)
+             - :dir:`file` **time** (`str`, ---)
+             - :dir:`file` **weekday** (`str`, ---)
+             - :dir:`file` **summary** (`str`, ---)
+             - :dir:`file` **icon** (`str`, ---)
+             - :dir:`file` **icon_visu** (`str`, ---)
+             - :dir:`file` **nearestStormDistance** (`num`, ---)
+             - :dir:`file` **precipIntensity** (`num`, ---)
+             - :dir:`file` **precipIntensityError** (`num`, ---)
+             - :dir:`file` **precipProbability** (`num`, ---)
+             - :dir:`file` **precipType** (`str`, ---)
+             - :dir:`file` **temperature** (`num`, ---)
+             - :dir:`file` **apparenttemperature** (`num`, ---)
+             - :dir:`file` **dewpoint** (`num`, ---)
+             - :dir:`file` **humidity** (`num`, ---)
+             - :dir:`file` **pressure** (`num`, ---)
+             - :dir:`file` **windSpeed** (`foo`, ---)
+             - :dir:`file` **windGust** (`foo`, ---)
+             - :dir:`file` **windBearing** (`foo`, ---)
+             - :dir:`file` **cloudCover** (`num`, ---)
+             - :dir:`file` **uvIndex** (`num`, ---)
+             - :dir:`file` **visibility** (`num`, ---)
+             - :dir:`file` **ozone** (`num`, ---)
+             - :dir:`file` **date** (`str`, ---)
+             - :dir:`file` **day** (`num`, ---)
+
+
+forecast_daily
+==============
+
+Daily forcast of Weather report from pirateweather.net - By default, data is not written to database
+
+.. treeview::
+     - :dir:`folder` **forecast_daily** (`foo`, Daily forcast of Weather report from pirateweather.net - By default, data is not written to database)
+         - :dir:`folder` **daily** (`foo`, ---)
+             - :dir:`file` **summary** (`str`, ---)
+             - :dir:`file` **icon** (`str`, ---)
+             - :dir:`file` **icon_visu** (`str`, ---)
+             - :dir:`file` **day0** (`foo`, ---)
+             - :dir:`file` **day1** (`foo`, ---)
+             - :dir:`file` **day2** (`foo`, ---)
+             - :dir:`file` **day3** (`foo`, ---)
+             - :dir:`file` **day4** (`foo`, ---)
+             - :dir:`file` **day5** (`foo`, ---)
+             - :dir:`file` **day6** (`foo`, ---)
+             - :dir:`file` **day7** (`foo`, ---)
+
+
+forecast_hourly
+===============
+
+Hourly forcast of Weather report from pirateweather.net - By default, data is not written to database
+
+.. treeview::
+     - :dir:`folder` **forecast_hourly** (`foo`, Hourly forcast of Weather report from pirateweather.net - By default, data is not written to database)
+         - :dir:`folder` **hourly** (`foo`, ---)
+             - :dir:`file` **summary** (`str`, ---)
+             - :dir:`file` **icon** (`str`, ---)
+             - :dir:`file` **icon_visu** (`str`, ---)
+             - :dir:`file` **hour0** (`foo`, ---)
+             - :dir:`file` **hour1** (`foo`, ---)
+             - :dir:`file` **hour2** (`foo`, ---)
+             - :dir:`file` **hour3** (`foo`, ---)
+             - :dir:`file` **hour4** (`foo`, ---)
+             - :dir:`file` **hour5** (`foo`, ---)
+             - :dir:`file` **hour6** (`foo`, ---)
+             - :dir:`file` **hour7** (`foo`, ---)
+             - :dir:`file` **hour8** (`foo`, ---)
+             - :dir:`file` **hour9** (`foo`, ---)
+             - :dir:`file` **hour10** (`foo`, ---)
+             - :dir:`file` **hour11** (`foo`, ---)
+             - :dir:`file` **hour12** (`foo`, ---)
+
+
+weather
+=======
+
+Complete weather report from pirateweather.net - Current weather and forecasts are written to database
+
+.. treeview::
+     - :dir:`folder` **weather** (`foo`, Complete weather report from pirateweather.net - Current weather and forecasts are written to database)
+         - :dir:`folder` **locals** (`foo`, ---)
+             - :dir:`file` **lat** (`num`, ---)
+             - :dir:`file` **lon** (`num`, ---)
+             - :dir:`file` **timezone** (`str`, ---)
+             - :dir:`file` **location** (`str`, ---)
+         - :dir:`folder` **minutely** (`foo`, ---)
+             - :dir:`file` **summary** (`str`, ---)
+             - :dir:`file` **icon** (`str`, ---)
+             - :dir:`file` **icon_visu** (`str`, ---)
+         - :dir:`folder` **alerts** (`foo`, ---)
+             - :dir:`file` **list** (`list`, ---)
+             - :dir:`file` **string_detail** (`str`, ---)
+         - :dir:`folder` **flags** (`foo`, ---)
+             - :dir:`file` **sources** (`str`, ---)
+             - :dir:`file` **units** (`str`, ---)
+             - :dir:`file` **nearest_station** (`num`, ---)
+
+
 ===============
 Logik Parameter
 ===============
@@ -157,7 +369,7 @@ Gibt das SmartVisu Icon zum übergebenen Pirate-Weather Icon zurück.
 
 
 icon
-----
+ -  -  -  - 
 
 Icon als String.
 

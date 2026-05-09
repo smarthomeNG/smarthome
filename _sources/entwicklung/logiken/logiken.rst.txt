@@ -15,7 +15,7 @@ Eine Logik besteht aus einem Python Skript sowie einer Reihe von Parametern die 
 steuern. Eine Logik kann während der Laufzeit von SmartHomeNG geladen und entladen werden. Dadurch sind Veränderungen
 ein einer Logik möglich, ohne SmartHomeNG neu starten zu müssen.
 
-Wird ein zusätzliches Python Modul in einer Logik benötigt, so kann eine ``requirements.txt`` im Verzeichnis ``logics`` erstellt 
+Wird ein zusätzliches Python Modul in einer Logik benötigt, so kann eine ``requirements.txt`` im Verzeichnis ``etc/logics`` erstellt 
 und in dieser Datei Namen und Versionen für die Installation via PIP notiert werden.
 In diesem Fall muss SmartHomeNG auf jeden Fall neu gestartet werden da die Überprüfung nur beim Start von SmartHomeNG erfolgt.
 
@@ -23,9 +23,9 @@ In diesem Fall muss SmartHomeNG auf jeden Fall neu gestartet werden da die Über
 Einführung
 ==========
 
-Das eigentliche Python Skript einer Logik muss im Verzeichnis ``../logics`` der SmartHomeNG Installation abgelegt
+Das eigentliche Python Skript einer Logik muss im Verzeichnis ``etc/logics`` der SmartHomeNG Installation abgelegt
 werden. Damit die Logik getriggert und ausgeführt wird, muss sie zusätzlich in der Konfigurationsdatei
-``../etc/logic.yaml`` konfiguriert werden. Hier wird festgelegt, unter welchen Bedingungen eine bestimmte Logik
+``etc/logic.yaml`` konfiguriert werden. Hier wird festgelegt, unter welchen Bedingungen eine bestimmte Logik
 auszuführen ist.
 
 Wenn eine Logik mit der Admin GUI erstellt wurde, ist sie nach dem ersten erfolgreichen Laden pausiert (disabled).
@@ -106,13 +106,13 @@ Template für eine neue Logik
 ----------------------------
 
 Eine neue Logik sollte möglichst auf der folgenden Vorlage ``logic.tpl`` aufbauen.
-Die Template Datei ist im Verzeichnis ``logics/`` abgelegt:
+Die Template Datei ist im Verzeichnis ``templates/`` abgelegt:
 
-.. literalinclude:: /logics/logic.tpl
-   :caption: /logics/logic.tpl
+.. literalinclude:: ../../../../../templates/logic.tpl
+   :caption: /templates/logic.tpl
    :language: python
 
-Um zum Beispiel eine Logik ``example`` zu erzeugen, muss zuerst die Datei ``logics/logic.tpl`` auf die
+Um zum Beispiel eine Logik ``example`` zu erzeugen, muss zuerst die Datei ``templates/logic.tpl`` auf die
 Datei ``logics/example.py`` kopiert werden und in der erstellten Datei der eigentliche Code der Logik erfasst werden.
 
 Anschließend muss noch in der Konfigurationsdatei ``etc/logic.yaml`` die Konfiguration für die Logik festgelegt
@@ -163,18 +163,18 @@ Beispiele
 
 Die folgende Beispielkonfiguration definiert 4 Logiken:
 
-* Die erste Logik mit Namen ``InitSmartHomeNG`` befindet sich in der Datei ``logics/initsmarthomeng.py``.
+* Die erste Logik mit Namen ``InitSmartHomeNG`` befindet sich in der Datei ``etc/logics/initsmarthomeng.py``.
   Das Attribut ``crontab: init`` weist SmartHomeNG an diese Logik direkt nach dem Start auszuführen.
-* Die zweite Logik mit dem Namen ``Hourly`` befindet sich in der Datei ``logics/time.py``
+* Die zweite Logik mit dem Namen ``Hourly`` befindet sich in der Datei ``etc/logics/time.py``
   und das Attribut ``cycle: 3600`` weist SmartHomeNG an die Logik alle 3600 Sekunden (jede Stunde) auszuführen.
-* Die dritte Logik mit Namen ``Gate`` befindet sich in der Datei ``logics/gate.py`` und das Attribut
+* Die dritte Logik mit Namen ``Gate`` befindet sich in der Datei ``etc/logics/gate.py`` und das Attribut
   ``watch_item: gate.alarm`` weist SmartHomeNG an die Logik auszuführen, wenn der Wert des Items gate.alarm sich ändert.
-* Die vierte Logik mit Namen ``disks`` befindet sich in der Datei ``logics/disks.py``. Der crontab Eintrag weist SmartHomeNG an
+* Die vierte Logik mit Namen ``disks`` befindet sich in der Datei ``etc/logics/disks.py``. Der crontab Eintrag weist SmartHomeNG an
   diese Logik alle 5 Minuten auszuführen. Der Parameter ``usage_warning`` ist ein benutzerdefinierter Parameter, der
   in der Logik verwendet wird, um einen Schwellwert zu definieren.
 
 .. code-block:: yaml
-   :caption:  etc/logic.yaml
+   :caption: etc/logic.yaml
 
    InitSmarthomeNG:
        filename: initsmarthomeng.py

@@ -12,7 +12,7 @@ Plugin 'uzsu' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -29,7 +29,7 @@ Beschreibung
 ============
 
 Dieses Plugin ermöglicht gezielte Schaltvorgänge von Items zu bestimmten Uhrzeiten oder abhängig vom Sonnenstand. Die automatischen Schaltungen können dabei pro Wochentag separat definiert werden.
-Außerdem ermöglicht eine Interpolationsfunktion das Errechnen von Werten zwischen zwei manuell angelegten Schaltzeiten, wodurch z.B. Lichtkurven über den Tagesverlauf umgesetzt werden können.
+Außerdem ermöglicht eine Interpolationsfunktion das Errechnen von Werten zwischen zwei manuell angelegten Schaltzeiten, wodurch z.B. Lichtkurven über den Tagesverlauf umgesetzt werden können. 
 
 
 Anforderungen
@@ -148,9 +148,33 @@ uzsu_item
 
 
 **Das Item, das durch die UZSU geschaltet werden soll:**
-Im items Ordner ist pro Item, das geschaltet werden soll, ein UZSU Item-Eintrag mit ``type: dict`` zu erstellen. Die Hierarchie spielt dabei keine Rolle, es wird allerdings empfohlen, das UZSU Item als Kind des zu schaltenden Items zu deklarieren und die relative Item-Referenzierung ``".."`` für den Parameter ``uzsu_item`` zu nutzen. Es wird dringend empfohlen, ``cache: True`` zu setzen, damit die Einstellungen bei einem Neustart nicht verloren gehen.
+Im items Ordner ist pro Item, das geschaltet werden soll, ein UZSU Item-Eintrag mit ``type: dict`` zu erstellen. Die Hierarchie spielt dabei keine Rolle, es wird allerdings empfohlen, das UZSU Item als Kind des zu schaltenden Items zu deklarieren und die relative Item-Referenzierung ``".."`` für den Parameter ``uzsu_item`` zu nutzen. Es wird dringend empfohlen, ``cache: True`` zu setzen, damit die Einstellungen bei einem Neustart nicht verloren gehen. 
 
  - Datentyp: **str**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+child
+=====
+
+Vorlage-Struktur für Zeitschaltuhren
+
+.. treeview::
+     - :dir:`folder` **child** (`foo`, Vorlage-Struktur für Zeitschaltuhren)
+         - :dir:`folder` **uzsu** (`dict`, ---)
+             - :dir:`file` **last** (`foo`, The last set value if UZSU is active)
+             - :dir:`folder` **active** (`bool`, Use this item to easily turn on or off your UZSU)
+                 - :dir:`file` **status** (`bool`, ---)
+             - :dir:`folder` **next** (`dict`, The next value and time)
+                 - :dir:`file` **value** (`str`, The next value)
+                 - :dir:`file` **time** (`str`, The next time)
 
 
 ===============
@@ -180,7 +204,7 @@ Abfrage oder Setzen, ob die UZSU aktiv ist oder nicht.
 
 
 activevalue
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Abfragen oder Setzen des UZSU Status
 
@@ -188,13 +212,13 @@ Abfragen oder Setzen des UZSU Status
 
  - Mögliche Werte:
 
-   - **None** |_| - |_| Abfrage
-   - **True** |_| - |_| Aktivieren
-   - **False** |_| - |_| Deaktivieren
+   - **None**
+   - **True**
+   - **False**
 
 
 item
-----
+ -  -  -  - 
 
 Das Item-Objekt
 
@@ -214,7 +238,7 @@ Löschen der UZSU Einträge eines Items.
 
 
 clear
------
+ -  -  -  -  - 
 
 True, um die UZSU Einträge zu löschen.
 
@@ -222,7 +246,7 @@ True, um die UZSU Einträge zu löschen.
 
 
 item
-----
+ -  -  -  - 
 
 Das Item-Objekt
 
@@ -239,7 +263,7 @@ Abfrage oder Setzen der Interpolationseinstellungen
 
 
 intpl_type
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Interpolationstyp
 
@@ -248,14 +272,14 @@ Interpolationstyp
 
  - Mögliche Werte:
 
-   - **None** |_| - |_| Abfrage
-   - **linear** |_| - |_| konstant gleiche Zwischenberechnung
-   - **cubic** |_| - |_| Spline-Interpolation mit verzögertem Start und sanftem Verlangsamen
-   - **none** |_| - |_| keine Interpolation
+   - **None**
+   - **linear**
+   - **cubic**
+   - **none**
 
 
 interval
---------
+ -  -  -  -  -  -  -  - 
 
 Intervall in Minuten, in dem der interpolierte Wert aktualisiert werden soll
 
@@ -265,7 +289,7 @@ Intervall in Minuten, in dem der interpolierte Wert aktualisiert werden soll
  - Minimalwert: **1**
 
 backintime
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Maximales Alter eines UZSU Eintrags in Minuten, um beim Plugin-Start versäumte Einträge nachzuholen.
 
@@ -287,7 +311,7 @@ Löschen oder Abrufen der internen Interpolationswerte.
 
 
 clear
------
+ -  -  -  -  - 
 
 Löschen oder nicht
 
@@ -296,7 +320,7 @@ Löschen oder nicht
 
 
 item
-----
+ -  -  -  - 
 
 Das Item-Objekt
 
@@ -313,7 +337,7 @@ Abfrage des zuletzt gesetzten/evaluierten Werts. Kann z.B. beim Aktivieren der U
 
 
 by
---
+ -  - 
 
 Für eine entsprechende Info im Logfile kann hier z.B. der Itemname, der den Wert abruft eingetragen werden
 
@@ -322,7 +346,7 @@ Für eine entsprechende Info im Logfile kann hier z.B. der Itemname, der den Wer
 
 
 item
-----
+ -  -  -  - 
 
 Das Item-Objekt
 
@@ -333,13 +357,13 @@ planned(item)
 =============
 
 
-Abfrage des nächsten Aktualisierungszeitpunkts. Ist keine Aktualisierung geplant, z.B. weil das UZSU Item nicht aktiviert ist, wird None zurückgegeben, ansonsten ein Dictionary mit den Einträgen Zeit und Wert.
+Abfrage des nächsten Aktualisierungszeitpunkts. Ist keine Aktualisierung geplant, z.B. weil das UZSU Item nicht aktiviert ist, wird None zurückgegeben, ansonsten ein Dictionary mit den Einträgen Zeit und Wert. 
 
  - Ergebnistyp der Funktion: **dict**
 
 
 item
-----
+ -  -  -  - 
 
 Das Item-Objekt
 
@@ -356,7 +380,7 @@ Fortsetzen der UZSU Evaluierung: Aktivieren des Items und Setzen des zuletzt fes
 
 
 activevalue
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 True, um die UZSU fortzusetzen; False, um sie zu pausieren
 
@@ -364,7 +388,7 @@ True, um die UZSU fortzusetzen; False, um sie zu pausieren
 
 
 item
-----
+ -  -  -  - 
 
 Das Item-Objekt
 
@@ -384,7 +408,7 @@ Setzen der activeToday Einträge eines Items.
 
 
 set
----
+ -  -  - 
 
 True, um die activeToday Einträge zu aktivieren, False um sie zu deaktivieren/zurückzusetzen.
 
@@ -392,7 +416,7 @@ True, um die activeToday Einträge zu aktivieren, False um sie zu deaktivieren/z
 
 
 item
-----
+ -  -  -  - 
 
 Das Item-Objekt
 

@@ -14,7 +14,7 @@ Attribut *on_update*
 Ermöglicht das Setzen des Wertes anderer Items, wenn das aktuelle Item ein Update erhält
 (auch wenn sich der Wert des aktuellen Items dabei nicht ändert und enforce_updates nicht aktiviert ist).
 Das ist der Unterschied zu **on_change**, welches nur ausgelöst
-wird wenn sich bei einem Update der Wert des Items auch ändert oder **enforce_updates** aktiviert ist. **Seit SmartHomeNG v1.4**
+wird wenn sich bei einem Update der Wert des Items auch ändert oder **enforce_updates** aktiviert ist. 
 
 Die Syntax ist wie folgt:
 
@@ -44,7 +44,7 @@ Die Syntax ist wie folgt:
   Wert des Items zugegriffen werden soll, geht das mit der Item-Methode **prev_value()** oder dem
   Item Property **property.last_value**. Um das Item selbst zu adressieren kann am einfachsten
   die relative Adressierung mittels **sh..self.prev_value()** eingesetzt werden.
-- Zusätzlich zur Spezialvariable **value** werden ab SmartHomeNG 1.11 die Spazialvariablen **caller**, **source**
+- Zusätzlich zur Spezialvariable **value** werden die Spazialvariablen **caller**, **source**
   und **dest** unterstützt, um Wertzuweisungen in Abhängigkeit von dem auslösenden Item zu ermöglichen
 
 .. attention::
@@ -65,7 +65,7 @@ Die Syntax ist wie folgt:
 Beispiel:
 
 .. code-block:: yaml
-   :caption: ../items/<filename>.yaml (Ausschnitt)
+   :caption: etc/items/<filename>.yaml (Ausschnitt)
 
    itemA1:
        # eine einzelne Zuweisung
@@ -91,7 +91,7 @@ Attribut *on_change*
 
 Ermöglicht das Setzen des Wertes anderer Items, wenn der Wert des aktuellen Items verändert wird.
 Im Gegensatz zu **on_update** wird **on_change** nur ausgelöst, wenn sich beim Update
-eines Items der Wert auch ändert oder **enforce_updates** aktiviert ist. **Seit SmartHomeNG v1.4**
+eines Items der Wert auch ändert oder **enforce_updates** aktiviert ist.
 
 Der Syntax ist äquivalent zum Attribut **on_update**.
 

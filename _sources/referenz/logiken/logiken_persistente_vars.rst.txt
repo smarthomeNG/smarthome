@@ -39,7 +39,7 @@ SmartHomeNG gehen die gespeicherten Werte verloren.
 Einrichtung
 ===========
 
-Normale Variablen sind lokal zum Lauf der der Logik. Eine Variable **myvar** die während eines
+Normale Variablen sind lokal zum Lauf der der Logik. Eine Variable ``myvar`` die während eines
 Laufes der Logik einen Wert zugewiesen bekommt, ist beim Beginn des nächsten Laufes nicht
 definiert.
 
@@ -57,7 +57,7 @@ muss die Variable folgendermaßen definiert werden:
    logic.myvar = 'my Value'
 
 
-Die Variable **logic.myvar** übersteht die Zeit bis zum nächsten Lauf der Logik und sie steht
+Die Variable ``logic.myvar`` übersteht die Zeit bis zum nächsten Lauf der Logik und sie steht
 nur in der Logik zur Verfügung, die sie auch definiert hat.
 
 
@@ -68,7 +68,7 @@ Wenn auf eine Variable zugegriffen wird bevor sie definiert wird, führt das zu 
 und der Rest der Logik wird nicht ausgeführt. Beim ersten Lauf einer Logik nach einem Neustart
 von SmartHomeNG existiert jedoch keine Variable aus vorangegangenen Läufen. Sie muss erstmal
 definiert werden. Das kann zum Beispiel in der folgenden Form erfolgen, in der die Variable
-**logic.myvar** mit dem Wert **None** initialisiert wird, falls sie nicht existiert
+``logic.myvar`` mit dem Wert **None** initialisiert wird, falls sie nicht existiert
 
 .. code-block:: python
    :caption: Sicherstellen, dass die Variable existiert
@@ -80,7 +80,7 @@ definiert werden. Das kann zum Beispiel in der folgenden Form erfolgen, in der d
 Nutzung selbst definierter Parameter
 ====================================
 
-Es ist möglich eigene Parameter in der Datei **../etc/logic.yaml** zu definieren. Diese Parameter
+Es ist möglich eigene Parameter in der Datei ``etc/logic.yaml`` zu definieren. Diese Parameter
 stehen in der Logik unter **logic.<Parameter>** zur Verfügung. Diese Parameter können als
 eine bereits initialisierte Variable verstanden/genutzt werden. Sie können in der Logik nicht
 nur gelesen, sondern auch verändert werden. Diese Änderung geht wie beschrieben bei einem

@@ -12,7 +12,7 @@ Plugin 'bose_soundtouch' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -98,6 +98,90 @@ bose_soundtouch_action
 Aktion die auf dem Bose Soundtouch System ausgeführt werden soll.
 
  - Datentyp: **str**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+actions
+=======
+
+
+.. treeview::
+     - :dir:`folder` **actions** (`foo`, ---)
+         - :dir:`file` **power_on** (`bool`, ---)
+         - :dir:`file` **power_off** (`bool`, ---)
+         - :dir:`file` **select_preset** (`num`, ---)
+         - :dir:`file` **play** (`bool`, ---)
+         - :dir:`file` **pause** (`bool`, ---)
+         - :dir:`file` **mute** (`bool`, ---)
+         - :dir:`file` **next_track** (`bool`, ---)
+         - :dir:`file` **previous_track** (`bool`, ---)
+         - :dir:`file` **shuffle** (`bool`, ---)
+         - :dir:`file` **repeat_all** (`bool`, ---)
+         - :dir:`file` **repeat_off** (`bool`, ---)
+
+
+presets
+=======
+
+
+.. treeview::
+     - :dir:`folder` **presets** (`foo`, ---)
+         - :dir:`folder` **0** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.0.name')]))
+             - :dir:`file` **name** (`str`, ---)
+             - :dir:`file` **preset_id** (`num`, ---)
+             - :dir:`file` **source** (`str`, ---)
+         - :dir:`folder` **1** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.1.name')]))
+             - :dir:`file` **name** (`str`, ---)
+             - :dir:`file` **preset_id** (`num`, ---)
+             - :dir:`file` **source** (`str`, ---)
+         - :dir:`folder` **2** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.2.name')]))
+             - :dir:`file` **name** (`str`, ---)
+             - :dir:`file` **preset_id** (`num`, ---)
+             - :dir:`file` **source** (`str`, ---)
+         - :dir:`folder` **3** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.3.name')]))
+             - :dir:`file` **name** (`str`, ---)
+             - :dir:`file` **preset_id** (`num`, ---)
+             - :dir:`file` **source** (`str`, ---)
+         - :dir:`folder` **4** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.4.name')]))
+             - :dir:`file` **name** (`str`, ---)
+             - :dir:`file` **preset_id** (`num`, ---)
+             - :dir:`file` **source** (`str`, ---)
+         - :dir:`folder` **5** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.5.name')]))
+             - :dir:`file` **name** (`str`, ---)
+             - :dir:`file` **preset_id** (`num`, ---)
+             - :dir:`file` **source** (`str`, ---)
+
+
+status
+======
+
+
+.. treeview::
+     - :dir:`folder` **status** (`foo`, ---)
+         - :dir:`file` **album** (`str`, ---)
+         - :dir:`file` **artist** (`str`, ---)
+         - :dir:`file` **description** (`str`, ---)
+         - :dir:`file` **image** (`str`, ---)
+         - :dir:`file` **source** (`str`, ---)
+         - :dir:`file` **standby** (`bool`, ---)
+         - :dir:`file` **track** (`str`, ---)
+
+
+volume
+======
+
+
+.. treeview::
+     - :dir:`folder` **volume** (`foo`, ---)
+         - :dir:`file` **actual** (`num`, ---)
+         - :dir:`file` **muted** (`bool`, ---)
 
 
 ===============

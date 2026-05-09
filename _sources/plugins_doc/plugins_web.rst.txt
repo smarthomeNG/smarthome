@@ -1,5 +1,3 @@
-.. index:: Plugin Type; Web/Cloud
-
 .. include:: /plugins_doc/plugins_web_header.rst
 
 .. toctree::
@@ -28,204 +26,380 @@
    /plugins/webpush/user_doc
    /plugins/webservices/user_doc
    /plugins/withings_health/user_doc
-   /plugins/wunderground/user_doc
 
 
 
-.. table:: 
-   :widths: grid
 
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | Plugin (Konfiguration)                                            | Version  | Beschreibung                                                                                                                                                          | Maintainer      | Tester          |
-   +===================================================================+==========+=======================================================================================================================================================================+=================+=================+
-   | :doc:`alexa <config/alexa>`                                       | v1.3.1   | Plugin zur Ansteuerung von SmartHomeNG via Amazon Echo / Alexa                                                                                                        | hotzen          | psilo909        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `alexa Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1021150-amazon-alexa-plugin>`_                                                      |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`alexa4p3 <config/alexa4p3>`                                 | v1.0.2   | Plugin zur Ansteuerung von SmartHomeNG via Amazon Echo bzw. Alexa                                                                                                     | andrek          | psilo909,       |
-   |                                                                   |          |                                                                                                                                                                       |                 | cannon, ASSR85, |
-   |                                                                   |          |                                                                                                                                                                       |                 | Juergen         |
-   |                                                                   |          | - `alexa4p3 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1021150-amazon-alexa-plugin>`_                                                   |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`alexarc4shng <config/alexarc4shng>`                         | v1.0.4   | Plugin zur Steuerung von Amazon Echo Geräten Zugriff via Web-Browser API und Cookie                                                                                   | AndreK          | henfri,         |
-   |                                                                   |          |                                                                                                                                                                       |                 | juergen, psilo  |
-   |                                                                   |          | - `alexarc4shng Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1336416-alexa-text-to-speach>`_                                              |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`darksky <config/darksky>`                                   | v1.7.2   | Wetterdaten über darksky.net.                                                                                                                                         | psilo909        | onkelandy,      |
-   |                                                                   |          |                                                                                                                                                                       |                 | henfri, cannon  |
-   |                                                                   |          | - `darksky zusätzliche Infos <https://www.smarthomeng.de/user/plugins/darksky/user_doc.html>`_                                                                        |                 |                 |
-   |                                                                   |          | - `darksky Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1244744>`_                                                                        |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`garminconnect <config/garminconnect>`                       | v1.2.0   | Ermöglicht den Abruf von Daten (Statistiken, Pulswerte) aus Garmin Connect.                                                                                           | psilo909        | psilo909        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `garminconnect zusätzliche Infos <http://smarthomeng.de/user/plugins_doc/config/garminconnect.html>`_                                                               |                 |                 |
-   |                                                                   |          | - `garminconnect Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1451496-support-thread-f%C3%BCr-das-garminconnect-plugin>`_                 |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`homeconnect <config/homeconnect>`                           | v1.0.0   | Anbindung der BSH/Siemens HomeConnect Schnittstelle mit Oauth2                                                                                                        | psilo909        | psilo909        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`ical <config/ical>`                                         | v1.6.4   | Ermöglicht die Verwendung von Kalendern (ICS)                                                                                                                         | onkelandy,      | ?               |
-   |                                                                   |          |                                                                                                                                                                       | cmalo (mknx)    |                 |
-   |                                                                   |          | - `ical Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1352089-support-thread-zum-ical-plugin>`_                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`indego4shng <config/indego4shng>`                           | v4.0.1   | Indego Plugin zum Auslesen und steuern von Bosch Indego Mährobotern mit Connect                                                                                       | AndreK, schuma  | schuma, AndreK  |
-   |                                                                   |          | Ausstattung                                                                                                                                                           |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `indego4shng zusätzliche Infos <http://smarthomeng.de/user/plugins_doc/config/indego.html>`_                                                                        |                 |                 |
-   |                                                                   |          | - `indego4shng Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/966612-indego-connect>`_                                                      |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`join <config/join>`                                         | v1.4.4   | Ermöglicht die Verwendung der Join API (https://joaoapps.com/join/api/)                                                                                               | Knx_fan         | psilo909        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `join Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1113523-neues-plugin-join-tts-sms-phonecall-notification-uvm>`_                      |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`jsonread <config/jsonread>`                                 | v1.0.4   | json Parser Plugin basierend auf jq                                                                                                                                   | onkelandy       | bmxp            |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `jsonread zusätzliche Infos <http://smarthomeng.de/user/plugins_doc/config/not-yet.html>`_                                                                          |                 |                 |
-   |                                                                   |          | - `jsonread Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/not-yet>`_                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | maximale Python Version: **3.11**                                                                                                                                     |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`mailrcv <config/mailrcv>`                                   | v1.4.2   | Empfangen von eMails via imap                                                                                                                                         | msinn           | psilo909,       |
-   |                                                                   |          |                                                                                                                                                                       |                 | onkelandy,      |
-   |                                                                   |          |                                                                                                                                                                       |                 | Sandman60       |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`mailsend <config/mailsend>`                                 | v1.4.2   | Versenden von eMails via smtp. Dieses Plugin ermöglicht das Versenden von eMails aus                                                                                  | msinn           | psilo909,       |
-   |                                                                   |          | Logiken heraus, durch Aufruf einer Funktion                                                                                                                           |                 | onkelandy,      |
-   |                                                                   |          |                                                                                                                                                                       |                 | Sandman60       |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`mvg_live <config/mvg_live>`                                 | v1.6.1   | Abfrage der Abfahrten in Stationen der Münchner Verkehrsbetriebe (MVG)                                                                                                | psilo909        | ?               |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `mvg_live zusätzliche Infos <http://smarthomeng.de/user/plugins_doc/config/mvg_live.html>`_                                                                         |                 |                 |
-   |                                                                   |          | - `mvg_live Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1108867-neues-plugin-mvg_live>`_                                                 |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`odlinfo <config/odlinfo>`                                   | v1.5.3   | Dieses Plugin liefert die Gamma-Ortsdosisleistung (ODL) in µSv/h  von mehreren                                                                                        | psilo909        | Sandman60       |
-   |                                                                   |          | Stationen in Deutschland (zur Verfügung gestellt durch das Bundesamt für                                                                                              |                 |                 |
-   |                                                                   |          | Strahlenschutz). Mehr Informationen unter https://odlinfo.bfs.de. Nutzungsbedingungen                                                                                 |                 |                 |
-   |                                                                   |          | siehe https://www.imis.bfs.de/geoportal/resources/sitepolicy.html.                                                                                                    |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `odlinfo zusätzliche Infos <https://smarthomeng.de/user/plugins_doc/config/odlinfo.html>`_                                                                          |                 |                 |
-   |                                                                   |          | - `odlinfo Unterstützung <https://knx-user-forum.de/node/986480>`_                                                                                                    |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`openweathermap <config/openweathermap>`                     | v1.8.8   | Wetterdaten über OpenWeatherMap.                                                                                                                                      | psilo909,       | Sisamiwe,       |
-   |                                                                   |          |                                                                                                                                                                       | jentz1986       | jentz1986       |
-   |                                                                   |          | - `openweathermap Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1246998-support-thread-zum-openweathermap-plugin>`_                        |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`piratewthr <config/piratewthr>`                             | v1.2.5   | Wetterdaten über pirateweather.net.                                                                                                                                   | msinn           | aschwith        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `piratewthr Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1852685>`_                                                                     |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`prowl <config/prowl>`                                       | v1.3.3   | Prowl Unterstützung                                                                                                                                                   | Foxi352         | Morg            |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `prowl zusätzliche Infos <https://www.smarthomeng.de/user/plugins/prowl/README.html>`_                                                                              |                 |                 |
-   |                                                                   |          | - `prowl Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1492644-support-thread-zum-prowl-plugin>`_                                          |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`pushbullet <config/pushbullet>`                             | v1.5.2   | Anbindung des Pushbullet Service                                                                                                                                      | ? (lbernau)     | onkelandy,      |
-   |                                                                   |          |                                                                                                                                                                       |                 | psilo909,       |
-   |                                                                   |          |                                                                                                                                                                       |                 | Sandman60       |
-   |                                                                   |          | - `pushbullet zusätzliche Infos <https://www.smarthomeng.de/developer/plugins/pushbullet/README.html>`_                                                               |                 |                 |
-   |                                                                   |          | - `pushbullet Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/36001-neues-plugin-pushbullet>`_                                               |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`pushover <config/pushover>`                                 | v1.6.2   | Anbindung des Pushover Dienstes                                                                                                                                       | Thomas Creutz   | None            |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`slack <config/slack>`                                       | v1.0.0   | Slack messaging Dienst                                                                                                                                                | rthill          | maddinador      |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`solarforecast <config/solarforecast>`                       | v1.9.5   | Plugin zur Anbindung an eine Web-basierte Solaretragsvorhersage                                                                                                       | Alexander       | henfri,         |
-   |                                                                   |          |                                                                                                                                                                       | Schwithal       | Haiphong,       |
-   |                                                                   |          |                                                                                                                                                                       | (aschwith)      | Morg42          |
-   |                                                                   |          | - `solarforecast Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1842817-support-thread-f%C3%BCr-das-solarforecast-plugin>`_                 |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`speech <config/speech>`                                     | v1.7.0   | Sprach Parser                                                                                                                                                         | bmxp            | henfri          |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `speech zusätzliche Infos <http://smarthomeng.de/user/plugins/speech/user_doc.html>`_                                                                               |                 |                 |
-   |                                                                   |          | - `speech Unterstützung <http://knx-user-forum.de/forum/supportforen/smarthome-py/39857-plugin-speech-parser>`_                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`tankerkoenig <config/tankerkoenig>`                         | v2.0.4   | Benzinpreise über die API von Tankerkönig. Bitte sicherstellen, die API nicht zu oft                                                                                  | psilo909        | Sandman60       |
-   |                                                                   |          | aufzurufen. Bitte Hinweise unter https://creativecommons.tankerkoenig.de/#techInfo                                                                                    |                 |                 |
-   |                                                                   |          | beachten!                                                                                                                                                             |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `tankerkoenig zusätzliche Infos <http://smarthomeng.de/user/plugins_doc/config/tankerkoenig.html>`_                                                                 |                 |                 |
-   |                                                                   |          | - `tankerkoenig Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/938924-benzinpreis-plugin>`_                                                 |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`telegram <config/telegram>`                                 | v2.0.3   | Anbindung des Telegram Messenger Service                                                                                                                              | gamade, ivan73, | onkelandy       |
-   |                                                                   |          |                                                                                                                                                                       | bmxp            |                 |
-   |                                                                   |          | - `telegram Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1548691-support-thread-f&uuml;r-das-telegram-plugin>`_                           |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`traffic <config/traffic>`                                   | v1.5.1   | Abfrage der Reisezeit über die kostenlose Google Directions API. Für einen eigenen                                                                                    | psilo909        | ?               |
-   |                                                                   |          | Key siehe                                                                                                                                                             |                 |                 |
-   |                                                                   |          | https://developers.google.com/maps/documentation/directions/intro?hl=de#traffic-                                                                                      |                 |                 |
-   |                                                                   |          | model.                                                                                                                                                                |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `traffic zusätzliche Infos <http://smarthomeng.de/user/plugins_doc/config/traffic.html>`_                                                                           |                 |                 |
-   |                                                                   |          | - `traffic Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1048446-traffic-plugin-support-thread>`_                                          |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`vacations <config/vacations>`                               | v1.0.3   | Ermöglicht den Abruf deutscher Schulferien für die Bundesländer BW, BY, BE, BB, HB,                                                                                   | Marc René Frieß |                 |
-   |                                                                   |          | HH, HE, MV, NI, NW, RP, SL, SN, ST, SH, TH.                                                                                                                           |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `vacations zusätzliche Infos <http://smarthomeng.de/user/plugins_doc/config/vacations.html>`_                                                                       |                 |                 |
-   |                                                                   |          | - `vacations Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1443788-support-thread-f%C3%BCr-das-vacations-plugin>`_                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`webpush <config/webpush>`                                   | v1.1.0   | Plugin zum Versenden von web push Nachrichten an Clients                                                                                                              | gruberth        |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `webpush Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1817454-support-thread>`_                                                         |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`webservices <config/webservices>`                           | v1.6.4   | Implementierung eines Webservice interfaces                                                                                                                           | psilo909        | psilo909        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `webservices zusätzliche Infos <https://www.smarthomeng.de/?category_name=plugins&s=webservices>`_                                                                  |                 |                 |
-   |                                                                   |          | - `webservices Unterstützung <https://knx-user-forum.de/node/1163886>`_                                                                                               |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`wettercom <config/wettercom>`                               | v1.4.0   | Integration von Wetter.COM                                                                                                                                            | ? (Jan N. Klug) | psilo909,       |
-   |                                                                   |          |                                                                                                                                                                       |                 | onkelandy       |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`withings_health <config/withings_health>`                   | v1.8.4   | Anbindung der Nokia Health API mit Oauth2                                                                                                                             | psilo909        | psilo909        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `withings_health Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1141179-nokia-health-plugin>`_                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`wunderground <config/wunderground>`                         | v1.4.9   | Abfrage der Daten des Wetterdienstes Wunderground.com                                                                                                                 | msinn           | msinn           |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `wunderground zusätzliche Infos <http://smarthomeng.de/user/plugins/wunderground/user_doc.html>`_                                                                   |                 |                 |
-   |                                                                   |          | - `wunderground Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1059124-neues-wunderground-plugin>`_                                         |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **deprecated**                                                                                                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
+.. list-table::
+   :header-rows: 1
 
+   * - Plugin (Konfiguration)
+     - Version
+     - Beschreibung
+     - Maintainer
+     - Tester
+   * - :doc:`alexa4p3 <config/alexa4p3>`
+     - v1.0.2
+     - Plugin zur Ansteuerung von SmartHomeNG via Amazon Echo bzw. Alexa
+       
+       + `alexa4p3 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1021150-amazon-alexa-plugin>`_
+       
+     - andrek
+   
+     - psilo909
+   
+       cannon
+   
+       ASSR85
+   
+       Juergen
+   
+   * - :doc:`alexarc4shng <config/alexarc4shng>`
+     - v1.0.4
+     - Plugin zur Steuerung von Amazon Echo Geräten Zugriff via Web-Browser API und Cookie
+       
+       + `alexarc4shng Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1336416-alexa-text-to-speach>`_
+       
+       
+       Plugin-Status: **develop**
+     - AndreK
+   
+     - henfri
+   
+       juergen
+   
+       psilo
+   
+   * - :doc:`darksky <config/darksky>`
+     - v1.7.2
+     - Wetterdaten über darksky.net.
+       
+       + `darksky zusätzliche Infos <https://www.smarthomeng.de/user/plugins/darksky/user_doc.html>`_
+       + `darksky Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1244744>`_
+       
+       
+       Plugin-Status: **deprecated**
+     - psilo909
+   
+     - onkelandy
+   
+       henfri
+   
+       cannon
+   
+   * - :doc:`garminconnect <config/garminconnect>`
+     - v1.2.0
+     - Ermöglicht den Abruf von Daten (Statistiken, Pulswerte) aus Garmin Connect.
+       
+       + `garminconnect zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/garminconnect.html>`_
+       + `garminconnect Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1451496-support-thread-f%C3%BCr-das-garminconnect-plugin>`_
+       
+       
+       Plugin-Status: **develop**
+     - psilo909
+   
+     - psilo909
+   
+   * - :doc:`homeconnect <config/homeconnect>`
+     - v1.0.0
+     - Anbindung der BSH/Siemens HomeConnect Schnittstelle mit Oauth2
+       
+       |br|
+       
+       
+       Plugin-Status: **develop**
+     - psilo909
+   
+     - psilo909
+   
+   * - :doc:`ical <config/ical>`
+     - v1.6.4
+     - Ermöglicht die Verwendung von Kalendern (ICS)
+       
+       + `ical Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1352089-support-thread-zum-ical-plugin>`_
+       
+     - onkelandy
+   
+       cmalo (mknx)
+   
+     - ?
+   
+   * - :doc:`indego4shng <config/indego4shng>`
+     - v4.0.1
+     - Indego Plugin zum Auslesen und steuern von Bosch Indego Mährobotern mit Connect Ausstattung
+       
+       + `indego4shng zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/indego.html>`_
+       + `indego4shng Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/966612-indego-connect>`_
+       
+     - AndreK
+   
+       schuma
+   
+     - schuma
+   
+       AndreK
+   
+   * - :doc:`join <config/join>`
+     - v1.4.4
+     - Ermöglicht die Verwendung der Join API (https://joaoapps.com/join/api/)
+       
+       + `join Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1113523-neues-plugin-join-tts-sms-phonecall-notification-uvm>`_
+       
+     - Knx_fan
+   
+     - psilo909
+   
+   * - :doc:`jsonread <config/jsonread>`
+     - v2.0.0
+     - json Parser Plugin ohne weitere Module
+       
+       + `jsonread zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/jsonread.html>`_
+       + `jsonread Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/2077534-supportthread-f%C3%BCr-das-jsronread-plugin>`_
+       
+     - onkelandy
+   
+     - bmxp
+   
+   * - :doc:`mailrcv <config/mailrcv>`
+     - v1.4.2
+     - Empfangen von eMails via imap
+       
+       |br|
+       
+     - msinn
+   
+     - psilo909
+   
+       onkelandy
+   
+       Sandman60
+   
+   * - :doc:`mailsend <config/mailsend>`
+     - v1.4.2
+     - Versenden von eMails via smtp. Dieses Plugin ermöglicht das Versenden von eMails aus Logiken heraus, durch Aufruf einer Funktion
+       
+       |br|
+       
+     - msinn
+   
+     - psilo909
+   
+       onkelandy
+   
+       Sandman60
+   
+   * - :doc:`mvg_live <config/mvg_live>`
+     - v1.6.1
+     - Abfrage der Abfahrten in Stationen der Münchner Verkehrsbetriebe (MVG)
+       
+       + `mvg_live zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/mvg_live.html>`_
+       + `mvg_live Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1108867-neues-plugin-mvg_live>`_
+       
+     - psilo909
+   
+     - ?
+   
+   * - :doc:`odlinfo <config/odlinfo>`
+     - v1.5.3
+     - Dieses Plugin liefert die Gamma-Ortsdosisleistung (ODL) in µSv/h  von mehreren Stationen in Deutschland (zur Verfügung gestellt durch das Bundesamt für Strahlenschutz). Mehr Informationen unter https://odlinfo.bfs.de. Nutzungsbedingungen siehe https://www.imis.bfs.de/geoportal/resources/sitepolicy.html.
+       
+       + `odlinfo zusätzliche Infos <https://smarthomeng.de/user/plugins_doc/config/odlinfo.html>`_
+       + `odlinfo Unterstützung <https://knx-user-forum.de/node/986480>`_
+       
+     - psilo909
+   
+     - Sandman60
+   
+   * - :doc:`openweathermap <config/openweathermap>`
+     - v1.8.8
+     - Wetterdaten über OpenWeatherMap.
+       
+       + `openweathermap Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1246998-support-thread-zum-openweathermap-plugin>`_
+       
+     - psilo909
+   
+       jentz1986
+   
+     - Sisamiwe
+   
+       jentz1986
+   
+   * - :doc:`piratewthr <config/piratewthr>`
+     - v1.2.5
+     - Wetterdaten über pirateweather.net.
+       
+       + `piratewthr Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1852685>`_
+       
+     - msinn
+   
+     - aschwith
+   
+   * - :doc:`prowl <config/prowl>`
+     - v1.3.3
+     - Prowl Unterstützung
+       
+       + `prowl zusätzliche Infos <https://www.smarthomeng.de/user/plugins/prowl/README.html>`_
+       + `prowl Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1492644-support-thread-zum-prowl-plugin>`_
+       
+     - Foxi352
+   
+     - Morg
+   
+   * - :doc:`pushbullet <config/pushbullet>`
+     - v1.5.2
+     - Anbindung des Pushbullet Service
+       
+       + `pushbullet zusätzliche Infos <https://www.smarthomeng.de/developer/plugins/pushbullet/README.html>`_
+       + `pushbullet Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/36001-neues-plugin-pushbullet>`_
+       
+     - ? (lbernau)
+   
+     - onkelandy
+   
+       psilo909
+   
+       Sandman60
+   
+   * - :doc:`pushover <config/pushover>`
+     - v1.6.2
+     - Anbindung des Pushover Dienstes
+       
+       |br|
+       
+     - Thomas Creutz
+   
+     - None
+   
+   * - :doc:`slack <config/slack>`
+     - v1.0.0
+     - Slack messaging Dienst
+       
+       |br|
+       
+       
+       Plugin-Status: **develop**
+     - rthill
+   
+     - maddinador
+   
+   * - :doc:`solarforecast <config/solarforecast>`
+     - v1.9.5
+     - Plugin zur Anbindung an eine Web-basierte Solaretragsvorhersage
+       
+       + `solarforecast Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1842817-support-thread-f%C3%BCr-das-solarforecast-plugin>`_
+       
+     - Alexander Schwithal (aschwith)
+   
+     - henfri
+   
+       Haiphong
+   
+       Morg
+   
+   * - :doc:`speech <config/speech>`
+     - v1.7.0
+     - Sprach Parser
+       
+       + `speech zusätzliche Infos <https://http://smarthomeng.de/user/plugins/speech/user_doc.html>`_
+       + `speech Unterstützung <https://http://knx-user-forum.de/forum/supportforen/smarthome-py/39857-plugin-speech-parser>`_
+       
+       
+       Plugin-Status: **develop**
+     - bmxp
+   
+     - henfri
+   
+   * - :doc:`tankerkoenig <config/tankerkoenig>`
+     - v2.0.6
+     - Benzinpreise über die API von Tankerkönig. Bitte sicherstellen, die API nicht zu oft aufzurufen. Bitte Hinweise unter https://creativecommons.tankerkoenig.de/#techInfo beachten!
+       
+       + `tankerkoenig zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/tankerkoenig.html>`_
+       + `tankerkoenig Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/938924-benzinpreis-plugin>`_
+       
+     - psilo909
+   
+     - Sandman60
+   
+   * - :doc:`telegram <config/telegram>`
+     - v2.0.3
+     - Anbindung des Telegram Messenger Service
+       
+       + `telegram Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1548691-support-thread-für-das-telegram-plugin>`_
+       
+     - gamade
+   
+       ivan73
+   
+       bmxp
+   
+     - onkelandy
+   
+   * - :doc:`traffic <config/traffic>`
+     - v1.5.1
+     - Abfrage der Reisezeit über die kostenlose Google Directions API. Für einen eigenen Key siehe https://developers.google.com/maps/documentation/directions/intro?hl=de#traffic-model.
+       
+       + `traffic zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/traffic.html>`_
+       + `traffic Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1048446-traffic-plugin-support-thread>`_
+       
+     - psilo909
+   
+     - ?
+   
+   * - :doc:`vacations <config/vacations>`
+     - v1.0.3
+     - Ermöglicht den Abruf deutscher Schulferien für die Bundesländer BW, BY, BE, BB, HB, HH, HE, MV, NI, NW, RP, SL, SN, ST, SH, TH.
+       
+       + `vacations zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/vacations.html>`_
+       + `vacations Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1443788-support-thread-f%C3%BCr-das-vacations-plugin>`_
+       
+     - Marc René Frieß
+   
+     - 
+   
+   * - :doc:`webpush <config/webpush>`
+     - v1.1.0
+     - Plugin zum Versenden von web push Nachrichten an Clients
+       
+       + `webpush Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1817454-support-thread>`_
+       
+       
+       Plugin-Status: **develop**
+     - gruberth
+   
+     - 
+   
+   * - :doc:`webservices <config/webservices>`
+     - v1.6.4
+     - Implementierung eines Webservice interfaces
+       
+       + `webservices zusätzliche Infos <https://www.smarthomeng.de/?category_name=plugins&amp;s=webservices>`_
+       + `webservices Unterstützung <https://knx-user-forum.de/node/1163886>`_
+       
+     - psilo909
+   
+     - psilo909
+   
+   * - :doc:`wettercom <config/wettercom>`
+     - v1.4.0
+     - Integration von Wetter.COM
+       
+       |br|
+       
+     - ? (Jan N. Klug)
+   
+     - psilo909
+   
+       onkelandy
+   
+   * - :doc:`withings_health <config/withings_health>`
+     - v1.8.4
+     - Anbindung der Nokia Health API mit Oauth2
+       
+       + `withings_health Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1141179-nokia-health-plugin>`_
+       
+     - psilo909
+   
+     - psilo909
+   
 
 .. include:: /plugins_doc/plugins_footer.rst

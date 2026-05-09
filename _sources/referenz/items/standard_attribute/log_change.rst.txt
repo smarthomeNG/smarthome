@@ -14,7 +14,7 @@ Attribut *log_change*
 =====================
 
 Ab SmartHomeNG v1.5 ermöglicht das Attribut **log_change** das Loggen jeder Veränderung des Item-Wertes. **log_change**
-muss dazu den Namen des zu verwendeten Loggers enthalten. In **../etc/logging.yaml** muss der Logger als
+muss dazu den Namen des zu verwendeten Loggers enthalten. In ``etc/logging.yaml`` muss der Logger als
 **items.<Name>** konfiguriert sein. Wertänderungen des Items werden dann mit dem Level **INFO** geloggt.
 
 Ab **SmartHomeNG v1.9** kann das Item Logging über die Attribute **log_level** und **log_text** an die eigenen
@@ -33,7 +33,7 @@ ERROR, CRITICAL). Die Angabe kann durch den Namen oder den Integer Wert des Logl
 eval-Ausduck in log_level
 --------------------------
 
-Ab **SmarthomeNG v1.10.1** ist es möglich, das Loglevel variabel mittels Eval-Ausdruck festzulegen. Es wird dadurch
+Das Loglevel kann variabel mittels Eval-Ausdruck festgelegt werden. Es wird dadurch
 vor dem Schreiben eines jeden Logging-Eintrags neu evaluiert.
 
 **Beispiel:** ``log_level: '{10 if value == 5 else "WARNING" if value == 1 else "INFO"}'``
@@ -184,7 +184,7 @@ highlimit weitere Werte zulassen würden bzw. exclude einen der Werte ausschlie�
 
 .. hint::
 
-    Sämtliche Werte in den log_rules können ab SmartHomeNG 1.10 auch in Items hinterlegt werden.
+    Sämtliche Werte in den log_rules können auch in Items hinterlegt werden.
     Der Verweis auf das jeweilige Item erfolgt dabei durch den absoluten oder relativen Itempfad als String (ohne sh.).
 
 lowlimit

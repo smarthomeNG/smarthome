@@ -20,11 +20,11 @@ Konfiguration
 =============
 
 --------------------------
-Datei *../etc/module.yaml*
+Datei *etc/module.yaml*
 --------------------------
 
 .. code-block:: yaml
-   :caption: ../etc/module.yaml
+   :caption: etc/module.yaml
 
    # etc/module.yaml
    admin:

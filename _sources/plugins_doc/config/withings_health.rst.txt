@@ -12,7 +12,7 @@ Plugin 'withings_health' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -130,6 +130,35 @@ nh_type kann folgende Werte annehmen: Zwingend für OAuth2: access_token, token_
    - **token_expiry**
    - **token_type**
    - **refresh_token**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+body
+====
+
+Body data from withings health scale
+
+.. treeview::
+     - :dir:`folder` **body** (`foo`, Body data from withings health scale)
+         - :dir:`file` **weight** (`num`, Body weight)
+         - :dir:`file` **height** (`num`, Body height)
+         - :dir:`file` **bmi** (`num`, Bondy measurement index (BMI) calculated by the plugin from weight and height (might only work after height is retrieved first time))
+         - :dir:`file` **bmi_text** (`str`, Bondy measurement index (BMI) in a textual representation (German/English))
+         - :dir:`file` **fat_ratio** (`num`, Fat ratio of the measured body)
+         - :dir:`file` **fat_free_mass** (`num`, Fat free mass of the measured body)
+         - :dir:`file` **fat_mass_weight** (`num`, Fat weight of the measured body)
+         - :dir:`file` **heart_rate** (`num`, Heart rate during measurement)
+         - :dir:`file` **access_token** (`str`, Stores the access token after oauth authentification)
+         - :dir:`file` **token_expiry** (`num`, Stores the token expiration time after oauth authentification)
+         - :dir:`file` **token_type** (`str`, Stores the token type after oauth authentification)
+         - :dir:`file` **refresh_token** (`str`, Stores the refresh token for the next refresh)
 
 
 ===============

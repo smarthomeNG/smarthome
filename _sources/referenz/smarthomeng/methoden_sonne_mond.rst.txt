@@ -8,7 +8,7 @@ sh.sun
 
 Dieses Objekt bietet Zugriff auf Parameter der Sonne. Um dieses Objekt zu verwenden, ist es erforderlich,
 den Breitengrad (latitude, z.B. lat: 53.5989481) und den Längengrad (longitude z.B. lon: 10.0459898),
-sowie die Höhe über dem Meeresspiegel (elevation z.B.: elev: 20) in der Datei **../etc/smarthome.yaml** anzugeben.
+sowie die Höhe über dem Meeresspiegel (elevation z.B.: elev: 20) in der Datei ``etc/smarthome.yaml`` anzugeben.
 
 
 sh.sun.pos()

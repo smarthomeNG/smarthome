@@ -12,7 +12,7 @@ Plugin 'luxtronic2' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -104,22 +104,22 @@ Gibt einen Parameterwert an, der automatisch dekodiert werden (z.B. Umwandlung B
    - **10**
    - **11**
    - **12**
-   - **14** |_| - |_| Temperatur Heißgas
+   - **14**
    - **15**
-   - **16** |_| - |_| Temperatur Mittelwert
-   - **18** |_| - |_| Temperatur Warmwasser SOLL
+   - **16**
+   - **18**
    - **19**
    - **20**
-   - **56** |_| - |_| Betriebsstunden Verdichter
-   - **57** |_| - |_| Impulse Verdichter
-   - **60** |_| - |_| Betriebsstunden Zusatzheizung
-   - **63** |_| - |_| Betriebsstunden Wärmepumpe Gesamt
-   - **64** |_| - |_| Betriebsstunden Wärmepumpe Heizung
-   - **65** |_| - |_| Betriebsstunden Wärmepumpe Warmwasser
-   - **119** |_| - |_| Betriebs-Modus
+   - **56**
+   - **57**
+   - **60**
+   - **63**
+   - **64**
+   - **65**
+   - **119**
    - **151**
    - **152**
-   - **159** |_| - |_| Temperatur Zuluft
+   - **159**
 
 
 lux2_a
@@ -148,6 +148,15 @@ Gibt einen Attributwert für einen Parameter an (Zugriff lesend und schreibend)
 
  - Datentyp: **int**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

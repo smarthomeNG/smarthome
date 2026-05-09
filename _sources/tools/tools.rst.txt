@@ -7,7 +7,7 @@
 Tools
 =====
 
-Im Verzeichnis **../tools** sind einige Python Skripte abgelegt, die im Umgang mit SmartHomeNG
+Im Verzeichnis ``tools`` sind einige Python Skripte abgelegt, die im Umgang mit SmartHomeNG
 hilfreich sind.
 
 

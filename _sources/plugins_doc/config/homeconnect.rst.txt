@@ -12,7 +12,7 @@ Plugin 'homeconnect' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **web Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -124,6 +124,15 @@ HomeConnect Datentyp des jeweiligen Items.
    - **status**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -160,7 +169,7 @@ Gibt die selektierten Programme einer Appliance zurück.
 
 
 ha_id
------
+ -  -  -  -  - 
 
 ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
@@ -168,7 +177,7 @@ ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
 
 program_key
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 program_key des Programms, dessen Optionen zurückgegeben werden sollen (im Web-Interface des Plugins zu sehen)
 
@@ -185,7 +194,7 @@ Gibt die aktiven Programme einer Appliance zurück.
 
 
 ha_id
------
+ -  -  -  -  - 
 
 ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
@@ -202,7 +211,7 @@ Gibt die verfügbaren Programme einer Appliance zurück.
 
 
 ha_id
------
+ -  -  -  -  - 
 
 ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
@@ -219,7 +228,7 @@ Gibt die selektierten Programme einer Appliance zurück.
 
 
 ha_id
------
+ -  -  -  -  - 
 
 ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
@@ -245,7 +254,7 @@ Startet das Programm einer Appliance.
 
 
 ha_id
------
+ -  -  -  -  - 
 
 ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
@@ -253,7 +262,7 @@ ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
 
 program_key
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 program_key des Programms, das ausgeführt werden soll (im Web-Interface des Plugins zu sehen)
 
@@ -261,7 +270,7 @@ program_key des Programms, das ausgeführt werden soll (im Web-Interface des Plu
 
 
 options
--------
+ -  -  -  -  -  -  - 
 
 Optionen des Programms, das ausgeführt werden soll (im Web-Interface des Plugins zu sehen)
 
@@ -278,7 +287,7 @@ Stoppt das Programm einer Appliance.
 
 
 ha_id
------
+ -  -  -  -  - 
 
 ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
@@ -286,7 +295,7 @@ ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
 
 program_key
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 program_key des Programms, das gestoppt werden soll (im Web-Interface des Plugins zu sehen)
 
@@ -294,7 +303,7 @@ program_key des Programms, das gestoppt werden soll (im Web-Interface des Plugin
 
 
 options
--------
+ -  -  -  -  -  -  - 
 
 Optionen des Programms, das gestoppt werden soll (im Web-Interface des Plugins zu sehen)
 

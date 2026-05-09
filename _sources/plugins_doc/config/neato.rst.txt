@@ -12,7 +12,7 @@ Plugin 'neato' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -83,8 +83,8 @@ Hersteller des Roboters
 
  - Mögliche Werte:
 
-   - **neato** |_| - |_| Neato Roboter
-   - **vorwerk** |_| - |_| Vorwerk Roboter
+   - **neato**
+   - **vorwerk**
 
 
 token
@@ -128,6 +128,94 @@ Neato Attributes: Name Befehl Zustand Alarm Text Zustand Aktion ist angedockt Re
    - **command_startAvailable**
    - **clean_room**
    - **online_status**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+Alert
+=====
+
+
+.. treeview::
+     - :dir:`file` **Alert** (`str`, ---)
+
+
+ChargePercentage
+================
+
+
+.. treeview::
+     - :dir:`file` **ChargePercentage** (`num`, ---)
+
+
+Command
+=======
+
+
+.. treeview::
+     - :dir:`file` **Command** (`num`, ---)
+
+
+GoToBaseAvailable
+=================
+
+
+.. treeview::
+     - :dir:`file` **GoToBaseAvailable** (`bool`, ---)
+
+
+IsCharging
+==========
+
+
+.. treeview::
+     - :dir:`file` **IsCharging** (`bool`, ---)
+
+
+IsDocked
+========
+
+
+.. treeview::
+     - :dir:`file` **IsDocked** (`bool`, ---)
+
+
+IsScheduleEnabled
+=================
+
+
+.. treeview::
+     - :dir:`file` **IsScheduleEnabled** (`bool`, ---)
+
+
+Neato
+=====
+
+
+.. treeview::
+     - :dir:`file` **Neato** (`str`, ---)
+
+
+State
+=====
+
+
+.. treeview::
+     - :dir:`file` **State** (`str`, ---)
+
+
+StateAction
+===========
+
+
+.. treeview::
+     - :dir:`file` **StateAction** (`str`, ---)
 
 
 ===============
@@ -184,7 +272,7 @@ Gibt im logfile die verfuebaren Raeume aus
 
 
 map_id
-------
+ -  -  -  -  -  - 
 
 Karten ID
 
@@ -201,7 +289,7 @@ Aktiviert Reinigung
 
 
 boundary_id
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Zimmer ID (ASCII hex Darstellung)
 
@@ -209,7 +297,7 @@ Zimmer ID (ASCII hex Darstellung)
 
 
 map_id
-------
+ -  -  -  -  -  - 
 
 Karten ID
 

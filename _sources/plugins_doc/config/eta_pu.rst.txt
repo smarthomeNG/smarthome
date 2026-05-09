@@ -12,7 +12,7 @@ Plugin 'eta_pu' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -141,6 +141,15 @@ Enthält die CAN-Bus-Id. Die Pellet Einheit zeigt alle Ids mit Beschreibung unte
 
  - Datentyp: **str**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

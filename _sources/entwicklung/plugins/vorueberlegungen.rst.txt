@@ -74,9 +74,8 @@ Beispiele für Web/Cloud Plugins sind: **alexa4p3**, **ical**, **jsonread** oder
 Plugin Vorlagen
 ===============
 
-Um ein neues Plugin zu erstellen, ist es am besten die Vorlage zu verwenden, die unter /dev/sample_plugin zu finden ist.
-Falls das Plugin über MQTT kommunizieren soll, ist es besser, die Vorlage zu verwenden, die unter /dev/sample_mqttplugin
-zu finden ist.
+Um ein neues Plugin zu erstellen, ist es am besten die Vorlage zu verwenden, die unter ``dev/sample_plugin`` zu finden ist.
+Falls das Plugin über MQTT kommunizieren soll, ist es besser, die Vorlage zu verwenden, die unter ``dev/sample_mqttplugin`` zu finden ist.
 
 Falls über MQTT kommuniziert werden soll, wäre es für einfache Aufgabenstellungen auch zu überlegen, kein eigenes Plugin
 zu schreiben, sondern das generische mqtt Plugin zu nutzen.

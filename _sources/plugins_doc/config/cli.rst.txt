@@ -12,7 +12,7 @@ Plugin 'cli' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -104,6 +104,15 @@ Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichn
 
 **Keine**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -131,7 +140,7 @@ sh.cli.commands.add_command(command, function, group, usage)
 
 
 command
--------
+ -  -  -  -  -  -  - 
 
 Name des Kommandos
 
@@ -139,7 +148,7 @@ Name des Kommandos
 
 
 function
---------
+ -  -  -  -  -  -  -  - 
 
 Funktion die aufgerufen werden soll, wenn das Kommando eingegeben wird
 
@@ -147,7 +156,7 @@ Funktion die aufgerufen werden soll, wenn das Kommando eingegeben wird
 
 
 group
------
+ -  -  -  -  - 
 
 Kommando Gruppe (item, log, logic, scheduler)
 
@@ -162,7 +171,7 @@ Kommando Gruppe (item, log, logic, scheduler)
 
 
 usage
------
+ -  -  -  -  - 
 
 Beschreibung der Kommando-Nutzung
 
@@ -179,7 +188,7 @@ sh.cli.commands.remove_command(command)
 
 
 command
--------
+ -  -  -  -  -  -  - 
 
 Name des Kommandos
 

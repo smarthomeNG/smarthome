@@ -12,7 +12,7 @@ Plugin 'sma_em' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -88,6 +88,153 @@ sma_em_data_type
 Datentyp. Folgende Werte sind möglich: pregard, pregardcounter, psurplus, psurpluscounter, sregard, sregardcounter, ssurplus, ssurpluscounter, qregard, qregardcounter, qsurplus, qsurpluscounter, cosphi, p1regard, p1regardcounter, p1surplus, p1surpluscounter, s1regard, s1regardcounter, s1surplus, s1surpluscounter, q1regard, q1regardcounter, q1surplus, q1surpluscounter, v1, thd1, cosphi1, p2regard, p2regardcounter, p2surplus, p2surpluscounter, s2regard, s2regardcounter, s2surplus, s2surpluscounter, q2regard, q2regardcounter, q2surplus, q2surpluscounter, v2, thd2, cosphi2, p3regard, p3regardcounter, p3surplus, p3surpluscounter, s3regard, s3regardcounter, s3surplus, s3surpluscounter, q3regard, q3regardcounter, q3surplus, q3surpluscounter, v3, thd3, cosphi3.
 
  - Datentyp: **str**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+detailed
+========
+
+More Detailed Data from SMA Energy Meter
+
+.. treeview::
+     - :dir:`folder` **detailed** (`foo`, More Detailed Data from SMA Energy Meter)
+         - :dir:`file` **ssupply** (`num`, ---)
+         - :dir:`file` **ssupply_unit** (`str`, ---)
+         - :dir:`file` **ssupply_counter** (`num`, ---)
+         - :dir:`file` **ssupply_counter_unit** (`str`, ---)
+         - :dir:`file` **sconsume** (`num`, ---)
+         - :dir:`file` **sconsume_unit** (`str`, ---)
+         - :dir:`file` **sconsume_counter** (`num`, ---)
+         - :dir:`file` **sconsume_counter_unit** (`str`, ---)
+         - :dir:`file` **qsupply** (`num`, ---)
+         - :dir:`file` **qsupply_unit** (`str`, ---)
+         - :dir:`file` **qsupply_counter** (`num`, ---)
+         - :dir:`file` **qsupply_counter_unit** (`str`, ---)
+         - :dir:`file` **qconsume** (`num`, ---)
+         - :dir:`file` **qconsume_unit** (`str`, ---)
+         - :dir:`file` **qconsume_counter** (`num`, ---)
+         - :dir:`file` **qconsume_counter_unit** (`str`, ---)
+         - :dir:`file` **p1supply** (`num`, ---)
+         - :dir:`file` **p1supply_unit** (`str`, ---)
+         - :dir:`file` **p1supply_counter** (`num`, ---)
+         - :dir:`file` **p1supply_counter_unit** (`str`, ---)
+         - :dir:`file` **p1consume** (`num`, ---)
+         - :dir:`file` **p1consume_unit** (`str`, ---)
+         - :dir:`file` **p1consume_counter** (`num`, ---)
+         - :dir:`file` **p1consume_counter_unit** (`str`, ---)
+         - :dir:`file` **s1supply** (`num`, ---)
+         - :dir:`file` **s1supply_unit** (`str`, ---)
+         - :dir:`file` **s1supply_counter** (`num`, ---)
+         - :dir:`file` **s1supply_counter_unit** (`str`, ---)
+         - :dir:`file` **s1consume** (`num`, ---)
+         - :dir:`file` **s1consume_unit** (`str`, ---)
+         - :dir:`file` **s1consume_counter** (`num`, ---)
+         - :dir:`file` **s1consume_counter_unit** (`str`, ---)
+         - :dir:`file` **q1supply** (`num`, ---)
+         - :dir:`file` **q1supply_unit** (`str`, ---)
+         - :dir:`file` **q1supply_counter** (`num`, ---)
+         - :dir:`file` **q1supply_counter_unit** (`str`, ---)
+         - :dir:`file` **q1consume** (`num`, ---)
+         - :dir:`file` **q1consume_unit** (`str`, ---)
+         - :dir:`file` **q1consume_counter** (`num`, ---)
+         - :dir:`file` **q1consume_counter_unit** (`str`, ---)
+         - :dir:`file` **i1** (`num`, ---)
+         - :dir:`file` **i1_unit** (`str`, ---)
+         - :dir:`file` **u1** (`num`, ---)
+         - :dir:`file` **u1_unit** (`str`, ---)
+         - :dir:`file` **cosphi1** (`num`, ---)
+         - :dir:`file` **cosphi1_unit** (`str`, ---)
+         - :dir:`file` **p2supply** (`num`, ---)
+         - :dir:`file` **p2supply_unit** (`str`, ---)
+         - :dir:`file` **p2supply_counter** (`num`, ---)
+         - :dir:`file` **p2supply_counter_unit** (`str`, ---)
+         - :dir:`file` **p2consume** (`num`, ---)
+         - :dir:`file` **p2consume_unit** (`str`, ---)
+         - :dir:`file` **p2consume_counter** (`num`, ---)
+         - :dir:`file` **p2consume_counter_unit** (`str`, ---)
+         - :dir:`file` **s2supply** (`num`, ---)
+         - :dir:`file` **s2supply_unit** (`str`, ---)
+         - :dir:`file` **s2supply_counter** (`num`, ---)
+         - :dir:`file` **s2supply_counter_unit** (`str`, ---)
+         - :dir:`file` **s2consume** (`num`, ---)
+         - :dir:`file` **s2consume_unit** (`str`, ---)
+         - :dir:`file` **s2consume_counter** (`num`, ---)
+         - :dir:`file` **s2consume_counter_unit** (`str`, ---)
+         - :dir:`file` **q2supply** (`num`, ---)
+         - :dir:`file` **q2supply_unit** (`str`, ---)
+         - :dir:`file` **q2supply_counter** (`num`, ---)
+         - :dir:`file` **q2supply_counter_unit** (`str`, ---)
+         - :dir:`file` **q2consume** (`num`, ---)
+         - :dir:`file` **q2consume_unit** (`str`, ---)
+         - :dir:`file` **q2consume_counter** (`num`, ---)
+         - :dir:`file` **q2consume_counter_unit** (`str`, ---)
+         - :dir:`file` **i2** (`num`, ---)
+         - :dir:`file` **i2_unit** (`str`, ---)
+         - :dir:`file` **u2** (`num`, ---)
+         - :dir:`file` **u2_unit** (`str`, ---)
+         - :dir:`file` **cosphi2** (`num`, ---)
+         - :dir:`file` **cosphi2_unit** (`str`, ---)
+         - :dir:`file` **p3supply** (`num`, ---)
+         - :dir:`file` **p3supply_unit** (`str`, ---)
+         - :dir:`file` **p3supply_counter** (`num`, ---)
+         - :dir:`file` **p3supply_counter_unit** (`str`, ---)
+         - :dir:`file` **p3consume** (`num`, ---)
+         - :dir:`file` **p3consume_unit** (`str`, ---)
+         - :dir:`file` **p3consume_counter** (`num`, ---)
+         - :dir:`file` **p3consume_counter_unit** (`str`, ---)
+         - :dir:`file` **s3supply** (`num`, ---)
+         - :dir:`file` **s3supply_unit** (`str`, ---)
+         - :dir:`file` **s3supply_counter** (`num`, ---)
+         - :dir:`file` **s3supply_counter_unit** (`str`, ---)
+         - :dir:`file` **s3consume** (`num`, ---)
+         - :dir:`file` **s3consume_unit** (`str`, ---)
+         - :dir:`file` **s3consume_counter** (`num`, ---)
+         - :dir:`file` **s3consume_counter_unit** (`str`, ---)
+         - :dir:`file` **q3supply** (`num`, ---)
+         - :dir:`file` **q3supply_unit** (`str`, ---)
+         - :dir:`file` **q3supply_counter** (`num`, ---)
+         - :dir:`file` **q3supply_counter_unit** (`str`, ---)
+         - :dir:`file` **q3consume** (`num`, ---)
+         - :dir:`file` **q3consume_unit** (`str`, ---)
+         - :dir:`file` **q3consume_counter** (`num`, ---)
+         - :dir:`file` **q3consume_counter_unit** (`str`, ---)
+         - :dir:`file` **i3** (`num`, ---)
+         - :dir:`file` **i3_unit** (`str`, ---)
+         - :dir:`file` **u3** (`num`, ---)
+         - :dir:`file` **u3_unit** (`str`, ---)
+         - :dir:`file` **cosphi3** (`num`, ---)
+         - :dir:`file` **cosphi3_unit** (`str`, ---)
+
+
+main
+====
+
+Main Data from SMA Energy Meter
+
+.. treeview::
+     - :dir:`folder` **main** (`foo`, Main Data from SMA Energy Meter)
+         - :dir:`file` **speedwire_version** (`str`, Speedwire Version)
+         - :dir:`folder` **supply** (`num`, Solar Energy Supply)
+             - :dir:`file` **kw** (`num`, ---)
+         - :dir:`file` **supply_unit** (`str`, Solar Energy Supply Unit)
+         - :dir:`folder` **consume** (`num`, Solar Energy Consume)
+             - :dir:`file` **kw** (`num`, ---)
+         - :dir:`file` **consume_unit** (`str`, Solar Energy Consume Unit)
+         - :dir:`file` **supply_counter** (`num`, Solar Energy Supply Counter)
+         - :dir:`file` **supply_counter_unit** (`str`, Solar Energy Supply Counter Unit)
+         - :dir:`file` **consume_counter** (`num`, Solar Energy Consume Counter)
+         - :dir:`file` **consume_counter_unit** (`str`, Solar Energy Consume Counter Unit)
+         - :dir:`file` **cosphi** (`num`, ---)
+         - :dir:`file` **cosphi_unit** (`str`, ---)
+         - :dir:`file` **consume_active** (`bool`, ---)
+         - :dir:`file` **supply_active** (`bool`, ---)
 
 
 ===============

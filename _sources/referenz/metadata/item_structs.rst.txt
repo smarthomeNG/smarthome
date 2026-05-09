@@ -37,7 +37,7 @@ Definitionen von ``item_structs:`` haben das folgende Format:
 
 
 Zur Konfiguration von SmartHomeNG werden diese structs durch die Angabe einer Referenz in den Item Tree eingefügt.
-Das erfolgt in den Konfigurationsdateien für Items im Verzeichnis ``../items``:
+Das erfolgt in den Konfigurationsdateien für Items im Verzeichnis ``etc/items``:
 
 .. code:: yaml
 
@@ -120,7 +120,7 @@ realen Instanz Namen ersetzt.
                     initial_value: True
 
 
-In der Item Konfiguration in den Dateien im Verzeichnis ``../items`` wird der Instanz Name der Struktur mitgegeben.
+In der Item Konfiguration in den Dateien im Verzeichnis ``etc/items`` wird der Instanz Name der Struktur mitgegeben.
 Das sieht z.B. folgendermaßen aus:
 
 .. code:: yaml

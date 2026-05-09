@@ -12,7 +12,7 @@ Plugin 'rpi_info' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -108,7 +108,61 @@ Attribut für globale Plugin Items zum Triggern eines Update
 
  - Mögliche Werte:
 
-   - **update** |_| - |_| Startet bei Triggerung ein Update der Daten
+   - **update**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+rpi_info
+========
+
+Struct für Information über den RPi
+
+.. treeview::
+     - :dir:`folder` **rpi_info** (`foo`, Struct für Information über den RPi)
+         - :dir:`file` **update_rpi_info** (`bool`, ---)
+         - :dir:`file` **temperature** (`num`, ---)
+         - :dir:`folder` **uptime** (`num`, ---)
+             - :dir:`file` **text** (`str`, ---)
+         - :dir:`file` **uptime_str** (`str`, ---)
+         - :dir:`file` **frequency** (`num`, ---)
+         - :dir:`file` **under_voltage** (`bool`, ---)
+         - :dir:`file` **frequency_capped** (`bool`, ---)
+         - :dir:`file` **throttled** (`bool`, ---)
+         - :dir:`file` **temperature_limit** (`bool`, ---)
+         - :dir:`file` **under_voltage_last_reboot** (`bool`, ---)
+         - :dir:`file` **frequency_capped_last_reboot** (`bool`, ---)
+         - :dir:`file` **throttled_last_reboot** (`bool`, ---)
+         - :dir:`file` **temperature_limit_last_reboot** (`bool`, ---)
+
+
+rpi_info_db
+===========
+
+Struct für Information über den RPi mit database
+
+.. treeview::
+     - :dir:`folder` **rpi_info_db** (`foo`, Struct für Information über den RPi mit database)
+         - :dir:`file` **update_rpi_info** (`bool`, ---)
+         - :dir:`file` **temperature** (`num`, ---)
+         - :dir:`folder` **uptime** (`num`, ---)
+             - :dir:`file` **text** (`str`, ---)
+         - :dir:`file` **uptime_str** (`str`, ---)
+         - :dir:`file` **frequency** (`num`, ---)
+         - :dir:`file` **under_voltage** (`bool`, ---)
+         - :dir:`file` **frequency_capped** (`bool`, ---)
+         - :dir:`file` **throttled** (`bool`, ---)
+         - :dir:`file` **temperature_limit** (`bool`, ---)
+         - :dir:`file` **under_voltage_last_reboot** (`bool`, ---)
+         - :dir:`file` **frequency_capped_last_reboot** (`bool`, ---)
+         - :dir:`file` **throttled_last_reboot** (`bool`, ---)
+         - :dir:`file` **temperature_limit_last_reboot** (`bool`, ---)
 
 
 ===============

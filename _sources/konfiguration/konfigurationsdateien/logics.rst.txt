@@ -9,24 +9,24 @@ logics/\*.py
 ---------
 
 Logiken werden in SmartHomeNG durch einfache Python Skripte bereitgestellt. Damit SmartHomeNG
-die Skripte findet, müssen sie unter **../logics** abgelegt sein. Zusätzlich
-müssen diese Logiken in der Datei **logic.yaml** im Verzeichnis  **../etc**
+die Skripte findet, müssen sie unter ``etc/logics`` abgelegt sein. Zusätzlich
+müssen diese Logiken in der Datei ``logic.yaml`` im Verzeichnis  ``etc``
 konfiguriert werden.
 
 
----------------------------------------
-Logik Code im Verzeichnis **../logics**
----------------------------------------
+----------------------------------------
+Logik Code im Verzeichnis ``etc/logics``
+----------------------------------------
 
 Dieses Verzeichnis enthält die Logiken, welche von SmartHomeNG verwendet werden. Diese Logiken
 schreibst Du bei Bedarf selbst.
 
 Eine Logik ist grundsätzlich ein Python Skript. Es gibt jedoch einige zusätzliche Konventionen.
-Wann und wie die Logik ausgeführt wird, wird in **../etc/logics.yaml** konfiguriert.
+Wann und wie die Logik ausgeführt wird, wird in ``etc/logics.yaml`` konfiguriert.
 
 Falls das Blockly Plugin zum schreiben einer Logik genutzt wird, hat eine Logik zwei Dateien.
-Eine Datei enthält den Blockly Code (Dateiendung **.blockly**) und die andere Datei enthält den
-generierten Python Code (Dateiendung **.py**).
+Eine Datei enthält den Blockly Code (Dateiendung ``.blockly``) und die andere Datei enthält den
+generierten Python Code (Dateiendung ``.py``).
 
 .. note::
 

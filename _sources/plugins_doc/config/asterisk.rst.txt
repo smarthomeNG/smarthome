@@ -12,7 +12,7 @@ Plugin 'asterisk' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -128,6 +128,15 @@ Asterisk Gerät wie in der ``sip.conf`` eingetragen
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -155,7 +164,7 @@ Einen Anruf starten mit einem Kontext und einer optionalen Caller ID
 
 
 source
-------
+ -  -  -  -  -  - 
 
 Quelle des Anrufes, z.B. 'SIP/200'
 
@@ -163,7 +172,7 @@ Quelle des Anrufes, z.B. 'SIP/200'
 
 
 dest
-----
+ -  -  -  - 
 
 Ziel des Anrufes, z.B. '240'
 
@@ -171,7 +180,7 @@ Ziel des Anrufes, z.B. '240'
 
 
 context
--------
+ -  -  -  -  -  -  - 
 
 Kontext des Anrufes, z.B. 'Tür'
 
@@ -179,7 +188,7 @@ Kontext des Anrufes, z.B. 'Tür'
 
 
 callerid
---------
+ -  -  -  -  -  -  -  - 
 
 Optionale Caller ID des Anrufes
 
@@ -196,7 +205,7 @@ Einen Werte aus der Asterisk Datenbank lesen
 
 
 key
----
+ -  -  - 
 
 Schlüssel in der Asterisk Datenbank
 
@@ -213,7 +222,7 @@ Ein Schlüssel/Wertepaar in die Asterisk Datenbank schreiben
 
 
 key
----
+ -  -  - 
 
 Schlüssel in der Asterisk Datenbank
 
@@ -221,7 +230,7 @@ Schlüssel in der Asterisk Datenbank
 
 
 value
------
+ -  -  -  -  - 
 
 Wert in der Asterisk Datenbank
 
@@ -238,7 +247,7 @@ Verbindungen für ein Gerät beenden
 
 
 device
-------
+ -  -  -  -  -  - 
 
 Gerätekennung
 
@@ -255,7 +264,7 @@ Fragt die Anzahl der Nachrichten einer Mailbox ab, Rückgabewert is ein Tupel (a
 
 
 mailbox
--------
+ -  -  -  -  -  -  - 
 
 Mailbox die abgefragt werden soll
 
@@ -263,7 +272,7 @@ Mailbox die abgefragt werden soll
 
 
 context
--------
+ -  -  -  -  -  -  - 
 
 Kontext der Mailbox Abfrage
 

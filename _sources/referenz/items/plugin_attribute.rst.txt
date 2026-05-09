@@ -49,7 +49,7 @@ oder die **hue_lamp_id**) nur an einer Stelle konfigurieren zu müssen.
 Das hue Plugin hat eine Vererbung der hue_lamp_id von übergeordneten Items im Plugin implementiert,
 indem das Plugin immer prüft, ob das Attribut in übergeordneten Items definiert wurde.
 
-Ab der Version 1.5 von SmartHomeNG gibt es einen Standardmechanismus der es möglich macht, selektiv
+Ein Standardmechanismus macht es möglich, selektiv
 den Wert aus einem übergeordneten Item zu erben. Dieser Mechanismus funktioniert **nur** bei
 plugin-spezifischen Attributen. Hierbei kann ein Attribut mit dem Wert eines Attributes eines
 übergeordneten Items belegt werden.
@@ -105,8 +105,8 @@ Start von SmartHomeNG kopiert wird. Im Backend wird in den Item Details des Chil
 .. index:: Zugriff auf Attribute anderer Items
 .. index:: Items; Zugriff auf Attribute anderer Items
 
-Zugriff auf Attribute anderer Items :bluesup:`update`
------------------------------------------------------
+Zugriff auf Attribute anderer Items
+-----------------------------------
 
 Der Zugriff auf Attribute anderer Items ist als Erweiterung der Vererbung von Attributen implementiert.
 Hierzu muss im aktuellen Item ein Attribut definiert werden, welches den Wert aufnimmt. Es ist hierbei
@@ -127,10 +127,10 @@ ein :code:`.` (für das aktuelle Item) angegeben (:code:`.:<Attribut>`).
 
 .. _Platzhalter_in_Attributwerten:
 
-Platzhalter in Attributwerten :redsup:`neu`
--------------------------------------------
+Platzhalter in Attributwerten
+-----------------------------
 
-Ab SmartHomeNG v1.10 ist es möglich in Attributwerten Platzhalter zu verwenden. Diese Platzhalter referenzieren
+In Attributwerten können Platzhalter verwendet werden. Diese Platzhalter referenzieren
 ein anderes Attribut und werden beim Start von SmartHomeNG durch den entsprechenden Wert ersetzt.
 
 Die Platzhalter sind Attribut-Referenzen, wie sie in den zwei vorangegangenen Abschnitten beschrieben wurden.
@@ -150,7 +150,7 @@ Platzhalter verwendet werden (:code:`name_: "Text {..:my_value}"`).
 Die Nutzung der Platzhalter wird am Beispiel der folgenden **structs** verdeutlicht:
 
 .. code-block:: yaml
-    :caption: ../etc/struct_knx.yaml
+    :caption: etc/structs/knx.yaml
 
     switch:
         _maingroup: 1
@@ -182,7 +182,7 @@ Die Nutzung der Platzhalter wird am Beispiel der folgenden **structs** verdeutli
 Wenn diese **structs** bei der Definition von Items folgendermaßen verwendet werden:
 
 .. code-block:: yaml
-    :caption: ../items/testitems.yaml
+    :caption: etc/items/testitems.yaml
 
     testitems:
 
@@ -230,7 +230,7 @@ Falls eine abweichende KNX Hauptgruppe verwendet wird, ist zusätzlich das Attri
 Hauptgruppe wird dann statt der in der struct definierten Hauptgruppe verwendet:
 
 .. code-block:: yaml
-    :caption: ../items/testitems.yaml
+    :caption: etc/items/testitems.yaml
 
     testitems:
 

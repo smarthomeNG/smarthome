@@ -12,7 +12,7 @@ Plugin 'kostal' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -126,33 +126,42 @@ Art der KOSTAL Daten, die im Item gespeichert werden
 
  - Mögliche Werte:
 
-   - **operation_status** |_| - |_| Status des Kostal Inverters (On, Off, Feed in, starting)
-   - **dcpower** |_| - |_| Summe DC Leistung (alle DC Eingänge); Einheit: Watt
-   - **dc1_v** |_| - |_| DC-Spannung Eingang 1; Einheit: Volt
-   - **dc2_v** |_| - |_| DC-Spannung Eingang 2; Einheit: Volt
-   - **dc3_v** |_| - |_| DC-Spannung Eingang 3; Einheit: Volt
-   - **dc1_a** |_| - |_| DC-Strom Eingang 1; Einheit: Ampere
-   - **dc2_a** |_| - |_| DC-Strom Eingang 2; Einheit: Ampere
-   - **dc3_a** |_| - |_| DC-Strom Eingang 3; Einheit: Ampere
-   - **dc1_w** |_| - |_| DC-Leistung Eingang 1; Einheit: Watt
-   - **dc2_w** |_| - |_| DC-Leistung Eingang 2; Einheit: Watt
-   - **dc3_w** |_| - |_| DC-Leistung Eingang 3; Einheit: Watt
-   - **actot_w** |_| - |_| Summe AC Leistung (alle AC Phasen); Einheit: Watt
-   - **actot_cos** |_| - |_| Summe AC Cos φ
-   - **actot_limitation** |_| - |_| Summe AC Limitierung; Einheit %
-   - **ac1_v** |_| - |_| AC Phase 1 Spannung; Einheit: Volt
-   - **ac2_v** |_| - |_| AC Phase 2 Spannung; Einheit: Volt
-   - **ac3_v** |_| - |_| AC Phase 3 Spannung; Einheit: Volt
-   - **ac1_a** |_| - |_| AC Phase 1 Strom; Einheit: Ampere
-   - **ac2_a** |_| - |_| AC Phase 2 Strom; Einheit: Ampere
-   - **ac3_a** |_| - |_| AC Phase 3 Strom; Einheit: Ampere
-   - **ac1_w** |_| - |_| AC Phase 1 Leistung; Einheit: Watt
-   - **ac2_w** |_| - |_| AC Phase 2 Leistung; Einheit: Watt
-   - **ac3_w** |_| - |_| AC Phase 3 Leistung; Einheit: Watt
-   - **yield_day_kwh** |_| - |_| Ergebnis heute; Einheit kWh
-   - **yield_tot_kwh** |_| - |_| Ergebnis Gesamt; Einheit kWh
-   - **operationtime_h** |_| - |_| Inverter Betriebszeit; Einheit Stunden
+   - **operation_status**
+   - **dcpower**
+   - **dc1_v**
+   - **dc2_v**
+   - **dc3_v**
+   - **dc1_a**
+   - **dc2_a**
+   - **dc3_a**
+   - **dc1_w**
+   - **dc2_w**
+   - **dc3_w**
+   - **actot_w**
+   - **actot_cos**
+   - **actot_limitation**
+   - **ac1_v**
+   - **ac2_v**
+   - **ac3_v**
+   - **ac1_a**
+   - **ac2_a**
+   - **ac3_a**
+   - **ac1_w**
+   - **ac2_w**
+   - **ac3_w**
+   - **yield_day_kwh**
+   - **yield_tot_kwh**
+   - **operationtime_h**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

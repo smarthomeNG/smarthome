@@ -390,7 +390,7 @@ Nacharbeiten: Port 80 in NGINX deaktivieren
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Da NGINX im LAN aktuell noch auf Port 80 konfiguriert ist, sollte man in
-der /etc/nginx/sites-available/default noch ein ``return 403`` ergänzen:
+der ``/etc/nginx/sites-available/default`` noch ein ``return 403`` ergänzen:
 
 .. code-block:: nginx
 

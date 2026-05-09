@@ -140,6 +140,41 @@ zu ändern. Ist also z.B. der Zustand auf Grund der Temperatur eingenommen worde
 könnte der Name auf "Zustand (Temp)" geändert werden. Ist der Zustand aufgrund
 der Helligkeitsbedingung aktiv, könnte der Name auf "Zustand (Hell)" geändert werden.
 
+
+Ignorieren von Bedingungen
+--------------------------
+
+.. code-block:: yaml
+
+      default:
+          regen_test:
+              enter:
+                  se_value_temperatur: item:markisen.stateengine.settings.regen.min_temperatur_hysterese
+                  se_max_helligkeit: 200
+                  se_min_helligkeit: 2
+      markise1:
+          automatik:
+              rules:
+                  regen_test:
+                      se_use: default.regen_test
+
+      markise2:
+          automatik:
+              rules:
+                  regen_test:
+                      se_use: default.regen_test
+
+                      enter:
+                          se_ignore_helligkeit: True
+
+Die gesamte Bedingung (Minimum, Maximum und Wert) wird ignoriert.
+Für das Attribut wird der Datentyp Boolean verwendet,
+zulässige Werte sind "true", "yes", "on" bzw. "false", "no", "off".
+Der Einsatz von "ignore" macht beispielsweise Sinn, wenn mittels struct
+oder se_use Zustände oder Bedingungen für mehrere Items geladen werden sollen,
+einzelne Teile bei gewissen Items aber keine Rolle spielen.
+
+
 CLI
 ---
 

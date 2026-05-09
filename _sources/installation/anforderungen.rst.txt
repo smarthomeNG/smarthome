@@ -168,27 +168,13 @@ Ab SmartHomeNG v1.8.2 sollte eine Installation unter **Windows** möglich sein.
 Python Versionen
 ================
 
-Minimum Python Version
-----------------------
-
-Die absolute Minimum Python Version in der SmartHomeNG startet wurde bereits mit SmartHomeNG v1.10 auf **Python 3.8**
-angehoben.
-Da auch Python 3.8 im Oktober 2024 den Status **End-of-Life** (End of security fixes) erreicht, wird empfohlen
-bei einer Neuinstallation auf einer der neueren offizell in SmartHomeNG unterstützten Python Versionen
-(3.10, 3.11 oder 3.12) aufzusetzen.
-
-Die aktuelle Version von SmartHomeNG setzt Python der **Version 3.8** oder neuer voraus. Bei Einsatz einer älteren
-Python Version, startet SmartHomeNG nicht.
-
-
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.11.x ist **Python 3.10**. (Diese Version
-muss nicht mit der *Minimum Python Version* übereinstimmen.
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.12.x ist **Python 3.11**. SmartHomeNG kann
+auch unter älteren Python Versionen lauffähig sein, das wird durch uns jedoch nicht (mehr) supported.
 
-Die Grundregel nach der sich der Support für Python Versionen richten
-soll ist folgende:
+Die Grundregel nach der sich der Support für Python Versionen richten soll ist folgende:
 
 **Unterstützt werden die bei Enwicklungsstart einer SmartHomeNG
 Version aktuelle Python Version und die zwei Vorgängerversionen.**
@@ -202,13 +188,13 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
   "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9",    "Python 3.7"
   "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.8"
   "v1.11",           "Python 3.12", "Python 3.10, 3.11, 3.12", "Python 3.8"
-  "v1.12",           "Python 3.13", "Python 3.11, 3.12, 3.13", "tbd"
+  "v1.12",           "Python 3.13", "Python 3.11, 3.12, 3.13", "Python 3.9"
 
 Wenn die eingesetzte Python Version nicht in den unterstützen Python Versionen aufgelistet ist, bedeutet das nicht
 automatisch, dass SmartHomeNG mit älteren/neueren Python Versionen nicht funktioniert. Die Entwicklung wird nur
 nicht (mehr) mit anderen Versionen getestet.
 
-Die minimale Python Version mit der die jewilige SmartHomeNG Version startet, ist in der Tabelle oben angegeben.
+Die **minimale Python** Version mit der die jewilige SmartHomeNG Version startet, ist in der Tabelle oben angegeben.
 Ältere Python Versionen können nicht genutzt werden, da die SmartHomeNG Version Python Features nutzt, die in
 den älteren Versionen noch nicht implementiert waren.
 
@@ -247,6 +233,7 @@ Hier sind einige Beispiele für Linux-System und mitgeliefere Software Versionen
    "Debian 10 (Buster)",                     "06. Jul 2019", "Sep 2022 / Jun 2024", "Python 3.7",   "PHP 7.3"
    "Debian 11 (Bullseye)",                   "14. Aug 2021", "Aug 2026",            "Python 3.9",   "PHP 7.4"
    "Debian 12 (Bookworm)",                   "10. Jun 2023", "Jun 2028",            "Python 3.11",  "PHP 8.2"
+   "Debian 13 (Trixie)",                     "09. Aug 2025", "Jun 2030",            "Python 3.13",  "PHP 8.4"
 
    "Ubuntu 18.04 LTS (Bionic Beaver)",       "Apr 201",      "Apr 2023 / Apr 2028", "Python 3.6",   "PHP 8.3, 8.2, 8.1, 8.0, 7.4"
    "Ubuntu 20.04 LTS (Focal Fossa)",         "Apr 2020",     "Apr 2025 / Apr 2030", "Python 3.8",   "PHP 8.4, 8.3, 8.2, 8.1, 8.0, 7.4"
@@ -255,7 +242,7 @@ Hier sind einige Beispiele für Linux-System und mitgeliefere Software Versionen
    "Ubuntu 24.10 (Oracular Oriole)",         "Oct 2024",     "Jul 2025",            "Python 3.12",  "PHP 8.4, 8.3, 8.2, 8.1, 8.0, 7.4"
 
 
-Aus den Beispielen ist ersichtlich, das Debian Buster nicht mehr für Neuinstallationen verwendet werden sollte.
+Aus den Beispielen ist ersichtlich, das Debian Buster oder Bullseye nicht mehr für Neuinstallationen verwendet werden sollten.
 Bei Ubuntu sollte man die LTS (Long Term Support) Varianten bevorzugen um nicht andauern mit Systemänderungen konfrontiert zu werden
 
 PHP wird für SmartHomeNG selbst nicht benötigt, ist jedoch eine Voraussetzung für den Einsatz der

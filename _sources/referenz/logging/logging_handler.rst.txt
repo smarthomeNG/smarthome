@@ -11,7 +11,7 @@ Logging Handler
 ===============
 
 Zusätzlich zu den Logging Handlern, die im Standard Logging Modul von Python definiert, bringt SmartHomeNG
-weitere Handler mit, die bei der Konfiguration in ../etc/logging.yaml verwendet werden können.
+weitere Handler mit, die bei der Konfiguration in ``etc/logging.yaml`` verwendet werden können.
 
 |
 
@@ -38,7 +38,7 @@ in der GUI eines Betriebssystems geöffnet werden.
 Benutzung des Handlers
 ----------------------
 
-In der Datei ``../etc/logging.yaml`` wird der Handler als Ersatz für **TimedRotatingFileHandler** eingesetzt.
+In der Datei ``etc/logging.yaml`` wird der Handler als Ersatz für **TimedRotatingFileHandler** eingesetzt.
 Dort wo im Abschnitt ``handler:`` bisher der Handler **TimedRotatingFileHandler** konfiguriert ist:
 
 .. code-block:: yaml
@@ -163,7 +163,7 @@ und der Handler wird in den konfigurierten Loggern als (zusätzlicher) Logger ko
 Benutzung des Handlers
 ----------------------
 
-In der Datei ``../etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt ``handler:`` konfiguriert.
+In der Datei ``etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt ``handler:`` konfiguriert.
 
 .. code-block:: yaml
 

@@ -12,7 +12,7 @@ Plugin 'nuki' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -58,7 +58,7 @@ bridge_api_token
 ================
 
 
-Token für die Authentifizierung mit der API der NUKI Bridge.
+Token für die Authentifizierung mit der API der NUKI Bridge. Nur notwendig, wenn die Bridge verwendet wird.
 
  - Datentyp: **str**
 
@@ -67,7 +67,7 @@ bridge_ip
 =========
 
 
-IP-Adresse der NUKI Bridge.
+IP-Adresse der NUKI Bridge. Nur notwendig, wenn die Bridge verwendet wird.
 
  - Datentyp: **ip**
 
@@ -76,9 +76,25 @@ bridge_port
 ===========
 
 
-Portnummer der NUKI Bridge.
+Portnummer der NUKI Bridge. Nur notwendig, wenn die Bridge verwendet wird.
 
  - Datentyp: **int**
+
+
+mode
+====
+
+
+(optional) Mode in dem das Plugin laufen soll: 1 - MQTT, 2 - Nuki Bridge, 3 - MQTT und Nuki Bridge
+
+ - Datentyp: **num**
+ - Standardwert: **2**
+
+ - Mögliche Werte:
+
+   - **1**
+   - **2**
+   - **3**
 
 
 no_wait
@@ -122,7 +138,7 @@ nuki_trigger
 ============
 
 
-Es gibt vier Typen von NUKI Triggern, `action`, `state`, `doorstate` (nur Nuki 2.0!) und `battery`. Ein Item kann nur einen Trigger gleichzeitig haben..
+Es gibt vier Typen von NUKI Triggern, welche über die Nuki Bridge API bezogen werden können: `action`, `state`, `doorstate` (nur Nuki 2.0!) und `battery`. Via MQTT gibt es alternative Typen von NUKI Triggern:  `mqtt_state`, `mqtt_mode` (der alte doorstate), `mqtt_battery_critical`, `mqtt_mqtt_battery_charge_state` und `mqtt_action` Ein Item kann nur einen Trigger gleichzeitig haben.
 
  - Datentyp: **str**
 
@@ -132,7 +148,21 @@ Es gibt vier Typen von NUKI Triggern, `action`, `state`, `doorstate` (nur Nuki 2
    - **doorstate**
    - **battery**
    - **action**
+   - **mqtt_state**
+   - **mqtt_battery_critical**
+   - **mqtt_battery_charge_state**
+   - **mqtt_mode**
+   - **mqtt_action**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

@@ -12,7 +12,7 @@ Plugin 'russound' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -97,10 +97,19 @@ rus_path
 ========
 
 
-Pfad mit Controller, Zone und System Parameter, getrennt durch "." Parameter ist * status = Zone An oder Aus: Item muss vom Typ "bool" sein * volume = Lautstärke der Zone: Item muss vom Typ "num" sein. Gültige Werte im Bereich [0..50] * bass = Bass der Zone: Item muss vom Typ "num" sein. Gültige Werte im Bereich [-10..10] * treble = Höhen der Zone: Item muss vom Typ "num" sein. Gültige Werte im Bereich [-10..10] * balance = Balance der Zone: Item muss vom Typ "num" sein. Gültige Werte im Bereich [-10..10] * turnonvolume = Lautstärke der Zone einschalten: Item muss vom Typ "num" sein. Gültige Werte im Bereich [0..50] * currentsource = Nummer der Soundquelle: Item muss vom Typ "num" sein. * mute = Ausgabeunterdrückung der zone (Mute): Item muss vom Typ "bool" sein * loudness = Loudness der zone: Item muss vom Typ "bool" sein * partymode = Party Modus Einstellung der Zone: Item muss vom Typ string sein. Gültige Werte [ON/OFF/MASTER] * donotdisturb = "Nicht Stören" Einstellung der Zone: Item muss vom Typ string
+Pfad mit Controller, Zone und System Parameter, getrennt durch "." Parameter ist * status = Zone An oder Aus: Item muss vom Typ "bool" sein * volume = Lautstärke der Zone: Item muss vom Typ "num" sein. Gültige Werte im Bereich [0..50] * bass = Bass der Zone: Item muss vom Typ "num" sein. Gültige Werte im Bereich [-10..10] * treble = Höhen der Zone: Item muss vom Typ "num" sein. Gültige Werte im Bereich [-10..10] * balance = Balance der Zone: Item muss vom Typ "num" sein. Gültige Werte im Bereich [-10..10] * turnonvolume = Lautstärke der Zone einschalten: Item muss vom Typ "num" sein. Gültige Werte im Bereich [0..50] * currentsource = Nummer der Soundquelle: Item muss vom Typ "num" sein. * mute = Ausgabeunterdrückung der zone (Mute): Item muss vom Typ "bool" sein * loudness = Loudness der zone: Item muss vom Typ "bool" sein * partymode = Party Modus Einstellung der Zone: Item muss vom Typ string sein. Gültige Werte [ON/OFF/MASTER] * donotdisturb = "Nicht Stören" Einstellung der Zone: Item muss vom Typ string sein * name = Name der Zone (nur lesbar) 
 
  - Datentyp: **str**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

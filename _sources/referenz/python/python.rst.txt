@@ -8,9 +8,9 @@
 .. role:: blacksup
 
 
-====================================
-Python Environment :bluesup:`Update`
-====================================
+==================
+Python Environment
+==================
 
 In diesem Abschnitt sind vertiefende Informationen zu Python zu finden.
 

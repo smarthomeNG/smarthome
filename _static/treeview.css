@@ -1,0 +1,84 @@
+:root {
+  --treeview-indent: 1.5rem;
+  --treeview-spacing: 0.2rem;
+  --treeview-icon-width: 1.3em;
+  --treeview-icon-height: 1.3em;
+  --treeview-color: oklch(0.5 0 0);
+  --treeview-thickness: 1px;
+}
+
+.treeview :is(ul,li) {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  list-style-type: none;
+  list-style-image: none;
+}
+
+.treeview li > :not(ul) {
+  margin: 0!important;
+  padding: 0!important;
+}
+
+.treeview li li {
+  margin-left: calc(calc(var(--treeview-icon-width) / 2) - calc(var(--treeview-thickness) / 2) - 1px);
+  padding-block: var(--treeview-spacing);
+  padding-left: calc(var(--treeview-indent) - .5em);
+  background:
+    linear-gradient(var(--treeview-color, #333), var(--treeview-color, #333)) 0 0 / var(--treeview-thickness, 1px) 100% no-repeat;
+}
+
+.treeview li li:last-child {
+  background: none;
+}
+
+.treeview li li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--treeview-indent) - .75em);
+  height: calc(var(--treeview-spacing) + .75em + calc(var(--treeview-thickness) / 2) + 1px);
+  background:
+    linear-gradient(var(--treeview-color, #333), var(--treeview-color, #333)) 0 0 / var(--treeview-thickness, 1px) 100% no-repeat,
+    linear-gradient(var(--treeview-color, #333), var(--treeview-color, #333)) 0 100% / 100% var(--treeview-thickness, 1px) no-repeat;
+}
+
+.treeview li.collapsed > ul {
+  display: none;
+}
+
+.treeview-icon {
+  display: inline-block;
+  background-repeat: no-repeat;
+  width: var(--treeview-icon-width);
+  height: var(--treeview-icon-height);
+  vertical-align: middle;
+  margin-top: -.125em;
+}
+
+.treeview-dir-folder {
+  background-image: url('data:image/svg+xml;utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%20standalone%3D%22no%22%3F%3E%0A%3Csvg%0A%20%20%20viewBox%3D%220%200%2024%2024%22%0A%20%20%20version%3D%221.1%22%0A%20%20%20id%3D%22svg1%22%0A%20%20%20sodipodi%3Adocname%3D%22folder.svg%22%0A%20%20%20inkscape%3Aversion%3D%221.3.2%20%28091e20e%2C%202023-11-25%2C%20custom%29%22%0A%20%20%20xmlns%3Ainkscape%3D%22http%3A//www.inkscape.org/namespaces/inkscape%22%0A%20%20%20xmlns%3Asodipodi%3D%22http%3A//sodipodi.sourceforge.net/DTD/sodipodi-0.dtd%22%0A%20%20%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%0A%20%20%20xmlns%3Asvg%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%3Cdefs%0A%20%20%20%20%20id%3D%22defs1%22%20/%3E%0A%20%20%3Csodipodi%3Anamedview%0A%20%20%20%20%20id%3D%22namedview1%22%0A%20%20%20%20%20pagecolor%3D%22%23ffffff%22%0A%20%20%20%20%20bordercolor%3D%22%23000000%22%0A%20%20%20%20%20borderopacity%3D%220.25%22%0A%20%20%20%20%20inkscape%3Ashowpageshadow%3D%222%22%0A%20%20%20%20%20inkscape%3Apageopacity%3D%220.0%22%0A%20%20%20%20%20inkscape%3Apagecheckerboard%3D%220%22%0A%20%20%20%20%20inkscape%3Adeskcolor%3D%22%23d1d1d1%22%0A%20%20%20%20%20inkscape%3Azoom%3D%2248.875%22%0A%20%20%20%20%20inkscape%3Acx%3D%2211.98977%22%0A%20%20%20%20%20inkscape%3Acy%3D%2212%22%0A%20%20%20%20%20inkscape%3Awindow-width%3D%222560%22%0A%20%20%20%20%20inkscape%3Awindow-height%3D%221369%22%0A%20%20%20%20%20inkscape%3Awindow-x%3D%223432%22%0A%20%20%20%20%20inkscape%3Awindow-y%3D%22-8%22%0A%20%20%20%20%20inkscape%3Awindow-maximized%3D%221%22%0A%20%20%20%20%20inkscape%3Acurrent-layer%3D%22svg1%22%20/%3E%0A%20%20%3Cpath%0A%20%20%20%20%20d%3D%22M10%2C4H4C2.89%2C4%202%2C4.89%202%2C6V18A2%2C2%200%200%2C0%204%2C20H20A2%2C2%200%200%2C0%2022%2C18V8C22%2C6.89%2021.1%2C6%2020%2C6H12L10%2C4Z%22%0A%20%20%20%20%20id%3D%22path1%22%0A%20%20%20%20%20style%3D%22fill%3A%2390a4ae%3Bfill-opacity%3A1%22%20/%3E%0A%3C/svg%3E%0A');
+}
+.treeview-dir-file {
+  background-image: url('data:image/svg+xml;utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%20standalone%3D%22no%22%3F%3E%0A%3Csvg%0A%20%20%20viewBox%3D%220%200%2024%2024%22%0A%20%20%20version%3D%221.1%22%0A%20%20%20id%3D%22svg1%22%0A%20%20%20sodipodi%3Adocname%3D%22file.svg%22%0A%20%20%20inkscape%3Aversion%3D%221.3.2%20%28091e20e%2C%202023-11-25%2C%20custom%29%22%0A%20%20%20xmlns%3Ainkscape%3D%22http%3A//www.inkscape.org/namespaces/inkscape%22%0A%20%20%20xmlns%3Asodipodi%3D%22http%3A//sodipodi.sourceforge.net/DTD/sodipodi-0.dtd%22%0A%20%20%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%0A%20%20%20xmlns%3Asvg%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%3Cdefs%0A%20%20%20%20%20id%3D%22defs1%22%20/%3E%0A%20%20%3Csodipodi%3Anamedview%0A%20%20%20%20%20id%3D%22namedview1%22%0A%20%20%20%20%20pagecolor%3D%22%23ffffff%22%0A%20%20%20%20%20bordercolor%3D%22%23000000%22%0A%20%20%20%20%20borderopacity%3D%220.25%22%0A%20%20%20%20%20inkscape%3Ashowpageshadow%3D%222%22%0A%20%20%20%20%20inkscape%3Apageopacity%3D%220.0%22%0A%20%20%20%20%20inkscape%3Apagecheckerboard%3D%220%22%0A%20%20%20%20%20inkscape%3Adeskcolor%3D%22%23d1d1d1%22%0A%20%20%20%20%20inkscape%3Azoom%3D%2248.875%22%0A%20%20%20%20%20inkscape%3Acx%3D%2212%22%0A%20%20%20%20%20inkscape%3Acy%3D%2212%22%0A%20%20%20%20%20inkscape%3Awindow-width%3D%222560%22%0A%20%20%20%20%20inkscape%3Awindow-height%3D%221369%22%0A%20%20%20%20%20inkscape%3Awindow-x%3D%223432%22%0A%20%20%20%20%20inkscape%3Awindow-y%3D%22-8%22%0A%20%20%20%20%20inkscape%3Awindow-maximized%3D%221%22%0A%20%20%20%20%20inkscape%3Acurrent-layer%3D%22svg1%22%20/%3E%0A%20%20%3Cpath%0A%20%20%20%20%20d%3D%22M13%2C9V3.5L18.5%2C9M6%2C2C4.89%2C2%204%2C2.89%204%2C4V20A2%2C2%200%200%2C0%206%2C22H18A2%2C2%200%200%2C0%2020%2C20V8L14%2C2H6Z%22%0A%20%20%20%20%20id%3D%22path1%22%0A%20%20%20%20%20style%3D%22fill%3A%2390a4ae%3Bfill-opacity%3A1%22%20/%3E%0A%3C/svg%3E%0A');
+}
+.treeview li.collapsible > :not(ul) {
+  cursor: pointer;
+}
+
+.treeview li.collapsible > *:first-child::after {
+  content: "";
+  display: inline-block;
+  margin-top: -.125em;
+  margin-left: .5rem;
+  width: .75em;
+  height: .75em;
+  background: currentColor;
+  transform: translateY(0.1em);
+  mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>');
+}
+
+.treeview li.collapsible.collapsed > *:first-child::after {
+  mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>');
+}

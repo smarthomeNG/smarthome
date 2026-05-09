@@ -12,7 +12,7 @@ Plugin 'panasonic_ac' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -123,6 +123,52 @@ Parameter der über pcc_index gewählten Klimaanlage
    - **eco**
    - **nanoe**
    - **connected**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+air_condition
+=============
+
+
+.. treeview::
+     - :dir:`folder` **air_condition** (`str`, ---)
+         - :dir:`file` **device_connected** (`bool`, ---)
+         - :dir:`file` **temp_inside** (`num`, ---)
+         - :dir:`file` **temp_outside** (`num`, ---)
+         - :dir:`file` **temp** (`num`, ---)
+         - :dir:`file` **power** (`num`, ---)
+         - :dir:`file` **mode** (`num`, ---)
+         - :dir:`file` **fanspeed** (`num`, ---)
+         - :dir:`file` **swing_hor** (`num`, ---)
+         - :dir:`file` **swing_vert** (`num`, ---)
+         - :dir:`file` **eco** (`num`, ---)
+         - :dir:`file` **nanoe** (`num`, ---)
+
+
+air_condition_enum
+==================
+
+
+.. treeview::
+     - :dir:`folder` **air_condition_enum** (`str`, ---)
+         - :dir:`file` **device_connected** (`bool`, ---)
+         - :dir:`file` **temp_inside** (`num`, ---)
+         - :dir:`file` **temp_outside** (`num`, ---)
+         - :dir:`file` **temp** (`num`, ---)
+         - :dir:`file` **power** (`str`, ---)
+         - :dir:`file` **mode** (`str`, ---)
+         - :dir:`file` **fanspeed** (`str`, ---)
+         - :dir:`file` **swing_hor** (`str`, ---)
+         - :dir:`file` **swing_vert** (`str`, ---)
+         - :dir:`file` **eco** (`str`, ---)
+         - :dir:`file` **nanoe** (`str`, ---)
 
 
 ===============

@@ -12,7 +12,7 @@ Plugin 'alexa4p3' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -121,7 +121,7 @@ alexa_color_value_type
 ======================
 
 
-Farbsystem für RGB/HSV Leuchten, Wert = RGB oder HSV, Standardwert ist RGB
+Farbsystem für RGB/HSV Leuchten, Wert = RGB oder HSV, Standardwert ist RGB 
 
  - Datentyp: **str**
 
@@ -157,7 +157,7 @@ alexa_icon
 ==========
 
 
-Alexa Kategorie/Symbol welche in der Alexa-App angezeigt wird, Standard-Wert SWITCH
+Alexa Kategorie/Symbol welche in der Alexa-App angezeigt wird, Standard-Wert SWITCH 
 
  - Datentyp: **str**
 
@@ -242,6 +242,15 @@ nur für Payload-V2 benötigt
 
  - Datentyp: **str**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

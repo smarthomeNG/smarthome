@@ -12,7 +12,7 @@ Plugin 'odlinfo' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -106,6 +106,15 @@ Internationale ID oder ODL Messstellenkennung der Station.
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -133,7 +142,7 @@ Gibt ein DICT mit Infos zur einer Messstation zurück. Keys: 'id', 'kenn', 'plz'
 
 
 odlinfo_id
-----------
+ -  -  -  -  -  -  -  -  -  - 
 
 Array der IDs ('id' oder 'kenn') der Messstationen. Siehe Web-Interface des Plugins oder https://odlinfo.bfs.de/ODL/DE/service/datenschnittstelle/datenschnittstelle_node.html.
 
@@ -144,7 +153,7 @@ get_stations()
 ==============
 
 
-Gibt ein Array of DICTs mit allen verfügbaren Messstationen zurück. Keys eines DICTs:<br/><br/> <strong>id:</strong> Die internationale ID der Messstelle.<br/> <strong>kenn:</strong> Die Messstellenkennung, wie sie auch auf ODL-Info verwendet wird.<br/> <strong>plz:</strong> Die Postleitzahl der Messstelle.<br/> <strong>name:</strong> Der Name bzw. Ortsname der Messstelle.<br/> <strong>site_status:</strong> Der Status der Messstelle als Zahl. (1 = in Betrieb, 2 = Defekt, 3 = Testbetrieb)<br/> <strong>site_status_text:</strong> Der Status der Messstelle als Text.<br/> <strong>kid:</strong> ID des Messnetzknotens, dem die Messstelle zugeordnet ist. (1 = Freiburg, 2 = Berlin, 3 = München, 4 = Bonn, 5 = Salzgitter, 6 = Rendsburg)<br/> <strong>height_above_sea:</strong> Höhe der Messstelle über NN.<br/> <strong>start_measure:</strong> Startzeitpunkt der Messperiode für den gegebenen Messwert.<br/> <strong>end_measure:</strong> Endzeitpunkt der Messperiode für den gegebenen Messwert.<br/> <strong>value:</strong>
+Gibt ein Array of DICTs mit allen verfügbaren Messstationen zurück. Keys eines DICTs:<br/><br/> <strong>id:</strong> Die internationale ID der Messstelle.<br/> <strong>kenn:</strong> Die Messstellenkennung, wie sie auch auf ODL-Info verwendet wird.<br/> <strong>plz:</strong> Die Postleitzahl der Messstelle.<br/> <strong>name:</strong> Der Name bzw. Ortsname der Messstelle.<br/> <strong>site_status:</strong> Der Status der Messstelle als Zahl. (1 = in Betrieb, 2 = Defekt, 3 = Testbetrieb)<br/> <strong>site_status_text:</strong> Der Status der Messstelle als Text.<br/> <strong>kid:</strong> ID des Messnetzknotens, dem die Messstelle zugeordnet ist. (1 = Freiburg, 2 = Berlin, 3 = München, 4 = Bonn, 5 = Salzgitter, 6 = Rendsburg)<br/> <strong>height_above_sea:</strong> Höhe der Messstelle über NN.<br/> <strong>start_measure:</strong> Startzeitpunkt der Messperiode für den gegebenen Messwert.<br/> <strong>end_measure:</strong> Endzeitpunkt der Messperiode für den gegebenen Messwert.<br/> <strong>value:</strong> Der Messwert.<br/> <strong>value_cosmic:</strong> Kosmischer Anteil des Messwertes.<br/> <strong>value_terrestrial:</strong> Terrestrischer Anteil des Messwertes.<br/> <strong>unit:</strong> Einheit zu dem Messwert.<br/> <strong>validated:</strong> Prüfstatus des Messwertes. (1 = geprüft, 2 = ungeprüft)<br/> <strong>nuclide:</strong> Bezeichnung der Messgröße.<br/> <strong>duration:</strong> Dauer der Messperiode.
 
  - Ergebnistyp der Funktion: **list(dict)**
 
@@ -159,7 +168,7 @@ Gibt ein Array von DICTs mit Infos zu Messstationen zurück. Keys: 'id', 'kenn',
 
 
 odlinfo_ids
------------
+ -  -  -  -  -  -  -  -  -  -  - 
 
 Array der IDs ('id' oder 'kenn') der Messstationen. Siehe Web-Interface des Plugins oder https://odlinfo.bfs.de/ODL/DE/service/datenschnittstelle/datenschnittstelle_node.html.
 

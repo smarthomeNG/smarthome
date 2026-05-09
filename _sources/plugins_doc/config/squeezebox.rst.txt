@@ -12,7 +12,7 @@ Plugin 'squeezebox' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -34,7 +34,7 @@ Getestet mit folgenden Geräten:
  - Logitech Squeezebox Radio
  - Squeezelite auf Windows, Mac OS X und Linux
 
-Sämtliche Kommandos sollten manuell über die Telnet-Schnittstelle auf Port 9090 getestet werden. Für Abfragen muss hierbei ein "?" am Ende des Befehls stehen, z.B. "<playerid> name ?"
+Sämtliche Kommandos sollten manuell über die Telnet-Schnittstelle auf Port 9090 getestet werden. Für Abfragen muss hierbei ein "?" am Ende des Befehls stehen, z.B. "<playerid> name ?" 
 
 
 Anforderungen
@@ -135,7 +135,7 @@ squeezebox_albumart
 
 
 Wird genutzt, um die URL zum aktuellen Cover Artwork automatisch zu generieren. Als Wert ist <playerid> anzugeben.
-Der Wert des Items wird auf http://<SERVER IP>:9002/music/current/cover.jpg?player=<PLAYER MAC> gesetzt, wobei die Server IP und der Port aus der Pluginkonfiguration, und die MAC-Adresse aus der playerid Angabe im (Grand)parent Item gelesen wird.
+Der Wert des Items wird auf http://<SERVER IP>:9002/music/current/cover.jpg?player=<PLAYER MAC> gesetzt, wobei die Server IP und der Port aus der Pluginkonfiguration, und die MAC-Adresse aus der playerid Angabe im (Grand)parent Item gelesen wird. 
 
  - Datentyp: **str**
 
@@ -147,7 +147,7 @@ squeezebox_init
 Wird genutzt, um beim Start des Plugins das Item zu aktualisierenn. Der Befehl ist der CLI Dokumentation des Media Servers zu entnehmen.
 Der Platzhalter <playerid> wird durch die im Parent-Item gesetzte Player-ID ersetzt. Das Fragezeichen wird automatisch an den Befehl angehängt, kann also wegfallen
 
-Beispiel: <playerid> playlist name, um den Namen des Player beim Pluginstart abzufragen
+Beispiel: <playerid> playlist name, um den Namen des Player beim Pluginstart abzufragen 
 
  - Datentyp: **str**
 
@@ -168,7 +168,7 @@ squeezebox_recv
 Wird genutzt, um Änderungen vom Player zu empfangen. Der Befehl ist der CLI Dokumentation des Media Servers zu entnehmen.
 Der Platzhalter <playerid> wird durch die im Parent-Item gesetzte Player-ID ersetzt
 
-Beispiel: <playerid> prefset server volume zum Updaten des Itemwerts durch die Lautstärke des Players
+Beispiel: <playerid> prefset server volume zum Updaten des Itemwerts durch die Lautstärke des Players 
 
  - Datentyp: **str**
 
@@ -183,9 +183,171 @@ Folgende Platzhalter können genutzt werden:
  - <playerid>: Wird durch die im Parent-Item gesetzte Player-ID ersetzt
  - {}: Der Wert des Items wird in diesen Platzhalter geschrieben (sollte nicht verwendet werden, wenn ein fixer oder kein Wert nötig ist).
 
-Beispiel: <playerid> name {} zum Ersetzen des Playernamen durch den Itemwert
+Beispiel: <playerid> name {} zum Ersetzen des Playernamen durch den Itemwert 
 
  - Datentyp: **str**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+controls
+========
+
+Vorlage-Struktur für Squeezebox Playercontrols
+
+.. treeview::
+     - :dir:`folder` **controls** (`foo`, Vorlage-Struktur für Squeezebox Playercontrols)
+         - :dir:`folder` **mode** (`str`, the mode gets automatically updated when using play, stop or pause and the other way around)
+             - :dir:`file` **query** (`bool`, ---)
+         - :dir:`file` **mute** (`bool`, ---)
+         - :dir:`folder` **volume** (`num`, ---)
+             - :dir:`file` **fading** (`num`, Use this item in conjunction with the fade() item function)
+             - :dir:`file` **up** (`num`, ---)
+             - :dir:`file` **down** (`num`, ---)
+             - :dir:`file` **low** (`num`, Sets the volume to a given (low) value)
+             - :dir:`file` **high** (`num`, Sets the volume to a given (high) value)
+         - :dir:`file` **customskip** (`str`, Use a filter to potentially skip songs with specific attributes (low rating, genre, etc.))
+         - :dir:`folder` **repeat** (`num`, Sets the repeat song, playlist, none values correctly)
+             - :dir:`folder` **song** (`bool`, ---)
+                 - :dir:`file` **sendcommand** (`bool`, ---)
+             - :dir:`folder` **playlist** (`bool`, ---)
+                 - :dir:`file` **sendcommand** (`bool`, ---)
+             - :dir:`folder` **none** (`bool`, ---)
+                 - :dir:`file` **sendcommand** (`bool`, ---)
+             - :dir:`file` **dummy** (`bool`, ---)
+         - :dir:`folder` **shuffle** (`num`, Sets the shuffle song, album, none values correctly)
+             - :dir:`folder` **song** (`bool`, ---)
+                 - :dir:`file` **sendcommand** (`bool`, ---)
+             - :dir:`folder` **album** (`bool`, ---)
+                 - :dir:`file` **sendcommand** (`bool`, ---)
+             - :dir:`folder` **none** (`bool`, ---)
+                 - :dir:`file` **sendcommand** (`bool`, ---)
+         - :dir:`file` **play** (`bool`, ---)
+         - :dir:`file` **stop** (`bool`, ---)
+         - :dir:`file` **pause** (`bool`, ---)
+         - :dir:`folder` **time** (`num`, ---)
+             - :dir:`file` **query** (`bool`, Queries current song time every 10 seconds and updates time item)
+         - :dir:`file` **forward** (`num`, Item value defines time in seconds to skip in current song)
+         - :dir:`file` **rewind** (`num`, Item value defines time in seconds to go back in current song)
+         - :dir:`file` **next** (`bool`, ---)
+         - :dir:`file` **previous** (`bool`, ---)
+
+
+database
+========
+
+Vorlage-Struktur für Squeezebox Server Database
+
+.. treeview::
+     - :dir:`folder` **database** (`foo`, Vorlage-Struktur für Squeezebox Server Database)
+         - :dir:`file` **abortscan** (`bool`, ---)
+         - :dir:`file` **wipecache** (`str`, ---)
+         - :dir:`file` **libraries** (`str`, ---)
+         - :dir:`file` **totalgenres** (`num`, ---)
+         - :dir:`file` **totalduration** (`num`, ---)
+         - :dir:`file` **totalartists** (`num`, ---)
+         - :dir:`file` **totalalbums** (`num`, ---)
+         - :dir:`file` **totalsongs** (`num`, ---)
+         - :dir:`folder` **rescan** (`str`, ---)
+             - :dir:`file` **query** (`bool`, ---)
+             - :dir:`folder` **progress** (`str`, ---)
+                 - :dir:`file` **time** (`num`, ---)
+                 - :dir:`file` **scantype** (`str`, ---)
+                 - :dir:`file` **directory** (`str`, ---)
+                 - :dir:`file` **action** (`str`, ---)
+
+
+info
+====
+
+Vorlage-Struktur für Squeezebox Mediainfo
+
+.. treeview::
+     - :dir:`folder` **info** (`foo`, Vorlage-Struktur für Squeezebox Mediainfo)
+         - :dir:`file` **genre** (`str`, ---)
+         - :dir:`file` **artist** (`str`, ---)
+         - :dir:`folder` **album** (`str`, ---)
+             - :dir:`file` **currentalbumarturl** (`str`, Will get set to http://<SERVER IP>:<WEB_PORT>/music/current/cover.jpg?player=<PLAYER MAC> automatically on plugin start)
+         - :dir:`file` **title** (`str`, ---)
+         - :dir:`file` **current_title** (`str`, ---)
+         - :dir:`file` **path** (`str`, ---)
+         - :dir:`file` **duration** (`num`, ---)
+
+
+player
+======
+
+Vorlage-Struktur für Squeezebox Player
+
+.. treeview::
+     - :dir:`folder` **player** (`foo`, Vorlage-Struktur für Squeezebox Player)
+         - :dir:`file` **alarms** (`str`, ---)
+         - :dir:`file` **alarm** (`str`, ---)
+         - :dir:`folder` **syncgroups** (`num`, ---)
+             - :dir:`file` **query** (`bool`, ---)
+         - :dir:`folder` **signalstrength** (`num`, ---)
+             - :dir:`file` **query** (`bool`, ---)
+         - :dir:`file` **player_name** (`str`, ---)
+         - :dir:`file` **connected** (`bool`, ---)
+         - :dir:`file` **sleep** (`num`, ---)
+         - :dir:`folder` **sync** (`str`, ---)
+             - :dir:`file` **query** (`bool`, ---)
+         - :dir:`file` **unsync** (`bool`, ---)
+         - :dir:`file` **power** (`bool`, ---)
+         - :dir:`file` **button** (`str`, ---)
+         - :dir:`folder` **display** (`str`, ---)
+             - :dir:`file` **query** (`bool`, ---)
+         - :dir:`file` **connect** (`str`, ---)
+         - :dir:`file` **disconnect** (`str`, ---)
+
+
+playlist
+========
+
+Vorlage-Struktur für Squeezebox Playlists
+
+.. treeview::
+     - :dir:`folder` **playlist** (`foo`, Vorlage-Struktur für Squeezebox Playlists)
+         - :dir:`folder` **index** (`num`, ---)
+             - :dir:`file` **query** (`bool`, ---)
+         - :dir:`folder` **playlist_name** (`str`, ---)
+             - :dir:`file` **query** (`bool`, ---)
+         - :dir:`file` **save** (`str`, ---)
+         - :dir:`file` **load** (`str`, ---)
+         - :dir:`file` **loadalbum** (`str`, ---)
+         - :dir:`file` **loadtracks** (`str`, ---)
+         - :dir:`file` **add** (`str`, ---)
+         - :dir:`file` **addalbum** (`str`, ---)
+         - :dir:`file` **addtracks** (`str`, ---)
+         - :dir:`file` **tracks** (`num`, ---)
+         - :dir:`file` **insert** (`str`, ---)
+         - :dir:`file` **insertalbum** (`str`, ---)
+         - :dir:`file` **clear** (`bool`, ---)
+         - :dir:`file` **delete** (`str`, ---)
+         - :dir:`file` **deletealbum** (`str`, ---)
+         - :dir:`file` **deleteitem** (`str`, ---)
+         - :dir:`file` **preview** (`str`, ---)
+
+
+server
+======
+
+Vorlage-Struktur für Squeezebox Server
+
+.. treeview::
+     - :dir:`folder` **server** (`foo`, Vorlage-Struktur für Squeezebox Server)
+         - :dir:`file` **alarm_playlists** (`str`, ---)
+         - :dir:`folder` **playercount** (`num`, ---)
+             - :dir:`file` **query** (`bool`, ---)
+         - :dir:`folder` **favoritescount** (`num`, ---)
+             - :dir:`file` **result** (`str`, ---)
+             - :dir:`file` **query** (`bool`, ---)
 
 
 ===============

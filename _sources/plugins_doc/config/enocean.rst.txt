@@ -12,7 +12,7 @@ Plugin 'enocean' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -170,6 +170,8 @@ Enocean Geraetetyp
    - **FBH63TF**
    - **NodOn-STP-2-1-03**
    - **SecuSignal**
+   - **FB55EB-wg**
+   - **FBH63AP**
 
 
 enocean_rocker_action
@@ -264,6 +266,15 @@ Referenzwert in % fuer Dimmwert beim Einschalten
  - Datentyp: **str**
  - Standardwert: **80**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

@@ -12,7 +12,7 @@ Plugin 'telegram' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -191,8 +191,8 @@ Bedingung unter der die Mitteilung gesendet wird
 
  - Mögliche Werte:
 
-   - **on_update** |_| - |_| Senden nach Wertaktualisierung
-   - **on_change** |_| - |_| Nur senden, wenn sich der Wert des Items gegenüber dem vorherigen Wert geändert hat
+   - **on_update**
+   - **on_change**
 
 
 telegram_control
@@ -249,6 +249,15 @@ Itemwert gegen einen regulären Ausdruck prüfen vor dem Versenden einer Mitteil
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -276,7 +285,7 @@ Sendet eine Nachricht an einen Empfänger
 
 
 msg
----
+ -  -  - 
 
 Nachricht die verschickt werden soll
 
@@ -284,7 +293,7 @@ Nachricht die verschickt werden soll
 
 
 chat_id
--------
+ -  -  -  -  -  -  - 
 
 ID des Chats oder Liste mit Chats denen die Nachricht gesendet werden soll
 
@@ -301,7 +310,7 @@ Sendet ein Bild an einen Empfänger
 
 
 photofile_or_url
-----------------
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 Dateiname oder URL eines Bildes
 
@@ -309,7 +318,7 @@ Dateiname oder URL eines Bildes
 
 
 caption
--------
+ -  -  -  -  -  -  - 
 
 Titel des Bildes
 
@@ -317,7 +326,7 @@ Titel des Bildes
 
 
 chat_id
--------
+ -  -  -  -  -  -  - 
 
 ID des Chats oder Liste mit Chats denen das Bild gesendet werden soll
 

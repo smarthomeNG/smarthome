@@ -13,14 +13,11 @@ jsonread
    :align: left
 
 Das vorliegende Plugin ist in der Lage aus einer Datei oder von einer
-URL JSON Daten zu lesen
-und anhand einer Abfrageanweisung einen Datenpunkt an ein Item zu übergeben.
+URL JSON Daten zu lesen und anhand einer Abfrageanweisung einen
+Datenpunkt an ein Item zu übergeben.
 
 Anforderungen
 =============
-
-Für die Auswertung des JSON Datensatzes wird der flexible JSON Prozessor
-`JQ <https://stedolan.github.io/jq/>`_ verwendet.
 
 Jede Webseite, die JSON formatierte Daten liefern kann oder
 jede Datei die JSON formatierte
@@ -170,22 +167,15 @@ erweitert werden mit ``@`` und dem Instanznamen
           type: num
           jsonread_filter@cairns: .main.temp
 
-Der Attributwert für ``jsonread_filter`` wird direkt an jq weitergegeben.
-Auf diese Art und Weise ist es möglich
-recht komplexe Filter zu erstellen und für die Itembefüllung zu verwenden.
+Der Attributwert für ``jsonread_filter`` wird direkt gefiltert und für die Itembefüllung verwendet.
 Dabei muss darauf geachtet werden, dass nur ein einzelner Wert
 zurückgegeben werden darf.
-Für komplexe JSON Strukturen kann es recht kompliziert sein,
-entsprechende Filter zu definieren, daher
-könnte es einfacher sein, diese Filter auf der Kommandozeile zu entwickeln:
-
-.. code-block:: bash
-
-    curl https://json.server.org/data.json | jq '.object'
 
 Es lohnt ein Blick ins
 `Tutorial für jq <https://jqlang.github.io/jq/tutorial/>`_
 um für die Verwendung der Filter einen Eindruck zu bekommen.
+Allerdings kann sein, dass das Plugin nicht mit allen Filtern klarkommt!
+
 
 Beispiel Batteriedaten
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -235,10 +225,6 @@ die Instanz ``myreserve`` definiert:
         i:
             type: num
             jsonread_filter@myreserve: .FData.IBat
-        power:
-            remark: etwas einfache Mathematik kann verwendet werden:
-            type: num
-            jsonread_filter@myreserve: (.FData.VBat * .FData.IBat * -1)
 
 
 Beispiel Energiemanager
@@ -260,18 +246,19 @@ Die Abfrage der URL liefert ein ziemliche großes JSON Datenpaket mit mehr als
 .. code-block:: json
 
     {
-    "result": {
+      "result": {
         "items": [
-            {
-                "guid": "urn:your-inverter-guid",
-                "tagValues": {
-                    "PowerACOut": {
-                        "value": 2419,
-                        "tagName": "PowerACOut"
-                    }
-                }
+          {
+            "guid": "urn:your-inverter-guid",
+            "tagValues": {
+              "PowerACOut": {
+                "value": 2419,
+                "tagName": "PowerACOut"
+              }
             }
+          }
         ]
+      }
     }
 
 Um die aktuelle Inverter AC Ausgangsleistung zu erhalten,
@@ -284,15 +271,15 @@ wird folgendes Item mit einem komplexen Filter definiert:
         jsonread_filter@swem: (.result.items[] | select(.guid == "urn:your-inverter-guid").tagValues.PowerACOut.value)
 
 Auswählen des Arrays ``.result.items``,
-dann auswählen des Zweiges, bei dem das Element ``guid`` mit dem eigenen
+dann Auswählen des Zweiges, bei dem das Element ``guid`` mit dem eigenen
 ``your-inverter-guid`` übereinstimmt, und im Zweig weitergehen
 und den Wert von ``.tagValues.PowerACOut.value``
 abfragen und ins Item schreiben.
 
 Das ``jsonread_filter`` Attribut kann mit Hilfe des
 `Blockstils für mehrzeilige Strings <https://yaml-multiline.info/>`_
-eben auf mehrere Zeilen aufgeteilt werden.
-So ist folgende komplexe Berechnung über einen Filter möglich:
+eben auf mehrere Zeilen aufgeteilt werden. Arithmetische Berechnungen
+sind nur in der älteren Pluginversion möglich.
 
 .. code-block:: yaml
 
@@ -300,9 +287,8 @@ So ist folgende komplexe Berechnung über einen Filter möglich:
         type: num
         jsonread_filter@swem: >
             (.result.items[] |
-            select(.deviceModel[].deviceClass == "com.kiwigrid.devices.solarwatt.MyReservePowermeter").tagValues.PowerOut.value) -
-            (.result.items[] |
-            select(.deviceModel[].deviceClass == "com.kiwigrid.devices.solarwatt.MyReservePowermeter").tagValues.PowerIn.value)
+            select(.deviceModel[].deviceClass == "com.kiwigrid.devices.solarwatt.MyReservePowermeter").tagValues.PowerOut.value)
+
 
 Web Interface
 =============

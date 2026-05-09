@@ -12,7 +12,7 @@ Plugin 'zigbee2mqtt' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -22,8 +22,6 @@ Plugin 'zigbee2mqtt' Konfiguration
 Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **zigbee2mqtt** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
-
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
 
 
 
@@ -159,6 +157,170 @@ z2m_writeonly
 Attribut wird nur geschrieben. Wenn z2m_readonly auch gesetzt ist, hat readonly Vorrang
 
  - Datentyp: **bool**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+bridge
+======
+
+
+.. treeview::
+     - :dir:`folder` **bridge** (`foo`, ---)
+         - :dir:`file` **online** (`bool`, ---)
+         - :dir:`file` **config** (`dict`, ---)
+         - :dir:`file` **coordinator** (`dict`, ---)
+         - :dir:`file` **config_schema** (`dict`, ---)
+         - :dir:`file` **network** (`dict`, ---)
+         - :dir:`file` **permit_join** (`bool`, ---)
+         - :dir:`file` **restart** (`bool`, ---)
+         - :dir:`file` **version** (`str`, ---)
+         - :dir:`file` **devices** (`list`, ---)
+         - :dir:`file` **groups** (`list`, ---)
+
+
+dimmer
+======
+
+
+.. treeview::
+     - :dir:`folder` **dimmer** (`foo`, ---)
+         - :dir:`file` **action** (`str`, ---)
+         - :dir:`file` **battery** (`num`, ---)
+         - :dir:`file` **duration** (`num`, ---)
+         - :dir:`file` **last_seen** (`foo`, ---)
+         - :dir:`folder` **on** (`bool`, ---)
+             - :dir:`file` **hold** (`bool`, ---)
+         - :dir:`folder` **off** (`bool`, ---)
+             - :dir:`file` **hold** (`bool`, ---)
+         - :dir:`folder` **up** (`bool`, ---)
+             - :dir:`file` **hold** (`bool`, ---)
+         - :dir:`folder` **down** (`bool`, ---)
+             - :dir:`file` **hold** (`bool`, ---)
+
+
+doorsensor_generic
+==================
+
+
+.. treeview::
+     - :dir:`folder` **doorsensor_generic** (`foo`, ---)
+         - :dir:`file` **contact** (`bool`, ---)
+
+
+doorsensor_tuya
+===============
+
+
+.. treeview::
+     - :dir:`folder` **doorsensor_tuya** (`foo`, ---)
+         - :dir:`file` **battery** (`num`, ---)
+         - :dir:`file` **low_battery** (`bool`, ---)
+
+
+light_rgb
+=========
+
+
+.. treeview::
+     - :dir:`folder` **light_rgb** (`foo`, ---)
+         - :dir:`folder` **update** (`dict`, ---)
+             - :dir:`file` **installed_version** (`num`, ---)
+             - :dir:`file` **latest_version** (`num`, ---)
+             - :dir:`file` **state** (`str`, ---)
+
+
+light_rgb_group
+===============
+
+
+.. treeview::
+     - :dir:`folder` **light_rgb_group** (`foo`, ---)
+         - :dir:`folder` **color** (`dict`, ---)
+             - :dir:`file` **r** (`num`, ---)
+             - :dir:`file` **g** (`num`, ---)
+             - :dir:`file` **b** (`num`, ---)
+             - :dir:`file` **rgb** (`str`, ---)
+         - :dir:`file` **color_startup** (`dict`, ---)
+
+
+light_white_ambient
+===================
+
+
+.. treeview::
+     - :dir:`folder` **light_white_ambient** (`foo`, ---)
+         - :dir:`folder` **update** (`dict`, ---)
+             - :dir:`file` **installed_version** (`num`, ---)
+             - :dir:`file` **latest_version** (`num`, ---)
+             - :dir:`file` **state** (`str`, ---)
+
+
+light_white_ambient_group
+=========================
+
+
+.. treeview::
+     - :dir:`folder` **light_white_ambient_group** (`bool`, ---)
+         - :dir:`folder` **brightness** (`num`, ---)
+             - :dir:`file` **percent** (`num`, ---)
+         - :dir:`folder` **color_temp** (`num`, 153..454, coolest, cool, neutral, warm, warmest)
+             - :dir:`file` **kelvin** (`num`, ---)
+         - :dir:`file` **color_mode** (`str`, ---)
+         - :dir:`file` **scene** (`str`, ---)
+         - :dir:`file` **scenes** (`list`, ---)
+         - :dir:`file` **color_startup** (`num`, 153..454, coolest, cool, neutral, warm, warmest, previous)
+         - :dir:`file` **last_seen** (`foo`, ---)
+
+
+lightsensor_xiaomi
+==================
+
+
+.. treeview::
+     - :dir:`folder` **lightsensor_xiaomi** (`foo`, ---)
+         - :dir:`file` **illuminance** (`num`, ---)
+         - :dir:`file` **illuminance_lux** (`num`, ---)
+         - :dir:`file` **detection_period** (`num`, ---)
+         - :dir:`file` **device_temperature** (`num`, ---)
+         - :dir:`file` **power_outage_count** (`num`, ---)
+         - :dir:`file` **voltage** (`num`, ---)
+         - :dir:`file` **state** (`num`, ---)
+         - :dir:`file` **battery** (`num`, ---)
+
+
+lqi
+===
+
+
+.. treeview::
+     - :dir:`folder` **lqi** (`foo`, ---)
+         - :dir:`file` **linkquality** (`num`, ---)
+
+
+socket_generic
+==============
+
+
+.. treeview::
+     - :dir:`folder` **socket_generic** (`foo`, ---)
+         - :dir:`file` **state** (`bool`, ---)
+
+
+socket_tuya
+===========
+
+
+.. treeview::
+     - :dir:`folder` **socket_tuya** (`foo`, ---)
+         - :dir:`file` **power** (`num`, ---)
+         - :dir:`file` **energy** (`num`, ---)
 
 
 ===============

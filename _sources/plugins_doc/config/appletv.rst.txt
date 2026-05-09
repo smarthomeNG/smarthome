@@ -12,7 +12,7 @@ Plugin 'appletv' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -92,58 +92,144 @@ ATV Funktion
 
  - Mögliche Werte:
 
-   - **name** |_| - |_| AppleTV Name
-   - **ip** |_| - |_| AppleTV IP Adresse
-   - **mac** |_| - |_| AppleTV MAC
-   - **model** |_| - |_| AppleTV Modell
-   - **os** |_| - |_| AppleTV OS Version
-   - **power** |_| - |_| Einschaltstatus
-   - **playing_app_identifier** |_| - |_| Applikationsidentifikation
-   - **playing_app_name** |_| - |_| Applikationsname
-   - **playing_state** |_| - |_| Abspielstatus als Zahl
-   - **playing_state_text** |_| - |_| Abspielstatus als Text
-   - **playing_fingerprint** |_| - |_| Fingerprint des aktuellen Mediums
-   - **playing_genre** |_| - |_| Aktuelles Genre
-   - **playing_artist** |_| - |_| Aktueller Künstler
-   - **playing_album** |_| - |_| Aktuelles Album
-   - **playing_title** |_| - |_| Aktueller Titel
-   - **playing_type** |_| - |_| Aktueller Medientyp als Zahl
-   - **playing_type_text** |_| - |_| Aktueller Medientyp als Text
-   - **playing_position** |_| - |_| Aktuelle Zeitposition
-   - **playing_total_time** |_| - |_| Aktuelle Gesamtspielzeit
-   - **playing_position_percent** |_| - |_| Aktuelle Abspielposition in Prozent
-   - **playing_repeat** |_| - |_| Aktueller Wiederholmodus als Zahl
-   - **playing_repeat_text** |_| - |_| Aktueller Wiederholmodus als Text
-   - **playing_shuffle** |_| - |_| Aktueller Shuffle Modus als Zahl
-   - **playing_shuffle_text** |_| - |_| Aktueller Shuffle Modus als Text
-   - **artwork_width** |_| - |_| Breite des aktuellen Artworks in Pixel
-   - **artwork_height** |_| - |_| Höhe des aktuellen Artworks in Pixel
-   - **artwork_mimetype** |_| - |_| Mimetype des aktuellen Artorks
-   - **artwork_base64** |_| - |_| Tatsächliches aktuelles Artwork
-   - **rc_top_menu** |_| - |_| Topmenü Taste
-   - **rc_home** |_| - |_| Home Taste
-   - **rc_home_hold** |_| - |_| Hold home Taste
-   - **rc_menu** |_| - |_| Menü Taste
-   - **rc_select** |_| - |_| Auswählen Taste
-   - **rc_next** |_| - |_| Nächster Titel
-   - **rc_previous** |_| - |_| Vorheriger Titel
-   - **rc_play** |_| - |_| Abspielen
-   - **rc_pause** |_| - |_| Pause
-   - **rc_stop** |_| - |_| Stop
-   - **rc_play_pause** |_| - |_| Umschalten zwischen Play und Pause
-   - **rc_down** |_| - |_| Hinunter Taste
-   - **rc_up** |_| - |_| Hinauf Taste
-   - **rc_left** |_| - |_| Links Taste
-   - **rc_right** |_| - |_| Rechts Taste
-   - **rc_set_position** |_| - |_| Abspielposition setzen
-   - **rc_set_repeat** |_| - |_| Wiederholmodus setzen
-   - **rc_set_shuffle** |_| - |_| Shuffle Modus setzen
-   - **rc_skip_backward** |_| - |_| Rückwärts springen
-   - **rc_skip_forward** |_| - |_| Vorwärts springen
-   - **rc_volume_down** |_| - |_| Lautstärke verringern
-   - **rc_volume_up** |_| - |_| Lautstärke erhöhen
-   - **rc_suspend** |_| - |_| Suspend Modus
-   - **rc_wakeup** |_| - |_| Aufwecken
+   - **name**
+   - **ip**
+   - **mac**
+   - **model**
+   - **os**
+   - **power**
+   - **playing_app_identifier**
+   - **playing_app_name**
+   - **playing_state**
+   - **playing_state_text**
+   - **playing_fingerprint**
+   - **playing_genre**
+   - **playing_artist**
+   - **playing_album**
+   - **playing_title**
+   - **playing_type**
+   - **playing_type_text**
+   - **playing_position**
+   - **playing_total_time**
+   - **playing_position_percent**
+   - **playing_repeat**
+   - **playing_repeat_text**
+   - **playing_shuffle**
+   - **playing_shuffle_text**
+   - **artwork_width**
+   - **artwork_height**
+   - **artwork_mimetype**
+   - **artwork_base64**
+   - **rc_top_menu**
+   - **rc_home**
+   - **rc_home_hold**
+   - **rc_menu**
+   - **rc_select**
+   - **rc_next**
+   - **rc_previous**
+   - **rc_play**
+   - **rc_pause**
+   - **rc_stop**
+   - **rc_play_pause**
+   - **rc_down**
+   - **rc_up**
+   - **rc_left**
+   - **rc_right**
+   - **rc_set_position**
+   - **rc_set_repeat**
+   - **rc_set_shuffle**
+   - **rc_skip_backward**
+   - **rc_skip_forward**
+   - **rc_volume_down**
+   - **rc_volume_up**
+   - **rc_suspend**
+   - **rc_wakeup**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+commands
+========
+
+
+.. treeview::
+     - :dir:`folder` **commands** (`foo`, ---)
+         - :dir:`file` **top_menu** (`bool`, RC top menu key)
+         - :dir:`file` **home** (`bool`, RC kome key)
+         - :dir:`file` **home_hold** (`bool`, RC hold home key)
+         - :dir:`file` **menu** (`bool`, RC menu key)
+         - :dir:`file` **select** (`bool`, RC select key)
+         - :dir:`file` **next** (`bool`, RC next key)
+         - :dir:`file` **previous** (`bool`, RC previous key)
+         - :dir:`file` **pause** (`bool`, RC pause key)
+         - :dir:`file` **play** (`bool`, RC play key)
+         - :dir:`file` **play_pause** (`bool`, RC toggle between play and pause)
+         - :dir:`file` **stop** (`bool`, RC stop key)
+         - :dir:`file` **down** (`bool`, RC down key)
+         - :dir:`file` **up** (`bool`, RC up key)
+         - :dir:`file` **right** (`bool`, RC right key)
+         - :dir:`file` **left** (`bool`, RC left key)
+         - :dir:`file` **set_position** (`num`, RC set position)
+         - :dir:`file` **set_repeat** (`num`, RC set repeat mode)
+         - :dir:`file` **set_shuffle** (`num`, RC set shuffle mode)
+         - :dir:`file` **skip_backward** (`bool`, RC skip backward key)
+         - :dir:`file` **skip_forward** (`bool`, RC skip forward key)
+         - :dir:`file` **volume_down** (`bool`, RC volume down key)
+         - :dir:`file` **volume_up** (`bool`, RC volume up key)
+         - :dir:`file` **suspend** (`bool`, RC suspend key)
+         - :dir:`file` **wakeup** (`bool`, RC wakeup key)
+
+
+device
+======
+
+
+.. treeview::
+     - :dir:`folder` **device** (`foo`, OrderedDict([('remark', 'Name of device'), ('type', 'str'), ('visu_acl', 'ro'), ('cache', True), ('appletv@instance', 'name')]))
+         - :dir:`file` **remark** (`str`, Name of device)
+         - :dir:`file` **ip** (`str`, IP address of device)
+         - :dir:`file` **mac** (`str`, MAC address of device)
+         - :dir:`file` **model** (`str`, MAC address of device)
+         - :dir:`file` **os** (`str`, MAC address of device)
+         - :dir:`file` **power** (`bool`, Power state of the device)
+
+
+playing
+=======
+
+
+.. treeview::
+     - :dir:`folder` **playing** (`foo`, ---)
+         - :dir:`folder` **app** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('cache', True), ('appletv@instance', 'playing_app_name')]))
+             - :dir:`file` **identifier** (`str`, ---)
+             - :dir:`file` **remark** (`str`, ---)
+         - :dir:`file` **state** (`num`, ---)
+         - :dir:`file` **state_text** (`str`, ---)
+         - :dir:`file` **fingerprint** (`str`, ---)
+         - :dir:`file` **genre** (`str`, ---)
+         - :dir:`file` **artist** (`str`, ---)
+         - :dir:`file` **album** (`str`, ---)
+         - :dir:`file` **title** (`str`, ---)
+         - :dir:`file` **media_type** (`num`, ---)
+         - :dir:`file` **media_type_text** (`str`, ---)
+         - :dir:`file` **position** (`num`, ---)
+         - :dir:`file` **totaltime** (`num`, ---)
+         - :dir:`file` **position_percent** (`num`, ---)
+         - :dir:`file` **repeat** (`num`, ---)
+         - :dir:`file` **repeat_text** (`str`, ---)
+         - :dir:`file` **shuffle** (`num`, ---)
+         - :dir:`file` **shuffle_text** (`str`, ---)
+         - :dir:`folder` **artwork** (`foo`, ---)
+             - :dir:`file` **width** (`num`, Width of the currently playing artwork)
+             - :dir:`file` **height** (`num`, Height of the currently playing artwork)
+             - :dir:`file` **mimetype** (`str`, Mimetype of the currently playing artwork)
+             - :dir:`file` **base64** (`foo`, The actual playing artwork in base64)
 
 
 ===============

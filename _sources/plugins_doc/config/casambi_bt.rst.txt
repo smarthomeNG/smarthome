@@ -1,0 +1,156 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'casambi_bt' Konfiguration
+=================================
+
+
+.. index:: Plugins; casambi_bt Konfiguration
+
+.. image:: /plugins/casambi_bt/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50%
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **casambi_bt** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Interface plugin fuer Casambi lokal via Bluetooth
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.7**
+ - Minimum Python Version: **3.11**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **casambi_bt** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+mac
+===
+
+
+MAC-Adresse (12-stelliger hex Wert, z.B. AA:BB:CD:EF:12:34)
+
+ - Datentyp: **str**
+
+
+password
+========
+
+
+Kennwort des lokalen Casmbi Netzwerks
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+casambi_bt_id
+=============
+
+
+Casambi Geraete ID
+
+ - Datentyp: **int**
+
+ - Minimalwert: **0**
+
+casambi_bt_rx_key
+=================
+
+
+Key fuer den Empfang von Statusinformationen
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **ON**
+   - **DIMMER**
+   - **VERTICAL**
+   - **CCT**
+   - **BACKEND_ONLINE_STAT**
+
+
+casambi_bt_tx_key
+=================
+
+
+Key fuer das Senden von Kommandos ins Casambi Netzwerk
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **ON**
+   - **DIMMER**
+   - **VERTICAL**
+   - **CCT**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

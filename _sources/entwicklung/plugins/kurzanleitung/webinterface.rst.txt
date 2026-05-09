@@ -38,8 +38,7 @@ Tooltips
 ========
 
 *popper.min.js* kann genutzt werden, um (aktuell pro Seite maximal zehn) "stabile"
-und ansprechende Tooltips zu integrieren. Ab *SmarthomeNG 1.10* sind alle nötigen
-Dateien hierbei schon automatisch integriert. Um Buttons mit Tooltips auszustatten,
+und ansprechende Tooltips zu integrieren. Um Buttons mit Tooltips auszustatten,
 muss ihnen die CSS Klasse ``button-tooltip`` zugewiesen werden. Außerdem sind
 folgende Codezeilen in der index.html Datei notwendig:
 
@@ -62,8 +61,7 @@ Cookies
 =======
 
 Um Einstellungen im Webinterface dauerhaft zu speichern, sollten die entsprechenden
-Werte als Browser-Cookie gespeichert werden. Eine einfache Möglichkeit dazu wird
-seit *SmarthomeNG 1.10* angeboten. Zum Speichern von Cookies steht die Funktion
+Werte als Browser-Cookie gespeichert werden. Zum Speichern von Cookies steht die Funktion
 ``setCookie(<Cookiename>, <Cookiewert>, <Dauer der Speicherung>, <Pluginname>)`` bereit, für das Laden ``getCookie(<Cookiename>)``. Cookies können gelöscht werden, indem 0 als Dauer angegebene wird.
 
 Im Folgenden Beispiel wird beim Laden der Seite das Cookie
@@ -94,8 +92,8 @@ genau so referenziert werden.
 Icons
 =====
 
-Im Ordner ``/gstatic/img`` sind diverse globale Icons hinterlegt. Seit *SmarthomeNG 1.10*
-stehen Icons für Sortierfunktionen zur Verfügung. Diese heißen wie folgt:
+Im Ordner ``/gstatic/img`` sind diverse globale Icons hinterlegt. 
+Für Sortierfunktionen stehen die folgenden Icons zur Verfügung:
 
   - sort-alpha-asc.svg
   - sort-alpha-desc.svg

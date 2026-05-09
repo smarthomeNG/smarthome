@@ -12,7 +12,7 @@ Plugin 'vacations' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -75,6 +75,15 @@ Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichn
 
 **Keine**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -102,7 +111,7 @@ Gibt ein "Vacation" Objekt (siehe https://pypi.org/project/ferien-api/), zu eine
 
 
 date
-----
+ -  -  -  - 
 
 Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
 
@@ -110,7 +119,7 @@ Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyy
 
 
 province
---------
+ -  -  -  -  -  -  -  - 
 
 Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
 
@@ -127,7 +136,7 @@ Gibt den Namen der Schulferien zu einem Datum zurück (aktuelles Datum, falls de
 
 
 date
-----
+ -  -  -  - 
 
 Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
 
@@ -135,7 +144,7 @@ Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyy
 
 
 province
---------
+ -  -  -  -  -  -  -  - 
 
 Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
 
@@ -152,7 +161,7 @@ Prüft, ob zu einem angegebenen Datum (aktuelles, falls der Parameter leer gelas
 
 
 date
-----
+ -  -  -  - 
 
 Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
 
@@ -160,7 +169,7 @@ Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyy
 
 
 province
---------
+ -  -  -  -  -  -  -  - 
 
 Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
 

@@ -8,11 +8,11 @@ Plugin 'smartmeter' Konfiguration
 
 .. index:: Plugins; smartmeter Konfiguration
 
-.. image:: /_static/img/interface.svg
-   :alt: plugin type logo
+.. image:: /plugins/smartmeter/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -239,7 +239,7 @@ time_filter
 ===========
 
 
-Im "ständig empfangen"-Modus Item-Updates nur alle x Sekunden senden. x = 0: alle Updates senden. x = -1: den Wert von "cycle" verwenden.
+Im "ständig empfangen"-Modus Item-Updates nur alle x Sekunden senden. x = 0: alle Updates senden. x = -1: den Wert von "cycle" verwenden. 
 
  - Datentyp: **int**
  - Standardwert: **0**
@@ -298,7 +298,7 @@ obis_property
 =============
 
 
-Eigenschaft des gelesenen Wertes: * value: korrigierter Wert (Skalierungsfaktor, SI-Basiseinheit) * valueRaw: vom Gerät gelieferter (Roh-)Wert * unit: zurückgegebene Einheit des Wertes * unitCode: Code der Einheit gem. smllib.const.UNITS * scaler: Multiplikationsfaktor für valueRaw * status: Status-Bitfeld * valTime: Zeitstempel des Wertes * actTime: korrigierter Zeitstempel des Wertes * signature: tbd Nicht alle Eigenschaften sind in jedem Datenpunkt vorhanden.
+Eigenschaft des gelesenen Wertes: * value: korrigierter Wert (Skalierungsfaktor, SI-Basiseinheit) * valueRaw: vom Gerät gelieferter (Roh-)Wert * unit: zurückgegebene Einheit des Wertes * unitCode: Code der Einheit gem. smllib.const.UNITS * scaler: Multiplikationsfaktor für valueRaw * status: Status-Bitfeld * valTime: Zeitstempel des Wertes * actTime: korrigierter Zeitstempel des Wertes * signature: tbd Nicht alle Eigenschaften sind in jedem Datenpunkt vorhanden. 
 
  - Datentyp: **str**
  - Standardwert: **value**
@@ -344,7 +344,7 @@ obis_vtype
 ==========
 
 
-Konvertierungsart des gelesenen Wertes: * str: eine Zeichenkette * num: numerisch, entweder Ganzzahl oder Fließkommazahl * int: Ganzzahl * float: Fließkommazahl * ZST12: Datum und Zeit codiert als YYMMDDhhmmss * ZST10: Datum und Zeit codiert als YYMMDDhhmm * D6: Datum codiert als YYMMDD * Z4: Zeit codiert als hhmm * Z6: Zeit codiert als hhmmss
+Konvertierungsart des gelesenen Wertes: * str: eine Zeichenkette * num: numerisch, entweder Ganzzahl oder Fließkommazahl * int: Ganzzahl * float: Fließkommazahl * ZST12: Datum und Zeit codiert als YYMMDDhhmmss * ZST10: Datum und Zeit codiert als YYMMDDhhmm * D6: Datum codiert als YYMMDD * Z4: Zeit codiert als hhmm * Z6: Zeit codiert als hhmmss 
 
  - Datentyp: **str**
 
@@ -361,6 +361,15 @@ Konvertierungsart des gelesenen Wertes: * str: eine Zeichenkette * num: numerisc
    - **Z4**
    - 
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

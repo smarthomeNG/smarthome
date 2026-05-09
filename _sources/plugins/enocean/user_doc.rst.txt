@@ -148,6 +148,7 @@ Die folgenden Status EEPs werden vom Plugin aktuell unterstützt:
  * A5_02_20		High Precision Temperature Sensor (ranges -10*C to +41.2Â°C, 1/20Â°C resolution)
  * A5_02_30		High Precision Temperature Sensor (ranges -40*C to +62.3Â°C, 1/10Â°C resolution)
  * A5_04_02		Energy (optional), humidity and temperature sensor
+ * A5_07_01             Occupancy sensor
  * A5_07_03		Occupancy sensor, e.g. NodOn PIR-2-1-0x
  * A5_08_01		Brightness and movement sensor
  * A5_11_04		Dimmer status feedback
@@ -200,6 +201,7 @@ SVC              A5_07_03              bool        Spannung
 TMP              A5_04_02              num         Temperatur
 HUM              A5_04_02              num         Luftfeuchtigkeit
 ENG              A5_04_02              num         Powerstatus
+VCC              A5_08_01              num         Batteriespannung
 
 DI_0             A5_3F_7F              num         RGB Dimmewert rot
 DI_1             A5_3F_7F              num         RGB Dimmewert grün

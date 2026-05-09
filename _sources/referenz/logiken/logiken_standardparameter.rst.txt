@@ -6,12 +6,12 @@
 Standardparameter
 =================
 
-Die folgenden Parameter können für eine Logik in der Konfigurationsdatei im Verzeichnis ../etc angegeben werden.
+Die folgenden Parameter können für eine Logik in der Konfigurationsdatei im Verzeichnis ``etc`` angegeben werden.
 
 +------------------+-----------------------------------------------------------------------------------------------+
 | **Parameter**    | **Beschreibung**                                                                              |
 +==================+===============================================================================================+
-| filename         | Dateiname des Logik-Codes. Diese Datei muss im Verzeichnis **../logics**  liegen. Dieser      |
+| filename         | Dateiname des Logik-Codes. Diese Datei muss im Verzeichnis ``etc/logics``  liegen. Dieser     |
 |                  | Parameter muss angegeben werden.                                                              |
 +------------------+-----------------------------------------------------------------------------------------------+
 | logic_groupname  | **Optional**: Logiken können mit diesem Parameter einer oder mehreren Gruppen zugeordnet      |

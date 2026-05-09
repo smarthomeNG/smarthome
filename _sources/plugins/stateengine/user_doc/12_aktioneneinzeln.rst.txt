@@ -247,6 +247,22 @@ Reihenfolge der beiden Aktionen untereinander ist dann wieder
 zufällig. Innerhalb der gesamten Aktionen werden die beiden
 Aktionen jedoch an der angegebenen Position ausgeführt.
 
+**overwrite: <bool>**
+
+Über das optionale Attribut ``se_overwrite`` wird für verzögerte Aktionen angegeben,
+ob bestehende Scheduler-Parameter überschrieben werden sollen oder nicht.
+Standardmäßig werden die Parameter aktualisiert. Wenn die Verzögerung (delay) länger
+dauert als das Intervall zur Zustandsberechnung (cycle des rules-Items), wird die Aktion niemals ausgeführt!
+
+Ist das Attribut auf ``False`` gesetzt,
+wird bei Neuberechnung des Zustands der bestehende Scheduler nicht geändert, also
+nicht mehr erneut verzögert. Dadurch wird die Aktion nach der ursprünglich
+angesetzten Verzögerung jedenfalls ausgeführt.
+
+.. code-block:: yaml
+
+       se_overwrite_<Aktionsname>: [True|False]
+
 **instanteval: <bool>**
 
 Über das optionale Attribut ``se_instanteval`` wird für verzögerte Aktionen angegeben,

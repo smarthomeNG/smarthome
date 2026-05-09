@@ -8,7 +8,6 @@
    :titlesonly:
    :hidden:
 
-   /plugins/alexa/README.md
    /plugins/alexa4p3/README.md
    /plugins/bose_soundtouch/README.md
    /plugins/bsblan/README.md
@@ -32,7 +31,6 @@
    /plugins/ical/README.md
    /plugins/indego/README.md
    /plugins/indego4shng/README.md
-   /plugins/influxdata/README.md
    /plugins/intercom_2n/README.md
    /plugins/kathrein/README.md
    /plugins/kostal/README.md
@@ -53,7 +51,6 @@
    /plugins/pluggit/README.md
    /plugins/pushbullet/README.md
    /plugins/pushover/README.md
-   /plugins/raumfeld/README.md
    /plugins/rcswitch/README.md
    /plugins/robonect/README.md
    /plugins/roomba/README.md
@@ -67,11 +64,9 @@
    /plugins/sma_em/README.md
    /plugins/sma_mb/README.md
    /plugins/smarttv/README.md
-   /plugins/sml/README.md
    /plugins/snap7_logo/README.md
    /plugins/solarlog/README.md
    /plugins/speech/README.md
-   /plugins/sqlite_visu2_8/README.md
    /plugins/squeezebox/README.md
    /plugins/systemair/README.md
    /plugins/tankerkoenig/README.md
@@ -81,10 +76,7 @@
    /plugins/traffic/README.md
    /plugins/trovis557x/README.md
    /plugins/viessmann/README.md
-   /plugins/visu_smartvisu/README.md
-   /plugins/visu_websocket/README.md
    /plugins/volkszaehler/README.md
    /plugins/wettercom/README.md
-   /plugins/wunderground/README.md
    /plugins/xmpp/README.md
    /plugins/zwave/README.md

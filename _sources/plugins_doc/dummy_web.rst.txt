@@ -8,7 +8,6 @@
    :titlesonly:
    :hidden:
 
-   /plugins/alexa/README.md
    /plugins/alexa4p3/README.md
    /plugins/homeconnect/README.md
    /plugins/ical/README.md
@@ -22,4 +21,3 @@
    /plugins/tankerkoenig/README.md
    /plugins/traffic/README.md
    /plugins/wettercom/README.md
-   /plugins/wunderground/README.md

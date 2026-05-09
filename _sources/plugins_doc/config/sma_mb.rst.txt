@@ -12,7 +12,7 @@ Plugin 'sma_mb' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -55,15 +55,25 @@ Parameter
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
 
+crontab
+=======
+
+
+Update mit Festlegung via Crontab
+
+ - Datentyp: **str**
+
+
 cycle
 =====
 
 
-Update Zyklus in Sekunden
+Update Zyklus in Sekunden. Wenn der Wert 0 ist, wird keine Abfrage über cycle ausgeführt
 
  - Datentyp: **int**
  - Standardwert: **300**
 
+ - Minimalwert: **0**
 
 host
 ====
@@ -82,6 +92,18 @@ Modbus Port
 
  - Datentyp: **int**
  - Standardwert: **502**
+
+ - Minimalwert: **0**
+ - Maximalwert: **65535**
+
+slaveUnit
+=========
+
+
+Slave-Addresse der zu lesenden Modbus-Einheit
+
+ - Datentyp: **int**
+ - Standardwert: **3**
 
 
 ==============
@@ -103,15 +125,15 @@ SMA Datentyp
 
  - Mögliche Werte:
 
-   - **S16** |_| - |_| 16-Bit Integer, mit Vorzeichen
-   - **U16** |_| - |_| 16-Bit Integer, ohne Vorzeichen
-   - **S32** |_| - |_| 32-Bit Integer, mit Vorzeichen
-   - **U32** |_| - |_| 32-Bit Integer, ohne Vorzeichen
-   - **S64** |_| - |_| 64-Bit Integer, mit Vorzeichen
-   - **U64** |_| - |_| 64-Bit Integer, ohne Vorzeichen
-   - **STR08** |_| - |_| String aus 8 Registern (ergibt einen String mit bis zu 16 Zeichen)
-   - **STR12** |_| - |_| String aus 12 Registern (ergibt einen String mit bis zu 24 Zeichen)
-   - **STR16** |_| - |_| String aus 16 Registern (ergibt einen String mit bis zu 32 Zeichen)
+   - **S16**
+   - **U16**
+   - **S32**
+   - **U32**
+   - **S64**
+   - **U64**
+   - **STR08**
+   - **STR12**
+   - **STR16**
 
 
 smamb_register
@@ -122,6 +144,15 @@ Das Modbus-Register des SMA Modbus-Profils
 
  - Datentyp: **int**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter

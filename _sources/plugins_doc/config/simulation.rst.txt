@@ -12,7 +12,7 @@ Plugin 'simulation' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -30,7 +30,7 @@ Beschreibung
 
 Dieses Plugin erlaubt es, Anwesenheit zu simulieren, wenn niemand zuhause ist.
 Um dies zu bewerkstelligen, nimmt es durchgehen die Daten aller konfigurierten Items auf und schreibt diese Events in eine Datei. Hierbei handelt es sich um ein Textfile, in dem jedes Event in eine eigene Zeile geschrieben wird. Diese Datei kann in einem Texteditor verändert werden, allerdings ist dabei darauf zu achten, dass die Syntax beibehalten bleibt.
-Auf Abruf kann das Plugin die Aufzeichnungen wieder abspielen.
+Auf Abruf kann das Plugin die Aufzeichnungen wieder abspielen. 
 
 
 Anforderungen
@@ -97,6 +97,27 @@ Entweder der Wert "track", "state", "control", "message" oder "tank". Außer "tr
    - **control**
    - **message**
    - **tank**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+general
+=======
+
+Vorlage-Struktur für Simulationplugin
+
+.. treeview::
+     - :dir:`folder` **general** (`foo`, Vorlage-Struktur für Simulationplugin)
+         - :dir:`file` **status** (`num`, ---)
+         - :dir:`file` **control** (`num`, ---)
+         - :dir:`file` **message** (`str`, ---)
+         - :dir:`file` **tank** (`num`, ---)
 
 
 ===============

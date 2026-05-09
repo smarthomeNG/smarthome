@@ -1,5 +1,3 @@
-.. index:: Plugin Type; Protokoll
-
 .. include:: /plugins_doc/plugins_protocol_header.rst
 
 .. toctree::
@@ -16,44 +14,81 @@
 
 
 
-.. table:: 
-   :widths: grid
 
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | Plugin (Konfiguration)                                            | Version  | Beschreibung                                                                                                                                                          | Maintainer      | Tester          |
-   +===================================================================+==========+=======================================================================================================================================================================+=================+=================+
-   | :doc:`mqtt <config/mqtt>`                                         | v2.0.6   | MQTT Plugin, welches das MQTT Module von SmartHomeNG zur Kommunikation nutzt.                                                                                         | msinn           | msinn,          |
-   |                                                                   |          |                                                                                                                                                                       |                 | onkelandy       |
-   |                                                                   |          | - `mqtt Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1089334-neues-mqtt-plugin>`_                                                         |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`network <config/network>`                                   | v1.6.2   | Items über Netzwerkanfragen (UDP/TCP/HTTP GET) ändern und Daten per UDP senden                                                                                        | morg            | onkelandy,      |
-   |                                                                   |          |                                                                                                                                                                       |                 | psilo909        |
-   |                                                                   |          | - `network zusätzliche Infos <https://www.smarthomeng.de/user/plugins_doc/config/network.html>`_                                                                      |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`philips_tv <config/philips_tv>`                             | v1.9.2   | Plugin zur Anbindung eines Philips TVs an SmartHomeNG                                                                                                                 | aschwith        | n/a             |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `philips_tv zusätzliche Infos <https://github.com/smarthomeNG/plugins/blob/develop/philips_tv/user_doc.rst>`_                                                       |                 |                 |
-   |                                                                   |          | - `philips_tv Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1698335-supportthread-f%C3%BCr-philips_tv-plugin>`_                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`snmp <config/snmp>`                                         | v1.6.1   | SNMP Queries                                                                                                                                                          | Michael Wenzel  |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `snmp Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1455436-support-thread-f%C3%BCr-snmp-plugin>`_                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | Plugin Status: **develop**                                                                                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`wol <config/wol>`                                           | v1.2.0   | Wake on LAN                                                                                                                                                           | bmxp            | ohinckel        |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | - `wol Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1661427>`_                                                                            |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
-   | :doc:`xmpp <config/xmpp>`                                         | v1.4.1   | Unterstützung des Extensible Messaging and Presence Protocol (XMPP). Unterstützt                                                                                      | ? (Skender      | ohinckel        |
-   |                                                                   |          | z.Zt. nur das Senden von Nachrichten.                                                                                                                                 | Haxhimolla)     |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          |                                                                                                                                                                       |                 |                 |
-   |                                                                   |          | .                                                                                                                                                                     |                 |                 |
-   +-------------------------------------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+
+.. list-table::
+   :header-rows: 1
 
+   * - Plugin (Konfiguration)
+     - Version
+     - Beschreibung
+     - Maintainer
+     - Tester
+   * - :doc:`mqtt <config/mqtt>`
+     - v2.0.6
+     - MQTT Plugin, welches das MQTT Module von SmartHomeNG zur Kommunikation nutzt.
+       
+       + `mqtt Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1089334-neues-mqtt-plugin>`_
+       
+     - msinn
+   
+     - msinn
+   
+       onkelandy
+   
+   * - :doc:`network <config/network>`
+     - v1.6.2
+     - Items über Netzwerkanfragen (UDP/TCP/HTTP GET) ändern und Daten per UDP senden
+       
+       + `network zusätzliche Infos <https://www.smarthomeng.de/user/plugins_doc/config/network.html>`_
+       
+     - Morg
+   
+     - onkelandy
+   
+       psilo909
+   
+   * - :doc:`philips_tv <config/philips_tv>`
+     - v1.9.2
+     - Plugin zur Anbindung eines Philips TVs an SmartHomeNG
+       
+       + `philips_tv zusätzliche Infos <https://github.com/smarthomeNG/plugins/blob/develop/philips_tv/user_doc.rst>`_
+       + `philips_tv Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1698335-supportthread-f%C3%BCr-philips_tv-plugin>`_
+       
+     - aschwith
+   
+     - n/a
+   
+   * - :doc:`snmp <config/snmp>`
+     - v1.6.1
+     - SNMP Queries
+       
+       + `snmp Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1455436-support-thread-f%C3%BCr-snmp-plugin>`_
+       
+       
+       Plugin-Status: **develop**
+     - Michael Wenzel
+   
+     - 
+   
+   * - :doc:`wol <config/wol>`
+     - v1.2.0
+     - Wake on LAN
+       
+       + `wol Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1661427>`_
+       
+     - bmxp
+   
+     - ohinckel
+   
+   * - :doc:`xmpp <config/xmpp>`
+     - v1.4.1
+     - Unterstützung des Extensible Messaging and Presence Protocol (XMPP). Unterstützt z.Zt. nur das Senden von Nachrichten.
+       
+       |br|
+       
+     - ? (Skender Haxhimolla)
+   
+     - ohinckel
+   
 
 .. include:: /plugins_doc/plugins_footer.rst

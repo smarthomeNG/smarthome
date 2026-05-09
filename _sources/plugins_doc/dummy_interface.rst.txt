@@ -41,7 +41,6 @@
    /plugins/sma_em/README.md
    /plugins/sma_mb/README.md
    /plugins/smarttv/README.md
-   /plugins/sml/README.md
    /plugins/snap7_logo/README.md
    /plugins/solarlog/README.md
    /plugins/systemair/README.md

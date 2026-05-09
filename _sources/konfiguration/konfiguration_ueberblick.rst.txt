@@ -80,7 +80,7 @@ Die Verzeichnisse sind im Hauptverzeichnis von SmartHomeNG zu finden, für gewö
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
 | ``doc``       | Wird einmal die Dokumentation enthalten                                                                                     |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
-| ``etc``       | enthält mindestens **smarthome.yaml**, **plugin.yaml** und **logic.yaml**.                                                  |
+| ``etc``       | enthält mindestens ``smarthome.yaml``, ``plugin.yaml`` und ``logic.yaml``.                                                  |
 |               | In diesen Dateien befindet sich die Konfiguration des Grundsystems                                                          |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
 | ``examples``  | Beispiele für Items                                                                                                         |
@@ -109,33 +109,36 @@ Die Verzeichnisse sind im Hauptverzeichnis von SmartHomeNG zu finden, für gewö
 
 Mit (*) gekennzeichnete Verzeichnisse enthalten die vom Benutzer zu erstellenden/zu ändernden Daten (Konfiguration).
 
-Durch Verwenden der Konfigurationsoption ``-e`` bzw. ``--config_etc`` wird SmartHomeNG angewiesen, diese Verzeichnisse nicht im Hauptverzeichnis
+Durch Setzen der Konfigurationsoption ``config_etc: true`` in der ``etc/smarthome.yaml`` wird SmartHomeNG angewiesen, diese Verzeichnisse nicht im Hauptverzeichnis
 von SmartHomeNG (z.B. `/usr/local/smarthome/`) zu suchen, sondern im Unterverzeichnis `etc`. So wären Item-Dateien beispielsweise nicht in
-`/usr/local/smarthome/items/`, sondern in `/usr/local/smarthome/etc/items/` abzulegen.
+`/usr/local/smarthome/items/`, sondern in ``/usr/local/smarthome/etc/items/`` abzulegen. 
 
-Der Vorteil ist, dass sich alle vom Benutzer zu ändernden Daten innerhalb eines Verzeichnisses (mit Unterverzeichnissen) befinden (`etc/`) und
+Der Vorteil der Option ist, dass sich alle vom Benutzer zu ändernden Daten innerhalb eines Verzeichnisses (mit Unterverzeichnissen) befinden (`etc/`) und
 dieses damit einfach nach eigenen Wünschen verwaltet werden kann. Weiterhin wird mit dieser Option die Nutzung der Verzeichnisstruktur stärker
-an die im Unix-Bereich übliche Aufteilung angepasst - in `etc/` befinden sich Konfigurationsdateien (die der Benutzer ändert), in `var/`
+an die im Unix-Bereich übliche Aufteilung angepasst - in ``etc/`` befinden sich Konfigurationsdateien (die der Benutzer ändert), in `var/`
 befinden sich Dateien, die durch SmartHomeNG geändert werden, und die restlichen Dateien sind statisch, d.h. im Programmablauf unverändert.
 
 Da bestehende Referenzen aber auf die seit Beginn von SmartHomeNG festgelegten Pfade verweisen, ist diese Konfiguration optional und kein Standard.
 
+Durch Setzen der Kommandozeilenoption ``-e`` bzw. ``--config_etc`` kann das gleiche Verhalten erzwungen werden, auch wenn die Konfiguration in ``etc/smarthome.yaml`` nicht gesetzt ist.
+Wenn dies von der Kommandozeile aus aktiviert wird, versucht SmartHomeNG zusätzliche, vorhandene  Konfigurationen in den oben mit (*) gekennzeichneten Verzeichnissen in die entsprechenden Ordner unterhalb von ``etc`` zu verschieben. Wenn dies gelingt, werden die ursprünglichen (leeren) Verzeichnisse gelöscht und SmartHomeNG startet normal.
+Wenn dabei Fehler auftauchen, wird eine entsprechende Meldung ausgegeben, und da die Konfiguration möglicherweise nicht korrekt übernommen wurde, wird der Start abgebrochen.
 
-Dateien im Verzeichnis *../etc*
--------------------------------
+Dateien im Verzeichnis ``etc``
+------------------------------
 
-Während der Installation sind im Unterverzeichnis **etc** bereits drei Dateien erstellt worden:
-**smarthome.yaml**, **plugin.yaml** und **logic.yaml**.
+Während der Installation sind im Unterverzeichnis ``etc`` bereits drei Dateien erstellt worden:
+``smarthome.yaml``, ``plugin.yaml`` und ``logic.yaml``.
 
 
 smarthome.yaml
 ^^^^^^^^^^^^^^
 
-In der Datei **smarthome.yaml** wird notiert, wo sich die Installation befindet und welche
+In der Datei ``smarthome.yaml`` wird notiert, wo sich die Installation befindet und welche
 Zeitzone als Basis genommen werden soll:
 
 .. code-block:: yaml
-   :caption: ../etc/smarthome.yaml
+   :caption: etc/smarthome.yaml
 
    # smarthome.yaml
    lat: '50.123'
@@ -164,10 +167,10 @@ Seite :doc:`/referenz/items/standard_attribute/autotimer`
 plugin.yaml
 ^^^^^^^^^^^
 
-Die Datei **plugin.yaml** enthält die Konfigurationsanweisungen für alle Plugins, die benutzt werden sollen.
+Die Datei ``plugin.yaml`` enthält die Konfigurationsanweisungen für alle Plugins, die benutzt werden sollen.
 
 .. code-block:: yaml
-   :caption: ../etc/plugin.yaml
+   :caption: etc/plugin.yaml
 
    # plugin.yaml
    knx:
@@ -186,29 +189,6 @@ Die Datei **plugin.yaml** enthält die Konfigurationsanweisungen für alle Plugi
    sql:
        plugin_name: sqlite_visu2_8
 
-
-Seit Version 1.2 (Master Branch) gibt es ein neues Plugin (Backend) für SmartHomeNG. Dabei kann
-man über einen Browser das gleiche (und mehr) erreichen, wie früher über das CLI-Plugin.
-
-Allerdings ist das Plugin inzwischen veraltet und wird in einer der kommenden Versionen von SmartHomeNG entfernt, da
-es inzwischen ein erheblich leistungsfähigeres Administrationsinterface für SmartHomeNG gibt.
-
-Das Backend Plugin bindet man folgendermaßen ein:
-
-.. code-block:: yaml
-   :caption: Auszug aus ../etc/plugin.yaml
-
-   BackendServer:
-       plugin_name: backend
-       updates_allowed: True
-       user: admin
-       password: xxxx
-       language: de
-       threads: 8
-       #ip: 0.0.0.0
-       #port: 8383
-
-
 Die weitere Einrichtung und Konfiguration von Plugins ist unter `Plugins <plugins.html>`_ beschrieben.
 
 
@@ -221,7 +201,7 @@ Die weitere Einrichtung und Konfiguration von Plugins ist unter `Plugins <plugin
    version of the plugin, you have to specify the parameter `plugin_version` in the configuration
    section of the plugin.
 
-   To find out, if a plugin comes with an older version (or versions), take a look at the plugin's
+   To find out if a plugin comes with an older version (or versions), take a look at the plugin's
    directory. if you find a subdirectory with the name starting with ``_pv_`` the plugin comes with
    an older (previous) version. The rest of the folder name specifies the version number. If you
    find a subfolder ``_pv_1_3_0``, it contains the v1.3.0 of the plugin. To load that version, just
@@ -232,13 +212,13 @@ Die weitere Einrichtung und Konfiguration von Plugins ist unter `Plugins <plugin
 logic.yaml
 ^^^^^^^^^^
 
-In der Datei **logic.yaml** werden die Logiken eingetragen. Der Name jeder Logik kommt
+In der Datei ``logic.yaml`` werden die Logiken eingetragen. Der Name jeder Logik kommt
 zwischen zwei eckige Klammern, der Eintrag **filename** verweist auf die Python-Datei die dann aufgerufen
 wird, wenn die Logik abgearbeitet werden soll. **crontab** schreibt fest, dass die Logik zu bestimmten
 Zeiten ausgeführt werden soll. watch_item bestimmt, welche Items die Logik aufrufen können:
 
 .. code-block:: yaml
-   :caption: ../etc/logic.yaml
+   :caption: etc/logic.yaml
 
    # logic.yaml
    InitSmarthomeNG:
@@ -266,11 +246,8 @@ Für die weitere Konfiguration von Logiken geht es unter :doc:`logiken` weiter.
 Weitere Dateien
 ^^^^^^^^^^^^^^^
 
-Zusätzlich sind ab der Version 1.2 auch noch **logging.yaml**, **plugin.yaml.default** und
-**smarthome.yaml.default** zu finden. Während sich der Inhalt der **.default** Dateien als
-Beispieldatei selbst erklärt, ist die **logging.yaml** noch erklärungsbedürftig:
-Im gesamten Programmcode sind Anweisungen verteilt, die bestimmte Programmzustände loggen,
-also mit notieren.
+Weiterhin existiert noch ``logging.yaml``. Im gesamten Programmcode sind Anweisungen
+verteilt, die bestimmte Programmzustände loggen, also protokollieren.
 
 Im einfachsten Fall sind das einfache Meldungen die z.B. den Start eines
 Plugins melden oder aber das setzen eines Items durch die Visu oder aber das Ausführen einer
@@ -278,7 +255,7 @@ Datenbank Komprimierung. Es sind aber auch Meldungen dabei, die über Fehler ber
 ein Item das über die Visu aktualisiert werden soll, gar nicht existiert oder wenn zum Beispiel
 ein Plugin einen Fehler bei der Abfrage von Daten eines Stromzählers meldet.
 
-Mit der **logging.yaml** kann man ziemlich fein steuern von welchen Modulen man welche Meldungen
+Mit der ``logging.yaml`` kann man ziemlich fein steuern von welchen Modulen man welche Meldungen
 bekommen möchte. Sucht man beispielsweise einen hartnäckigen Fehler in einem neuen Plugin **Foo**,
 dann kann man das Logging für alle anderen Plugins gezielt reduzieren so das man sich aufs Wesentliche
 konzentrieren kann.
@@ -286,14 +263,14 @@ konzentrieren kann.
 Weitere Informationen gibt es unter `Konfiguration - Logging <logging.html>`_
 
 
-Dateien im Verzeichnis *../functions*
--------------------------------------
+Dateien im Verzeichnis ``etc/functions``
+----------------------------------------
 
 Hier werden benutzerdefinierte Funktionen (Userfunctions) gespeichert.
 
 
-Dateien im Verzeichnis *../items*
----------------------------------
+Dateien im Verzeichnis ``etc/items``
+------------------------------------
 
 Hier finden sich die Dateien mit den Items. Es ist egal, wie viele Dateien hier abgelegt wurden.
 Alle Dateien die die Endung .yaml besitzen, werden beim Start von SmartHomeNG gelesen und in die

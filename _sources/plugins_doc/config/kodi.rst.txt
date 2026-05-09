@@ -12,7 +12,7 @@ Plugin 'kodi' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -22,8 +22,6 @@ Plugin 'kodi' Konfiguration
 Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **kodi** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
-
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
 
 
 
@@ -271,6 +269,152 @@ kodi_write
 Änderung des Items werden an das Gerät gesendet
 
  - Datentyp: **bool**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+ALL
+===
+
+
+.. treeview::
+     - :dir:`folder` **ALL** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`folder` **info** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **player** (`num`, ---)
+             - :dir:`file` **state** (`str`, ---)
+             - :dir:`file` **media** (`str`, ---)
+             - :dir:`file` **title** (`str`, ---)
+             - :dir:`file` **streams** (`list`, ---)
+             - :dir:`file` **subtitles** (`list`, ---)
+             - :dir:`file` **macro** (`bool`, ---)
+         - :dir:`folder` **status** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **update** (`bool`, ---)
+             - :dir:`file` **ping** (`bool`, ---)
+             - :dir:`file` **get_status_au** (`bool`, ---)
+             - :dir:`file` **get_actplayer** (`bool`, ---)
+             - :dir:`file` **get_settings** (`dict`, ---)
+             - :dir:`file` **get_status_play** (`bool`, ---)
+             - :dir:`file` **get_item** (`bool`, ---)
+             - :dir:`file` **get_favourites** (`bool`, ---)
+         - :dir:`folder` **control** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **playpause** (`bool`, ---)
+             - :dir:`file` **seek** (`num`, ---)
+             - :dir:`file` **audio** (`foo`, ---)
+             - :dir:`file` **speed** (`num`, ---)
+             - :dir:`file` **subtitle** (`foo`, ---)
+             - :dir:`file` **stop** (`bool`, ---)
+             - :dir:`file` **goto** (`str`, ---)
+             - :dir:`file` **power** (`bool`, ---)
+             - :dir:`file` **quit** (`bool`, ---)
+             - :dir:`file` **mute** (`bool`, ---)
+             - :dir:`file` **volume** (`num`, ---)
+             - :dir:`file` **action** (`str`, ---)
+
+
+control
+=======
+
+
+.. treeview::
+     - :dir:`folder` **control** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`file` **playpause** (`bool`, ---)
+         - :dir:`file` **seek** (`num`, ---)
+         - :dir:`file` **audio** (`foo`, ---)
+         - :dir:`file` **speed** (`num`, ---)
+         - :dir:`file` **subtitle** (`foo`, ---)
+         - :dir:`file` **stop** (`bool`, ---)
+         - :dir:`file` **goto** (`str`, ---)
+         - :dir:`file` **power** (`bool`, ---)
+         - :dir:`file` **quit** (`bool`, ---)
+         - :dir:`file` **mute** (`bool`, ---)
+         - :dir:`file` **volume** (`num`, ---)
+         - :dir:`file` **action** (`str`, ---)
+
+
+info
+====
+
+
+.. treeview::
+     - :dir:`folder` **info** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`file` **player** (`num`, ---)
+         - :dir:`file` **state** (`str`, ---)
+         - :dir:`file` **media** (`str`, ---)
+         - :dir:`file` **title** (`str`, ---)
+         - :dir:`file` **streams** (`list`, ---)
+         - :dir:`file` **subtitles** (`list`, ---)
+         - :dir:`file` **macro** (`bool`, ---)
+
+
+old_control
+===========
+
+
+.. treeview::
+     - :dir:`folder` **old_control** (`foo`, ---)
+         - :dir:`file` **update** (`bool`, ---)
+         - :dir:`folder` **play** (`bool`, ---)
+             - :dir:`file` **play_cmd** (`bool`, ---)
+         - :dir:`folder` **pause** (`bool`, ---)
+             - :dir:`file` **pause_cmd** (`bool`, ---)
+         - :dir:`file` **stop** (`bool`, ---)
+         - :dir:`file` **playpause** (`bool`, ---)
+         - :dir:`file` **previous** (`bool`, ---)
+         - :dir:`file` **next** (`bool`, ---)
+         - :dir:`file` **seek** (`num`, ---)
+         - :dir:`file` **speed** (`num`, ---)
+         - :dir:`file` **volume** (`num`, ---)
+         - :dir:`file` **mute** (`bool`, ---)
+         - :dir:`file` **macro** (`bool`, ---)
+         - :dir:`file` **on_off** (`bool`, ---)
+         - :dir:`file` **input** (`str`, ---)
+         - :dir:`file` **get_favourites** (`bool`, ---)
+         - :dir:`file` **audiostream** (`foo`, ---)
+         - :dir:`file` **subtitle** (`foo`, ---)
+
+
+old_info
+========
+
+
+.. treeview::
+     - :dir:`folder` **old_info** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`file` **player** (`num`, ---)
+         - :dir:`file` **state** (`str`, ---)
+         - :dir:`file` **media** (`str`, ---)
+         - :dir:`file` **title** (`str`, ---)
+         - :dir:`file` **audiostreams** (`list`, ---)
+         - :dir:`file` **subtitles** (`list`, ---)
+
+
+status
+======
+
+
+.. treeview::
+     - :dir:`folder` **status** (`foo`, ---)
+         - :dir:`file` **read** (`bool`, ---)
+         - :dir:`file` **update** (`bool`, ---)
+         - :dir:`file` **ping** (`bool`, ---)
+         - :dir:`file` **get_status_au** (`bool`, ---)
+         - :dir:`file` **get_actplayer** (`bool`, ---)
+         - :dir:`file` **get_settings** (`dict`, ---)
+         - :dir:`file` **get_status_play** (`bool`, ---)
+         - :dir:`file` **get_item** (`bool`, ---)
+         - :dir:`file` **get_favourites** (`bool`, ---)
 
 
 ===============

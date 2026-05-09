@@ -5,6 +5,13 @@
 rrd
 ===
 
+.. image:: webif/static/img/rrdtool-logo-dark.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
 Das `RRDTool <https://oss.oetiker.ch/rrdtool/>`_  ist ein weitverbreitetes Tool um Zeitreihen von Messdaten aufzuzeichnen.
 Dieses Plugin stellt die Möglichkeit bereit Itemwerte an das RRDTool weiterzugeben.
 
@@ -14,27 +21,41 @@ Anforderungen
 Notwendige Software
 -------------------
 
-Das Paket Rrdtool und die entsprechenden Python Libraries müssen installiert sein.
+Das Python Paket ``rrdtool`` und die entsprechenden Libraries für das Betriebssystem müssen installiert sein. 
+Letzteres muss manuell erfolgen:
 
 .. code:: bash
 
     sudo apt-get install librrd-dev libpython3-dev
 
+Das Python Paket wird über die ``requirements.txt`` automatisch beim Start installiert.
 
-Vergleich zwischen Datenbank-Plugin und rrdtool:
-------------------------------------------------
 
-Das RRD-Plugin und das Datenbank-Plugin können nicht zusammen für ein einzelnes Element verwendet werden.
+Vergleich zwischen Datenbank-Plugin, InfluxDB und rrdtool:
+----------------------------------------------------------
 
 RRD
 + ein stabiles, zuverlässiges Werkzeug
 + wird in vielen Datenprotokollierungs- und Grafiktools verwendet
-- Die Entwicklung hat in den letzten Jahren nicht stattgefunden
+- zähe Weiterentwicklung in den letzten Jahren
+- Werte werden nur in bestimmten Abständen aufgezeichnet und nicht dann, wenn eine Änderung eintritt
 
 Datenbank-Plugin
 + Unterstützung für viele verschiedene Datenbanken wie SQLite, MySQL/MariaDB usw.
 + genaue Protokollierung der Änderungszeiten
 + mehr Analysefunktionalität
++ im SmartHomeNG Kern gut integriert
+- keine einstellbare Datenreduktion, nur Zeitbegrenzung der Aufzeichnung
+
+InfluxDB-Plugin
++ Unterstützung für Influx Datenbank
++ speziell entwickelt für Zeitreihen
++ genaue Protokollierung der Änderungszeiten
++ unter Verwendung von Grafana sehr gute Analysefunktionalität
++ Datenreduktion voreinstellbar
+
+Das RRD-Plugin und das Datenbank-Plugin können nur dann zusammen für ein Item verwendet werden,
+wenn beim RRD Plugin die Bereitstellung der Series Funktion unterdrückt wird.
 
 Konfiguration
 =============
@@ -42,6 +63,14 @@ Konfiguration
 Die Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
 unter :doc:`/plugins_doc/config/rrd` beschrieben.
 
+
+Der Plugin Parameter ``step`` bestimmt den Zyklus mit dem alle Itemwerte aufgezeichnet werden.
+Werteänderungen von Items zwischen den ``step`` werden **nicht** berücksichtigt.
+
+.. important:: Änderung gewünscht?
+   Soll das noch geänderte werden das die Items auf jeden Fall aufgezeichnet und im Zeitbereich eines
+   Step in die Datenbank geschrieben werden? 
+   Funktioniert das mit der lib.rrdtool?
 
 Funktionen
 ----------
@@ -52,9 +81,10 @@ Das Plugin stellt für jedes Item das für die Verwendung mit dem Plugin konfigu
 
 Diese Funktion liefert Werte unter Berücksichtigung der nachfolgend erläuterten Funktion und dem Zeitrahmen ``start`` und ``end``.
 
-Unterstützte Funktionen für die Datenaufbereitung sind:
+Derzeit unterstützte Funktionen für die Datenaufbereitung sind:
 
    * `avg`: Durchschnittswert
+   * 'raw': wie Durchschnittswert, aufgenommen um den Parameter ``raw`` bei der SmartVISU nicht ändern zu müssen
    * `max`: Maximalwert
    * `min`: Minimalwert
    * `last`: Letzter eingetragener Wert
@@ -112,4 +142,4 @@ Um die Durchschnittstemperatur einer Woche zu ermitteln die vor genau 7 Tagen en
 Web Interface
 =============
 
-Aktuell hat das Plugin kein Webinterface
+Aktuell hat das Plugin ein Webinterface zur Anzeige der Konfiguration der Items und des aktuellen Wertes.

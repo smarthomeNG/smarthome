@@ -12,7 +12,7 @@ Plugin 'mikrotik' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -136,6 +136,15 @@ Name des zu adressierenden Geräteanschlusses, Beispiel: ether1
  - Datentyp: **str**
 
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -163,7 +172,7 @@ Port Status abfragen. True = aktiviert, False = deaktiviert
 
 
 port
-----
+ -  -  -  - 
 
 Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
@@ -180,7 +189,7 @@ Port POE Status abfragen. True = aktiviert, False = deaktiviert
 
 
 port
-----
+ -  -  -  - 
 
 Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
@@ -197,7 +206,7 @@ Aktuellen Port Status abfragen. True = in Betrieb, False = Aus
 
 
 port
-----
+ -  -  -  - 
 
 Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
@@ -214,7 +223,7 @@ Anschluss aktivieren oder deaktivieren
 
 
 port
-----
+ -  -  -  - 
 
 Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
@@ -222,7 +231,7 @@ Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwend
 
 
 state
------
+ -  -  -  -  - 
 
 Gewünschter Aktivierungsstatus (true = aktiviert, false = deaktiviert)
 
@@ -239,7 +248,7 @@ Poe Ausgabe für einen bestimmten Anschluss einstellen
 
 
 port
-----
+ -  -  -  - 
 
 Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
@@ -247,7 +256,7 @@ Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwend
 
 
 state
------
+ -  -  -  -  - 
 
 Gewünschter POE-Status (true = auto-on, false = off)
 

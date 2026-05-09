@@ -12,7 +12,7 @@ Plugin 'pushbullet' Konfiguration
    :alt: plugin type logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -81,6 +81,15 @@ Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichn
 
 **Keine**
 
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
+
 ===============
 Logik Parameter
 ===============
@@ -108,7 +117,7 @@ Sendet eine Adresse an Pushbullet.
 
 
 name
-----
+ -  -  -  - 
 
 Name der Adresse / des Kontakts.
 
@@ -116,7 +125,7 @@ Name der Adresse / des Kontakts.
 
 
 address
--------
+ -  -  -  -  -  -  - 
 
 Adresse.
 
@@ -124,7 +133,7 @@ Adresse.
 
 
 deviceid
---------
+ -  -  -  -  -  -  -  - 
 
 (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
@@ -132,7 +141,7 @@ deviceid
 
 
 apikey
-------
+ -  -  -  -  -  - 
 
 (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 
@@ -149,7 +158,7 @@ Sendet eine Datei an Pushbullet.
 
 
 filepath
---------
+ -  -  -  -  -  -  -  - 
 
 Pfad der Datei.
 
@@ -157,7 +166,7 @@ Pfad der Datei.
 
 
 deviceid
---------
+ -  -  -  -  -  -  -  - 
 
 (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
@@ -165,7 +174,7 @@ deviceid
 
 
 apikey
-------
+ -  -  -  -  -  - 
 
 (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 
@@ -173,7 +182,7 @@ apikey
 
 
 body
-----
+ -  -  -  - 
 
 Inhalt der Nachricht.
 
@@ -190,7 +199,7 @@ Sendet einen Link an Pushbullet.
 
 
 title
------
+ -  -  -  -  - 
 
 Titel des Links.
 
@@ -198,7 +207,7 @@ Titel des Links.
 
 
 url
----
+ -  -  - 
 
 URL des Links.
 
@@ -206,7 +215,7 @@ URL des Links.
 
 
 deviceid
---------
+ -  -  -  -  -  -  -  - 
 
 (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
@@ -214,7 +223,7 @@ deviceid
 
 
 apikey
-------
+ -  -  -  -  -  - 
 
 (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 
@@ -222,7 +231,7 @@ apikey
 
 
 body
-----
+ -  -  -  - 
 
 Inhalt der Nachricht.
 
@@ -239,7 +248,7 @@ Sendet eine Liste an Pushbullet.
 
 
 title
------
+ -  -  -  -  - 
 
 Titel der Liste.
 
@@ -247,7 +256,7 @@ Titel der Liste.
 
 
 items
------
+ -  -  -  -  - 
 
 Items der Liste (als JSON Array).
 
@@ -255,7 +264,7 @@ Items der Liste (als JSON Array).
 
 
 deviceid
---------
+ -  -  -  -  -  -  -  - 
 
 (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
@@ -263,7 +272,7 @@ deviceid
 
 
 apikey
-------
+ -  -  -  -  -  - 
 
 (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 
@@ -280,7 +289,7 @@ Sendet eine Nachricht an Pushbullet.
 
 
 title
------
+ -  -  -  -  - 
 
 Titel der Nachricht.
 
@@ -288,7 +297,7 @@ Titel der Nachricht.
 
 
 body
-----
+ -  -  -  - 
 
 Inhalt der Nachricht.
 
@@ -296,7 +305,7 @@ Inhalt der Nachricht.
 
 
 deviceid
---------
+ -  -  -  -  -  -  -  - 
 
 (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
@@ -304,7 +313,7 @@ deviceid
 
 
 apikey
-------
+ -  -  -  -  -  - 
 
 (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 

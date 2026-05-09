@@ -12,7 +12,7 @@ Plugin 'dlms' Konfiguration
    :alt: plugin logo
    :width: 300px
    :height: 300px
-   :scale: 50 %
+   :scale: 50%
    :align: left
 
 .. |br| raw:: html
@@ -197,7 +197,7 @@ dlms_obis_code
 ==============
 
 
-Anweisung welcher Teil einer OBIS Zeile geparst und dem Item zugewiesen werden soll * obis Code ``1-1:1.6.2*01`` * Index * Entweder Wert also 'Value' oder Einheit also 'Unit' * Wert Konvertierungsart      * Z6 (Zeit codiert mit hhmmss),      * Z4 (Zeit codiert mit hhmm),      * D6 (Datum codiert mit YYMMDD),      * ZST10 (Datum und Zeit codiert mit YYMMDDhhmm),      * ZST12 (Datum und Zeit codiert mit YYMMDDhhmmss),      * str eine Zeichenkette      * float eine Fliesskommazahl      * int ein ganze Zahl      * num Numerisch, entweder Ganzzahl oder Fliesskommazahl
+Anweisung welcher Teil einer OBIS Zeile geparst und dem Item zugewiesen werden soll * obis Code ``1-1:1.6.2*01`` * Index * Entweder Wert also 'Value' oder Einheit also 'Unit' * Wert Konvertierungsart      * Z6 (Zeit codiert mit hhmmss),      * Z4 (Zeit codiert mit hhmm),      * D6 (Datum codiert mit YYMMDD),      * ZST10 (Datum und Zeit codiert mit YYMMDDhhmm),      * ZST12 (Datum und Zeit codiert mit YYMMDDhhmmss),      * str eine Zeichenkette      * float eine Fliesskommazahl      * int ein ganze Zahl      * num Numerisch, entweder Ganzzahl oder Fliesskommazahl 
 
  - Datentyp: **list(4,str,int,str,str)**
 
@@ -210,6 +210,15 @@ In Items mit diesem Attribut wird der komplette Auslesepuffer abgelegt für eige
 
  - Datentyp: **str**
 
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+**Keine**
 
 ===============
 Logik Parameter
