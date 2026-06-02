@@ -355,6 +355,74 @@ def nested_get(input_dict, path):
     return internal_dict_value
 
 
+def _resolve_partial_struct(struct_name, struct_dict):
+    """
+    Attempt to resolve *struct_name* as a dotted sub-path into a registered struct.
+
+    This enables partial struct inclusion: instead of importing an entire struct,
+    only a named sub-tree of that struct is inserted into the item tree.
+
+    Example
+    -------
+    If the struct ``kodi.master`` is defined and contains sub-items ``foo``, ``bar``
+    and ``baz``, a user can write::
+
+        myitem:
+            struct: kodi.master.bar
+
+    which inserts only the ``bar`` sub-tree of ``kodi.master`` rather than the
+    whole struct.  Deeper paths (e.g. ``kodi.master.bar.child1``) are equally
+    supported.
+
+    Disambiguation
+    --------------
+    The algorithm tries the **longest possible registered prefix first**.  A struct
+    literally named ``kodi.master.bar`` (if such a thing were ever registered) takes
+    precedence over the partial-path interpretation of the same string, because the
+    direct ``struct_dict.get()`` call in the caller is attempted before this helper
+    is invoked.
+
+    Return value
+    ------------
+    Returns a 3-tuple ``(result, matched_struct_name, sub_path)`` where:
+
+    * ``(sub_tree, name, path)``  — the sub-path was found and points to a dict node.
+    * ``(None, name, path)``      — a registered struct prefix was found, but the
+      sub-path is absent or leads to a scalar value (not a dict).
+    * ``(None, None, None)``      — no registered struct matches any prefix at all.
+
+    :param struct_name:  Dotted name to resolve (e.g. ``'kodi.master.bar'``)
+    :param struct_dict:  Dict of all registered structs keyed by their full name
+    :type struct_name:   str
+    :type struct_dict:   dict
+    :return:             3-tuple (sub_tree_or_None, matched_name_or_None, sub_path_or_None)
+    :rtype:              tuple
+    """
+    parts = struct_name.split('.')
+    # Iterate from longest possible prefix down to shortest (greedy, longest wins)
+    for i in range(len(parts) - 1, 0, -1):
+        candidate_name = '.'.join(parts[:i])
+        candidate = struct_dict.get(candidate_name, None)
+        if candidate is None:
+            continue
+        # A registered struct was found — navigate the remaining sub-path key by key
+        sub_path = '.'.join(parts[i:])
+        sub_tree = candidate
+        for part in parts[i:]:
+            if not isinstance(sub_tree, dict):
+                sub_tree = None    # arrived at a scalar before exhausting the path
+                break
+            sub_tree = sub_tree.get(part, None)
+            if sub_tree is None:
+                break              # key not present at this level
+        # Return hit information regardless of sub-path outcome so the caller can
+        # emit a precise error message even when navigation fails
+        return (sub_tree if isinstance(sub_tree, dict) else None,
+                candidate_name,
+                sub_path)
+    return None, None, None
+
+
 def nested_put(output_dict, path, value, add=None):
     """
 
@@ -537,47 +605,96 @@ def set_attr_for_subtree(subtree, attr, value, indent=0):
 
 def add_struct_to_item_template(path, struct_name, template, struct_dict, instance, struct_attrs=None):
     """
-    Add the referenced struct to the items_template subtree
+    Add the referenced struct to the items_template subtree.
 
-    :param path: Path of the item which references a struct (template)
-    :param struct_name: Name of the to use for the item
-    :param template: Template dict to be merged into the item tree
-    :param struct_dict: dict with all defined structs (from /etc/structs.yaml and from loaded plugins)
-    :param instance: For multi instance plugins: instance for which the items work (is derived from item with struct attribute)
-    :param struct_attrs: OrderedDict with attributes to set for every item
+    Supports both full struct names and partial sub-path references:
 
-    :return:
+    * ``struct: kodi.master``       — imports the whole ``kodi.master`` struct (existing behaviour)
+    * ``struct: kodi.master.bar``   — imports only the ``bar`` sub-tree of ``kodi.master``
+    * ``struct: kodi.master.bar.child1`` — imports a deeper sub-tree
+
+    When a partial path is used, the algorithm first checks whether a struct with
+    the exact name exists (direct lookup).  Only if that fails, it tries to find the
+    longest registered struct name that is a prefix of the given name, then navigates
+    into the struct tree along the remaining path components.  This means that a
+    struct literally named ``kodi.master.bar`` is never shadowed by the partial-path
+    mechanism.
+
+    Errors are reported with context-specific messages:
+
+    * *struct not found* — no registered struct name matches any prefix of the given name.
+    * *sub-item not found* — a registered struct was found but the sub-path does not exist.
+    * *not a sub-item tree* — the sub-path resolves to a scalar attribute, not an item tree.
+
+    :param path:         Path of the item which references a struct (template)
+    :param struct_name:  Name (or partial path) of the struct to use for the item
+    :param template:     Template dict to be merged into the item tree
+    :param struct_dict:  Dict with all defined structs (from etc/structs/ and loaded plugins)
+    :param instance:     For multi-instance plugins: instance the items belong to
+    :param struct_attrs: OrderedDict with attributes to propagate to every item in the struct
+    :type path:          str
+    :type struct_name:   str
+    :type template:      OrderedDict
+    :type struct_dict:   dict
+    :type instance:      str
+    :type struct_attrs:  OrderedDict | None
     """
     logger.info(f"add_struct_to_item_template: path (parent)={path}, struct_name={struct_name}, template={dict(template)}")
     struct = struct_dict.get(struct_name, None)
-    if struct is None:
-        # no struct/template with this name
-        nf = collections.OrderedDict()
-        nf['name'] = "ERROR: struct '" + struct_name + "' not found!"
-        nested_put(template, path, nf)
-        logger.error(f"add_struct_to_item_template: Struct definition for '{struct_name}' not found (referenced in item {path})")
-    else:
-        # add struct/template to temporary item(template) tree
-        #logger.debug("- add_struct_to_item_template: struct_dict = {}".format(dict(struct_dict)))
-        #logger.debug("- add_struct_to_item_template: struct '{}' to item '{}'".format(struct_name, path))
-        tmp_struct = copy.deepcopy(struct)
-        if '__struct_is_optional' in tmp_struct:
-            del tmp_struct['__struct_is_optional']
-        if 'name' in tmp_struct and isinstance(struct["name"], str):
-            from lib.smarthome import SmartHome
-            _sh = SmartHome.get_instance()
-            if Utils.to_bool(getattr(_sh, '_struct_strip_name', False)):
-                del tmp_struct['name']
-                logger.debug(f'removed "name" attribute from struct {struct_name}')
-        nested_put(template, path, tmp_struct, add=struct_attrs)
 
-        if instance != '' or True:
-            # add instance to items added by template struct
-            subtree = nested_get(template, path)
-            # logger.info(f"add_struct_to_item_template: Adding 'instance: {instance}' to template for subtree '{path}'")
-            # add instance name to attributes which carry '@instance'
-            logger.debug(f"- add_struct_to_item_template: Add instance={instance} to subtree={subtree}")
-            replace_struct_instance(path, subtree, instance)
+    if struct is None:
+        # Try to resolve as a partial sub-path of a registered struct
+        sub_tree, matched_name, sub_path = _resolve_partial_struct(struct_name, struct_dict)
+        if sub_tree is not None:
+            logger.info(f"add_struct_to_item_template: '{struct_name}' resolved as "
+                        f"sub-path '{sub_path}' of struct '{matched_name}'")
+            struct = sub_tree
+        elif matched_name is not None:
+            # A registered struct was found but the sub-path is missing or scalar
+            raw = nested_get(struct_dict.get(matched_name, {}), sub_path)
+            if raw is None:
+                err = (f"struct '{matched_name}' found but sub-item '{sub_path}' "
+                       f"does not exist within it")
+            else:
+                err = (f"struct '{matched_name}' found but '{sub_path}' is a scalar "
+                       f"value ({repr(raw)}), not a sub-item tree")
+            nf = collections.OrderedDict()
+            nf['name'] = f"ERROR: {err}"
+            nested_put(template, path, nf)
+            logger.error(f"add_struct_to_item_template: {err} (referenced in item '{path}')")
+            logger.info(f"- add_struct_to_item_template: - after add - template={dict(template)}")
+            return
+        else:
+            # No registered struct matches any prefix — original "not found" error
+            nf = collections.OrderedDict()
+            nf['name'] = "ERROR: struct '" + struct_name + "' not found!"
+            nested_put(template, path, nf)
+            logger.error(f"add_struct_to_item_template: Struct definition for '{struct_name}' not found (referenced in item '{path}')")
+            logger.info(f"- add_struct_to_item_template: - after add - template={dict(template)}")
+            return
+
+    # --- struct resolved (either direct or via partial sub-path) ---
+    # add struct/template to temporary item(template) tree
+    #logger.debug("- add_struct_to_item_template: struct_dict = {}".format(dict(struct_dict)))
+    #logger.debug("- add_struct_to_item_template: struct '{}' to item '{}'".format(struct_name, path))
+    tmp_struct = copy.deepcopy(struct)
+    if '__struct_is_optional' in tmp_struct:
+        del tmp_struct['__struct_is_optional']
+    if 'name' in tmp_struct and isinstance(tmp_struct.get("name"), str):
+        from lib.smarthome import SmartHome
+        _sh = SmartHome.get_instance()
+        if Utils.to_bool(getattr(_sh, '_struct_strip_name', False)):
+            del tmp_struct['name']
+            logger.debug(f'removed "name" attribute from struct {struct_name}')
+    nested_put(template, path, tmp_struct, add=struct_attrs)
+
+    if instance != '' or True:
+        # add instance to items added by template struct
+        subtree = nested_get(template, path)
+        # logger.info(f"add_struct_to_item_template: Adding 'instance: {instance}' to template for subtree '{path}'")
+        # add instance name to attributes which carry '@instance'
+        logger.debug(f"- add_struct_to_item_template: Add instance={instance} to subtree={subtree}")
+        replace_struct_instance(path, subtree, instance)
 
     logger.info(f"- add_struct_to_item_template: - after add - template={dict(template)}")
     return

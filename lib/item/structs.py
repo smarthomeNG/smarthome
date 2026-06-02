@@ -384,38 +384,139 @@ class Structs():
         return new_struct
 
 
+    def _resolve_partial_struct_def(self, substruct_name):
+        """
+        Attempt to resolve *substruct_name* as a dotted sub-path into a registered
+        struct definition (used during struct-within-struct expansion at startup).
+
+        This is the struct-definition-time counterpart of ``_resolve_partial_struct``
+        in ``lib/config.py``.  Both implement the same greedy-prefix algorithm; this
+        version operates on ``self._struct_definitions`` rather than the item-loading
+        ``struct_dict``.
+
+        Returns a 3-tuple ``(result, matched_name, sub_path)``:
+
+        * ``(sub_tree, name, path)``  — sub-path found and points to a dict node.
+        * ``(None, name, path)``      — a registered prefix was found but the sub-path
+          is absent or leads to a scalar value.
+        * ``(None, None, None)``      — no registered struct matches any prefix.
+
+        :param substruct_name: Dotted name to resolve (e.g. ``'kodi.master.bar'``)
+        :type substruct_name:  str
+        :return:               3-tuple (sub_tree_or_None, matched_name_or_None, sub_path_or_None)
+        :rtype:                tuple
+        """
+        parts = substruct_name.split('.')
+        for i in range(len(parts) - 1, 0, -1):
+            candidate_name = '.'.join(parts[:i])
+            candidate = self._struct_definitions.get(candidate_name, None)
+            if candidate is None:
+                continue
+            sub_path = '.'.join(parts[i:])
+            sub_tree = candidate
+            for part in parts[i:]:
+                if not isinstance(sub_tree, dict):
+                    sub_tree = None
+                    break
+                sub_tree = sub_tree.get(part, None)
+                if sub_tree is None:
+                    break
+            return (sub_tree if isinstance(sub_tree, dict) else None,
+                    candidate_name,
+                    sub_path)
+        return None, None, None
+
+
     def merge_substruct_to_struct(self, main_struct, substruct_name, main_struct_name='?', key_prefix=''):
         """
+        Merge a referenced struct (or a partial sub-path of a struct) into *main_struct*.
 
-        :param main_struct:
-        :param substruct_name:
-        :param main_struct_name:
-        :return:
+        Supports partial sub-path references in addition to full struct names, allowing
+        a struct definition to embed only part of another struct:
+
+        .. code-block:: yaml
+
+            # etc/structs/mydevice.yaml
+            mydevice:
+                struct: kodi.master.bar   # only the 'bar' sub-tree of kodi.master
+
+        Resolution order:
+
+        1. Exact match — ``substruct_name`` is looked up directly in ``_struct_definitions``.
+        2. Partial match — the longest registered struct name that is a prefix of
+           ``substruct_name`` is found, then the remaining path is navigated within
+           that struct's tree.
+
+        Errors are reported with context-specific messages:
+
+        * *struct not found* — no prefix matches any registered struct name.
+        * *sub-item not found* — a registered prefix was found but the sub-path is absent.
+        * *not a sub-item tree* — the sub-path resolves to a scalar, not a dict node.
+
+        :param main_struct:       Struct being built (modified in place)
+        :param substruct_name:    Name (or partial path) of the struct to merge in
+        :param main_struct_name:  Name of *main_struct* (for error messages)
+        :param key_prefix:        Prefix for relative struct references starting with '.'
+        :type main_struct:        OrderedDict
+        :type substruct_name:     str
+        :type main_struct_name:   str
+        :type key_prefix:         str
         """
-
         self.logger.dbgmed(f"merge_substruct_to_struct: substruct_name='{substruct_name}' -> main_struct='{main_struct_name}'")
         if substruct_name.startswith('.'):
-            # referencing a struct from same definition file
+            # referencing a struct from the same definition file
             substruct_name = key_prefix + substruct_name
+
         substruct = self._struct_definitions.get(substruct_name, None)
+
         if substruct is None:
-            self.logger.error(f"struct '{substruct_name}' not found in structdefinitions (used in struct '{main_struct_name}') - key_prefix={key_prefix}")
-        else:
-            # merge the sub-struct to the main-struct key by key
-            for key in substruct:
-                if key == '__struct_is_optional':
-                    continue
-                if main_struct.get(key, None) is None:
-                    self.logger.dbglow(f" - add key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
-                    main_struct[key] = copy.deepcopy(substruct[key])
-                elif isinstance(main_struct.get(key, None), dict):
-                    self.logger.dbglow(f" - merge key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
-                    self.merge(substruct[key], main_struct[key], substruct_name + '.' + key, main_struct_name + '.' + key)
-                elif isinstance(main_struct.get(key, None), list) or isinstance(substruct.get(key, None), list):
-                    self.logger.dbglow(f" - merge list(s) key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
-                    main_struct[key] = self.merge_structlists(main_struct[key], substruct[key], key)
+            # Try partial sub-path resolution
+            sub_tree, matched_name, sub_path = self._resolve_partial_struct_def(substruct_name)
+            if sub_tree is not None:
+                self.logger.info(f"merge_substruct_to_struct: '{substruct_name}' resolved as "
+                                 f"sub-path '{sub_path}' of struct '{matched_name}'")
+                substruct = sub_tree
+            elif matched_name is not None:
+                # Struct found but sub-path missing or scalar
+                raw = self._struct_definitions.get(matched_name, {})
+                # navigate manually to get the raw value for the error message
+                for part in sub_path.split('.'):
+                    if isinstance(raw, dict):
+                        raw = raw.get(part, None)
+                    else:
+                        raw = None
+                        break
+                if raw is None:
+                    self.logger.error(
+                        f"struct '{matched_name}' found but sub-item '{sub_path}' does not exist "
+                        f"(used in struct '{main_struct_name}') - key_prefix={key_prefix}")
                 else:
-                    self.logger.dbglow(f" - key='{key}', value '{substruct[key]}' is ignored'")
+                    self.logger.error(
+                        f"struct '{matched_name}' found but '{sub_path}' is a scalar value "
+                        f"({repr(raw)}), not a sub-item tree "
+                        f"(used in struct '{main_struct_name}') - key_prefix={key_prefix}")
+                return
+            else:
+                self.logger.error(
+                    f"struct '{substruct_name}' not found in struct definitions "
+                    f"(used in struct '{main_struct_name}') - key_prefix={key_prefix}")
+                return
+
+        # merge the sub-struct into the main struct key by key
+        for key in substruct:
+            if key == '__struct_is_optional':
+                continue
+            if main_struct.get(key, None) is None:
+                self.logger.dbglow(f" - add key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
+                main_struct[key] = copy.deepcopy(substruct[key])
+            elif isinstance(main_struct.get(key, None), dict):
+                self.logger.dbglow(f" - merge key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
+                self.merge(substruct[key], main_struct[key], substruct_name + '.' + key, main_struct_name + '.' + key)
+            elif isinstance(main_struct.get(key, None), list) or isinstance(substruct.get(key, None), list):
+                self.logger.dbglow(f" - merge list(s) key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
+                main_struct[key] = self.merge_structlists(main_struct[key], substruct[key], key)
+            else:
+                self.logger.dbglow(f" - key='{key}', value '{substruct[key]}' is ignored'")
 
         return
 
