@@ -46,7 +46,7 @@ from lib.plugin import Plugins
 from lib.shtime import Shtime
 
 from lib.model.sdp.globals import (
-    update, PLUGIN_ATTR_SEND_TIMEOUT, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
+    update, SDPError, PLUGIN_ATTR_SEND_TIMEOUT, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
     CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS,
     CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES, CMD_ATTR_SEND_RETRIES,
     CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_ATTR_REPLY_PATTERN,
@@ -893,8 +893,8 @@ class SmartDevicePlugin(SmartPlugin):
         # if an error occurs on sending, an exception is thrownn below
         try:
             result = self._send(data_dict, resend_info=resend_info)
-        except (RuntimeError, OSError) as e:  # Exception as e:
-            self.logger.debug(f'error on sending command {command}, error was {e}')
+        except (SDPError, RuntimeError) as e:
+            self.logger.debug(f'error on sending command {command}: {e}')
             return False
         if result:
             by = kwargs.get('by')

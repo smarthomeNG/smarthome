@@ -238,6 +238,27 @@ class CommandsError(Exception):
     pass
 
 
+class SDPError(Exception):
+    """Base class for all SmartDevicePlugin errors.
+    Catch this single type to handle all SDP-specific errors with one except clause.
+    """
+    pass
+
+
+class SDPConnectionError(SDPError, OSError):
+    """Raised when a connection cannot be established or is lost during I/O.
+    Inherits from OSError for backward compatibility with existing catch clauses.
+    """
+    pass
+
+
+class SDPProtocolError(SDPError):
+    """Raised when protocol exchange fails: handshake error, unexpected or
+    invalid response from device, checksum mismatch, etc.
+    """
+    pass
+
+
 #############################################################################################################################################################################################################################################
 #
 # non-class functions
