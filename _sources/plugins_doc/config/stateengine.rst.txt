@@ -58,6 +58,26 @@ Parameter
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
 
+cron_default
+============
+
+
+Crontab zur Evaluierung der Itemstates. Kann individuell pro Item überschrieben werden. Die Evaluierung erfolgt nicht mittels individueller Item-Scheduler, sondern in einem internen globalen Scheduler-System.
+
+ - Datentyp: **str**
+
+
+cycle_default
+=============
+
+
+Cycle in Sekunden, definiert das Intervall, in dem Items neu evaluiert werden sollen. Kann individuell pro Item überschrieben werden. Die Evaluierung erfolgt nicht mittels individueller Item-Scheduler, sondern in einem internen globalen Scheduler-System.
+
+ - Datentyp: **num**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+
 instant_leaveaction
 ===================
 

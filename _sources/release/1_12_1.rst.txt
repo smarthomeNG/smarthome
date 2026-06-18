@@ -1,0 +1,197 @@
+=============================
+Release 1.12.1 - 06. Mai 2026
+=============================
+
+Dieses Release ist ein Feature-Release. Es gibt einige neuer Features im Core
+von SmartHomeNG und den Plugins.
+
+|
+
+.. only:: develop_branch
+
+.. note::
+
+        Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
+
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 
+           ('')
+
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. 
+           ('')
+
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release 
+v1.12.0 sind im Folgenden in diesen Release Notes beschrieben.
+
+
+Minimum Python Version
+----------------------
+
+Die minimale Python-Version, die von SmartHomeNG unterstützt wird, ist **Python 3.10**.
+
+Es ist ggf. möglich, SmartHomeNG auch auf früheren Python-Versionen laufen zu lassen. 
+Dies ist aber nicht getestet, und möglicherweise nutzen z.B. einzelne Plugins Sprachfeatures,
+die erst ab Python 3.10 unterstützt werden. 
+Insofern kann für Versuche in dieser Hinsicht kein Support geleistet werden. 
+
+Bei einer Neuinstallation wird jedoch empfohlen, auf einer der neueren
+Python-Versionen (3.12 oder 3.13) aufzusetzen.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Offiziell unterstützt werden im SmartHomeNG Release 1.12.1 die Python-Versionen 3.10, 3.11, 3.12 und 3.13.
+Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
+(Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
+zu unterstützten Python Versionen)
+
+|
+
+Änderungen am Core
+==================
+
+Allgemein
+---------
+
+* example plugins: enhance, add tests, add instructions in contributing.md
+
+* workflows:
+
+  * update workflows and hooks, update docu
+  * local check/test before pushing (optional)
+  * build dev-doc only on upstream repository
+  * update workflows, implement linting & error checking
+  * update pyproject.toml: exclude previous plugin versions and logics from linting
+
+* tests:
+
+  * improve lib.item tests for refactoring
+  * further improvements, minor fixes
+  * add/update tests for libraries
+
+
+Updates im Core
+---------------
+
+* rename logic (adminui, lib.logic)
+
+* detect and report undefined group references in get_logics_info(), cross-reference all logic_groupname values against the defined groups in logic_groups.yaml. unknown references are collected into an 'unknown_groups' dict ({groupname: [logicnames]}) and included in the api response alongside the existing groups field. each unknown reference also emits a warning log line on the backend. this powers the warning ui in the admin frontend without requiring any auto-correction of user-edited files.
+
+* store group definitions in etc/logic_groups.yaml
+
+* Libs:
+
+  * lib.item:
+
+    * fix eval nameerror processing
+    * partial struct inclusion — import sub-trees of a struct by dotted path
+    * eval namespace doc, ruff cleanup, _casting.py eval wiring
+    * explicit eval namespace with legacy compat shim
+    * complete refactoring
+    * only try compat shim for nameerror
+
+  * lib.log:
+
+    * fix bug
+    * enable logger reconfig without reload
+
+  * lib.metadata:
+
+    * fix: return string if language dict not available
+
+  * lib.plugin:
+
+    * fix error in reload logic
+
+  * lib.scene:
+
+    * fix bug, log warning instead of raising exception
+
+  * lib.smarthome:
+
+    * skip deprecated crypto ciphers
+ 
+* Modules:
+
+  * module.admin:
+
+    * fix websocket race condition, production path calculation, global_structs error
+    * add develop log level
+    * build info, fix scroll and log display
+    * fix scrolling, use dialogs with keys
+    * add support for small screens
+    * add new system config parameters, fix logic/group editing (also in core/api)
+    * fix appreadyguard, deletelogicgroup, layout (also: lib.logic)
+    * improvements to logics editor (rename, merge groups), layout structured and unified
+    * new logics group editor, layout fixes, tests; moved logic_groups definition to etc/logic_groups.yaml
+    * fix file selection
+    * deprecate and ignore websocket host/port as these are set in the websocket module
+    * fixes and improvements, edit all struct files
+    * fixes to resource graphs and license text
+    * enable sorting/filtering of lists
+    * fix layout, dont overwrite existing files
+    * streamline design details
+    * fix/enhance loggers list
+    * fix pypi endpoint to use cached package_list
+    * add item tree/detail/update and pypi endpoints to rest api
+    * migration auf angular20 fortgesetzt, regressionen behoben
+    * update to adminui v1.0.0
+    * fix path resolution for adminui, cleanup
+    * add load/unload/reload methods
+
+  * module.admin.api_files:
+
+    * enable log file backup
+
+|
+
+Änderungen an Plugins
+=====================
+
+* database:
+
+  * update workflows for testing
+
+* stateengine:
+
+  * minor code adjustments based on pr #1042
+  * fix negative delay/suspend_remaining edge case
+  * improve queue lock
+  * fix overwrite handling
+  * remove useless line
+  * get rid of stupid action scheduler.
+  * change version to 2.3.0
+  * further scheduler/trigger fixes
+  * another important scheduler fix to avoid multiple triggers at the same time
+  * adapt scheduler (important)
+  * cleanup scheduler (remove item scheduler for now)
+  * update scheduler handling
+  * remove item scheduler
+  * improve scheduler
+  * improve value handling
+  * fix docu link
+  * improve action scheduler, prepare internal item scheduler
+
+* uzsu:
+
+  * minor code improvement based on https://github.com/smarthomeng/plugins/pull/1042
+  * fix issue with activetoday
+  * fix sunrise/set calculation
+
+|
+
+Weitere Änderungen
+==================
+
+Dokumentation
+-------------
+
+* add new developer docs to dev subfolder
+
+module.admin
+~~~~~~~~~~~~
+* AdminUI updated to v1.12.1

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Beispielplugin update &mdash; Dokumentation v1.12.0 v1.12.0 (Stand 09. Mai 2026) Dokumentation</title>
+  <title>Beispielplugin update &mdash; Dokumentation v1.12.1 v1.12.1 (Stand 18. Juni 2026) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
@@ -42,7 +42,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Dokumentation v1.12.0
+            Dokumentation v1.12.1
               <img src="../../../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -55,8 +55,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../was_ist_neu.html">Neuerungen im Release v1.12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../was_ist_neu.html">Neuerungen im Release v1.12.1</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-im-release-v1-12">Neuerungen im Release v1.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-im-release-v1-11">Neuerungen im Release v1.11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a><ul>
@@ -399,6 +400,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../konfiguration/item_structs.html#teilweises-einbinden-von-structs-partial-struct-inclusion-new">Teilweises Einbinden von structs (partial struct inclusion) <span class="redsup">new</span></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../konfiguration/item_structs.html#verwendung-mehrerer-definitionsdateien">Verwendung mehrerer Definitionsdateien</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../konfiguration/item_structs.html#beispiele">Beispiele</a></li>
 </ul>
@@ -4034,6 +4036,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_build_requirements.html">build_requirements.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_conf_to_yaml_converter.html">conf_to_yaml_converter.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_getshngpid.html">getshngpid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_install_hooks.html">install-hooks.sh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#wozu-dienen-die-hooks">Wozu dienen die Hooks?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#scope-der-checks">Scope der Checks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#push-trotzdem-erzwingen">Push trotzdem erzwingen</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_plugin_metadata_checker.html">plugin_metadata_checker.py</a></li>
 </ul>
 </li>
@@ -4096,14 +4105,8 @@
 <li class="toctree-l5"><a class="reference internal" href="plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartplugin_class.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/mqttplugin_class.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#plugin">Plugin</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
@@ -4113,10 +4116,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin"><code class="docutils literal notranslate"><span class="pre">SmartDevicePlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="plugin_metadata.html#plugin">plugin</a></li>
@@ -4193,19 +4193,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
@@ -4237,10 +4226,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../core/core.html">Entwicklung des Core</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../core/core_shng.html#smarthome-py">smarthome.py</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../core/core_shng.html#smarthome-py">smarthome.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../core/core_shng.html#lib-item">lib.item</a></li>
 </ul>
 </li>
@@ -4270,15 +4256,7 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/daemon.html">lib.daemon</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/daemon.html">lib.daemon</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -4286,15 +4264,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_conversion.html#lib.item_conversion.yaml_save"><code class="docutils literal notranslate"><span class="pre">yaml_save()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/log.html">lib.log</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/log.html#lib.log.DateTimeRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">DateTimeRotatingFileHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/log.html#lib.log.EnglishLocale"><code class="docutils literal notranslate"><span class="pre">EnglishLocale</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/log.html#lib.log.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/log.html#lib.log.Logs"><code class="docutils literal notranslate"><span class="pre">Logs</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/log.html#lib.log.ShngMemLogHandler"><code class="docutils literal notranslate"><span class="pre">ShngMemLogHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/log.html#lib.log.ShngTimedRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">ShngTimedRotatingFileHandler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/log.html">lib.log</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/metadata.html">lib.metadata</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/metadata.html#lib.metadata.Metadata"><code class="docutils literal notranslate"><span class="pre">Metadata</span></code></a></li>
 </ul>
@@ -4303,10 +4273,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/scene.html">lib.scene</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/scene.html">lib.scene</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -4334,10 +4301,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/translation.html#lib.translation.translate"><code class="docutils literal notranslate"><span class="pre">translate()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/db.html">lib.db</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/db.html">lib.db</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/logutils.html">lib.logutils</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
@@ -4353,10 +4317,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/tools.html">lib.tools</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a></li>
 </ul>
@@ -4657,12 +4618,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../referenz/module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../referenz/module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_http.html#module-modules.http">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_http.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4670,29 +4626,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../referenz/module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../referenz/module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../referenz/module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4858,25 +4800,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../lib/db.html">lib.db</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.close"><code class="docutils literal notranslate"><span class="pre">Database.close()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.commit"><code class="docutils literal notranslate"><span class="pre">Database.commit()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.connect"><code class="docutils literal notranslate"><span class="pre">Database.connect()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.connected"><code class="docutils literal notranslate"><span class="pre">Database.connected()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.cursor"><code class="docutils literal notranslate"><span class="pre">Database.cursor()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.execute"><code class="docutils literal notranslate"><span class="pre">Database.execute()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.fetchall"><code class="docutils literal notranslate"><span class="pre">Database.fetchall()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.fetchone"><code class="docutils literal notranslate"><span class="pre">Database.fetchone()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.lock"><code class="docutils literal notranslate"><span class="pre">Database.lock()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.release"><code class="docutils literal notranslate"><span class="pre">Database.release()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.rollback"><code class="docutils literal notranslate"><span class="pre">Database.rollback()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.setup"><code class="docutils literal notranslate"><span class="pre">Database.setup()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.verify"><code class="docutils literal notranslate"><span class="pre">Database.verify()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lib/db.html">lib.db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/logutils.html">lib.logutils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/logutils.html#lib.logutils.DuplicateFilter.filter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter.filter()</span></code></a></li>
@@ -4959,21 +4883,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.aware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.aware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.unaware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.unaware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.utc_to_local"><code class="docutils literal notranslate"><span class="pre">Orb.utc_to_local()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/env.html">lib.env</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/env.html#lib.env.kn_to_kmh"><code class="docutils literal notranslate"><span class="pre">kn_to_kmh()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/env.html#lib.env.kmh_to_kn"><code class="docutils literal notranslate"><span class="pre">kmh_to_kn()</span></code></a></li>
@@ -5058,7 +4968,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../referenz/APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/item.html#module-lib.item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/item.html#lib-item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/item.html#class-item">class Item</a></li>
@@ -5068,7 +4978,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/plugin.html#lib-plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/plugin.html#module-lib.plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -5078,26 +4988,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/shtime.html#module-lib.shtime">lib.shtime</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/shtime.html#lib-shtime">lib.shtime</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/logic.html#module-lib.logic">lib.logic</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/logic.html#lib-logic">lib.logic</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../lib/scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../lib/scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/scheduler.html#lib-scheduler">lib.scheduler</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/env.html">lib.env</a><ul>
@@ -5207,6 +5106,27 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../release/1_x_x.html#weitere-anderungen">Weitere Änderungen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../release/1_x_x.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../release/1_12_1.html">Release 1.12.1 - 06. Mai 2026</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_12_1.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_1.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_1.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_12_1.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_1.html#allgemein">Allgemein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_1.html#updates-im-core">Updates im Core</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_12_1.html#anderungen-an-plugins">Änderungen an Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_12_1.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_1.html#dokumentation">Dokumentation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../release/1_12_1.html#module-admin">module.admin</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -5600,7 +5520,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Dokumentation v1.12.0</a>
+          <a href="../../../index.html">Dokumentation v1.12.1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -5705,6 +5625,12 @@
 <span class="n">item_attributes</span><span class="p">:</span>
     <span class="c1"># Definition of item attributes defined by this plugin (enter &#39;item_attributes: NONE&#39;, if section should be empty)</span>
 
+    <span class="n">foo_itemtag</span><span class="p">:</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="n">description</span><span class="p">:</span>
+            <span class="n">de</span><span class="p">:</span> <span class="s1">&#39;Demo Item-Attribut zur Demonstration der Plugin-Zuordnung&#39;</span>
+            <span class="n">en</span><span class="p">:</span> <span class="s1">&#39;Demo item attribute to demonstrate plugin item assignment&#39;</span>
+
 <span class="n">item_structs</span><span class="p">:</span>
     <span class="c1"># Definition of item-structure templates for this plugin (enter &#39;item_structs: NONE&#39;, if section should be empty)</span>
 
@@ -5774,9 +5700,10 @@
 <span class="sd">    are already available!</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">PLUGIN_VERSION</span> <span class="o">=</span> <span class="s1">&#39;1.0.0&#39;</span>    <span class="c1"># (must match the version specified in plugin.yaml), use &#39;1.0.0&#39; for your initial plugin Release</span>
+    <span class="n">PLUGIN_VERSION</span> <span class="o">=</span> <span class="s1">&#39;1.0.0&#39;</span>  <span class="c1"># must match the version in plugin.yaml; use &#39;1.0.0&#39; for initial release</span>
+    <span class="n">ALLOW_MULTIINSTANCE</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># set to True if the plugin can run as multiple instances simultaneously</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sh</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initalizes the plugin.</span>
 
@@ -5795,24 +5722,26 @@
         <span class="c1"># cycle time in seconds, only needed, if hardware/interface needs to be</span>
         <span class="c1"># polled for value changes by adding a scheduler entry in the run method of this plugin</span>
         <span class="c1"># (maybe you want to make it a plugin parameter?)</span>
+        <span class="c1">#</span>
         <span class="c1"># self._cycle = 60</span>
 
         <span class="c1"># if you want to use an item to toggle plugin execution, enable the</span>
         <span class="c1"># definition in plugin.yaml and uncomment the following line</span>
-        <span class="c1">#self._pause_item_path = self.get_parameter_value(&#39;pause_item&#39;)</span>
+        <span class="c1">#</span>
+        <span class="c1"># self._pause_item_path = self.get_parameter_value(&#39;pause_item&#39;)</span>
 
         <span class="c1"># Initialization code goes here</span>
 
         <span class="c1"># On initialization error use:</span>
-        <span class="c1">#   self._init_complete = False</span>
-        <span class="c1">#   return</span>
+        <span class="c1">#</span>
+        <span class="c1"># self._init_complete = False</span>
+        <span class="c1"># return</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_webinterface</span><span class="p">(</span><span class="n">WebInterface</span><span class="p">)</span>
         <span class="c1"># if plugin should not start without web interface</span>
+        <span class="c1">#</span>
         <span class="c1"># if not self.init_webinterface():</span>
         <span class="c1">#     self._init_complete = False</span>
-
-        <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -5823,19 +5752,22 @@
         <span class="c1"># connect to network / web / serial device</span>
         <span class="c1"># (enable the following lines if you want to open a connection</span>
         <span class="c1">#  don&#39;t forget to implement a connect (and disconnect) method.. :) )</span>
-        <span class="c1">#self.connect()</span>
+        <span class="c1">#</span>
+        <span class="c1"># self.connect()</span>
 
         <span class="c1"># setup scheduler for device poll loop</span>
         <span class="c1"># (enable the following line, if you need to poll the device.</span>
         <span class="c1">#  Rember to un-comment the self._cycle statement in __init__ as well)</span>
-        <span class="c1">#self.scheduler_add(self.get_fullname() + &#39;_poll&#39;, self.poll_device, cycle=self._cycle)</span>
+        <span class="c1">#</span>
+        <span class="c1"># self.scheduler_add(self.get_fullname() + &#39;_poll&#39;, self.poll_device, cycle=self._cycle)</span>
 
         <span class="c1"># Start the asyncio eventloop in it&#39;s own thread</span>
         <span class="c1"># and set self.alive to True when the eventloop is running</span>
         <span class="c1"># (enable the following line, if you need to use asyncio in the plugin)</span>
-        <span class="c1">#self.start_asyncio(self.plugin_coro())</span>
+        <span class="c1">#</span>
+        <span class="c1"># self.start_asyncio(self.plugin_coro())</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">True</span>     <span class="c1"># if using asyncio, do not set self.alive here. Set it in the session coroutine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># if using asyncio, do not set self.alive here. Set it in the session coroutine</span>
 
         <span class="c1"># let the plugin change the state of pause_item</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pause_item</span><span class="p">:</span>
@@ -5852,7 +5784,7 @@
 <span class="sd">        Stop method for the plugin</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">dbghigh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;Methode &#39;</span><span class="si">{method}</span><span class="s2">&#39; aufgerufen&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;stop()&#39;</span><span class="p">}))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">False</span>     <span class="c1"># if using asyncio, do not set self.alive here. Set it in the session coroutine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># if using asyncio, do not set self.alive here. Set it in the session coroutine</span>
 
         <span class="c1"># let the plugin change the state of pause_item</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pause_item</span><span class="p">:</span>
@@ -5864,11 +5796,13 @@
 
         <span class="c1"># stop the asyncio eventloop and it&#39;s thread</span>
         <span class="c1"># If you use asyncio, enable the following line</span>
-        <span class="c1">#self.stop_asyncio()</span>
+        <span class="c1">#</span>
+        <span class="c1"># self.stop_asyncio()</span>
 
         <span class="c1"># If you called connect() on run(), disconnect here</span>
         <span class="c1"># (remember to write a disconnect() method!)</span>
-        <span class="c1">#self.disconnect()</span>
+        <span class="c1">#</span>
+        <span class="c1"># self.disconnect()</span>
 
         <span class="c1"># also, clean up anything you set up in run(), so the plugin can be</span>
         <span class="c1"># cleanly stopped and started again</span>
@@ -5894,12 +5828,11 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_item</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_iattr</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">conf</span><span class="p">,</span> <span class="s1">&#39;foo_itemtag&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;parse item: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="c1"># todo</span>
-        <span class="c1"># if interesting item for sending values:</span>
-        <span class="c1">#   self._itemlist.append(item)</span>
-        <span class="c1">#   return self.update_item</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;parse item: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># Register the item so update_item() is called when the item changes.</span>
+            <span class="c1"># updating=True means the item is also tracked in get_trigger_items().</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">updating</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_item</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">parse_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logic</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -5939,7 +5872,15 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="ow">and</span> <span class="n">caller</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fullname</span><span class="p">():</span>
             <span class="c1"># code to execute if the plugin is not stopped</span>
             <span class="c1"># and only, if the item has not been changed by this plugin:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;update_item: &#39;</span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; has been changed outside this plugin by caller &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">callerinfo</span><span class="p">(</span><span class="n">caller</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;update_item: &#39;</span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; has been changed outside this plugin &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;by caller &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">callerinfo</span><span class="p">(</span><span class="n">caller</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># OPTIONAL (asyncio): bridge the synchronous update_item call into</span>
+            <span class="c1"># the plugin&#39;s async event loop.  run_asyncio_coro() blocks until</span>
+            <span class="c1"># the coroutine returns, so update_item stays synchronous to shNG.</span>
+            <span class="c1"># result = self.run_asyncio_coro(self._async_send(&#39;some_command&#39;, item()))</span>
 
             <span class="k">pass</span>
 
@@ -5967,23 +5908,76 @@
         <span class="c1">#     item(device_value, self.get_fullname(), source=device_source_id)</span>
         <span class="k">pass</span>
 
+    <span class="c1"># ==========================================================================</span>
+    <span class="c1"># OPTIONAL: asyncio support</span>
+    <span class="c1"># ==========================================================================</span>
+    <span class="c1"># Use this block if your plugin relies on an asyncio-based device library.</span>
+    <span class="c1"># SmartPlugin runs the plugin coroutine in a dedicated per-plugin event loop</span>
+    <span class="c1"># inside its own thread, separate from the main shNG event loop.</span>
+    <span class="c1">#</span>
+    <span class="c1"># Enable by uncommenting the corresponding lines in run() and stop():</span>
+    <span class="c1">#   run()  → self.start_asyncio(self.plugin_coro())</span>
+    <span class="c1">#   stop() → self.stop_asyncio()</span>
+    <span class="c1"># When using asyncio, do NOT set self.alive in run()/stop() — plugin_coro</span>
+    <span class="c1"># manages self.alive so that the timing matches the event loop&#39;s lifecycle.</span>
+    <span class="c1"># ==========================================================================</span>
+
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">plugin_coro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Coroutine for the plugin session (only needed, if using asyncio)</span>
+<span class="sd">        Async entry point for the plugin (only needed when using asyncio).</span>
 
-<span class="sd">        This coroutine is run as the PluginTask and should</span>
-<span class="sd">        only terminate, when the plugin is stopped</span>
+<span class="sd">        SmartPlugin.start_asyncio() launches this coroutine inside a dedicated</span>
+<span class="sd">        event loop thread.  The coroutine is responsible for managing self.alive</span>
+<span class="sd">        so the rest of shNG knows when the plugin is actually running.</span>
+
+<span class="sd">        Lifecycle</span>
+<span class="sd">        ---------</span>
+<span class="sd">        1. One-time async setup (e.g. open a client connection).</span>
+<span class="sd">        2. Set self.alive = True and notify the pause item.</span>
+<span class="sd">        3. Await wait_for_asyncio_termination() — this blocks until stop()</span>
+<span class="sd">           calls stop_asyncio(), which puts &#39;STOP&#39; on the internal run-queue.</span>
+<span class="sd">        4. Async teardown, then self.alive = False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">notice</span><span class="p">(</span><span class="s2">&quot;plugin_coro started&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;plugin_coro: started&#39;</span><span class="p">)</span>
+
+        <span class="c1"># --- one-time async setup (open connection, subscribe to events, …) ---</span>
+        <span class="c1"># await self._async_connect()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pause_item</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pause_item</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fullname</span><span class="p">())</span>
 
-        <span class="c1"># ...</span>
+        <span class="c1"># Keep running until stop_asyncio() signals termination.</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_asyncio_termination</span><span class="p">()</span>
+
+        <span class="c1"># --- async teardown ---</span>
+        <span class="c1"># await self._async_disconnect()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pause_item</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pause_item</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fullname</span><span class="p">())</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">notice</span><span class="p">(</span><span class="s2">&quot;plugin_coro finished&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;plugin_coro: finished&#39;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_async_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Example async helper: send a command/value to the device.</span>
+
+<span class="sd">        Call this from synchronous code (e.g. update_item) via the bridge::</span>
+
+<span class="sd">            result = self.run_asyncio_coro(self._async_send(&#39;power&#39;, True))</span>
+
+<span class="sd">        run_asyncio_coro() submits the coroutine to the plugin event loop and</span>
+<span class="sd">        blocks the calling thread until the coroutine returns.</span>
+
+<span class="sd">        :param command: device command name</span>
+<span class="sd">        :param value:   value to send</span>
+<span class="sd">        :return:        True on success, False on error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;_async_send: </span><span class="si">{</span><span class="n">command</span><span class="si">!r}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># Replace with your actual async device call, e.g.:</span>
+        <span class="c1">#   await self._client.write(command, value)</span>
+        <span class="k">return</span> <span class="kc">True</span>
 </pre></div>
 </div>
 </div>

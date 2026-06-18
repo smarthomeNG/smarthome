@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lib.network &mdash; Dokumentation v1.12.0 v1.12.0 (Stand 09. Mai 2026) Dokumentation</title>
+  <title>lib.network &mdash; Dokumentation v1.12.1 v1.12.1 (Stand 18. Juni 2026) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Dokumentation v1.12.0
+            Dokumentation v1.12.1
               <img src="../../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -52,8 +52,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../was_ist_neu.html">Neuerungen im Release v1.12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../was_ist_neu.html">Neuerungen im Release v1.12.1</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-12">Neuerungen im Release v1.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-11">Neuerungen im Release v1.11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../was_war_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a><ul>
@@ -396,6 +397,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../konfiguration/item_structs.html#teilweises-einbinden-von-structs-partial-struct-inclusion-new">Teilweises Einbinden von structs (partial struct inclusion) <span class="redsup">new</span></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../konfiguration/item_structs.html#verwendung-mehrerer-definitionsdateien">Verwendung mehrerer Definitionsdateien</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../konfiguration/item_structs.html#beispiele">Beispiele</a></li>
 </ul>
@@ -4031,6 +4033,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_build_requirements.html">build_requirements.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_conf_to_yaml_converter.html">conf_to_yaml_converter.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_getshngpid.html">getshngpid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/tools_install_hooks.html">install-hooks.sh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#wozu-dienen-die-hooks">Wozu dienen die Hooks?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#scope-der-checks">Scope der Checks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#push-trotzdem-erzwingen">Push trotzdem erzwingen</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_plugin_metadata_checker.html">plugin_metadata_checker.py</a></li>
 </ul>
 </li>
@@ -4093,14 +4102,8 @@
 <li class="toctree-l5"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartplugin_class.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/mqttplugin_class.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#plugin">Plugin</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
@@ -4110,10 +4113,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin"><code class="docutils literal notranslate"><span class="pre">SmartDevicePlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#plugin">plugin</a></li>
@@ -4190,19 +4190,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
@@ -4234,10 +4223,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../entwicklung/core/core.html">Entwicklung des Core</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../entwicklung/core/core_shng.html#lib-item">lib.item</a></li>
 </ul>
 </li>
@@ -4267,15 +4253,7 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/daemon.html">lib.daemon</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/daemon.html">lib.daemon</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -4283,15 +4261,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_conversion.html#lib.item_conversion.yaml_save"><code class="docutils literal notranslate"><span class="pre">yaml_save()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/log.html">lib.log</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.DateTimeRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">DateTimeRotatingFileHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.EnglishLocale"><code class="docutils literal notranslate"><span class="pre">EnglishLocale</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.Logs"><code class="docutils literal notranslate"><span class="pre">Logs</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.ShngMemLogHandler"><code class="docutils literal notranslate"><span class="pre">ShngMemLogHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.ShngTimedRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">ShngTimedRotatingFileHandler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/log.html">lib.log</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/metadata.html">lib.metadata</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/metadata.html#lib.metadata.Metadata"><code class="docutils literal notranslate"><span class="pre">Metadata</span></code></a></li>
 </ul>
@@ -4300,10 +4270,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/scene.html">lib.scene</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/scene.html">lib.scene</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -4331,10 +4298,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/translation.html#lib.translation.translate"><code class="docutils literal notranslate"><span class="pre">translate()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/db.html">lib.db</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/db.html">lib.db</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/logutils.html">lib.logutils</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
@@ -4350,10 +4314,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html">lib.orb</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html">lib.orb</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/tools.html">lib.tools</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a></li>
 </ul>
@@ -4654,12 +4615,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../referenz/module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#module-modules.http">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4667,29 +4623,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4855,25 +4797,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../lib/db.html">lib.db</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.close"><code class="docutils literal notranslate"><span class="pre">Database.close()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.commit"><code class="docutils literal notranslate"><span class="pre">Database.commit()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.connect"><code class="docutils literal notranslate"><span class="pre">Database.connect()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.connected"><code class="docutils literal notranslate"><span class="pre">Database.connected()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.cursor"><code class="docutils literal notranslate"><span class="pre">Database.cursor()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.execute"><code class="docutils literal notranslate"><span class="pre">Database.execute()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.fetchall"><code class="docutils literal notranslate"><span class="pre">Database.fetchall()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.fetchone"><code class="docutils literal notranslate"><span class="pre">Database.fetchone()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.lock"><code class="docutils literal notranslate"><span class="pre">Database.lock()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.release"><code class="docutils literal notranslate"><span class="pre">Database.release()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.rollback"><code class="docutils literal notranslate"><span class="pre">Database.rollback()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.setup"><code class="docutils literal notranslate"><span class="pre">Database.setup()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.verify"><code class="docutils literal notranslate"><span class="pre">Database.verify()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../../lib/db.html">lib.db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/logutils.html">lib.logutils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.DuplicateFilter.filter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter.filter()</span></code></a></li>
@@ -4956,21 +4880,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../lib/orb.html">lib.orb</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.aware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.aware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.unaware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.unaware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.utc_to_local"><code class="docutils literal notranslate"><span class="pre">Orb.utc_to_local()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../../lib/orb.html">lib.orb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/env.html">lib.env</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/env.html#lib.env.kn_to_kmh"><code class="docutils literal notranslate"><span class="pre">kn_to_kmh()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/env.html#lib.env.kmh_to_kn"><code class="docutils literal notranslate"><span class="pre">kmh_to_kn()</span></code></a></li>
@@ -5055,7 +4965,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../referenz/APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/item.html#module-lib.item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/item.html#lib-item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item.html#class-item">class Item</a></li>
@@ -5065,7 +4975,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/plugin.html#lib-plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/plugin.html#module-lib.plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -5075,26 +4985,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/shtime.html#module-lib.shtime">lib.shtime</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/shtime.html#lib-shtime">lib.shtime</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/logic.html#module-lib.logic">lib.logic</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/logic.html#lib-logic">lib.logic</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/scheduler.html#lib-scheduler">lib.scheduler</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/env.html">lib.env</a><ul>
@@ -5204,6 +5103,27 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../release/1_x_x.html#weitere-anderungen">Weitere Änderungen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../release/1_x_x.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../release/1_12_1.html">Release 1.12.1 - 06. Mai 2026</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_1.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_1.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#allgemein">Allgemein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#updates-im-core">Updates im Core</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_1.html#anderungen-an-plugins">Änderungen an Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_1.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#dokumentation">Dokumentation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../release/1_12_1.html#module-admin">module.admin</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -5597,7 +5517,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Dokumentation v1.12.0</a>
+          <a href="../../index.html">Dokumentation v1.12.1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -5660,7 +5580,8 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<span class="c1">#from iowait import IOWait</span>
+
+<span class="c1"># from iowait import IOWait</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">selectors</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">socket</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
@@ -5775,7 +5696,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;FFFFFFFFFFFF&#39;</span><span class="p">,</span> <span class="n">mac</span> <span class="o">*</span> <span class="mi">16</span><span class="p">])</span>
         <span class="n">send_data</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="n">send_data</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">send_data</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">))])</span>
+            <span class="n">send_data</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">send_data</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">))])</span>
 
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">):</span>
             <span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
@@ -5846,10 +5767,7 @@
         <span class="c1"># find login data</span>
         <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;http([s]?)://([^:]+:[^@]+@)&#39;</span><span class="p">)</span>
         <span class="c1"># possible replacement modes</span>
-        <span class="n">replacement</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;strip&#39;</span><span class="p">:</span> <span class="s1">&#39;http</span><span class="se">\\</span><span class="s1">g&lt;1&gt;://&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="s1">&#39;http</span><span class="se">\\</span><span class="s1">g&lt;1&gt;://***:***@&#39;</span>
-        <span class="p">}</span>
+        <span class="n">replacement</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;strip&#39;</span><span class="p">:</span> <span class="s1">&#39;http</span><span class="se">\\</span><span class="s1">g&lt;1&gt;://&#39;</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="s1">&#39;http</span><span class="se">\\</span><span class="s1">g&lt;1&gt;://***:***@&#39;</span><span class="p">}</span>
 
         <span class="c1"># if no change requested or no login data found, return unchanged</span>
         <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">replacement</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">uri</span><span class="p">):</span>
@@ -5935,7 +5853,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">HTTPDigestAuth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Http.post_json"><a class="viewcode-back" href="../../lib/network.html#lib.network.Http.post_json">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">post_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="Http.post_json"><a class="viewcode-back" href="../../lib/network.html#lib.network.Http.post_json">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">post_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">files</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Launch a POST request and return JSON answer as a dict or None on error.</span>
 
@@ -5952,12 +5870,16 @@
 <span class="sd">        :return: JSON answer decoded into a dict or None on whatever error occured</span>
 <span class="sd">        :rtype: dict | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">files</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">):</span>
             <span class="n">json</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> invalid JSON received from </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">baseurl</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> invalid JSON received from </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">baseurl</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
             <span class="k">return</span> <span class="n">json</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -5983,7 +5905,9 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> invalid JSON received from </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">baseurl</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="w"> </span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> invalid JSON received from </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">baseurl</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
             <span class="k">return</span> <span class="n">json</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -6009,7 +5933,9 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span>
                 <span class="n">_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="o">.</span><span class="n">text</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> successful GET, but decoding response failed. This should never happen...error was: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> successful GET, but decoding response failed. This should never happen...error was: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
         <span class="k">return</span> <span class="n">_text</span></div>
 
 <div class="viewcode-block" id="Http.download"><a class="viewcode-back" href="../../lib/network.html#lib.network.Http.download">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -6032,7 +5958,9 @@
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> download of </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1"> successfully completed, saving to </span><span class="si">{</span><span class="n">local</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> download of </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1"> successfully completed, saving to </span><span class="si">{</span><span class="n">local</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">local</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="p">:</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
@@ -6103,7 +6031,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">__post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">json</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">files</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Send POST request. Non-documented arguments are passed on to requests.request().</span>
 
@@ -6115,15 +6053,23 @@
 <span class="sd">        :return: True if POST was successful</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">files</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseurl</span> <span class="o">+</span> <span class="n">url</span> <span class="k">if</span> <span class="n">url</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseurl</span>
         <span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span> <span class="k">if</span> <span class="n">timeout</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span> <span class="k">if</span> <span class="n">json</span> <span class="k">else</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> sending POST request </span><span class="si">{</span><span class="n">json</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">response_status</span><span class="p">()</span><span class="si">}</span><span class="s1"> Posted to URL </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">response_status</span><span class="p">()</span><span class="si">}</span><span class="s1"> Posted to URL </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> error sending POST request to </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> error sending POST request to </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
 
@@ -6141,10 +6087,16 @@
         <span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span> <span class="k">if</span> <span class="n">timeout</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> sending GET request to </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">response_status</span><span class="p">()</span><span class="si">}</span><span class="s1"> fetched URL </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">response_status</span><span class="p">()</span><span class="si">}</span><span class="s1"> fetched URL </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> error sending GET request to </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> error sending GET request to </span><span class="si">{</span><span class="n">Network</span><span class="o">.</span><span class="n">clean_uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_hide_login</span><span class="p">)</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_response</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
@@ -6173,7 +6125,7 @@
 <span class="sd">    :param connect_cycle: Time between retries inside a connect round</span>
 <span class="sd">    :param retry_cycle: Time between connect rounds if autoreconnect is True</span>
 <span class="sd">    :param retry_abort: abort connecting after this many failed connect rounds and call abort_callback, no action if set to 0 or callback not set</span>
-<span class="sd">    :param abort_callback: callback function to be run on connection abort </span>
+<span class="sd">    :param abort_callback: callback function to be run on connection abort</span>
 <span class="sd">    :param binary: Switch between binary and text mode. Text will be encoded / decoded using encoding parameter.</span>
 <span class="sd">    :param terminator: Terminator to use to split received data into chunks (split lines &lt;cr&gt; for example). If integer then split into n bytes. Default is None means process chunks as received.</span>
 <span class="sd">    :param timeout: Timeout to set for connected socket. Don&#39;t change without reason</span>
@@ -6193,11 +6145,24 @@
 <span class="sd">    :type timeout: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">autoreconnect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoconnect</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connect_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                 <span class="n">connect_cycle</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">retry_cycle</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">retry_abort</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">abort_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">terminator</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">rate_limit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_rate_connects</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">host</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">autoreconnect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">autoconnect</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">connect_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">connect_cycle</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">retry_cycle</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">retry_abort</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">abort_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">binary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">terminator</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">rate_limit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">max_rate_connects</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="c1"># public properties</span>
@@ -6251,7 +6216,9 @@
         <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_family</span><span class="p">)</span> <span class="o">=</span> <span class="n">Network</span><span class="o">.</span><span class="n">validate_inet_addr</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hostip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;TCP_Client&quot;</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="si">}</span><span class="s1">)&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> Initializing a connection to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s1"> on TCP port </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">&quot;with&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_autoreconnect</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;without&quot;</span><span class="si">}</span><span class="s1"> autoreconnect&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> Initializing a connection to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s1"> on TCP port </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">&quot;with&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_autoreconnect</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;without&quot;</span><span class="si">}</span><span class="s1"> autoreconnect&#39;</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> Connection to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s1"> not possible, invalid address&#39;</span><span class="p">)</span>
 
@@ -6269,19 +6236,27 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">connected</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">connected</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;connected_callback for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">connected</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2"> and it expects </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2"> arguments&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;connected_callback for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> is </span><span class="si">{</span><span class="n">connected</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s1"> and it expects </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s1"> arguments&#39;</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_connected_callback</span> <span class="o">=</span> <span class="n">connected</span>
         <span class="k">if</span> <span class="n">receiving</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">receiving</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;connected_callback for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">receiving</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2"> and it expects </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2"> arguments&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;connected_callback for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> is </span><span class="si">{</span><span class="n">receiving</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s1"> and it expects </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s1"> arguments&#39;</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_receiving_callback</span> <span class="o">=</span> <span class="n">receiving</span>
         <span class="k">if</span> <span class="n">disconnected</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">disconnected</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;connected_callback for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">disconnected</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2"> and it expects </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2"> arguments&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;connected_callback for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> is </span><span class="si">{</span><span class="n">disconnected</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s1"> and it expects </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s1"> arguments&#39;</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_disconnected_callback</span> <span class="o">=</span> <span class="n">disconnected</span>
         <span class="k">if</span> <span class="n">data_received</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">data_received</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;connected_callback for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">data_received</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2"> and it expects </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2"> arguments&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;connected_callback for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> is </span><span class="si">{</span><span class="n">data_received</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s1"> and it expects </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s1"> arguments&#39;</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span> <span class="o">=</span> <span class="n">data_received</span></div>
 
 <div class="viewcode-block" id="Tcp_client.open"><a class="viewcode-back" href="../../lib/network.html#lib.network.Tcp_client.open">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -6307,15 +6282,17 @@
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">__connect_threadlock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Starting connect to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
-
                 <span class="c1"># limit connection rates</span>
                 <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_connect</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ratelimit</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;connect: rate limit active, minimum delay is </span><span class="si">{</span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_ratelimit</span><span class="si">}</span><span class="s1">, current delay is </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_last_connect</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;connect: rate limit active, minimum delay is </span><span class="si">{</span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_ratelimit</span><span class="si">}</span><span class="s1">, current delay is </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_last_connect</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_num_connects</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_connects</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_rate_connects</span><span class="p">:</span>
-
                         <span class="c1"># too many rate limits reached</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;connect: max number of rate limits hit </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_rate_connects</span><span class="si">}</span><span class="s1">, aborting connect&#39;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s1">&#39;connect: max number of rate limits hit </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_rate_connects</span><span class="si">}</span><span class="s1">, aborting connect&#39;</span>
+                        <span class="p">)</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abort_callback</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_abort_callback</span><span class="p">()</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_num_connects</span> <span class="o">=</span> <span class="mi">0</span>
@@ -6323,18 +6300,24 @@
 
                     <span class="c1"># wait till we may connect again</span>
                     <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_connect</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ratelimit</span><span class="p">):</span>
-                        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">.1</span><span class="p">)</span>
+                        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">dbglow</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;connect() creating connect thread &quot;TCP_Connect </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_connect_thread_worker</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;TCP_Connect </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                    <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_connect_thread_worker</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;TCP_Connect </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">dbglow</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;connect() to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="si">}</span><span class="s1">: self.__running=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__running</span><span class="si">}</span><span class="s1">, self.__connect_thread.is_alive()=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">dbglow</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;connect() to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="si">}</span><span class="s1">: self.__running=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__running</span><span class="si">}</span><span class="s1">, self.__connect_thread.is_alive()=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__running</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">dbglow</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;connect() to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="si">}</span><span class="s1">: calling __connect_thread.start()&#39;</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">dbglow</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;connect() starting thread failed, error was </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">, thread is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="si">}</span><span class="s1">, running=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__running</span><span class="si">}</span><span class="s1">, is_alive()=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">dbglow</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;connect() starting thread failed, error was </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">, thread is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="si">}</span><span class="s1">, running=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__running</span><span class="si">}</span><span class="s1">, is_alive()=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="p">)</span>
                     <span class="k">return</span> <span class="kc">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">dbglow</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;leaving connect() to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -6369,14 +6352,18 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> autoconnecting on send attempt, message is </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> trying to send </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">, but not connected and autoconnect not active. Aborting.&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> trying to send </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">, but not connected and autoconnect not active. Aborting.&#39;</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_connected</span><span class="p">:</span>
                 <span class="n">bytes_sent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_socket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">bytes_sent</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> error sending message </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">: message truncated, sent </span><span class="si">{</span><span class="n">bytes_sent</span><span class="si">}</span><span class="s1"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="si">}</span><span class="s1"> bytes&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> error sending message </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">: message truncated, sent </span><span class="si">{</span><span class="n">bytes_sent</span><span class="si">}</span><span class="s1"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="si">}</span><span class="s1"> bytes&#39;</span>
+                    <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
@@ -6417,7 +6404,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__running</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">__running</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_connected</span><span class="p">:</span>
             <span class="c1"># Try a full connect round</span>
-            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_connected</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect_counter</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect_retries</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_retry_round_counter</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retry_abort</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retry_abort</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__running</span><span class="p">:</span>
+            <span class="k">while</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_connected</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect_counter</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect_retries</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_retry_round_counter</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retry_abort</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retry_abort</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__running</span>
+            <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_connected</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
@@ -6429,11 +6421,11 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">__receive_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">__receive_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
                     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;could not start __receive_thread_worker for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;could not start __receive_thread_worker for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
                         <span class="k">raise</span>
                     <span class="k">return</span> <span class="kc">True</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;self._connect() for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> did not work&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;self._connect() for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> did not work&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__running</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect_counter</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect_retries</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connect_cycle</span><span class="p">)</span>
 
@@ -6452,7 +6444,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initiate connection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> connecting using TCP/</span><span class="si">{</span><span class="s2">&quot;IPv6&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_family</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET6</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">&quot;with&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_autoreconnect</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;without&quot;</span><span class="si">}</span><span class="s1"> autoreconnect&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> connecting using TCP/</span><span class="si">{</span><span class="s2">&quot;IPv6&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_family</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET6</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">&quot;with&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_autoreconnect</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;without&quot;</span><span class="si">}</span><span class="s1"> autoreconnect&#39;</span>
+        <span class="p">)</span>
         <span class="c1"># Try to connect to remote host using ip (v4 or v6)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_socket</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_family</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
@@ -6466,16 +6460,18 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_connected</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_connect_counter</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> TCP connection failed </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_connect_counter</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connect_retries</span><span class="p">)</span><span class="si">}</span><span class="s1"> times, last error was: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> TCP connection failed </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_connect_counter</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connect_retries</span><span class="p">)</span><span class="si">}</span><span class="s1"> times, last error was: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__receive_thread_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Thread worker to handle receiving.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> started receive thread&#39;</span><span class="p">)</span>
-        <span class="c1">#alt</span>
-        <span class="c1">#waitobj = IOWait()</span>
-        <span class="c1">#waitobj.watch(self._socket, read=True)</span>
+        <span class="c1"># alt</span>
+        <span class="c1"># waitobj = IOWait()</span>
+        <span class="c1"># waitobj.watch(self._socket, read=True)</span>
         <span class="c1"># neu:</span>
         <span class="n">selector</span> <span class="o">=</span> <span class="n">selectors</span><span class="o">.</span><span class="n">DefaultSelector</span><span class="p">()</span>
         <span class="n">selector</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_socket</span><span class="p">,</span> <span class="n">selectors</span><span class="o">.</span><span class="n">EVENT_READ</span><span class="p">)</span>
@@ -6487,11 +6483,11 @@
         <span class="c1"># try to find possible &quot;hidden&quot; errors</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_connected</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__running</span><span class="p">:</span>
-                <span class="c1">#alt</span>
-                <span class="c1">#events = waitobj.wait(1000)     # BMX</span>
-                <span class="c1">#for fileno, read, write in events:  # BMX</span>
+                <span class="c1"># alt</span>
+                <span class="c1"># events = waitobj.wait(1000)     # BMX</span>
+                <span class="c1"># for fileno, read, write in events:  # BMX</span>
 
-                <span class="c1">#neu</span>
+                <span class="c1"># neu</span>
                 <span class="n">events</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 1 Sekunde</span>
                 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">mask</span> <span class="o">&amp;</span> <span class="n">selectors</span><span class="o">.</span><span class="n">EVENT_READ</span><span class="p">:</span>
@@ -6534,16 +6530,24 @@
                                     <span class="n">__buffer</span> <span class="o">=</span> <span class="n">__buffer</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span>
                                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                                         <span class="k">try</span><span class="p">:</span>
-                                            <span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_binary</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span><span class="p">(</span>
+                                                <span class="bp">self</span><span class="p">,</span> <span class="n">line</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_binary</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                                            <span class="p">)</span>
                                         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">iex</span><span class="p">:</span>
-                                            <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span><span class="p">(</span><span class="n">iex</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;lib.network </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> receive in terminator mode calling data_received_callback </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span><span class="si">}</span><span class="s1"> failed: </span><span class="si">{</span><span class="n">iex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span><span class="p">(</span>
+                                                <span class="n">iex</span><span class="p">,</span>
+                                                <span class="sa">f</span><span class="s1">&#39;lib.network </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> receive in terminator mode calling data_received_callback </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span><span class="si">}</span><span class="s1"> failed: </span><span class="si">{</span><span class="n">iex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                            <span class="p">)</span>
                             <span class="c1"># If not in terminator mode just forward what we received</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                                     <span class="k">try</span><span class="p">:</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
                                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">iex</span><span class="p">:</span>
-                                        <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span><span class="p">(</span><span class="n">iex</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;lib.network </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> calling data_received_callback </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span><span class="si">}</span><span class="s1"> failed: </span><span class="si">{</span><span class="n">iex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span><span class="p">(</span>
+                                            <span class="n">iex</span><span class="p">,</span>
+                                            <span class="sa">f</span><span class="s1">&#39;lib.network </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> calling data_received_callback </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_received_callback</span><span class="si">}</span><span class="s1"> failed: </span><span class="si">{</span><span class="n">iex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                        <span class="p">)</span>
                         <span class="c1"># If empty peer has closed the connection</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__running</span><span class="p">:</span>
@@ -6559,15 +6563,18 @@
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="c1"># default state, peer closed connection</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> connection closed by peer&#39;</span><span class="p">)</span>
-                                <span class="c1">#alt</span>
-                                <span class="c1">#waitobj.unwatch(self._socket)</span>
-                                <span class="c1">#neu</span>
+                                <span class="c1"># alt</span>
+                                <span class="c1"># waitobj.unwatch(self._socket)</span>
+                                <span class="c1"># neu</span>
                                 <span class="n">selector</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_socket</span><span class="p">)</span>
                                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disconnected_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                                     <span class="k">try</span><span class="p">:</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">_disconnected_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">iex</span><span class="p">:</span>
-                                        <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span><span class="p">(</span><span class="n">iex</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;lib.network </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> calling disconnected_callback </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_disconnected_callback</span><span class="si">}</span><span class="s1"> failed: </span><span class="si">{</span><span class="n">iex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span><span class="p">(</span>
+                                            <span class="n">iex</span><span class="p">,</span>
+                                            <span class="sa">f</span><span class="s1">&#39;lib.network </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> calling disconnected_callback </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_disconnected_callback</span><span class="si">}</span><span class="s1"> failed: </span><span class="si">{</span><span class="n">iex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                        <span class="p">)</span>
                                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_autoreconnect</span><span class="p">:</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> autoreconnect enabled&#39;</span><span class="p">)</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
@@ -6584,14 +6591,15 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__running</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> receive thread shutting down&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;lib.network </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> receive thread died with unexpected error: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s1">. Go tell...&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span><span class="p">(</span>
+                    <span class="n">ex</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;lib.network </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> receive thread died with unexpected error: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s1">. Go tell...&#39;</span>
+                <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_receiving</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_log_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s1">&#39; -- If stack trace is necessary, enable/check debug log&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">):</span>
-
             <span class="c1"># Get current system exception</span>
             <span class="n">ex_type</span><span class="p">,</span> <span class="n">ex_value</span><span class="p">,</span> <span class="n">ex_traceback</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
 
@@ -6602,11 +6610,13 @@
             <span class="n">stack_trace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 
             <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">trace_back</span><span class="p">:</span>
-                <span class="n">stack_trace</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;File : </span><span class="si">%s</span><span class="s2"> , Line : </span><span class="si">%d</span><span class="s2">, Func.Name : </span><span class="si">%s</span><span class="s2">, Message : </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trace</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trace</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">trace</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+                <span class="n">stack_trace</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s1">&#39;File : </span><span class="si">%s</span><span class="s1"> , Line : </span><span class="si">%d</span><span class="s1">, Func.Name : </span><span class="si">%s</span><span class="s1">, Message : </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trace</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trace</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">trace</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Exception type : </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">ex_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Exception message : </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ex_value</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stack trace : </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">stack_trace</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Exception type : </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">ex_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Exception message : </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ex_value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Stack trace : </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">stack_trace</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_sleep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_lapse</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6616,7 +6626,7 @@
 <span class="sd">        :type time: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">time_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">time_end</span> <span class="o">=</span> <span class="p">(</span><span class="n">time_start</span> <span class="o">+</span> <span class="n">time_lapse</span><span class="p">)</span>
+        <span class="n">time_end</span> <span class="o">=</span> <span class="n">time_start</span> <span class="o">+</span> <span class="n">time_lapse</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">__running</span> <span class="ow">and</span> <span class="n">time_end</span> <span class="o">&gt;</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">():</span>
             <span class="c1"># modified from &#39;pass&#39; - this way intervals of 1 second are given up to other threads</span>
             <span class="c1"># but the abort loop stays intact with a maximum of 1 second delay</span>
@@ -6632,7 +6642,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_socket</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">SHUT_RD</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;socket no longer connected on disconnect, exception is </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;socket no longer connected on disconnect, exception is </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__connect_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
@@ -6729,7 +6739,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> error encoding data&#39;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">try</span><span class="p">:</span>
-
             <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__drain_writer</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -6778,7 +6787,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_iac_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-        <span class="n">iac</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;ECHO&#39;</span><span class="p">,</span> <span class="mi">251</span><span class="p">:</span> <span class="s1">&#39;WILL&#39;</span><span class="p">,</span> <span class="mi">252</span><span class="p">:</span> <span class="s1">&#39;WON</span><span class="se">\&#39;</span><span class="s1">T&#39;</span><span class="p">,</span> <span class="mi">253</span><span class="p">:</span> <span class="s1">&#39;DO&#39;</span><span class="p">,</span> <span class="mi">254</span><span class="p">:</span> <span class="s1">&#39;DON</span><span class="se">\&#39;</span><span class="s1">T&#39;</span><span class="p">,</span> <span class="mi">255</span><span class="p">:</span> <span class="s1">&#39;IAC&#39;</span><span class="p">}</span>
+        <span class="n">iac</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;ECHO&#39;</span><span class="p">,</span> <span class="mi">251</span><span class="p">:</span> <span class="s1">&#39;WILL&#39;</span><span class="p">,</span> <span class="mi">252</span><span class="p">:</span> <span class="s2">&quot;WON&#39;T&quot;</span><span class="p">,</span> <span class="mi">253</span><span class="p">:</span> <span class="s1">&#39;DO&#39;</span><span class="p">,</span> <span class="mi">254</span><span class="p">:</span> <span class="s2">&quot;DON&#39;T&quot;</span><span class="p">,</span> <span class="mi">255</span><span class="p">:</span> <span class="s1">&#39;IAC&#39;</span><span class="p">}</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">iac</span><span class="p">:</span>
@@ -6889,7 +6898,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__coroutine</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">start_server</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__handle_connection</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ipaddr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__server</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__coroutine</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread_worker</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;TCPServer </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread_worker</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;TCPServer </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -6958,7 +6969,9 @@
                     <span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">_data_received_callback</span><span class="p">:</span>
                         <span class="n">client</span><span class="o">.</span><span class="n">_data_received_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> received undecodable bytes from </span><span class="si">{</span><span class="n">client</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s1">, resulting in error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1"> received undecodable bytes from </span><span class="si">{</span><span class="n">client</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s1">, resulting in error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__close_client</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
@@ -7120,7 +7133,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__coroutine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__start_server</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__coroutine</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread_worker</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;UDP_Server </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread_worker</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;UDP_Server </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -7174,7 +7189,7 @@
         <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">):</span>  <span class="c1"># thread can disappear between first and second condition test</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span> <span class="o">=</span> <span class="kc">None</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">__listening_thread</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__loop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">__start_server</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

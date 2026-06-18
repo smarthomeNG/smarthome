@@ -8,7 +8,7 @@ Tools
 =====
 
 Im Verzeichnis ``tools`` sind einige Python Skripte abgelegt, die im Umgang mit SmartHomeNG
-hilfreich sind.
+hilfreich sind. Daneben befinden sich dort auch Shell-Skripte für Entwicklungsaufgaben.
 
 
 .. toctree::
@@ -19,5 +19,6 @@ hilfreich sind.
    tools_build_requirements
    tools_conf_to_yaml_converter
    tools_getshngpid
+   tools_install_hooks
    tools_plugin_metadata_checker
 

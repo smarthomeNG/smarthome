@@ -212,7 +212,7 @@
        onkelandy
    
    * - :doc:`stateengine <config/stateengine>`
-     - v2.2.2
+     - v2.3.0
      - Zustandsautomat für SmarthomeNG, ehemals AutoBlind
        
        + `stateengine Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1303071-stateengine-plugin-support>`_
@@ -248,7 +248,7 @@
      - jentz1986
    
    * - :doc:`uzsu <config/uzsu>`
-     - v2.1.0
+     - v2.1.1
      - Universelle Zeitschaltuhr
        
        + `uzsu Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1364692-supportthread-für-uzsu-plugin>`_

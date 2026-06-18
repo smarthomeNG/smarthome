@@ -368,6 +368,73 @@ werden die Listen zusammengefügt. Die Reihenfolge der Listeneinträge wird durc
 Attributdefinitionen eingelesen werden.
 
 
+Teilweises Einbinden von structs (partial struct inclusion) :redsup:`new`
+=========================================================================
+
+Normalerweise wird beim Verwenden des **struct**-Attributs die gesamte Struktur des Templates eingebunden.
+Es ist jedoch möglich, nur einen Teil einer Struktur einzubinden, indem der Pfad zum gewünschten Teilbaum
+angegeben wird.
+
+Wenn z.B. das Plugin **kodi** eine Struktur **master** mit den Unterpunkten **foo**, **bar** und **baz** definiert,
+kann mit:
+
+.. code-block:: yaml
+
+    myitem:
+        struct: kodi.master
+
+die gesamte Struktur eingebunden werden. Um nur den Teilbaum **bar** einzubinden, schreibt man:
+
+.. code-block:: yaml
+
+    myitem:
+        struct: kodi.master.bar
+
+Es lassen sich auch tiefere Pfade referenzieren:
+
+.. code-block:: yaml
+
+    myitem:
+        struct: kodi.master.bar.child1
+
+Dabei gilt: Es wird der **längste** registrierte Strukturname als Prefix gesucht. Ein direkt registrierter
+Strukturname (z.B. wenn ``kodi.master.bar`` selbst als eigenständige Struktur registriert wäre) hat immer
+Vorrang vor der Teilpfad-Auflösung.
+
+Das Einbinden von Teilstrukturen funktioniert auch in Strukturdefinitionen selbst (nested structs), nicht
+nur in Item-Definitionen:
+
+.. code-block:: yaml
+
+    # etc/structs/mydevice.yaml
+    mydevice:
+        struct: kodi.master.bar   # nur den 'bar'-Teilbaum von kodi.master einbinden
+
+Fehlermeldungen
+~~~~~~~~~~~~~~~
+
+Wenn ein Teilpfad angegeben wird, der nicht existiert, gibt SmartHomeNG eine aussagekräftige Fehlermeldung aus:
+
+* *struct 'kodi.master' found but sub-item 'bar' does not exist within it* — der Pfad existiert nicht im
+  Strukturbaum.
+* *struct 'kodi.master' found but 'bar.type' is a scalar value ('num'), not a sub-item tree* — der Pfad
+  verweist auf ein skalares Attribut (z.B. ``type: num``), nicht auf einen Teilbaum.
+* *struct 'kodi.master.bar' not found* — kein registrierter Strukturname passt als Präfix (Struktur komplett
+  unbekannt).
+
+.. note::
+
+    Mit ``struct: kodi.master.bar`` wird der Inhalt des Teilbaums **bar** direkt unter dem referenzierenden
+    Item eingefügt — **nicht** als Kind-Item namens **bar**. Wenn das gewünschte Ergebnis ein Kind-Item
+    namens **bar** sein soll, muss die Item-Definition entsprechend strukturiert werden:
+
+    .. code-block:: yaml
+
+        myitem:
+            bar:
+                struct: kodi.master.bar
+
+
 Verwendung mehrerer Definitionsdateien
 ======================================
 

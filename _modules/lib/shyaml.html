@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lib.shyaml &mdash; Dokumentation v1.12.0 v1.12.0 (Stand 09. Mai 2026) Dokumentation</title>
+  <title>lib.shyaml &mdash; Dokumentation v1.12.1 v1.12.1 (Stand 18. Juni 2026) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Dokumentation v1.12.0
+            Dokumentation v1.12.1
               <img src="../../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -52,8 +52,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../was_ist_neu.html">Neuerungen im Release v1.12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../was_ist_neu.html">Neuerungen im Release v1.12.1</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-12">Neuerungen im Release v1.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-11">Neuerungen im Release v1.11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../was_war_neu.html#neuerungen-bei-plugins">Neuerungen bei Plugins</a><ul>
@@ -396,6 +397,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../konfiguration/item_structs.html#teilweises-einbinden-von-structs-partial-struct-inclusion-new">Teilweises Einbinden von structs (partial struct inclusion) <span class="redsup">new</span></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../konfiguration/item_structs.html#verwendung-mehrerer-definitionsdateien">Verwendung mehrerer Definitionsdateien</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../konfiguration/item_structs.html#beispiele">Beispiele</a></li>
 </ul>
@@ -4031,6 +4033,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_build_requirements.html">build_requirements.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_conf_to_yaml_converter.html">conf_to_yaml_converter.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_getshngpid.html">getshngpid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/tools_install_hooks.html">install-hooks.sh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#wozu-dienen-die-hooks">Wozu dienen die Hooks?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#scope-der-checks">Scope der Checks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#push-trotzdem-erzwingen">Push trotzdem erzwingen</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_plugin_metadata_checker.html">plugin_metadata_checker.py</a></li>
 </ul>
 </li>
@@ -4093,14 +4102,8 @@
 <li class="toctree-l5"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartplugin_class.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/mqttplugin_class.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#plugin">Plugin</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
@@ -4110,10 +4113,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin"><code class="docutils literal notranslate"><span class="pre">SmartDevicePlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#plugin">plugin</a></li>
@@ -4190,19 +4190,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
@@ -4234,10 +4223,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../entwicklung/core/core.html">Entwicklung des Core</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../entwicklung/core/core_shng.html#lib-item">lib.item</a></li>
 </ul>
 </li>
@@ -4267,15 +4253,7 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/daemon.html">lib.daemon</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/daemon.html">lib.daemon</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -4283,15 +4261,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_conversion.html#lib.item_conversion.yaml_save"><code class="docutils literal notranslate"><span class="pre">yaml_save()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/log.html">lib.log</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.DateTimeRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">DateTimeRotatingFileHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.EnglishLocale"><code class="docutils literal notranslate"><span class="pre">EnglishLocale</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.Logs"><code class="docutils literal notranslate"><span class="pre">Logs</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.ShngMemLogHandler"><code class="docutils literal notranslate"><span class="pre">ShngMemLogHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.ShngTimedRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">ShngTimedRotatingFileHandler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/log.html">lib.log</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/metadata.html">lib.metadata</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/metadata.html#lib.metadata.Metadata"><code class="docutils literal notranslate"><span class="pre">Metadata</span></code></a></li>
 </ul>
@@ -4300,10 +4270,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/scene.html">lib.scene</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/scene.html">lib.scene</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -4331,10 +4298,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/translation.html#lib.translation.translate"><code class="docutils literal notranslate"><span class="pre">translate()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/db.html">lib.db</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/db.html">lib.db</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/logutils.html">lib.logutils</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
@@ -4350,10 +4314,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html">lib.orb</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html">lib.orb</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/tools.html">lib.tools</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a></li>
 </ul>
@@ -4654,12 +4615,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../referenz/module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#module-modules.http">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4667,29 +4623,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4855,25 +4797,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../lib/db.html">lib.db</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.close"><code class="docutils literal notranslate"><span class="pre">Database.close()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.commit"><code class="docutils literal notranslate"><span class="pre">Database.commit()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.connect"><code class="docutils literal notranslate"><span class="pre">Database.connect()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.connected"><code class="docutils literal notranslate"><span class="pre">Database.connected()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.cursor"><code class="docutils literal notranslate"><span class="pre">Database.cursor()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.execute"><code class="docutils literal notranslate"><span class="pre">Database.execute()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.fetchall"><code class="docutils literal notranslate"><span class="pre">Database.fetchall()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.fetchone"><code class="docutils literal notranslate"><span class="pre">Database.fetchone()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.lock"><code class="docutils literal notranslate"><span class="pre">Database.lock()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.release"><code class="docutils literal notranslate"><span class="pre">Database.release()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.rollback"><code class="docutils literal notranslate"><span class="pre">Database.rollback()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.setup"><code class="docutils literal notranslate"><span class="pre">Database.setup()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.verify"><code class="docutils literal notranslate"><span class="pre">Database.verify()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../../lib/db.html">lib.db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/logutils.html">lib.logutils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.DuplicateFilter.filter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter.filter()</span></code></a></li>
@@ -4956,21 +4880,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../lib/orb.html">lib.orb</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.aware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.aware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.unaware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.unaware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.utc_to_local"><code class="docutils literal notranslate"><span class="pre">Orb.utc_to_local()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../../lib/orb.html">lib.orb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/env.html">lib.env</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/env.html#lib.env.kn_to_kmh"><code class="docutils literal notranslate"><span class="pre">kn_to_kmh()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/env.html#lib.env.kmh_to_kn"><code class="docutils literal notranslate"><span class="pre">kmh_to_kn()</span></code></a></li>
@@ -5055,7 +4965,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../referenz/APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/item.html#module-lib.item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/item.html#lib-item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item.html#class-item">class Item</a></li>
@@ -5065,7 +4975,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/plugin.html#lib-plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/plugin.html#module-lib.plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -5075,26 +4985,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/shtime.html#module-lib.shtime">lib.shtime</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/shtime.html#lib-shtime">lib.shtime</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/logic.html#module-lib.logic">lib.logic</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/logic.html#lib-logic">lib.logic</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/scheduler.html#lib-scheduler">lib.scheduler</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/env.html">lib.env</a><ul>
@@ -5204,6 +5103,27 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../release/1_x_x.html#weitere-anderungen">Weitere Änderungen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../release/1_x_x.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../release/1_12_1.html">Release 1.12.1 - 06. Mai 2026</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_1.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_1.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#allgemein">Allgemein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#updates-im-core">Updates im Core</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_1.html#anderungen-an-plugins">Änderungen an Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_1.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_1.html#dokumentation">Dokumentation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../release/1_12_1.html#module-admin">module.admin</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -5597,7 +5517,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Dokumentation v1.12.0</a>
+          <a href="../../index.html">Dokumentation v1.12.1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -5655,54 +5575,57 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">YAML_FILE</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">YAML_FILE</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">ruamel.yaml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">yaml</span>
+
     <span class="n">EDITING_ENABLED</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="c1"># check to be enabled after migrating to the new ruamel.yaml api</span>
 <span class="c1">#    if str(yaml.__version__) &lt; &#39;0.15.0&#39;:</span>
 <span class="c1">#        logger.critical(&quot;shyaml: Loaded version of ruamel.yaml ({}) is too old&quot;.format(yaml.__version__))</span>
 <span class="c1">#        exit(1)</span>
 
-<span class="k">except</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">EDITING_ENABLED</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;shyaml: ruamel.yaml is not installed&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;shyaml: ruamel.yaml is not installed&#39;</span><span class="p">)</span>
     <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">yaml_version</span> <span class="o">=</span> <span class="s1">&#39;1.1&#39;</span>
 <span class="n">indent_spaces</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">block_seq_indent</span> <span class="o">=</span> <span class="mi">0</span>
 
+
 <div class="viewcode-block" id="editing_is_enabled"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.editing_is_enabled">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">editing_is_enabled</span><span class="p">():</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">EDITING_ENABLED</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">EDITING_ENABLED</span></div>
 
 
 <span class="c1"># ==================================================================================</span>
 <span class="c1">#   Routines to handle yaml files</span>
 <span class="c1">#</span>
 
+
 <div class="viewcode-block" id="convert_linenumber"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.convert_linenumber">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">convert_linenumber</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">occ</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">occ</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">s2</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line: &#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">6</span><span class="p">:]</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line: &#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">6</span> <span class="p">:]</span>
     <span class="k">elif</span> <span class="n">occ</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line: &#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">6</span>
-        <span class="n">s2</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line: &#39;</span><span class="p">,</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="mi">6</span><span class="p">:]</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line: &#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">6</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line: &#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="mi">6</span> <span class="p">:]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;*&#39;</span> <span class="o">+</span> <span class="n">s</span>
-    <span class="n">lineold</span> <span class="o">=</span> <span class="n">s2</span><span class="p">[:</span><span class="n">s2</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)]</span>
+    <span class="n">lineold</span> <span class="o">=</span> <span class="n">s2</span><span class="p">[:</span> <span class="n">s2</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)]</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">linenew</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">lineold</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
-    <span class="k">except</span><span class="p">:</span>
+        <span class="n">linenew</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">lineold</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Unable to correct line number for yaml-file error. Wrong line number is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lineold</span><span class="p">))</span>
         <span class="n">linenew</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">lineold</span><span class="p">)</span>
-    <span class="n">lo</span> <span class="o">=</span> <span class="s1">&#39;line &#39;</span><span class="o">+</span><span class="n">lineold</span>
-    <span class="n">ln</span> <span class="o">=</span> <span class="s1">&#39;line &#39;</span><span class="o">+</span><span class="n">linenew</span>
-    <span class="n">lo2</span> <span class="o">=</span> <span class="s1">&#39;(line: &#39;</span><span class="o">+</span><span class="n">lineold</span><span class="o">+</span><span class="s1">&#39;)&#39;</span>
-    <span class="n">ln2</span> <span class="o">=</span> <span class="s1">&#39;(line: &#39;</span><span class="o">+</span><span class="n">linenew</span><span class="o">+</span><span class="s1">&#39;)&#39;</span>
+    <span class="n">lo</span> <span class="o">=</span> <span class="s1">&#39;line &#39;</span> <span class="o">+</span> <span class="n">lineold</span>
+    <span class="n">ln</span> <span class="o">=</span> <span class="s1">&#39;line &#39;</span> <span class="o">+</span> <span class="n">linenew</span>
+    <span class="n">lo2</span> <span class="o">=</span> <span class="s1">&#39;(line: &#39;</span> <span class="o">+</span> <span class="n">lineold</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
+    <span class="n">ln2</span> <span class="o">=</span> <span class="s1">&#39;(line: &#39;</span> <span class="o">+</span> <span class="n">linenew</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">ln</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">lo2</span><span class="p">,</span> <span class="n">ln2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">s</span></div>
@@ -5738,22 +5661,24 @@
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">estr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;found character &#39;</span><span class="se">\\</span><span class="s2">t&#39;&quot;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">:</span>
-            <span class="n">estr</span> <span class="o">=</span> <span class="n">estr</span><span class="p">[</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line&#39;</span><span class="p">):]</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="n">estr</span><span class="p">[</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line&#39;</span><span class="p">)</span> <span class="p">:]</span>
             <span class="n">estr</span> <span class="o">=</span> <span class="s1">&#39;TABs are not allowed in YAML files, use spaces for indentation instead!</span><span class="se">\n</span><span class="s1">Error in &#39;</span> <span class="o">+</span> <span class="n">estr</span>
-        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;while scanning a simple key&quot;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;could not found expected &#39;:&#39;&quot;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">):</span>
-            <span class="n">estr</span> <span class="o">=</span> <span class="n">estr</span><span class="p">[</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">):</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;could not&#39;</span><span class="p">)]</span>
-            <span class="n">estr</span> <span class="o">=</span> <span class="s1">&#39;The colon (:) following a key has to be followed by a space. The space is missing!</span><span class="se">\n</span><span class="s1">Error in &#39;</span> <span class="o">+</span> <span class="n">estr</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;while scanning a simple key&#39;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;could not found expected &#39;:&#39;&quot;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">):</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="n">estr</span><span class="p">[</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;could not&#39;</span><span class="p">)]</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s1">&#39;The colon (:) following a key has to be followed by a space. The space is missing!</span><span class="se">\n</span><span class="s1">Error in &#39;</span> <span class="o">+</span> <span class="n">estr</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;(line: &#39;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">:</span>
             <span class="n">line</span> <span class="o">=</span> <span class="n">convert_linenumber</span><span class="p">(</span><span class="n">estr</span><span class="p">)</span>
             <span class="n">line</span> <span class="o">=</span> <span class="n">convert_linenumber</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="c1">#            estr += &#39;\nNOTE: To find correct line numbers: add 1 to line and divide by 2 -&gt; &#39;+line</span>
+            <span class="c1">#            estr += &#39;\nNOTE: To find correct line numbers: add 1 to line and divide by 2 -&gt; &#39;+line</span>
             <span class="n">estr</span> <span class="o">=</span> <span class="n">line</span>
             <span class="n">estr</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">NOTE: Look for the error at the expected &lt;block end&gt;, near the second specified line number&#39;</span>
-        <span class="k">if</span> <span class="s2">&quot;[Errno 2]&quot;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;[Errno 2]&#39;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">ignore_notfound</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;yaml_load: YAML-file &#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;YAML-file load error in </span><span class="si">{}</span><span class="s2">:  </span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">estr</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;YAML-file load error in </span><span class="si">{}</span><span class="s1">:  </span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">estr</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">y</span></div>
 
@@ -5780,7 +5705,7 @@
     <span class="n">estr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">sdata</span> <span class="o">=</span> <span class="n">string</span>
-<span class="c1">#        sdata = sdata.replace(&#39;\n&#39;, &#39;\n\n&#39;)</span>
+        <span class="c1">#        sdata = sdata.replace(&#39;\n&#39;, &#39;\n\n&#39;)</span>
         <span class="k">if</span> <span class="n">ordered</span><span class="p">:</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">_ordered_load</span><span class="p">(</span><span class="n">sdata</span><span class="p">,</span> <span class="n">yaml</span><span class="o">.</span><span class="n">SafeLoader</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -5788,11 +5713,13 @@
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">estr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;found character &#39;</span><span class="se">\\</span><span class="s2">t&#39;&quot;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">:</span>
-            <span class="n">estr</span> <span class="o">=</span> <span class="n">estr</span><span class="p">[</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line&#39;</span><span class="p">):]</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="n">estr</span><span class="p">[</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;line&#39;</span><span class="p">)</span> <span class="p">:]</span>
             <span class="n">estr</span> <span class="o">=</span> <span class="s1">&#39;TABs are not allowed in YAML files, use spaces for indentation instead!</span><span class="se">\n</span><span class="s1">Error in &#39;</span> <span class="o">+</span> <span class="n">estr</span>
-        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;while scanning a simple key&quot;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;could not found expected &#39;:&#39;&quot;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">):</span>
-            <span class="n">estr</span> <span class="o">=</span> <span class="n">estr</span><span class="p">[</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">):</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;could not&#39;</span><span class="p">)]</span>
-            <span class="n">estr</span> <span class="o">=</span> <span class="s1">&#39;The colon (:) following a key has to be followed by a space. The space is missing!</span><span class="se">\n</span><span class="s1">Error in &#39;</span> <span class="o">+</span> <span class="n">estr</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;while scanning a simple key&#39;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;could not found expected &#39;:&#39;&quot;</span> <span class="ow">in</span> <span class="n">estr</span><span class="p">):</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="n">estr</span><span class="p">[</span><span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="n">estr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;could not&#39;</span><span class="p">)]</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s1">&#39;The colon (:) following a key has to be followed by a space. The space is missing!</span><span class="se">\n</span><span class="s1">Error in &#39;</span> <span class="o">+</span> <span class="n">estr</span>
+            <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">estr</span></div>
 
@@ -5810,20 +5737,26 @@
 <span class="sd">    :returns: Nothing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">ordered</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;OrderedDict&#39;</span><span class="p">)</span>
+    <span class="n">ordered</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;OrderedDict&#39;</span>
     <span class="n">dict_type</span> <span class="o">=</span> <span class="s1">&#39;dict&#39;</span>
     <span class="k">if</span> <span class="n">ordered</span><span class="p">:</span>
         <span class="n">dict_type</span> <span class="o">=</span> <span class="s1">&#39;OrderedDict&#39;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Saving &#39;</span><span class="si">{}</span><span class="s2">&#39; to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dict_type</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">ordered</span><span class="p">:</span>
-        <span class="n">sdata</span> <span class="o">=</span> <span class="n">_ordered_dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeDumper</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">768</span><span class="p">,</span> <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">sdata</span> <span class="o">=</span> <span class="n">_ordered_dump</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeDumper</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">768</span><span class="p">,</span> <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">sdata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeDumper</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">768</span><span class="p">,</span> <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">sdata</span> <span class="o">=</span> <span class="n">_format_yaml_dump</span><span class="p">(</span> <span class="n">sdata</span> <span class="p">)</span>
+        <span class="n">sdata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeDumper</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">768</span><span class="p">,</span> <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+    <span class="n">sdata</span> <span class="o">=</span> <span class="n">_format_yaml_dump</span><span class="p">(</span><span class="n">sdata</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
-        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="n">sdata</span> <span class="p">)</span></div>
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sdata</span><span class="p">)</span></div>
+
 
 <span class="c1"># ==================================================================================</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_format_yaml_load</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -5834,8 +5767,8 @@
 <span class="sd">    :return: formatted string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="c1">#    ptr = 0</span>
-<span class="c1">#    cptr = data[ptr:].find(&#39;comment: &#39;)</span>
+    <span class="c1">#    ptr = 0</span>
+    <span class="c1">#    cptr = data[ptr:].find(&#39;comment: &#39;)</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span>
@@ -5856,12 +5789,12 @@
     <span class="c1"># usage example: ordered_load(stream, yaml.SafeLoader)</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">OrderedLoader</span><span class="p">(</span><span class="n">Loader</span><span class="p">):</span>
         <span class="k">pass</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">construct_mapping</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="n">loader</span><span class="o">.</span><span class="n">flatten_mapping</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">object_pairs_hook</span><span class="p">(</span><span class="n">loader</span><span class="o">.</span><span class="n">construct_pairs</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
-    <span class="n">OrderedLoader</span><span class="o">.</span><span class="n">add_constructor</span><span class="p">(</span>
-        <span class="n">yaml</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">BaseResolver</span><span class="o">.</span><span class="n">DEFAULT_MAPPING_TAG</span><span class="p">,</span>
-        <span class="n">construct_mapping</span><span class="p">)</span>
+
+    <span class="n">OrderedLoader</span><span class="o">.</span><span class="n">add_constructor</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">BaseResolver</span><span class="o">.</span><span class="n">DEFAULT_MAPPING_TAG</span><span class="p">,</span> <span class="n">construct_mapping</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">OrderedLoader</span><span class="p">)</span>
 
 
@@ -5883,7 +5816,7 @@
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ldata</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;:&#39;</span><span class="p">:</span>
             <span class="c1"># no empty line before list attributes</span>
-            <span class="k">if</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
                 <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -5907,10 +5840,10 @@
     <span class="c1"># usage example: ordered_dump(data, Dumper=yaml.SafeDumper)</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">OrderedDumper</span><span class="p">(</span><span class="n">Dumper</span><span class="p">):</span>
         <span class="k">pass</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_dict_representer</span><span class="p">(</span><span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_mapping</span><span class="p">(</span>
-            <span class="n">yaml</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">BaseResolver</span><span class="o">.</span><span class="n">DEFAULT_MAPPING_TAG</span><span class="p">,</span>
-            <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_mapping</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">BaseResolver</span><span class="o">.</span><span class="n">DEFAULT_MAPPING_TAG</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
     <span class="n">OrderedDumper</span><span class="o">.</span><span class="n">add_representer</span><span class="p">(</span><span class="n">OrderedDict</span><span class="p">,</span> <span class="n">_dict_representer</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">OrderedDumper</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
 
@@ -5918,6 +5851,7 @@
 <span class="c1"># ==================================================================================</span>
 <span class="c1">#   Routines to handle editing of yaml files</span>
 <span class="c1">#</span>
+
 
 <div class="viewcode-block" id="yaml_load_roundtrip"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yaml_load_roundtrip">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">yaml_load_roundtrip</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -5945,17 +5879,17 @@
 
 
 <div class="viewcode-block" id="get_emptynode"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.get_emptynode">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_emptynode</span><span class="p">():</span>
-<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">   Return an empty node</span>
-<span class="sd">   &quot;&quot;&quot;</span>
-   <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedMap</span><span class="p">([])</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return an empty node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedMap</span><span class="p">([])</span></div>
 
 
-<div class="viewcode-block" id="get_commentedseq"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.get_commentedseq">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_commentedseq</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
-<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">   Convert a list to a commented sequence</span>
-<span class="sd">   &quot;&quot;&quot;</span>
-   <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedSeq</span><span class="p">(</span> <span class="n">l</span> <span class="p">)</span></div>
+<div class="viewcode-block" id="get_commentedseq"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.get_commentedseq">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_commentedseq</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a list to a commented sequence</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedSeq</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="yaml_dump_roundtrip"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yaml_dump_roundtrip">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">yaml_dump_roundtrip</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -5965,8 +5899,16 @@
 <span class="sd">    :param data: data structure to save</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">sdata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">RoundTripDumper</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">yaml_version</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent_spaces</span><span class="p">,</span> <span class="n">block_seq_indent</span><span class="o">=</span><span class="n">block_seq_indent</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">12288</span><span class="p">,</span> <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sdata</span> <span class="o">=</span> <span class="n">_format_yaml_dump2</span><span class="p">(</span> <span class="n">sdata</span> <span class="p">)</span>
+    <span class="n">sdata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">RoundTripDumper</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">yaml_version</span><span class="p">,</span>
+        <span class="n">indent</span><span class="o">=</span><span class="n">indent_spaces</span><span class="p">,</span>
+        <span class="n">block_seq_indent</span><span class="o">=</span><span class="n">block_seq_indent</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="mi">12288</span><span class="p">,</span>
+        <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sdata</span> <span class="o">=</span> <span class="n">_format_yaml_dump2</span><span class="p">(</span><span class="n">sdata</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sdata</span></div>
 
 
@@ -5980,18 +5922,25 @@
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">EDITING_ENABLED</span><span class="p">:</span>
         <span class="k">return</span>
-    <span class="n">sdata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">RoundTripDumper</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">yaml_version</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent_spaces</span><span class="p">,</span> <span class="n">block_seq_indent</span><span class="o">=</span><span class="n">block_seq_indent</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">12288</span><span class="p">,</span> <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sdata</span> <span class="o">=</span> <span class="n">_format_yaml_dump2</span><span class="p">(</span> <span class="n">sdata</span> <span class="p">)</span>
+    <span class="n">sdata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">RoundTripDumper</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">yaml_version</span><span class="p">,</span>
+        <span class="n">indent</span><span class="o">=</span><span class="n">indent_spaces</span><span class="p">,</span>
+        <span class="n">block_seq_indent</span><span class="o">=</span><span class="n">block_seq_indent</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="mi">12288</span><span class="p">,</span>
+        <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sdata</span> <span class="o">=</span> <span class="n">_format_yaml_dump2</span><span class="p">(</span><span class="n">sdata</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.yaml&#39;</span><span class="p">):</span>
         <span class="n">filename</span> <span class="o">+=</span> <span class="n">YAML_FILE</span>
     <span class="k">if</span> <span class="n">create_backup</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.bak&#39;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;.bak&#39;</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
-        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="n">sdata</span> <span class="p">)</span></div>
-
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sdata</span><span class="p">)</span></div>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_strip_empty_lines</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -6031,7 +5980,7 @@
     <span class="n">sdata</span> <span class="o">=</span> <span class="n">_strip_empty_lines</span><span class="p">(</span><span class="n">sdata</span><span class="p">)</span>
     <span class="n">sdata</span> <span class="o">=</span> <span class="n">sdata</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">sdata</span> <span class="o">=</span> <span class="n">sdata</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="c1">#    sdata = sdata.replace(&#39;: |4\n&#39;, &#39;: |\n&#39;)    # Multiline strings: remove &#39;4&#39; inserted by ruyaml</span>
+    <span class="c1">#    sdata = sdata.replace(&#39;: |4\n&#39;, &#39;: |\n&#39;)    # Multiline strings: remove &#39;4&#39; inserted by ruyaml</span>
 
     <span class="n">ldata</span> <span class="o">=</span> <span class="n">sdata</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">rdata</span> <span class="o">=</span> <span class="p">[]</span>
@@ -6039,31 +5988,33 @@
         <span class="c1"># Remove empty line after section w/o a value, if the following line is a child-line</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">nextline</span> <span class="o">=</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">except</span><span class="p">:</span>
+                <span class="n">nextline</span> <span class="o">=</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
                 <span class="n">nextline</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-            <span class="n">indentprevline</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
+            <span class="n">indentprevline</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
             <span class="n">indentnextline</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nextline</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">nextline</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">indentnextline</span> <span class="o">!=</span> <span class="n">indentprevline</span> <span class="o">+</span> <span class="n">indent_spaces</span><span class="p">:</span>
                 <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
         <span class="c1"># Insert empty line after section w/o a value</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span>  <span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;:&#39;</span><span class="p">:</span>
                 <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="c1"># only insert empty line, if last line was not a comment</span>
-            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
                 <span class="c1"># Only insert empty line, if next line is not commented out</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;:&#39;</span> <span class="ow">and</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;:&#39;</span> <span class="ow">and</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
                     <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
         <span class="c1"># Insert empty line before section (key w/o a value)</span>
         <span class="k">elif</span> <span class="n">line</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;:&#39;</span><span class="p">:</span>
             <span class="c1"># only, if last line is not empty and last line is not a comment</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span>
+            <span class="p">):</span>
                 <span class="c1"># no empty line before list attributes</span>
-                <span class="k">if</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ldata</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
                         <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -6071,7 +6022,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-             <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="n">rdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
     <span class="n">sdata</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rdata</span><span class="p">)</span>
 
@@ -6085,13 +6036,15 @@
 <span class="c1">#   support functions for class yamlfile</span>
 <span class="c1">#</span>
 
+
 <span class="c1"># Set a given data in a dictionary with position provided as a list</span>
 <div class="viewcode-block" id="setInDict"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.setInDict">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">setInDict</span><span class="p">(</span><span class="n">dataDict</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="n">mapList</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mapList</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span> <span class="n">dataDict</span> <span class="o">=</span> <span class="n">dataDict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mapList</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">dataDict</span> <span class="o">=</span> <span class="n">dataDict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
         <span class="n">dataDict</span><span class="p">[</span><span class="n">mapList</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="k">except</span><span class="p">:</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -6099,20 +6052,21 @@
 <span class="c1"># Get parent to a path</span>
 <div class="viewcode-block" id="get_parent"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.get_parent">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_parent</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="n">pathlist</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathlist</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">pathlist</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathlist</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">pathlist</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">parent</span></div>
 
 
 <span class="c1"># Get key without parent</span>
 <div class="viewcode-block" id="get_key"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.get_key">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_key</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="n">pathlist</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="n">pathlist</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">pathlist</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">pathlist</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">pathlist</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">key</span></div>
 
 
 <span class="c1"># ==================================================================================</span>
 <span class="c1">#   function for changing a single item-attribute in a yaml file</span>
 <span class="c1">#</span>
+
 
 <div class="viewcode-block" id="writeBackToFile"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.writeBackToFile">[Doku]</a><span class="k">def</span><span class="w"> </span><span class="nf">writeBackToFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">itempath</span><span class="p">,</span> <span class="n">itemattr</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6127,7 +6081,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">itemyamlfile</span> <span class="o">=</span> <span class="n">yamlfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="o">+</span><span class="n">YAML_FILE</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="n">YAML_FILE</span><span class="p">):</span>
         <span class="n">itemyamlfile</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
     <span class="n">itemyamlfile</span><span class="o">.</span><span class="n">setleafvalue</span><span class="p">(</span><span class="n">itempath</span><span class="p">,</span> <span class="n">itemattr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
     <span class="n">itemyamlfile</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
@@ -6137,10 +6091,10 @@
 <span class="c1">#   class yamlfile (for editing multiple entries at a time)</span>
 <span class="c1">#</span>
 
-<div class="viewcode-block" id="yamlfile"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile">[Doku]</a><span class="k">class</span><span class="w"> </span><span class="nc">yamlfile</span><span class="p">():</span>
+
+<div class="viewcode-block" id="yamlfile"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile">[Doku]</a><span class="k">class</span><span class="w"> </span><span class="nc">yamlfile</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">filename_write</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">create_bak</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6159,10 +6113,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span> <span class="o">=</span> <span class="n">filename</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span> <span class="o">=</span> <span class="n">filename_write</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">filename_bak</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span> <span class="o">+</span> <span class="s1">&#39;.bak&#39;</span><span class="o">+</span><span class="n">YAML_FILE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename_bak</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span> <span class="o">+</span> <span class="s1">&#39;.bak&#39;</span> <span class="o">+</span> <span class="n">YAML_FILE</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_bak</span> <span class="o">=</span> <span class="n">create_bak</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedMap</span><span class="p">([])</span>
-
 
 <div class="viewcode-block" id="yamlfile.load"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.load">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6170,15 +6123,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">yaml_load_roundtrip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span></div>
 
-
 <div class="viewcode-block" id="yamlfile.save"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.save">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        save the contents of the data-structure to the yaml-file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_bak</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span><span class="o">+</span><span class="n">YAML_FILE</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span><span class="o">+</span><span class="n">YAML_FILE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename_bak</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_bak</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span> <span class="o">+</span> <span class="n">YAML_FILE</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span> <span class="o">+</span> <span class="n">YAML_FILE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename_bak</span><span class="p">)</span>
         <span class="n">yaml_save_roundtrip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="yamlfile.getnode"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.getnode">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getnode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6190,7 +6141,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">returned</span><span class="p">,</span> <span class="n">ret_nodetype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getFromDict</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">returned</span></div>
-
 
 <div class="viewcode-block" id="yamlfile.getvalue"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.getvalue">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6206,7 +6156,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-
 <div class="viewcode-block" id="yamlfile.getnodetype"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.getnodetype">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getnodetype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get the type of a node</span>
@@ -6217,7 +6166,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">returned</span><span class="p">,</span> <span class="n">ret_nodetype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getFromDict</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret_nodetype</span></div>
-
 
 <div class="viewcode-block" id="yamlfile.getvaluetype"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.getvaluetype">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getvaluetype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6235,7 +6183,6 @@
             <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-
     <span class="c1"># Add/set a leaf to an empty node, the branch node must exist</span>
 <div class="viewcode-block" id="yamlfile.setvalue"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.setvalue">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6244,14 +6191,14 @@
 <span class="sd">        :param path: path of the leaf-node to modify</span>
 <span class="sd">        :param value: new value of the leaf-node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">getnode</span><span class="p">(</span><span class="n">get_parent</span><span class="p">(</span><span class="n">path</span><span class="p">))</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">get_key</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
                 <span class="k">pass</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getnode</span><span class="p">(</span><span class="n">get_parent</span><span class="p">(</span><span class="n">path</span><span class="p">))</span> <span class="o">==</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedMap</span><span class="p">():</span>
                 <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getnode</span><span class="p">(</span><span class="n">get_parent</span><span class="p">(</span><span class="n">get_parent</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
-                <span class="n">root</span> <span class="o">=</span> <span class="p">(</span><span class="n">node</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">root</span> <span class="o">=</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span>
                 <span class="k">if</span> <span class="n">root</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">get_key</span><span class="p">(</span><span class="n">get_parent</span><span class="p">(</span><span class="n">path</span><span class="p">))]</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -6259,7 +6206,6 @@
             <span class="k">return</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_node_and_leaf</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
-
 
     <span class="c1"># Add/set a leaf with value, the branch is created if it does not exist</span>
 <div class="viewcode-block" id="yamlfile.setleafvalue"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.setleafvalue">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setleafvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -6275,32 +6221,30 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;shyaml.setleafvalue: Exception &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">branch</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">leaf</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">branch</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
     <span class="c1"># ----------------------------------------------------------</span>
 
     <span class="c1"># Add an empty branch</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensurebranch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getnodetype</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;leaf&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span><span class="o">+</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;&#39;, it exists already as a leaf&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;&#39;, it exists already as a leaf&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">getnodetype</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;branch&#39;</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_addnode</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span><span class="o">+</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;&#39; in item structure&quot;</span><span class="p">)</span>
-
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;&#39; in item structure&quot;</span><span class="p">)</span>
 
     <span class="c1"># Add an empty branch</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_addbranch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getnodetype</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;leaf&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span><span class="o">+</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;&#39;, it exists already as a leaf&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;&#39;, it exists already as a leaf&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">getnodetype</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;branch&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span><span class="o">+</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;&#39;, it exists already as a branch&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;&#39;, it exists already as a branch&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_addnode</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span><span class="o">+</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;&#39; in item structure&quot;</span><span class="p">)</span>
-
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Node-ERROR: Unable to set branch &#39;&quot;</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;&#39; in item structure&quot;</span><span class="p">)</span>
 
     <span class="c1"># Add an empty node (internal for recursion)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_addnode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
@@ -6309,22 +6253,20 @@
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_node_and_leaf</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
             <span class="n">pathlist</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-            <span class="n">parent</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathlist</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">pathlist</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathlist</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">pathlist</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_addnode</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_node_and_leaf</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
-
 
     <span class="c1"># Add a leaf to an empty node</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_node_and_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">setInDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="n">get_parent</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-            <span class="n">attr</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
             <span class="n">cm</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedMap</span><span class="p">([(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)])</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">setInDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">cm</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
-
 
     <span class="c1"># Get a given data from a dictionary with position provided as a list</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_getFromDict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
@@ -6332,18 +6274,17 @@
         <span class="n">nodetype</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
         <span class="n">mapList</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mapList</span><span class="p">:</span> <span class="n">dataDict</span> <span class="o">=</span> <span class="n">dataDict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-        <span class="k">except</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mapList</span><span class="p">:</span>
+                <span class="n">dataDict</span> <span class="o">=</span> <span class="n">dataDict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
             <span class="n">nodetype</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
             <span class="n">dataDict</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataDict</span><span class="p">,</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedMap</span><span class="p">):</span>
-               <span class="n">nodetype</span> <span class="o">=</span> <span class="s1">&#39;branch&#39;</span>
+                <span class="n">nodetype</span> <span class="o">=</span> <span class="s1">&#39;branch&#39;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">nodetype</span> <span class="o">=</span> <span class="s1">&#39;leaf&#39;</span>
         <span class="k">return</span> <span class="n">dataDict</span><span class="p">,</span> <span class="n">nodetype</span></div>
-
-
 </pre></div>
 
            </div>
