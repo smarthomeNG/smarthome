@@ -112,5 +112,23 @@ class TestRemoveSchedulerCleanup(_Base):
         self.assertIn('items.hl-LoTimer', self.recorder.removed_names())
 
 
+class TestRemoveStopsFading(_Base):
+    def test_remove_stops_in_progress_fade(self):
+        item = _item(self.sh, 'fd')
+        item._fading = True
+
+        item.remove()
+
+        self.assertFalse(item._fading)
+
+    def test_remove_without_active_fade_does_not_crash(self):
+        item = _item(self.sh, 'nf')
+        self.assertFalse(item._fading)
+
+        item.remove()  # must not raise
+
+        self.assertFalse(item._fading)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

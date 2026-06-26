@@ -28,9 +28,9 @@ Item lifecycle helpers extracted from lib/item/item.py.
 Functions
 ---------
 remove(item)
-    Remove *item*'s own scheduler jobs and notify all loaded plugins that
-    *item* is being deleted so they can release any references they hold
-    to it.
+    Remove *item*'s own scheduler jobs, stop an in-progress fade, and
+    notify all loaded plugins that *item* is being deleted so they can
+    release any references they hold to it.
 """
 
 import logging
@@ -53,14 +53,29 @@ def _remove_scheduler_jobs(item):
         item._sh.scheduler.remove(base + suffix)
 
 
+def _stop_fading(item):
+    """
+    Abort an in-progress fade on *item*, if any.
+
+    Mirrors the pattern ``Items.stop()`` already uses globally for all
+    items: clear the flag the fade loop checks (``helpers.fadejob``) and
+    wake it immediately instead of letting it run out its current
+    ``delta_time`` wait.
+    """
+    item._fading = False
+    with item._lock:
+        item._lock.notify_all()
+
+
 def remove(item):
     """
     Clean up *item* usage before deletion.
 
-    Removes *item*'s own scheduler jobs, then iterates over all loaded
-    plugins and calls ``plugin.remove_item(item)`` on each one that
-    implements the ``PLUGIN_REMOVE_ITEM`` interface. Plugins that do not
-    implement the interface are collected and reported in a warning.
+    Removes *item*'s own scheduler jobs, stops an in-progress fade, then
+    iterates over all loaded plugins and calls ``plugin.remove_item(item)``
+    on each one that implements the ``PLUGIN_REMOVE_ITEM`` interface.
+    Plugins that do not implement the interface are collected and reported
+    in a warning.
 
     :param item: ``Item`` instance being removed.
     :return:     ``True`` if all plugins handled the removal cleanly;
@@ -68,6 +83,7 @@ def remove(item):
     :rtype:      bool
     """
     _remove_scheduler_jobs(item)
+    _stop_fading(item)
 
     incompatible = []
 
