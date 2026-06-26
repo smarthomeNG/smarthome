@@ -147,5 +147,44 @@ class TestRemoveDetachesFromParent(_Base):
         self.assertNotIn(toplevel, items_instance._children)
 
 
+class TestRemoveDetachesShAttribute(_Base):
+    def _make_toplevel(self, name):
+        items_instance = self.sh.items
+        item = lib.item.item.Item(self.sh, items_instance, name, {'type': 'num'}, items_instance=items_instance)
+        # mirrors Items.load_itemdefinitions()'s install side
+        setattr(items_instance, name, item)
+        setattr(self.sh, name, item)
+        return item, items_instance
+
+    def test_remove_clears_sh_and_items_attribute(self):
+        item, items_instance = self._make_toplevel('top')
+
+        item.remove()
+
+        self.assertFalse(hasattr(items_instance, 'top'))
+        self.assertFalse(hasattr(self.sh, 'top'))
+
+    def test_remove_does_not_clear_attribute_reassigned_to_something_else(self):
+        item, items_instance = self._make_toplevel('top')
+
+        # name got reassigned (e.g. to another item, or a plugin) before removal
+        sentinel = object()
+        setattr(items_instance, 'top', sentinel)
+        setattr(self.sh, 'top', sentinel)
+
+        item.remove()
+
+        self.assertIs(items_instance.top, sentinel)
+        self.assertIs(self.sh.top, sentinel)
+
+    def test_remove_of_nested_item_does_not_touch_sh(self):
+        parent = lib.item.item.Item(self.sh, self.sh, 'parent', {'sub': {'type': 'num'}})
+        child = parent.return_children().__next__()
+
+        child.remove()  # must not raise, must not touch unrelated sh attributes
+
+        self.assertFalse(hasattr(self.sh, 'parent.sub'))
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

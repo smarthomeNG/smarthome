@@ -29,9 +29,9 @@ Functions
 ---------
 remove(item)
     Remove *item*'s own scheduler jobs, stop an in-progress fade, detach
-    it from its parent's child collection, and notify all loaded plugins
-    that *item* is being deleted so they can release any references they
-    hold to it.
+    it from its parent's child collection and from any sh/items attribute
+    binding, and notify all loaded plugins that *item* is being deleted so
+    they can release any references they hold to it.
 """
 
 import logging
@@ -83,15 +83,34 @@ def _detach_from_parent(item):
         parent._remove_child(item)
 
 
+def _detach_sh_attribute(item):
+    """
+    Remove the ``sh.<name>``/``items.<name>`` attribute binding installed
+    for top-level items in ``Items.load_itemdefinitions()``.
+
+    Only removes the attribute if it still points at exactly *item* — the
+    name may since have been reassigned to something else (another item, a
+    plugin, ...), in which case it must be left alone. Nested (non-top-level)
+    items never had this binding in the first place, so the identity check
+    is also what keeps this a no-op for them: ``item._parent`` is then a
+    regular ``Item``, which was never the target of such a ``setattr()``.
+    """
+    attr = item.property.path
+    for obj in (item._parent, item._sh):
+        if getattr(obj, attr, None) is item:
+            delattr(obj, attr)
+
+
 def remove(item):
     """
     Clean up *item* usage before deletion.
 
     Removes *item*'s own scheduler jobs, stops an in-progress fade, detaches
-    it from its parent's child collection, then iterates over all loaded
-    plugins and calls ``plugin.remove_item(item)`` on each one that
-    implements the ``PLUGIN_REMOVE_ITEM`` interface. Plugins that do not
-    implement the interface are collected and reported in a warning.
+    it from its parent's child collection and from any sh/items attribute
+    binding, then iterates over all loaded plugins and calls
+    ``plugin.remove_item(item)`` on each one that implements the
+    ``PLUGIN_REMOVE_ITEM`` interface. Plugins that do not implement the
+    interface are collected and reported in a warning.
 
     :param item: ``Item`` instance being removed.
     :return:     ``True`` if all plugins handled the removal cleanly;
@@ -101,6 +120,7 @@ def remove(item):
     _remove_scheduler_jobs(item)
     _stop_fading(item)
     _detach_from_parent(item)
+    _detach_sh_attribute(item)
 
     incompatible = []
 

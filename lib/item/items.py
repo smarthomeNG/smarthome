@@ -200,8 +200,8 @@ class Items:
                 except Exception as e:
                     self.logger.error('load_itemdefinitions: Item {}: problem creating: {}'.format(child_path, e))
                 else:
-                    vars(self)[attr] = child
-                    vars(self._sh)[attr] = child
+                    setattr(self, attr, child)
+                    setattr(self._sh, attr, child)
                     self.add_item(child_path, child)
                     self._children.append(child)
         del item_conf  # clean up
