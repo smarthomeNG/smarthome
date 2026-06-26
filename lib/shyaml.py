@@ -654,17 +654,21 @@ class yamlfile:
         :param value: new value of the leaf-node
         """
         if value is None:
+            parent_path = get_parent(path)
+            # get_parent() returns '' for a top-level path; getnode('') does
+            # not resolve to self.data, it's a lookup miss - special-case it.
+            parent_node = self.data if parent_path == '' else self.getnode(parent_path)
             try:
-                self.getnode(get_parent(path)).pop(get_key(path), None)
+                parent_node.pop(get_key(path), None)
             except AttributeError:
                 pass
-            if self.getnode(get_parent(path)) == yaml.comments.CommentedMap():
-                node = self.getnode(get_parent(get_parent(path)))
+            if parent_path != '' and self.getnode(parent_path) == yaml.comments.CommentedMap():
+                node = self.getnode(get_parent(parent_path))
                 root = node is None
                 if root:
-                    self.data[get_key(get_parent(path))] = None
+                    self.data[get_key(parent_path)] = None
                 else:
-                    node[get_key(get_parent(path))] = None
+                    node[get_key(parent_path)] = None
             return
         else:
             return self._add_node_and_leaf(path, value)
