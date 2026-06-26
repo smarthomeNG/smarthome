@@ -376,6 +376,61 @@ class Items:
         else:
             self.logger.warning(f'Item {item.property.path} could not be removed due to incompatible plugins.')
 
+    def find_references(self, path):
+        """
+        Best-effort search for textual references to item *path* inside
+        other items' ``eval``, ``on_change``, ``on_update``, ``trigger``
+        and ``hysteresis_input`` attributes.
+
+        This is a review aid, not a safety mechanism: a reference embedded
+        in free-form ``eval`` text cannot be tracked structurally (unlike
+        ``trigger``/``hysteresis_input``, which already are, via
+        ``_items_to_trigger``/``_hysteresis_items_to_trigger`` — those are
+        included here too, for a complete picture in one place). There is
+        no guarantee of completeness (e.g. a computed/concatenated
+        reference won't be found) and no guarantee against false positives
+        beyond a word-boundary match. Intended to be called interactively
+        before deleting an item, so a human can review the result — it is
+        deliberately not wired into remove_item() itself.
+
+        :param path: Path of the item to search for
+        :type path: str
+
+        :return: List of (item, attribute_name, attribute_value) tuples,
+                 one per match
+        :rtype: list
+        """
+        target = self.return_item(path)
+        pattern = re.compile(r'\b' + re.escape(path) + r'\b')
+
+        results = []
+        for other in self.return_items():
+            if other is target:
+                continue
+            for attr_name, text in self._reference_candidates(other):
+                if text and pattern.search(text):
+                    results.append((other, attr_name, text))
+        return results
+
+    @staticmethod
+    def _reference_candidates(item):
+        """
+        Yield (attribute_name, text) pairs for *item*'s reference-bearing
+        attributes, for use by find_references(). Single-value attributes
+        are skipped when unset; list attributes contribute one pair per
+        entry.
+        """
+        if item._eval:
+            yield ('eval', item._eval)
+        for text in item._on_change or []:
+            yield ('on_change', text)
+        for text in item._on_update or []:
+            yield ('on_update', text)
+        for text in item._trigger or []:
+            yield ('trigger', text)
+        if item._hysteresis_input:
+            yield ('hysteresis_input', item._hysteresis_input)
+
     def get_toplevel_items(self):
         """
         Returns a list with all items defined at the top level
