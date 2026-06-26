@@ -109,12 +109,12 @@ from .helpers import (  # noqa - cast_foo methods are accessed via globals()
     cast_timestamp,
     cast_datetime,
 )
-from ._typehandler import TypeHandler, ListHandler, DictHandler, HANDLER_MAP  # noqa: F401
-from ._history import ItemHistory
-from ._logchange import log_on_change
-from ._eval import run_eval, run_on_xxx, run_on_update, run_on_change
-from ._hysteresis import run_hysteresis, get_hysteresis_state, get_hysteresis_data
-from ._pathresolution import (
+from ._internal._typehandler import TypeHandler, ListHandler, DictHandler, HANDLER_MAP  # noqa: F401
+from ._internal._history import ItemHistory
+from ._internal._logchange import log_on_change
+from ._internal._eval import run_eval, run_on_xxx, run_on_update, run_on_change
+from ._internal._hysteresis import run_hysteresis, get_hysteresis_state, get_hysteresis_data
+from ._internal._pathresolution import (
     get_absolutepath as _get_absolutepath,
     get_stringwithabsolutepathes as _get_stringwithabsolutepathes,
     find_attribute as _find_attribute,
@@ -122,7 +122,7 @@ from ._pathresolution import (
     expand_relativepathes as _expand_relativepathes,
     get_attr as _get_attr_fn,
 )
-from ._autotimer import (
+from ._internal._autotimer import (
     get_attr_time as _get_attr_time,
     get_attr_value as _get_attr_value,
     get_items_from_string as _get_items_from_string,
@@ -131,12 +131,12 @@ from ._autotimer import (
     item_remove_timer as _item_remove_timer,
     item_autotimer as _item_autotimer,
 )
-from ._casting import (
+from ._internal._casting import (
     castvalue_to_itemtype as _castvalue_to_itemtype,
     cast_duration as _cast_duration,
     run_attribute_eval as _run_attribute_eval_fn,
 )
-from ._triggers import (
+from ._internal._triggers import (
     add_logic_trigger as _add_logic_trigger,
     remove_logic_trigger as _remove_logic_trigger,
     get_logic_triggers as _get_logic_triggers,
@@ -146,7 +146,7 @@ from ._triggers import (
     get_item_triggers as _get_item_triggers,
     get_hysteresis_item_triggers as _get_hysteresis_item_triggers,
 )
-from ._parsing import (
+from ._internal._parsing import (
     parse_eval_attribute as _parse_eval_attribute,
     parse_eval_trigger_list_attribute as _parse_eval_trigger_list_attribute,
     parse_hysteresis_input_attribute as _parse_hysteresis_input_attribute,
@@ -159,15 +159,18 @@ from ._parsing import (
     build_on_xx_list as _build_on_xx_list_fn,
     init_prerun as _init_prerun_fn,
 )
-from ._lifecycle import remove as _remove_item
-from ._navigation import return_parent_item as _return_parent_item, is_top_of_item_tree as _is_top_of_item_tree_fn
-from ._stackinfo import (
+from ._internal._lifecycle import remove as _remove_item
+from ._internal._navigation import (
+    return_parent_item as _return_parent_item,
+    is_top_of_item_tree as _is_top_of_item_tree_fn,
+)
+from ._internal._stackinfo import (
     get_class_from_frame as _get_class_from_frame,
     get_calling_item_from_frame as _get_calling_item_from_frame,
     get_stack_info as _get_stack_info,
 )
-from ._fade import fade as _fade
-from ._json import jsonvars as _jsonvars, to_json as _to_json
+from ._internal._fade import fade as _fade
+from ._internal._json import jsonvars as _jsonvars, to_json as _to_json
 
 _items_instance = None
 

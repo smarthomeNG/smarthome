@@ -59,7 +59,7 @@ import lib.item.item
 import lib.item.items
 import lib.config
 from lib.item.items import Items
-from lib.item._hysteresis import _onoff, _get_hysteresis_state_string
+from lib.item._internal._hysteresis import _onoff, _get_hysteresis_state_string
 from tests.mock.core import MockSmartHome
 import tests.common as common
 

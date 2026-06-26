@@ -39,7 +39,7 @@ first scheduler call.
 
 import logging
 
-from .helpers import fadejob
+from ..helpers import fadejob
 
 logger = logging.getLogger('lib.item')
 

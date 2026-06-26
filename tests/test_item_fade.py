@@ -50,7 +50,7 @@ common.register_shng_log_levels()
 import lib.item.item
 import lib.item.items
 from lib.item.items import Items
-from lib.item._fade import fade
+from lib.item._internal._fade import fade
 from lib.item.helpers import fadejob
 from tests.mock.core import MockSmartHome
 

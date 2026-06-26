@@ -37,7 +37,7 @@ import tests.common as common
 
 common.register_shng_log_levels()
 
-from lib.item._stackinfo import get_class_from_frame, get_calling_item_from_frame, get_stack_info
+from lib.item._internal._stackinfo import get_class_from_frame, get_calling_item_from_frame, get_stack_info
 
 
 class FakeItem:

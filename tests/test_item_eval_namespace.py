@@ -60,9 +60,9 @@ common.register_shng_log_levels()
 import lib.item.item
 import lib.item.items
 from lib.item.items import Items
-from lib.item._eval import _make_eval_env
-from lib.item._eval_compat import _eval_with_legacy_fallback, _EVAL_FAILED
-from lib.item._casting import run_attribute_eval
+from lib.item._internal._eval import _make_eval_env
+from lib.item._internal._eval_compat import _eval_with_legacy_fallback, _EVAL_FAILED
+from lib.item._internal._casting import run_attribute_eval
 from tests.mock.core import MockSmartHome
 
 
@@ -329,7 +329,7 @@ class TestRunEvalItemAccess(_Base):
         captured = []
         i = _item(self.sh, 'item_identity', eval='captured.append(item) or 42')
         # inject 'captured' into the item's run-eval by patching _make_eval_env
-        from lib.item import _eval as eval_mod
+        from lib.item._internal import _eval as eval_mod
 
         orig = eval_mod._make_eval_env
 

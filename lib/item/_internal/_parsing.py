@@ -58,7 +58,7 @@ from lib.constants import (
     KEY_CONDITION,
 )
 
-from .helpers import split_duration_value_string
+from ..helpers import split_duration_value_string
 
 logger = logging.getLogger('lib.item')
 

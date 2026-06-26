@@ -47,7 +47,7 @@ import sys
 
 from lib.constants import ATTRIB_COMPAT_LATEST
 
-from .helpers import (
+from ..helpers import (
     cast_str,
     cast_list,
     cast_dict,
