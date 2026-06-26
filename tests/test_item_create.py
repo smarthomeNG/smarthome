@@ -85,49 +85,51 @@ class _Base(unittest.TestCase):
 
 class TestCreateItemToplevel(_Base):
     def test_create_item_is_findable_by_path(self):
-        self.sh.items.create_item('new', {'type': 'num'})
+        self.sh.items.create_item('new', {'type': 'num'}, persist=False)
 
         self.assertIsNotNone(self.sh.items.return_item('new'))
 
     def test_create_item_sets_sh_and_items_attribute(self):
-        item = self.sh.items.create_item('new', {'type': 'num'})
+        item = self.sh.items.create_item('new', {'type': 'num'}, persist=False)
 
         self.assertIs(self.sh.items.new, item)
         self.assertIs(self.sh.new, item)
 
     def test_create_item_appears_in_toplevel_children(self):
-        item = self.sh.items.create_item('new', {'type': 'num'})
+        item = self.sh.items.create_item('new', {'type': 'num'}, persist=False)
 
         self.assertIn(item, self.sh.items._children)
 
 
 class TestCreateItemRunsInitPhases(_Base):
     def test_cycle_attribute_registers_scheduler_job(self):
-        self.sh.items.create_item('cy', {'type': 'num', 'cycle': '30'})
+        self.sh.items.create_item('cy', {'type': 'num', 'cycle': '30'}, persist=False)
 
         self.assertIn('items.cy', self.recorder.added_names())
 
     def test_eval_trigger_wires_into_existing_items_to_trigger(self):
-        target = self.sh.items.create_item('target', {'type': 'num', 'eval': '1'})
+        target = self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=False)
 
-        source = self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.target()', 'eval_trigger': 'target'})
+        source = self.sh.items.create_item(
+            'source', {'type': 'num', 'eval': 'sh.target()', 'eval_trigger': 'target'}, persist=False
+        )
 
         self.assertIn(source, target.get_item_triggers())
 
 
 class TestCreateItemUnderExistingParent(_Base):
     def test_nested_item_appears_in_parent_children_not_toplevel(self):
-        parent = self.sh.items.create_item('parent', {'type': 'num'})
+        parent = self.sh.items.create_item('parent', {'type': 'num'}, persist=False)
 
-        child = self.sh.items.create_item('parent.child', {'type': 'num'}, parent=parent)
+        child = self.sh.items.create_item('parent.child', {'type': 'num'}, parent=parent, persist=False)
 
         self.assertIn(child, parent.return_children())
         self.assertNotIn(child, self.sh.items._children)
 
     def test_nested_item_has_no_sh_attribute_but_is_findable(self):
-        parent = self.sh.items.create_item('parent', {'type': 'num'})
+        parent = self.sh.items.create_item('parent', {'type': 'num'}, persist=False)
 
-        self.sh.items.create_item('parent.child', {'type': 'num'}, parent=parent)
+        self.sh.items.create_item('parent.child', {'type': 'num'}, parent=parent, persist=False)
 
         self.assertFalse(hasattr(self.sh, 'parent.child'))
         self.assertIsNotNone(self.sh.items.return_item('parent.child'))
@@ -135,7 +137,7 @@ class TestCreateItemUnderExistingParent(_Base):
 
 class TestCreateItemWithNestedConfig(_Base):
     def test_grandchild_from_nested_config_is_findable_and_initialized(self):
-        self.sh.items.create_item('top', {'type': 'num', 'sub': {'type': 'num', 'cycle': '30'}})
+        self.sh.items.create_item('top', {'type': 'num', 'sub': {'type': 'num', 'cycle': '30'}}, persist=False)
 
         grandchild = self.sh.items.return_item('top.sub')
 

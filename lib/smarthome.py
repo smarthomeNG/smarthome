@@ -164,6 +164,13 @@ class SmartHome:
         self._config_etc = False
         self._legacy_instances = True
 
+        # default basename (without extension) for the yaml file that
+        # Items.create_item(persist=True) writes runtime-created items to,
+        # when no explicit filename is given. Overridable via
+        # 'created_items_file' in etc/smarthome.yaml (see the config-loading
+        # loop in __init__, which overwrites any self._xxx default found here).
+        self._created_items_file = 'created'
+
     def initialize_dir_vars(self):
         self._base_dir = BASE
         self.base_dir = self._base_dir  # **base_dir** is deprecated. Use method get_basedir() instead. - for external modules using that var (backend, ...?)

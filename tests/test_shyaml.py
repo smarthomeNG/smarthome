@@ -315,6 +315,40 @@ class TestYamlfileClass(unittest.TestCase):
         yf2.load()
         self.assertEqual(yf2.getvalue('key'), 'modified')
 
+    def test_setvalue_none_removes_top_level_key(self):
+        path = self._make_file("""
+            first: 1
+            second: 2
+        """)
+        yf = shyaml.yamlfile(path)
+        yf.load()
+        yf.setvalue('first', None)
+        self.assertIsNone(yf.getvalue('first'))
+        self.assertEqual(yf.getvalue('second'), 2)
+
+    def test_setvalue_none_removes_top_level_key_persists_after_save(self):
+        path = self._make_file('first: 1\nsecond: 2\n')
+        yf = shyaml.yamlfile(path)
+        yf.load()
+        yf.setvalue('first', None)
+        yf.save()
+        yf2 = shyaml.yamlfile(path)
+        yf2.load()
+        self.assertIsNone(yf2.getvalue('first'))
+        self.assertEqual(yf2.getvalue('second'), 2)
+
+    def test_setvalue_none_removes_nested_key(self):
+        path = self._make_file("""
+            parent:
+                child: 1
+                sibling: 2
+        """)
+        yf = shyaml.yamlfile(path)
+        yf.load()
+        yf.setvalue('parent.child', None)
+        self.assertIsNone(yf.getvalue('parent.child'))
+        self.assertEqual(yf.getvalue('parent.sibling'), 2)
+
     def test_setleafvalue_creates_branch_and_leaf(self):
         # setvalue requires the parent branch to exist; setleafvalue creates it.
         path = self._make_file('existing: yes\n')

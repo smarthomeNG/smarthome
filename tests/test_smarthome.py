@@ -102,6 +102,8 @@ class SmarthomeTest(unittest.TestCase):
                 _module_conf_basename = os.path.join(_etc_dir, 'module')
                 self.assertEqual(sh._module_conf_basename, _module_conf_basename)
 
+                self.assertEqual(sh._created_items_file, 'created')
+
                 _cache_dir = os.path.join(base_dir, 'var', 'cache' + os.path.sep)
                 self.assertEqual(sh._cache_dir, _cache_dir)
                 _env_dir = os.path.join(base_dir, 'lib', 'env' + os.path.sep)

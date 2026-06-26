@@ -52,10 +52,14 @@ They can be used the following way: To call eg. **get_toplevel_items()**, use th
 
 """
 
+import copy
 import logging
+import os
 import re
 
+import lib.config
 import lib.utils
+import lib.shyaml as shyaml
 
 from .item import Item
 from .structs import Structs
@@ -295,7 +299,7 @@ class Items:
 
         return child
 
-    def create_item(self, path, config, parent=None):
+    def create_item(self, path, config, parent=None, persist=True, filename=None):
         """
         Create a single item at runtime and fully initialize it (and any
         nested child items declared in *config*).
@@ -312,13 +316,32 @@ class Items:
         :param config: Attribute configuration dict for the item
         :param parent: Item under which to create this item; None for a
                         top-level item
+        :param persist: If True (default), also write *config* to a yaml
+                         file in items_dir, so the item survives a restart.
+                         If False, the item is runtime-only, same as before
+                         this parameter existed.
+        :param filename: Basename (without extension) of the yaml file to
+                          persist to. Only used when persist is True; falls
+                          back to ``sh._created_items_file`` if not given.
         :type path: str
         :type config: dict
+        :type persist: bool
+        :type filename: str
 
         :return: The newly created Item
         :rtype: Item
         """
-        item = self._construct_and_link(path, config, parent=parent)
+        item_config = config
+        if persist:
+            filename = filename or getattr(self._sh, '_created_items_file', 'created')
+            item_config = copy.deepcopy(config)
+            # _add_filenames_to_config() sets '_filename' on dict *values* of
+            # its argument, recursively - wrap item_config so it (and every
+            # nested child config) gets the key too, not just grandchildren.
+            lib.config._add_filenames_to_config({'_': item_config}, filename)
+            self._write_to_yaml_file(filename, path, config)
+
+        item = self._construct_and_link(path, item_config, parent=parent)
 
         new_items = list(_flatten_with_children(item))
         for new_item in new_items:
@@ -329,6 +352,25 @@ class Items:
             new_item._init_run()
 
         return item
+
+    def _write_to_yaml_file(self, filename, path, config):
+        """
+        Write *config* (the original, caller-supplied dict — no internal
+        bookkeeping keys like ``_filename``) into ``items_dir/<filename>.yaml``
+        at the given dotted *path*, creating intermediate branches as
+        needed. Preserves comments/formatting already in the file via
+        ruamel.yaml's round-trip loader/dumper.
+
+        :param filename: Basename (without extension) of the target file
+        :param path: Full dotted path at which to insert *config*
+        :param config: Attribute configuration dict to persist
+        """
+        target = os.path.join(self._sh._items_dir, filename)
+        yf = shyaml.yamlfile(target)
+        if os.path.isfile(target + shyaml.YAML_FILE):
+            yf.load()
+        yf.setvalue(path, config)
+        yf.save()
 
     def add_item(self, path, item):
         """
@@ -350,31 +392,63 @@ class Items:
     #        for child in self.__children:
     #            yield child
 
-    def remove_item(self, item):
+    def remove_item(self, item, persist=True):
         """
         Function to remove an item from the dictionary of items
         and delete the item object.
 
         :param item: The item to delete
+        :param persist: If True (default), also remove the item's entry
+                         from the yaml file it was defined in (``item.
+                         property.defined_in``/``item._filename``), if any.
+                         Works for any item with a known source file, not
+                         only ones created via create_item(persist=True) —
+                         deliberately generic. No-op if the item has no
+                         known source file.
         :type item: object
+        :type persist: bool
         """
 
         if item.property.path not in self.__items:
             return
 
+        path = item.property.path
+        source_filename = item._filename
+
         # remove item from Items data
         try:
-            del self.__item_dict[item.property.path]
-            self.__items.remove(item.property.path)
+            del self.__item_dict[path]
+            self.__items.remove(path)
         except Exception as e:
-            self.logger.warning(f'Error occured while trying to remove item {item.property.path}: {e}')
+            self.logger.warning(f'Error occured while trying to remove item {path}: {e}')
 
         # remove item bindings in plugins
         if item.remove():
             # delete item
             del item
         else:
-            self.logger.warning(f'Item {item.property.path} could not be removed due to incompatible plugins.')
+            self.logger.warning(f'Item {path} could not be removed due to incompatible plugins.')
+
+        if persist and source_filename:
+            self._remove_from_yaml_file(source_filename, path)
+
+    def _remove_from_yaml_file(self, filename, path):
+        """
+        Remove the entry at dotted *path* from ``items_dir/<filename>.yaml``,
+        if that file exists. Cleans up now-empty parent branches. Preserves
+        comments/formatting of everything else in the file (round-trip
+        load/save).
+
+        :param filename: Basename (without extension) of the file to edit
+        :param path: Full dotted path of the entry to remove
+        """
+        target = os.path.join(self._sh._items_dir, filename)
+        if not os.path.isfile(target + shyaml.YAML_FILE):
+            return
+        yf = shyaml.yamlfile(target)
+        yf.load()
+        yf.setvalue(path, None)
+        yf.save()
 
     def find_references(self, path):
         """

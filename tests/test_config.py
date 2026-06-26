@@ -128,5 +128,20 @@ class TestConfigYaml(unittest.TestCase, ConfigBaseTests):
         self.assertEqual(conf['section']['key_multiline_quotes'], 'line1line2')
 
 
+class TestAddFilenamesToConfig(unittest.TestCase):
+    """_add_filenames_to_config() stores the file basename without extension (no more .conf
+    files to disambiguate from — the .yaml extension is implicit, not stored)."""
+
+    def test_filename_stored_without_extension(self):
+        items = {'top': {'type': 'num'}}
+        lib.config._add_filenames_to_config(items, 'created.yaml')
+        self.assertEqual(items['top']['_filename'], 'created')
+
+    def test_filename_propagated_to_nested_items(self):
+        items = {'top': {'type': 'num', 'sub': {'type': 'num'}}}
+        lib.config._add_filenames_to_config(items, 'created.yaml')
+        self.assertEqual(items['top']['sub']['_filename'], 'created')
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
