@@ -551,6 +551,7 @@ class Plugins:
                                 logger.info(
                                     f"Initialized plugin '{str(classpath).split('.')[1]}' instance '{instance}' from section '{configname}'"
                                 )
+                            self._parse_existing_items(plugin_thread.plugin)
                             return True
                         except Exception as e:
                             logger.warning(
@@ -561,6 +562,28 @@ class Plugins:
                         f"Plugin '{str(classpath).split('.')[1]}' {plugin_version} from section '{configname}'\nException: {e}\nrunning SmartHomeNG {self._sh.version} / plugins {self._sh.plugins_version}"
                     )
         return False
+
+    def _parse_existing_items(self, plugin) -> None:
+        """
+        Call parse_item() on plugin for every item that already exists in the
+        item tree. Needed when a plugin is (re-)loaded after the item tree has
+        already been built — e.g. a plugin loaded at runtime, or a plugin being
+        reloaded — so it doesn't miss items it would normally see during the
+        regular startup sequence (items loaded, then plugins parse them).
+
+        :param plugin: the plugin instance to parse existing items for
+        """
+        if not hasattr(plugin, PLUGIN_PARSE_ITEM):
+            return
+
+        for item in self._sh.items.return_items():
+            update = plugin.parse_item(item)
+            if update:
+                try:
+                    plugin.add_item(item, updating=True)
+                except Exception:
+                    pass
+                item.add_method_trigger(update)
 
     def unload_plugin(self, configname: str) -> bool:
         """
@@ -721,15 +744,7 @@ class Plugins:
         myplugin = self.return_plugin(configname)
 
         logger.info(f'Reloading plugin {configname}, step 5: (re)init items')
-        if hasattr(myplugin, PLUGIN_PARSE_ITEM):
-            for item in self._sh.items.return_items():
-                update = myplugin.parse_item(item)
-                if update:
-                    try:
-                        myplugin.add_item(item, updating=True)
-                    except Exception:
-                        pass
-                    item.add_method_trigger(update)
+        self._parse_existing_items(myplugin)
 
         if alive:
             logger.info(f'Reloading plugin {configname}, step 6: start plugin')

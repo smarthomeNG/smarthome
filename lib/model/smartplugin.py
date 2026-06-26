@@ -560,6 +560,20 @@ class SmartPlugin(SmartObject, Utils):
         """
         return list(self._item_lookup_dict.keys())
 
+    ###############################################################################
+    #
+    # the following method can be overwritten
+    #
+    # It is the symmetric counterpart to parse_item() and is called once per item
+    # by remove_item() (which itself must NOT be overwritten, see above). If a
+    # plugin's parse_item() sets up plugin-specific bookkeeping beyond add_item()'s
+    # generic dicts, the matching teardown belongs here — not in remove_item().
+    #
+    # If overwritten, call super().unparse_item(item) too, since the base
+    # implementation removes the update_item method trigger that parse_item's
+    # `return self.update_item` registered.
+    #
+
     def unparse_item(self, item) -> bool:
         """
         Ensure that changes to <item> are no longer propagated to this plugin
