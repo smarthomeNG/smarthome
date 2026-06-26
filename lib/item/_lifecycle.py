@@ -28,8 +28,9 @@ Item lifecycle helpers extracted from lib/item/item.py.
 Functions
 ---------
 remove(item)
-    Notify all loaded plugins that *item* is being deleted so they can
-    release any references they hold to it.
+    Remove *item*'s own scheduler jobs and notify all loaded plugins that
+    *item* is being deleted so they can release any references they hold
+    to it.
 """
 
 import logging
@@ -39,20 +40,35 @@ from lib.constants import PLUGIN_REMOVE_ITEM
 logger = logging.getLogger('lib.item')
 
 
+def _remove_scheduler_jobs(item):
+    """
+    Remove all scheduler jobs that may have been registered for *item*
+    (cycle/crontab, autotimer/threshold timer, hysteresis up/low timers).
+
+    ``scheduler.remove()`` is a safe no-op if a given job was never
+    registered, so all four names are removed unconditionally.
+    """
+    base = item._itemname_prefix + item.id()
+    for suffix in ('', '-Timer', '-UpTimer', '-LoTimer'):
+        item._sh.scheduler.remove(base + suffix)
+
+
 def remove(item):
     """
     Clean up *item* usage before deletion.
 
-    Iterates over all loaded plugins and calls ``plugin.remove_item(item)``
-    on each one that implements the ``PLUGIN_REMOVE_ITEM`` interface.
-    Plugins that do not implement the interface are collected and reported
-    in a warning.
+    Removes *item*'s own scheduler jobs, then iterates over all loaded
+    plugins and calls ``plugin.remove_item(item)`` on each one that
+    implements the ``PLUGIN_REMOVE_ITEM`` interface. Plugins that do not
+    implement the interface are collected and reported in a warning.
 
     :param item: ``Item`` instance being removed.
     :return:     ``True`` if all plugins handled the removal cleanly;
                  ``False`` if any plugin was incompatible.
     :rtype:      bool
     """
+    _remove_scheduler_jobs(item)
+
     incompatible = []
 
     for plugin in item.plugins.return_plugins():
