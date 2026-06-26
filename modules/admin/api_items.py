@@ -124,6 +124,87 @@ class ItemsController(RESTResource, ItemData):
     update.expose_resource = True
     update.authentication_needed = True
 
+    # ======================================================================
+    #  POST /api/items/{item_path}
+    #
+    def add(self, id=None):
+        """
+        Handle POST requests — create a new item at runtime.
+
+        Request body: JSON object with a "config" key (item attribute dict,
+        same shape as a static item definition).
+        """
+        if id is None:
+            raise cherrypy.HTTPError(400, 'Item path required')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        body = cherrypy.request.body.read()
+        try:
+            data = json.loads(body)
+            config = data.get('config')
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"config": ...}')
+
+        self.logger.info(f'ItemsController POST /api/items/{id}: config={config!r}')
+
+        self.items.create_item(id, config)
+        return json.dumps({'result': 'ok'})
+
+    add.expose_resource = True
+    add.authentication_needed = True
+
+    # ======================================================================
+    #  DELETE /api/items/{item_path}
+    #
+    def delete(self, id=None):
+        """
+        Handle DELETE requests — remove an item at runtime.
+        """
+        if id is None:
+            raise cherrypy.HTTPError(400, 'Item path required')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        self.logger.info(f'ItemsController DELETE /api/items/{id}')
+
+        self.items.remove_item(item)
+        return json.dumps({'result': 'ok'})
+
+    delete.expose_resource = True
+    delete.authentication_needed = True
+
+    # ======================================================================
+    #  GET /api/items/{item_path}/references
+    #
+    def references(self, id, *vpath, **params):
+        """
+        Handle GET requests for the /references sub-resource — best-effort
+        list of other items that textually reference this item's path
+        (see Items.find_references()).
+        """
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        self.logger.info(f'ItemsController GET /api/items/{id}/references')
+
+        refs = self.items.find_references(id)
+        result = [{'item': ref_item.property.path, 'attribute': attr, 'value': value} for ref_item, attr, value in refs]
+        return json.dumps(result)
+
+    references.expose_resource = True
+    references.authentication_needed = True
+
 
 class ItemsListController(RESTResource):
     def __init__(self, module):
