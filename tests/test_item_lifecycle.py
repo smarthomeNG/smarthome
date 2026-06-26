@@ -186,5 +186,36 @@ class TestRemoveDetachesShAttribute(_Base):
         self.assertFalse(hasattr(self.sh, 'parent.sub'))
 
 
+class TestRemoveDetachesFromOtherItemsTriggerLists(_Base):
+    def test_remove_clears_item_from_other_items_items_to_trigger(self):
+        target = _item(self.sh, 'target', eval='1')
+        source = _item(self.sh, 'source', eval='sh.target()', eval_trigger='target')
+        target._init_prerun()
+        source._init_prerun()
+        self.assertIn(source, target.get_item_triggers())
+
+        source.remove()
+
+        self.assertNotIn(source, target.get_item_triggers())
+
+    def test_remove_clears_item_from_other_items_hysteresis_triggers(self):
+        sensor = _item(self.sh, 'sensor', 'num')
+        output = _item(
+            self.sh,
+            'output',
+            'bool',
+            hysteresis_input='sensor',
+            hysteresis_upper_threshold='22',
+            hysteresis_lower_threshold='18',
+        )
+        sensor._init_prerun()
+        output._init_prerun()
+        self.assertIn(output, sensor.get_hysteresis_item_triggers())
+
+        output.remove()
+
+        self.assertNotIn(output, sensor.get_hysteresis_item_triggers())
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

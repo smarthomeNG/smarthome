@@ -29,9 +29,10 @@ Functions
 ---------
 remove(item)
     Remove *item*'s own scheduler jobs, stop an in-progress fade, detach
-    it from its parent's child collection and from any sh/items attribute
-    binding, and notify all loaded plugins that *item* is being deleted so
-    they can release any references they hold to it.
+    it from its parent's child collection, from any sh/items attribute
+    binding, and from other items' trigger lists, then notify all loaded
+    plugins that *item* is being deleted so they can release any
+    references they hold to it.
 """
 
 import logging
@@ -101,16 +102,43 @@ def _detach_sh_attribute(item):
             delattr(obj, attr)
 
 
+def _detach_from_other_items_triggers(item):
+    """
+    Remove *item* from every other item's ``_items_to_trigger`` /
+    ``_hysteresis_items_to_trigger`` list.
+
+    ``_parsing.init_prerun()`` appends *item* to another item's
+    ``_items_to_trigger`` when that other item is named in *item*'s
+    ``eval_trigger``/``trigger`` attribute, and to a sensor item's
+    ``_hysteresis_items_to_trigger`` when *item*'s ``hysteresis_input``
+    names that sensor. Without this, the other item keeps trying to
+    trigger a deleted item on every value change.
+    """
+    from lib.item.items import Items
+
+    items_instance = Items.get_instance()
+    if items_instance is None:
+        return
+
+    for other in items_instance.return_items():
+        if other is item:
+            continue
+        if item in other._items_to_trigger:
+            other._items_to_trigger.remove(item)
+        if item in other._hysteresis_items_to_trigger:
+            other._hysteresis_items_to_trigger.remove(item)
+
+
 def remove(item):
     """
     Clean up *item* usage before deletion.
 
     Removes *item*'s own scheduler jobs, stops an in-progress fade, detaches
-    it from its parent's child collection and from any sh/items attribute
-    binding, then iterates over all loaded plugins and calls
-    ``plugin.remove_item(item)`` on each one that implements the
-    ``PLUGIN_REMOVE_ITEM`` interface. Plugins that do not implement the
-    interface are collected and reported in a warning.
+    it from its parent's child collection, from any sh/items attribute
+    binding, and from other items' trigger lists, then iterates over all
+    loaded plugins and calls ``plugin.remove_item(item)`` on each one that
+    implements the ``PLUGIN_REMOVE_ITEM`` interface. Plugins that do not
+    implement the interface are collected and reported in a warning.
 
     :param item: ``Item`` instance being removed.
     :return:     ``True`` if all plugins handled the removal cleanly;
@@ -121,6 +149,7 @@ def remove(item):
     _stop_fading(item)
     _detach_from_parent(item)
     _detach_sh_attribute(item)
+    _detach_from_other_items_triggers(item)
 
     incompatible = []
 
