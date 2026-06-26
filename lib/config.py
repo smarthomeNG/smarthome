@@ -332,7 +332,7 @@ def merge(source, destination, source_name='', dest_name='', filename='', add=No
         True
     """
 
-    if source.get('_filename', '') == 'test_struct.yaml':
+    if source.get('_filename', '') == 'test_struct':
         logger.info(
             f'merge {source.get("_filename", "")}: source={dict(source)}, destination={dict(destination)}, source_name={source_name}, dest_name={dest_name}'
         )
@@ -871,6 +871,8 @@ def _add_filenames_to_config(items, filename, level=0):
 
     This function calls itself recurselively
     """
+    if filename.endswith(YAML_FILE):
+        filename = filename[: -len(YAML_FILE)]
     for attr, value in items.items():
         if isinstance(value, dict):
             child_path = dict(value)
