@@ -75,13 +75,14 @@ def _detach_from_parent(item):
 
     *item*'s parent is either another ``Item`` (nested item) or the
     ``Items`` singleton (top-level item) — both expose ``_remove_child()``,
-    so the call site doesn't need to distinguish the two. Defensive
-    ``hasattr`` check in case *item* has no parent exposing it (e.g. in
-    minimal test setups).
+    so the call site doesn't need to distinguish the two. Tolerates a
+    parent that has no ``_remove_child()`` (e.g. ``None``, or a minimal
+    test setup that passes ``sh`` itself as the parent).
     """
-    parent = item._parent
-    if parent is not None and hasattr(parent, '_remove_child'):
-        parent._remove_child(item)
+    try:
+        item._parent._remove_child(item)
+    except AttributeError:
+        pass
 
 
 def _detach_sh_attribute(item):
@@ -123,10 +124,14 @@ def _detach_from_other_items_triggers(item):
     for other in items_instance.return_items():
         if other is item:
             continue
-        if item in other._items_to_trigger:
+        try:
             other._items_to_trigger.remove(item)
-        if item in other._hysteresis_items_to_trigger:
+        except ValueError:
+            pass
+        try:
             other._hysteresis_items_to_trigger.remove(item)
+        except ValueError:
+            pass
 
 
 def remove(item):

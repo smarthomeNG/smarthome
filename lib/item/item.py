@@ -1577,8 +1577,10 @@ class Item:
 
     def _remove_child(self, child) -> None:
         """Remove child from __children — used by _lifecycle.py when child is deleted."""
-        if child in self.__children:
+        try:
             self.__children.remove(child)
+        except ValueError:
+            pass
 
     def _append_child(self, child) -> None:
         """Append child to __children — used by Items._construct_and_link() when child is created."""

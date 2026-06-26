@@ -443,8 +443,10 @@ class Items:
 
     def _remove_child(self, item) -> None:
         """Remove item from _children — used by _lifecycle.py when a top-level item is deleted."""
-        if item in self._children:
+        try:
             self._children.remove(item)
+        except ValueError:
+            pass
 
     def _append_child(self, item) -> None:
         """Append item to _children — used by _construct_and_link() when a top-level item is created."""
