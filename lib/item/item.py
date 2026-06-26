@@ -1577,6 +1577,10 @@ class Item:
         if child in self.__children:
             self.__children.remove(child)
 
+    def _append_child(self, child) -> None:
+        """Append child to __children — used by Items._construct_and_link() when child is created."""
+        self.__children.append(child)
+
     def return_parent(self, level: int = 1, strict: bool = False):
         """Return ancestor item at given level — delegates to _navigation.return_parent_item()."""
         return _return_parent_item(self, level=level, strict=strict)

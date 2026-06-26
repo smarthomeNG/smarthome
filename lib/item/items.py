@@ -64,6 +64,19 @@ from .structs import Structs
 _items_instance = None  # Pointer to the initialized instance of the Items class (for use by static methods)
 
 
+def _flatten_with_children(item):
+    """
+    Yield *item* followed by all of its descendants, depth-first.
+
+    Used by ``Items.create_item()`` to find every item that was newly
+    created together with the requested one (nested config dicts create
+    child items automatically, via Item's own recursive construction).
+    """
+    yield item
+    for child in item.return_children():
+        yield from _flatten_with_children(child)
+
+
 class Items:
     """
     Items loader class. (Item-methods from bin/smarthome.py are moved here.)
@@ -193,17 +206,10 @@ class Items:
 
         for attr, value in item_conf.items():
             if isinstance(value, dict):
-                child_path = attr
                 try:
-                    # (smarthome, parent, path, config):
-                    child = Item(self._sh, self, child_path, value, items_instance=_items_instance)
+                    self._construct_and_link(attr, value)
                 except Exception as e:
-                    self.logger.error('load_itemdefinitions: Item {}: problem creating: {}'.format(child_path, e))
-                else:
-                    setattr(self, attr, child)
-                    setattr(self._sh, attr, child)
-                    self.add_item(child_path, child)
-                    self._children.append(child)
+                    self.logger.error('load_itemdefinitions: Item {}: problem creating: {}'.format(attr, e))
         del item_conf  # clean up
 
         # Test if all used attributes are defined in configuread plugins
@@ -251,6 +257,78 @@ class Items:
     # here goes debug output (if needed) after the initialization of all items
     # import lib.metadata as metadata
     # self.logger.notice(f"metadata.all_itemprefixdefinitions: {metadata.all_itemprefixdefinitions.keys()}")
+
+    def _construct_and_link(self, path, config, parent=None):
+        """
+        Construct a single item and link it into the tree, without running
+        any of the post-construction init phases (_init_prerun/
+        _init_start_scheduler/_init_run).
+
+        This is the shared construction path used both by
+        load_itemdefinitions() (which batches the init phases across the
+        whole tree afterward, to support forward references between items)
+        and by create_item() (which runs the init phases immediately, for
+        just the newly created subtree).
+
+        :param path: Full path of the item to create
+        :param config: Attribute configuration dict for the item (may
+                        contain nested dicts for child items, handled by
+                        Item's own recursive construction)
+        :param parent: Item under which to create this item; None for a
+                        top-level item (parent becomes this Items instance)
+        :type path: str
+        :type config: dict
+
+        :return: The newly created Item
+        :rtype: Item
+        """
+        parent_obj = self if parent is None else parent
+        leaf_attr = path.rsplit('.', 1)[-1]
+
+        child = Item(self._sh, parent_obj, path, config, items_instance=self)
+
+        setattr(parent_obj, leaf_attr, child)
+        if parent is None:
+            setattr(self._sh, leaf_attr, child)
+        self.add_item(path, child)
+        parent_obj._append_child(child)
+
+        return child
+
+    def create_item(self, path, config, parent=None):
+        """
+        Create a single item at runtime and fully initialize it (and any
+        nested child items declared in *config*).
+
+        Unlike load_itemdefinitions(), which batches the init phases across
+        the whole tree (to support forward references between items being
+        loaded together), this runs the init phases immediately, scoped to
+        only the newly created item and its descendants. A pre-existing
+        item with a wildcard ``trigger:`` pattern that would now match this
+        new item is *not* retroactively rewired — that would require
+        re-running _init_prerun() across the whole tree on every creation.
+
+        :param path: Full path of the item to create
+        :param config: Attribute configuration dict for the item
+        :param parent: Item under which to create this item; None for a
+                        top-level item
+        :type path: str
+        :type config: dict
+
+        :return: The newly created Item
+        :rtype: Item
+        """
+        item = self._construct_and_link(path, config, parent=parent)
+
+        new_items = list(_flatten_with_children(item))
+        for new_item in new_items:
+            new_item._init_prerun()
+        for new_item in new_items:
+            new_item._init_start_scheduler()
+        for new_item in new_items:
+            new_item._init_run()
+
+        return item
 
     def add_item(self, path, item):
         """
@@ -312,6 +390,10 @@ class Items:
         """Remove item from _children — used by _lifecycle.py when a top-level item is deleted."""
         if item in self._children:
             self._children.remove(item)
+
+    def _append_child(self, item) -> None:
+        """Append item to _children — used by _construct_and_link() when a top-level item is created."""
+        self._children.append(item)
 
     # aus lib.logic.py
     #    def __iter__(self):
