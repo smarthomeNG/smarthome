@@ -308,6 +308,11 @@ class Items:
         for child in self._children:
             yield child
 
+    def _remove_child(self, item) -> None:
+        """Remove item from _children — used by _lifecycle.py when a top-level item is deleted."""
+        if item in self._children:
+            self._children.remove(item)
+
     # aus lib.logic.py
     #    def __iter__(self):
     #        for logic in self._logics:

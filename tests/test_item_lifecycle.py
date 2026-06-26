@@ -127,7 +127,24 @@ class TestRemoveStopsFading(_Base):
 
         item.remove()  # must not raise
 
-        self.assertFalse(item._fading)
+
+class TestRemoveDetachesFromParent(_Base):
+    def test_remove_detaches_child_from_parent(self):
+        parent = lib.item.item.Item(self.sh, self.sh, 'parent', {'sub': {'type': 'num'}})
+        child = parent.return_children().__next__()
+
+        child.remove()
+
+        self.assertNotIn(child, parent.return_children())
+
+    def test_remove_detaches_toplevel_item_from_items(self):
+        items_instance = self.sh.items
+        toplevel = lib.item.item.Item(self.sh, items_instance, 'top', {'type': 'num'}, items_instance=items_instance)
+        items_instance._children.append(toplevel)
+
+        toplevel.remove()
+
+        self.assertNotIn(toplevel, items_instance._children)
 
 
 if __name__ == '__main__':

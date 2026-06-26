@@ -28,9 +28,10 @@ Item lifecycle helpers extracted from lib/item/item.py.
 Functions
 ---------
 remove(item)
-    Remove *item*'s own scheduler jobs, stop an in-progress fade, and
-    notify all loaded plugins that *item* is being deleted so they can
-    release any references they hold to it.
+    Remove *item*'s own scheduler jobs, stop an in-progress fade, detach
+    it from its parent's child collection, and notify all loaded plugins
+    that *item* is being deleted so they can release any references they
+    hold to it.
 """
 
 import logging
@@ -67,15 +68,30 @@ def _stop_fading(item):
         item._lock.notify_all()
 
 
+def _detach_from_parent(item):
+    """
+    Remove *item* from its parent's child collection.
+
+    *item*'s parent is either another ``Item`` (nested item) or the
+    ``Items`` singleton (top-level item) — both expose ``_remove_child()``,
+    so the call site doesn't need to distinguish the two. Defensive
+    ``hasattr`` check in case *item* has no parent exposing it (e.g. in
+    minimal test setups).
+    """
+    parent = item._parent
+    if parent is not None and hasattr(parent, '_remove_child'):
+        parent._remove_child(item)
+
+
 def remove(item):
     """
     Clean up *item* usage before deletion.
 
-    Removes *item*'s own scheduler jobs, stops an in-progress fade, then
-    iterates over all loaded plugins and calls ``plugin.remove_item(item)``
-    on each one that implements the ``PLUGIN_REMOVE_ITEM`` interface.
-    Plugins that do not implement the interface are collected and reported
-    in a warning.
+    Removes *item*'s own scheduler jobs, stops an in-progress fade, detaches
+    it from its parent's child collection, then iterates over all loaded
+    plugins and calls ``plugin.remove_item(item)`` on each one that
+    implements the ``PLUGIN_REMOVE_ITEM`` interface. Plugins that do not
+    implement the interface are collected and reported in a warning.
 
     :param item: ``Item`` instance being removed.
     :return:     ``True`` if all plugins handled the removal cleanly;
@@ -84,6 +100,7 @@ def remove(item):
     """
     _remove_scheduler_jobs(item)
     _stop_fading(item)
+    _detach_from_parent(item)
 
     incompatible = []
 

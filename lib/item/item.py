@@ -1572,6 +1572,11 @@ class Item:
         for child in self.__children:
             yield child
 
+    def _remove_child(self, child) -> None:
+        """Remove child from __children — used by _lifecycle.py when child is deleted."""
+        if child in self.__children:
+            self.__children.remove(child)
+
     def return_parent(self, level: int = 1, strict: bool = False):
         """Return ancestor item at given level — delegates to _navigation.return_parent_item()."""
         return _return_parent_item(self, level=level, strict=strict)
