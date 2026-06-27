@@ -100,3 +100,32 @@ class TestEditItemTypeChange(_Base):
         self.sh.items.edit_item(item, {'type': 'num'})
 
         self.assertEqual(item(), 0)
+
+
+class TestEditItemPreservesIncomingReferences(_Base):
+    def test_edit_item_keeps_other_items_triggering_on_it(self):
+        target = self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=False)
+        source = self.sh.items.create_item(
+            'source', {'type': 'num', 'eval': 'sh.target()', 'eval_trigger': 'target'}, persist=False
+        )
+        self.assertIn(source, target.get_item_triggers())
+
+        self.sh.items.edit_item(target, {'type': 'num', 'eval': '1', 'remark': 'edited'})
+
+        self.assertIn(source, target.get_item_triggers())
+
+
+class TestEditItemRewiresOwnOutgoingTriggers(_Base):
+    def test_edit_item_moving_its_own_trigger_rewires_correctly(self):
+        target_a = self.sh.items.create_item('target_a', {'type': 'num', 'eval': '1'}, persist=False)
+        target_b = self.sh.items.create_item('target_b', {'type': 'num', 'eval': '2'}, persist=False)
+        source = self.sh.items.create_item(
+            'source', {'type': 'num', 'eval': 'sh.target_a()', 'eval_trigger': 'target_a'}, persist=False
+        )
+        self.assertIn(source, target_a.get_item_triggers())
+        self.assertNotIn(source, target_b.get_item_triggers())
+
+        self.sh.items.edit_item(source, {'type': 'num', 'eval': 'sh.target_b()', 'eval_trigger': 'target_b'})
+
+        self.assertNotIn(source, target_a.get_item_triggers())
+        self.assertIn(source, target_b.get_item_triggers())

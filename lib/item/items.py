@@ -62,6 +62,7 @@ import lib.utils
 import lib.shyaml as shyaml
 
 from lib.constants import ITEM_DEFAULTS
+from lib.item._internal._lifecycle import _detach_from_other_items_triggers
 
 from .item import Item
 from .structs import Structs
@@ -416,7 +417,21 @@ class Items:
         :return: The same item, mutated
         :rtype: Item
         """
+        # Undo this item's own OUTGOING trigger/hysteresis_input wiring
+        # (based on the OLD config) before re-parsing — otherwise a moved
+        # trigger leaves a stale registration on the old target. Incoming
+        # references (other items pointing AT this one) live on THIS
+        # item's own _items_to_trigger list, untouched here — that's the
+        # whole point of editing in place instead of remove+recreate.
+        _detach_from_other_items_triggers(item)
+
         item._apply_config(config)
+
+        # Re-wire based on the NEW config (eval/trigger/hysteresis_input
+        # expansion, registers this item onto its new trigger targets).
+        item._init_prerun()
+        item._init_start_scheduler()
+        item._init_run()
 
         # Preserved value may not be valid for a new type (e.g. num -> str
         # always works, str -> num doesn't if the string isn't numeric).
