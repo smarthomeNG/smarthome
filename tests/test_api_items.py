@@ -169,19 +169,18 @@ class TestDelete(_Base):
 
         self.assertEqual(ctx.exception.status, 404)
 
-    def test_delete_persist_false_keeps_file_entry(self):
+    def test_delete_persist_false_query_param_keeps_file_entry(self):
         with self._post_body({'config': {'type': 'num'}}):
             self.controller.add(id='new')
 
-        with self._post_body({'persist': False}):
-            self.controller.delete(id='new')
+        self.controller.delete(id='new', persist='false')
 
         self.assertIsNone(self.sh.items.return_item('new'))
         yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, 'created'))
         yf.load()
         self.assertIsNotNone(yf.getnode('new'))
 
-    def test_delete_without_body_defaults_to_persist_true(self):
+    def test_delete_without_persist_param_defaults_to_true(self):
         with self._post_body({'config': {'type': 'num'}}):
             self.controller.add(id='new')
 
@@ -190,6 +189,15 @@ class TestDelete(_Base):
         yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, 'created'))
         yf.load()
         self.assertIsNone(yf.getnode('new'))
+
+    def test_delete_invalid_persist_param_returns_400(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='new')
+
+        with self.assertRaises(cherrypy.HTTPError) as ctx:
+            self.controller.delete(id='new', persist='not-a-bool')
+
+        self.assertEqual(ctx.exception.status, 400)
 
 
 class TestReferences(_Base):

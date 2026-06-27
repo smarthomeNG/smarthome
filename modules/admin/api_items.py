@@ -27,6 +27,7 @@ import cherrypy
 
 import lib.shyaml as shyaml
 from lib.item import Items
+from lib.utils import Utils
 
 import jwt
 from .rest import RESTResource
@@ -206,13 +207,23 @@ class ItemsController(RESTResource, ItemData):
     # ======================================================================
     #  DELETE /api/items/{item_path}
     #
-    def delete(self, id=None):
+    def delete(self, id=None, persist=None):
         """
         Handle DELETE requests — remove an item at runtime.
 
-        Request body is optional. If given, it's a JSON object with an
-        optional "persist" key (bool, default True) — whether to also
-        remove the item's entry from its source yaml file.
+        :param persist: Optional query parameter ('true'/'false', default
+                         True if omitted) — whether to also remove the
+                         item's entry from its source yaml file.
+
+        Deliberately a query parameter, not a JSON request body: DELETE
+        isn't in cherrypy's default `methods_with_bodies`
+        ('POST', 'PUT', 'PATCH'), so cherrypy never runs its normal body
+        wrapping/processing for it — request.body.fp ends up as the raw
+        cheroot KnownLengthRFile, whose read() doesn't accept the
+        (size, fp_out) signature cherrypy's own Entity.read() calls it
+        with, crashing with a TypeError on every DELETE. The query string
+        is parsed unconditionally regardless of method, so it doesn't hit
+        this.
         """
         if id is None:
             raise cherrypy.HTTPError(400, 'Item path required')
@@ -224,19 +235,16 @@ class ItemsController(RESTResource, ItemData):
         if item is None:
             raise cherrypy.HTTPError(404, f"Item '{id}' not found")
 
-        persist = True
-        body = b''
-        if getattr(cherrypy.request, 'body', None) is not None:
-            body = cherrypy.request.body.read()
-        if body:
+        persist_value = True
+        if persist is not None:
             try:
-                persist = json.loads(body).get('persist', True)
-            except (json.JSONDecodeError, AttributeError, TypeError):
-                raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"persist": ...}')
+                persist_value = Utils.to_bool(persist)
+            except Exception:
+                raise cherrypy.HTTPError(400, "Invalid 'persist' parameter — expected true/false")
 
-        self.logger.info(f'ItemsController DELETE /api/items/{id}: persist={persist!r}')
+        self.logger.info(f'ItemsController DELETE /api/items/{id}: persist={persist_value!r}')
 
-        self.items.remove_item(item, persist=persist)
+        self.items.remove_item(item, persist=persist_value)
         return json.dumps({'result': 'ok'})
 
     delete.expose_resource = True
