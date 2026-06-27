@@ -63,6 +63,12 @@ import subprocess
 import threading
 import time
 import traceback
+import warnings
+
+try:
+    from cryptography.utils import CryptographyDeprecationWarning
+except ImportError:
+    CryptographyDeprecationWarning = None
 
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
@@ -1122,27 +1128,22 @@ class SmartHome:
 
     def _object_refcount(self):
         objects = {}
-        for module in list(sys.modules.values()):
-            for sym in dir(module):
-                # skip deprecation warning on MacOS, these ciphers shouldn't be used anyway
-                if module.__name__ == 'cryptography.hazmat.primitives.asymmetric.ec' and sym.startswith('SECT'):
-                    continue
-                if module.__name__ == 'cryptography.hazmat.primitives.ciphers.algorithms' and sym in [
-                    'SECT233K1',
-                    'Blowfish',
-                    'CAST5',
-                    'IDEA',
-                    'SEED',
-                    'TripleDES',
-                    'ARC4',
-                ]:
-                    continue
-                try:
-                    obj = getattr(module, sym)
-                    if isinstance(obj, type):
-                        objects[obj] = sys.getrefcount(obj)
-                except Exception:
-                    pass
+        with warnings.catch_warnings():
+            # getattr() below touches every symbol of every loaded module,
+            # including deprecated cryptography ciphers/modes (e.g.
+            # Camellia, CFB, CFB8, OFB, ...) - that list keeps growing as
+            # the cryptography package deprecates more of them, so suppress
+            # by category instead of maintaining a name list.
+            if CryptographyDeprecationWarning is not None:
+                warnings.simplefilter('ignore', CryptographyDeprecationWarning)
+            for module in list(sys.modules.values()):
+                for sym in dir(module):
+                    try:
+                        obj = getattr(module, sym)
+                        if isinstance(obj, type):
+                            objects[obj] = sys.getrefcount(obj)
+                    except Exception:
+                        pass
         return objects
 
     #####################################################################
