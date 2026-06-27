@@ -62,7 +62,7 @@ import lib.utils
 import lib.shyaml as shyaml
 
 from lib.constants import ITEM_DEFAULTS
-from lib.item._internal._lifecycle import _detach_from_other_items_triggers
+from lib.item._internal._lifecycle import _detach_from_other_items_triggers, _remove_scheduler_jobs, _stop_fading
 
 from .item import Item
 from .structs import Structs
@@ -424,6 +424,8 @@ class Items:
         # item's own _items_to_trigger list, untouched here — that's the
         # whole point of editing in place instead of remove+recreate.
         _detach_from_other_items_triggers(item)
+        _remove_scheduler_jobs(item)
+        _stop_fading(item)
 
         item._apply_config(config)
 

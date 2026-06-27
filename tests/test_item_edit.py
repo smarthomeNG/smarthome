@@ -41,9 +41,33 @@ def _make_sh():
     return MockSmartHome()
 
 
+class RecordingScheduler:
+    """Drop-in replacement for MockScheduler that records calls."""
+
+    def __init__(self):
+        self.calls = []
+
+    def add(self, name, obj=None, prio=3, cron=None, cycle=None, value=None, offset=None, next=None, items=None):
+        self.calls.append({'action': 'add', 'name': name, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next})
+
+    def remove(self, name):
+        self.calls.append({'action': 'remove', 'name': name})
+
+    def adds(self):
+        return [c for c in self.calls if c['action'] == 'add']
+
+    def removes(self):
+        return [c for c in self.calls if c['action'] == 'remove']
+
+    def added_names(self):
+        return [c['name'] for c in self.adds()]
+
+
 class _Base(unittest.TestCase):
     def setUp(self):
         self.sh = _make_sh()
+        self.recorder = RecordingScheduler()
+        self.sh.scheduler = self.recorder
 
     def tearDown(self):
         _reset()
@@ -129,3 +153,14 @@ class TestEditItemRewiresOwnOutgoingTriggers(_Base):
 
         self.assertNotIn(source, target_a.get_item_triggers())
         self.assertIn(source, target_b.get_item_triggers())
+
+
+class TestEditItemRewiresScheduler(_Base):
+    def test_edit_item_changing_cycle_removes_old_job_and_adds_new(self):
+        item = self.sh.items.create_item('cy', {'type': 'num', 'cycle': '30'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'cycle': '60'})
+
+        self.assertIn('items.cy', [c['name'] for c in self.recorder.removes()])
+        cycle_adds = [c for c in self.recorder.adds() if c['name'] == 'items.cy']
+        self.assertEqual(cycle_adds[-1]['cycle'], 60)
