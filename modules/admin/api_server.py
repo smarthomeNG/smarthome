@@ -97,8 +97,8 @@ class ServerController(RESTResource):
         response['default_language'] = self._sh.get_defaultlanguage()
         response['client_ip'] = client_ip
         http_user_dict = self.module.mod_http.get_user_dict()
-        pw_hash = http_user_dict.get('admin', {}).get('password_hash') or ''
-        response['login_required'] = pw_hash != ''
+        # http_user_dict always has only one entry
+        response['login_required'] = any(u.get('password_hash') for u in http_user_dict.values())
         # Include websocket connection info so the frontend can set wsPort/wsHost
         # during APP_INITIALIZER (getServerBasicinfo) rather than waiting for the
         # later getServerinfo() call from TopNavigationComponent.  Without these
