@@ -61,7 +61,7 @@ import lib.config
 import lib.utils
 import lib.shyaml as shyaml
 
-from lib.constants import ITEM_DEFAULTS
+from lib.constants import ITEM_DEFAULTS, PLUGIN_PARSE_ITEM, PLUGIN_REMOVE_ITEM
 from lib.item._internal._lifecycle import _detach_from_other_items_triggers, _remove_scheduler_jobs, _stop_fading
 
 from .item import Item
@@ -427,6 +427,14 @@ class Items:
         _remove_scheduler_jobs(item)
         _stop_fading(item)
 
+        # Undo old plugin bindings before re-parsing — without this, a
+        # plugin that appends to its own internal state in parse_item()
+        # (e.g. the database plugin) would double-register the same item
+        # object when parse_item() runs again below.
+        for plugin in item.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_REMOVE_ITEM):
+                plugin.remove_item(item)
+
         item._apply_config(config)
 
         # Re-wire based on the NEW config (eval/trigger/hysteresis_input
@@ -434,6 +442,18 @@ class Items:
         item._init_prerun()
         item._init_start_scheduler()
         item._init_run()
+
+        # Rebind to plugins per the NEW config — mirrors the same loop
+        # Item.__init__ runs inline for a freshly constructed item.
+        for plugin in item.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_PARSE_ITEM):
+                update = plugin.parse_item(item)
+                if update:
+                    try:
+                        plugin.add_item(item, updating=True)
+                    except Exception:
+                        pass
+                    item.add_method_trigger(update)
 
         # Preserved value may not be valid for a new type (e.g. num -> str
         # always works, str -> num doesn't if the string isn't numeric).

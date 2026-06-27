@@ -21,6 +21,7 @@ common.register_shng_log_levels()
 
 import lib.item.item
 import lib.item.items
+import lib.plugin
 from lib.item.items import Items
 from tests.mock.core import MockSmartHome
 
@@ -34,6 +35,26 @@ def _reset():
     Items.plugin_attributes = {}
     Items.plugin_attribute_prefixes = {}
     Items.plugin_prefixes_tuple = None
+    lib.plugin._plugins_instance = None
+    lib.plugin.Plugins._plugins = []
+
+
+class FakePlugin:
+    """Minimal stand-in for a SmartPlugin implementing PLUGIN_REMOVE_ITEM/
+    PLUGIN_PARSE_ITEM, for testing the plugin remove/parse bracket in
+    Items.edit_item() without any real plugin machinery."""
+
+    def __init__(self):
+        self.removed_items = []
+        self.parsed_items = []
+
+    def remove_item(self, item):
+        self.removed_items.append(item)
+        return True
+
+    def parse_item(self, item):
+        self.parsed_items.append(item)
+        return None
 
 
 def _make_sh():
@@ -164,3 +185,20 @@ class TestEditItemRewiresScheduler(_Base):
         self.assertIn('items.cy', [c['name'] for c in self.recorder.removes()])
         cycle_adds = [c for c in self.recorder.adds() if c['name'] == 'items.cy']
         self.assertEqual(cycle_adds[-1]['cycle'], 60)
+
+
+class TestEditItemRebindsPlugins(_Base):
+    def setUp(self):
+        super().setUp()
+        lib.plugin.Plugins(self.sh, 'test')
+        self.fake_plugin = FakePlugin()
+        lib.plugin.Plugins._plugins.append(self.fake_plugin)
+
+    def test_edit_item_calls_plugin_remove_then_parse(self):
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+        self.assertIn(item, self.fake_plugin.parsed_items)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        self.assertIn(item, self.fake_plugin.removed_items)
+        self.assertEqual(self.fake_plugin.parsed_items.count(item), 2)
