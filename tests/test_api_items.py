@@ -71,6 +71,25 @@ class _Base(unittest.TestCase):
         return patch.object(cherrypy, 'request', request)
 
 
+class TestReadAttributes(_Base):
+    def test_read_attributes_includes_type_attribute_with_valid_list(self):
+        result = json.loads(self.controller.read(id='attributes'))
+
+        self.assertEqual(result['type']['type'], 'str')
+        self.assertEqual(result['type']['valid_list'], ['bool', 'num', 'str', 'list', 'dict', 'foo', 'scene'])
+
+    def test_read_attributes_omits_valid_list_when_absent(self):
+        result = json.loads(self.controller.read(id='attributes'))
+
+        self.assertNotIn('valid_list', result['autotimer'])
+
+    def test_read_attributes_includes_description(self):
+        result = json.loads(self.controller.read(id='attributes'))
+
+        self.assertIn('de', result['autotimer']['description'])
+        self.assertIn('en', result['autotimer']['description'])
+
+
 class TestAdd(_Base):
     def test_add_creates_item(self):
         with self._post_body({'config': {'type': 'num'}}):
@@ -94,6 +113,36 @@ class TestAdd(_Base):
                 self.controller.add(id='new')
 
         self.assertEqual(ctx.exception.status, 400)
+
+    def test_add_nested_item_appears_in_parent_children(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='parent')
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='parent.child')
+
+        parent = self.sh.items.return_item('parent')
+        child = self.sh.items.return_item('parent.child')
+        self.assertIn(child, list(parent.return_children()))
+
+    def test_add_with_missing_parent_returns_400(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.add(id='does.not.exist')
+
+        self.assertEqual(ctx.exception.status, 400)
+
+    def test_add_persist_false_writes_no_file(self):
+        with self._post_body({'config': {'type': 'num'}, 'persist': False}):
+            self.controller.add(id='new')
+
+        self.assertFalse(os.path.isfile(os.path.join(self.tmpdir.name, 'created.yaml')))
+
+    def test_add_with_explicit_filename_writes_that_file(self):
+        with self._post_body({'config': {'type': 'num'}, 'filename': 'custom'}):
+            self.controller.add(id='new')
+
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir.name, 'custom.yaml')))
+        self.assertFalse(os.path.isfile(os.path.join(self.tmpdir.name, 'created.yaml')))
 
 
 class TestDelete(_Base):

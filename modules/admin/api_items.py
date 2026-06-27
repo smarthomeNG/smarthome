@@ -25,6 +25,7 @@ import logging
 import json
 import cherrypy
 
+import lib.shyaml as shyaml
 from lib.item import Items
 
 import jwt
@@ -70,6 +71,11 @@ class ItemsController(RESTResource, ItemData):
             self.logger.info('ItemsController GET /api/items/tree')
             return self.items_json('tree')
 
+        if id == 'attributes':
+            # /api/items/attributes  — core item attribute catalog (modules/core/items.yaml)
+            self.logger.info('ItemsController GET /api/items/attributes')
+            return json.dumps(self._core_item_attributes())
+
         if id is not None:
             # /api/items/{item_path}  — returns item detail array (same format as legacy endpoint)
             self.logger.info(f'ItemsController GET /api/items/{id}')
@@ -82,6 +88,33 @@ class ItemsController(RESTResource, ItemData):
 
     read.expose_resource = True
     read.authentication_needed = True
+
+    def _core_item_attributes(self):
+        """
+        Read the core item-attribute catalog (modules/core/items.yaml's
+        ``item_attributes:`` section) and shape it for the admin frontend:
+        ``{<name>: {"type": ..., "valid_list": [...]}}`` — ``valid_list`` is
+        omitted (not null) for attributes that don't define one, matching
+        the shape api_plugins.py uses for plugin item attributes.
+
+        :return: dict of attribute name -> {"type": ..., ["valid_list": ...]}
+        :rtype: dict
+        """
+        filename = os.path.join(self._sh.get_basedir(), 'modules', 'core', 'items.yaml')
+        data = shyaml.yaml_load(filename, ordered=True) or {}
+        item_attributes = data.get('item_attributes', {}) or {}
+
+        result = {}
+        for name, definition in item_attributes.items():
+            entry = {'type': definition.get('type')}
+            valid_list = definition.get('valid_list')
+            if valid_list is not None:
+                entry['valid_list'] = valid_list
+            description = definition.get('description')
+            if description is not None:
+                entry['description'] = description
+            result[name] = entry
+        return result
 
     # ======================================================================
     #  PUT /api/items/{item_path}
@@ -132,7 +165,13 @@ class ItemsController(RESTResource, ItemData):
         Handle POST requests — create a new item at runtime.
 
         Request body: JSON object with a "config" key (item attribute dict,
-        same shape as a static item definition).
+        same shape as a static item definition), and optionally "persist"
+        (bool, default True) and "filename" (str, default None — falls back
+        to Items.create_item()'s own default resolution).
+
+        If id contains a dot, the part before the last dot is resolved as
+        the parent item — it must already exist, or this is a 400, not a
+        silent top-level fallback.
         """
         if id is None:
             raise cherrypy.HTTPError(400, 'Item path required')
@@ -144,12 +183,21 @@ class ItemsController(RESTResource, ItemData):
         try:
             data = json.loads(body)
             config = data.get('config')
+            persist = data.get('persist', True)
+            filename = data.get('filename')
         except (json.JSONDecodeError, AttributeError, TypeError):
             raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"config": ...}')
 
+        parent_path, _, _leaf = id.rpartition('.')
+        parent_item = None
+        if parent_path:
+            parent_item = self.items.return_item(parent_path)
+            if parent_item is None:
+                raise cherrypy.HTTPError(400, f"Parent item '{parent_path}' not found")
+
         self.logger.info(f'ItemsController POST /api/items/{id}: config={config!r}')
 
-        self.items.create_item(id, config)
+        self.items.create_item(id, config, parent=parent_item, persist=persist, filename=filename)
         return json.dumps({'result': 'ok'})
 
     add.expose_resource = True
