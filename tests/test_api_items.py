@@ -146,6 +146,59 @@ class TestAdd(_Base):
         self.assertFalse(os.path.isfile(os.path.join(self.tmpdir.name, 'created.yaml')))
 
 
+class TestEdit(_Base):
+    def test_edit_updates_item_config(self):
+        with self._post_body({'config': {'type': 'num', 'eval': '1'}}):
+            self.controller.add(id='target')
+
+        with self._post_body({'config': {'type': 'num', 'eval': '2'}}):
+            self.controller.edit(id='target')
+
+        self.assertEqual(self.sh.items.return_item('target')._eval, '2')
+
+    def test_edit_returns_ok_json(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='target')
+
+        with self._post_body({'config': {'type': 'num', 'remark': 'x'}}):
+            result = self.controller.edit(id='target')
+
+        self.assertEqual(json.loads(result), {'result': 'ok'})
+
+    def test_edit_missing_item_returns_404(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.edit(id='does.not.exist')
+
+        self.assertEqual(ctx.exception.status, 404)
+
+    def test_edit_with_incoming_trigger_reference_returns_400(self):
+        with self._post_body({'config': {'type': 'num', 'eval': '1'}}):
+            self.controller.add(id='target')
+        with self._post_body({'config': {'type': 'num', 'eval': 'sh.target()', 'eval_trigger': 'target'}}):
+            self.controller.add(id='source')
+
+        with self._post_body({'config': {'type': 'num', 'eval': '2'}}):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.edit(id='target')
+
+        self.assertEqual(ctx.exception.status, 400)
+
+    def test_edit_with_broken_body_returns_400(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='target')
+
+        body = MagicMock()
+        body.read.return_value = b'not json'
+        request = MagicMock()
+        request.body = body
+        with patch.object(cherrypy, 'request', request):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.edit(id='target')
+
+        self.assertEqual(ctx.exception.status, 400)
+
+
 class TestDelete(_Base):
     def test_delete_removes_item(self):
         with self._post_body({'config': {'type': 'num'}}):

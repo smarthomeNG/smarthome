@@ -35,6 +35,11 @@ from .itemdata import ItemData
 
 
 class ItemsController(RESTResource, ItemData):
+    # PATCH isn't in RESTResource's REST_defaults (DELETE/GET/POST/PUT/OPTIONS
+    # only) — add it here rather than there, since this is the only
+    # controller in the admin module that needs it so far.
+    REST_map = {'PATCH': 'edit'}
+
     def __init__(self, module):
         self._sh = module._sh
         self.module = module
@@ -203,6 +208,62 @@ class ItemsController(RESTResource, ItemData):
 
     add.expose_resource = True
     add.authentication_needed = True
+
+    # ======================================================================
+    #  PATCH /api/items/{item_path}
+    #
+    def edit(self, id=None):
+        """
+        Handle PATCH requests — edit an existing item's attributes in place.
+
+        Request body: JSON object with a "config" key — the COMPLETE new
+        attribute set (same convention as add()/POST — omitting a key
+        resets it to its default, there is no partial-patch/delete-sentinel
+        scheme). No "persist"/"filename" — editing never moves an item to a
+        different file; it always persists to whatever file it was already
+        defined in.
+
+        v1 deliberately rejects editing an item that other items
+        structurally depend on (``trigger:``/``hysteresis_input:``
+        references onto it) — 400, not a silent edit. The mutate-in-place
+        mechanism itself handles this fine (see
+        ~/.claude/handoff/shng-edit-item-attributes.md), but v1 keeps the
+        blast radius small for a brand new code path; lifting this
+        restriction is a separate, deliberate follow-up.
+        """
+        if id is None:
+            raise cherrypy.HTTPError(400, 'Item path required')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        structural_refs = [ref for ref in self.items.find_references(id) if ref[1] in ('trigger', 'hysteresis_input')]
+        if structural_refs:
+            referencing = ', '.join(sorted({ref[0].property.path for ref in structural_refs}))
+            raise cherrypy.HTTPError(
+                400,
+                f"Item '{id}' is a trigger/hysteresis_input target for other items "
+                f'({referencing}) — editing it is not yet supported.',
+            )
+
+        body = cherrypy.request.body.read()
+        try:
+            data = json.loads(body)
+            config = data.get('config')
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"config": ...}')
+
+        self.logger.info(f'ItemsController PATCH /api/items/{id}: config={config!r}')
+
+        self.items.edit_item(item, config)
+        return json.dumps({'result': 'ok'})
+
+    edit.expose_resource = True
+    edit.authentication_needed = True
 
     # ======================================================================
     #  DELETE /api/items/{item_path}
