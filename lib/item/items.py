@@ -375,6 +375,40 @@ class Items:
         yf.setvalue(path, config)
         yf.save()
 
+    def _preserve_existing_children(self, filename, path, config):
+        """
+        Return a copy of *config* with any child-item entries (dict-valued
+        keys) from the EXISTING persisted file at *path* merged in.
+
+        edit_item() never touches an item's children (see its docstring) —
+        persisting its new attribute config must not either. setvalue()
+        replaces the whole dict at *path* wholesale, so without this, an
+        edit would silently wipe out any child item's own YAML block.
+
+        :param filename: Basename (without extension) of the target file
+        :param path: Full dotted path *config* is about to be written to
+        :param config: New attribute configuration dict (no children)
+        :type filename: str
+        :type path: str
+        :type config: dict
+
+        :return: config, with existing child entries merged in
+        :rtype: dict
+        """
+        target = os.path.join(self._sh._items_dir, filename)
+        if not os.path.isfile(target + shyaml.YAML_FILE):
+            return config
+        yf = shyaml.yamlfile(target)
+        yf.load()
+        existing = yf.getnode(path)
+        if not isinstance(existing, dict):
+            return config
+        merged = dict(config)
+        for key, value in existing.items():
+            if isinstance(value, dict) and key not in merged:
+                merged[key] = value
+        return merged
+
     def add_item(self, path, item):
         """
         Function to to add an item to the dictionary of items.
@@ -467,6 +501,10 @@ class Items:
                 f'{item._type} after edit — resetting to default.'
             )
             item._value = ITEM_DEFAULTS[item._type]
+
+        if item._filename:
+            merged_config = self._preserve_existing_children(item._filename, item.property.path, config)
+            self._write_to_yaml_file(item._filename, item.property.path, merged_config)
 
         return item
 

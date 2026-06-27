@@ -11,6 +11,7 @@ TODO: filled in incrementally, test by test.
 
 import os
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -202,3 +203,51 @@ class TestEditItemRebindsPlugins(_Base):
 
         self.assertIn(item, self.fake_plugin.removed_items)
         self.assertEqual(self.fake_plugin.parsed_items.count(item), 2)
+
+
+class TestEditItemPersists(unittest.TestCase):
+    def setUp(self):
+        _reset()
+        self.tmpdir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmpdir.cleanup)
+        self.sh = MockSmartHome()
+        self.sh._items_dir = self.tmpdir.name
+        self.sh._created_items_file = 'created'
+        self.recorder = RecordingScheduler()
+        self.sh.scheduler = self.recorder
+
+    def tearDown(self):
+        _reset()
+
+    def _read_file(self, filename):
+        import lib.shyaml as shyaml
+
+        yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, filename))
+        yf.load()
+        return yf.data
+
+    def test_edit_item_persists_new_config_to_its_existing_file(self):
+        item = self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=True)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'eval': '2'})
+
+        data = self._read_file('created')
+        self.assertEqual(data['target']['eval'], '2')
+
+    def test_edit_item_omitted_attribute_is_removed_from_file(self):
+        item = self.sh.items.create_item('target', {'type': 'num', 'eval': '1', 'remark': 'old'}, persist=True)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'eval': '1'})
+
+        data = self._read_file('created')
+        self.assertNotIn('remark', data['target'])
+
+    def test_edit_item_preserves_childs_yaml_entry(self):
+        self.sh.items.create_item('parent', {'type': 'num', 'eval': '1', 'child': {'type': 'str'}}, persist=True)
+        parent = self.sh.items.return_item('parent')
+
+        self.sh.items.edit_item(parent, {'type': 'num', 'eval': '2'})
+
+        data = self._read_file('created')
+        self.assertIn('child', data['parent'])
+        self.assertEqual(data['parent']['child']['type'], 'str')
