@@ -61,6 +61,8 @@ import lib.config
 import lib.utils
 import lib.shyaml as shyaml
 
+from lib.constants import ITEM_DEFAULTS
+
 from .item import Item
 from .structs import Structs
 
@@ -415,6 +417,20 @@ class Items:
         :rtype: Item
         """
         item._apply_config(config)
+
+        # Preserved value may not be valid for a new type (e.g. num -> str
+        # always works, str -> num doesn't if the string isn't numeric).
+        # Same try-cast-with-fallback pattern as the existing cache-restore
+        # path (Item.__init__'s "Cache" section) — not new logic.
+        try:
+            item._value = item.cast(item._value)
+        except Exception:
+            self.logger.warning(
+                f'Item {item.property.path}: value {item._value!r} does not match new type '
+                f'{item._type} after edit — resetting to default.'
+            )
+            item._value = ITEM_DEFAULTS[item._type]
+
         return item
 
     def remove_item(self, item, persist=True):

@@ -63,3 +63,40 @@ class TestEditItemPreservesIdentity(_Base):
         self.sh.items.edit_item(item, {'type': 'num', 'my_custom_attr': 'new'})
 
         self.assertEqual(item.conf['my_custom_attr'], 'new')
+
+
+class TestEditItemPreservesValueAndHistory(_Base):
+    def test_edit_item_preserves_current_value(self):
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+        item(5, caller='test')
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        self.assertEqual(item(), 5)
+
+    def test_edit_item_preserves_history(self):
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+        item(5, caller='test')
+        prev_value_before = item.prev_value()
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        self.assertEqual(item.prev_value(), prev_value_before)
+
+
+class TestEditItemTypeChange(_Base):
+    def test_edit_item_casts_preserved_value_to_new_type(self):
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+        item(5, caller='test')
+
+        self.sh.items.edit_item(item, {'type': 'str'})
+
+        self.assertEqual(item(), '5')
+
+    def test_edit_item_falls_back_to_type_default_when_cast_fails(self):
+        item = self.sh.items.create_item('target', {'type': 'str'}, persist=False)
+        item('not a number', caller='test')
+
+        self.sh.items.edit_item(item, {'type': 'num'})
+
+        self.assertEqual(item(), 0)
