@@ -392,6 +392,31 @@ class Items:
     #        for child in self.__children:
     #            yield child
 
+    def edit_item(self, item, config):
+        """
+        Edit an existing item's attributes at runtime, in place — preserves
+        Python object identity (unlike create_item()/remove_item()), so
+        other items' incoming trigger/hysteresis_input registrations onto
+        *item*, and this item's own value/history/children, all survive
+        automatically without any rewiring step. See
+        ~/.claude/handoff/shng-edit-item-attributes.md for the full design
+        rationale.
+
+        *config* is the COMPLETE new attribute set, same convention as
+        create_item() — omitting a key resets it to its default, there is
+        no separate partial-patch/delete-sentinel scheme.
+
+        :param item: The item to edit
+        :param config: Complete new attribute configuration dict
+        :type item: object
+        :type config: dict
+
+        :return: The same item, mutated
+        :rtype: Item
+        """
+        item._apply_config(config)
+        return item
+
     def remove_item(self, item, persist=True):
         """
         Function to remove an item from the dictionary of items
