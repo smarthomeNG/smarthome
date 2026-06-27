@@ -31,6 +31,7 @@ import cherrypy
 
 import lib.item.item
 import lib.item.items
+import lib.shyaml as shyaml
 from lib.item.items import Items
 from modules.admin.api_items import ItemsController
 from tests.mock.core import MockSmartHome
@@ -167,6 +168,28 @@ class TestDelete(_Base):
             self.controller.delete(id='does.not.exist')
 
         self.assertEqual(ctx.exception.status, 404)
+
+    def test_delete_persist_false_keeps_file_entry(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='new')
+
+        with self._post_body({'persist': False}):
+            self.controller.delete(id='new')
+
+        self.assertIsNone(self.sh.items.return_item('new'))
+        yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, 'created'))
+        yf.load()
+        self.assertIsNotNone(yf.getnode('new'))
+
+    def test_delete_without_body_defaults_to_persist_true(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='new')
+
+        self.controller.delete(id='new')
+
+        yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, 'created'))
+        yf.load()
+        self.assertIsNone(yf.getnode('new'))
 
 
 class TestReferences(_Base):

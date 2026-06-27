@@ -209,6 +209,10 @@ class ItemsController(RESTResource, ItemData):
     def delete(self, id=None):
         """
         Handle DELETE requests — remove an item at runtime.
+
+        Request body is optional. If given, it's a JSON object with an
+        optional "persist" key (bool, default True) — whether to also
+        remove the item's entry from its source yaml file.
         """
         if id is None:
             raise cherrypy.HTTPError(400, 'Item path required')
@@ -220,9 +224,19 @@ class ItemsController(RESTResource, ItemData):
         if item is None:
             raise cherrypy.HTTPError(404, f"Item '{id}' not found")
 
-        self.logger.info(f'ItemsController DELETE /api/items/{id}')
+        persist = True
+        body = b''
+        if getattr(cherrypy.request, 'body', None) is not None:
+            body = cherrypy.request.body.read()
+        if body:
+            try:
+                persist = json.loads(body).get('persist', True)
+            except (json.JSONDecodeError, AttributeError, TypeError):
+                raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"persist": ...}')
 
-        self.items.remove_item(item)
+        self.logger.info(f'ItemsController DELETE /api/items/{id}: persist={persist!r}')
+
+        self.items.remove_item(item, persist=persist)
         return json.dumps({'result': 'ok'})
 
     delete.expose_resource = True
