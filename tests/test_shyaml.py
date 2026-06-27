@@ -349,6 +349,21 @@ class TestYamlfileClass(unittest.TestCase):
         self.assertIsNone(yf.getvalue('parent.child'))
         self.assertEqual(yf.getvalue('parent.sibling'), 2)
 
+    def test_setvalue_after_loading_null_root(self):
+        # A file whose only top-level key was removed (setvalue(path, None)'s
+        # "cleanup empty parent" branch) ends up with a literal `null` root.
+        # Loading that must not leave self.data as None, or every subsequent
+        # setvalue() silently no-ops (TypeError swallowed in setInDict).
+        path = self._make_file('null\n')
+        yf = shyaml.yamlfile(path)
+        yf.load()
+        yf.setvalue('new', {'type': 'num'})
+        yf.save()
+
+        yf2 = shyaml.yamlfile(path)
+        yf2.load()
+        self.assertEqual(yf2.getnode('new'), {'type': 'num'})
+
     def test_setleafvalue_creates_branch_and_leaf(self):
         # setvalue requires the parent branch to exist; setleafvalue creates it.
         path = self._make_file('existing: yes\n')

@@ -175,5 +175,25 @@ class LibMetadataTest(unittest.TestCase):
         logger.warning('=== End metadata Tests')
 
 
+class GetItemdefinitionTest(unittest.TestCase):
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.meta = Metadata(self.sh, 'test_resources', 'plugin', 'tests.resources.test_metadata')
+
+    def test_returns_valid_list_when_present(self):
+        self.assertEqual(self.meta.get_itemdefinition('with_validlist', 'valid_list'), ['foo', 'bar'])
+
+    def test_returns_none_when_key_absent(self):
+        self.assertIsNone(self.meta.get_itemdefinition('without_validlist', 'valid_list'))
+
+    def test_returns_none_for_unknown_attribute(self):
+        self.assertIsNone(self.meta.get_itemdefinition('does_not_exist', 'valid_list'))
+
+    def test_returns_description_for_any_key_not_just_valid_list(self):
+        description = self.meta.get_itemdefinition('with_validlist', 'description')
+        self.assertIn('de', description)
+        self.assertIn('en', description)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

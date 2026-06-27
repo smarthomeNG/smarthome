@@ -582,8 +582,17 @@ class yamlfile:
     def load(self):
         """
         load the contents of the yaml-file to the data-structure
+
+        A file whose root is literally ``null`` (e.g. after setvalue()
+        removed its last top-level key) loads as ``None`` - normalize that
+        to an empty CommentedMap, matching __init__'s default, so setvalue()
+        doesn't silently no-op on every subsequent call (None[key] = ...
+        raises TypeError, which setInDict() swallows and turns into a
+        no-op).
         """
         self.data = yaml_load_roundtrip(self.filename)
+        if self.data is None:
+            self.data = yaml.comments.CommentedMap([])
 
     def save(self):
         """
