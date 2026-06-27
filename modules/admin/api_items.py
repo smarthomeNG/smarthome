@@ -269,7 +269,10 @@ class ItemsController(RESTResource, ItemData):
         self.logger.info(f'ItemsController GET /api/items/{id}/references')
 
         refs = self.items.find_references(id)
-        result = [{'item': ref_item.property.path, 'attribute': attr, 'value': value} for ref_item, attr, value in refs]
+        result = [
+            {'item': ref_item.property.path, 'attribute': attr, 'value': value, 'unambiguous': unambiguous}
+            for ref_item, attr, value, unambiguous in refs
+        ]
         return json.dumps(result)
 
     references.expose_resource = True

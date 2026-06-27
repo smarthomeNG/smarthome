@@ -470,8 +470,11 @@ class Items:
         :param path: Path of the item to search for
         :type path: str
 
-        :return: List of (item, attribute_name, attribute_value) tuples,
-                 one per match
+        :return: List of (item, attribute_name, attribute_value, unambiguous)
+                 tuples, one per match. ``unambiguous`` is True if *path* is
+                 the only item the matched text depends on (see
+                 _is_unambiguous_reference()) — a hint for which matches
+                 might be safe to auto-clean later, not a guarantee.
         :rtype: list
         """
         target = self.return_item(path)
@@ -483,8 +486,68 @@ class Items:
                 continue
             for attr_name, text in self._reference_candidates(other):
                 if text and pattern.search(text):
-                    results.append((other, attr_name, text))
+                    unambiguous = self._is_unambiguous_reference(attr_name, text, path)
+                    results.append((other, attr_name, text, unambiguous))
         return results
+
+    # Item paths only ever contain ASCII letters, digits and underscores
+    # (lib/config.py's valid_item_chars) — deliberately not \w, which is
+    # Unicode-aware and would also match e.g. German umlauts.
+    _SH_REF_RE = re.compile(r'sh\.([A-Za-z0-9_.]+)')
+
+    def _resolve_references(self, text):
+        """
+        Return the set of distinct item paths referenced via ``sh.<path>``
+        in *text*. Resolves against the live item tree (longest valid
+        prefix wins), not a hardcoded property-name list — so
+        ``sh.a.b.last_change`` correctly resolves to item ``a.b``
+        (``last_change`` being the property), not ``a.b.last_change``,
+        unless the latter also happens to be a real item path (longest
+        match wins regardless — same best-effort character as the rest of
+        find_references()).
+
+        :param text: eval/on_change/on_update text to scan
+        :type text: str
+
+        :return: set of item paths found
+        :rtype: set
+        """
+        found = set()
+        for m in self._SH_REF_RE.finditer(text):
+            parts = m.group(1).split('.')
+            for end in range(len(parts), 0, -1):
+                candidate = '.'.join(parts[:end])
+                if self.return_item(candidate) is not None:
+                    found.add(candidate)
+                    break
+        return found
+
+    def _is_unambiguous_reference(self, attr_name, text, target_path):
+        """
+        True if *target_path* is the only item *text* depends on.
+
+        ``trigger``/``hysteresis_input`` entries are always a single bare
+        absolute item path (see _reference_candidates()) — never
+        ``sh.``-prefixed eval text, that syntax is only valid inside eval
+        expressions — so they are unambiguous by construction whenever
+        they matched at all (the word-boundary match in find_references()
+        already guarantees there's nothing else in the string).
+        ``eval``/``on_change``/``on_update`` are free-form Python and need
+        the ``sh.<path>`` resolution in _resolve_references().
+
+        :param attr_name: Attribute the text came from
+        :param text: The matched attribute text
+        :param target_path: Path being checked for exclusivity
+        :type attr_name: str
+        :type text: str
+        :type target_path: str
+
+        :return: True if target_path is the only dependency
+        :rtype: bool
+        """
+        if attr_name in ('trigger', 'hysteresis_input'):
+            return True
+        return self._resolve_references(text) == {target_path}
 
     @staticmethod
     def _reference_candidates(item):

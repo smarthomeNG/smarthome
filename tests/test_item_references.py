@@ -65,7 +65,7 @@ class TestFindReferencesEval(_Base):
 
         refs = self.sh.items.find_references('a')
 
-        self.assertIn((source, 'eval', 'sh.a()'), refs)
+        self.assertIn((source, 'eval', 'sh.a()', True), refs)
 
     def test_no_match_returns_empty_list(self):
         _item(self.sh, 'a')
@@ -91,6 +91,31 @@ class TestFindReferencesEval(_Base):
         self.assertEqual(refs, [])
         self.assertIsNotNone(target)
 
+    def test_arithmetic_around_single_reference_is_unambiguous(self):
+        _item(self.sh, 'd.aussentemperatur')
+        source = _item(self.sh, 'd.aussentemperatur.fahrenheit', eval='sh.d.aussentemperatur()*9/5+32')
+
+        refs = self.sh.items.find_references('d.aussentemperatur')
+
+        self.assertIn((source, 'eval', 'sh.d.aussentemperatur()*9/5+32', True), refs)
+
+    def test_property_access_without_call_resolves_to_item(self):
+        _item(self.sh, 'a.b')
+        source = _item(self.sh, 'c', eval='sh.a.b.last_change')
+
+        refs = self.sh.items.find_references('a.b')
+
+        self.assertIn((source, 'eval', 'sh.a.b.last_change', True), refs)
+
+    def test_two_distinct_references_is_ambiguous(self):
+        _item(self.sh, 'a')
+        _item(self.sh, 'b')
+        source = _item(self.sh, 'c', eval='sh.a() + sh.b()')
+
+        refs = self.sh.items.find_references('a')
+
+        self.assertIn((source, 'eval', 'sh.a() + sh.b()', False), refs)
+
 
 class TestFindReferencesOnChangeOnUpdate(_Base):
     def test_on_change_reference_is_found(self):
@@ -99,7 +124,7 @@ class TestFindReferencesOnChangeOnUpdate(_Base):
 
         refs = self.sh.items.find_references('a')
 
-        self.assertIn((source, 'on_change', 'sh.a(1)'), refs)
+        self.assertIn((source, 'on_change', 'sh.a(1)', True), refs)
         self.assertIsNotNone(target)
 
     def test_on_update_reference_is_found(self):
@@ -108,8 +133,17 @@ class TestFindReferencesOnChangeOnUpdate(_Base):
 
         refs = self.sh.items.find_references('a')
 
-        self.assertIn((source, 'on_update', 'sh.a(1)'), refs)
+        self.assertIn((source, 'on_update', 'sh.a(1)', True), refs)
         self.assertIsNotNone(target)
+
+    def test_on_change_with_second_reference_is_ambiguous(self):
+        _item(self.sh, 'a')
+        _item(self.sh, 'b')
+        source = _item(self.sh, 'c', on_change='sh.a(1) if sh.b() else None')
+
+        refs = self.sh.items.find_references('a')
+
+        self.assertIn((source, 'on_change', 'sh.a(1) if sh.b() else None', False), refs)
 
 
 class TestFindReferencesTriggerAndHysteresis(_Base):
@@ -119,7 +153,7 @@ class TestFindReferencesTriggerAndHysteresis(_Base):
 
         refs = self.sh.items.find_references('a')
 
-        self.assertIn((source, 'trigger', 'a'), refs)
+        self.assertIn((source, 'trigger', 'a', True), refs)
         self.assertIsNotNone(target)
 
     def test_hysteresis_input_reference_is_found(self):
@@ -135,7 +169,7 @@ class TestFindReferencesTriggerAndHysteresis(_Base):
 
         refs = self.sh.items.find_references('sensor')
 
-        self.assertIn((output, 'hysteresis_input', 'sensor'), refs)
+        self.assertIn((output, 'hysteresis_input', 'sensor', True), refs)
 
 
 if __name__ == '__main__':

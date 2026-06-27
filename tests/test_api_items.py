@@ -209,7 +209,7 @@ class TestReferences(_Base):
 
         result = json.loads(self.controller.references(id='target'))
 
-        self.assertEqual(result, [{'item': 'source', 'attribute': 'eval', 'value': 'sh.target()'}])
+        self.assertEqual(result, [{'item': 'source', 'attribute': 'eval', 'value': 'sh.target()', 'unambiguous': True}])
 
     def test_references_no_match_returns_empty_list(self):
         with self._post_body({'config': {'type': 'num'}}):
