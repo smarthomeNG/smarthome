@@ -67,3 +67,15 @@ class TestRemoveReferencesStripsTriggerEntry(_PersistedBase):
         source = self.sh.items.return_item('source')
         self.assertIsNone(source._trigger)
         self.assertEqual(result, {'removed': [('source', ['trigger'])], 'skipped_ambiguous': []})
+
+
+class TestRemoveReferencesClearsHysteresisInput(_PersistedBase):
+    def test_remove_references_clears_hysteresis_input(self):
+        self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=True)
+        self.sh.items.create_item('source', {'type': 'num', 'eval': '2', 'hysteresis_input': 'target'}, persist=True)
+
+        result = self.sh.items.remove_references('target')
+
+        source = self.sh.items.return_item('source')
+        self.assertIsNone(source._hysteresis_input)
+        self.assertEqual(result, {'removed': [('source', ['hysteresis_input'])], 'skipped_ambiguous': []})
