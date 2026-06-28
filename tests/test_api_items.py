@@ -146,6 +146,83 @@ class TestAdd(_Base):
         self.assertFalse(os.path.isfile(os.path.join(self.tmpdir.name, 'created.yaml')))
 
 
+class TestRename(_Base):
+    def _post_body_as_post_method(self, data):
+        """Like _post_body(), but also sets request.method = 'POST' —
+        needed for rename(), a vpath sub-resource endpoint that isn't
+        verb-gated by RESTResource's dispatcher and so checks the method
+        itself (same reasoning as remove_references())."""
+        body = MagicMock()
+        body.read.return_value = json.dumps(data).encode('utf-8')
+        request = MagicMock()
+        request.method = 'POST'
+        request.body = body
+        return patch.object(cherrypy, 'request', request)
+
+    def test_rename_updates_item_path(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='old')
+
+        with self._post_body_as_post_method({'new_path': 'new'}):
+            self.controller.rename(id='old')
+
+        self.assertIsNone(self.sh.items.return_item('old'))
+        self.assertIsNotNone(self.sh.items.return_item('new'))
+
+    def test_rename_returns_ok_json_with_report(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='old')
+
+        with self._post_body_as_post_method({'new_path': 'new'}):
+            result = self.controller.rename(id='old')
+
+        self.assertEqual(
+            json.loads(result), {'result': 'ok', 'new_path': 'new', 'rewritten_references': [], 'failed_references': []}
+        )
+
+    def test_rename_missing_item_returns_404(self):
+        with self._post_body_as_post_method({'new_path': 'new'}):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.rename(id='does.not.exist')
+
+        self.assertEqual(ctx.exception.status, 404)
+
+    def test_rename_cross_parent_returns_400(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='old')
+
+        with self._post_body_as_post_method({'new_path': 'different.parent.new'}):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.rename(id='old')
+
+        self.assertEqual(ctx.exception.status, 400)
+
+    def test_rename_name_collision_returns_400(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='old')
+
+        with self._post_body_as_post_method({'new_path': 'scheduler'}):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.rename(id='old')
+
+        self.assertEqual(ctx.exception.status, 400)
+
+    def test_rename_rejects_get(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='old')
+
+        body = MagicMock()
+        body.read.return_value = json.dumps({'new_path': 'new'}).encode('utf-8')
+        request = MagicMock()
+        request.method = 'GET'
+        request.body = body
+        with patch.object(cherrypy, 'request', request):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.rename(id='old')
+
+        self.assertEqual(ctx.exception.status, 405)
+
+
 class TestEdit(_Base):
     def test_edit_updates_item_config(self):
         with self._post_body({'config': {'type': 'num', 'eval': '1'}}):

@@ -365,6 +365,58 @@ class ItemsController(RESTResource, ItemData):
     remove_references.expose_resource = True
     remove_references.authentication_needed = True
 
+    # ======================================================================
+    #  POST /api/items/{item_path}/rename
+    #
+    def rename(self, id, *vpath, **params):
+        """
+        Handle POST requests for the /rename sub-resource — rename an
+        item in place, same parent only (v1; see
+        ~/.claude/handoff/shng-rename-item-design.md).
+
+        Request body: JSON object with a "new_path" key — the COMPLETE
+        new path, not just a leaf name, so this same endpoint/contract
+        can grow into supporting a cross-parent move later without a
+        contract change; v1 just rejects a different parent segment.
+
+        Sub-resource methods reached via vpath aren't verb-gated by
+        RESTResource's dispatcher — checked explicitly here, same
+        reasoning as remove_references().
+        """
+        if cherrypy.request.method != 'POST':
+            raise cherrypy.HTTPError(405, 'Method not allowed')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        body = cherrypy.request.body.read()
+        try:
+            data = json.loads(body)
+            new_path = data.get('new_path')
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"new_path": ...}')
+
+        old_parent, _, _ = id.rpartition('.')
+        new_parent, _, _ = new_path.rpartition('.')
+        if new_parent != old_parent:
+            raise cherrypy.HTTPError(400, "Moving to a different parent isn't supported yet")
+
+        self.logger.info(f'ItemsController POST /api/items/{id}/rename: new_path={new_path!r}')
+
+        try:
+            _renamed_item, report = self.items.rename_item(item, new_path)
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
+
+        return json.dumps({'result': 'ok', 'new_path': new_path, **report})
+
+    rename.expose_resource = True
+    rename.authentication_needed = True
+
 
 class ItemsListController(RESTResource):
     def __init__(self, module):
