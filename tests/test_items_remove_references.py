@@ -134,3 +134,14 @@ class TestRemoveReferencesBatchesPerItem(_PersistedBase):
         self.assertIsNone(source._trigger)
         self.assertEqual(source.property.remark, 'keep me')
         self.assertEqual(result, {'removed': [('source', ['eval', 'trigger'])], 'skipped_ambiguous': []})
+
+
+class TestRemoveReferencesPersists(_PersistedBase):
+    def test_remove_references_persists_the_stripped_config(self):
+        self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=True)
+        self.sh.items.create_item('source', {'type': 'num', 'trigger': ['target']}, persist=True)
+
+        self.sh.items.remove_references('target')
+
+        data = self._read_file('created')
+        self.assertNotIn('trigger', data['source'])
