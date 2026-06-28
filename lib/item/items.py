@@ -61,7 +61,7 @@ import lib.config
 import lib.utils
 import lib.shyaml as shyaml
 
-from lib.constants import ITEM_DEFAULTS, PLUGIN_PARSE_ITEM, PLUGIN_REMOVE_ITEM
+from lib.constants import ITEM_DEFAULTS, PLUGIN_PARSE_ITEM, PLUGIN_REMOVE_ITEM, PLUGIN_RENAME_ITEM
 from lib.item._internal._lifecycle import _detach_from_other_items_triggers, _remove_scheduler_jobs, _stop_fading
 from lib.item._internal._parsing import check_item_name_collision
 
@@ -597,6 +597,10 @@ class Items:
             self.add_item(descendant_new_path, descendant)
 
             descendant._init_start_scheduler()
+
+            for plugin in descendant.plugins.return_plugins():
+                if hasattr(plugin, PLUGIN_RENAME_ITEM):
+                    plugin.rename_item(descendant, descendant_old_path, descendant_new_path)
 
         if item._filename:
             target = os.path.join(self._sh._items_dir, item._filename)

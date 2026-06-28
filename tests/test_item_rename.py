@@ -19,8 +19,22 @@ common.register_shng_log_levels()
 
 import lib.item.item
 import lib.item.items
+import lib.plugin
 from lib.item.items import Items
 from tests.mock.core import MockSmartHome
+
+
+class FakePlugin:
+    """Minimal stand-in for a SmartPlugin implementing PLUGIN_RENAME_ITEM,
+    for testing the rename_item() hook call-site without any real plugin
+    machinery."""
+
+    def __init__(self):
+        self.renamed_items = []
+
+    def rename_item(self, item, old_path, new_path):
+        self.renamed_items.append((item, old_path, new_path))
+        return True
 
 
 class RecordingScheduler:
@@ -54,6 +68,8 @@ def _reset():
     Items.plugin_attributes = {}
     Items.plugin_attribute_prefixes = {}
     Items.plugin_prefixes_tuple = None
+    lib.plugin._plugins_instance = None
+    lib.plugin.Plugins._plugins = []
 
 
 class _Base(unittest.TestCase):
@@ -158,3 +174,20 @@ class TestRenameItemPersists(unittest.TestCase):
         self.assertNotIn('old', data)
         self.assertEqual(data['new']['eval'], '1')
         self.assertIn('child', data['new'])
+
+
+class TestRenameItemCallsPluginHook(_Base):
+    def setUp(self):
+        super().setUp()
+        lib.plugin.Plugins(self.sh, 'test')
+        self.fake_plugin = FakePlugin()
+        lib.plugin.Plugins._plugins.append(self.fake_plugin)
+
+    def test_rename_calls_plugin_rename_item_hook_per_item_in_subtree(self):
+        item = self.sh.items.create_item('old', {'type': 'num', 'child': {'type': 'num'}}, persist=False)
+        child = self.sh.items.return_item('old.child')
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertIn((item, 'old', 'new'), self.fake_plugin.renamed_items)
+        self.assertIn((child, 'old.child', 'new.child'), self.fake_plugin.renamed_items)
