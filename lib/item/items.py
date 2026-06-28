@@ -598,6 +598,16 @@ class Items:
 
             descendant._init_start_scheduler()
 
+        if item._filename:
+            target = os.path.join(self._sh._items_dir, item._filename)
+            if os.path.isfile(target + shyaml.YAML_FILE):
+                yf = shyaml.yamlfile(target)
+                yf.load()
+                node = yf.getnode(old_path)
+                yf.setvalue(old_path, None)
+                yf.setvalue(new_path, node)
+                yf.save()
+
         return item
 
     def _remove_from_yaml_file(self, filename, path):

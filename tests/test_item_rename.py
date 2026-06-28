@@ -8,6 +8,7 @@ in-place (same parent only, v1) by mutating its path, see
 
 import os
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -127,3 +128,33 @@ class TestRenameItemRekeysScheduler(_Base):
 
         self.assertIn('items.cy', [c['name'] for c in self.recorder.removes()])
         self.assertIn('items.cynew', self.recorder.added_names())
+
+
+class TestRenameItemPersists(unittest.TestCase):
+    def setUp(self):
+        _reset()
+        self.tmpdir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmpdir.cleanup)
+        self.sh = MockSmartHome()
+        self.sh._items_dir = self.tmpdir.name
+        self.sh._created_items_file = 'created'
+
+    def tearDown(self):
+        _reset()
+
+    def _read_file(self, filename):
+        import lib.shyaml as shyaml
+
+        yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, filename))
+        yf.load()
+        return yf.data
+
+    def test_rename_moves_the_yaml_node_to_the_new_path(self):
+        item = self.sh.items.create_item('old', {'type': 'num', 'eval': '1', 'child': {'type': 'num'}}, persist=True)
+
+        self.sh.items.rename_item(item, 'new')
+
+        data = self._read_file('created')
+        self.assertNotIn('old', data)
+        self.assertEqual(data['new']['eval'], '1')
+        self.assertIn('child', data['new'])
