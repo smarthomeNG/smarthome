@@ -170,6 +170,10 @@ class SmartHome:
         self._config_etc = False
         self._legacy_instances = True
 
+        # if set: create items with illegal named and warn, but go on
+        # else: refuse to create items with illegal names
+        self._ignore_item_collision = False
+
         # default basename (without extension) for the yaml file that
         # Items.create_item(persist=True) writes runtime-created items to,
         # when no explicit filename is given. Overridable via

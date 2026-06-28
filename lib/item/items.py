@@ -63,6 +63,7 @@ import lib.shyaml as shyaml
 
 from lib.constants import ITEM_DEFAULTS, PLUGIN_PARSE_ITEM, PLUGIN_REMOVE_ITEM
 from lib.item._internal._lifecycle import _detach_from_other_items_triggers, _remove_scheduler_jobs, _stop_fading
+from lib.item._internal._parsing import check_item_name_collision
 
 from .item import Item
 from .structs import Structs
@@ -292,6 +293,10 @@ class Items:
         parent_obj = self if parent is None else parent
         leaf_attr = path.rsplit('.', 1)[-1]
 
+        objects_to_check = [parent_obj] if parent is not None else [parent_obj, self._sh]
+        if check_item_name_collision(self._sh, objects_to_check, leaf_attr, path):
+            return None
+
         child = Item(self._sh, parent_obj, path, config, items_instance=self)
 
         setattr(parent_obj, leaf_attr, child)
@@ -331,8 +336,10 @@ class Items:
         :type persist: bool
         :type filename: str
 
-        :return: The newly created Item
-        :rtype: Item
+        :return: The newly created Item, or None if its name collided with
+                 an existing attribute and was dropped — see
+                 lib.item._internal._parsing.check_item_name_collision()
+        :rtype: Item or None
         """
         item_config = config
         if persist:
@@ -345,6 +352,8 @@ class Items:
             self._write_to_yaml_file(filename, path, config)
 
         item = self._construct_and_link(path, item_config, parent=parent)
+        if item is None:
+            return None
 
         new_items = list(_flatten_with_children(item))
         for new_item in new_items:

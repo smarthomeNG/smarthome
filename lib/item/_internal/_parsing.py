@@ -62,6 +62,54 @@ from ..helpers import split_duration_value_string
 
 logger = logging.getLogger('lib.item')
 
+# Names reserved by convention even when they aren't (yet) a real attribute
+# on the object they'd collide with — e.g. 'get' is only dynamically bound
+# for dict-type items (see DictHandler), so hasattr() can't reliably detect
+# it at item-construction time, before the item's type has been resolved.
+RESERVED_ITEM_NAMES = {'get'}
+
+
+def check_item_name_collision(sh, objects_to_check, leaf_attr, path):
+    """
+    Check whether creating an item named *leaf_attr* (full path *path*)
+    would collide with an existing attribute on any of *objects_to_check*
+    — e.g. an existing sibling item, an Item class member/property, or,
+    for top-level items, an attribute of the smarthome object itself
+    (both get the item set as an attribute on construction, see
+    Items._construct_and_link()) — or with RESERVED_ITEM_NAMES.
+
+    Behavior is gated by ``sh._ignore_item_collision``: if it is True,
+    logs a warning and returns False (construction proceeds anyway); if
+    False (the default), logs a warning and returns True (the caller
+    must not construct the item, and must drop the item's whole subtree
+    along with it, since none of its own children get constructed
+    either if the item itself is never created).
+
+    :param sh: The smarthome object (for the ``_ignore_item_collision`` flag)
+    :param objects_to_check: Objects the new item would be set as an attribute on
+    :param leaf_attr: The item's own (last path segment) name
+    :param path: Full path of the item, for the log message
+    :type objects_to_check: list
+    :type leaf_attr: str
+    :type path: str
+
+    :return: True if the item must NOT be constructed
+    :rtype: bool
+    """
+    collision = leaf_attr in RESERVED_ITEM_NAMES or any(hasattr(obj, leaf_attr) for obj in objects_to_check)
+    if not collision:
+        return False
+
+    if sh._ignore_item_collision:
+        logger.warning(f"Name of item '{path}' collides with an existing attribute. Unexpected behaviour might occur.")
+        return False
+
+    logger.warning(
+        f"Name of item '{path}' collides with an existing attribute — item was NOT created. "
+        f'Set sh._ignore_item_collision to True to create it anyway.'
+    )
+    return True
+
 
 # ---------------------------------------------------------------------------
 # Eval attribute
