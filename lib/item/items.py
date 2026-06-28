@@ -632,6 +632,64 @@ class Items:
         yf.setvalue(path, None)
         yf.save()
 
+    @staticmethod
+    def _rewrite_sh_path_reference(text, old_path, new_path):
+        """
+        Replace every ``sh.<old_path>`` occurrence in *text* with
+        ``sh.<new_path>``, leaving any suffix untouched (a property
+        accessor, a legacy accessor like ``last_change``, ``()``, a real
+        child item segment, or a plugin-attached method like
+        ``.db(...)``) — used by rename_item() to repoint other items'
+        eval/on_change/on_update text at a renamed item's new path.
+
+        Unlike find_references()'s detection regex, no live-tree
+        resolution is needed here: every reference to *old_path* or one
+        of its descendants is, by construction, a literal
+        ``old_path``-prefixed string, since a descendant's own path is
+        always ``old_path + '.' + something`` — replacing just the
+        ``old_path`` prefix is correct regardless of what follows. A
+        negative lookahead guards against a longer, unrelated identifier
+        that merely starts with the same characters (e.g. renaming
+        ``item`` must not also rewrite ``itemized``).
+
+        :param text: eval/on_change/on_update text to rewrite
+        :param old_path: The path being renamed away from
+        :param new_path: The path being renamed to
+        :type text: str
+        :type old_path: str
+        :type new_path: str
+
+        :return: text with every matching reference repointed
+        :rtype: str
+        """
+        pattern = re.compile(r'\bsh\.' + re.escape(old_path) + r'(?![A-Za-z0-9_])')
+        return pattern.sub('sh.' + new_path, text)
+
+    @staticmethod
+    def _rewrite_bare_path_reference(value, old_path, new_path):
+        """
+        Replace a ``trigger``/``hysteresis_input``-style bare item path
+        with its renamed equivalent, if *value* is *old_path* itself or a
+        descendant of it (``old_path + '.' + something``) — same prefix
+        rule as _rewrite_sh_path_reference(), without the ``sh.`` prefix
+        (these attributes store a bare path directly, never ``sh.``-text).
+
+        :param value: The bare path value to check/rewrite
+        :param old_path: The path being renamed away from
+        :param new_path: The path being renamed to
+        :type value: str
+        :type old_path: str
+        :type new_path: str
+
+        :return: value, rewritten if it referenced old_path; unchanged otherwise
+        :rtype: str
+        """
+        if value == old_path:
+            return new_path
+        if value.startswith(old_path + '.'):
+            return new_path + value[len(old_path) :]
+        return value
+
     def find_references(self, path):
         """
         Best-effort search for textual references to item *path* inside
