@@ -358,6 +358,47 @@ class SmartPlugin(SmartObject, Utils):
 
         return True
 
+    def rename_item(self, item, old_path, new_path) -> bool:
+        """
+        Re-key configuration data for an item that was renamed in place
+        (same object, only its path changed — see Items.rename_item()).
+
+        Unlike remove_item()/parse_item(), this does NOT re-parse the
+        item's configuration — it hasn't changed, only the path has — so
+        it is much cheaper than a full remove+re-add cycle. Still
+        respects STOP_ON_ITEM_CHANGE: pauses the plugin around the rekey
+        if set, and explicitly resumes it afterward, since this method's
+        pause window is fully self-contained (unlike remove_item(),
+        which only stops and relies on something else to resume).
+
+        Plugins with their own item-path-keyed storage beyond
+        _plg_item_dict/_pause_item_path (e.g. the database plugin) must
+        override this method.
+
+        :param item: The renamed item (same object, unchanged identity)
+        :param old_path: The item's path before the rename
+        :param new_path: The item's path after the rename
+        :type old_path: str
+        :type new_path: str
+
+        :return: True
+        :rtype: bool
+        """
+        needs_pause = self.STOP_ON_ITEM_CHANGE and self.alive
+        if needs_pause:
+            self.logger.debug(f'pausing plugin for rename of item {old_path} to {new_path}')
+            self.stop()
+
+        if old_path in self._plg_item_dict:
+            self._plg_item_dict[new_path] = self._plg_item_dict.pop(old_path)
+        if self._pause_item_path == old_path:
+            self._pause_item_path = new_path
+
+        if needs_pause and not self.alive:
+            self.run()
+
+        return True
+
     def callerinfo(self, caller: str, source: str) -> str:
 
         if source is None:
