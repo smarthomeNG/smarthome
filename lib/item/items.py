@@ -589,10 +589,14 @@ class Items:
             descendant_old_path = descendant.property.path
             descendant_new_path = new_path + descendant_old_path[len(old_path) :]
 
+            _remove_scheduler_jobs(descendant)
+
             descendant._path = descendant_new_path
             del self.__item_dict[descendant_old_path]
             self.__items.remove(descendant_old_path)
             self.add_item(descendant_new_path, descendant)
+
+            descendant._init_start_scheduler()
 
         return item
 

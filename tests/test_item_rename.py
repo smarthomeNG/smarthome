@@ -22,6 +22,28 @@ from lib.item.items import Items
 from tests.mock.core import MockSmartHome
 
 
+class RecordingScheduler:
+    """Drop-in replacement for MockScheduler that records calls."""
+
+    def __init__(self):
+        self.calls = []
+
+    def add(self, name, obj=None, prio=3, cron=None, cycle=None, value=None, offset=None, next=None, items=None):
+        self.calls.append({'action': 'add', 'name': name, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next})
+
+    def remove(self, name):
+        self.calls.append({'action': 'remove', 'name': name})
+
+    def adds(self):
+        return [c for c in self.calls if c['action'] == 'add']
+
+    def removes(self):
+        return [c for c in self.calls if c['action'] == 'remove']
+
+    def added_names(self):
+        return [c['name'] for c in self.adds()]
+
+
 def _reset():
     lib.item.items._items_instance = None
     lib.item.item._items_instance = None
@@ -90,3 +112,18 @@ class TestRenameItemCascadesToDescendants(_Base):
         self.assertIs(self.sh.items.return_item('new.child'), child)
         self.assertIs(self.sh.items.return_item('new.child.grandchild'), grandchild)
         self.assertIs(child.return_parent(), parent)
+
+
+class TestRenameItemRekeysScheduler(_Base):
+    def setUp(self):
+        super().setUp()
+        self.recorder = RecordingScheduler()
+        self.sh.scheduler = self.recorder
+
+    def test_rename_removes_old_job_and_adds_new(self):
+        item = self.sh.items.create_item('cy', {'type': 'num', 'cycle': '30'}, persist=False)
+
+        self.sh.items.rename_item(item, 'cynew')
+
+        self.assertIn('items.cy', [c['name'] for c in self.recorder.removes()])
+        self.assertIn('items.cynew', self.recorder.added_names())
