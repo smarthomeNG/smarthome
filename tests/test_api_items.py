@@ -279,5 +279,43 @@ class TestReferences(_Base):
         self.assertEqual(ctx.exception.status, 404)
 
 
+class TestRemoveReferences(_Base):
+    def _post_request(self):
+        request = MagicMock()
+        request.method = 'POST'
+        return patch.object(cherrypy, 'request', request)
+
+    def test_remove_references_strips_dangling_reference_and_returns_result(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='target')
+        with self._post_body({'config': {'type': 'num', 'trigger': ['target']}}):
+            self.controller.add(id='source')
+
+        with self._post_request():
+            result = json.loads(self.controller.remove_references(id='target'))
+
+        self.assertEqual(result, {'removed': [['source', ['trigger']]], 'skipped_ambiguous': []})
+        self.assertIsNone(self.sh.items.return_item('source')._trigger)
+
+    def test_remove_references_missing_item_returns_404(self):
+        with self._post_request():
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.remove_references(id='does.not.exist')
+
+        self.assertEqual(ctx.exception.status, 404)
+
+    def test_remove_references_rejects_get(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='target')
+
+        request = MagicMock()
+        request.method = 'GET'
+        with patch.object(cherrypy, 'request', request):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.remove_references(id='target')
+
+        self.assertEqual(ctx.exception.status, 405)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

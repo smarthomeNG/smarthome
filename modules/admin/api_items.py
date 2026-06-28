@@ -331,6 +331,40 @@ class ItemsController(RESTResource, ItemData):
     references.expose_resource = True
     references.authentication_needed = True
 
+    # ======================================================================
+    #  POST /api/items/{item_path}/remove_references
+    #
+    def remove_references(self, id, *vpath, **params):
+        """
+        Handle POST requests for the /remove_references sub-resource —
+        strip dangling unambiguous references to this item from every
+        other item (see Items.remove_references()). Intended to be
+        called right before deleting this item.
+
+        Sub-resource methods reached via vpath (like this one and
+        references()) aren't verb-gated by RESTResource's dispatcher —
+        only the top-level REST_map/REST_defaults methods are. Since this
+        one is destructive (unlike references(), which is read-only),
+        the method check is enforced explicitly here.
+        """
+        if cherrypy.request.method != 'POST':
+            raise cherrypy.HTTPError(405, 'Method not allowed')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        self.logger.info(f'ItemsController POST /api/items/{id}/remove_references')
+
+        result = self.items.remove_references(id)
+        return json.dumps(result)
+
+    remove_references.expose_resource = True
+    remove_references.authentication_needed = True
+
 
 class ItemsListController(RESTResource):
     def __init__(self, module):
