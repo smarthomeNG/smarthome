@@ -600,7 +600,12 @@ class Items:
 
             for plugin in descendant.plugins.return_plugins():
                 if hasattr(plugin, PLUGIN_RENAME_ITEM):
-                    plugin.rename_item(descendant, descendant_old_path, descendant_new_path)
+                    try:
+                        plugin.rename_item(descendant, descendant_old_path, descendant_new_path)
+                    except Exception as e:
+                        self.logger.warning(
+                            f"Plugin '{plugin}' rename_item() failed for item '{descendant_new_path}': {e}"
+                        )
 
         if item._filename:
             target = os.path.join(self._sh._items_dir, item._filename)

@@ -231,5 +231,49 @@ class TestRenameItemRewritesReferences(_Base):
         source = self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.old() + sh.other()'}, persist=False)
 
         self.sh.items.rename_item(target, 'new')
-
         self.assertEqual(source._eval, 'sh.new() + sh.other()')
+
+
+class TestRenameItemPluginHookFailureIsBestEffort(_Base):
+    def setUp(self):
+        super().setUp()
+        lib.plugin.Plugins(self.sh, 'test')
+
+    def test_one_plugins_rename_item_raising_does_not_abort_the_rename(self):
+        class RaisingPlugin:
+            def rename_item(self, item, old_path, new_path):
+                raise RuntimeError('boom')
+
+        good_plugin = FakePlugin()
+        lib.plugin.Plugins._plugins.append(RaisingPlugin())
+        lib.plugin.Plugins._plugins.append(good_plugin)
+
+        item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
+
+        renamed, report = self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(item.property.path, 'new')
+        self.assertIn((item, 'old', 'new'), good_plugin.renamed_items)
+
+
+class TestRenameItemReferenceRewriteFailureIsBestEffort(_Base):
+    def test_one_referencing_items_edit_failure_is_reported_not_raised(self):
+        target = self.sh.items.create_item('old', {'type': 'num', 'eval': '1'}, persist=False)
+        source = self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.old()'}, persist=False)
+        other_source = self.sh.items.create_item('other_source', {'type': 'num', 'eval': 'sh.old()'}, persist=False)
+
+        original_edit_item = self.sh.items.edit_item
+
+        def failing_edit_item(item, config):
+            if item is source:
+                raise RuntimeError('simulated failure')
+            return original_edit_item(item, config)
+
+        self.sh.items.edit_item = failing_edit_item
+
+        renamed, report = self.sh.items.rename_item(target, 'new')
+
+        self.assertEqual(report['rewritten_references'], ['other_source'])
+        self.assertEqual(len(report['failed_references']), 1)
+        self.assertEqual(report['failed_references'][0][0], 'source')
+        self.assertEqual(other_source._eval, 'sh.new()')
