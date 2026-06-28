@@ -578,6 +578,13 @@ class Items:
         if new_path == old_path:
             return item
 
+        is_top_level = item._is_top_of_item_tree()
+        parent_obj = self if is_top_level else item.return_parent()
+        leaf_attr = new_path.rsplit('.', 1)[-1]
+        objects_to_check = [parent_obj, self._sh] if is_top_level else [parent_obj]
+        if check_item_name_collision(self._sh, objects_to_check, leaf_attr, new_path):
+            raise ValueError(f"Item '{old_path}' cannot be renamed to '{new_path}': name collision")
+
         item._path = new_path
         del self.__item_dict[old_path]
         self.__items.remove(old_path)

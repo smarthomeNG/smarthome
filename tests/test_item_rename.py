@@ -51,3 +51,23 @@ class TestRenameItemBasic(_Base):
         self.assertEqual(item.property.path, 'new')
         self.assertIsNone(self.sh.items.return_item('old'))
         self.assertIs(self.sh.items.return_item('new'), item)
+
+
+class TestRenameItemValidatesNewName(_Base):
+    def test_rename_refuses_colliding_name(self):
+        item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
+        self.sh.items.create_item('scheduler_clash', {'type': 'num'}, persist=False)
+
+        with self.assertRaises(ValueError):
+            self.sh.items.rename_item(item, 'scheduler')
+
+        self.assertEqual(item.property.path, 'old')
+        self.assertIsNotNone(self.sh.items.return_item('old'))
+
+    def test_rename_to_same_path_is_a_silent_no_op(self):
+        item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
+
+        renamed = self.sh.items.rename_item(item, 'old')
+
+        self.assertIs(renamed, item)
+        self.assertEqual(item.property.path, 'old')
