@@ -71,3 +71,22 @@ class TestRenameItemValidatesNewName(_Base):
 
         self.assertIs(renamed, item)
         self.assertEqual(item.property.path, 'old')
+
+
+class TestRenameItemCascadesToDescendants(_Base):
+    def test_rename_updates_descendant_paths(self):
+        parent = self.sh.items.create_item(
+            'old', {'type': 'num', 'child': {'type': 'num', 'grandchild': {'type': 'num'}}}, persist=False
+        )
+        child = self.sh.items.return_item('old.child')
+        grandchild = self.sh.items.return_item('old.child.grandchild')
+
+        self.sh.items.rename_item(parent, 'new')
+
+        self.assertEqual(child.property.path, 'new.child')
+        self.assertEqual(grandchild.property.path, 'new.child.grandchild')
+        self.assertIsNone(self.sh.items.return_item('old.child'))
+        self.assertIsNone(self.sh.items.return_item('old.child.grandchild'))
+        self.assertIs(self.sh.items.return_item('new.child'), child)
+        self.assertIs(self.sh.items.return_item('new.child.grandchild'), grandchild)
+        self.assertIs(child.return_parent(), parent)

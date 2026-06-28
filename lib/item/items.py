@@ -585,10 +585,14 @@ class Items:
         if check_item_name_collision(self._sh, objects_to_check, leaf_attr, new_path):
             raise ValueError(f"Item '{old_path}' cannot be renamed to '{new_path}': name collision")
 
-        item._path = new_path
-        del self.__item_dict[old_path]
-        self.__items.remove(old_path)
-        self.add_item(new_path, item)
+        for descendant in _flatten_with_children(item):
+            descendant_old_path = descendant.property.path
+            descendant_new_path = new_path + descendant_old_path[len(old_path) :]
+
+            descendant._path = descendant_new_path
+            del self.__item_dict[descendant_old_path]
+            self.__items.remove(descendant_old_path)
+            self.add_item(descendant_new_path, descendant)
 
         return item
 
