@@ -225,11 +225,13 @@ class ItemsController(RESTResource, ItemData):
 
         v1 deliberately rejects editing an item that other items
         structurally depend on (``trigger:``/``hysteresis_input:``
-        references onto it) — 400, not a silent edit. The mutate-in-place
-        mechanism itself handles this fine (see
-        ~/.claude/handoff/shng-edit-item-attributes.md), but v1 keeps the
-        blast radius small for a brand new code path; lifting this
-        restriction is a separate, deliberate follow-up.
+        references onto it) — 400, not a silent edit. Enforced by
+        Items.edit_item() itself (raises ValueError), not just here, so it
+        applies to every caller, not only this endpoint — see
+        ~/.claude/handoff/shng-edit-item-attributes.md. The mutate-in-place
+        mechanism itself handles this fine; v1 keeps the blast radius small
+        for a brand new code path. Lifting the restriction is a separate,
+        deliberate follow-up.
         """
         if id is None:
             raise cherrypy.HTTPError(400, 'Item path required')
@@ -241,15 +243,6 @@ class ItemsController(RESTResource, ItemData):
         if item is None:
             raise cherrypy.HTTPError(404, f"Item '{id}' not found")
 
-        structural_refs = [ref for ref in self.items.find_references(id) if ref[1] in ('trigger', 'hysteresis_input')]
-        if structural_refs:
-            referencing = ', '.join(sorted({ref[0].property.path for ref in structural_refs}))
-            raise cherrypy.HTTPError(
-                400,
-                f"Item '{id}' is a trigger/hysteresis_input target for other items "
-                f'({referencing}) — editing it is not yet supported.',
-            )
-
         body = cherrypy.request.body.read()
         try:
             data = json.loads(body)
@@ -259,7 +252,10 @@ class ItemsController(RESTResource, ItemData):
 
         self.logger.info(f'ItemsController PATCH /api/items/{id}: config={config!r}')
 
-        self.items.edit_item(item, config)
+        try:
+            self.items.edit_item(item, config)
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
         return json.dumps({'result': 'ok'})
 
     edit.expose_resource = True

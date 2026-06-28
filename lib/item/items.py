@@ -443,6 +443,17 @@ class Items:
         create_item() — omitting a key resets it to its default, there is
         no separate partial-patch/delete-sentinel scheme.
 
+        v1 deliberately rejects editing an item that other items
+        structurally depend on (``trigger:``/``hysteresis_input:``
+        references onto it) — raises ValueError, no mutation attempted.
+        The mutate-in-place mechanism itself handles this fine (incoming
+        references live on THIS item's own _items_to_trigger list, never
+        touched by an edit — see the module docstring / handoff doc), this
+        is a deliberate v1 scope limit to keep the blast radius small for a
+        brand new code path, enforced here (not just in the admin API) so
+        it applies to every caller — scripts, logics, the interactive
+        console, not only the REST endpoint.
+
         :param item: The item to edit
         :param config: Complete new attribute configuration dict
         :type item: object
@@ -450,7 +461,20 @@ class Items:
 
         :return: The same item, mutated
         :rtype: Item
+
+        :raises ValueError: if *item* is a trigger/hysteresis_input target
+                             for other items (see above)
         """
+        structural_refs = [
+            ref for ref in self.find_references(item.property.path) if ref[1] in ('trigger', 'hysteresis_input')
+        ]
+        if structural_refs:
+            referencing = ', '.join(sorted({ref[0].property.path for ref in structural_refs}))
+            raise ValueError(
+                f"Item '{item.property.path}' is a trigger/hysteresis_input target for other items "
+                f'({referencing}) — editing it is not yet supported.'
+            )
+
         # Undo this item's own OUTGOING trigger/hysteresis_input wiring
         # (based on the OLD config) before re-parsing — otherwise a moved
         # trigger leaves a stale registration on the old target. Incoming

@@ -148,17 +148,26 @@ class TestEditItemTypeChange(_Base):
         self.assertEqual(item(), 0)
 
 
-class TestEditItemPreservesIncomingReferences(_Base):
-    def test_edit_item_keeps_other_items_triggering_on_it(self):
+class TestEditItemRejectsIncomingStructuralReferences(_Base):
+    def test_edit_item_raises_when_item_is_a_trigger_target(self):
         target = self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=False)
         source = self.sh.items.create_item(
             'source', {'type': 'num', 'eval': 'sh.target()', 'eval_trigger': 'target'}, persist=False
         )
         self.assertIn(source, target.get_item_triggers())
 
-        self.sh.items.edit_item(target, {'type': 'num', 'eval': '1', 'remark': 'edited'})
+        with self.assertRaises(ValueError):
+            self.sh.items.edit_item(target, {'type': 'num', 'eval': '1', 'remark': 'edited'})
 
-        self.assertIn(source, target.get_item_triggers())
+    def test_edit_item_allows_plain_eval_reference_with_no_trigger(self):
+        # source's eval mentions target's path, but has no eval_trigger/
+        # hysteresis_input pointing at it — not a STRUCTURAL (live-wired)
+        # dependency, so it's not blocked. Confirms the guard is scoped to
+        # trigger/hysteresis_input specifically, not "any textual mention".
+        target = self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=False)
+        self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.target()'}, persist=False)
+
+        self.sh.items.edit_item(target, {'type': 'num', 'eval': '1', 'remark': 'edited'})
 
 
 class TestEditItemRewiresOwnOutgoingTriggers(_Base):
