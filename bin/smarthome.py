@@ -130,10 +130,13 @@ arggroup.add_argument('-f', '--foreground', help='stay in the foreground', actio
 arggroup.add_argument(
     '-q', '--quiet', help='reduce logging to the logfile - DEPRECATED use logging-configuration', action='store_true'
 )
-# NOTE: argparser.parse_args() is intentionally NOT called here at module level.
-# Calling it here would cause argparse to read sys.argv (which contains pytest
-# arguments during testing) and call sys.exit(2) for unrecognised flags.
-# parse_args() is called inside the  if __name__ == '__main__'  guard below.
+# When running under pytest, sys.argv contains pytest's own arguments, which
+# argparse would reject with sys.exit(2). Parse an empty arg list in that case
+# so import-time parsing (needed to bootstrap core requirements below) stays safe.
+if 'pytest' in sys.modules:
+    args = argparser.parse_args([])
+else:
+    args = argparser.parse_args()
 
 #####################################################################
 # Import Python Core Modules
@@ -169,6 +172,43 @@ VERSION = bin.shngversion.get_shng_version()
 # - core requirements = libs
 from lib.shpypi import Shpypi
 
+shpypi = Shpypi.get_instance()
+if shpypi is None:
+    shpypi = Shpypi(base=BASE, version=VERSION)
+
+core_reqs = shpypi.test_core_requirements(logging=False, pip3_command=args.pip3_command)
+if core_reqs == 0:
+    print('Starting SmartHomeNG again...')
+    python_bin = sys.executable
+    if ' ' in python_bin:
+        python_bin = '"' + python_bin + '"'
+    # if we didn't change the working dir (yet), for example...
+    # command = [python_bin] + sys.argv
+    command = [python_bin, os.path.join(BASE, 'bin', 'smarthome.py')]
+    # if started with parameter to stay in foreground, don't fork
+    if args.foreground or args.interactive or args.debug:
+        try:
+            print('os.execv: python_bin={}, sys.argv={}'.format(python_bin, sys.argv))
+            # function call doesn't return; this process is replaced by the new one
+            os.execv(python_bin, [python_bin] + sys.argv)
+        except OSError as e:
+            print('Restart command {} failed with error {}'.format(python_bin, e))
+            exit(0)
+
+    try:
+        command = command[0] + ' ' + command[1] + ' -R'
+        p = subprocess.Popen(command, shell=True)
+        print('Waiting for restart...')
+    except subprocess.SubprocessError as e:
+        print("Restart command '{}' failed with error {}".format(command, e))
+    time.sleep(15)
+    exit(0)
+elif core_reqs == -1:
+    print('ERROR: Unable to install core requirements')
+    print('Use the commandline option --pip3_command to specify the path to the command')
+    print()
+    exit(1)
+
 #####################################################################
 # Import SmartHomeNG Modules
 #####################################################################
@@ -201,48 +241,6 @@ def _reload_logics():
 #####################################################################
 
 if __name__ == '__main__':
-    args = argparser.parse_args()
-
-    #############################################################
-    # test if needed Python packages are installed
-    # - core requirements = libs
-    shpypi = Shpypi.get_instance()
-    if shpypi is None:
-        shpypi = Shpypi(base=BASE, version=VERSION)
-
-    core_reqs = shpypi.test_core_requirements(logging=False, pip3_command=args.pip3_command)
-    if core_reqs == 0:
-        print('Starting SmartHomeNG again...')
-        python_bin = sys.executable
-        if ' ' in python_bin:
-            python_bin = '"' + python_bin + '"'
-        # if we didn't change the working dir (yet), for example...
-        # command = [python_bin] + sys.argv
-        command = [python_bin, os.path.join(BASE, 'bin', 'smarthome.py')]
-        # if started with parameter to stay in foreground, don't fork
-        if args.foreground or args.interactive or args.debug:
-            try:
-                print('os.execv: python_bin={}, sys.argv={}'.format(python_bin, sys.argv))
-                # function call doesn't return; this process is replaced by the new one
-                os.execv(python_bin, [python_bin] + sys.argv)
-            except OSError as e:
-                print('Restart command {} failed with error {}'.format(python_bin, e))
-                exit(0)
-
-        try:
-            command = command[0] + ' ' + command[1] + ' -R'
-            p = subprocess.Popen(command, shell=True)
-            print('Waiting for restart...')
-        except subprocess.SubprocessError as e:
-            print("Restart command '{}' failed with error {}".format(command, e))
-        time.sleep(15)
-        exit(0)
-    elif core_reqs == -1:
-        print('ERROR: Unable to install core requirements')
-        print('Use the commandline option --pip3_command to specify the path to the command')
-        print()
-        exit(1)
-
     try:
         if locale.getlocale() == (None, None):
             locale.setlocale(locale.LC_ALL, 'C')
