@@ -103,3 +103,18 @@ class TestRemoveReferencesClearsUnambiguousEval(_PersistedBase):
         self.assertEqual(source._eval, 'sh.target() + sh.other()')
         self.assertEqual(result['removed'], [])
         self.assertEqual(result['skipped_ambiguous'], [('source', 'eval', 'sh.target() + sh.other()')])
+
+
+class TestRemoveReferencesFiltersOnChangeList(_PersistedBase):
+    def test_remove_references_drops_only_the_matching_on_change_entry(self):
+        self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=True)
+        self.sh.items.create_item('other', {'type': 'num', 'eval': '3'}, persist=True)
+        self.sh.items.create_item(
+            'source', {'type': 'num', 'on_change': ['sh.target() + 1', 'sh.other() + 2']}, persist=True
+        )
+
+        result = self.sh.items.remove_references('target')
+
+        source = self.sh.items.return_item('source')
+        self.assertEqual(source._on_change, ['sh.other() + 2'])
+        self.assertEqual(result, {'removed': [('source', ['on_change'])], 'skipped_ambiguous': []})
