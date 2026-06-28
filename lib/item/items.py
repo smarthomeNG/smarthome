@@ -560,6 +560,31 @@ class Items:
         if persist and source_filename:
             self._remove_from_yaml_file(source_filename, path)
 
+    def rename_item(self, item, new_path):
+        """
+        Rename an item in place — same parent only (v1; see
+        ~/.claude/handoff/shng-rename-item-design.md). Mutates the item's
+        own path and re-keys it in __item_dict; unlike edit_item(), the
+        item's attribute config is untouched, only its identity (path).
+
+        :param item: The item to rename
+        :param new_path: The item's new full path (same parent segment as today)
+        :type new_path: str
+
+        :return: The same item, mutated
+        :rtype: Item
+        """
+        old_path = item.property.path
+        if new_path == old_path:
+            return item
+
+        item._path = new_path
+        del self.__item_dict[old_path]
+        self.__items.remove(old_path)
+        self.add_item(new_path, item)
+
+        return item
+
     def _remove_from_yaml_file(self, filename, path):
         """
         Remove the entry at dotted *path* from ``items_dir/<filename>.yaml``,
