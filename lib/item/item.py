@@ -158,6 +158,7 @@ from ._internal._parsing import (
     get_attribute_value as _get_attribute_value_fn,
     build_on_xx_list as _build_on_xx_list_fn,
     init_prerun as _init_prerun_fn,
+    check_item_name_collision as _check_item_name_collision,
 )
 from ._internal._lifecycle import remove as _remove_item
 from ._internal._navigation import (
@@ -280,12 +281,6 @@ class Item:
         else:
             self._change_logger = logger.debug
 
-        if not self._sh._ignore_item_collision:
-            if self._path.split('.')[-1] in _items_instance._item_methods:
-                logger.notice(
-                    f'Name of item {self._path} collides with Item class member. Unexpected behaviour might occur, renaming the item is recommended.'
-                )
-
         #############################################################
         # Initialize attribute assignment compatibility
         #############################################################
@@ -315,6 +310,8 @@ class Item:
         for attr, value in config.items():
             if isinstance(value, dict):
                 child_path = self._path + '.' + attr
+                if _check_item_name_collision(smarthome, [self], attr, child_path):
+                    continue
                 try:
                     child = Item(smarthome, self, child_path, value)
                 except Exception as e:

@@ -51,3 +51,35 @@ class TestNameCollisionDropsByDefault(_Base):
 
         self.assertIsNone(child)
         self.assertIsNone(self.sh.items.return_item('d.property'))
+
+    def test_colliding_inline_nested_child_is_dropped_but_parent_survives(self):
+        parent = self.sh.items.create_item(
+            'd', {'type': 'num', 'property': {'type': 'num'}, 'sensor1': {'type': 'num'}}, persist=False
+        )
+
+        self.assertIsNotNone(parent)
+        self.assertIsNone(self.sh.items.return_item('d.property'))
+        self.assertIsNotNone(self.sh.items.return_item('d.sensor1'))
+
+    def test_colliding_top_level_item_against_smarthome_attribute_is_dropped(self):
+        item = self.sh.items.create_item('scheduler', {'type': 'num'}, persist=False)
+
+        self.assertIsNone(item)
+        self.assertIsNone(self.sh.items.return_item('scheduler'))
+
+    def test_reserved_name_with_no_real_attribute_yet_is_still_dropped(self):
+        item = self.sh.items.create_item('get', {'type': 'num'}, persist=False)
+
+        self.assertIsNone(item)
+        self.assertIsNone(self.sh.items.return_item('get'))
+
+
+class TestNameCollisionAllowedWhenIgnored(_Base):
+    def test_colliding_item_is_created_when_ignore_flag_is_set(self):
+        self.sh._ignore_item_collision = True
+        parent = self.sh.items.create_item('d', {'type': 'num'}, persist=False)
+
+        child = self.sh.items.create_item('d.property', {'type': 'num'}, parent=parent, persist=False)
+
+        self.assertIsNotNone(child)
+        self.assertIsNotNone(self.sh.items.return_item('d.property'))
