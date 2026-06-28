@@ -79,3 +79,27 @@ class TestRemoveReferencesClearsHysteresisInput(_PersistedBase):
         source = self.sh.items.return_item('source')
         self.assertIsNone(source._hysteresis_input)
         self.assertEqual(result, {'removed': [('source', ['hysteresis_input'])], 'skipped_ambiguous': []})
+
+
+class TestRemoveReferencesClearsUnambiguousEval(_PersistedBase):
+    def test_remove_references_clears_whole_eval_when_unambiguous(self):
+        self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=True)
+        self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.target() * 9 / 5 + 32'}, persist=True)
+
+        result = self.sh.items.remove_references('target')
+
+        source = self.sh.items.return_item('source')
+        self.assertIsNone(source._eval)
+        self.assertEqual(result, {'removed': [('source', ['eval'])], 'skipped_ambiguous': []})
+
+    def test_remove_references_leaves_ambiguous_eval_untouched(self):
+        self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=True)
+        self.sh.items.create_item('other', {'type': 'num', 'eval': '2'}, persist=True)
+        self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.target() + sh.other()'}, persist=True)
+
+        result = self.sh.items.remove_references('target')
+
+        source = self.sh.items.return_item('source')
+        self.assertEqual(source._eval, 'sh.target() + sh.other()')
+        self.assertEqual(result['removed'], [])
+        self.assertEqual(result['skipped_ambiguous'], [('source', 'eval', 'sh.target() + sh.other()')])
