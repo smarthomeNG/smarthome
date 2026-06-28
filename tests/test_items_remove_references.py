@@ -118,3 +118,19 @@ class TestRemoveReferencesFiltersOnChangeList(_PersistedBase):
         source = self.sh.items.return_item('source')
         self.assertEqual(source._on_change, ['sh.other() + 2'])
         self.assertEqual(result, {'removed': [('source', ['on_change'])], 'skipped_ambiguous': []})
+
+
+class TestRemoveReferencesBatchesPerItem(_PersistedBase):
+    def test_remove_references_combines_multiple_dangling_attrs_into_one_edit(self):
+        self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=True)
+        self.sh.items.create_item(
+            'source', {'type': 'num', 'eval': 'sh.target()', 'trigger': ['target'], 'remark': 'keep me'}, persist=True
+        )
+
+        result = self.sh.items.remove_references('target')
+
+        source = self.sh.items.return_item('source')
+        self.assertIsNone(source._eval)
+        self.assertIsNone(source._trigger)
+        self.assertEqual(source.property.remark, 'keep me')
+        self.assertEqual(result, {'removed': [('source', ['eval', 'trigger'])], 'skipped_ambiguous': []})
