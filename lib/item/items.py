@@ -689,6 +689,120 @@ class Items:
         if item._hysteresis_input:
             yield ('hysteresis_input', item._hysteresis_input)
 
+    def _current_config_for_edit(self, item):
+        """
+        Best-effort reconstruction of *item*'s current complete attribute
+        config, suitable as a base for an edit_item() call — there is no
+        single source of truth for this on a live Item (core attributes
+        like eval/trigger/type live in dedicated fields, not item.conf,
+        see Item._apply_config()).
+
+        If *item* is persisted, its on-disk YAML entry IS that complete
+        config (exactly what create_item()/edit_item() last wrote there)
+        — used directly, with any child-item blocks (dict-valued keys)
+        stripped, since edit_item() handles children separately. If not
+        persisted, falls back to reading the known core fields plus
+        item.conf — accurate for every attribute find_references() can
+        detect, but may not preserve more obscure attributes that were
+        never written to a config dict in the first place.
+
+        :param item: The item to read the current config for
+        :return: Attribute configuration dict
+        :rtype: dict
+        """
+        if item._filename:
+            target = os.path.join(self._sh._items_dir, item._filename)
+            if os.path.isfile(target + shyaml.YAML_FILE):
+                yf = shyaml.yamlfile(target)
+                yf.load()
+                existing = yf.getnode(item.property.path)
+                if isinstance(existing, dict):
+                    return {key: value for key, value in existing.items() if not isinstance(value, dict)}
+
+        config = dict(item.conf)
+        config['type'] = item._type
+        if item._eval:
+            config['eval'] = item._eval
+        if item._on_change:
+            config['on_change'] = list(item._on_change)
+        if item._on_update:
+            config['on_update'] = list(item._on_update)
+        if item._trigger:
+            config['trigger'] = list(item._trigger)
+        if item._hysteresis_input:
+            config['hysteresis_input'] = item._hysteresis_input
+        return config
+
+    def remove_references(self, path):
+        """
+        Strip dangling unambiguous references to *path* from every other
+        item, via find_references()/edit_item() — intended to be called
+        right before deleting the item at *path*, so other items aren't
+        left pointing at something that no longer exists.
+
+        Ambiguous references (something else the referencing attribute
+        also depends on) are left untouched and reported back, not
+        treated as an error — there is no safe automatic action for them.
+
+        ``trigger``/``hysteresis_input`` matches are mechanical (the
+        whole matched value IS the bare path) — the trigger list entry is
+        filtered out (dropping the key if the list becomes empty), or
+        hysteresis_input is cleared. ``eval`` is a single freeform
+        expression — the entire attribute is cleared, since a substring
+        can't be safely excised from arbitrary Python. ``on_change``/
+        ``on_update`` are lists of independent freeform expressions, like
+        ``trigger`` structurally — only the matching list entry is
+        dropped, the rest of the list survives.
+
+        A referencing item with multiple dangling attributes (e.g. both
+        ``eval`` and ``trigger`` pointing at *path*) gets ONE edit_item()
+        call with all of its changes combined, not one call per
+        attribute.
+
+        :param path: Path of the item whose incoming references should be cleaned up
+        :type path: str
+
+        :return: {"removed": [(item_path, [attribute_names])],
+                  "skipped_ambiguous": [(item_path, attribute_name, value)]}
+        :rtype: dict
+        """
+        pending = {}
+        skipped = []
+
+        for ref_item, attr_name, value, unambiguous in self.find_references(path):
+            if not unambiguous:
+                skipped.append((ref_item.property.path, attr_name, value))
+                continue
+
+            entry = pending.setdefault(ref_item, {'config': self._current_config_for_edit(ref_item), 'attrs': set()})
+            config = entry['config']
+
+            if attr_name == 'trigger':
+                remaining = [entry_path for entry_path in config.get('trigger', []) if entry_path != path]
+                if remaining:
+                    config['trigger'] = remaining
+                else:
+                    config.pop('trigger', None)
+            elif attr_name == 'hysteresis_input':
+                config.pop('hysteresis_input', None)
+            elif attr_name in ('on_change', 'on_update'):
+                remaining = [text for text in config.get(attr_name, []) if text != value]
+                if remaining:
+                    config[attr_name] = remaining
+                else:
+                    config.pop(attr_name, None)
+            else:
+                config.pop(attr_name, None)
+
+            entry['attrs'].add(attr_name)
+
+        removed = []
+        for ref_item, entry in pending.items():
+            self.edit_item(ref_item, entry['config'])
+            removed.append((ref_item.property.path, sorted(entry['attrs'])))
+
+        return {'removed': removed, 'skipped_ambiguous': skipped}
+
     def get_toplevel_items(self):
         """
         Returns a list with all items defined at the top level
