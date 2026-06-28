@@ -172,17 +172,17 @@ class TestEdit(_Base):
 
         self.assertEqual(ctx.exception.status, 404)
 
-    def test_edit_with_incoming_trigger_reference_returns_400(self):
+    def test_edit_with_incoming_trigger_reference_succeeds(self):
         with self._post_body({'config': {'type': 'num', 'eval': '1'}}):
             self.controller.add(id='target')
         with self._post_body({'config': {'type': 'num', 'eval': 'sh.target()', 'eval_trigger': 'target'}}):
             self.controller.add(id='source')
 
         with self._post_body({'config': {'type': 'num', 'eval': '2'}}):
-            with self.assertRaises(cherrypy.HTTPError) as ctx:
-                self.controller.edit(id='target')
+            result = self.controller.edit(id='target')
 
-        self.assertEqual(ctx.exception.status, 400)
+        self.assertEqual(json.loads(result), {'result': 'ok'})
+        self.assertEqual(self.sh.items.return_item('target')._eval, '2')
 
     def test_edit_with_broken_body_returns_400(self):
         with self._post_body({'config': {'type': 'num'}}):

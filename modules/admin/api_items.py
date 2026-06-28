@@ -223,15 +223,11 @@ class ItemsController(RESTResource, ItemData):
         different file; it always persists to whatever file it was already
         defined in.
 
-        v1 deliberately rejects editing an item that other items
-        structurally depend on (``trigger:``/``hysteresis_input:``
-        references onto it) — 400, not a silent edit. Enforced by
-        Items.edit_item() itself (raises ValueError), not just here, so it
-        applies to every caller, not only this endpoint — see
-        ~/.claude/handoff/shng-edit-item-attributes.md. The mutate-in-place
-        mechanism itself handles this fine; v1 keeps the blast radius small
-        for a brand new code path. Lifting the restriction is a separate,
-        deliberate follow-up.
+        Editing an item that other items structurally depend on (via
+        ``trigger:``/``hysteresis_input:``) is allowed — those incoming
+        registrations live on the edited item's own object and survive
+        the edit untouched, since edit_item() mutates in place rather than
+        replacing the object.
         """
         if id is None:
             raise cherrypy.HTTPError(400, 'Item path required')

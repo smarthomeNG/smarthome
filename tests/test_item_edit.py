@@ -148,22 +148,31 @@ class TestEditItemTypeChange(_Base):
         self.assertEqual(item(), 0)
 
 
-class TestEditItemRejectsIncomingStructuralReferences(_Base):
-    def test_edit_item_raises_when_item_is_a_trigger_target(self):
+class TestEditItemAllowsIncomingStructuralReferences(_Base):
+    def test_edit_item_type_change_with_live_incoming_trigger_is_safe(self):
         target = self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=False)
         source = self.sh.items.create_item(
             'source', {'type': 'num', 'eval': 'sh.target()', 'eval_trigger': 'target'}, persist=False
         )
         self.assertIn(source, target.get_item_triggers())
 
-        with self.assertRaises(ValueError):
-            self.sh.items.edit_item(target, {'type': 'num', 'eval': '1', 'remark': 'edited'})
+        self.sh.items.edit_item(target, {'type': 'str'})
+
+        self.assertIn(source, target.get_item_triggers())
+
+    def test_edit_item_succeeds_when_item_is_a_trigger_target(self):
+        target = self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=False)
+        source = self.sh.items.create_item(
+            'source', {'type': 'num', 'eval': 'sh.target()', 'eval_trigger': 'target'}, persist=False
+        )
+        self.assertIn(source, target.get_item_triggers())
+
+        self.sh.items.edit_item(target, {'type': 'num', 'eval': '1', 'remark': 'edited'})
+
+        self.assertEqual(target.property.remark, 'edited')
+        self.assertIn(source, target.get_item_triggers())
 
     def test_edit_item_allows_plain_eval_reference_with_no_trigger(self):
-        # source's eval mentions target's path, but has no eval_trigger/
-        # hysteresis_input pointing at it — not a STRUCTURAL (live-wired)
-        # dependency, so it's not blocked. Confirms the guard is scoped to
-        # trigger/hysteresis_input specifically, not "any textual mention".
         target = self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=False)
         self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.target()'}, persist=False)
 
