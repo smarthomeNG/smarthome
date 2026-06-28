@@ -84,9 +84,10 @@ class TestRenameItemBasic(_Base):
     def test_rename_updates_item_path_and_item_dict(self):
         item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
 
-        renamed = self.sh.items.rename_item(item, 'new')
+        renamed, report = self.sh.items.rename_item(item, 'new')
 
         self.assertIs(renamed, item)
+        self.assertEqual(report, {'rewritten_references': [], 'failed_references': []})
         self.assertEqual(item.property.path, 'new')
         self.assertIsNone(self.sh.items.return_item('old'))
         self.assertIs(self.sh.items.return_item('new'), item)
@@ -106,9 +107,10 @@ class TestRenameItemValidatesNewName(_Base):
     def test_rename_to_same_path_is_a_silent_no_op(self):
         item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
 
-        renamed = self.sh.items.rename_item(item, 'old')
+        renamed, report = self.sh.items.rename_item(item, 'old')
 
         self.assertIs(renamed, item)
+        self.assertEqual(report, {'rewritten_references': [], 'failed_references': []})
         self.assertEqual(item.property.path, 'old')
 
 
@@ -191,3 +193,43 @@ class TestRenameItemCallsPluginHook(_Base):
 
         self.assertIn((item, 'old', 'new'), self.fake_plugin.renamed_items)
         self.assertIn((child, 'old.child', 'new.child'), self.fake_plugin.renamed_items)
+
+
+class TestRenameItemRewritesReferences(_Base):
+    def test_rename_rewrites_eval_reference_in_another_item(self):
+        target = self.sh.items.create_item('old', {'type': 'num', 'eval': '1'}, persist=False)
+        source = self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.old()'}, persist=False)
+
+        renamed, report = self.sh.items.rename_item(target, 'new')
+
+        self.assertEqual(source._eval, 'sh.new()')
+        self.assertEqual(report, {'rewritten_references': ['source'], 'failed_references': []})
+
+    def test_rename_rewrites_trigger_list_entry_in_another_item(self):
+        target = self.sh.items.create_item('old', {'type': 'num', 'eval': '1'}, persist=False)
+        source = self.sh.items.create_item('source', {'type': 'num', 'eval': '2', 'trigger': ['old']}, persist=False)
+
+        renamed, report = self.sh.items.rename_item(target, 'new')
+
+        self.assertEqual(source._trigger, ['new'])
+        self.assertEqual(report, {'rewritten_references': ['source'], 'failed_references': []})
+
+    def test_rename_rewrites_reference_to_a_descendant(self):
+        parent = self.sh.items.create_item('old', {'type': 'num', 'child': {'type': 'num'}}, persist=False)
+        source = self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.old.child()'}, persist=False)
+
+        self.sh.items.rename_item(parent, 'new')
+
+        self.assertEqual(source._eval, 'sh.new.child()')
+
+    def test_rename_rewrites_only_the_matching_reference_in_a_multi_dependency_eval(self):
+        # Unlike remove_references(), ambiguity (depends on more than one
+        # item) doesn't matter here — every match gets rewritten, none
+        # are skipped, since nothing is being removed, only repointed.
+        target = self.sh.items.create_item('old', {'type': 'num', 'eval': '1'}, persist=False)
+        self.sh.items.create_item('other', {'type': 'num', 'eval': '2'}, persist=False)
+        source = self.sh.items.create_item('source', {'type': 'num', 'eval': 'sh.old() + sh.other()'}, persist=False)
+
+        self.sh.items.rename_item(target, 'new')
+
+        self.assertEqual(source._eval, 'sh.new() + sh.other()')

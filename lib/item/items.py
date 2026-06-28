@@ -576,7 +576,7 @@ class Items:
         """
         old_path = item.property.path
         if new_path == old_path:
-            return item
+            return item, {'rewritten_references': [], 'failed_references': []}
 
         is_top_level = item._is_top_of_item_tree()
         parent_obj = self if is_top_level else item.return_parent()
@@ -612,7 +612,69 @@ class Items:
                 yf.setvalue(new_path, node)
                 yf.save()
 
-        return item
+        report = self._rewrite_references(old_path, new_path)
+
+        return item, report
+
+    def _rewrite_references(self, old_path, new_path):
+        """
+        Repoint every other item's textual reference to *old_path* (or one
+        of its descendants) at *new_path*, via the boundary-aware prefix
+        replace in _rewrite_sh_path_reference()/_rewrite_bare_path_reference().
+
+        Unlike remove_references(), every match is rewritten — ambiguous
+        or not, that classification doesn't apply here, since nothing is
+        being removed, only repointed (see
+        ~/.claude/handoff/shng-rename-item-design.md).
+
+        Best-effort per referencing item: a failure on one item doesn't
+        abort the others, consistent with edit_item()'s/remove_references()'s
+        existing best-effort conventions.
+
+        :param old_path: The path being renamed away from
+        :param new_path: The path being renamed to
+        :type old_path: str
+        :type new_path: str
+
+        :return: {"rewritten_references": [item_path, ...],
+                  "failed_references": [(item_path, error), ...]}
+        :rtype: dict
+        """
+        matched_attrs = {}
+        for ref_item, attr_name, _value, _unambiguous in self.find_references(old_path):
+            matched_attrs.setdefault(ref_item, set()).add(attr_name)
+
+        rewritten = []
+        failed = []
+        for ref_item, attrs in matched_attrs.items():
+            try:
+                config = self._current_config_for_edit(ref_item)
+                for attr_name in attrs:
+                    if attr_name == 'trigger':
+                        config['trigger'] = [
+                            self._rewrite_bare_path_reference(entry, old_path, new_path)
+                            for entry in config.get('trigger', [])
+                        ]
+                    elif attr_name == 'hysteresis_input':
+                        if 'hysteresis_input' in config:
+                            config['hysteresis_input'] = self._rewrite_bare_path_reference(
+                                config['hysteresis_input'], old_path, new_path
+                            )
+                    elif attr_name == 'eval':
+                        if 'eval' in config:
+                            config['eval'] = self._rewrite_sh_path_reference(config['eval'], old_path, new_path)
+                    elif attr_name in ('on_change', 'on_update'):
+                        if attr_name in config:
+                            config[attr_name] = [
+                                self._rewrite_sh_path_reference(entry, old_path, new_path)
+                                for entry in config[attr_name]
+                            ]
+                self.edit_item(ref_item, config)
+                rewritten.append(ref_item.property.path)
+            except Exception as e:
+                failed.append((ref_item.property.path, str(e)))
+
+        return {'rewritten_references': rewritten, 'failed_references': failed}
 
     def _remove_from_yaml_file(self, filename, path):
         """
