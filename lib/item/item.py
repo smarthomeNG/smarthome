@@ -1610,14 +1610,14 @@ class Item:
             yield child
 
     def _remove_child(self, child) -> None:
-        """Remove child from __children — used by _lifecycle.py when child is deleted."""
+        """Remove child from __children — used by _lifecycle.py when child is deleted, and by Items.rename_item() when moving it to a different parent."""
         try:
             self.__children.remove(child)
         except ValueError:
             pass
 
     def _append_child(self, child) -> None:
-        """Append child to __children — used by Items._construct_and_link() when child is created."""
+        """Append child to __children — used by Items._construct_and_link() when child is created, and by Items.rename_item() when moving it under this item."""
         self.__children.append(child)
 
     def _reassign_parent(self, new_parent) -> None:

@@ -1064,14 +1064,14 @@ class Items:
             yield child
 
     def _remove_child(self, item) -> None:
-        """Remove item from _children — used by _lifecycle.py when a top-level item is deleted."""
+        """Remove item from _children — used by _lifecycle.py when a top-level item is deleted, and by rename_item() when moving a top-level item to a new parent."""
         try:
             self._children.remove(item)
         except ValueError:
             pass
 
     def _append_child(self, item) -> None:
-        """Append item to _children — used by _construct_and_link() when a top-level item is created."""
+        """Append item to _children — used by _construct_and_link() when a top-level item is created, and by rename_item() when moving an item to become top-level."""
         self._children.append(item)
 
     # aus lib.logic.py
