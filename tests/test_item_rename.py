@@ -331,3 +331,19 @@ class TestRenameItemMovesAcrossParents(_Base):
         self.assertFalse(hasattr(old_parent, 'item'))
         self.assertIn(item, list(new_parent.return_children()))
         self.assertIs(self.sh.items.return_item('new_parent.item'), item)
+
+    def test_move_into_own_subtree_is_refused(self):
+        parent = self.sh.items.create_item('parent', {'type': 'num', 'child': {'type': 'num'}}, persist=False)
+
+        with self.assertRaises(ValueError):
+            self.sh.items.rename_item(parent, 'parent.child.parent')
+
+        self.assertEqual(parent.property.path, 'parent')
+
+    def test_move_under_nonexistent_parent_is_refused(self):
+        item = self.sh.items.create_item('item', {'type': 'num'}, persist=False)
+
+        with self.assertRaises(ValueError):
+            self.sh.items.rename_item(item, 'does.not.exist.item')
+
+        self.assertEqual(item.property.path, 'item')
