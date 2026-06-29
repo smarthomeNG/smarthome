@@ -363,6 +363,31 @@ class Items:
 
         return item
 
+    @staticmethod
+    def _load_yaml_file(yf, filename):
+        """
+        Load *yf* (a shyaml.yamlfile already pointed at *filename*),
+        turning a parse failure into a ValueError instead of letting it
+        propagate as whatever exception ruamel.yaml happened to raise.
+
+        yamlfile.load() raises on a genuine parse error (e.g. a
+        duplicate-key mistake elsewhere in the file) rather than silently
+        treating it as an empty file — every caller here goes on to
+        modify and save() the result, and saving "empty" over a file that
+        merely failed to parse would destroy everything else in it. This
+        wraps that into a message callers' own try/except ValueError
+        (and the REST layer's) already know how to surface as a 400.
+
+        :param yf: The yamlfile instance to load
+        :param filename: Basename (without extension), for the message
+        :type yf: shyaml.yamlfile
+        :type filename: str
+        """
+        try:
+            yf.load()
+        except Exception as e:
+            raise ValueError(f"Could not parse '{filename}.yaml': {e}") from e
+
     def _write_to_yaml_file(self, filename, path, config):
         """
         Write *config* (the original, caller-supplied dict — no internal
@@ -378,7 +403,7 @@ class Items:
         target = os.path.join(self._sh._items_dir, filename)
         yf = shyaml.yamlfile(target)
         if os.path.isfile(target + shyaml.YAML_FILE):
-            yf.load()
+            self._load_yaml_file(yf, filename)
         yf.setvalue(path, config)
         yf.save()
 
@@ -406,7 +431,7 @@ class Items:
         if not os.path.isfile(target + shyaml.YAML_FILE):
             return config
         yf = shyaml.yamlfile(target)
-        yf.load()
+        self._load_yaml_file(yf, filename)
         existing = yf.getnode(path)
         if not isinstance(existing, dict):
             return config
@@ -628,26 +653,47 @@ class Items:
             if new_is_top_level:
                 setattr(self._sh, leaf_attr, item)
 
-        for descendant in _flatten_with_children(item):
-            descendant_old_path = descendant.property.path
-            descendant_new_path = new_path + descendant_old_path[len(old_path) :]
+        rename_hook_plugins = [p for p in item.plugins.return_plugins() if hasattr(p, PLUGIN_RENAME_ITEM)]
+        # Pause each affected plugin AT MOST ONCE for the whole rename, not
+        # once per descendant — STOP_ON_ITEM_CHANGE's stop()/run() cycle can
+        # be expensive (reconnecting to real hardware/network), and a
+        # renamed subtree may have many descendants.
+        paused_plugins = [p for p in rename_hook_plugins if getattr(p, 'STOP_ON_ITEM_CHANGE', False) and p.alive]
+        for plugin in paused_plugins:
+            try:
+                plugin.stop()
+            except Exception as e:
+                self.logger.warning(f"Plugin '{plugin}' failed to stop for rename of item '{old_path}': {e}")
 
-            _remove_scheduler_jobs(descendant)
+        try:
+            for descendant in _flatten_with_children(item):
+                descendant_old_path = descendant.property.path
+                descendant_new_path = new_path + descendant_old_path[len(old_path) :]
 
-            descendant._path = descendant_new_path
-            del self.__item_dict[descendant_old_path]
-            self.__items.remove(descendant_old_path)
-            self.add_item(descendant_new_path, descendant)
+                _remove_scheduler_jobs(descendant)
 
-            descendant._init_start_scheduler()
+                descendant._path = descendant_new_path
+                del self.__item_dict[descendant_old_path]
+                self.__items.remove(descendant_old_path)
+                self.add_item(descendant_new_path, descendant)
 
-            for plugin in descendant.plugins.return_plugins():
-                if hasattr(plugin, PLUGIN_RENAME_ITEM):
+                descendant._init_start_scheduler()
+
+                for plugin in rename_hook_plugins:
                     try:
                         plugin.rename_item(descendant, descendant_old_path, descendant_new_path)
                     except Exception as e:
                         self.logger.warning(
                             f"Plugin '{plugin}' rename_item() failed for item '{descendant_new_path}': {e}"
+                        )
+        finally:
+            for plugin in paused_plugins:
+                if not plugin.alive:
+                    try:
+                        plugin.run()
+                    except Exception as e:
+                        self.logger.warning(
+                            f"Plugin '{plugin}' failed to resume after rename of item '{old_path}': {e}"
                         )
 
         if item._filename:
@@ -661,7 +707,7 @@ class Items:
                 target = os.path.join(self._sh._items_dir, item._filename)
                 if os.path.isfile(target + shyaml.YAML_FILE):
                     yf = shyaml.yamlfile(target)
-                    yf.load()
+                    self._load_yaml_file(yf, item._filename)
                     node = yf.getnode(old_path)
                     yf.setvalue(old_path, None)
                     yf.setvalue(new_path, node)
@@ -671,7 +717,7 @@ class Items:
                 node = None
                 if os.path.isfile(old_target + shyaml.YAML_FILE):
                     old_yf = shyaml.yamlfile(old_target)
-                    old_yf.load()
+                    self._load_yaml_file(old_yf, item._filename)
                     node = old_yf.getnode(old_path)
                     old_yf.setvalue(old_path, None)
                     old_yf.save()
@@ -679,7 +725,7 @@ class Items:
                 new_target = os.path.join(self._sh._items_dir, target_filename)
                 new_yf = shyaml.yamlfile(new_target)
                 if os.path.isfile(new_target + shyaml.YAML_FILE):
-                    new_yf.load()
+                    self._load_yaml_file(new_yf, target_filename)
                 new_yf.setvalue(new_path, node)
                 new_yf.save()
 
@@ -764,7 +810,7 @@ class Items:
         if not os.path.isfile(target + shyaml.YAML_FILE):
             return
         yf = shyaml.yamlfile(target)
-        yf.load()
+        self._load_yaml_file(yf, filename)
         yf.setvalue(path, None)
         yf.save()
 
@@ -976,7 +1022,7 @@ class Items:
             target = os.path.join(self._sh._items_dir, item._filename)
             if os.path.isfile(target + shyaml.YAML_FILE):
                 yf = shyaml.yamlfile(target)
-                yf.load()
+                self._load_yaml_file(yf, item._filename)
                 existing = yf.getnode(item.property.path)
                 if isinstance(existing, dict):
                     return {key: value for key, value in existing.items() if not isinstance(value, dict)}

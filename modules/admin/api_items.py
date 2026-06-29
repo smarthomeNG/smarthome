@@ -203,7 +203,10 @@ class ItemsController(RESTResource, ItemData):
 
         self.logger.info(f'ItemsController POST /api/items/{id}: config={config!r}')
 
-        item = self.items.create_item(id, config, parent=parent_item, persist=persist, filename=filename)
+        try:
+            item = self.items.create_item(id, config, parent=parent_item, persist=persist, filename=filename)
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
         if item is None:
             raise cherrypy.HTTPError(400, f"Item '{id}' was not created — its name collides with an existing attribute")
         return json.dumps({'result': 'ok'})
@@ -299,7 +302,10 @@ class ItemsController(RESTResource, ItemData):
 
         self.logger.info(f'ItemsController DELETE /api/items/{id}: persist={persist_value!r}')
 
-        self.items.remove_item(item, persist=persist_value)
+        try:
+            self.items.remove_item(item, persist=persist_value)
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
         return json.dumps({'result': 'ok'})
 
     delete.expose_resource = True

@@ -315,11 +315,21 @@ def _ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
 #
 
 
-def yaml_load_roundtrip(filename):
+def yaml_load_roundtrip(filename, raise_on_error=False):
     """
     Load contents of a yaml file into an dict structure for editing (using Roundtrip Loader)
 
     :param filename: name of the yaml file to load
+    :param raise_on_error: if True, re-raise a load/parse failure instead
+                            of swallowing it into an empty dict. Callers
+                            that go on to MODIFY and SAVE the result must
+                            set this — treating a parse error the same as
+                            "file is legitimately empty" makes the
+                            following save() silently truncate the file
+                            to just the one change being made, destroying
+                            everything else in it.
+    :type raise_on_error: bool
+
     :return: data structure loaded from file
     """
 
@@ -336,6 +346,8 @@ def yaml_load_roundtrip(filename):
         y = yaml.load(sdata, yaml.RoundTripLoader)
     except Exception as e:
         logger.error("yaml_load_roundtrip: YAML-file load error: '%s'" % (e))
+        if raise_on_error:
+            raise
         y = {}
     return y
 
@@ -589,8 +601,15 @@ class yamlfile:
         doesn't silently no-op on every subsequent call (None[key] = ...
         raises TypeError, which setInDict() swallows and turns into a
         no-op).
+
+        Raises on a genuine parse failure (e.g. a duplicate-key error
+        elsewhere in the file) rather than treating it the same as an
+        empty file - this class is used to load, modify ONE value, and
+        save the whole file back; silently continuing with empty data
+        would make save() overwrite the rest of the file's contents with
+        nothing.
         """
-        self.data = yaml_load_roundtrip(self.filename)
+        self.data = yaml_load_roundtrip(self.filename, raise_on_error=True)
         if self.data is None:
             self.data = yaml.comments.CommentedMap([])
 

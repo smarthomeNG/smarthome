@@ -37,6 +37,28 @@ class FakePlugin:
         return True
 
 
+class FakeStoppablePlugin(FakePlugin):
+    """FakePlugin plus the alive/STOP_ON_ITEM_CHANGE/stop()/run() surface
+    Items.rename_item() inspects to decide whether (and how often) to
+    pause a plugin around a rename — for testing that pausing happens
+    once per rename operation, not once per descendant."""
+
+    def __init__(self, stop_on_item_change=True):
+        super().__init__()
+        self.STOP_ON_ITEM_CHANGE = stop_on_item_change
+        self.alive = True
+        self.stop_calls = 0
+        self.run_calls = 0
+
+    def stop(self):
+        self.stop_calls += 1
+        self.alive = False
+
+    def run(self):
+        self.run_calls += 1
+        self.alive = True
+
+
 class RecordingScheduler:
     """Drop-in replacement for MockScheduler that records calls."""
 
@@ -214,6 +236,37 @@ class TestRenameItemPersists(unittest.TestCase):
         self.assertNotIn('item', data.get('old_parent', {}))
         self.assertEqual(data['item']['eval'], '1')
 
+    def test_rename_preserves_sibling_items_in_the_same_file(self):
+        old_parent = self.sh.items.create_item(
+            'old_parent', {'type': 'num'}, parent=None, persist=True, filename='parent_file'
+        )
+        item = self.sh.items.create_item(
+            'old_parent.item', {'type': 'num', 'eval': '1'}, parent=old_parent, persist=True, filename='parent_file'
+        )
+        self.sh.items.create_item(
+            'old_parent.sibling', {'type': 'num'}, parent=old_parent, persist=True, filename='parent_file'
+        )
+
+        self.sh.items.rename_item(item, 'item')
+
+        data = self._read_file('parent_file')
+        self.assertIn('sibling', data['old_parent'])
+
+    def test_rename_refuses_to_persist_when_the_source_file_fails_to_parse(self):
+        path = os.path.join(self.tmpdir.name, 'broken_file.yaml')
+        with open(path, 'w', encoding='utf8') as f:
+            f.write('a:\n  remark: one\n  remark: two\n')
+        original_contents = open(path, encoding='utf8').read()
+
+        item = self.sh.items.create_item('a', {'type': 'num'}, persist=False)
+        item._filename = 'broken_file'
+
+        with self.assertRaises(ValueError):
+            self.sh.items.rename_item(item, 'b')
+
+        with open(path, encoding='utf8') as f:
+            self.assertEqual(f.read(), original_contents)
+
 
 class TestRenameItemCallsPluginHook(_Base):
     def setUp(self):
@@ -230,6 +283,52 @@ class TestRenameItemCallsPluginHook(_Base):
 
         self.assertIn((item, 'old', 'new'), self.fake_plugin.renamed_items)
         self.assertIn((child, 'old.child', 'new.child'), self.fake_plugin.renamed_items)
+
+
+class TestRenameItemPausesEachAffectedPluginOnceForTheWholeOperation(_Base):
+    def setUp(self):
+        super().setUp()
+        lib.plugin.Plugins(self.sh, 'test')
+        self.fake_plugin = FakeStoppablePlugin()
+        lib.plugin.Plugins._plugins.append(self.fake_plugin)
+
+    def test_stop_and_run_are_each_called_once_regardless_of_descendant_count(self):
+        item = self.sh.items.create_item(
+            'old', {'type': 'num', 'a': {'type': 'num'}, 'b': {'type': 'num'}, 'c': {'type': 'num'}}, persist=False
+        )
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(self.fake_plugin.stop_calls, 1)
+        self.assertEqual(self.fake_plugin.run_calls, 1)
+        # the rekey hook itself still runs for every descendant
+        self.assertEqual(len(self.fake_plugin.renamed_items), 4)
+
+    def test_plugin_is_alive_again_after_the_rename(self):
+        item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertTrue(self.fake_plugin.alive)
+
+    def test_does_not_pause_a_plugin_with_stop_on_item_change_false(self):
+        self.fake_plugin.STOP_ON_ITEM_CHANGE = False
+        item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(self.fake_plugin.stop_calls, 0)
+        self.assertEqual(self.fake_plugin.run_calls, 0)
+
+    def test_does_not_resume_a_plugin_that_was_already_stopped_before_the_rename(self):
+        self.fake_plugin.alive = False
+        item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(self.fake_plugin.stop_calls, 0)
+        self.assertEqual(self.fake_plugin.run_calls, 0)
+        self.assertFalse(self.fake_plugin.alive)
 
 
 class TestRenameItemRewritesReferences(_Base):

@@ -58,38 +58,26 @@ class TestRenameItemDefault(unittest.TestCase):
         self.assertEqual(self.plugin._pause_item_path, 'new.path')
 
 
-class TestRenameItemRespectsStopOnItemChange(unittest.TestCase):
-    def test_pauses_and_resumes_when_stop_on_item_change_is_true(self):
+class TestRenameItemDoesNotPauseTheCallingPlugin(unittest.TestCase):
+    """
+    SmartPlugin.rename_item() itself never touches alive/stop()/run() —
+    Items.rename_item() (lib/item/items.py) is responsible for pausing
+    and resuming each affected plugin, once for the whole rename
+    operation rather than once per descendant, since stop()/run() can be
+    expensive (e.g. reconnecting to real hardware/network) and a renamed
+    subtree may have many descendants. See
+    TestRenameItemPausesEachAffectedPluginOnceForTheWholeOperation in
+    test_item_rename.py for that batching behavior.
+    """
+
+    def test_does_not_call_stop_or_run_regardless_of_stop_on_item_change(self):
         plugin = FakeSmartPlugin()
         plugin.STOP_ON_ITEM_CHANGE = True
         plugin.alive = True
+        plugin.stop = unittest.mock.Mock(side_effect=AssertionError('stop() must not be called'))
+        plugin.run = unittest.mock.Mock(side_effect=AssertionError('run() must not be called'))
 
         plugin.rename_item(None, 'old.path', 'new.path')
 
-        self.assertTrue(plugin.alive)
-
-    def test_does_not_touch_alive_state_when_stop_on_item_change_is_false(self):
-        plugin = FakeSmartPlugin()
-        plugin.STOP_ON_ITEM_CHANGE = False
-        plugin.alive = True
-
-        plugin.rename_item(None, 'old.path', 'new.path')
-
-        self.assertTrue(plugin.alive)
-
-    def test_does_not_resume_if_something_else_already_restarted_it(self):
-        plugin = FakeSmartPlugin()
-        plugin.STOP_ON_ITEM_CHANGE = True
-        plugin.alive = True
-        original_stop = plugin.stop
-
-        def stop_and_get_restarted_by_someone_else():
-            original_stop()
-            plugin.alive = True  # simulate a concurrent restart during the pause window
-
-        plugin.stop = stop_and_get_restarted_by_someone_else
-        plugin.run = unittest.mock.Mock(side_effect=AssertionError('run() must not be called again'))
-
-        plugin.rename_item(None, 'old.path', 'new.path')
-
+        plugin.stop.assert_not_called()
         plugin.run.assert_not_called()

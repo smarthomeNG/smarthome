@@ -365,11 +365,14 @@ class SmartPlugin(SmartObject, Utils):
 
         Unlike remove_item()/parse_item(), this does NOT re-parse the
         item's configuration — it hasn't changed, only the path has — so
-        it is much cheaper than a full remove+re-add cycle. Still
-        respects STOP_ON_ITEM_CHANGE: pauses the plugin around the rekey
-        if set, and explicitly resumes it afterward, since this method's
-        pause window is fully self-contained (unlike remove_item(),
-        which only stops and relies on something else to resume).
+        it is much cheaper than a full remove+re-add cycle. Does NOT
+        pause the plugin itself: Items.rename_item() may call this once
+        per descendant of a renamed subtree, and STOP_ON_ITEM_CHANGE's
+        stop()/run() cycle is expensive on a plugin actually talking to
+        hardware/network — pausing once per descendant would multiply
+        that cost across the whole subtree. Items.rename_item() pauses
+        and resumes each affected plugin itself, once for the whole
+        rename operation, around the entire descendant loop.
 
         Plugins with their own item-path-keyed storage beyond
         _plg_item_dict/_pause_item_path (e.g. the database plugin) must
@@ -384,18 +387,10 @@ class SmartPlugin(SmartObject, Utils):
         :return: True
         :rtype: bool
         """
-        needs_pause = self.STOP_ON_ITEM_CHANGE and self.alive
-        if needs_pause:
-            self.logger.debug(f'pausing plugin for rename of item {old_path} to {new_path}')
-            self.stop()
-
         if old_path in self._plg_item_dict:
             self._plg_item_dict[new_path] = self._plg_item_dict.pop(old_path)
         if self._pause_item_path == old_path:
             self._pause_item_path = new_path
-
-        if needs_pause and not self.alive:
-            self.run()
 
         return True
 
