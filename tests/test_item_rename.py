@@ -289,3 +289,18 @@ class TestReassignParent(_Base):
         child._reassign_parent(new_parent)
 
         self.assertIs(child.return_parent(), new_parent)
+
+
+class TestRenameItemMovesAcrossParents(_Base):
+    def test_move_top_level_item_to_become_nested(self):
+        new_parent = self.sh.items.create_item('new_parent', {'type': 'num'}, persist=False)
+        item = self.sh.items.create_item('item', {'type': 'num'}, persist=False)
+
+        renamed, report = self.sh.items.rename_item(item, 'new_parent.item')
+
+        self.assertIs(renamed, item)
+        self.assertEqual(item.property.path, 'new_parent.item')
+        self.assertIs(item.return_parent(), new_parent)
+        self.assertIn(item, list(new_parent.return_children()))
+        self.assertIsNone(self.sh.items.return_item('item'))
+        self.assertIs(self.sh.items.return_item('new_parent.item'), item)

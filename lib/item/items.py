@@ -562,13 +562,15 @@ class Items:
 
     def rename_item(self, item, new_path):
         """
-        Rename an item in place — same parent only (v1; see
+        Rename an item in place, optionally moving it to a new parent (see
         ~/.claude/handoff/shng-rename-item-design.md). Mutates the item's
-        own path and re-keys it in __item_dict; unlike edit_item(), the
-        item's attribute config is untouched, only its identity (path).
+        own path (and, for a move, its parent) and re-keys it in
+        __item_dict; unlike edit_item(), the item's attribute config is
+        untouched, only its identity (path/parent).
 
-        :param item: The item to rename
-        :param new_path: The item's new full path (same parent segment as today)
+        :param item: The item to rename/move
+        :param new_path: The item's new full path — same parent segment
+                          for a plain rename, a different one to move it
         :type new_path: str
 
         :return: The same item, mutated
@@ -578,12 +580,38 @@ class Items:
         if new_path == old_path:
             return item, {'rewritten_references': [], 'failed_references': []}
 
-        is_top_level = item._is_top_of_item_tree()
-        parent_obj = self if is_top_level else item.return_parent()
+        new_parent_path, _, _ = new_path.rpartition('.')
+        if new_parent_path:
+            new_parent_obj = self.return_item(new_parent_path)
+            if new_parent_obj is None:
+                raise ValueError(
+                    f"Item '{old_path}' cannot be renamed to '{new_path}': parent '{new_parent_path}' not found"
+                )
+            new_is_top_level = False
+        else:
+            new_parent_obj = self
+            new_is_top_level = True
+
         leaf_attr = new_path.rsplit('.', 1)[-1]
-        objects_to_check = [parent_obj, self._sh] if is_top_level else [parent_obj]
-        if check_item_name_collision(self._sh, objects_to_check, leaf_attr, new_path):
+        objects_to_check = [new_parent_obj, self._sh] if new_is_top_level else [new_parent_obj]
+        if check_item_name_collision(self._sh, objects_to_check, leaf_attr, new_path, moving_item=item):
             raise ValueError(f"Item '{old_path}' cannot be renamed to '{new_path}': name collision")
+
+        old_is_top_level = item._is_top_of_item_tree()
+        old_parent_obj = self if old_is_top_level else item.return_parent()
+        if new_parent_obj is not old_parent_obj:
+            old_leaf_attr = old_path.rsplit('.', 1)[-1]
+            old_parent_obj._remove_child(item)
+            if getattr(old_parent_obj, old_leaf_attr, None) is item:
+                delattr(old_parent_obj, old_leaf_attr)
+            if old_is_top_level and getattr(self._sh, old_leaf_attr, None) is item:
+                delattr(self._sh, old_leaf_attr)
+
+            item._reassign_parent(new_parent_obj)
+            new_parent_obj._append_child(item)
+            setattr(new_parent_obj, leaf_attr, item)
+            if new_is_top_level:
+                setattr(self._sh, leaf_attr, item)
 
         for descendant in _flatten_with_children(item):
             descendant_old_path = descendant.property.path
