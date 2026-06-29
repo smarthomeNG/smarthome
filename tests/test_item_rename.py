@@ -277,3 +277,15 @@ class TestRenameItemReferenceRewriteFailureIsBestEffort(_Base):
         self.assertEqual(len(report['failed_references']), 1)
         self.assertEqual(report['failed_references'][0][0], 'source')
         self.assertEqual(other_source._eval, 'sh.new()')
+
+
+class TestReassignParent(_Base):
+    def test_reassign_parent_updates_item_parent(self):
+        old_parent = self.sh.items.create_item('old_parent', {'type': 'num'}, persist=False)
+        new_parent = self.sh.items.create_item('new_parent', {'type': 'num'}, persist=False)
+        child = self.sh.items.create_item('old_parent.child', {'type': 'num'}, parent=old_parent, persist=False)
+        self.assertIs(child.return_parent(), old_parent)
+
+        child._reassign_parent(new_parent)
+
+        self.assertIs(child.return_parent(), new_parent)

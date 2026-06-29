@@ -20,6 +20,7 @@ common.register_shng_log_levels()
 
 import lib.item.item
 import lib.item.items
+from lib.item._internal._parsing import check_item_name_collision
 from lib.item.items import Items
 from tests.mock.core import MockSmartHome
 
@@ -83,3 +84,28 @@ class TestNameCollisionAllowedWhenIgnored(_Base):
 
         self.assertIsNotNone(child)
         self.assertIsNotNone(self.sh.items.return_item('d.property'))
+
+
+class TestNameCollisionPreventsMoveIntoOwnSubtree(_Base):
+    def test_moving_item_into_its_own_descendant_is_refused(self):
+        parent = self.sh.items.create_item('parent', {'type': 'num', 'child': {'type': 'num'}}, persist=False)
+        child = self.sh.items.return_item('parent.child')
+
+        result = check_item_name_collision(self.sh, [child], 'parent', 'parent.child.parent', moving_item=parent)
+
+        self.assertTrue(result)
+
+    def test_moving_item_to_an_unrelated_parent_is_not_affected_by_the_cycle_check(self):
+        item = self.sh.items.create_item('item', {'type': 'num'}, persist=False)
+        other = self.sh.items.create_item('other', {'type': 'num'}, persist=False)
+
+        result = check_item_name_collision(self.sh, [other], 'item', 'other.item', moving_item=item)
+
+        self.assertFalse(result)
+
+    def test_fresh_construction_is_unaffected_by_the_cycle_check(self):
+        parent = self.sh.items.create_item('parent', {'type': 'num'}, persist=False)
+
+        result = check_item_name_collision(self.sh, [parent], 'child', 'parent.child', moving_item=None)
+
+        self.assertFalse(result)

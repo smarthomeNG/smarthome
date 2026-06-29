@@ -1620,6 +1620,10 @@ class Item:
         """Append child to __children — used by Items._construct_and_link() when child is created."""
         self.__children.append(child)
 
+    def _reassign_parent(self, new_parent) -> None:
+        """Reassign __parent — used by Items.rename_item() when moving an item to a new parent."""
+        self.__parent = new_parent
+
     def return_parent(self, level: int = 1, strict: bool = False):
         """Return ancestor item at given level — delegates to _navigation.return_parent_item()."""
         return _return_parent_item(self, level=level, strict=strict)
