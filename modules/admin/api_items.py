@@ -371,13 +371,14 @@ class ItemsController(RESTResource, ItemData):
     def rename(self, id, *vpath, **params):
         """
         Handle POST requests for the /rename sub-resource — rename an
-        item in place, same parent only (v1; see
+        item in place, optionally moving it to a new parent (see
         ~/.claude/handoff/shng-rename-item-design.md).
 
         Request body: JSON object with a "new_path" key — the COMPLETE
-        new path, not just a leaf name, so this same endpoint/contract
-        can grow into supporting a cross-parent move later without a
-        contract change; v1 just rejects a different parent segment.
+        new path, not just a leaf name, since a different parent segment
+        triggers a move rather than a plain rename — and an optional
+        "filename" key, an explicit override for which yaml file the
+        moved item's node lands in (only meaningful when persisted).
 
         Sub-resource methods reached via vpath aren't verb-gated by
         RESTResource's dispatcher — checked explicitly here, same
@@ -397,18 +398,14 @@ class ItemsController(RESTResource, ItemData):
         try:
             data = json.loads(body)
             new_path = data.get('new_path')
+            filename = data.get('filename')
         except (json.JSONDecodeError, AttributeError, TypeError):
             raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"new_path": ...}')
-
-        old_parent, _, _ = id.rpartition('.')
-        new_parent, _, _ = new_path.rpartition('.')
-        if new_parent != old_parent:
-            raise cherrypy.HTTPError(400, "Moving to a different parent isn't supported yet")
 
         self.logger.info(f'ItemsController POST /api/items/{id}/rename: new_path={new_path!r}')
 
         try:
-            _renamed_item, report = self.items.rename_item(item, new_path)
+            _renamed_item, report = self.items.rename_item(item, new_path, filename=filename)
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
 

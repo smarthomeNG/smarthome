@@ -187,7 +187,19 @@ class TestRename(_Base):
 
         self.assertEqual(ctx.exception.status, 404)
 
-    def test_rename_cross_parent_returns_400(self):
+    def test_rename_can_move_to_a_different_existing_parent(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='new_parent')
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='old')
+
+        with self._post_body_as_post_method({'new_path': 'new_parent.old'}):
+            self.controller.rename(id='old')
+
+        self.assertIsNone(self.sh.items.return_item('old'))
+        self.assertIsNotNone(self.sh.items.return_item('new_parent.old'))
+
+    def test_rename_move_to_nonexistent_parent_returns_400(self):
         with self._post_body({'config': {'type': 'num'}}):
             self.controller.add(id='old')
 
