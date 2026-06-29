@@ -145,6 +145,14 @@ class TestAdd(_Base):
         self.assertTrue(os.path.isfile(os.path.join(self.tmpdir.name, 'custom.yaml')))
         self.assertFalse(os.path.isfile(os.path.join(self.tmpdir.name, 'created.yaml')))
 
+    def test_add_with_colliding_name_returns_400_not_ok(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.add(id='scheduler')
+
+        self.assertEqual(ctx.exception.status, 400)
+        self.assertIsNone(self.sh.items.return_item('scheduler'))
+
 
 class TestRename(_Base):
     def _post_body_as_post_method(self, data):

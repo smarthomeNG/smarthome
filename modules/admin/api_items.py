@@ -203,7 +203,9 @@ class ItemsController(RESTResource, ItemData):
 
         self.logger.info(f'ItemsController POST /api/items/{id}: config={config!r}')
 
-        self.items.create_item(id, config, parent=parent_item, persist=persist, filename=filename)
+        item = self.items.create_item(id, config, parent=parent_item, persist=persist, filename=filename)
+        if item is None:
+            raise cherrypy.HTTPError(400, f"Item '{id}' was not created — its name collides with an existing attribute")
         return json.dumps({'result': 'ok'})
 
     add.expose_resource = True
