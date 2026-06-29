@@ -185,6 +185,15 @@ class TestRemoveDetachesShAttribute(_Base):
 
         self.assertFalse(hasattr(self.sh, 'parent.sub'))
 
+    def test_remove_of_nested_item_clears_parents_attribute(self):
+        parent = lib.item.item.Item(self.sh, self.sh, 'parent', {'sub': {'type': 'num'}})
+        child = parent.return_children().__next__()
+        self.assertIs(parent.sub, child)
+
+        child.remove()
+
+        self.assertFalse(hasattr(parent, 'sub'))
+
 
 class TestRemoveDetachesFromOtherItemsTriggerLists(_Base):
     def test_remove_clears_item_from_other_items_items_to_trigger(self):

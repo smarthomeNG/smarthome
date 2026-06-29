@@ -87,20 +87,25 @@ def _detach_from_parent(item):
 
 def _detach_sh_attribute(item):
     """
-    Remove the ``sh.<name>``/``items.<name>`` attribute binding installed
-    for top-level items in ``Items.load_itemdefinitions()``.
+    Remove the ``parent.<leaf_attr>`` attribute binding every item gets
+    (set by ``Items._construct_and_link()``/``Item.__init__``'s nested-child
+    loop), plus the additional ``sh.<leaf_attr>`` binding top-level items
+    also get.
 
-    Only removes the attribute if it still points at exactly *item* — the
+    Only removes an attribute if it still points at exactly *item* — the
     name may since have been reassigned to something else (another item, a
-    plugin, ...), in which case it must be left alone. Nested (non-top-level)
-    items never had this binding in the first place, so the identity check
-    is also what keeps this a no-op for them: ``item._parent`` is then a
-    regular ``Item``, which was never the target of such a ``setattr()``.
+    plugin, ...), in which case it must be left alone.
+
+    Uses the leaf name (the last path segment), not the full dotted path —
+    that's what was actually set as the attribute name, for both top-level
+    items (whose path *is* just the leaf name) and nested ones (whose
+    parent only ever got the leaf name as an attribute, never the full
+    path).
     """
-    attr = item.property.path
+    leaf_attr = item.property.path.rsplit('.', 1)[-1]
     for obj in (item._parent, item._sh):
-        if getattr(obj, attr, None) is item:
-            delattr(obj, attr)
+        if getattr(obj, leaf_attr, None) is item:
+            delattr(obj, leaf_attr)
 
 
 def _detach_from_other_items_triggers(item):
