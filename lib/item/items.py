@@ -602,9 +602,14 @@ class Items:
             new_parent_obj = self
             new_is_top_level = True
 
+        if new_path.startswith(old_path + '.'):
+            raise ValueError(
+                f"Item '{old_path}' cannot be renamed to '{new_path}': item cannot become a child of itself"
+            )
+
         leaf_attr = new_path.rsplit('.', 1)[-1]
         objects_to_check = [new_parent_obj, self._sh] if new_is_top_level else [new_parent_obj]
-        if check_item_name_collision(self._sh, objects_to_check, leaf_attr, new_path, moving_item=item):
+        if check_item_name_collision(self._sh, objects_to_check, leaf_attr, new_path):
             raise ValueError(f"Item '{old_path}' cannot be renamed to '{new_path}': name collision")
 
         old_is_top_level = item._is_top_of_item_tree()

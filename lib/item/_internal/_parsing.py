@@ -69,7 +69,7 @@ logger = logging.getLogger('lib.item')
 RESERVED_ITEM_NAMES = {'get'}
 
 
-def check_item_name_collision(sh, objects_to_check, leaf_attr, path, moving_item=None):
+def check_item_name_collision(sh, objects_to_check, leaf_attr, path):
     """
     Check whether creating an item named *leaf_attr* (full path *path*)
     would collide with an existing attribute on any of *objects_to_check*
@@ -78,44 +78,24 @@ def check_item_name_collision(sh, objects_to_check, leaf_attr, path, moving_item
     (both get the item set as an attribute on construction, see
     Items._construct_and_link()) — or with RESERVED_ITEM_NAMES.
 
-    If *moving_item* is given (Items.rename_item() moving an existing
-    item to a new parent, as opposed to fresh construction), also
-    refuses — unconditionally, NOT gated by ``sh._ignore_item_collision``
-    — if *path* would place the item inside its own current subtree (an
-    attempt to become its own descendant). Unlike a name collision, a
-    cycle breaks a fundamental tree invariant; there is no sensible
-    "force it anyway". The exact-equality case (*path* unchanged) is
-    never reached here — rename_item()'s own no-op guard short-circuits
-    before this function is called.
-
-    Behavior for the ordinary collision check is gated by
-    ``sh._ignore_item_collision``: if it is True, logs a warning and
-    returns False (construction/move proceeds anyway); if False (the
-    default), logs a warning and returns True (the caller must not
-    construct the item, and must drop the item's whole subtree along
-    with it, since none of its own children get constructed either if
-    the item itself is never created).
+    Behavior is gated by ``sh._ignore_item_collision``: if it is True,
+    logs a warning and returns False (construction/move proceeds
+    anyway); if False (the default), logs a warning and returns True
+    (the caller must not construct the item, and must drop the item's
+    whole subtree along with it, since none of its own children get
+    constructed either if the item itself is never created).
 
     :param sh: The smarthome object (for the ``_ignore_item_collision`` flag)
     :param objects_to_check: Objects the new item would be set as an attribute on
     :param leaf_attr: The item's own (last path segment) name
     :param path: Full path of the item, for the log message
-    :param moving_item: The item being moved, if this is a move rather
-                         than fresh construction
     :type objects_to_check: list
     :type leaf_attr: str
     :type path: str
-    :type moving_item: object
 
     :return: True if the item must NOT be constructed/moved
     :rtype: bool
     """
-    if moving_item is not None:
-        current_path = moving_item.property.path
-        if path.startswith(current_path + '.'):
-            logger.warning(f"Cannot move '{current_path}' into its own subtree (target: '{path}')")
-            return True
-
     collision = leaf_attr in RESERVED_ITEM_NAMES or any(hasattr(obj, leaf_attr) for obj in objects_to_check)
     if not collision:
         return False
