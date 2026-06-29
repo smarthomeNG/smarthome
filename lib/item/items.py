@@ -717,7 +717,7 @@ class Items:
         failed = []
         for ref_item, attrs in matched_attrs.items():
             try:
-                config = self._current_config_for_edit(ref_item)
+                config = self.current_config_for_edit(ref_item)
                 for attr_name in attrs:
                     if attr_name == 'trigger':
                         config['trigger'] = [
@@ -939,7 +939,7 @@ class Items:
         if item._hysteresis_input:
             yield ('hysteresis_input', item._hysteresis_input)
 
-    def _current_config_for_edit(self, item):
+    def current_config_for_edit(self, item):
         """
         Best-effort reconstruction of *item*'s current complete attribute
         config, suitable as a base for an edit_item() call — there is no
@@ -955,6 +955,13 @@ class Items:
         item.conf — accurate for every attribute find_references() can
         detect, but may not preserve more obscure attributes that were
         never written to a config dict in the first place.
+
+        Used internally by remove_references()/rename_item() to build a
+        referencing item's new config, and exposed cross-module (e.g. via
+        modules/admin/itemdata.py's "editable_config" field) so a frontend
+        can safely pre-populate an edit-attributes form — item.conf alone
+        (the "config" field there) never includes core attributes, only
+        generic/plugin ones, so it's unsafe to PATCH back as-is.
 
         :param item: The item to read the current config for
         :return: Attribute configuration dict
@@ -1024,7 +1031,7 @@ class Items:
                 skipped.append((ref_item.property.path, attr_name, value))
                 continue
 
-            entry = pending.setdefault(ref_item, {'config': self._current_config_for_edit(ref_item), 'attrs': set()})
+            entry = pending.setdefault(ref_item, {'config': self.current_config_for_edit(ref_item), 'attrs': set()})
             config = entry['config']
 
             if attr_name == 'trigger':

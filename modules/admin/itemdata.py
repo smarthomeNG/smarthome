@@ -296,6 +296,12 @@ class ItemData:
                 #                         'logics': json.dumps(logics),
                 #                         'triggers': json.dumps(triggers),
                 'config': dict(item_conf_sorted),
+                # Complete attribute set (core + generic), safe to PATCH
+                # straight back via PATCH /api/items/{path} — unlike
+                # 'config' above (item.conf only, generic/plugin attrs),
+                # which omits core attributes like type/eval/trigger
+                # entirely and would silently reset them if resubmitted.
+                'editable_config': self.items.current_config_for_edit(item),
                 'logics': logics,
                 'triggers': triggers,
                 'filename': str(item._filename),

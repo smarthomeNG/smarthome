@@ -91,6 +91,31 @@ class TestReadAttributes(_Base):
         self.assertIn('en', result['autotimer']['description'])
 
 
+class TestReadItemDetail(_Base):
+    def test_read_includes_editable_config_with_core_attributes(self):
+        with self._post_body({'config': {'type': 'num', 'eval': '1', 'cycle': '30'}}):
+            self.controller.add(id='target')
+
+        result = json.loads(self.controller.read(id='target'))[0]
+
+        self.assertEqual(result['editable_config']['type'], 'num')
+        self.assertEqual(result['editable_config']['eval'], '1')
+        self.assertEqual(result['editable_config']['cycle'], '30')
+
+    def test_editable_config_is_distinct_from_the_generic_config_field(self):
+        # 'config' stays item.conf-only (generic/plugin attrs, used by the
+        # existing read-only attributes table) — editable_config is the new,
+        # separate, complete attribute set meant for pre-populating an edit form.
+        with self._post_body({'config': {'type': 'num', 'eval': '1', 'my_custom_attr': 'x'}}):
+            self.controller.add(id='target')
+
+        result = json.loads(self.controller.read(id='target'))[0]
+
+        self.assertNotIn('eval', result['config'])
+        self.assertIn('eval', result['editable_config'])
+        self.assertEqual(result['config']['my_custom_attr'], 'x')
+
+
 class TestAdd(_Base):
     def test_add_creates_item(self):
         with self._post_body({'config': {'type': 'num'}}):

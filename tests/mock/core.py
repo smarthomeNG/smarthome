@@ -34,6 +34,10 @@ class MockScheduler:
         import lib.scheduler
 
         lib.scheduler._scheduler_instance = self
+        # Real Scheduler's internal job dict — modules/admin/itemdata.py's
+        # item_detail_json_html() iterates this looking up a crontab entry
+        # by name; empty dict correctly models "no jobs scheduled yet".
+        self._scheduler = {}
 
     def add(
         self,
