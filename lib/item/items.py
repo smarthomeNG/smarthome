@@ -560,7 +560,7 @@ class Items:
         if persist and source_filename:
             self._remove_from_yaml_file(source_filename, path)
 
-    def rename_item(self, item, new_path):
+    def rename_item(self, item, new_path, filename=None):
         """
         Rename an item in place, optionally moving it to a new parent (see
         ~/.claude/handoff/shng-rename-item-design.md). Mutates the item's
@@ -568,10 +568,20 @@ class Items:
         __item_dict; unlike edit_item(), the item's attribute config is
         untouched, only its identity (path/parent).
 
+        If the item is persisted, its YAML node moves to: *filename* if
+        given explicitly; otherwise the new parent's file, if the new
+        parent is a real (non-top-level) Item with one; otherwise the
+        item's own current file unchanged (same-file rename, the
+        original v1 behavior). A non-persisted item is never persisted
+        as a side effect of a move.
+
         :param item: The item to rename/move
         :param new_path: The item's new full path — same parent segment
                           for a plain rename, a different one to move it
+        :param filename: Explicit target yaml file (basename, no
+                          extension) to override the default above
         :type new_path: str
+        :type filename: str
 
         :return: The same item, mutated
         :rtype: Item
@@ -636,14 +646,40 @@ class Items:
                         )
 
         if item._filename:
-            target = os.path.join(self._sh._items_dir, item._filename)
-            if os.path.isfile(target + shyaml.YAML_FILE):
-                yf = shyaml.yamlfile(target)
-                yf.load()
-                node = yf.getnode(old_path)
-                yf.setvalue(old_path, None)
-                yf.setvalue(new_path, node)
-                yf.save()
+            target_filename = filename or (
+                new_parent_obj._filename
+                if not new_is_top_level and getattr(new_parent_obj, '_filename', None)
+                else item._filename
+            )
+
+            if target_filename == item._filename:
+                target = os.path.join(self._sh._items_dir, item._filename)
+                if os.path.isfile(target + shyaml.YAML_FILE):
+                    yf = shyaml.yamlfile(target)
+                    yf.load()
+                    node = yf.getnode(old_path)
+                    yf.setvalue(old_path, None)
+                    yf.setvalue(new_path, node)
+                    yf.save()
+            else:
+                old_target = os.path.join(self._sh._items_dir, item._filename)
+                node = None
+                if os.path.isfile(old_target + shyaml.YAML_FILE):
+                    old_yf = shyaml.yamlfile(old_target)
+                    old_yf.load()
+                    node = old_yf.getnode(old_path)
+                    old_yf.setvalue(old_path, None)
+                    old_yf.save()
+
+                new_target = os.path.join(self._sh._items_dir, target_filename)
+                new_yf = shyaml.yamlfile(new_target)
+                if os.path.isfile(new_target + shyaml.YAML_FILE):
+                    new_yf.load()
+                new_yf.setvalue(new_path, node)
+                new_yf.save()
+
+                for descendant in _flatten_with_children(item):
+                    descendant._filename = target_filename
 
         report = self._rewrite_references(old_path, new_path)
 

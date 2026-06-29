@@ -177,6 +177,43 @@ class TestRenameItemPersists(unittest.TestCase):
         self.assertEqual(data['new']['eval'], '1')
         self.assertIn('child', data['new'])
 
+    def test_move_to_new_parent_in_a_different_file_moves_the_yaml_node(self):
+        self.sh.items.create_item('new_parent', {'type': 'num'}, parent=None, persist=True, filename='parent_file')
+        item = self.sh.items.create_item('item', {'type': 'num', 'eval': '1'}, persist=True, filename='item_file')
+
+        self.sh.items.rename_item(item, 'new_parent.item')
+
+        old_data = self._read_file('item_file')
+        self.assertNotIn('item', old_data)
+        new_data = self._read_file('parent_file')
+        self.assertEqual(new_data['new_parent']['item']['eval'], '1')
+        self.assertEqual(item._filename, 'parent_file')
+
+    def test_move_with_explicit_filename_overrides_the_default(self):
+        self.sh.items.create_item('new_parent', {'type': 'num'}, parent=None, persist=True, filename='parent_file')
+        item = self.sh.items.create_item('item', {'type': 'num', 'eval': '1'}, persist=True, filename='item_file')
+
+        self.sh.items.rename_item(item, 'new_parent.item', filename='explicit_file')
+
+        explicit_data = self._read_file('explicit_file')
+        self.assertEqual(explicit_data['new_parent']['item']['eval'], '1')
+        parent_data = self._read_file('parent_file')
+        self.assertNotIn('item', parent_data.get('new_parent', {}))
+
+    def test_move_to_top_level_falls_back_to_the_items_own_current_file(self):
+        old_parent = self.sh.items.create_item(
+            'old_parent', {'type': 'num'}, parent=None, persist=True, filename='parent_file'
+        )
+        item = self.sh.items.create_item(
+            'old_parent.item', {'type': 'num', 'eval': '1'}, parent=old_parent, persist=True, filename='parent_file'
+        )
+
+        self.sh.items.rename_item(item, 'item')
+
+        data = self._read_file('parent_file')
+        self.assertNotIn('item', data.get('old_parent', {}))
+        self.assertEqual(data['item']['eval'], '1')
+
 
 class TestRenameItemCallsPluginHook(_Base):
     def setUp(self):
