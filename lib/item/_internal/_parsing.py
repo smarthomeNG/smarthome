@@ -59,6 +59,7 @@ from lib.constants import (
 )
 
 from ..helpers import split_duration_value_string
+from lib.model.smartplugin import SmartPlugin
 
 logger = logging.getLogger('lib.item')
 
@@ -78,6 +79,13 @@ def check_item_name_collision(sh, objects_to_check, leaf_attr, path):
     (both get the item set as an attribute on construction, see
     Items._construct_and_link()) — or with RESERVED_ITEM_NAMES.
 
+    An item shadowing a plugin instance bound onto ``sh`` (e.g. ``sh.arduino``
+    set by a plugin with instance name ``arduino``) is not treated as a
+    collision: plugins are only ever bound onto ``sh`` as a legacy
+    convenience (see lib/plugin.py), not because anything depends on the
+    item tree staying clear of those names, so flagging it would block
+    item names a user could otherwise reasonably choose.
+
     Behavior is gated by ``sh._ignore_item_collision``: if it is True,
     logs a warning and returns False (construction/move proceeds
     anyway); if False (the default), logs a warning and returns True
@@ -96,7 +104,15 @@ def check_item_name_collision(sh, objects_to_check, leaf_attr, path):
     :return: True if the item must NOT be constructed/moved
     :rtype: bool
     """
-    collision = leaf_attr in RESERVED_ITEM_NAMES or any(hasattr(obj, leaf_attr) for obj in objects_to_check)
+
+    def _is_real_collision(obj):
+        if not hasattr(obj, leaf_attr):
+            return False
+        if obj is sh and isinstance(getattr(obj, leaf_attr), SmartPlugin):
+            return False
+        return True
+
+    collision = leaf_attr in RESERVED_ITEM_NAMES or any(_is_real_collision(obj) for obj in objects_to_check)
     if not collision:
         return False
 

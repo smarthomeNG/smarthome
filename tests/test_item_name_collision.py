@@ -22,7 +22,16 @@ import lib.item.item
 import lib.item.items
 from lib.item._internal._parsing import check_item_name_collision
 from lib.item.items import Items
+from lib.model.smartplugin import SmartPlugin
 from tests.mock.core import MockSmartHome
+
+
+class _FakeSmartPlugin(SmartPlugin):
+    def run(self):
+        self.alive = True
+
+    def stop(self):
+        self.alive = False
 
 
 def _reset():
@@ -84,3 +93,48 @@ class TestNameCollisionAllowedWhenIgnored(_Base):
 
         self.assertIsNotNone(child)
         self.assertIsNotNone(self.sh.items.return_item('d.property'))
+
+
+class TestNameCollisionIgnoresPluginShadowingOnSh(_Base):
+    """
+    An item shadowing a plugin instance bound onto sh (e.g. sh.arduino set
+    by a plugin with instance name 'arduino') must not be treated as a
+    collision — plugins are only ever bound onto sh as a legacy
+    convenience, not because the item tree must stay clear of those names.
+    """
+
+    def test_top_level_item_named_like_a_plugin_instance_is_created(self):
+        self.sh.arduino = _FakeSmartPlugin()
+
+        item = self.sh.items.create_item('arduino', {'type': 'bool'}, persist=False)
+
+        self.assertIsNotNone(item)
+        self.assertIsNotNone(self.sh.items.return_item('arduino'))
+
+    def test_real_smarthome_attribute_collision_is_still_dropped_even_if_plugin_also_present(self):
+        self.sh.arduino = _FakeSmartPlugin()
+
+        item = self.sh.items.create_item('scheduler', {'type': 'num'}, persist=False)
+
+        self.assertIsNone(item)
+        self.assertIsNone(self.sh.items.return_item('scheduler'))
+
+    def test_check_item_name_collision_directly_skips_plugin_attribute_on_sh(self):
+        sh = MockSmartHome()
+        sh.arduino = _FakeSmartPlugin()
+
+        must_not_construct = check_item_name_collision(sh, [sh], 'arduino', 'arduino')
+
+        self.assertFalse(must_not_construct)
+
+    def test_check_item_name_collision_directly_still_flags_plugin_attribute_on_non_sh_object(self):
+        class Parent:
+            pass
+
+        sh = MockSmartHome()
+        parent = Parent()
+        parent.arduino = _FakeSmartPlugin()
+
+        must_not_construct = check_item_name_collision(sh, [parent], 'arduino', 'd.arduino')
+
+        self.assertTrue(must_not_construct)
