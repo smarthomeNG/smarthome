@@ -2,8 +2,19 @@
 # pre-commit — format and lint staged Python files.
 # Installed via: git config core.hooksPath .githooks
 
+# move to shng root dir for checks/tests to run properly
 SHNG_DIR="$(git rev-parse --show-toplevel)"
 cd "$SHNG_DIR" || exit 1
+
+# Run a private, untracked local hook first if present — .git/hooks/ is
+# never read by git itself while core.hooksPath points here, so this is
+# the one place a personal hook can live without being published
+# alongside the hooks in this directory. Runs before the checks below so
+# a fast personal guard can reject a commit without waiting on lint.
+LOCAL_HOOK="$(git rev-parse --git-dir)/hooks/$(basename "$0")"
+if [ -x "$LOCAL_HOOK" ]; then
+    "$LOCAL_HOOK" "$@" || exit $?
+fi
 
 RUFF="${SHNG_DIR}/venvs/shng/bin/ruff"
 [ -x "$RUFF" ] || RUFF="ruff"

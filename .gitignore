@@ -88,10 +88,8 @@ Thumbs.db
 !/var/run/
 
 # don't check in requirements that are built each time SHNG starts
-requirements/all.txt
-requirements/base.txt
-requirements/conf_all.txt
-requirements/test_plugins.txt
+/requirements/*
+!/requirements/test.txt
 
 # ignore users tools settings
 /custom_plugins/
