@@ -264,13 +264,17 @@ class ItemsController(RESTResource, ItemData):
     # ======================================================================
     #  DELETE /api/items/{item_path}
     #
-    def delete(self, id=None, persist=None):
+    def delete(self, id=None, persist=None, recursive=None):
         """
         Handle DELETE requests — remove an item at runtime.
 
         :param persist: Optional query parameter ('true'/'false', default
                          True if omitted) — whether to also remove the
                          item's entry from its source yaml file.
+        :param recursive: Optional query parameter ('true'/'false', default
+                         False if omitted) — an item with sub-items is
+                         rejected with a 400 unless this is set, in which
+                         case every sub-item is removed too.
 
         Deliberately a query parameter, not a JSON request body: DELETE
         isn't in cherrypy's default `methods_with_bodies`
@@ -299,10 +303,19 @@ class ItemsController(RESTResource, ItemData):
             except Exception:
                 raise cherrypy.HTTPError(400, "Invalid 'persist' parameter — expected true/false")
 
-        self.logger.info(f'ItemsController DELETE /api/items/{id}: persist={persist_value!r}')
+        recursive_value = False
+        if recursive is not None:
+            try:
+                recursive_value = Utils.to_bool(recursive)
+            except Exception:
+                raise cherrypy.HTTPError(400, "Invalid 'recursive' parameter — expected true/false")
+
+        self.logger.info(
+            f'ItemsController DELETE /api/items/{id}: persist={persist_value!r} recursive={recursive_value!r}'
+        )
 
         try:
-            self.items.remove_item(item, persist=persist_value)
+            self.items.remove_item(item, persist=persist_value, recursive=recursive_value)
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
         return json.dumps({'result': 'ok'})

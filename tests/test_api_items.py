@@ -399,6 +399,39 @@ class TestDelete(_Base):
 
         self.assertEqual(ctx.exception.status, 400)
 
+    def test_delete_item_with_children_without_recursive_returns_400(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='parent')
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='parent.child')
+
+        with self.assertRaises(cherrypy.HTTPError) as ctx:
+            self.controller.delete(id='parent')
+
+        self.assertEqual(ctx.exception.status, 400)
+        self.assertIsNotNone(self.sh.items.return_item('parent'))
+        self.assertIsNotNone(self.sh.items.return_item('parent.child'))
+
+    def test_delete_item_with_children_and_recursive_true_removes_both(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='parent')
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='parent.child')
+
+        self.controller.delete(id='parent', recursive='true')
+
+        self.assertIsNone(self.sh.items.return_item('parent'))
+        self.assertIsNone(self.sh.items.return_item('parent.child'))
+
+    def test_delete_invalid_recursive_param_returns_400(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            self.controller.add(id='new')
+
+        with self.assertRaises(cherrypy.HTTPError) as ctx:
+            self.controller.delete(id='new', recursive='not-a-bool')
+
+        self.assertEqual(ctx.exception.status, 400)
+
 
 class TestReferences(_Base):
     def test_references_finds_eval_reference(self):

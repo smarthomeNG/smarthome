@@ -579,10 +579,17 @@ class Items:
 
         return item
 
-    def remove_item(self, item, persist=True):
+    def remove_item(self, item, persist=True, recursive=False):
         """
         Function to remove an item from the dictionary of items
         and delete the item object.
+
+        An item with sub-items is left untouched (raises ValueError) unless
+        *recursive* is set — sub-items are not necessarily defined in the
+        same yaml file as their parent (each item tracks its own
+        ``_filename`` independently), so this can't be handled as a side
+        effect of removing the parent's own yaml node; every descendant is
+        removed individually, deepest first, each via its own source file.
 
         :param item: The item to delete
         :param persist: If True (default), also remove the item's entry
@@ -591,13 +598,28 @@ class Items:
                          Works for any item with a known source file, not
                          only ones created via create_item(persist=True) —
                          deliberately generic. No-op if the item has no
-                         known source file.
+                         known source file. Applies to every removed
+                         descendant too, each using its own source file.
+        :param recursive: If True, also remove every sub-item first
+                           (deepest first). If False (default) and *item*
+                           has sub-items, raises ValueError instead of
+                           removing anything.
         :type item: object
         :type persist: bool
+        :type recursive: bool
         """
 
         if item.property.path not in self.__items:
             return
+
+        children = list(item.return_children())
+        if children and not recursive:
+            raise ValueError(
+                f"Item '{item.property.path}' has {len(children)} sub-item(s) — set recursive to delete them too"
+            )
+
+        for child in children:
+            self.remove_item(child, persist=persist, recursive=True)
 
         path = item.property.path
         source_filename = item._filename
