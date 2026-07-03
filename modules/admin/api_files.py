@@ -203,7 +203,7 @@ class FilesController(RESTResource):
         """Return sorted list of .yaml files in the structs directory, plus the
         relative display path so the frontend can show the correct location
         regardless of whether --config-etc is active."""
-        filelist = sorted(fn for fn in os.listdir(self.structs_dir) if fn.endswith('.yaml'))
+        filelist = sorted(fn for fn in os.listdir(self.structs_dir) if fn.endswith('.yaml') and not fn.startswith('._'))
         rel_dir = './' + os.path.relpath(self.structs_dir, self.base_dir)
         self.logger.info('FilesController.get_structs_filelist(): dir={} files={}'.format(rel_dir, filelist))
         return json.dumps({'dir': rel_dir, 'files': filelist})
@@ -280,6 +280,8 @@ class FilesController(RESTResource):
         list = os.listdir(self.items_dir)
         filelist = []
         for filename in list:
+            if filename.startswith('._'):
+                continue
             if filename.endswith('.yaml'):
                 filelist.append(filename)
             if filename.endswith('.conf'):
@@ -337,6 +339,8 @@ class FilesController(RESTResource):
         list = os.listdir(self.scenes_dir)
         filelist = []
         for filename in list:
+            if filename.startswith('._'):
+                continue
             if filename.endswith('.yaml'):
                 filelist.append(filename)
             if filename.endswith('.conf'):
@@ -394,6 +398,8 @@ class FilesController(RESTResource):
         list = os.listdir(self.functions_dir)
         filelist = []
         for filename in list:
+            if filename.startswith('._'):
+                continue
             if filename.endswith('.py'):
                 filelist.append(filename)
 
@@ -515,6 +521,8 @@ class FilesController(RESTResource):
         list = os.listdir(self.logics_dir)
         filelist = []
         for filename in list:
+            if filename.startswith('._'):
+                continue
             if filename.endswith('.py'):
                 filelist.append(filename)
 
