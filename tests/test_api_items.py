@@ -178,6 +178,31 @@ class TestAdd(_Base):
         self.assertEqual(ctx.exception.status, 400)
         self.assertIsNone(self.sh.items.return_item('scheduler'))
 
+    def test_add_with_missing_parent_and_create_missing_parents_creates_the_whole_chain(self):
+        with self._post_body({'config': {'type': 'num'}, 'create_missing_parents': True}):
+            self.controller.add(id='a.b.c')
+
+        self.assertIsNotNone(self.sh.items.return_item('a'))
+        self.assertIsNotNone(self.sh.items.return_item('a.b'))
+        self.assertIsNotNone(self.sh.items.return_item('a.b.c'))
+
+    def test_add_create_missing_parents_defaults_to_off(self):
+        with self._post_body({'config': {'type': 'num'}}):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.add(id='a.b.c')
+
+        self.assertEqual(ctx.exception.status, 400)
+        self.assertIsNone(self.sh.items.return_item('a'))
+
+    def test_add_create_missing_parents_collision_returns_400_naming_the_ancestor(self):
+        with self._post_body({'config': {'type': 'num'}, 'create_missing_parents': True}):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                self.controller.add(id='scheduler.b.c')
+
+        self.assertEqual(ctx.exception.status, 400)
+        self.assertIn('scheduler', str(ctx.exception))
+        self.assertIsNone(self.sh.items.return_item('scheduler.b'))
+
 
 class TestRename(_Base):
     def _post_body_as_post_method(self, data):

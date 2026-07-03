@@ -172,12 +172,15 @@ class ItemsController(RESTResource, ItemData):
 
         Request body: JSON object with a "config" key (item attribute dict,
         same shape as a static item definition), and optionally "persist"
-        (bool, default True) and "filename" (str, default None — falls back
-        to Items.create_item()'s own default resolution).
+        (bool, default True), "filename" (str, default None — falls back to
+        Items.create_item()'s own default resolution), and
+        "create_missing_parents" (bool, default False).
 
         If id contains a dot, the part before the last dot is resolved as
-        the parent item — it must already exist, or this is a 400, not a
-        silent top-level fallback.
+        the parent item. By default it must already exist, or this is a
+        400 — not a silent top-level fallback. Set create_missing_parents
+        to auto-create the whole missing ancestor chain instead (each as an
+        empty item, same persist/filename as the requested item).
         """
         if id is None:
             raise cherrypy.HTTPError(400, 'Item path required')
@@ -191,20 +194,16 @@ class ItemsController(RESTResource, ItemData):
             config = data.get('config')
             persist = data.get('persist', True)
             filename = data.get('filename')
+            create_missing_parents = data.get('create_missing_parents', False)
         except (json.JSONDecodeError, AttributeError, TypeError):
             raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"config": ...}')
-
-        parent_path, _, _leaf = id.rpartition('.')
-        parent_item = None
-        if parent_path:
-            parent_item = self.items.return_item(parent_path)
-            if parent_item is None:
-                raise cherrypy.HTTPError(400, f"Parent item '{parent_path}' not found")
 
         self.logger.info(f'ItemsController POST /api/items/{id}: config={config!r}')
 
         try:
-            item = self.items.create_item(id, config, parent=parent_item, persist=persist, filename=filename)
+            item = self.items.create_item(
+                id, config, persist=persist, filename=filename, create_missing_parents=create_missing_parents
+            )
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
         if item is None:
