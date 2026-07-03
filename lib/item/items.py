@@ -341,7 +341,7 @@ class Items:
         """
         item_config = config
         if persist:
-            filename = filename or getattr(self._sh, '_created_items_file', 'created')
+            filename = filename or self._sh._created_items_file
             item_config = copy.deepcopy(config)
             # _add_filenames_to_config() sets '_filename' on dict *values* of
             # its argument, recursively - wrap item_config so it (and every
