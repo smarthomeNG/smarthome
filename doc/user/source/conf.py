@@ -96,7 +96,7 @@ shversion = shngversion.get_shng_main_version()
 # General information about the project.
 # project = u'SmartHomeNG'
 project = 'Dokumentation '
-copyright = '2016-2025 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
+copyright = '2016-2026 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The full version, including alpha/beta/rc tags.
 # release = '1.3a dev (as of 13. October 2017)'  13. October 2017 is replaced by makefile with a date in the form of '2. September 2017'
@@ -125,7 +125,7 @@ else:
 plgrelease = shngversion.get_shng_plugins_version()
 plgbranch = pluginsversion.plugin_branch()
 if plgbranch != 'master':
-    copyright = '2016-2025 SmartHomeNG Team  -  ACHTUNG: Dokumentation zum Develop Branch - Work in Progress'
+    copyright = '2016-2026 SmartHomeNG Team  -  ACHTUNG: Dokumentation zum Develop Branch - Work in Progress'
     plgrelease += ' ' + plgbranch
 version = plgrelease
 
@@ -163,6 +163,7 @@ exclude_patterns = [
     '**/_pv_*',
     '**/pv_*',
     '**/._*md',
+    '**/.pytest*',
 ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.

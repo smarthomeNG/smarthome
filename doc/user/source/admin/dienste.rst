@@ -130,7 +130,7 @@ dem Button **Ausgewählte Löschen** gelöscht werden.
 Userfunction Editor
 ===================
 
-Ab Version 1.9 von SmartHomeNG ist die Möglichkeit implementiert, benutzerdefinierte Funktionen (Userfunctions) zu
+In SmartHomeNG ist die Möglichkeit implementiert, benutzerdefinierte Funktionen (Userfunctions) zu
 schreiben und in eval Statements sowie in Logiken zu verwenden.
 
 Es steht ein Editor zum erstellen und bearbeiten von Userfunctions zur Verfügung. Dieser findet sich

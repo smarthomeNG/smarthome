@@ -6,7 +6,7 @@
 Items
 =====
 
-Unter **Items** können die in SmartHomeNG Eigenschaften der eingelesenen Items angezeigt werden. Außerdem können die zur
+Unter **Items** können die eingelesenen Items und ihre Eigenschaften angezeigt und bearbeitet werden. Außerdem können die zur
 Verfügung stehenden Itemstruktur-Templates angezeigt werden.
 
 
@@ -18,13 +18,13 @@ Item Baum
 =========
 
 Hier kann die Baum-Struktur der geladenen Items angezeigt werden. Außerdem können die Eigenschaften und Attribute eines
-ausgewählten Items angezeigt werden.
+ausgewählten Items angezeigt und bearbeitet werden.
 
 .. note::
 
     Die Baum-Struktur zeigt die in SmartHomeNG geladenen Items an. Wenn während der Laufzeit von SmartHomeNG Änderungen
-    an den Item Definitionen in den Konfigurationsdateien vorgenommen werden, so wird dieses hier bis zu einem Neustart
-    von SmartHomeNG nicht sichtbar.
+    **an den Item Definitionen in den Konfigurationsdateien** vorgenommen werden, so wird dieses hier bis zu einem Neustart
+    von SmartHomeNG nicht sichtbar. Änderungen, die über die hier angebotenen Funktionen erfolgen, sind unmittelbar sichtbar.
 
 
 .. image:: assets/items-itemtree.jpg
@@ -52,14 +52,14 @@ Item erstellen
 ~~~~~~~~~~~~~~~
 
 Beim Anlegen eines neuen Items kann ein vollständiger, mehrstufiger Item-Pfad angegeben werden. Fehlende
-übergeordnete Items werden dabei automatisch als leere Items angelegt (wie ``mkdir -p``).
+übergeordnete Items werden dabei automatisch als leere Items angelegt.
 
 Item bearbeiten
 ~~~~~~~~~~~~~~~~
 
 Der Bearbeiten-Dialog zeigt die vollständige Attribut-Konfiguration des Items zur Bearbeitung an. Beim
 Speichern wird die komplette Konfiguration des Items ersetzt: Wird ein zuvor vorhandenes Attribut im Dialog
-entfernt, wird es beim Speichern auf seinen Standardwert zurückgesetzt, nicht nur unverändert belassen.
+entfernt, ist es danach nicht mehr vorhanden.
 
 Item umbenennen / verschieben
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
