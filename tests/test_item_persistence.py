@@ -164,6 +164,63 @@ class TestRemoveItemPersist(_Base):
         yf.save()
 
 
+class TestRemoveItemRecursive(_Base):
+    def test_removing_an_item_with_children_without_recursive_raises(self):
+        parent = self.sh.items.create_item('parent', {'type': 'num', 'child': {'type': 'num'}})
+
+        with self.assertRaises(ValueError):
+            self.sh.items.remove_item(parent)
+
+        self.assertIsNotNone(self.sh.items.return_item('parent'))
+        self.assertIsNotNone(self.sh.items.return_item('parent.child'))
+
+    def test_removing_recursively_removes_parent_and_every_descendant(self):
+        parent = self.sh.items.create_item(
+            'parent', {'type': 'num', 'child': {'type': 'num', 'grandchild': {'type': 'num'}}}
+        )
+
+        self.sh.items.remove_item(parent, recursive=True)
+
+        self.assertIsNone(self.sh.items.return_item('parent'))
+        self.assertIsNone(self.sh.items.return_item('parent.child'))
+        self.assertIsNone(self.sh.items.return_item('parent.child.grandchild'))
+
+    def test_removing_recursively_persists_removal_of_every_descendant(self):
+        self.sh.items.create_item('parent', {'type': 'num', 'child': {'type': 'num', 'grandchild': {'type': 'num'}}})
+        parent = self.sh.items.return_item('parent')
+
+        self.sh.items.remove_item(parent, recursive=True)
+
+        data = self._read_file('created')
+        self.assertNotIn('parent', data)
+
+    def test_removing_recursively_cleans_up_a_child_persisted_to_a_different_file_than_its_parent(self):
+        parent = self.sh.items.create_item('parent', {'type': 'num'}, filename='parentfile')
+        child = self.sh.items.create_item('parent.child', {'type': 'num'}, parent=parent, filename='childfile')
+        self.assertEqual(child._filename, 'childfile')
+
+        self.sh.items.remove_item(parent, recursive=True)
+
+        self.assertNotIn('parent', self._read_file('parentfile'))
+        # childfile only ever held the nested 'parent.child' path — 'parent'
+        # itself is just a structural bridge here, never a real item entry
+        # in this file, so removing the nested path value.setvalue(None)s it
+        # rather than removing the 'parent' key outright (same shyaml
+        # behavior as a nested-path edit anywhere else in this codebase).
+        self.assertIsNone(self._read_file('childfile').get('parent'))
+
+    def test_removing_recursively_with_persist_false_writes_nothing(self):
+        self.sh.items.create_item('parent', {'type': 'num', 'child': {'type': 'num'}})
+
+        self.sh.items.remove_item(self.sh.items.return_item('parent'), persist=False, recursive=True)
+
+        # 'created' still exists (created by create_item's persist=True
+        # above) but the entry itself must remain untouched by a
+        # persist=False removal.
+        data = self._read_file('created')
+        self.assertIn('parent', data)
+
+
 class TestPersistencePreservesComments(_Base):
     def test_existing_comment_survives_create_item(self):
         path = self._file_path('created')

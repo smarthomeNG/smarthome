@@ -169,6 +169,7 @@ class SmartHome:
 
         self._config_etc = False
         self._legacy_instances = True
+        self._orb_backend = 'ephem'
 
         # if set: create items with illegal named and warn, but go on
         # else: refuse to create items with illegal names
@@ -582,13 +583,23 @@ class SmartHome:
         else:
             self._sun_neverup_delta = 0.00001
 
-        if lib.orb.ephem is None:
-            self._logger.warning('Could not find/use ephem!')
+        # orb_backend: which ephemeris library lib.orb.Orb uses ('ephem' or 'skyfield').
+        # Default set in initialize_vars(), overridden by smarthome.yaml if present.
+        if self._orb_backend not in lib.orb._BACKENDS:
+            if self._orb_backend.startswith('skyfield') and lib.orb.Loader is None:
+                self._logger.warning(
+                    f"Could not find/use ephemeris backend '{self._orb_backend}' - skyfield is not installed. "
+                    f"Run 'tools/fetch_skyfield_data.py' once to install it."
+                )
+            else:
+                self._logger.warning(f"Could not find/use ephemeris backend '{self._orb_backend}'!")
         elif not (hasattr(self, '_lon') and hasattr(self, '_lat')):
             self._logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
         else:
-            self.sun = lib.orb.Orb('sun', self._lon, self._lat, self._elev, self._sun_neverup_delta)
-            self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev)
+            self.sun = lib.orb.Orb(
+                'sun', self._lon, self._lat, self._elev, self._sun_neverup_delta, backend=self._orb_backend
+            )
+            self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev, backend=self._orb_backend)
 
     @property
     def lat(self) -> float:

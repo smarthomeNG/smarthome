@@ -172,12 +172,15 @@ class ItemsController(RESTResource, ItemData):
 
         Request body: JSON object with a "config" key (item attribute dict,
         same shape as a static item definition), and optionally "persist"
-        (bool, default True) and "filename" (str, default None — falls back
-        to Items.create_item()'s own default resolution).
+        (bool, default True), "filename" (str, default None — falls back to
+        Items.create_item()'s own default resolution), and
+        "create_missing_parents" (bool, default False).
 
         If id contains a dot, the part before the last dot is resolved as
-        the parent item — it must already exist, or this is a 400, not a
-        silent top-level fallback.
+        the parent item. By default it must already exist, or this is a
+        400 — not a silent top-level fallback. Set create_missing_parents
+        to auto-create the whole missing ancestor chain instead (each as an
+        empty item, same persist/filename as the requested item).
         """
         if id is None:
             raise cherrypy.HTTPError(400, 'Item path required')
@@ -191,20 +194,16 @@ class ItemsController(RESTResource, ItemData):
             config = data.get('config')
             persist = data.get('persist', True)
             filename = data.get('filename')
+            create_missing_parents = data.get('create_missing_parents', False)
         except (json.JSONDecodeError, AttributeError, TypeError):
             raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"config": ...}')
-
-        parent_path, _, _leaf = id.rpartition('.')
-        parent_item = None
-        if parent_path:
-            parent_item = self.items.return_item(parent_path)
-            if parent_item is None:
-                raise cherrypy.HTTPError(400, f"Parent item '{parent_path}' not found")
 
         self.logger.info(f'ItemsController POST /api/items/{id}: config={config!r}')
 
         try:
-            item = self.items.create_item(id, config, parent=parent_item, persist=persist, filename=filename)
+            item = self.items.create_item(
+                id, config, persist=persist, filename=filename, create_missing_parents=create_missing_parents
+            )
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
         if item is None:
@@ -265,13 +264,17 @@ class ItemsController(RESTResource, ItemData):
     # ======================================================================
     #  DELETE /api/items/{item_path}
     #
-    def delete(self, id=None, persist=None):
+    def delete(self, id=None, persist=None, recursive=None):
         """
         Handle DELETE requests — remove an item at runtime.
 
         :param persist: Optional query parameter ('true'/'false', default
                          True if omitted) — whether to also remove the
                          item's entry from its source yaml file.
+        :param recursive: Optional query parameter ('true'/'false', default
+                         False if omitted) — an item with sub-items is
+                         rejected with a 400 unless this is set, in which
+                         case every sub-item is removed too.
 
         Deliberately a query parameter, not a JSON request body: DELETE
         isn't in cherrypy's default `methods_with_bodies`
@@ -300,10 +303,19 @@ class ItemsController(RESTResource, ItemData):
             except Exception:
                 raise cherrypy.HTTPError(400, "Invalid 'persist' parameter — expected true/false")
 
-        self.logger.info(f'ItemsController DELETE /api/items/{id}: persist={persist_value!r}')
+        recursive_value = False
+        if recursive is not None:
+            try:
+                recursive_value = Utils.to_bool(recursive)
+            except Exception:
+                raise cherrypy.HTTPError(400, "Invalid 'recursive' parameter — expected true/false")
+
+        self.logger.info(
+            f'ItemsController DELETE /api/items/{id}: persist={persist_value!r} recursive={recursive_value!r}'
+        )
 
         try:
-            self.items.remove_item(item, persist=persist_value)
+            self.items.remove_item(item, persist=persist_value, recursive=recursive_value)
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
         return json.dumps({'result': 'ok'})

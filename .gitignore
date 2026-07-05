@@ -19,6 +19,7 @@ test.cache
 
 # Type checker / static analysis
 pyrightconfig.json
+/typings/
 
 # PyCharm
 *.srctrl*

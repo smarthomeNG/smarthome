@@ -10,6 +10,15 @@ Dieses Objekt bietet Zugriff auf Parameter der Sonne. Um dieses Objekt zu verwen
 den Breitengrad (latitude, z.B. lat: 53.5989481) und den Längengrad (longitude z.B. lon: 10.0459898),
 sowie die Höhe über dem Meeresspiegel (elevation z.B.: elev: 20) in der Datei ``etc/smarthome.yaml`` anzugeben.
 
+.. note::
+
+   Die Berechnungen für ``sh.sun`` und ``sh.moon`` werden intern von einer austauschbaren
+   Ephemeriden-Bibliothek durchgeführt. Standardmäßig wird **ephem** verwendet. Optional kann in
+   ``etc/smarthome.yaml`` mit ``orb_backend: skyfield`` auf die Bibliothek **skyfield** umgeschaltet
+   werden. Vor der ersten Verwendung von skyfield muss einmalig ``tools/fetch_skyfield_data.py``
+   ausgeführt werden, um die benötigten Ephemeriden-Daten (~17MB, gültig bis 2053) herunterzuladen -
+   danach ist kein Netzwerkzugriff mehr erforderlich.
+
 
 sh.sun.pos()
 ~~~~~~~~~~~~

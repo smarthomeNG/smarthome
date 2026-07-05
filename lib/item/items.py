@@ -305,7 +305,7 @@ class Items:
 
         return child
 
-    def create_item(self, path, config, parent=None, persist=True, filename=None):
+    def create_item(self, path, config, parent=None, persist=True, filename=None, create_missing_parents=False):
         """
         Create a single item at runtime and fully initialize it (and any
         nested child items declared in *config*).
@@ -318,10 +318,18 @@ class Items:
         new item is *not* retroactively rewired — that would require
         re-running _init_prerun() across the whole tree on every creation.
 
+        If *parent* is not given and *path* has a dotted parent segment,
+        that parent is resolved by path. A missing parent raises ValueError
+        unless *create_missing_parents* is set, in which case every missing
+        ancestor is created first (in order, shallow to deep) as an empty
+        item — same as calling create_item() on each of them individually
+        with an empty config.
+
         :param path: Full path of the item to create
         :param config: Attribute configuration dict for the item
-        :param parent: Item under which to create this item; None for a
-                        top-level item
+        :param parent: Item under which to create this item; None to
+                        resolve the parent from *path* (or for a top-level
+                        item, if *path* has no dot)
         :param persist: If True (default), also write *config* to a yaml
                          file in items_dir, so the item survives a restart.
                          If False, the item is runtime-only, same as before
@@ -329,16 +337,42 @@ class Items:
         :param filename: Basename (without extension) of the yaml file to
                           persist to. Only used when persist is True; falls
                           back to ``sh._created_items_file`` if not given.
+                          Auto-created missing parents use the same
+                          persist/filename as *path* itself.
+        :param create_missing_parents: If True, auto-create any missing
+                          ancestor of *path* (as an empty item) instead of
+                          raising ValueError.
         :type path: str
         :type config: dict
         :type persist: bool
         :type filename: str
+        :type create_missing_parents: bool
 
-        :return: The newly created Item, or None if its name collided with
-                 an existing attribute and was dropped — see
-                 lib.item._internal._parsing.check_item_name_collision()
+        :return: The newly created Item, or None if its own name collided
+                 with an existing attribute and was dropped — see
+                 lib.item._internal._parsing.check_item_name_collision().
+                 A collision on an auto-created ancestor instead raises
+                 ValueError, since silently dropping just an ancestor would
+                 leave the requested item never created but reported as if
+                 the failure were about *path* itself.
         :rtype: Item or None
         """
+        if parent is None:
+            parent_path, sep, _leaf = path.rpartition('.')
+            if sep:
+                parent = self.return_item(parent_path)
+                if parent is None:
+                    if not create_missing_parents:
+                        raise ValueError(f"Parent item '{parent_path}' not found")
+                    parent = self.create_item(
+                        parent_path, {}, persist=persist, filename=filename, create_missing_parents=True
+                    )
+                    if parent is None:
+                        raise ValueError(
+                            f"Could not auto-create missing parent '{parent_path}': "
+                            'its name collides with an existing attribute'
+                        )
+
         item_config = config
         if persist:
             filename = filename or self._sh._created_items_file
@@ -545,10 +579,17 @@ class Items:
 
         return item
 
-    def remove_item(self, item, persist=True):
+    def remove_item(self, item, persist=True, recursive=False):
         """
         Function to remove an item from the dictionary of items
         and delete the item object.
+
+        An item with sub-items is left untouched (raises ValueError) unless
+        *recursive* is set — sub-items are not necessarily defined in the
+        same yaml file as their parent (each item tracks its own
+        ``_filename`` independently), so this can't be handled as a side
+        effect of removing the parent's own yaml node; every descendant is
+        removed individually, deepest first, each via its own source file.
 
         :param item: The item to delete
         :param persist: If True (default), also remove the item's entry
@@ -557,13 +598,28 @@ class Items:
                          Works for any item with a known source file, not
                          only ones created via create_item(persist=True) —
                          deliberately generic. No-op if the item has no
-                         known source file.
+                         known source file. Applies to every removed
+                         descendant too, each using its own source file.
+        :param recursive: If True, also remove every sub-item first
+                           (deepest first). If False (default) and *item*
+                           has sub-items, raises ValueError instead of
+                           removing anything.
         :type item: object
         :type persist: bool
+        :type recursive: bool
         """
 
         if item.property.path not in self.__items:
             return
+
+        children = list(item.return_children())
+        if children and not recursive:
+            raise ValueError(
+                f"Item '{item.property.path}' has {len(children)} sub-item(s) — set recursive to delete them too"
+            )
+
+        for child in children:
+            self.remove_item(child, persist=persist, recursive=True)
 
         path = item.property.path
         source_filename = item._filename

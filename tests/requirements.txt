@@ -27,6 +27,12 @@ beautifulsoup4>=4.1.0
 # testing with pytest
 pytest>=3.6.0
 
+# lib.orb's opt-in skyfield backend (orb_backend: skyfield) is deliberately not
+# in lib/requirements.txt (not auto-installed for every user - see the comment
+# there), but the test suite parametrizes lib.orb's characterization tests
+# against both backends, so it's needed here to get full coverage in CI/dev.
+skyfield>=1.49,<2.0.0
+
 # used by tests/mock/core.py:
 #python-dateutil
 
