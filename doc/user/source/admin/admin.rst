@@ -43,7 +43,6 @@ nur, wenn das im Browser gespeicherte Token abläuft. Die Lebensdauer des Token 
 **Admin Modul** konfigurierbar.
 
 
-
 .. toctree::
    :maxdepth: 4
    :hidden:
@@ -58,5 +57,21 @@ nur, wenn das im Browser gespeicherte Token abläuft. Die Lebensdauer des Token 
    scenes
    threads
    logs
+
+
+.. index:: Hilfe
+.. index:: Admin GUI; Hilfe
+
+Hilfe
+-----
+
+Neben dem Abmelde-Button findet sich ein **Hilfe** Eintrag, der die zur aktuell angezeigten Seite passende
+Dokumentation in einem neuen Tab öffnet.
+
+Falls auf dem Server lokal gebaute Dokumentation vorliegt (``doc/user/build/html``), wird zusätzlich zur
+offiziellen Online-Dokumentation ein Link auf die lokale Dokumentation angeboten. Falls SmartHomeNG bzw. die
+Plugins auf einem anderen Branch als **master** laufen, wird zusätzlich ein Link auf die Dokumentation des
+**develop**-Branches angeboten (nicht auf die Dokumentation des tatsächlich laufenden Branches — diese wird
+per GitHub-Workflow ausschließlich aus dem develop-Branch generiert).
 
 

@@ -14,3 +14,9 @@ sowie Einstellungen zu Ausführungszyklus und Crontab angezeigt werden.
    :class: screenshot
 
 
+.. index:: Scheduler; Entwicklermodus
+
+Im **Entwicklermodus** (einstellbar unter System/Konfiguration im Tab Admin Modul) werden zusätzlich die Spalten
+**Task-Typ** und **Task-Name** angezeigt, beim Tab für getriggerte Scheduler zusätzlich auch **Ausgelöst durch**.
+
+

@@ -2,6 +2,10 @@
   "APP": {
     "SERVER_CONNECTING": "Connecting to server…"
   },
+  "THEME": {
+    "SWITCH_TO_DARK": "Switch to dark mode",
+    "SWITCH_TO_LIGHT": "Switch to light mode"
+  },
   "MENU": {
     "SYSTEM": "System",
     "SYSTEM_PROPERTIES": "System Properties",
@@ -28,7 +32,11 @@
     "LOGS_DISPLAY": "Display Logs",
     "LOGGER_CONFIGURATION": "Logger Configuration",
     "LOGGING_CONFIGURATION": "Expert Logging Configuration",
-    "LOGIN": "Login"
+    "LOGIN": "Login",
+    "HELP": "Help",
+    "HELP_LOCAL": "Help (local)",
+    "HELP_OFFICIAL": "Help (official)",
+    "HELP_DEVELOP": "Help (develop branch)"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Systeminfo",
@@ -251,6 +259,7 @@
     "DELETE_PERSIST": "Also remove from configuration file",
     "DELETE_PERSIST_WARNING": "The item will stay in {{filename}} but SmartHomeNG won't know about it until restarted — re-creating the same item before then may not work as expected.",
     "DELETE_CONFIRM": "Do you really want to delete item",
+    "DELETE_CONFIRM_CHILDREN": "This item has {{count}} sub-item(s), which will also be deleted",
     "REFERENCE_CHECK_FAILED": "Could not check for references to this item — please review manually before deleting.",
     "REFERENCE_CHECK_RUNNING": "Checking for references to this item...",
     "NO_REFERENCES_FOUND": "No references to this item were found in other items.",
@@ -283,6 +292,7 @@
     "MISSING_PARENTS_INTRO": "The new path requires these parent items, which don't exist yet:",
     "MISSING_PARENTS_QUESTION": "Create them now as empty structural items, then continue with the rename?",
     "MISSING_PARENTS_CREATE": "Create and continue",
+    "CREATE_WITH_PATH_BUTTON": "Create with Path",
     "ERROR": "Error",
     "DELETE_SUCCESS_TITLE": "Item deleted",
     "DELETE_FAILED": "Could not delete item",
