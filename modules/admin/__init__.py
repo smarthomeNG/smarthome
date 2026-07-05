@@ -113,6 +113,7 @@ class Admin(Module):
             self.developer_mode = self._parameters['developer_mode']
             self.rest_dispatch_force_exception = self._parameters['rest_dispatch_force_exception']
             self.click_dropdown_header = self._parameters['click_dropdown_header']
+            self.dark_mode = self._parameters['dark_mode']
         except Exception:
             self.logger.critical(
                 "Module '{}': Inconsistent module (invalid metadata definition)".format(self._shortname)

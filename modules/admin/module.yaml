@@ -106,3 +106,13 @@ parameters:
             de: 'Click auf Kopfeintrag von Dropdown Menüs erlauben'
             en: 'Allow click on header of dropdown menus'
 
+    dark_mode:
+        type: bool
+        gui_type: on_off
+        default: False
+        description:
+            de: 'Dark Mode als Standard für das Administrations-Interface aktivieren (kann pro Browser über den
+                 Schalter in der Navigationsleiste übersteuert werden)'
+            en: 'Activate dark mode as the default for the admin interface (can be overridden per browser via the
+                 toggle in the navigation bar)'
+
