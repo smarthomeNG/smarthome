@@ -38,6 +38,13 @@ try:
 except ImportError:
     HAS_EPHEM = False
 
+try:
+    from skyfield.api import Loader as _skyfield_loader_check
+
+    HAS_SKYFIELD = True
+except ImportError:
+    HAS_SKYFIELD = False
+
 from lib.orb import Orb
 from lib.shtime import Shtime
 
@@ -93,6 +100,25 @@ class TestOrbInit(unittest.TestCase):
         orb = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
         self.assertEqual(orb.orb, 'sun')
 
+    def test_ephem_backend_used_by_default(self):
+        orb = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
+        from lib.orb import _EphemBackend
+
+        self.assertIsInstance(orb._backend, _EphemBackend)
+
+    def test_unknown_backend_warns_and_leaves_orb_unconfigured(self):
+        orb = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend='nonexistent')
+        # Orb.__init__ returns early for an unregistered backend name, same as
+        # the historical "ephem not installed" case.
+        self.assertFalse(hasattr(orb, 'orb'))
+
+    @unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+    def test_skyfield_backend_selectable(self):
+        orb = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend='skyfield')
+        from lib.orb import _SkyfieldBackend
+
+        self.assertIsInstance(orb._backend, _SkyfieldBackend)
+
     def test_moon_object_created(self):
         orb = Orb('moon', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
         self.assertEqual(orb.orb, 'moon')
@@ -116,10 +142,11 @@ class TestSunRiseSet(unittest.TestCase):
     """Sunrise and sunset times against published USNO values (±10 min)."""
 
     TOLERANCE = datetime.timedelta(minutes=10)
+    BACKEND = 'ephem'
 
     def setUp(self):
         self.shtime = _make_shtime()
-        self.sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
+        self.sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend=self.BACKEND)
 
     def test_summer_solstice_sunrise_approx(self):
         # pyephem computes Berlin sunrise on 2024-06-21 ≈ 02:43 UTC.
@@ -172,11 +199,27 @@ class TestSunRiseSet(unittest.TestCase):
         self.assertAlmostEqual(diff.total_seconds() / 60, 30, delta=1)
 
 
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestSunRiseSetSkyfield(TestSunRiseSet):
+    """Same characterization suite as TestSunRiseSet, against the skyfield backend."""
+
+    BACKEND = 'skyfield'
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestSunRiseSetSkyfieldCached(TestSunRiseSet):
+    """Same characterization suite again, against the cached skyfield backend."""
+
+    BACKEND = 'skyfield-cached'
+
+
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
 class TestSolarNoon(unittest.TestCase):
+    BACKEND = 'ephem'
+
     def setUp(self):
         self.shtime = _make_shtime()
-        self.sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
+        self.sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend=self.BACKEND)
 
     def test_noon_approx_time(self):
         # pyephem computes Berlin solar noon on 2024-06-21 ≈ 11:08 UTC.
@@ -200,11 +243,23 @@ class TestSolarNoon(unittest.TestCase):
         self.assertIsNotNone(result.tzinfo)
 
 
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestSolarNoonSkyfield(TestSolarNoon):
+    BACKEND = 'skyfield'
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestSolarNoonSkyfieldCached(TestSolarNoon):
+    BACKEND = 'skyfield-cached'
+
+
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
 class TestSolarPosition(unittest.TestCase):
+    BACKEND = 'ephem'
+
     def setUp(self):
         self.shtime = _make_shtime()
-        self.sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
+        self.sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend=self.BACKEND)
 
     def test_pos_returns_two_values(self):
         result = self.sun.pos(dt=_SUMMER_SOLSTICE)
@@ -241,11 +296,23 @@ class TestSolarPosition(unittest.TestCase):
         self.assertLessEqual(el_deg, 90)
 
 
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestSolarPositionSkyfield(TestSolarPosition):
+    BACKEND = 'skyfield'
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestSolarPositionSkyfieldCached(TestSolarPosition):
+    BACKEND = 'skyfield-cached'
+
+
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
 class TestMoon(unittest.TestCase):
+    BACKEND = 'ephem'
+
     def setUp(self):
         self.shtime = _make_shtime()
-        self.moon = Orb('moon', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
+        self.moon = Orb('moon', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend=self.BACKEND)
 
     def test_moon_rise_returns_datetime(self):
         result = self.moon.rise(dt=_SUMMER_SOLSTICE)
@@ -272,6 +339,16 @@ class TestMoon(unittest.TestCase):
         self.assertIsInstance(result, int)
         self.assertGreaterEqual(result, 0)
         self.assertLessEqual(result, 100)
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestMoonSkyfield(TestMoon):
+    BACKEND = 'skyfield'
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestMoonSkyfieldCached(TestMoon):
+    BACKEND = 'skyfield-cached'
 
 
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
@@ -334,9 +411,11 @@ class TestCoordinateConversionsUseConfiguredTz(unittest.TestCase):
 
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
 class TestEquinox(unittest.TestCase):
+    BACKEND = 'ephem'
+
     def setUp(self):
         self.shtime = _make_shtime()
-        self.sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
+        self.sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend=self.BACKEND)
 
     def test_equinox_day_length_close_to_twelve_hours(self):
         # True day/night equality ("equilux") happens a few days after the
@@ -360,6 +439,16 @@ class TestEquinox(unittest.TestCase):
         self.assertLessEqual(diff, datetime.timedelta(minutes=15))
 
 
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestEquinoxSkyfield(TestEquinox):
+    BACKEND = 'skyfield'
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestEquinoxSkyfieldCached(TestEquinox):
+    BACKEND = 'skyfield-cached'
+
+
 # ===========================================================================
 # Moon rise/set sanity (only phase/light were characterized before)
 # ===========================================================================
@@ -367,9 +456,11 @@ class TestEquinox(unittest.TestCase):
 
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
 class TestMoonRiseSet(unittest.TestCase):
+    BACKEND = 'ephem'
+
     def setUp(self):
         self.shtime = _make_shtime()
-        self.moon = Orb('moon', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
+        self.moon = Orb('moon', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend=self.BACKEND)
 
     def test_moon_rise_is_utc_aware(self):
         result = self.moon.rise(dt=_SPRING_EQUINOX)
@@ -396,6 +487,16 @@ class TestMoonRiseSet(unittest.TestCase):
         self.assertAlmostEqual(diff.total_seconds() / 60, 30, delta=1)
 
 
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestMoonRiseSetSkyfield(TestMoonRiseSet):
+    BACKEND = 'skyfield'
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestMoonRiseSetSkyfieldCached(TestMoonRiseSet):
+    BACKEND = 'skyfield-cached'
+
+
 # ===========================================================================
 # High-latitude (midnight sun / polar night) regression tests
 #
@@ -403,14 +504,20 @@ class TestMoonRiseSet(unittest.TestCase):
 # ephem.AlwaysUpError/NeverUpError at any location where the sun's plain
 # horizon crossing genuinely does not occur on the given day. _avoid_neverup
 # only clamps non-zero degree offsets, so this path had no protection.
+#
+# The skyfield variant exercises the *different* mechanism that backend uses
+# to signal "no event": checking the find_risings()/find_settings() events
+# flag rather than catching an ephem-specific exception.
 # ===========================================================================
 
 
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
 class TestHighLatitudeNeverUp(unittest.TestCase):
+    BACKEND = 'ephem'
+
     def setUp(self):
         self.shtime = _make_shtime()
-        self.sun = Orb('sun', TROMSO_LON, TROMSO_LAT, TROMSO_ELEV)
+        self.sun = Orb('sun', TROMSO_LON, TROMSO_LAT, TROMSO_ELEV, backend=self.BACKEND)
 
     def test_midnight_sun_rise_returns_none_not_raises(self):
         # Tromsø, summer solstice: sun never sets, so it never "rises" either
@@ -449,6 +556,94 @@ class TestHighLatitudeNeverUp(unittest.TestCase):
         self.assertIsInstance(rise, datetime.datetime)
         self.assertIsInstance(sset, datetime.datetime)
         self.assertLess(rise, sset)
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestHighLatitudeNeverUpSkyfield(TestHighLatitudeNeverUp):
+    BACKEND = 'skyfield'
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestHighLatitudeNeverUpSkyfieldCached(TestHighLatitudeNeverUp):
+    BACKEND = 'skyfield-cached'
+
+
+# ===========================================================================
+# Correctness: the cached backend must agree with the uncached one exactly.
+# The cache batches a whole year of events and bisects into it instead of
+# running a fresh search per call - these tests catch the bug we found while
+# building it (a circumpolar query returning the next *real* event months
+# away instead of None - see _SkyfieldCachedBackend.SAME_CIRCUIT_DAYS).
+# ===========================================================================
+
+
+@unittest.skipUnless(HAS_SKYFIELD, 'skyfield not installed')
+class TestSkyfieldCachedMatchesUncached(unittest.TestCase):
+    def setUp(self):
+        self.shtime = _make_shtime()
+        self.sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend='skyfield')
+        self.sun_cached = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend='skyfield-cached')
+        self.moon = Orb('moon', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend='skyfield')
+        self.moon_cached = Orb('moon', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend='skyfield-cached')
+        self.tromso_sun = Orb('sun', TROMSO_LON, TROMSO_LAT, TROMSO_ELEV, backend='skyfield')
+        self.tromso_sun_cached = Orb('sun', TROMSO_LON, TROMSO_LAT, TROMSO_ELEV, backend='skyfield-cached')
+
+    def test_sun_rise_matches_across_several_dates(self):
+        for dt in (_SUMMER_SOLSTICE, _WINTER_SOLSTICE, _SPRING_EQUINOX):
+            with self.subTest(dt=dt):
+                self.assertEqual(self.sun.rise(dt=dt), self.sun_cached.rise(dt=dt))
+
+    def test_sun_set_matches_across_several_dates(self):
+        for dt in (_SUMMER_SOLSTICE, _WINTER_SOLSTICE, _SPRING_EQUINOX):
+            with self.subTest(dt=dt):
+                self.assertEqual(self.sun.set(dt=dt), self.sun_cached.set(dt=dt))
+
+    def test_sun_rise_matches_repeated_calls_across_consecutive_days(self):
+        # exercises the cache hit path (second+ call for the same doff)
+        dt = _SUMMER_SOLSTICE
+        for _ in range(5):
+            with self.subTest(dt=dt):
+                self.assertEqual(self.sun.rise(dt=dt), self.sun_cached.rise(dt=dt))
+            dt = self.sun.rise(dt=dt) + datetime.timedelta(seconds=1)
+
+    def test_noon_midnight_match(self):
+        self.assertEqual(self.sun.noon(dt=_SUMMER_SOLSTICE), self.sun_cached.noon(dt=_SUMMER_SOLSTICE))
+        self.assertEqual(self.sun.midnight(dt=_WINTER_SOLSTICE), self.sun_cached.midnight(dt=_WINTER_SOLSTICE))
+
+    def test_moon_rise_set_match(self):
+        self.assertEqual(self.moon.rise(dt=_SPRING_EQUINOX), self.moon_cached.rise(dt=_SPRING_EQUINOX))
+        self.assertEqual(self.moon.set(dt=_SPRING_EQUINOX), self.moon_cached.set(dt=_SPRING_EQUINOX))
+
+    def test_circumpolar_none_matches(self):
+        # the actual bug this test suite exists to catch: the cached backend
+        # must return None here too, not the next real event months away.
+        self.assertIsNone(self.tromso_sun.rise(dt=_SUMMER_SOLSTICE))
+        self.assertIsNone(self.tromso_sun_cached.rise(dt=_SUMMER_SOLSTICE))
+        self.assertIsNone(self.tromso_sun.set(dt=_SUMMER_SOLSTICE))
+        self.assertIsNone(self.tromso_sun_cached.set(dt=_SUMMER_SOLSTICE))
+        self.assertIsNone(self.tromso_sun.rise(dt=_WINTER_SOLSTICE))
+        self.assertIsNone(self.tromso_sun_cached.rise(dt=_WINTER_SOLSTICE))
+
+    def test_circumpolar_equinox_still_matches(self):
+        # away from the solstices, Tromsø has normal events again - the cache
+        # must resolve these via the proximity check too, not just return None.
+        self.assertEqual(self.tromso_sun.rise(dt=_SPRING_EQUINOX), self.tromso_sun_cached.rise(dt=_SPRING_EQUINOX))
+        self.assertEqual(self.tromso_sun.set(dt=_SPRING_EQUINOX), self.tromso_sun_cached.set(dt=_SPRING_EQUINOX))
+
+    def test_query_at_cache_window_boundary_is_not_a_false_none(self):
+        # Regression test: a query landing exactly at the cached window's end
+        # must not be mistaken for "confirmed no event" - that's just where the
+        # search stopped, not proof nothing exists just beyond it (found via
+        # 1000 sequential daily queries at Berlin - never circumpolar - wrongly
+        # returning None right at each yearly cache-refill boundary). Use a
+        # short CACHE_HORIZON_DAYS to hit the boundary deterministically
+        # without iterating a full year.
+        self.sun_cached._backend.CACHE_HORIZON_DAYS = 3
+        self.sun_cached.rise(dt=_SUMMER_SOLSTICE)  # populates the cache, covered_end = +3 days
+        boundary = _SUMMER_SOLSTICE + datetime.timedelta(days=3)
+        result = self.sun_cached.rise(dt=boundary)
+        self.assertIsNotNone(result)
+        self.assertEqual(result, self.sun.rise(dt=boundary))
 
 
 if __name__ == '__main__':
