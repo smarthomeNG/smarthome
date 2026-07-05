@@ -207,6 +207,9 @@ class SystemController(RESTResource):
 
         # SmartHomeNG
         response['sh_dir'] = self._sh.base_dir
+        response['help_local_available'] = os.path.isfile(
+            os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html', 'index.html')
+        )
         response['core_branch'] = shngversion.get_shng_branch()
         response['sh_vers'] = shngversion.get_shng_version()
         response['sh_desc'] = shngversion.get_shng_description()

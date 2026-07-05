@@ -265,6 +265,19 @@ class Admin(Module):
                 'tools.staticfile.filename': license_file,
             }
 
+        # Local user documentation (doc/user/build/html), if it's been
+        # built for this install — self._sh.get_basedir() so this works on
+        # any install rather than a fixed path. api_system.py's info()
+        # reports whether this exists, so the frontend can offer a "local
+        # help" link only when it does.
+        help_dir = os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html')
+        if os.path.isfile(os.path.join(help_dir, 'index.html')) and '' in cherrypy.tree.apps:
+            cherrypy.tree.apps[''].config['/help'] = {
+                'tools.staticdir.on': True,
+                'tools.staticdir.dir': help_dir,
+                'tools.staticdir.index': 'index.html',
+            }
+
     def stop(self):
         """ """
         self.logger.dbghigh(self.translate("Methode '{method}' aufgerufen", {'method': 'stop()'}))

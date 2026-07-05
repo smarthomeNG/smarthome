@@ -148,6 +148,9 @@ class ServerController(RESTResource):
         response['log_chunksize'] = self.module.log_chunksize
         response['developer_mode'] = self.module.developer_mode
         response['click_dropdown_header'] = self.module.click_dropdown_header
+        response['help_local_available'] = os.path.isfile(
+            os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html', 'index.html')
+        )
 
         response['daemon_knx'] = self.get_knx_daemon()
         response['daemon_ow'] = self.get_1wire_daemon()
