@@ -122,6 +122,17 @@ sind.
    :class: screenshot
 
 
+.. index:: Konfiguration; websocket Modul
+.. index:: websocket Modul; Konfiguration (Admin GUI)
+
+Websocket Modul
+===============
+
+Im Tab für das websocket Modul werden die Einstellungen für das websocket Modul konfiguriert. Es handelt sich
+hierbei um die Einstellungen, die in der Konfigurationsdatei ``etc/module.yaml`` im Abschnitt **websocket:**
+abgelegt sind.
+
+
 .. index:: Konfiguration; admin Modul
 .. index:: admin Modul; Konfiguration
 

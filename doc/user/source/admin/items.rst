@@ -37,6 +37,48 @@ auch eingestellt werden, ab wieviel eingegebenen Zeichen die Suche beginnen soll
 In den rechts angezeigten Item Informationen kann der Wert des Items live angepasst werden.
 
 
+.. index:: Items; Item erstellen
+.. index:: Items; Item bearbeiten
+.. index:: Items; Item umbenennen
+.. index:: Items; Item löschen
+
+Item erstellen, bearbeiten, umbenennen und löschen
+---------------------------------------------------
+
+Über die Buttons oberhalb des Item Baums bzw. in den Item Informationen können Items direkt über die
+Admin-Oberfläche angelegt, bearbeitet, umbenannt/verschoben und gelöscht werden.
+
+Item erstellen
+~~~~~~~~~~~~~~~
+
+Beim Anlegen eines neuen Items kann ein vollständiger, mehrstufiger Item-Pfad angegeben werden. Fehlende
+übergeordnete Items werden dabei automatisch als leere Items angelegt (wie ``mkdir -p``).
+
+Item bearbeiten
+~~~~~~~~~~~~~~~~
+
+Der Bearbeiten-Dialog zeigt die vollständige Attribut-Konfiguration des Items zur Bearbeitung an. Beim
+Speichern wird die komplette Konfiguration des Items ersetzt: Wird ein zuvor vorhandenes Attribut im Dialog
+entfernt, wird es beim Speichern auf seinen Standardwert zurückgesetzt, nicht nur unverändert belassen.
+
+Item umbenennen / verschieben
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Über den Umbenennen-Dialog kann einem Item ein neuer Name und/oder ein neues übergeordnetes Item zugewiesen
+werden. Fehlt das gewünschte neue übergeordnete Item, wird vor der Ausführung nachgefragt, ob es (leer)
+automatisch angelegt werden soll.
+
+Referenzen auf das umbenannte Item (z.B. in ``trigger`` oder ``eval`` Ausdrücken anderer Items) werden dabei
+nach bestem Wissen automatisch angepasst. Da das nicht in jedem Fall zuverlässig möglich ist, werden nicht
+angepasste Referenzen nach der Aktion in einer Liste angezeigt, damit sie manuell korrigiert werden können.
+
+Item löschen
+~~~~~~~~~~~~
+
+Besitzt ein zu löschendes Item Unter-Items, so wird vor dem Löschen die Anzahl der betroffenen Items im
+gesamten Unterbaum angezeigt und eine explizite Bestätigung verlangt.
+
+
 Item Monitoring
 ---------------
 
@@ -64,8 +106,8 @@ angelegt, gelöscht oder zur Bearbeitung ausgewählt werden.
 .. image:: assets/items-configuration.jpg
    :class: screenshot
 
-Eine Dialog-gestützte Konfiguration von Items (analog zur Plugin Konfiguration) wird in einem kommenden Release von
-SmartHomeNG hinzu kommen.
+Eine Dialog-gestützte Bearbeitung einzelner Items steht über den Item Baum zur Verfügung (siehe oben). Diese Seite
+dient weiterhin der direkten Bearbeitung ganzer Item-Konfigurationsdateien im YAML Format.
 
 
 Es können Item Struktur Templates angelegt werden, um sich wiederholende Strukturen einfacher zu verwalten. Item

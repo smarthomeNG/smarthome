@@ -31,6 +31,13 @@ Rechts in der jeweiligen Zeile sind Icons über die (falls vorhanden)
    und es muss eine Anmeldung mit Username/Passwort des Admin Interfaces erfolgen.
 
 
+.. index:: Plugins; Aktionen
+.. index:: Admin GUI; Plugin Aktionen
+
+Im **Entwicklermodus** (einstellbar unter System/Konfiguration im Tab Admin Modul) wird zusätzlich eine Spalte mit
+Aktions-Buttons angezeigt, über die ein Plugin gestartet, gestoppt oder neu geladen werden kann.
+
+
 
 .. index:: Plugin Konfiguration
 
