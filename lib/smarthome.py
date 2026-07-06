@@ -931,6 +931,15 @@ class SmartHome:
         """
         This method is used to stop SmartHomeNG and all it's threads
         """
+        if signum is not None:
+            try:
+                source = f' (received {signal.Signals(signum).name})'
+            except ValueError:
+                source = f' (received signal {signum})'
+        else:
+            source = ''
+        self._logger_main.notice(f'--------------------   SmartHomeNG stopping{source}   --------------------')
+
         self.shng_status = {'code': 31, 'text': 'Stopping'}
 
         self.alive = False
