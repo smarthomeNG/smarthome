@@ -990,7 +990,15 @@ class SmartHome:
         lib.daemon.remove_pidfile(PIDFILE)
 
         logging.shutdown()
-        exit(exitcode)  # default exit code 5 -> for systemctl to restart SmartHomeNG
+        # stop() can be called from any thread (e.g. a web/websocket request
+        # handler when "Restart Core" is triggered from the admin UI, not
+        # just the main-thread signal handler for Ctrl-C). exit() only
+        # raises SystemExit on the calling thread, so if the main thread is
+        # blocked elsewhere (e.g. the interactive console's shell.interact())
+        # it never notices and the process lingers until nudged. All of
+        # SmartHomeNG's own teardown has already completed above, so a hard
+        # process exit here is safe regardless of which thread got here.
+        os._exit(exitcode)  # default exit code 5 -> for systemctl to restart SmartHomeNG
 
     def restart(self, source=''):
         """
