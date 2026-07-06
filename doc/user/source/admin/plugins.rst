@@ -84,6 +84,12 @@ bzw. bei Auswahl Listen der Wert über das **x** neben dem Wert gelöscht werden
 Falls eine Konfiguration nicht nur deaktiviert, sondern endgültig gelöscht werden soll, so kann das über den
 **Löschen** Button erfolgen.
 
+.. note::
+
+   Der obige Screenshot wurde im Entwicklermodus aufgenommen, daher sind zusätzlich die Buttons **Neu laden**
+   und **Entladen** sichtbar sowie in der Liste dahinter die entsprechenden Aktions-Icons. Siehe dazu den
+   folgenden Abschnitt.
+
 
 .. index:: Plugins; Laden, Entladen, Neu laden
 .. index:: Admin GUI; Plugin laden
