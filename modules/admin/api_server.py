@@ -149,6 +149,7 @@ class ServerController(RESTResource):
         response['developer_mode'] = self.module.developer_mode
         response['click_dropdown_header'] = self.module.click_dropdown_header
         response['dark_mode'] = self.module.dark_mode
+        response['resource_graph_period'] = self.module.resource_graph_period
         response['help_local_available'] = os.path.isfile(
             os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html', 'index.html')
         )
