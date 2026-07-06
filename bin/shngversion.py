@@ -135,6 +135,7 @@ def _get_git_data(sub='', printout=False):
     describe = ''
     commit_short = ''
     if BASE is not None:
+        original_cwd = os.getcwd()
         try:
             os.chdir(BASE)
             branch = (
@@ -155,6 +156,13 @@ def _get_git_data(sub='', printout=False):
             )
         except Exception:
             pass
+        finally:
+            # chdir() above is process-wide and this function is called on every
+            # /api/server/info request (System page) — without restoring, the
+            # whole process's cwd stays pinned to BASE (e.g. plugins/) forever,
+            # breaking any later code relying on relative paths (e.g. the
+            # database plugin's sqlite file path).
+            os.chdir(original_cwd)
     if printout:
         print()
         print('_get_git_data: BASE={}'.format(BASE))
