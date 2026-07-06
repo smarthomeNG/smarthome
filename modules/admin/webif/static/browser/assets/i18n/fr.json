@@ -2,10 +2,6 @@
   "APP": {
     "SERVER_CONNECTING": "Connexion au serveur en cours…"
   },
-  "THEME": {
-    "SWITCH_TO_DARK": "Passer en mode sombre",
-    "SWITCH_TO_LIGHT": "Passer en mode clair"
-  },
   "MENU": {
     "SYSTEM": "Système",
     "SYSTEM_PROPERTIES": "Propriétés du système",
@@ -32,11 +28,7 @@
     "LOGS_DISPLAY": "Afficher les journaux",
     "LOGGER_CONFIGURATION": "Configuration générateurs des journaux",
     "LOGGING_CONFIGURATION": "Configuration de la journalisation pour les experts",
-    "LOGIN": "s'identifier",
-    "HELP": "Aide",
-    "HELP_LOCAL": "Aide (locale)",
-    "HELP_OFFICIAL": "Aide (officielle)",
-    "HELP_DEVELOP": "Aide (branche develop)"
+    "LOGIN": "s'identifier"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Propriétés du système",
@@ -252,7 +244,6 @@
     "DELETE_PERSIST": "Supprimer aussi du fichier de configuration",
     "DELETE_PERSIST_WARNING": "L'item restera dans {{filename}}, mais SmartHomeNG ne le connaîtra plus avant un redémarrage — recréer le même item avant cela pourrait ne pas fonctionner comme prévu.",
     "DELETE_CONFIRM": "Voulez-vous vraiment supprimer l'item",
-    "DELETE_CONFIRM_CHILDREN": "Cet item a {{count}} sous-item(s), qui seront également supprimés",
     "REFERENCE_CHECK_FAILED": "La vérification des références à cet item a échoué — veuillez vérifier manuellement avant de supprimer.",
     "REFERENCE_CHECK_RUNNING": "Vérification des références à cet item en cours...",
     "NO_REFERENCES_FOUND": "Aucune référence à cet item n'a été trouvée dans d'autres items.",
@@ -285,7 +276,6 @@
     "MISSING_PARENTS_INTRO": "Le nouveau chemin nécessite ces items parents, qui n'existent pas encore :",
     "MISSING_PARENTS_QUESTION": "Les créer maintenant comme items structurels vides, puis continuer le renommage ?",
     "MISSING_PARENTS_CREATE": "Créer et continuer",
-    "CREATE_WITH_PATH_BUTTON": "Créer avec le chemin",
     "ERROR": "Erreur",
     "DELETE_SUCCESS_TITLE": "Item supprimé",
     "DELETE_FAILED": "Impossible de supprimer l'item",

@@ -2,10 +2,6 @@
   "APP": {
     "SERVER_CONNECTING": "Verbindung zum Server wird hergestellt…"
   },
-  "THEME": {
-    "SWITCH_TO_DARK": "Zum Dark Mode wechseln",
-    "SWITCH_TO_LIGHT": "Zum hellen Modus wechseln"
-  },
   "MENU": {
     "SYSTEM": "System",
     "SYSTEM_PROPERTIES": "System Eigenschaften",
@@ -32,11 +28,7 @@
     "LOGS_DISPLAY": "Logs Anzeigen",
     "LOGGER_CONFIGURATION": "Logger Konfiguration",
     "LOGGING_CONFIGURATION": "Logging Konfiguration für Experten",
-    "LOGIN": "Login",
-    "HELP": "Hilfe",
-    "HELP_LOCAL": "Hilfe (lokal)",
-    "HELP_OFFICIAL": "Hilfe (offiziell)",
-    "HELP_DEVELOP": "Hilfe (develop-Zweig)"
+    "LOGIN": "Login"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Systemeigenschaften",
@@ -259,7 +251,6 @@
     "DELETE_PERSIST": "Auch aus der Konfigurationsdatei entfernen",
     "DELETE_PERSIST_WARNING": "Das Item bleibt in {{filename}} erhalten, SmartHomeNG weiß bis zum nächsten Neustart aber nichts mehr davon — ein erneutes Anlegen desselben Items vor dem Neustart funktioniert möglicherweise nicht wie erwartet.",
     "DELETE_CONFIRM": "Soll das Item wirklich gelöscht werden?",
-    "DELETE_CONFIRM_CHILDREN": "Dieses Item hat {{count}} Unter-Item(s), die ebenfalls gelöscht werden",
     "REFERENCE_CHECK_FAILED": "Die Prüfung auf Referenzen zu diesem Item ist fehlgeschlagen — bitte vor dem Löschen manuell prüfen.",
     "REFERENCE_CHECK_RUNNING": "Prüfung auf Referenzen zu diesem Item läuft...",
     "NO_REFERENCES_FOUND": "Es wurden keine Referenzen zu diesem Item in anderen Items gefunden.",
@@ -292,7 +283,6 @@
     "MISSING_PARENTS_INTRO": "Der neue Pfad benötigt diese übergeordneten Items, die noch nicht existieren:",
     "MISSING_PARENTS_QUESTION": "Jetzt als leere Strukturitems anlegen und mit dem Umbenennen fortfahren?",
     "MISSING_PARENTS_CREATE": "Anlegen und fortfahren",
-    "CREATE_WITH_PATH_BUTTON": "Mit Pfad anlegen",
     "ERROR": "Fehler",
     "DELETE_SUCCESS_TITLE": "Item gelöscht",
     "DELETE_FAILED": "Item konnte nicht gelöscht werden",

@@ -54,12 +54,18 @@ Item erstellen
 Beim Anlegen eines neuen Items kann ein vollständiger, mehrstufiger Item-Pfad angegeben werden. Fehlende
 übergeordnete Items werden dabei automatisch als leere Items angelegt.
 
+.. image:: assets/items-item-create.jpg
+   :class: screenshot
+
 Item bearbeiten
 ~~~~~~~~~~~~~~~~
 
 Der Bearbeiten-Dialog zeigt die vollständige Attribut-Konfiguration des Items zur Bearbeitung an. Beim
 Speichern wird die komplette Konfiguration des Items ersetzt: Wird ein zuvor vorhandenes Attribut im Dialog
 entfernt, ist es danach nicht mehr vorhanden.
+
+.. image:: assets/items-item-edit.jpg
+   :class: screenshot
 
 Item umbenennen / verschieben
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,11 +78,22 @@ Referenzen auf das umbenannte Item (z.B. in ``trigger`` oder ``eval`` Ausdrücke
 nach bestem Wissen automatisch angepasst. Da das nicht in jedem Fall zuverlässig möglich ist, werden nicht
 angepasste Referenzen nach der Aktion in einer Liste angezeigt, damit sie manuell korrigiert werden können.
 
+.. image:: assets/items-item-rename.jpg
+   :class: screenshot
+
 Item löschen
 ~~~~~~~~~~~~
 
 Besitzt ein zu löschendes Item Unter-Items, so wird vor dem Löschen die Anzahl der betroffenen Items im
 gesamten Unterbaum angezeigt und eine explizite Bestätigung verlangt.
+
+Referenziert ein anderes Item das zu löschende Item (z.B. über ``trigger`` oder ``eval``), werden diese
+Referenzen vor dem Löschen angezeigt. Eindeutig bereinigbare Referenzen (z.B. ``trigger``) werden automatisch
+angepasst; bei ``eval``/``on_change``/``on_update`` Ausdrücken, deren Bereinigung den Ausdruck vollständig
+entfernen würde, wird der bisherige Ausdruckstext zur Prüfung angezeigt, bevor er verloren geht.
+
+.. image:: assets/items-item-delete.jpg
+   :class: screenshot
 
 
 Item Monitoring

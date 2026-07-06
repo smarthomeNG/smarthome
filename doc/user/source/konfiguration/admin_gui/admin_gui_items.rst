@@ -28,5 +28,3 @@ In einer bestehenden umfangreicheren Konfiguration sieht das dann so aus:
 
 Was Items tun und Wie sie zu konfigurieren sind, ist im Abschnitt :doc:`Konfiguration - Items </konfiguration/items/items>`
 beschrieben.
-
-

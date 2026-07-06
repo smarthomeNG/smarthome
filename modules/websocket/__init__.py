@@ -131,11 +131,19 @@ class Websocket(Module):
 
         self.logger.info('Shutting down websocket server(s)...')
         self.loop.call_soon_threadsafe(self.loop.stop)
-        time.sleep(5)
 
         try:
-            self._server_thread.join()
-            self.logger.info('Websocket Server(s): Stopped')
+            # join() already blocks until the thread's own finally-block
+            # cleanup (task cancellation, asyncgen shutdown, loop.close())
+            # actually completes - a fixed sleep() beforehand only pads
+            # every shutdown with dead time, it does not help synchronize
+            # anything. Bound it so a regression here surfaces as a warning
+            # instead of an indefinite hang.
+            self._server_thread.join(timeout=10)
+            if self._server_thread.is_alive():
+                self.logger.warning('Websocket Server(s): did not stop within 10s')
+            else:
+                self.logger.info('Websocket Server(s): Stopped')
         except Exception as err:
             self.logger.info(f'Stopping websocket error: {err}')
             pass
@@ -251,14 +259,18 @@ class Websocket(Module):
         try:
             self.loop.run_forever()
         finally:
-            # self.logger.warning("_ws_server_thread: finally")
             try:
-                self.loop.shutdown_asyncgens()
-                # if python_version >= '3.9':
-                #    self.loop.shutdown_default_executor()
-                # time.sleep(3)
-                # self.logger.notice(f"all_tasks: {self.loop.Task.all_tasks()}")
-                # self.loop.run_until_complete(self.loop.shutdown_asyncgens())
+                # cancel and drain all outstanding tasks and generators
+                pending = [t for t in asyncio.all_tasks(loop=self.loop) if not t.done()]
+                for task in pending:
+                    task.cancel()
+                if pending:
+                    # finally stop the loop
+                    self.loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+            except Exception as e:
+                self.logger.warning(f'_ws_server_thread: finally - Exception on cancelling pending tasks: {e}')
+            try:
+                self.loop.run_until_complete(self.loop.shutdown_asyncgens())
             except Exception as e:
                 self.logger.warning(f'_ws_server_thread: finally - Exception on loop.shutdown_asyncgens(): {e}')
             try:

@@ -116,3 +116,13 @@ parameters:
             en: 'Activate dark mode as the default for the admin interface (can be overridden per browser via the
                  toggle in the navigation bar)'
 
+    resource_graph_period:
+        type: str
+        default: '24h'
+        description:
+            de: 'Zeitraum, den die Ressourcen-Graphen (Systemeigenschaften) initial anzeigen, z.B. "1h", "6h", "24h".
+                 Ein kürzerer Zeitraum lässt die Graphen häufiger live aktualisieren, da das Aktualisierungsintervall
+                 an die Anzahl der dargestellten Messpunkte gekoppelt ist.'
+            en: 'Time span initially shown by the resource graphs (System properties), e.g. "1h", "6h", "24h".
+                 A shorter span makes the graphs update live more often, since the update interval is tied to the
+                 number of plotted data points.'
