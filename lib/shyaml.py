@@ -616,9 +616,21 @@ class yamlfile:
     def save(self):
         """
         save the contents of the data-structure to the yaml-file
+
+        If the data-structure is now empty (e.g. the last item defined in
+        this file was removed), delete the file instead of writing a
+        redundant ``{}`` document - an empty file and a "file with an
+        empty mapping" are equivalent for every reader in this codebase,
+        so there's nothing worth keeping.
         """
         if self._create_bak and os.path.isfile(self.filename_write + YAML_FILE):
             os.rename(self.filename_write + YAML_FILE, self.filename_bak)
+        if not self.data:
+            filepath = self.filename_write + YAML_FILE
+            if os.path.isfile(filepath):
+                os.remove(filepath)
+                logger.info("Deleted now-empty yaml file '{}'".format(filepath))
+            return
         yaml_save_roundtrip(self.filename_write, self.data)
 
     def getnode(self, path):

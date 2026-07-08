@@ -205,8 +205,9 @@ class TestRenameItemPersists(unittest.TestCase):
 
         self.sh.items.rename_item(item, 'new_parent.item')
 
-        old_data = self._read_file('item_file')
-        self.assertNotIn('item', old_data)
+        # 'item' was the only entry in item_file - it's now empty and
+        # gets deleted rather than left behind as a redundant '{}' doc.
+        self.assertFalse(os.path.isfile(os.path.join(self.tmpdir.name, 'item_file.yaml')))
         new_data = self._read_file('parent_file')
         self.assertEqual(new_data['new_parent']['item']['eval'], '1')
         self.assertEqual(item._filename, 'parent_file')
