@@ -92,9 +92,13 @@ Thumbs.db
 /requirements/*
 !/requirements/test.txt
 
+# ignore bootstrap tool plugin matrix
+/tools/plugin_dummy_matrix.json
+
 # ignore users tools settings
 /custom_plugins/
 /priv_tools/
+
 # ignore all root *.toml except pyproject.toml (ruff / build config)
 /*.toml
 !/pyproject.toml
