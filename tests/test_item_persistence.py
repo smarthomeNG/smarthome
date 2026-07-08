@@ -134,8 +134,10 @@ class TestRemoveItemPersist(_Base):
 
         self.sh.items.remove_item(item)
 
-        data = self._read_file('created')
-        self.assertNotIn('new', data)
+        # 'new' was the only entry in 'created.yaml' - removing it leaves
+        # the file empty, so it gets deleted rather than left behind as
+        # a redundant '{}' document.
+        self.assertFalse(os.path.isfile(self._file_path('created')))
 
     def test_remove_without_filename_is_noop(self):
         item = self.sh.items.create_item('new', {'type': 'num'}, persist=False)
@@ -153,8 +155,9 @@ class TestRemoveItemPersist(_Base):
 
         self.sh.items.remove_item(item)
 
-        data = self._read_file('created')
-        self.assertNotIn('static_item', data)
+        # 'static_item' was the only entry - file is now empty, so it
+        # gets deleted rather than left behind as a redundant '{}' doc.
+        self.assertFalse(os.path.isfile(self._file_path('created')))
 
     def _write_to_existing_file(self, filename, path, config):
         yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, filename))
@@ -191,8 +194,10 @@ class TestRemoveItemRecursive(_Base):
 
         self.sh.items.remove_item(parent, recursive=True)
 
-        data = self._read_file('created')
-        self.assertNotIn('parent', data)
+        # 'parent' (with its nested children) was the only entry - file
+        # is now empty, so it gets deleted rather than left behind as a
+        # redundant '{}' doc.
+        self.assertFalse(os.path.isfile(self._file_path('created')))
 
     def test_removing_recursively_cleans_up_a_child_persisted_to_a_different_file_than_its_parent(self):
         parent = self.sh.items.create_item('parent', {'type': 'num'}, filename='parentfile')
@@ -201,7 +206,10 @@ class TestRemoveItemRecursive(_Base):
 
         self.sh.items.remove_item(parent, recursive=True)
 
-        self.assertNotIn('parent', self._read_file('parentfile'))
+        # 'parent' was the only entry in parentfile - it's now empty and
+        # gets deleted rather than left behind as a redundant '{}' doc.
+        self.assertFalse(os.path.isfile(self._file_path('parentfile')))
+
         # childfile only ever held the nested 'parent.child' path — 'parent'
         # itself is just a structural bridge here, never a real item entry
         # in this file, so removing the nested path value.setvalue(None)s it

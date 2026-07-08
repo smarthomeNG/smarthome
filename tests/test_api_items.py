@@ -386,9 +386,9 @@ class TestDelete(_Base):
 
         self.controller.delete(id='new')
 
-        yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, 'created'))
-        yf.load()
-        self.assertIsNone(yf.getnode('new'))
+        # 'new' was the only entry in 'created.yaml' - it's now empty and
+        # gets deleted rather than left behind as a redundant '{}' doc.
+        self.assertFalse(os.path.isfile(os.path.join(self.tmpdir.name, 'created.yaml')))
 
     def test_delete_invalid_persist_param_returns_400(self):
         with self._post_body({'config': {'type': 'num'}}):

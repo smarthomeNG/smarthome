@@ -140,6 +140,7 @@ abgelegt sind.
 .. image:: assets/system-websocket.jpg
    :class: screenshot
 
+
 .. index:: Konfiguration; admin Modul
 .. index:: admin Modul; Konfiguration
 
