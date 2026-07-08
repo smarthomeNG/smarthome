@@ -90,6 +90,7 @@ Falls eine Konfiguration nicht nur deaktiviert, sondern endgültig gelöscht wer
    und **Entladen** sichtbar sowie in der Liste dahinter die entsprechenden Aktions-Icons. Siehe dazu den
    folgenden Abschnitt.
 
+
 .. index:: Plugins; Laden, Entladen, Neu laden
 .. index:: Admin GUI; Plugin laden
 

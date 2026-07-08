@@ -21,3 +21,5 @@ Im **Entwicklermodus** (einstellbar unter System/Konfiguration im Tab Admin Modu
 
 .. image:: assets/scheduler-devmode.jpg
    :class: screenshot
+
+

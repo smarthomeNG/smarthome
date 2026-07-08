@@ -126,3 +126,4 @@ parameters:
             en: 'Time span initially shown by the resource graphs (System properties), e.g. "1h", "6h", "24h".
                  A shorter span makes the graphs update live more often, since the update interval is tied to the
                  number of plotted data points.'
+

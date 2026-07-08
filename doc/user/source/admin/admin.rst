@@ -105,3 +105,5 @@ Abschnitt System Konfiguration, Tab Admin Modul).
    Manche Browser bieten eine Einstellung an, mit der Webseiten grundsätzlich das Erkennen der
    System-Farbeinstellung verweigert werden kann (z.B. Firefox' **„Resist Fingerprinting“**). In diesem Fall
    wirkt die Option **System folgen** wie **Hell**, bis stattdessen ausdrücklich **Dunkel** ausgewählt wird.
+
+

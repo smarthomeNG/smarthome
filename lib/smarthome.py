@@ -24,14 +24,6 @@
 
 __docformat__ = 'reStructuredText'
 
-#########################################################################
-#
-# TO DO:
-# - remove all remarks with old code (that has been moved to lib modules)
-#
-#########################################################################
-
-
 #####################################################################
 # Check Python Version
 #####################################################################
@@ -352,10 +344,6 @@ class SmartHome:
         threading.current_thread().name = 'Main'
         self.alive = True
 
-        # import bin.shngversion as shngversion
-        # VERSION = shngversion.get_shng_version()
-        # self.branch = shngversion.get_shng_branch()
-        # self.version = shngversion.get_shng_version()
         self.connections = None
 
         self._pidfile = PIDFILE
@@ -980,9 +968,6 @@ class SmartHome:
                         )
                         header_logged = True
                     self._logger.warning(f'-Thread: {thread.name}, still alive')
-        #            if header_logged:
-        #                self._logger.warning("SmartHomeNG stopped")
-        #        else:
         self._logger_main.notice('--------------------   SmartHomeNG stopped   --------------------')
 
         self.shng_status = {'code': 33, 'text': 'Stopped'}
@@ -1219,8 +1204,6 @@ class SmartHome:
                     break
                 called_by += ' -> ' + c_b
 
-        #            called_by = str(sys._getframe(3).f_code.co_name)
-
         if not hasattr(self, 'dep_id_list'):
             self.dep_id_list = []
         id_str = d_func + '|' + in_class + '|' + called_by
@@ -1313,18 +1296,6 @@ class SmartHome:
         """
         self._deprecated_warning('Items-API')
         return self.items.match_items(regex)
-
-    #        regex, __, attr = regex.partition(':')
-    #        regex = regex.replace('.', '\.').replace('*', '.*') + '$'
-    #        regex = re.compile(regex)
-    #        attr, __, val = attr.partition('[')
-    #        val = val.rstrip(']')
-    #        if attr != '' and val != '':
-    #            return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf and ((type(self.__item_dict[item].conf[attr]) in [list,dict] and val in self.__item_dict[item].conf[attr]) or (val == self.__item_dict[item].conf[attr]))]
-    #        elif attr != '':
-    #            return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf]
-    #        else:
-    #            return [self.__item_dict[item] for item in self.__items if regex.match(item)]
 
     def find_items(self, conf):
         """ "

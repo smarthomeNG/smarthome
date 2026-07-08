@@ -209,7 +209,6 @@ class TestRemoveItemRecursive(_Base):
         # 'parent' was the only entry in parentfile - it's now empty and
         # gets deleted rather than left behind as a redundant '{}' doc.
         self.assertFalse(os.path.isfile(self._file_path('parentfile')))
-
         # childfile only ever held the nested 'parent.child' path — 'parent'
         # itself is just a structural bridge here, never a real item entry
         # in this file, so removing the nested path value.setvalue(None)s it
