@@ -46,22 +46,70 @@ from lib.plugin import Plugins
 from lib.shtime import Shtime
 
 from lib.model.sdp.globals import (
-    update, SDPError, PLUGIN_ATTR_SEND_TIMEOUT, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
-    CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS,
-    CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES, CMD_ATTR_SEND_RETRIES,
-    CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_ATTR_REPLY_PATTERN,
-    CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS,
-    CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3, PATTERN_CUSTOM_PATTERN,
-    CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CUSTOM_SEP,
-    INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM1,
-    ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ,
-    ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE,
-    PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_DELAY_INITIAL,
-    PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_SUSPEND_ITEM,
-    PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_REREAD_INITIAL,
-    PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH, PLUGIN_ATTR_CYCLE,
-    PLUGIN_ATTR_CB_SUSPEND, CMD_IATTR_CYCLIC, ITEM_ATTR_CYCLIC, ITEM_ATTR_VALID_LIST,
-    PROTO_RESEND, PROTO_JSONRPC, PLUGIN_ATTR_SEND_RETRIES, PLUGIN_ATTR_SEND_RETRY_CYCLE)
+    update,
+    SDPError,
+    PLUGIN_ATTR_SEND_TIMEOUT,
+    ATTR_NAMES,
+    CMD_ATTR_CMD_SETTINGS,
+    CMD_ATTR_ITEM_ATTRS,
+    CMD_ATTR_ITEM_TYPE,
+    CMD_ATTR_LOOKUP,
+    CMD_ATTR_OPCODE,
+    CMD_ATTR_PARAMS,
+    CMD_ATTR_READ,
+    CMD_ATTR_READ_CMD,
+    CMD_ATTR_WRITE,
+    CMD_IATTR_ATTRIBUTES,
+    CMD_ATTR_SEND_RETRIES,
+    CMD_IATTR_CYCLE,
+    CMD_IATTR_ENFORCE,
+    CMD_IATTR_INITIAL,
+    CMD_ATTR_REPLY_PATTERN,
+    CMD_IATTR_LOOKUP_ITEM,
+    CMD_IATTR_READ_GROUPS,
+    CMD_IATTR_RG_LEVELS,
+    CMD_IATTR_CUSTOM1,
+    CMD_IATTR_CUSTOM2,
+    CMD_IATTR_CUSTOM3,
+    PATTERN_CUSTOM_PATTERN,
+    CMD_IATTR_TEMPLATE,
+    COMMAND_READ,
+    COMMAND_SEP,
+    COMMAND_WRITE,
+    CUSTOM_SEP,
+    INDEX_GENERIC,
+    INDEX_MODEL,
+    ITEM_ATTR_COMMAND,
+    ITEM_ATTR_CUSTOM1,
+    ITEM_ATTR_CYCLE,
+    ITEM_ATTR_GROUP,
+    ITEM_ATTR_LOOKUP,
+    ITEM_ATTR_READ,
+    ITEM_ATTR_READ_GRP,
+    ITEM_ATTR_READ_INIT,
+    ITEM_ATTR_WRITE,
+    PLUGIN_ATTR_CB_ON_CONNECT,
+    PLUGIN_ATTR_CB_ON_DISCONNECT,
+    PLUGIN_ATTR_DELAY_INITIAL,
+    PLUGIN_ATTR_CMD_CLASS,
+    PLUGIN_ATTR_CONNECTION,
+    PLUGIN_ATTR_SUSPEND_ITEM,
+    PLUGIN_ATTR_CONN_AUTO_RECONN,
+    PLUGIN_ATTR_CONN_AUTO_CONN,
+    PLUGIN_ATTR_REREAD_INITIAL,
+    PLUGIN_ATTR_PROTOCOL,
+    PLUGIN_ATTR_RECURSIVE,
+    PLUGIN_PATH,
+    PLUGIN_ATTR_CYCLE,
+    PLUGIN_ATTR_CB_SUSPEND,
+    CMD_IATTR_CYCLIC,
+    ITEM_ATTR_CYCLIC,
+    ITEM_ATTR_VALID_LIST,
+    PROTO_RESEND,
+    PROTO_JSONRPC,
+    PLUGIN_ATTR_SEND_RETRIES,
+    PLUGIN_ATTR_SEND_RETRY_CYCLE,
+)
 from lib.smarthome import SmartHome
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
@@ -90,6 +138,7 @@ class SmartDevicePlugin(SmartPlugin):
     The implemented methods are described below, inherited methods are only
     described if changed/overwritten.
     """
+
     def __init__(self, sh: SmartHome, logger=None, **kwargs):
         """
         Initalizes the plugin.
@@ -369,11 +418,11 @@ class SmartDevicePlugin(SmartPlugin):
             self.on_resume()
 
     def on_suspend(self):
-        """ called when suspend is enabled. Overwrite as needed """
+        """called when suspend is enabled. Overwrite as needed"""
         pass
 
     def on_resume(self):
-        """ called when suspend is disabled. Overwrite as needed """
+        """called when suspend is disabled. Overwrite as needed"""
         pass
 
     def set_suspend(self, suspend_active: bool | None = None, by: str | None = None):
@@ -465,7 +514,7 @@ class SmartDevicePlugin(SmartPlugin):
         """
 
         def find_custom_attr(item: Item, index: int = 1) -> str | None:
-            """ find custom item attribute recursively.
+            """find custom item attribute recursively.
             Returns attribute or None
             """
             parent = item.return_parent()
@@ -492,7 +541,6 @@ class SmartDevicePlugin(SmartPlugin):
         # handle custom item attributes
         self._items_custom[item.property.path] = {1: None, 2: None, 3: None}
         for index in (1, 2, 3):
-
             val = None
             if self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_CUSTOM' + str(index), 'foo')):
                 val = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CUSTOM' + str(index), 'foo'))
@@ -506,11 +554,14 @@ class SmartDevicePlugin(SmartPlugin):
                 self._items_custom[item.property.path][index] = val
 
         custom_token = ''
-        if self._commands.custom_is_enabled_for(command) and self.custom_commands and self._items_custom[item.property.path][self.custom_commands]:
+        if (
+            self._commands.custom_is_enabled_for(command)
+            and self.custom_commands
+            and self._items_custom[item.property.path][self.custom_commands]
+        ):
             custom_token = CUSTOM_SEP + self._items_custom[item.property.path][self.custom_commands]
 
         if command:
-
             # command found, validate command for device
             if not self.is_valid_command(command):
                 self.logger.warning(f'Item {item} requests undefined command {command}, ignoring item')
@@ -537,7 +588,9 @@ class SmartDevicePlugin(SmartPlugin):
                     self._commands_read[command].append(item)
                     self.logger.debug(f'Item {item} saved for reading command {command}')
                 else:
-                    self.logger.warning(f'Item {item} requests command {command} for reading, which is not allowed, read configuration is ignored')
+                    self.logger.warning(
+                        f'Item {item} requests command {command} for reading, which is not allowed, read configuration is ignored'
+                    )
 
                 # read in group?
                 group = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_GROUP', 'foo'))
@@ -553,7 +606,9 @@ class SmartDevicePlugin(SmartPlugin):
                                 self._commands_read_grp[grp].append(command)
                                 self.logger.debug(f'Item {item} saved for reading in group {grp}')
                     else:
-                        self.logger.warning(f'Item {item} wants to be read in group with invalid group identifier "{group}", ignoring.')
+                        self.logger.warning(
+                            f'Item {item} wants to be read in group with invalid group identifier "{group}", ignoring.'
+                        )
 
                 # read on startup?
                 if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ_INIT', 'foo')):
@@ -565,16 +620,24 @@ class SmartDevicePlugin(SmartPlugin):
                 if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLIC', 'foo')):
                     if self._cycle > 0:
                         # set plpugin-wide cycle
-                        self._commands_cyclic[command] = {'cycle': min(self._cycle, self._commands_cyclic.get(command, self._cycle)), 'next': 0}
+                        self._commands_cyclic[command] = {
+                            'cycle': min(self._cycle, self._commands_cyclic.get(command, self._cycle)),
+                            'next': 0,
+                        }
                         self.logger.debug(f'Item {item} saved for global cyclic reading command {command}')
                     else:
-                        self.logger.info(f'Item {item} wants global cyclic reading, but global cycle is {self._cycle}, ignoring.')
+                        self.logger.info(
+                            f'Item {item} wants global cyclic reading, but global cycle is {self._cycle}, ignoring.'
+                        )
 
                 # read individual-cyclically?
                 cycle = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLE', 'foo'))
                 if cycle:
                     # if cycle is already set for command, use the lower value of the two
-                    self._commands_cyclic[command] = {'cycle': min(cycle, self._commands_cyclic.get(command, cycle)), 'next': 0}
+                    self._commands_cyclic[command] = {
+                        'cycle': min(cycle, self._commands_cyclic.get(command, cycle)),
+                        'next': 0,
+                    }
                     self.logger.debug(f'Item {item} saved for cyclic reading command {command}')
 
             # command marked for writing
@@ -585,7 +648,9 @@ class SmartDevicePlugin(SmartPlugin):
                     return self.update_item
 
             # pseudo commands
-            if not self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ', 'foo')) and not self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_WRITE', 'foo')):
+            if not self.get_iattr_value(
+                item.conf, self._item_attrs.get('ITEM_ATTR_READ', 'foo')
+            ) and not self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_WRITE', 'foo')):
                 if command not in self._commands_pseudo:
                     self._commands_pseudo[command] = []
                 self._commands_pseudo[command].append(item)
@@ -594,7 +659,6 @@ class SmartDevicePlugin(SmartPlugin):
         # is read_grp trigger item?
         grp = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ_GRP', 'foo'))
         if grp:
-
             grp += custom_token
             item_msg = f'Item {item}'
             if custom_token:
@@ -615,7 +679,9 @@ class SmartDevicePlugin(SmartPlugin):
                     self._triggers_cyclic[grp] = {'cycle': min(self._cycle, existing_cycle), 'next': 0}
                     self.logger.debug(f'Item {item} saved for global cyclic reading for group {grp}')
                 else:
-                    self.logger.info(f'Item {item} wants global cyclic reading of group {grp}, but global cycle is {self._cycle}, ignoring.')
+                    self.logger.info(
+                        f'Item {item} wants global cyclic reading of group {grp}, but global cycle is {self._cycle}, ignoring.'
+                    )
 
             # read individual-cyclically?
             cycle = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLE', 'foo'))
@@ -633,20 +699,25 @@ class SmartDevicePlugin(SmartPlugin):
                 self.logger.debug(f'{item_msg} reading group {grp}')
                 return self.update_item
             else:
-                self.logger.warning(f'Item {item} wants to trigger group read with invalid group identifier "{grp}", ignoring.')
+                self.logger.warning(
+                    f'Item {item} wants to trigger group read with invalid group identifier "{grp}", ignoring.'
+                )
 
         # is lookup table item?
         table = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_LOOKUP', 'foo'))
         if table:
-
             mode = 'fwd'
             if '#' in table:
                 table, mode = table.split('#')
             lu = self.get_lookup(table, mode)
             if mode in ('fwd', 'rev', 'rci') and item.type() != 'dict':
-                self.logger.warning(f'Item {item} requested lookup and should be of type dict, but is type {item.type()}. Ignoring.')
+                self.logger.warning(
+                    f'Item {item} requested lookup and should be of type dict, but is type {item.type()}. Ignoring.'
+                )
             elif mode == 'list' and item.type() != 'list':
-                self.logger.warning(f'Item {item} requested list lookup and should be of type list, but is type {item.type()}. Ignoring.')
+                self.logger.warning(
+                    f'Item {item} requested list lookup and should be of type list, but is type {item.type()}. Ignoring.'
+                )
             elif lu:
                 item.set(lu, self.get_fullname(), source='Init')
                 self.logger.debug(f'Item {item} assigned lookup {table} with contents {lu}')
@@ -664,7 +735,9 @@ class SmartDevicePlugin(SmartPlugin):
         vlist_cmd = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_VALID_LIST', 'foo'))
         if vlist_cmd:
             if item.type() != 'list':
-                self.logger.warning(f'Item {item} requested valid_list for command {vlist_cmd}, should be of type list but is type {item.type()}. Ignoring.')
+                self.logger.warning(
+                    f'Item {item} requested valid_list for command {vlist_cmd}, should be of type list but is type {item.type()}. Ignoring.'
+                )
             elif vlist_cmd in self._commands._commands:
                 cmd = self._commands._commands[vlist_cmd]
                 if CMD_ATTR_CMD_SETTINGS in cmd._cmd_params:
@@ -680,9 +753,13 @@ class SmartDevicePlugin(SmartPlugin):
                         self.logger.debug(f'Item {item} assigned {vl} for command {vlist_cmd} with contents {vlist}')
                         item(vlist, self.get_fullname(), source='Init')
                         return self.update_item
-                self.logger.info(f'Item {item} requested valid_list for command {vlist_cmd}, but no valid_list present, ignoring.')
+                self.logger.info(
+                    f'Item {item} requested valid_list for command {vlist_cmd}, but no valid_list present, ignoring.'
+                )
             else:
-                self.logger.info(f'Item {item} requested valid_list for command {vlist_cmd}, but command not found. Ignoring.')
+                self.logger.info(
+                    f'Item {item} requested valid_list for command {vlist_cmd}, but command not found. Ignoring.'
+                )
 
     def update_item(self, item: Item, caller: str | None = None, source: str | None = None, dest: str | None = None):
         """
@@ -698,8 +775,9 @@ class SmartDevicePlugin(SmartPlugin):
         :param dest: if given it represents the dest
         """
         if self.alive:
-
-            self.logger.debug(f'Update_item was called with item "{item}" from caller {caller}, source {source} and dest {dest}')
+            self.logger.debug(
+                f'Update_item was called with item "{item}" from caller {caller}, source {source} and dest {dest}'
+            )
 
             # check for suspend item
             if item is self._suspend_item:
@@ -708,62 +786,80 @@ class SmartDevicePlugin(SmartPlugin):
                     self.set_suspend(by=f'suspend item {item.property.path}')
                 return
 
-            if not any(self.has_iattr(item.conf, self._item_attrs.get(key, 'foo')) for key in ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ_GRP', 'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_VALID_LIST')):
-                self.logger.warning(f'Update_item was called with item {item}, which is not configured for this plugin. This shouldn\'t happen...')
+            if not any(
+                self.has_iattr(item.conf, self._item_attrs.get(key, 'foo'))
+                for key in ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ_GRP', 'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_VALID_LIST')
+            ):
+                self.logger.warning(
+                    f"Update_item was called with item {item}, which is not configured for this plugin. This shouldn't happen..."
+                )
                 return
 
             # test if source of item change was not ourselves...
             if caller != self.get_fullname():
-
                 # okay, go ahead
                 self.logger.info(f'Update item: {item.property.path}: item has been changed outside this plugin')
 
                 # item in list of write-configured items?
                 if item.property.path in self._items_write:
-
                     # get data and send new value
                     command = self._items_write[item.property.path]
 
                     if self._check_loop_guard(item.property.path, item(), caller):
-                        self.logger.warning(f'Loop guard triggered for item {item.property.path} (value={item()}, caller={caller}), suppressing write')
+                        self.logger.warning(
+                            f'Loop guard triggered for item {item.property.path} (value={item()}, caller={caller}), suppressing write'
+                        )
                         return
 
-                    self.logger.debug(f'Writing value "{item()}" from item {item.property.path} with command "{command}"')
+                    self.logger.debug(
+                        f'Writing value "{item()}" from item {item.property.path} with command "{command}"'
+                    )
                     if not self.send_command(command, item(), custom=self._items_custom[item.property.path]):
-                        self.logger.debug(f'Writing value "{item()}" from item {item.property.path} with command "{command}" failed, resetting item value')
+                        self.logger.debug(
+                            f'Writing value "{item()}" from item {item.property.path} with command "{command}" failed, resetting item value'
+                        )
                         item(item.property.last_value, self.get_fullname())
                         return
 
-                    readafterwrite = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READAFTERWRITE', 'foo'))
+                    readafterwrite = self.get_iattr_value(
+                        item.conf, self._item_attrs.get('ITEM_ATTR_READAFTERWRITE', 'foo')
+                    )
                     if readafterwrite is not None:
                         try:
                             readafterwrite = float(readafterwrite)
                         except ValueError:
-                            self.logger.warning(f'Item {item} has readafterwrite set to {readafterwrite}, which is not parseable as (float) seconds. Ignoring.')
+                            self.logger.warning(
+                                f'Item {item} has readafterwrite set to {readafterwrite}, which is not parseable as (float) seconds. Ignoring.'
+                            )
                         else:
                             if command and readafterwrite > 0:
-                                self.logger.debug(f'Attempting to schedule read after write for item {item}, command {command}, delay {readafterwrite}')
-                                self.scheduler_add(f'{item}-readafterwrite', lambda: self.send_command(command), next=self.shtime.now() + datetime.timedelta(seconds=readafterwrite))
+                                self.logger.debug(
+                                    f'Attempting to schedule read after write for item {item}, command {command}, delay {readafterwrite}'
+                                )
+                                self.scheduler_add(
+                                    f'{item}-readafterwrite',
+                                    lambda: self.send_command(command),
+                                    next=self.shtime.now() + datetime.timedelta(seconds=readafterwrite),
+                                )
 
                 elif item.property.path in self._items_read_all:
-
                     # get data and trigger read_all
                     self.logger.debug('Triggering read_all')
                     self.read_all_commands()
 
                 elif item.property.path in self._items_read_grp:
-
                     # get data and trigger read_grp
                     group = self._items_read_grp[item.property.path]
                     self.logger.debug(f'Triggering read_group {group}')
                     self.read_all_commands(group)
 
                 elif item.property.path in self._items_lookup:
-
                     # get data and update lookup if appropriate
                     table = self._items_lookup[item.property.path]
                     if not isinstance(item(), dict):
-                        self.logger.debug(f'update of lookup table {table} not possible, item value is {type(item())}, not dict')
+                        self.logger.debug(
+                            f'update of lookup table {table} not possible, item value is {type(item())}, not dict'
+                        )
                         return
                     self.logger.debug(f'updating lookup {table}')
                     self._commands.update_lookup_table(table, item())
@@ -779,7 +875,9 @@ class SmartDevicePlugin(SmartPlugin):
                 elif item.property.path in self._items_vlist:
                     cmd, ci, re = self._items_vlist[item.property.path].values()
                     try:
-                        self.logger.debug(f'trying to set valid_list (ci: {ci}, re: {re}) for command {cmd} to {item()}')
+                        self.logger.debug(
+                            f'trying to set valid_list (ci: {ci}, re: {re}) for command {cmd} to {item()}'
+                        )
                         self._commands.set_valid_list(cmd, item(), ci, re)
                     except RuntimeError as e:
                         self.logger.warning(f'error while updating valid_list for command {cmd} from item {item}: {e}')
@@ -828,7 +926,7 @@ class SmartDevicePlugin(SmartPlugin):
         return entry['locked']
 
     def _reset_loop_guard(self, item_path: str | None = None):
-        """ Clear loop guard state for item_path, or all items if None. """
+        """Clear loop guard state for item_path, or all items if None."""
         if item_path is not None:
             self._loop_guard.pop(item_path, None)
         else:
@@ -845,7 +943,7 @@ class SmartDevicePlugin(SmartPlugin):
             for index in (1, 2, 3):
                 custom_replacement = kwargs['custom'].get(index)
                 if custom_replacement is not None:
-                    pattern = "{" + PATTERN_CUSTOM_PATTERN + str(index) + "}"
+                    pattern = '{' + PATTERN_CUSTOM_PATTERN + str(index) + '}'
                     if isinstance(reply_pattern, list):
                         reply_pattern = [r.replace(pattern, custom_replacement) for r in reply_pattern]
                         if len(reply_pattern) == 1:
@@ -859,9 +957,21 @@ class SmartDevicePlugin(SmartPlugin):
         lookup = self._commands.get_lookup(self._commands._get_cmd_lookup(command))
 
         if reply_pattern is None or value is None:
-            resend_info = {'command': resend_command, 'returnvalue': None, 'read_cmd': read_cmd, 'lookup': lookup, 'lookup_ci': lookup_ci}
+            resend_info = {
+                'command': resend_command,
+                'returnvalue': None,
+                'read_cmd': read_cmd,
+                'lookup': lookup,
+                'lookup_ci': lookup_ci,
+            }
         elif not isinstance(reply_pattern, list) and not captures_value(reply_pattern):
-            resend_info = {'command': resend_command, 'returnvalue': re.compile(reply_pattern), 'read_cmd': read_cmd, 'lookup': lookup, 'lookup_ci': lookup_ci}
+            resend_info = {
+                'command': resend_command,
+                'returnvalue': re.compile(reply_pattern),
+                'read_cmd': read_cmd,
+                'lookup': lookup,
+                'lookup_ci': lookup_ci,
+            }
         elif isinstance(reply_pattern, list):
             return_list = []
             for r in reply_pattern:
@@ -871,9 +981,21 @@ class SmartDevicePlugin(SmartPlugin):
                 elif checked_value not in return_list:
                     return_list.append(checked_value)
             reply_pattern = None if None in return_list else return_list
-            resend_info = {'command': resend_command, 'returnvalue': reply_pattern, 'read_cmd': read_cmd, 'lookup': lookup, 'lookup_ci': lookup_ci}
+            resend_info = {
+                'command': resend_command,
+                'returnvalue': reply_pattern,
+                'read_cmd': read_cmd,
+                'lookup': lookup,
+                'lookup_ci': lookup_ci,
+            }
         else:
-            resend_info = {'command': resend_command, 'returnvalue': value, 'read_cmd': read_cmd, 'lookup': lookup, 'lookup_ci': lookup_ci}
+            resend_info = {
+                'command': resend_command,
+                'returnvalue': value,
+                'read_cmd': read_cmd,
+                'lookup': lookup,
+                'lookup_ci': lookup_ci,
+            }
 
         send_retries = self._commands.get_commandlist(command).get(CMD_ATTR_SEND_RETRIES)
         try:
@@ -897,6 +1019,7 @@ class SmartDevicePlugin(SmartPlugin):
         :return: True if send was successful, False otherwise
         :rtype: bool
         """
+
         def captures_value(pattern):
             try:
                 re.compile(pattern)
@@ -918,7 +1041,9 @@ class SmartDevicePlugin(SmartPlugin):
             return False
 
         if not self._connection:
-            self.logger.warning(f'trying to send command {command} with value {value}, but connection is None. This shouldn\'t happen...')
+            self.logger.warning(
+                f"trying to send command {command} with value {value}, but connection is None. This shouldn't happen..."
+            )
             return False
 
         kwargs.update(self._parameters)
@@ -937,7 +1062,9 @@ class SmartDevicePlugin(SmartPlugin):
                 self.connect()
 
             if not self._connection.connected():
-                self.logger.warning(f'trying to send command {command} with value {value}, but connection could not be re-established.')
+                self.logger.warning(
+                    f'trying to send command {command} with value {value}, but connection could not be re-established.'
+                )
                 return False
 
         # enable doing something before sending data normally
@@ -949,7 +1076,9 @@ class SmartDevicePlugin(SmartPlugin):
         try:
             data_dict = self._commands.get_send_data(command, value, **kwargs)
         except Exception as e:
-            self.logger.warning(f'command {command} with value {value} produced error on converting value, aborting. Error was: {e}')
+            self.logger.warning(
+                f'command {command} with value {value} produced error on converting value, aborting. Error was: {e}'
+            )
             return False
 
         if data_dict['payload'] is None or data_dict['payload'] == '':
@@ -1010,10 +1139,14 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.debug(f'data "{data}" did not identify a known command, ignoring it')
                 else:
                     if not self.suspended:
-                        self.logger.debug(f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}')
+                        self.logger.debug(
+                            f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}'
+                        )
                         self._dispatch_callback(self._unknown_command, data, by)
                     else:
-                        self.logger.info(f'received data "{data}" not identifying a known command while suspended, aborting.')
+                        self.logger.info(
+                            f'received data "{data}" not identifying a known command while suspended, aborting.'
+                        )
                 return
 
         if self.suspended:
@@ -1022,7 +1155,6 @@ class SmartDevicePlugin(SmartPlugin):
 
         # process all commands
         for cmd in commands:
-
             try:
                 value, custom = self._process_received_data(data, cmd)
             except SDPResultError:
@@ -1035,7 +1167,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self._process_additional_data(cmd, data, value, custom, by)
 
     def _process_received_data(self, data: Any, command: str) -> Tuple[Any, Any]:
-        """ convert received data and handle custom token """
+        """convert received data and handle custom token"""
 
         custom = None
         if self._commands.custom_is_enabled_for(command) and self.custom_commands:
@@ -1048,7 +1180,9 @@ class SmartDevicePlugin(SmartPlugin):
             if custom:
                 command = command + CUSTOM_SEP + custom
         except (ValueError, OSError) as e:  # Exception as e:
-            self.logger.info(f'received data "{data}" for command {command}, error {e} occurred while converting. Discarding data.')
+            self.logger.info(
+                f'received data "{data}" for command {command}, error {e} occurred while converting. Discarding data.'
+            )
             raise SDPResultError
         else:
             self.logger.debug(f'received data "{data}" for command {command} converted to value {value}')
@@ -1066,7 +1200,6 @@ class SmartDevicePlugin(SmartPlugin):
         :type command: str
         """
         if self.alive and not self.suspended:
-
             item = None
 
             # check if command is configured for reading
@@ -1074,15 +1207,21 @@ class SmartDevicePlugin(SmartPlugin):
             items += self._commands_pseudo.get(command, [])
 
             if not items:
-                self.logger.info(f'Command {command} yielded value {value} by {by}, not assigned to any item, discarding data')
+                self.logger.info(
+                    f'Command {command} yielded value {value} by {by}, not assigned to any item, discarding data'
+                )
                 return
 
             if self.suspended:
-                self.logger.error('Trying to update item, but suspended. This should not happen, please report to developer.')
+                self.logger.error(
+                    'Trying to update item, but suspended. This should not happen, please report to developer.'
+                )
                 return
 
             for item in items:
-                self.logger.debug(f'Command {command} wants to update item {item.property.path} with value {value} received from {by}')
+                self.logger.debug(
+                    f'Command {command} wants to update item {item.property.path} with value {value} received from {by}'
+                )
                 item(value, self.get_fullname())
 
     def read_all_commands(self, group: str = ''):
@@ -1113,7 +1252,9 @@ class SmartDevicePlugin(SmartPlugin):
             try:
                 command, custom_value = command.split(CUSTOM_SEP)
                 if custom_value not in self._custom_values[self.custom_commands]:
-                    self.logger.debug(f'custom value {custom_value} not in known custom values {self._custom_values[self.custom_commands]}')
+                    self.logger.debug(
+                        f'custom value {custom_value} not in known custom values {self._custom_values[self.custom_commands]}'
+                    )
                     return
             except ValueError:
                 pass
@@ -1124,7 +1265,7 @@ class SmartDevicePlugin(SmartPlugin):
             return False
 
     def get_lookup(self, lookup: str, mode: str = 'fwd') -> dict | list | None:
-        """ returns the lookup table for name <lookup>, None on error """
+        """returns the lookup table for name <lookup>, None on error"""
         if self._commands:
             return self._commands.get_lookup(lookup, mode)
         else:
@@ -1138,7 +1279,7 @@ class SmartDevicePlugin(SmartPlugin):
             return rec == index
 
     def set_custom_item(self, item: Item, command: str, index: int, value: Any):
-        """ this is called by parse_items if xx_custom[123] is found. """
+        """this is called by parse_items if xx_custom[123] is found."""
         self._custom_values[index].append(value)
         self._custom_values[index] = list(set(self._custom_values[index]))
 
@@ -1149,14 +1290,14 @@ class SmartDevicePlugin(SmartPlugin):
     #
 
     def _set_device_defaults(self):
-        """ Set custom class properties. Overwrite as needed... """
+        """Set custom class properties. Overwrite as needed..."""
 
         # if you want to enable callbacks, overwrite this method and set
         # self._use_callbacks = True
         pass
 
     def _post_init(self):
-        """ do something after default initializing is done. Overwrite it """
+        """do something after default initializing is done. Overwrite it"""
         pass
 
     def _transform_send_data(self, data_dict: dict, **kwargs) -> dict:
@@ -1205,7 +1346,7 @@ class SmartDevicePlugin(SmartPlugin):
         return self._connection.send(data_dict, **kwargs)
 
     def on_connect(self, by: str | None = None):
-        """ callback if connection is made. """
+        """callback if connection is made."""
         if self._connection.connected():
             if not self._initial_value_read_done or self._resume_initial_read:
                 # read on first connect or on every reconnect if configured
@@ -1214,26 +1355,27 @@ class SmartDevicePlugin(SmartPlugin):
                 # so any synchronous send path would deadlock. 1s minimum gives us a safe margin.
                 if not self.scheduler_get('read_initial_values'):
                     delay = self._initial_value_read_delay if self._initial_value_read_delay else 1
-                    self.scheduler_add('read_initial_values', self._read_initial_values,
-                                       next=self.shtime.now() + datetime.timedelta(seconds=delay))
+                    self.scheduler_add(
+                        'read_initial_values',
+                        self._read_initial_values,
+                        next=self.shtime.now() + datetime.timedelta(seconds=delay),
+                    )
             if not SDP_standalone:  # noqa  # type: ignore
                 self._create_cyclic_scheduler()
 
     def on_disconnect(self, by: str | None = None):
-        """ callback if connection is broken. """
+        """callback if connection is broken."""
         if not SDP_standalone and self.alive:  # noqa  # type: ignore
             if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
                 reconnect_name = f'{self.get_fullname()}_reconnect'
                 if not self.scheduler_get(reconnect_name):
                     self.logger.info('connection lost, scheduling reconnect in 5s')
                     self.scheduler_add(
-                        reconnect_name,
-                        self.connect,
-                        next=self.shtime.now() + datetime.timedelta(seconds=5)
+                        reconnect_name, self.connect, next=self.shtime.now() + datetime.timedelta(seconds=5)
                     )
 
     def _process_additional_data(self, command: str, data: Any, value: Any, custom: int, by: str | None = None):
-        """ do additional processing of received data
+        """do additional processing of received data
 
         Here you can do additional data examinating, filtering and possibly
         triggering additional commands or setting additional items.
@@ -1263,18 +1405,21 @@ class SmartDevicePlugin(SmartPlugin):
         elif res[0] in self._custom_values[self.custom_commands]:
             return res[0]
         else:
-            self.logger.debug(f'received custom token {res[0]}, not in list of known tokens {self._custom_values[self.custom_commands]}')
+            self.logger.debug(
+                f'received custom token {res[0]}, not in list of known tokens {self._custom_values[self.custom_commands]}'
+            )
             return
 
     def _get_connection(
-            self,
-            conn_type: str | None = None,
-            conn_classname: str | None = None,
-            conn_cls: type[SDPConnection] | None = None,
-            proto_type: str | None = None,
-            proto_classname: str | None = None,
-            proto_cls: type[SDPProtocol] | None = None,
-            name: str | None = None) -> SDPConnection:
+        self,
+        conn_type: str | None = None,
+        conn_classname: str | None = None,
+        conn_cls: type[SDPConnection] | None = None,
+        proto_type: str | None = None,
+        proto_classname: str | None = None,
+        proto_cls: type[SDPProtocol] | None = None,
+        name: str | None = None,
+    ) -> SDPConnection:
         """
         return connection object.
 
@@ -1324,11 +1469,12 @@ class SmartDevicePlugin(SmartPlugin):
                 self._parameters[PLUGIN_ATTR_PROTOCOL] = 'resend'
             # if send_retries is set and protocol is not set to resend, log info that protocol is overruling the parameter
             elif protocol not in (PROTO_JSONRPC, PROTO_RESEND):
-                self.logger.debug(f'{PLUGIN_ATTR_SEND_RETRIES} is set to {resend}, but protocol {protocol} is requested, so resend may not apply')
+                self.logger.debug(
+                    f'{PLUGIN_ATTR_SEND_RETRIES} is set to {resend}, but protocol {protocol} is requested, so resend may not apply'
+                )
 
         # if protocol is specified, find second class
         if PLUGIN_ATTR_PROTOCOL in self._parameters:
-
             params = self._parameters.copy()
             try:
                 proto_cls = SDPProtocol._get_protocol_class(proto_cls, proto_classname, proto_type, **params)
@@ -1338,7 +1484,9 @@ class SmartDevicePlugin(SmartPlugin):
             # if protocol is needed but not possible to obtain, just bail out. we don't know
             # if the plugin works without a protocol layer (e.g. jsonrpc), so don't even try
             if not proto_cls:
-                raise RuntimeError(f'protocol {self._parameters["PLUGIN_ATTR_PROTOCOL"]} requested, but no protocol class returned. Giving up.')
+                raise RuntimeError(
+                    f'protocol {self._parameters["PLUGIN_ATTR_PROTOCOL"]} requested, but no protocol class returned. Giving up.'
+                )
 
             # set connection class in self._parameters dict for protocol class to use
             self._parameters[PLUGIN_ATTR_CONNECTION] = conn_cls
@@ -1371,24 +1519,31 @@ class SmartDevicePlugin(SmartPlugin):
 
         # Start the worker thread
         if shortestcycle != -1:
-
             # Balance unnecessary calls and precision
             workercycle = int(shortestcycle / 2)
 
             # just in case it already exists...
             if self.scheduler_get(self.get_fullname() + '_cyclic'):
                 self.scheduler_remove(self.get_fullname() + '_cyclic')
-            self.scheduler_add(self.get_fullname() + '_cyclic', self._read_cyclic_values, cycle=workercycle, prio=5, offset=0)
+            self.scheduler_add(
+                self.get_fullname() + '_cyclic', self._read_cyclic_values, cycle=workercycle, prio=5, offset=0
+            )
             self._cyclic_errors = 0
-            self.logger.info(f'Added cyclic worker thread {self.get_fullname()}_cyclic with {workercycle} s cycle. Shortest item update cycle found was {shortestcycle} s')
+            self.logger.info(
+                f'Added cyclic worker thread {self.get_fullname()}_cyclic with {workercycle} s cycle. Shortest item update cycle found was {shortestcycle} s'
+            )
 
     def read_initial_values(self):
-        """ control call of _read_initial_values - run instantly or delay """
+        """control call of _read_initial_values - run instantly or delay"""
         if self.scheduler_get('read_initial_values'):
             return
         elif self._initial_value_read_delay:
-            self.logger.dbghigh(f"Delaying reading initial values for {self._initial_value_read_delay} seconds.")
-            self.scheduler_add('read_initial_values', self._read_initial_values, next=self.shtime.now() + datetime.timedelta(seconds=self._initial_value_read_delay))
+            self.logger.dbghigh(f'Delaying reading initial values for {self._initial_value_read_delay} seconds.')
+            self.scheduler_add(
+                'read_initial_values',
+                self._read_initial_values,
+                next=self.shtime.now() + datetime.timedelta(seconds=self._initial_value_read_delay),
+            )
         else:
             self._read_initial_values()
 
@@ -1422,19 +1577,23 @@ class SmartDevicePlugin(SmartPlugin):
         if self._cyclic_update_active:
             self._cyclic_errors += 1
             if self._cyclic_errors >= 3 and self._reconnect_on_cycle_error:
-                self.logger.warning(f'Cyclic command read failed {self._cyclic_errors} times due to long previous cycle. Reconnecting... ')
+                self.logger.warning(
+                    f'Cyclic command read failed {self._cyclic_errors} times due to long previous cycle. Reconnecting... '
+                )
                 self.disconnect()
                 self._cyclic_update_active = False
 
                 # reconnect after 1 s without blocking the scheduler thread
                 if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
-                    self.scheduler_add(
-                        f'{self.get_fullname()}_reconnect',
-                        self.connect,
-                        next=self.shtime.now() + datetime.timedelta(seconds=1)
-                    )
+                    reconnect_name = f'{self.get_fullname()}_reconnect'
+                    if not self.scheduler_get(reconnect_name):
+                        self.scheduler_add(
+                            reconnect_name, self.connect, next=self.shtime.now() + datetime.timedelta(seconds=1)
+                        )
             else:
-                self.logger.warning('Triggered cyclic command read, but previous cyclic run is still active. Check device and cyclic configuration (too much/too short?)')
+                self.logger.warning(
+                    'Triggered cyclic command read, but previous cyclic run is still active. Check device and cyclic configuration (too much/too short?)'
+                )
             return
         else:
             self.logger.info('Triggering cyclic command read')
@@ -1442,63 +1601,66 @@ class SmartDevicePlugin(SmartPlugin):
 
         # set lock
         self._cyclic_update_active = True
-        currenttime = time.time()
-        read_cmds = 0
-        todo = []
-        for cmd in self._commands_cyclic:
+        try:
+            currenttime = time.time()
+            read_cmds = 0
+            todo = []
+            for cmd in self._commands_cyclic:
+                # Is the command already due?
+                if self._commands_cyclic[cmd]['next'] <= currenttime:
+                    todo.append(cmd)
 
-            # Is the command already due?
-            if self._commands_cyclic[cmd]['next'] <= currenttime:
-                todo.append(cmd)
+            for cmd in todo:
+                # repeatedly check if shng wants to stop to prevent stalling shng
+                if not self.alive:
+                    self.logger.info('Stop command issued, cancelling cyclic read')
+                    return
 
-        for cmd in todo:
-            # repeatedly check if shng wants to stop to prevent stalling shng
-            if not self.alive:
-                self.logger.info('Stop command issued, cancelling cyclic read')
-                return
+                # also leave early on disconnect
+                if not self._connection.connected():
+                    self.logger.info('Disconnect detected, cancelling cyclic read')
+                    return
 
-            # also leave early on disconnect
-            if not self._connection.connected():
-                self.logger.info('Disconnect detected, cancelling cyclic read')
-                return
+                self.logger.debug(f'Triggering cyclic read of command {cmd}')
+                self.send_command(cmd)
+                self._commands_cyclic[cmd]['next'] = currenttime + self._commands_cyclic[cmd]['cycle']
+                read_cmds += 1
 
-            self.logger.debug(f'Triggering cyclic read of command {cmd}')
-            self.send_command(cmd)
-            self._commands_cyclic[cmd]['next'] = currenttime + self._commands_cyclic[cmd]['cycle']
-            read_cmds += 1
+            if read_cmds:
+                self.logger.debug(
+                    f'Cyclic command read took {(time.time() - currenttime):.1f} seconds for {read_cmds} items'
+                )
 
-        if read_cmds:
-            self.logger.debug(f'Cyclic command read took {(time.time() - currenttime):.1f} seconds for {read_cmds} items')
+            currenttime = time.time()
+            read_grps = 0
+            todo = []
+            for grp in self._triggers_cyclic:
+                # Is the trigger already due?
+                if self._triggers_cyclic[grp]['next'] <= currenttime:
+                    todo.append(grp)
 
-        currenttime = time.time()
-        read_grps = 0
-        todo = []
-        for grp in self._triggers_cyclic:
+            for grp in todo:
+                # repeatedly check if shng wants to stop to prevent stalling shng
+                if not self.alive:
+                    self.logger.info('Stop command issued, cancelling cyclic trigger')
+                    return
 
-            # Is the trigger already due?
-            if self._triggers_cyclic[grp]['next'] <= currenttime:
-                todo.append(grp)
+                # also leave early on disconnect
+                if not self._connection.connected():
+                    self.logger.info('Disconnect detected, cancelling cyclic trigger')
+                    return
 
-        for grp in todo:
-            # repeatedly check if shng wants to stop to prevent stalling shng
-            if not self.alive:
-                self.logger.info('Stop command issued, cancelling cyclic trigger')
-                return
+                self.logger.debug(f'Triggering cyclic read of group {grp}')
+                self.read_all_commands(grp)
+                self._triggers_cyclic[grp]['next'] = currenttime + self._triggers_cyclic[grp]['cycle']
+                read_grps += 1
 
-            # also leave early on disconnect
-            if not self._connection.connected():
-                self.logger.info('Disconnect detected, cancelling cyclic trigger')
-                return
-
-            self.logger.debug(f'Triggering cyclic read of group {grp}')
-            self.read_all_commands(grp)
-            self._triggers_cyclic[grp]['next'] = currenttime + self._triggers_cyclic[grp]['cycle']
-            read_grps += 1
-
-        if read_grps:
-            self.logger.debug(f'Cyclic triggers took {(time.time() - currenttime):.1f} seconds for {read_grps} groups')
-
-        self._cyclic_update_active = False
+            if read_grps:
+                self.logger.debug(
+                    f'Cyclic triggers took {(time.time() - currenttime):.1f} seconds for {read_grps} groups'
+                )
+        finally:
+            self._cyclic_update_active = False
 
     def _read_configuration(self):
         """
@@ -1510,7 +1672,6 @@ class SmartDevicePlugin(SmartPlugin):
         if isinstance(self._command_class, type):
             cls = self._command_class
         elif isinstance(self._command_class, str):
-
             cmd_module = sys.modules.get('lib.model.sdp.command', '')
             if not cmd_module:
                 self.logger.error('unable to get object handle of SDPCommand module')
@@ -1524,11 +1685,10 @@ class SmartDevicePlugin(SmartPlugin):
         return True
 
     def _import_structs(self):
-        """ check if additional MODEL struct is needed and insert it """
+        """check if additional MODEL struct is needed and insert it"""
 
         # check for and load struct definitions
         if not SDP_standalone:  # noqa  # type: ignore
-
             shstructs = self._sh.items.return_struct_definitions(False)  # type: ignore (if we don't have items in shng, we're really fubar)
             model = self._parameters.get('model', '')
             m_name = self.get_fullname() + '.' + model
@@ -1578,8 +1738,8 @@ class SmartDevicePlugin(SmartPlugin):
 #
 ################################################################################
 
-class Standalone:
 
+class Standalone:
     def __init__(self, plugin_class, plugin_file):
 
         self.item_tree = {}
@@ -1650,11 +1810,9 @@ class Standalone:
         self.indentwidth = 4
 
         if len(sys.argv) == 1 or (len(sys.argv) > 1 and sys.argv[1] not in ['-h', '--help', '-?', '/?', '/h', '/help']):
-
             # check for further command line arguments
             self.params = {}
             for arg in range(1, len(sys.argv)):
-
                 arg_str = sys.argv[arg]
 
                 if arg_str == '-v':
@@ -1708,7 +1866,6 @@ class Standalone:
         self.params[PLUGIN_PATH] = self.plugin_mod_path
 
         if self.struct_mode:
-
             self.create_struct_yaml()
             return
 
@@ -1723,12 +1880,12 @@ class Standalone:
 
             pl.run_standalone()
         else:
-            print('plugin doesn\'t have a standalone function.')
+            print("plugin doesn't have a standalone function.")
 
         print('Done.')
 
     def add_item_to_tree(self, item_path, item_dict):
-        """ add entry for custom read group triggers """
+        """add entry for custom read group triggers"""
 
         if self.lc:
             # make lowercase items
@@ -1745,8 +1902,10 @@ class Standalone:
 
         update(self.item_tree, item)
 
-    def walk(self, node, node_name, parent, func, path, indent, gpath, gpathlist, has_models, func_first=True, cut_levels=0):
-        """ traverses a nested dict
+    def walk(
+        self, node, node_name, parent, func, path, indent, gpath, gpathlist, has_models, func_first=True, cut_levels=0
+    ):
+        """traverses a nested dict
 
         :param node: starting node
         :param node_name: name of the starting node on parent level ('key')
@@ -1778,7 +1937,6 @@ class Standalone:
 
         # iterate over all children who are dicts
         for child in list(k for k in node.keys() if isinstance(node[k], dict)):
-
             if path:
                 new_path = path + COMMAND_SEP
             elif not has_models:
@@ -1788,14 +1946,26 @@ class Standalone:
             new_path += child
 
             # and recursively walk them
-            self.walk(node[child], child, node, func, new_path, indent + 1, path, gpathlist + ([path] if path else []), has_models, func_first, cut_levels)
+            self.walk(
+                node[child],
+                child,
+                node,
+                func,
+                new_path,
+                indent + 1,
+                path,
+                gpathlist + ([path] if path else []),
+                has_models,
+                func_first,
+                cut_levels,
+            )
 
         if func and not func_first:
             # last call func -> process current node after descending
             func(node, node_name, parent, path, indent, gpath, gpathlist)
 
     def find_read_group_triggers(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels):
-        """ find custom read trigger definitions, create trigger item
+        """find custom read trigger definitions, create trigger item
 
         for params see walk() above, they are the same there
 
@@ -1828,10 +1998,12 @@ class Standalone:
                         src_path_elems = path.split(COMMAND_SEP)
                     item_path = '.'.join(['.'.join(src_path_elems), itempath])
 
-                    self.add_item_to_tree(item_path, {'type': 'bool', 'enforce_updates': 'true', ITEM_ATTR_READ_GRP: entry.get('name')})
+                    self.add_item_to_tree(
+                        item_path, {'type': 'bool', 'enforce_updates': 'true', ITEM_ATTR_READ_GRP: entry.get('name')}
+                    )
 
     def create_item(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
-        """ create item or read item for current node/command
+        """create item or read item for current node/command
 
         for params see walk() above, they are the same there
         """
@@ -1843,8 +2015,10 @@ class Standalone:
         item = {}
 
         # skip known command sub-dict nodes, but include command nodes
-        if CMD_ATTR_ITEM_TYPE in node or (node_name not in (CMD_ATTR_CMD_SETTINGS, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS, CMD_IATTR_ATTRIBUTES) and 'type' not in node):
-
+        if CMD_ATTR_ITEM_TYPE in node or (
+            node_name not in (CMD_ATTR_CMD_SETTINGS, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS, CMD_IATTR_ATTRIBUTES)
+            and 'type' not in node
+        ):
             # item -> print item attributes
             if CMD_ATTR_ITEM_TYPE in node:
                 item['type'] = node.get(CMD_ATTR_ITEM_TYPE, 'foo')
@@ -1933,12 +2107,14 @@ class Standalone:
                         item['lookup'][ITEM_ATTR_LOOKUP + '@instance'] = f'{node.get(CMD_ATTR_LOOKUP)}#{ltyp}'
 
             # 'level node' -> print read item
-            elif node_name not in (CMD_ATTR_CMD_SETTINGS, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS, CMD_IATTR_ATTRIBUTES, CMD_IATTR_READ_GROUPS):
-
-                item['read'] = {
-                    'type': 'bool',
-                    'enforce_updates': True
-                }
+            elif node_name not in (
+                CMD_ATTR_CMD_SETTINGS,
+                CMD_ATTR_PARAMS,
+                CMD_ATTR_ITEM_ATTRS,
+                CMD_IATTR_ATTRIBUTES,
+                CMD_IATTR_READ_GROUPS,
+            ):
+                item['read'] = {'type': 'bool', 'enforce_updates': True}
                 item['read'][ITEM_ATTR_READ_GRP + '@instance'] = path if path else node_name
                 try:
                     # set sub-node for readability
@@ -1972,7 +2148,6 @@ class Standalone:
         keys = list(yaml.get('item_attributes').keys())
 
         if keys and global_mod:
-
             new = {}
             for attr in ATTR_NAMES:
                 attr_val = getattr(global_mod, attr)
@@ -1985,13 +2160,13 @@ class Standalone:
                 global_vars[attr] = new[attr]
 
     def create_struct_yaml(self):
-        """ read commands.py and export struct.yaml """
+        """read commands.py and export struct.yaml"""
 
         def isnumstr(val):
             return all(c in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.') for c in val)
 
         def str_presenter(dumper, data):
-            """configures yaml for dumping multiline strings and version number strings """
+            """configures yaml for dumping multiline strings and version number strings"""
 
             # quote strings like '1.2' or '1.2.3' to make is more apparent that this is not a number
             if isnumstr(data):
@@ -2033,7 +2208,6 @@ class Standalone:
 
         if cmds_has_models:
             for model in top_level_entries:
-
                 # create model-specific commands dict
                 m_commands = deepcopy(commands.get(INDEX_GENERIC))
                 update(m_commands, deepcopy(commands.get(model)))
@@ -2051,7 +2225,6 @@ class Standalone:
                 self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)
 
         else:
-
             # create flat commands, 'valid command' needs full cmd path
             flat_commands = deepcopy(commands)
             SDPCommands._flatten_cmds(flat_commands)
