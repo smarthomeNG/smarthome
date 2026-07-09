@@ -48,6 +48,33 @@ except ImportError:
 from lib.orb import Orb
 from lib.shtime import Shtime
 
+# tests/requirements.txt installs skyfield unconditionally, so every
+# *Skyfield/*SkyfieldCached test class below runs for real - the first
+# Orb(backend='skyfield') call would otherwise trigger _SkyfieldBackend.
+# _ensure_loaded() downloading the full de421.bsp (~17MB) from NASA/NAIF.
+# unittests.yml runs a 5-way Python version matrix in parallel, so a single
+# push/PR fired up to 5 simultaneous downloads of the same file from GitHub
+# Actions' shared IP ranges - enough to get rate-limited/blocked, failing CI
+# for a reason unrelated to the actual code change.
+#
+# Fix: seed _SkyfieldBackend's shared ephemeris/timescale class attributes
+# directly from a small local fixture before any test runs. _ensure_loaded()
+# early-returns once cls._planets is set, so the download path is never
+# reached - no changes needed in lib/orb.py itself, and this never touches a
+# developer's real var/cache/skyfield-data/. _SkyfieldCachedBackend inherits
+# the same class attributes, so this covers both backends.
+if HAS_SKYFIELD:
+    from skyfield.api import load as _skyfield_load
+    from skyfield.api import load_file as _skyfield_load_file
+
+    from lib.orb import _SkyfieldBackend
+
+    _SKYFIELD_FIXTURE = os.path.join(os.path.dirname(__file__), 'resources', 'skyfield', 'de421_excerpt.bsp')
+
+    def setUpModule():
+        _SkyfieldBackend._planets = _skyfield_load_file(_SKYFIELD_FIXTURE)
+        _SkyfieldBackend._ts = _skyfield_load.timescale()
+
 # ---------------------------------------------------------------------------
 # Helper
 # ---------------------------------------------------------------------------
@@ -312,6 +339,14 @@ class TestMoon(unittest.TestCase):
 
     def setUp(self):
         self.shtime = _make_shtime()
+        # phase()/light() take no dt param - they always compute against
+        # self.shtime.utcnow(), unlike every other method in this suite which
+        # accepts an explicit dt. Freeze it to a fixed date (same convention
+        # as the rest of the suite) rather than the real wall clock: against
+        # the skyfield backend this also keeps the query inside the fixed
+        # date range tests/resources/skyfield/de421_excerpt.bsp covers,
+        # instead of silently regressing as "now" drifts past it.
+        self.shtime.utcnow = lambda: _SUMMER_SOLSTICE
         self.moon = Orb('moon', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend=self.BACKEND)
 
     def test_moon_rise_returns_datetime(self):
