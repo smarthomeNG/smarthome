@@ -133,6 +133,7 @@ CACHE_FORMAT = CACHE_PICKLE
 PLUGIN_PARSE_ITEM = 'parse_item'
 PLUGIN_PARSE_LOGIC = 'parse_logic'
 PLUGIN_REMOVE_ITEM = 'remove_item'
+PLUGIN_RENAME_ITEM = 'rename_item'
 
 # file extensions
 YAML_FILE = '.yaml'

@@ -1213,7 +1213,7 @@ class Metadata:
         :rtype: str
         """
         try:
-            result = definitions[definition].get('key')
+            result = definitions[definition].get(key)
         except KeyError:
             result = None
         return result
@@ -1222,13 +1222,13 @@ class Metadata:
         """
         Returns the value for a key of a parameter as a string
         """
-        return self.__get_definitioninfo(param, key, self.parameters)
+        return self._get_definitioninfo(param, key, self.parameters)
 
     def get_itemdefinition(self, definition, key):
         """
         Returns the value for a key of a parameter as a string
         """
-        return self.__get_definitioninfo(definition, key, self.itemdefinitions)
+        return self._get_definitioninfo(definition, key, self.itemdefinitions)
 
     def check_parameters(self, args):
         """

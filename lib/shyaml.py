@@ -315,11 +315,21 @@ def _ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
 #
 
 
-def yaml_load_roundtrip(filename):
+def yaml_load_roundtrip(filename, raise_on_error=False):
     """
     Load contents of a yaml file into an dict structure for editing (using Roundtrip Loader)
 
     :param filename: name of the yaml file to load
+    :param raise_on_error: if True, re-raise a load/parse failure instead
+                            of swallowing it into an empty dict. Callers
+                            that go on to MODIFY and SAVE the result must
+                            set this — treating a parse error the same as
+                            "file is legitimately empty" makes the
+                            following save() silently truncate the file
+                            to just the one change being made, destroying
+                            everything else in it.
+    :type raise_on_error: bool
+
     :return: data structure loaded from file
     """
 
@@ -336,6 +346,8 @@ def yaml_load_roundtrip(filename):
         y = yaml.load(sdata, yaml.RoundTripLoader)
     except Exception as e:
         logger.error("yaml_load_roundtrip: YAML-file load error: '%s'" % (e))
+        if raise_on_error:
+            raise
         y = {}
     return y
 
@@ -582,15 +594,43 @@ class yamlfile:
     def load(self):
         """
         load the contents of the yaml-file to the data-structure
+
+        A file whose root is literally ``null`` (e.g. after setvalue()
+        removed its last top-level key) loads as ``None`` - normalize that
+        to an empty CommentedMap, matching __init__'s default, so setvalue()
+        doesn't silently no-op on every subsequent call (None[key] = ...
+        raises TypeError, which setInDict() swallows and turns into a
+        no-op).
+
+        Raises on a genuine parse failure (e.g. a duplicate-key error
+        elsewhere in the file) rather than treating it the same as an
+        empty file - this class is used to load, modify ONE value, and
+        save the whole file back; silently continuing with empty data
+        would make save() overwrite the rest of the file's contents with
+        nothing.
         """
-        self.data = yaml_load_roundtrip(self.filename)
+        self.data = yaml_load_roundtrip(self.filename, raise_on_error=True)
+        if self.data is None:
+            self.data = yaml.comments.CommentedMap([])
 
     def save(self):
         """
         save the contents of the data-structure to the yaml-file
+
+        If the data-structure is now empty (e.g. the last item defined in
+        this file was removed), delete the file instead of writing a
+        redundant ``{}`` document - an empty file and a "file with an
+        empty mapping" are equivalent for every reader in this codebase,
+        so there's nothing worth keeping.
         """
         if self._create_bak and os.path.isfile(self.filename_write + YAML_FILE):
             os.rename(self.filename_write + YAML_FILE, self.filename_bak)
+        if not self.data:
+            filepath = self.filename_write + YAML_FILE
+            if os.path.isfile(filepath):
+                os.remove(filepath)
+                logger.info("Deleted now-empty yaml file '{}'".format(filepath))
+            return
         yaml_save_roundtrip(self.filename_write, self.data)
 
     def getnode(self, path):
@@ -654,17 +694,21 @@ class yamlfile:
         :param value: new value of the leaf-node
         """
         if value is None:
+            parent_path = get_parent(path)
+            # get_parent() returns '' for a top-level path; getnode('') does
+            # not resolve to self.data, it's a lookup miss - special-case it.
+            parent_node = self.data if parent_path == '' else self.getnode(parent_path)
             try:
-                self.getnode(get_parent(path)).pop(get_key(path), None)
+                parent_node.pop(get_key(path), None)
             except AttributeError:
                 pass
-            if self.getnode(get_parent(path)) == yaml.comments.CommentedMap():
-                node = self.getnode(get_parent(get_parent(path)))
+            if parent_path != '' and self.getnode(parent_path) == yaml.comments.CommentedMap():
+                node = self.getnode(get_parent(parent_path))
                 root = node is None
                 if root:
-                    self.data[get_key(get_parent(path))] = None
+                    self.data[get_key(parent_path)] = None
                 else:
-                    node[get_key(get_parent(path))] = None
+                    node[get_key(parent_path)] = None
             return
         else:
             return self._add_node_and_leaf(path, value)

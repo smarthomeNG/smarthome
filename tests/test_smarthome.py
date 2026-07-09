@@ -25,10 +25,22 @@ import unittest
 import logging
 import os
 import tempfile
+import warnings
 
 import bin.smarthome
 import lib.smarthome
 from lib.constants import YAML_FILE
+
+common.register_shng_log_levels()
+
+try:
+    import cryptography.hazmat.primitives.ciphers.algorithms as _crypto_algorithms
+    import cryptography.hazmat.primitives.ciphers.modes as _crypto_modes
+    from cryptography.utils import CryptographyDeprecationWarning
+
+    _CRYPTOGRAPHY_AVAILABLE = True
+except ImportError:
+    _CRYPTOGRAPHY_AVAILABLE = False
 
 
 logger = logging.getLogger(__name__)
@@ -102,6 +114,8 @@ class SmarthomeTest(unittest.TestCase):
                 _module_conf_basename = os.path.join(_etc_dir, 'module')
                 self.assertEqual(sh._module_conf_basename, _module_conf_basename)
 
+                self.assertEqual(sh._created_items_file, 'created')
+
                 _cache_dir = os.path.join(base_dir, 'var', 'cache' + os.path.sep)
                 self.assertEqual(sh._cache_dir, _cache_dir)
                 _env_dir = os.path.join(base_dir, 'lib', 'env' + os.path.sep)
@@ -116,6 +130,28 @@ class SmarthomeTest(unittest.TestCase):
                     self.assertTrue(os.path.isfile(os.path.join(_etc_dir, c + YAML_FILE)))
 
         logger.warning('=== End Smarthome Tests: testConfigInit')
+
+    @unittest.skipUnless(_CRYPTOGRAPHY_AVAILABLE, 'cryptography package not installed')
+    def test_object_refcount_does_not_emit_crypto_deprecation_warnings(self):
+        # Force the (possibly deprecated) symbols into sys.modules so
+        # _object_refcount()'s getattr() scan actually reaches them.
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore', CryptographyDeprecationWarning)
+            _crypto_algorithms.Camellia
+            _crypto_modes.CFB
+            _crypto_modes.CFB8
+            _crypto_modes.OFB
+
+        bin.smarthome.MODE = 'unittest'
+        sh = lib.smarthome.SmartHome(MODE=bin.smarthome.MODE)
+        sh.alive = False
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter('always')
+            sh._object_refcount()
+
+        crypto_warnings = [w for w in caught if issubclass(w.category, CryptographyDeprecationWarning)]
+        self.assertEqual(crypto_warnings, [])
 
 
 if __name__ == '__main__':

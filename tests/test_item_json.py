@@ -39,7 +39,7 @@ common.register_shng_log_levels()
 import lib.item.item
 import lib.item.items
 from lib.item.items import Items
-from lib.item._json import jsonvars, to_json
+from lib.item._internal._json import jsonvars, to_json
 from tests.mock.core import MockSmartHome
 
 

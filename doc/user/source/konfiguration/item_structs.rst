@@ -411,7 +411,7 @@ nur in Item-Definitionen:
         struct: kodi.master.bar   # nur den 'bar'-Teilbaum von kodi.master einbinden
 
 Fehlermeldungen
-~~~~~~~~~~~~~~~
+---------------
 
 Wenn ein Teilpfad angegeben wird, der nicht existiert, gibt SmartHomeNG eine aussagekräftige Fehlermeldung aus:
 

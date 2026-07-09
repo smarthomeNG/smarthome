@@ -20,6 +20,7 @@
 #########################################################################
 
 
+import json
 import os
 import logging
 import cherrypy
@@ -112,6 +113,8 @@ class Admin(Module):
             self.developer_mode = self._parameters['developer_mode']
             self.rest_dispatch_force_exception = self._parameters['rest_dispatch_force_exception']
             self.click_dropdown_header = self._parameters['click_dropdown_header']
+            self.dark_mode = self._parameters['dark_mode']
+            self.resource_graph_period = self._parameters['resource_graph_period']
         except Exception:
             self.logger.critical(
                 "Module '{}': Inconsistent module (invalid metadata definition)".format(self._shortname)
@@ -220,12 +223,12 @@ class Admin(Module):
                 'tools.expires.on': True,
                 'tools.expires.secs': 6,
                 'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-                'error_page.404': self._error_page,
-                'error_page.400': self._error_page,
-                'error_page.401': self._error_page,
-                'error_page.405': self._error_page,
-                'error_page.411': self._error_page,
-                'error_page.500': self._error_page,
+                'error_page.404': self._error_page_json,
+                'error_page.400': self._error_page_json,
+                'error_page.401': self._error_page_json,
+                'error_page.405': self._error_page_json,
+                'error_page.411': self._error_page_json,
+                'error_page.500': self._error_page_json,
             }
         }
 
@@ -262,6 +265,19 @@ class Admin(Module):
             cherrypy.tree.apps[''].config['/3rdpartylicenses.txt'] = {
                 'tools.staticfile.on': True,
                 'tools.staticfile.filename': license_file,
+            }
+
+        # Local user documentation (doc/user/build/html), if it's been
+        # built for this install — self._sh.get_basedir() so this works on
+        # any install rather than a fixed path. api_system.py's info()
+        # reports whether this exists, so the frontend can offer a "local
+        # help" link only when it does.
+        help_dir = os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html')
+        if os.path.isfile(os.path.join(help_dir, 'index.html')) and '' in cherrypy.tree.apps:
+            cherrypy.tree.apps[''].config['/help'] = {
+                'tools.staticdir.on': True,
+                'tools.staticdir.dir': help_dir,
+                'tools.staticdir.index': 'index.html',
             }
 
     def stop(self):
@@ -357,6 +373,36 @@ class Admin(Module):
         result += '</div>'
 
         return result
+
+    def _error_page_json(self, status, message, traceback, version):
+        """
+        JSON error body for the /api tree, used in place of _error_page()'s
+        HTML.  The shngadmin frontend reads the message via
+        ``err.error.error`` (see e.g. ItemTreeComponent) — until this
+        existed, that field was always undefined for every API error
+        (the response body was an HTML page, not JSON), silently breaking
+        every error-message-driven flow (cycle/collision wording,
+        offering to auto-create missing parent items on rename, etc.) —
+        callers always fell through to a generic fallback string instead.
+
+        :param status: error number and description, e.g. "400 Bad Request"
+        :param message: detailed error description
+        :param traceback: traceback that lead to the error
+        :param version: CherryPy version
+        :type status: str
+        :type message: str
+        :type traceback: str
+        :type version: str
+
+        :return: JSON-encoded error body
+        :rtype: str
+        """
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        errno = status.split()[0]
+        body = {'error': message, 'status': errno}
+        if self._showtraceback and errno == '500':
+            body['traceback'] = traceback
+        return json.dumps(body)
 
     def _spa_index(self, status, message, traceback, version):
         cherrypy.response.status = 200

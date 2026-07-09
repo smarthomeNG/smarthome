@@ -52,16 +52,37 @@ They can be used the following way: To call eg. **get_toplevel_items()**, use th
 
 """
 
+import copy
 import logging
+import os
 import re
 
+import lib.config
 import lib.utils
+import lib.shyaml as shyaml
+
+from lib.constants import ITEM_DEFAULTS, PLUGIN_PARSE_ITEM, PLUGIN_REMOVE_ITEM, PLUGIN_RENAME_ITEM
+from lib.item._internal._lifecycle import _detach_from_other_items_triggers, _remove_scheduler_jobs, _stop_fading
+from lib.item._internal._parsing import check_item_name_collision
 
 from .item import Item
 from .structs import Structs
 
 
 _items_instance = None  # Pointer to the initialized instance of the Items class (for use by static methods)
+
+
+def _flatten_with_children(item):
+    """
+    Yield *item* followed by all of its descendants, depth-first.
+
+    Used by ``Items.create_item()`` to find every item that was newly
+    created together with the requested one (nested config dicts create
+    child items automatically, via Item's own recursive construction).
+    """
+    yield item
+    for child in item.return_children():
+        yield from _flatten_with_children(child)
 
 
 class Items:
@@ -85,8 +106,6 @@ class Items:
     plugin_prefixes_tuple = None  # tuple for finding if an attribute name starts with one of the prefixes
 
     structs = None
-
-    _item_methods = [name for name in dir(Item) if name[0] != '_']
 
     def __init__(self, smarthome):
         self._sh = smarthome
@@ -193,17 +212,10 @@ class Items:
 
         for attr, value in item_conf.items():
             if isinstance(value, dict):
-                child_path = attr
                 try:
-                    # (smarthome, parent, path, config):
-                    child = Item(self._sh, self, child_path, value, items_instance=_items_instance)
+                    self._construct_and_link(attr, value)
                 except Exception as e:
-                    self.logger.error('load_itemdefinitions: Item {}: problem creating: {}'.format(child_path, e))
-                else:
-                    vars(self)[attr] = child
-                    vars(self._sh)[attr] = child
-                    self.add_item(child_path, child)
-                    self._children.append(child)
+                    self.logger.error('load_itemdefinitions: Item {}: problem creating: {}'.format(attr, e))
         del item_conf  # clean up
 
         # Test if all used attributes are defined in configuread plugins
@@ -252,6 +264,217 @@ class Items:
     # import lib.metadata as metadata
     # self.logger.notice(f"metadata.all_itemprefixdefinitions: {metadata.all_itemprefixdefinitions.keys()}")
 
+    def _construct_and_link(self, path, config, parent=None):
+        """
+        Construct a single item and link it into the tree, without running
+        any of the post-construction init phases (_init_prerun/
+        _init_start_scheduler/_init_run).
+
+        This is the shared construction path used both by
+        load_itemdefinitions() (which batches the init phases across the
+        whole tree afterward, to support forward references between items)
+        and by create_item() (which runs the init phases immediately, for
+        just the newly created subtree).
+
+        :param path: Full path of the item to create
+        :param config: Attribute configuration dict for the item (may
+                        contain nested dicts for child items, handled by
+                        Item's own recursive construction)
+        :param parent: Item under which to create this item; None for a
+                        top-level item (parent becomes this Items instance)
+        :type path: str
+        :type config: dict
+
+        :return: The newly created Item
+        :rtype: Item
+        """
+        parent_obj = self if parent is None else parent
+        leaf_attr = path.rsplit('.', 1)[-1]
+
+        objects_to_check = [parent_obj] if parent is not None else [parent_obj, self._sh]
+        if check_item_name_collision(self._sh, objects_to_check, leaf_attr, path):
+            return None
+
+        child = Item(self._sh, parent_obj, path, config, items_instance=self)
+
+        setattr(parent_obj, leaf_attr, child)
+        if parent is None:
+            setattr(self._sh, leaf_attr, child)
+        self.add_item(path, child)
+        parent_obj._append_child(child)
+
+        return child
+
+    def create_item(self, path, config, parent=None, persist=True, filename=None, create_missing_parents=False):
+        """
+        Create a single item at runtime and fully initialize it (and any
+        nested child items declared in *config*).
+
+        Unlike load_itemdefinitions(), which batches the init phases across
+        the whole tree (to support forward references between items being
+        loaded together), this runs the init phases immediately, scoped to
+        only the newly created item and its descendants. A pre-existing
+        item with a wildcard ``trigger:`` pattern that would now match this
+        new item is *not* retroactively rewired — that would require
+        re-running _init_prerun() across the whole tree on every creation.
+
+        If *parent* is not given and *path* has a dotted parent segment,
+        that parent is resolved by path. A missing parent raises ValueError
+        unless *create_missing_parents* is set, in which case every missing
+        ancestor is created first (in order, shallow to deep) as an empty
+        item — same as calling create_item() on each of them individually
+        with an empty config.
+
+        :param path: Full path of the item to create
+        :param config: Attribute configuration dict for the item
+        :param parent: Item under which to create this item; None to
+                        resolve the parent from *path* (or for a top-level
+                        item, if *path* has no dot)
+        :param persist: If True (default), also write *config* to a yaml
+                         file in items_dir, so the item survives a restart.
+                         If False, the item is runtime-only, same as before
+                         this parameter existed.
+        :param filename: Basename (without extension) of the yaml file to
+                          persist to. Only used when persist is True; falls
+                          back to ``sh._created_items_file`` if not given.
+                          Auto-created missing parents use the same
+                          persist/filename as *path* itself.
+        :param create_missing_parents: If True, auto-create any missing
+                          ancestor of *path* (as an empty item) instead of
+                          raising ValueError.
+        :type path: str
+        :type config: dict
+        :type persist: bool
+        :type filename: str
+        :type create_missing_parents: bool
+
+        :return: The newly created Item, or None if its own name collided
+                 with an existing attribute and was dropped — see
+                 lib.item._internal._parsing.check_item_name_collision().
+                 A collision on an auto-created ancestor instead raises
+                 ValueError, since silently dropping just an ancestor would
+                 leave the requested item never created but reported as if
+                 the failure were about *path* itself.
+        :rtype: Item or None
+        """
+        if parent is None:
+            parent_path, sep, _leaf = path.rpartition('.')
+            if sep:
+                parent = self.return_item(parent_path)
+                if parent is None:
+                    if not create_missing_parents:
+                        raise ValueError(f"Parent item '{parent_path}' not found")
+                    parent = self.create_item(
+                        parent_path, {}, persist=persist, filename=filename, create_missing_parents=True
+                    )
+                    if parent is None:
+                        raise ValueError(
+                            f"Could not auto-create missing parent '{parent_path}': "
+                            'its name collides with an existing attribute'
+                        )
+
+        item_config = config
+        if persist:
+            filename = filename or self._sh._created_items_file
+            item_config = copy.deepcopy(config)
+            # _add_filenames_to_config() sets '_filename' on dict *values* of
+            # its argument, recursively - wrap item_config so it (and every
+            # nested child config) gets the key too, not just grandchildren.
+            lib.config._add_filenames_to_config({'_': item_config}, filename)
+            self._write_to_yaml_file(filename, path, config)
+
+        item = self._construct_and_link(path, item_config, parent=parent)
+        if item is None:
+            return None
+
+        new_items = list(_flatten_with_children(item))
+        for new_item in new_items:
+            new_item._init_prerun()
+        for new_item in new_items:
+            new_item._init_start_scheduler()
+        for new_item in new_items:
+            new_item._init_run()
+
+        return item
+
+    @staticmethod
+    def _load_yaml_file(yf, filename):
+        """
+        Load *yf* (a shyaml.yamlfile already pointed at *filename*),
+        turning a parse failure into a ValueError instead of letting it
+        propagate as whatever exception ruamel.yaml happened to raise.
+
+        yamlfile.load() raises on a genuine parse error (e.g. a
+        duplicate-key mistake elsewhere in the file) rather than silently
+        treating it as an empty file — every caller here goes on to
+        modify and save() the result, and saving "empty" over a file that
+        merely failed to parse would destroy everything else in it. This
+        wraps that into a message callers' own try/except ValueError
+        (and the REST layer's) already know how to surface as a 400.
+
+        :param yf: The yamlfile instance to load
+        :param filename: Basename (without extension), for the message
+        :type yf: shyaml.yamlfile
+        :type filename: str
+        """
+        try:
+            yf.load()
+        except Exception as e:
+            raise ValueError(f"Could not parse '{filename}.yaml': {e}") from e
+
+    def _write_to_yaml_file(self, filename, path, config):
+        """
+        Write *config* (the original, caller-supplied dict — no internal
+        bookkeeping keys like ``_filename``) into ``items_dir/<filename>.yaml``
+        at the given dotted *path*, creating intermediate branches as
+        needed. Preserves comments/formatting already in the file via
+        ruamel.yaml's round-trip loader/dumper.
+
+        :param filename: Basename (without extension) of the target file
+        :param path: Full dotted path at which to insert *config*
+        :param config: Attribute configuration dict to persist
+        """
+        target = os.path.join(self._sh._items_dir, filename)
+        yf = shyaml.yamlfile(target)
+        if os.path.isfile(target + shyaml.YAML_FILE):
+            self._load_yaml_file(yf, filename)
+        yf.setvalue(path, config)
+        yf.save()
+
+    def _preserve_existing_children(self, filename, path, config):
+        """
+        Return a copy of *config* with any child-item entries (dict-valued
+        keys) from the EXISTING persisted file at *path* merged in.
+
+        edit_item() never touches an item's children (see its docstring) —
+        persisting its new attribute config must not either. setvalue()
+        replaces the whole dict at *path* wholesale, so without this, an
+        edit would silently wipe out any child item's own YAML block.
+
+        :param filename: Basename (without extension) of the target file
+        :param path: Full dotted path *config* is about to be written to
+        :param config: New attribute configuration dict (no children)
+        :type filename: str
+        :type path: str
+        :type config: dict
+
+        :return: config, with existing child entries merged in
+        :rtype: dict
+        """
+        target = os.path.join(self._sh._items_dir, filename)
+        if not os.path.isfile(target + shyaml.YAML_FILE):
+            return config
+        yf = shyaml.yamlfile(target)
+        self._load_yaml_file(yf, filename)
+        existing = yf.getnode(path)
+        if not isinstance(existing, dict):
+            return config
+        merged = dict(config)
+        for key, value in existing.items():
+            if isinstance(value, dict) and key not in merged:
+                merged[key] = value
+        return merged
+
     def add_item(self, path, item):
         """
         Function to to add an item to the dictionary of items.
@@ -272,31 +495,677 @@ class Items:
     #        for child in self.__children:
     #            yield child
 
-    def remove_item(self, item):
+    def edit_item(self, item, config):
+        """
+        Edit an existing item's attributes at runtime, in place — preserves
+        Python object identity (unlike create_item()/remove_item()), so
+        other items' incoming trigger/hysteresis_input registrations onto
+        *item*, and this item's own value/history/children, all survive
+        automatically without any rewiring step. See
+        ~/.claude/handoff/shng-edit-item-attributes.md for the full design
+        rationale.
+
+        *config* is the COMPLETE new attribute set, same convention as
+        create_item() — omitting a key resets it to its default, there is
+        no separate partial-patch/delete-sentinel scheme.
+
+        Other items' incoming trigger/hysteresis_input registrations onto
+        *item* live on THIS item's own _items_to_trigger list, which an
+        edit never resets — they survive an edit untouched, with no
+        special-case code needed here.
+
+        :param item: The item to edit
+        :param config: Complete new attribute configuration dict
+        :type item: object
+        :type config: dict
+
+        :return: The same item, mutated
+        :rtype: Item
+        """
+        # Undo this item's own OUTGOING trigger/hysteresis_input wiring
+        # (based on the OLD config) before re-parsing — otherwise a moved
+        # trigger leaves a stale registration on the old target. Incoming
+        # references (other items pointing AT this one) live on THIS
+        # item's own _items_to_trigger list, untouched here — that's the
+        # whole point of editing in place instead of remove+recreate.
+        _detach_from_other_items_triggers(item)
+        _remove_scheduler_jobs(item)
+        _stop_fading(item)
+
+        # Undo old plugin bindings before re-parsing — without this, a
+        # plugin that appends to its own internal state in parse_item()
+        # (e.g. the database plugin) would double-register the same item
+        # object when parse_item() runs again below.
+        for plugin in item.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_REMOVE_ITEM):
+                plugin.remove_item(item)
+
+        item._apply_config(config)
+
+        # Re-wire based on the NEW config (eval/trigger/hysteresis_input
+        # expansion, registers this item onto its new trigger targets).
+        item._init_prerun()
+        item._init_start_scheduler()
+        item._init_run()
+
+        # Rebind to plugins per the NEW config — mirrors the same loop
+        # Item.__init__ runs inline for a freshly constructed item.
+        for plugin in item.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_PARSE_ITEM):
+                update = plugin.parse_item(item)
+                if update:
+                    try:
+                        plugin.add_item(item, updating=True)
+                    except Exception:
+                        pass
+                    item.add_method_trigger(update)
+
+        # Preserved value may not be valid for a new type (e.g. num -> str
+        # always works, str -> num doesn't if the string isn't numeric).
+        # Same try-cast-with-fallback pattern as the existing cache-restore
+        # path (Item.__init__'s "Cache" section) — not new logic.
+        try:
+            item._value = item.cast(item._value)
+        except Exception:
+            self.logger.warning(
+                f'Item {item.property.path}: value {item._value!r} does not match new type '
+                f'{item._type} after edit — resetting to default.'
+            )
+            item._value = ITEM_DEFAULTS[item._type]
+
+        if item._filename:
+            merged_config = self._preserve_existing_children(item._filename, item.property.path, config)
+            self._write_to_yaml_file(item._filename, item.property.path, merged_config)
+
+        return item
+
+    def remove_item(self, item, persist=True, recursive=False):
         """
         Function to remove an item from the dictionary of items
         and delete the item object.
 
+        An item with sub-items is left untouched (raises ValueError) unless
+        *recursive* is set — sub-items are not necessarily defined in the
+        same yaml file as their parent (each item tracks its own
+        ``_filename`` independently), so this can't be handled as a side
+        effect of removing the parent's own yaml node; every descendant is
+        removed individually, deepest first, each via its own source file.
+
         :param item: The item to delete
+        :param persist: If True (default), also remove the item's entry
+                         from the yaml file it was defined in (``item.
+                         property.defined_in``/``item._filename``), if any.
+                         Works for any item with a known source file, not
+                         only ones created via create_item(persist=True) —
+                         deliberately generic. No-op if the item has no
+                         known source file. Applies to every removed
+                         descendant too, each using its own source file.
+        :param recursive: If True, also remove every sub-item first
+                           (deepest first). If False (default) and *item*
+                           has sub-items, raises ValueError instead of
+                           removing anything.
         :type item: object
+        :type persist: bool
+        :type recursive: bool
         """
 
         if item.property.path not in self.__items:
             return
 
+        children = list(item.return_children())
+        if children and not recursive:
+            raise ValueError(
+                f"Item '{item.property.path}' has {len(children)} sub-item(s) — set recursive to delete them too"
+            )
+
+        for child in children:
+            self.remove_item(child, persist=persist, recursive=True)
+
+        path = item.property.path
+        source_filename = item._filename
+
         # remove item from Items data
         try:
-            del self.__item_dict[item.property.path]
-            self.__items.remove(item.property.path)
+            del self.__item_dict[path]
+            self.__items.remove(path)
         except Exception as e:
-            self.logger.warning(f'Error occured while trying to remove item {item.property.path}: {e}')
+            self.logger.warning(f'Error occured while trying to remove item {path}: {e}')
 
         # remove item bindings in plugins
         if item.remove():
             # delete item
             del item
         else:
-            self.logger.warning(f'Item {item.property.path} could not be removed due to incompatible plugins.')
+            self.logger.warning(f'Item {path} could not be removed due to incompatible plugins.')
+
+        if persist and source_filename:
+            self._remove_from_yaml_file(source_filename, path)
+
+    def rename_item(self, item, new_path, filename=None):
+        """
+        Rename an item in place, optionally moving it to a new parent (see
+        ~/.claude/handoff/shng-rename-item-design.md). Mutates the item's
+        own path (and, for a move, its parent) and re-keys it in
+        __item_dict; unlike edit_item(), the item's attribute config is
+        untouched, only its identity (path/parent).
+
+        If the item is persisted, its YAML node moves to: *filename* if
+        given explicitly; otherwise the new parent's file, if the new
+        parent is a real (non-top-level) Item with one; otherwise the
+        item's own current file unchanged (same-file rename, the
+        original v1 behavior). A non-persisted item is never persisted
+        as a side effect of a move.
+
+        :param item: The item to rename/move
+        :param new_path: The item's new full path — same parent segment
+                          for a plain rename, a different one to move it
+        :param filename: Explicit target yaml file (basename, no
+                          extension) to override the default above
+        :type new_path: str
+        :type filename: str
+
+        :return: The same item, mutated
+        :rtype: Item
+        """
+        old_path = item.property.path
+        if new_path == old_path:
+            return item, {'rewritten_references': [], 'failed_references': []}
+
+        new_parent_path, _, _ = new_path.rpartition('.')
+        if new_parent_path:
+            new_parent_obj = self.return_item(new_parent_path)
+            if new_parent_obj is None:
+                raise ValueError(
+                    f"Item '{old_path}' cannot be renamed to '{new_path}': parent '{new_parent_path}' not found"
+                )
+            new_is_top_level = False
+        else:
+            new_parent_obj = self
+            new_is_top_level = True
+
+        if new_path.startswith(old_path + '.'):
+            raise ValueError(
+                f"Item '{old_path}' cannot be renamed to '{new_path}': item cannot become a child of itself"
+            )
+
+        leaf_attr = new_path.rsplit('.', 1)[-1]
+        objects_to_check = [new_parent_obj, self._sh] if new_is_top_level else [new_parent_obj]
+        if check_item_name_collision(self._sh, objects_to_check, leaf_attr, new_path):
+            raise ValueError(f"Item '{old_path}' cannot be renamed to '{new_path}': name collision")
+
+        old_is_top_level = item._is_top_of_item_tree()
+        old_parent_obj = self if old_is_top_level else item.return_parent()
+        if new_parent_obj is not old_parent_obj:
+            old_leaf_attr = old_path.rsplit('.', 1)[-1]
+            old_parent_obj._remove_child(item)
+            if getattr(old_parent_obj, old_leaf_attr, None) is item:
+                delattr(old_parent_obj, old_leaf_attr)
+            if old_is_top_level and getattr(self._sh, old_leaf_attr, None) is item:
+                delattr(self._sh, old_leaf_attr)
+
+            item._reassign_parent(new_parent_obj)
+            new_parent_obj._append_child(item)
+            setattr(new_parent_obj, leaf_attr, item)
+            if new_is_top_level:
+                setattr(self._sh, leaf_attr, item)
+
+        rename_hook_plugins = [p for p in item.plugins.return_plugins() if hasattr(p, PLUGIN_RENAME_ITEM)]
+        # Pause each affected plugin AT MOST ONCE for the whole rename, not
+        # once per descendant — STOP_ON_ITEM_CHANGE's stop()/run() cycle can
+        # be expensive (reconnecting to real hardware/network), and a
+        # renamed subtree may have many descendants.
+        paused_plugins = [p for p in rename_hook_plugins if getattr(p, 'STOP_ON_ITEM_CHANGE', False) and p.alive]
+        for plugin in paused_plugins:
+            try:
+                plugin.stop()
+            except Exception as e:
+                self.logger.warning(f"Plugin '{plugin}' failed to stop for rename of item '{old_path}': {e}")
+
+        try:
+            for descendant in _flatten_with_children(item):
+                descendant_old_path = descendant.property.path
+                descendant_new_path = new_path + descendant_old_path[len(old_path) :]
+
+                _remove_scheduler_jobs(descendant)
+
+                descendant._path = descendant_new_path
+                del self.__item_dict[descendant_old_path]
+                self.__items.remove(descendant_old_path)
+                self.add_item(descendant_new_path, descendant)
+
+                descendant._init_start_scheduler()
+
+                for plugin in rename_hook_plugins:
+                    try:
+                        plugin.rename_item(descendant, descendant_old_path, descendant_new_path)
+                    except Exception as e:
+                        self.logger.warning(
+                            f"Plugin '{plugin}' rename_item() failed for item '{descendant_new_path}': {e}"
+                        )
+        finally:
+            for plugin in paused_plugins:
+                if not plugin.alive:
+                    try:
+                        plugin.run()
+                    except Exception as e:
+                        self.logger.warning(
+                            f"Plugin '{plugin}' failed to resume after rename of item '{old_path}': {e}"
+                        )
+
+        if item._filename:
+            target_filename = filename or (
+                new_parent_obj._filename
+                if not new_is_top_level and getattr(new_parent_obj, '_filename', None)
+                else item._filename
+            )
+
+            if target_filename == item._filename:
+                target = os.path.join(self._sh._items_dir, item._filename)
+                if os.path.isfile(target + shyaml.YAML_FILE):
+                    yf = shyaml.yamlfile(target)
+                    self._load_yaml_file(yf, item._filename)
+                    node = yf.getnode(old_path)
+                    yf.setvalue(old_path, None)
+                    yf.setvalue(new_path, node)
+                    yf.save()
+            else:
+                old_target = os.path.join(self._sh._items_dir, item._filename)
+                node = None
+                if os.path.isfile(old_target + shyaml.YAML_FILE):
+                    old_yf = shyaml.yamlfile(old_target)
+                    self._load_yaml_file(old_yf, item._filename)
+                    node = old_yf.getnode(old_path)
+                    old_yf.setvalue(old_path, None)
+                    old_yf.save()
+
+                new_target = os.path.join(self._sh._items_dir, target_filename)
+                new_yf = shyaml.yamlfile(new_target)
+                if os.path.isfile(new_target + shyaml.YAML_FILE):
+                    self._load_yaml_file(new_yf, target_filename)
+                new_yf.setvalue(new_path, node)
+                new_yf.save()
+
+                for descendant in _flatten_with_children(item):
+                    descendant._filename = target_filename
+
+        report = self._rewrite_references(old_path, new_path)
+
+        return item, report
+
+    def _rewrite_references(self, old_path, new_path):
+        """
+        Repoint every other item's textual reference to *old_path* (or one
+        of its descendants) at *new_path*, via the boundary-aware prefix
+        replace in _rewrite_sh_path_reference()/_rewrite_bare_path_reference().
+
+        Unlike remove_references(), every match is rewritten — ambiguous
+        or not, that classification doesn't apply here, since nothing is
+        being removed, only repointed (see
+        ~/.claude/handoff/shng-rename-item-design.md).
+
+        Best-effort per referencing item: a failure on one item doesn't
+        abort the others, consistent with edit_item()'s/remove_references()'s
+        existing best-effort conventions.
+
+        :param old_path: The path being renamed away from
+        :param new_path: The path being renamed to
+        :type old_path: str
+        :type new_path: str
+
+        :return: {"rewritten_references": [item_path, ...],
+                  "failed_references": [(item_path, error), ...]}
+        :rtype: dict
+        """
+        matched_attrs = {}
+        for ref_item, attr_name, _value, _unambiguous in self.find_references(old_path):
+            matched_attrs.setdefault(ref_item, set()).add(attr_name)
+
+        rewritten = []
+        failed = []
+        for ref_item, attrs in matched_attrs.items():
+            try:
+                config = self.current_config_for_edit(ref_item)
+                for attr_name in attrs:
+                    if attr_name == 'trigger':
+                        config['trigger'] = [
+                            self._rewrite_bare_path_reference(entry, old_path, new_path)
+                            for entry in config.get('trigger', [])
+                        ]
+                    elif attr_name == 'hysteresis_input':
+                        if 'hysteresis_input' in config:
+                            config['hysteresis_input'] = self._rewrite_bare_path_reference(
+                                config['hysteresis_input'], old_path, new_path
+                            )
+                    elif attr_name == 'eval':
+                        if 'eval' in config:
+                            config['eval'] = self._rewrite_sh_path_reference(config['eval'], old_path, new_path)
+                    elif attr_name in ('on_change', 'on_update'):
+                        if attr_name in config:
+                            config[attr_name] = [
+                                self._rewrite_sh_path_reference(entry, old_path, new_path)
+                                for entry in config[attr_name]
+                            ]
+                self.edit_item(ref_item, config)
+                rewritten.append(ref_item.property.path)
+            except Exception as e:
+                failed.append((ref_item.property.path, str(e)))
+
+        return {'rewritten_references': rewritten, 'failed_references': failed}
+
+    def _remove_from_yaml_file(self, filename, path):
+        """
+        Remove the entry at dotted *path* from ``items_dir/<filename>.yaml``,
+        if that file exists. Cleans up now-empty parent branches. Preserves
+        comments/formatting of everything else in the file (round-trip
+        load/save).
+
+        :param filename: Basename (without extension) of the file to edit
+        :param path: Full dotted path of the entry to remove
+        """
+        target = os.path.join(self._sh._items_dir, filename)
+        if not os.path.isfile(target + shyaml.YAML_FILE):
+            return
+        yf = shyaml.yamlfile(target)
+        self._load_yaml_file(yf, filename)
+        yf.setvalue(path, None)
+        yf.save()
+
+    @staticmethod
+    def _rewrite_sh_path_reference(text, old_path, new_path):
+        """
+        Replace every ``sh.<old_path>`` occurrence in *text* with
+        ``sh.<new_path>``, leaving any suffix untouched (a property
+        accessor, a legacy accessor like ``last_change``, ``()``, a real
+        child item segment, or a plugin-attached method like
+        ``.db(...)``) — used by rename_item() to repoint other items'
+        eval/on_change/on_update text at a renamed item's new path.
+
+        Unlike find_references()'s detection regex, no live-tree
+        resolution is needed here: every reference to *old_path* or one
+        of its descendants is, by construction, a literal
+        ``old_path``-prefixed string, since a descendant's own path is
+        always ``old_path + '.' + something`` — replacing just the
+        ``old_path`` prefix is correct regardless of what follows. A
+        negative lookahead guards against a longer, unrelated identifier
+        that merely starts with the same characters (e.g. renaming
+        ``item`` must not also rewrite ``itemized``).
+
+        :param text: eval/on_change/on_update text to rewrite
+        :param old_path: The path being renamed away from
+        :param new_path: The path being renamed to
+        :type text: str
+        :type old_path: str
+        :type new_path: str
+
+        :return: text with every matching reference repointed
+        :rtype: str
+        """
+        pattern = re.compile(r'\bsh\.' + re.escape(old_path) + r'(?![A-Za-z0-9_])')
+        return pattern.sub('sh.' + new_path, text)
+
+    @staticmethod
+    def _rewrite_bare_path_reference(value, old_path, new_path):
+        """
+        Replace a ``trigger``/``hysteresis_input``-style bare item path
+        with its renamed equivalent, if *value* is *old_path* itself or a
+        descendant of it (``old_path + '.' + something``) — same prefix
+        rule as _rewrite_sh_path_reference(), without the ``sh.`` prefix
+        (these attributes store a bare path directly, never ``sh.``-text).
+
+        :param value: The bare path value to check/rewrite
+        :param old_path: The path being renamed away from
+        :param new_path: The path being renamed to
+        :type value: str
+        :type old_path: str
+        :type new_path: str
+
+        :return: value, rewritten if it referenced old_path; unchanged otherwise
+        :rtype: str
+        """
+        if value == old_path:
+            return new_path
+        if value.startswith(old_path + '.'):
+            return new_path + value[len(old_path) :]
+        return value
+
+    def find_references(self, path):
+        """
+        Best-effort search for textual references to item *path* inside
+        other items' ``eval``, ``on_change``, ``on_update``, ``trigger``
+        and ``hysteresis_input`` attributes.
+
+        This is a review aid, not a safety mechanism: a reference embedded
+        in free-form ``eval`` text cannot be tracked structurally (unlike
+        ``trigger``/``hysteresis_input``, which already are, via
+        ``_items_to_trigger``/``_hysteresis_items_to_trigger`` — those are
+        included here too, for a complete picture in one place). There is
+        no guarantee of completeness (e.g. a computed/concatenated
+        reference won't be found) and no guarantee against false positives
+        beyond a word-boundary match. Intended to be called interactively
+        before deleting an item, so a human can review the result — it is
+        deliberately not wired into remove_item() itself.
+
+        :param path: Path of the item to search for
+        :type path: str
+
+        :return: List of (item, attribute_name, attribute_value, unambiguous)
+                 tuples, one per match. ``unambiguous`` is True if *path* is
+                 the only item the matched text depends on (see
+                 _is_unambiguous_reference()) — a hint for which matches
+                 might be safe to auto-clean later, not a guarantee.
+        :rtype: list
+        """
+        target = self.return_item(path)
+        pattern = re.compile(r'\b' + re.escape(path) + r'\b')
+
+        results = []
+        for other in self.return_items():
+            if other is target:
+                continue
+            for attr_name, text in self._reference_candidates(other):
+                if text and pattern.search(text):
+                    unambiguous = self._is_unambiguous_reference(attr_name, text, path)
+                    results.append((other, attr_name, text, unambiguous))
+        return results
+
+    # Item paths only ever contain ASCII letters, digits and underscores
+    # (lib/config.py's valid_item_chars) — deliberately not \w, which is
+    # Unicode-aware and would also match e.g. German umlauts.
+    _SH_REF_RE = re.compile(r'sh\.([A-Za-z0-9_.]+)')
+
+    def _resolve_references(self, text):
+        """
+        Return the set of distinct item paths referenced via ``sh.<path>``
+        in *text*. Resolves against the live item tree (longest valid
+        prefix wins), not a hardcoded property-name list — so
+        ``sh.a.b.last_change`` correctly resolves to item ``a.b``
+        (``last_change`` being the property), not ``a.b.last_change``,
+        unless the latter also happens to be a real item path (longest
+        match wins regardless — same best-effort character as the rest of
+        find_references()).
+
+        :param text: eval/on_change/on_update text to scan
+        :type text: str
+
+        :return: set of item paths found
+        :rtype: set
+        """
+        found = set()
+        for m in self._SH_REF_RE.finditer(text):
+            parts = m.group(1).split('.')
+            for end in range(len(parts), 0, -1):
+                candidate = '.'.join(parts[:end])
+                if self.return_item(candidate) is not None:
+                    found.add(candidate)
+                    break
+        return found
+
+    def _is_unambiguous_reference(self, attr_name, text, target_path):
+        """
+        True if *target_path* is the only item *text* depends on.
+
+        ``trigger``/``hysteresis_input`` entries are always a single bare
+        absolute item path (see _reference_candidates()) — never
+        ``sh.``-prefixed eval text, that syntax is only valid inside eval
+        expressions — so they are unambiguous by construction whenever
+        they matched at all (the word-boundary match in find_references()
+        already guarantees there's nothing else in the string).
+        ``eval``/``on_change``/``on_update`` are free-form Python and need
+        the ``sh.<path>`` resolution in _resolve_references().
+
+        :param attr_name: Attribute the text came from
+        :param text: The matched attribute text
+        :param target_path: Path being checked for exclusivity
+        :type attr_name: str
+        :type text: str
+        :type target_path: str
+
+        :return: True if target_path is the only dependency
+        :rtype: bool
+        """
+        if attr_name in ('trigger', 'hysteresis_input'):
+            return True
+        return self._resolve_references(text) == {target_path}
+
+    @staticmethod
+    def _reference_candidates(item):
+        """
+        Yield (attribute_name, text) pairs for *item*'s reference-bearing
+        attributes, for use by find_references(). Single-value attributes
+        are skipped when unset; list attributes contribute one pair per
+        entry.
+        """
+        if item._eval:
+            yield ('eval', item._eval)
+        for text in item._on_change or []:
+            yield ('on_change', text)
+        for text in item._on_update or []:
+            yield ('on_update', text)
+        for text in item._trigger or []:
+            yield ('trigger', text)
+        if item._hysteresis_input:
+            yield ('hysteresis_input', item._hysteresis_input)
+
+    def current_config_for_edit(self, item):
+        """
+        Best-effort reconstruction of *item*'s current complete attribute
+        config, suitable as a base for an edit_item() call — there is no
+        single source of truth for this on a live Item (core attributes
+        like eval/trigger/type live in dedicated fields, not item.conf,
+        see Item._apply_config()).
+
+        If *item* is persisted, its on-disk YAML entry IS that complete
+        config (exactly what create_item()/edit_item() last wrote there)
+        — used directly, with any child-item blocks (dict-valued keys)
+        stripped, since edit_item() handles children separately. If not
+        persisted, falls back to reading the known core fields plus
+        item.conf — accurate for every attribute find_references() can
+        detect, but may not preserve more obscure attributes that were
+        never written to a config dict in the first place.
+
+        Used internally by remove_references()/rename_item() to build a
+        referencing item's new config, and exposed cross-module (e.g. via
+        modules/admin/itemdata.py's "editable_config" field) so a frontend
+        can safely pre-populate an edit-attributes form — item.conf alone
+        (the "config" field there) never includes core attributes, only
+        generic/plugin ones, so it's unsafe to PATCH back as-is.
+
+        :param item: The item to read the current config for
+        :return: Attribute configuration dict
+        :rtype: dict
+        """
+        if item._filename:
+            target = os.path.join(self._sh._items_dir, item._filename)
+            if os.path.isfile(target + shyaml.YAML_FILE):
+                yf = shyaml.yamlfile(target)
+                self._load_yaml_file(yf, item._filename)
+                existing = yf.getnode(item.property.path)
+                if isinstance(existing, dict):
+                    return {key: value for key, value in existing.items() if not isinstance(value, dict)}
+
+        config = dict(item.conf)
+        config['type'] = item._type
+        if item._eval:
+            config['eval'] = item._eval
+        if item._on_change:
+            config['on_change'] = list(item._on_change)
+        if item._on_update:
+            config['on_update'] = list(item._on_update)
+        if item._trigger:
+            config['trigger'] = list(item._trigger)
+        if item._hysteresis_input:
+            config['hysteresis_input'] = item._hysteresis_input
+        return config
+
+    def remove_references(self, path):
+        """
+        Strip dangling unambiguous references to *path* from every other
+        item, via find_references()/edit_item() — intended to be called
+        right before deleting the item at *path*, so other items aren't
+        left pointing at something that no longer exists.
+
+        Ambiguous references (something else the referencing attribute
+        also depends on) are left untouched and reported back, not
+        treated as an error — there is no safe automatic action for them.
+
+        ``trigger``/``hysteresis_input`` matches are mechanical (the
+        whole matched value IS the bare path) — the trigger list entry is
+        filtered out (dropping the key if the list becomes empty), or
+        hysteresis_input is cleared. ``eval`` is a single freeform
+        expression — the entire attribute is cleared, since a substring
+        can't be safely excised from arbitrary Python. ``on_change``/
+        ``on_update`` are lists of independent freeform expressions, like
+        ``trigger`` structurally — only the matching list entry is
+        dropped, the rest of the list survives.
+
+        A referencing item with multiple dangling attributes (e.g. both
+        ``eval`` and ``trigger`` pointing at *path*) gets ONE edit_item()
+        call with all of its changes combined, not one call per
+        attribute.
+
+        :param path: Path of the item whose incoming references should be cleaned up
+        :type path: str
+
+        :return: {"removed": [(item_path, [attribute_names])],
+                  "skipped_ambiguous": [(item_path, attribute_name, value)]}
+        :rtype: dict
+        """
+        pending = {}
+        skipped = []
+
+        for ref_item, attr_name, value, unambiguous in self.find_references(path):
+            if not unambiguous:
+                skipped.append((ref_item.property.path, attr_name, value))
+                continue
+
+            entry = pending.setdefault(ref_item, {'config': self.current_config_for_edit(ref_item), 'attrs': set()})
+            config = entry['config']
+
+            if attr_name == 'trigger':
+                remaining = [entry_path for entry_path in config.get('trigger', []) if entry_path != path]
+                if remaining:
+                    config['trigger'] = remaining
+                else:
+                    config.pop('trigger', None)
+            elif attr_name == 'hysteresis_input':
+                config.pop('hysteresis_input', None)
+            elif attr_name in ('on_change', 'on_update'):
+                remaining = [text for text in config.get(attr_name, []) if text != value]
+                if remaining:
+                    config[attr_name] = remaining
+                else:
+                    config.pop(attr_name, None)
+            else:
+                config.pop(attr_name, None)
+
+            entry['attrs'].add(attr_name)
+
+        removed = []
+        for ref_item, entry in pending.items():
+            self.edit_item(ref_item, entry['config'])
+            removed.append((ref_item.property.path, sorted(entry['attrs'])))
+
+        return {'removed': removed, 'skipped_ambiguous': skipped}
 
     def get_toplevel_items(self):
         """
@@ -307,6 +1176,17 @@ class Items:
         """
         for child in self._children:
             yield child
+
+    def _remove_child(self, item) -> None:
+        """Remove item from _children — used by _lifecycle.py when a top-level item is deleted, and by rename_item() when moving a top-level item to a new parent."""
+        try:
+            self._children.remove(item)
+        except ValueError:
+            pass
+
+    def _append_child(self, item) -> None:
+        """Append item to _children — used by _construct_and_link() when a top-level item is created, and by rename_item() when moving an item to become top-level."""
+        self._children.append(item)
 
     # aus lib.logic.py
     #    def __iter__(self):

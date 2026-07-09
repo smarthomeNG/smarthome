@@ -36,6 +36,11 @@ Drei dieser Graphen sind bereits aus der Konfigurationsseite der smartVISU bekan
 .. image:: assets/system-ressource-graphs.jpg
    :class: screenshot
 
+Der Zeitraum, den die Graphen beim Laden der Seite initial anzeigen, kann über den Parameter
+**resource_graph_period** im Admin Modul (siehe Tab Admin Modul weiter unten) eingestellt werden (Standard:
+``24h``). Da das Aktualisierungsintervall der Graphen an die Anzahl der dargestellten Messpunkte gekoppelt ist,
+sorgt ein kürzerer Zeitraum auch für häufigere Live-Aktualisierungen.
+
 
 .. index:: PyPI Check
 .. index:: Systemeigenschaften; PyPI Check
@@ -122,6 +127,20 @@ sind.
    :class: screenshot
 
 
+.. index:: Konfiguration; websocket Modul
+.. index:: websocket Modul; Konfiguration (Admin GUI)
+
+Websocket Modul
+===============
+
+Im Tab für das websocket Modul werden die Einstellungen für das websocket Modul konfiguriert. Es handelt sich
+hierbei um die Einstellungen, die in der Konfigurationsdatei ``etc/module.yaml`` im Abschnitt **websocket:**
+abgelegt sind.
+
+.. image:: assets/system-websocket.jpg
+   :class: screenshot
+
+
 .. index:: Konfiguration; admin Modul
 .. index:: admin Modul; Konfiguration
 
@@ -146,6 +165,13 @@ Der Parameter **login_autorenew** legt fest, ob bei Nutzung des Administrations-
 verlängert wird oder nicht. Wenn **login_autorenew** auf **true** gesetzt ist, wird bei einer Nutzung des
 Administrations-Interfaces nach Ablauf der halben Gültigkeits-Dauer das Token erneuert, so dass es wieder die volle
 mit **login_expiration** festgelegte Dauer gültig ist.
+
+.. index:: Dark Mode
+.. index:: admin Modul; Dark Mode
+
+Der Parameter **dark_mode** legt den Standard-Farbmodus (hell/dunkel) der Administrationsoberfläche fest, der
+verwendet wird, solange kein Browser-spezifischer Wert eingestellt wurde. Siehe dazu auch den Abschnitt
+:ref:`Dark Mode <dark-mode-section>`.
 
 
 .. index:: Konfiguration; mqtt Modul

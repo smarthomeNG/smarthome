@@ -457,6 +457,12 @@ class PluginsInfoController(RESTResource):
                     a_dict = {}
                     a_dict['name'] = str(a)
                     a_dict['type'] = x._metadata.get_itemdefinition_type_with_subtype(a)
+                    valid_list = x._metadata.get_itemdefinition(a, 'valid_list')
+                    if valid_list is not None:
+                        a_dict['valid_list'] = valid_list
+                    description = x._metadata.get_itemdefinition(a, 'description')
+                    if description is not None:
+                        a_dict['description'] = description
                     plugin['attributes'].append(a_dict)
 
                 plugin['metadata']['classpath'] = x._classpath  # str

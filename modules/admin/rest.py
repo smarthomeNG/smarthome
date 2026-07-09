@@ -245,9 +245,15 @@ class RESTResource:
     logger = logging.getLogger('REST')
     jwt_secret = 'SmartHomeNG$0815'
 
-    def set_response_headers(self, vpath=''):
+    def set_response_headers(self, *vpath):
         """
         Set http response headers for CORS support
+
+        :param vpath: unused (kept for the commented-out debug logging
+                       below); accepts any number of segments since
+                       default() calls this as set_response_headers(*vpath),
+                       and vpath can have more than one element for a
+                       sub-resource URL (e.g. /api/items/<path>/references).
         """
         #        if vpath != 'status':
         #            self.logger.notice(f"set_response_headers ({vpath=}): request headers: {cherrypy.request.headers}")

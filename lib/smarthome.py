@@ -24,14 +24,6 @@
 
 __docformat__ = 'reStructuredText'
 
-#########################################################################
-#
-# TO DO:
-# - remove all remarks with old code (that has been moved to lib modules)
-#
-#########################################################################
-
-
 #####################################################################
 # Check Python Version
 #####################################################################
@@ -63,6 +55,12 @@ import subprocess
 import threading
 import time
 import traceback
+import warnings
+
+try:
+    from cryptography.utils import CryptographyDeprecationWarning
+except ImportError:
+    CryptographyDeprecationWarning = None
 
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
@@ -164,6 +162,17 @@ class SmartHome:
         self._config_etc = False
         self._legacy_instances = True
         self._orb_backend = 'ephem'
+
+        # if set: create items with illegal named and warn, but go on
+        # else: refuse to create items with illegal names
+        self._ignore_item_collision = False
+
+        # default basename (without extension) for the yaml file that
+        # Items.create_item(persist=True) writes runtime-created items to,
+        # when no explicit filename is given. Overridable via
+        # 'created_items_file' in etc/smarthome.yaml (see the config-loading
+        # loop in __init__, which overwrites any self._xxx default found here).
+        self._created_items_file = 'created'
 
     def initialize_dir_vars(self):
         self._base_dir = BASE
@@ -335,10 +344,6 @@ class SmartHome:
         threading.current_thread().name = 'Main'
         self.alive = True
 
-        # import bin.shngversion as shngversion
-        # VERSION = shngversion.get_shng_version()
-        # self.branch = shngversion.get_shng_branch()
-        # self.version = shngversion.get_shng_version()
         self.connections = None
 
         self._pidfile = PIDFILE
@@ -914,6 +919,15 @@ class SmartHome:
         """
         This method is used to stop SmartHomeNG and all it's threads
         """
+        if signum is not None:
+            try:
+                source = f' (received {signal.Signals(signum).name})'
+            except ValueError:
+                source = f' (received signal {signum})'
+        else:
+            source = ''
+        self._logger_main.notice(f'--------------------   SmartHomeNG stopping{source}   --------------------')
+
         self.shng_status = {'code': 31, 'text': 'Stopping'}
 
         self.alive = False
@@ -954,9 +968,6 @@ class SmartHome:
                         )
                         header_logged = True
                     self._logger.warning(f'-Thread: {thread.name}, still alive')
-        #            if header_logged:
-        #                self._logger.warning("SmartHomeNG stopped")
-        #        else:
         self._logger_main.notice('--------------------   SmartHomeNG stopped   --------------------')
 
         self.shng_status = {'code': 33, 'text': 'Stopped'}
@@ -964,7 +975,15 @@ class SmartHome:
         lib.daemon.remove_pidfile(PIDFILE)
 
         logging.shutdown()
-        exit(exitcode)  # default exit code 5 -> for systemctl to restart SmartHomeNG
+        # stop() can be called from any thread (e.g. a web/websocket request
+        # handler when "Restart Core" is triggered from the admin UI, not
+        # just the main-thread signal handler for Ctrl-C). exit() only
+        # raises SystemExit on the calling thread, so if the main thread is
+        # blocked elsewhere (e.g. the interactive console's shell.interact())
+        # it never notices and the process lingers until nudged. All of
+        # SmartHomeNG's own teardown has already completed above, so a hard
+        # process exit here is safe regardless of which thread got here.
+        os._exit(exitcode)  # default exit code 5 -> for systemctl to restart SmartHomeNG
 
     def restart(self, source=''):
         """
@@ -1126,27 +1145,22 @@ class SmartHome:
 
     def _object_refcount(self):
         objects = {}
-        for module in list(sys.modules.values()):
-            for sym in dir(module):
-                # skip deprecation warning on MacOS, these ciphers shouldn't be used anyway
-                if module.__name__ == 'cryptography.hazmat.primitives.asymmetric.ec' and sym.startswith('SECT'):
-                    continue
-                if module.__name__ == 'cryptography.hazmat.primitives.ciphers.algorithms' and sym in [
-                    'SECT233K1',
-                    'Blowfish',
-                    'CAST5',
-                    'IDEA',
-                    'SEED',
-                    'TripleDES',
-                    'ARC4',
-                ]:
-                    continue
-                try:
-                    obj = getattr(module, sym)
-                    if isinstance(obj, type):
-                        objects[obj] = sys.getrefcount(obj)
-                except Exception:
-                    pass
+        with warnings.catch_warnings():
+            # getattr() below touches every symbol of every loaded module,
+            # including deprecated cryptography ciphers/modes (e.g.
+            # Camellia, CFB, CFB8, OFB, ...) - that list keeps growing as
+            # the cryptography package deprecates more of them, so suppress
+            # by category instead of maintaining a name list.
+            if CryptographyDeprecationWarning is not None:
+                warnings.simplefilter('ignore', CryptographyDeprecationWarning)
+            for module in list(sys.modules.values()):
+                for sym in dir(module):
+                    try:
+                        obj = getattr(module, sym)
+                        if isinstance(obj, type):
+                            objects[obj] = sys.getrefcount(obj)
+                    except Exception:
+                        pass
         return objects
 
     #####################################################################
@@ -1189,8 +1203,6 @@ class SmartHome:
                 if c_b == '':
                     break
                 called_by += ' -> ' + c_b
-
-        #            called_by = str(sys._getframe(3).f_code.co_name)
 
         if not hasattr(self, 'dep_id_list'):
             self.dep_id_list = []
@@ -1284,18 +1296,6 @@ class SmartHome:
         """
         self._deprecated_warning('Items-API')
         return self.items.match_items(regex)
-
-    #        regex, __, attr = regex.partition(':')
-    #        regex = regex.replace('.', '\.').replace('*', '.*') + '$'
-    #        regex = re.compile(regex)
-    #        attr, __, val = attr.partition('[')
-    #        val = val.rstrip(']')
-    #        if attr != '' and val != '':
-    #            return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf and ((type(self.__item_dict[item].conf[attr]) in [list,dict] and val in self.__item_dict[item].conf[attr]) or (val == self.__item_dict[item].conf[attr]))]
-    #        elif attr != '':
-    #            return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf]
-    #        else:
-    #            return [self.__item_dict[item] for item in self.__items if regex.match(item)]
 
     def find_items(self, conf):
         """ "

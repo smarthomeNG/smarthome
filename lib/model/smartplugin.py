@@ -358,6 +358,42 @@ class SmartPlugin(SmartObject, Utils):
 
         return True
 
+    def rename_item(self, item, old_path, new_path) -> bool:
+        """
+        Re-key configuration data for an item that was renamed in place
+        (same object, only its path changed — see Items.rename_item()).
+
+        Unlike remove_item()/parse_item(), this does NOT re-parse the
+        item's configuration — it hasn't changed, only the path has — so
+        it is much cheaper than a full remove+re-add cycle. Does NOT
+        pause the plugin itself: Items.rename_item() may call this once
+        per descendant of a renamed subtree, and STOP_ON_ITEM_CHANGE's
+        stop()/run() cycle is expensive on a plugin actually talking to
+        hardware/network — pausing once per descendant would multiply
+        that cost across the whole subtree. Items.rename_item() pauses
+        and resumes each affected plugin itself, once for the whole
+        rename operation, around the entire descendant loop.
+
+        Plugins with their own item-path-keyed storage beyond
+        _plg_item_dict/_pause_item_path (e.g. the database plugin) must
+        override this method.
+
+        :param item: The renamed item (same object, unchanged identity)
+        :param old_path: The item's path before the rename
+        :param new_path: The item's path after the rename
+        :type old_path: str
+        :type new_path: str
+
+        :return: True
+        :rtype: bool
+        """
+        if old_path in self._plg_item_dict:
+            self._plg_item_dict[new_path] = self._plg_item_dict.pop(old_path)
+        if self._pause_item_path == old_path:
+            self._pause_item_path = new_path
+
+        return True
+
     def callerinfo(self, caller: str, source: str) -> str:
 
         if source is None:
@@ -559,6 +595,20 @@ class SmartPlugin(SmartObject, Utils):
         :rtype: list
         """
         return list(self._item_lookup_dict.keys())
+
+    ###############################################################################
+    #
+    # the following method can be overwritten
+    #
+    # It is the symmetric counterpart to parse_item() and is called once per item
+    # by remove_item() (which itself must NOT be overwritten, see above). If a
+    # plugin's parse_item() sets up plugin-specific bookkeeping beyond add_item()'s
+    # generic dicts, the matching teardown belongs here — not in remove_item().
+    #
+    # If overwritten, call super().unparse_item(item) too, since the base
+    # implementation removes the update_item method trigger that parse_item's
+    # `return self.update_item` registered.
+    #
 
     def unparse_item(self, item) -> bool:
         """

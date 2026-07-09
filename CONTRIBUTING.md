@@ -8,6 +8,11 @@ Hinweise für erfahrenere Entwickler sind gesondert markiert:
 > **💡 Hinweis für erfahrene Python-Entwickler**  
 > Diese Kästen enthalten Hintergrundinformationen, die für Einsteiger zunächst nicht relevant sind.
 
+> **📐 Hintergrund:** Die Designentscheidungen, die diesem Leitfaden zugrunde liegen, sind in
+> [`DESIGNPHILOSOPHIE.md`](DESIGNPHILOSOPHIE.md) (was SmartHomeNG architektonisch ausmacht) und
+> [`ENTWICKLUNGSRICHTLINIEN.md`](ENTWICKLUNGSRICHTLINIEN.md) (verbindliche Leitplanken für Kern- und
+> Plugin-Entwicklung, insb. zu optionalen Lifecycle-Hooks) festgehalten.
+
 ---
 
 ## Inhaltsverzeichnis
@@ -280,6 +285,13 @@ Diese Hilfsmethoden prüfen bzw. lesen Plugin-Attribute, auch wenn das Plugin in
 **Was bedeutet `return self.update_item`?**  
 Das ist eine *Methodenreferenz* — keine Klammer, kein Aufruf. SmartHomeNG speichert diesen Verweis und ruft die Methode auf, wenn das Item seinen Wert ändert. Ohne dieses Return bekommt das Plugin keine Benachrichtigungen über Item-Änderungen.
 
+> **💡 Hinweis für erfahrene Python-Entwickler**  
+> `parse_item` ist nicht auf einen einmaligen Aufruf beim Start beschränkt — es kann auch aufgerufen
+> werden, nachdem `run()` bereits läuft (z. B. wenn Items zur Laufzeit neu erzeugt werden). Wer eigene
+> Geräte-/Item-Listen in `run()` einmalig aufbaut statt `self.add_item()`/`self.get_item_list()` zu
+> nutzen, verpasst solche später hinzukommenden Items — das ist eine bekannte Einschränkung, kein Bug,
+> aber bei neuen Plugins sollte `add_item()`/`get_item_list()` bevorzugt werden, um das zu vermeiden.
+
 ### `update_item` — Auf Item-Änderungen reagieren
 
 ```python
@@ -307,6 +319,33 @@ Wenn das Plugin selbst einen Item-Wert setzt (z. B. nach einer Geräte-Antwort),
 > `super().update_item(item, caller, source, dest)` aufrufen **oder** diese Logik selbst
 > implementieren. `self.get_item_config(item)` gibt das `config_data_dict` zurück, das
 > in `parse_item` via `add_item(..., config_data_dict=...)` gespeichert wurde.
+
+### `unparse_item` — Aufräumen bei Plugin-Entladen (optional)
+
+`parse_item()` und `unparse_item()` sind ein symmetrisches Paar: was `parse_item()` beim Registrieren
+eines Items an plugin-eigenen Daten anlegt, wird in `unparse_item()` wieder abgebaut.
+`remove_item()`/`add_item()` sind dagegen die generischen, **vom Kern verwalteten** Methoden — sie
+dürfen **nicht** überschrieben werden (`remove_item()` ruft `unparse_item()` intern bereits auf, siehe
+unten).
+
+`unparse_item(item)` muss nur überschrieben werden, wenn das Plugin **eigene** Datenstrukturen jenseits
+von `add_item()`/`get_item_list()` für ein Item pflegt (z. B. eine eigene Mapping-Tabelle):
+
+```python
+def unparse_item(self, item):
+    # Eigene Aufräumarbeiten zuerst
+    self._meine_mapping_tabelle.pop(item.property.path, None)
+    # Danach immer die Basisklasse aufrufen
+    return super().unparse_item(item)
+```
+
+**Wichtig:** `super().unparse_item(item)` muss aufgerufen werden, sonst bleibt die in `parse_item()`
+über `return self.update_item` registrierte Benachrichtigung für das Item bestehen.
+`remove_item()` **nicht** überschreiben — diese Methode ist Teil des generischen Kern-Vertrags
+(`add_item`/`remove_item`) und ruft `unparse_item()` bereits an der richtigen Stelle auf. Aktuell wird
+das beim Entladen eines Plugins (`unload_plugin`) für jedes registrierte Item ausgelöst — perspektivisch
+auch beim Löschen einzelner Items zur Laufzeit. Details zum dahinterliegenden additiven-Hook-Vertrag:
+siehe [`ENTWICKLUNGSRICHTLINIEN.md`](ENTWICKLUNGSRICHTLINIEN.md).
 
 ---
 
@@ -754,6 +793,8 @@ Vor dem ersten Commit ins Plugin-Repository alle Punkte abhaken:
 - [ ] `stop()` setzt `self.alive = False`
 - [ ] Alle in `run()` angelegten Scheduler werden in `stop()` entfernt
 - [ ] `update_item` enthält den `caller != self.get_shortname()`-Guard
+- [ ] Falls das Plugin eigene Item-Datenstrukturen jenseits von `add_item()` pflegt: `unparse_item()`
+  überschrieben, inkl. `super().unparse_item()`-Aufruf (nicht `remove_item()` überschreiben)
 
 ### Tests
 - [ ] Datei `plugins/mein_plugin/tests/test_mein_plugin.py` existiert
