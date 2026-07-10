@@ -507,9 +507,19 @@
 <li class="toctree-l5"><a class="reference internal" href="#export-von-daten">Export von Daten</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="#aufbau-der-datenbank">Aufbau der Datenbank</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#aufbau-der-datenbank">Aufbau der Datenbank</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#fehlende-messwerte-datenlucken">Fehlende Messwerte (Datenlücken)</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="#datenbankfunktionen-fur-datenreihen-plots">Datenbankfunktionen für Datenreihen/Plots</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#datenbankfunktionen-fur-einzelauswertungen">Datenbankfunktionen für Einzelauswertungen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#datenqualitat-und-datenlucken">Datenqualität und Datenlücken</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#item-db-mark-invalid">item.db_mark_invalid()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#item-db-mark-valid">item.db_mark_valid()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#auswirkung-auf-abfragen">Auswirkung auf Abfragen</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#implizite-revalidierung">Implizite Revalidierung</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../db_addon/user_doc.html">db_addon</a><ul>
@@ -1281,6 +1291,33 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../viessmann/user_doc.html">viessmann</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#changelog">Changelog</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#id1">1.2.2</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#id2">1.2.0</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#id3">1.1.0</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#id4">1.0.0</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#anforderungen">Anforderungen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#unterstutzte-gerate">Unterstützte Geräte</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#konfiguration">Konfiguration</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#plugin-yaml">plugin.yaml</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#items-yaml">items.yaml</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#beispiel">Beispiel</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#funktionen">Funktionen</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#update-all-read-items">update_all_read_items()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#read-addr-addr">read_addr(addr)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#read-temp-addr-addr-length-unit">read_temp_addr(addr, length, unit)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#write-addr-addr-value">write_addr(addr, value)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#web-interface">Web Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#standalone-modus">Standalone-Modus</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../zigbee2mqtt/user_doc.html">zigbee2mqtt</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../zigbee2mqtt/user_doc.html#konfiguration">Konfiguration</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../zigbee2mqtt/user_doc.html#konfiguration-von-items">Konfiguration von Items</a></li>
@@ -1698,33 +1735,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../unifi/user_doc.html#unterstutzte-hardware">Unterstützte Hardware</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../unifi/user_doc.html#konfiguration">Konfiguration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../unifi/user_doc.html#web-interface">Web Interface</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../viessmann/user_doc.html">viessmann</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#changelog">Changelog</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#id1">1.2.2</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#id2">1.2.0</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#id3">1.1.0</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#id4">1.0.0</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#anforderungen">Anforderungen</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#unterstutzte-gerate">Unterstützte Geräte</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#konfiguration">Konfiguration</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#plugin-yaml">plugin.yaml</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#items-yaml">items.yaml</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#beispiel">Beispiel</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#funktionen">Funktionen</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#update-all-read-items">update_all_read_items()</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#read-addr-addr">read_addr(addr)</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#read-temp-addr-addr-length-unit">read_temp_addr(addr, length, unit)</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../viessmann/user_doc.html#write-addr-addr-value">write_addr(addr, value)</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#web-interface">Web Interface</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../viessmann/user_doc.html#standalone-modus">Standalone-Modus</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../xiaomi_vac/user_doc.html">xiaomi_vac</a><ul>
@@ -2358,9 +2368,19 @@
 <li class="toctree-l5"><a class="reference internal" href="#export-von-daten">Export von Daten</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="#aufbau-der-datenbank">Aufbau der Datenbank</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#aufbau-der-datenbank">Aufbau der Datenbank</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#fehlende-messwerte-datenlucken">Fehlende Messwerte (Datenlücken)</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="#datenbankfunktionen-fur-datenreihen-plots">Datenbankfunktionen für Datenreihen/Plots</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#datenbankfunktionen-fur-einzelauswertungen">Datenbankfunktionen für Einzelauswertungen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#datenqualitat-und-datenlucken">Datenqualität und Datenlücken</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#item-db-mark-invalid">item.db_mark_invalid()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#item-db-mark-valid">item.db_mark_valid()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#auswirkung-auf-abfragen">Auswirkung auf Abfragen</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#implizite-revalidierung">Implizite Revalidierung</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../db_addon/user_doc.html">db_addon</a><ul>
@@ -4111,14 +4131,8 @@
 <li class="toctree-l5"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartplugin_class.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/mqttplugin_class.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#plugin">Plugin</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
@@ -4130,10 +4144,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin"><code class="docutils literal notranslate"><span class="pre">SmartDevicePlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../entwicklung/plugins/kurzanleitung/plugin_metadata.html#plugin">plugin</a></li>
@@ -4210,19 +4221,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
@@ -4254,10 +4254,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../entwicklung/core/core.html">Entwicklung des Core</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../entwicklung/core/core_shng.html#lib-item">lib.item</a></li>
 </ul>
 </li>
@@ -4287,15 +4284,7 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/daemon.html">lib.daemon</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/daemon.html">lib.daemon</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -4303,15 +4292,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_conversion.html#lib.item_conversion.yaml_save"><code class="docutils literal notranslate"><span class="pre">yaml_save()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/log.html">lib.log</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.DateTimeRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">DateTimeRotatingFileHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.EnglishLocale"><code class="docutils literal notranslate"><span class="pre">EnglishLocale</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.Logs"><code class="docutils literal notranslate"><span class="pre">Logs</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.ShngMemLogHandler"><code class="docutils literal notranslate"><span class="pre">ShngMemLogHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/log.html#lib.log.ShngTimedRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">ShngTimedRotatingFileHandler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/log.html">lib.log</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/metadata.html">lib.metadata</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/metadata.html#lib.metadata.Metadata"><code class="docutils literal notranslate"><span class="pre">Metadata</span></code></a></li>
 </ul>
@@ -4320,10 +4301,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/scene.html">lib.scene</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/scene.html">lib.scene</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -4351,10 +4329,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/translation.html#lib.translation.translate"><code class="docutils literal notranslate"><span class="pre">translate()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/db.html">lib.db</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/db.html">lib.db</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/logutils.html">lib.logutils</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
@@ -4371,7 +4346,6 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html">lib.orb</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
@@ -4675,12 +4649,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../referenz/module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#module-modules.http">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4688,29 +4657,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../referenz/module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../referenz/module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../referenz/module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4876,25 +4831,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken <span class="greensup">Update</span></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../lib/db.html">lib.db</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.close"><code class="docutils literal notranslate"><span class="pre">Database.close()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.commit"><code class="docutils literal notranslate"><span class="pre">Database.commit()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.connect"><code class="docutils literal notranslate"><span class="pre">Database.connect()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.connected"><code class="docutils literal notranslate"><span class="pre">Database.connected()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.cursor"><code class="docutils literal notranslate"><span class="pre">Database.cursor()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.execute"><code class="docutils literal notranslate"><span class="pre">Database.execute()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.fetchall"><code class="docutils literal notranslate"><span class="pre">Database.fetchall()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.fetchone"><code class="docutils literal notranslate"><span class="pre">Database.fetchone()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.lock"><code class="docutils literal notranslate"><span class="pre">Database.lock()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.release"><code class="docutils literal notranslate"><span class="pre">Database.release()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.rollback"><code class="docutils literal notranslate"><span class="pre">Database.rollback()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.setup"><code class="docutils literal notranslate"><span class="pre">Database.setup()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.verify"><code class="docutils literal notranslate"><span class="pre">Database.verify()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../../lib/db.html">lib.db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/logutils.html">lib.logutils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/logutils.html#lib.logutils.DuplicateFilter.filter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter.filter()</span></code></a></li>
@@ -4978,18 +4915,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/orb.html">lib.orb</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.aware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.aware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.unaware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.unaware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.utc_to_local"><code class="docutils literal notranslate"><span class="pre">Orb.utc_to_local()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
@@ -5077,7 +5002,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../referenz/APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/item.html#module-lib.item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/item.html#lib-item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/item.html#class-item">class Item</a></li>
@@ -5087,7 +5012,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/plugin.html#lib-plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/plugin.html#module-lib.plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -5097,26 +5022,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/shtime.html#module-lib.shtime">lib.shtime</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/shtime.html#lib-shtime">lib.shtime</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/logic.html#module-lib.logic">lib.logic</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/logic.html#lib-logic">lib.logic</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../lib/scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../lib/scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/scheduler.html#lib-scheduler">lib.scheduler</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/env.html">lib.env</a><ul>
@@ -5841,16 +5755,40 @@ Verkleinern des Datenbank Datei nach dem Löschen einer größeren Menge von Dat
 <div><ul class="simple">
 <li><p>Column <cite>time</cite> - Ein UNIX Zeitstempel in eine Auflösung von Mikrosekunden</p></li>
 <li><p>Column <cite>item_id</cite> - Eine Referenz auf eine eindeutige Kennung eines Items in der Tabelle <cite>item</cite></p></li>
-<li><p>Column <cite>duration</cite> - Die Dauer in Mikrosekunden</p></li>
+<li><p>Column <cite>duration</cite> - Die Dauer in Mikrosekunden (NULL = Wert aktuell aktiv, Dauer noch offen)</p></li>
 <li><p>Column <cite>val_str</cite> - Der Itemwert als Zeichenkette wenn das Item den Typ <cite>str</cite> hat</p></li>
 <li><p>Column <cite>val_num</cite> - Der Itemwert als Zahl, wenn das Item den Typ <cite>num</cite> hat</p></li>
 <li><p>Column <cite>val_bool</cite> - Der Itemwert als Wahrheitswert, das Item den Typ <cite>bool</cite> oder <cite>num</cite> hat</p></li>
 <li><p>Column <cite>changed</cite> - Ein UNIX Zeitstempel (in einer Auflösung von Mikrosekunden) der letzen Änderung</p></li>
+<li><p>Column <cite>val_quality</cite> - Datenqualitätsflag: <code class="docutils literal notranslate"><span class="pre">0</span></code> = normaler Messwert (Standard), <code class="docutils literal notranslate"><span class="pre">1</span></code> = keine Daten verfügbar (Lücke)</p></li>
 </ul>
 </div></blockquote>
+<section id="fehlende-messwerte-datenlucken">
+<h3>Fehlende Messwerte (Datenlücken)<a class="headerlink" href="#fehlende-messwerte-datenlucken" title="Permalink to this heading"></a></h3>
+<p>Wenn ein Gerät (z. B. ein Wechselrichter) zeitweise nicht erreichbar ist, behält das Item
+in SmartHomeNG seinen letzten Wert. Ohne weiteres würde diese Zeitspanne fälschlicherweise
+als „Wert unverändert“ in der Datenbank gespeichert — mit Auswirkungen auf Mittelwerte und
+Energieberechnungen.</p>
+<p>Ab Schemaversion 7 unterstützt das Plugin explizite Datenlücken über die Methoden
+<code class="docutils literal notranslate"><span class="pre">item.db_mark_invalid()</span></code> und <code class="docutils literal notranslate"><span class="pre">item.db_mark_valid()</span></code>, die beim Start des Plugins
+automatisch auf allen registrierten Items verfügbar gemacht werden.</p>
+<p><strong>Verwendung im Plugin:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Verbindung verloren — Lücke öffnen</span>
+<span class="n">sh</span><span class="o">.</span><span class="n">solar</span><span class="o">.</span><span class="n">power</span><span class="o">.</span><span class="n">db_mark_invalid</span><span class="p">(</span><span class="n">caller</span><span class="o">=</span><span class="s1">&#39;solar_plugin&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;connection_lost&#39;</span><span class="p">)</span>
+
+<span class="c1"># Verbindung wiederhergestellt — Lücke schließen, dann neuen Wert setzen</span>
+<span class="n">sh</span><span class="o">.</span><span class="n">solar</span><span class="o">.</span><span class="n">power</span><span class="o">.</span><span class="n">db_mark_valid</span><span class="p">(</span><span class="n">caller</span><span class="o">=</span><span class="s1">&#39;solar_plugin&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;connection_restored&#39;</span><span class="p">)</span>
+<span class="n">sh</span><span class="o">.</span><span class="n">solar</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">new_value</span><span class="p">,</span> <span class="s1">&#39;solar_plugin&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Lückeneinträge (<code class="docutils literal notranslate"><span class="pre">val_quality</span> <span class="pre">=</span> <span class="pre">1</span></code>) werden bei Aggregationsabfragen (<code class="docutils literal notranslate"><span class="pre">avg</span></code>, <code class="docutils literal notranslate"><span class="pre">sum</span></code>,
+<code class="docutils literal notranslate"><span class="pre">integrate</span></code>, <code class="docutils literal notranslate"><span class="pre">on</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code>, <code class="docutils literal notranslate"><span class="pre">max</span></code>) <strong>ausgeschlossen</strong>, sodass Mittelwerte und
+Energieberechnungen nur echte Messwerte berücksichtigen.  In Rohwertabfragen (<code class="docutils literal notranslate"><span class="pre">raw</span></code>)
+erscheinen sie als <code class="docutils literal notranslate"><span class="pre">NULL</span></code>-Werte, damit Visualisierungen Lücken darstellen können.</p>
 <p>Es gibt aktuell nur eine Möglichkeit die Anzahl der Datensätze pro Item zu begrenzen:
 Durch die Angabe des Item Attributs <code class="docutils literal notranslate"><span class="pre">database_maxage</span></code> wird das maximale Alter der Einträge eines Items begrenzt.
 Regelmässig werden Werte deren Zeitstempel älter ist als die angegebene Zeitspanne aus der Datenbank gelöscht.</p>
+</section>
 </section>
 <section id="datenbankfunktionen-fur-datenreihen-plots">
 <h2>Datenbankfunktionen für Datenreihen/Plots<a class="headerlink" href="#datenbankfunktionen-fur-datenreihen-plots" title="Permalink to this heading"></a></h2>
@@ -5957,6 +5895,95 @@ Beispiele finden sich in der SmartVisu Dokumentation unter plot.period.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">item.db(&#39;diff&#39;,&#39;365d&#39;, &#39;now&#39;)</span>
 </pre></div>
 </div>
+</section>
+<section id="datenqualitat-und-datenlucken">
+<h2>Datenqualität und Datenlücken<a class="headerlink" href="#datenqualitat-und-datenlucken" title="Permalink to this heading"></a></h2>
+<p>Wenn eine Datenquelle (z. B. ein Wechselrichter oder ein Cloud-Dienst) zeitweise
+nicht erreichbar ist, behält das Item in SmartHomeNG seinen letzten bekannten Wert.
+Ohne besondere Maßnahmen würde diese Zeitspanne fälschlicherweise als „Wert
+unverändert“ in der Datenbank gespeichert, was Mittelwerte und Energieberechnungen
+verfälscht.</p>
+<p>Ab <strong>Schemaversion 7</strong> unterstützt das Plugin explizite Datenlücken.  Jeder
+Eintrag in der <code class="docutils literal notranslate"><span class="pre">log</span></code>-Tabelle trägt jetzt eine Spalte <code class="docutils literal notranslate"><span class="pre">val_quality</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Wert</p></th>
+<th class="head"><p>Bedeutung</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>Normaler, gültiger Messwert (Standard; alle alten Zeilen).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>Keine Daten verfügbar (Lücke).  Alle <code class="docutils literal notranslate"><span class="pre">val_*</span></code> Spalten
+sind <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.  Wird bei Aggregationen ausgeschlossen.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="item-db-mark-invalid">
+<h3>item.db_mark_invalid()<a class="headerlink" href="#item-db-mark-invalid" title="Permalink to this heading"></a></h3>
+<p>Öffnet eine Datenlücke in der Datenbank für dieses Item.</p>
+<p>Das Plugin injiziert diese Methode auf allen registrierten Items in
+<code class="docutils literal notranslate"><span class="pre">parse_item()</span></code>.  Sie wird vom Datenquellen-Plugin aufgerufen, wenn die
+Verbindung zur Datenquelle unterbrochen wird.</p>
+<p>Der Python-Wert des Items bleibt dabei <strong>unverändert</strong> — die Methode wirkt
+ausschließlich auf den Datenbankpuffer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Beispiel: im solar-Plugin, wenn die Verbindung verloren geht</span>
+<span class="n">sh</span><span class="o">.</span><span class="n">solar</span><span class="o">.</span><span class="n">leistung</span><span class="o">.</span><span class="n">db_mark_invalid</span><span class="p">(</span><span class="n">caller</span><span class="o">=</span><span class="s1">&#39;solar_plugin&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;connection_lost&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Parameter:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">caller<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optionaler Bezeichner des Aufrufers (erscheint im Log).</p>
+</dd>
+<dt class="field-even">source<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optionale Quellbeschreibung (erscheint im Log).</p>
+</dd>
+</dl>
+</section>
+<section id="item-db-mark-valid">
+<h3>item.db_mark_valid()<a class="headerlink" href="#item-db-mark-valid" title="Permalink to this heading"></a></h3>
+<p>Schließt eine offene Datenlücke für dieses Item.</p>
+<p>Wird aufgerufen, wenn die Verbindung zur Datenquelle wiederhergestellt wird.
+Die offene Lücke erhält die berechnete Dauer zugewiesen.  Anschließend sollte
+der neue Messwert normal gesetzt werden.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Beispiel: im solar-Plugin, wenn die Verbindung wieder besteht</span>
+<span class="n">sh</span><span class="o">.</span><span class="n">solar</span><span class="o">.</span><span class="n">leistung</span><span class="o">.</span><span class="n">db_mark_valid</span><span class="p">(</span><span class="n">caller</span><span class="o">=</span><span class="s1">&#39;solar_plugin&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;connection_restored&#39;</span><span class="p">)</span>
+<span class="n">sh</span><span class="o">.</span><span class="n">solar</span><span class="o">.</span><span class="n">leistung</span><span class="p">(</span><span class="n">neuer_wert</span><span class="p">,</span> <span class="s1">&#39;solar_plugin&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Parameter:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">caller<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optionaler Bezeichner des Aufrufers.</p>
+</dd>
+<dt class="field-even">source<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optionale Quellbeschreibung.</p>
+</dd>
+</dl>
+</section>
+<section id="auswirkung-auf-abfragen">
+<h3>Auswirkung auf Abfragen<a class="headerlink" href="#auswirkung-auf-abfragen" title="Permalink to this heading"></a></h3>
+<p>Einträge mit <code class="docutils literal notranslate"><span class="pre">val_quality</span> <span class="pre">=</span> <span class="pre">1</span></code> werden bei folgenden Funktionen automatisch
+<strong>ausgeschlossen</strong>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">avg</span></code>, <code class="docutils literal notranslate"><span class="pre">sum</span></code>, <code class="docutils literal notranslate"><span class="pre">integrate</span></code>, <code class="docutils literal notranslate"><span class="pre">on</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code>, <code class="docutils literal notranslate"><span class="pre">max</span></code></p>
+<p>Bei Rohwertabfragen (<code class="docutils literal notranslate"><span class="pre">raw</span></code>) erscheinen Lückeneinträge als <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, damit
+Visualisierungen die Unterbrechung als echte Lücke darstellen können.</p>
+</section>
+<section id="implizite-revalidierung">
+<h3>Implizite Revalidierung<a class="headerlink" href="#implizite-revalidierung" title="Permalink to this heading"></a></h3>
+<p>Trifft ein neuer Messwert über <code class="docutils literal notranslate"><span class="pre">update_item()</span></code> ein, während für das Item noch
+eine offene Datenlücke besteht, <strong>schließt das Plugin die Lücke automatisch</strong> —
+ohne dass <code class="docutils literal notranslate"><span class="pre">db_mark_valid()</span></code> vorher explizit aufgerufen werden muss.  Die
+Lückendauer wird dabei korrekt ab dem Öffnungszeitpunkt der Lücke berechnet,
+nicht ab der letzten regulären Wertänderung.</p>
+<p>Das bedeutet: Wenn ein Gerät nach einem Verbindungsabbruch wieder Werte liefert,
+genügt es, den neuen Messwert direkt zu setzen.  <code class="docutils literal notranslate"><span class="pre">db_mark_valid()</span></code> ist dann
+optional und muss nur explizit aufgerufen werden, wenn die Lücke geschlossen
+werden soll, <em>bevor</em> der erste neue Messwert bekannt ist.</p>
+</section>
 </section>
 </section>
 

@@ -1085,17 +1085,19 @@
      - ?
    
    * - :doc:`modbus_tcp <config/modbus_tcp>`
-     - v1.0.15
+     - v1.1.0
      - Plugin zur Geräte-Anbindung über ModBus an SmartHomeNG
        
        + `modbus_tcp Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1154368-einbindung-von-modbus-tcp>`_
        
        Plugin Typ: **gateway**
-     - ivande
+     - CaeruleusAqua
+   
+       ivande
    
        Cannon
    
-     - NONE
+     - onkelandy
    
    * - :doc:`mpd <config/mpd>`
      - v1.6.1
@@ -1993,17 +1995,17 @@
      - n/a
    
    * - :doc:`viessmann <config/viessmann>`
-     - v1.2.3
+     - v2.0.0
      - Lesen und Schreiben von Werten einer Viessmann Heizung
        
-       + `viessmann Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1455991-viessmann-plugin-neuentwicklung-python-hilfe/>`_
+       |br|
        
-       Plugin Typ: **interface**
+       Plugin Typ: **gateway**
+       
+       Plugin-Status: **develop**
      - Morg
    
-     - sisamiwe
-   
-       tcr82
+     - 
    
    * - :doc:`volkszaehler <config/volkszaehler>`
      - v1.6.1

@@ -37,7 +37,6 @@
    /plugins/snap7_logo/user_doc
    /plugins/solarlog/user_doc
    /plugins/unifi/user_doc
-   /plugins/viessmann/user_doc
    /plugins/xiaomi_vac/user_doc
    /plugins/yamaha/user_doc
    /plugins/yamahayxc/user_doc
@@ -794,18 +793,6 @@
      - Onkelandy
    
        psilo909
-   
-   * - :doc:`viessmann <config/viessmann>`
-     - v1.2.3
-     - Lesen und Schreiben von Werten einer Viessmann Heizung
-       
-       + `viessmann Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1455991-viessmann-plugin-neuentwicklung-python-hilfe/>`_
-       
-     - Morg
-   
-     - sisamiwe
-   
-       tcr82
    
    * - :doc:`volkszaehler <config/volkszaehler>`
      - v1.6.1

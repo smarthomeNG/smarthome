@@ -210,11 +210,40 @@ Die `log` Tabelle enthält die folgenden Spalten:
 
   * Column `time` - Ein UNIX Zeitstempel in eine Auflösung von Mikrosekunden
   * Column `item_id` - Eine Referenz auf eine eindeutige Kennung eines Items in der Tabelle `item`
-  * Column `duration` - Die Dauer in Mikrosekunden
+  * Column `duration` - Die Dauer in Mikrosekunden (NULL = Wert aktuell aktiv, Dauer noch offen)
   * Column `val_str` - Der Itemwert als Zeichenkette wenn das Item den Typ `str` hat
   * Column `val_num` - Der Itemwert als Zahl, wenn das Item den Typ `num` hat
   * Column `val_bool` - Der Itemwert als Wahrheitswert, das Item den Typ `bool` oder `num` hat
   * Column `changed` - Ein UNIX Zeitstempel (in einer Auflösung von Mikrosekunden) der letzen Änderung
+  * Column `val_quality` - Datenqualitätsflag: ``0`` = normaler Messwert (Standard), ``1`` = keine Daten verfügbar (Lücke)
+
+Fehlende Messwerte (Datenlücken)
+---------------------------------
+
+Wenn ein Gerät (z. B. ein Wechselrichter) zeitweise nicht erreichbar ist, behält das Item
+in SmartHomeNG seinen letzten Wert. Ohne weiteres würde diese Zeitspanne fälschlicherweise
+als "Wert unverändert" in der Datenbank gespeichert — mit Auswirkungen auf Mittelwerte und
+Energieberechnungen.
+
+Ab Schemaversion 7 unterstützt das Plugin explizite Datenlücken über die Methoden
+``item.db_mark_invalid()`` und ``item.db_mark_valid()``, die beim Start des Plugins
+automatisch auf allen registrierten Items verfügbar gemacht werden.
+
+**Verwendung im Plugin:**
+
+.. code-block:: python
+
+    # Verbindung verloren — Lücke öffnen
+    sh.solar.power.db_mark_invalid(caller='solar_plugin', source='connection_lost')
+
+    # Verbindung wiederhergestellt — Lücke schließen, dann neuen Wert setzen
+    sh.solar.power.db_mark_valid(caller='solar_plugin', source='connection_restored')
+    sh.solar.power(new_value, 'solar_plugin')
+
+Lückeneinträge (``val_quality = 1``) werden bei Aggregationsabfragen (``avg``, ``sum``,
+``integrate``, ``on``, ``min``, ``max``) **ausgeschlossen**, sodass Mittelwerte und
+Energieberechnungen nur echte Messwerte berücksichtigen.  In Rohwertabfragen (``raw``)
+erscheinen sie als ``NULL``-Werte, damit Visualisierungen Lücken darstellen können.
 
 Es gibt aktuell nur eine Möglichkeit die Anzahl der Datensätze pro Item zu begrenzen:
 Durch die Angabe des Item Attributs ``database_maxage`` wird das maximale Alter der Einträge eines Items begrenzt.
@@ -281,5 +310,94 @@ Differenz der Datenbank zwischen heute und vor einem Jahr:
 
 .. code-block:: yaml
 
-    item.db('diff','365d', 'now') 
+    item.db('diff','365d', 'now')
+
+
+Datenqualität und Datenlücken
+==============================
+
+Wenn eine Datenquelle (z. B. ein Wechselrichter oder ein Cloud-Dienst) zeitweise
+nicht erreichbar ist, behält das Item in SmartHomeNG seinen letzten bekannten Wert.
+Ohne besondere Maßnahmen würde diese Zeitspanne fälschlicherweise als "Wert
+unverändert" in der Datenbank gespeichert, was Mittelwerte und Energieberechnungen
+verfälscht.
+
+Ab **Schemaversion 7** unterstützt das Plugin explizite Datenlücken.  Jeder
+Eintrag in der ``log``-Tabelle trägt jetzt eine Spalte ``val_quality``:
+
++-------+-----------------------------------------------------------+
+| Wert  | Bedeutung                                                 |
++=======+===========================================================+
+| ``0`` | Normaler, gültiger Messwert (Standard; alle alten Zeilen).|
++-------+-----------------------------------------------------------+
+| ``1`` | Keine Daten verfügbar (Lücke).  Alle ``val_*`` Spalten    |
+|       | sind ``NULL``.  Wird bei Aggregationen ausgeschlossen.    |
++-------+-----------------------------------------------------------+
+
+item.db_mark_invalid()
+-----------------------
+
+Öffnet eine Datenlücke in der Datenbank für dieses Item.
+
+Das Plugin injiziert diese Methode auf allen registrierten Items in
+``parse_item()``.  Sie wird vom Datenquellen-Plugin aufgerufen, wenn die
+Verbindung zur Datenquelle unterbrochen wird.
+
+Der Python-Wert des Items bleibt dabei **unverändert** — die Methode wirkt
+ausschließlich auf den Datenbankpuffer.
+
+.. code-block:: python
+
+    # Beispiel: im solar-Plugin, wenn die Verbindung verloren geht
+    sh.solar.leistung.db_mark_invalid(caller='solar_plugin', source='connection_lost')
+
+**Parameter:**
+
+:caller: Optionaler Bezeichner des Aufrufers (erscheint im Log).
+:source: Optionale Quellbeschreibung (erscheint im Log).
+
+item.db_mark_valid()
+---------------------
+
+Schließt eine offene Datenlücke für dieses Item.
+
+Wird aufgerufen, wenn die Verbindung zur Datenquelle wiederhergestellt wird.
+Die offene Lücke erhält die berechnete Dauer zugewiesen.  Anschließend sollte
+der neue Messwert normal gesetzt werden.
+
+.. code-block:: python
+
+    # Beispiel: im solar-Plugin, wenn die Verbindung wieder besteht
+    sh.solar.leistung.db_mark_valid(caller='solar_plugin', source='connection_restored')
+    sh.solar.leistung(neuer_wert, 'solar_plugin')
+
+**Parameter:**
+
+:caller: Optionaler Bezeichner des Aufrufers.
+:source: Optionale Quellbeschreibung.
+
+Auswirkung auf Abfragen
+------------------------
+
+Einträge mit ``val_quality = 1`` werden bei folgenden Funktionen automatisch
+**ausgeschlossen**:
+
+``avg``, ``sum``, ``integrate``, ``on``, ``min``, ``max``
+
+Bei Rohwertabfragen (``raw``) erscheinen Lückeneinträge als ``NULL``, damit
+Visualisierungen die Unterbrechung als echte Lücke darstellen können.
+
+Implizite Revalidierung
+------------------------
+
+Trifft ein neuer Messwert über ``update_item()`` ein, während für das Item noch
+eine offene Datenlücke besteht, **schließt das Plugin die Lücke automatisch** —
+ohne dass ``db_mark_valid()`` vorher explizit aufgerufen werden muss.  Die
+Lückendauer wird dabei korrekt ab dem Öffnungszeitpunkt der Lücke berechnet,
+nicht ab der letzten regulären Wertänderung.
+
+Das bedeutet: Wenn ein Gerät nach einem Verbindungsabbruch wieder Werte liefert,
+genügt es, den neuen Messwert direkt zu setzen.  ``db_mark_valid()`` ist dann
+optional und muss nur explizit aufgerufen werden, wenn die Lücke geschlossen
+werden soll, *bevor* der erste neue Messwert bekannt ist.
 

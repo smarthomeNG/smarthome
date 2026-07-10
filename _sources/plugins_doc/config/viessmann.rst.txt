@@ -21,7 +21,9 @@ Plugin 'viessmann' Konfiguration
 
 Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **viessmann** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
 
-Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
 
 
 
@@ -37,7 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.6.0**
+ - Minimum SmartHomeNG Version: **1.9.5.1**
  - Minimum Python Version: **3.6**
 
 Konfiguration
@@ -55,42 +57,116 @@ Parameter
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
 
-heating_type
-============
+autoreconnect
+=============
 
 
-Gerätetype der Heizung
+Verbindung nach Verbindungsabbruch automatisch wiederherstellen
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+clean_structs
+=============
+
+
+
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+command_class
+=============
+
+
+
+
+ - Datentyp: **str**
+ - Standardwert: **SDPCommandViessmann**
+
+
+cycle
+=====
+
+
+
+
+ - Datentyp: **num**
+ - Standardwert: **30**
+
+
+loop_guard_count
+================
+
+
+Anzahl identischer Schreibversuche im Zeitfenster, die den Loop-Guard auslösen (0 = deaktiviert)
+
+ - Datentyp: **num**
+ - Standardwert: **5**
+
+
+loop_guard_source
+=================
+
+
+Wenn gesetzt, zählt der Loop-Guard nur Schreibversuche, deren "caller"-String mit diesem Präfix beginnt (z.B. "MQTT"). Schreibvorgänge anderer Aufrufer werden immer durchgelassen.
 
  - Datentyp: **str**
 
 
-protocol
-========
+loop_guard_window
+=================
 
 
-Protokoll der Heizung
+Zeitfenster in Sekunden für den Loop-Guard
 
- - Datentyp: **str**
- - Standardwert: **P300**
+ - Datentyp: **num**
+ - Standardwert: **5.0**
+
+
+model
+=====
+
+
+
+
+ - Datentyp: **foo**
+ - Standardwert: **None**
 
 
 serialport
 ==========
 
 
-Serieller Port, an dem der Lesekopf angeschlossen ist
+
 
  - Datentyp: **str**
 
 
-timeout
-=======
+suspend_item
+============
 
 
-Zeitbegrenzung für das Lesen vom seriellen Port in Sekunden
+Item-Pfad für das Suspend-Item
 
- - Datentyp: **num**
- - Standardwert: **1.5**
+ - Datentyp: **str**
+
+
+viess_proto
+===========
+
+
+
+
+ - Datentyp: **str**
+ - Standardwert: **P300**
+
+ - Mögliche Werte:
+
+   - **P300**
+   - **KW**
 
 
 ==============
@@ -101,92 +177,119 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
-viess_ba_list
+viess_command
 =============
 
 
-Gibt nach der Initialisierung eine Liste aller für die konfigurierte Heizung gültigen Betriebsarten zurück
+Legt das angegebene Kommando für das Item fest
 
- - Datentyp: **bool**
-
-
-viess_init
-==========
+ - Datentyp: **str**
 
 
-Konfiguriert, ob der Wert aus der Heizung initialisiert werden soll
+viess_custom1
+=============
 
- - Datentyp: **bool**
+
+Der Inhalt dieses Items kann vom jeweiligen Gerät für spezielle Zwecke genutzt werden. Durch den Parameter "recursive_custom: 1" in der Geräte-Konfiguration wird der Wert rekursiv für alle Unteritems gesetzt.
+
+ - Datentyp: **str**
+
+
+viess_custom2
+=============
+
+
+Der Inhalt dieses Items kann vom jeweiligen Gerät für spezielle Zwecke genutzt werden. Durch den Parameter "recursive_custom: 2" in der Geräte-Konfiguration wird der Wert rekursiv für alle Unteritems gesetzt.
+
+ - Datentyp: **str**
+
+
+viess_custom3
+=============
+
+
+Der Inhalt dieses Items kann vom jeweiligen Gerät für spezielle Zwecke genutzt werden. Durch den Parameter "recursive_custom: 3" in der Geräte-Konfiguration wird der Wert rekursiv für alle Unteritems gesetzt.
+
+ - Datentyp: **str**
+
+
+viess_lookup
+============
+
+
+Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.   Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art der Tabelle ausgewählt werden: - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard) - rev liefert die Tabelle SmartHomeNG -> Gerät - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben - list liefert die Liste der Namen für SmartHomeNG
+
+ - Datentyp: **str**
 
 
 viess_read
 ==========
 
 
-Liest Wert mit konfiguriertem Kommando aus der Heizung aus
+Liest/erhält Werte vom Gerät
 
- - Datentyp: **str**
-
-
-viess_read_afterwrite
-=====================
-
-
-Konfiguriert eine Verzögerung in Sekunden nachdem ein Lesekommando nach einem Schreibkommando an die Heizung geschickt wird
-
- - Datentyp: **num**
+ - Datentyp: **bool**
 
 
 viess_read_cycle
 ================
 
 
-Konfiguriert ein Intervall in Sekunden für das Lesekommando
+Konfiguriert ein individuelles Intervall in Sekunden für regelmäßiges Lesen
 
  - Datentyp: **num**
 
 
-viess_send
-==========
+viess_read_cyclic
+=================
 
 
-Änderung des Items wird mit konfiguriertem Kommando an die Heizung geschickt
+Konfiguriert regelmäßiges Lesen mit dem plugin-weiten Intervall
 
- - Datentyp: **str**
-
-
-viess_timer
-===========
+ - Datentyp: **bool**
 
 
-Liest alle Timer zur übergebenen Anwendung (z.B. Heizkreis_A1M1) und stellt diese für die Nutzung mit UZSU zur Verfügung
-
- - Datentyp: **str**
-
-
-viess_trigger
-=============
+viess_read_group
+================
 
 
-Konfiguriert Lesekommandos, die nach einem Schreibvorgang auf das Item aufgerufen werden
+Weist das Item der angegebenen Gruppe zum gesammelten Lesen zu. Gruppe kann int oder str sein, mehrere Gruppen können als Liste angegeben werden.
 
  - Datentyp: **list(str)**
 
 
-viess_trigger_afterwrite
+viess_read_group_trigger
 ========================
 
 
-Konfiguriert eine Verzögerung in Sekunden, bis ein Trigger ausgeführt werden soll, nachdem ein Wert gesetzt wurde
+Wenn diesem Item ein beliebiger Wert zugewiesen wird, werden alle zum Lesen konfigurierten Items der angegebenen Gruppe neu vom Gerät gelesen, bei Gruppe 0 werden alle zum Lesen konfigurierten Items neu gelesen. Das Item kann nicht gleichzeitig mit viess_command belegt werden.
+
+ - Datentyp: **str**
+
+
+viess_read_initial
+==================
+
+
+Legt fest, dass der Wert beim Start vom Gerät gelesen wird
+
+ - Datentyp: **bool**
+
+
+viess_readafterwrite
+====================
+
+
+Nach dem Schreiben des Items den Wert nach der angegebenen Anzahl von Sekunden automatisch neu vom Gerät laden
 
  - Datentyp: **num**
 
 
-viess_update
-============
+viess_write
+===========
 
 
-Liest alle konfigurierten Items neu, wenn es auf True gesetzt wird
+Änderung des Items werden an das Gerät gesendet
 
  - Datentyp: **bool**
 
@@ -199,31 +302,555 @@ Item-Structs
 Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
 
 
-betriebsart
-===========
+ALL
+===
 
-Betriebsart in string wandeln
 
 .. treeview::
-     - :dir:`folder` **betriebsart** (`foo`, Betriebsart in string wandeln)
-         - :dir:`file` **betriebsart_str** (`str`, ---)
+     - :dir:`folder` **ALL** (`foo`, ---)
+         - :dir:`file` **anlagentyp** (`str`, ---)
 
 
-timer
-=====
+V200HO1C
+========
 
-Schaltzeiten in Einzelzeiten fuer An und Aus
 
 .. treeview::
-     - :dir:`folder` **timer** (`foo`, Schaltzeiten in Einzelzeiten fuer An und Aus)
-         - :dir:`file` **an1** (`str`, erste Anschaltzeit)
-         - :dir:`file` **aus1** (`str`, erste Ausschaltzeit)
-         - :dir:`file` **an2** (`str`, zweite Anschaltzeit)
-         - :dir:`file` **aus2** (`str`, zweite Ausschaltzeit)
-         - :dir:`file` **an3** (`str`, dritte Anschaltzeit)
-         - :dir:`file` **aus3** (`str`, dritte Ausschaltzeit)
-         - :dir:`file` **an4** (`str`, vierte Anschaltzeit)
-         - :dir:`file` **aus4** (`str`, vierte Ausschaltzeit)
+     - :dir:`folder` **V200HO1C** (`foo`, ---)
+         - :dir:`file` **anlagentyp** (`str`, ---)
+         - :dir:`folder` **allgemein** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **anlagenschema** (`num`, ---)
+             - :dir:`file` **frostgefahr** (`num`, ---)
+             - :dir:`file` **anlagenleistung** (`num`, ---)
+             - :dir:`folder` **temperatur** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **aussen_tp** (`num`, ---)
+                 - :dir:`file` **aussen_dp** (`num`, ---)
+         - :dir:`folder` **kessel** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **tp** (`num`, ---)
+             - :dir:`file` **soll** (`num`, ---)
+             - :dir:`file` **abgastemperatur** (`num`, ---)
+         - :dir:`folder` **fehler** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **sammelstoerung** (`num`, ---)
+             - :dir:`file` **error0** (`num`, ---)
+             - :dir:`file` **error1** (`num`, ---)
+             - :dir:`file` **error2** (`num`, ---)
+             - :dir:`file` **error3** (`num`, ---)
+             - :dir:`file` **error4** (`num`, ---)
+             - :dir:`file` **error5** (`num`, ---)
+             - :dir:`file` **error6** (`num`, ---)
+             - :dir:`file` **error7** (`num`, ---)
+             - :dir:`file` **error8** (`num`, ---)
+             - :dir:`file` **error9** (`num`, ---)
+         - :dir:`folder` **pumpen** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **speicherlade** (`bool`, ---)
+             - :dir:`file` **zirkulation** (`bool`, ---)
+             - :dir:`file` **intern** (`bool`, ---)
+             - :dir:`file` **heizkreis_1** (`bool`, ---)
+             - :dir:`file` **heizkreis_2** (`bool`, ---)
+         - :dir:`folder` **brenner** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **starts** (`num`, ---)
+             - :dir:`file` **leistung** (`num`, ---)
+             - :dir:`file` **betriebsstunden** (`num`, ---)
+         - :dir:`folder` **solar** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **pumpe** (`bool`, ---)
+             - :dir:`file` **kollektortemperatur** (`num`, ---)
+             - :dir:`file` **speichertemperatur** (`num`, ---)
+             - :dir:`file` **betriebsstunden** (`num`, ---)
+             - :dir:`file` **waermemenge** (`num`, ---)
+             - :dir:`file` **ausbeute** (`num`, ---)
+         - :dir:`folder` **heizkreis** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **1** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **betriebsart** (`num`, ---)
+                 - :dir:`file` **heizart** (`num`, ---)
+                 - :dir:`folder` **temperatur** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **vorlauf_soll** (`num`, ---)
+                     - :dir:`file` **vorlauf_ist** (`num`, ---)
+             - :dir:`folder` **2** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **betriebsart** (`num`, ---)
+                 - :dir:`file` **heizart** (`num`, ---)
+                 - :dir:`folder` **temperatur** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **vorlauf_soll** (`num`, ---)
+                     - :dir:`file` **vorlauf_ist** (`num`, ---)
+         - :dir:`folder` **warmwasser** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **ist** (`num`, ---)
+             - :dir:`file` **soll** (`num`, ---)
+             - :dir:`file` **austritt** (`num`, ---)
+
+
+V200KO1B
+========
+
+
+.. treeview::
+     - :dir:`folder` **V200KO1B** (`foo`, ---)
+         - :dir:`file` **anlagentyp** (`str`, ---)
+         - :dir:`folder` **allgemein** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **temperatur** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **aussen** (`num`, ---)
+                 - :dir:`file` **aussen_tp** (`num`, ---)
+                 - :dir:`file` **aussen_dp** (`num`, ---)
+                 - :dir:`file` **speicher_ladesensor** (`num`, ---)
+                 - :dir:`file` **auslauf** (`num`, ---)
+                 - :dir:`file` **abgas** (`num`, ---)
+                 - :dir:`file` **gem_vorlauf** (`num`, ---)
+             - :dir:`file` **relais_k12** (`bool`, ---)
+             - :dir:`file` **eingang_0-10_v** (`bool`, ---)
+             - :dir:`file` **ea1_kontakt_0** (`bool`, ---)
+             - :dir:`file` **ea1_kontakt_1** (`bool`, ---)
+             - :dir:`file` **ea1_kontakt_2** (`bool`, ---)
+             - :dir:`file` **ea1_externer_soll_0-10v** (`bool`, ---)
+             - :dir:`file` **ea1_relais_0** (`bool`, ---)
+             - :dir:`file` **am1_ausgang_1** (`bool`, ---)
+             - :dir:`file` **am1_ausgang_2** (`bool`, ---)
+             - :dir:`file` **tempkoffset** (`num`, ---)
+             - :dir:`file` **systemtime** (`bool`, ---)
+             - :dir:`file` **anlagenschema** (`num`, ---)
+             - :dir:`file` **inventory** (`str`, ---)
+             - :dir:`file` **ctrlid** (`num`, ---)
+         - :dir:`folder` **kessel** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **ist** (`num`, ---)
+             - :dir:`file` **tp** (`num`, ---)
+             - :dir:`file` **soll** (`num`, ---)
+         - :dir:`folder` **fehler** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **sammelstoerung** (`num`, ---)
+             - :dir:`file` **error0** (`num`, ---)
+             - :dir:`file` **error1** (`num`, ---)
+             - :dir:`file` **error2** (`num`, ---)
+             - :dir:`file` **error3** (`num`, ---)
+             - :dir:`file` **error4** (`num`, ---)
+             - :dir:`file` **error5** (`num`, ---)
+             - :dir:`file` **error6** (`num`, ---)
+             - :dir:`file` **error7** (`num`, ---)
+             - :dir:`file` **error8** (`num`, ---)
+             - :dir:`file` **error9** (`num`, ---)
+         - :dir:`folder` **pumpen** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **speicherlade** (`bool`, ---)
+             - :dir:`file` **zirkulation** (`bool`, ---)
+             - :dir:`file` **intern** (`bool`, ---)
+             - :dir:`file` **heizkreis_a1m1** (`bool`, ---)
+             - :dir:`file` **heizkreis_a1m1_rpm** (`bool`, ---)
+             - :dir:`file` **heizkreis_m2** (`bool`, ---)
+             - :dir:`file` **heizkreis_m2_rpm** (`bool`, ---)
+             - :dir:`file` **relais_status** (`bool`, ---)
+         - :dir:`folder` **brenner** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **starts** (`num`, ---)
+             - :dir:`file` **betriebsstunden** (`num`, ---)
+             - :dir:`file` **status_1** (`bool`, ---)
+             - :dir:`file` **status_2** (`bool`, ---)
+             - :dir:`file` **oeldurchsatz** (`num`, ---)
+             - :dir:`file` **oelverbrauch** (`num`, ---)
+         - :dir:`folder` **solar** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **nachladeunterdrueckung** (`bool`, ---)
+             - :dir:`file` **pumpe** (`bool`, ---)
+             - :dir:`file` **kollektortemperatur** (`num`, ---)
+             - :dir:`file` **speichertemperatur** (`num`, ---)
+             - :dir:`file` **betriebsstunden** (`num`, ---)
+             - :dir:`file` **steuerung** (`num`, ---)
+         - :dir:`folder` **heizkreis** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **a1m1** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`folder` **temperatur** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`folder` **raum** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **ist** (`num`, ---)
+                         - :dir:`file` **soll_normalbetrieb** (`num`, ---)
+                         - :dir:`file` **soll_red_betrieb** (`num`, ---)
+                         - :dir:`file` **soll_party_betrieb** (`num`, ---)
+                     - :dir:`folder` **vorlauf** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **ist** (`num`, ---)
+                         - :dir:`file` **soll** (`num`, ---)
+                         - :dir:`file` **min** (`num`, ---)
+                         - :dir:`file` **max** (`num`, ---)
+                         - :dir:`file` **erhoehung_soll** (`num`, ---)
+                         - :dir:`file` **erhoehung_zeit** (`num`, ---)
+                     - :dir:`file` **grenze_red_betrieb** (`num`, ---)
+                     - :dir:`file` **grenze_red_raumtemp** (`num`, ---)
+                 - :dir:`folder` **status** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **aktuelle_betriebsart** (`num`, ---)
+                     - :dir:`file` **betriebsart** (`num`, ---)
+                     - :dir:`file` **sparbetrieb** (`num`, ---)
+                     - :dir:`file` **zustand_sparbetrieb** (`num`, ---)
+                     - :dir:`file` **partybetrieb** (`num`, ---)
+                     - :dir:`file` **zustand_partybetrieb** (`num`, ---)
+                     - :dir:`file` **statusfrost** (`num`, ---)
+                     - :dir:`file` **externe_raumsolltemperatur_normal** (`num`, ---)
+                     - :dir:`file` **externe_betriebsartenumschaltung** (`num`, ---)
+                     - :dir:`file` **speichervorrang** (`num`, ---)
+                     - :dir:`file` **frostschutzgrenze** (`num`, ---)
+                     - :dir:`file` **frostschutz** (`num`, ---)
+                     - :dir:`file` **heizkreispumpenlogik** (`num`, ---)
+                     - :dir:`file` **sparschaltung** (`num`, ---)
+                     - :dir:`file` **mischersparfunktion** (`num`, ---)
+                     - :dir:`file` **pumpenstillstandzeit** (`num`, ---)
+                 - :dir:`folder` **heizkennlinie** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **neigung** (`num`, ---)
+                     - :dir:`file` **niveau** (`num`, ---)
+                 - :dir:`file` **partybetrieb_zeitbegrenzung** (`num`, ---)
+             - :dir:`folder` **m2** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`folder` **temperatur** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`folder` **raum** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **ist** (`num`, ---)
+                         - :dir:`file` **soll_normalbetrieb** (`num`, ---)
+                         - :dir:`file` **soll_red_betrieb** (`num`, ---)
+                         - :dir:`file` **soll_party_betrieb** (`num`, ---)
+                     - :dir:`folder` **vorlauf** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **ist** (`num`, ---)
+                         - :dir:`file` **soll** (`num`, ---)
+                         - :dir:`file` **min** (`num`, ---)
+                         - :dir:`file` **max** (`num`, ---)
+                         - :dir:`file` **erhoehung_soll** (`num`, ---)
+                         - :dir:`file` **erhoehung_zeit** (`num`, ---)
+                     - :dir:`file` **grenze_red_betrieb** (`num`, ---)
+                     - :dir:`file` **grenze_red_raumtemp** (`num`, ---)
+                 - :dir:`folder` **status** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **aktuelle_betriebsart** (`num`, ---)
+                     - :dir:`file` **betriebsart** (`num`, ---)
+                     - :dir:`file` **sparbetrieb** (`num`, ---)
+                     - :dir:`file` **zustand_sparbetrieb** (`num`, ---)
+                     - :dir:`file` **partybetrieb** (`num`, ---)
+                     - :dir:`file` **zustand_partybetrieb** (`num`, ---)
+                     - :dir:`file` **statusfrost** (`num`, ---)
+                     - :dir:`file` **externe_raumsolltemperatur_normal** (`num`, ---)
+                     - :dir:`file` **externe_betriebsartenumschaltung** (`num`, ---)
+                     - :dir:`file` **speichervorrang** (`num`, ---)
+                     - :dir:`file` **frostschutzgrenze** (`num`, ---)
+                     - :dir:`file` **frostschutz** (`num`, ---)
+                     - :dir:`file` **heizkreispumpenlogik** (`num`, ---)
+                     - :dir:`file` **sparschaltung** (`num`, ---)
+                     - :dir:`file` **mischersparfunktion** (`num`, ---)
+                     - :dir:`file` **pumpenstillstandzeit** (`num`, ---)
+                 - :dir:`folder` **heizkennlinie** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **neigung** (`num`, ---)
+                     - :dir:`file` **niveau** (`num`, ---)
+                 - :dir:`file` **partybetrieb_zeitbegrenzung** (`num`, ---)
+         - :dir:`folder` **warmwasser** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **ist** (`num`, ---)
+             - :dir:`file` **soll** (`num`, ---)
+             - :dir:`file` **status** (`bool`, ---)
+             - :dir:`file` **pumpennachlauf** (`num`, ---)
+         - :dir:`folder` **ferienprogramm** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **a1m1** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **status** (`num`, ---)
+                 - :dir:`file` **abreisetag** (`bool`, ---)
+                 - :dir:`file` **rückreisetag** (`bool`, ---)
+             - :dir:`folder` **m2** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **status** (`num`, ---)
+                 - :dir:`file` **abreisetag** (`bool`, ---)
+                 - :dir:`file` **rückreisetag** (`bool`, ---)
+         - :dir:`folder` **timer** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **warmwasser** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **mo** (`list`, ---)
+                 - :dir:`file` **di** (`list`, ---)
+                 - :dir:`file` **mi** (`list`, ---)
+                 - :dir:`file` **do** (`list`, ---)
+                 - :dir:`file` **fr** (`list`, ---)
+                 - :dir:`file` **sa** (`list`, ---)
+                 - :dir:`file` **so** (`list`, ---)
+             - :dir:`folder` **a1m1** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **mo** (`list`, ---)
+                 - :dir:`file` **di** (`list`, ---)
+                 - :dir:`file` **mi** (`list`, ---)
+                 - :dir:`file` **do** (`list`, ---)
+                 - :dir:`file` **fr** (`list`, ---)
+                 - :dir:`file` **sa** (`list`, ---)
+                 - :dir:`file` **so** (`list`, ---)
+             - :dir:`folder` **m2** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **mo** (`list`, ---)
+                 - :dir:`file` **di** (`list`, ---)
+                 - :dir:`file` **mi** (`list`, ---)
+                 - :dir:`file` **do** (`list`, ---)
+                 - :dir:`file` **fr** (`list`, ---)
+                 - :dir:`file` **sa** (`list`, ---)
+                 - :dir:`file` **so** (`list`, ---)
+             - :dir:`folder` **zirkulation** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **mo** (`list`, ---)
+                 - :dir:`file` **di** (`list`, ---)
+                 - :dir:`file` **mi** (`list`, ---)
+                 - :dir:`file` **do** (`list`, ---)
+                 - :dir:`file` **fr** (`list`, ---)
+                 - :dir:`file` **sa** (`list`, ---)
+                 - :dir:`file` **so** (`list`, ---)
+
+
+V200KW2
+=======
+
+
+.. treeview::
+     - :dir:`folder` **V200KW2** (`foo`, ---)
+         - :dir:`file` **anlagentyp** (`str`, ---)
+         - :dir:`folder` **allgemein** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **temperatur** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **aussen** (`num`, ---)
+                 - :dir:`file` **aussen_dp** (`num`, ---)
+             - :dir:`file` **anlagenschema** (`num`, ---)
+             - :dir:`file` **anlagensoftwareindex** (`num`, ---)
+             - :dir:`file` **systemtime** (`bool`, ---)
+         - :dir:`folder` **kessel** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **tempkoffset** (`num`, ---)
+             - :dir:`file` **ist** (`num`, ---)
+             - :dir:`file` **soll** (`num`, ---)
+         - :dir:`folder` **fehler** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **sammelstoerung** (`num`, ---)
+             - :dir:`file` **brennerstoerung** (`num`, ---)
+             - :dir:`file` **error0** (`num`, ---)
+             - :dir:`file` **error1** (`num`, ---)
+             - :dir:`file` **error2** (`num`, ---)
+             - :dir:`file` **error3** (`num`, ---)
+             - :dir:`file` **error4** (`num`, ---)
+             - :dir:`file` **error5** (`num`, ---)
+             - :dir:`file` **error6** (`num`, ---)
+             - :dir:`file` **error7** (`num`, ---)
+             - :dir:`file` **error8** (`num`, ---)
+             - :dir:`file` **error9** (`num`, ---)
+         - :dir:`folder` **pumpen** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **speicherlade** (`bool`, ---)
+             - :dir:`file` **zirkulation** (`bool`, ---)
+             - :dir:`file` **heizkreis_a1m1** (`bool`, ---)
+             - :dir:`file` **heizkreis_m2** (`bool`, ---)
+         - :dir:`folder` **brenner** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **typ** (`num`, ---)
+             - :dir:`file` **stufe** (`num`, ---)
+             - :dir:`file` **starts** (`num`, ---)
+             - :dir:`file` **status_1** (`bool`, ---)
+             - :dir:`file` **status_2** (`bool`, ---)
+             - :dir:`file` **betriebsstundenstufe1** (`num`, ---)
+             - :dir:`file` **betriebsstundenstufe2** (`num`, ---)
+         - :dir:`folder` **heizkreis** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **a1m1** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`folder` **temperatur** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`folder` **raum** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **soll_normal** (`num`, ---)
+                         - :dir:`file` **soll_reduziert** (`num`, ---)
+                         - :dir:`file` **soll_party** (`num`, ---)
+                     - :dir:`folder` **vorlauf** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **ist** (`num`, ---)
+                         - :dir:`file` **soll** (`num`, ---)
+                 - :dir:`file` **betriebsart** (`num`, ---)
+                 - :dir:`file` **aktuelle_betriebsart** (`num`, ---)
+                 - :dir:`file` **sparbetrieb** (`num`, ---)
+                 - :dir:`file` **partybetrieb_zeit** (`num`, ---)
+                 - :dir:`file` **partybetrieb** (`num`, ---)
+                 - :dir:`file` **mischerm1** (`num`, ---)
+                 - :dir:`file` **heizkreispumpenlogik** (`num`, ---)
+                 - :dir:`file` **sparschaltung** (`num`, ---)
+                 - :dir:`folder` **heizkennlinie** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **neigung** (`num`, ---)
+                     - :dir:`file` **niveau** (`num`, ---)
+             - :dir:`folder` **m2** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`folder` **temperatur** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`folder` **raum** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **soll_normal** (`num`, ---)
+                         - :dir:`file` **soll_reduziert** (`num`, ---)
+                         - :dir:`file` **soll_party** (`num`, ---)
+                     - :dir:`folder` **vorlauf** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **soll** (`num`, ---)
+                         - :dir:`file` **ist** (`num`, ---)
+                         - :dir:`file` **min** (`num`, ---)
+                         - :dir:`file` **max** (`num`, ---)
+                 - :dir:`file` **betriebsart** (`num`, ---)
+                 - :dir:`file` **aktuelle_betriebsart** (`num`, ---)
+                 - :dir:`file` **sparbetrieb** (`num`, ---)
+                 - :dir:`file` **partybetrieb** (`num`, ---)
+                 - :dir:`file` **partybetrieb_zeit** (`num`, ---)
+                 - :dir:`file` **mischerm2** (`num`, ---)
+                 - :dir:`file` **mischerm2auf** (`bool`, ---)
+                 - :dir:`file` **mischerm2zu** (`bool`, ---)
+                 - :dir:`file` **heizkreispumpenlogik** (`num`, ---)
+                 - :dir:`file` **sparschaltung** (`num`, ---)
+                 - :dir:`file` **statusklemme2** (`bool`, ---)
+                 - :dir:`file` **statusklemme17** (`bool`, ---)
+                 - :dir:`folder` **heizkennlinie** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **neigung** (`num`, ---)
+                     - :dir:`file` **niveau** (`num`, ---)
+         - :dir:`folder` **warmwasser** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **status** (`bool`, ---)
+             - :dir:`file` **kesseloffset** (`num`, ---)
+             - :dir:`file` **beipartydnormal** (`num`, ---)
+             - :dir:`file` **ist** (`num`, ---)
+             - :dir:`file` **soll** (`num`, ---)
+             - :dir:`file` **sollaktuell** (`num`, ---)
+             - :dir:`file` **sollmax** (`num`, ---)
+         - :dir:`folder` **ferienprogramm** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **a1m1** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **status** (`num`, ---)
+                 - :dir:`file` **abreisetag** (`bool`, ---)
+                 - :dir:`file` **rückreisetag** (`bool`, ---)
+             - :dir:`folder` **m2** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **status** (`num`, ---)
+                 - :dir:`file` **abreisetag** (`bool`, ---)
+                 - :dir:`file` **rückreisetag** (`bool`, ---)
+         - :dir:`folder` **timer** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **warmwasser** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **mo** (`list`, ---)
+                 - :dir:`file` **di** (`list`, ---)
+                 - :dir:`file` **mi** (`list`, ---)
+                 - :dir:`file` **do** (`list`, ---)
+                 - :dir:`file` **fr** (`list`, ---)
+                 - :dir:`file` **sa** (`list`, ---)
+                 - :dir:`file` **so** (`list`, ---)
+             - :dir:`folder` **a1m1** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **mo** (`list`, ---)
+                 - :dir:`file` **di** (`list`, ---)
+                 - :dir:`file` **mi** (`list`, ---)
+                 - :dir:`file` **do** (`list`, ---)
+                 - :dir:`file` **fr** (`list`, ---)
+                 - :dir:`file` **sa** (`list`, ---)
+                 - :dir:`file` **so** (`list`, ---)
+             - :dir:`folder` **m2** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **mo** (`list`, ---)
+                 - :dir:`file` **di** (`list`, ---)
+                 - :dir:`file` **mi** (`list`, ---)
+                 - :dir:`file` **do** (`list`, ---)
+                 - :dir:`file` **fr** (`list`, ---)
+                 - :dir:`file` **sa** (`list`, ---)
+                 - :dir:`file` **so** (`list`, ---)
+
+
+V200WO1C
+========
+
+
+.. treeview::
+     - :dir:`folder` **V200WO1C** (`foo`, ---)
+         - :dir:`file` **anlagentyp** (`str`, ---)
+         - :dir:`folder` **allgemein** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **temperatur** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **aussen** (`num`, ---)
+             - :dir:`folder` **betriebsart** (`str`, ---)
+                 - :dir:`file` **lookup** (`list`, ---)
+             - :dir:`file` **manuell** (`num`, ---)
+             - :dir:`file` **outdoor_fanspeed** (`num`, ---)
+             - :dir:`file` **status_fanspeed** (`num`, ---)
+             - :dir:`file` **kompressor_freq** (`num`, ---)
+             - :dir:`file` **sollleistung_verdichter** (`num`, ---)
+         - :dir:`folder` **pumpen** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **sekundaer** (`bool`, ---)
+             - :dir:`file` **heizkreis** (`bool`, ---)
+             - :dir:`file` **zirkulation** (`bool`, ---)
+         - :dir:`folder` **heizkreis** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **temperatur** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`folder` **raum** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **soll** (`num`, ---)
+                     - :dir:`file` **soll_reduziert** (`num`, ---)
+                     - :dir:`file` **soll_party** (`num`, ---)
+                 - :dir:`folder` **vorlauf** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **ist** (`num`, ---)
+                     - :dir:`file` **soll** (`num`, ---)
+                     - :dir:`file` **mittel** (`num`, ---)
+                 - :dir:`folder` **ruecklauf** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **ist** (`num`, ---)
+                     - :dir:`file` **mittel** (`num`, ---)
+             - :dir:`folder` **heizkennlinie** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **niveau** (`num`, ---)
+                 - :dir:`file` **neigung** (`num`, ---)
+         - :dir:`folder` **warmwasser** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **ist** (`num`, ---)
+             - :dir:`file` **soll** (`num`, ---)
+             - :dir:`file` **ventil** (`bool`, ---)
+         - :dir:`folder` **statistik** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **einschaltungen** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **sekundaer** (`num`, ---)
+                 - :dir:`file` **heizstab1** (`num`, ---)
+                 - :dir:`file` **heizstab2** (`num`, ---)
+                 - :dir:`file` **heizkreis** (`num`, ---)
+             - :dir:`folder` **laufzeiten** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **sekundaer** (`num`, ---)
+                 - :dir:`file` **heizstab1** (`num`, ---)
+                 - :dir:`file` **heizstab2** (`num`, ---)
+                 - :dir:`file` **heizkreis** (`num`, ---)
+                 - :dir:`file` **ventil** (`num`, ---)
+                 - :dir:`file` **verdichterstufe1** (`num`, ---)
+                 - :dir:`file` **verdichterstufe2** (`num`, ---)
+                 - :dir:`file` **verdichterstufe3** (`num`, ---)
+                 - :dir:`file` **verdichterstufe4** (`num`, ---)
+                 - :dir:`file` **verdichterstufe5** (`num`, ---)
+                 - :dir:`file` **verdichterwp** (`num`, ---)
+             - :dir:`file` **oat_temperature** (`num`, ---)
+             - :dir:`file` **ict_temperature** (`num`, ---)
+             - :dir:`file` **cct_temperature** (`num`, ---)
+             - :dir:`file` **hst_temperature** (`num`, ---)
+             - :dir:`file` **omt_temperature** (`num`, ---)
+             - :dir:`file` **waermeww12m** (`num`, ---)
+             - :dir:`file` **elektroww12m** (`num`, ---)
 
 
 ===============
@@ -242,91 +869,6 @@ Plugin Functions
 
 Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
 
-
-read_addr(addr)
-===============
-
-
-Stößt das Lesen des angegebenen Datenpunkts an, der nicht an ein Item gebunden sein muss. Es erfolgt keine Zuweisung an ein Item. Rückgabewert ist der gelesene Wert, oder NONE bei Fehler
-
- - Ergebnistyp der Funktion: **foo**
-
-
-addr
- -  -  -  - 
-
-Vierstellige Hex-Adresse des Datenpunktes
-
- - Datentyp: **str**
-
-
-read_temp_addr(addr, length, unit)
-==================================
-
-
-Stößt das Lesen eines beliebigen Datenpunkts an, der nicht konfiguriert oder bekannt sein muss. Es erfolgt keine Zuweisung an ein Item. Rückgabewert ist der gelesene Wert, oder NONE bei Fehler
-
- - Ergebnistyp der Funktion: **foo**
-
-
-addr
- -  -  -  - 
-
-Vierstellige Hex-Adresse des Datenpunktes
-
- - Datentyp: **str**
-
-
-length
- -  -  -  -  -  - 
-
-Länge der Geräteantwort in Bytes (1-8)
-
- - Datentyp: **int**
-
- - Minimalwert: **1**
- - Maximalwert: **8**
-
-unit
- -  -  -  - 
-
-Einheitencode für die Konvertierung der Antwort. Muss in der Protokollkonfiguration ``unitset`` in commands.py definiert sein
-
- - Datentyp: **str**
-
-
-update_all_read_items()
-=======================
-
-
-Stößt das Lesen aller konfigurierten Items an
-
- - Ergebnistyp der Funktion: **none**
-
-
-write_addr(addr, value)
-=======================
-
-
-Stößt das Schreiben des angegebenen Datenpunkts an, der nicht an ein Item gebunden sein muss. Der übergebene Wert muss zum konfigurierten Datentyp passen
-
- - Ergebnistyp der Funktion: **foo**
-
-
-addr
- -  -  -  - 
-
-Vierstellige Hex-Adresse des Datenpunktes
-
- - Datentyp: **str**
-
-
-value
- -  -  -  -  - 
-
-Zu schreibender Wert
-
- - Datentyp: 
-
+**Keine**
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/viessmann/README>` des Plugins zugreifen.

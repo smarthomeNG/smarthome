@@ -507,9 +507,19 @@
 <li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#export-von-daten">Export von Daten</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#aufbau-der-datenbank">Aufbau der Datenbank</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#aufbau-der-datenbank">Aufbau der Datenbank</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#fehlende-messwerte-datenlucken">Fehlende Messwerte (Datenlücken)</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#datenbankfunktionen-fur-datenreihen-plots">Datenbankfunktionen für Datenreihen/Plots</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#datenbankfunktionen-fur-einzelauswertungen">Datenbankfunktionen für Einzelauswertungen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#datenqualitat-und-datenlucken">Datenqualität und Datenlücken</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#item-db-mark-invalid">item.db_mark_invalid()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#item-db-mark-valid">item.db_mark_valid()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#auswirkung-auf-abfragen">Auswirkung auf Abfragen</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#implizite-revalidierung">Implizite Revalidierung</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../plugins/db_addon/user_doc.html">db_addon</a><ul>
@@ -1281,6 +1291,33 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../plugins/viessmann/user_doc.html">viessmann</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#changelog">Changelog</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#id1">1.2.2</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#id2">1.2.0</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#id3">1.1.0</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#id4">1.0.0</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#anforderungen">Anforderungen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#unterstutzte-gerate">Unterstützte Geräte</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#konfiguration">Konfiguration</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#plugin-yaml">plugin.yaml</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#items-yaml">items.yaml</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#beispiel">Beispiel</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#funktionen">Funktionen</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#update-all-read-items">update_all_read_items()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#read-addr-addr">read_addr(addr)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#read-temp-addr-addr-length-unit">read_temp_addr(addr, length, unit)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#write-addr-addr-value">write_addr(addr, value)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#web-interface">Web Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#standalone-modus">Standalone-Modus</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../plugins/zigbee2mqtt/user_doc.html">zigbee2mqtt</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../plugins/zigbee2mqtt/user_doc.html#konfiguration">Konfiguration</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../plugins/zigbee2mqtt/user_doc.html#konfiguration-von-items">Konfiguration von Items</a></li>
@@ -1698,33 +1735,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../plugins/unifi/user_doc.html#unterstutzte-hardware">Unterstützte Hardware</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../plugins/unifi/user_doc.html#konfiguration">Konfiguration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../plugins/unifi/user_doc.html#web-interface">Web Interface</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../plugins/viessmann/user_doc.html">viessmann</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#changelog">Changelog</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#id1">1.2.2</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#id2">1.2.0</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#id3">1.1.0</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#id4">1.0.0</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#anforderungen">Anforderungen</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#unterstutzte-gerate">Unterstützte Geräte</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#konfiguration">Konfiguration</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#plugin-yaml">plugin.yaml</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#items-yaml">items.yaml</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#beispiel">Beispiel</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#funktionen">Funktionen</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#update-all-read-items">update_all_read_items()</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#read-addr-addr">read_addr(addr)</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#read-temp-addr-addr-length-unit">read_temp_addr(addr, length, unit)</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../plugins/viessmann/user_doc.html#write-addr-addr-value">write_addr(addr, value)</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#web-interface">Web Interface</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/viessmann/user_doc.html#standalone-modus">Standalone-Modus</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../plugins/xiaomi_vac/user_doc.html">xiaomi_vac</a><ul>
@@ -2358,9 +2368,19 @@
 <li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#export-von-daten">Export von Daten</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#aufbau-der-datenbank">Aufbau der Datenbank</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#aufbau-der-datenbank">Aufbau der Datenbank</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#fehlende-messwerte-datenlucken">Fehlende Messwerte (Datenlücken)</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#datenbankfunktionen-fur-datenreihen-plots">Datenbankfunktionen für Datenreihen/Plots</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#datenbankfunktionen-fur-einzelauswertungen">Datenbankfunktionen für Einzelauswertungen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../plugins/database/user_doc.html#datenqualitat-und-datenlucken">Datenqualität und Datenlücken</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#item-db-mark-invalid">item.db_mark_invalid()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#item-db-mark-valid">item.db_mark_valid()</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#auswirkung-auf-abfragen">Auswirkung auf Abfragen</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../plugins/database/user_doc.html#implizite-revalidierung">Implizite Revalidierung</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../plugins/db_addon/user_doc.html">db_addon</a><ul>
@@ -4111,14 +4131,8 @@
 <li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_in5minutes.html#funktionen-von-smarthomeng">Funktionen von SmartHomeNG</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartplugin_class.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/mqttplugin_class.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartplugin_class.html">Class SmartPlugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/mqttplugin_class.html">Class MqttPlugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html">Class SmartDevicePlugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#plugin">Plugin</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
@@ -4130,10 +4144,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin"><code class="docutils literal notranslate"><span class="pre">SmartDevicePlugin</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#klassendefinition">Klassendefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/kurzanleitung/plugin_metadata.html#plugin">plugin</a></li>
@@ -4210,19 +4221,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
@@ -4254,10 +4254,7 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../entwicklung/core/core.html">Entwicklung des Core</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#lib-item">lib.item</a></li>
 </ul>
 </li>
@@ -4287,15 +4284,7 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="daemon.html">lib.daemon</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="daemon.html">lib.daemon</a></li>
 <li class="toctree-l4"><a class="reference internal" href="item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -4303,15 +4292,7 @@
 <li class="toctree-l5"><a class="reference internal" href="item_conversion.html#lib.item_conversion.yaml_save"><code class="docutils literal notranslate"><span class="pre">yaml_save()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="log.html">lib.log</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.DateTimeRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">DateTimeRotatingFileHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.EnglishLocale"><code class="docutils literal notranslate"><span class="pre">EnglishLocale</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.Logs"><code class="docutils literal notranslate"><span class="pre">Logs</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.ShngMemLogHandler"><code class="docutils literal notranslate"><span class="pre">ShngMemLogHandler</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="log.html#lib.log.ShngTimedRotatingFileHandler"><code class="docutils literal notranslate"><span class="pre">ShngTimedRotatingFileHandler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="log.html">lib.log</a></li>
 <li class="toctree-l4"><a class="reference internal" href="metadata.html">lib.metadata</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="metadata.html#lib.metadata.Metadata"><code class="docutils literal notranslate"><span class="pre">Metadata</span></code></a></li>
 </ul>
@@ -4320,10 +4301,7 @@
 <li class="toctree-l5"><a class="reference internal" href="module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="scene.html">lib.scene</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="scene.html">lib.scene</a></li>
 <li class="toctree-l4"><a class="reference internal" href="shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -4351,10 +4329,7 @@
 <li class="toctree-l5"><a class="reference internal" href="translation.html#lib.translation.translate"><code class="docutils literal notranslate"><span class="pre">translate()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="db.html">lib.db</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="db.html">lib.db</a></li>
 <li class="toctree-l4"><a class="reference internal" href="logutils.html">lib.logutils</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
@@ -4371,7 +4346,6 @@
 </ul>
 </li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">lib.orb</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
@@ -4675,12 +4649,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#module-modules.http">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4688,29 +4657,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -4876,25 +4831,7 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken <span class="greensup">Update</span></a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="db.html">lib.db</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.close"><code class="docutils literal notranslate"><span class="pre">Database.close()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.commit"><code class="docutils literal notranslate"><span class="pre">Database.commit()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.connect"><code class="docutils literal notranslate"><span class="pre">Database.connect()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.connected"><code class="docutils literal notranslate"><span class="pre">Database.connected()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.cursor"><code class="docutils literal notranslate"><span class="pre">Database.cursor()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.execute"><code class="docutils literal notranslate"><span class="pre">Database.execute()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.fetchall"><code class="docutils literal notranslate"><span class="pre">Database.fetchall()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.fetchone"><code class="docutils literal notranslate"><span class="pre">Database.fetchone()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.lock"><code class="docutils literal notranslate"><span class="pre">Database.lock()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.release"><code class="docutils literal notranslate"><span class="pre">Database.release()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.rollback"><code class="docutils literal notranslate"><span class="pre">Database.rollback()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.setup"><code class="docutils literal notranslate"><span class="pre">Database.setup()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="db.html#lib.db.Database.verify"><code class="docutils literal notranslate"><span class="pre">Database.verify()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="db.html">lib.db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="logutils.html">lib.logutils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="logutils.html#lib.logutils.DuplicateFilter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="logutils.html#lib.logutils.DuplicateFilter.filter"><code class="docutils literal notranslate"><span class="pre">DuplicateFilter.filter()</span></code></a></li>
@@ -4978,18 +4915,6 @@
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">lib.orb</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb.aware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.aware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb.unaware_datetime_to_utc"><code class="docutils literal notranslate"><span class="pre">Orb.unaware_datetime_to_utc()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#lib.orb.Orb.utc_to_local"><code class="docutils literal notranslate"><span class="pre">Orb.utc_to_local()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l4"><a class="reference internal" href="#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
@@ -5077,7 +5002,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="item.html#module-lib.item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="item.html#lib-item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="item.html#class-item">class Item</a></li>
@@ -5087,7 +5012,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="plugin.html#lib-plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="plugin.html#module-lib.plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -5097,26 +5022,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="shtime.html#module-lib.shtime">lib.shtime</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="shtime.html#lib-shtime">lib.shtime</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="logic.html#module-lib.logic">lib.logic</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="logic.html#lib-logic">lib.logic</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#lib-scheduler">lib.scheduler</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="env.html">lib.env</a><ul>
@@ -5684,147 +5598,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-lib.orb">
-<span id="lib-orb"></span><h1>lib.orb<a class="headerlink" href="#module-lib.orb" title="Permalink to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="lib.orb.Orb">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.orb.</span></span><span class="sig-name descname"><span class="pre">Orb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neverup_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ephem'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb" title="Link zu dieser Definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Save an observers location and the name of a celestial body for future use</p>
-<p>The Methods internally use a swappable backend for computation (currently
-only PyEphem is implemented, see _OrbBackend/_EphemBackend above).</p>
-<p>All calculations are based on utc time.
-Changelog of pypehem:
-&gt; Version 4.1.1 (2021 November 27)
-&gt; When you provide PyEphem with a Python datetime that has a time zone attached,
-&gt; PyEphem now detects the time zone and converts the date and time to UTC automatically.</p>
-<p>To prevent side effects by this behaviour every datetime object given to any function in class Orb
-will be converted to utc.
-In case the given datetime is
-- naive (no timezone attached) –&gt; the current timezone of SmartHomeNG will be used and the datetime will be converted to utc
-- has a timezone other than utc –&gt; dt will be converted to utc
-- has utc timezone –&gt; dt will not be changed and has always an offset of 0:00</p>
-<p>TODO:
-It can be that datetime conversion from and to utc is ambigous:
-Imagine October 27th, in 2024, at 2:30 in the night.
-dt = datetime(2024, 10, 27, 2, 30, tzinfo=berlin)
-This is ambigous because it could well be summertime having still utc+2 hours or wintertime with utc+1 hours
-This ambiguity is not handled right now</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="lib.orb.Orb.aware_datetime_to_utc">
-<span class="sig-name descname"><span class="pre">aware_datetime_to_utc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aware_dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb.aware_datetime_to_utc"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb.aware_datetime_to_utc" title="Link zu dieser Definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lib.orb.Orb.get_observer_and_orb">
-<span class="sig-name descname"><span class="pre">get_observer_and_orb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb.get_observer_and_orb"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb.get_observer_and_orb" title="Link zu dieser Definition"></a></dt>
-<dd><p>Return a tuple of an instance of an observer with location information
-and a celestial body, as provided by the active backend. Both returned
-objects are uniquely created to prevent errors in computation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple of observer and celestial body</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lib.orb.Orb.midnight">
-<span class="sig-name descname"><span class="pre">midnight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb.midnight"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb.midnight" title="Link zu dieser Definition"></a></dt>
-<dd><p>Calculate the time of next antitransit starting with dt. If dt is None the the time of this function call will be used</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameter<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doff</strong> (<em>float</em><em>, </em><em>optional</em>) – degrees offset, defaults to 0</p></li>
-<li><p><strong>moff</strong> (<em>float</em><em>, </em><em>optional</em>) – minutes offset, defaults to 0</p></li>
-<li><p><strong>dt</strong> (<em>datetime</em><em>, </em><em>optional</em>) – datetime object to start calculation with, defaults to None</p></li>
-</ul>
-</dd>
-<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
-<dd class="field-even"><p>datetime of next antitransit</p>
-</dd>
-<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
-<dd class="field-odd"><p>datetime</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lib.orb.Orb.noon">
-<span class="sig-name descname"><span class="pre">noon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb.noon"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb.noon" title="Link zu dieser Definition"></a></dt>
-<dd><p>calculate the time of next transit starting with dt. If dt is None the the time of this function call will be used</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameter<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doff</strong> (<em>float</em><em>, </em><em>optional</em>) – degrees offset, defaults to 0</p></li>
-<li><p><strong>moff</strong> (<em>float</em><em>, </em><em>optional</em>) – minutes offset, defaults to 0</p></li>
-<li><p><strong>dt</strong> (<em>datetime</em><em>, </em><em>optional</em>) – datetime object to start calculation with, defaults to None</p></li>
-</ul>
-</dd>
-<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
-<dd class="field-even"><p>datetime of next transit</p>
-</dd>
-<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
-<dd class="field-odd"><p>datetime</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lib.orb.Orb.pos">
-<span class="sig-name descname"><span class="pre">pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb.pos"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb.pos" title="Link zu dieser Definition"></a></dt>
-<dd><p>Calculates the position of either sun or moon
-:type offset: 
-:param offset:  given in minutes, shifts the time of calculation by some minutes back or forth
-:type degree: 
-:param degree:  if True: return the position of either sun or moon from the observer as degrees, otherwise as radians
-:type dt: 
-:param dt:      time for which the position needs to be calculated
-:return:        a tuple with azimuth and elevation</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lib.orb.Orb.rise">
-<span class="sig-name descname"><span class="pre">rise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb.rise"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb.rise" title="Link zu dieser Definition"></a></dt>
-<dd><p>Computes the rise of either sun or moon
-:type doff: 
-:param doff:    degrees offset for the observers horizon
-:type moff: 
-:param moff:    minutes offset from time of rise (either before or after)
-:type center: 
-:param center:  if True then the centerpoint of either sun or moon will be considered to make the transit otherwise the upper limb will be considered
-:type dt: 
-:param dt:      start time for the search for a rise, if not given the current time will be used
-:return: datetime of next rising in utc timezone, or None if the body does not rise during this circuit</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lib.orb.Orb.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb.set"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb.set" title="Link zu dieser Definition"></a></dt>
-<dd><p>Computes the setting of either sun or moon
-:type doff: 
-:param doff:    degrees offset for the observers horizon
-:type moff: 
-:param moff:    minutes offset from time of setting (either before or after)
-:type center: 
-:param center:  if True then the centerpoint of either sun or moon will be considered to make the transit otherwise the upper limb will be considered
-:type dt: 
-:param dt:      start time for the search for a setting, if not given the current time will be used
-:return: datetime of next setting in utc timezone, or None if the body does not set during this circuit</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lib.orb.Orb.unaware_datetime_to_utc">
-<span class="sig-name descname"><span class="pre">unaware_datetime_to_utc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">naive_dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb.unaware_datetime_to_utc"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb.unaware_datetime_to_utc" title="Link zu dieser Definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lib.orb.Orb.utc_to_local">
-<span class="sig-name descname"><span class="pre">utc_to_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">utc_dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/orb.html#Orb.utc_to_local"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.orb.Orb.utc_to_local" title="Link zu dieser Definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+  <section id="lib-orb">
+<h1>lib.orb<a class="headerlink" href="#lib-orb" title="Permalink to this heading"></a></h1>
 <section id="lib-orb-backends-update">
 <h2>lib.orb Backends <span class="greensup">Update</span><a class="headerlink" href="#lib-orb-backends-update" title="Permalink to this heading"></a></h2>
 <p>Die Bibliothek <cite>lib.orb</cite> kann intern mit verschiedenen Backends arbeiten:</p>

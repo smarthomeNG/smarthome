@@ -18,4 +18,5 @@
    /plugins/mlgw/README.md
    /plugins/rcswitch/README.md
    /plugins/squeezebox/README.md
+   /plugins/viessmann/README.md
    /plugins/zwave/README.md

@@ -46,5 +46,4 @@
    /plugins/systemair/README.md
    /plugins/thz/README.md
    /plugins/trovis557x/README.md
-   /plugins/viessmann/README.md
    /plugins/volkszaehler/README.md

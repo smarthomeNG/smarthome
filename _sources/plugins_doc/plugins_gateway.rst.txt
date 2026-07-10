@@ -32,6 +32,7 @@
    /plugins/squeezebox/user_doc
    /plugins/tasmota/user_doc
    /plugins/vicare/user_doc
+   /plugins/viessmann/user_doc
    /plugins/zigbee2mqtt/user_doc
 
 
@@ -243,16 +244,18 @@
      - ?
    
    * - :doc:`modbus_tcp <config/modbus_tcp>`
-     - v1.0.15
+     - v1.1.0
      - Plugin zur Geräte-Anbindung über ModBus an SmartHomeNG
        
        + `modbus_tcp Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1154368-einbindung-von-modbus-tcp>`_
        
-     - ivande
+     - CaeruleusAqua
+   
+       ivande
    
        Cannon
    
-     - NONE
+     - onkelandy
    
    * - :doc:`mpd <config/mpd>`
      - v1.6.1
@@ -430,6 +433,18 @@
      - aschwith
    
      - n/a
+   
+   * - :doc:`viessmann <config/viessmann>`
+     - v2.0.0
+     - Lesen und Schreiben von Werten einer Viessmann Heizung
+       
+       |br|
+       
+       
+       Plugin-Status: **develop**
+     - Morg
+   
+     - 
    
    * - :doc:`zigbee2mqtt <config/zigbee2mqtt>`
      - v2.0.2
