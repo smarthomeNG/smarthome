@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>install-hooks.sh &mdash; Dokumentation v1.12.1 v1.12.1 (Stand 18. Juni 2026) Dokumentation</title>
+  <title>install-hooks.sh Update &mdash; Dokumentation v1.12.2 v1.12.2 (Stand 10. Juli 2026) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
@@ -42,7 +42,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            Dokumentation v1.12.1
+            Dokumentation v1.12.2
               <img src="../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -55,8 +55,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../was_ist_neu.html">Neuerungen im Release v1.12.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../was_ist_neu.html">Neuerungen im Release v1.12.2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../was_war_neu.html#neuerungen-im-release-v1-12-1">Neuerungen im Release v1.12.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../was_war_neu.html#neuerungen-im-release-v1-12">Neuerungen im Release v1.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../was_war_neu.html#neuerungen-im-release-v1-11">Neuerungen im Release v1.11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
@@ -4031,13 +4032,18 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="tools.html">Tools</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tools.html">Tools <span class="greensup">Update</span></a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tools_backup_restore.html">backup_restore.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools_build_requirements.html">build_requirements.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools_conf_to_yaml_converter.html">conf_to_yaml_converter.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools_getshngpid.html">getshngpid</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">install-hooks.sh</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#wozu-dienen-die-hooks">Wozu dienen die Hooks?</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">install-hooks.sh <span class="greensup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#warum-das-ganze">Warum das Ganze?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wie-funktionieren-die-hooks">Wie funktionieren die Hooks?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pre-commit-formatieren-lint-gate"><strong>pre-commit</strong> (formatieren + Lint-Gate):</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pre-push-pytest-gate"><strong>pre-push</strong> (pytest-Gate):</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#scope-der-checks">Scope der Checks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#push-trotzdem-erzwingen">Push trotzdem erzwingen</a></li>
@@ -4118,6 +4124,8 @@
 <li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#protokoll">Protokoll</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#verbindung">Verbindung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#fehlerbehandlung">Fehlerbehandlung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#loop-guard">Loop-Guard</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#datatypes">DataTypes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
 </ul>
@@ -4364,6 +4372,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../lib/orb.html">lib.orb</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../lib/tools.html">lib.tools</a><ul>
@@ -4866,7 +4875,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken <span class="greensup">Update</span></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../lib/db.html">lib.db</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../lib/db.html#lib.db.Database.close"><code class="docutils literal notranslate"><span class="pre">Database.close()</span></code></a></li>
@@ -4981,6 +4990,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../lib/orb.html#lib.orb.Orb.utc_to_local"><code class="docutils literal notranslate"><span class="pre">Orb.utc_to_local()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../lib/env.html">lib.env</a><ul>
@@ -5216,6 +5226,29 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../release/1_x_x.html#weitere-anderungen">Weitere Änderungen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../release/1_x_x.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_12_2.html">Release 1.12.2 - 10. Juli 2026</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_12_2.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_12_2.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_12_2.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_12_2.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_12_2.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_12_2.html#bugfixes-im-core">Bugfixes im CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_12_2.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_12_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_12_2.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_12_2.html#plugin-updates">Plugin Updates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_12_2.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_12_2.html#dokumentation">Dokumentation</a></li>
 </ul>
 </li>
 </ul>
@@ -5630,7 +5663,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Dokumentation v1.12.1</a>
+          <a href="../index.html">Dokumentation v1.12.2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -5638,8 +5671,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="tools.html">Tools</a></li>
-      <li class="breadcrumb-item active">install-hooks.sh</li>
+          <li class="breadcrumb-item"><a href="tools.html">Tools <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">install-hooks.sh <span class="greensup">Update</span></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -5648,96 +5681,137 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <span class="target" id="index-0"></span><span class="target" id="index-1"></span><section id="install-hooks-sh">
-<span id="index-2"></span><h1>install-hooks.sh<a class="headerlink" href="#install-hooks-sh" title="Permalink to this heading"></a></h1>
-<p>Das Skript <code class="docutils literal notranslate"><span class="pre">tools/install-hooks.sh</span></code> richtet Git-Hooks für beide Repositorys —
-SmartHomeNG-Core und Plugins — mit einem einzigen Aufruf ein.</p>
-<section id="wozu-dienen-die-hooks">
-<h2>Wozu dienen die Hooks?<a class="headerlink" href="#wozu-dienen-die-hooks" title="Permalink to this heading"></a></h2>
-<p>Nach jedem <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> (<strong>post-commit</strong>) werden automatisch ruff und pytest
-ausgeführt. Das Ergebnis wird ausgegeben, blockiert den Commit aber nicht
-nachträglich.</p>
-<p>Vor jedem <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span></code> (<strong>pre-push</strong>) werden ruff und pytest erneut ausgeführt.
-Schlägt einer der beiden Checks fehl, wird der Push <strong>abgelehnt</strong>. Der Entwickler
-muss die Fehler beheben und kann den Push danach wiederholen.</p>
+  <span class="target" id="index-0"></span><span class="target" id="index-1"></span><section id="install-hooks-sh-update">
+<span id="index-2"></span><h1>install-hooks.sh <span class="greensup">Update</span><a class="headerlink" href="#install-hooks-sh-update" title="Permalink to this heading"></a></h1>
+<p>Das Skript <code class="docutils literal notranslate"><span class="pre">tools/install-hooks.sh</span></code> richtet git-Hooks für die SmartHomeNG-Repositories
+Core und/oder Plugins ein. Es fragt interaktiv ab, welche Repositories konfiguriert werden sollen.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hinweis</p>
+<p>Das Aktivieren ist freiwillig und kann nach individuellen Vorlieben geschehen.</p>
+</div>
+<section id="warum-das-ganze">
+<h2>Warum das Ganze?<a class="headerlink" href="#warum-das-ganze" title="Permalink to this heading"></a></h2>
+<p>Durch einheitliche Formatierung des Quellcodes wird der Code insgesamt
+lesbarer, da die einschlägigen Python-Konventionen der PEP8 überall
+eingehalten werden.</p>
+<p>Das Linting (Syntaxprüfung) dient dazu, statisch erkennbare Fehler schon
+vor der Veröffentlichung des Codes zu finden und beheben zu lassen.</p>
+<p>Das Ausführen der Testsuiten dient dazu sicherzustellen, dass durch Änderungen
+oder Erweiterungen am Code das definierte und gewünschte Verhalten nicht
+verändert oder geplante Änderungen erfolgreich umgesetzt wurden.</p>
+<p>Im Core ist dies sinnvoll, da bei diesem zentralen Element die Korrektheit
+und Verständlichkeit des Codes besonders wichtig ist.</p>
+<p>Bei den Plugins ist dies sinnvoll, da durch eine Vielzahl von unterschiedlichen
+Autoren eine einheitliche Konvention das Lesen und Verstehen vereinfacht, und
+gerade weniger versierten Autoren hilft, korrekten Code auf GitHub zu veröffentlichen.</p>
+</section>
+<section id="wie-funktionieren-die-hooks">
+<h2>Wie funktionieren die Hooks?<a class="headerlink" href="#wie-funktionieren-die-hooks" title="Permalink to this heading"></a></h2>
+<section id="pre-commit-formatieren-lint-gate">
+<h3><strong>pre-commit</strong> (formatieren + Lint-Gate):<a class="headerlink" href="#pre-commit-formatieren-lint-gate" title="Permalink to this heading"></a></h3>
+<p>Vor jedem Commit werden die
+<em>staged</em> <code class="docutils literal notranslate"><span class="pre">.py</span></code>-Dateien automatisch mit <code class="docutils literal notranslate"><span class="pre">ruff</span> <span class="pre">format</span></code> formatiert und neu
+zum Commit hinzugefügt (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span></code>). Anschließend prüft <code class="docutils literal notranslate"><span class="pre">ruff</span> <span class="pre">check</span></code> die
+gleichen Dateien. Findet ruff Lint-Fehler, wird der Commit <strong>abgelehnt</strong>, da
+die Code-Prüfung einen fehlerhaften PR blockiert.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>==&gt; COMMIT REJECTED: ruff found lint errors in staged files.
+
+    Fix the errors above, then:  git commit
+    Bypass (use sparingly):      git commit --no-verify
+
+    Note: ruff is a required CI check — errors will block your PR.
+</pre></div>
+</div>
+</section>
+<section id="pre-push-pytest-gate">
+<h3><strong>pre-push</strong> (pytest-Gate):<a class="headerlink" href="#pre-push-pytest-gate" title="Permalink to this heading"></a></h3>
+<p>Vor jedem <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span></code> wird die Testsuite
+ausgeführt. Schlägt sie fehl, wird der Push <strong>abgelehnt</strong>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>── pre-push gate (shng) ────────────────────────────────────────
-  ruff  : OK
+  running tests/ ...
+
   pytest: OK
 ────────────────────────────────────────────────────────────────
 </pre></div>
 </div>
-<p>Beide Hooks wechseln immer in das SmartHomeNG-Wurzelverzeichnis, bevor sie
-ruff und pytest aufrufen, damit Importpfade und <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> korrekt
-aufgelöst werden.</p>
+<p>Beide Hooks wechseln immer in das Wurzelverzeichnis des jeweiligen
+Repositorys, bevor sie ruff bzw. pytest aufrufen, damit Importpfade und
+<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> korrekt aufgelöst werden.</p>
+</section>
 </section>
 <section id="scope-der-checks">
 <h2>Scope der Checks<a class="headerlink" href="#scope-der-checks" title="Permalink to this heading"></a></h2>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Repository</p></th>
-<th class="head"><p>ruff-Prüfbereich</p></th>
-<th class="head"><p>pytest</p></th>
+<th class="head"><p>ruff-Prüfbereich (pre-commit)</p></th>
+<th class="head"><p>pytest (pre-push)</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>shng (Core)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">lib/</span>&#160; <span class="pre">tests/</span>&#160; <span class="pre">bin/</span></code>
-<code class="docutils literal notranslate"><span class="pre">modules/</span>&#160; <span class="pre">tools/</span></code></p></td>
-<td><p>Gesamte Testsuite</p></td>
+<td><p>nur staged <code class="docutils literal notranslate"><span class="pre">.py</span></code>-Dateien</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tests/</span></code>
+(gesamter Core)</p></td>
 </tr>
 <tr class="row-odd"><td><p>plugins</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">plugins/</span></code></p></td>
-<td><p>Gesamte Testsuite</p></td>
+<td><p>nur staged <code class="docutils literal notranslate"><span class="pre">.py</span></code>-Dateien</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">plugins/*/tests</span></code>
+(alle Plugins)</p></td>
 </tr>
 </tbody>
 </table>
+<p>ruff formatiert und prüft also nur die Dateien, die tatsächlich committet
+werden — nicht das gesamte Repository.</p>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
-<p>Das Skript muss einmalig pro Klon ausgeführt werden:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>smarthome@&lt;yourcomputer&gt;:/usr/local/smarthome$ tools/install-hooks.sh
+<p>Das Skript muss einmalig pro Installation ausgeführt werden:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>shng@computer:/usr/local/smarthome$ tools/install-hooks.sh
 </pre></div>
 </div>
-<p>Liegt das Plugins-Repository an einem nicht-standardmäßigen Ort, kann der Pfad
-als erstes Argument übergeben werden:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>smarthome@&lt;yourcomputer&gt;:/usr/local/smarthome$ tools/install-hooks.sh /pfad/zu/plugins
+<p>Es fragt anschließend, für welches Repository die Hooks installiert werden
+sollen:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Install</span> <span class="n">hooks</span> <span class="k">for</span><span class="p">:</span>
+  <span class="n">c</span><span class="p">)</span> <span class="n">shng</span> <span class="n">core</span> <span class="n">only</span>
+  <span class="n">p</span><span class="p">)</span> <span class="n">plugins</span> <span class="n">only</span>
+  <span class="n">b</span><span class="p">)</span> <span class="n">both</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+
+<span class="n">Choice</span> <span class="p">[</span><span class="n">b</span><span class="p">]:</span>
 </pre></div>
 </div>
-<p>Das Skript gibt eine Zusammenfassung der installierten Hooks aus:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>SmartHomeNG git hook installer
-  shng root   : /usr/local/smarthome
-  plugins root: /usr/local/smarthome/plugins
-  ruff        : /usr/local/smarthome/venvs/shng/bin/ruff
-  pytest      : /usr/local/smarthome/venvs/shng/bin/pytest
-
-=== shng: activating .githooks/ ===
-  git config core.hooksPath .githooks  → done
-  hooks: post-commit (informational), pre-push (blocking)
-
-=== plugins: writing hooks to /usr/local/smarthome/plugins/.git/hooks/ ===
-  post-commit (informational) → written
-  pre-push    (blocking)      → written
-
-Installation complete.
+<p>Bei der Auswahl <code class="docutils literal notranslate"><span class="pre">p</span></code> oder <code class="docutils literal notranslate"><span class="pre">b</span></code> wird zusätzlich nach dem Pfad zum
+Plugins-Repository gefragt (Standard: <code class="docutils literal notranslate"><span class="pre">&lt;shng-root&gt;/plugins</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Plugins</span> <span class="n">repository</span> <span class="p">[</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">smarthome</span><span class="o">/</span><span class="n">plugins</span><span class="p">]:</span>
 </pre></div>
 </div>
+<p>Um Hooks nach Änderungen (z. B. an diesem Skript) zu aktualisieren, wird
+<code class="docutils literal notranslate"><span class="pre">install-hooks.sh</span></code> einfach erneut ausgeführt.</p>
 <div class="admonition note">
 <p class="admonition-title">Bemerkung</p>
 <p>Die Hooks für den Core sind im Verzeichnis <code class="docutils literal notranslate"><span class="pre">.githooks/</span></code> des Repositorys
-versioniert. Für das Plugins-Repository werden die Hooks von
-<code class="docutils literal notranslate"><span class="pre">install-hooks.sh</span></code> generiert und in <code class="docutils literal notranslate"><span class="pre">plugins/.git/hooks/</span></code> abgelegt
-(nicht versioniert). Nach einem erneuten Klonen des Plugins-Repositorys
+abgelegt; <code class="docutils literal notranslate"><span class="pre">install-hooks.sh</span></code> aktiviert sie lediglich per
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">config</span> <span class="pre">core.hooksPath</span> <span class="pre">.githooks</span></code>. Für das Plugins-Repository
+werden die Hooks von <code class="docutils literal notranslate"><span class="pre">install-hooks.sh</span></code> generiert und direkt in
+<code class="docutils literal notranslate"><span class="pre">plugins/.git/hooks/</span></code> abgelegt. Nach einem erneuten <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code>
+(nicht <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code> oder <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span></code>) des Plugins-Repositorys
 muss <code class="docutils literal notranslate"><span class="pre">install-hooks.sh</span></code> deshalb erneut ausgeführt werden.</p>
 </div>
+<p>Ein zuvor evtl. vorhandener <code class="docutils literal notranslate"><span class="pre">post-commit</span></code>-Hook wird beim Installieren
+automatisch entfernt — er wurde durch den <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>-Hook (Format + Lint
+vor dem Commit statt informativ danach) abgelöst.</p>
 </section>
 <section id="push-trotzdem-erzwingen">
 <h2>Push trotzdem erzwingen<a class="headerlink" href="#push-trotzdem-erzwingen" title="Permalink to this heading"></a></h2>
-<p>In Ausnahmefällen kann der pre-push-Gate mit <code class="docutils literal notranslate"><span class="pre">--no-verify</span></code> übersprungen
-werden:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">verify</span>
+<p>In Ausnahmefällen kann der pre-commit- bzw. pre-push-Gate mit
+<code class="docutils literal notranslate"><span class="pre">--no-verify</span></code> übersprungen werden:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">commit</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">verify</span>
+<span class="n">git</span> <span class="n">push</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">verify</span>
 </pre></div>
 </div>
-<p>Dies sollte nur bewusst und begründet eingesetzt werden.</p>
+<p>Dies sollte nur bewusst und begründet eingesetzt werden — die gleichen
+Checks laufen verpflichtend in der CI (GitHub Actions) und blockieren den
+Pull Request unabhängig vom lokalen Bypass.</p>
 </section>
 </section>
 

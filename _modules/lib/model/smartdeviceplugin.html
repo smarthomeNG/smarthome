@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lib.model.smartdeviceplugin &mdash; Dokumentation v1.12.1 v1.12.1 (Stand 18. Juni 2026) Dokumentation</title>
+  <title>lib.model.smartdeviceplugin &mdash; Dokumentation v1.12.2 v1.12.2 (Stand 10. Juli 2026) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Dokumentation v1.12.1
+            Dokumentation v1.12.2
               <img src="../../../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -52,8 +52,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../was_ist_neu.html">Neuerungen im Release v1.12.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../was_ist_neu.html">Neuerungen im Release v1.12.2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-im-release-v1-12-1">Neuerungen im Release v1.12.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-im-release-v1-12">Neuerungen im Release v1.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-im-release-v1-11">Neuerungen im Release v1.11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
@@ -4028,13 +4029,18 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tools/tools.html">Tools</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/tools.html">Tools <span class="greensup">Update</span></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_backup_restore.html">backup_restore.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_build_requirements.html">build_requirements.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_conf_to_yaml_converter.html">conf_to_yaml_converter.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_getshngpid.html">getshngpid</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_install_hooks.html">install-hooks.sh</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#wozu-dienen-die-hooks">Wozu dienen die Hooks?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools/tools_install_hooks.html">install-hooks.sh <span class="greensup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#warum-das-ganze">Warum das Ganze?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#wie-funktionieren-die-hooks">Wie funktionieren die Hooks?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tools/tools_install_hooks.html#pre-commit-formatieren-lint-gate"><strong>pre-commit</strong> (formatieren + Lint-Gate):</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tools/tools_install_hooks.html#pre-push-pytest-gate"><strong>pre-push</strong> (pytest-Gate):</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#scope-der-checks">Scope der Checks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#installation">Installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tools/tools_install_hooks.html#push-trotzdem-erzwingen">Push trotzdem erzwingen</a></li>
@@ -4115,6 +4121,8 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#protokoll">Protokoll</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#verbindung">Verbindung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#fehlerbehandlung">Fehlerbehandlung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#loop-guard">Loop-Guard</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#datatypes">DataTypes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
 </ul>
@@ -4361,6 +4369,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html">lib.orb</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/tools.html">lib.tools</a><ul>
@@ -4863,7 +4872,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken <span class="greensup">Update</span></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/db.html">lib.db</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/db.html#lib.db.Database.close"><code class="docutils literal notranslate"><span class="pre">Database.close()</span></code></a></li>
@@ -4978,6 +4987,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../lib/orb.html#lib.orb.Orb.utc_to_local"><code class="docutils literal notranslate"><span class="pre">Orb.utc_to_local()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lib/env.html">lib.env</a><ul>
@@ -5213,6 +5223,29 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../release/1_x_x.html#weitere-anderungen">Weitere Änderungen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../release/1_x_x.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../release/1_12_2.html">Release 1.12.2 - 10. Juli 2026</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_12_2.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_2.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_2.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_12_2.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_2.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_2.html#bugfixes-im-core">Bugfixes im CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_2.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_12_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_2.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_2.html#plugin-updates">Plugin Updates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../release/1_12_2.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../release/1_12_2.html#dokumentation">Dokumentation</a></li>
 </ul>
 </li>
 </ul>
@@ -5627,7 +5660,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Dokumentation v1.12.1</a>
+          <a href="../../../index.html">Dokumentation v1.12.2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -5683,7 +5716,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">ruamel.yaml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">yaml</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">literal_eval</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">deque</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
 
@@ -5695,6 +5728,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.model.sdp.globals</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">update</span><span class="p">,</span>
+    <span class="n">SDPError</span><span class="p">,</span>
     <span class="n">PLUGIN_ATTR_SEND_TIMEOUT</span><span class="p">,</span>
     <span class="n">ATTR_NAMES</span><span class="p">,</span>
     <span class="n">CMD_ATTR_CMD_SETTINGS</span><span class="p">,</span>
@@ -5862,6 +5896,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_suspend_item</span><span class="p">:</span> <span class="n">Item</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suspended</span> <span class="o">=</span> <span class="kc">False</span>
 
+        <span class="c1"># loop guard: suppress MQTT feedback loops on write failure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">_lgc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter_value</span><span class="p">(</span><span class="s1">&#39;loop_guard_count&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard_count</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">_lgc</span><span class="p">)</span> <span class="k">if</span> <span class="n">_lgc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">_lgw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter_value</span><span class="p">(</span><span class="s1">&#39;loop_guard_window&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard_window</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">_lgw</span><span class="p">)</span> <span class="k">if</span> <span class="n">_lgw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">5.0</span>
+        <span class="n">_lgs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter_value</span><span class="p">(</span><span class="s1">&#39;loop_guard_source&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">_lgs</span><span class="p">)</span> <span class="k">if</span> <span class="n">_lgs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
         <span class="c1"># connection instance</span>
         <span class="c1"># self._connection: SDPConnection | None = None</span>
         <span class="c1"># commands instance</span>
@@ -5972,9 +6015,9 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_read</span><span class="p">[</span><span class="n">cmd</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_read</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_read</span><span class="p">[</span><span class="n">cmd</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_commands_read</span><span class="p">[</span><span class="n">cmd</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_pseudo</span><span class="p">[</span><span class="n">cmd</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_pseudo</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_pseudo</span><span class="p">[</span><span class="n">cmd</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_commands_pseudo</span><span class="p">[</span><span class="n">cmd</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_initial</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_commands_initial</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
@@ -6313,10 +6356,8 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_iattr_value</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">conf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_item_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ITEM_ATTR_CYCLIC&#39;</span><span class="p">,</span> <span class="s1">&#39;foo&#39;</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cycle</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="c1"># set plpugin-wide cycle</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">[</span><span class="n">grp</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                        <span class="s1">&#39;cycle&#39;</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cycle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_cyclic</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cycle</span><span class="p">)),</span>
-                        <span class="s1">&#39;next&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                    <span class="p">}</span>
+                    <span class="n">existing_cycle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cycle&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cycle</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">[</span><span class="n">grp</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cycle&#39;</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cycle</span><span class="p">,</span> <span class="n">existing_cycle</span><span class="p">),</span> <span class="s1">&#39;next&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Item </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1"> saved for global cyclic reading for group </span><span class="si">{</span><span class="n">grp</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -6444,6 +6485,13 @@
                 <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items_write</span><span class="p">:</span>
                     <span class="c1"># get data and send new value</span>
                     <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items_write</span><span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">path</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_loop_guard</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">item</span><span class="p">(),</span> <span class="n">caller</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s1">&#39;Loop guard triggered for item </span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> (value=</span><span class="si">{</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s1">, caller=</span><span class="si">{</span><span class="n">caller</span><span class="si">}</span><span class="s1">), suppressing write&#39;</span>
+                        <span class="p">)</span>
+                        <span class="k">return</span>
+
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                         <span class="sa">f</span><span class="s1">&#39;Writing value &quot;</span><span class="si">{</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s1">&quot; from item </span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> with command &quot;</span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
                     <span class="p">)</span>
@@ -6514,6 +6562,131 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">set_valid_list</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">item</span><span class="p">(),</span> <span class="n">ci</span><span class="p">,</span> <span class="n">re</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;error while updating valid_list for command </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s1"> from item </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_loop_guard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return True (and suppress the write) when the same value has been</span>
+<span class="sd">        written to item_path more than _loop_guard_count times within</span>
+<span class="sd">        _loop_guard_window seconds.</span>
+
+<span class="sd">        If _loop_guard_source is set, only callers whose name starts with</span>
+<span class="sd">        that prefix are subject to the guard; all others pass freely.</span>
+<span class="sd">        caller=None always passes freely when a source filter is active.</span>
+
+<span class="sd">        The guard unlocks automatically once all tracked timestamps have</span>
+<span class="sd">        aged out of the time window.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard_count</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard_source</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">caller</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">caller</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard_source</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">item_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard</span><span class="p">[</span><span class="n">item_path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span> <span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="n">deque</span><span class="p">(),</span> <span class="s1">&#39;locked&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard</span><span class="p">[</span><span class="n">item_path</span><span class="p">]</span>
+
+        <span class="n">times</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;times&#39;</span><span class="p">]</span>
+        <span class="n">cutoff</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard_window</span>
+        <span class="k">while</span> <span class="n">times</span> <span class="ow">and</span> <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">cutoff</span><span class="p">:</span>
+            <span class="n">times</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">times</span><span class="p">:</span>
+            <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard_count</span><span class="p">:</span>
+            <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_loop_guard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear loop guard state for item_path, or all items if None.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">item_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">item_path</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_loop_guard</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_resend_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">custom_value</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">captures_value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the resend_info dict consumed by SDPProtocolResend.</span>
+<span class="sd">        Handles reply_pattern resolution, custom-token substitution, lookup</span>
+<span class="sd">        table attachment, and per-command send_retries override.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">reply_pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_commandlist</span><span class="p">(</span><span class="n">command</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CMD_ATTR_REPLY_PATTERN</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">custom_value</span> <span class="ow">and</span> <span class="n">reply_pattern</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="n">custom_replacement</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;custom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">custom_replacement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">pattern</span> <span class="o">=</span> <span class="s1">&#39;{&#39;</span> <span class="o">+</span> <span class="n">PATTERN_CUSTOM_PATTERN</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="n">reply_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">custom_replacement</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reply_pattern</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">reply_pattern</span> <span class="o">=</span> <span class="n">reply_pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">reply_pattern</span> <span class="o">=</span> <span class="n">reply_pattern</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">custom_replacement</span><span class="p">)</span>
+
+        <span class="n">read_cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_send_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_send_data</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">resend_command</span> <span class="o">=</span> <span class="n">command</span> <span class="k">if</span> <span class="n">custom_value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s1">#</span><span class="si">{</span><span class="n">custom_value</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">lookup_ci</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">_get_cmd_lookup</span><span class="p">(</span><span class="n">command</span><span class="p">),</span> <span class="s1">&#39;rci&#39;</span><span class="p">)</span>
+        <span class="n">lookup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">_get_cmd_lookup</span><span class="p">(</span><span class="n">command</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">reply_pattern</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">resend_info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">resend_command</span><span class="p">,</span>
+                <span class="s1">&#39;returnvalue&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;read_cmd&#39;</span><span class="p">:</span> <span class="n">read_cmd</span><span class="p">,</span>
+                <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="n">lookup</span><span class="p">,</span>
+                <span class="s1">&#39;lookup_ci&#39;</span><span class="p">:</span> <span class="n">lookup_ci</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">captures_value</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">):</span>
+            <span class="n">resend_info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">resend_command</span><span class="p">,</span>
+                <span class="s1">&#39;returnvalue&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">),</span>
+                <span class="s1">&#39;read_cmd&#39;</span><span class="p">:</span> <span class="n">read_cmd</span><span class="p">,</span>
+                <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="n">lookup</span><span class="p">,</span>
+                <span class="s1">&#39;lookup_ci&#39;</span><span class="p">:</span> <span class="n">lookup_ci</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">return_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reply_pattern</span><span class="p">:</span>
+                <span class="n">checked_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">command</span><span class="p">]</span><span class="o">.</span><span class="n">_check_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">captures_value</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+                    <span class="n">return_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">checked_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">return_list</span><span class="p">:</span>
+                    <span class="n">return_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">checked_value</span><span class="p">)</span>
+            <span class="n">reply_pattern</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">return_list</span> <span class="k">else</span> <span class="n">return_list</span>
+            <span class="n">resend_info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">resend_command</span><span class="p">,</span>
+                <span class="s1">&#39;returnvalue&#39;</span><span class="p">:</span> <span class="n">reply_pattern</span><span class="p">,</span>
+                <span class="s1">&#39;read_cmd&#39;</span><span class="p">:</span> <span class="n">read_cmd</span><span class="p">,</span>
+                <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="n">lookup</span><span class="p">,</span>
+                <span class="s1">&#39;lookup_ci&#39;</span><span class="p">:</span> <span class="n">lookup_ci</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resend_info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">resend_command</span><span class="p">,</span>
+                <span class="s1">&#39;returnvalue&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                <span class="s1">&#39;read_cmd&#39;</span><span class="p">:</span> <span class="n">read_cmd</span><span class="p">,</span>
+                <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="n">lookup</span><span class="p">,</span>
+                <span class="s1">&#39;lookup_ci&#39;</span><span class="p">:</span> <span class="n">lookup_ci</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="n">send_retries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_commandlist</span><span class="p">(</span><span class="n">command</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CMD_ATTR_SEND_RETRIES</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">send_retries</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">send_retries</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">send_retries</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">send_retries</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">resend_info</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;send_retries&#39;</span><span class="p">:</span> <span class="n">send_retries</span><span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">resend_info</span>
 
 <div class="viewcode-block" id="SmartDevicePlugin.send_command"><a class="viewcode-back" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin.send_command">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">send_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_result</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6598,80 +6771,12 @@
 
         <span class="c1"># creating resend info, necessary for resend protocol</span>
         <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">reply_pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_commandlist</span><span class="p">(</span><span class="n">command</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CMD_ATTR_REPLY_PATTERN</span><span class="p">)</span>
-        <span class="c1"># replace custom patterns in reply_pattern by the current result</span>
-        <span class="k">if</span> <span class="n">custom_value</span> <span class="ow">and</span> <span class="n">reply_pattern</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
-                <span class="n">custom_replacement</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;custom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">custom_replacement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">pattern</span> <span class="o">=</span> <span class="s1">&#39;{&#39;</span> <span class="o">+</span> <span class="n">PATTERN_CUSTOM_PATTERN</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span>
-
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="n">reply_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">custom_replacement</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reply_pattern</span><span class="p">]</span>
-                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                            <span class="n">reply_pattern</span> <span class="o">=</span> <span class="n">reply_pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">reply_pattern</span> <span class="o">=</span> <span class="n">reply_pattern</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">custom_replacement</span><span class="p">)</span>
-        <span class="n">read_cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_send_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_send_data</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">resend_command</span> <span class="o">=</span> <span class="n">command</span> <span class="k">if</span> <span class="n">custom_value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s1">#</span><span class="si">{</span><span class="n">custom_value</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="n">lookup_ci</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">_get_cmd_lookup</span><span class="p">(</span><span class="n">command</span><span class="p">),</span> <span class="s1">&#39;rci&#39;</span><span class="p">)</span>
-        <span class="n">lookup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">_get_cmd_lookup</span><span class="p">(</span><span class="n">command</span><span class="p">))</span>
-        <span class="c1"># if no reply_pattern given, no response is expected</span>
-        <span class="k">if</span> <span class="n">reply_pattern</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">resend_info</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">resend_command</span><span class="p">,</span>
-                <span class="s1">&#39;returnvalue&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;read_cmd&#39;</span><span class="p">:</span> <span class="n">read_cmd</span><span class="p">,</span>
-                <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="n">lookup</span><span class="p">,</span>
-                <span class="s1">&#39;lookup_ci&#39;</span><span class="p">:</span> <span class="n">lookup_ci</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="c1"># if reply_pattern has no lookup or capture group, put it in resend_info as expected reply</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">captures_value</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">):</span>
-            <span class="n">resend_info</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">resend_command</span><span class="p">,</span>
-                <span class="s1">&#39;returnvalue&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">),</span>
-                <span class="s1">&#39;read_cmd&#39;</span><span class="p">:</span> <span class="n">read_cmd</span><span class="p">,</span>
-                <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="n">lookup</span><span class="p">,</span>
-                <span class="s1">&#39;lookup_ci&#39;</span><span class="p">:</span> <span class="n">lookup_ci</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="c1"># if reply_pattern is list, check if one of the entries has capture group</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reply_pattern</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">return_list</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reply_pattern</span><span class="p">:</span>
-                <span class="n">checked_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">command</span><span class="p">]</span><span class="o">.</span><span class="n">_check_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">captures_value</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
-                    <span class="n">return_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
-                <span class="k">elif</span> <span class="n">checked_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">return_list</span><span class="p">:</span>
-                    <span class="n">return_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">checked_value</span><span class="p">)</span>
-            <span class="n">reply_pattern</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">return_list</span> <span class="k">else</span> <span class="n">return_list</span>
-            <span class="n">resend_info</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">resend_command</span><span class="p">,</span>
-                <span class="s1">&#39;returnvalue&#39;</span><span class="p">:</span> <span class="n">reply_pattern</span><span class="p">,</span>
-                <span class="s1">&#39;read_cmd&#39;</span><span class="p">:</span> <span class="n">read_cmd</span><span class="p">,</span>
-                <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="n">lookup</span><span class="p">,</span>
-                <span class="s1">&#39;lookup_ci&#39;</span><span class="p">:</span> <span class="n">lookup_ci</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="c1"># if reply pattern does not expect a specific value, use value as expected reply</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">resend_info</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">resend_command</span><span class="p">,</span>
-                <span class="s1">&#39;returnvalue&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
-                <span class="s1">&#39;read_cmd&#39;</span><span class="p">:</span> <span class="n">read_cmd</span><span class="p">,</span>
-                <span class="s1">&#39;lookup&#39;</span><span class="p">:</span> <span class="n">lookup</span><span class="p">,</span>
-                <span class="s1">&#39;lookup_ci&#39;</span><span class="p">:</span> <span class="n">lookup_ci</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="n">send_retries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">get_commandlist</span><span class="p">(</span><span class="n">command</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CMD_ATTR_SEND_RETRIES</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">send_retries</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">send_retries</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">send_retries</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">send_retries</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">resend_info</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;send_retries&#39;</span><span class="p">:</span> <span class="n">send_retries</span><span class="p">})</span>
+        <span class="n">resend_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_resend_info</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">custom_value</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">captures_value</span><span class="p">)</span>
         <span class="c1"># if an error occurs on sending, an exception is thrownn below</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">resend_info</span><span class="o">=</span><span class="n">resend_info</span><span class="p">)</span>
-        <span class="k">except</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># Exception as e:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;error on sending command </span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s1">, error was </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">SDPError</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;error on sending command </span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
             <span class="n">by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;by&#39;</span><span class="p">)</span>
@@ -6907,7 +7012,6 @@
 <span class="sd">        If continue_send is False, send_command will abort and return &lt;result&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="c1"># return (False, True)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -6925,16 +7029,31 @@
 <div class="viewcode-block" id="SmartDevicePlugin.on_connect"><a class="viewcode-back" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin.on_connect">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">on_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;callback if connection is made.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">connected</span><span class="p">():</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resume_initial_read</span><span class="p">:</span>
-                <span class="c1"># make sure to read again on resume (if configured)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_value_read_done</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resume_initial_read</span><span class="p">:</span>
+                <span class="c1"># read on first connect or on every reconnect if configured</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_initial_value_read_done</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">read_initial_values</span><span class="p">()</span>
+                <span class="c1"># Always schedule — on_connect may fire inside open() which holds _send_lock,</span>
+                <span class="c1"># so any synchronous send path would deadlock. 1s minimum gives us a safe margin.</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_get</span><span class="p">(</span><span class="s1">&#39;read_initial_values&#39;</span><span class="p">):</span>
+                    <span class="n">delay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_value_read_delay</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_value_read_delay</span> <span class="k">else</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_add</span><span class="p">(</span>
+                        <span class="s1">&#39;read_initial_values&#39;</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_read_initial_values</span><span class="p">,</span>
+                        <span class="nb">next</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shtime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay</span><span class="p">),</span>
+                    <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">SDP_standalone</span><span class="p">:</span>  <span class="c1"># noqa  # type: ignore</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_create_cyclic_scheduler</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SmartDevicePlugin.on_disconnect"><a class="viewcode-back" href="../../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#lib.model.smartdeviceplugin.SmartDevicePlugin.on_disconnect">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">on_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;callback if connection is broken.&quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">SDP_standalone</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>  <span class="c1"># noqa  # type: ignore</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PLUGIN_ATTR_CONN_AUTO_RECONN</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">reconnect_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_fullname</span><span class="p">()</span><span class="si">}</span><span class="s1">_reconnect&#39;</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_get</span><span class="p">(</span><span class="n">reconnect_name</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;connection lost, scheduling reconnect in 5s&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_add</span><span class="p">(</span>
+                        <span class="n">reconnect_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shtime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                    <span class="p">)</span></div>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_process_additional_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">custom</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;do additional processing of received data</span>
@@ -7145,10 +7264,13 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_cyclic_update_active</span> <span class="o">=</span> <span class="kc">False</span>
 
-                <span class="c1"># reconnect</span>
+                <span class="c1"># reconnect after 1 s without blocking the scheduler thread</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PLUGIN_ATTR_CONN_AUTO_RECONN</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+                    <span class="n">reconnect_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_fullname</span><span class="p">()</span><span class="si">}</span><span class="s1">_reconnect&#39;</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_get</span><span class="p">(</span><span class="n">reconnect_name</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_add</span><span class="p">(</span>
+                            <span class="n">reconnect_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shtime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="s1">&#39;Triggered cyclic command read, but previous cyclic run is still active. Check device and cyclic configuration (too much/too short?)&#39;</span>
@@ -7160,63 +7282,66 @@
 
         <span class="c1"># set lock</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cyclic_update_active</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">currenttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">read_cmds</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">todo</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_cyclic</span><span class="p">:</span>
-            <span class="c1"># Is the command already due?</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_cyclic</span><span class="p">[</span><span class="n">cmd</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">currenttime</span><span class="p">:</span>
-                <span class="n">todo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">currenttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">read_cmds</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">todo</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_cyclic</span><span class="p">:</span>
+                <span class="c1"># Is the command already due?</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_cyclic</span><span class="p">[</span><span class="n">cmd</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">currenttime</span><span class="p">:</span>
+                    <span class="n">todo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">todo</span><span class="p">:</span>
-            <span class="c1"># repeatedly check if shng wants to stop to prevent stalling shng</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Stop command issued, cancelling cyclic read&#39;</span><span class="p">)</span>
-                <span class="k">return</span>
+            <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">todo</span><span class="p">:</span>
+                <span class="c1"># repeatedly check if shng wants to stop to prevent stalling shng</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Stop command issued, cancelling cyclic read&#39;</span><span class="p">)</span>
+                    <span class="k">return</span>
 
-            <span class="c1"># also leave early on disconnect</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">connected</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Disconnect detected, cancelling cyclic read&#39;</span><span class="p">)</span>
-                <span class="k">return</span>
+                <span class="c1"># also leave early on disconnect</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">connected</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Disconnect detected, cancelling cyclic read&#39;</span><span class="p">)</span>
+                    <span class="k">return</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Triggering cyclic read of command </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_commands_cyclic</span><span class="p">[</span><span class="n">cmd</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">currenttime</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_cyclic</span><span class="p">[</span><span class="n">cmd</span><span class="p">][</span><span class="s1">&#39;cycle&#39;</span><span class="p">]</span>
-            <span class="n">read_cmds</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Triggering cyclic read of command </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_commands_cyclic</span><span class="p">[</span><span class="n">cmd</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">currenttime</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands_cyclic</span><span class="p">[</span><span class="n">cmd</span><span class="p">][</span><span class="s1">&#39;cycle&#39;</span><span class="p">]</span>
+                <span class="n">read_cmds</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="k">if</span> <span class="n">read_cmds</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Cyclic command read took </span><span class="si">{</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">currenttime</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> seconds for </span><span class="si">{</span><span class="n">read_cmds</span><span class="si">}</span><span class="s1"> items&#39;</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">read_cmds</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Cyclic command read took </span><span class="si">{</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">currenttime</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> seconds for </span><span class="si">{</span><span class="n">read_cmds</span><span class="si">}</span><span class="s1"> items&#39;</span>
+                <span class="p">)</span>
 
-        <span class="n">currenttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">read_grps</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">todo</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">:</span>
-            <span class="c1"># Is the trigger already due?</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">[</span><span class="n">grp</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">currenttime</span><span class="p">:</span>
-                <span class="n">todo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
+            <span class="n">currenttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">read_grps</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">todo</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">:</span>
+                <span class="c1"># Is the trigger already due?</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">[</span><span class="n">grp</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">currenttime</span><span class="p">:</span>
+                    <span class="n">todo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">todo</span><span class="p">:</span>
-            <span class="c1"># repeatedly check if shng wants to stop to prevent stalling shng</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Stop command issued, cancelling cyclic trigger&#39;</span><span class="p">)</span>
-                <span class="k">return</span>
+            <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">todo</span><span class="p">:</span>
+                <span class="c1"># repeatedly check if shng wants to stop to prevent stalling shng</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Stop command issued, cancelling cyclic trigger&#39;</span><span class="p">)</span>
+                    <span class="k">return</span>
 
-            <span class="c1"># also leave early on disconnect</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">connected</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Disconnect detected, cancelling cyclic trigger&#39;</span><span class="p">)</span>
-                <span class="k">return</span>
+                <span class="c1"># also leave early on disconnect</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">connected</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Disconnect detected, cancelling cyclic trigger&#39;</span><span class="p">)</span>
+                    <span class="k">return</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Triggering cyclic read of group </span><span class="si">{</span><span class="n">grp</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">read_all_commands</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">[</span><span class="n">grp</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">currenttime</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">[</span><span class="n">grp</span><span class="p">][</span><span class="s1">&#39;cycle&#39;</span><span class="p">]</span>
-            <span class="n">read_grps</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Triggering cyclic read of group </span><span class="si">{</span><span class="n">grp</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">read_all_commands</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">[</span><span class="n">grp</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">currenttime</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triggers_cyclic</span><span class="p">[</span><span class="n">grp</span><span class="p">][</span><span class="s1">&#39;cycle&#39;</span><span class="p">]</span>
+                <span class="n">read_grps</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="k">if</span> <span class="n">read_grps</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cyclic triggers took </span><span class="si">{</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">currenttime</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> seconds for </span><span class="si">{</span><span class="n">read_grps</span><span class="si">}</span><span class="s1"> groups&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cyclic_update_active</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">read_grps</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Cyclic triggers took </span><span class="si">{</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">currenttime</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> seconds for </span><span class="si">{</span><span class="n">read_grps</span><span class="si">}</span><span class="s1"> groups&#39;</span>
+                <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cyclic_update_active</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

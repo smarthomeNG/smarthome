@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lib.smarthome &mdash; Dokumentation v1.12.1 v1.12.1 (Stand 18. Juni 2026) Dokumentation</title>
+  <title>lib.smarthome &mdash; Dokumentation v1.12.2 v1.12.2 (Stand 10. Juli 2026) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Dokumentation v1.12.1
+            Dokumentation v1.12.2
               <img src="../../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -52,8 +52,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../was_ist_neu.html">Neuerungen im Release v1.12.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../was_ist_neu.html">Neuerungen im Release v1.12.2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-12-1">Neuerungen im Release v1.12.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-12">Neuerungen im Release v1.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-11">Neuerungen im Release v1.11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
@@ -4028,13 +4029,18 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../tools/tools.html">Tools</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/tools.html">Tools <span class="greensup">Update</span></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_backup_restore.html">backup_restore.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_build_requirements.html">build_requirements.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_conf_to_yaml_converter.html">conf_to_yaml_converter.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_getshngpid.html">getshngpid</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tools/tools_install_hooks.html">install-hooks.sh</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#wozu-dienen-die-hooks">Wozu dienen die Hooks?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/tools_install_hooks.html">install-hooks.sh <span class="greensup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#warum-das-ganze">Warum das Ganze?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#wie-funktionieren-die-hooks">Wie funktionieren die Hooks?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../tools/tools_install_hooks.html#pre-commit-formatieren-lint-gate"><strong>pre-commit</strong> (formatieren + Lint-Gate):</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tools/tools_install_hooks.html#pre-push-pytest-gate"><strong>pre-push</strong> (pytest-Gate):</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#scope-der-checks">Scope der Checks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#installation">Installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#push-trotzdem-erzwingen">Push trotzdem erzwingen</a></li>
@@ -4115,6 +4121,8 @@
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#protokoll">Protokoll</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#verbindung">Verbindung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#fehlerbehandlung">Fehlerbehandlung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#loop-guard">Loop-Guard</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#datatypes">DataTypes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
 </ul>
@@ -4361,6 +4369,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html">lib.orb</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/tools.html">lib.tools</a><ul>
@@ -4863,7 +4872,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken <span class="greensup">Update</span></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/db.html">lib.db</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.close"><code class="docutils literal notranslate"><span class="pre">Database.close()</span></code></a></li>
@@ -4978,6 +4987,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.utc_to_local"><code class="docutils literal notranslate"><span class="pre">Orb.utc_to_local()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/env.html">lib.env</a><ul>
@@ -5213,6 +5223,29 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../release/1_x_x.html#weitere-anderungen">Weitere Änderungen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../release/1_x_x.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../release/1_12_2.html">Release 1.12.2 - 10. Juli 2026</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_2.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_2.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#bugfixes-im-core">Bugfixes im CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#plugin-updates">Plugin Updates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_2.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#dokumentation">Dokumentation</a></li>
 </ul>
 </li>
 </ul>
@@ -5627,7 +5660,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Dokumentation v1.12.1</a>
+          <a href="../../index.html">Dokumentation v1.12.2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -5810,7 +5843,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__children</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_config_etc</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_instances</span> <span class="o">=</span> <span class="kc">True</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_instances</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_orb_backend</span> <span class="o">=</span> <span class="s1">&#39;ephem&#39;</span></div>
 
 <div class="viewcode-block" id="SmartHome.initialize_dir_vars"><a class="viewcode-back" href="../../entwicklung/core/core_shng.html#lib.smarthome.SmartHome.initialize_dir_vars">[Doku]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_dir_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_base_dir</span> <span class="o">=</span> <span class="n">BASE</span>
@@ -6213,13 +6247,23 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_sun_neverup_delta</span> <span class="o">=</span> <span class="mf">0.00001</span>
 
-        <span class="k">if</span> <span class="n">lib</span><span class="o">.</span><span class="n">orb</span><span class="o">.</span><span class="n">ephem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Could not find/use ephem!&#39;</span><span class="p">)</span>
+        <span class="c1"># orb_backend: which ephemeris library lib.orb.Orb uses (&#39;ephem&#39; or &#39;skyfield&#39;).</span>
+        <span class="c1"># Default set in initialize_vars(), overridden by smarthome.yaml if present.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_orb_backend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">lib</span><span class="o">.</span><span class="n">orb</span><span class="o">.</span><span class="n">_BACKENDS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_orb_backend</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;skyfield&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">lib</span><span class="o">.</span><span class="n">orb</span><span class="o">.</span><span class="n">Loader</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Could not find/use ephemeris backend &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_orb_backend</span><span class="si">}</span><span class="s2">&#39; - skyfield is not installed. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Run &#39;tools/fetch_skyfield_data.py&#39; once to install it.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find/use ephemeris backend &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_orb_backend</span><span class="si">}</span><span class="s2">&#39;!&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_lon&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_lat&#39;</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No latitude/longitude specified =&gt; you could not use the sun and moon object.&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sun</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">orb</span><span class="o">.</span><span class="n">Orb</span><span class="p">(</span><span class="s1">&#39;sun&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elev</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sun_neverup_delta</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">moon</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">orb</span><span class="o">.</span><span class="n">Orb</span><span class="p">(</span><span class="s1">&#39;moon&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elev</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sun</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">orb</span><span class="o">.</span><span class="n">Orb</span><span class="p">(</span>
+                <span class="s1">&#39;sun&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elev</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sun_neverup_delta</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_orb_backend</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">moon</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">orb</span><span class="o">.</span><span class="n">Orb</span><span class="p">(</span><span class="s1">&#39;moon&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elev</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_orb_backend</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">lat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>

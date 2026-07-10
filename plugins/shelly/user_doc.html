@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>shelly &mdash; Dokumentation v1.12.1 v1.12.1 (Stand 18. Juni 2026) Dokumentation</title>
+  <title>shelly &mdash; Dokumentation v1.12.2 v1.12.2 (Stand 10. Juli 2026) Dokumentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -42,7 +42,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Dokumentation v1.12.1
+            Dokumentation v1.12.2
               <img src="../../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -55,8 +55,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../einleitung.html">Einleitung</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../was_ist_neu.html">Neuerungen im Release v1.12.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../was_ist_neu.html">Neuerungen im Release v1.12.2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../was_war_neu.html">Neuerungen der letzten Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-12-1">Neuerungen im Release v1.12.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-12">Neuerungen im Release v1.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-11">Neuerungen im Release v1.11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../was_war_neu.html#neuerungen-im-release-v1-10">Neuerungen im Release v1.10</a><ul>
@@ -4031,13 +4032,18 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../tools/tools.html">Tools</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/tools.html">Tools <span class="greensup">Update</span></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_backup_restore.html">backup_restore.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_build_requirements.html">build_requirements.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_conf_to_yaml_converter.html">conf_to_yaml_converter.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tools/tools_getshngpid.html">getshngpid</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tools/tools_install_hooks.html">install-hooks.sh</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#wozu-dienen-die-hooks">Wozu dienen die Hooks?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/tools_install_hooks.html">install-hooks.sh <span class="greensup">Update</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#warum-das-ganze">Warum das Ganze?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#wie-funktionieren-die-hooks">Wie funktionieren die Hooks?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../tools/tools_install_hooks.html#pre-commit-formatieren-lint-gate"><strong>pre-commit</strong> (formatieren + Lint-Gate):</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tools/tools_install_hooks.html#pre-push-pytest-gate"><strong>pre-push</strong> (pytest-Gate):</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#scope-der-checks">Scope der Checks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#installation">Installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../tools/tools_install_hooks.html#push-trotzdem-erzwingen">Push trotzdem erzwingen</a></li>
@@ -4118,6 +4124,8 @@
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#kommandos">Kommandos</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#protokoll">Protokoll</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#verbindung">Verbindung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#fehlerbehandlung">Fehlerbehandlung</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#loop-guard">Loop-Guard</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#datatypes">DataTypes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../referenz/plugins/plugin_typen/smartdeviceplugin_class.html#commands">Commands</a></li>
 </ul>
@@ -4364,6 +4372,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html">lib.orb</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/tools.html">lib.tools</a><ul>
@@ -4866,7 +4875,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken <span class="greensup">Update</span></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/db.html">lib.db</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../lib/db.html#lib.db.Database.close"><code class="docutils literal notranslate"><span class="pre">Database.close()</span></code></a></li>
@@ -4981,6 +4990,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../lib/orb.html#lib.orb.Orb.utc_to_local"><code class="docutils literal notranslate"><span class="pre">Orb.utc_to_local()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../lib/orb.html#lib-orb-backends-update">lib.orb Backends <span class="greensup">Update</span></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../lib/env.html">lib.env</a><ul>
@@ -5216,6 +5226,29 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../release/1_x_x.html#weitere-anderungen">Weitere Änderungen</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../release/1_x_x.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../release/1_12_2.html">Release 1.12.2 - 10. Juli 2026</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_2.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_2.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#bugfixes-im-core">Bugfixes im CORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_2.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#plugin-updates">Plugin Updates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../release/1_12_2.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../release/1_12_2.html#dokumentation">Dokumentation</a></li>
 </ul>
 </li>
 </ul>
@@ -5630,7 +5663,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Dokumentation v1.12.1</a>
+          <a href="../../index.html">Dokumentation v1.12.2</a>
       </nav>
 
       <div class="wy-nav-content">
