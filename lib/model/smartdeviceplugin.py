@@ -35,7 +35,7 @@ import datetime
 import ruamel.yaml as yaml
 from copy import deepcopy
 from ast import literal_eval
-from collections import OrderedDict
+from collections import OrderedDict, deque
 from collections.abc import Callable
 from typing import Any, Tuple
 
@@ -47,6 +47,7 @@ from lib.shtime import Shtime
 
 from lib.model.sdp.globals import (
     update,
+    SDPError,
     PLUGIN_ATTR_SEND_TIMEOUT,
     ATTR_NAMES,
     CMD_ATTR_CMD_SETTINGS,
@@ -214,6 +215,15 @@ class SmartDevicePlugin(SmartPlugin):
         self._suspend_item: Item | None = None
         self.suspended = False
 
+        # loop guard: suppress MQTT feedback loops on write failure
+        self._loop_guard: dict = {}
+        _lgc = self.get_parameter_value('loop_guard_count')
+        self._loop_guard_count: float = float(_lgc) if _lgc is not None else 0
+        _lgw = self.get_parameter_value('loop_guard_window')
+        self._loop_guard_window: float = float(_lgw) if _lgw is not None else 5.0
+        _lgs = self.get_parameter_value('loop_guard_source')
+        self._loop_guard_source: str = str(_lgs) if _lgs is not None else ''
+
         # connection instance
         # self._connection: SDPConnection | None = None
         # commands instance
@@ -324,9 +334,9 @@ class SmartDevicePlugin(SmartPlugin):
         if not cmd:
             return True
 
-        if item in self._commands_read[cmd]:
+        if cmd in self._commands_read and item in self._commands_read[cmd]:
             self._commands_read[cmd].remove(item)
-        if item in self._commands_pseudo[cmd]:
+        if cmd in self._commands_pseudo and item in self._commands_pseudo[cmd]:
             self._commands_pseudo[cmd].remove(item)
         if cmd in self._commands_initial:
             self._commands_initial.remove(cmd)
@@ -665,10 +675,8 @@ class SmartDevicePlugin(SmartPlugin):
             if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLIC', 'foo')):
                 if self._cycle > 0:
                     # set plpugin-wide cycle
-                    self._triggers_cyclic[grp] = {
-                        'cycle': min(self._cycle, self._commands_cyclic.get(command, self._cycle)),
-                        'next': 0,
-                    }
+                    existing_cycle = self._triggers_cyclic.get(grp, {}).get('cycle', self._cycle)
+                    self._triggers_cyclic[grp] = {'cycle': min(self._cycle, existing_cycle), 'next': 0}
                     self.logger.debug(f'Item {item} saved for global cyclic reading for group {grp}')
                 else:
                     self.logger.info(
@@ -796,6 +804,13 @@ class SmartDevicePlugin(SmartPlugin):
                 if item.property.path in self._items_write:
                     # get data and send new value
                     command = self._items_write[item.property.path]
+
+                    if self._check_loop_guard(item.property.path, item(), caller):
+                        self.logger.warning(
+                            f'Loop guard triggered for item {item.property.path} (value={item()}, caller={caller}), suppressing write'
+                        )
+                        return
+
                     self.logger.debug(
                         f'Writing value "{item()}" from item {item.property.path} with command "{command}"'
                     )
@@ -866,6 +881,131 @@ class SmartDevicePlugin(SmartPlugin):
                         self._commands.set_valid_list(cmd, item(), ci, re)
                     except RuntimeError as e:
                         self.logger.warning(f'error while updating valid_list for command {cmd} from item {item}: {e}')
+
+    def _check_loop_guard(self, item_path: str, value, caller=None) -> bool:
+        """
+        Return True (and suppress the write) when the same value has been
+        written to item_path more than _loop_guard_count times within
+        _loop_guard_window seconds.
+
+        If _loop_guard_source is set, only callers whose name starts with
+        that prefix are subject to the guard; all others pass freely.
+        caller=None always passes freely when a source filter is active.
+
+        The guard unlocks automatically once all tracked timestamps have
+        aged out of the time window.
+        """
+        if not self._loop_guard_count:
+            return False
+
+        if self._loop_guard_source:
+            if not caller or not caller.startswith(self._loop_guard_source):
+                return False
+
+        now = time.time()
+        entry = self._loop_guard.get(item_path)
+
+        if entry is None or entry['value'] != value:
+            self._loop_guard[item_path] = {'value': value, 'times': deque(), 'locked': False}
+            entry = self._loop_guard[item_path]
+
+        times = entry['times']
+        cutoff = now - self._loop_guard_window
+        while times and times[0] < cutoff:
+            times.popleft()
+
+        if entry['locked'] and not times:
+            entry['locked'] = False
+            return False
+
+        times.append(now)
+
+        if len(times) >= self._loop_guard_count:
+            entry['locked'] = True
+
+        return entry['locked']
+
+    def _reset_loop_guard(self, item_path: str | None = None):
+        """Clear loop guard state for item_path, or all items if None."""
+        if item_path is not None:
+            self._loop_guard.pop(item_path, None)
+        else:
+            self._loop_guard.clear()
+
+    def _build_resend_info(self, command: str, value: Any, custom_value, kwargs: dict, captures_value) -> dict:
+        """
+        Build the resend_info dict consumed by SDPProtocolResend.
+        Handles reply_pattern resolution, custom-token substitution, lookup
+        table attachment, and per-command send_retries override.
+        """
+        reply_pattern = self._commands.get_commandlist(command).get(CMD_ATTR_REPLY_PATTERN)
+        if custom_value and reply_pattern:
+            for index in (1, 2, 3):
+                custom_replacement = kwargs['custom'].get(index)
+                if custom_replacement is not None:
+                    pattern = '{' + PATTERN_CUSTOM_PATTERN + str(index) + '}'
+                    if isinstance(reply_pattern, list):
+                        reply_pattern = [r.replace(pattern, custom_replacement) for r in reply_pattern]
+                        if len(reply_pattern) == 1:
+                            reply_pattern = reply_pattern[0]
+                    else:
+                        reply_pattern = reply_pattern.replace(pattern, custom_replacement)
+
+        read_cmd = self._transform_send_data(self._commands.get_send_data(command, None, **kwargs), **kwargs)
+        resend_command = command if custom_value is None else f'{command}#{custom_value}'
+        lookup_ci = self._commands.get_lookup(self._commands._get_cmd_lookup(command), 'rci')
+        lookup = self._commands.get_lookup(self._commands._get_cmd_lookup(command))
+
+        if reply_pattern is None or value is None:
+            resend_info = {
+                'command': resend_command,
+                'returnvalue': None,
+                'read_cmd': read_cmd,
+                'lookup': lookup,
+                'lookup_ci': lookup_ci,
+            }
+        elif not isinstance(reply_pattern, list) and not captures_value(reply_pattern):
+            resend_info = {
+                'command': resend_command,
+                'returnvalue': re.compile(reply_pattern),
+                'read_cmd': read_cmd,
+                'lookup': lookup,
+                'lookup_ci': lookup_ci,
+            }
+        elif isinstance(reply_pattern, list):
+            return_list = []
+            for r in reply_pattern:
+                checked_value = self._commands._commands[command]._check_value(value)
+                if not captures_value(r):
+                    return_list.append(re.compile(r))
+                elif checked_value not in return_list:
+                    return_list.append(checked_value)
+            reply_pattern = None if None in return_list else return_list
+            resend_info = {
+                'command': resend_command,
+                'returnvalue': reply_pattern,
+                'read_cmd': read_cmd,
+                'lookup': lookup,
+                'lookup_ci': lookup_ci,
+            }
+        else:
+            resend_info = {
+                'command': resend_command,
+                'returnvalue': value,
+                'read_cmd': read_cmd,
+                'lookup': lookup,
+                'lookup_ci': lookup_ci,
+            }
+
+        send_retries = self._commands.get_commandlist(command).get(CMD_ATTR_SEND_RETRIES)
+        try:
+            send_retries = int(send_retries)
+        except Exception:
+            send_retries = None
+        if send_retries is not None:
+            resend_info.update({'send_retries': send_retries})
+
+        return resend_info
 
     def send_command(self, command: str, value: Any = None, return_result: bool = False, **kwargs):
         """
@@ -950,80 +1090,12 @@ class SmartDevicePlugin(SmartPlugin):
 
         # creating resend info, necessary for resend protocol
         result = None
-        reply_pattern = self._commands.get_commandlist(command).get(CMD_ATTR_REPLY_PATTERN)
-        # replace custom patterns in reply_pattern by the current result
-        if custom_value and reply_pattern:
-            for index in (1, 2, 3):
-                custom_replacement = kwargs['custom'].get(index)
-                if custom_replacement is not None:
-                    pattern = '{' + PATTERN_CUSTOM_PATTERN + str(index) + '}'
-
-                    if isinstance(reply_pattern, list):
-                        reply_pattern = [r.replace(pattern, custom_replacement) for r in reply_pattern]
-                        if len(reply_pattern) == 1:
-                            reply_pattern = reply_pattern[0]
-                    else:
-                        reply_pattern = reply_pattern.replace(pattern, custom_replacement)
-        read_cmd = self._transform_send_data(self._commands.get_send_data(command, None, **kwargs), **kwargs)
-        resend_command = command if custom_value is None else f'{command}#{custom_value}'
-        lookup_ci = self._commands.get_lookup(self._commands._get_cmd_lookup(command), 'rci')
-        lookup = self._commands.get_lookup(self._commands._get_cmd_lookup(command))
-        # if no reply_pattern given, no response is expected
-        if reply_pattern is None or value is None:
-            resend_info = {
-                'command': resend_command,
-                'returnvalue': None,
-                'read_cmd': read_cmd,
-                'lookup': lookup,
-                'lookup_ci': lookup_ci,
-            }
-        # if reply_pattern has no lookup or capture group, put it in resend_info as expected reply
-        elif not isinstance(reply_pattern, list) and not captures_value(reply_pattern):
-            resend_info = {
-                'command': resend_command,
-                'returnvalue': re.compile(reply_pattern),
-                'read_cmd': read_cmd,
-                'lookup': lookup,
-                'lookup_ci': lookup_ci,
-            }
-        # if reply_pattern is list, check if one of the entries has capture group
-        elif isinstance(reply_pattern, list):
-            return_list = []
-            for r in reply_pattern:
-                checked_value = self._commands._commands[command]._check_value(value)
-                if not captures_value(r):
-                    return_list.append(re.compile(r))
-                elif checked_value not in return_list:
-                    return_list.append(checked_value)
-            reply_pattern = None if None in return_list else return_list
-            resend_info = {
-                'command': resend_command,
-                'returnvalue': reply_pattern,
-                'read_cmd': read_cmd,
-                'lookup': lookup,
-                'lookup_ci': lookup_ci,
-            }
-        # if reply pattern does not expect a specific value, use value as expected reply
-        else:
-            resend_info = {
-                'command': resend_command,
-                'returnvalue': value,
-                'read_cmd': read_cmd,
-                'lookup': lookup,
-                'lookup_ci': lookup_ci,
-            }
-        send_retries = self._commands.get_commandlist(command).get(CMD_ATTR_SEND_RETRIES)
-        try:
-            send_retries = int(send_retries)
-        except Exception:
-            send_retries = None
-        if send_retries is not None:
-            resend_info.update({'send_retries': send_retries})
+        resend_info = self._build_resend_info(command, value, custom_value, kwargs, captures_value)
         # if an error occurs on sending, an exception is thrownn below
         try:
             result = self._send(data_dict, resend_info=resend_info)
-        except (RuntimeError, OSError) as e:  # Exception as e:
-            self.logger.debug(f'error on sending command {command}, error was {e}')
+        except (SDPError, RuntimeError) as e:
+            self.logger.debug(f'error on sending command {command}: {e}')
             return False
         if result:
             by = kwargs.get('by')
@@ -1259,7 +1331,6 @@ class SmartDevicePlugin(SmartPlugin):
         If continue_send is False, send_command will abort and return <result>
         """
         return (True, True)
-        # return (False, True)
 
     def _send(self, data_dict: dict, **kwargs) -> Any:
         """
@@ -1277,16 +1348,31 @@ class SmartDevicePlugin(SmartPlugin):
     def on_connect(self, by: str | None = None):
         """callback if connection is made."""
         if self._connection.connected():
-            if self._resume_initial_read:
-                # make sure to read again on resume (if configured)
+            if not self._initial_value_read_done or self._resume_initial_read:
+                # read on first connect or on every reconnect if configured
                 self._initial_value_read_done = False
-                self.read_initial_values()
+                # Always schedule — on_connect may fire inside open() which holds _send_lock,
+                # so any synchronous send path would deadlock. 1s minimum gives us a safe margin.
+                if not self.scheduler_get('read_initial_values'):
+                    delay = self._initial_value_read_delay if self._initial_value_read_delay else 1
+                    self.scheduler_add(
+                        'read_initial_values',
+                        self._read_initial_values,
+                        next=self.shtime.now() + datetime.timedelta(seconds=delay),
+                    )
             if not SDP_standalone:  # noqa  # type: ignore
                 self._create_cyclic_scheduler()
 
     def on_disconnect(self, by: str | None = None):
         """callback if connection is broken."""
-        pass
+        if not SDP_standalone and self.alive:  # noqa  # type: ignore
+            if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
+                reconnect_name = f'{self.get_fullname()}_reconnect'
+                if not self.scheduler_get(reconnect_name):
+                    self.logger.info('connection lost, scheduling reconnect in 5s')
+                    self.scheduler_add(
+                        reconnect_name, self.connect, next=self.shtime.now() + datetime.timedelta(seconds=5)
+                    )
 
     def _process_additional_data(self, command: str, data: Any, value: Any, custom: int, by: str | None = None):
         """do additional processing of received data
@@ -1497,10 +1583,13 @@ class SmartDevicePlugin(SmartPlugin):
                 self.disconnect()
                 self._cyclic_update_active = False
 
-                # reconnect
+                # reconnect after 1 s without blocking the scheduler thread
                 if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_RECONN, False):
-                    time.sleep(1)
-                    self.connect()
+                    reconnect_name = f'{self.get_fullname()}_reconnect'
+                    if not self.scheduler_get(reconnect_name):
+                        self.scheduler_add(
+                            reconnect_name, self.connect, next=self.shtime.now() + datetime.timedelta(seconds=1)
+                        )
             else:
                 self.logger.warning(
                     'Triggered cyclic command read, but previous cyclic run is still active. Check device and cyclic configuration (too much/too short?)'
@@ -1512,63 +1601,66 @@ class SmartDevicePlugin(SmartPlugin):
 
         # set lock
         self._cyclic_update_active = True
-        currenttime = time.time()
-        read_cmds = 0
-        todo = []
-        for cmd in self._commands_cyclic:
-            # Is the command already due?
-            if self._commands_cyclic[cmd]['next'] <= currenttime:
-                todo.append(cmd)
+        try:
+            currenttime = time.time()
+            read_cmds = 0
+            todo = []
+            for cmd in self._commands_cyclic:
+                # Is the command already due?
+                if self._commands_cyclic[cmd]['next'] <= currenttime:
+                    todo.append(cmd)
 
-        for cmd in todo:
-            # repeatedly check if shng wants to stop to prevent stalling shng
-            if not self.alive:
-                self.logger.info('Stop command issued, cancelling cyclic read')
-                return
+            for cmd in todo:
+                # repeatedly check if shng wants to stop to prevent stalling shng
+                if not self.alive:
+                    self.logger.info('Stop command issued, cancelling cyclic read')
+                    return
 
-            # also leave early on disconnect
-            if not self._connection.connected():
-                self.logger.info('Disconnect detected, cancelling cyclic read')
-                return
+                # also leave early on disconnect
+                if not self._connection.connected():
+                    self.logger.info('Disconnect detected, cancelling cyclic read')
+                    return
 
-            self.logger.debug(f'Triggering cyclic read of command {cmd}')
-            self.send_command(cmd)
-            self._commands_cyclic[cmd]['next'] = currenttime + self._commands_cyclic[cmd]['cycle']
-            read_cmds += 1
+                self.logger.debug(f'Triggering cyclic read of command {cmd}')
+                self.send_command(cmd)
+                self._commands_cyclic[cmd]['next'] = currenttime + self._commands_cyclic[cmd]['cycle']
+                read_cmds += 1
 
-        if read_cmds:
-            self.logger.debug(
-                f'Cyclic command read took {(time.time() - currenttime):.1f} seconds for {read_cmds} items'
-            )
+            if read_cmds:
+                self.logger.debug(
+                    f'Cyclic command read took {(time.time() - currenttime):.1f} seconds for {read_cmds} items'
+                )
 
-        currenttime = time.time()
-        read_grps = 0
-        todo = []
-        for grp in self._triggers_cyclic:
-            # Is the trigger already due?
-            if self._triggers_cyclic[grp]['next'] <= currenttime:
-                todo.append(grp)
+            currenttime = time.time()
+            read_grps = 0
+            todo = []
+            for grp in self._triggers_cyclic:
+                # Is the trigger already due?
+                if self._triggers_cyclic[grp]['next'] <= currenttime:
+                    todo.append(grp)
 
-        for grp in todo:
-            # repeatedly check if shng wants to stop to prevent stalling shng
-            if not self.alive:
-                self.logger.info('Stop command issued, cancelling cyclic trigger')
-                return
+            for grp in todo:
+                # repeatedly check if shng wants to stop to prevent stalling shng
+                if not self.alive:
+                    self.logger.info('Stop command issued, cancelling cyclic trigger')
+                    return
 
-            # also leave early on disconnect
-            if not self._connection.connected():
-                self.logger.info('Disconnect detected, cancelling cyclic trigger')
-                return
+                # also leave early on disconnect
+                if not self._connection.connected():
+                    self.logger.info('Disconnect detected, cancelling cyclic trigger')
+                    return
 
-            self.logger.debug(f'Triggering cyclic read of group {grp}')
-            self.read_all_commands(grp)
-            self._triggers_cyclic[grp]['next'] = currenttime + self._triggers_cyclic[grp]['cycle']
-            read_grps += 1
+                self.logger.debug(f'Triggering cyclic read of group {grp}')
+                self.read_all_commands(grp)
+                self._triggers_cyclic[grp]['next'] = currenttime + self._triggers_cyclic[grp]['cycle']
+                read_grps += 1
 
-        if read_grps:
-            self.logger.debug(f'Cyclic triggers took {(time.time() - currenttime):.1f} seconds for {read_grps} groups')
-
-        self._cyclic_update_active = False
+            if read_grps:
+                self.logger.debug(
+                    f'Cyclic triggers took {(time.time() - currenttime):.1f} seconds for {read_grps} groups'
+                )
+        finally:
+            self._cyclic_update_active = False
 
     def _read_configuration(self):
         """

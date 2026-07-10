@@ -1186,6 +1186,7 @@ class Requirements_files:
 
         self.for_tests = for_tests
         self._conf_plugin_files = []
+        self._conf_plugin_files_label = 'configured plugin '
 
         self.shng_version = Version.format(version.split('-')[0])
         vi = sys.version_info
@@ -1439,10 +1440,6 @@ class Requirements_files:
         for fname in self._module_files:
             self._read_requirementfile(fname, requirements, 'SmartHomeNG-module ')
 
-        # Read requirements for userfunctions
-        # self.logger.warning(f"__read_requirementfiles: self._module_files={self._module_files}")
-        self._read_requirementfile(fname, requirements, 'SmartHomeNG-userfunctions ')
-
         # Read requirements for plugins
         # self.logger.warning(f"__read_requirementfiles: self._plugin_files={self._plugin_files}")
         for fname in self._plugin_files:
@@ -1451,7 +1448,7 @@ class Requirements_files:
         # Read requirements for configured plugins
         # self.logger.warning(f"__read_requirementfiles: self._conf_plugin_files={self._conf_plugin_files}")
         for fname in self._conf_plugin_files:
-            self._read_requirementfile(fname, requirements, 'configured plugin ')
+            self._read_requirementfile(fname, requirements, self._conf_plugin_files_label)
 
         # Read user defined requirements for userfunctions (and logics)
         # self.logger.warning(f"__read_requirementfiles: self._user_files={self._user_files}")
@@ -1596,8 +1593,9 @@ class Requirements_files:
 
         return complete_filename
 
-    def set_conf_plugin_files(self, conf_plugin_filelist):
+    def set_conf_plugin_files(self, conf_plugin_filelist, label='configured plugin '):
         self._conf_plugin_files = conf_plugin_filelist
+        self._conf_plugin_files_label = label
 
     def create_requirementsfile(self, selection):
         """

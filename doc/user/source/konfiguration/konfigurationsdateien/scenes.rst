@@ -213,10 +213,6 @@ Beispiel muss die Datei den Namen ``wohnung.buero.szenen.yaml`` tragen.
         - {item: wohnung.buero.dreieckschrank.hue, value: 59635, learn: false}
         - {item: wohnung.buero.dreieckschrank.sat, value: 230, learn: false}
         - {item: wohnung.buero.dreieckschrank.onoff, value: True, learn: false}
-<<<<<<< HEAD
-        
-=======
-
 
 
 .. code-block:: yaml
@@ -226,4 +222,3 @@ Beispiel muss die Datei den Namen ``wohnung.buero.szenen.yaml`` tragen.
        wohnung:
            buero:
                type: scene
->>>>>>> origin/release-1.6

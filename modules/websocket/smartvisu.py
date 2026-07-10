@@ -367,15 +367,14 @@ class Protocol:
 
         except Exception as e:
             logmsg = f'smartVISU_protocol_v4 error: Client {self.build_log_info(client_addr)} - {e}'
-            if str(e).startswith(('no close frame received or sent', 'received 1005', 'code = 1005')):
-                self.logger.info(logmsg)
-            elif str(e).startswith(('code = 1006')) or str(e).endswith(
-                'keepalive ping timeout; no close frame received'
-            ):
-                if (str(e).find('1011 (unexpected error)') >= 0) or (str(e).find('no reason')):
-                    self.logger.info(logmsg)
-                else:
-                    self.logger.warning(logmsg)
+            # Benign client-side/network disconnects (peer slept or lost network, no clean close
+            # frame, abnormal closure, keepalive ping timeout): not a shng front-/backend deficiency
+            # and not user-actionable, so logged at debug only - enable debug logging to see them
+            # when chasing connection problems. Everything else is a real error.
+            if str(e).startswith(
+                ('no close frame received or sent', 'received 1005', 'code = 1005', 'code = 1006')
+            ) or str(e).endswith('keepalive ping timeout; no close frame received'):
+                self.logger.debug(logmsg)
             else:
                 self.logger.error(logmsg)
 

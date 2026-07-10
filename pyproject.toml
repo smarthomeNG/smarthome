@@ -94,6 +94,32 @@ ignore = [
 # "lib/scheduler.py" = ["B"]    # remove when scheduler is clean
 
 # ------------------------------------------------------------------------------
+# PYRIGHT — type checker configuration
+# Docs: https://microsoft.github.io/pyright/#/configuration
+#
+# Ruff's pyflakes rules (F) don't do control-flow analysis, so they miss
+# possibly-unbound locals (a name assigned on some branches/in a try block
+# but not all, then read afterwards). Pyright's reportPossiblyUnboundVariable /
+# reportUnboundVariable do — that's this section's main purpose.
+# ------------------------------------------------------------------------------
+
+[tool.pyright]
+include = ["lib", "modules", "tests", "bin", "tools"]
+exclude = [
+    "**/__pycache__",
+    "deprecated",
+    "lib/env",    # logic scripts: sh/logic/logger injected at exec() time, not importable
+    "examples",   # example logic scripts with the same injected-namespace pattern
+    "dev",        # skeletal SmartDevicePlugin templates; SDP_standalone injected by the framework
+    "plugins",    # has its own pyproject.toml/pyright scope
+]
+venvPath = "venvs"
+venv = "shng"
+typeCheckingMode = "basic"
+reportPossiblyUnboundVariable = "error"
+reportUnboundVariable = "error"
+
+# ------------------------------------------------------------------------------
 # MIGRATION NOTE: replacing setup.py with pyproject.toml
 # ------------------------------------------------------------------------------
 # To complete the migration, add the two sections below and delete setup.py.

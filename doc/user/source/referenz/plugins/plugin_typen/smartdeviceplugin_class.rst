@@ -147,8 +147,9 @@ Standardmäßig wird kein Protokoll benötigt und somit nicht konfiguriert. Wenn
 sie sowohl für das Plugin als auch für die konfigurierte Verbindung transparent.
 
 Zum Lieferumfang gehören die Protokollklassen `SDPProtocol` (keine gesonderte Funktion, Basisklasse, kann zum Testen
-verwendet werden) sowie `SDPProtocolJsonrpc` (stellt transparente Format- und Datenformatierung nach Json-RPC-Standard
-zur Verfügung).
+verwendet werden), `SDPProtocolJsonrpc` (stellt transparente Format- und Datenformatierung nach Json-RPC-Standard
+zur Verfügung) sowie `SDPProtocolResend` (wiederholt gesendete Befehle, wenn die erwartete Antwort ausbleibt, und
+prüft Antworten anhand eines konfigurierbaren ``reply_pattern``).
 
 Eigene Protokolle können definiert werden - im Beispiel sdp_viessmann z.B. die binären Protokolltypen P300 und KW2,
 die einen Verbindungsaufbau mit Handshake benötigen.
@@ -169,6 +170,76 @@ asnychronen Datenempfang), `SDPConnectionNetUdpRequest` (wie SDPConnectionNetTcp
 UDP-Listener, z.B. für Multicast), `SDPConnectionSerial` (Anfrage-Antwort-Verbindung über serielle Schnittstelle)
 sowie `SDPConnectionSerialAsync` (serielle Verbindung mit Listener, der eingehende Daten unabhängig von gesendeten
 Kommandos empfangen kann).
+
+
+Fehlerbehandlung
+----------------
+
+Es gilt das Prinzip: **Rückgabewerte signalisieren Erfolg, Ausnahmen signalisieren Fehler.**
+Eine Methode, die ``None`` oder einen Wert zurückgibt, war erfolgreich. Fehler werden ausschließlich über
+Ausnahmen kommuniziert.
+
+Die folgende Hierarchie wird verwendet:
+
+.. list-table:: SDP-Ausnahmen
+   :header-rows: 1
+
+   * - Klasse
+     - Basisklassen
+     - Bedeutung
+   * - ``SDPError``
+     - ``Exception``
+     - Basisklasse für alle SDP-Fehler. Für allgemeine Fehlerbehandlung genügt es, nur diese Klasse abzufangen.
+   * - ``SDPConnectionError``
+     - ``SDPError``, ``OSError``
+     - Verbindungsfehler: Port nicht offen, Schreibfehler, Lesetimeout ohne Antwort. Durch Vererbung von ``OSError``
+       bleiben bestehende ``except OSError``-Blöcke rückwärtskompatibel.
+   * - ``SDPProtocolError``
+     - ``SDPError``
+     - Protokollfehler: Handshake gescheitert, unerwartete oder ungültige Geräteantwort, Prüfsummenfehler.
+
+Für eigene Plugin-Klassen, die ``_send_init_on_send()`` oder ``_send_bytes()`` überschreiben, gelten folgende Regeln:
+
+- ``_send_bytes()``: Bei Fehlschlag ``SDPConnectionError`` auslösen (nicht ``False`` zurückgeben).
+- ``_send_init_on_send()``: Bei Fehlschlag ``SDPProtocolError`` auslösen (nicht ``False`` zurückgeben).
+  Soll ein Sendevorgang lautlos übersprungen werden (z.B. Gerät noch nicht bereit), stattdessen
+  ``_do_before_send()`` überschreiben und ``(False, True)`` zurückgeben.
+- ``on_disconnect()``: Kann auch durch Lesetimeouts aufgerufen werden, nicht nur durch explizites
+  Schließen der Verbindung. Implementierungen müssen idempotent sein.
+
+
+Loop-Guard
+----------
+
+Der Loop-Guard verhindert Endlosschleifen, die entstehen können, wenn ein Schreibbefehl fehlschlägt,
+der Item-Wert zurückgesetzt wird, und ein externes System (z.B. MQTT) diesen Reset als neue Anforderung
+interpretiert und denselben Wert erneut sendet.
+
+Der Guard zählt identische Schreibversuche für jedes Item innerhalb eines konfigurierbaren Zeitfensters.
+Werden innerhalb des Fensters zu viele identische Versuche erkannt, wird der Schreibvorgang unterdrückt
+und der Item-Wert **nicht** zurückgesetzt — die Rückkopplungsschleife wird damit unterbrochen.
+
+.. list-table:: Loop-Guard-Parameter
+   :header-rows: 1
+
+   * - Parameter (plugin.yaml)
+     - Standardwert
+     - Beschreibung
+   * - ``loop_guard_count``
+     - ``5``
+     - Anzahl identischer Schreibversuche, die innerhalb des Zeitfensters den Guard auslösen.
+       ``0`` deaktiviert den Guard vollständig.
+   * - ``loop_guard_window``
+     - ``5.0``
+     - Zeitfenster in Sekunden.
+   * - ``loop_guard_source``
+     - ``''`` (leer)
+     - Präfix des ``caller``-Strings, auf den der Guard beschränkt wird (z.B. ``'MQTT'``).
+       Schreibvorgänge von anderen Aufrufern werden immer durchgelassen.
+       Leer bedeutet: alle externen Aufrufer werden gezählt.
+
+Der Guard wird automatisch zurückgesetzt, wenn der Item-Wert sich ändert, die Verbindung zum Gerät
+erfolgreich wiederhergestellt wird, oder das Zeitfenster abläuft ohne weitere Versuche.
 
 
 DataTypes

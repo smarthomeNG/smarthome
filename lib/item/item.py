@@ -177,6 +177,7 @@ ATTRIB_COMPAT_DEFAULT = ''
 
 logger = logging.getLogger(__name__)
 items_count = 0
+_NOTSET = object()  # sentinel: distinguishes "no default given" from default=None
 
 
 #####################################################################
@@ -668,6 +669,9 @@ class Item:
             obj = type_class(item=self)
             # create item member <item>.list / <item>.dict
             setattr(self, self._type, obj)
+            # expose get() directly on dict items so evals can use sh.my.item.get('key')
+            if self._type == 'dict':
+                setattr(self, 'get', obj.get)
         if self._type == 'timestamp':
             setattr(self, 'as_dt', self.__ts_as_dt)
             setattr(self, 'as_str', self.__ts_as_str)
@@ -1035,7 +1039,7 @@ class Item:
         """Build trigger condition eval string — delegates to _parsing.build_trigger_condition_eval()."""
         return _build_trigger_condition_eval(self, trigger_condition)
 
-    def __call__(self, value=None, caller='Logic', source=None, dest=None, key=None, index=None, default=None):
+    def __call__(self, value=None, caller='Logic', source=None, dest=None, key=None, index=None, default=_NOTSET):
         # return value
         if value is None or self._type is None:
             if key is not None and self._type == 'dict':
@@ -1155,11 +1159,11 @@ class Item:
         """Return caller info from call stack — delegates to _stackinfo.get_stack_info()."""
         return _get_stack_info(self)
 
-    def __get_dictentry(self, key, default):
+    def __get_dictentry(self, key, default=_NOTSET):
         try:
             return self._value[key]
         except Exception as e:
-            if default is None:
+            if default is _NOTSET:
                 msg = f"Item '{self._path}': {e.__class__.__name__}: {e}"
                 stack_info = self.get_stack_info()
                 if stack_info.startswith('Item'):

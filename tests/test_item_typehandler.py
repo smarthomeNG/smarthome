@@ -335,5 +335,105 @@ class TestCallerPassthrough(_Base):
         self.assertIn('PrependCaller', li.property.last_change_by)
 
 
+# ===========================================================================
+# DictHandler.get — via item.dict.get()
+# ===========================================================================
+
+
+class TestDictHandlerGet(_Base):
+    def setUp(self):
+        super().setUp()
+        self.di = _item(self.sh, 'di', 'dict')
+        self.di({'a': 1, 'b': 2})
+
+    def test_get_existing_key_returns_value(self):
+        self.assertEqual(self.di.dict.get('a'), 1)
+
+    def test_get_missing_key_returns_none(self):
+        self.assertIsNone(self.di.dict.get('missing'))
+
+    def test_get_missing_key_returns_explicit_default(self):
+        self.assertEqual(self.di.dict.get('missing', 42), 42)
+
+    def test_get_missing_key_default_none_returns_none(self):
+        self.assertIsNone(self.di.dict.get('missing', None))
+
+    def test_get_on_unpopulated_item_returns_default(self):
+        di = _item(self.sh, 'di2', 'dict')
+        # _value is None — item never set
+        self.assertIsNone(di.dict.get('key'))
+
+    def test_get_on_unpopulated_item_returns_explicit_default(self):
+        di = _item(self.sh, 'di2', 'dict')
+        self.assertEqual(di.dict.get('key', 'fallback'), 'fallback')
+
+
+# ===========================================================================
+# Item.get() — direct shortcut attached on dict-type items
+# ===========================================================================
+
+
+class TestItemGetShortcut(_Base):
+    def setUp(self):
+        super().setUp()
+        self.di = _item(self.sh, 'di', 'dict')
+        self.di({'x': 10, 'y': 20})
+
+    def test_get_shortcut_exists_on_dict_item(self):
+        self.assertTrue(hasattr(self.di, 'get'))
+
+    def test_get_shortcut_missing_on_non_dict_item(self):
+        ni = _item(self.sh, 'ni', 'num')
+        self.assertFalse(hasattr(ni, 'get'))
+
+    def test_get_shortcut_returns_value(self):
+        self.assertEqual(self.di.get('x'), 10)
+
+    def test_get_shortcut_missing_key_returns_none(self):
+        self.assertIsNone(self.di.get('missing'))
+
+    def test_get_shortcut_missing_key_returns_explicit_default(self):
+        self.assertEqual(self.di.get('missing', 99), 99)
+
+    def test_get_shortcut_default_none_returns_none(self):
+        self.assertIsNone(self.di.get('missing', None))
+
+    def test_get_shortcut_on_unpopulated_item(self):
+        di = _item(self.sh, 'di2', 'dict')
+        self.assertIsNone(di.get('key'))
+
+
+# ===========================================================================
+# Item.__call__(key=, default=) — _NOTSET sentinel fix
+# ===========================================================================
+
+
+class TestItemCallDictAccess(_Base):
+    def setUp(self):
+        super().setUp()
+        self.di = _item(self.sh, 'di', 'dict')
+        self.di({'k': 'v'})
+
+    def test_call_with_key_returns_value(self):
+        self.assertEqual(self.di(key='k'), 'v')
+
+    def test_call_missing_key_no_default_raises(self):
+        with self.assertRaises(KeyError):
+            self.di(key='missing')
+
+    def test_call_missing_key_default_none_returns_none(self):
+        # Previously raised KeyError because None was the sentinel — now fixed
+        self.assertIsNone(self.di(key='missing', default=None))
+
+    def test_call_missing_key_explicit_default_returns_default(self):
+        self.assertEqual(self.di(key='missing', default='fallback'), 'fallback')
+
+    def test_call_missing_key_default_false_returns_false(self):
+        self.assertIs(self.di(key='missing', default=False), False)
+
+    def test_call_missing_key_default_zero_returns_zero(self):
+        self.assertEqual(self.di(key='missing', default=0), 0)
+
+
 if __name__ == '__main__':
     unittest.main()

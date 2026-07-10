@@ -30,6 +30,8 @@ import unittest
 # Make shng root importable
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
+import tests.common as common
+
 
 # ---------------------------------------------------------------------------
 # Register shng's custom log levels before importing shtime.
@@ -244,6 +246,17 @@ class TestDatetimeTransform(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.st.datetime_transform([2024, 1, 1])
 
+    def test_naive_datetime_is_labeled_not_shifted(self):
+        # Regression test: a naive datetime must be interpreted as wall-clock
+        # time *in the configured timezone*, not as OS-local time that gets
+        # converted. force_os_tz creates a genuine OS/configured mismatch.
+        st = _make_shtime('Pacific/Honolulu')
+        with common.force_os_tz('Europe/Berlin'):
+            dt = datetime.datetime(2024, 6, 15, 12, 0, 0)
+            result = st.datetime_transform(dt)
+            self.assertEqual(result.hour, 12)
+            self.assertEqual(result.utcoffset(), datetime.timedelta(hours=-10))
+
 
 class TestDateTransform(unittest.TestCase):
     def setUp(self):
@@ -437,6 +450,100 @@ class TestBeginningOf(unittest.TestCase):
     def test_beginning_of_year_with_positive_offset(self):
         result = self.st.beginning_of_year(year=2024, offset=1)
         self.assertEqual(result, datetime.date(2025, 1, 1))
+
+
+# ===========================================================================
+# today / tomorrow / yesterday
+#
+# NOTE: real OS-tz/configured-tz mismatch can't be exercised deterministically
+# here because the bug only manifests near midnight relative to the offset
+# difference, and "now" is real wall-clock time at test run. These verify the
+# contract instead: today() must derive from the configured tz via now().
+# ===========================================================================
+
+
+class TestTodayTomorrowYesterday(unittest.TestCase):
+    def setUp(self):
+        self.st = _make_shtime('Pacific/Honolulu')
+
+    def test_today_matches_now_date_in_configured_tz(self):
+        self.assertEqual(self.st.today(), self.st.now().date())
+
+    def test_tomorrow_is_today_plus_one(self):
+        self.assertEqual(self.st.tomorrow(), self.st.today() + datetime.timedelta(days=1))
+
+    def test_yesterday_is_today_minus_one(self):
+        self.assertEqual(self.st.yesterday(), self.st.today() - datetime.timedelta(days=1))
+
+    def test_today_offset(self):
+        self.assertEqual(self.st.today(offset=2), self.st.today() + datetime.timedelta(days=2))
+
+
+# ===========================================================================
+# tzname / tznameST / tznameDST
+#
+# Regression tests: these must report the *configured* timezone's name, not
+# whatever the OS-level timezone happens to be (dateutil's tz.tzlocal() reads
+# OS state dynamically, so force_os_tz can genuinely discriminate here).
+# ===========================================================================
+
+
+class TestTzNames(unittest.TestCase):
+    def setUp(self):
+        self.st = _make_shtime('Pacific/Honolulu')
+
+    def test_tzname_reports_configured_tz(self):
+        with common.force_os_tz('Europe/Berlin'):
+            self.assertEqual(self.st.tzname(), 'HST')
+
+    def test_tznameST_reports_configured_tz(self):
+        with common.force_os_tz('Europe/Berlin'):
+            self.assertEqual(self.st.tznameST(), 'HST')
+
+    def test_tznameDST_reports_configured_tz(self):
+        with common.force_os_tz('Europe/Berlin'):
+            self.assertEqual(self.st.tznameDST(), 'HST')
+
+    def test_tzname_distinguishes_st_and_dst_for_dst_observing_zone(self):
+        # Pacific/Honolulu has no DST (always HST); Europe/Berlin does
+        # (CET in winter, CEST in summer) - use it to confirm ST != DST name.
+        st = _make_shtime('Europe/Berlin')
+        self.assertEqual(st.tznameST(), 'CET')
+        self.assertEqual(st.tznameDST(), 'CEST')
+
+
+# ===========================================================================
+# ts()
+#
+# Regression test: ts() must not overwrite tzinfo on an already-aware
+# datetime (no OS-tz involvement needed - this is purely an
+# overwrite-vs-preserve bug).
+# ===========================================================================
+
+
+class TestTs(unittest.TestCase):
+    def setUp(self):
+        self.st = _make_shtime('Europe/Berlin')
+
+    def test_aware_datetime_timestamp_unaffected_by_configured_tz(self):
+        # 12:00 UTC must yield the same posix timestamp regardless of shng's
+        # configured timezone - ts() must not relabel it to Europe/Berlin.
+        utc_dt = datetime.datetime(2024, 6, 15, 12, 0, 0, tzinfo=datetime.timezone.utc)
+        expected = utc_dt.timestamp()
+        self.assertEqual(self.st.ts(utc_dt), expected)
+
+    def test_naive_datetime_uses_configured_tz(self):
+        naive_dt = datetime.datetime(2024, 6, 15, 12, 0, 0)
+        result = self.st.ts(naive_dt)
+        expected = naive_dt.replace(tzinfo=self.st.tzinfo()).timestamp()
+        self.assertEqual(result, expected)
+
+    def test_explicit_tz_override_still_works(self):
+        naive_dt = datetime.datetime(2024, 6, 15, 12, 0, 0)
+        honolulu = _make_shtime('Pacific/Honolulu').tzinfo()
+        result = self.st.ts(naive_dt, tz=honolulu)
+        expected = naive_dt.replace(tzinfo=honolulu).timestamp()
+        self.assertEqual(result, expected)
 
 
 # ===========================================================================

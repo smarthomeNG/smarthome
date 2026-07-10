@@ -43,7 +43,7 @@ from lib.utils import Utils
 # flake8: noqa
 
 # this is the internal SDP version
-SDP_VERSION = '1.0.4'
+SDP_VERSION = '1.1.0'
 
 # plugin attributes, used in plugin config 'device' and instance creation (**kwargs)
 
@@ -340,6 +340,30 @@ PLUGIN_PATH = 'plugin_path'  # module path to the plugin class
 
 
 class CommandsError(Exception):
+    pass
+
+
+class SDPError(Exception):
+    """Base class for all SmartDevicePlugin errors.
+    Catch this single type to handle all SDP-specific errors with one except clause.
+    """
+
+    pass
+
+
+class SDPConnectionError(SDPError, OSError):
+    """Raised when a connection cannot be established or is lost during I/O.
+    Inherits from OSError for backward compatibility with existing catch clauses.
+    """
+
+    pass
+
+
+class SDPProtocolError(SDPError):
+    """Raised when protocol exchange fails: handshake error, unexpected or
+    invalid response from device, checksum mismatch, etc.
+    """
+
     pass
 
 

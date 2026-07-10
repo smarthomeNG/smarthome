@@ -25,12 +25,57 @@ from . import common
 import unittest
 import logging
 import datetime
+import os
 
 from tests.mock.core import MockSmartHome
 
-from lib.triggertimes import Crontab
+from lib.triggertimes import Crontab, Skytime
+
+try:
+    import ephem as _ephem_check
+
+    HAS_EPHEM = True
+except ImportError:
+    HAS_EPHEM = False
+
+from lib.shtime import Shtime
+from lib.orb import Orb
+
+common.register_shng_log_levels()
 
 logger = logging.getLogger(__name__)
+
+BERLIN_LON = 13.4050
+BERLIN_LAT = 52.5200
+BERLIN_ELEV = 34
+
+
+def _make_sky_env(tz='Europe/Berlin'):
+    """Set up a minimal Shtime + Orb('sun') environment and register it with
+    Skytime, mirroring how bin/smarthome.py wires sh.shtime/sh.sun/sh.moon."""
+    import lib.shtime as _m
+
+    _m._shtime_instance = None
+
+    class _Sh:
+        _default_language = 'de'
+
+        def get_config_file(self, basename, extension='.yaml'):
+            base = os.path.join(os.path.dirname(__file__), 'resources', 'etc')
+            return os.path.join(base, basename + extension)
+
+    shtime = Shtime(_Sh())
+    shtime.set_tz(tz)
+    sun = Orb('sun', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV)
+
+    class _SkySh:
+        def __init__(self, shtime, sun):
+            self.shtime = shtime
+            self.sun = sun
+            self.moon = sun  # unused by these tests, just needs to exist
+
+    Skytime.set_smarthome_reference(_SkySh(shtime, sun))
+    return shtime, sun
 
 
 class TestCrontab(unittest.TestCase):
@@ -200,6 +245,38 @@ class TestCrontab(unittest.TestCase):
 
         logger.warning('\nfurthermore fancy dates')
         self.assertEqual(Crontab('59 59 23 31 10 *').get_next(now), datetime.datetime(year, 10, 31, 23, 59, 59))
+
+
+@unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
+class TestSkytimeSolsticeGuard(unittest.TestCase):
+    """Regression guard for a forum-reported bug: a sun-bound trigger like
+    'sunset+35m', re-triggered day after day across the summer solstice, was
+    reported to occasionally skip forward by several weeks instead of firing
+    the next evening (smarthome v1.9.5). This was NOT reproducible against
+    current develop with real pyephem (verified empirically: every gap across
+    2024-06-01..2024-07-30 at Berlin coordinates came out to a clean ~24h).
+    This test locks in that correct behaviour so a future change (e.g. the
+    planned ephem->skyfield port) can't silently reintroduce the jump."""
+
+    MAX_PLAUSIBLE_GAP = datetime.timedelta(hours=30)
+
+    def setUp(self):
+        self.shtime, self.sun = _make_sky_env()
+
+    def test_sunset_plus_offset_advances_by_about_one_day_across_solstice(self):
+        sky = Skytime('sunset+35m')
+        starttime = datetime.datetime(2024, 6, 1, 12, 0, 0, tzinfo=self.shtime.tzinfo())
+        end = datetime.datetime(2024, 7, 30, tzinfo=self.shtime.tzinfo())
+        prev = None
+        while starttime < end:
+            nxt = sky.get_next(starttime)
+            if prev is not None:
+                gap = nxt - prev
+                self.assertLessEqual(
+                    gap, self.MAX_PLAUSIBLE_GAP, f'gap from {prev} to {nxt} is {gap}, expected roughly 24h'
+                )
+            prev = nxt
+            starttime = nxt + datetime.timedelta(microseconds=1)
 
 
 if __name__ == '__main__':

@@ -1,4 +1,13 @@
 # lib.orb:
+# skyfield is an alternative, opt-in ephemeris backend (orb_backend: skyfield in
+# smarthome.yaml) and deliberately NOT listed here: it's not auto-installed by
+# shpypi's core-requirements check, which runs before smarthome.yaml is even
+# parsed (so it can't know which backend is configured) and would otherwise
+# install skyfield's dependencies (numpy, sgp4, jplephem) for every
+# installation regardless of whether it's ever used. Run
+# tools/fetch_skyfield_data.py once to install skyfield and its ephemeris data
+# before switching to that backend. See lib/orb.py and
+# doc/user/source/referenz/smarthomeng/methoden_sonne_mond.rst.
 ephem>=4.2,<5.0.0
 pytz
 babel

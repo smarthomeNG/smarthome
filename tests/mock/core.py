@@ -35,7 +35,19 @@ class MockScheduler:
 
         lib.scheduler._scheduler_instance = self
 
-    def add(self, name, obj, prio=3, cron=None, cycle=None, value=None, offset=None, next=None):
+    def add(
+        self,
+        name,
+        obj,
+        prio=3,
+        cron=None,
+        cycle=None,
+        value=None,
+        offset=None,
+        next=None,
+        from_smartplugin=False,
+        items=None,
+    ):
         logger.warning(
             'MockScheduler (add): {}, cron={}, cycle={}, value={}, offset={}'.format(
                 name, str(cron), str(cycle), str(value), str(offset)
@@ -47,8 +59,13 @@ class MockScheduler:
         except AttributeError:
             pass
 
-    def remove(self, name):
+    def remove(self, name, from_smartplugin=False):
         logger.warning('MockScheduler (remove): {}'.format(name))
+
+    def trigger(
+        self, name, obj=None, by='Logic', source=None, value=None, dest=None, prio=3, dt=None, from_smartplugin=False
+    ):
+        logger.warning('MockScheduler (trigger): {}, by={}, value={}'.format(name, by, value))
 
 
 class MockSmartHome:

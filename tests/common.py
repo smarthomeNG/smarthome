@@ -1,6 +1,8 @@
+import contextlib
 import logging
 import os
 import sys
+import time
 import pathlib
 
 # with Linux standard installation of SmartHomeNG
@@ -34,3 +36,26 @@ def register_shng_log_levels():
             logging.addLevelName(level, name)
             setattr(logging, name, level)
             setattr(logging.getLoggerClass(), name.lower(), _make_method(level))
+
+
+@contextlib.contextmanager
+def force_os_tz(tz_name):
+    """Force the process's OS-level timezone to tz_name for the duration of the block.
+
+    Shtime.set_tz() writes os.environ['TZ'], which on some platforms makes naive
+    .astimezone()/.now() calls silently track the *configured* shng timezone too -
+    masking bugs where code should use shng's configured tz but instead falls back
+    to "whatever the OS thinks". This forces a genuine OS/configured mismatch via
+    time.tzset() (POSIX only) so such bugs are actually exercised by tests.
+    """
+    orig_tz = os.environ.get('TZ')
+    os.environ['TZ'] = tz_name
+    time.tzset()
+    try:
+        yield
+    finally:
+        if orig_tz is None:
+            os.environ.pop('TZ', None)
+        else:
+            os.environ['TZ'] = orig_tz
+        time.tzset()

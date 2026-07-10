@@ -181,6 +181,10 @@ class Shtime:
 
     def ts(self, dt, tz=None):
         """Return dt as posix timestamp, possibly with different local tz"""
+        if dt.tzinfo is not None and tz is None:
+            # already aware and no explicit override: timestamp() is tz-correct as-is,
+            # replacing tzinfo would silently shift the represented instant
+            return dt.timestamp()
         if tz is None:
             tz = self._tzinfo
         return dt.replace(tzinfo=tz).timestamp()
@@ -218,34 +222,34 @@ class Shtime:
 
     def tzname(self):
         """
-        Returns the name about the actual local timezone (e.g. CEST)
+        Returns the name about the actual configured timezone (e.g. CEST)
 
         :return: timezone string (like: 'CEST' or 'CET')
         :rtype: str
         """
 
-        return datetime.datetime.now(tz.tzlocal()).tzname()
+        return self.now().tzname()
 
     def tznameST(self):
         """
-        Returns the name for Standard Time in the local timezone (e.g. CET)
+        Returns the name for Standard Time in the configured timezone (e.g. CET)
 
         :return: Timezone info (like: 'CET')
         :rtype: str
         """
 
-        jan = datetime.datetime.fromtimestamp(datetime.datetime.timestamp(datetime.datetime(2020, 1, 1)), tz.tzlocal())
+        jan = datetime.datetime(2020, 1, 1, tzinfo=self._tzinfo)
         return jan.strftime('%Z')
 
     def tznameDST(self):
         """
-        Returns the name for Daylight Saving Time (DST) in the local timezone (e.g. CEST)
+        Returns the name for Daylight Saving Time (DST) in the configured timezone (e.g. CEST)
 
         :return: Timezone info (like: 'CEST')
         :rtype: str
         """
 
-        jul = datetime.datetime.fromtimestamp(datetime.datetime.timestamp(datetime.datetime(2020, 7, 1)), tz.tzlocal())
+        jul = datetime.datetime(2020, 7, 1, tzinfo=self._tzinfo)
         return jul.strftime('%Z')
 
     def utcnow(self):
@@ -581,8 +585,9 @@ class Shtime:
         else:
             raise TypeError(self.translate("Cannot convert type '{key}' to datetime").format(key=type(key)))
         if isinstance(key, datetime.datetime) and key.tzinfo is None:
-            # key = self._timezone.localize(key)   # uses a pytz method
-            key = key.astimezone(self._timezone)
+            # naive datetime: label it as being in shng's configured timezone, don't shift it.
+            # .astimezone() would instead treat it as OS-local time and convert (shift) it.
+            key = key.replace(tzinfo=self._timezone)
         return key
 
     def date_transform(self, key):
@@ -699,7 +704,7 @@ class Shtime:
         :return: date of today
         :rtype: datetime.date
         """
-        return (datetime.datetime.now() + datetime.timedelta(days=offset)).date()
+        return (self.now() + datetime.timedelta(days=offset)).date()
 
     def tomorrow(self):
         """

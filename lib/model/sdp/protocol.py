@@ -52,6 +52,7 @@ from lib.model.sdp.globals import (
     PROTO_NULL,
 )
 from lib.model.sdp.connection import SDPConnection
+from lib.model.sdp.globals import SDPError
 
 
 #############################################################################################################################################################################################################################################
@@ -497,9 +498,12 @@ class SDPProtocolJsonrpc(SDPProtocol):
             self._message_archive[message_id] = [time(), command, ddict, repeat]
 
             self.logger.debug(f'sending queued msg {message_id} - {command} (#{repeat})')
-            response = self._connection.send(ddict)
-            if response:
-                self.on_data_received('request', response)
+            try:
+                response = self._connection.send(ddict)
+                if response:
+                    self.on_data_received('request', response)
+            except SDPError as e:
+                self.logger.warning(f'Error sending message {message_id} ({command}): {e}')
 
 
 class SDPProtocolResend(SDPProtocol):
@@ -702,7 +706,11 @@ class SDPProtocolResend(SDPProtocol):
                     self.logger.debug(
                         f'Resending {command}, retries {retry}/{self._sending[command].get("send_retries")}.'
                     )
-                    sent = self._send(self._sending[command].get('data_dict'))
+                    try:
+                        sent = self._send(self._sending[command].get('data_dict'))
+                    except SDPError as e:
+                        self.logger.warning(f'Error resending {command}: {e}')
+                        sent = False
                     self._sending_retries[command] = retry + 1
                 elif retry >= self._sending[command].get('send_retries'):
                     sent = False
@@ -711,7 +719,10 @@ class SDPProtocolResend(SDPProtocol):
                     self.logger.info(f'Giving up re-sending {command} after {retry} retries.')
                     if self._sending[command].get('read_cmd') is not None:
                         self.logger.info('Querying current value')
-                        self._send(self._sending[command].get('read_cmd'))
+                        try:
+                            self._send(self._sending[command].get('read_cmd'))
+                        except SDPError as e:
+                            self.logger.warning(f'Error querying current value for {command}: {e}')
             for command in remove_commands:
                 self._sending.pop(command)
                 self._sending_retries.pop(command)

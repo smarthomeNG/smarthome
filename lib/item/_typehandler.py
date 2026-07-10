@@ -121,7 +121,10 @@ class DictHandler(TypeHandler):
     item_functions = ['get', 'delete', 'clear', 'pop', 'popitem', 'update']
 
     def get(self, key, default=None):
-        return self._item().get(key, default)
+        value = self._item._value
+        if not isinstance(value, dict):
+            return default
+        return value.get(key, default)
 
     def delete(self, key, caller='Logic', source=None, dest=None):
         """Named *delete* rather than *del* for syntax reasons."""

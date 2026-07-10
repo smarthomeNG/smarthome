@@ -37,11 +37,17 @@ from importlib import import_module
 from queue import SimpleQueue
 from threading import Lock, Thread
 from time import sleep, time
+
+# Seconds of serial silence while connected before declaring the connection stale.
+# Must exceed the longest normal gap between device transmissions (cyclic read cycle).
+_STALE_CONNECTION_TIMEOUT = 60
 from typing import Any, Generator
 
 from lib.network import Tcp_client
 from lib.model.sdp.globals import (
     sanitize_param,
+    SDPConnectionError,
+    SDPProtocolError,
     CONN_NET_TCP_REQ,
     CONN_NULL,
     CONN_SER_DIR,
@@ -185,9 +191,9 @@ class SDPConnection(object):
             if self._params[PLUGIN_ATTR_CONN_AUTO_CONN]:
                 self._open()
                 if not self._is_connected:
-                    raise RuntimeError('trying to send, but autoconnect did not open a connection')
+                    raise SDPConnectionError('cannot send: autoconnect failed to open connection')
             else:
-                raise RuntimeError('trying to send, but not connected and autoconnect not enabled')
+                raise SDPConnectionError('cannot send: not connected and autoconnect disabled')
 
         data = data_dict.get('payload', None)
         if not data:
@@ -200,8 +206,9 @@ class SDPConnection(object):
                 self.logger.debug(f'trying to get send_lock for sending {data_dict}')
                 self._send_lock.acquire()
 
-            if self._send_init_on_send():
-                response = self._send(data_dict, **kwargs)
+            if not self._send_init_on_send():
+                raise SDPProtocolError('cannot send: connection protocol initialization failed')
+            response = self._send(data_dict, **kwargs)
         except Exception:
             raise
         finally:
@@ -718,6 +725,7 @@ class SDPConnectionSerial(SDPConnection):
 
             if self._is_connected:
                 self._connection_attempts = 0
+                self._lastbytetime = time()
                 self._setup_listener()
                 # only call on_connect callback after listener is set up
                 if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
@@ -806,27 +814,24 @@ class SDPConnectionSerial(SDPConnection):
 
             return res
 
-    def _send_bytes(self, packet: bytes | bytearray) -> bool | int:
+    def _send_bytes(self, packet: bytes | bytearray) -> int:
         """
-        Send data to device
+        Send data to device.
 
         :param packet: Data to be sent
         :type packet: bytearray|bytes
-        :return: Returns False, if no connection is established or write failed; number of written bytes otherwise
+        :return: Number of bytes written
+        :raises SDPConnectionError: if not connected or write fails
         """
-        # self.logger.debug(f'{self.__class__.__name__} _send_bytes called with {packet}')
-
         if not self._is_connected:
-            self.logger.debug('_send_bytes not connected, aborting')
-            return False
+            raise SDPConnectionError(f'cannot send, not connected to {self._params[PLUGIN_ATTR_SERIAL_PORT]}')
 
         try:
-            numbytes = self._connection.write(packet)
-        except self.serial.SerialTimeoutException:
-            return False
-
-        # self.logger.debug(f'_send_bytes: sent {packet} with {numbytes} bytes')
-        return numbytes
+            return self._connection.write(packet)
+        except self.serial.SerialTimeoutException as e:
+            raise SDPConnectionError(f'serial write timeout on {self._params[PLUGIN_ATTR_SERIAL_PORT]}') from e
+        except self.serial.SerialException as e:
+            raise SDPConnectionError(f'serial write error on {self._params[PLUGIN_ATTR_SERIAL_PORT]}: {e}') from e
 
     def _read_bytes(self, limit_response: int | bytes | bytearray, clear_buffer=False) -> bytes:
         """
@@ -872,7 +877,15 @@ class SDPConnectionSerial(SDPConnection):
                     if readbyte != b'':
                         self._lastbytetime = time()
                     else:
-                        return totalreadbytes
+                        if self._listener_active:
+                            # async listener: empty read is normal; return
+                            # accumulated bytes immediately so the listener
+                            # thread can loop without busy-waiting
+                            return totalreadbytes
+                        # sync mode: no more data from device right now;
+                        # break out so the disconnect-detection block below
+                        # can run if we received nothing at all
+                        break
                     totalreadbytes += readbyte
 
                     # limit_response reached?
@@ -887,12 +900,30 @@ class SDPConnectionSerial(SDPConnection):
                         else:
                             return totalreadbytes
             else:
-                self.logger.warning("read_bytes couldn't get lock on serial. Ths is unintended...")
+                self.logger.error(
+                    'read_bytes could not acquire serial lock within timeout — possible deadlock or hung connection'
+                )
+                raise SDPConnectionError(f'serial read lock timeout on {self._params[PLUGIN_ATTR_SERIAL_PORT]}')
 
         # timeout reached, did we read anything?
-        if not totalreadbytes and not self._listener_active:
-            # just in case, force plugin to reconnect
-            self._is_connected = False
+        # Do NOT set _is_connected = False here. A read timeout means the device
+        # did not respond in time — normal for P300 SYNC wait (device can take >0.5s).
+        # Setting False would cause _send_bytes and subsequent _read_bytes to bail
+        # immediately, preventing the protocol-level retry loop from recovering.
+        # Real disconnects are detected when _send_bytes raises SerialException on write.
+
+        # Long-period silence: sustained unresponsiveness means the device or
+        # cable is truly dead. _lastbytetime is reset to now() on each open(), so
+        # this triggers only after _STALE_CONNECTION_TIMEOUT seconds without any
+        # byte from the device — not during a normal P300 SYNC wait.
+        if not totalreadbytes and self._lastbytetime:
+            elapsed = time() - self._lastbytetime
+            if elapsed > _STALE_CONNECTION_TIMEOUT:
+                self.logger.warning(
+                    f'no data from {self._params[PLUGIN_ATTR_SERIAL_PORT]} for '
+                    f'{elapsed:.0f}s — closing stale connection'
+                )
+                self._close()
 
         # return what we got so far, might be b''
         return totalreadbytes

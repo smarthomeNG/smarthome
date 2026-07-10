@@ -10,6 +10,15 @@ Dieses Objekt bietet Zugriff auf Parameter der Sonne. Um dieses Objekt zu verwen
 den Breitengrad (latitude, z.B. lat: 53.5989481) und den Längengrad (longitude z.B. lon: 10.0459898),
 sowie die Höhe über dem Meeresspiegel (elevation z.B.: elev: 20) in der Datei ``etc/smarthome.yaml`` anzugeben.
 
+.. note::
+
+   Die Berechnungen für ``sh.sun`` und ``sh.moon`` werden intern von einer austauschbaren
+   Ephemeriden-Bibliothek durchgeführt. Standardmäßig wird **ephem** verwendet. Optional kann in
+   ``etc/smarthome.yaml`` mit ``orb_backend: skyfield`` auf die Bibliothek **skyfield** umgeschaltet
+   werden. Vor der ersten Verwendung von skyfield muss einmalig ``tools/fetch_skyfield_data.py``
+   ausgeführt werden, um die benötigten Ephemeriden-Daten (~17MB, gültig bis 2053) herunterzuladen -
+   danach ist kein Netzwerkzugriff mehr erforderlich.
+
 
 sh.sun.pos()
 ~~~~~~~~~~~~
@@ -49,6 +58,13 @@ Das Ergebnis ist ein auf UTC basierendes ``datetime`` Objekt
    sunset = sh.sun.set()      # liefert den utc-basierten Zeitpunkt des nächsten Sonnenuntergangs
    sunset_tw = sh.sun.set(-6) # liefert den utc-basierten Zeitpunkt zu dem die Sonne 6° unter dem Horizont
                               # steht. (Ende der bürgerlichen Abenddämmerung)
+
+.. note::
+
+   An Orten mit Mitternachtssonne bzw. Polarnacht kann es vorkommen, dass die Sonne an einem bestimmten
+   Tag den angegebenen Horizont gar nicht erreicht (z.B. geht sie im Sommer gar nicht unter). In diesem
+   Fall liefert ``sh.sun.set()`` (und analog ``sh.sun.rise()``) den Wert ``None`` zurück, statt einer
+   Datums/Zeitangabe.
 
 
 sh.sun.rise()
@@ -118,6 +134,12 @@ Das Ergebnis ist ein auf UTC basierendes ``datetime`` Objekt
 
    moonset = sh.moon.set()      # liefert den utc-basierten Zeitpunkt des nächsten Monduntergangs
    moonset_tw = sh.moon.set(-6) # liefert den utc-basierten Zeitpunkt zu dem der Mond 6° unter dem Horizont steht
+
+.. note::
+
+   Analog zu ``sh.sun.set()``/``sh.sun.rise()`` kann ``sh.moon.set()``/``sh.moon.rise()`` an Orten mit
+   entsprechenden Bedingungen ``None`` zurückliefern, wenn der Mond den angegebenen Horizont an dem
+   betreffenden Tag nicht erreicht.
 
 
 sh.moon.rise()

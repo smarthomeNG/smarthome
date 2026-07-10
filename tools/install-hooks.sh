@@ -125,10 +125,12 @@ if [ -z "\$STAGED" ]; then
     exit 0
 fi
 
-echo "\$STAGED" | xargs "\$RUFF" format --quiet
+# --force-exclude: ruff's [tool.ruff] exclude only applies during directory
+# discovery, not to explicit file paths (which is what xargs passes here).
+echo "\$STAGED" | xargs "\$RUFF" format --force-exclude --quiet && echo 'Formatted.'
 echo "\$STAGED" | xargs git add
 
-if ! echo "\$STAGED" | xargs "\$RUFF" check; then
+if ! echo "\$STAGED" | xargs "\$RUFF" check --force-exclude; then
     echo ""
     echo "==> COMMIT REJECTED: ruff found lint errors in staged files."
     echo ""
