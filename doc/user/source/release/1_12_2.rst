@@ -1,0 +1,241 @@
+==============================
+Release 1.12.2 - 10. Juli 2026
+==============================
+
+Dieses Release ist ein Bugfix-Release. Ein kritischer Fehler verhinderte den Start
+von SmartHomeNG in neuen Installationen. Zudem sind weitere Fehler im Core und in
+Plugins behoben.
+
+|
+
+.. only:: develop_branch
+
+.. note::
+
+        Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
+
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 10. Juli 2026
+           ('update formatting')
+
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. 10. Juli 2026
+           ('database: update tests')
+
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release 
+v1.12.1 sind im Folgenden in diesen Release Notes beschrieben.
+
+
+Minimum Python Version
+----------------------
+
+Die minimale Python-Version, die von SmartHomeNG unterstützt wird, ist **Python 3.10**.
+
+Es ist ggf. möglich, SmartHomeNG auch auf früheren Python-Versionen laufen zu lassen. 
+Dies ist aber nicht getestet, und möglicherweise nutzen z.B. einzelne Plugins Sprachfeatures,
+die erst ab Python 3.10 unterstützt werden. 
+Insofern kann für Versuche in dieser Hinsicht kein Support geleistet werden. 
+
+Bei einer Neuinstallation wird jedoch empfohlen, auf einer der neueren
+Python-Versionen (3.12 oder 3.13) aufzusetzen.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Offiziell unterstützt werden im SmartHomeNG Release 1.12.2 die Python-Versionen 3.10, 3.11, 3.12 und 3.13.
+Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
+(Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
+zu unterstützten Python Versionen)
+
+|
+
+
+.. note::
+
+   **Basis: Release 1.12.0** — Die folgenden Abschnitte wurden aus den
+   Release Notes v1.12.0 übernommen.
+   Neue Änderungen für Release 1.12.2 folgen am Ende dieses Dokuments.
+
+Änderungen am Core
+==================
+
+Allgmein
+--------
+
+* Workflows:
+
+  * build requirements only for tested plugins
+  * update hooks to include local git hooks
+  * update workflows and tools
+  * add pyright config/tools for more in-depth checking
+
+Bugfixes im CORE
+----------------
+
+* restore startup without requirements
+
+* fix interactive console
+
+* use consistent timezone source
+
+* gitignore: fix requirements ignores
+
+Updates in the CORE
+-------------------
+
+* Libs:
+
+  * lib.env:
+
+    * cosmetic change to location.py
+
+  * lib.item:
+
+    * safe dict access via get() shortcut
+    * _notset sentinel
+
+  * lib.model.smartdeviceplugin:
+
+    * sdp: fix reconnect loop
+    * sdp: bump version number
+    * sdp: update error propagation and connection logic for serial
+
+  * lib.orb:
+
+    * add skyfield backend
+    * integrate into shng, add config variable for backend, add tests
+    * implement cached skyfield and standalone benchmark, update docu, requirements, tools
+    * fix numpy angle handling
+
+* Modules:
+
+  * module.admin:
+
+    * exclude ._* from file lists
+    * fix item tree value field
+
+  * module.websocket:
+
+    * downgrade benign disconnect closures to debug
+
+* tools:
+
+  * tools/bootstrap_matrix_test:
+
+    * add core/plugin build checker for all python versions
+
+|
+
+Änderungen bei Plugins
+======================
+
+Allgmein
+--------
+
+* add missing third-party packages to requirements.txt
+
+* restrict pytest collection to tests/ dirs
+
+* remove 51 dead expressions left by unused-variable fixes
+
+* fix remaining latent nameerror bugs in byd_bat, shelly, snap7_logo
+
+* fix bare except clauses (e722) and except-clause name errors (f821)
+
+* fix latent f821 undefined-name bugs surfaced by lint cleanup
+
+* fix ruff lint findings surfaced after star-import cleanup
+
+* replace star imports with explicit imports
+
+* Workflows:
+
+  * only build doc on upstream
+  * update workflow and unittest scopes
+
+.. _releasenotes_1_12_2_updates_plugins:
+
+Plugin Updates
+--------------
+
+Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* database:
+
+  * guard against null id
+  * re-validate on value change, fix none parameter handling
+  * refactor, add invalid-value handling
+  * update tests
+
+* githubplugin:
+
+  * add image hover titles
+
+* jsonread:
+
+  * support index arrays in filter paths
+  * add test coverage for filter-engine, contract and end-to-end coverage
+
+* modbus_tcp:
+
+  * add huawei structs (inverter, emma, storage)
+  * fix payloaddecoder and code issues
+
+* smartvisu:
+
+  * fix missing local variable
+
+* stateengine:
+
+  * minor code adjustments based on pr #1042
+  * fix negative delay/suspend_remaining edge case
+  * improve queue lock
+  * fix overwrite handling
+  * get rid of stupid action scheduler.
+  * change version to 2.3.0
+  * add test suite (194 tests, 9 files)
+
+* uzsu:
+
+  * use shng configured timezone in line with lib.orb
+  * fix "cleanup" of older bug
+  * fix series end in dict key seriescalculated
+
+* viessman:
+
+  * v2.0, fix webif, improve functions
+  * adjust log level
+  * update sdp requirement
+  * don't close connection on device protocol errors in _send()
+  * enable autoreconnect by default; close on p300 init failure
+  * fix protocol error propagation
+  * assign _get_connection() result in get_device_type()
+  * use callbacks and pass them through
+  * add readafterwrite item attribute, add plugin old version
+  * cycle connection on crc error
+  * add cyclic parameter, adjust commands
+
+* z2m:
+
+  * update struct
+
+|
+
+Weitere Änderungen
+==================
+
+Dokumentation
+-------------
+
+* Modified README.md to reflect, that the JetBrains licenses expired
+* Doku Fixes für logging
+* Small fix in hysteresis_state()
+* Added info for ssh passwordless login
+* Updated documentation for installation/configuration of mosquitto
+* Added documentation for node.js and MobileAlerts to complete installation
+* Fixes for complete installation and installing Python versions
+

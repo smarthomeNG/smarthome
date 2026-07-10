@@ -11,6 +11,7 @@ Covers our exception-refactor changes:
 """
 
 import builtins
+
 builtins.SDP_standalone = False
 
 import logging
@@ -21,8 +22,10 @@ from unittest.mock import MagicMock, call
 
 from lib.model.sdp.globals import (
     SDPConnectionError,
-    PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_CONN_AUTO_CONN,
-    PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_CB_ON_DISCONNECT,
+    PLUGIN_ATTR_SERIAL_PORT,
+    PLUGIN_ATTR_CONN_AUTO_CONN,
+    PLUGIN_ATTR_CONN_TIMEOUT,
+    PLUGIN_ATTR_CB_ON_DISCONNECT,
 )
 from lib.model.sdp.connection import SDPConnectionSerial
 
@@ -31,11 +34,13 @@ from lib.model.sdp.connection import SDPConnectionSerial
 # Helper — build a minimal SDPConnectionSerial without touching serial hardware
 # ---------------------------------------------------------------------------
 
+
 def _make_serial_conn(is_connected=True, disconnect_cb=None):
     """
     Create SDPConnectionSerial via object.__new__ and set only the attributes
     exercised by _send_bytes() and _read_bytes(), using a MagicMock serial port.
     """
+
     # Define lightweight exception types that mirror pyserial's hierarchy
     class _SerialException(OSError):
         pass
@@ -65,7 +70,7 @@ def _make_serial_conn(is_connected=True, disconnect_cb=None):
     conn._params = {
         PLUGIN_ATTR_SERIAL_PORT: '/dev/mock_tty',
         PLUGIN_ATTR_CONN_AUTO_CONN: False,
-        PLUGIN_ATTR_CONN_TIMEOUT: 0.1,   # short for tests
+        PLUGIN_ATTR_CONN_TIMEOUT: 0.1,  # short for tests
         PLUGIN_ATTR_CB_ON_DISCONNECT: cb,
     }
     # __lock_timeout uses Python name-mangling; must be set with the mangled name
@@ -103,8 +108,8 @@ def _make_timeout_lock():
 # _send_bytes() tests
 # ---------------------------------------------------------------------------
 
-class TestSendBytes(unittest.TestCase):
 
+class TestSendBytes(unittest.TestCase):
     def test_raises_when_not_connected(self):
         conn, port, serial_mod, _ = _make_serial_conn(is_connected=False)
         with self.assertRaises(SDPConnectionError):
@@ -135,7 +140,7 @@ class TestSendBytes(unittest.TestCase):
         """Ensure the exception chaining preserves OSError identity."""
         conn, port, serial_mod, _ = _make_serial_conn()
         port.write.side_effect = serial_mod.SerialException('broken')
-        with self.assertRaises(OSError):   # SDPConnectionError IS OSError
+        with self.assertRaises(OSError):  # SDPConnectionError IS OSError
             conn._send_bytes(b'\x04')
 
 
@@ -143,8 +148,8 @@ class TestSendBytes(unittest.TestCase):
 # _read_bytes() — timeout / disconnect behaviour
 # ---------------------------------------------------------------------------
 
-class TestReadBytesDisconnect(unittest.TestCase):
 
+class TestReadBytesDisconnect(unittest.TestCase):
     def _make_conn_with_instant_timeout(self, disconnect_cb=None):
         """Serial port whose read() always returns b'' immediately."""
         conn, port, serial_mod, cb = _make_serial_conn(disconnect_cb=disconnect_cb)
@@ -183,17 +188,18 @@ class TestReadBytesDisconnect(unittest.TestCase):
         port.read.side_effect = [b'\x06', b'']
         result = conn._read_bytes(1)
         self.assertEqual(result, b'\x06')
-        self.assertTrue(conn._is_connected)   # still connected
+        self.assertTrue(conn._is_connected)  # still connected
         cb.assert_not_called()
 
     def test_raises_on_lock_contention(self):
         """If the lock cannot be acquired within timeout, raise SDPConnectionError."""
         conn, port, serial_mod, cb = _make_serial_conn()
+
         # Replace lock with one that always fails to acquire
         class NeverAcquireLock:
             @__import__('contextlib').contextmanager
             def acquire_timeout(self, timeout):
-                yield False   # locked = False
+                yield False  # locked = False
 
         conn._lock = NeverAcquireLock()
         with self.assertRaises(SDPConnectionError):
@@ -216,6 +222,7 @@ class TestReadBytesStaleDetection(unittest.TestCase):
 
     def test_closes_when_stale(self):
         from lib.model.sdp.connection import _STALE_CONNECTION_TIMEOUT
+
         stale_time = time.time() - _STALE_CONNECTION_TIMEOUT - 5
         conn, port, cb = self._make_conn_stale(stale_time)
         conn._read_bytes(1)

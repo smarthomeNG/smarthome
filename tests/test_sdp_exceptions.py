@@ -11,6 +11,7 @@ Covers:
 """
 
 import builtins
+
 builtins.SDP_standalone = False
 
 import logging
@@ -18,8 +19,11 @@ import unittest
 from unittest.mock import MagicMock
 
 from lib.model.sdp.globals import (
-    SDPError, SDPConnectionError, SDPProtocolError,
-    CMD_ATTR_REPLY_PATTERN, CMD_ATTR_SEND_RETRIES,
+    SDPError,
+    SDPConnectionError,
+    SDPProtocolError,
+    CMD_ATTR_REPLY_PATTERN,
+    CMD_ATTR_SEND_RETRIES,
     PLUGIN_ATTR_CONN_AUTO_CONN,
 )
 from lib.model.sdp.connection import SDPConnection
@@ -29,6 +33,7 @@ from lib.model.smartdeviceplugin import SmartDevicePlugin
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_sdp():
     """
@@ -52,10 +57,7 @@ def _make_sdp():
     cmds = MagicMock()
     cmds.custom_is_enabled_for.return_value = False
     cmds.get_send_data.return_value = {'payload': b'\x41\x05\x00', 'data': {}}
-    cmds.get_commandlist.return_value = {
-        CMD_ATTR_REPLY_PATTERN: None,
-        CMD_ATTR_SEND_RETRIES: None,
-    }
+    cmds.get_commandlist.return_value = {CMD_ATTR_REPLY_PATTERN: None, CMD_ATTR_SEND_RETRIES: None}
     cmds.get_lookup.return_value = None
     cmds._get_cmd_lookup.return_value = None
     sdp._commands = cmds
@@ -67,8 +69,8 @@ def _make_sdp():
 # Exception hierarchy
 # ---------------------------------------------------------------------------
 
-class TestSDPExceptionHierarchy(unittest.TestCase):
 
+class TestSDPExceptionHierarchy(unittest.TestCase):
     def test_sdp_error_is_exception(self):
         self.assertTrue(issubclass(SDPError, Exception))
 
@@ -108,8 +110,8 @@ class TestSDPExceptionHierarchy(unittest.TestCase):
 # SDPConnection.send() — guard rails
 # ---------------------------------------------------------------------------
 
-class TestSDPConnectionSendGuards(unittest.TestCase):
 
+class TestSDPConnectionSendGuards(unittest.TestCase):
     def _make_conn(self):
         """Minimal SDPConnection with _send and _send_init_on_send overridable."""
         conn = object.__new__(SDPConnection)
@@ -132,7 +134,7 @@ class TestSDPConnectionSendGuards(unittest.TestCase):
         conn = self._make_conn()
         conn._is_connected = False
         conn._params[PLUGIN_ATTR_CONN_AUTO_CONN] = True
-        conn._open = lambda: None   # _open() succeeds but doesn't set _is_connected
+        conn._open = lambda: None  # _open() succeeds but doesn't set _is_connected
         with self.assertRaises(SDPConnectionError):
             conn.send({'payload': b'\x01'})
 
@@ -156,8 +158,8 @@ class TestSDPConnectionSendGuards(unittest.TestCase):
 # SmartDevicePlugin.send_command() — exception handling
 # ---------------------------------------------------------------------------
 
-class TestSendCommandExceptionHandling(unittest.TestCase):
 
+class TestSendCommandExceptionHandling(unittest.TestCase):
     def setUp(self):
         self.sdp, self.conn = _make_sdp()
 
