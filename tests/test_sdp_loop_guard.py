@@ -20,6 +20,7 @@ Design under test (from .claude/05_loop_guard.md):
 """
 
 import builtins
+
 builtins.SDP_standalone = False
 
 import logging
@@ -33,14 +34,14 @@ from lib.model.smartdeviceplugin import SmartDevicePlugin
 
 HAS_LOOP_GUARD = hasattr(SmartDevicePlugin, '_check_loop_guard')
 skip_if_not_implemented = unittest.skipUnless(
-    HAS_LOOP_GUARD,
-    '_check_loop_guard not yet implemented in SmartDevicePlugin'
+    HAS_LOOP_GUARD, '_check_loop_guard not yet implemented in SmartDevicePlugin'
 )
 
 
 # ---------------------------------------------------------------------------
 # Helper — build a minimal object with loop guard attributes
 # ---------------------------------------------------------------------------
+
 
 def _make_sdp_with_guard(count=5, window=5.0, source=''):
     sdp = object.__new__(SmartDevicePlugin)
@@ -56,9 +57,9 @@ def _make_sdp_with_guard(count=5, window=5.0, source=''):
 # Basic guard behaviour
 # ---------------------------------------------------------------------------
 
+
 @skip_if_not_implemented
 class TestLoopGuardBasic(unittest.TestCase):
-
     def test_first_write_is_allowed(self):
         sdp = _make_sdp_with_guard()
         self.assertFalse(sdp._check_loop_guard('item.path', True))
@@ -108,9 +109,9 @@ class TestLoopGuardBasic(unittest.TestCase):
 # Time window behaviour
 # ---------------------------------------------------------------------------
 
+
 @skip_if_not_implemented
 class TestLoopGuardWindow(unittest.TestCase):
-
     def test_old_attempts_outside_window_are_pruned(self):
         """Attempts older than window_seconds are not counted."""
         sdp = _make_sdp_with_guard(count=5, window=1.0)
@@ -118,7 +119,7 @@ class TestLoopGuardWindow(unittest.TestCase):
         # Manually pre-fill the guard state with 4 old (expired) timestamps
         sdp._loop_guard['item.path'] = {
             'value': True,
-            'times': deque([now - 2.0] * 4),   # all expired
+            'times': deque([now - 2.0] * 4),  # all expired
             'locked': False,
         }
         # One fresh write → only 1 attempt in window → must pass
@@ -143,9 +144,9 @@ class TestLoopGuardWindow(unittest.TestCase):
 # Source filter
 # ---------------------------------------------------------------------------
 
+
 @skip_if_not_implemented
 class TestLoopGuardSourceFilter(unittest.TestCase):
-
     def test_no_filter_counts_all_callers(self):
         sdp = _make_sdp_with_guard(count=5, window=5.0, source='')
         results = [sdp._check_loop_guard('item.path', True, caller='MQTT') for _ in range(5)]
@@ -193,6 +194,7 @@ class TestLoopGuardSourceFilter(unittest.TestCase):
 # Integration: update_item() suppression path
 # ---------------------------------------------------------------------------
 
+
 @skip_if_not_implemented
 class TestLoopGuardUpdateItemIntegration(unittest.TestCase):
     """
@@ -210,6 +212,7 @@ class TestLoopGuardUpdateItemIntegration(unittest.TestCase):
 
     def test_update_item_calls_send_when_guard_not_triggered(self):
         import unittest.mock as mock
+
         sdp = _make_sdp_with_guard(count=5, window=5.0)
         sdp.alive = True
         sdp.suspended = False

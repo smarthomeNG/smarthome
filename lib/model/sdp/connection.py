@@ -45,16 +45,37 @@ from typing import Any, Generator
 
 from lib.network import Tcp_client
 from lib.model.sdp.globals import (
-    sanitize_param, SDPConnectionError, SDPProtocolError,
-    CONN_NET_TCP_REQ, CONN_NULL, CONN_SER_DIR, CONNECTION_TYPES,
-    PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION,
-    PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_BINARY,
-    PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_RETRY_CYCLE,
-    PLUGIN_ATTR_CONN_RETRY_SUSPD, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CB_SUSPEND,
-    PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
-    PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE,
-    PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_STOP,
-    PLUGIN_ATTRS, REQUEST_DICT_ARGS)
+    sanitize_param,
+    SDPConnectionError,
+    SDPProtocolError,
+    CONN_NET_TCP_REQ,
+    CONN_NULL,
+    CONN_SER_DIR,
+    CONNECTION_TYPES,
+    PLUGIN_ATTR_CB_ON_CONNECT,
+    PLUGIN_ATTR_CB_ON_DISCONNECT,
+    PLUGIN_ATTR_CONNECTION,
+    PLUGIN_ATTR_CONN_AUTO_CONN,
+    PLUGIN_ATTR_CONN_AUTO_RECONN,
+    PLUGIN_ATTR_CONN_BINARY,
+    PLUGIN_ATTR_CONN_CYCLE,
+    PLUGIN_ATTR_CONN_RETRIES,
+    PLUGIN_ATTR_CONN_RETRY_CYCLE,
+    PLUGIN_ATTR_CONN_RETRY_SUSPD,
+    PLUGIN_ATTR_CONN_TERMINATOR,
+    PLUGIN_ATTR_CB_SUSPEND,
+    PLUGIN_ATTR_CONN_TIMEOUT,
+    PLUGIN_ATTR_NET_HOST,
+    PLUGIN_ATTR_NET_PORT,
+    PLUGIN_ATTR_PROTOCOL,
+    PLUGIN_ATTR_SERIAL_BAUD,
+    PLUGIN_ATTR_SERIAL_BSIZE,
+    PLUGIN_ATTR_SERIAL_PARITY,
+    PLUGIN_ATTR_SERIAL_PORT,
+    PLUGIN_ATTR_SERIAL_STOP,
+    PLUGIN_ATTRS,
+    REQUEST_DICT_ARGS,
+)
 
 
 #############################################################################################################################################################################################################################################
@@ -63,8 +84,9 @@ from lib.model.sdp.globals import (
 #
 #############################################################################################################################################################################################################################################
 
+
 class SDPConnection(object):
-    """ SDPConnection class to provide actual connection support
+    """SDPConnection class to provide actual connection support
 
     This class is the base class for further connection classes. It can - well,
     not much. Opening and closing of connections and writing and receiving data
@@ -97,26 +119,28 @@ class SDPConnection(object):
         # we set defaults for all possible connection parameters, so we don't
         # need to care later if a parameter is set or not
         # these will be overwritten by all parameters set in plugin.yaml
-        self._params = {PLUGIN_ATTR_SERIAL_PORT: '',
-                        PLUGIN_ATTR_SERIAL_BAUD: 9600,
-                        PLUGIN_ATTR_SERIAL_BSIZE: 8,
-                        PLUGIN_ATTR_SERIAL_PARITY: 'N',
-                        PLUGIN_ATTR_SERIAL_STOP: 1,
-                        PLUGIN_ATTR_PROTOCOL: None,
-                        PLUGIN_ATTR_NET_HOST: '',
-                        PLUGIN_ATTR_NET_PORT: 0,
-                        PLUGIN_ATTR_CONN_BINARY: False,
-                        PLUGIN_ATTR_CONN_TIMEOUT: 1.0,
-                        PLUGIN_ATTR_CONN_AUTO_RECONN: True,
-                        PLUGIN_ATTR_CONN_AUTO_CONN: True,
-                        PLUGIN_ATTR_CONN_RETRIES: 3,
-                        PLUGIN_ATTR_CONN_CYCLE: 5,
-                        PLUGIN_ATTR_CONN_RETRY_CYCLE: 30,
-                        PLUGIN_ATTR_CONN_RETRY_SUSPD: 0,
-                        PLUGIN_ATTR_CONN_TERMINATOR: '',
-                        PLUGIN_ATTR_CB_ON_CONNECT: None,
-                        PLUGIN_ATTR_CB_ON_DISCONNECT: None,
-                        PLUGIN_ATTR_CB_SUSPEND: None}
+        self._params = {
+            PLUGIN_ATTR_SERIAL_PORT: '',
+            PLUGIN_ATTR_SERIAL_BAUD: 9600,
+            PLUGIN_ATTR_SERIAL_BSIZE: 8,
+            PLUGIN_ATTR_SERIAL_PARITY: 'N',
+            PLUGIN_ATTR_SERIAL_STOP: 1,
+            PLUGIN_ATTR_PROTOCOL: None,
+            PLUGIN_ATTR_NET_HOST: '',
+            PLUGIN_ATTR_NET_PORT: 0,
+            PLUGIN_ATTR_CONN_BINARY: False,
+            PLUGIN_ATTR_CONN_TIMEOUT: 1.0,
+            PLUGIN_ATTR_CONN_AUTO_RECONN: True,
+            PLUGIN_ATTR_CONN_AUTO_CONN: True,
+            PLUGIN_ATTR_CONN_RETRIES: 3,
+            PLUGIN_ATTR_CONN_CYCLE: 5,
+            PLUGIN_ATTR_CONN_RETRY_CYCLE: 30,
+            PLUGIN_ATTR_CONN_RETRY_SUSPD: 0,
+            PLUGIN_ATTR_CONN_TERMINATOR: '',
+            PLUGIN_ATTR_CB_ON_CONNECT: None,
+            PLUGIN_ATTR_CB_ON_DISCONNECT: None,
+            PLUGIN_ATTR_CB_SUSPEND: None,
+        }
 
         # "import" options from plugin
         self._params.update(kwargs)
@@ -130,7 +154,7 @@ class SDPConnection(object):
             self.logger.debug(f'connection initialized from {self.__class__.__name__}')
 
     def open(self) -> bool:
-        """ wrapper method provides stable interface and allows overwriting """
+        """wrapper method provides stable interface and allows overwriting"""
         self.logger.debug('open method called for connection')
 
         try:
@@ -150,7 +174,7 @@ class SDPConnection(object):
         return self._is_connected
 
     def close(self):
-        """ wrapper method provides stable interface and allows overwriting """
+        """wrapper method provides stable interface and allows overwriting"""
         self.logger.debug('close method called for connection')
         self._close()
         self._is_connected = False
@@ -195,25 +219,25 @@ class SDPConnection(object):
         return response
 
     def connected(self) -> bool:
-        """ getter for self._is_connected """
+        """getter for self._is_connected"""
         return self._is_connected
 
     def on_data_received(self, by: str | None, data: Any, command: str | None = None):
-        """ callback for on_data_received event """
+        """callback for on_data_received event"""
         if data:
             self.logger.debug(f'received raw data "{data}" from "{by}"')
             if self._data_received_callback:
                 self._data_received_callback(by, data)
 
     def on_connect(self, by: str | None = None):
-        """ callback for on_connect event """
+        """callback for on_connect event"""
         self._is_connected = True
         self.logger.info(f'on_connect called by {by}')
         if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_CONNECT](by)
 
     def on_disconnect(self, by: str | None = None):
-        """ callback for on_disconnect event """
+        """callback for on_disconnect event"""
         self.logger.debug(f'on_disconnect called by {by}')
         self._is_connected = False
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
@@ -306,23 +330,25 @@ class SDPConnection(object):
 
     @staticmethod
     def _get_connection_class(
-            connection_cls: type[SDPConnection] | None = None,
-            connection_classname: str | None = None,
-            connection_type: str | None = None,
-            **params) -> type[SDPConnection]:
+        connection_cls: type[SDPConnection] | None = None,
+        connection_classname: str | None = None,
+        connection_type: str | None = None,
+        **params,
+    ) -> type[SDPConnection]:
 
         connection_module = sys.modules.get('lib.model.sdp.connection', '')
         if not connection_module:
             raise RuntimeError('unable to get object handle of SDPConnection module')
 
         try:
-
             # class not set
             if not connection_cls:
-
                 # do we have a class type from parameters?
-                if PLUGIN_ATTR_CONNECTION in params and type(params[PLUGIN_ATTR_CONNECTION]) is type and issubclass(params[PLUGIN_ATTR_CONNECTION], SDPConnection):
-
+                if (
+                    PLUGIN_ATTR_CONNECTION in params
+                    and type(params[PLUGIN_ATTR_CONNECTION]) is type
+                    and issubclass(params[PLUGIN_ATTR_CONNECTION], SDPConnection)
+                ):
                     # directly assign class
                     connection_cls = params[PLUGIN_ATTR_CONNECTION]
                     connection_classname = connection_cls.__name__  # type: ignore (previous assignment makes connection_cls type SDPConnection)
@@ -330,32 +356,26 @@ class SDPConnection(object):
                 else:
                     # classname not known
                     if not connection_classname:
-
                         # do we have an unknown connection type from parameters?
                         if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] not in CONNECTION_TYPES:
-
                             # assume name of unknown class
                             connection_classname = params[PLUGIN_ATTR_CONNECTION]
                             connection_type = 'manual'
 
                         # wanted connection type not known yet
                         if not connection_type:
-
                             # known connection type given in parameters?
                             if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] in CONNECTION_TYPES:
-
                                 # user given connection type
                                 connection_type = params[PLUGIN_ATTR_CONNECTION]
 
                             # host given in parameters?
                             elif PLUGIN_ATTR_NET_HOST in params and params[PLUGIN_ATTR_NET_HOST]:
-
                                 # no further information on network specifics, use basic HTTP TCP client
                                 connection_type = CONN_NET_TCP_REQ
 
                             # serial port given in parameters?
                             elif PLUGIN_ATTR_SERIAL_PORT in params and params[PLUGIN_ATTR_SERIAL_PORT]:
-
                                 # this seems to be a serial killer application
                                 connection_type = CONN_SER_DIR
 
@@ -365,10 +385,14 @@ class SDPConnection(object):
                                 connection_type = CONN_NULL
 
                         # build classname from type
-                        connection_classname = 'SDPConnection' + ''.join([tok.capitalize() for tok in connection_type.split('_')])
+                        connection_classname = 'SDPConnection' + ''.join(
+                            [tok.capitalize() for tok in connection_type.split('_')]
+                        )
 
                     # get class from classname -> only for predefined classes, not for custom plugin classes!
-                    connection_cls = getattr(connection_module, connection_classname, getattr(connection_module, 'SDPConnection'))
+                    connection_cls = getattr(
+                        connection_module, connection_classname, getattr(connection_module, 'SDPConnection')
+                    )
 
         except (TypeError, AttributeError):
             # raise RuntimeError(f'could not identify wanted connection class from {connection_cls}, {connection_classname}, {connection_type}. Using default connection.')
@@ -382,7 +406,7 @@ class SDPConnection(object):
 
 
 class SDPConnectionNetTcpRequest(SDPConnection):
-    """ Connection via TCP / HTTP requests
+    """Connection via TCP / HTTP requests
 
     This class implements TCP connections in the query-reply matter using
     the requests library, e.g. for HTTP communication.
@@ -395,6 +419,7 @@ class SDPConnectionNetTcpRequest(SDPConnection):
 
     Response data is returned as text. Errors raise HTTPException
     """
+
     def _open(self) -> bool:
         self.logger.debug(f'{self.__class__.__name__} opening connection as {__name__} with params {self._params}')
         return True
@@ -426,14 +451,19 @@ class SDPConnectionNetTcpRequest(SDPConnection):
         par['data'] = json.dumps(par['data'])
 
         # send data
-        response = requests.request(request_method, url,
-                                    params=par['params'],
-                                    headers=par['headers'],
-                                    data=par['data'],
-                                    cookies=par['cookies'],
-                                    files=par['files'])
+        response = requests.request(
+            request_method,
+            url,
+            params=par['params'],
+            headers=par['headers'],
+            data=par['data'],
+            cookies=par['cookies'],
+            files=par['files'],
+        )
 
-        self.logger.debug(f'{self.__class__.__name__} received response {response.text} with code {response.status_code}')
+        self.logger.debug(
+            f'{self.__class__.__name__} received response {response.text} with code {response.status_code}'
+        )
 
         if 200 <= response.status_code < 400:
             return response.text
@@ -446,7 +476,7 @@ class SDPConnectionNetTcpRequest(SDPConnection):
 
 
 class SDPConnectionNetTcpClient(SDPConnection):
-    """ Connection via direct TCP connection with listener
+    """Connection via direct TCP connection with listener
 
     This class implements a TCP connection using a single persistent connection
     to send data and an anynchronous listener with callback for receiving data.
@@ -459,6 +489,7 @@ class SDPConnectionNetTcpClient(SDPConnection):
         def data_received_callback(command, message)
     If callbacks are class members, they need the additional first parameter 'self'
     """
+
     def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
 
         super().__init__(data_received_callback, done=False, **kwargs)
@@ -469,20 +500,22 @@ class SDPConnectionNetTcpClient(SDPConnection):
         self._suspend_callback = self._params[PLUGIN_ATTR_CB_SUSPEND]
 
         # initialize connection
-        self._tcp = Tcp_client(host=self._params[PLUGIN_ATTR_NET_HOST],
-                               port=self._params[PLUGIN_ATTR_NET_PORT],
-                               name=name,
-                               autoreconnect=self._params[PLUGIN_ATTR_CONN_AUTO_RECONN],
-                               autoconnect=self._params[PLUGIN_ATTR_CONN_AUTO_CONN],
-                               connect_retries=self._params[PLUGIN_ATTR_CONN_RETRIES],
-                               connect_cycle=self._params[PLUGIN_ATTR_CONN_CYCLE],
-                               retry_cycle=self._params[PLUGIN_ATTR_CONN_RETRY_CYCLE],
-                               retry_abort=self._params[PLUGIN_ATTR_CONN_RETRY_SUSPD],
-                               abort_callback=self._on_abort,
-                               terminator=self._params[PLUGIN_ATTR_CONN_TERMINATOR])
-        self._tcp.set_callbacks(data_received=self.on_data_received,
-                                disconnected=self.on_disconnect,
-                                connected=self.on_connect)
+        self._tcp = Tcp_client(
+            host=self._params[PLUGIN_ATTR_NET_HOST],
+            port=self._params[PLUGIN_ATTR_NET_PORT],
+            name=name,
+            autoreconnect=self._params[PLUGIN_ATTR_CONN_AUTO_RECONN],
+            autoconnect=self._params[PLUGIN_ATTR_CONN_AUTO_CONN],
+            connect_retries=self._params[PLUGIN_ATTR_CONN_RETRIES],
+            connect_cycle=self._params[PLUGIN_ATTR_CONN_CYCLE],
+            retry_cycle=self._params[PLUGIN_ATTR_CONN_RETRY_CYCLE],
+            retry_abort=self._params[PLUGIN_ATTR_CONN_RETRY_SUSPD],
+            abort_callback=self._on_abort,
+            terminator=self._params[PLUGIN_ATTR_CONN_TERMINATOR],
+        )
+        self._tcp.set_callbacks(
+            data_received=self.on_data_received, disconnected=self.on_disconnect, connected=self.on_connect
+        )
 
         # tell someone about our actual class
         self.logger.debug(f'connection initialized from {self.__class__.__name__}')
@@ -520,16 +553,17 @@ class UDPServer(socket.socket):
 
     TODO: enable IPv6
     """
+
     def __init__(self, local_port: int):
         socket.socket.__init__(self, socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        if hasattr(socket, "SO_REUSEPORT"):
+        if hasattr(socket, 'SO_REUSEPORT'):
             self.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         self.bind(('0.0.0.0', local_port))
 
 
 class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
-    """ Connection via TCP/HTTP requests and listens for UDP messages
+    """Connection via TCP/HTTP requests and listens for UDP messages
 
     This class implements UDP connections in the query-reply matter using
     the requests library, e.g. for HTTP communication.
@@ -541,6 +575,7 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
 
     Response data is returned as text. Errors raise HTTPException
     """
+
     def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
 
         super().__init__(data_received_callback, name, **kwargs)
@@ -597,7 +632,7 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
 
 
 class SDPConnectionSerial(SDPConnection):
-    """ Connection for serial connectivity
+    """Connection for serial connectivity
 
     This class implements a serial connection using a single persistent connection
     to send data and receive immediate answers.
@@ -675,7 +710,6 @@ class SDPConnectionSerial(SDPConnection):
             return True
 
         while not self._is_connected and self._connection_attempts <= self._params[PLUGIN_ATTR_CONN_RETRIES]:
-
             self._connection_attempts += 1
             self._lock.acquire()
             try:
@@ -698,10 +732,14 @@ class SDPConnectionSerial(SDPConnection):
                     self._params[PLUGIN_ATTR_CB_ON_CONNECT](self)
                 return True
             else:
-                self.logger.debug(f'sleeping {self._params[PLUGIN_ATTR_CONN_CYCLE]} seconds before next connection attempt')
+                self.logger.debug(
+                    f'sleeping {self._params[PLUGIN_ATTR_CONN_CYCLE]} seconds before next connection attempt'
+                )
                 sleep(self._params[PLUGIN_ATTR_CONN_CYCLE])
 
-        self.logger.error(f'error on connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]}, max number of connection attempts reached')
+        self.logger.error(
+            f'error on connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]}, max number of connection attempts reached'
+        )
         self._connection_attempts = 0
         return False
 
@@ -747,7 +785,7 @@ class SDPConnectionSerial(SDPConnection):
             self._open()
 
         if not self._is_connected:
-            raise self.serial.SerialException(f'trying to send {data}, but connection can\'t be opened.')
+            raise self.serial.SerialException(f"trying to send {data}, but connection can't be opened.")
 
         if not self._send_bytes(data):
             self.is_connected = False
@@ -766,7 +804,9 @@ class SDPConnectionSerial(SDPConnection):
                 try:
                     res = str(res, 'utf-8', errors='replace').strip()
                 except Exception as e:
-                    self.logger.warning(f'could not convert received result {res} to str, discarding value. Error was: {e}')
+                    self.logger.warning(
+                        f'could not convert received result {res} to str, discarding value. Error was: {e}'
+                    )
                     return
 
             if self._data_received_callback:
@@ -784,20 +824,14 @@ class SDPConnectionSerial(SDPConnection):
         :raises SDPConnectionError: if not connected or write fails
         """
         if not self._is_connected:
-            raise SDPConnectionError(
-                f'cannot send, not connected to {self._params[PLUGIN_ATTR_SERIAL_PORT]}'
-            )
+            raise SDPConnectionError(f'cannot send, not connected to {self._params[PLUGIN_ATTR_SERIAL_PORT]}')
 
         try:
             return self._connection.write(packet)
         except self.serial.SerialTimeoutException as e:
-            raise SDPConnectionError(
-                f'serial write timeout on {self._params[PLUGIN_ATTR_SERIAL_PORT]}'
-            ) from e
+            raise SDPConnectionError(f'serial write timeout on {self._params[PLUGIN_ATTR_SERIAL_PORT]}') from e
         except self.serial.SerialException as e:
-            raise SDPConnectionError(
-                f'serial write error on {self._params[PLUGIN_ATTR_SERIAL_PORT]}: {e}'
-            ) from e
+            raise SDPConnectionError(f'serial write error on {self._params[PLUGIN_ATTR_SERIAL_PORT]}: {e}') from e
 
     def _read_bytes(self, limit_response: int | bytes | bytearray, clear_buffer=False) -> bytes:
         """
@@ -834,7 +868,6 @@ class SDPConnectionSerial(SDPConnection):
 
         # prevent concurrent read attempts;
         with self._lock.acquire_timeout(self.__lock_timeout) as locked:
-
             if locked:
                 # don't wait for input indefinitely, stop after timeout_mult * self._params[PLUGIN_ATTR_CONN_TIMEOUT] seconds
                 while time() <= starttime + self._timeout_mult * self._params[PLUGIN_ATTR_CONN_TIMEOUT]:
@@ -862,18 +895,15 @@ class SDPConnectionSerial(SDPConnection):
                     if term_bytes and term_bytes in totalreadbytes:
                         if self.__use_read_buffer:
                             pos = totalreadbytes.find(term_bytes)
-                            self._read_buffer += totalreadbytes[pos + len(term_bytes):]
-                            return totalreadbytes[:pos + len(term_bytes)]
+                            self._read_buffer += totalreadbytes[pos + len(term_bytes) :]
+                            return totalreadbytes[: pos + len(term_bytes)]
                         else:
                             return totalreadbytes
             else:
                 self.logger.error(
-                    'read_bytes could not acquire serial lock within timeout — '
-                    'possible deadlock or hung connection'
+                    'read_bytes could not acquire serial lock within timeout — possible deadlock or hung connection'
                 )
-                raise SDPConnectionError(
-                    f'serial read lock timeout on {self._params[PLUGIN_ATTR_SERIAL_PORT]}'
-                )
+                raise SDPConnectionError(f'serial read lock timeout on {self._params[PLUGIN_ATTR_SERIAL_PORT]}')
 
         # timeout reached, did we read anything?
         # Do NOT set _is_connected = False here. A read timeout means the device
@@ -903,12 +933,12 @@ class SDPConnectionSerial(SDPConnection):
             self._connection.reset_input_buffer()
 
     def _setup_listener(self):
-        """ empty, for subclass use """
+        """empty, for subclass use"""
         pass
 
 
 class SDPConnectionSerialAsync(SDPConnectionSerial):
-    """ Connection for serial connectivity with async listener
+    """Connection for serial connectivity with async listener
 
     This class implements a serial connection for call-based sending and a
     threaded listener for async reading with callbacks.
@@ -929,6 +959,7 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         def data_received_callback(by, message)
     If callbacks are class members, they need the additional first parameter 'self'
     """
+
     def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
         # set additional class members
         self.__receive_thread: Thread | None = None
@@ -963,7 +994,7 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         super()._close()
 
     def __receive_thread_worker(self):
-        """ thread worker to handle receiving """
+        """thread worker to handle receiving"""
         __buffer = b''
 
         msg = None
@@ -977,7 +1008,6 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
                     pass
 
                 if msg:
-
                     self.logger.debug(f'received raw data {msg}, buffer is {__buffer}')
                     # If we work in line mode (with a terminator) slice buffer into single chunks based on terminator
                     if self._params[PLUGIN_ATTR_CONN_TERMINATOR]:
@@ -996,7 +1026,9 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
                                 i += len(self._params[PLUGIN_ATTR_CONN_TERMINATOR])
                             line = __buffer[:i]
                             __buffer = __buffer[i:]
-                            self._queue.put(line if self._params[PLUGIN_ATTR_CONN_BINARY] else str(line, 'utf-8').strip())
+                            self._queue.put(
+                                line if self._params[PLUGIN_ATTR_CONN_BINARY] else str(line, 'utf-8').strip()
+                            )
                             # possibly deactivate in production?
                             self.logger.debug(f'put {line} in queue, queue size is {self._queue.qsize()}')
 
@@ -1033,7 +1065,7 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
             self.__queue_thread = None
 
     def __queue_worker(self):
-        """ thread worker to get items from queue and pass them on to sdp """
+        """thread worker to get items from queue and pass them on to sdp"""
         while self._listener_active:
             item = self._queue.get()
             # we could check for the callback outside the while loop, but the
