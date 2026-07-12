@@ -148,7 +148,7 @@ Betriebssysteme
 Ein beliebiges **Linux** oder **Unix System** (mit Shell Zugang um die Requirements und SmartHomeNG zu installieren)
 sollte funktionieren.
 
-SmartHomeNG ist mindestens getestet auf Raspbian und Debian Buster (amd64)
+SmartHomeNG ist mindestens getestet auf Raspbian und Debian Bookworm (amd64)
 
 Wenn eine Hardware ohne gepufferte Echtzeituhr (Realtime Clock) genutzt wird, ist der
 Einsatz eines NTP Daemons notwendig, um die Zeit über das Internet zu
@@ -180,15 +180,16 @@ Die Grundregel nach der sich der Support für Python Versionen richten soll ist 
 Version aktuelle Python Version und die zwei Vorgängerversionen.**
 
 .. csv-table:: Zur Verdeutlichung
-  :header: "SmartHomeNG", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen", "minimale Python Version"
+  :header: "SmartHomeNG", "Release", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen", "minimale Python Version"
 
-  "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.4"
-  "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.5"
-  "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8",    "Python 3.6"
-  "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9",    "Python 3.7"
-  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.8"
-  "v1.11",           "Python 3.12", "Python 3.10, 3.11, 3.12", "Python 3.8"
-  "v1.12",           "Python 3.13", "Python 3.11, 3.12, 3.13", "Python 3.9"
+  "v1.6",  "11.05.2019", "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.4"
+  "v1.7",  "05.04.2020", "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.5"
+  "v1.8",  "15.01.2021", "Python 3.8",  "Python 3.6, 3.7, 3.8",    "Python 3.6"
+  "v1.9",  "28.12.2021", "Python 3.9",  "Python 3.7, 3.8, 3.9",    "Python 3.7"
+  "v1.10", "28.01.2024", "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.8"
+  "v1.11", "30.03.2025", "Python 3.12", "Python 3.10, 3.11, 3.12", "Python 3.8"
+  "v1.12", "09.05.2026", "Python 3.13", "Python 3.11, 3.12, 3.13", "Python 3.9"
+  "v1.13", "--",         "Python 3.14", "Python 3.11, 3.12, 3.13", "Python 3.10"
 
 Wenn die eingesetzte Python Version nicht in den unterstützen Python Versionen aufgelistet ist, bedeutet das nicht
 automatisch, dass SmartHomeNG mit älteren/neueren Python Versionen nicht funktioniert. Die Entwicklung wird nur
@@ -209,12 +210,12 @@ ist in der folgenden Tabelle aufgelistet:
 
   "3.7",   "end of life",  "27\. Juni 2018",       "27\. Juni 2023"
   "3.8",   "end of life",  "14\. Oktober 2019",    "Oktober 2024"
-  "3.9",   "security",     "5\. Oktober 2020",     "Oktober 2025"
+  "3.9",   "end of life",  "5\. Oktober 2020",     "Oktober 2025"
   "3.10",  "security",     "4\. Oktober 2021",     "Oktober 2026"
   "3.11",  "security",     "24\. Oktober 2022",    "Oktober 2027"
-  "3.12",  "bugfix",       "2\. Oktober 2023",     "Oktober 2028"
+  "3.12",  "security",     "2\. Oktober 2023",     "Oktober 2028"
   "3.13",  "bugfix",       "7\. Oktober 2024",     "Oktober 2029"
-  "3.14",  "development",  "1\. Oktober 2025",     "Oktober 2030"
+  "3.14",  "bugfix",       "1\. Oktober 2025",     "Oktober 2030"
 
 
 Python (und PHP) Versionen unter Linux
@@ -242,9 +243,8 @@ Hier sind einige Beispiele für Linux-System und mitgeliefere Software Versionen
    "Ubuntu 24.10 (Oracular Oriole)",         "Oct 2024",     "Jul 2025",            "Python 3.12",  "PHP 8.4, 8.3, 8.2, 8.1, 8.0, 7.4"
 
 
-Aus den Beispielen ist ersichtlich, das Debian Buster oder Bullseye nicht mehr für Neuinstallationen verwendet werden sollten.
-Bei Ubuntu sollte man die LTS (Long Term Support) Varianten bevorzugen um nicht andauern mit Systemänderungen konfrontiert zu werden
+Aus den Beispielen ist ersichtlich, das Debian 11 (Bullseye) oder früher nicht mehr für Neuinstallationen verwendet werden sollten.
+Bei Ubuntu sollte man die LTS (Long Term Support) Varianten bevorzugen um nicht andauernd mit Systemänderungen konfrontiert zu werden
 
 PHP wird für SmartHomeNG selbst nicht benötigt, ist jedoch eine Voraussetzung für den Einsatz der
 `SmartVISU <https://www.smartvisu.de>`_.
-

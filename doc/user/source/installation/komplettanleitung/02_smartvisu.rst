@@ -9,8 +9,9 @@ smartVISU installieren
 ======================
 
 Die SmartVISU ist eine Sammlung von HTML-Dateien und PHP Skripten die es ermöglicht Items vom SmartHomeNG
-anzuzeigen. Im Wesentlichen wird dazu ein Webserver benötigt, Apache2 oder NGINX und für die variablen Daten
-des SmartHomeNG braucht die SmartVisu noch eine Websocket-Verbindung zum SmartHomeNG.
+anzuzeigen. Im Wesentlichen wird dazu PHP und ein Webserver benötigt: Aktuell können unter anderem
+Apache2 oder NGINX genutzt werden.
+Variable Daten (z.B. Itemwerte, Plotdaten) tauschen SmartVisu und SmartHomeNG über eine Websocket-Verbindung aus.
 
 .. contents:: Schritte der Installation
    :local:
@@ -18,6 +19,10 @@ des SmartHomeNG braucht die SmartVisu noch eine Websocket-Verbindung zum SmartHo
 
 Webserver und zusätzliche Pakete installieren
 =============================================
+
+Die folgende Anleitung funktioniert für eine Installation unter Debian Trixie (13) oder auch Debian Bookkworm (12).
+Für andere Versionen kann es sein das weitere Pakete benötigt werden oder aber auch Pakete nicht gebraucht werden.
+In dem Fall gibt es im Internet genügend andere Quellen die Hilfe versprechen.
 
 .. tab-set::
 
@@ -28,9 +33,7 @@ Webserver und zusätzliche Pakete installieren
 
         .. code-block:: bash
 
-           sudo apt-get install apache2 libawl-php php-curl php8.2-fpm php-json php-xml php-mbstring php-zip
-           # für Debian 13, welches PHP 8.4 mitbringt:
-           sudo apt install libapache2-mod-php8.4
+           sudo apt-get install apache2 libawl-php php-curl php-fpm php-json php-xml php-mbstring php-zip libapache2-mod-php
            # nun zur Sicherheit den apache neu starten
            sudo systemctl restart apache2
 
@@ -38,11 +41,11 @@ Webserver und zusätzliche Pakete installieren
 
         Wer auf die Visu auch über das Internet (ohne VPN) zugreifen möchte, sollte NGINX installieren und
         dann der Anleitung zum :doc:`Reverse Proxy </visualisierung/reverse_proxy>` folgen. Jedenfalls
-        sind das Paket für den Webserver und PHP 8.2 zu installieren.
+        sind das Paket für den Webserver und PHP 8.x zu installieren.
 
         .. code-block:: bash
 
-          sudo apt-get install nginx-full php8.2-fpm
+          sudo apt-get install nginx-full php-fpm
           sudo nano /etc/nginx/sites-available/default
 
         Bei der Standardkonfiguration von NGINX kann auf die entsprechenden Handbücher zum Paket zurückgegriffen
@@ -53,7 +56,7 @@ Webserver und zusätzliche Pakete installieren
           location ~ \.php$ {
               try_files $uri =404;
               fastcgi_split_path_info ^(.+\.php)(/.+)$;
-              fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+              fastcgi_pass unix:/run/php/php-fpm.sock;
               fastcgi_index index.php;
               fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
               include fastcgi_params;
@@ -67,12 +70,12 @@ Webserver und zusätzliche Pakete installieren
           sudo chown www-data:www-data /etc/nginx/sites-available/default
 
 
-Sollte es Probleme mit PHP geben, sind folgende Schritte durchzuführen:
+Sollte es Probleme mit PHP geben(egal ob Apache2 oder NGINX), sind folgende Schritte durchzuführen:
 
 .. code-block:: bash
 
-  sudo mkdir /etc/systemd/system/php8.2-fpm.service.d/
-  sudo nano /etc/systemd/system/php8.2-fpm.service.d/service_php_fix.conf
+  sudo mkdir /etc/systemd/system/php-fpm.service.d/
+  sudo nano /etc/systemd/system/php-fpm.service.d/service_php_fix.conf
 
 Hier ist folgender Inhalt einzutragen. Danach die Datei speichern und schließen.
 
@@ -86,7 +89,7 @@ Schließlich sollte PHP und der Webserver neu gestartet werden.
 
 .. code-block:: bash
 
-   sudo systemctl restart php8.2-fpm.service
+   sudo systemctl restart php-fpm.service
    sudo systemctl restart nginx ODER sudo systemctl restart apache2
 
 
@@ -111,11 +114,13 @@ das für den Webserver zugänglich ist:
 
 Bitte auf den **Punkt** am Ende des **git clone** Kommandos achten!
 
-Eine Besonderheit des Apache Webservers ist sein spezieller Umgang mit einem Ordner namens "icons" im Root-Verzeichnis.
-Da smartVISU einen solchen Ordner verwendet, sollte sie immer wie oben angegeben in einem Unterverzeichnis angelegt werden, damit keine Konflikte entstehen.
-Dies gilt auch für Docker-Umgebungen.
+.. hint::
 
-Für den ordnungsgemäßen Betrieb braucht die SmartVISU noch das SmartHomeNG Plugin **smartvisu** und das **Websocket-Modul**.
+    Eine Besonderheit des Apache Webservers ist sein spezieller Umgang mit einem Ordner namens "icons" im Root-Verzeichnis.
+    Da smartVISU einen solchen Ordner verwendet, sollte sie immer wie oben angegeben in einem Unterverzeichnis angelegt werden, damit keine Konflikte entstehen.
+    Dies gilt auch für Docker-Umgebungen.
+
+Für den ordnungsgemäßen Betrieb der SmartVISU in Verbindung mit mit SmartHomeNG müssen noch das Plugin **smartvisu** und das **Websocket-Modul** konfiguriert werden.
 Beide sind in der **plugin.yaml.default** und **module.yaml.default** bereits vorkonfiguriert
 und werden beim ersten Start nach einer frischen Installation in die Einstellungen
 übernommen.
