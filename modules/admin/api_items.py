@@ -434,6 +434,72 @@ class ItemsController(RESTResource, ItemData):
     rename.expose_resource = True
     rename.authentication_needed = True
 
+    # ======================================================================
+    #  POST /api/items/{item_path}/copy
+    #
+    def copy(self, id, *vpath, **params):
+        """
+        Handle POST requests for the /copy sub-resource — copy an
+        item's entire subtree to a new path as an independent clone
+        (fresh plugin bindings/value history, no shared identity with
+        the source — see Items.copy_item()).
+
+        Request body: JSON object with a "new_path" key — the COMPLETE
+        new path for the copy — and optional "filename" (target yaml
+        file override, defaults to the source item's own file),
+        "create_missing_parents" (bool, default False), and
+        "include_children" (bool, default True — set False to copy only
+        the item's own attributes, none of its child items).
+
+        Only persisted items can be copied — see Items.copy_item()'s
+        docstring for why.
+
+        Sub-resource methods reached via vpath aren't verb-gated by
+        RESTResource's dispatcher — checked explicitly here, same
+        reasoning as rename()/remove_references().
+        """
+        if cherrypy.request.method != 'POST':
+            raise cherrypy.HTTPError(405, 'Method not allowed')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        body = cherrypy.request.body.read()
+        try:
+            data = json.loads(body)
+            new_path = data.get('new_path')
+            filename = data.get('filename')
+            create_missing_parents = data.get('create_missing_parents', False)
+            include_children = data.get('include_children', True)
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"new_path": ...}')
+
+        self.logger.info(f'ItemsController POST /api/items/{id}/copy: new_path={new_path!r}')
+
+        try:
+            copied_item, report = self.items.copy_item(
+                item,
+                new_path,
+                filename=filename,
+                create_missing_parents=create_missing_parents,
+                include_children=include_children,
+            )
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
+        if copied_item is None:
+            raise cherrypy.HTTPError(
+                400, f"Item '{new_path}' was not created — its name collides with an existing attribute"
+            )
+
+        return json.dumps({'result': 'ok', 'new_path': new_path, **report})
+
+    copy.expose_resource = True
+    copy.authentication_needed = True
+
 
 class ItemsListController(RESTResource):
     def __init__(self, module):

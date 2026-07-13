@@ -56,6 +56,7 @@ import copy
 import logging
 import os
 import re
+import types
 
 import lib.config
 import lib.utils
@@ -64,6 +65,7 @@ import lib.shyaml as shyaml
 from lib.constants import ITEM_DEFAULTS, PLUGIN_PARSE_ITEM, PLUGIN_REMOVE_ITEM, PLUGIN_RENAME_ITEM
 from lib.item._internal._lifecycle import _detach_from_other_items_triggers, _remove_scheduler_jobs, _stop_fading
 from lib.item._internal._parsing import check_item_name_collision
+from lib.item._internal._pathresolution import get_absolutepath
 
 from .item import Item
 from .structs import Structs
@@ -363,7 +365,7 @@ class Items:
                 parent = self.return_item(parent_path)
                 if parent is None:
                     if not create_missing_parents:
-                        raise ValueError(f"Parent item '{parent_path}' not found")
+                        raise ValueError(f"Item '{path}' cannot be created: parent '{parent_path}' not found")
                     parent = self.create_item(
                         parent_path, {}, persist=persist, filename=filename, create_missing_parents=True
                     )
@@ -375,7 +377,7 @@ class Items:
 
         item_config = config
         if persist:
-            filename = filename or self._sh._created_items_file
+            filename = shyaml.strip_yaml_extension(filename or self._sh._created_items_file)
             item_config = copy.deepcopy(config)
             # _add_filenames_to_config() sets '_filename' on dict *values* of
             # its argument, recursively - wrap item_config so it (and every
@@ -436,7 +438,7 @@ class Items:
         """
         target = os.path.join(self._sh._items_dir, filename)
         yf = shyaml.yamlfile(target)
-        if os.path.isfile(target + shyaml.YAML_FILE):
+        if shyaml.yaml_exists(target):
             self._load_yaml_file(yf, filename)
         yf.setvalue(path, config)
         yf.save()
@@ -462,7 +464,7 @@ class Items:
         :rtype: dict
         """
         target = os.path.join(self._sh._items_dir, filename)
-        if not os.path.isfile(target + shyaml.YAML_FILE):
+        if not shyaml.yaml_exists(target):
             return config
         yf = shyaml.yamlfile(target)
         self._load_yaml_file(yf, filename)
@@ -667,6 +669,8 @@ class Items:
         :return: The same item, mutated
         :rtype: Item
         """
+        if filename is not None:
+            filename = shyaml.strip_yaml_extension(filename)
         old_path = item.property.path
         if new_path == old_path:
             return item, {'rewritten_references': [], 'failed_references': []}
@@ -761,7 +765,7 @@ class Items:
 
             if target_filename == item._filename:
                 target = os.path.join(self._sh._items_dir, item._filename)
-                if os.path.isfile(target + shyaml.YAML_FILE):
+                if shyaml.yaml_exists(target):
                     yf = shyaml.yamlfile(target)
                     self._load_yaml_file(yf, item._filename)
                     node = yf.getnode(old_path)
@@ -771,7 +775,7 @@ class Items:
             else:
                 old_target = os.path.join(self._sh._items_dir, item._filename)
                 node = None
-                if os.path.isfile(old_target + shyaml.YAML_FILE):
+                if shyaml.yaml_exists(old_target):
                     old_yf = shyaml.yamlfile(old_target)
                     self._load_yaml_file(old_yf, item._filename)
                     node = old_yf.getnode(old_path)
@@ -780,7 +784,7 @@ class Items:
 
                 new_target = os.path.join(self._sh._items_dir, target_filename)
                 new_yf = shyaml.yamlfile(new_target)
-                if os.path.isfile(new_target + shyaml.YAML_FILE):
+                if shyaml.yaml_exists(new_target):
                     self._load_yaml_file(new_yf, target_filename)
                 new_yf.setvalue(new_path, node)
                 new_yf.save()
@@ -791,6 +795,451 @@ class Items:
         report = self._rewrite_references(old_path, new_path)
 
         return item, report
+
+    def copy_item(self, item, new_path, filename=None, create_missing_parents=False, include_children=True):
+        """
+        Copy an item to *new_path* as an independent clone — fresh
+        plugin bindings and value history, no shared identity with the
+        source (unlike rename_item(), which preserves identity and only
+        relocates it). Copies the item's entire subtree by default; set
+        *include_children* to False to copy only the item itself.
+
+        Only persisted items can be copied: there is no existing helper
+        that reconstructs a full nested (with-children) config dict from
+        a live, non-persisted item tree — current_config_for_edit()
+        strips child (dict-valued) keys on purpose, since edit_item()
+        never touches children. A non-persisted source raises ValueError.
+
+        The copy is written to *filename* if given, otherwise to the
+        SOURCE item's own file — deliberately not the new parent's file
+        the way rename_item() defaults when moving, since a copy is
+        meant to be "the same config, elsewhere," not adopt its new
+        neighbourhood's file.
+
+        Self-references inside the copied subtree (eval/on_change/
+        on_update/trigger/hysteresis_input/cycle/autotimer/
+        hysteresis_upper_threshold/hysteresis_lower_threshold) are
+        handled differently depending on whether their target is
+        actually part of what's being copied:
+
+        * An absolute (``sh.<path>``/bare-path) reference whose target
+          IS part of the copy (old_path itself, or one of its
+          descendants when include_children brought it along) is
+          rewritten from old_path to new_path, via the same
+          boundary-aware prefix replace rename_item() uses for external
+          references.
+        * An absolute reference whose target is NOT part of the copy (a
+          descendant include_children=False left behind, or something
+          entirely outside old_path's subtree) is left pointing at the
+          original — reported back in ``left_pointing_at_original``
+          rather than silently rewritten to a path that won't exist, or
+          silently dropped.
+        * A relative reference (leading-dot syntax, resolved fresh
+          against the item's own position at every load) is NEVER
+          rewritten — its target is inherently tied to tree position,
+          so "leaving it alone" IS the text staying byte-for-byte the
+          same. It's classified instead: silently fine if it still
+          resolves inside the copied tree; always reported in
+          ``relative_references_flagged`` if its original target was a
+          descendant that wasn't copied along (guaranteed broken); and,
+          if its target was outside old_path's subtree entirely,
+          reported only if re-resolving the same text from the new
+          position lands on a different target than before (can't tell
+          whether that drift is a bug or intentional, so it's surfaced
+          rather than guessed at).
+
+        :param item: The item to copy
+        :param new_path: Full path for the copy
+        :param filename: Explicit target yaml file (basename, no
+                          extension) to override the default (source
+                          item's own file)
+        :param create_missing_parents: If True, auto-create any missing
+                          ancestor of *new_path* instead of raising
+                          ValueError — see create_item().
+        :param include_children: If False, copy only the item's own
+                          attributes — none of its child items.
+        :type new_path: str
+        :type filename: str
+        :type create_missing_parents: bool
+        :type include_children: bool
+
+        :return: (copy, report) — copy is the newly created copy, or
+                 None if its own name collided with an existing
+                 attribute and was dropped (see create_item()); report
+                 is {"left_pointing_at_original": [...],
+                 "relative_references_flagged": [...]}, each entry a
+                 dict with item/attribute/reference (plus a reason and
+                 the resolved old/new targets for relative entries) —
+                 see _rewrite_subtree_self_references().
+        :rtype: tuple(Item or None, dict)
+        """
+        if filename is not None:
+            filename = shyaml.strip_yaml_extension(filename)
+        old_path = item.property.path
+        if new_path == old_path:
+            raise ValueError(f"Item '{old_path}' cannot be copied to itself")
+
+        if not item._filename:
+            raise ValueError(f"Item '{old_path}' cannot be copied: only persisted items can be copied")
+
+        source_target = os.path.join(self._sh._items_dir, item._filename)
+        if not shyaml.yaml_exists(source_target):
+            raise ValueError(f"Item '{old_path}' cannot be copied: source file '{item._filename}' not found")
+
+        yf = shyaml.yamlfile(source_target)
+        self._load_yaml_file(yf, item._filename)
+        node = yf.getnode(old_path)
+        if not isinstance(node, dict):
+            raise ValueError(f"Item '{old_path}' cannot be copied: no config found at its current path")
+
+        config = copy.deepcopy(node)
+        if not include_children:
+            config = {key: value for key, value in config.items() if not isinstance(value, dict)}
+
+        copied_paths = self._collect_copied_paths(config, old_path)
+        report = {'left_pointing_at_original': [], 'relative_references_flagged': []}
+        config = self._rewrite_subtree_self_references(
+            config, old_path, new_path, copied_paths, old_path, new_path, report
+        )
+
+        copied_item = self.create_item(
+            new_path,
+            config,
+            persist=True,
+            filename=filename or item._filename,
+            create_missing_parents=create_missing_parents,
+        )
+        return copied_item, report
+
+    @staticmethod
+    def _collect_copied_paths(config, base_path):
+        """
+        Return the set of absolute item paths that will exist once
+        *config* (already include_children-filtered, as returned by
+        copy_item()) is persisted under *base_path* — base_path itself,
+        plus one entry per nested (dict-valued) child, recursively.
+        Used to tell whether a self-reference's target is actually part
+        of the copy.
+
+        :param config: Item subtree config (as returned by copy_item())
+        :param base_path: The path *config* itself is rooted at
+        :type config: dict
+        :type base_path: str
+
+        :return: set of absolute paths included in the copy
+        :rtype: set
+        """
+        paths = {base_path}
+        for key, value in config.items():
+            if isinstance(value, dict):
+                paths |= Items._collect_copied_paths(value, base_path + '.' + key)
+        return paths
+
+    def _resolve_self_reference_target(self, old_path, suffix):
+        """
+        Resolve what a matched ``sh.<old_path><suffix>`` self-reference
+        actually refers to — the longest prefix of old_path+suffix that
+        is a real item, since *suffix* may continue past a real child
+        item into a property accessor or plugin method call (e.g.
+        ``.last_change``, ``.db(...)``) that isn't a separate item at
+        all. Items nest contiguously (a child's own existence implies
+        every ancestor segment is a real item too), so stopping at the
+        first non-item segment is sufficient — no need to check every
+        possible truncation the way _resolve_references() does for
+        unanchored eval text.
+
+        :param old_path: The item path the match was anchored on
+        :param suffix: Whatever followed old_path in the match (e.g.
+                       '', '.child', '.child.last_change')
+        :type old_path: str
+        :type suffix: str
+
+        :return: old_path, or the longest real-item extension of it
+        :rtype: str
+        """
+        if not suffix:
+            return old_path
+        resolved = old_path
+        candidate = old_path
+        for segment in suffix.lstrip('.').split('.'):
+            candidate = candidate + '.' + segment
+            if self.return_item(candidate) is None:
+                break
+            resolved = candidate
+        return resolved
+
+    def _classify_relative_reference(
+        self, rel, subtree_old_path, copied_paths, current_old_path, current_new_path, attr_name, report
+    ):
+        """
+        Classify (never rewrite) a single relative reference found
+        inside a copied item's attribute — see copy_item()'s docstring
+        for the three-way rule. Appends to
+        report['relative_references_flagged'] when the reference may no
+        longer be correct; does nothing when it's still fine as-is.
+
+        :param rel: The relative-path text itself (e.g. '..item' — for
+                    a bare trigger/hysteresis_input value, or whatever
+                    followed 'sh.' for an embedded eval-style reference)
+        :param subtree_old_path: Root path of the subtree being copied
+        :param copied_paths: Absolute paths included in the copy
+        :param current_old_path: Old absolute path of the item that
+                    owns this reference (may be a descendant of
+                    subtree_old_path, not subtree_old_path itself)
+        :param current_new_path: New absolute path of that same item
+        :param attr_name: Attribute the reference came from
+        :param report: Report dict, mutated in place
+        :type rel: str
+        :type subtree_old_path: str
+        :type copied_paths: set
+        :type current_old_path: str
+        :type current_new_path: str
+        :type attr_name: str
+        :type report: dict
+        """
+        old_resolved = get_absolutepath(types.SimpleNamespace(_path=current_old_path), rel, attr_name)
+        if old_resolved in copied_paths:
+            return
+        if old_resolved == subtree_old_path or old_resolved.startswith(subtree_old_path + '.'):
+            report['relative_references_flagged'].append(
+                {
+                    'item': current_new_path,
+                    'attribute': attr_name,
+                    'reference': rel,
+                    'resolved_original_target': old_resolved,
+                    'reason': 'not_copied',
+                }
+            )
+            return
+        new_resolved = get_absolutepath(types.SimpleNamespace(_path=current_new_path), rel, attr_name)
+        if new_resolved != old_resolved:
+            report['relative_references_flagged'].append(
+                {
+                    'item': current_new_path,
+                    'attribute': attr_name,
+                    'reference': rel,
+                    'resolved_original_target': old_resolved,
+                    'resolved_new_target': new_resolved,
+                    'reason': 'target_may_differ',
+                }
+            )
+
+    def _flag_relative_sh_references(
+        self, text, subtree_old_path, copied_paths, current_old_path, current_new_path, attr_name, report
+    ):
+        """
+        Scan sh.-style *text* (eval/on_change/on_update/cycle/
+        autotimer/hysteresis_upper_threshold/hysteresis_lower_threshold)
+        for embedded relative references and classify each one via
+        _classify_relative_reference() — never modifies *text*.
+
+        A relative reference embedded this way is marked by a literal
+        ``sh..`` — the mandatory ``sh.`` prefix supplies the first dot,
+        so it always has one more dot than the equivalent bare
+        trigger/hysteresis_input relative path (``sh...item()`` is the
+        embedded form of the bare ``..item``). This reuses the exact
+        same begintag/endtag scan
+        lib.item._internal._pathresolution.get_stringwithabsolutepathes()
+        uses to find and extract these, rather than re-deriving the dot
+        count independently and risking an off-by-one.
+
+        :param text: The attribute text to scan (unchanged on return)
+        :type text: str
+        """
+        begintag, endtag = 'sh.', '('
+        rest = text
+        while rest.find(begintag + '.') != -1:
+            rest = rest[rest.find(begintag + '.') + len(begintag) :]
+            if endtag == '' or rest.find(endtag) == -1:
+                rel = rest
+                rest = ''
+            else:
+                rel = rest[: rest.find(endtag)]
+                rest = rest[rest.find(endtag) :]
+            self._classify_relative_reference(
+                rel, subtree_old_path, copied_paths, current_old_path, current_new_path, attr_name, report
+            )
+
+    def _rewrite_or_flag_sh_reference(
+        self,
+        text,
+        subtree_old_path,
+        subtree_new_path,
+        copied_paths,
+        current_old_path,
+        current_new_path,
+        attr_name,
+        report,
+    ):
+        """
+        Rewrite or flag every self-reference inside sh.-style *text*
+        (eval/on_change/on_update/cycle/autotimer/
+        hysteresis_upper_threshold/hysteresis_lower_threshold) — see
+        copy_item()'s docstring for the rule. Absolute references whose
+        target is part of the copy are rewritten from subtree_old_path
+        to subtree_new_path; ones that aren't are left untouched and
+        recorded into report['left_pointing_at_original']. Relative
+        references are classified only (never rewritten) via
+        _flag_relative_sh_references().
+
+        :param text: The attribute text to rewrite/scan
+        :type text: str
+
+        :return: text, with in-scope absolute references rewritten
+        :rtype: str
+        """
+        self._flag_relative_sh_references(
+            text, subtree_old_path, copied_paths, current_old_path, current_new_path, attr_name, report
+        )
+
+        pattern = re.compile(r'\bsh\.' + re.escape(subtree_old_path) + r'((?:\.[A-Za-z0-9_]+)*)(?![A-Za-z0-9_])')
+
+        def _replace(m):
+            suffix = m.group(1)
+            resolved = self._resolve_self_reference_target(subtree_old_path, suffix)
+            if resolved in copied_paths:
+                return 'sh.' + subtree_new_path + suffix
+            report['left_pointing_at_original'].append(
+                {'item': current_new_path, 'attribute': attr_name, 'reference': resolved}
+            )
+            return m.group(0)
+
+        return pattern.sub(_replace, text)
+
+    def _rewrite_or_flag_bare_reference(
+        self,
+        value,
+        subtree_old_path,
+        subtree_new_path,
+        copied_paths,
+        current_old_path,
+        current_new_path,
+        attr_name,
+        report,
+    ):
+        """
+        Rewrite or flag a single bare-path self-reference (trigger/
+        hysteresis_input) — see copy_item()'s docstring for the rule.
+        Unlike sh.-style text, these attributes store a bare item path
+        directly (no embedded ``sh.`` prefix, no property/method
+        suffix), so a relative value is recognized simply by a leading
+        ``.`` and resolved directly, with no prefix-stripping needed.
+
+        :param value: The bare path value to rewrite/classify
+        :type value: str
+
+        :return: value, rewritten if it referenced subtree_old_path and
+                 the target is part of the copy; unchanged otherwise
+        :rtype: str
+        """
+        if value.startswith('.'):
+            self._classify_relative_reference(
+                value, subtree_old_path, copied_paths, current_old_path, current_new_path, attr_name, report
+            )
+            return value
+
+        if value == subtree_old_path or value.startswith(subtree_old_path + '.'):
+            if value in copied_paths:
+                return subtree_new_path + value[len(subtree_old_path) :]
+            report['left_pointing_at_original'].append(
+                {'item': current_new_path, 'attribute': attr_name, 'reference': value}
+            )
+        return value
+
+    _SH_STYLE_ATTRIBUTES = ('eval', 'cycle', 'autotimer', 'hysteresis_upper_threshold', 'hysteresis_lower_threshold')
+    _SH_STYLE_LIST_ATTRIBUTES = ('on_change', 'on_update')
+    _BARE_PATH_LIST_ATTRIBUTES = ('trigger',)
+    _BARE_PATH_ATTRIBUTES = ('hysteresis_input',)
+
+    def _rewrite_subtree_self_references(
+        self, config, subtree_old_path, subtree_new_path, copied_paths, current_old_path, current_new_path, report
+    ):
+        """
+        Recursively rewrite or flag self-references inside *config* (a
+        nested item subtree config, as returned by
+        shyaml.yamlfile.getnode()) — used by copy_item(), see its
+        docstring for the full rule. Descends into every dict-valued
+        key (a nested child item block), not just the top level,
+        tracking each descendant's own old/new path as it goes (needed
+        to correctly resolve a descendant's own relative references,
+        which are anchored on ITS position, not the subtree root's).
+
+        :param config: Nested item config dict (mutated in place and
+                        returned)
+        :param subtree_old_path: Root path of the subtree being copied
+        :param subtree_new_path: Root path the subtree is copied to
+        :param copied_paths: Absolute paths included in the copy (see
+                        _collect_copied_paths())
+        :param current_old_path: Old absolute path of *config* itself
+        :param current_new_path: New absolute path of *config* itself
+        :param report: Report dict, mutated in place — see
+                        copy_item()'s docstring
+        :type config: dict
+        :type subtree_old_path: str
+        :type subtree_new_path: str
+        :type copied_paths: set
+        :type current_old_path: str
+        :type current_new_path: str
+        :type report: dict
+
+        :return: config, with matching absolute references rewritten
+        :rtype: dict
+        """
+
+        def _rewrite_sh(text, attr_name):
+            return self._rewrite_or_flag_sh_reference(
+                text,
+                subtree_old_path,
+                subtree_new_path,
+                copied_paths,
+                current_old_path,
+                current_new_path,
+                attr_name,
+                report,
+            )
+
+        def _rewrite_bare(value, attr_name):
+            return self._rewrite_or_flag_bare_reference(
+                value,
+                subtree_old_path,
+                subtree_new_path,
+                copied_paths,
+                current_old_path,
+                current_new_path,
+                attr_name,
+                report,
+            )
+
+        for attr_name in self._SH_STYLE_ATTRIBUTES:
+            if isinstance(config.get(attr_name), str):
+                config[attr_name] = _rewrite_sh(config[attr_name], attr_name)
+        for attr_name in self._SH_STYLE_LIST_ATTRIBUTES:
+            if isinstance(config.get(attr_name), list):
+                config[attr_name] = [
+                    _rewrite_sh(entry, attr_name) if isinstance(entry, str) else entry for entry in config[attr_name]
+                ]
+        for attr_name in self._BARE_PATH_LIST_ATTRIBUTES:
+            if isinstance(config.get(attr_name), list):
+                config[attr_name] = [
+                    _rewrite_bare(entry, attr_name) if isinstance(entry, str) else entry for entry in config[attr_name]
+                ]
+        for attr_name in self._BARE_PATH_ATTRIBUTES:
+            if isinstance(config.get(attr_name), str):
+                config[attr_name] = _rewrite_bare(config[attr_name], attr_name)
+
+        for key, value in config.items():
+            if isinstance(value, dict):
+                self._rewrite_subtree_self_references(
+                    value,
+                    subtree_old_path,
+                    subtree_new_path,
+                    copied_paths,
+                    current_old_path + '.' + key,
+                    current_new_path + '.' + key,
+                    report,
+                )
+
+        return config
 
     def _rewrite_references(self, old_path, new_path):
         """
@@ -836,9 +1285,15 @@ class Items:
                             config['hysteresis_input'] = self._rewrite_bare_path_reference(
                                 config['hysteresis_input'], old_path, new_path
                             )
-                    elif attr_name == 'eval':
-                        if 'eval' in config:
-                            config['eval'] = self._rewrite_sh_path_reference(config['eval'], old_path, new_path)
+                    elif attr_name in (
+                        'eval',
+                        'cycle',
+                        'autotimer',
+                        'hysteresis_upper_threshold',
+                        'hysteresis_lower_threshold',
+                    ):
+                        if attr_name in config:
+                            config[attr_name] = self._rewrite_sh_path_reference(config[attr_name], old_path, new_path)
                     elif attr_name in ('on_change', 'on_update'):
                         if attr_name in config:
                             config[attr_name] = [
@@ -863,7 +1318,7 @@ class Items:
         :param path: Full dotted path of the entry to remove
         """
         target = os.path.join(self._sh._items_dir, filename)
-        if not os.path.isfile(target + shyaml.YAML_FILE):
+        if not shyaml.yaml_exists(target):
             return
         yf = shyaml.yamlfile(target)
         self._load_yaml_file(yf, filename)
@@ -1033,7 +1488,11 @@ class Items:
         Yield (attribute_name, text) pairs for *item*'s reference-bearing
         attributes, for use by find_references(). Single-value attributes
         are skipped when unset; list attributes contribute one pair per
-        entry.
+        entry. cycle/autotimer/hysteresis_upper_threshold/
+        hysteresis_lower_threshold each split into two independently
+        sh.-expanded runtime parts (time/value, threshold/timer) — both
+        are yielded under the same attribute_name, since the raw config
+        value being rewritten is one string either way.
         """
         if item._eval:
             yield ('eval', item._eval)
@@ -1045,6 +1504,22 @@ class Items:
             yield ('trigger', text)
         if item._hysteresis_input:
             yield ('hysteresis_input', item._hysteresis_input)
+        if item._cycle_time:
+            yield ('cycle', item._cycle_time)
+        if item._cycle_value:
+            yield ('cycle', item._cycle_value)
+        if item._autotimer_time:
+            yield ('autotimer', item._autotimer_time)
+        if item._autotimer_value:
+            yield ('autotimer', item._autotimer_value)
+        if item._hysteresis_upper_threshold:
+            yield ('hysteresis_upper_threshold', item._hysteresis_upper_threshold)
+        if item._hysteresis_upper_timer:
+            yield ('hysteresis_upper_threshold', item._hysteresis_upper_timer)
+        if item._hysteresis_lower_threshold:
+            yield ('hysteresis_lower_threshold', item._hysteresis_lower_threshold)
+        if item._hysteresis_lower_timer:
+            yield ('hysteresis_lower_threshold', item._hysteresis_lower_timer)
 
     def current_config_for_edit(self, item):
         """
@@ -1076,7 +1551,7 @@ class Items:
         """
         if item._filename:
             target = os.path.join(self._sh._items_dir, item._filename)
-            if os.path.isfile(target + shyaml.YAML_FILE):
+            if shyaml.yaml_exists(target):
                 yf = shyaml.yamlfile(target)
                 self._load_yaml_file(yf, item._filename)
                 existing = yf.getnode(item.property.path)
