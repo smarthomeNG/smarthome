@@ -1,8 +1,11 @@
 .. index:: Items; relative Referenzen
 .. index:: relative Referenzen
 
-Relative Item Referenzen
-########################
+.. role:: redsup
+.. role:: greensup
+
+Relative Item Referenzen :greensup:`Update`
+#############################################
 
 Damit können in **eval** und in **eval_trigger** Attributen von Items andere Items referenziert
 werden ohne den vollständigen Item-Pfad anzugeben. Das ist besonders hilfreich, wenn man Item
@@ -119,6 +122,24 @@ Attribute folgendermaßen aussehen:
    In diesem Fall ist es notwendig, das Item selbst statt über ```.``` über die alternative
    Notation ```.self``` anzusprechen, also ```sh..self.changed_by()``` statt ```sh...changed_by()```
    zu verwenden.
+
+
+Verhalten beim Kopieren von Items :redsup:`neu`
+=================================================
+
+Da relative Referenzen von der Position des referenzierenden Items im Item-Baum abhängen, können sie
+beim Kopieren eines Items (siehe :doc:`Item kopieren </admin/items>`) nicht wie absolute Referenzen
+auf den neuen Pfad umgeschrieben werden - der Text der Referenz bleibt unverändert, da er sich beim
+nächsten Auflösen (z.B. beim Start von SmartHomeNG) ohnehin erneut ergibt, ausgehend von der neuen
+Position des kopierten Items.
+
+Das ist unproblematisch, solange das referenzierte Item Teil der Kopie ist - z.B. ``.child`` beim
+Kopieren mit Unter-Items, oder ``..geschwisterkind`` beim Kopieren unter demselben übergeordneten
+Item. Zeigt eine relative Referenz jedoch auf ein Item, das nicht mit kopiert wurde (z.B. weil beim
+Kopieren **Unter-Items einschließen** deaktiviert war), oder verlässt sie den kopierten Unterbaum
+vollständig (z.B. eine Referenz auf ein Geschwister-Item über mehrere Ebenen hinweg), kann sich ihr
+tatsächliches Ziel nach dem Kopieren ändern oder ins Leere laufen. Solche Fälle werden nach dem
+Kopieren automatisch erkannt und in einer Liste zur Überprüfung angezeigt.
 
 
 Nutzung relativer Item Referenzen in Plugins
