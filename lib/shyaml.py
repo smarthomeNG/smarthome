@@ -315,6 +315,50 @@ def _ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
 #
 
 
+def strip_yaml_extension(filename):
+    """
+    Strip a trailing .yaml or .yml (case-insensitive) from *filename*, if
+    present. Callers are not always consistent about whether they pass a
+    bare basename or one that already includes an extension - shng only
+    ever reads/writes the .yaml form on disk, so this normalizes either
+    input to the same basename.
+
+    :param filename: Basename of a yaml file, with or without extension
+    :type filename: str
+
+    :return: filename with any trailing .yaml/.yml removed
+    :rtype: str
+    """
+    lower = filename.lower()
+    if lower.endswith('.yaml'):
+        return filename[:-5]
+    if lower.endswith('.yml'):
+        return filename[:-4]
+    return filename
+
+
+def yaml_exists(filename):
+    """
+    Check whether the yaml file for *filename* exists on disk, regardless
+    of whether *filename* already includes a .yaml/.yml extension or not.
+
+    A bare ``os.path.isfile(filename + YAML_FILE)`` silently returns False
+    (making callers wrongly conclude "doesn't exist yet") when *filename*
+    already ends in an extension, since it would then look for a
+    nonexistent ``...yaml.yaml`` path - this was the root cause of an
+    existing item's file being silently overwritten instead of loaded and
+    merged into, whenever create_item()/rename_item() were handed a
+    filename that still had its extension attached.
+
+    :param filename: Basename of the yaml file, with or without extension
+    :type filename: str
+
+    :return: True if the file exists
+    :rtype: bool
+    """
+    return os.path.isfile(strip_yaml_extension(filename) + YAML_FILE)
+
+
 def yaml_load_roundtrip(filename, raise_on_error=False):
     """
     Load contents of a yaml file into an dict structure for editing (using Roundtrip Loader)
@@ -337,8 +381,7 @@ def yaml_load_roundtrip(filename, raise_on_error=False):
         return None
 
     y = None
-    if not filename.lower().endswith('.yaml'):
-        filename += YAML_FILE
+    filename = strip_yaml_extension(filename) + YAML_FILE
     try:
         with open(filename, 'r', encoding='utf8') as stream:
             sdata = stream.read()
@@ -407,8 +450,7 @@ def yaml_save_roundtrip(filename, data, create_backup=False):
     )
     sdata = _format_yaml_dump2(sdata)
 
-    if not filename.lower().endswith('.yaml'):
-        filename += YAML_FILE
+    filename = strip_yaml_extension(filename) + YAML_FILE
     if create_backup:
         if os.path.isfile(filename):
             shutil.copy2(filename, filename + '.bak')
@@ -555,7 +597,7 @@ def writeBackToFile(filename, itempath, itemattr, value):
     """
 
     itemyamlfile = yamlfile(filename)
-    if os.path.isfile(filename + YAML_FILE):
+    if yaml_exists(filename):
         itemyamlfile.load()
     itemyamlfile.setleafvalue(itempath, itemattr, value)
     itemyamlfile.save()
@@ -582,11 +624,11 @@ class yamlfile:
 
         :return: formatted string
         """
-        self.filename = filename
+        self.filename = strip_yaml_extension(filename)
         if filename_write == '':
-            self.filename_write = filename
+            self.filename_write = self.filename
         else:
-            self.filename_write = filename_write
+            self.filename_write = strip_yaml_extension(filename_write)
         self.filename_bak = self.filename_write + '.bak' + YAML_FILE
         self._create_bak = create_bak
         self.data = yaml.comments.CommentedMap([])
