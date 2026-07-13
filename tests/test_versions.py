@@ -20,9 +20,11 @@
 #########################################################################
 
 from . import common
+import os
 import unittest
 import logging
 
+import bin.shngversion as shngversion
 from lib.model.smartplugin import SmartPlugin
 
 from tests.mock.core import MockSmartHome
@@ -121,6 +123,38 @@ class TestModule(unittest.TestCase):
         self.assertFalse(Version.compare('1.2', '1.2.3.4.5', '>='))
 
         logger.warning('=== End test_version_numbers:')
+
+
+# ----------------------------------------------------------
+
+
+class TestGetGitDataDoesNotChangeCwd(unittest.TestCase):
+    """
+    _get_git_data() used to os.chdir(BASE) to run 'git' scoped to either
+    the core repo or the plugins/ repo (a separate nested .git root) and
+    never restored the original cwd — corrupting every other thread's
+    relative paths for the rest of the process's life (see the database
+    plugin's relative sqlite path bug this caused). Fixed by using
+    'git -C <path>' instead, which needs no process-wide cwd mutation at
+    all — the process's cwd should never change no matter how many times
+    or in what order core/plugins git data is fetched.
+    """
+
+    def test_single_core_call_leaves_cwd_unchanged(self):
+        before = os.getcwd()
+        shngversion._get_git_data()
+        self.assertEqual(before, os.getcwd())
+
+    def test_single_plugins_call_leaves_cwd_unchanged(self):
+        before = os.getcwd()
+        shngversion._get_git_data('plugins')
+        self.assertEqual(before, os.getcwd())
+
+    def test_plugins_call_does_not_leak_into_a_later_core_call(self):
+        before = os.getcwd()
+        shngversion._get_git_data('plugins')
+        shngversion._get_git_data()
+        self.assertEqual(before, os.getcwd())
 
 
 if __name__ == '__main__':

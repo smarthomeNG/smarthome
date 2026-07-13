@@ -141,22 +141,39 @@ def _get_git_data(sub='', printout=False):
     commit_short = ''
     if BASE is not None:
         try:
-            os.chdir(BASE)
+            # git -C <path> runs against that repo without touching this
+            # process's cwd — this used to os.chdir(BASE) first and never
+            # restore it, which corrupted every other thread's relative
+            # paths for the rest of the process's life (see the database
+            # plugin's relative sqlite path bug this caused: cwd left
+            # pinned at the plugins/ repo after every /api/server/info
+            # request, since get_plugins_version() -> this function with
+            # sub='plugins' is always the last git-data fetch that builds
+            # that response). A shared os.chdir() is also inherently
+            # unsafe here regardless of restoration, since concurrent
+            # CherryPy request threads could interleave; -C has no such
+            # race, each invocation is independent.
             branch = (
-                subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stderr=subprocess.STDOUT)
+                subprocess.check_output(
+                    ['git', '-C', BASE, 'rev-parse', '--abbrev-ref', 'HEAD'], stderr=subprocess.STDOUT
+                )
                 .decode()
                 .strip('\n')
             )
             commit = (
-                subprocess.check_output(['git', 'rev-parse', 'HEAD'], stderr=subprocess.STDOUT).decode().strip('\n')
+                subprocess.check_output(['git', '-C', BASE, 'rev-parse', 'HEAD'], stderr=subprocess.STDOUT)
+                .decode()
+                .strip('\n')
             )
             commit_short = (
-                subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], stderr=subprocess.STDOUT)
+                subprocess.check_output(['git', '-C', BASE, 'rev-parse', '--short', 'HEAD'], stderr=subprocess.STDOUT)
                 .decode()
                 .strip('\n')
             )
             describe = (
-                subprocess.check_output(['git', 'describe', '--all'], stderr=subprocess.STDOUT).decode().strip('\n')
+                subprocess.check_output(['git', '-C', BASE, 'describe', '--all'], stderr=subprocess.STDOUT)
+                .decode()
+                .strip('\n')
             )
         except Exception:
             pass
