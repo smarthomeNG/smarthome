@@ -80,6 +80,7 @@ jobs:
           config: |
             paths-ignore:
               - '**/executor/examples/**'
+              - '**/_pv_*/**'
 
       # Autobuild is omitted — it is a no-op for Python (no compilation step needed).
 
