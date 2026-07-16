@@ -251,6 +251,10 @@ class PluginsConfigController(RESTResource):
                 # self.logger.warning("confplg {}: type(plginstance) = {}".format(confplg, type(plginstance)))
                 # self.logger.warning("confplg {}: type(plginstance.metadata) = {}".format(confplg, type(plginstance.metadata)))
                 try:
+                    _conf[confplg]['_running'] = plginstance.alive
+                except AttributeError:
+                    _conf[confplg]['_running'] = False
+                try:
                     plginstance.metadata.get_string('type')
                     _conf[confplg]['_meta'] = plginstance.metadata.meta
                     _conf[confplg]['_description'] = plginstance.metadata.meta['plugin']['description']

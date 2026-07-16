@@ -262,7 +262,7 @@ class Plugins:
 
     def _get_instancename(self, plg_name: str, plg_conf: dict):
         """
-        Returns the instance name for the actual plugin
+        Returns the instance name for the given plugin
 
         :param plg_name: section of the plugin.yaml for the current plugin
         :type plg_name: str

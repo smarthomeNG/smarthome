@@ -32,7 +32,7 @@ from lib.module import Modules
 from lib.plugin import Plugins
 from lib.metadata import Metadata
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import KEY_CLASS_PATH, YAML_FILE, DIR_PLUGINS
+from lib.constants import KEY_CLASS_PATH, KEY_INSTANCE, YAML_FILE, DIR_PLUGINS
 
 from .rest import RESTResource
 
@@ -130,6 +130,36 @@ class PluginController(RESTResource):
     read.expose_resource = True
     read.authentication_needed = True
 
+    def _find_legacy_instance_collision(self, new_id, plugin_conf):
+        """
+        Legacy-instance-mode only: a section's explicit 'instance' value is
+        an arbitrary string, independent of any section name, so a new
+        section named e.g. 'bar' can silently collide with an existing
+        section's `instance: bar` even though no section is literally named
+        'bar' yet (the plain "section already exists" check above doesn't
+        catch this). Both would then resolve to the same runtime instance
+        name and, in turn, claim the same @bar-suffixed items.
+
+        Not needed for non-legacy instance naming: there, a resolved
+        instance name is always '' or a section's own name, which the
+        section-existence check already guards against.
+
+        Encapsulated on purpose - remove this method and its one call site
+        in add() when legacy_instances support is eventually dropped.
+
+        :return: the colliding section's id, or None
+        """
+        if not self._sh._legacy_instances:
+            return None
+        new_id_lower = new_id.lower()
+        for existing_id, existing_sect in plugin_conf.items():
+            if not isinstance(existing_sect, dict):
+                continue
+            existing_instance = existing_sect.get(KEY_INSTANCE)
+            if isinstance(existing_instance, str) and existing_instance.strip().lower() == new_id_lower:
+                return existing_id
+        return None
+
     def add(self, id=None):
         self.logger.info("PluginController(): add('{}')".format(id))
 
@@ -148,10 +178,30 @@ class PluginController(RESTResource):
             response = {}
             plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
             sect = plugin_conf.get(id)
+            colliding_section = None if sect is not None else self._find_legacy_instance_collision(id, plugin_conf)
             if sect is not None:
                 response = {'result': 'error', 'description': "Configuration section '{}' already exists".format(id)}
+            elif colliding_section is not None:
+                response = {
+                    'result': 'error',
+                    'description': "Configuration name '{}' collides with the instance name already used by section '{}'".format(
+                        id, colliding_section
+                    ),
+                }
             else:
-                plugin_conf[id] = params.get('config', {})
+                config = params.get('config', {})
+                # If another section already configures the same plugin_name, this
+                # is a multi-instance setup - set instance to the new section name.
+                # id is already guaranteed unique (checked above), so this can't
+                # collide with any sibling's instance name, whether that sibling
+                # has an explicit instance set or not.
+                new_plugin_name = config.get('plugin_name')
+                if new_plugin_name is not None and any(
+                    isinstance(existing, dict) and existing.get('plugin_name') == new_plugin_name
+                    for existing in plugin_conf.values()
+                ):
+                    config[KEY_INSTANCE] = id
+                plugin_conf[id] = config
                 shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
                 response = {'result': 'ok'}
 
