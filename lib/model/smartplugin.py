@@ -451,7 +451,7 @@ class SmartPlugin(SmartObject, Utils):
             item_path = item
         else:
             item_path = item.property.path
-        return self._plg_item_dict[item_path].get('mapping')
+        return self._plg_item_dict.get(item_path, {}).get('mapping')
 
     def get_item_mapping_list(self) -> list:
         """
@@ -466,6 +466,7 @@ class SmartPlugin(SmartObject, Utils):
         :rtype: list
         """
         result = []
+        # create snapshot in cast _plg_item_dict mutates during iteration
         for item_path in list(self._plg_item_dict.keys()):
             result.append([item_path, self._plg_item_dict[item_path].get('mapping')])
         return result
@@ -516,12 +517,14 @@ class SmartPlugin(SmartObject, Utils):
         if mode == '':
             return [
                 item_path
+                # create snapshot in cast _plg_item_dict mutates during iteration
                 for item_path in list(self._plg_item_dict.keys())
                 if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value
             ]
 
         return [
             item_path
+            # create snapshot in cast _plg_item_dict mutates during iteration
             for item_path in list(self._plg_item_dict.keys())
             if self._string_compare(
                 self._plg_item_dict[item_path]['config_data'].get(filter_key, None), filter_value, mode
@@ -547,12 +550,14 @@ class SmartPlugin(SmartObject, Utils):
         if mode == '':
             return [
                 self._plg_item_dict[item_path]['item']
+                # create snapshot in cast _plg_item_dict mutates during iteration
                 for item_path in list(self._plg_item_dict.keys())
                 if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value
             ]
 
         return [
             self._plg_item_dict[item_path]['item']
+            # create snapshot in cast _plg_item_dict mutates during iteration
             for item_path in list(self._plg_item_dict.keys())
             if self._string_compare(
                 self._plg_item_dict[item_path]['config_data'].get(filter_key, None), filter_value, mode
