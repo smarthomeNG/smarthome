@@ -138,6 +138,13 @@ class Database:
     }
     _translation_param_types = {'qmark': list, 'format': list, 'numeric': list, 'named': dict, 'pyformat': dict}
 
+    # connect() kwargs that must be an int rather than the literal string from
+    # config (e.g. pymysql's port=). Every other key is passed through as-is -
+    # guessing types via int/float fallback for arbitrary keys previously
+    # turned numeric-looking values (e.g. a numeric password) silently into
+    # the wrong type.
+    _numeric_connect_keys = {'port'}
+
     def __init__(self, name, dbapi, connect, formatting='named'):
         """Create a new database instance
 
@@ -194,19 +201,17 @@ class Database:
         if type(connect) is str:
             connect = [p.strip() for p in connect.split('|')]
 
-        # Deprecated, remove with 1.7 or 1.8
         # -> but keep list of ordered dict as "default" returned by yaml parser!
         if type(connect) is list:
             if isinstance(connect[0], str):
                 for arg in connect:
                     key, sep, value = arg.partition(':')
-                    for t in int, float, str:
+                    if key in self._numeric_connect_keys:
                         try:
-                            v = t(value)
-                            break
-                        except Exception:
+                            value = int(value)
+                        except ValueError:
                             pass
-                    self._params[key] = v
+                    self._params[key] = value
             elif isinstance(connect[0], OrderedDict):
                 self._params = {k: str(v) for item in connect for k, v in item.items()}
 
@@ -288,7 +293,7 @@ class Database:
         cur = self.cursor()
         version_table = re.sub('[^a-z0-9_]', '', self._name.lower()) + '_version'
         try:
-            (version,) = self.fetchone('SELECT MAX(version) FROM ' + version_table + ';', cur=cur)
+            (version,) = self.fetchone('SELECT MAX(version) FROM ' + version_table + ';', cur=cur, quiet=True)
             if version is None:
                 version = 0
         except Exception:
@@ -338,7 +343,7 @@ class Database:
         if self._conn is not None:
             return self._conn.cursor()
 
-    def execute(self, stmt, params=(), formatting=None, cur=None):
+    def execute(self, stmt, params=(), formatting=None, cur=None, quiet=False):
         """Execute the given statement
 
         This will execute the statement specified in the 'stmt' parameter
@@ -355,6 +360,11 @@ class Database:
         If already aqcuired a cursor you can use this cursor by using the
         'cur' parameter. If omitted a new cursor will be aqcuire for this
         statement and released afterwards.
+
+        Set 'quiet' to True to suppress the error-level log entry for an
+        expected failure (e.g. a first-run "table does not exist yet" probe).
+        The exception is always raised regardless of 'quiet' - only the log
+        entry is conditional.
         """
         try:
             stmt, args = self._prepare(stmt, params, formatting)
@@ -376,10 +386,9 @@ class Database:
                 result = cur.execute(stmt, args)
             return result
         except Exception as e:
-            if str(e).find('no such table: database_version') == -1:
-                # log error only, if query not executed on a new and empty database
+            if not quiet:
                 self.logger.error(f'Can not execute query: {stmt} (args {args}): {e}')
-                raise
+            raise
         finally:
             if c is not None:
                 c.close()
@@ -411,6 +420,9 @@ class Database:
                     self.fetchone('SELECT 1')
                     retry = -1
                     self.release()
+                else:
+                    self.logger.warning('Database [{}]: Could not acquire lock to verify connection'.format(self._name))
+                    retry = retry - 1
 
             except Exception as e:
                 self.logger.warning('Database [{}]: Connection error {}'.format(self._name, e))
@@ -424,7 +436,7 @@ class Database:
 
         return retry
 
-    def fetchone(self, stmt, params=(), formatting=None, cur=None):
+    def fetchone(self, stmt, params=(), formatting=None, cur=None, quiet=False):
         """Execute given statement and fetch one row from result
 
         This method can be used in case you only want to fetch one row from
@@ -437,15 +449,15 @@ class Database:
                 self.logger.warning(f'fetchone: No cursor defined for stmt {stmt} with params {params}')
                 result = ''
             else:
-                self.execute(stmt, params, formatting=formatting, cur=c)
+                self.execute(stmt, params, formatting=formatting, cur=c, quiet=quiet)
                 result = c.fetchone()
                 c.close()
         else:
-            self.execute(stmt, params, formatting=formatting, cur=cur)
+            self.execute(stmt, params, formatting=formatting, cur=cur, quiet=quiet)
             result = cur.fetchone()
         return result
 
-    def fetchall(self, stmt, params=(), formatting=None, cur=None):
+    def fetchall(self, stmt, params=(), formatting=None, cur=None, quiet=False):
         """Execute given statement and fetch all rows from result
 
         This method can be used to fetch all rows from the result. It accepts
@@ -454,13 +466,13 @@ class Database:
         if cur is None:
             c = self.cursor()
             if c is not None:
-                self.execute(stmt, params, formatting=formatting, cur=c)
+                self.execute(stmt, params, formatting=formatting, cur=c, quiet=quiet)
                 result = c.fetchall()
                 c.close()
             else:
                 result = []
         else:
-            self.execute(stmt, params, formatting=formatting, cur=cur)
+            self.execute(stmt, params, formatting=formatting, cur=cur, quiet=quiet)
             result = cur.fetchall()
         return result
 

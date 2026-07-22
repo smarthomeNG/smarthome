@@ -37,6 +37,17 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertTrue('password' in args)
         self.assertEqual('secret', args['password'])
 
+    def test_connect_only_port_is_coerced_to_int(self):
+        # Every connect value used to be guessed via int/float/str fallback
+        # typing, so a numeric-looking value for ANY key (e.g. a numeric
+        # password) silently became an int. 'port' genuinely needs to be an
+        # int for drivers like pymysql; everything else must stay the exact
+        # string from config.
+        db = self.db(connect='passwd:123456 | port:3306 | host:myhost')
+        self.assertEqual('123456', db._params['passwd'])
+        self.assertEqual(3306, db._params['port'])
+        self.assertEqual('myhost', db._params['host'])
+
     def test_connect_set_connected(self):
         db = self.db()
         self.assertFalse(db.connected())
@@ -127,6 +138,47 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         db.connect()
         db.verify()
         self.assertEqual('SELECT 1', db._conn.cursor_return.execute_kwargs[0][0])
+
+    def test_verify_gives_up_after_retries_on_lock_contention(self):
+        # Lock contention (lock() returning False without raising) must count
+        # against the retry budget just like a connection exception does,
+        # otherwise verify() loops forever whenever the lock is held elsewhere.
+        db = self.db()
+        db.connect()
+        calls = []
+
+        def fake_lock(timeout=-1):
+            calls.append(timeout)
+            if len(calls) > 10:
+                raise AssertionError('verify() did not respect the retry limit on lock contention')
+            return False
+
+        db.lock = fake_lock
+        result = db.verify(retry=3, delay=0)
+        self.assertEqual(0, result)
+        self.assertEqual(3, len(calls))
+
+    def test_execute_error_logs_by_default(self):
+        db = self.db()
+        db.connect()
+        cur = db.cursor()
+        cur.execute = lambda *a, **kw: (_ for _ in ()).throw(Exception('no such table: foo_version'))
+        with self.assertRaisesRegex(Exception, 'no such table: foo_version'):
+            with self.assertLogs('lib.db', level='ERROR'):
+                db.execute('SELECT 1', cur=cur)
+
+    def test_execute_quiet_suppresses_log_but_still_raises(self):
+        # quiet=True must silence the ERROR log for an expected "table
+        # missing" probe (e.g. setup()'s first-run version check) without
+        # ever swallowing the exception itself - callers still need to catch
+        # it to react (e.g. create the table).
+        db = self.db()
+        db.connect()
+        cur = db.cursor()
+        cur.execute = lambda *a, **kw: (_ for _ in ()).throw(Exception('no such table: foo_version'))
+        with self.assertRaisesRegex(Exception, 'no such table: foo_version'):
+            with self.assertNoLogs('lib.db', level='ERROR'):
+                db.execute('SELECT 1', cur=cur, quiet=True)
 
     def test_fetchone(self):
         db = self.db()
