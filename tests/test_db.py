@@ -2,6 +2,7 @@ from . import common
 import unittest
 import sqlite3
 import threading
+from unittest.mock import patch
 import lib.db
 
 
@@ -119,6 +120,26 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         # Statement 4: INSERT version - check
         self.assertEqual('INSERT INTO test_version', db._conn.cursor_return.execute_kwargs[4][0][0:24])
         self.assertEqual(2, db._conn.cursor_return.execute_kwargs[4][1][0])
+
+    def test_setup_releases_lock_even_if_upgrade_fails(self):
+        db = self.db()
+        db.connect()
+
+        original_execute = db.execute
+
+        def failing_execute(stmt, *a, **kw):
+            if stmt == 'ROLLOUT 1':
+                raise RuntimeError('simulated bad SQL for this driver')
+            return original_execute(stmt, *a, **kw)
+
+        with patch.object(db, 'execute', side_effect=failing_execute):
+            with self.assertRaises(RuntimeError):
+                db.setup({1: ['ROLLOUT 1', 'ROLLBACK 1']})
+
+        # a failed upgrade statement must not leave self._fdb_lock held -
+        # every future connect()/close()/setup()/verify() call would hang
+        self.assertTrue(db.lock(0), 'self._fdb_lock was left held after setup() raised')
+        db.release()
 
     def test_execute_internal_cursor(self):
         db = self.db()

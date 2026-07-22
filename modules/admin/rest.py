@@ -27,6 +27,57 @@ import cherrypy
 import logging
 import jwt
 
+from dataclasses import dataclass, field
+from typing import Any, List, Optional
+
+
+@dataclass
+class ApiParam:
+    """
+    One query- or path-parameter of an OpenAPI operation.
+    """
+
+    name: str
+    location: str = 'query'  # 'query' or 'path' - OpenAPI's `in`
+    type: str = 'string'
+    required: bool = False
+    default: Any = None
+    enum: Optional[List[str]] = None
+    description: str = ''
+
+
+@dataclass
+class ApiDoc:
+    """
+    OpenAPI metadata for one operation exposed by a REST method.
+
+    Set as `<method>.api_doc = [ApiDoc(...), ...]` right below that method's
+    existing `expose_resource`/`authentication_needed` assignments - same
+    convention, so a route's behavior and its documentation sit in the same
+    few lines and are far more likely to get updated together. A method that
+    internally dispatches several distinct sub-resources by `id` (e.g.
+    ConfigController.read) lists one ApiDoc per sub-resource.
+
+    tools/build_openapi.py statically collects these into
+    modules/admin/openapi.yaml. That file is generated, not hand-edited -
+    same convention as requirements/*.txt (see lib/shpypi.py). The RAML file
+    this replaced went stale because nothing forced it to change alongside
+    the code; co-locating the metadata with the route it describes is the
+    actual fix, not just a different file format.
+    """
+
+    summary: str
+    method: str  # get | post | put | patch | delete
+    path: str  # relative to /api, with {param} placeholders, e.g. '/items/{itemPath}/rename'
+    auth: bool = True
+    tags: Optional[List[str]] = None
+    params: List[ApiParam] = field(default_factory=list)
+    request_body: Optional[str] = None
+    request_example: Optional[str] = None
+    response_example: Optional[str] = None
+    description: str = ''
+    deprecated: bool = False
+
 
 # """
 # REST Resource
@@ -339,26 +390,37 @@ class RESTResource:
 
         return (True, '')
 
+    def REST_check_auth(self, m, root):
+        """
+        Check whether the exposed resource method m may be invoked for the current request.
+
+        This is the single place authentication_needed/public_root are enforced - every
+        dispatch path that ends up calling an @expose_resource method must go through it.
+
+        :return: None if the call may proceed, otherwise a JSON error response to return to the client
+        """
+        public_root = False
+        if root:
+            public_root = getattr(m, 'public_root', False)
+            self.logger.info(f"REST_check_auth(): public_root = '{public_root}'")
+        if not public_root:
+            auth_needed = getattr(m, 'authentication_needed', False)
+            self.logger.info(
+                f'REST_check_auth(): {("" if auth_needed else "No ")}Authentication needed for {str(m).split()[2]}'
+            )
+            if auth_needed:
+                token_valid, error_text = self.REST_test_jwt_token()
+                if not token_valid:
+                    self.logger.info(f'REST_check_auth(): Authentication failed for {str(m).split()[2]}')
+                    response = {'result': 'error', 'description': error_text}
+                    return json.dumps(response)
+        return None
+
     def REST_dispatch_execute(self, m, method, root, resource, **params):
         if m and getattr(m, 'expose_resource', False):
-            public_root = False
-            if root:
-                public_root = getattr(m, 'public_root', False)
-                self.logger.info(f"REST_dispatch_execute(): public_root = '{public_root}'")
-            if not public_root:
-                auth_needed = getattr(m, 'authentication_needed', False)
-                self.logger.info(
-                    f'REST_dispatch_execute(): {("" if auth_needed else "No ")}Authentication needed for {method} ({str(m).split()[2]})'
-                )
-                if auth_needed:
-                    # self.logger.info("REST_dispatch: Authentication needed for {} ({})".format(method, str(m).split()[2]))
-                    token_valid, error_text = self.REST_test_jwt_token()
-                    if not token_valid:
-                        self.logger.info(
-                            'REST_dispatch_execute(): Authentication failed for {method} ({str(m).split()[2]})'
-                        )
-                        response = {'result': 'error', 'description': error_text}
-                        return json.dumps(response)
+            auth_error = self.REST_check_auth(m, root)
+            if auth_error is not None:
+                return auth_error
 
             try:
                 return m(resource, **params)
@@ -448,6 +510,9 @@ class RESTResource:
             method = getattr(self, a, None)
             # self.logger.notice(f"dir(method): {dir(method)}")
             if method and getattr(method, 'expose_resource', False):
+                auth_error = self.REST_check_auth(method, False)
+                if auth_error is not None:
+                    return auth_error
                 return method(resource, *vpath, **params)
             else:
                 # path component was specified but doesn't

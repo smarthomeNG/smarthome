@@ -601,6 +601,15 @@ class SDPCommands(object):
             # update with command attributes
             cmd_params.update({arg: cmd_dict[arg] for arg in COMMAND_PARAMS if arg in cmd_dict})
 
+            # cmd_settings is mutated in place below (and later at runtime by
+            # SDPCommand.set_valid_list()). commands.py is a cached module shared by
+            # every plugin instance of this device type, so cmd_dict[CMD_ATTR_CMD_SETTINGS]
+            # (just shallow-copied by the update() above) must be deep-copied here --
+            # otherwise mutating one instance's cmd_settings corrupts every other
+            # instance's command validation state.
+            if CMD_ATTR_CMD_SETTINGS in cmd_params:
+                cmd_params[CMD_ATTR_CMD_SETTINGS] = deepcopy(cmd_params[CMD_ATTR_CMD_SETTINGS])
+
             # store original config for later parsing
             cmd_params[CMD_ATTR_ORG_PARAMS] = deepcopy(cmd_dict)
 

@@ -29,7 +29,7 @@ import cherrypy
 
 import lib.backup
 from lib.item import Items
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 
 import bin.shngversion
 from lib.item_conversion import convert_yaml as convert_yaml
@@ -722,6 +722,34 @@ class FilesController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary="File list, or one file's raw text",
+            method='get',
+            path='/files/{filetype}',
+            tags=['files'],
+            params=[
+                ApiParam(
+                    name='filetype',
+                    location='path',
+                    required=True,
+                    enum=['structs', 'items', 'scenes', 'functions', 'logics', 'logging'],
+                    description=(
+                        'For structs/items/scenes/functions/logics: without filename, '
+                        "returns that type's file list; with filename, returns that file's "
+                        'raw text. `logging` (etc/logging.yaml) ignores filename.'
+                    ),
+                ),
+                ApiParam(name='filename'),
+            ],
+        ),
+        ApiDoc(
+            summary='Download a config backup (zip of the whole etc/ dir)',
+            method='get',
+            path='/files/backup/',
+            tags=['files'],
+        ),
+    ]
 
     def update(self, id='', filename=''):
         """
@@ -748,6 +776,36 @@ class FilesController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary=(
+                'Save/overwrite a file. For filetype=logging specifically, the response '
+                'includes config_reloaded/config_restored flags - bad YAML is auto-rolled '
+                'back server-side.'
+            ),
+            method='put',
+            path='/files/{filetype}',
+            tags=['files'],
+            params=[
+                ApiParam(
+                    name='filetype',
+                    location='path',
+                    required=True,
+                    enum=['structs', 'items', 'scenes', 'functions', 'logics', 'logging'],
+                ),
+                ApiParam(name='filename'),
+            ],
+            request_body='text/plain',
+        ),
+        ApiDoc(
+            summary='Restore etc/ from a previously downloaded backup file',
+            method='put',
+            path='/files/restore',
+            tags=['files'],
+            params=[ApiParam(name='filename', required=True)],
+            description='Not currently wired up in shngadmin - GET /files/backup/ (download) is used, but no frontend caller for restore was found.',
+        ),
+    ]
 
     def add(self, id='', filename=''):
         """
@@ -768,6 +826,21 @@ class FilesController(RESTResource):
 
     add.expose_resource = True
     add.authentication_needed = True
+    add.api_doc = [
+        ApiDoc(
+            summary='Create a new file. Unlike PUT, returns 409 Conflict if filename already exists.',
+            method='post',
+            path='/files/{filetype}',
+            tags=['files'],
+            params=[
+                ApiParam(
+                    name='filetype', location='path', required=True, enum=['structs', 'items', 'scenes', 'functions']
+                ),
+                ApiParam(name='filename', required=True),
+            ],
+            request_body='text/plain',
+        )
+    ]
 
     def delete(self, id='', filename=''):
         """
@@ -788,3 +861,17 @@ class FilesController(RESTResource):
 
     delete.expose_resource = True
     delete.authentication_needed = True
+    delete.api_doc = [
+        ApiDoc(
+            summary='Delete a file',
+            method='delete',
+            path='/files/{filetype}',
+            tags=['files'],
+            params=[
+                ApiParam(
+                    name='filetype', location='path', required=True, enum=['structs', 'items', 'scenes', 'functions']
+                ),
+                ApiParam(name='filename', required=True),
+            ],
+        )
+    ]

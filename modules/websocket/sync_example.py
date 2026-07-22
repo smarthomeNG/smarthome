@@ -126,7 +126,7 @@ class Protocol:
                     self.logger.info(f'Incremented value to {self.STATE["value"]}')
                     await self.notify_state()
                 else:
-                    self.logging.error(f'Sync-protocol: unsupported event: {data}')
+                    self.logger.error(f'Sync-protocol: unsupported event: {data}')
 
             await self.notify_users()
 

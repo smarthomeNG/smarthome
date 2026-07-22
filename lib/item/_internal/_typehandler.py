@@ -62,6 +62,12 @@ class ListHandler(TypeHandler):
 
     # All methods route through item.__call__() to ensure item-update pipeline fires.
 
+    # for all methods not implemented in __call__ themselves:
+    # read-modify-write must be atomic w.r.t. other threads calling a
+    # mutating method on the same item concurrently - the lock is
+    # reentrant (threading.Condition() defaults to an RLock), so
+    # __call__()/__update() reacquiring it below is safe
+
     def append(self, value, caller='Logic', source=None, dest=None):
         self._item.__call__(value, caller, source, dest, index='append')
 
@@ -69,23 +75,26 @@ class ListHandler(TypeHandler):
         self._item.__call__(value, caller, source, dest, index='prepend')
 
     def insert(self, index, value, caller='Logic', source=None, dest=None):
-        tmplist = copy.deepcopy(self._item._value)
-        tmplist.insert(index, value)
-        self._item.__call__(tmplist, caller, source, dest)
+        with self._item._lock:
+            tmplist = copy.deepcopy(self._item._value)
+            tmplist.insert(index, value)
+            self._item.__call__(tmplist, caller, source, dest)
 
     def pop(self, index=None, caller='Logic', source=None, dest=None):
-        tmplist = copy.deepcopy(self._item._value)
-        if index is None:
-            ret = tmplist.pop()
-        else:
-            ret = tmplist.pop(index)
-        self._item.__call__(tmplist, caller, source, dest)
+        with self._item._lock:
+            tmplist = copy.deepcopy(self._item._value)
+            if index is None:
+                ret = tmplist.pop()
+            else:
+                ret = tmplist.pop(index)
+            self._item.__call__(tmplist, caller, source, dest)
         return ret
 
     def extend(self, value, caller='Logic', source=None, dest=None):
-        tmplist = copy.deepcopy(self._item._value)
-        tmplist.extend(value)
-        self._item.__call__(tmplist, caller, source, dest)
+        with self._item._lock:
+            tmplist = copy.deepcopy(self._item._value)
+            tmplist.extend(value)
+            self._item.__call__(tmplist, caller, source, dest)
 
     def clear(self, caller='Logic', source=None, dest=None):
         self._item.__call__([], caller, source, dest)
@@ -95,23 +104,25 @@ class ListHandler(TypeHandler):
         Mimic ``del list[x:y]`` — supply ``"x:y"`` as *value*.
         Named *delete* rather than *del* for syntax reasons.
         """
-        splits = str(value).count(':')
-        tmplist = copy.deepcopy(self._item._value)
-        if splits == 0:
-            x = int(value)
-            del tmplist[x]
-        if splits == 1:
-            x, y = [int(i) for i in value.split(':')]
-            del tmplist[x:y]
-        elif splits == 2:
-            x, y, z = [int(i) for i in value.split(':')]
-            del tmplist[x:y:z]
-        self._item.__call__(tmplist, caller, source, dest)
+        with self._item._lock:
+            splits = str(value).count(':')
+            tmplist = copy.deepcopy(self._item._value)
+            if splits == 0:
+                x = int(value)
+                del tmplist[x]
+            if splits == 1:
+                x, y = [int(i) for i in value.split(':')]
+                del tmplist[x:y]
+            elif splits == 2:
+                x, y, z = [int(i) for i in value.split(':')]
+                del tmplist[x:y:z]
+            self._item.__call__(tmplist, caller, source, dest)
 
     def remove(self, value, caller='Logic', source=None, dest=None):
-        tmplist = copy.deepcopy(self._item._value)
-        tmplist.remove(value)
-        self._item.__call__(tmplist, caller, source, dest)
+        with self._item._lock:
+            tmplist = copy.deepcopy(self._item._value)
+            tmplist.remove(value)
+            self._item.__call__(tmplist, caller, source, dest)
 
 
 class DictHandler(TypeHandler):
@@ -128,29 +139,34 @@ class DictHandler(TypeHandler):
 
     def delete(self, key, caller='Logic', source=None, dest=None):
         """Named *delete* rather than *del* for syntax reasons."""
-        tmpdict = copy.deepcopy(self._item._value)
-        del tmpdict[key]
-        self._item.__call__(tmpdict, caller, source, dest)
+        # see ListHandler.insert() for why this needs the lock
+        with self._item._lock:
+            tmpdict = copy.deepcopy(self._item._value)
+            del tmpdict[key]
+            self._item.__call__(tmpdict, caller, source, dest)
 
     def clear(self, caller='Logic', source=None, dest=None):
         self._item.__call__({}, caller, source, dest)
 
     def pop(self, key, caller='Logic', source=None, dest=None, default=None):
-        tmpdict = copy.deepcopy(self._item._value)
-        ret = tmpdict.pop(key, default)
-        self._item.__call__(tmpdict, caller, source, dest)
+        with self._item._lock:
+            tmpdict = copy.deepcopy(self._item._value)
+            ret = tmpdict.pop(key, default)
+            self._item.__call__(tmpdict, caller, source, dest)
         return ret
 
     def popitem(self, caller='Logic', source=None, dest=None):
-        tmpdict = copy.deepcopy(self._item._value)
-        ret = tmpdict.popitem()
-        self._item.__call__(tmpdict, caller, source, dest)
+        with self._item._lock:
+            tmpdict = copy.deepcopy(self._item._value)
+            ret = tmpdict.popitem()
+            self._item.__call__(tmpdict, caller, source, dest)
         return ret
 
     def update(self, value, caller='Logic', source=None, dest=None):
-        tmpdict = copy.deepcopy(self._item._value)
-        tmpdict.update(value)
-        self._item.__call__(tmpdict, caller, source, dest)
+        with self._item._lock:
+            tmpdict = copy.deepcopy(self._item._value)
+            tmpdict.update(value)
+            self._item.__call__(tmpdict, caller, source, dest)
 
 
 # Map from item type string to handler class — used by Item.__init__

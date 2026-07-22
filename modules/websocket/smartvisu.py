@@ -216,6 +216,12 @@ class Protocol:
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
                 self.logger.dbgmed(f"{self.build_log_info(client_addr)} sent '{data}'")
                 answer = {'error': 'unhandled command'}
+                # keep in sync with the reassignment at the end of the try block below --
+                # this default must always be valid, since a handler raising before reaching
+                # that reassignment must not leave reply undefined (regression: used to raise
+                # UnboundLocalError here, and again in the except below referencing reply,
+                # which terminated the whole connection)
+                reply = json.dumps(answer, default=self.json_serial)
 
                 try:
                     if command == 'item':
@@ -228,11 +234,11 @@ class Protocol:
                                 item_acl = item.conf.get('acl', None)
                             if item_acl is None:
                                 item_acl = self.sv_acl
-                            if item_acl != 'ro':
+                            if item_acl == 'rw':
                                 item(value, self.sv_clients[client_addr]['sw'], client_ip)
                             else:
                                 self.logger.warning(
-                                    f'Client {self.build_log_info(client_addr)} want to update read only item: {path}'
+                                    f'Client {self.build_log_info(client_addr)} want to update non-writable item: {path}'
                                 )
                         else:
                             self.logger.warning(
@@ -480,7 +486,7 @@ class Protocol:
                     )
 
             else:
-                self.logger.warning('Client {self.build_log_info(client_addr)} requested invalid item: {path}')
+                self.logger.warning(f'Client {self.build_log_info(client_addr)} requested invalid item: {path}')
         self.logger.debug(
             f'json_parse: send to {self.build_log_info(client_addr)}: { ({"cmd": "item", "items": items}) }'
         )

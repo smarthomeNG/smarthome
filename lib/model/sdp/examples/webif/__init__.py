@@ -24,22 +24,31 @@
 #
 #########################################################################
 
-import json
+"""INCOMPLETE STUB -- not a working webif, not a copy-paste example.
+
+This was never finished, and it deliberately no longer ships a
+templates/index.html: a webif's template has to be written against the
+specific item/data/device structure of the plugin it belongs to, none of
+which is known at this (generic SDP) level -- there is no single HTML
+layout that would be correct for every SmartDevicePlugin. So there is no
+generic *example* to provide here, only a (currently unwritten) generic
+*Python-side* interface: helpers that introspect an SDPCommands/SDPConnection
+instance generically (connection status, the list of defined commands and
+their read/write/item_type, currently bound items) without assuming any
+particular device's item layout. That interface doesn't exist yet.
+
+If you're writing a plugin's webif, don't start from this file -- write
+your own WebInterface class and template against your plugin's actual
+data, the same way dev/sample_smartdevice_plugin's plugin code is written
+against the current single-connection SmartDevicePlugin API (self._connection,
+self._commands), not the multi-device model this stub predates.
+"""
 
 from lib.item import Items
 from lib.model.smartplugin import SmartPluginWebIf
-from ..MD_Globals import *
-import cherrypy
 
-
-#############################################################################################################################################################################################################################################
-#
-# class WebInterface
-#
-#############################################################################################################################################################################################################################################
 
 class WebInterface(SmartPluginWebIf):
-
     def __init__(self, webif_dir, plugin):
         """
         Initialization of instance of class WebInterface
@@ -56,100 +65,5 @@ class WebInterface(SmartPluginWebIf):
 
         self.tplenv = self.init_template_environment()
 
-    @cherrypy.expose
-    def index(self, reload=None):
-        """
-        Build index.html for cherrypy
-
-        Render the template and return the html file to be delivered to the browser
-
-        :return: contents of the template after beeing rendered
-        """
-        tmpl = self.tplenv.get_template('index.html')
-        # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
-
-        plgitems = []
-        for item in self.items.return_items():
-            if any(elem in item.property.attributes for elem in ITEM_ATTRS):
-                plgitems.append(item)
-
-        return tmpl.render(p=self.plugin,
-                           items=sorted(self.items.return_items(), key=lambda k: str.lower(k['_path'])),
-                           item_count=0,
-                           plgitems=plgitems,
-                           running={dev: self.plugin._devices[dev]['device'].alive for dev in self.plugin._devices},
-                           devices=self.plugin._devices,
-                           lookups={dev: self.plugin._devices[dev]['device']._commands._lookups for dev in self.plugin._devices})
-
-    @cherrypy.expose
-    def submit(self, button=None, param=None):
-        """
-        Submit handler for Ajax
-        """
-        if button is not None:
-
-            notify = None
-
-            if '#' in button:
-
-                # run/stop command
-                cmd, __, dev = button.partition('#')
-                device = self.plugin.get_device(dev)
-                if device:
-                    if cmd == 'run':
-                        self.logger.info(f'Webinterface starting device {dev}')
-                        device.start()
-                    elif cmd == 'stop':
-                        self.logger.info(f'Webinterface stopping device {dev}')
-                        device.stop()
-            elif '.' in button:
-
-                # set device arg - but only when stopped
-                dev, __, arg = button.partition('.')
-                if param is not None:
-                    param = sanitize_param(param)
-                    try:
-                        self.logger.info(f'Webinterface setting param {arg} of device {dev} to {param}')
-                        self.plugin._devices[dev]['params'][arg] = param
-                        self.plugin._update_device_params(dev)
-                        notify = dev + '-' + arg + '-notify'
-                    except Exception as e:
-                        self.logger.info(f'Webinterface failed to set param {arg} of device {dev} to {param} with error {e}')
-
-            # # possibly prepare data for returning
-            # read_cmd = self.plugin._commandname_by_commandcode(button)
-            # if read_cmd is not None:
-            #     self._last_read[button] = {'addr': button, 'cmd': read_cmd, 'val': read_val}
-            #     self._last_read['last'] = self._last_read[button]
-
-            data = {'running': {dev: self.plugin._devices[dev]['device'].alive for dev in self.plugin._devices}, 'notify': notify}
-
-        # # possibly return data to WebIf
-        cherrypy.response.headers['Content-Type'] = 'application/json'
-        return json.dumps(data).encode('utf-8')
-
-    @cherrypy.expose
-    def get_data_html(self, dataSet=None):
-        """
-        Return data to update the webpage
-
-        For the standard update mechanism of the web interface, the dataSet to return the data for is None
-
-        :param dataSet: Dataset for which the data should be returned (standard: None)
-        :return: dict with the data needed to update the web page.
-        """
-        if dataSet is None:
-            # get the new data
-            # data = {}
-            pass
-
-            # data['item'] = {}
-            # for i in self.plugin.items:
-            #     data['item'][i]['value'] = self.plugin.getitemvalue(i)
-            #
-            # return it as json the the web page
-            # try:
-            #     return json.dumps(data)
-            # except Exception as e:
-            #     self.logger.error('get_data_html exception: {}'.format(e))
-        return {}
+    # no index()/submit()/get_data_html() here on purpose -- see the module
+    # docstring. A real plugin needs its own handlers and its own template.

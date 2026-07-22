@@ -53,24 +53,26 @@ def import_user_module(m):
     import importlib
 
     try:
-        exec(f"globals()['{m}']=importlib.import_module('{modulename}')")
+        mod = importlib.import_module(modulename)
     except Exception as e:
         _logger.error(translate("Error importing userfunctions from '{module}': {error}", {'module': m, 'error': e}))
         return False
     else:
+        globals()[m] = mod
+
         global _uf_version
         _uf_version = '?.?.?'
         try:
-            exec(f"globals()['_uf_version'] = {m}._VERSION")
+            _uf_version = mod._VERSION
         except AttributeError:
-            exec(f'{m}._VERSION = _uf_version')
+            mod._VERSION = _uf_version
 
         global _uf_description
         _uf_description = '?'
         try:
-            exec(f"globals()['_uf_description'] = {m}._DESCRIPTION")
+            _uf_description = mod._DESCRIPTION
         except AttributeError:
-            exec(f'{m}._DESCRIPTION = _uf_description')
+            mod._DESCRIPTION = _uf_description
 
         _logger.notice(
             translate(
@@ -134,27 +136,26 @@ def reload(userlib):
 
     if userlib in _user_modules:
         try:
-            exec(f'importlib.reload({userlib})')
-        except Exception as e:
-            if str(e) == f"name '{userlib}' is not defined":
-                _logger.warning(
-                    translate(
-                        "Error reloading userfunctions Modul '{module}': Module is not loaded, trying to newly import userfunctions '{module}' instead",
-                        {'module': userlib},
-                    )
+            importlib.reload(globals()[userlib])
+        except KeyError:
+            _logger.warning(
+                translate(
+                    "Error reloading userfunctions Modul '{module}': Module is not loaded, trying to newly import userfunctions '{module}' instead",
+                    {'module': userlib},
                 )
-                if import_user_module(userlib):
-                    return True
-                else:
-                    return False
+            )
+            if import_user_module(userlib):
+                return True
             else:
-                _logger.error(
-                    translate(
-                        "Error reloading userfunctions '{module}': {error} - old version of '{module}' is still active",
-                        {'module': userlib, 'error': e},
-                    )
-                )
                 return False
+        except Exception as e:
+            _logger.error(
+                translate(
+                    "Error reloading userfunctions '{module}': {error} - old version of '{module}' is still active",
+                    {'module': userlib, 'error': e},
+                )
+            )
+            return False
 
         else:
             _logger.notice(translate("Reloaded userfunctions '{module}'", {'module': userlib}))

@@ -397,7 +397,7 @@ class Log(collections.deque):
 
         :return: List of log entries
         """
-        return list(self)[-number:]
+        return list(self)[:number]
 
     def export(self, number):
         """
@@ -938,7 +938,8 @@ class ShngMemLogHandler(logging.StreamHandler):
         # logs_instance.logger.info(f"ShngMemLogHandler.emit() #2: self={self}, handlers={logging._handlers.data}")
         try:
             self.format(record)
-            timestamp = datetime.datetime.fromtimestamp(record.created, self._shtime.tzinfo())
+            tzinfo = self._shtime.tzinfo() if self._shtime is not None else datetime.timezone.utc
+            timestamp = datetime.datetime.fromtimestamp(record.created, tzinfo)
             self._log.add([timestamp, record.threadName, record.levelname, record.message])
         except Exception:
             self.handleError(record)

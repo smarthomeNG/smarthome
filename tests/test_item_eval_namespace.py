@@ -618,5 +618,52 @@ class TestRunEvalCompatIntegration(_Base):
         self.assertTrue(any('future release' in line for line in cm.output))
 
 
+# ===========================================================================
+# TestBareEvalRunsOnce — bare on_change/on_update must not double-execute
+# ===========================================================================
+
+
+class TestBareEvalRunsOnce(_Base):
+    """
+    Regression test: bare (no "dest =") on_change/on_update expressions must
+    only run once. run_on_xxx() used to eval() the expression a second time
+    "for its side effect", even though the first eval() (needed to compute
+    dest_value) already ran it - any bare expression whose result was not
+    None (e.g. a uf. function call returning a status) had its side effects
+    executed twice per trigger.
+    """
+
+    def _tracked(self):
+        calls = []
+
+        def tracked(x, caller=None, source=None):
+            # caller/source: bare "expr(...)" calls get ", caller=..., source=..."
+            # appended automatically, so the target function must accept them
+            calls.append(x)
+            return x + 1  # non-None return is what used to trigger the second eval
+
+        return calls, tracked
+
+    def test_bare_on_update_runs_expression_once(self):
+        calls, tracked = self._tracked()
+        import lib.userfunctions as uf
+
+        with patch.object(uf, 'tracked', tracked, create=True):
+            source = _item(self.sh, 'oe_ou_src', on_update='uf.tracked(value)')
+            source(5)
+
+        self.assertEqual(calls, [5])
+
+    def test_bare_on_change_runs_expression_once(self):
+        calls, tracked = self._tracked()
+        import lib.userfunctions as uf
+
+        with patch.object(uf, 'tracked', tracked, create=True):
+            source = _item(self.sh, 'oe_oc_src', on_change='uf.tracked(value)')
+            source(5)
+
+        self.assertEqual(calls, [5])
+
+
 if __name__ == '__main__':
     unittest.main()

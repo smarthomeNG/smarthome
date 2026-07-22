@@ -329,6 +329,7 @@ class MockSmartHome:
         lib.plugin._plugins_instance = None
         lib.plugin.Plugins._plugins = []
         lib.plugin.Plugins._threads = []
+        lib.plugin.Plugins._plugindict = {}
         self.plugins = lib.plugin.Plugins(self, conf)
         return self.plugins
 

@@ -290,37 +290,39 @@ class Database:
         For an extended example take a look into the 'database' plugin.
         """
         self.lock()
-        cur = self.cursor()
-        version_table = re.sub('[^a-z0-9_]', '', self._name.lower()) + '_version'
         try:
-            (version,) = self.fetchone('SELECT MAX(version) FROM ' + version_table + ';', cur=cur, quiet=True)
-            if version is None:
-                version = 0
-        except Exception:
-            self.logger.info('Missing table ' + version_table + ' error can be ignored, will be created now!')
-            self.execute(
-                'CREATE TABLE ' + version_table + '(version NUMERIC, updated BIGINT, rollout TEXT, rollback TEXT)',
-                cur=cur,
-            )
-            version = 0
-        self.logger.info('Database [{}]: Version {} found'.format(self._name, version))
-        for v in sorted(queries.keys()):
-            if float(v) > version:
-                self.logger.info('Database [{}]: Upgrading to version {}'.format(self._name, v))
-                self.execute(queries[v][0], cur=cur)
-
-                dt = self.shtime.utcnow()  # type: ignore (shtime is set dynamically)
-                ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
+            cur = self.cursor()
+            version_table = re.sub('[^a-z0-9_]', '', self._name.lower()) + '_version'
+            try:
+                (version,) = self.fetchone('SELECT MAX(version) FROM ' + version_table + ';', cur=cur, quiet=True)
+                if version is None:
+                    version = 0
+            except Exception:
+                self.logger.info('Missing table ' + version_table + ' error can be ignored, will be created now!')
                 self.execute(
-                    'INSERT INTO ' + version_table + '(version, updated, rollout, rollback) VALUES(?, ?, ?, ?);',
-                    (v, ts, queries[v][0], queries[v][1]),
-                    formatting='qmark',
+                    'CREATE TABLE ' + version_table + '(version NUMERIC, updated BIGINT, rollout TEXT, rollback TEXT)',
                     cur=cur,
                 )
+                version = 0
+            self.logger.info('Database [{}]: Version {} found'.format(self._name, version))
+            for v in sorted(queries.keys()):
+                if float(v) > version:
+                    self.logger.info('Database [{}]: Upgrading to version {}'.format(self._name, v))
+                    self.execute(queries[v][0], cur=cur)
 
-        self.commit()
-        cur.close()
-        self.release()
+                    dt = self.shtime.utcnow()  # type: ignore (shtime is set dynamically)
+                    ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
+                    self.execute(
+                        'INSERT INTO ' + version_table + '(version, updated, rollout, rollback) VALUES(?, ?, ?, ?);',
+                        (v, ts, queries[v][0], queries[v][1]),
+                        formatting='qmark',
+                        cur=cur,
+                    )
+
+            self.commit()
+            cur.close()
+        finally:
+            self.release()
 
     def lock(self, timeout=-1):
         """Acquire a database lock"""

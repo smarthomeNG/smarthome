@@ -1294,7 +1294,9 @@ class Item:
 
     def __trigger_logics(self, source_details=None):
         source = {'item': self._path, 'details': source_details}
-        for logic in self.__logics_to_trigger:
+        # snapshot: add_logic_trigger()/remove_logic_trigger() (_triggers.py) mutate
+        # this list with no lock, from any thread, concurrently with this iteration
+        for logic in list(self.__logics_to_trigger):
             logic.trigger(by='Item', source=source, value=self._value)
 
     def _set_value(self, value, caller, source=None, dest=None, prev_change=None, last_change=None):
@@ -1407,55 +1409,53 @@ class Item:
                     pass
                 return
 
-        self._lock.acquire()
-        _changed = False
-        trigger_source_details = self._history.get_last_update_by()
+        with self._lock:
+            _changed = False
+            trigger_source_details = self._history.get_last_update_by()
 
-        if key is not None and self._type == 'dict':
-            # Update a dict item element or add an element (selected by key)
-            value = self.__set_dictentry(value, key)
-        elif index is not None and self._type == 'list':
-            # Update a list item element (selected by index)
-            value = self.__set_listentry(value, index)
-        if self._fading:
-            stop_fade = self._fadingdetails.get('stop_fade')
-            continue_fade = self._fadingdetails.get('continue_fade')
-            stopping = check_external_change('stop_fade', stop_fade) if stop_fade else [False]
-            continuing = check_external_change('continue_fade', continue_fade) if continue_fade else [True]
-            # If stop_fade is set and there's a match, stop fading immediately
-            if stop_fade and True in stopping:
-                logger.dbghigh(f'Item {self._path}: Stopping fade loop, {caller} matches stop list {stop_fade}')
-                self._fading = False
-                self._lock.notify_all()
+            if key is not None and self._type == 'dict':
+                # Update a dict item element or add an element (selected by key)
+                value = self.__set_dictentry(value, key)
+            elif index is not None and self._type == 'list':
+                # Update a list item element (selected by index)
+                value = self.__set_listentry(value, index)
+            if self._fading:
+                stop_fade = self._fadingdetails.get('stop_fade')
+                continue_fade = self._fadingdetails.get('continue_fade')
+                stopping = check_external_change('stop_fade', stop_fade) if stop_fade else [False]
+                continuing = check_external_change('continue_fade', continue_fade) if continue_fade else [True]
+                # If stop_fade is set and there's a match, stop fading immediately
+                if stop_fade and True in stopping:
+                    logger.dbghigh(f'Item {self._path}: Stopping fade loop, {caller} matches stop list {stop_fade}')
+                    self._fading = False
+                    self._lock.notify_all()
 
-            # If continue_fade is set and there is no match, stop fading immediately
-            elif continue_fade and False not in continuing and caller != 'Fader':
-                logger.dbghigh(
-                    f'Item {self._path}: Stopping fade loop, {caller} matches no value in continue list {continue_fade}'
-                )
-                self._fading = False
-                self._lock.notify_all()
+                # If continue_fade is set and there is no match, stop fading immediately
+                elif continue_fade and False not in continuing and caller != 'Fader':
+                    logger.dbghigh(
+                        f'Item {self._path}: Stopping fade loop, {caller} matches no value in continue list {continue_fade}'
+                    )
+                    self._fading = False
+                    self._lock.notify_all()
 
-            # If nothing is set, stop (original behaviour)
-            elif not continue_fade and not stop_fade and caller != 'Fader':
-                logger.dbghigh(f'Item {self._path}: Stopping fade loop by {caller}, current value {value}')
-                self._fading = False
-                self._lock.notify_all()
+                # If nothing is set, stop (original behaviour)
+                elif not continue_fade and not stop_fade and caller != 'Fader':
+                    logger.dbghigh(f'Item {self._path}: Stopping fade loop by {caller}, current value {value}')
+                    self._fading = False
+                    self._lock.notify_all()
 
-            elif value == self._fadingdetails.get('value'):
-                pass
+                elif value == self._fadingdetails.get('value'):
+                    pass
+                else:
+                    logger.dbghigh(f'Item {self._path}: Ignoring update by {caller} as item is fading')
+                    return
+
+            if value != self._value or self._enforce_change:
+                _changed = True
+                self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
+                trigger_source_details = self._history.get_last_change_by()
             else:
-                logger.dbghigh(f'Item {self._path}: Ignoring update by {caller} as item is fading')
-                self._lock.release()
-                return
-
-        if value != self._value or self._enforce_change:
-            _changed = True
-            self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
-            trigger_source_details = self._history.get_last_change_by()
-        else:
-            self._history.record_update_only(caller, source, self.shtime)
-        self._lock.release()
+                self._history.record_update_only(caller, source, self.shtime)
 
         # Test for fix for unwanted plugin retrigger in combination with eval expressions
         # remove existing prefix from caller
@@ -1473,7 +1473,9 @@ class Item:
         if _changed or self._enforce_updates or self._type == 'scene':
             # Trigger methods (update_item methods of plugins)
             ### Test for fix for unwanted plugin retrigger in combination with eval expressions
-            for method in self.__methods_to_trigger:
+            # snapshot: add_method_trigger()/remove_method_trigger() (_triggers.py) mutate
+            # this list with no lock, from any thread, concurrently with this iteration
+            for method in list(self.__methods_to_trigger):
                 # shortname={method.__self__._shortname} - not every plugin has a var _shortname !!!
                 try:
                     method(self, caller_without_prefix, source, dest)
@@ -1658,9 +1660,8 @@ class Item:
             except Exception:
                 pass
             return
-        self._lock.acquire()
-        self._set_value(value, caller, source, dest, prev_change, last_change)
-        self._lock.release()
+        with self._lock:
+            self._set_value(value, caller, source, dest, prev_change, last_change)
         return
 
     def get_children_path(self):

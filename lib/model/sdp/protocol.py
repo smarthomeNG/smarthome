@@ -620,12 +620,17 @@ class SDPProtocolResend(SDPProtocol):
                 except ValueError:
                     return False
             elif value_type is bool:
-                if compare_value.lower() == 'true':
-                    converted_value = True
-                elif compare_value.lower() == 'false':
-                    converted_value = False
-                else:
+                try:
+                    normalized = compare_value.lower()
+                except AttributeError:
                     converted_value = None
+                else:
+                    if normalized == 'true':
+                        converted_value = True
+                    elif normalized == 'false':
+                        converted_value = False
+                    else:
+                        converted_value = None
             elif value_type is list:
                 try:
                     converted_value = ast.literal_eval(compare_value)

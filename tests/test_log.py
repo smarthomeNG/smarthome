@@ -203,6 +203,8 @@ class TestLogLast(unittest.TestCase):
     def setUp(self):
         self.log = _make_log()
         self.log._sh.return_event_listeners.return_value = []
+        # add() uses appendleft, so entries are added oldest-first here and
+        # msg4 (added last) ends up newest, at index 0
         for i in range(5):
             self.log.add((i, '', '', f'msg{i}'))
 
@@ -210,15 +212,20 @@ class TestLogLast(unittest.TestCase):
         result = self.log.last(3)
         self.assertEqual(len(result), 3)
 
-    def test_last_returns_oldest_n(self):
-        # last() returns the last N items of list(self), which are the oldest
+    def test_last_returns_newest_n(self):
+        # regression test: last() used to return list(self)[-number:], the
+        # OLDEST surviving entries, contradicting its own docstring and its
+        # sibling export(), which correctly uses [:number] on the same deque
         result = self.log.last(1)
-        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0][3], 'msg4')
 
-    def test_last_zero_returns_full_list(self):
-        # last(0): list(self)[-0:] == list(self)[0:] → the entire deque
+    def test_last_returns_newest_n_in_order(self):
+        result = self.log.last(3)
+        self.assertEqual([entry[3] for entry in result], ['msg4', 'msg3', 'msg2'])
+
+    def test_last_zero_returns_empty_list(self):
         result = self.log.last(0)
-        self.assertEqual(len(result), 5)
+        self.assertEqual(len(result), 0)
 
 
 class TestLogExport(unittest.TestCase):

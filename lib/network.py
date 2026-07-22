@@ -35,6 +35,7 @@ These classes, functions and methods are mainly meant to be used by plugin devel
 """
 
 from lib.utils import Utils
+import errno
 import sys
 import traceback
 from inspect import signature
@@ -105,7 +106,7 @@ class Network(object):
         :rtype: bool
         """
         logger = logging.getLogger(__name__)
-        if subprocess.call(f'ping -c 1 {ip}', shell=True, stdout=open('/dev/null', 'w'), stderr=subprocess.STDOUT) == 0:
+        if subprocess.call(['ping', '-c', '1', ip], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0:
             logger.debug(f'Ping: {ip} is online')
             return True
         else:
@@ -446,8 +447,9 @@ class Http(object):
         :return: Answer as raw binary objector None on whatever error occured
         :rtype: bytes | None
         """
-        self.__get(url=url, params=params)
-        return self._response.content
+        if self.__get(url=url, params=params):
+            return self._response.content
+        return None
 
     def response_status(self):
         """
@@ -830,8 +832,9 @@ class Tcp_client(object):
                 return False
 
         except (BrokenPipeError, TimeoutError, ConnectionResetError) as e:
-            if e.errno == 60:
-                # timeout
+            if isinstance(e, TimeoutError) or e.errno == errno.ETIMEDOUT:
+                # a plain TimeoutError (from settimeout()) has errno=None, not a
+                # numbered errno at all -- check the exception type too
                 self.logger.warning(f'{self._id} detected timeout, disconnecting, send failed.')
             else:
                 self.logger.warning(f'{self._id} detected disconnect, send failed.')
@@ -956,8 +959,13 @@ class Tcp_client(object):
                         timeout = False
                         try:
                             msg = self._socket.recv(4096)
-                        except (TimeoutError, OSError) as e:
-                            if isinstance(e, OSError) and e.errno not in (60, 65):
+                        except TimeoutError:
+                            # a plain recv timeout (from settimeout()) has errno=None,
+                            # not a numbered errno at all -- always expected here
+                            msg = None
+                            timeout = True
+                        except OSError as e:
+                            if e.errno not in (errno.ETIMEDOUT, errno.EHOSTUNREACH):
                                 raise
                             msg = None
                             timeout = True

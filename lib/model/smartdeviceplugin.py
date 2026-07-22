@@ -305,7 +305,7 @@ class SmartDevicePlugin(SmartPlugin):
         """
 
         try:
-            cmd = self._plg_item_dict[item]['mapping']
+            cmd = self._plg_item_dict[item.property.path]['mapping']
         except KeyError:
             cmd = None
 
@@ -318,8 +318,8 @@ class SmartDevicePlugin(SmartPlugin):
             return True
 
         """ remove item from custom plugin dicts/lists """
-        if item in self._items_write:
-            del self._items_write[item]
+        if item.property.path in self._items_write:
+            del self._items_write[item.property.path]
 
         if item.property.path in self._items_read_grp:
             del self._items_read_grp[item.property.path]
@@ -1203,8 +1203,7 @@ class SmartDevicePlugin(SmartPlugin):
             item = None
 
             # check if command is configured for reading
-            items = self._commands_read.get(command, [])
-            items += self._commands_pseudo.get(command, [])
+            items = self._commands_read.get(command, []) + self._commands_pseudo.get(command, [])
 
             if not items:
                 self.logger.info(

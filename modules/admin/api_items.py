@@ -30,7 +30,7 @@ from lib.item import Items
 from lib.utils import Utils
 
 import jwt
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 from .itemdata import ItemData
 
 
@@ -94,6 +94,23 @@ class ItemsController(RESTResource, ItemData):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(summary='Item struct templates (etc/struct.yaml)', method='get', path='/items/structs', tags=['items']),
+        ApiDoc(summary='Item tree structure', method='get', path='/items/tree', tags=['items']),
+        ApiDoc(
+            summary='Core item-attribute catalog (drives item-edit-dialog form fields)',
+            method='get',
+            path='/items/attributes',
+            tags=['items'],
+        ),
+        ApiDoc(
+            summary='Full detail for one item',
+            method='get',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+        ),
+    ]
 
     def _core_item_attributes(self):
         """
@@ -162,6 +179,17 @@ class ItemsController(RESTResource, ItemData):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary="Live-set an item's value",
+            method='put',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example='{"value": "<new value>"}',
+        )
+    ]
 
     # ======================================================================
     #  POST /api/items/{item_path}
@@ -212,6 +240,20 @@ class ItemsController(RESTResource, ItemData):
 
     add.expose_resource = True
     add.authentication_needed = True
+    add.api_doc = [
+        ApiDoc(
+            summary='Create a new item',
+            method='post',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example=(
+                '{"config": {}, "persist": true, "filename": "<optional>", "create_missing_parents": false}'
+            ),
+            description='create_missing_parents auto-creates the whole missing ancestor chain as empty items.',
+        )
+    ]
 
     # ======================================================================
     #  PATCH /api/items/{item_path}
@@ -260,6 +302,17 @@ class ItemsController(RESTResource, ItemData):
 
     edit.expose_resource = True
     edit.authentication_needed = True
+    edit.api_doc = [
+        ApiDoc(
+            summary='Edit item config - full replace, not a partial patch despite the verb',
+            method='patch',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example='{"config": {}}',
+        )
+    ]
 
     # ======================================================================
     #  DELETE /api/items/{item_path}
@@ -322,6 +375,21 @@ class ItemsController(RESTResource, ItemData):
 
     delete.expose_resource = True
     delete.authentication_needed = True
+    delete.api_doc = [
+        ApiDoc(
+            summary=(
+                'Delete item. persist/recursive are query params, not a body - CherryPy does not body-process DELETE.'
+            ),
+            method='delete',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[
+                ApiParam(name='itemPath', location='path', required=True),
+                ApiParam(name='persist', type='boolean', default=True),
+                ApiParam(name='recursive', type='boolean', default=False),
+            ],
+        )
+    ]
 
     # ======================================================================
     #  GET /api/items/{item_path}/references
@@ -350,6 +418,15 @@ class ItemsController(RESTResource, ItemData):
 
     references.expose_resource = True
     references.authentication_needed = True
+    references.api_doc = [
+        ApiDoc(
+            summary='List what references this item (used to warn before delete)',
+            method='get',
+            path='/items/{itemPath}/references',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+        )
+    ]
 
     # ======================================================================
     #  POST /api/items/{item_path}/remove_references
@@ -384,6 +461,15 @@ class ItemsController(RESTResource, ItemData):
 
     remove_references.expose_resource = True
     remove_references.authentication_needed = True
+    remove_references.api_doc = [
+        ApiDoc(
+            summary="Strip other items'/plugins' references to this item, pre-delete",
+            method='post',
+            path='/items/{itemPath}/remove_references',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+        )
+    ]
 
     # ======================================================================
     #  POST /api/items/{item_path}/rename
@@ -433,6 +519,20 @@ class ItemsController(RESTResource, ItemData):
 
     rename.expose_resource = True
     rename.authentication_needed = True
+    rename.api_doc = [
+        ApiDoc(
+            summary=(
+                'Rename or move an item. A new_path whose parent segment differs from the '
+                'current one triggers a move - same endpoint, no separate move route.'
+            ),
+            method='post',
+            path='/items/{itemPath}/rename',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example='{"new_path": "<path>", "filename": "<optional>"}',
+        )
+    ]
 
     # ======================================================================
     #  POST /api/items/{item_path}/copy
@@ -499,6 +599,20 @@ class ItemsController(RESTResource, ItemData):
 
     copy.expose_resource = True
     copy.authentication_needed = True
+    copy.api_doc = [
+        ApiDoc(
+            summary=(
+                'Copy an item (and its subtree by default). Only persisted items are '
+                "copyable; the copy is written to the source item's own file by default."
+            ),
+            method='post',
+            path='/items/{itemPath}/copy',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example='{"new_path": "<path>", "filename": "<optional>", "include_children": true}',
+        )
+    ]
 
 
 class ItemsListController(RESTResource):
@@ -532,3 +646,4 @@ class ItemsListController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [ApiDoc(summary='Flat list of all items', method='get', path='/items/list', tags=['items'])]

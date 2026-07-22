@@ -179,6 +179,12 @@ class Protocol:
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
                 self.logger.info(f"{self.build_log_info(client_addr)} sent '{data}'")
                 answer = {'error': 'unhandled command'}
+                # keep in sync with the reassignment at the end of the try block below --
+                # this default must always be valid, since a handler raising before reaching
+                # that reassignment must not leave reply undefined (regression: used to raise
+                # UnboundLocalError here, and again in the except below referencing reply,
+                # which terminated the whole connection)
+                reply = json.dumps(answer, default=self.json_serial)
 
                 try:
                     if command == 'item':
@@ -191,11 +197,11 @@ class Protocol:
                                 item_acl = item.conf.get('acl', None)
                             if item_acl is None:
                                 item_acl = self.adm_acl
-                            if item_acl != 'ro':
+                            if item_acl == 'rw':
                                 item(value, self.adm_clients[client_addr]['sw'], client_ip)
                             else:
                                 self.logger.warning(
-                                    f'Client {self.build_log_info(client_addr)} want to update read only item: {path}'
+                                    f'Client {self.build_log_info(client_addr)} want to update non-writable item: {path}'
                                 )
                         else:
                             self.logger.warning(
@@ -377,7 +383,7 @@ class Protocol:
         items = []
         newmonitor_items = []
         for path in list(data['items']):
-            path_parts = 0 if path is None else path.split('.property.')
+            path_parts = [] if path is None else path.split('.property.')
             if len(path_parts) == 1:
                 self.logger.debug(
                     f'Client {self.build_log_info(client_addr)} requested to monitor item {path_parts[0]}'
@@ -421,7 +427,7 @@ class Protocol:
                     )
 
             else:
-                self.logger.warning('Client {self.build_log_info(client_addr)} requested invalid item: {path}')
+                self.logger.warning(f'Client {self.build_log_info(client_addr)} requested invalid item: {path}')
         self.logger.debug(
             f'json_parse: send to {self.build_log_info(client_addr)}: { ({"cmd": "item", "items": items}) }'
         )

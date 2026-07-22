@@ -637,13 +637,13 @@ class Plugins:
             logger.debug(f'myplugin referrer cnt2= {len(gc.get_referrers(myplugin))}')
 
             # remove references in plugins data
-            if getattr(self._plugindict, plgname, None) is myplugin:
+            if self._plugindict.get(plgname, None) is myplugin:
                 try:
                     del self._plugindict[plgname]
                 except Exception as e:
                     logger.warning(f'error on removing {plgname} from plugindict: {e}')
 
-            if getattr(self._plugindict, plgname + '#' + instance, None) is myplugin:
+            if self._plugindict.get(plgname + '#' + instance, None) is myplugin:
                 try:
                     del self._plugindict[plgname + '#' + instance]
                 except Exception as e:
@@ -947,6 +947,24 @@ class PluginWrapper(threading.Thread):
             # initialize the loaded instance of the plugin
             # exec("self.plugin.__init__(smarthome{0}{1})".format("," if len(arglist) else "", argstring))
             self.plugin.__init__(smarthome, **kwargs)
+
+            # QA guard: detect plugins that skip super().__init__(), which
+            # leaves them running on SmartPlugin/MqttPlugin's class-level
+            # mutable-default fallbacks (shared across every plugin instance)
+            # instead of proper instance-specific state. Work now, fail later:
+            # just warn for now while the 3rd-party plugin fleet gets audited;
+            # TODO/FIXME: once that audit is done, uncomment the line below to
+            # actually refuse to run plugins that fail this check.
+            if isinstance(self.get_implementation(), SmartPlugin) and not getattr(
+                self.get_implementation(), '_smartplugin_super_init_done', False
+            ):
+                logger.warning(
+                    f"Plugin '{classpath.split('.')[1]}' (section '{plg_section}') does not call "
+                    f'super().__init__() from its own __init__() method - it is running on shared '
+                    f'class-level default state instead of instance-specific state, which can leak '
+                    f'data between plugin instances. Please fix the plugin.'
+                )
+                # self.get_implementation()._init_complete = False
 
             # set level to make logger appear in internal list of loggers (if not configured by logging.yaml)
             try:  # skip classic plugins

@@ -680,7 +680,7 @@ class Metadata:
             return Utils.to_bool(value, default='?') != '?'
         elif typ == 'int':
             return Utils.is_int(value)
-        elif typ in ['float', 'num']:
+        elif typ in ['float', 'num', 'timestamp']:
             return Utils.is_float(value)
         elif typ == 'scene':
             if Utils.is_int(value):
@@ -783,7 +783,7 @@ class Metadata:
             result = Utils.to_bool(value)
         elif typ in ['int', 'scene']:
             result = int(value)
-        elif typ in ['float', 'num']:
+        elif typ in ['float', 'num', 'timestamp']:
             result = float(value)
         elif typ in ['str', 'password']:
             result = str(value)
@@ -1062,23 +1062,23 @@ class Metadata:
             return FOO
         if definitions[definition] is None:
             return FOO
-        result = str(definitions.get('type', FOO)).lower()
+        result = str(definitions[definition].get('type', FOO)).lower()
         llen = 0
         if result == 'list':
-            llen = definitions.get('listlen', ['?'])
+            llen = definitions[definition].get('listlen', ['?'])
         return llen
 
     def get_parameter_listlen(self, param):
         """
         Returns the len of a parameter of type list of a parameter
         """
-        return self.get_definition_listlen(param, self.parameters)
+        return self._get_definition_listlen(param, self.parameters)
 
     def get_itemdefinition_listlen(self, definition):
         """
         Returns the len of a parameter of type list of an item attribute definition
         """
-        return self.get_definition_listlen(definition, self.itemdefinitions)
+        return self._get_definition_listlen(definition, self.itemdefinitions)
 
     def _get_definition_type_with_subtype(self, definition, definitions):
         """

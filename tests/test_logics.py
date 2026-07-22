@@ -151,6 +151,25 @@ class TestLogics(unittest.TestCase):
         readback = self.logics.read_config_section('logic_up3')
         self.assertEqual(len(readback), 0)
 
+    def test_07_empty_logic_section_does_not_crash(self):
+        """
+        Regression test: an empty logic YAML section ('mylogic:' with nothing
+        under it) parses to attributes=None. Logic.__init__() used to compare
+        `attributes != 'None'` (the string) instead of `attributes is not
+        None`, which is True even when attributes really is None, so
+        execution reached `for attribute in attributes:` with attributes=None
+        and crashed with TypeError instead of hitting the intended
+        "not configured correctly" error-log branch.
+        """
+        logger.warning('----- Logic Test: test_07_empty_logic_section_does_not_crash')
+        from lib.logic import Logic
+
+        logic = Logic(self.sh, 'empty_test_logic', None, self._logics)
+        self.assertEqual(logic.id(), 'empty_test_logic')
+        # _generate_bytecode() must not have run -- this is exactly the
+        # signal _load_logic() checks via hasattr() to detect a load failure
+        self.assertFalse(hasattr(logic, '_bytecode'))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

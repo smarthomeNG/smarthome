@@ -28,7 +28,7 @@ import json
 import cherrypy
 
 from lib.item import Items
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 
 import bin.shngversion
 from lib.item_conversion import convert_yaml as convert_yaml
@@ -94,6 +94,16 @@ class ServicesController(RESTResource):
     # ======================================================================
     #  eval_syntax_checker
     #
+    # SECURITY NOTE: this intentionally runs eval() on the caller-supplied
+    # expression with the full sh/items/shtime/env/math/uf namespace in scope,
+    # and is reachable by any authenticated admin API client (PUT
+    # /api/services/evalcheck). This is accepted risk, not an oversight: an
+    # authenticated admin can already reach equivalent arbitrary Python
+    # execution via an item's `eval:` config attribute, so this endpoint does
+    # not cross a new privilege boundary under the current all-authenticated-
+    # users-are-admin trust model. If a lower-privilege authenticated role is
+    # ever introduced (see the unused 'admin' JWT claim in api_auth.py), this
+    # endpoint must require it.
     def eval_syntax_checker(self, eval_code, relative_to):
         expanded_code = ''
 
@@ -306,6 +316,14 @@ class ServicesController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='List orphaned cache files (present on disk but not referenced by any item)',
+            method='get',
+            path='/services/cachecheck/',
+            tags=['services'],
+        )
+    ]
 
     def update(self, id='', filename=''):
         """
@@ -326,3 +344,25 @@ class ServicesController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary='Validate a Python eval:-style expression',
+            method='put',
+            path='/services/evalcheck/',
+            tags=['services'],
+        ),
+        ApiDoc(summary='Validate raw YAML text', method='put', path='/services/yamlcheck/', tags=['services']),
+        ApiDoc(
+            summary='Convert arbitrary config text to YAML',
+            method='put',
+            path='/services/yamlconvert/',
+            tags=['services'],
+        ),
+        ApiDoc(
+            summary='Delete one cache file',
+            method='put',
+            path='/services/cachefile_delete',
+            tags=['services'],
+            params=[ApiParam(name='filename', required=True)],
+        ),
+    ]

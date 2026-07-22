@@ -35,7 +35,7 @@ import json
 import cherrypy
 
 import bin.shngversion as shngversion
-from .rest import RESTResource
+from .rest import ApiDoc, RESTResource
 
 # import bin.shngversion
 import lib.daemon
@@ -322,45 +322,6 @@ class SystemController(RESTResource):
         return daemon
 
     # ======================================================================
-    #  /api/system/status
-    #
-    # def status(self):
-    #     """
-    #     return status of SmartHomeNG server software
-    #
-    #     :return: status dict
-    #     """
-    #     try:
-    #         response = self._sh.shng_status
-    #     except:
-    #         response = {'code': -1, 'text': 'unknown'}
-    #
-    #     # self.logger.debug("ServerController.index(): /{} - response '{}'".format(id, response))
-    #     return json.dumps(response)
-
-    # # ======================================================================
-    # #  /api/server/restart
-    # #
-    # def restart(self):
-    #     """
-    #     restart the SmartHomneNG server software
-    #
-    #     :return: status dict
-    #     """
-    #     self.logger.info("ServerController.restart()")
-    #
-    #     status = self._sh.shng_status
-    #     if status['code'] == 20:
-    #         self._sh.restart('admin interface')
-    #         response = {'result': 'ok'}
-    #     else:
-    #         response = {'result': 'error', 'text': "SmartHomeNG is not in state 'running'"}
-    #
-    #     self.logger.info("ServerController.update(): /{} - response '{}'".format(id, response))
-    #     return json.dumps(response)
-    #
-    #
-    # ======================================================================
     #  GET /api/system/
     #
     def read(self, id=''):
@@ -371,8 +332,6 @@ class SystemController(RESTResource):
 
         if id is None:
             return self.root()
-        # elif id == 'status':
-        #     return self.status()
         elif id == 'info':
             return self.info()
 
@@ -380,18 +339,11 @@ class SystemController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
-    # read.public_root = True
-
-    def update(self, id='', level=None):
-        """
-        Handle PUT requests for server API
-        """
-        self.logger.info(f"ServerController.update('{id}'), level='{level}'")
-
-        # if id == 'restart':
-        #     return self.restart()
-
-        return None
-
-    # update.expose_resource = True
-    # update.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='CPU/memory/disk stats for the System Overview page',
+            method='get',
+            path='/system/info',
+            tags=['system'],
+        )
+    ]

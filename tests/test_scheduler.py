@@ -456,5 +456,70 @@ class TestSchedulerNextTimeCalculation(unittest.TestCase):
         self.assertEqual(self.sched._scheduler['multi_cron']['next'], soon)
 
 
+class TestUpdateItemLocking(unittest.TestCase):
+    """
+    Regression test: update_item() is registered as an item method-trigger,
+    so it runs synchronously on whatever thread changes the watched item -
+    not the scheduler's own thread. It used to mutate self._scheduler[name]
+    ('cycle', 'value', and via _next_time() also 'next') without taking
+    self._lock, unlike add()/remove()/change() and run()'s own iteration -
+    a concurrent run() iteration or another update_item() call for the same
+    entry could interleave with it. Verifies the whole method (including
+    the trailing _next_time() call) now runs under self._lock.
+    """
+
+    def setUp(self):
+        self.sched, self.now = _make_scheduler()
+
+        job_obj = MagicMock()
+        job_obj.__class__.__name__ = 'function'
+        job_obj.get_attr_time.return_value = 10
+        job_obj.get_attr_value.return_value = 'A'
+        self.sched._scheduler['job1'] = {
+            'prio': 3,
+            'obj': job_obj,
+            'source': '??',
+            'cron': None,
+            'cycle': 5,
+            'value': None,
+            'next': None,
+            'active': True,
+        }
+        self.sched._cycle_items['watched'] = {'job1'}
+
+        self.watched_item = MagicMock()
+        self.watched_item.property.path = 'watched'
+
+    def test_update_item_holds_lock_for_its_duration(self):
+        lock_was_held = threading.Event()
+        proceed = threading.Event()
+        original_next_time = self.sched._next_time
+
+        def slow_next_time(name, offset=None):
+            # by the time _next_time() runs, update_item() should already
+            # hold self._lock - pause here (still "inside" update_item()'s
+            # call) and let the main thread try to acquire it meanwhile
+            lock_was_held.set()
+            proceed.wait(timeout=2)
+            return original_next_time(name, offset)
+
+        with patch.object(self.sched, '_next_time', side_effect=slow_next_time):
+            t = threading.Thread(target=self.sched.update_item, args=(self.watched_item,))
+            t.start()
+            self.assertTrue(lock_was_held.wait(timeout=2), 'update_item() never reached _next_time()')
+
+            # update_item() should still be running (and, if fixed, holding
+            # self._lock) at this point - a short-timeout acquire from this
+            # thread must fail while it does
+            acquired = self.sched._lock.acquire(timeout=0.2)
+            if acquired:
+                self.sched._lock.release()
+
+            proceed.set()
+            t.join(timeout=2)
+
+        self.assertFalse(acquired, 'update_item() must hold self._lock for its entire duration')
+
+
 if __name__ == '__main__':
     unittest.main()

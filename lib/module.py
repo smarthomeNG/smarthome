@@ -214,6 +214,19 @@ class Modules:
                 )
         return duplicate
 
+    @staticmethod
+    def _unwrap_conf_string(value):
+        """
+        _get_conf_args() wraps original string config values as "'value'" (for the
+        old exec()-based call-string builder this method used to feed). Undo that
+        wrapping to recover the real string for use as an actual keyword argument
+        value. Non-string values (bool/int/list/dict/... from YAML) pass through
+        unchanged -- _get_conf_args() never wraps those.
+        """
+        if isinstance(value, str) and len(value) >= 2 and value[0] == "'" and value[-1] == "'":
+            return value[1:-1]
+        return value
+
     def _load_module(self, name, classname, classpath, args):
         """
         Module Loader. Loads one module defined by the parameters classname and classpath.
@@ -232,8 +245,6 @@ class Modules:
         :rtype: object
         """
 
-        import modules  # needed for Python 3.13 and up
-
         enabled = Utils.strip_quotes(args.get('enabled', 'true').lower())
         if enabled == 'false':
             logger.warning(f"Not loading module {classname} from section '{name}': Module is disabled")
@@ -242,29 +253,25 @@ class Modules:
         logger.info(f"Loading module '{name}': args = '{args}'")
         # Load an instance of the module
         try:
-            if name == 'httpX':
-                # importlib.import_module(classpath)
-                import modules.http
-            else:
-                exec(f'import {classpath}')
+            module_obj = importlib.import_module(classpath)
         except Exception as e:
             logger.critical(f"Module '{name}' ({classpath}) exception during import of __init__.py: {e}")
             return None
 
         try:
-            exec(f'self.loadedmodule = {classpath}.{classname}.__new__({classpath}.{classname})')
+            module_cls = getattr(module_obj, classname)
+            loadedmodule = module_cls.__new__(module_cls)
         except Exception as e:
             logger.error(f"Module '{name}' ({classpath}) exception during initialization (__new__): {e}")
-            pass
+            return None
 
         # load module-specific translations
         translation.load_translations('module', classpath.replace('.', '/'), 'module/' + classpath.split('.')[1])
         #        translation.load_translations('global', classpath.replace('.', '/'), 'module/'+classpath.split('.')[1])
 
-        # get arguments defined in __init__ of module's class to self.args
+        # get arguments defined in __init__ of module's class
         try:
-            #            exec("self.args = inspect.getargspec({classpath}.{classname}.__init__)[0][1:]")
-            exec(f'self.args = inspect.getfullargspec({classpath}.{classname}.__init__)[0][1:]')
+            self.args = inspect.getfullargspec(module_cls.__init__)[0][1:]
         except Exception as e:
             logger.critical(
                 f"Module '{name}' exception during 'inspect.getfullargspec({classpath}.{classname}.__init__)[0][1:]': {e}"
@@ -274,42 +281,44 @@ class Modules:
 
         # get list of argument used names, if they are defined in the module's class
         logger.info(f"Module '{classname}': args = '{str(args)}'")
-        arglist = [name for name in self.args if name in args]
-        argstring = ','.join([f'{name}={args[name]}' for name in arglist])
+        arglist = [n for n in self.args if n in args]
 
-        self.loadedmodule._init_complete = False
+        loadedmodule._init_complete = False
         (module_params, params_ok, hide_params) = self.meta.check_parameters(args)
         if params_ok:
             if module_params != {}:
-                # initialize parameters the old way
-                argstring = ','.join(
-                    ['{}={}'.format(name, "'" + str(module_params.get(name, '')) + "'") for name in arglist]
-                )
+                # module_params values are already cast to their declared type by
+                # check_parameters(), use them as-is
+                init_kwargs = {n: module_params.get(n, '') for n in arglist}
+            else:
+                # no module metadata parameters declared: fall back to the raw config args
+                init_kwargs = {n: self._unwrap_conf_string(args[n]) for n in arglist}
+
             # initialize parameters the new way: Define a dict within the instance
-            self.loadedmodule._parameters = module_params
-            self.loadedmodule._metadata = self.meta
+            loadedmodule._parameters = module_params
+            loadedmodule._metadata = self.meta
 
             # initialize the loaded instance of the module
-            self.loadedmodule._init_complete = True  # set to false by module, if an initalization error occurs
-            exec(f'self.loadedmodule.__init__(self._sh{"," if len(arglist) else ""}{argstring})')
+            loadedmodule._init_complete = True  # set to false by module, if an initalization error occurs
+            loadedmodule.__init__(self._sh, **init_kwargs)
 
-        if self.loadedmodule._init_complete:
+        if loadedmodule._init_complete:
             try:
-                code_version = self.loadedmodule.version
+                code_version = loadedmodule.version
             except AttributeError:
                 code_version = None  # if module code without version
             if self.meta.test_version(code_version):
                 logger.info(
-                    f"Modules: Loaded module '{name}' (class '{str(self.loadedmodule.__class__.__name__)}') v{self.meta.get_version()}: {self.meta.get_mlstring('description')}"
+                    f"Modules: Loaded module '{name}' (class '{str(loadedmodule.__class__.__name__)}') v{self.meta.get_version()}: {self.meta.get_mlstring('description')}"
                 )
-                self._moduledict[name] = self.loadedmodule
+                self._moduledict[name] = loadedmodule
                 self._modules.append(self._moduledict[name])
-                return self.loadedmodule
+                return loadedmodule
             else:
                 logger.error(f'Module {name} not started: Module version mismatch')
                 return None
         else:
-            logger.error("Modules: Module '{classpath.split('.')[1]}' initialization failed, module not loaded")
+            logger.error(f"Modules: Module '{classpath.split('.')[1]}' initialization failed, module not loaded")
             return None
 
     # ------------------------------------------------------------------------------------

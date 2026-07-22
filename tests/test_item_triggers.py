@@ -205,6 +205,39 @@ class TestLogicTriggers(_Base):
         item(42)
         self.assertEqual(fired, [])
 
+    def test_logic_removed_mid_iteration_does_not_skip_later_logics(self):
+        """
+        Regression test: __trigger_logics() used to iterate
+        self.__logics_to_trigger directly (no snapshot) -- same failure mode
+        as test_method_removed_mid_iteration_does_not_skip_later_methods,
+        for the logic-trigger list.
+        """
+        fired = []
+        item = _item(self.sh, 'a')
+
+        class _Logic:
+            def __init__(self, name):
+                self.name = name
+
+            def trigger(self, by, source, value):
+                fired.append(self.name)
+
+        l1, l2, l3, l4 = _Logic('l1'), _Logic('l2'), _Logic('l3'), _Logic('l4')
+
+        class _RemovingLogic(_Logic):
+            def trigger(self, by, source, value):
+                super().trigger(by, source, value)
+                item.remove_logic_trigger(l1)  # removes an already-visited entry
+
+        l2 = _RemovingLogic('l2')
+
+        for logic in (l1, l2, l3, l4):
+            item.add_logic_trigger(logic)
+
+        item(42)
+
+        self.assertEqual(fired, ['l1', 'l2', 'l3', 'l4'])
+
 
 # ===========================================================================
 # Method triggers
@@ -305,6 +338,41 @@ class TestMethodTriggers(_Base):
         item.add_method_trigger(lambda i, c, s, d: 1 / 0)
         item(42)  # should not raise
         self.assertEqual(item(), 42)
+
+    def test_method_removed_mid_iteration_does_not_skip_later_methods(self):
+        """
+        Regression test: __update() used to iterate self.__methods_to_trigger
+        directly (no snapshot). Removing an already-visited entry from within
+        a still-running trigger callback (simulating a concurrent
+        remove_method_trigger() call from another thread, e.g. a plugin
+        deregistering during reload) shifts list positions under the
+        for-loop's cursor and silently skips whatever trigger was next in
+        line -- confirmed via plain-list iteration semantics independent of
+        Item: removing an earlier element while iterating skips the element
+        that shifts into the current cursor position.
+        """
+        calls = []
+        item = _item(self.sh, 'a')
+
+        def m1(i, c, s, d):
+            calls.append('m1')
+
+        def m2(i, c, s, d):
+            calls.append('m2')
+            item.remove_method_trigger(m1)  # removes an already-visited entry
+
+        def m3(i, c, s, d):
+            calls.append('m3')
+
+        def m4(i, c, s, d):
+            calls.append('m4')
+
+        for m in (m1, m2, m3, m4):
+            item.add_method_trigger(m)
+
+        item(42)
+
+        self.assertEqual(calls, ['m1', 'm2', 'm3', 'm4'])
 
 
 # ===========================================================================

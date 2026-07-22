@@ -26,7 +26,7 @@ import json
 import cherrypy
 import copy
 
-from .rest import RESTResource
+from .rest import ApiDoc, RESTResource
 
 
 class SchedulersController(RESTResource):
@@ -155,3 +155,6 @@ class SchedulersController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(summary='List of configured schedulers', method='get', path='/schedulers/', tags=['schedulers'])
+    ]

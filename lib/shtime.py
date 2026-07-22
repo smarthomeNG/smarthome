@@ -55,7 +55,6 @@ _shtime_instance = None  # Pointer to the initialized instance of the shtime cla
 
 class Shtime:
     _tzinfo = None
-    _timezone = None
     _utctz = None
     _starttime = None
     _tz = ''
@@ -139,18 +138,12 @@ class Shtime:
         tzinfo = tz.gettz(tzone)  # type: tzfile
         self.logger.info(f'set_tz: tz={tz} -> tzinfo={tzinfo}')
         if tzinfo is not None:
-            #            TZ = tzinfo
             self._tz = tzone
             os.environ['TZ'] = self._tz
-            #             self._tzinfo = TZ
             self.set_tzinfo(tzinfo)
-            # self._timezone = pytz.timezone(tzone)
-            self._timezone = tz.gettz(tzone)
         else:
             self.logger.warning(self.translate("Problem parsing timezone '{tz}' - Using UTC").format(tz=tzone))
-            # self._timezone = pytz.timezone("UTC")
-            self._timezone = tz.gettz('UTC')
-        self.logger.info(f'self.set_tz: -> self._timezone={self._timezone}')
+            self.set_tzinfo(tz.gettz('UTC'))
         self.logger.info(f'self.set_tz: -> self._tzinfo={self._tzinfo}')
         return
 
@@ -587,7 +580,7 @@ class Shtime:
         if isinstance(key, datetime.datetime) and key.tzinfo is None:
             # naive datetime: label it as being in shng's configured timezone, don't shift it.
             # .astimezone() would instead treat it as OS-local time and convert (shift) it.
-            key = key.replace(tzinfo=self._timezone)
+            key = key.replace(tzinfo=self._tzinfo)
         return key
 
     def date_transform(self, key):

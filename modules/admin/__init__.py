@@ -31,10 +31,6 @@ from lib.model.module import Module
 from lib.module import Modules
 from lib.shtime import Shtime
 
-from .systemdata import SystemData
-from .itemdata import ItemData
-from .plugindata import PluginData
-
 from .rest import RESTResource
 
 from .api_server import *
@@ -106,7 +102,6 @@ class Admin(Module):
         try:
             self.login_expiration = self._parameters['login_expiration']
             self.login_autorenew = self._parameters['login_autorenew']
-            self.pypi_timeout = self._parameters['pypi_timeout']
             self.itemtree_fullpath = self._parameters['itemtree_fullpath']
             self.itemtree_searchstart = self._parameters['itemtree_searchstart']
             self.log_chunksize = self._parameters['log_chunksize']
@@ -419,18 +414,23 @@ def translate(s):
     return s
 
 
-class WebInterface(SystemData, ItemData, PluginData):
+class WebInterface:
+    """
+    Serves the built Angular shngadmin frontend's static assets at the admin
+    suburl. Used to mix in SystemData/ItemData/PluginData, a set of
+    unauthenticated pre-REST JSON/HTML endpoints (items_json,
+    item_change_value_html, plugin_set_config_html, systeminfo_json,
+    pypi_json, ...) fully superseded once shngadmin migrated to the
+    JWT-authenticated REST API (WebApi below); removed since nothing called
+    them anymore.
+    """
+
     def __init__(self, webif_dir, module, shng_url_root, url_root):
         self._sh = module._sh
         self.logger = logging.getLogger(__name__)
         self.module = module
-        self.pypi_timeout = module.pypi_timeout
         self.shng_url_root = shng_url_root
         self.url_root = url_root
-
-        SystemData.__init__(self, self._sh)
-        ItemData.__init__(self)
-        PluginData.__init__(self)
 
         return
 

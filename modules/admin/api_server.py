@@ -25,7 +25,7 @@ import logging
 import json
 import cherrypy
 
-from .rest import RESTResource
+from .rest import ApiDoc, RESTResource
 
 import bin.shngversion
 import lib.daemon
@@ -320,6 +320,31 @@ class ServerController(RESTResource):
     read.expose_resource = True
     read.authentication_needed = True
     read.public_root = True
+    read.api_doc = [
+        ApiDoc(
+            summary=(
+                'Basic server info: default_language, client_ip, login_required, '
+                'websocket_host, websocket_port. Public even though flagged '
+                'authentication_needed in code - exempted at the bare path via '
+                'public_root. Also (ab)used as a lightweight reachability heartbeat.'
+            ),
+            method='get',
+            path='/server/',
+            tags=['server'],
+            auth=False,
+        ),
+        ApiDoc(
+            summary=(
+                'Extended server info: timezone, core/plugins git branch, developer_mode, '
+                'dark_mode default, resource_graph_period, restart_stops_only, and more.'
+            ),
+            method='get',
+            path='/server/info',
+            tags=['server'],
+        ),
+        ApiDoc(summary='shng core running/stopped status', method='get', path='/server/status/', tags=['server']),
+        ApiDoc(summary='PyPI package/version check data', method='get', path='/server/pypi', tags=['server']),
+    ]
 
     def update(self, id='', level=None):
         """
@@ -334,3 +359,4 @@ class ServerController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [ApiDoc(summary='Restart shng core', method='put', path='/server/restart/', tags=['server'])]

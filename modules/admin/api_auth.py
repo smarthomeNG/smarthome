@@ -33,7 +33,7 @@ import jwt
 from lib.utils import Utils
 from lib.constants import DIR_ETC, DIR_MODULES
 
-from .rest import RESTResource
+from .rest import ApiDoc, RESTResource
 
 
 class AuthController(RESTResource):
@@ -226,6 +226,21 @@ class AuthController(RESTResource):
 
     add.expose_resource = True
     add.authentication_needed = False
+    add.api_doc = [
+        ApiDoc(
+            summary='Log in with SHA-512-hashed credentials, get a JWT',
+            method='post',
+            path='/authenticate/user',
+            auth=False,
+            tags=['authenticate'],
+            request_body='application/json',
+            request_example=(
+                '{"username": "<sha512(username + \'shNG0160$\')>", '
+                '"password": "<sha512(sha512(password) + \'shNG0160$\')>"}'
+            ),
+            response_example='{"token": "<jwt>"}',
+        )
+    ]
 
     @cherrypy.expose
     def update(self, id=''):
@@ -245,3 +260,12 @@ class AuthController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary='Renew the current JWT before it expires',
+            method='put',
+            path='/authenticate/renew',
+            tags=['authenticate'],
+            response_example='{"token": "<renewed jwt>"}',
+        )
+    ]

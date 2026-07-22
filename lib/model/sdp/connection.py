@@ -41,6 +41,12 @@ from time import sleep, time
 # Seconds of serial silence while connected before declaring the connection stale.
 # Must exceed the longest normal gap between device transmissions (cyclic read cycle).
 _STALE_CONNECTION_TIMEOUT = 60
+
+# Seconds to wait for the UDP receive thread to exit after closing its socket, before
+# giving up. Closing a socket a thread is blocked on in recvfrom() reliably unblocks it
+# with an OSError on Linux (shng's primary deployment target), but this isn't guaranteed
+# on every platform -- bound the join so a stuck thread can't hang the calling thread.
+_UDP_CLOSE_JOIN_TIMEOUT = 5
 from typing import Any, Generator
 
 from lib.network import Tcp_client
@@ -604,16 +610,20 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
             pass
 
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
-            self.__receive_thread.join()
+            self.__receive_thread.join(timeout=_UDP_CLOSE_JOIN_TIMEOUT)
+            if self.__receive_thread.is_alive():
+                self.logger.warning(
+                    f'{self.__class__.__name__} receive thread did not stop within {_UDP_CLOSE_JOIN_TIMEOUT}s'
+                )
         self.__receive_thread = None
         self._connected = False
 
     def _receive_thread_worker(self):
-        self.sock = UDPServer(self._params[PLUGIN_ATTR_NET_PORT])
+        self._sock = UDPServer(self._params[PLUGIN_ATTR_NET_PORT])
         if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_CONNECT](self.__str__() + ' UDP_listener')
         while self.alive:
-            data, addr = self.sock.recvfrom(self._srv_buffer)
+            data, addr = self._sock.recvfrom(self._srv_buffer)
             try:
                 host, port = addr
             except Exception as e:
@@ -626,7 +636,7 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
                     self._data_received_callback(host, data.decode('utf-8'))
 
         self._connected = False
-        self.sock.close()
+        self._sock.close()
         if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](self.__str__() + ' UDP_listener')
 
@@ -663,9 +673,11 @@ class SDPConnectionSerial(SDPConnection):
             @contextmanager
             def acquire_timeout(self, timeout) -> Generator[bool]:
                 result = self._lock.acquire(timeout=timeout)
-                yield result
-                if result:
-                    self._lock.release()
+                try:
+                    yield result
+                finally:
+                    if result:
+                        self._lock.release()
 
             def release(self):
                 self._lock.release()
@@ -788,7 +800,7 @@ class SDPConnectionSerial(SDPConnection):
             raise self.serial.SerialException(f"trying to send {data}, but connection can't be opened.")
 
         if not self._send_bytes(data):
-            self.is_connected = False
+            self._is_connected = False
             raise self.serial.SerialException(f'data {data} could not be sent')
 
         # don't try to read response if listener is active
@@ -833,11 +845,11 @@ class SDPConnectionSerial(SDPConnection):
         except self.serial.SerialException as e:
             raise SDPConnectionError(f'serial write error on {self._params[PLUGIN_ATTR_SERIAL_PORT]}: {e}') from e
 
-    def _read_bytes(self, limit_response: int | bytes | bytearray, clear_buffer=False) -> bytes:
+    def _read_bytes(self, limit_response: int | bytes | bytearray | str, clear_buffer=False) -> bytes:
         """
         Try to read bytes from device, return read bytes
         if limit_response is int > 0, try to read at least <limit_response> bytes (len mode)
-        if limit_response is bytes() or bytearray(), try to read till receiving <limit_response> (terminator mode)
+        if limit_response is bytes(), bytearray() or str, try to read till receiving <limit_response> (terminator mode)
         if limit_response is 0, read until timeout (use with care...) (use on your own risk mode ;) )
 
         :param limit_response: Number of bytes to read, b'<terminator> for terminated read, 0 for unrestricted read (timeout)
@@ -853,7 +865,9 @@ class SDPConnectionSerial(SDPConnection):
         term_bytes = None
         if isinstance(limit_response, int):
             maxlen = limit_response
-        elif isinstance(limit_response, (bytes, bytearray, str)):
+        elif isinstance(limit_response, str):
+            term_bytes = bytes(limit_response, 'utf-8')
+        elif isinstance(limit_response, (bytes, bytearray)):
             term_bytes = bytes(limit_response)
 
         # take care of "overflow" from last read

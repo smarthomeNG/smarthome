@@ -614,28 +614,34 @@ class Scheduler(threading.Thread):
 
     def update_item(self, item, caller=None, source=None, dest=None):
         """provide a mechanism to handle changes of cycle item references"""
-        if item.property.path not in self._cycle_items:
-            logger.warning(f'item {item} not registered for cycle update, ignoring.')
-            return
-
-        for name in self._cycle_items[item.property.path]:
-            cycle_item = self._scheduler[name]['obj']
-            cycle = cycle_item.get_attr_time('cycle')
-            if cycle is None:
-                logger.warning(f'item {cycle_item} for cycle update return invalid cycle data {cycle}, ignoring.')
+        # called synchronously on whatever thread changes the watched item
+        # (item.add_method_trigger), so this must not touch _scheduler/
+        # _cycle_items without the lock run() and the other mutators use -
+        # otherwise a concurrent run() iteration and this method can read/
+        # write the same job entry's 'cycle'/'value'/'next' interleaved
+        with self._lock:
+            if item.property.path not in self._cycle_items:
+                logger.warning(f'item {item} not registered for cycle update, ignoring.')
                 return
 
-            value = cycle_item.get_attr_value('cycle')
+            for name in self._cycle_items[item.property.path]:
+                cycle_item = self._scheduler[name]['obj']
+                cycle = cycle_item.get_attr_time('cycle')
+                if cycle is None:
+                    logger.warning(f'item {cycle_item} for cycle update return invalid cycle data {cycle}, ignoring.')
+                    return
 
-            c = self._scheduler[name]['cycle']
-            if isinstance(c, int):
-                self._scheduler[name]['cycle'] = cycle
-                self._scheduler[name]['value'] = value
-            else:
-                self._scheduler[name]['cycle'] = {cycle: value}
+                value = cycle_item.get_attr_value('cycle')
 
-            # as we don't know the last execution time, we start anew from now
-            self._next_time(name)
+                c = self._scheduler[name]['cycle']
+                if isinstance(c, int):
+                    self._scheduler[name]['cycle'] = cycle
+                    self._scheduler[name]['value'] = value
+                else:
+                    self._scheduler[name]['cycle'] = {cycle: value}
+
+                # as we don't know the last execution time, we start anew from now
+                self._next_time(name)
 
     def get(self, name, from_smartplugin=False):
         """

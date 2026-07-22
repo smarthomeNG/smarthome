@@ -24,6 +24,7 @@
 
 from . import common
 import unittest
+from unittest.mock import patch
 import logging
 
 import lib.plugin
@@ -605,6 +606,58 @@ class TestItem(unittest.TestCase):
         self.assertEqual(0, item())
         item.set(12)
         self.assertEqual(12, item())
+
+    def _assert_lock_free_from_other_thread(self, item, timeout=0.5):
+        # self._lock is a threading.Condition backed by a *reentrant* lock, so
+        # re-acquiring it from the thread that (maybe) leaked it always
+        # trivially succeeds -- that would pass even with the bug present.
+        # The only real test is whether a *different* thread can get it.
+        acquired = []
+
+        def worker():
+            acquired.append(item._lock.acquire(timeout=timeout))
+            if acquired[-1]:
+                item._lock.release()
+
+        t = threading.Thread(target=worker)
+        t.start()
+        t.join(timeout + 1)
+        self.assertTrue(acquired and acquired[0], 'lock was not released -- item is deadlocked for other threads')
+
+    def test_update_releases_lock_on_bad_list_index(self):
+        """
+        item(value, index=N) with an out-of-range index raises ValueError from
+        inside the locked section of __update(). Regression test for a bug where
+        the lock was never released on that path, permanently deadlocking the
+        item for every later item()/.set() call from any *other* thread.
+        """
+        sh = MockSmartHome()
+        conf = {'type': 'list', 'value': ['a', 'b']}
+        item = self.create_item(config=conf, parent=sh, smarthome=sh, path='test_item_lock')
+
+        with self.assertRaises(ValueError):
+            item('x', index=5)
+
+        self._assert_lock_free_from_other_thread(item)
+
+        # and the item must still be usable afterwards
+        item('c', index=0)
+        self.assertEqual('c', item()[0])
+
+    def test_set_releases_lock_on_error(self):
+        """
+        Regression test: Item.set() must release its lock even if _set_value()
+        raises, mirroring the __update() fix above.
+        """
+        sh = MockSmartHome()
+        conf = {'type': 'num'}
+        item = self.create_item(config=conf, parent=sh, smarthome=sh, path='test_item_lock_set')
+
+        with patch.object(item, '_set_value', side_effect=RuntimeError('boom')):
+            with self.assertRaises(RuntimeError):
+                item.set(1)
+
+        self._assert_lock_free_from_other_thread(item)
 
     def test_run_eval(self):
         sh = MockSmartHome()

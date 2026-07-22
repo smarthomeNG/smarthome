@@ -142,7 +142,7 @@ reportUnboundVariable = "error"
 # description = "Open-source home automation platform running on Python 3."
 # license = { text = "GPL-3.0-or-later" }
 # readme = "README.md"
-# requires-python = ">=3.9"      # enforced at runtime in bin/smarthome.py
+# requires-python = ">=3.10"     # enforced at runtime in bin/smarthome.py
 # keywords = ["home", "automation", "smarthome"]
 # authors = []                   # populate as desired
 #
@@ -151,7 +151,6 @@ reportUnboundVariable = "error"
 #     "Intended Audience :: Developers",
 #     "Operating System :: POSIX :: Linux",
 #     "Operating System :: MacOS :: MacOS X",
-#     "Programming Language :: Python :: 3.9",
 #     "Programming Language :: Python :: 3.10",
 #     "Programming Language :: Python :: 3.11",
 #     "Programming Language :: Python :: 3.12",

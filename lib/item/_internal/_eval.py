@@ -305,6 +305,7 @@ def run_on_xxx(item, path, value, on_dest, on_eval, attr='?', caller=None, sourc
     dest_value = None
     try:
         dest_value = eval(on_eval, _ns)
+        logger.debug(f" - : '{attr}' evaluating {on_eval}, result={dest_value}")
     except Exception as _e:
         dest_value = _eval_with_legacy_fallback(  # COMPAT-SHIM
             on_eval, _ns, item, f'{attr} on_eval', _e
@@ -321,14 +322,14 @@ def run_on_xxx(item, path, value, on_dest, on_eval, attr='?', caller=None, sourc
             dest_item = _items_instance.return_item(on_dest)
             if dest_item is not None:
                 dest_item._update_item(dest_value, caller=attr, source=path)
-                logger.debug(f" - : '{attr}' finally evaluating {on_dest} = {on_eval}, result={dest_value}")
             else:
                 logger.error(
                     f"Item {path}: '{attr}' has not found dest_item '{on_dest}' = {on_eval}, result={dest_value}"
                 )
-        else:
-            _ = eval(on_eval, _ns)
-            logger.debug(f" - : '{attr}' finally evaluating {on_eval}, result={dest_value}")
+        # bare (no "dest =") syntax: the eval() above already ran the
+        # expression - including any side effects - and computed
+        # dest_value, so there's nothing left to do here. Do NOT eval()
+        # on_eval again "for its side effect": it already happened.
     else:
         logger.debug(f" - : '{attr}' {on_dest} not set (cause: eval=None)")
 

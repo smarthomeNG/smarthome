@@ -34,7 +34,7 @@ from lib.metadata import Metadata
 from lib.model.smartplugin import SmartPlugin
 from lib.constants import KEY_CLASS_PATH, KEY_INSTANCE, YAML_FILE, DIR_PLUGINS
 
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 
 
 class PluginController(RESTResource):
@@ -128,6 +128,16 @@ class PluginController(RESTResource):
         raise cherrypy.NotFound
 
     read.expose_resource = True
+    read.api_doc = [
+        ApiDoc(
+            summary='Single plugin config section + `_readonly` legacy-format flag',
+            method='get',
+            path='/plugin/{pluginSection}',
+            tags=['plugin'],
+            params=[ApiParam(name='pluginSection', location='path', required=True)],
+            description='Not currently called by shngadmin - it fetches all plugin configs at once via GET /plugins/config/.',
+        )
+    ]
     read.authentication_needed = True
 
     def _find_legacy_instance_collision(self, new_id, plugin_conf):
@@ -210,6 +220,18 @@ class PluginController(RESTResource):
 
     add.expose_resource = True
     add.authentication_needed = True
+    add.api_doc = [
+        ApiDoc(
+            summary='Add a new plugin config section',
+            method='post',
+            path='/plugin/{pluginSection}',
+            tags=['plugin'],
+            params=[ApiParam(name='pluginSection', location='path', required=True)],
+            request_body='application/json',
+            description='Full plugin config object.',
+            response_example='{"result": "ok"}',
+        )
+    ]
 
     def handle_plugin_action(self, id, action):
 
@@ -319,6 +341,29 @@ class PluginController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary="Update one plugin's config section in etc/plugin.yaml",
+            method='put',
+            path='/plugin/{pluginSection}',
+            tags=['plugin'],
+            params=[ApiParam(name='pluginSection', location='path', required=True)],
+            request_body='application/json',
+            description='Full plugin config object.',
+            response_example='{"result": "ok"}',
+        ),
+        ApiDoc(
+            summary='Plugin lifecycle/state control, dispatched via action in PluginController.update()',
+            method='put',
+            path='/plugin/{pluginConfigName}',
+            tags=['plugin'],
+            params=[
+                ApiParam(name='pluginConfigName', location='path', required=True),
+                ApiParam(name='action', required=True, enum=['start', 'stop', 'load', 'unload', 'reload']),
+                ApiParam(name='filename'),
+            ],
+        ),
+    ]
 
     @cherrypy.expose
     def delete(self, id=None):
@@ -344,3 +389,12 @@ class PluginController(RESTResource):
 
     delete.expose_resource = True
     delete.authentication_needed = True
+    delete.api_doc = [
+        ApiDoc(
+            summary='Delete a plugin config section',
+            method='delete',
+            path='/plugin/{pluginSection}',
+            tags=['plugin'],
+            params=[ApiParam(name='pluginSection', location='path', required=True)],
+        )
+    ]

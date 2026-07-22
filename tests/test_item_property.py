@@ -39,7 +39,9 @@ _ro_error, _type_error, _cast_warning helper paths
 import logging
 import os
 import sys
+import threading
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -584,6 +586,94 @@ class TestPropertyOnChangeUpdate(_PropertyTestBase):
     def test_on_update_unexpanded_default_empty(self):
         item = _make_item(self.sh)
         self.assertEqual(item.property.on_update_unexpanded, [])
+
+
+# ===========================================================================
+# _unexpanded setters — regression test
+# ===========================================================================
+#
+# eval_unexpanded/on_change_unexpanded/on_update_unexpanded/trigger_unexpanded
+# setters used to call self._item._process_eval() / _process_on_xx_list() /
+# _process_trigger_list(), none of which exist on Item - guaranteed
+# AttributeError on every call. Only the getters were covered above; these
+# setters were never exercised, so the break went unnoticed.
+
+
+class TestUnexpandedSetters(_PropertyTestBase):
+    def test_set_eval_unexpanded_does_not_raise_and_updates_value(self):
+        item = _make_item(self.sh, itype='num')
+        item.property.eval_unexpanded = '1 + 1'
+        self.assertEqual(item.property.eval_unexpanded, '1 + 1')
+        self.assertEqual(item._eval, '1 + 1')
+
+    def test_set_on_change_unexpanded_does_not_raise_and_updates_value(self):
+        item = _make_item(self.sh)
+        item.property.on_change_unexpanded = 'value + 1'
+        self.assertEqual(item._on_change_unexpanded, ['value + 1'])
+
+    def test_set_on_update_unexpanded_does_not_raise_and_updates_value(self):
+        item = _make_item(self.sh)
+        item.property.on_update_unexpanded = 'value + 1'
+        self.assertEqual(item._on_update_unexpanded, ['value + 1'])
+
+    def test_set_trigger_unexpanded_does_not_raise_and_updates_value(self):
+        item = _make_item(self.sh)
+        item.property.trigger_unexpanded = 'other.item'
+        self.assertEqual(item.property.trigger_unexpanded, ['other.item'])
+        self.assertEqual(item._trigger, ['other.item'])
+
+
+class TestUnexpandedSettersReleaseLockOnException(_PropertyTestBase):
+    """
+    Regression test: these setters used to acquire item._lock with a bare
+    acquire()/release() pair, no try/finally. If the underlying _parse_*
+    call raised, release() was skipped and the lock leaked. Since
+    item._lock is an RLock, checking "is it free" from the same thread
+    that (maybe) leaked it is meaningless - the owning thread can always
+    re-acquire an RLock regardless of whether it released it - so these
+    checks run from a separate thread.
+    """
+
+    def _assert_lock_is_free(self, item):
+        result = {}
+
+        def check():
+            result['acquired'] = item._lock.acquire(timeout=0.2)
+            if result['acquired']:
+                item._lock.release()
+
+        t = threading.Thread(target=check)
+        t.start()
+        t.join(timeout=2)
+        self.assertTrue(result.get('acquired'), 'item._lock was left held after the setter raised')
+
+    def test_eval_unexpanded_releases_lock_if_parse_raises(self):
+        item = _make_item(self.sh, itype='num')
+        with patch.object(item, '_parse_eval_attribute', side_effect=RuntimeError('boom')):
+            with self.assertRaises(RuntimeError):
+                item.property.eval_unexpanded = '1 + 1'
+        self._assert_lock_is_free(item)
+
+    def test_on_change_unexpanded_releases_lock_if_parse_raises(self):
+        item = _make_item(self.sh)
+        with patch.object(item, '_parse_on_xx_list_attribute', side_effect=RuntimeError('boom')):
+            with self.assertRaises(RuntimeError):
+                item.property.on_change_unexpanded = 'value + 1'
+        self._assert_lock_is_free(item)
+
+    def test_on_update_unexpanded_releases_lock_if_parse_raises(self):
+        item = _make_item(self.sh)
+        with patch.object(item, '_parse_on_xx_list_attribute', side_effect=RuntimeError('boom')):
+            with self.assertRaises(RuntimeError):
+                item.property.on_update_unexpanded = 'value + 1'
+        self._assert_lock_is_free(item)
+
+    def test_trigger_unexpanded_releases_lock_if_parse_raises(self):
+        item = _make_item(self.sh)
+        with patch.object(item, '_parse_eval_trigger_list_attribute', side_effect=RuntimeError('boom')):
+            with self.assertRaises(RuntimeError):
+                item.property.trigger_unexpanded = 'other.item'
+        self._assert_lock_is_free(item)
 
 
 if __name__ == '__main__':

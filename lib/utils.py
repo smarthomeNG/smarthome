@@ -631,7 +631,7 @@ class Version:
         if vsplit == '':
             return ''
         for v in vsplit:
-            if v[-1].isalpha():
+            if v and v[-1].isalpha():
                 build += ord(v[-1].lower()) - 96
                 v = v[:-1]
             vi = 0

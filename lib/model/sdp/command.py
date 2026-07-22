@@ -148,7 +148,7 @@ class SDPCommand(object):
         :type args: list | tuple
         """
         for arg in args:
-            if kwargs.get(arg, None):
+            if arg in kwargs:
                 setattr(self, arg, kwargs[arg])
 
     def _check_min_max(self, data: Any, key: str, min: bool = True, force: bool = False) -> Any:
@@ -376,16 +376,16 @@ class SDPCommandStr(SDPCommand):
         - recursively _parse_tree for all elements of iterables or
         - return unknown or unparseable elements unchanged
         """
-        if issubclass(node, str):
-            return self._parse_str(node, data, **kwargs)  # type: ignore (type is checked)
-        elif issubclass(node, list):
-            return [self._parse_tree(k, data, **kwargs) for k in node]  # type: ignore
-        elif issubclass(node, tuple):
-            return (self._parse_tree(k, data, **kwargs) for k in node)  # type: ignore
-        elif issubclass(node, dict):
+        if isinstance(node, str):
+            return self._parse_str(node, data, **kwargs)
+        elif isinstance(node, list):
+            return [self._parse_tree(k, data, **kwargs) for k in node]
+        elif isinstance(node, tuple):
+            return (self._parse_tree(k, data, **kwargs) for k in node)
+        elif isinstance(node, dict):
             new_dict = {}
-            for k in node.keys():  # type: ignore
-                new_dict[k] = self._parse_tree(node[k], data, **kwargs)  # type: ignore
+            for k in node.keys():
+                new_dict[k] = self._parse_tree(node[k], data, **kwargs)
             return new_dict
         else:
             return node
@@ -570,6 +570,10 @@ class SDPCommandJSON(SDPCommand):
                 if idx and (1 <= int(idx[1]) <= 3):
                     val = kwargs['custom'][int(idx[1])]
             elif isinstance(val, tuple):
+                # accepted risk: eval() here runs a commands.py-defined expression with the
+                # bound item's write value spliced in. commands.py is plugin/admin-authored,
+                # same trust level as the rest of the plugin config; see the warning in
+                # dev/sample_smartdevice_plugin/commands.py before using this feature.
                 try:
                     expr = str(val[0]).replace('{' + CMD_STR_VALUE + '}', str(data))
                     val = eval(expr)
@@ -675,6 +679,8 @@ class SDPCommandViessmann(SDPCommand):
             if val == 'VAL':
                 val = data
             elif isinstance(val, tuple):
+                # accepted risk: same as SDPCommandJSON._build_dict.check_value above --
+                # see dev/sample_smartdevice_plugin/commands.py for the usage warning.
                 try:
                     expr = str(val[0]).replace('VAL', str(data))
                     val = eval(expr)

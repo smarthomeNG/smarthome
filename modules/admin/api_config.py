@@ -30,7 +30,7 @@ from lib.module import Modules
 import lib.shyaml as shyaml
 from lib.constants import DIR_ETC, DIR_MODULES, BASE_SH, BASE_HOLIDAY, BASE_MODULE
 
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 
 
 class ConfigController(RESTResource):
@@ -220,6 +220,34 @@ class ConfigController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='Get all config sections (common, http, websocket, admin, mqtt) in one call',
+            method='get',
+            path='/config/',
+            tags=['config'],
+        ),
+        ApiDoc(
+            summary='Get a single config section (not currently called by shngadmin - it always fetches everything via GET /config/)',
+            method='get',
+            path='/config/{section}',
+            tags=['config'],
+            params=[
+                ApiParam(
+                    name='section',
+                    location='path',
+                    required=True,
+                    enum=['common', 'http', 'websocket', 'admin', 'mqtt'],
+                )
+            ],
+        ),
+        ApiDoc(
+            summary='Dry-run the etc/ config-directory migration check and report conflicts / files to migrate',
+            method='get',
+            path='/config/check_config_etc/',
+            tags=['config'],
+        ),
+    ]
 
     @cherrypy.expose
     def update(self, id=None):
@@ -290,6 +318,26 @@ class ConfigController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary=(
+                'Save config. Despite the path, this writes the common+http+websocket+admin+mqtt '
+                'sections together in one call, regardless of which of core/common/http/admin/mqtt '
+                'is used - shngadmin always uses `core`.'
+            ),
+            method='put',
+            path='/config/core',
+            tags=['config'],
+            request_body='application/json',
+            description="Full config object, same shape as GET /config/'s response.",
+        ),
+        ApiDoc(
+            summary='(Re-)enable the etc/ config directory after a check_config_etc pass',
+            method='put',
+            path='/config/enable_config_etc/',
+            tags=['config'],
+        ),
+    ]
 
     # ======================================================================
     #  config_etc migration check

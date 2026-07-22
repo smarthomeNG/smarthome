@@ -205,9 +205,8 @@ class Property:
     def eval_unexpanded(self, value):
 
         if isinstance(value, str):
-            self._item._lock.acquire()
-            self._item._process_eval(value)
-            self._item._lock.release()
+            with self._item._lock:
+                self._item._parse_eval_attribute('eval', value)
             return
         else:
             self._type_error('non-non-string')
@@ -496,9 +495,8 @@ class Property:
             value = [value]
         if isinstance(value, list):
             if value == [] or self._checkstrtype(value):
-                self._item._lock.acquire()
-                self._item._process_on_xx_list('on_change', value)
-                self._item._lock.release()
+                with self._item._lock:
+                    self._item._parse_on_xx_list_attribute('on_change', value)
             else:
                 self._type_error('list containing non-string')
                 return
@@ -542,9 +540,8 @@ class Property:
             value = [value]
         if isinstance(value, list):
             if value == [] or self._checkstrtype(value):
-                self._item._lock.acquire()
-                self._item._process_on_xx_list('on_update', value)
-                self._item._lock.release()
+                with self._item._lock:
+                    self._item._parse_on_xx_list_attribute('on_update', value)
             else:
                 self._type_error('list containing non-string')
                 return
@@ -802,9 +799,8 @@ class Property:
             value = [value]
         if isinstance(value, list):
             if value == [] or self._checkstrtype(value):
-                self._item._lock.acquire()
-                self._item._process_trigger_list('trigger', value)
-                self._item._lock.release()
+                with self._item._lock:
+                    self._item._parse_eval_trigger_list_attribute('trigger', value)
             else:
                 self._type_error('list containing non-string')
                 return

@@ -195,5 +195,67 @@ class GetItemdefinitionTest(unittest.TestCase):
         self.assertIn('en', description)
 
 
+class TimestampTypeTest(unittest.TestCase):
+    """
+    Regression tests: META_DATA_TYPES/ITEM_TYPES declare 'timestamp' as a
+    valid type, but _convert_valuetotype()'s if/elif chain had no branch for
+    it -- falling to the trailing else, which logs an error but never sets
+    `result`, so `return result` raised UnboundLocalError. Its sibling
+    _test_valuetype() had the same gap without an else branch at all, so it
+    implicitly returned None (falsy) -- a timestamp-typed value was always
+    treated as invalid. Both are now handled the same as 'float'/'num',
+    matching META_DATA_DEFAULTS['timestamp'] == 0.0 in lib/constants.py.
+    """
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.meta = Metadata(self.sh, 'test_resources', 'plugin', 'tests.resources.test_metadata')
+
+    def test_convert_valuetotype_does_not_raise(self):
+        self.assertEqual(self.meta._convert_valuetotype('timestamp', '1234.5'), 1234.5)
+
+    def test_test_valuetype_accepts_numeric_value(self):
+        self.assertTrue(self.meta._test_valuetype('timestamp', '', '1234.5'))
+
+    def test_test_valuetype_rejects_non_numeric_value(self):
+        self.assertFalse(self.meta._test_valuetype('timestamp', '', 'not-a-number'))
+
+
+class ListlenTest(unittest.TestCase):
+    """
+    Regression tests: _get_definition_listlen() called definitions.get('type', ...)
+    / definitions.get('listlen', ...) -- 'definitions' is the whole name->definition
+    dict, not the single definition -- so it was indexing the wrong dict and 'type'
+    was (almost) never actually a key there, meaning the 'list' branch never fired
+    and listlen was always 0. Its sibling _get_definition_subtype() already used the
+    correct definitions[definition].get(...) form -- matched that pattern here too.
+
+    Separately, get_parameter_listlen()/get_itemdefinition_listlen() called
+    self.get_definition_listlen(...) (no leading underscore); only the
+    underscore-prefixed _get_definition_listlen() actually exists, so both public
+    methods raised AttributeError unconditionally.
+    """
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.meta = Metadata(self.sh, 'test_resources', 'plugin', 'tests.resources.test_metadata')
+
+    def test_get_definition_listlen_reads_correct_dict(self):
+        definitions = {'mylist': {'type': 'list', 'listlen': 3}, 'other': {'type': 'str'}}
+        self.assertEqual(self.meta._get_definition_listlen('mylist', definitions), 3)
+
+    def test_get_definition_listlen_non_list_type_returns_zero(self):
+        definitions = {'mylist': {'type': 'str'}}
+        self.assertEqual(self.meta._get_definition_listlen('mylist', definitions), 0)
+
+    def test_get_parameter_listlen_does_not_raise(self):
+        self.meta.parameters = {'mylist': {'type': 'list', 'listlen': 5}}
+        self.assertEqual(self.meta.get_parameter_listlen('mylist'), 5)
+
+    def test_get_itemdefinition_listlen_does_not_raise(self):
+        self.meta.itemdefinitions = {'mylist': {'type': 'list', 'listlen': 2}}
+        self.assertEqual(self.meta.get_itemdefinition_listlen('mylist'), 2)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

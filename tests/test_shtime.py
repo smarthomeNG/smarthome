@@ -257,6 +257,20 @@ class TestDatetimeTransform(unittest.TestCase):
             self.assertEqual(result.hour, 12)
             self.assertEqual(result.utcoffset(), datetime.timedelta(hours=-10))
 
+    def test_naive_datetime_without_set_tz_call(self):
+        # Regression test: if etc/smarthome.yaml has no 'tz:' key, set_tz() is
+        # never called (only __init__'s set_tzinfo(UTC) default runs). A naive
+        # datetime must still be labelled (with UTC), not crash.
+        import lib.shtime as _st_module
+
+        _st_module._shtime_instance = None
+        st = Shtime(_MockSh())  # note: no st.set_tz(...) call, unlike _make_shtime()
+
+        dt = datetime.datetime(2024, 6, 15, 12, 0, 0)
+        result = st.datetime_transform(dt)
+        self.assertIsNotNone(result.tzinfo)
+        self.assertEqual(result.utcoffset(), datetime.timedelta(0))
+
 
 class TestDateTransform(unittest.TestCase):
     def setUp(self):

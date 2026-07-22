@@ -38,7 +38,7 @@ from lib.metadata import Metadata
 from lib.model.smartplugin import SmartPlugin
 from lib.constants import KEY_CLASS_PATH, YAML_FILE, DIR_PLUGINS
 
-from .rest import RESTResource
+from .rest import ApiDoc, RESTResource
 
 
 class PluginsController(RESTResource):
@@ -85,7 +85,10 @@ class PluginsController(RESTResource):
 
         return json.dumps(self.plugin_data)
 
-    read.expose_resource = True
+    # Deactivated 2026-07-20 to check whether anything still depends on it: this is a strict
+    # subset of GET /api/plugins/installed/ (name -> type only, vs. full metadata), which
+    # shngadmin already fetches. No other caller found. If nothing breaks, remove for good.
+    # read.expose_resource = True
     read.authentication_needed = True
 
 
@@ -162,6 +165,14 @@ class PluginsInstalledController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='Full metadata for every plugin present in the plugins/ directory (not just configured ones)',
+            method='get',
+            path='/plugins/installed/',
+            tags=['plugins'],
+        )
+    ]
 
 
 class PluginsConfigController(RESTResource):
@@ -280,6 +291,14 @@ class PluginsConfigController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='Configuration of all currently configured plugins',
+            method='get',
+            path='/plugins/config/',
+            tags=['plugins'],
+        )
+    ]
 
 
 class PluginsInfoController(RESTResource):
@@ -532,6 +551,11 @@ class PluginsInfoController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='Plugin metadata for the plugin-list page', method='get', path='/plugins/info/', tags=['plugins']
+        )
+    ]
 
 
 class PluginsAPIController(RESTResource):
@@ -575,6 +599,7 @@ class PluginsAPIController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [ApiDoc(summary='Plugin API metadata', method='get', path='/plugins/api/', tags=['plugins'])]
 
 
 class PluginsLogicParametersController(RESTResource):
@@ -605,3 +630,11 @@ class PluginsLogicParametersController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='Plugin-contributed logic-parameter metadata, for the logic editor',
+            method='get',
+            path='/plugins/logicparams/',
+            tags=['plugins'],
+        )
+    ]

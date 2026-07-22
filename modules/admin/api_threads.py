@@ -26,7 +26,7 @@ import logging
 import json
 import cherrypy
 
-from .rest import RESTResource
+from .rest import ApiDoc, RESTResource
 
 
 class ThreadsController(RESTResource):
@@ -126,3 +126,4 @@ class ThreadsController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [ApiDoc(summary='List of running threads', method='get', path='/threads/', tags=['threads'])]

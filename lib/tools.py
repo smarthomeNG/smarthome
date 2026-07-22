@@ -47,11 +47,10 @@ class Tools:
     def ping(self, host):
         if os.name != 'nt':
             try:
-                retcode = subprocess.call('ping -W 1 -c 1 ' + host + ' > /dev/null', shell=True)
-                if retcode == 0:
-                    return True
-                else:
-                    return False
+                retcode = subprocess.call(
+                    ['ping', '-W', '1', '-c', '1', host], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+                )
+                return retcode == 0
             except OSError:
                 return False
         else:

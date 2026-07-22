@@ -181,7 +181,7 @@ class Scenes:
             logger.warning(
                 ' - ' + translate('Problem evaluating: {value} - {exception}', {'value': value, 'exception': e})
             )
-            return value
+            return None
         return rvalue
 
     def _get_learned_value(self, scene, state, ditem):

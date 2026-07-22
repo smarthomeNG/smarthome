@@ -27,7 +27,7 @@ import cherrypy
 
 from lib.item import Items
 
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 
 
 class FunctionsController(RESTResource):
@@ -143,6 +143,9 @@ class FunctionsController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(summary='List of registered functions', method='get', path='/functions/', tags=['functions'])
+    ]
 
 
 class FunctionsReloadController(RESTResource):
@@ -183,3 +186,12 @@ class FunctionsReloadController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary='Reload one function, or `all` to reload every function',
+            method='put',
+            path='/functions/reload/{name}',
+            tags=['functions'],
+            params=[ApiParam(name='name', location='path', required=True)],
+        )
+    ]

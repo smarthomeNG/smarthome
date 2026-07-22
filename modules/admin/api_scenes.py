@@ -27,7 +27,7 @@ import cherrypy
 
 from lib.item import Items
 
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 
 
 class ScenesController(RESTResource):
@@ -141,6 +141,7 @@ class ScenesController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [ApiDoc(summary='List of configured scenes', method='get', path='/scenes/', tags=['scenes'])]
 
 
 class ScenesReloadController(RESTResource):
@@ -175,3 +176,12 @@ class ScenesReloadController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary='Reload one scene, or `all` to reload every scene',
+            method='put',
+            path='/scenes/reload/{name}',
+            tags=['scenes'],
+            params=[ApiParam(name='name', location='path', required=True)],
+        )
+    ]

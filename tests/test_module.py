@@ -40,12 +40,34 @@ class TestModule(unittest.TestCase):
 
         self.sh = MockSmartHome()
         self.modules = self.sh.with_modules_from(common.BASE + '/tests/resources/module')
-        # self.assertIsNotNone(self.sh.modules.get_module("dummy"))    # Test module is not registered
+        self.assertIsNotNone(self.sh.modules.get_module('dummy'))
         self.assertIsNone(self.sh.modules.get_module('dummyX'))  # Test module ist not registered
-        # self.assertEqual(self.sh.modules.return_modules(),['dummy']) # Test modules loaded
-        # self.assertIsNone(self.sh.modules.get_module("faulty"))      # Test module ist not registered
 
         logger.warning('=== End Module Tests')
+
+    def test_failed_load_does_not_reuse_previous_module_instance(self):
+        """
+        Regression test for lib.module.Modules._load_module(): a module whose
+        class can't be resolved (bad classname) must fail cleanly and must not
+        leave a previously-loaded module's instance registered under the new,
+        failing module's name -- self.loadedmodule used to be reused as-is
+        across loop iterations when the class-resolution exec() raised without
+        being reassigned.
+        """
+        self.sh = MockSmartHome()
+        self.modules = self.sh.with_modules_from(common.BASE + '/tests/resources/module_stale_reuse')
+
+        good = self.modules.get_module('good')
+        self.assertIsNotNone(good)
+        self.assertEqual(good.__class__.__name__, 'dummy')
+
+        # the failing module must not be registered at all
+        self.assertIsNone(self.modules.get_module('broken'))
+
+        # and must not have contaminated _modules/_moduledict with a second
+        # reference to 'good's instance
+        self.assertEqual(self.modules._modules.count(good), 1)
+        self.assertEqual(list(self.modules._moduledict.values()).count(good), 1)
 
 
 if __name__ == '__main__':

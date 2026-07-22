@@ -30,10 +30,10 @@
 from hashlib import new
 import sys
 
-if sys.hexversion < 0x03090000:
+if sys.hexversion < 0x030A0000:
     print()
     print(
-        f'Sorry your python interpreter ({sys.version_info[0]}.{sys.version_info[1]}) is too old. Please update to 3.9 or newer.'
+        f'Sorry your python interpreter ({sys.version_info[0]}.{sys.version_info[1]}) is too old. Please update to 3.10 or newer.'
     )
     print()
     exit(1)
@@ -285,7 +285,26 @@ if __name__ == '__main__':
         _sh_thread = threading.Thread(target=sh.start)
         _sh_thread.start()
 
-        shell = code.InteractiveConsole(locals())
+        class _ConsoleNoExit:
+            """
+            Shadows the console's builtin exit/quit: typing exit()/quit() is
+            the natural first thing to try in any Python REPL, but this
+            console doesn't own SmartHomeNG's lifecycle - the SmartHome
+            instance keeps running in its own (non-daemon) thread regardless.
+            Print a hint instead of letting exit()/quit() raise SystemExit.
+            """
+
+            _msg = 'This console does not stop SmartHomeNG. Use sh.stop() or press Ctrl-C to actually stop it.'
+
+            def __call__(self, *args, **kwargs):
+                print(self._msg)
+
+            def __repr__(self):
+                return self._msg
+
+        _console_exit_shadow = {'exit': _ConsoleNoExit(), 'quit': _ConsoleNoExit()}
+
+        shell = code.InteractiveConsole({**locals(), **_console_exit_shadow})
         console_active = True
         while sh.alive:
             if console_active:
@@ -295,10 +314,10 @@ if __name__ == '__main__':
                     try:
                         sys.stdin = open('/dev/tty', 'r')
                         sys.stdout = open('/dev/tty', 'w')
-                        shell = code.InteractiveConsole(locals())
+                        shell = code.InteractiveConsole({**locals(), **_console_exit_shadow})
                     except OSError:
                         print(
-                            'ERROR: Interactive console lost its controlling terminal; SmartHomeNG keeps running without it.'
+                            'ERROR: Interactive console lost its controlling terminal; SmartHomeNG keeps running without it, press Ctrl-C to stop.'
                         )
                         console_active = False
             else:
@@ -346,7 +365,7 @@ if __name__ == '__main__':
     if lib.daemon.check_sh_is_running(PIDFILE):
         print('SmartHomeNG already running with pid {}'.format(lib.daemon.read_pidfile(PIDFILE)))
         print("Run 'smarthome.py -s' to stop it or 'smarthome.py -r' to restart it.")
-        exit()
+        exit(1)
     if MODE == 'debug':
         lib.daemon.write_pidfile(psutil.Process().pid, PIDFILE)
     # Starting SmartHomeNG

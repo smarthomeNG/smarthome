@@ -28,7 +28,7 @@ import cherrypy
 import lib.shyaml as shyaml
 
 import jwt
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 
 
 class LoggersController(RESTResource):
@@ -248,7 +248,10 @@ class LoggersController(RESTResource):
         return json.dumps(response)
 
     read.expose_resource = True
-    read.authentication_needed = False
+    read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(summary='All loggers with their current levels', method='get', path='/loggers/', tags=['loggers'])
+    ]
 
     def update(self, id=None, level=None, handlers=None):
         """
@@ -272,6 +275,19 @@ class LoggersController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary="Set a logger's level and/or handler list",
+            method='put',
+            path='/loggers/{logger}',
+            tags=['loggers'],
+            params=[
+                ApiParam(name='logger', location='path', required=True),
+                ApiParam(name='level'),
+                ApiParam(name='handlers', description='Comma-separated handler list.'),
+            ],
+        )
+    ]
 
     def add(self, id=None, level=None):
         """
@@ -296,6 +312,15 @@ class LoggersController(RESTResource):
 
     add.expose_resource = True
     add.authentication_needed = True
+    add.api_doc = [
+        ApiDoc(
+            summary='Add a new logger',
+            method='post',
+            path='/loggers/{logger}',
+            tags=['loggers'],
+            params=[ApiParam(name='logger', location='path', required=True)],
+        )
+    ]
 
     def delete(self, id=None, level=None):
         """
@@ -324,3 +349,12 @@ class LoggersController(RESTResource):
 
     delete.expose_resource = True
     delete.authentication_needed = True
+    delete.api_doc = [
+        ApiDoc(
+            summary='Delete a logger',
+            method='delete',
+            path='/loggers/{logger}',
+            tags=['loggers'],
+            params=[ApiParam(name='logger', location='path', required=True)],
+        )
+    ]

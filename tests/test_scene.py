@@ -94,10 +94,12 @@ class TestScenesEval(unittest.TestCase):
     def test_boolean_false(self):
         self.assertIs(self.sc._eval('False'), False)
 
-    def test_invalid_expression_returns_original_value(self):
-        # On exception, _eval returns the original value string unchanged
+    def test_invalid_expression_returns_none(self):
+        # On exception, _eval must return None (per its own docstring), not
+        # the original value string - callers rely on `is not None` to
+        # decide whether to act on the result.
         result = self.sc._eval('completely_undefined_name_xyz')
-        self.assertEqual(result, 'completely_undefined_name_xyz')
+        self.assertIsNone(result)
 
     def test_none_string_evaluates_to_none(self):
         self.assertIsNone(self.sc._eval('None'))
@@ -253,6 +255,62 @@ class TestReturnSceneValueActions(unittest.TestCase):
     def test_learned_value_none_when_not_set(self):
         result = self.sc.return_scene_value_actions('living', '1')
         self.assertIsNone(result[0][3])
+
+
+# ===========================================================================
+# _trigger_setstate — must not write a live item when eval fails
+# ===========================================================================
+
+
+class TestTriggerSetstateEvalFailure(unittest.TestCase):
+    def setUp(self):
+        self.sc = _make_scenes()
+
+    def test_broken_expression_does_not_write_to_item(self):
+        scene_item = _mock_item('my_scene')
+        ditem = MagicMock()
+        self.sc._scenes['my_scene'] = {'0': [(ditem, 'completely_undefined_name_xyz', '', False)]}
+        self.sc._trigger_setstate(scene_item, 0, 'test', None, None)
+        ditem.assert_not_called()
+
+    def test_valid_expression_still_writes_to_item(self):
+        scene_item = _mock_item('my_scene')
+        ditem = MagicMock()
+        self.sc._scenes['my_scene'] = {'0': [(ditem, '42', '', False)]}
+        self.sc._trigger_setstate(scene_item, 0, 'test', None, None)
+        ditem.assert_called_once_with(value=42, caller='Scene', source='my_scene')
+
+
+# ===========================================================================
+# _add_scene_entry — must force learn off (not silently keep it on) when
+# the entry's value fails to evaluate
+# ===========================================================================
+
+
+class TestAddSceneEntryLearnOnEvalFailure(unittest.TestCase):
+    def setUp(self):
+        self.sc = _make_scenes()
+
+    def _make_defining_item(self, path):
+        item = MagicMock()
+        item.property.path = path
+        item.get_stringwithabsolutepathes = MagicMock(side_effect=lambda value, *a, **kw: value)
+        item.get_absolutepath = MagicMock(return_value='light.kitchen')
+        return item
+
+    def test_broken_expression_forces_learn_off(self):
+        item = self._make_defining_item('my_scene')
+        self.sc.items.return_item = MagicMock(return_value=MagicMock())
+        self.sc._add_scene_entry(item, '0', 'kitchen', 'completely_undefined_name_xyz', learn=True)
+        _, _, _, learn = self.sc._scenes['my_scene']['0'][0]
+        self.assertFalse(learn)
+
+    def test_valid_static_expression_keeps_learn_on(self):
+        item = self._make_defining_item('my_scene')
+        self.sc.items.return_item = MagicMock(return_value=MagicMock())
+        self.sc._add_scene_entry(item, '0', 'kitchen', '42', learn=True)
+        _, _, _, learn = self.sc._scenes['my_scene']['0'][0]
+        self.assertTrue(learn)
 
 
 # ===========================================================================

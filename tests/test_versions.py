@@ -96,6 +96,13 @@ class TestModule(unittest.TestCase):
         self.assertEqual([1, 2, 0, 1], Version.to_list('1.2a'))
         self.assertEqual([1, 9, 0, 1], Version.to_list('1.9.0.1'))
 
+        # Regression: an empty component (e.g. from '1.2..3' or a trailing
+        # separator '1.2.3.') used to crash to_list() with IndexError on
+        # v[-1] -- v was '' and indexing an empty string raises. Empty
+        # components must be treated as 0, like any other non-numeric part.
+        self.assertEqual([1, 2, 0, 3], Version.to_list('1.2..3'))
+        self.assertEqual([1, 2, 3, 0], Version.to_list('1.2.3.'))
+
         # test_version_compare('1.2', '1.3', '<')
         # test_version_compare('1.2', '1.3', '>')
         # test_version_compare('1.2', '1.3', '=')

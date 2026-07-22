@@ -376,13 +376,9 @@ class Logics:
         """
         This methods adds a scheduler entry for a logic-scheduler
 
-        A plugin identifiction is added to the scheduler name
-
         The parameters are identical to the scheduler.add method from lib.scheduler
         """
-        if name != '':
-            name = '.' + name
-        name = self._logicname_prefix + self.get_fullname() + name
+        name = self._logicname_prefix + name
         logger.debug('scheduler_add: name = {}'.format(name))
         self.scheduler.add(name, obj, prio, cron, cycle, value, offset, next, from_smartplugin=True)
 
@@ -390,23 +386,17 @@ class Logics:
         """
         This methods changes a scheduler entry of a logic-scheduler
         """
-        if name != '':
-            name = '.' + name
-        name = self._logicname_prefix + self.get_fullname() + name
+        name = self._logicname_prefix + name
         logger.debug('scheduler_change: name = {}'.format(name))
-        self.scheduler.change(name, kwargs)
+        self.scheduler.change(name, **kwargs)
 
     def scheduler_remove(self, name):
         """
         This methods rmoves a scheduler entry of a logic-scheduler
 
-        A plugin identifiction is added to the scheduler name
-
         The parameters are identical to the scheduler.remove method from lib.scheduler
         """
-        if name != '':
-            name = '.' + name
-        name = self._logicname_prefix + self.get_fullname() + name
+        name = self._logicname_prefix + name
         logger.debug('scheduler_remove: name = {}'.format(name))
         self.scheduler.remove(name, from_smartplugin=False)
 
@@ -1079,7 +1069,7 @@ class Logic:
         self._logic_description = ''
         self.shtime = logics.shtime
         self._logics = logics  # access to the logics api
-        self._enabled = True if 'enabled' not in attributes else Utils.to_bool(attributes['enabled'])
+        self._enabled = True if not attributes or 'enabled' not in attributes else Utils.to_bool(attributes['enabled'])
         # self.enabled = self._enabled
         self._crontab = None
         self._cycle = None
@@ -1091,7 +1081,7 @@ class Logic:
         self._conf = attributes
         self.scheduler = Logics.get_instance().scheduler
         self.__methods_to_trigger = []
-        if attributes != 'None':
+        if attributes is not None:
             # Fills crontab, cycle and other parameters
             for attribute in attributes:
                 if attribute == 'logic_groupname':

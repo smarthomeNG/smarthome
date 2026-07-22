@@ -28,14 +28,6 @@ parameters:
             en: 'Automatically extend an existing login-token'
 #            fr: ""
 
-    pypi_timeout:
-        type: int
-        default: 5
-        description:
-            de: 'Timeout bei der Abfrage der pypi Website'
-            en: 'Timeout for getting data from the pypi website'
-            fr: "Délai d'attente pour obtenir des données du site Web Pypi"
-
     itemtree_fullpath:
         type: bool
         gui_type: yes_no

@@ -29,7 +29,7 @@ import lib.shyaml as shyaml
 from lib.utils import Utils
 from lib.constants import DIR_ETC, BASE_LOG
 import jwt
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 
 
 class LogsController(RESTResource):
@@ -136,10 +136,14 @@ class LogsController(RESTResource):
             logs = self.get_logs_with_files()
             return json.dumps({'logs': logs, 'default': self.root_logname})
 
-        if id in logs:
-            # get filenames available for the specified log (if log is specified without extension)
-            logfiles = self.get_files_of_log(id)
-            return json.dumps(sorted(logfiles))
+        # Deactivated 2026-07-20 to check whether anything still depends on it: shngadmin's
+        # log-display.component.ts already gets each log's rotated-file list from the bulk
+        # GET /api/logs/ response (get_logs_with_files() above embeds it) and never calls
+        # this branch separately. If nothing breaks, remove for good.
+        # if id in logs:
+        #     # get filenames available for the specified log (if log is specified without extension)
+        #     logfiles = self.get_files_of_log(id)
+        #     return json.dumps(sorted(logfiles))
 
         if os.path.isfile(os.path.join(self.log_dir, id)):
             # return content of the logfile specified in id, if file is found
@@ -204,3 +208,25 @@ class LogsController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(summary='List of available log files', method='get', path='/logs/', tags=['logs']),
+        ApiDoc(
+            summary=(
+                "One chunk of a log file's content. The per-log-name rotated-file-list "
+                'variant of this path was deactivated 2026-07-20 (see the commented-out '
+                'branch above) - only real filenames on disk are served now.'
+            ),
+            method='get',
+            path='/logs/{filename}',
+            tags=['logs'],
+            params=[
+                ApiParam(name='filename', location='path', required=True),
+                ApiParam(
+                    name='chunk',
+                    type='integer',
+                    default=1,
+                    description='1 = first chunk; 0 is the server convention for "last chunk".',
+                ),
+            ],
+        ),
+    ]

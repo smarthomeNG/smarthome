@@ -68,11 +68,19 @@ class SmartPlugin(SmartObject, Utils):
 
     _pluginname_prefix = 'plugins.'
 
-    # these variables _should_ be instance members (not class members) ...
-    # BUT if a plugin fails to call the parent class' __init__(), these are
-    # not present and cause errors.
-    # So - until a proper QA for 3rd party plugins is in place - we define these
-    # as class members to prevent AttributeErrors later on...
+    # TODO/FIXME: these variables _should_ be instance members (not class
+    # members) ... BUT if a plugin fails to call the parent class' __init__(),
+    # these are not present and cause errors. So - until a proper QA for
+    # 3rd party plugins is in place - we define these as class members to
+    # prevent AttributeErrors later on. __init__() below does set proper
+    # instance-level versions for every plugin that *does* call
+    # super().__init__() (the common case), so these class-level defaults
+    # only get shared across instances for plugins that skip it - confirmed
+    # happening today (e.g. miflora, traffic). Same trade-off, same fix
+    # shape as lib/model/mqttplugin.py's _item_values. Revisit once the
+    # 3rd-party plugin fleet has been audited for super().__init__()
+    # compliance, then these can become None sentinels to fail loudly
+    # instead of sharing state.
 
     logger = logging.getLogger(__name__)
 
@@ -146,6 +154,13 @@ class SmartPlugin(SmartObject, Utils):
         self._asyncio_state = 'unused'  # stored state of the asyncio use of the plugin
         self._used_plugin_coro = None  # plugin coro used when calling start_asyncio (to be able to used by a generic 'restart asyncio' method
         self._run_queue = None  # queue to send commends to the main-coro/plugin-coro
+
+        # QA sentinel: only reachable if this __init__() actually ran, i.e. the
+        # plugin's own __init__() correctly called super().__init__(). Checked
+        # by lib/plugin.py's PluginWrapper right after instantiating the
+        # plugin, to detect the "forgot super().__init__()" case that the
+        # class-level mutable defaults above exist to paper over.
+        self._smartplugin_super_init_done = True
 
     #
     # the following methods should be overwritten
