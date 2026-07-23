@@ -145,6 +145,11 @@ class Database:
     # the wrong type.
     _numeric_connect_keys = {'port'}
 
+    # connect() kwargs that must be a real bool rather than the literal
+    # string from config - a non-empty string like 'False' is truthy in
+    # Python and would silently defeat an explicit override.
+    _bool_connect_keys = {'check_same_thread'}
+
     def __init__(self, name, dbapi, connect, formatting='named'):
         """Create a new database instance
 
@@ -211,12 +216,27 @@ class Database:
                             value = int(value)
                         except ValueError:
                             pass
+                    elif key in self._bool_connect_keys:
+                        value = value.strip().lower() not in ('false', '0', 'no', '')
                     self._params[key] = value
             elif isinstance(connect[0], OrderedDict):
                 self._params = {k: str(v) for item in connect for k, v in item.items()}
 
         elif type(connect) in [dict, collections.OrderedDict]:
             self._params = connect
+
+        if getattr(self._dbapi, '__name__', '') == 'sqlite3' and 'check_same_thread' not in self._params:
+            # This class already serializes every connection access via
+            # self._fdb_lock below - sqlite3's own check_same_thread=True
+            # default (which rejects any cross-thread use of the connection
+            # object) is therefore redundant, and actively breaks the
+            # scheduler-driven access pattern every caller assumes: connect()
+            # typically runs once on the main thread at startup, while
+            # periodic maintenance tasks (e.g. the database plugin's
+            # remove_older_than_maxage/build_orphanlist) run on a scheduler
+            # thread. Only applied as a default - an explicit
+            # check_same_thread in the connect config always wins.
+            self._params['check_same_thread'] = False
 
         self._format_output = self._dbapi.paramstyle
         if self._format_output not in self._styles:
@@ -345,6 +365,90 @@ class Database:
         if self._conn is not None:
             return self._conn.cursor()
 
+    def _cursor_op_with_reconnect(self, op, quiet=False, empty=None, error_prefix=None):
+        """Run *op(cursor)* against a fresh cursor of our own (the ``cur is
+        None`` case in execute()/fetchone()/fetchall()), retrying exactly
+        once after a reconnect if the connection has gone stale.
+
+        ``verify()`` is the dedicated, actively-called health check for a
+        connection - but callers that go through the newer ItemStore/
+        LogStore CRUD layer (store.py) always call execute()/fetchone()/
+        fetchall() with ``cur=None`` and never call verify() themselves.
+        Without this, a single dropped connection (network blip, MySQL
+        restarting, "Lost connection to MySQL server during query") leaves
+        ``self._conn`` in a broken-but-not-None state that nothing ever
+        resets - every subsequent cur=None call fails identically until
+        something unrelated happens to call verify() or the process
+        restarts. This mirrors verify()'s own close-then-reconnect recovery,
+        scoped to the one statement actually being run instead of a
+        separate probe query.
+
+        :param op:        Callable taking a cursor, returning the result.
+        :param quiet:     Suppress the error-level log entry on final failure.
+        :param empty:     Value to return if no cursor could be obtained at
+                          all (mirrors execute()'s ``result = []`` /
+                          fetchone()'s ``result = ''`` no-cursor fallbacks).
+        :param error_prefix: Message prefix to log on final failure (the
+                          final exception is appended); falls back to a
+                          generic message if omitted.
+
+        Also closes a separate, longstanding gap: this cur=None path is
+        exactly what ItemStore/LogStore always use, and none of it was ever
+        wrapped in self._fdb_lock - unlike the plugin's older _query()
+        wrapper, which always locked before a cur=None call. Concurrent
+        threads (the scheduler running maxage/orphan cleanup, live item
+        writes, WebIf/logic reads) could hit the same self._conn/cursor at
+        once with no serialization at all. Locked here now, released again
+        before close()/connect() run (both lock internally, and
+        self._fdb_lock is a plain, non-reentrant Lock - holding it across
+        those calls would deadlock).
+        """
+        last_error = None
+        for attempt in (1, 2):
+            if self._conn is None:
+                # never connected, or a previous attempt already gave up
+                # and closed us - not a "stale" condition, just not
+                # connected right now. Preserve today's behaviour: no
+                # reconnect storm here, that's _initialize_db()'s throttled
+                # job. Only an existing-but-broken connection gets retried.
+                return empty
+
+            if not self.lock(300):
+                last_error = TimeoutError(f'Database [{self._name}]: could not acquire lock within 300s')
+                break
+
+            c = None
+            try:
+                # sqlite3 raises immediately on .cursor() against an
+                # already-closed connection; pymysql instead tends to
+                # return a cursor that only fails on first use. Either way
+                # it's the same "connection object present but unusable"
+                # condition this retry exists for.
+                c = self.cursor()
+                result = op(c)
+                c.close()
+                return result
+            except Exception as e:
+                last_error = e
+                if c is not None:
+                    try:
+                        c.close()
+                    except Exception:
+                        pass
+            finally:
+                self.release()
+
+            if attempt == 1:
+                self.close()
+                try:
+                    self.connect()
+                except Exception:
+                    break
+        if not quiet:
+            prefix = error_prefix or f'Database [{self._name}]: query failed after reconnect attempt'
+            self.logger.error(f'{prefix}: {last_error}')
+        raise last_error
+
     def execute(self, stmt, params=(), formatting=None, cur=None, quiet=False):
         """Execute the given statement
 
@@ -374,26 +478,20 @@ class Database:
             self.logger.error('Can not prepare query: {} (args {}): {}'.format(stmt, params, e))
             raise
 
-        c = None
-        try:
-            if cur is None:
-                c = self.cursor()
-                if c is not None:
-                    result = c.execute(stmt, args)
-                    c.close()
-                else:
-                    result = []
-                c = None
-            else:
-                result = cur.execute(stmt, args)
-            return result
-        except Exception as e:
-            if not quiet:
-                self.logger.error(f'Can not execute query: {stmt} (args {args}): {e}')
-            raise
-        finally:
-            if c is not None:
-                c.close()
+        if cur is not None:
+            try:
+                return cur.execute(stmt, args)
+            except Exception as e:
+                if not quiet:
+                    self.logger.error(f'Can not execute query: {stmt} (args {args}): {e}')
+                raise
+
+        return self._cursor_op_with_reconnect(
+            lambda c: c.execute(stmt, args),
+            quiet=quiet,
+            empty=[],
+            error_prefix=f'Can not execute query: {stmt} (args {args})',
+        )
 
     def verify(self, retry=5, delay=5):
         """Verifies the connection status and reconnets if required
@@ -419,7 +517,14 @@ class Database:
                 locked = self.lock(2)
 
                 if locked:
-                    self.fetchone('SELECT 1')
+                    # explicit cursor: fetchone(cur=None) now locks
+                    # internally too (see _cursor_op_with_reconnect) - we
+                    # already hold self._fdb_lock here, and it's a plain
+                    # non-reentrant Lock, so a cur=None call from the same
+                    # thread would deadlock against itself.
+                    probe_cur = self.cursor()
+                    self.fetchone('SELECT 1', cur=probe_cur)
+                    probe_cur.close()
                     retry = -1
                     self.release()
                 else:
@@ -445,19 +550,17 @@ class Database:
         the result. It accepts the same arguments as mentioned in the
         'execute()' method.
         """
-        if cur is None:
-            c = self.cursor()
-            if c is None:
-                self.logger.warning(f'fetchone: No cursor defined for stmt {stmt} with params {params}')
-                result = ''
-            else:
-                self.execute(stmt, params, formatting=formatting, cur=c, quiet=quiet)
-                result = c.fetchone()
-                c.close()
-        else:
+        if cur is not None:
             self.execute(stmt, params, formatting=formatting, cur=cur, quiet=quiet)
-            result = cur.fetchone()
-        return result
+            return cur.fetchone()
+
+        def op(c):
+            self.execute(stmt, params, formatting=formatting, cur=c, quiet=True)
+            return c.fetchone()
+
+        return self._cursor_op_with_reconnect(
+            op, quiet=quiet, empty='', error_prefix=f'fetchone failed for stmt {stmt} with params {params}'
+        )
 
     def fetchall(self, stmt, params=(), formatting=None, cur=None, quiet=False):
         """Execute given statement and fetch all rows from result
@@ -465,18 +568,17 @@ class Database:
         This method can be used to fetch all rows from the result. It accepts
         the same arguments as mentioned in the 'execute()' method.
         """
-        if cur is None:
-            c = self.cursor()
-            if c is not None:
-                self.execute(stmt, params, formatting=formatting, cur=c, quiet=quiet)
-                result = c.fetchall()
-                c.close()
-            else:
-                result = []
-        else:
+        if cur is not None:
             self.execute(stmt, params, formatting=formatting, cur=cur, quiet=quiet)
-            result = cur.fetchall()
-        return result
+            return cur.fetchall()
+
+        def op(c):
+            self.execute(stmt, params, formatting=formatting, cur=c, quiet=True)
+            return c.fetchall()
+
+        return self._cursor_op_with_reconnect(
+            op, quiet=quiet, empty=[], error_prefix=f'fetchall failed for stmt {stmt} with params {params}'
+        )
 
     def _prepare(self, stmt, params, formatting=None):
         """Internal helper method to convert the statement and parameter list"""

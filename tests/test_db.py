@@ -211,6 +211,119 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         db.connect()
         db.fetchall('SELECT 1')
 
+    # -- reconnect-on-stale-connection (cur=None path) -----------------------
+    #
+    # execute()/fetchone()/fetchall() manage their own cursor when called
+    # with cur=None - this is the path store.py's ItemStore/LogStore CRUD
+    # layer always uses, and it never calls verify() itself. A connection
+    # that goes stale between calls (network blip, server-side disconnect)
+    # used to wedge every subsequent cur=None call identically until
+    # something unrelated called verify() or the process restarted - see
+    # plugins/database's "Lost connection to MySQL server during query" /
+    # "read of closed file" incident. These tests cover the fix directly on
+    # lib.db.Database rather than through the plugin.
+
+    def _break_connection_once(self, db, where='cursor'):
+        """Make the *current* connection's cursor()/execute() raise exactly
+        once, then behave normally again on the connection that's active
+        for that attempt (mirrors both failure shapes noted in
+        _cursor_op_with_reconnect: sqlite3 raises immediately from
+        .cursor() on an already-closed connection, pymysql instead tends to
+        return a cursor that only fails on first use)."""
+        conn = db._conn
+        calls = {'n': 0}
+        if where == 'cursor':
+            original = conn.cursor
+
+            def failing(**kwargs):
+                calls['n'] += 1
+                if calls['n'] == 1:
+                    raise Exception('simulated stale connection')
+                return original(**kwargs)
+
+            conn.cursor = failing
+        else:  # 'execute' - cursor() itself succeeds, first .execute() call fails
+            original_cursor = conn.cursor
+
+            def wrapped_cursor(**kwargs):
+                cur = original_cursor(**kwargs)
+                original_execute = cur.execute
+
+                def failing_execute(*a, **kw):
+                    calls['n'] += 1
+                    if calls['n'] == 1:
+                        raise Exception('simulated stale connection')
+                    return original_execute(*a, **kw)
+
+                cur.execute = failing_execute
+                return cur
+
+            conn.cursor = wrapped_cursor
+        return calls
+
+    def test_fetchall_reconnects_after_stale_connection_cursor_failure(self):
+        db = self.db()
+        db.connect()
+        first_conn = db._conn
+        self._break_connection_once(db, where='cursor')
+
+        result = db.fetchall('SELECT 1')
+
+        self.assertEqual([[0]], result)
+        self.assertIsNot(first_conn, db._conn, 'must have reconnected to a new connection object')
+
+    def test_fetchone_reconnects_after_stale_connection_execute_failure(self):
+        db = self.db()
+        db.connect()
+        first_conn = db._conn
+        self._break_connection_once(db, where='execute')
+
+        result = db.fetchone('SELECT 1')
+
+        self.assertEqual([0], result)
+        self.assertIsNot(first_conn, db._conn, 'must have reconnected to a new connection object')
+
+    def test_execute_reconnects_after_stale_connection(self):
+        db = self.db()
+        db.connect()
+        first_conn = db._conn
+        self._break_connection_once(db, where='cursor')
+
+        db.execute('INSERT INTO x VALUES (1)')
+
+        self.assertIsNot(first_conn, db._conn, 'must have reconnected to a new connection object')
+
+    def test_reconnect_gives_up_and_logs_after_second_failure(self):
+        # a genuinely broken destination, not a transient blip: the first
+        # attempt fails (stale connection), and the reconnect attempt
+        # itself also fails (server really is unreachable) - must still
+        # raise the original error, and must still log exactly once.
+        db = self.db()
+        db.connect()
+
+        def always_failing_cursor(**kwargs):
+            raise Exception('simulated persistent connection failure')
+
+        db._conn.cursor = always_failing_cursor
+
+        def failing_connect(**kwargs):
+            raise Exception('simulated reconnect also fails')
+
+        db._dbapi.connect = failing_connect
+
+        with self.assertRaisesRegex(Exception, 'simulated persistent connection failure'):
+            with self.assertLogs('lib.db', level='ERROR'):
+                db.fetchall('SELECT 1')
+
+    def test_fetchall_not_connected_returns_empty_without_reconnect_attempt(self):
+        # never connected at all - must preserve today's behaviour exactly
+        # (empty result, no attempted reconnect / no connection storm).
+        # Initial connect() throttling is _initialize_db()'s job, not this
+        # retry's.
+        db = self.db()
+        self.assertEqual([], db.fetchall('SELECT 1'))
+        self.assertIsNone(db._conn)
+
 
 class DbQueryBaseTests(TestDbBase):
     format = None
