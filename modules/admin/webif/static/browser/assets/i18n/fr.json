@@ -9,6 +9,7 @@
     "SYSTEM": "Suivre le système"
   },
   "MENU": {
+    "DASHBOARD": "Tableau de bord",
     "SYSTEM": "Système",
     "SYSTEM_PROPERTIES": "Propriétés du système",
     "SYSTEM_CONFIGURATION": "Configuration du système",
@@ -39,6 +40,26 @@
     "HELP_LOCAL": "Aide (locale)",
     "HELP_OFFICIAL": "Aide (officielle)",
     "HELP_DEVELOP": "Aide (branche develop)"
+  },
+  "DASHBOARD": {
+    "SYSTEM_STATUS": "État du système",
+    "HOSTNAME": "Nom d'hôte",
+    "OSTYPE": "Type de système d'exploitation",
+    "SHNG_VERSION": "Version de SmartHomeNG",
+    "SHNG_UPTIME": "Temps de fonctionnement de SmartHomeNG",
+    "PYTHON": "Python",
+    "ITEM_COUNT": "Objets",
+    "LOGIC_COUNT": "Logiques",
+    "STOPPED_PLUGINS": "Plugins arrêtés",
+    "NO_STOPPED_PLUGINS": "Tous les plugins sont en cours d'exécution.",
+    "RECENT_WARNINGS": "Avertissements et erreurs récents",
+    "NO_RECENT_WARNINGS": "Aucun avertissement ni erreur récent.",
+    "STALE_DATA": "Données potentiellement obsolètes - dernière mise à jour {{time}}",
+    "NEVER_LOADED": "Impossible de charger les données",
+    "START_FAILED": "Impossible de démarrer le plugin '{{name}}'",
+    "OVERDUE_SCHEDULERS": "Planificateurs en retard",
+    "NO_OVERDUE_SCHEDULERS": "Aucun planificateur en retard.",
+    "SCHEDULED_FOR": "prévu pour"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Propriétés du système",

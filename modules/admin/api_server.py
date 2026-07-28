@@ -106,6 +106,11 @@ class ServerController(RESTResource):
         # components (e.g. resource graphs) skip their connection on first load.
         response['websocket_port'] = self.module.websocket_port
         response['websocket_host'] = self.module.websocket_host
+        # Also needed before initial routing, same reason as websocket_*
+        # above: the frontend's default-route redirect resolves during the
+        # router's initial navigation, which happens right after this
+        # APP_INITIALIZER call completes - info() below runs too late for it.
+        response['start_page'] = self.module.start_page
 
         return json.dumps(response)
 
@@ -324,9 +329,10 @@ class ServerController(RESTResource):
         ApiDoc(
             summary=(
                 'Basic server info: default_language, client_ip, login_required, '
-                'websocket_host, websocket_port. Public even though flagged '
-                'authentication_needed in code - exempted at the bare path via '
-                'public_root. Also (ab)used as a lightweight reachability heartbeat.'
+                'websocket_host, websocket_port, start_page. Public even though '
+                'flagged authentication_needed in code - exempted at the bare path '
+                'via public_root. Also (ab)used as a lightweight reachability '
+                'heartbeat.'
             ),
             method='get',
             path='/server/',

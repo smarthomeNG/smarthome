@@ -119,3 +119,12 @@ parameters:
                  A shorter span makes the graphs update live more often, since the update interval is tied to the
                  number of plotted data points.'
 
+    start_page:
+        type: str
+        default: 'dashboard'
+        valid_list: ['dashboard', 'system', 'items', 'logics', 'plugins', 'scenes', 'schedulers', 'services', 'logs']
+        description:
+            de: 'Seite, die nach dem Login im Administrations-Interface angezeigt wird'
+            en: 'Page shown after login in the admin interface'
+            fr: "Page affichée après la connexion dans l'interface d'administration"
+

@@ -9,6 +9,7 @@
     "SYSTEM": "Follow system"
   },
   "MENU": {
+    "DASHBOARD": "Dashboard",
     "SYSTEM": "System",
     "SYSTEM_PROPERTIES": "System Properties",
     "SYSTEM_CONFIGURATION": "System Configuration",
@@ -39,6 +40,26 @@
     "HELP_LOCAL": "Help (local)",
     "HELP_OFFICIAL": "Help (official)",
     "HELP_DEVELOP": "Help (develop branch)"
+  },
+  "DASHBOARD": {
+    "SYSTEM_STATUS": "System status",
+    "HOSTNAME": "Hostname",
+    "OSTYPE": "OS type",
+    "SHNG_VERSION": "SmartHomeNG version",
+    "SHNG_UPTIME": "SmartHomeNG uptime",
+    "PYTHON": "Python",
+    "ITEM_COUNT": "Items",
+    "LOGIC_COUNT": "Logics",
+    "STOPPED_PLUGINS": "Stopped plugins",
+    "NO_STOPPED_PLUGINS": "All plugins are running.",
+    "RECENT_WARNINGS": "Recent warnings and errors",
+    "NO_RECENT_WARNINGS": "No warnings or errors logged recently.",
+    "STALE_DATA": "Data may be outdated - last updated {{time}}",
+    "NEVER_LOADED": "Could not load data",
+    "START_FAILED": "Could not start plugin '{{name}}'",
+    "OVERDUE_SCHEDULERS": "Overdue schedulers",
+    "NO_OVERDUE_SCHEDULERS": "No overdue schedulers.",
+    "SCHEDULED_FOR": "scheduled for"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Systeminfo",

@@ -111,7 +111,7 @@ class LogsController(RESTResource):
     # ======================================================================
     #  GET /api/logs
     #
-    def read(self, id=None, chunk='1'):
+    def read(self, id=None, chunk='1', count='10'):
         """
         Handle GET requests for logs API
         """
@@ -135,6 +135,18 @@ class LogsController(RESTResource):
             # get list of existing logs and name of default log
             logs = self.get_logs_with_files()
             return json.dumps({'logs': logs, 'default': self.root_logname})
+
+        # id may name an in-memory log (e.g. 'env.core.log', the root
+        # WARNING+ buffer from lib.log.ShngMemLogHandler) instead of a file
+        # on disk. These are already maintained incrementally at log-emit
+        # time, so serving them is just a deque read, no file I/O.
+        memlogs = self._sh.logs.return_logs()
+        if id in memlogs:
+            if Utils.is_int(count):
+                count = int(count)
+            else:
+                count = 10
+            return json.dumps({'name': id, 'entries': memlogs[id].export(count)}, default=str)
 
         # Deactivated 2026-07-20 to check whether anything still depends on it: shngadmin's
         # log-display.component.ts already gets each log's rotated-file list from the bulk
@@ -227,6 +239,20 @@ class LogsController(RESTResource):
                     default=1,
                     description='1 = first chunk; 0 is the server convention for "last chunk".',
                 ),
+            ],
+        ),
+        ApiDoc(
+            summary=(
+                "Tail of an in-memory log (e.g. 'env.core.log', the root WARNING+ buffer). "
+                'Matched by name against registered memory logs before falling back to the '
+                'file lookup above.'
+            ),
+            method='get',
+            path='/logs/{name}',
+            tags=['logs'],
+            params=[
+                ApiParam(name='name', location='path', required=True),
+                ApiParam(name='count', type='integer', default=10, description='Number of newest entries to return.'),
             ],
         ),
     ]
