@@ -65,11 +65,17 @@ def _make_controller_with_memlog(maxlen=50):
 
 class TestReadServesMemlogById(unittest.TestCase):
     def setUp(self):
+        # lib.log.logs_instance is a process-global singleton. Earlier test
+        # files (via tests/mock/core.py's MockSmartHome) may have already
+        # populated it with a real, still-cached Logs instance - save it and
+        # restore it verbatim, rather than nulling it unconditionally, or
+        # every later test in the same pytest run that reuses that cached
+        # instance breaks with "'NoneType' object has no attribute '_sh'"
+        # (lib/log.py's Log.__init__ reads the module global directly).
+        original_logs_instance = _log_module.logs_instance
+        self.addCleanup(setattr, _log_module, 'logs_instance', original_logs_instance)
+
         self.controller, self.mem_log = _make_controller_with_memlog()
-        # lib.log.logs_instance is a process-global singleton; leaving it
-        # pointed at this test's FakeSh (no .shtime) breaks any later test
-        # file that builds a real MockSmartHome() in the same pytest run.
-        self.addCleanup(setattr, _log_module, 'logs_instance', None)
 
     def test_unregistered_id_falls_through_to_file_lookup(self):
         # id that is neither a registered memory log nor a real file on disk
