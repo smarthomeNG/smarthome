@@ -122,6 +122,22 @@ class LogsController(RESTResource):
         else:
             chunk = 1
 
+        # id may name an in-memory log (e.g. 'env.core.log', the root
+        # WARNING+ buffer from lib.log.ShngMemLogHandler) instead of a file
+        # on disk. These are already maintained incrementally at log-emit
+        # time, so serving them is just a deque read, no file I/O - checked
+        # before the file-directory scan below, which touches disk (and on
+        # a bare checkout with no var/log/ yet, e.g. a fresh CI runner,
+        # would raise before ever reaching this branch otherwise).
+        if id is not None:
+            memlogs = self._sh.logs.return_logs()
+            if id in memlogs:
+                if Utils.is_int(count):
+                    count = int(count)
+                else:
+                    count = 10
+                return json.dumps({'name': id, 'entries': memlogs[id].export(count)}, default=str)
+
         # get names of files in log directory
         wrkl = sorted(os.listdir(self.log_dir))
         self.files = []
@@ -135,18 +151,6 @@ class LogsController(RESTResource):
             # get list of existing logs and name of default log
             logs = self.get_logs_with_files()
             return json.dumps({'logs': logs, 'default': self.root_logname})
-
-        # id may name an in-memory log (e.g. 'env.core.log', the root
-        # WARNING+ buffer from lib.log.ShngMemLogHandler) instead of a file
-        # on disk. These are already maintained incrementally at log-emit
-        # time, so serving them is just a deque read, no file I/O.
-        memlogs = self._sh.logs.return_logs()
-        if id in memlogs:
-            if Utils.is_int(count):
-                count = int(count)
-            else:
-                count = 10
-            return json.dumps({'name': id, 'entries': memlogs[id].export(count)}, default=str)
 
         # Deactivated 2026-07-20 to check whether anything still depends on it: shngadmin's
         # log-display.component.ts already gets each log's rotated-file list from the bulk
