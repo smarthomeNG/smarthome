@@ -78,6 +78,7 @@ def _make_proto(viess_proto='P300'):
     p._controlset = P300_CS if viess_proto == 'P300' else KW_CS
     p._is_initialized = False
     p._is_connected = True
+    p._p300_init_retries = 10
     p._lock = threading.Lock()
     p._send_bytes = MagicMock()
     p._read_bytes = MagicMock(return_value=b'')
