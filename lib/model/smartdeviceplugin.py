@@ -40,6 +40,7 @@ from collections.abc import Callable
 from typing import Any, Tuple
 
 import lib.shyaml as shyaml
+from lib.metadata import Metadata
 from lib.model.smartplugin import SmartPlugin, SmartPluginWebIf
 from lib.item.item import Item
 from lib.plugin import Plugins
@@ -1776,9 +1777,9 @@ class Standalone:
     HELP_STRUCT = """
         ========================================================================
 
-        If you call it with -s as a parameter, the plugin will insert the struct
-        into the plugins' `plugins/<plugin_name>/plugin.yaml` file. Old struct
-        content will be overwritten:
+        If you call this plugin with -s as a parameter, the plugin will insert
+        the struct into the plugins' `plugins/<plugin_name>/plugin.yaml` file.
+        Old struct content will be overwritten:
 
         ``__init__.py -s``
 
@@ -1801,11 +1802,14 @@ class Standalone:
         self.yaml = None
         self.cmdlist = []
 
-        self.usage = '<Error: Help text not set>'
+        self.struct_mode = False
+        self.acl = False
+        self.lc = False
+        self.indentwidth = 4
 
-        self.set_usage()
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.CRITICAL)
+
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
 
@@ -1813,50 +1817,22 @@ class Standalone:
         formatter = logging.Formatter('%(asctime)s - %(message)s  @ %(lineno)d')
         ch.setFormatter(formatter)
 
-        # add the handlers to the logger
-        self.logger.addHandler(ch)
+        # attach the handler to the ROOT logger, not just this one -
+        # SDPConnection and friends create their own, differently-named
+        # loggers in standalone mode (e.g. logging.getLogger('__main__') -
+        # see lib/model/sdp/connection.py), which would otherwise never
+        # reach a handler at all and be silently discarded. A logger with
+        # no explicit level of its own (the default for any of those)
+        # inherits its effective level from the nearest ancestor that has
+        # one set - setting it on root here makes -v/'critical only' apply
+        # to them too, not just to this specific logger
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.CRITICAL)
+        root_logger.addHandler(ch)
 
-        self.struct_mode = False
-        self.acl = False
-        self.lc = False
-
-        self.indentwidth = 4
-
-        if len(sys.argv) == 1 or (len(sys.argv) > 1 and sys.argv[1] not in ['-h', '--help', '-?', '/?', '/h', '/help']):
-            # check for further command line arguments
-            self.params = {}
-            for arg in range(1, len(sys.argv)):
-                arg_str = sys.argv[arg]
-
-                if arg_str == '-v':
-                    print('Debug logging enabled')
-                    self.logger.setLevel(logging.DEBUG)
-
-                elif arg_str[:2].lower() == '-s':
-                    self.struct_mode = True
-
-                elif arg_str[:2].lower() == '-a':
-                    self.acl = True
-
-                elif arg_str[:2].lower() == '-l':
-                    self.lc = True
-
-                else:
-                    try:
-                        # convertible to dict?
-                        self.params.update(literal_eval(arg_str))
-                    except Exception:
-                        # if not: try to parse as 'name=value'
-                        match = re.match('([^= \n]+)=([^= \n]+)', arg_str)
-                        if match:
-                            name, value = match.groups(0)
-                            self.params[name] = value
-
-        else:
-            print(self.usage)
-            return
-
-        # make sure we are in shng base dir
+        # make sure we are in shng base dir - needed below to locate
+        # plugin.yaml, for both the help text and actually running the
+        # plugin, so this has to happen before either
         if not os.path.exists(os.path.join('bin', 'smarthome.py')):
             print('Plugin needs to be called from SmartHomeNG base directory. Aborting.')
             return
@@ -1876,11 +1852,71 @@ class Standalone:
             self.plugin_path = '/' + self.plugin_path
 
         self.plugin_name = pfitems[-2]
-        self.params[PLUGIN_PATH] = self.plugin_mod_path
+
+        # no shng instance exists in standalone mode - Metadata tolerates
+        # sh=None (falls back to cwd, which the base-dir check above just
+        # verified, and skips the http-module-only global parameter)
+        self.meta = Metadata(None, self.plugin_name, 'plugin', self.plugin_mod_path.replace('.', os.sep))
+
+        self.usage = '<Error: Help text not set>'
+        self.set_usage()
+
+        if len(sys.argv) == 1 or (len(sys.argv) > 1 and sys.argv[1] not in ['-h', '--help', '-?', '/?', '/h', '/help']):
+            # check for further command line arguments
+            raw_args = {}
+            for arg in range(1, len(sys.argv)):
+                arg_str = sys.argv[arg]
+
+                if arg_str == '-v':
+                    print('Debug logging enabled')
+                    self.logger.setLevel(logging.DEBUG)
+                    root_logger.setLevel(logging.DEBUG)
+
+                elif arg_str[:2].lower() == '-s':
+                    self.struct_mode = True
+
+                elif arg_str[:2].lower() == '-a':
+                    self.acl = True
+
+                elif arg_str[:2].lower() == '-l':
+                    self.lc = True
+
+                else:
+                    if arg_str.startswith('--'):
+                        # '--key=val' is just 'key=val' with a friendlier,
+                        # more familiar-looking CLI flag prefix
+                        arg_str = arg_str[2:]
+                    try:
+                        # convertible to dict?
+                        raw_args.update(literal_eval(arg_str))
+                    except Exception:
+                        # if not: try to parse as 'name=value'
+                        match = re.match('([^= \n]+)=([^= \n]+)', arg_str)
+                        if match:
+                            name, value = match.groups(0)
+                            raw_args[name] = value
+
+        else:
+            print(self.usage)
+            return
 
         if self.struct_mode:
+            # struct export doesn't connect to a device, so the usual
+            # mandatory-parameter/type checking below doesn't apply here
+            self.params = raw_args
+            self.params[PLUGIN_PATH] = self.plugin_mod_path
             self.create_struct_yaml()
             return
+
+        # resolve declared defaults, type-convert, and check that every
+        # mandatory parameter (with no default) was actually supplied -
+        # instead of finding out however many calls deep into the plugin
+        # once it tries to use a parameter that was never set
+        self.params, allparams_ok, _ = self.meta.check_parameters(raw_args)
+        if not allparams_ok:
+            print('Missing required parameter(s) - see -h for available options and defaults.')
+            return
+        self.params[PLUGIN_PATH] = self.plugin_mod_path
 
         s = f'This is the {self.plugin_name} plugin running in standalone mode'
         print(s)
@@ -1900,7 +1936,37 @@ class Standalone:
     def set_usage(self):
         options = getattr(self.plugin_class, 'STANDALONE_HELP_OPTIONS', '')
         extra = getattr(self.plugin_class, 'STANDALONE_HELP_EXTRA', '')
-        self.usage = self.HELP_USAGE + self.HELP_DEVICE + options + self.HELP_STRUCT + extra
+        parameters = self._format_parameters()
+        self.usage = self.HELP_USAGE + self.HELP_DEVICE + options + parameters + self.HELP_STRUCT + extra
+
+    def _format_parameters(self) -> str:
+        """
+        Formats this plugin's declared parameters (name, type, default or
+        mandatory-flag, English description) from plugin.yaml, for
+        inclusion in the standalone usage text.
+        """
+        if not self.meta or not self.meta.parameters:
+            return ''
+
+        lines = ['Available parameters (from plugin.yaml):', '-' * 72, '']
+        for name in self.meta._paramlist:
+            definition = self.meta.parameters.get(name) or {}
+            ptype = definition.get('type', 'foo')
+            description = definition.get('description', '')
+            if isinstance(description, dict):
+                description = description.get('en') or description.get('de') or next(iter(description.values()), '')
+
+            if definition.get('mandatory'):
+                info = f'{ptype}, mandatory'
+            else:
+                default = self.meta.get_parameter_defaultvalue(name)
+                info = f'{ptype}, default: {default}'
+
+            lines.append(f'  {name:<24} ({info})')
+            if description:
+                lines.append(f'      {description}')
+
+        return '\n'.join(lines) + '\n\n'
 
     def add_item_to_tree(self, item_path, item_dict):
         """add entry for custom read group triggers"""

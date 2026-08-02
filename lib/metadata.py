@@ -90,7 +90,11 @@ class Metadata:
         #        logger.warning(self._log_premsg + "relative_filename = '{}'".format(self.relative_filename))
 
         # read complete definitions from metadata file
-        filename = os.path.join(self._sh.get_basedir(), self.relative_filename)
+        # sh may be None (e.g. standalone-mode plugin invocation, no shng
+        # instance running at all) - fall back to cwd, which callers in
+        # that situation are already required to keep at the shng base dir
+        basedir = self._sh.get_basedir() if self._sh is not None else '.'
+        filename = os.path.join(basedir, self.relative_filename)
         self.meta = shyaml.yaml_load(filename, ordered=True)
 
         self.parameters = None
@@ -283,7 +287,10 @@ class Metadata:
 
         result = {}
 
-        if self._sh.modules.get_module('http') is not None:
+        # sh may be None (standalone-mode plugin invocation) - no modules
+        # are loaded at all in that case, so there's no web interface and
+        # nothing to add here
+        if self._sh is not None and self._sh.modules.get_module('http') is not None:
             # only if http module is loaded:
             # global plugin parameter 'webif_pagelength'
             result['webif_pagelength'] = {}
