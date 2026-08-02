@@ -740,7 +740,6 @@ class Plugins:
             return False
 
         logger.info(f'Reloading plugin {configname}, step 3: reload plugin code')
-        myplugin = None
         if not self._reload_module_tree(classpath, mymodule):
             logger.warning(f'Reloading plugin {configname}: error reloading plugin code')
             return False
@@ -749,13 +748,12 @@ class Plugins:
         if not self.load_plugin(configname, plg_conf):
             logger.warning(f'Reloading plugin {configname}: load_plugin failed, aborting reload')
             return False
-        myplugin = self.return_plugin(configname)
-
-        logger.info(f'Reloading plugin {configname}, step 5: (re)init items')
-        self._parse_existing_items(myplugin)
+        # load_plugin() already calls _parse_existing_items() itself on
+        # success - a second, explicit call here used to double-register
+        # every matching item's trigger on the same instance
 
         if alive:
-            logger.info(f'Reloading plugin {configname}, step 6: start plugin')
+            logger.info(f'Reloading plugin {configname}, step 5: start plugin')
             self.start_plugin(configname)
 
         logger.info(f'Reloading plugin {configname} complete')

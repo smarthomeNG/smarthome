@@ -23,3 +23,9 @@ cyclereload:
     class_path: tests.fixture_reload_cycle_plugin
     class_name: CyclePlugin
     instance: cyclereload
+
+itembinding:
+    plugin_name: wol
+    class_path: tests.reload_item_binding_plugin
+    class_name: ItemBindingPlugin
+    instance: itembinding

@@ -291,5 +291,65 @@ class TestReloadSubmodules(unittest.TestCase):
         )
 
 
+class TestReloadDoesNotDuplicateItemTriggers(unittest.TestCase):
+    """
+    Regression test for a real bug found live against the matter plugin:
+    reload_plugin() called _parse_existing_items() twice on the freshly
+    reloaded instance - once via load_plugin()'s own internal call, and
+    again explicitly itself right after - registering the same instance's
+    update_item on every matching item twice.
+
+    Since item.remove_method_trigger() is a plain list.remove() (only
+    removes the first matching entry) and deinit()'s cleanup runs once per
+    item, one of the two duplicate entries survives every unload and
+    becomes permanently orphaned the moment that instance is later
+    replaced by another reload - a small, unbounded leak that accumulates
+    by exactly one stale trigger per reload, forever.
+    """
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.plugins = self.sh.with_plugins_from(common.BASE + '/tests/resources/plugin_reload')
+        self.sh.with_items_from(common.BASE + '/tests/resources/item_dumps.yaml')
+
+    def _triggers_for(self, item, plugin):
+        return [m for m in item.get_method_triggers() if getattr(m, '__self__', None) is plugin]
+
+    def test_reload_registers_the_new_instance_exactly_once_per_item(self):
+        item = self.sh.items.return_item('item1')
+        original = self.plugins.return_plugin('itembinding')
+        self.assertEqual(len(self._triggers_for(item, original)), 1)
+
+        result = self.plugins.reload_plugin('itembinding')
+        self.assertTrue(result)
+
+        reloaded = self.plugins.return_plugin('itembinding')
+        self.assertIsNot(reloaded, original)
+        self.assertEqual(
+            len(self._triggers_for(item, reloaded)),
+            1,
+            'reload_plugin() must not register the same freshly-reloaded instance twice on the same item',
+        )
+
+    def test_reload_does_not_leave_a_permanently_orphaned_trigger_on_the_next_unload(self):
+        item = self.sh.items.return_item('item1')
+
+        self.assertTrue(self.plugins.reload_plugin('itembinding'))
+        first_reload = self.plugins.return_plugin('itembinding')
+
+        self.assertTrue(self.plugins.reload_plugin('itembinding'))
+
+        # unparse_item()'s cleanup (called during the second reload's
+        # internal unload) removes list.remove()'s *first* matching entry -
+        # if first_reload was ever double-registered, one entry survives
+        # this unconditionally, orphaned, since first_reload is gone for
+        # good the moment the second reload's load_plugin() runs.
+        self.assertEqual(
+            len(self._triggers_for(item, first_reload)),
+            0,
+            'no trigger for a since-replaced plugin instance should survive the next reload',
+        )
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
