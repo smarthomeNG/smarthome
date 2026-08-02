@@ -268,9 +268,7 @@ class PluginController(RESTResource):
                 return {'result': 'error', 'description': "No configuration section '{}' found".format(id)}
             result = self.plugins.load_plugin(id, plg_conf)
             if result:
-                myplugin = self.plugins.return_plugin(id)
-                if myplugin:
-                    myplugin.run()
+                self.plugins.start_plugin(id)
                 return {'result': 'ok'}
             return {'result': 'error', 'description': "load_plugin('{}') returned False".format(id)}
 

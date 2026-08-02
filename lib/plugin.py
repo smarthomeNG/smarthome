@@ -46,8 +46,10 @@ They can be used the following way: To call eg. **xxx()**, use the following syn
 
 """
 
+import ast
 import gc
 import ctypes
+import graphlib
 import inspect
 import sys
 
@@ -619,7 +621,10 @@ class Plugins:
             # execute de-initialization code of the plugin
             myplugin.deinit()
 
-            self._threads.remove(mythread)
+            for thread_list in (self._threads, self.threads_early, self.threads_late):
+                if mythread in thread_list:
+                    thread_list.remove(mythread)
+                    break
             self._plugins.remove(myplugin)
             logger.debug('Plugins._plugins nach remove ({}) = {}'.format(len(self._plugins), self._plugins))
             logger.debug('Plugins._threads nach remove ({}) = {}'.format(len(self._threads), self._threads))
@@ -703,6 +708,7 @@ class Plugins:
             return False
 
         mymodule = myplugin.__module__
+        classpath = myplugin._classpath
         alive = myplugin.alive
 
         # read plugin configuration (from etc/plugin.yaml)
@@ -729,18 +735,20 @@ class Plugins:
 
         logger.info(f'Reloading plugin {configname}, step 2: unload plugin')
         del myplugin
-        self.unload_plugin(configname)
+        if not self.unload_plugin(configname):
+            logger.warning(f'Reloading plugin {configname}: unload_plugin failed, aborting reload')
+            return False
 
         logger.info(f'Reloading plugin {configname}, step 3: reload plugin code')
         myplugin = None
-        try:
-            reload(sys.modules[mymodule])
-        except Exception as e:
-            logger.warning(f'error on reloading plugin {configname} from {mymodule}: {e}')
+        if not self._reload_module_tree(classpath, mymodule):
+            logger.warning(f'Reloading plugin {configname}: error reloading plugin code')
             return False
 
         logger.info(f'Reloading plugin {configname}, step 4: load plugin')
-        self.load_plugin(configname, plg_conf)
+        if not self.load_plugin(configname, plg_conf):
+            logger.warning(f'Reloading plugin {configname}: load_plugin failed, aborting reload')
+            return False
         myplugin = self.return_plugin(configname)
 
         logger.info(f'Reloading plugin {configname}, step 5: (re)init items')
@@ -748,13 +756,123 @@ class Plugins:
 
         if alive:
             logger.info(f'Reloading plugin {configname}, step 6: start plugin')
-            try:
-                myplugin.run()
-            except Exception as e:
-                logger.warning(f'error on starting plugin {configname}: {e}')
+            self.start_plugin(configname)
 
         logger.info(f'Reloading plugin {configname} complete')
         return True
+
+    def _reload_module_tree(self, classpath: str, mymodule: str) -> bool:
+        """
+        Reloads a plugin's own top-level module and every submodule of its
+        package already present in sys.modules (e.g. a webif submodule) -
+        not just the top-level module. reload() only re-executes the module
+        it's called on; a `from .webif import WebInterface` line inside a
+        reloaded top-level module just rebinds to whatever's already cached
+        in sys.modules for the submodule, so without this, edits to
+        locally-imported submodules never take effect.
+
+        reload() itself doesn't cascade to what a module imports, so the
+        reload order matters too: if module A imports a name from sibling
+        module B, A must be reloaded *after* B, or A's `from .b import x`
+        line rebinds to whatever's still cached for B at that moment. The
+        order is derived from each candidate's own import statements
+        (static-parsed, not guessed from nesting depth), topologically
+        sorted so dependencies always reload before their dependents.
+
+        :param classpath: the plugin's package path (e.g. 'plugins.hue2')
+        :param mymodule: the module the plugin's class is actually defined
+            in - usually the same as classpath, but may be a submodule of it
+        :return: True if every module reloaded successfully
+        """
+        prefix = classpath + '.'
+        candidates = {name for name in sys.modules if name == classpath or name.startswith(prefix)}
+        candidates.add(mymodule)  # may be defined outside classpath's own package tree
+
+        order = self._reload_order(candidates, mymodule)
+
+        for name in order:
+            module = sys.modules.get(name)
+            if module is None:
+                continue
+            try:
+                reload(module)
+            except Exception as e:
+                logger.warning(f'_reload_module_tree: error reloading {name}: {e}')
+                return False
+        return True
+
+    def _reload_order(self, candidates: set, mymodule: str) -> list:
+        """
+        Determines a reload order for `candidates` (a set of sys.modules
+        keys) in which each module's own dependencies - on other members of
+        `candidates` - are reloaded before it, derived from parsing each
+        module's actual import statements. mymodule is always placed last,
+        since load_plugin() re-fetches the plugin's class from it
+        immediately after reloading finishes.
+
+        Falls back to [mymodule] only (i.e. the old, pre-submodule-aware
+        behavior) if the imports form a cycle - reload() has no sane
+        semantics for a true import cycle, so this is a defined, safe
+        degradation rather than an unhandled exception out of reload_plugin().
+
+        :param candidates: module names (sys.modules keys) to consider
+        :param mymodule: the module to always reload last
+        :return: module names in dependency order
+        """
+        graph = {name: self._module_local_dependencies(name, candidates) for name in candidates}
+
+        try:
+            order = list(graphlib.TopologicalSorter(graph).static_order())
+        except graphlib.CycleError as e:
+            logger.warning(
+                f"_reload_module_tree: circular import detected among {mymodule}'s submodules ({e}), "
+                f'falling back to reloading {mymodule} only'
+            )
+            return [mymodule]
+
+        if mymodule in order:
+            order.remove(mymodule)
+        order.append(mymodule)
+        return order
+
+    @staticmethod
+    def _module_local_dependencies(name: str, candidates: set) -> set:
+        """
+        Statically parses module `name`'s own import statements and returns
+        which members of `candidates` it imports from (directly or as a
+        submodule) - i.e. which of them must be reloaded before it.
+        """
+        module = sys.modules.get(name)
+        if module is None:
+            return set()
+        try:
+            tree = ast.parse(inspect.getsource(module))
+        except (OSError, SyntaxError, TypeError):
+            return set()
+
+        package = module.__package__ or ''
+        dependencies = set()
+        for node in ast.walk(tree):
+            targets = []
+            if isinstance(node, ast.ImportFrom):
+                if node.level > 0:
+                    bits = package.rsplit('.', node.level - 1)
+                    base = bits[0] if bits[0] else None
+                    if base is None:
+                        continue
+                    base_target = f'{base}.{node.module}' if node.module else base
+                else:
+                    if not node.module:
+                        continue
+                    base_target = node.module
+                targets.append(base_target)
+                # `from .pkg import sub` - sub may itself be a submodule
+                targets.extend(f'{base_target}.{alias.name}' for alias in node.names)
+            elif isinstance(node, ast.Import):
+                targets.extend(alias.name for alias in node.names)
+
+            dependencies.update(target for target in targets if target in candidates and target != name)
+        return dependencies
 
     def start(self):
         logger.info('Start plugins')
@@ -788,6 +906,29 @@ class Plugins:
                 )
         logger.info('Stop of plugins finished')
 
+    def start_plugin(self, configname: str) -> bool:
+        """
+        Starts an already-loaded plugin via its dedicated PluginWrapper
+        thread - the same path bulk startup uses - instead of calling the
+        plugin's run() directly on the caller's thread.
+
+        :param configname: name of the plugin configuration section
+        :return: True if the thread was started, False otherwise
+        """
+        thread = self.get_pluginthread(configname)
+        if thread is None:
+            logger.warning(f'start_plugin: no thread found for {configname}, plugin not loaded?')
+            return False
+        # a Thread may only ever be started once - ident is set the moment
+        # start() is called and, unlike is_alive(), stays set after the
+        # thread finishes, so it correctly distinguishes "never started"
+        # from "already ran (and possibly already finished)"
+        if thread.ident is not None:
+            logger.warning(f'start_plugin: {configname} has already been started')
+            return False
+        thread.start()
+        return True
+
     def get_pluginthread(self, configname):
         """
         Returns one plugin with given name
@@ -795,7 +936,7 @@ class Plugins:
         :return: Thread object for the given plugin name
         :rtype: object
         """
-        for thread in self._threads:
+        for thread in self._threads + self.threads_early + self.threads_late:
             if thread.name == configname:
                 return thread
 

@@ -1,0 +1,25 @@
+# Dedicated plugin config fixture for tests/test_plugin_reload.py's
+# TestReloadPluginReturnValues. Kept separate from tests/resources/plugin.yaml
+# (shared baseline for test_plugin.py and friends) so reload_plugin()'s tests
+# don't couple to or pollute that shared fixture. reload_plugin() re-reads
+# its config from disk on every call (by design - see lib/plugin.py), so
+# unlike load_plugin()-only tests elsewhere, these sections must exist here,
+# not just in an in-memory dict.
+
+failingstop:
+    plugin_name: wol
+    class_name: FailingStopPlugin
+    class_path: tests.reload_failing_stop_plugin
+    instance: failingstop
+
+submodulereload:
+    plugin_name: wol
+    class_path: tests.fixture_reload_submodule_plugin
+    class_name: SubmoduleReloadPlugin
+    instance: submodulereload
+
+cyclereload:
+    plugin_name: wol
+    class_path: tests.fixture_reload_cycle_plugin
+    class_name: CyclePlugin
+    instance: cyclereload
