@@ -139,6 +139,11 @@ class SmartDevicePlugin(SmartPlugin):
     described if changed/overwritten.
     """
 
+    STANDALONE_HELP_OPTIONS = (
+        ''  #: extra text describing this plugin's own standalone options, inserted after the generic arg=value help
+    )
+    STANDALONE_HELP_EXTRA = ''  #: free-form additional text, appended at the end of the standalone usage message
+
     def __init__(self, sh: SmartHome, logger=None, **kwargs):
         """
         Initalizes the plugin.
@@ -1484,7 +1489,7 @@ class SmartDevicePlugin(SmartPlugin):
             # if the plugin works without a protocol layer (e.g. jsonrpc), so don't even try
             if not proto_cls:
                 raise RuntimeError(
-                    f'protocol {self._parameters["PLUGIN_ATTR_PROTOCOL"]} requested, but no protocol class returned. Giving up.'
+                    f'protocol {self._parameters[PLUGIN_ATTR_PROTOCOL]} requested, but no protocol class returned. Giving up.'
                 )
 
             # set connection class in self._parameters dict for protocol class to use
@@ -1739,14 +1744,7 @@ class SmartDevicePlugin(SmartPlugin):
 
 
 class Standalone:
-    def __init__(self, plugin_class, plugin_file):
-
-        self.item_tree = {}
-        self.item_templates = {}
-        self.yaml = None
-        self.cmdlist = []
-
-        usage = """
+    HELP_USAGE = """
         Usage:
         ------------------------------------------------------------------------
 
@@ -1756,7 +1754,8 @@ class Standalone:
         for diagnostic purposes - IF the plugin supports this mode.
 
         ========================================================================
-
+        """
+    HELP_DEVICE = """
         If you call this plugin, any necessary configuration options can be
         specified either as arg=value pairs or as a python dict(this needs to be
         enclosed in quotes).
@@ -1773,6 +1772,8 @@ class Standalone:
 
         ``__init__.py -v``
 
+        """
+    HELP_STRUCT = """
         ========================================================================
 
         If you call it with -s as a parameter, the plugin will insert the struct
@@ -1790,6 +1791,19 @@ class Standalone:
         If you add the -l parameter, all items will be lowercase.
 
         """
+
+    def __init__(self, plugin_class, plugin_file):
+
+        self.plugin_class = plugin_class
+
+        self.item_tree = {}
+        self.item_templates = {}
+        self.yaml = None
+        self.cmdlist = []
+
+        self.usage = '<Error: Help text not set>'
+
+        self.set_usage()
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.CRITICAL)
         ch = logging.StreamHandler()
@@ -1839,7 +1853,7 @@ class Standalone:
                             self.params[name] = value
 
         else:
-            print(usage)
+            print(self.usage)
             return
 
         # make sure we are in shng base dir
@@ -1882,6 +1896,11 @@ class Standalone:
             print("plugin doesn't have a standalone function.")
 
         print('Done.')
+
+    def set_usage(self):
+        options = getattr(self.plugin_class, 'STANDALONE_HELP_OPTIONS', '')
+        extra = getattr(self.plugin_class, 'STANDALONE_HELP_EXTRA', '')
+        self.usage = self.HELP_USAGE + self.HELP_DEVICE + options + self.HELP_STRUCT + extra
 
     def add_item_to_tree(self, item_path, item_dict):
         """add entry for custom read group triggers"""
