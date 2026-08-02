@@ -1,0 +1,22 @@
+# Metadata fixture for tests/test_metadata.py's sh=None (standalone-mode)
+# coverage - needs a parameters section with a mandatory-no-default entry
+# and a defaulted one, which tests/resources/test_metadata/plugin.yaml
+# (used by other Metadata tests) doesn't have.
+plugin:
+    type: system
+    description:
+        de: 'Test-Plugin fuer standalone Metadata-Tests'
+        en: 'Test plugin for standalone metadata tests'
+    version: 1.0.0
+    classname: test_metadata_standalone
+
+parameters:
+    required_param:
+        type: str
+        mandatory: true
+        description: A required parameter with no default
+
+    optional_param:
+        type: int
+        default: 42
+        description: An optional parameter with a default
