@@ -29,7 +29,6 @@ import importlib
 import re
 import os
 import sys
-import threading
 import time
 import json
 import datetime
@@ -1353,25 +1352,25 @@ class SmartDevicePlugin(SmartPlugin):
 
     def on_connect(self, by: str | None = None):
         """callback if connection is made."""
-        if self._connection.connected():
+        # neither of these are meaningful in standalone mode: there's no
+        # shng scheduler (self._sh is None) to schedule either through, and
+        # standalone diagnostic flows (e.g. run_standalone()) do their own
+        # direct reads rather than relying on the general initial/cyclic
+        # read machinery
+        if self._connection.connected() and not SDP_standalone:  # noqa  # type: ignore
             if not self._initial_value_read_done or self._resume_initial_read:
                 # read on first connect or on every reconnect if configured
                 self._initial_value_read_done = False
                 # Always schedule — on_connect may fire inside open() which holds _send_lock,
                 # so any synchronous send path would deadlock. 1s minimum gives us a safe margin.
-                delay = self._initial_value_read_delay if self._initial_value_read_delay else 1
-                if SDP_standalone:  # noqa  # type: ignore
-                    # no shng scheduler available (self._sh is None) - a plain
-                    # deferred Timer gives the same deadlock-avoidance without it
-                    threading.Timer(delay, self._read_initial_values).start()
-                elif not self.scheduler_get('read_initial_values'):
+                if not self.scheduler_get('read_initial_values'):
+                    delay = self._initial_value_read_delay if self._initial_value_read_delay else 1
                     self.scheduler_add(
                         'read_initial_values',
                         self._read_initial_values,
                         next=self.shtime.now() + datetime.timedelta(seconds=delay),
                     )
-            if not SDP_standalone:  # noqa  # type: ignore
-                self._create_cyclic_scheduler()
+            self._create_cyclic_scheduler()
 
     def on_disconnect(self, by: str | None = None):
         """callback if connection is broken."""
