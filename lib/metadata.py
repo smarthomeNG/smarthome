@@ -1237,7 +1237,7 @@ class Metadata:
         """
         return self._get_definitioninfo(definition, key, self.itemdefinitions)
 
-    def check_parameters(self, args):
+    def check_parameters(self, args, source: str = None):
         """
         Checks the values of a dict of configured parameters.
 
@@ -1247,11 +1247,17 @@ class Metadata:
         values in the the datatype of the parameter definition
 
         :param args: Configured parameters with the values
+        :param source: human-readable description of where args came from, used
+            in log messages (e.g. "the command line" for standalone-mode
+            invocation). Defaults to the addon's /etc/*.yaml config file, which
+            is what args actually is for every other caller.
         :type args: dict of parameter-values (values as string)
+        :type source: str
 
         :return: All defined parameters with values, Flag if all parameters are ok (no mandatory is missing)
         :rtype: dict, bool
         """
+        source = source or f'/etc/{self._addon_type}{YAML_FILE}'
         addon_params = collections.OrderedDict()
         hide_params = collections.OrderedDict()
         if self.meta is None:
@@ -1268,21 +1274,14 @@ class Metadata:
                 if value is None:
                     if self.parameters[param] is not None:
                         if self.parameters[param].get('mandatory'):
-                            logger.error(
-                                self._log_premsg
-                                + "'{}' is mandatory, but was not found in /etc/{}".format(
-                                    param, self._addon_type + YAML_FILE
-                                )
-                            )
+                            logger.error(self._log_premsg + f"'{param}' is mandatory, but was not found in {source}")
                             allparams_ok = False
                         else:
                             addon_params[param] = self.get_parameter_defaultvalue(param)
                             hide_params[param] = Utils.to_bool(self.parameters[param].get('hide'), default=False)
                             logger.info(
                                 self._log_premsg
-                                + "value not found in plugin configuration file for parameter '{}' -> using default value '{}' instead".format(
-                                    param, addon_params[param]
-                                )
+                                + f"value not found in {source} for parameter '{param}' -> using default value '{addon_params[param]}' instead"
                             )
                 #                    logger.warning(self._log_premsg + "'{}' not found in /etc/{}, using default value '{}'".format(param, self._addon_type + YAML_FILE, addon_params[param]))
                 else:
@@ -1294,10 +1293,7 @@ class Metadata:
                             hide_params[param] = None
                         else:
                             hide_params[param] = Utils.to_bool(self.parameters[param].get('hide'), default=False)
-                        logger.debug(
-                            self._log_premsg
-                            + "Found '{}' with value '{}' in /etc/{}".format(param, value, self._addon_type + YAML_FILE)
-                        )
+                        logger.debug(self._log_premsg + f"Found '{param}' with value '{value}' in {source}")
                     else:
                         if self.parameters.get(param) is not None:
                             if bool(self.parameters[param].get('mandatory', False)) is True:

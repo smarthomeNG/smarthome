@@ -29,6 +29,7 @@ import importlib
 import re
 import os
 import sys
+import threading
 import time
 import json
 import datetime
@@ -1358,8 +1359,12 @@ class SmartDevicePlugin(SmartPlugin):
                 self._initial_value_read_done = False
                 # Always schedule — on_connect may fire inside open() which holds _send_lock,
                 # so any synchronous send path would deadlock. 1s minimum gives us a safe margin.
-                if not self.scheduler_get('read_initial_values'):
-                    delay = self._initial_value_read_delay if self._initial_value_read_delay else 1
+                delay = self._initial_value_read_delay if self._initial_value_read_delay else 1
+                if SDP_standalone:  # noqa  # type: ignore
+                    # no shng scheduler available (self._sh is None) - a plain
+                    # deferred Timer gives the same deadlock-avoidance without it
+                    threading.Timer(delay, self._read_initial_values).start()
+                elif not self.scheduler_get('read_initial_values'):
                     self.scheduler_add(
                         'read_initial_values',
                         self._read_initial_values,
@@ -1912,7 +1917,7 @@ class Standalone:
         # mandatory parameter (with no default) was actually supplied -
         # instead of finding out however many calls deep into the plugin
         # once it tries to use a parameter that was never set
-        self.params, allparams_ok, _ = self.meta.check_parameters(raw_args)
+        self.params, allparams_ok, _ = self.meta.check_parameters(raw_args, source='the command line')
         if not allparams_ok:
             print('Missing required parameter(s) - see -h for available options and defaults.')
             return
