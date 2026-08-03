@@ -320,8 +320,9 @@ class SmartDevicePlugin(SmartPlugin):
         if not super().remove_item(item):
             return False
 
-        if item.path == self._suspend_item_path:
+        if item.property.path == self._suspend_item_path:
             self.logger.warning(f'removed suspend item {item.property.path}, ')
+            self._suspend_item = None
             return True
 
         """ remove item from custom plugin dicts/lists """
@@ -336,6 +337,17 @@ class SmartDevicePlugin(SmartPlugin):
 
         if item.property.path in self._items_read_all:
             self._items_read_all.remove(item.property.path)
+
+        if item.property.path in self._items_lookup:
+            del self._items_lookup[item.property.path]
+
+        for modes in self._items_by_lookup.values():
+            for items in modes.values():
+                if item in items:
+                    items.remove(item)
+
+        if item.property.path in self._items_vlist:
+            del self._items_vlist[item.property.path]
 
         # done already?
         if not cmd:

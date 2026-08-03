@@ -633,9 +633,9 @@ class SDPCommandViessmann(SDPCommand):
         cp = self._cmd_params.get('params')
         cpv = self._cmd_params.get(CMD_ATTR_PARAM_VALUES)
         if cp and cpv:
-            for attr in ('len', 'mult', 'signed'):
-                if attr in cp:
-                    setattr(self, attr, cpv[cp.index(attr)])
+            for name, val in zip(cp, cpv):
+                if name in ('len', 'mult', 'signed'):
+                    setattr(self, name, val)
 
     def get_send_data(self, data: Any, **kwargs) -> dict:
 

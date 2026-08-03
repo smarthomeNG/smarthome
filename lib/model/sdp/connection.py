@@ -263,6 +263,7 @@ class SDPConnection(object):
         :rtype: bool
         """
         self.logger.debug(f'simulating opening connection as {__name__} with params {self._params}')
+        self._is_connected = True
         return True
 
     def _close(self):
@@ -428,6 +429,7 @@ class SDPConnectionNetTcpRequest(SDPConnection):
 
     def _open(self) -> bool:
         self.logger.debug(f'{self.__class__.__name__} opening connection as {__name__} with params {self._params}')
+        self._is_connected = True
         return True
 
     def _close(self):
@@ -599,6 +601,7 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
         self.__receive_thread.daemon = True
         self.__receive_thread.start()
 
+        self._is_connected = True
         return True
 
     def _close(self):
@@ -730,8 +733,6 @@ class SDPConnectionSerial(SDPConnection):
                 self.logger.info(f'connected to {self._params[PLUGIN_ATTR_SERIAL_PORT]}')
             except (self.serial.SerialException, ValueError) as e:
                 self.logger.error(f'error on connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]}. Error was: {e}')
-                self._connection_attempts = 0
-                return False
             finally:
                 self._lock.release()
 
@@ -799,7 +800,13 @@ class SDPConnectionSerial(SDPConnection):
         if not self._is_connected:
             raise self.serial.SerialException(f"trying to send {data}, but connection can't be opened.")
 
-        if not self._send_bytes(data):
+        try:
+            sent_ok = self._send_bytes(data)
+        except SDPConnectionError:
+            self._is_connected = False
+            raise
+
+        if not sent_ok:
             self._is_connected = False
             raise self.serial.SerialException(f'data {data} could not be sent')
 

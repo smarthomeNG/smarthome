@@ -278,7 +278,7 @@ class SDPCommands(object):
             if cmd in self._commands:
                 # update reply patterns to reflect changed valid_list contents
                 cmd_dict = self._commands[cmd]._cmd_params[CMD_ATTR_ORG_PARAMS]
-                patterns = self._parse_command_reply_patterns(cmd_dict[CMD_ATTR_REPLY_PATTERN], cmd_dict)
+                patterns = self._parse_command_reply_patterns(cmd_dict.get(CMD_ATTR_REPLY_PATTERN, []), cmd_dict)
                 setattr(self._commands[cmd], CMD_ATTR_REPLY_PATTERN, patterns)
 
     def _lookup(self, data: str, table: str, rev: bool = False, ci: bool = True) -> Any:
@@ -701,7 +701,12 @@ class SDPCommands(object):
         own file format.
         """
         if INDEX_GENERIC in lookups:
-            lu = lookups[INDEX_GENERIC]
+            # lookups comes from the device's commands.py module, which locate()
+            # caches in sys.modules and is therefore shared by every SDPCommands
+            # instance for this device type - deep-copy before merging model
+            # overrides into it below, or one instance's model-specific lookup
+            # entries permanently contaminate every other instance's generic table
+            lu = deepcopy(lookups[INDEX_GENERIC])
             self.logger.debug(f'found {len(lu)} generic lookup table{"" if len(lu) == 1 else "s"}')
 
             if self._model and self._model in lookups:
