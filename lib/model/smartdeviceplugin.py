@@ -32,6 +32,7 @@ import sys
 import time
 import json
 import datetime
+import textwrap
 import ruamel.yaml as yaml
 from copy import deepcopy
 from ast import literal_eval
@@ -1946,19 +1947,37 @@ class Standalone:
     def _format_parameters(self) -> str:
         """
         Formats this plugin's declared parameters (name, type, default or
-        mandatory-flag, English description) from plugin.yaml, for
-        inclusion in the standalone usage text.
+        mandatory-flag, description) from plugin.yaml, for inclusion in the
+        standalone usage text.
+
+        Indentation matches HELP_USAGE/HELP_DEVICE/HELP_STRUCT (8 spaces),
+        since this is spliced in between them in set_usage() rather than
+        printed standalone. No separator line before the listing - it reads
+        as a continuation of the general option help above it, not a new
+        section (HELP_STRUCT's own topic change still gets one).
         """
         if not self.meta or not self.meta.parameters:
             return ''
 
-        lines = ['Available parameters (from plugin.yaml):', '-' * 72, '']
+        indent = ' ' * 8
+        desc_indent = indent + '      '
+        lines = [f'{indent}Available parameters (from plugin.yaml):', '']
+
         for name in self.meta._paramlist:
             definition = self.meta.parameters.get(name) or {}
-            ptype = definition.get('type', 'foo')
+            ptype = definition.get('type') or '?'
             description = definition.get('description', '')
             if isinstance(description, dict):
-                description = description.get('en') or description.get('de') or next(iter(description.values()), '')
+                if 'en' in description:
+                    description = description['en']
+                elif description:
+                    # no English translation provided - fall back to
+                    # whatever's there, but say so instead of silently
+                    # mixing languages across the parameter list
+                    lang, text = next(iter(description.items()))
+                    description = f'{text} [{lang}]'
+                else:
+                    description = ''
 
             if definition.get('mandatory'):
                 info = f'{ptype}, mandatory'
@@ -1966,11 +1985,13 @@ class Standalone:
                 default = self.meta.get_parameter_defaultvalue(name)
                 info = f'{ptype}, default: {default}'
 
-            lines.append(f'  {name:<24} ({info})')
+            lines.append(f'{indent}  {name:<24} ({info})')
             if description:
-                lines.append(f'      {description}')
+                lines.extend(
+                    textwrap.wrap(description, width=76, initial_indent=desc_indent, subsequent_indent=desc_indent)
+                )
 
-        return '\n'.join(lines) + '\n\n'
+        return '\n' + '\n'.join(lines) + '\n'
 
     def add_item_to_tree(self, item_path, item_dict):
         """add entry for custom read group triggers"""

@@ -34,6 +34,7 @@ from typing import Any
 import lib.model.sdp.datatypes as DT
 from lib.model.sdp.globals import (
     CMD_ATTR_PARAMS,
+    CMD_ATTR_PARAM_VALUES,
     CMD_STR_VAL_RAW,
     CMD_STR_VAL_UPP,
     CMD_STR_VAL_LOW,
@@ -630,10 +631,11 @@ class SDPCommandViessmann(SDPCommand):
         self.signed = False
 
         cp = self._cmd_params.get('params')
-        if cp:
+        cpv = self._cmd_params.get(CMD_ATTR_PARAM_VALUES)
+        if cp and cpv:
             for attr in ('len', 'mult', 'signed'):
                 if attr in cp:
-                    setattr(self, attr, cp[attr])
+                    setattr(self, attr, cpv[cp.index(attr)])
 
     def get_send_data(self, data: Any, **kwargs) -> dict:
 
@@ -661,21 +663,24 @@ class SDPCommandViessmann(SDPCommand):
 
     def _build_dict(self, data: Any, **kwargs) -> dict:
         """
-        build param array for JSON RPC from provided value and kwargs
+        build param dict from this command's params (names) and param_values
+        (values), matched by position - see class docstring
 
         :param data: value for the command
         :param kwargs: additional data
         :return: params-dict (or None)
         :rtype: dict
         """
-        params = {}
         if not hasattr(self, CMD_ATTR_PARAMS):
             return {}
 
-        cmd_params = getattr(self, CMD_ATTR_PARAMS)
+        names = getattr(self, CMD_ATTR_PARAMS)
+        values = self._cmd_params.get('param_values')
+        if not names or not values:
+            return {}
 
-        for key in cmd_params:
-            val = cmd_params[key]
+        params = {}
+        for name, val in zip(names, values):
             if val == 'VAL':
                 val = data
             elif isinstance(val, tuple):
@@ -687,6 +692,6 @@ class SDPCommandViessmann(SDPCommand):
                 except Exception as e:
                     raise ValueError(f'invalid data: eval expression {val} with argument {data} raised error: {e}')
 
-            params[key] = val
+            params[name] = val
 
         return params

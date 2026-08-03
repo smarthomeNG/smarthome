@@ -226,6 +226,7 @@ CMD_ATTR_REPLY_PATTERN = 'reply_pattern'  # regex pattern(s) to identify reply a
 CMD_ATTR_CMD_SETTINGS = 'cmd_settings'  # additional settings for command, e.g. data validity
 CMD_ATTR_LOOKUP = 'lookup'  # use lookup table <foo> to translate between plugin and items
 CMD_ATTR_PARAMS = 'params'  # parameters to send (e.g. in JSON-RPC)
+CMD_ATTR_PARAM_VALUES = 'param_values'  # values matching CMD_ATTR_PARAMS by position
 CMD_ATTR_ITEM_ATTRS = 'item_attrs'  # item attributes for struct generation (see below)
 CMD_ATTR_CUSTOM_DISABLE = 'custom_disabled'  # disable custom token detection for this command
 CMD_ATTR_SEND_RETRIES = 'send_retries'  # how often should a command be resent when not receiving expected answer (resend protocol only, overwriting default plugin parameter)
@@ -258,6 +259,7 @@ COMMAND_PARAMS = (
     CMD_ATTR_CMD_SETTINGS,
     CMD_ATTR_LOOKUP,
     CMD_ATTR_PARAMS,
+    CMD_ATTR_PARAM_VALUES,
     CMD_ATTR_ITEM_ATTRS,
     CMD_ATTR_CUSTOM_DISABLE,
     CMD_ATTR_SEND_RETRIES,

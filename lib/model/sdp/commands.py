@@ -447,6 +447,16 @@ class SDPCommands(object):
                         )  # type: ignore
                 else:
                     raise CommandsError('model configuration invalid, "models" is not a dict')
+        # load lookups (e.g. device type tables) before importing commands, since
+        # reply_patterns might need them. This is independent of SDP_standalone:
+        # standalone diagnostics (e.g. viessmann's run_standalone()) rely on
+        # lookups like devicetypes even though full command loading below is
+        # skipped for standalone mode.
+        if hasattr(cmd_module, 'lookups') and isinstance(cmd_module.lookups, dict):  # type: ignore
+            self._parse_lookups(cmd_module.lookups)  # type: ignore
+        else:
+            self.logger.debug('no lookups found')
+
         if hasattr(cmd_module, 'commands') and isinstance(cmd_module.commands, dict) and not SDP_standalone:  # noqa  # type: ignore
             cmds = cmd_module.commands  # type: ignore
             cmdlist = None
@@ -465,12 +475,6 @@ class SDPCommands(object):
                         f'found {len(cmd_module.models.get(self._model, []))} commands for model {self._model}'
                     )  # type: ignore
             self._flatten_cmds(cmds)
-
-            # do this before importing commands, because reply_patterns might need lookups
-            if hasattr(cmd_module, 'lookups') and isinstance(cmd_module.lookups, dict):  # type: ignore
-                self._parse_lookups(cmd_module.lookups)  # type: ignore
-            else:
-                self.logger.debug('no lookups found')
 
             # actually import commands
             self._parse_commands(cmds, self._get_cmdlist(cmds, cmdlist))
