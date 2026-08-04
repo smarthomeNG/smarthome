@@ -34,7 +34,6 @@ from typing import Any
 import lib.model.sdp.datatypes as DT
 from lib.model.sdp.globals import (
     CMD_ATTR_PARAMS,
-    CMD_ATTR_PARAM_VALUES,
     CMD_STR_VAL_RAW,
     CMD_STR_VAL_UPP,
     CMD_STR_VAL_LOW,
@@ -615,11 +614,11 @@ class SDPCommandViessmann(SDPCommand):
     With this class, you can send commands to Viessmann heating systems
 
     The command is sent as 'method', the params-dict is populated from the
-    CMD_ATTR_PARAMS attribute of the command, while the parameter values are
-    taken from the CMD_ATTR_PARAM_VALUES attribute. 'VAL' is replaced with the
+    CMD_ATTR_PARAMS attribute of the command. 'VAL' is replaced with the
     actual item value.
 
-    params and param_value need to be None or lists of the same length.
+    params needs to be a dict of {name: value} pairs, e.g.
+    {'value': 'VAL', 'len': 2, 'mult': 10, 'signed': True}.
     """
 
     def __init__(self, command: str, dt_class: type[DT.Datatype], **kwargs):
@@ -631,11 +630,10 @@ class SDPCommandViessmann(SDPCommand):
         self.signed = False
 
         cp = self._cmd_params.get('params')
-        cpv = self._cmd_params.get(CMD_ATTR_PARAM_VALUES)
-        if cp and cpv:
-            for name, val in zip(cp, cpv):
-                if name in ('len', 'mult', 'signed'):
-                    setattr(self, name, val)
+        if cp:
+            for attr in ('len', 'mult', 'signed'):
+                if attr in cp:
+                    setattr(self, attr, cp[attr])
 
     def get_send_data(self, data: Any, **kwargs) -> dict:
 
@@ -663,8 +661,8 @@ class SDPCommandViessmann(SDPCommand):
 
     def _build_dict(self, data: Any, **kwargs) -> dict:
         """
-        build param dict from this command's params (names) and param_values
-        (values), matched by position - see class docstring
+        build param dict from this command's params dict, replacing 'VAL'
+        with the actual item value - see class docstring
 
         :param data: value for the command
         :param kwargs: additional data
@@ -674,13 +672,12 @@ class SDPCommandViessmann(SDPCommand):
         if not hasattr(self, CMD_ATTR_PARAMS):
             return {}
 
-        names = getattr(self, CMD_ATTR_PARAMS)
-        values = self._cmd_params.get('param_values')
-        if not names or not values:
+        cmd_params = getattr(self, CMD_ATTR_PARAMS)
+        if not cmd_params:
             return {}
 
         params = {}
-        for name, val in zip(names, values):
+        for name, val in cmd_params.items():
             if val == 'VAL':
                 val = data
             elif isinstance(val, tuple):
