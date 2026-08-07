@@ -2,6 +2,8 @@ from . import common
 import unittest
 import sqlite3
 import threading
+import logging
+import time
 from unittest.mock import patch
 import lib.db
 
@@ -324,6 +326,40 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertEqual([], db.fetchall('SELECT 1'))
         self.assertIsNone(db._conn)
 
+    def test_cursor_op_lock_wait_tracks_configured_timeout_not_hardcoded_300(self):
+        # Regression: _cursor_op_with_reconnect used to call self.lock(300),
+        # a value hardcoded independent of db_query_timeout - meaning a
+        # hung server could stall this specific path (the cur=None path
+        # store.py's ItemStore/LogStore always use) for up to 5 minutes
+        # regardless of what the user configured. Prove the lock wait now
+        # actually respects the configured value by holding the lock in a
+        # background thread and using a tiny configured timeout.
+        db = self.db()
+        db.connect()
+
+        locked_evt = threading.Event()
+        release_evt = threading.Event()
+
+        def _worker():
+            db.lock()
+            locked_evt.set()
+            release_evt.wait()
+            db.release()
+
+        t = threading.Thread(target=_worker, daemon=True)
+        t.start()
+        locked_evt.wait()
+        try:
+            start = time.monotonic()
+            with patch('lib.db._sh_db_query_timeout', return_value=0.1):
+                with self.assertRaisesRegex(TimeoutError, 'could not acquire lock within 0.1s'):
+                    db.fetchall('SELECT 1', quiet=True)
+            elapsed = time.monotonic() - start
+            self.assertLess(elapsed, 5, 'lock wait took much longer than the configured 0.1s timeout')
+        finally:
+            release_evt.set()
+            t.join(timeout=1)
+
 
 class DbQueryBaseTests(TestDbBase):
     format = None
@@ -459,6 +495,10 @@ class MockDbApi:
         return MockDbApiConnection()
 
 
+class MockPymysqlApi(MockDbApi):
+    __name__ = 'pymysql'
+
+
 class MockDbApiConnection:
     def __init__(self):
         self.close_kwargs = None
@@ -499,6 +539,380 @@ class MockDbApiCursor:
 
     def fetchall(self, **kwargs):
         return [[0]]
+
+
+class TestHangWatchdog(unittest.TestCase):
+    """_hang_watchdog logs a WARNING partway through a slow bounded wait,
+    and stays silent when the wrapped operation finishes quickly."""
+
+    def test_fires_warning_when_operation_outlasts_half_timeout(self):
+        with self.assertLogs('test.watchdog', level='WARNING') as cm:
+            with lib.db._hang_watchdog(logging.getLogger('test.watchdog'), 'mydb', 'doing stuff', timeout=0.1):
+                time.sleep(0.15)
+        self.assertTrue(any('doing stuff' in msg and 'mydb' in msg for msg in cm.output))
+        self.assertTrue(any('still running' in msg for msg in cm.output))
+
+    def test_silent_when_operation_completes_before_half_timeout(self):
+        logger = logging.getLogger('test.watchdog.quiet')
+        with self.assertNoLogs(logger, level='WARNING'):
+            with lib.db._hang_watchdog(logger, 'mydb', 'doing stuff', timeout=1.0):
+                pass  # returns instantly - timer must be cancelled, not fired
+        # give a cancelled timer a chance to (wrongly) fire, to make the
+        # negative assertion meaningful rather than just "didn't wait long enough"
+        time.sleep(0.05)
+
+    def test_message_includes_deadline_countdown(self):
+        with self.assertLogs('test.watchdog2', level='WARNING') as cm:
+            with lib.db._hang_watchdog(logging.getLogger('test.watchdog2'), 'mydb', 'q', timeout=0.1):
+                time.sleep(0.15)
+        # timeout=0.1 -> warn_after=0.05, remaining=0.05 -> "0s"/"0s" after rounding
+        self.assertTrue(any('will give up in' in msg for msg in cm.output))
+
+
+class TestDbConnectHungLock(unittest.TestCase, TestDbBase):
+    """connect() must raise instead of blocking indefinitely when lock is held."""
+
+    def test_raises_timeout_error_when_lock_held(self):
+        db = self.db()
+        db.lock()
+        try:
+            with patch('lib.db._sh_db_query_timeout', return_value=0.05):
+                with self.assertRaises(TimeoutError):
+                    db.connect()
+        finally:
+            db.release()
+
+    def test_logs_early_watchdog_warning_before_timeout(self):
+        # The watchdog should warn partway through the wait (b), not just
+        # after it - so a wedged connect() is visible in the log before it
+        # eventually raises, not only in the final error line.
+        db = self.db()
+        db.lock()
+        try:
+            with patch('lib.db._sh_db_query_timeout', return_value=0.1):
+                with self.assertLogs('lib.db', level='WARNING') as cm:
+                    with self.assertRaises(TimeoutError):
+                        db.connect()
+            self.assertTrue(any('still running' in msg and 'connect()' in msg for msg in cm.output))
+        finally:
+            db.release()
+
+    def test_lock_released_after_failed_connect(self):
+        # If dbapi.connect() raises, the lock must still be released.
+        db = self.db()
+        db._dbapi.connect = lambda **kw: (_ for _ in ()).throw(Exception('host unreachable'))
+        with patch('lib.db._sh_db_query_timeout', return_value=1):
+            with self.assertRaises(Exception):
+                db.connect()
+        self.assertTrue(db.lock(0), '_fdb_lock left held after connect() failure')
+        db.release()
+
+
+class TestDbCloseHungLock(unittest.TestCase, TestDbBase):
+    """close() must not block forever when a worker holds _fdb_lock."""
+
+    def _hold_lock_in_thread(self, db):
+        """Acquire the lock in a daemon thread; return (release_event, thread)."""
+        locked = threading.Event()
+        release = threading.Event()
+
+        def _worker():
+            db.lock()
+            locked.set()
+            release.wait()
+            db.release()
+
+        t = threading.Thread(target=_worker, daemon=True)
+        t.start()
+        locked.wait()
+        return release, t
+
+    def test_force_closes_conn_when_lock_held(self):
+        """Lock held by worker → close() times out, force-closes conn, marks disconnected."""
+        db = self.db()
+        db.connect()
+        conn = db._conn
+
+        release, t = self._hold_lock_in_thread(db)
+        try:
+            with patch('lib.db._sh_db_query_timeout', return_value=0.05):
+                with self.assertLogs('lib.db', level='WARNING') as cm:
+                    db.close()
+
+            self.assertIsNotNone(conn.close_kwargs, '_conn.close() must be called even without the lock')
+            self.assertIsNone(db._conn)
+            self.assertFalse(db.connected())
+            self.assertTrue(any('force-closing' in msg for msg in cm.output))
+            # (b): an early "still running" warning must precede the final
+            # "force-closing" one - visible proof the timeout is about to
+            # strike, not just a post-hoc note that it already did.
+            self.assertTrue(any('still running' in msg and 'close()' in msg for msg in cm.output))
+        finally:
+            release.set()
+            t.join(timeout=1)
+        self.assertFalse(t.is_alive())
+
+    def test_does_not_release_unacquired_lock(self):
+        """close() must not call release() when it never got the lock (would RuntimeError)."""
+        db = self.db()
+        db.connect()
+
+        release, t = self._hold_lock_in_thread(db)
+        try:
+            with patch('lib.db._sh_db_query_timeout', return_value=0.05):
+                with self.assertLogs('lib.db', level='WARNING'):
+                    db.close()  # would raise RuntimeError if it tried release() on unowned lock
+        finally:
+            release.set()
+            t.join(timeout=1)
+
+    def test_normal_path_releases_lock(self):
+        """When no contention, lock is acquired and released cleanly."""
+        db = self.db()
+        db.connect()
+        db.close()
+        # lock must be free so a subsequent acquire succeeds immediately
+        self.assertTrue(db.lock(0), '_fdb_lock not released after normal close()')
+        db.release()
+
+
+class TestDbConnectionSelfHealing(unittest.TestCase, TestDbBase):
+    """commit()/rollback() reset connection state on failure instead of
+    leaving a corrupted connection object for the next caller to inherit.
+
+    Regression context: a failed commit/rollback (e.g. the underlying
+    driver tore its own socket down after a protocol error or a client-side
+    timeout) used to leave self._connected/self._conn untouched. The next
+    thing to touch the connection - verify()'s probe, the next dump item,
+    an unrelated later call - would inherit the same broken connection
+    object and fail with a confusing, unrelated-looking error (pymysql
+    leaves attributes like _sock/_rfile as None, so callers see
+    AttributeError instead of a clear "not connected").
+    """
+
+    def test_commit_failure_resets_connection_state(self):
+        db = self.db()
+        db.connect()
+        conn = db._conn
+        conn.commit = lambda **kw: (_ for _ in ()).throw(Exception('simulated dead connection'))
+
+        with self.assertRaisesRegex(Exception, 'simulated dead connection'):
+            db.commit()
+
+        self.assertIsNone(db._conn)
+        self.assertFalse(db.connected())
+        self.assertIsNotNone(conn.close_kwargs, 'the dead connection object must still be closed')
+
+    def test_rollback_failure_resets_connection_state(self):
+        db = self.db()
+        db.connect()
+        conn = db._conn
+        conn.rollback = lambda **kw: (_ for _ in ()).throw(Exception('simulated dead connection'))
+
+        with self.assertRaisesRegex(Exception, 'simulated dead connection'):
+            db.rollback()
+
+        self.assertIsNone(db._conn)
+        self.assertFalse(db.connected())
+        self.assertIsNotNone(conn.close_kwargs)
+
+    def test_commit_success_does_not_touch_connection_state(self):
+        db = self.db()
+        db.connect()
+        db.commit()
+        self.assertIsNotNone(db._conn)
+        self.assertTrue(db.connected())
+
+    def test_commit_failure_while_caller_holds_lock_does_not_deadlock(self):
+        # _dump()/_compact_maxage()'s actual pattern: lock() ... commit()/
+        # rollback() ... release(), all on the same thread. self._fdb_lock
+        # is a plain, non-reentrant threading.Lock - if the failure path
+        # inside commit()/rollback() tried to re-acquire it (e.g. by
+        # routing through close()'s own lock() call), this would hang
+        # forever instead of raising. Must complete promptly.
+        db = self.db()
+        db.connect()
+        db._conn.commit = lambda **kw: (_ for _ in ()).throw(Exception('simulated dead connection'))
+
+        self.assertTrue(db.lock())
+        try:
+            with self.assertRaisesRegex(Exception, 'simulated dead connection'):
+                db.commit()
+        finally:
+            db.release()
+
+        # lock must be genuinely free afterward - proves no self-deadlock occurred
+        self.assertTrue(db.lock(0), '_fdb_lock not released after commit() failure under held lock')
+        db.release()
+
+    def test_rollback_failure_while_caller_holds_lock_does_not_deadlock(self):
+        db = self.db()
+        db.connect()
+        db._conn.rollback = lambda **kw: (_ for _ in ()).throw(Exception('simulated dead connection'))
+
+        self.assertTrue(db.lock())
+        try:
+            with self.assertRaisesRegex(Exception, 'simulated dead connection'):
+                db.rollback()
+        finally:
+            db.release()
+
+        self.assertTrue(db.lock(0), '_fdb_lock not released after rollback() failure under held lock')
+        db.release()
+
+
+class TestDbReadOnlyTransactionCleanup(unittest.TestCase, TestDbBase):
+    """Reads must not leave an idle transaction open (autocommit is off,
+    see __init__) - verify()'s probe and fetchone()/fetchall()'s cur=None
+    path must roll back after a successful read. Writes must be unaffected:
+    execute()'s cur=None path never auto-rolls-back (a write's caller owns
+    its own commit), and an explicit cur (an outer caller already managing
+    its own transaction, e.g. _dump()) must never trigger an internal
+    rollback either.
+    """
+
+    def test_verify_rolls_back_after_successful_probe(self):
+        db = self.db()
+        db.connect()
+        db.verify()
+        self.assertIsNotNone(db._conn.rollback_kwargs, "verify()'s probe must roll back its own transaction")
+
+    def test_verify_probe_rollback_failure_does_not_fail_verify(self):
+        db = self.db()
+        db.connect()
+        db._conn.rollback = lambda **kw: (_ for _ in ()).throw(Exception('simulated rollback failure'))
+        # must not raise - connectivity was already confirmed by the probe
+        result = db.verify()
+        self.assertEqual(-1, result)
+
+    def test_fetchall_cur_none_rolls_back_after_success(self):
+        db = self.db()
+        db.connect()
+        db.fetchall('SELECT 1')
+        self.assertIsNotNone(db._conn.rollback_kwargs, 'fetchall() with cur=None must close its own read transaction')
+
+    def test_fetchone_cur_none_rolls_back_after_success(self):
+        db = self.db()
+        db.connect()
+        db.fetchone('SELECT 1')
+        self.assertIsNotNone(db._conn.rollback_kwargs, 'fetchone() with cur=None must close its own read transaction')
+
+    def test_fetchall_explicit_cur_does_not_auto_rollback(self):
+        # An explicit cur means the caller (e.g. _dump()) is managing its
+        # own transaction across multiple statements - an internal rollback
+        # here would corrupt whatever the outer caller is building up.
+        db = self.db()
+        db.connect()
+        cur = db.cursor()
+        db.fetchall('SELECT 1', cur=cur)
+        self.assertIsNone(db._conn.rollback_kwargs)
+
+    def test_execute_cur_none_does_not_auto_rollback(self):
+        # A write's caller owns its own commit - execute()'s cur=None path
+        # must never auto-rollback, or a write would be silently discarded.
+        db = self.db()
+        db.connect()
+        db.execute('INSERT INTO x VALUES (1)')
+        self.assertIsNone(db._conn.rollback_kwargs)
+
+    def test_readonly_rollback_failure_does_not_mask_successful_read_result(self):
+        db = self.db()
+        db.connect()
+        db._conn.rollback = lambda **kw: (_ for _ in ()).throw(Exception('simulated rollback failure'))
+        with self.assertLogs('lib.db', level='WARNING'):
+            result = db.fetchall('SELECT 1')
+        self.assertEqual([[0]], result, 'a cleanup-only failure must not turn a successful read into an error')
+
+
+class TestDbPymysqlTimeouts(unittest.TestCase, TestDbBase):
+    """pymysql-family drivers receive socket timeout defaults via setdefault."""
+
+    def _pymysql_db(self, connect=''):
+        return lib.db.Database('test', MockPymysqlApi('qmark'), connect, 'qmark')
+
+    def test_read_and_write_timeout_injected(self):
+        db = self._pymysql_db()
+        self.assertIn('read_timeout', db._params)
+        self.assertIn('write_timeout', db._params)
+        self.assertIsInstance(db._params['read_timeout'], int)
+        self.assertIsInstance(db._params['write_timeout'], int)
+
+    def test_connect_timeout_fixed_at_10(self):
+        db = self._pymysql_db()
+        self.assertEqual(10, db._params['connect_timeout'])
+
+    def test_user_read_timeout_not_overridden(self):
+        db = self._pymysql_db(connect='read_timeout:120')
+        self.assertEqual(120, db._params['read_timeout'])
+
+    def test_user_write_timeout_not_overridden(self):
+        db = self._pymysql_db(connect='write_timeout:90')
+        self.assertEqual(90, db._params['write_timeout'])
+
+    def test_user_connect_timeout_not_overridden(self):
+        db = self._pymysql_db(connect='connect_timeout:5')
+        self.assertEqual(5, db._params['connect_timeout'])
+
+    def test_timeout_keys_coerced_to_int_from_string_config(self):
+        # Keys in _numeric_connect_keys get int() coercion when the connect
+        # param is a pipe-separated string (the common YAML config form).
+        db = self._pymysql_db(connect='read_timeout:60 | write_timeout:60')
+        self.assertIsInstance(db._params['read_timeout'], int)
+        self.assertIsInstance(db._params['write_timeout'], int)
+
+    def test_non_pymysql_driver_not_affected(self):
+        db = self.db()  # MockDbApi has no __name__ → empty string → not in _pymysql_driver_names
+        self.assertNotIn('read_timeout', db._params)
+        self.assertNotIn('write_timeout', db._params)
+        self.assertNotIn('connect_timeout', db._params)
+
+    def test_read_timeout_reflects_sh_config(self):
+        """Injected default tracks whatever _sh_db_query_timeout() returns."""
+        with patch('lib.db._sh_db_query_timeout', return_value=99):
+            db = self._pymysql_db()
+        self.assertEqual(99, db._params['read_timeout'])
+        self.assertEqual(99, db._params['write_timeout'])
+
+
+class TestShDbQueryTimeout(unittest.TestCase):
+    """_sh_db_query_timeout() reads sh._db_query_timeout and falls back safely."""
+
+    def _call_with_sh(self, sh_instance):
+        """Inject a fake lib.smarthome into sys.modules for one call."""
+        import sys
+
+        class _FakeSmartHome:
+            @staticmethod
+            def get_instance():
+                return sh_instance
+
+        fake_module = type(sys)('lib.smarthome')
+        fake_module.SmartHome = _FakeSmartHome
+        with patch.dict(sys.modules, {'lib.smarthome': fake_module}):
+            return lib.db._sh_db_query_timeout()
+
+    def test_returns_default_when_no_instance(self):
+        result = self._call_with_sh(None)
+        self.assertEqual(lib.db._DB_QUERY_TIMEOUT_DEFAULT, result)
+
+    def test_reads_attribute_from_sh(self):
+        class _Sh:
+            _db_query_timeout = 60
+
+        result = self._call_with_sh(_Sh())
+        self.assertEqual(60, result)
+
+    def test_returns_default_when_attribute_absent(self):
+        result = self._call_with_sh(object())  # plain object, no _db_query_timeout
+        self.assertEqual(lib.db._DB_QUERY_TIMEOUT_DEFAULT, result)
+
+    def test_returns_default_when_import_fails(self):
+        # Simulates early-startup or test environment where lib.smarthome can't load.
+        import sys
+
+        with patch.dict(sys.modules, {'lib.smarthome': None}):
+            result = lib.db._sh_db_query_timeout()
+        self.assertEqual(lib.db._DB_QUERY_TIMEOUT_DEFAULT, result)
 
 
 if __name__ == '__main__':

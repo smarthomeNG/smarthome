@@ -184,3 +184,10 @@ parameters:
         description:
             de: "PIP-Befehl, falls pip3 nicht automatisch gefunden wird (z.B. 'python3 -m pip')"
             en: "PIP command to use if pip3 is not found automatically (e.g. 'python3 -m pip')"
+
+    db_query_timeout:
+        type: num
+        default: 60
+        description:
+            de: "Timeout in Sekunden für Datenbankabfragen (z.B. MySQL). Verhindert dauerhaftes Blockieren bei einem nicht erreichbaren Datenbankserver. Gilt auch als Lock-Timeout beim Schließen der Verbindung."
+            en: "Timeout in seconds for database queries (e.g. MySQL). Prevents indefinite blocking when the database server is unresponsive. Also used as the lock-acquisition timeout when closing the connection."
