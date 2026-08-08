@@ -518,14 +518,27 @@ class Database:
         :param error_prefix: Message prefix to log on final failure (the
                           final exception is appended); falls back to a
                           generic message if omitted.
-        :param readonly:  If True, roll back after a successful op() while
-                          still holding the lock (see fetchone()/fetchall()).
+        :param readonly:  If True, commit after a successful op() while still
+                          holding the lock (see fetchone()/fetchall()).
                           autocommit is off (see __init__), so even a bare
                           SELECT opens a real transaction here; without this
-                          it sits open until some unrelated later write
-                          commits on the same connection, holding back
-                          InnoDB purge in the meantime. execute() does not
-                          set this - a write's caller owns its own commit.
+                          it sits open indefinitely, holding back InnoDB
+                          purge. Deliberately commit(), not rollback():
+                          self._fdb_lock already serializes every caller, so
+                          any other write still pending on this connection
+                          already finished its own critical section before
+                          this read could acquire the lock - committing here
+                          only completes work that should already have been
+                          committed, never discards it. rollback() was tried
+                          first and reverted - it silently destroyed
+                          not-yet-committed writes made via the same cur=None
+                          convenience path (e.g. insertLog()/updateLog(),
+                          whose own default cur=None never self-commits),
+                          which a later unrelated cur=None read would then
+                          wipe out from underneath the caller. execute() does
+                          not set this - a write's own commit is explicit,
+                          this parameter only closes out what's left after a
+                          read.
 
         Also closes a separate, longstanding gap: this cur=None path is
         exactly what ItemStore/LogStore always use, and none of it was ever
@@ -573,10 +586,12 @@ class Database:
                     result = op(c)
                 c.close()
                 if readonly:
-                    # Best-effort: a cleanup failure here shouldn't turn an
-                    # already-successful read into an error for the caller.
+                    # commit(), not rollback() - see the readonly= docstring
+                    # above. Best-effort: a cleanup failure here shouldn't
+                    # turn an already-successful read into an error for the
+                    # caller.
                     try:
-                        self.rollback()
+                        self.commit()
                     except Exception as e:
                         self.logger.warning(f'Database [{self._name}]: could not close read-only transaction: {e}')
                 return result
@@ -681,10 +696,17 @@ class Database:
                         # autocommit is off (see __init__) - the probe above
                         # opened a real transaction that would otherwise sit
                         # idle indefinitely between verify() calls, holding
-                        # back InnoDB purge. Best-effort: a failure here
-                        # shouldn't turn a successful verify() into a
-                        # reported failure, since connectivity IS confirmed.
-                        self.rollback()
+                        # back InnoDB purge. commit(), not rollback() - see
+                        # _cursor_op_with_reconnect's readonly= docstring:
+                        # self._fdb_lock already serializes every caller, so
+                        # rollback() here could silently discard an
+                        # unrelated write still pending on this connection
+                        # from an earlier cur=None caller that never
+                        # explicitly committed (e.g. insertLog()). Best-
+                        # effort: a failure here shouldn't turn a successful
+                        # verify() into a reported failure, since
+                        # connectivity IS confirmed.
+                        self.commit()
                     except Exception as e:
                         self.logger.warning(f'Database [{self._name}]: could not close verify() probe transaction: {e}')
                     retry = -1

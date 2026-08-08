@@ -764,64 +764,97 @@ class TestDbConnectionSelfHealing(unittest.TestCase, TestDbBase):
 class TestDbReadOnlyTransactionCleanup(unittest.TestCase, TestDbBase):
     """Reads must not leave an idle transaction open (autocommit is off,
     see __init__) - verify()'s probe and fetchone()/fetchall()'s cur=None
-    path must roll back after a successful read. Writes must be unaffected:
-    execute()'s cur=None path never auto-rolls-back (a write's caller owns
-    its own commit), and an explicit cur (an outer caller already managing
-    its own transaction, e.g. _dump()) must never trigger an internal
-    rollback either.
+    path must close it after a successful read. Writes must be unaffected:
+    execute()'s cur=None path never auto-closes anything (a write's caller
+    owns its own commit), and an explicit cur (an outer caller already
+    managing its own transaction, e.g. _dump()) must never trigger internal
+    cleanup either.
+
+    commit(), not rollback(), for that cleanup - regression coverage below
+    for why: self._fdb_lock serializes every caller, so any other write
+    still pending on the same connection already finished its own critical
+    section before this read could acquire the lock. rollback() was tried
+    first and reverted - it silently destroyed not-yet-committed writes
+    made via the same cur=None convenience path (e.g. insertLog()'s own
+    cur=None default, which never self-commits), the moment an unrelated
+    later cur=None read ran. Caught by plugins/database's real (sqlite3)
+    test suite, not by these mocks - the mock harness can't model pending
+    transactional state, only which method got called.
     """
 
-    def test_verify_rolls_back_after_successful_probe(self):
+    def test_verify_commits_after_successful_probe(self):
         db = self.db()
         db.connect()
         db.verify()
-        self.assertIsNotNone(db._conn.rollback_kwargs, "verify()'s probe must roll back its own transaction")
+        self.assertIsNotNone(db._conn.commit_kwargs, "verify()'s probe must close its own transaction")
+        self.assertIsNone(db._conn.rollback_kwargs, 'must commit, not roll back - see class docstring')
 
-    def test_verify_probe_rollback_failure_does_not_fail_verify(self):
+    def test_verify_probe_commit_failure_does_not_fail_verify(self):
         db = self.db()
         db.connect()
-        db._conn.rollback = lambda **kw: (_ for _ in ()).throw(Exception('simulated rollback failure'))
+        db._conn.commit = lambda **kw: (_ for _ in ()).throw(Exception('simulated commit failure'))
         # must not raise - connectivity was already confirmed by the probe
         result = db.verify()
         self.assertEqual(-1, result)
 
-    def test_fetchall_cur_none_rolls_back_after_success(self):
+    def test_fetchall_cur_none_commits_after_success(self):
         db = self.db()
         db.connect()
         db.fetchall('SELECT 1')
-        self.assertIsNotNone(db._conn.rollback_kwargs, 'fetchall() with cur=None must close its own read transaction')
+        self.assertIsNotNone(db._conn.commit_kwargs, 'fetchall() with cur=None must close its own read transaction')
+        self.assertIsNone(db._conn.rollback_kwargs, 'must commit, not roll back - see class docstring')
 
-    def test_fetchone_cur_none_rolls_back_after_success(self):
+    def test_fetchone_cur_none_commits_after_success(self):
         db = self.db()
         db.connect()
         db.fetchone('SELECT 1')
-        self.assertIsNotNone(db._conn.rollback_kwargs, 'fetchone() with cur=None must close its own read transaction')
+        self.assertIsNotNone(db._conn.commit_kwargs, 'fetchone() with cur=None must close its own read transaction')
+        self.assertIsNone(db._conn.rollback_kwargs, 'must commit, not roll back - see class docstring')
 
-    def test_fetchall_explicit_cur_does_not_auto_rollback(self):
+    def test_fetchall_explicit_cur_does_not_auto_cleanup(self):
         # An explicit cur means the caller (e.g. _dump()) is managing its
-        # own transaction across multiple statements - an internal rollback
+        # own transaction across multiple statements - internal cleanup
         # here would corrupt whatever the outer caller is building up.
         db = self.db()
         db.connect()
         cur = db.cursor()
         db.fetchall('SELECT 1', cur=cur)
+        self.assertIsNone(db._conn.commit_kwargs)
         self.assertIsNone(db._conn.rollback_kwargs)
 
-    def test_execute_cur_none_does_not_auto_rollback(self):
+    def test_execute_cur_none_does_not_auto_cleanup(self):
         # A write's caller owns its own commit - execute()'s cur=None path
-        # must never auto-rollback, or a write would be silently discarded.
+        # must never auto-commit or auto-rollback on its own.
         db = self.db()
         db.connect()
         db.execute('INSERT INTO x VALUES (1)')
+        self.assertIsNone(db._conn.commit_kwargs)
         self.assertIsNone(db._conn.rollback_kwargs)
 
-    def test_readonly_rollback_failure_does_not_mask_successful_read_result(self):
+    def test_readonly_commit_failure_does_not_mask_successful_read_result(self):
         db = self.db()
         db.connect()
-        db._conn.rollback = lambda **kw: (_ for _ in ()).throw(Exception('simulated rollback failure'))
+        db._conn.commit = lambda **kw: (_ for _ in ()).throw(Exception('simulated commit failure'))
         with self.assertLogs('lib.db', level='WARNING'):
             result = db.fetchall('SELECT 1')
         self.assertEqual([[0]], result, 'a cleanup-only failure must not turn a successful read into an error')
+
+    def test_uncommitted_cur_none_write_survives_a_later_cur_none_read(self):
+        # The actual regression: insertLog()'s cur=None default never
+        # self-commits (plugins/database/__init__.py) - a later, unrelated
+        # cur=None read used to roll that write back via this exact code
+        # path, silently discarding it. Simulate the same shape here:
+        # write, then read, then confirm the write's own commit()/rollback
+        # state was never touched by the read's cleanup.
+        db = self.db()
+        db.connect()
+        db.execute('INSERT INTO x VALUES (1)')  # cur=None, not yet committed by caller
+        self.assertIsNone(db._conn.commit_kwargs, 'sanity: write must not have self-committed')
+        db.fetchall('SELECT 1')  # unrelated later read on the same connection
+        self.assertIsNotNone(
+            db._conn.commit_kwargs, "the read's cleanup must commit (preserving the pending write), not roll it back"
+        )
+        self.assertIsNone(db._conn.rollback_kwargs, 'the pending write must never be rolled back by an unrelated read')
 
 
 class TestDbPymysqlTimeouts(unittest.TestCase, TestDbBase):
