@@ -53,10 +53,19 @@ vorgesehen hat – komplexe Logik lässt sich direkt und ohne Umwege formulieren
 
 Der Preis dafür: Referenzen auf andere Items innerhalb eines `eval`-Ausdrucks (z. B. `sh.wohnzimmer.licht()`)
 sind reiner Text, keine strukturierte, vom System verwaltete Verknüpfung. Das System kann diese Referenzen
-weder zentral validieren noch automatisch nachführen, wenn sich ein referenziertes Item ändert. Andere
-Systeme, die ihre Verknüpfungen strukturiert statt textuell ablegen, können solche Anpassungen automatisch
-vornehmen – zahlen dafür aber mit weniger Ausdrucksfreiheit. SmartHomeNG hat sich bewusst für die
+nicht zentral validieren. Andere Systeme, die ihre Verknüpfungen strukturiert statt textuell ablegen, zahlen
+für diese Validierbarkeit mit weniger Ausdrucksfreiheit. SmartHomeNG hat sich bewusst für die
 Ausdrucksfreiheit entschieden.
+
+**Einschränkung seit Ende Juni 2026:** Für den Spezialfall Umbenennen gilt „nicht automatisch nachführbar"
+nicht mehr uneingeschränkt. `Items.rename_item()` durchsucht per `find_references()` andere Items nach
+Text-Treffern in `eval`/`on_change`/`on_update`/`trigger`/`hysteresis_input`/`cycle`/`autotimer` und ersetzt
+sie automatisch (grenzsicherer Text-Ersatz, kein Live-Baum-Abgleich – über die Admin-API und damit auch aus
+shngadmins Umbenennen/Verschieben-Dialog erreichbar). Das ist weiterhin keine strukturierte Verknüpfung,
+sondern Textmustererkennung ohne Vollständigkeitsgarantie: berechnete oder zusammengesetzte Referenzen
+werden nicht gefunden (so `find_references()`s eigener Docstring). Für jede andere Änderung an einem Item
+(insbesondere Löschen) bleibt es bei der reinen Review-Hilfe `find_references()`/`remove_references()` ohne
+automatische Anpassung – absichtlich nicht in `remove_item()` verdrahtet.
 
 ---
 
@@ -65,7 +74,8 @@ Ausdrucksfreiheit entschieden.
 **Home Assistant**: Entity-orientiert, Verhalten lebt in Automationen. Stabile, von der Anzeige entkoppelte
 `entity_id`. Eine Entity-Registry verwaltet Entities zur Laufzeit. Referenzen aus UI-Automationen sind
 strukturierte Daten (und damit beim Umbenennen nachführbar); Referenzen aus frei geschriebenen
-Jinja-Templates sind Text (und damit – wie bei SmartHomeNG – nicht automatisch nachführbar).
+Jinja-Templates sind Text (und damit – wie bei SmartHomeNGs `eval` im allgemeinen Fall – nicht automatisch
+nachführbar; Ausnahme: SmartHomeNGs eigener Rename-Mechanismus, siehe oben).
 
 **openHAB**: Item, Thing/Channel und Rule sind getrennte Konzepte. Die Verbindung zwischen einem Item und
 der dahinterliegenden Hardware ist ein eigenständiges Objekt (der „Link"), nicht im Item selbst verdrahtet.
@@ -80,6 +90,11 @@ Definitionen per Textersatz nachzuziehen – ein Ansatz, der in der FHEM-Communi
 ist (Teilstring-Kollisionen, berechnete Namen, bedingte Logik werden nicht erkannt). Das ist ein praktischer
 Beleg dafür, dass dieses Problem nicht einfach „gelöst" werden kann, ohne die Ausdrucksfreiheit selbst
 einzuschränken.
+
+SmartHomeNG hat seit Ende Juni 2026 für den Spezialfall Umbenennen einen Mechanismus derselben Kategorie
+(textbasierter Ersatz, siehe oben) – mit einer gezielten Absicherung gegen die Teilstring-Kollision, die
+FHEMs `rename` fehlt (Wortgrenzen-Regex), aber demselben Blindspot bei berechneten oder zusammengesetzten
+Referenzen wie FHEM.
 
 **ioBroker**: Objekte besitzen eine stabile, mehrteilige ID (`adapter.0.pfad`) in einer echten
 Objekt-Datenbank. Das Umbenennen einer Objekt-ID ist selten und wird aktiv vermieden. Wo eine
@@ -118,6 +133,33 @@ ohne eine zusätzliche Indirektionsebene pflegen zu müssen.
 **Langlebigkeit.** SmartHomeNG existiert seit über zehn Jahren mit einer aktiven, breiten Plugin-Landschaft.
 Diese Reife – etablierte Konventionen, ein eingespieltes Ökosystem, viel praktische Erfahrung in der
 Community – ist selbst ein Wert, den jede Weiterentwicklung respektieren muss.
+
+---
+
+## Wer von diesen Entscheidungen am meisten profitiert
+
+Die oben beschriebenen Entscheidungen sind nicht neutral. Sie passen besser zu manchen Arbeitsweisen als zu
+anderen.
+
+Am meisten profitiert, wer
+
+- mit Python-Code direkt umgehen kann und will: `eval:` ist kein eingeschränktes Template, sondern ein
+  echter Python-Ausdruck (siehe oben) – das lohnt sich für jemanden, der Bedingungen und Berechnungen lieber
+  als Code formuliert statt über eine grafische Regel-Oberfläche.
+- Konfiguration lieber als Text (YAML) pflegt als über eine UI – wobei das Umbenennen eines Items seit Ende
+  Juni 2026 einen Teil der Referenzpflege automatisch übernimmt (textbasiert, bester Versuch, siehe oben);
+  für alle anderen Änderungen (insbesondere Löschen) bleibt die Konsistenzprüfung beim Anwender.
+- den Item-Baum eines laufenden Systems direkt untersuchen möchte, etwa über den `--interactive`-REPL-Modus
+  – ein Debugging-Zugriff, den ein mehrprozessiges System mit Message-Bus in dieser Form nicht bietet.
+- auf einfacher, ressourcenarmer Hardware (z. B. Raspberry Pi) betreiben möchte, ohne separaten Datenbank-
+  oder Broker-Prozess.
+- eigene Plugins schreiben oder bestehende an eigene Bedürfnisse anpassen möchte – der einheitliche
+  `SmartPlugin`-Vertrag macht das an einer Stelle lernbar, statt 150 Mal unterschiedlich.
+
+Wer dagegen in erster Linie eine grafische Oberfläche zur Automatisierung sucht, in der Referenzen
+automatisch nachgeführt werden und kein Python-Code nötig ist, findet diese Eigenschaften eher in Systemen
+wie Home Assistant oder openHAB – dort ist genau das eine bewusste Design-Priorität, so wie bei SmartHomeNG
+die Ausdrucksfreiheit die Priorität ist.
 
 ---
 
