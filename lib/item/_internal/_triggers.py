@@ -20,38 +20,16 @@
 #########################################################################
 
 """
-lib/item/_triggers.py
-=====================
+Trigger-registration helpers extracted from lib/item/item.py:
+add/remove_logic_trigger, get_logic_triggers, add/remove_method_trigger,
+get_method_triggers, get_item_triggers, get_hysteresis_item_triggers.
 
-Trigger-registration helpers extracted from lib/item/item.py.
-
-Functions
----------
-add_logic_trigger(item, logic)
-remove_logic_trigger(item, logic)
-get_logic_triggers(item)
-add_method_trigger(item, method)
-remove_method_trigger(item, method)
-get_method_triggers(item)
-get_item_triggers(item)
-get_hysteresis_item_triggers(item)
-
-Name-mangling note
-------------------
-``Item.__logics_to_trigger`` and ``Item.__methods_to_trigger`` are
-double-underscore attributes and would be name-mangled to
-``_Item__logics_to_trigger`` / ``_Item__methods_to_trigger`` outside
-the class body.  Rather than using the mangled form (fragile) two
-proxy properties are added to ``Item``:
-
-    ``item._logics_to_trigger``   → returns ``self.__logics_to_trigger``
-    ``item._methods_to_trigger``  → returns ``self.__methods_to_trigger``
-
-Both return the *same* list object, so in-place mutations made here are
-immediately visible inside the class.
-
-The single-underscore attributes ``_items_to_trigger`` and
-``_hysteresis_items_to_trigger`` require no proxies.
+Item.__logics_to_trigger/__methods_to_trigger are double-underscore
+(name-mangled outside the class body) - rather than use the mangled form,
+Item exposes proxy properties item._logics_to_trigger/_methods_to_trigger
+returning the *same* list objects, so in-place mutations here are
+immediately visible inside the class. _items_to_trigger and
+_hysteresis_items_to_trigger are already single-underscore, no proxy needed.
 """
 
 

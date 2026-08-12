@@ -20,26 +20,14 @@
 #########################################################################
 
 """
-lib/item/_casting.py
-====================
-
 Value-casting helpers extracted from lib/item/item.py.
 
-Functions
----------
-castvalue_to_itemtype(item, value, compat)
-    Cast *value* to the item's declared type (no-op when compat=v1.2).
+castvalue_to_itemtype(item, value, compat) - casts *value* to the item's
+declared type (no-op when compat=v1.2). cast_duration(item, time, test) -
+converts a duration string ('5m', '2h30s', ...) to seconds.
 
-cast_duration(item, time, test)
-    Convert a human-readable duration string (``'5m'``, ``'2h30s'``, …)
-    to an integer number of seconds.
-
-These functions access only single-underscore attributes on *item* and
-call ``item.shtime`` so no name-mangling proxies are required.
-
-The ``item.py`` methods ``_castvalue_to_itemtype`` and ``_cast_duration``
-are kept as one-line delegates so the public / semi-public API and all
-callers (``_autotimer.py``, ``_build_cycledict``, etc.) remain unchanged.
+item.py keeps _castvalue_to_itemtype/_cast_duration as one-line delegates
+to these, so callers (_autotimer.py, _build_cycledict, ...) are unaffected.
 """
 
 import logging

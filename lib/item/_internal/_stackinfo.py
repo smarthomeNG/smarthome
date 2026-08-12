@@ -20,25 +20,13 @@
 #########################################################################
 
 """
-lib/item/_stackinfo.py
-======================
-
-Call-stack inspection helpers extracted from lib/item/item.py.
-
-Used to enrich log messages with caller context when dict/list entries
-are accessed via eval expressions.
-
-Functions
----------
-get_class_from_frame(item, fr)
-    Return a debug string describing the arguments visible in frame *fr*.
-
-get_calling_item_from_frame(item, fr)
-    Return the string representation of the ``self`` argument in frame *fr*,
-    used to identify which Item triggered an eval call.
-
-get_stack_info(item)
-    Walk the call stack (level 4) and return a human-readable caller string.
+Call-stack inspection helpers extracted from lib/item/item.py, used to
+enrich log messages with caller context when dict/list entries are accessed
+via eval expressions. get_class_from_frame() returns a debug string of a
+frame's visible arguments; get_calling_item_from_frame() returns the
+frame's ``self`` argument (identifies which Item triggered an eval call);
+get_stack_info() walks the call stack (level 4) for a human-readable
+caller string.
 """
 
 import inspect

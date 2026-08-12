@@ -20,19 +20,9 @@
 #########################################################################
 
 """
-lib/item/_json.py
-=================
-
-JSON serialisation helpers extracted from lib/item/item.py.
-
-Functions
----------
-jsonvars(item)
-    Return a plain ``dict`` of the item's key attributes, suitable for
-    JSON serialisation.
-
-to_json(item)
-    Return a pretty-printed JSON string representation of the item.
+JSON serialisation helpers extracted from lib/item/item.py. jsonvars()
+returns a plain dict of the item's key attributes; to_json() returns a
+pretty-printed JSON string of that dict.
 """
 
 import json

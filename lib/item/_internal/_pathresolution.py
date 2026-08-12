@@ -20,35 +20,18 @@
 #########################################################################
 
 """
-Path-resolution helpers for Item.
+Path-resolution helpers for Item, extracted from lib/item/item.py.
+get_absolutepath replaces Item.get_absolutepath() (relative '.'-path to
+absolute); get_stringwithabsolutepathes replaces
+Item.get_stringwithabsolutepathes() (same, for path references embedded in
+a string); find_attribute replaces Item.find_attribute() (walk up the item
+tree for an attribute value); split_destitem_from_value replaces
+Item._split_destitem_from_value() (parses 'dest = expr' syntax, pure string
+op, no item needed); expand_relativepathes replaces
+Item.expand_relativepathes() (in-place conversion on an item conf attribute).
 
-Extracted from lib/item/item.py.
-
-Public functions
-----------------
-get_absolutepath(item, relativepath, attribute='')
-    Convert a relative item path (starting with '.') to an absolute path.
-    Replaces Item.get_absolutepath().
-
-get_stringwithabsolutepathes(item, evalstr, begintag, endtag, attribute='')
-    Convert relative item path references inside a string to absolute paths.
-    Replaces Item.get_stringwithabsolutepathes().
-
-find_attribute(item, attr, default='', level=-1, strict=False)
-    Search for an attribute value walking up the item tree.
-    Replaces Item.find_attribute().
-
-split_destitem_from_value(value)
-    Parse 'dest = expr' syntax from an on_change/on_update attribute value.
-    Replaces Item._split_destitem_from_value() — pure string operation,
-    no item reference needed.
-
-expand_relativepathes(item, attr, begintag, endtag)
-    In-place conversion of relative paths in an item conf attribute.
-    Replaces Item.expand_relativepathes().
-
-All functions access only single-underscore attributes and public methods on
-Item so no name-mangling issues arise.
+Only single-underscore attributes and public methods are accessed, to avoid
+Python name-mangling.
 """
 
 import logging

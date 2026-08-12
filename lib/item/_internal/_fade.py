@@ -20,21 +20,11 @@
 #########################################################################
 
 """
-lib/item/_fade.py
-=================
-
-Fade/ramp helper extracted from lib/item/item.py.
-
-Functions
----------
-fade(item, dest, step, delta, caller, stop_fade, continue_fade,
-     instant_set, update)
-    Smoothly ramp an item's value to *dest* by scheduling repeated
-    ``fadejob`` calls via the SmartHomeNG scheduler.
-
-The actual step-by-step logic lives in ``fadejob`` (``lib/item/helpers.py``);
-this function only validates parameters, stores fade state, and triggers the
-first scheduler call.
+Fade/ramp helper extracted from lib/item/item.py. fade() ramps an item's
+value to a target by scheduling repeated fadejob calls via the SmartHomeNG
+scheduler; the step-by-step logic itself lives in fadejob (lib/item/helpers.py)
+- this function only validates parameters, stores fade state, and triggers
+the first scheduler call.
 """
 
 import logging

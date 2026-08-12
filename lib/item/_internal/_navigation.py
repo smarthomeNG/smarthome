@@ -20,28 +20,13 @@
 #########################################################################
 
 """
-lib/item/_navigation.py
-=======================
-
 Item-tree navigation helpers extracted from lib/item/item.py.
+return_parent_item() walks up the tree to the ancestor *level* hops away;
+is_top_of_item_tree() checks whether an item has no parent.
 
-Functions
----------
-return_parent_item(item, level, strict)
-    Walk up the item tree and return the ancestor at *level* hops.
-
-is_top_of_item_tree(item)
-    Return ``True`` when *item* has no parent inside the item tree.
-
-Name-mangling note
-------------------
-``Item.__parent`` is a double-underscore attribute.  A ``_parent``
-property proxy is added to ``Item`` so that these module-level functions
-can access it without using the mangled name ``_Item__parent``:
-
-    @property
-    def _parent(self):
-        return self.__parent
+Item.__parent is double-underscore (name-mangled) - Item exposes a
+``_parent`` property proxy so these module-level functions can reach it
+without the mangled name ``_Item__parent``.
 """
 
 

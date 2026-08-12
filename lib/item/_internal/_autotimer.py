@@ -20,43 +20,16 @@
 #########################################################################
 
 """
-Autotimer / cycle / cron scheduler helpers for Item.
+Autotimer / cycle / cron scheduler helpers for Item, extracted from
+lib/item/item.py. Each function replaces a former Item method of a similar
+name (get_attr_time -> Item.get_attr_time, get_attr_value ->
+Item.get_attr_value, get_items_from_string -> Item.__get_items_from_string,
+init_start_scheduler -> Item._init_start_scheduler, item_timer -> Item.timer,
+item_remove_timer -> Item.remove_timer, item_autotimer -> Item.autotimer).
 
-Extracted from lib/item/item.py.
-
-Public functions
-----------------
-get_attr_time(item, attr)
-    Return the resolved time value for 'cycle' or 'autotimer' attributes.
-    Replaces Item.get_attr_time().
-
-get_attr_value(item, attr, value=None)
-    Return the resolved value for 'cycle', 'autotimer', or 'cron' attributes.
-    Replaces Item.get_attr_value().
-
-get_items_from_string(item, string)
-    Return a list of Item objects referenced in an eval-string.
-    Replaces Item.__get_items_from_string().
-
-init_start_scheduler(item)
-    Register crontab / cycle scheduler entries for the item.
-    Replaces Item._init_start_scheduler().
-
-item_timer(item, time, value, auto=False, caller=None, source=None, compat=...)
-    Start a one-shot or autotimer for the item.
-    Replaces Item.timer().
-
-item_remove_timer(item)
-    Cancel the running timer for the item.
-    Replaces Item.remove_timer().
-
-item_autotimer(item, time=None, value=None)
-    Set or clear the item's autotimer time/value.
-    Replaces Item.autotimer().
-
-All functions access only single-underscore attributes and the public proxies
-_run_attribute_eval() / _cast_duration() / _castvalue_to_itemtype() that Item
-exposes for extracted modules.
+Only single-underscore attributes and the public proxies
+_run_attribute_eval()/_cast_duration()/_castvalue_to_itemtype() (which Item
+exposes for extracted modules) are accessed - avoids Python name-mangling.
 """
 
 import datetime

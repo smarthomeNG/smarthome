@@ -20,46 +20,24 @@
 #########################################################################
 
 """
-lib/item/_eval_compat.py
-========================
+DEPRECATED COMPATIBILITY SHIM - scheduled for removal.
 
-.. warning:: DEPRECATED COMPATIBILITY SHIM — scheduled for removal.
+Before eval was extracted from item.py into _eval.py, every eval() call ran
+inside item.py and inherited its full module namespace as an unintended
+side-effect (datetime/time/os/re etc. silently available to user eval
+expressions, though never documented API). _eval.py now passes an explicit
+namespace via _make_eval_env() instead - a user expression relying on a
+leaked name would raise NameError under the new code without this shim.
 
-Before the eval logic was extracted from ``lib/item/item.py`` into
-``lib/item/_eval.py``, every ``eval()`` call ran inside ``item.py``
-and inherited that module's full namespace as an unintended side-effect.
-This made modules such as ``datetime``, ``time``, ``os``, ``re`` and
-others silently available to user-written eval expressions, even though
-they were never part of the documented API.
+_eval_with_legacy_fallback() catches that failure, retries with the old wide
+namespace, logs a deprecation warning, and returns the result so the item
+keeps working. Call sites are marked ``# COMPAT-SHIM`` for easy removal.
 
-The refactored code now passes an *explicit* namespace to ``eval()`` via
-:func:`_make_eval_env` (defined in ``_eval.py``).  User configurations
-that relied on the previously leaked names may therefore raise
-``NameError`` with the new code.
-
-This module provides a single fallback function —
-:func:`_eval_with_legacy_fallback` — that catches those failures, retries
-with the wide legacy namespace, logs a deprecation warning, and returns
-the result so that the item continues working.  Each call site is marked
-with ``# COMPAT-SHIM`` so it is easy to locate.
-
-Removal procedure
------------------
-When the project is ready to enforce the explicit namespace:
-
-1. **Delete this file** (``_eval_compat.py``).
-
-2. In ``_eval.py`` — remove the import line marked ``# COMPAT-SHIM``
-   and every ``except`` block whose body is marked ``# COMPAT-SHIM``;
-   in each case the block can simply be deleted because primary-eval
-   failures are already handled by the surrounding try/except that was
-   there before.
-
-3. In ``_casting.py`` — same as step 2.
-
-After removal, any user expression that references an undocumented name
-will produce a plain error log (the same message that already appears as
-the second line of the fallback warning today).
+Removal: delete this file; in _eval.py and _casting.py, remove the
+``# COMPAT-SHIM``-marked import and except blocks (each except block can
+just be deleted - the surrounding try/except already handles primary-eval
+failures). Afterward, a leaked-name reference produces a plain error log
+instead of the fallback's second warning line.
 """
 
 import logging

@@ -492,11 +492,6 @@ class Items:
             self.__items.append(path)
         self.__item_dict[path] = item
 
-    # aus bin/smarthome.py
-    #    def __iter__(self):
-    #        for child in self.__children:
-    #            yield child
-
     def edit_item(self, item, config):
         """
         Edit an existing item's attributes at runtime, in place — preserves
@@ -525,47 +520,57 @@ class Items:
         :rtype: Item
         """
         # Undo this item's own OUTGOING trigger/hysteresis_input wiring
-        # (based on the OLD config) before re-parsing — otherwise a moved
-        # trigger leaves a stale registration on the old target. Incoming
-        # references (other items pointing AT this one) live on THIS
-        # item's own _items_to_trigger list, untouched here — that's the
-        # whole point of editing in place instead of remove+recreate.
         _detach_from_other_items_triggers(item)
         _remove_scheduler_jobs(item)
         _stop_fading(item)
 
-        # Undo old plugin bindings before re-parsing — without this, a
-        # plugin that appends to its own internal state in parse_item()
-        # (e.g. the database plugin) would double-register the same item
-        # object when parse_item() runs again below.
-        for plugin in item.plugins.return_plugins():
-            if hasattr(plugin, PLUGIN_REMOVE_ITEM):
-                plugin.remove_item(item)
+        # Pause each STOP_ON_ITEM_CHANGE plugin bound to this item ONCE for
+        # the whole edit
+        paused_plugins = [
+            p for p in item.plugins.return_plugins() if getattr(p, 'STOP_ON_ITEM_CHANGE', False) and p.alive
+        ]
+        for plugin in paused_plugins:
+            try:
+                plugin.stop()
+            except Exception as e:
+                self.logger.warning(f"Plugin '{plugin}' failed to stop for edit of item '{item.property.path}': {e}")
 
-        item._apply_config(config)
+        try:
+            # Undo old plugin bindings before re-parsing
+            for plugin in item.plugins.return_plugins():
+                if hasattr(plugin, PLUGIN_REMOVE_ITEM):
+                    plugin.remove_item(item)
 
-        # Re-wire based on the NEW config (eval/trigger/hysteresis_input
-        # expansion, registers this item onto its new trigger targets).
-        item._init_prerun()
-        item._init_start_scheduler()
-        item._init_run()
+            item._apply_config(config)
 
-        # Rebind to plugins per the NEW config — mirrors the same loop
-        # Item.__init__ runs inline for a freshly constructed item.
-        for plugin in item.plugins.return_plugins():
-            if hasattr(plugin, PLUGIN_PARSE_ITEM):
-                update = plugin.parse_item(item)
-                if update:
+            # Re-wire based on the NEW config (eval/trigger/hysteresis_input
+            # expansion, registers this item onto its new trigger targets).
+            item._init_prerun()
+            item._init_start_scheduler()
+            item._init_run()
+
+            # Rebind to plugins per the NEW config — mirrors the same loop
+            # Item.__init__ runs inline for a freshly constructed item.
+            for plugin in item.plugins.return_plugins():
+                if hasattr(plugin, PLUGIN_PARSE_ITEM):
+                    update = plugin.parse_item(item)
+                    if update:
+                        try:
+                            plugin.add_item(item, updating=True)
+                        except Exception:
+                            pass
+                        item.add_method_trigger(update)
+        finally:
+            for plugin in paused_plugins:
+                if not plugin.alive:
                     try:
-                        plugin.add_item(item, updating=True)
-                    except Exception:
-                        pass
-                    item.add_method_trigger(update)
+                        plugin.run()
+                    except Exception as e:
+                        self.logger.warning(
+                            f"Plugin '{plugin}' failed to resume after edit of item '{item.property.path}': {e}"
+                        )
 
-        # Preserved value may not be valid for a new type (e.g. num -> str
-        # always works, str -> num doesn't if the string isn't numeric).
-        # Same try-cast-with-fallback pattern as the existing cache-restore
-        # path (Item.__init__'s "Cache" section) — not new logic.
+        # Preserved value may not be valid for a new type
         try:
             item._value = item.cast(item._value)
         except Exception:
@@ -714,10 +719,7 @@ class Items:
                 setattr(self._sh, leaf_attr, item)
 
         rename_hook_plugins = [p for p in item.plugins.return_plugins() if hasattr(p, PLUGIN_RENAME_ITEM)]
-        # Pause each affected plugin AT MOST ONCE for the whole rename, not
-        # once per descendant — STOP_ON_ITEM_CHANGE's stop()/run() cycle can
-        # be expensive (reconnecting to real hardware/network), and a
-        # renamed subtree may have many descendants.
+        # Pause each affected plugin only once for the whole rename
         paused_plugins = [p for p in rename_hook_plugins if getattr(p, 'STOP_ON_ITEM_CHANGE', False) and p.alive]
         for plugin in paused_plugins:
             try:

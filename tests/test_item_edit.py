@@ -58,6 +58,28 @@ class FakePlugin:
         return None
 
 
+class FakeStoppablePlugin(FakePlugin):
+    """FakePlugin plus the alive/STOP_ON_ITEM_CHANGE/stop()/run() surface
+    Items.edit_item() inspects to decide whether to pause a plugin around
+    an edit - mirrors test_item_rename.py's FakeStoppablePlugin, same
+    pause/resume contract."""
+
+    def __init__(self, stop_on_item_change=True):
+        super().__init__()
+        self.STOP_ON_ITEM_CHANGE = stop_on_item_change
+        self.alive = True
+        self.stop_calls = 0
+        self.run_calls = 0
+
+    def stop(self):
+        self.stop_calls += 1
+        self.alive = False
+
+    def run(self):
+        self.run_calls += 1
+        self.alive = True
+
+
 def _make_sh():
     _reset()
     return MockSmartHome()
@@ -221,6 +243,53 @@ class TestEditItemRebindsPlugins(_Base):
 
         self.assertIn(item, self.fake_plugin.removed_items)
         self.assertEqual(self.fake_plugin.parsed_items.count(item), 2)
+
+
+class TestEditItemPausesAndResumesStoppablePlugins(_Base):
+    """Regression test: edit_item() used to call plugin.remove_item(), which
+    stops a STOP_ON_ITEM_CHANGE plugin internally, but never called run()
+    again afterward - any such plugin (e.g. one driving a background
+    asyncio loop) stayed dead after any item edit touching it. Fixed by
+    giving edit_item() the same pause-once/resume-once wrapper
+    Items.rename_item() already had."""
+
+    def setUp(self):
+        super().setUp()
+        lib.plugin.Plugins(self.sh, 'test')
+
+    def test_stoppable_plugin_is_resumed_after_edit(self):
+        plugin = FakeStoppablePlugin(stop_on_item_change=True)
+        lib.plugin.Plugins._plugins.append(plugin)
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        self.assertEqual(plugin.stop_calls, 1)
+        self.assertEqual(plugin.run_calls, 1)
+        self.assertTrue(plugin.alive)
+
+    def test_plugin_already_stopped_before_edit_is_left_stopped(self):
+        plugin = FakeStoppablePlugin(stop_on_item_change=True)
+        plugin.alive = False
+        lib.plugin.Plugins._plugins.append(plugin)
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        self.assertEqual(plugin.stop_calls, 0)
+        self.assertEqual(plugin.run_calls, 0)
+        self.assertFalse(plugin.alive)
+
+    def test_non_stop_on_item_change_plugin_is_never_paused(self):
+        plugin = FakeStoppablePlugin(stop_on_item_change=False)
+        lib.plugin.Plugins._plugins.append(plugin)
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        self.assertEqual(plugin.stop_calls, 0)
+        self.assertEqual(plugin.run_calls, 0)
+        self.assertTrue(plugin.alive)
 
 
 class TestEditItemPersists(unittest.TestCase):

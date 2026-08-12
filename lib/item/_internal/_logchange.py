@@ -20,16 +20,12 @@
 #########################################################################
 
 """
-log_change implementation for Item.
+log_change implementation for Item, extracted from lib/item/item.py.
+log_on_change() is called from Item._set_value() for every value write when
+log_change is configured, except when caller is 'Fader'.
 
-Extracted from lib/item/item.py.
-
-Entry point: ``log_on_change(item, value, caller, source, dest)``
-Called from Item._set_value() for every value write (when the item has
-``log_change`` configured) — but skipped when caller is 'Fader'.
-
-Accesses only single-underscore attributes and public methods on the Item
-so the extraction avoids Python name-mangling issues.
+Only single-underscore attributes and public methods are accessed, to avoid
+Python name-mangling.
 """
 
 import logging

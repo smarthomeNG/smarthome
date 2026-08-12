@@ -20,37 +20,17 @@
 #########################################################################
 
 """
-Eval / on_change / on_update execution for Item.
+Eval / on_change / on_update execution for Item, extracted from
+lib/item/item.py. run_eval replaces Item.__run_eval(), run_on_xxx replaces
+Item._run_on_xxx() (the common runner for on_update/on_change entries),
+run_on_update/run_on_change replace Item.__run_on_update()/__run_on_change().
 
-Extracted from lib/item/item.py.
+Only single-underscore attributes and public methods are accessed, to avoid
+Python name-mangling - the one exception is item._update_item(), a public
+proxy Item exposes for this purpose (delegates to private Item.__update()).
 
-Entry points
-------------
-run_eval(item, value, caller, source, dest)
-    Called when an item's eval expression must be evaluated.
-    Replaces Item.__run_eval().
-
-run_on_xxx(item, path, value, on_dest, on_eval, attr, caller, source, dest)
-    Common runner for on_update and on_change entries.
-    Replaces Item._run_on_xxx().
-
-run_on_update(item, value, caller, source, dest)
-    Runs all on_update entries for the item.
-    Replaces Item.__run_on_update().
-
-run_on_change(item, value, caller, source, dest)
-    Runs all on_change entries for the item.
-    Replaces Item.__run_on_change().
-
-All functions access only single-underscore attributes and public methods on
-the Item to avoid Python name-mangling problems.  The one exception is calling
-item._update_item() — a thin public proxy that Item exposes for this purpose
-(it delegates to the private Item.__update()).
-
-Eval namespace
---------------
-All eval calls use the explicit namespace built by :func:`_make_eval_env`.
-See its docstring for the full list of names available to user expressions.
+All eval calls use the explicit namespace built by _make_eval_env() - see
+its docstring for the full list of names available to user expressions.
 """
 
 import logging

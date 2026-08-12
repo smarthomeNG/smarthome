@@ -20,26 +20,14 @@
 #########################################################################
 
 """
-Hysteresis state-machine execution for Item.
+Hysteresis state-machine execution for Item, extracted from lib/item/item.py.
+run_hysteresis replaces Item.__run_hysteresis(), get_hysteresis_state
+replaces Item.hysteresis_state(), get_hysteresis_data replaces
+Item.hysteresis_data().
 
-Extracted from lib/item/item.py.
-
-Entry points
-------------
-run_hysteresis(item, value, caller, source, dest)
-    Evaluate the hysteresis state machine for an item.
-    Replaces Item.__run_hysteresis().
-
-get_hysteresis_state(item)
-    Return the human-readable hysteresis state string.
-    Replaces Item.hysteresis_state().
-
-get_hysteresis_data(item)
-    Return a dict with full hysteresis diagnostics.
-    Replaces Item.hysteresis_data().
-
-All functions access only single-underscore attributes and the proxies
-_update_item() / _run_attribute_eval() that Item exposes for extracted modules.
+Only single-underscore attributes and the proxies _update_item()/
+_run_attribute_eval() (which Item exposes for extracted modules) are
+accessed - avoids Python name-mangling.
 """
 
 import datetime

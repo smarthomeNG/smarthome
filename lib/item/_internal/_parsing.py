@@ -20,32 +20,20 @@
 #########################################################################
 
 """
-lib/item/_parsing.py
-====================
+Attribute-parsing helpers extracted from lib/item/item.py: parse_eval_attribute,
+parse_eval_trigger_list_attribute, parse_hysteresis_input_attribute,
+parse_hysteresis_xx_threshold_attribute, parse_on_xx_list_attribute,
+parse_cycle_attribute, parse_autotimer_attribute, build_trigger_condition_eval.
 
-Attribute-parsing helpers extracted from lib/item/item.py.
+Path resolution goes through Item's existing public/delegate API
+(get_absolutepath, get_stringwithabsolutepathes, _split_destitem_from_value)
+- no extra proxies needed.
 
-Functions
----------
-parse_eval_attribute(item, attribute_name, value)
-parse_eval_trigger_list_attribute(item, attribute_name, value)
-parse_hysteresis_input_attribute(item, attribute_name, value)
-parse_hysteresis_xx_threshold_attribute(item, attr, value)
-parse_on_xx_list_attribute(item, attr, value)
-parse_cycle_attribute(item, attr, value, compat_default)
-parse_autotimer_attribute(item, attr, value, compat_default)
-build_trigger_condition_eval(item, trigger_condition)
-
-All path-resolution calls go through the existing public/delegate API
-on ``Item`` (``get_absolutepath``, ``get_stringwithabsolutepathes``,
-``_split_destitem_from_value``) so no additional proxies are needed.
-
-The ``compat_default`` parameter of ``parse_cycle_attribute`` and
-``parse_autotimer_attribute`` is supplied by the ``item.py`` delegate,
-which reads the module-level ``ATTRIB_COMPAT_DEFAULT`` global.  Passing
-it as an argument avoids a circular import.  The returned ``compat``
-value from ``split_duration_value_string`` is intentionally discarded by
-these two functions (it is not used further in parsing).
+parse_cycle_attribute/parse_autotimer_attribute take compat_default as an
+argument (supplied by the item.py delegate, which reads the module-level
+ATTRIB_COMPAT_DEFAULT) rather than importing it directly, to avoid a
+circular import. The compat value split_duration_value_string returns is
+intentionally discarded by both - unused further in parsing.
 """
 
 import logging

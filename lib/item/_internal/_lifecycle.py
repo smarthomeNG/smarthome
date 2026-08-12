@@ -20,19 +20,10 @@
 #########################################################################
 
 """
-lib/item/_lifecycle.py
-======================
-
-Item lifecycle helpers extracted from lib/item/item.py.
-
-Functions
----------
-remove(item)
-    Remove *item*'s own scheduler jobs, stop an in-progress fade, detach
-    it from its parent's child collection, from any sh/items attribute
-    binding, and from other items' trigger lists, then notify all loaded
-    plugins that *item* is being deleted so they can release any
-    references they hold to it.
+Item lifecycle helpers extracted from lib/item/item.py. remove() tears an
+item down: own scheduler jobs, an in-progress fade, its parent's child
+collection, any sh/items attribute binding, other items' trigger lists -
+then notifies every loaded plugin so each can release its own references.
 """
 
 import logging

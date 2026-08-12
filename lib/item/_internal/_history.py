@@ -20,35 +20,19 @@
 #########################################################################
 
 """
-Item history data holder.
+Item history data holder, extracted from lib/item/item.py. ItemHistory
+stores timestamp/caller/value history for an Item; Item creates one as
+self._history in __init__ and delegates all reads/writes through it.
 
-Extracted from lib/item/item.py.
+Write paths: record_change() fires from _set_value() on an actual value
+change; record_update_only() fires from __update() on a same-value rewrite
+(last_update advances, last_change doesn't); record_trigger() fires from
+__run_eval() on an eval trigger; set_initial_value_caller()/set_from_cache()
+fire once, from __init__'s initial-value/cache-restore paths.
 
-``ItemHistory`` stores the timestamp, caller, and value history for an Item.
-Item creates one instance as ``self._history`` during ``__init__`` and
-delegates all reads and writes through it.
-
-Write paths (called from item.py):
-  record_change(old_value, caller, source, shtime, ...)
-      fired by _set_value() when the item's value actually changes
-
-  record_update_only(caller, source, shtime)
-      fired by __update() when the same value is written again
-      (no change → last_update advances but last_change does not)
-
-  record_trigger(caller, source, shtime)
-      fired by __run_eval() when an eval trigger fires
-
-  set_initial_value_caller(caller)
-      called after the initial value is set in __init__
-
-  set_from_cache(cache_time, caller)
-      called when a cached value is restored
-
-Read paths:
-  Getters mirror the private attribute names that were previously held
-  directly on Item (``__last_change`` etc.) so that all call-sites in
-  item.py and property.py need only trivial one-line changes.
+Getters mirror the private attribute names Item held directly before this
+extraction (__last_change etc.), so item.py/property.py call-sites needed
+only trivial one-line changes.
 """
 
 
