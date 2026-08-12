@@ -369,7 +369,15 @@ class SmartPlugin(SmartObject, Utils):
                 self._item_lookup_dict[mapping].remove(item)
 
         # unregister item update method
-        self.unparse_item(item)
+        try:
+            self.unparse_item(item)
+        except (KeyError, IndexError, ValueError, RuntimeError) as e:
+            self.logger.warning(f'Error on unparsing item {item}: {e}')
+
+        try:
+            item.remove_method_trigger(self.update_item)
+        except Exception:
+            pass
 
         return True
 
@@ -624,24 +632,16 @@ class SmartPlugin(SmartObject, Utils):
     # by remove_item() (which itself must NOT be overwritten, see above). If a
     # plugin's parse_item() sets up plugin-specific bookkeeping beyond add_item()'s
     # generic dicts, the matching teardown belongs here — not in remove_item().
-    #
-    # If overwritten, call super().unparse_item(item) too, since the base
-    # implementation removes the update_item method trigger that parse_item's
-    # `return self.update_item` registered.
-    #
+    #    #
 
-    def unparse_item(self, item) -> bool:
+    def unparse_item(self, item) -> None:
         """
-        Ensure that changes to <item> are no longer propagated to this plugin
+        Remove user-/plugin-specific bookkeeping of items. Overwrite as needed.
 
         :param item: item to unparse
         :type item: class Item
         """
-        try:
-            item.remove_method_trigger(self.update_item)
-            return True
-        except Exception:
-            return False
+        pass
 
     def get_configname(self) -> str:
         """
