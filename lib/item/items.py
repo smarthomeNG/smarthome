@@ -73,6 +73,8 @@ from .structs import Structs
 
 _items_instance = None  # Pointer to the initialized instance of the Items class (for use by static methods)
 
+_MISSING = object()  # sentinel for Items.edit_item()'s old/new config diff - None is a legitimate attribute value
+
 
 def _flatten_with_children(item):
     """
@@ -492,13 +494,13 @@ class Items:
             self.__items.append(path)
         self.__item_dict[path] = item
 
-    def edit_item(self, item, config):
+    def edit_item(self, item, config, notify_plugins=True):
         """
         Edit an existing item's attributes at runtime, in place — preserves
-        Python object identity (unlike create_item()/remove_item()), so
-        other items' incoming trigger/hysteresis_input registrations onto
-        *item*, and this item's own value/history/children, all survive
-        automatically without any rewiring step. See
+        Python object identity (unlike Items.remove_item()+create_item()),
+        so other items' incoming trigger/hysteresis_input registrations
+        onto *item*, and this item's own value/history/children, all
+        survive automatically without any rewiring step. See
         ~/.claude/handoff/shng-edit-item-attributes.md for the full design
         rationale.
 
@@ -511,10 +513,33 @@ class Items:
         edit never resets — they survive an edit untouched, with no
         special-case code needed here.
 
+        plugin.remove_item()/plugin.parse_item() (the per-plugin hooks,
+        not Items.remove_item()) are called for every loaded plugin
+        unconditionally, exactly as before — only the STOP_ON_ITEM_CHANGE
+        pause/resume bracket around them is scoped down, to plugins that
+        plausibly have a stake in this specific edit (see
+        _plugin_is_touched() below). Narrowing the pause bracket instead
+        of the calls themselves keeps the remove_item()/parse_item()
+        contract untouched, and confines the heuristic's failure mode to
+        "an unpaused live plugin briefly sees the item mutate", never to
+        "a plugin's binding silently never gets refreshed".
+
         :param item: The item to edit
         :param config: Complete new attribute configuration dict
+        :param notify_plugins: If False, skip plugin.remove_item()/
+                                plugin.parse_item() and the pause/resume
+                                bracket entirely — pure attribute mutation,
+                                no plugin cross-talk. Only safe when the
+                                caller knows, from its own domain
+                                knowledge, that no plugin cares about this
+                                item's config (e.g. a plugin editing its
+                                own private bookkeeping items). Logged at
+                                NOTICE on every use, since getting this
+                                wrong leaves a plugin silently stale
+                                rather than erroring loudly.
         :type item: object
         :type config: dict
+        :type notify_plugins: bool
 
         :return: The same item, mutated
         :rtype: Item
@@ -524,22 +549,78 @@ class Items:
         _remove_scheduler_jobs(item)
         _stop_fading(item)
 
-        # Pause each STOP_ON_ITEM_CHANGE plugin bound to this item ONCE for
-        # the whole edit
-        paused_plugins = [
-            p for p in item.plugins.return_plugins() if getattr(p, 'STOP_ON_ITEM_CHANGE', False) and p.alive
-        ]
-        for plugin in paused_plugins:
-            try:
-                plugin.stop()
-            except Exception as e:
-                self.logger.warning(f"Plugin '{plugin}' failed to stop for edit of item '{item.property.path}': {e}")
+        if not notify_plugins:
+            self.logger.notice(
+                f"edit_item(): notify_plugins=False for item '{item.property.path}' - plugin remove_item()/"
+                f'parse_item() and the STOP_ON_ITEM_CHANGE pause/resume bracket are being skipped for this '
+                f'edit; any plugin that actually cares about this config change will silently go stale until '
+                f'its next update'
+            )
+            paused_plugins = []
+        else:
+            old_config = self.current_config_for_edit(item)
+            type_changed = old_config.get('type') != config.get('type')
+            present_keys = set(old_config) | set(config)
+            changed_keys = {key for key in present_keys if old_config.get(key, _MISSING) != config.get(key, _MISSING)}
+
+            def _plugin_is_touched(plugin_name):
+                """
+                True if *plugin_name* plausibly has a stake in this edit -
+                used only to scope the pause/resume bracket, never to skip
+                plugin.remove_item()/plugin.parse_item() themselves (those
+                still run for every plugin, unconditionally). Deliberately
+                conservative: with no positive evidence a plugin is
+                unaffected, it's treated as touched.
+                """
+                owned_keys = {k for k, v in self.plugin_attributes.items() if v['plugin'] == plugin_name}
+                owned_prefixes = tuple(
+                    k for k, v in self.plugin_attribute_prefixes.items() if v['plugin'] == plugin_name
+                )
+                if not owned_keys and not owned_prefixes:
+                    # plugin never declared item_attributes/item_attribute_prefixes at
+                    # all - no signal either way, don't assume it's unaffected
+                    return True
+
+                def _owns(key):
+                    return key in owned_keys or key.startswith(owned_prefixes)
+
+                if not any(_owns(key) for key in present_keys):
+                    # has declared attributes, but none of them are on this item,
+                    # old or new - real evidence this plugin has nothing at stake
+                    return False
+
+                if type_changed:
+                    # has a stake in this item AND the type is changing - no plugin
+                    # is written to expect that, force it into the pause bracket
+                    # regardless of which specific key changed
+                    return True
+
+                return any(_owns(key) for key in changed_keys)
+
+            paused_plugins = [
+                p
+                for p in item.plugins.return_plugins()
+                if getattr(p, 'STOP_ON_ITEM_CHANGE', False) and p.alive and _plugin_is_touched(p.get_shortname())
+            ]
+            for plugin in paused_plugins:
+                try:
+                    plugin.stop()
+                except Exception as e:
+                    self.logger.warning(
+                        f"Plugin '{plugin}' failed to stop for edit of item '{item.property.path}': {e}"
+                    )
 
         try:
-            # Undo old plugin bindings before re-parsing
-            for plugin in item.plugins.return_plugins():
-                if hasattr(plugin, PLUGIN_REMOVE_ITEM):
-                    plugin.remove_item(item)
+            if notify_plugins:
+                # Undo old plugin bindings before re-parsing
+                for plugin in item.plugins.return_plugins():
+                    if hasattr(plugin, PLUGIN_REMOVE_ITEM):
+                        try:
+                            plugin.remove_item(item)
+                        except Exception as e:
+                            self.logger.warning(
+                                f"Plugin '{plugin}' remove_item() failed for edit of item '{item.property.path}': {e}"
+                            )
 
             item._apply_config(config)
 
@@ -549,17 +630,24 @@ class Items:
             item._init_start_scheduler()
             item._init_run()
 
-            # Rebind to plugins per the NEW config — mirrors the same loop
-            # Item.__init__ runs inline for a freshly constructed item.
-            for plugin in item.plugins.return_plugins():
-                if hasattr(plugin, PLUGIN_PARSE_ITEM):
-                    update = plugin.parse_item(item)
-                    if update:
+            if notify_plugins:
+                # Rebind to plugins per the NEW config — mirrors the same loop
+                # Item.__init__ runs inline for a freshly constructed item.
+                for plugin in item.plugins.return_plugins():
+                    if hasattr(plugin, PLUGIN_PARSE_ITEM):
+                        update = None
                         try:
-                            plugin.add_item(item, updating=True)
-                        except Exception:
-                            pass
-                        item.add_method_trigger(update)
+                            update = plugin.parse_item(item)
+                        except Exception as e:
+                            self.logger.warning(
+                                f"Plugin '{plugin}' parse_item() failed for edit of item '{item.property.path}': {e}"
+                            )
+                        if update:
+                            try:
+                                plugin.add_item(item, updating=True)
+                            except Exception:
+                                pass
+                            item.add_method_trigger(update)
         finally:
             for plugin in paused_plugins:
                 if not plugin.alive:

@@ -45,9 +45,13 @@ class FakePlugin:
     PLUGIN_PARSE_ITEM, for testing the plugin remove/parse bracket in
     Items.edit_item() without any real plugin machinery."""
 
-    def __init__(self):
+    def __init__(self, shortname='fakeplugin'):
         self.removed_items = []
         self.parsed_items = []
+        self._shortname = shortname
+
+    def get_shortname(self):
+        return self._shortname
 
     def remove_item(self, item):
         self.removed_items.append(item)
@@ -64,8 +68,8 @@ class FakeStoppablePlugin(FakePlugin):
     an edit - mirrors test_item_rename.py's FakeStoppablePlugin, same
     pause/resume contract."""
 
-    def __init__(self, stop_on_item_change=True):
-        super().__init__()
+    def __init__(self, stop_on_item_change=True, shortname='fakeplugin'):
+        super().__init__(shortname=shortname)
         self.STOP_ON_ITEM_CHANGE = stop_on_item_change
         self.alive = True
         self.stop_calls = 0
@@ -290,6 +294,195 @@ class TestEditItemPausesAndResumesStoppablePlugins(_Base):
         self.assertEqual(plugin.stop_calls, 0)
         self.assertEqual(plugin.run_calls, 0)
         self.assertTrue(plugin.alive)
+
+
+class TestEditItemScopesPauseToRelevantPlugins(_Base):
+    """Regression test: edit_item() used to pause every STOP_ON_ITEM_CHANGE
+    plugin in the whole installation on every item edit, regardless of
+    whether that plugin had anything to do with the edited item - the root
+    cause of the matter plugin's self-edit-during-startup recursion.
+    plugin.remove_item()/plugin.parse_item() still run for every plugin
+    unconditionally (unchanged, verified below); only the stop()/run()
+    bracket is scoped down, via Items.plugin_attributes/
+    plugin_attribute_prefixes, to plugins with a plausible stake in this
+    specific edit."""
+
+    def setUp(self):
+        super().setUp()
+        lib.plugin.Plugins(self.sh, 'test')
+
+    def test_plugin_with_no_stake_in_the_item_is_not_paused(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute('owner', 'owner_attr', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        self.assertEqual(owner.stop_calls, 0)
+        self.assertEqual(owner.run_calls, 0)
+        # remove_item()/parse_item() still run unconditionally (Option B)
+        self.assertIn(item, owner.removed_items)
+        self.assertEqual(owner.parsed_items.count(item), 2)
+
+    def test_plugin_whose_owned_attribute_is_unchanged_is_not_paused(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute('owner', 'owner_attr', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item('target', {'type': 'num', 'owner_attr': 'x'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'owner_attr': 'x', 'remark': 'edited'})
+
+        self.assertEqual(owner.stop_calls, 0)
+        self.assertEqual(owner.run_calls, 0)
+
+    def test_plugin_whose_owned_attribute_changes_is_paused(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute('owner', 'owner_attr', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item('target', {'type': 'num', 'owner_attr': 'x'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'owner_attr': 'y'})
+
+        self.assertEqual(owner.stop_calls, 1)
+        self.assertEqual(owner.run_calls, 1)
+
+    def test_plugin_owning_attribute_prefix_is_paused_on_prefixed_key_change(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute_prefix('owner', 'owner_', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item('target', {'type': 'num', 'owner_mode': 'x'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'owner_mode': 'y'})
+
+        self.assertEqual(owner.stop_calls, 1)
+        self.assertEqual(owner.run_calls, 1)
+
+    def test_type_change_pauses_plugin_with_a_stake_even_if_its_own_key_is_unchanged(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute('owner', 'owner_attr', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item('target', {'type': 'num', 'owner_attr': 'x'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'str', 'owner_attr': 'x'})
+
+        self.assertEqual(owner.stop_calls, 1)
+        self.assertEqual(owner.run_calls, 1)
+
+    def test_type_change_does_not_pause_a_plugin_with_no_stake_at_all(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute('owner', 'owner_attr', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'str'})
+
+        self.assertEqual(owner.stop_calls, 0)
+        self.assertEqual(owner.run_calls, 0)
+
+    def test_plugin_that_never_registered_any_attribute_is_always_paused(self):
+        unregistered = FakeStoppablePlugin(shortname='unregistered')
+        lib.plugin.Plugins._plugins.append(unregistered)
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        self.assertEqual(unregistered.stop_calls, 1)
+        self.assertEqual(unregistered.run_calls, 1)
+
+
+class TestEditItemNotifyPluginsFalse(_Base):
+    def setUp(self):
+        super().setUp()
+        lib.plugin.Plugins(self.sh, 'test')
+
+    def test_notify_plugins_false_skips_remove_parse_and_pause(self):
+        plugin = FakeStoppablePlugin(stop_on_item_change=True)
+        lib.plugin.Plugins._plugins.append(plugin)
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+        plugin.removed_items.clear()
+        plugin.parsed_items.clear()
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'}, notify_plugins=False)
+
+        self.assertEqual(plugin.removed_items, [])
+        self.assertEqual(plugin.parsed_items, [])
+        self.assertEqual(plugin.stop_calls, 0)
+        self.assertEqual(plugin.run_calls, 0)
+        self.assertEqual(item.property.remark, 'edited')
+
+    def test_notify_plugins_false_logs_notice(self):
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+
+        with self.assertLogs('lib.item.items', level='NOTICE') as cm:
+            self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'}, notify_plugins=False)
+
+        self.assertTrue(any('notify_plugins=False' in message for message in cm.output))
+
+
+class TestEditItemPluginHookFailureIsolation(_Base):
+    """Regression test: plugin.remove_item()/plugin.parse_item() calls were
+    unguarded - one plugin raising aborted the whole edit (config never
+    applied, no other plugin's remove_item()/parse_item() ran). Now
+    isolated per plugin, mirroring the stop()/run() bracket's existing
+    try/except pattern."""
+
+    def setUp(self):
+        super().setUp()
+        lib.plugin.Plugins(self.sh, 'test')
+
+    def test_remove_item_failure_in_one_plugin_does_not_block_others_or_the_config_apply(self):
+        class RaisingPlugin(FakePlugin):
+            def remove_item(self, item):
+                raise RuntimeError('boom')
+
+        raiser = RaisingPlugin(shortname='raiser')
+        survivor = FakePlugin(shortname='survivor')
+        lib.plugin.Plugins._plugins.extend([raiser, survivor])
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+        survivor.removed_items.clear()
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        self.assertIn(item, survivor.removed_items)
+        self.assertEqual(item.property.remark, 'edited')
+
+    def test_parse_item_failure_does_not_leak_a_stale_update_into_the_next_plugin(self):
+        class OkPlugin(FakePlugin):
+            def parse_item(self, item):
+                self.parsed_items.append(item)
+                return self.update_item
+
+            def update_item(self, item, caller=None, source=None, dest=None):
+                pass
+
+        class RaisingParsePlugin(FakePlugin):
+            def __init__(self, shortname):
+                super().__init__(shortname=shortname)
+                self.call_count = 0
+
+            def parse_item(self, item):
+                # only raises from the 2nd call (edit), not the 1st
+                # (construction) - Item.__init__'s own parse_item() loop
+                # isn't guarded, that's a separate, pre-existing gap
+                self.call_count += 1
+                if self.call_count > 1:
+                    raise RuntimeError('boom')
+                self.parsed_items.append(item)
+                return None
+
+        ok = OkPlugin(shortname='ok')
+        raiser = RaisingParsePlugin(shortname='raiser')
+        lib.plugin.Plugins._plugins.extend([ok, raiser])
+        item = self.sh.items.create_item('target', {'type': 'num'}, persist=False)
+
+        self.sh.items.edit_item(item, {'type': 'num', 'remark': 'edited'})
+
+        # 2, not 3: one from create_item()'s own parse_item() pass, one
+        # from edit_item()'s. A 3rd would mean raiser's failed parse_item()
+        # call leaked ok's stale `update` value into its own iteration.
+        triggers = item.get_method_triggers()
+        self.assertEqual(triggers.count(ok.update_item), 2)
 
 
 class TestEditItemPersists(unittest.TestCase):
