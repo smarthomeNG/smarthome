@@ -118,6 +118,7 @@ from ._internal._pathresolution import (
     get_absolutepath as _get_absolutepath,
     get_stringwithabsolutepathes as _get_stringwithabsolutepathes,
     find_attribute as _find_attribute,
+    find_attribute_with_instance as _find_attribute_with_instance,
     split_destitem_from_value as _split_destitem_from_value,
     expand_relativepathes as _expand_relativepathes,
     get_attr as _get_attr_fn,
@@ -745,6 +746,13 @@ class Item:
     def find_attribute(self, attr, default: str = '', level: int = -1, strict: bool = False) -> str:
         """Find attribute value walking up the item tree — delegates to _pathresolution."""
         return _find_attribute(self, attr, default=default, level=level, strict=strict)
+
+    def find_attribute_with_instance(
+        self, attr, default: str = '', level: int = -1, strict: bool = False, plugin=None
+    ) -> str:
+        """Same as find_attribute(), but resolves attr@instance/attr@* per ancestor level when
+        a multi-instance-capable plugin is given — delegates to _pathresolution."""
+        return _find_attribute_with_instance(self, attr, default=default, level=level, strict=strict, plugin=plugin)
 
     def _split_destitem_from_value(self, value):
         """Split 'dest = expr' syntax — delegates to _pathresolution.split_destitem_from_value."""

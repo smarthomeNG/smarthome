@@ -187,6 +187,49 @@ def find_attribute(item, attr, default='', level=-1, strict=False):
     return current.conf.get(attr, default)
 
 
+def find_attribute_with_instance(item, attr, default='', level=-1, strict=False, plugin=None):
+    """
+    Same as find_attribute(), but instance-aware when a plugin is given.
+
+    find_attribute() only ever looks for the bare attr name at each ancestor
+    level - it has no notion that a multi-instance-capable plugin's item
+    attributes may be written as attr@<instance> or attr@* (see
+    SmartPlugin.has_iattr()/get_iattr_value()). Those two, in turn, only
+    ever check the one conf dict they are given - never ancestors. A plugin
+    that wants both ancestor-inheritance (an attribute set once on a
+    "master" item, every child inherits) and multi-instance disambiguation
+    needs both properties at once; this combines them by doing the ancestor
+    walk itself and deferring the per-level match to the plugin's own
+    has_iattr()/get_iattr_value() when a plugin is given.
+
+    plugin=None reproduces find_attribute()'s exact behavior (a plain
+    conf.get(attr, default) at each level), so existing callers - and this
+    function's own default - are unaffected either way.
+
+    :param item:    the Item instance
+    :param attr:    attribute name to look for
+    :param default: value returned when attribute is not found
+    :param level:   number of parent-levels to search (< 0 = unlimited)
+    :param strict:  if True, return default when level is not reached
+    :param plugin:  a SmartPlugin instance to resolve attr@instance/attr@*
+                     through, or None for find_attribute()'s plain behavior
+    :return:        attribute value
+    """
+    current = item
+    nolimit = level < 0
+    while (level >= 1 or nolimit) and (
+        strict or not (plugin.has_iattr(current.conf, attr) if plugin else attr in current.conf)
+    ):
+        if current._is_top_of_item_tree():
+            return default
+        current = current.return_parent()
+        level -= 1
+
+    if plugin:
+        return plugin.get_iattr_value(current.conf, attr, default)
+    return current.conf.get(attr, default)
+
+
 # ---------------------------------------------------------------------------
 # split_destitem_from_value  (replaces Item._split_destitem_from_value)
 # ---------------------------------------------------------------------------

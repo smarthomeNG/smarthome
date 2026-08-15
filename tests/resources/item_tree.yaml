@@ -21,3 +21,20 @@ zone:
 orphan:
     type: bool
     orphan_attr: standalone
+
+# For find_attribute_with_instance() (multi-instance-capable plugins, e.g.
+# plugins/matter's server role): attr@instance / attr@* alongside a bare
+# attr, plus a level to test child-overrides-ancestor per instance.
+inst_room:
+    type: foo
+    inst_attr: from_room_default
+    inst_attr@home: from_room_home
+    inst_attr@shop: from_room_shop
+    wild_attr@*: from_room_wild
+
+    inst_lamp:
+        type: bool
+
+        inst_override:
+            type: bool
+            inst_attr@home: from_override_home

@@ -53,8 +53,19 @@ import lib.item.item
 import lib.item.items
 import lib.config
 from lib.item.items import Items
+from lib.model.smartplugin import SmartPlugin
 from tests.mock.core import MockSmartHome
 import tests.common as common
+
+
+def _make_plugin(instance=''):
+    """Minimal real SmartPlugin instance (bypasses __init__'s heavier sh/config
+    plumbing, irrelevant here) - has_iattr()/get_iattr_value() are the real,
+    unmocked implementations, only _SmartPlugin__instance is set directly the
+    way _set_instance_name() actually sets it."""
+    plugin = SmartPlugin.__new__(SmartPlugin)
+    plugin._SmartPlugin__instance = instance
+    return plugin
 
 
 def _reset():
@@ -157,6 +168,59 @@ class TestFindAttribute(_Base):
     def test_root_item_missing_attr_returns_default(self):
         zone = self.sh.items.return_item('zone')
         self.assertEqual(zone.find_attribute('no_such_attr', default='x'), 'x')
+
+
+# ===========================================================================
+# find_attribute_with_instance
+# ===========================================================================
+
+
+class TestFindAttributeWithInstance(_Base):
+    def test_plugin_none_behaves_exactly_like_find_attribute(self):
+        lamp = self.sh.items.return_item('inst_room.inst_lamp')
+        self.assertEqual(
+            lamp.find_attribute_with_instance('inst_attr', default='x'), lamp.find_attribute('inst_attr', default='x')
+        )
+        self.assertEqual(lamp.find_attribute_with_instance('inst_attr', default='x'), 'from_room_default')
+
+    def test_named_instance_resolves_its_own_suffixed_attr(self):
+        lamp = self.sh.items.return_item('inst_room.inst_lamp')
+        home = _make_plugin('home')
+        shop = _make_plugin('shop')
+
+        self.assertEqual(lamp.find_attribute_with_instance('inst_attr', plugin=home), 'from_room_home')
+        self.assertEqual(lamp.find_attribute_with_instance('inst_attr', plugin=shop), 'from_room_shop')
+
+    def test_bare_attr_is_invisible_to_a_named_instance(self):
+        """The actual bug this whole mechanism exists to fix: a bare attr
+        (meant for the default/unnamed instance) must not leak into a named
+        instance's resolution - inst_lamp itself has no inst_attr@other
+        anywhere in its ancestor chain, only the bare default one."""
+        lamp = self.sh.items.return_item('inst_room.inst_lamp')
+        other = _make_plugin('other')
+
+        self.assertEqual(lamp.find_attribute_with_instance('inst_attr', default='fallback', plugin=other), 'fallback')
+
+    def test_wildcard_resolves_for_any_named_instance(self):
+        lamp = self.sh.items.return_item('inst_room.inst_lamp')
+        other = _make_plugin('other')
+
+        self.assertEqual(lamp.find_attribute_with_instance('wild_attr', plugin=other), 'from_room_wild')
+
+    def test_child_override_wins_over_ancestor_for_the_same_instance(self):
+        override = self.sh.items.return_item('inst_room.inst_lamp.inst_override')
+        home = _make_plugin('home')
+
+        self.assertEqual(override.find_attribute_with_instance('inst_attr', plugin=home), 'from_override_home')
+
+    def test_child_override_does_not_affect_other_instances(self):
+        """inst_override only sets inst_attr@home - a shop-instance lookup on
+        the same item must still fall through to the ancestor's inst_attr@shop,
+        not be shadowed by the unrelated override."""
+        override = self.sh.items.return_item('inst_room.inst_lamp.inst_override')
+        shop = _make_plugin('shop')
+
+        self.assertEqual(override.find_attribute_with_instance('inst_attr', plugin=shop), 'from_room_shop')
 
 
 # ===========================================================================
