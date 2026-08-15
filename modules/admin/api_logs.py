@@ -108,6 +108,52 @@ class LogsController(RESTResource):
                 logfiles.append([fn, size])
         return logfiles
 
+    @staticmethod
+    def _iter_log_entries(path):
+        """
+        Yield ``(raw_line_no, entry_text)`` for every logical log entry in the
+        file at *path*, merging traceback continuation lines into the entry
+        they belong to: a line starting with ``'Traceback'``, and every
+        following indented (``'  '``-prefixed) line up to and including the
+        first non-indented line after it, is appended to the *previous*
+        entry rather than starting a new one - same convention the reader
+        has always used, just applied consistently across the whole file in
+        one pass instead of being re-derived per chunk request.
+
+        *raw_line_no* is the 1-based physical file line number of the last
+        raw line consumed by that entry (a running total, not an index) -
+        this is what lets callers compute true chunk/line offsets without
+        assuming a fixed number of raw lines per logical entry, which breaks
+        as soon as any entry spans more than one physical line.
+
+        :param path: Path of the logfile to read
+        :type path: str
+
+        :return: generator of (raw_line_no, entry_text) pairs, in file order
+        :rtype: Iterator[tuple[int, str]]
+        """
+        with open(path, 'r', encoding='UTF-8') as lfile:
+            raw_line_no = 0
+            entry_text = None
+            entry_end_line = 0
+            appending = False
+            for line in lfile:
+                raw_line_no += 1
+                if line.startswith('Traceback'):
+                    appending = True
+                if appending and entry_text is not None:
+                    entry_text += '> ' + line.replace(' ', chr(160))
+                    entry_end_line = raw_line_no
+                    if (not line.startswith('Traceback')) and (not line.startswith('  ')):
+                        appending = False
+                    continue
+                if entry_text is not None:
+                    yield entry_end_line, entry_text
+                entry_text = line.replace(' ', chr(160))
+                entry_end_line = raw_line_no
+            if entry_text is not None:
+                yield entry_end_line, entry_text
+
     # ======================================================================
     #  GET /api/logs
     #
@@ -161,62 +207,49 @@ class LogsController(RESTResource):
         #     logfiles = self.get_files_of_log(id)
         #     return json.dumps(sorted(logfiles))
 
-        if os.path.isfile(os.path.join(self.log_dir, id)):
+        logfile_path = os.path.join(self.log_dir, id)
+        if os.path.isfile(logfile_path):
             # return content of the logfile specified in id, if file is found
-            chunk_read = 0
-            if chunk > 0:
-                chunk_read = chunk - 1
-            skiplines = self.chunksize * (chunk - 1)
-            if skiplines < 0:
-                skiplines = 0
-            skipcount = 0
 
-            # read logfile
-            with open(os.path.join(self.log_dir, id), 'r', encoding='UTF-8') as lfile:
-                append_to_previous_line = False
-                loglines = []
-                lastchunk = True
-                # read lines of logfile
-                for line in lfile:
-                    if (skiplines > 0) and (skipcount < skiplines):
-                        # skip line, if not reading first chunk
-                        skipcount += 1
-                    else:
-                        if len(loglines) < self.chunksize:
-                            if line.startswith('Traceback'):
-                                append_to_previous_line = True
-                            if append_to_previous_line:
-                                # append to previous log line
-                                loglines[len(loglines) - 1] += '> ' + line.replace(' ', chr(160))
-                                if (not line.startswith('Traceback')) and (not line.startswith('  ')):
-                                    # last line of multiline traceback reached
-                                    append_to_previous_line = False
-                            else:
-                                # append new log line
-                                loglines.append(line.replace(' ', chr(160)))
-                        else:
-                            # chunk length reached, but there is another line
-                            lastchunk = False
-                            if chunk != 0:
-                                break
-                            else:
-                                chunk_read += 1
-                                # skip forward till last chunk is read
-                                loglines = []
-                                loglines.append(line.replace(' ', chr(160)))
-                                if chunk == 0:
-                                    lastchunk = True
+            # Full-file scan, every request: entries[i] = (raw_line_no, text)
+            # for the i-th logical entry, raw_line_no being that entry's last
+            # physical line. This is what makes 'chunks' (total page count)
+            # and true raw-line offsets possible - a chunk's raw line span
+            # can no longer be derived from chunksize*index once any entry
+            # in an earlier chunk spanned more than one physical line (a
+            # traceback), so counting is done directly instead of assumed.
+            entries = list(self._iter_log_entries(logfile_path))
+            total_entries = len(entries)
+            chunks_total = max(1, -(-total_entries // self.chunksize))  # ceil div
 
-                chunk_read += 1
-            # return content
-            first_chunk_line = (chunk_read - 1) * self.chunksize  # zero based
+            if chunk == 0:
+                # sentinel: caller wants the last (possibly partial) chunk
+                chunk_no = chunks_total
+            elif chunk < 1:
+                chunk_no = 1
+            else:
+                chunk_no = chunk
+
+            start_index = (chunk_no - 1) * self.chunksize
+            end_index = start_index + self.chunksize
+            window = entries[start_index:end_index]
+            loglines = [text for _raw_line_no, text in window]
+
+            # Raw line the previous chunk ended on, clamped to the file's
+            # actual last entry for an out-of-range chunk request (avoids
+            # indexing past the end instead of mirroring it).
+            prev_entry_index = min(start_index, total_entries)
+            prev_end_raw_line = entries[prev_entry_index - 1][0] if prev_entry_index > 0 else 0
+            last_raw_line = window[-1][0] if window else prev_end_raw_line
+
             result = {}
             result['file'] = id
-            result['filesize'] = round(os.path.getsize(os.path.join(self.log_dir, id)) / 1024, 1)
-            result['chunk'] = chunk_read
+            result['filesize'] = round(os.path.getsize(logfile_path) / 1024, 1)
+            result['chunk'] = chunk_no
             result['chunksize'] = self.chunksize
-            result['lastchunk'] = lastchunk
-            result['lines'] = [first_chunk_line + 1, first_chunk_line + len(loglines)]
+            result['chunks'] = chunks_total
+            result['lastchunk'] = chunk_no >= chunks_total
+            result['lines'] = [prev_end_raw_line + 1, last_raw_line]
             result['loglines'] = loglines
             return json.dumps(result)
 
