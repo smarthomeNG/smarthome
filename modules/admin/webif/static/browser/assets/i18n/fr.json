@@ -59,7 +59,16 @@
     "START_FAILED": "Impossible de démarrer le plugin '{{name}}'",
     "OVERDUE_SCHEDULERS": "Planificateurs en retard",
     "NO_OVERDUE_SCHEDULERS": "Aucun planificateur en retard.",
-    "SCHEDULED_FOR": "prévu pour"
+    "SCHEDULED_FOR": "prévu pour",
+    "DATABASE": "Base de données",
+    "DB_DRIVER": "Pilote",
+    "DB_NAME": "Nom de la base de données",
+    "DB_HOST": "Hôte",
+    "DB_STATUS": "État",
+    "DB_CONNECTED": "Connecté",
+    "DB_DISCONNECTED": "Non connecté",
+    "DB_VERSION": "Version du moteur",
+    "DB_QUERY_TIMEOUT": "Délai d'expiration des requêtes"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Propriétés du système",

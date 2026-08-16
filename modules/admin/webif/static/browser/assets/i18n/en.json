@@ -59,7 +59,16 @@
     "START_FAILED": "Could not start plugin '{{name}}'",
     "OVERDUE_SCHEDULERS": "Overdue schedulers",
     "NO_OVERDUE_SCHEDULERS": "No overdue schedulers.",
-    "SCHEDULED_FOR": "scheduled for"
+    "SCHEDULED_FOR": "scheduled for",
+    "DATABASE": "Database",
+    "DB_DRIVER": "Driver",
+    "DB_NAME": "Database name",
+    "DB_HOST": "Host",
+    "DB_STATUS": "Status",
+    "DB_CONNECTED": "Connected",
+    "DB_DISCONNECTED": "Not connected",
+    "DB_VERSION": "Engine version",
+    "DB_QUERY_TIMEOUT": "Query timeout"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Systeminfo",

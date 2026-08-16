@@ -37,6 +37,7 @@ from .api_server import *
 from .api_auth import *
 
 from .api_config import *
+from .api_database import *
 from .api_files import *
 from .api_items import *
 from .api_functions import *
@@ -463,6 +464,7 @@ class WebApi(RESTResource):
         self.authenticate = AuthController(self.module)
 
         self.config = ConfigController(self.module)
+        self.database = DatabaseController(self.module)
         self.files = FilesController(self.module)
         self.items = ItemsController(self.module)
         self.items.list = ItemsListController(self.module)

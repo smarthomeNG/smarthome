@@ -59,7 +59,16 @@
     "START_FAILED": "Plugin '{{name}}' konnte nicht gestartet werden",
     "OVERDUE_SCHEDULERS": "Überfällige Scheduler",
     "NO_OVERDUE_SCHEDULERS": "Keine überfälligen Scheduler.",
-    "SCHEDULED_FOR": "geplant für"
+    "SCHEDULED_FOR": "geplant für",
+    "DATABASE": "Datenbank",
+    "DB_DRIVER": "Treiber",
+    "DB_NAME": "Datenbankname",
+    "DB_HOST": "Host",
+    "DB_STATUS": "Status",
+    "DB_CONNECTED": "Verbunden",
+    "DB_DISCONNECTED": "Nicht verbunden",
+    "DB_VERSION": "Engine-Version",
+    "DB_QUERY_TIMEOUT": "Abfrage-Timeout"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Systemeigenschaften",
