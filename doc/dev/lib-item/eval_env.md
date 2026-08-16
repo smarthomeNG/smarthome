@@ -72,8 +72,8 @@ an eval expression.
 
 ### `_make_eval_env()`
 
-`lib/item/_eval.py` now exports a single function that constructs the eval
-namespace as an explicit dictionary:
+`lib/item/_internal/_eval.py` now exports a single function that constructs
+the eval namespace as an explicit dictionary:
 
 ```python
 def _make_eval_env(item, value=None, caller=None, source=None, dest=None) -> dict:
@@ -161,7 +161,7 @@ datetime, time.
 ### File layout
 
 ```
-lib/item/
+lib/item/_internal/
   _eval.py          _make_eval_env()   ← explicit namespace builder
                     run_eval()
                     run_on_xxx()
@@ -170,6 +170,13 @@ lib/item/
                     _make_legacy_namespace()
                     _eval_with_legacy_fallback()   ← the shim
 ```
+
+> **Note:** these modules originally lived directly under `lib/item/`. They
+> were moved into `lib/item/_internal/` on 2026-06-26 (commit `6ba309547`,
+> "move item.py's extracted submodules into lib/item/_internal/"), together
+> with every other sub-module extracted from `item.py` — see
+> [`lib_item_refactoring.md`](lib_item_refactoring.md) for the full list.
+> Nothing about the eval-namespace mechanics changed in that move.
 
 All call sites that invoke the fallback are marked with `# COMPAT-SHIM`:
 
@@ -193,9 +200,9 @@ except Exception as _e:                              # COMPAT-SHIM
 When the project is ready to enforce the explicit namespace and break
 compatibility with undocumented variable usage:
 
-**Step 1** — delete `lib/item/_eval_compat.py`.
+**Step 1** — delete `lib/item/_internal/_eval_compat.py`.
 
-**Step 2** — in `lib/item/_eval.py`, remove:
+**Step 2** — in `lib/item/_internal/_eval.py`, remove:
 ```python
 # COMPAT-SHIM: remove this import together with _eval_compat.py
 from ._eval_compat import _eval_with_legacy_fallback, _EVAL_FAILED
@@ -204,7 +211,7 @@ Then delete every `except` block whose entire body is marked `# COMPAT-SHIM`.
 The surrounding `try` and outer exception handlers were present before the shim
 was added and continue to work.
 
-**Step 3** — in `lib/item/_casting.py`, same as step 2.
+**Step 3** — in `lib/item/_internal/_casting.py`, same as step 2.
 
 After removal, any expression that references an undocumented name will produce
 a plain error log (the same message that currently appears as the second line
@@ -214,7 +221,7 @@ of the fallback warning).
 
 ## 4. Test Coverage
 
-62 tests in `tests/test_item_eval_namespace.py` act as the before/after gate
+64 tests in `tests/test_item_eval_namespace.py` act as the before/after gate
 for this change.
 
 | Test class | Tests | What it verifies |
@@ -227,6 +234,7 @@ for this change.
 | `TestRunAttributeEvalDirect` | 8 | `run_attribute_eval()` — numeric, math, `sh.`, quoting-retry, error sentinel |
 | `TestEvalCompatShim` | 9 | Fallback success + `_EVAL_FAILED` + warning content; `datetime`/`time` in primary ns |
 | `TestRunEvalCompatIntegration` | 3 | Full-stack: `os` in eval still works (compat), unknown name no crash, `re` in `on_change` |
+| `TestBareEvalRunsOnce` | 2 | Regression gate: bare (no `dest =`) `on_change`/`on_update` expressions with a non-`None` result run exactly once, not twice |
 
 The `datetime` and `time` tests are the critical regression gate: they would
 have failed silently on the extracted `_eval.py` before this fix.

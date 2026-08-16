@@ -327,15 +327,18 @@ event is a push; otherwise use `develop`.
     config: |
       paths-ignore:
         - '**/executor/examples/**'
+        - '**/_pv_*/**'
 ```
 
 `security-and-quality` is a combined query suite that checks for both:
 - Security issues: SQL injection, path traversal, unsanitised inputs, etc.
 - Quality issues: dead code, unreachable blocks, type errors.
 
-The `paths-ignore` configuration skips the executor examples directory, which
+The `paths-ignore` configuration skips two path patterns. `**/executor/examples/**`
 contains demonstration code that intentionally uses patterns that would otherwise
-trigger false positives.
+trigger false positives. `**/_pv_*/**` was added later (commit `34388c9e7`,
+"workflows: exclude old plugin versions from codeql") to exclude archived previous
+versions of plugins from the scan.
 
 > **Design decision:** The original file included an `Autobuild` step
 > (`github/codeql-action/autobuild@v3`). For compiled languages (C, Java) this step
@@ -433,6 +436,10 @@ on:
 
 Only fires on direct pushes to `develop` (which includes merges). PRs do not trigger
 it — documentation is only rebuilt from finished, merged code.
+
+The job itself is additionally gated with `if: github.repository == 'smarthomeNG/smarthome'`,
+so it only runs on the upstream repository, not on forks — forks have no `dev_doc`
+companion repo to publish to and lack the `PAT_TOKEN` secret the deploy step needs.
 
 ### Why three repository checkouts?
 

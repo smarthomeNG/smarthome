@@ -107,7 +107,7 @@ export class LogicsListComponent {
 │                                                                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │  UI Layer (Components + Templates)                       │   │
-│  │  system  │  items  │  logics  │  plugins  │  scenes ...  │   │
+│  │  dashboard│system│items│logics│plugins│scenes ...        │   │
 │  └────────────────────────┬─────────────────────────────────┘   │
 │                           │ calls                               │
 │  ┌────────────────────────▼─────────────────────────────────┐   │
@@ -116,7 +116,7 @@ export class LogicsListComponent {
 │  │  server-api            auth        connectivity          │   │
 │  │  items-api             websocket   app-config            │   │
 │  │  logics-api            log         shared                │   │
-│  │  plugins-api           user-prefs                        │   │
+│  │  plugins-api           user-prefs  theme                 │   │
 │  │  ... (one per feature)                                   │   │
 │  └────────┬──────────────────────────┬───────────────────────┘  │
 │           │ HTTP (REST)              │ WebSocket                │
@@ -132,15 +132,9 @@ export class LogicsListComponent {
 │  PUT  /api/logics/... │   │  disk/thread charts     │
 │  POST /api/auth/...   │   │                         │
 └───────────────────────┘   └─────────────────────────┘
-            │
-            ▼ also
-┌───────────────────────┐
-│  Legacy admin URLs    │
-│  /admin/items.json    │
-│  /admin/systeminfo... │
-│  (OlddataService)     │
-└───────────────────────┘
 ```
+
+The legacy `/admin/...` endpoints and the `OlddataService` that used to call them (item tree, item details, value changes, system/pypi info) have been removed entirely — everything now goes through `/api/items/...` (`ItemsApiService`) and `/api/server/...` (`ServerApiService.getSystemStats()`/`getPypiInfo()`).
 
 The port `8383` comes from SmartHomeNG's config and is loaded dynamically at startup — the Angular app doesn't hardcode it.
 
@@ -218,9 +212,15 @@ src/app/
 │   │   │   log.service.ts             logging wrapper
 │   │   │   user-preferences.service.ts localStorage prefs
 │   │   │   shared.service.ts          formatting utilities
+│   │   │   theme.service.ts           light/dark/system theme state
+│   │   │   attribute-catalog.service.ts core+plugin item-attribute catalog
 │   │   └── API SERVICES (one per backend domain):
 │   │       server-api.service.ts      /api/server/
-│   │       items-api.service.ts       /api/items/
+│   │       items-api.service.ts       /api/items/ (tree, details, value
+│   │                                  changes, create/edit/rename/copy/
+│   │                                  delete — absorbed the old
+│   │                                  olddata.service.ts's item-tree
+│   │                                  responsibilities, see below)
 │   │       logics-api.service.ts      /api/logics/
 │   │       plugins-api.service.ts     /api/plugins/
 │   │       scenes-api.service.ts      /api/scenes/
@@ -233,31 +233,44 @@ src/app/
 │   │       files-api.service.ts       /api/files/
 │   │       functions-api.service.ts   /api/functions/
 │   │       structs-api.service.ts     /api/items/structs/
-│   │       olddata.service.ts         /admin/ (legacy)
+│   │
+│   │   olddata.service.ts has been REMOVED (legacy /admin/ URLs are gone).
 │   │
 │   ├── models/                ← TypeScript interfaces (like Python dataclasses)
 │   │   server-info.ts, item-tree.ts, plugin-info.ts ...
 │   │
 │   ├── guards/                ← Route access control
 │   │   app-ready.guard.ts     waits for serverReady$
+│   │   auth.guard.ts          redirects to /login if not authenticated
+│   │
+│   │   (a legacy per-feature AuthGuardService class guard was removed from
+│   │   every feature's *.routes.ts — appReadyGuard + authGuard on the
+│   │   parent route are now the only guard layer, see commit 890f68f)
 │   │
 │   ├── interceptors/          ← HTTP middleware (like Flask before_request)
 │   │   connectivity.interceptor.ts
 │   │
 │   └── components/            ← Reusable UI building blocks
 │       offline-banner/        shown when API unreachable
-│       code-editor/           Monaco editor wrapper
+│       code-editor/           CodeMirror 6 editor wrapper
 │       dynamic-field/         renders config params by type
+│       file-editor-layout/    shared layout shell around code-editor
 │
 └── FEATURE FOLDERS (each is one nav section):
+    ├── dashboard/             status overview (default landing page)
     ├── system/                overview, config, logging
-    ├── items/                 item tree browser
+    ├── items/                 item tree browser, create/edit/rename/delete
     ├── logics/                logics list + editor
     ├── plugins/               plugin list + config
     ├── scenes/                scene list
     ├── schedulers/            scheduler display
     ├── logs/                  log file viewer
-    └── services/              eval/yaml tools, cache check
+    ├── services/              eval/yaml tools, cache check
+    ├── top-navigation/        nav bar, Help menu, theme picker (own folder,
+    │                          not under common/components/)
+    ├── login/                 username/password form
+    ├── no-access/             shown when a route is blocked for the user
+    └── not-found/             wildcard 404 route target
 ```
 
 ---
@@ -375,6 +388,29 @@ Pure utility functions. No state, no HTTP. Like a Python utils.py module.
   setGuiLanguage()             → tells TranslateService to switch language
 ```
 
+```
+ThemeService
+────────────
+Owns light/dark theme state, applies a 'dark-mode' class to <html>.
+
+  Precedence (highest wins):
+    1. Explicit local choice  UserPreferencesService.themePreference
+                               ('light' | 'dark' | 'system')
+    2. OS preference           prefers-color-scheme, live via matchMedia
+    3. Server default          AppConfigService.darkModeDefault
+                               (etc/module.yaml admin: dark_mode) — only
+                               used when the browser has no
+                               prefers-color-scheme support at all
+
+AttributeCatalogService
+────────────────────────
+Loads the combined core + plugin item-attribute catalog for the item
+create/edit attribute autocomplete (items/attribute-browser/).
+
+  Sources: ItemsApiService.getCoreItemAttributes(), PluginsApiService
+  Groups suggestions by source ('core' or a plugin name).
+```
+
 ### API services
 
 One service per SmartHomeNG API domain. Each method is essentially a typed wrapper around one HTTP endpoint.
@@ -402,18 +438,38 @@ ServerApiService
   getServerBasicinfo()  GET /api/server/          → ServerInfo (boot)
   getServerinfo()       GET /api/server/info       → ServerInfo (full, system page)
   getShngServerStatus() GET /api/server/status/
+  getSystemStats()      GET /api/system/info       → host, uptime, version, python
+                         (replaces OlddataService.getSysteminfo(), now removed)
+  getPypiInfo()         GET /api/server/pypi       → required/installed package status
+                         (replaces OlddataService.getPypiinfo(), now removed)
   restartShngServer()   PUT /api/server/restart/
   downloadConfigBackup()GET /api/files/backup/     → Blob (file download)
 
-ItemsApiService
-  getItemList()         GET /api/items/list/
-
-OlddataService  (legacy /admin/ URLs, used for the item tree)
-  getItemtree()         GET /admin/items.json      → [count, ItemTree]
-  getItemDetails(path)  GET /admin/item_detail_json.html?item_path=...
-  changeItemValue(path) GET /admin/item_change_value.html?item_path=...&value=...
-  getSysteminfo()       GET /admin/systeminfo.json
-  getPypiinfo()         GET /admin/pypi.json
+ItemsApiService  (OlddataService, which used to cover the item tree via
+                   legacy /admin/... URLs, has been removed entirely — all
+                   of that plus full item CRUD now lives here)
+  getItemList()          GET /api/items/list/
+  getItemTree()          GET /api/items/tree        → item hierarchy
+  getItemDetails(path)   GET /api/items/{path}       → value, age, triggers, eval
+  changeItemValue(path)  PUT /api/items/{path}       → {value}
+  getCoreItemAttributes()GET /api/items/attributes   → attribute catalog (for
+                                                        autocomplete)
+  createItem(path, config, persist, filename?, createMissingParents?)
+                         POST /api/items/{path}       auto-creates missing
+                                                        ancestors if requested
+  editItem(path, config) PATCH /api/items/{path}      config is the COMPLETE
+                                                        new attribute set
+  renameItem(path, newPath, filename?)
+                         POST /api/items/{path}/rename a changed parent
+                                                        segment = a move
+  copyItem(path, newPath, filename?, includeChildren?)
+                         POST /api/items/{path}/copy   only persisted items;
+                                                        includeChildren
+                                                        defaults true
+  deleteItem(path, persist?, recursive?)
+                         DELETE /api/items/{path}?persist=&recursive=
+  getItemReferences(path)GET /api/items/{path}/references
+  removeReferences(path) POST /api/items/{path}/remove_references
 
 LogicsApiService
   getGroupsInfo()       GET /api/logics/?infotype=groups
@@ -542,7 +598,9 @@ ItemTreeNode
   tags[]              str[]
   nodes[]             ItemTreeNode[]   ← recursive tree
 
-ItemDetails         (comes from legacy /admin/ endpoint)
+ItemDetails         (comes from ItemsApiService.getItemDetails(), GET
+                      /api/items/{path} — the old legacy /admin/ endpoint
+                      this used to come from has been removed)
   value, last_value, previous_value
   type
   eval
@@ -550,6 +608,13 @@ ItemDetails         (comes from legacy /admin/ endpoint)
   updated_by[], changed_by[]
   crontab, on_change, on_update
   hysteresis_input, hysteresis_thresholds
+
+ItemAttributeInfo, ItemCopyResult, ItemReference,
+ItemRemoveReferencesResult, ItemRenameResult
+  Added alongside the item create/edit/rename/copy/delete dialogs —
+  request/response shapes for ItemsApiService's attribute-catalog and
+  mutation endpoints (item-attribute-info.ts, item-copy-result.ts,
+  item-reference.ts, item-remove-references-result.ts, item-rename-result.ts)
 
 ConfigParameter     (used in system config tables)
   name                str
@@ -566,6 +631,9 @@ AppConfig           (internal, not from API)
   coreBranch, pluginsBranch
   itemtreeFullpath, itemtreeSearchstart
   developerMode, clickDropdownHeader
+  darkModeDefault, resourceGraphPeriod, restartStopsOnly
+  startPage           str   ('dashboard' by default — see app.routes.ts's
+                             default-route redirect)
   fallbackLanguageOrder[], defaultLanguage
 ```
 
@@ -584,22 +652,56 @@ AppComponent
 └── <router-outlet>          ← this slot is replaced by the active feature component
 ```
 
-### System (/)
+### Dashboard (/dashboard, the default landing page)
+
+```
+DashboardOverviewComponent
+│
+├── Five status cards, top-to-bottom: status+plugins side by side,
+│   schedulers, database (optional), logs (full-width)
+│
+├── System status — one-shot fetch (ServerApiService.getSystemStats(),
+│   ItemsApiService.getItemList(), LogicsApiService.getLogics())
+│   hostname, SHNG version/uptime, OS, python+venv, item/logic counts
+│
+├── Stopped plugins — polled 15s (PluginsApiService)
+│   count header (n/total), per-row Start button, links to /plugins
+│
+├── Overdue schedulers — polled 15s (SchedulersApiService)
+│   active cyclic/cron entries past their `next` time by more than a
+│   grace window; excludes one-shot 'trigger' group entries on purpose
+│
+├── Database properties (optional) — one-shot fetch
+│   (ServerApiService.getDatabaseInfo()); only rendered when a `database`
+│   plugin instance is configured; driver/name/host/status/engine version
+│
+└── Recent warnings/errors — polled 15s (LogsApiService.getMemlogTail())
+    tail of env.core.log's WARNING+ in-memory buffer, full-width row
+
+Polled cards + system-status carry a stale/error indicator (icon+tooltip,
+dimmed body, keeps last-known-good data on failure). The database card is
+the one exception — it fails closed (stays hidden) instead, since there's
+nothing to be "stale" about an unconfigured optional feature.
+```
+
+### System (/system)
 
 ```
 SystemComponent
 │
 ├── Data sources:
-│   ├── OlddataService.getSysteminfo()      → uptime, version, host info
-│   ├── OlddataService.getPypiinfo()        → Python package requirements
+│   ├── ServerApiService.getSystemStats()   → uptime, version, host info
+│   ├── ServerApiService.getPypiInfo()      → Python package requirements
 │   └── WebsocketPluginService series data → chart data
 │
 ├── On init:
-│   ├── getSysteminfo() → displays: host, uptime, sh_uptime, version, python version
+│   ├── getSystemStats() → displays: host, uptime, sh_uptime, version, python version
 │   │     Also shows frontend build version:
-│   │     v1.12.0-<commit>.<branch>   in   /path   (heads/<branch>)
+│   │     v1.12.2-<commit>.<branch>   (heads/<branch>)
 │   │     Generated at build time by scripts/generate-version.js
-│   ├── getPypiinfo()   → displays: required packages, installed versions, status
+│   │     (the build-time filesystem path used to also be shown here;
+│   │     removed in commit dec097a as meaningless on a deployed instance)
+│   ├── getPypiInfo()   → displays: required packages, installed versions, status
 │   └── initCharts()
 │       ├── Waits for AppConfigService.serverReady$ (take 1) before connecting
 │       │   This ensures wsPort is set before the WebSocket connection attempt.
@@ -635,13 +737,16 @@ SystemConfigComponent
 
 ```
 ItemTreeComponent
+
+The legacy OlddataService (/admin/... URLs) has been removed. All item-tree
+data access below goes through ItemsApiService (/api/items/...) instead.
 │
 ├── Data sources:
-│   ├── OlddataService.getItemtree()           → full item hierarchy
-│   ├── OlddataService.getItemDetails(path)    → details for selected item
+│   ├── ItemsApiService.getItemTree()           → full item hierarchy
+│   ├── ItemsApiService.getItemDetails(path)    → details for selected item
 │   └── WebsocketPluginService.getMonitoredItems() → live value updates
 │
-├── Left panel: PrimeNG Tree component
+├── Left panel: PrimeNG Tree component (virtual-scrolled)
 │   ├── Hierarchical display of all items
 │   ├── filterNodes(query): filters tree by item path or name
 │   │   Uses configurable searchstart (e.g., filter only within 'home.' prefix)
@@ -656,18 +761,29 @@ ItemTreeComponent
 │   ├── On_change / on_update / crontab triggers
 │   └── Value editor: updateValue(path, value, type)
 │         validates range for numeric/scene types
-│         calls OlddataService.changeItemValue(path, value)
+│         calls ItemsApiService.changeItemValue(path, value)
 │
 ├── Bottom panel: monitored items
 │   ├── Waits for AppConfigService.serverReady$ before connecting WebSocket
 │   │   (ensures wsPort is available before the subscription is sent)
 │   ├── monitorItem(path, true): subscribe to live updates
 │   ├── WebSocket pushes new value → updateMonitoredItem() updates display
-│   └── monitorItem(path, false): unsubscribe
+│   ├── monitorItem(path, false): unsubscribe
+│   └── Monitored-item paths persist across a full page reload via
+│       SharedService (localStorage key 'shng.items.monitored'); fresh
+│       data is re-fetched for the restored placeholders on reconnect
 │
-└── Dynamic child view (insertChildView / removeChildView):
-    Used to show/hide a sub-panel within the component tree.
-    (Angular ViewContainerRef — low-level API, fragile)
+└── Create/edit/rename/delete dialogs (item-tree/*-dialog/), all backed by
+    ItemsApiService:
+    ├── create-item-dialog:  accepts a full multi-level path
+    │   (mkdir -p style), type-aware attribute inputs sourced from
+    │   AttributeCatalogService via attribute-browser/attribute-value-input
+    ├── edit-item-dialog:    edits an item's full attribute set
+    ├── rename-item-dialog:  single path field; a changed parent segment
+    │   is a move, same endpoint
+    └── delete-item-dialog:  looks up references first (getItemReferences),
+        offers reference cleanup, requires explicit confirmation for
+        recursive deletes of items with sub-items
 ```
 
 ### Logics (/logics)
@@ -700,7 +816,7 @@ LogicsListComponent
 LogicsEditComponent  (/logics/{name})
 │
 ├── Data: LogicsApiService.getLogic(name), getLogicState(name)
-├── Monaco code editor (CodeEditorComponent) for logic Python code
+├── CodeMirror 6 code editor (CodeEditorComponent) for logic Python code
 ├── FilesApiService for reading/writing the .py and .yaml files
 └── saveLogicParameters() → PUT /api/logics/{name}?action=saveparameters
 ```
@@ -888,9 +1004,11 @@ USER ACTION: click "Trigger" on 'my_logic'
 
 ---
 
-## Part 10 — Observables (the async pattern you will see everywhere)
+## Part 10 — Observables (the async pattern at the HTTP/service boundary)
 
-Python has `async/await` and generators. Angular uses **RxJS Observables** heavily. You need a mental model for this.
+Python has `async/await` and generators. Angular uses **RxJS Observables** heavily at the service layer — every API service method below still returns one. You need a mental model for this.
+
+**Note on components specifically**: as of a mid-2026 migration, component-level state is now overwhelmingly held in **Signals** (`signal()`, `computed()`, `linkedSignal()`, and `toSignal()` wrapping an Observable) rather than plain fields set inside `.subscribe()` callbacks; the app is also now zoneless (no `zone.js`). The `Observable`/`BehaviorSubject` material below still fully applies at the service layer. The pattern below (`getLogics().subscribe(data => process(data))`) is now more typical of how a *service* consumes another service's Observable, or how `toSignal()` is fed, than of how a component itself holds state.
 
 ```
 PYTHON async/await analogy:
@@ -1148,9 +1266,16 @@ INFRASTRUCTURE SERVICES (no feature, pure plumbing)
 
 FEATURE COMPONENTS AND THEIR SERVICE DEPENDENCIES
 
+  DashboardOverviewComponent
+    ├── ServerApiService        (system stats, pypi, database info)
+    ├── ItemsApiService         (item count)
+    ├── LogicsApiService        (logic count)
+    ├── PluginsApiService       (stopped-plugin list, start action)
+    ├── SchedulersApiService    (overdue-scheduler detection)
+    └── LogsApiService          (recent warnings/errors tail)
+
   SystemComponent
-    ├── OlddataService          (system info, pypi info)
-    ├── ServerApiService        (server info, restart)
+    ├── ServerApiService        (system stats, pypi info, restart)
     ├── WebsocketPluginService  (chart series data)
     └── SharedService           (date/time formatting)
 
@@ -1158,10 +1283,13 @@ FEATURE COMPONENTS AND THEIR SERVICE DEPENDENCIES
     └── ConfigApiService        (get/save config)
 
   ItemTreeComponent
-    ├── OlddataService          (item tree, item details, value change)
+    ├── ItemsApiService         (item tree, item details, value change,
+    │                            create/edit/rename/copy/delete, references)
+    ├── AttributeCatalogService (attribute autocomplete for create/edit)
     ├── WebsocketPluginService  (monitored item values)
     ├── AppConfigService        (searchstart config)
-    └── SharedService           (validators, formatters)
+    └── SharedService           (validators, formatters, monitored-item
+                                  persistence)
 
   LogicsListComponent
     ├── LogicsApiService        (list, state, groups)
@@ -1195,6 +1323,12 @@ FEATURE COMPONENTS AND THEIR SERVICE DEPENDENCIES
 
   LoginComponent
     └── AuthService
+
+  TopNavigationComponent
+    ├── ServerApiService        (full server info)
+    ├── WebsocketPluginService  (connect on startup)
+    ├── AuthService             (loggedIn$, for the login link)
+    └── ThemeService            (Light/Dark/Follow-System picker)
 ```
 
 ---
@@ -1203,32 +1337,41 @@ FEATURE COMPONENTS AND THEIR SERVICE DEPENDENCIES
 
 ```
 INFRASTRUCTURE
-  main.ts                      app entry point, registers all global providers + 2 APP_INITIALIZERs
+  main.ts                      app entry point, registers all global providers + 2 APP_INITIALIZERs;
+                                provideZonelessChangeDetection() — no zone.js
   app.component.ts             root shell: strips _cb param on NavigationEnd, renders nav + router slot
-  app.routes.ts                URL→component map, all routes guarded by appReadyGuard
-  scripts/generate-version.js  run at build time; writes git-version.auto.ts with commit/branch/path
+  app.routes.ts                URL→component map; '' redirects to the configurable startPage
+                                (default 'dashboard'); all feature routes guarded by
+                                appReadyGuard + authGuard
+  scripts/generate-version.js  run at build time; writes git-version.auto.ts with commit hash + branch
+                                (no longer includes the build machine's filesystem path — see dec097a)
 
-  app-config.service.ts        global config dict (wsPort, apiUrl, tz, etc.)
+  app-config.service.ts        global config dict (wsPort, apiUrl, tz, startPage, etc.)
   auth.service.ts              login/logout/token renewal
-  auth-guard.service.ts        redirects to /login if not authenticated
+  auth.guard.ts                the only route guard checking loginRequired/authReady$
+                                (a redundant per-feature AuthGuardService class guard —
+                                previously auth-guard.service.ts — was removed, commit 890f68f)
   connectivity.service.ts      heartbeat, offline detection, retry backoff
   connectivity.interceptor.ts  HTTP middleware: cancels offline debounce on API success
   websocket.service.ts         raw WebSocket with reconnect and message queue
   websocket-plugin.service.ts  SmartHomeNG protocol: item monitoring + chart series
   log.service.ts               console.log wrapper (suppressed in production)
-  shared.service.ts            formatting and validation utilities (no HTTP, no state)
-  user-preferences.service.ts  localStorage wrapper for language preference
+  shared.service.ts            formatting/validation utilities + monitored-item localStorage persistence
+  user-preferences.service.ts  localStorage wrapper for language + theme preference
+  theme.service.ts             light/dark/system theme state, applies .dark-mode to <html>
+  attribute-catalog.service.ts core+plugin item-attribute catalog for autocomplete
   app-ready.guard.ts           blocks routes until serverReady$ fires
 
 API SERVICES
-  server-api.service.ts        /api/server/ — server info, restart, stale-frontend check
-  items-api.service.ts         /api/items/ — item list
-  olddata.service.ts           /admin/ — item tree, item details, value changes (legacy)
+  server-api.service.ts        /api/server/ + /api/system/ — server info, system/pypi/database
+                                stats, restart, stale-frontend check
+  items-api.service.ts         /api/items/ — tree, details, value changes, create/edit/rename/
+                                copy/delete, references (absorbed the removed olddata.service.ts)
   logics-api.service.ts        /api/logics/ — logic CRUD and state control
   plugins-api.service.ts       /api/plugins/ and /api/plugin/ — plugin CRUD and state
   scenes-api.service.ts        /api/scenes/ — scene list and reload
   schedulers-api.service.ts    /api/schedulers/ — scheduler info
-  logs-api.service.ts          /api/logs/ — log file list and chunked reading
+  logs-api.service.ts          /api/logs/ — log file list, chunked reading, memlog tail
   loggers-api.service.ts       /api/loggers/ — logger CRUD, levels, handlers
   threads-api.service.ts       /api/threads/ — thread info
   services-api.service.ts      /api/services/ — eval/yaml tools, cache management
@@ -1237,28 +1380,43 @@ API SERVICES
   functions-api.service.ts     /api/functions/ — function reload
   structs-api.service.ts       /api/items/structs/ — struct definitions
 
+  olddata.service.ts has been REMOVED — its /admin/... responsibilities now live in
+  items-api.service.ts and server-api.service.ts (see above).
+
 MODELS (data shapes)
   server-info.ts               ServerInfo (server config response shape)
   item-tree.ts                 ItemTree, ItemTreeNode (recursive)
   item-details.ts              ItemDetails (value, age, triggers, eval)
-  plugin-info.ts               PlugininfoType, PluginParameter, PluginMetadata
+  item-attribute-info.ts       ItemAttributeInfo (attribute catalog entry)
+  item-copy-result.ts, item-reference.ts, item-remove-references-result.ts,
+  item-rename-result.ts        response shapes for the item copy/rename/reference endpoints
+  plugin-info.ts                PlugininfoType, PluginParameter, PluginMetadata
   logics-info.ts               LogicsinfoType, LogicsGroupType
+  logics-watch-item.ts         watch_item shape used by logics-info
   scene-info.ts                SceneInfo, SceneValue
   scheduler-info.ts            SchedulerInfo
   loggers-info.ts              LoggersType (loggers, handlers, active_*)
   logfiles-info.ts             LogsType
-  system-info.ts               SystemInfo (legacy /admin/ response)
-  pypi-info.ts                 PypiInfo (package requirement status)
+  memlog-entry.ts              MemlogEntry (in-memory warning/error log tail, dashboard)
+  system-info.ts                SystemInfo (from ServerApiService.getSystemStats())
+  pypi-info.ts                  PypiInfo (from ServerApiService.getPypiInfo())
+  database-info.ts             DatabaseInfo (optional database-plugin connection properties)
   interfaces.ts                TableColumn, ConfigParameter, generic TreeNode
 
 FEATURE COMPONENTS
-  system/system-overview/      dashboard: uptime, pypi status, 6 real-time charts
+  dashboard/dashboard-overview/ default landing page: 5 status cards (system, plugins,
+                                schedulers, optional database, recent warnings/errors)
+  system/system-overview/      uptime, pypi status, real-time charts
   system/system-config/        smarthomeng.yaml config editor table
-  items/item-tree/             hierarchical item browser with live value monitoring
+  items/item-tree/             hierarchical item browser with live value monitoring +
+                                create/edit/rename/delete dialogs
+  items/attribute-browser/, items/attribute-value-input/
+                                type-aware attribute autocomplete/input for item dialogs
   logics/logics-list/          logic list with group management and state control
-  logics/logics-edit/          Monaco editor for logic code + parameter editor
+  logics/logics-edit/          CodeMirror 6 editor for logic code + parameter editor
   logics/logics-groups/        group creation/editing dialog
-  plugins/plugin-list/         plugin instance list with start/stop/reload
+  plugins/plugin-list/         plugin instance list with start/stop (Load/Unload/Reload
+                                moved to plugin-config, see plugins/config/)
   plugins/config/              plugin.yaml config editor
   scenes/scene-list/           scene group and value display
   schedulers/schedulers/       scheduler info display
@@ -1266,10 +1424,14 @@ FEATURE COMPONENTS
   logs/log-viewer/             log file display with chunked loading
   services/services/           eval checker, yaml tools, cache inspector
   login/                       username/password form → AuthService.login()
+  top-navigation/              own top-level folder (not under common/components/):
+                                nav bar, language selector, Help menu, theme picker, logout
+  no-access/                   shown when a route is blocked for the current user
+  not-found/                   wildcard ('**') 404 route target
 
 SHARED COMPONENTS
   offline-banner/              red "offline" bar, retry countdown + button
-  code-editor/                 Monaco editor wrapper (used in logics-edit)
+  code-editor/                 CodeMirror 6 editor wrapper (used in logics-edit, YAML checker, etc.)
+  file-editor-layout/          shared layout shell around code-editor
   dynamic-field/               renders a ConfigParameter as the right input type
-  top-navigation/              nav bar: links to all sections, language selector, logout
 ```

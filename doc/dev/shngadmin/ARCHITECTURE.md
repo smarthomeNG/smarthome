@@ -43,7 +43,7 @@ The Angular app communicates with both, renders the results as interactive pages
 Browser                              SmartHomeNG Python server
   ┌──────────────────────┐              ┌────────────────────┐
   │  Angular SPA         │──HTTPS REST─▶│  REST API  /api/   │
-  │  shngAdmin v1.12.0   │◀─────────────│                    │
+  │  shngAdmin v1.12.2   │◀─────────────│                    │
   │                      │              │                    │
   │                      │◀─WebSocket──▶│  WS Server /adm    │
   └──────────────────────┘              └────────────────────┘
@@ -59,9 +59,9 @@ The full system architecture is shown in the first illustration:
 
 | Layer | Technology | Role |
 |---|---|---|
-| Language | TypeScript 5.8 | Compiled to JavaScript; adds static types |
-| Framework | Angular 20 | Component framework, DI, routing, HTTP |
-| UI components | PrimeNG 20 | Ready-made UI widgets (tables, dialogs, tabs…) |
+| Language | TypeScript 5.9 | Compiled to JavaScript; adds static types |
+| Framework | Angular 21 (zoneless) | Component framework, DI, routing, HTTP |
+| UI components | PrimeNG 21 | Ready-made UI widgets (tables, dialogs, tabs…) |
 | Icons | PrimeIcons + FontAwesome | Icon fonts |
 | Charts | Chart.js 4 | Canvas-based graphs for system metrics |
 | Code editing | CodeMirror 6 | Embedded editor (Python, YAML, JS, XML) |
@@ -74,6 +74,8 @@ The full system architecture is shown in the first illustration:
 | Git hooks | Husky + lint-staged | Auto-format on commit |
 
 **TypeScript vs Python**: TypeScript is structurally typed — the compiler checks that objects have the right fields and method signatures, but at runtime it is plain JavaScript.  Interfaces (like `ServerInfo`) are compile-time only; they vanish after compilation.
+
+**Zoneless**: as of the Angular 20→21 upgrade, the app no longer loads `zone.js` at all (`provideZonelessChangeDetection()` in `main.ts`; see Section 12).  All components are `ChangeDetectionStrategy.OnPush`, and state is overwhelmingly Angular **Signals** (`signal`, `computed`, `linkedSignal`, `toSignal`) rather than component fields set inside RxJS `.subscribe()` callbacks.  Section 12 below describes the previous zone-based/`markForCheck()`-heavy model largely for historical contrast — the codebase itself now needs almost none of it.
 
 ---
 
@@ -88,7 +90,7 @@ The full system architecture is shown in the first illustration:
 ### 3.1 Browser loads `index.html`
 Angular's build tool (`@angular/build`) produces a single `index.html` that references bundled JavaScript files.  The browser fetches and executes them.
 
-`zone.js` is loaded first.  It patches *every* browser async API (`setTimeout`, `Promise`, `fetch`, XHR, WebSocket) so Angular can know when asynchronous work finishes and decide whether to update the UI.  Think of Zone.js as a Python `contextvars` that propagates through all async boundaries.
+**No `zone.js` is loaded.**  The app is zoneless (`provideZonelessChangeDetection()` — see 3.2).  Older versions of this app (and most Angular tutorials) load `zone.js` first to patch every browser async API so Angular knows when to re-render.  This app instead relies on Signals: writing to a `signal()` schedules a re-render directly, with no global monkey-patching layer involved.  If you're reading older Angular material, mentally discard anything about Zone.js — it does not apply here.
 
 ### 3.2 `main.ts` — `bootstrapApplication`
 This is the entry point, equivalent to Python's `if __name__ == '__main__'`.  It calls `bootstrapApplication(AppComponent, providers)` which:
@@ -129,11 +131,13 @@ The response patches all those values into `AppConfigService`.  Critically, once
 `TopNavigationComponent` also calls `WebsocketPluginService.connect()` at this point.
 
 ### 3.7 Router activates the first route
-The Router tries to activate `/system` (the default redirect from `/`).  It runs the guards first:
+The Router tries to activate `/` → `redirectTo`, which resolves at navigation time (a function-based `RedirectFunction`, not a static string) to `AppConfigService.startPage`.  `startPage` is patched from the server's `admin.start_page` config parameter (SHNG's `modules/admin/module.yaml`, default `dashboard`) during the `getServerBasicinfo()` `APP_INITIALIZER`.  An unrecognised or stale value falls back to `dashboard` (see `resolveStartRoute()` in `app.routes.ts`) rather than redirecting into a 404.
+
+Whichever route this resolves to, the guards run first:
 1. `appReadyGuard` — waits for `serverReady$`.
 2. `authGuard` — checks login state / `authReady$`.
 
-Once both pass, Angular downloads the `system` feature chunk and renders the system dashboard.
+Once both pass, Angular downloads the target feature chunk and renders it.
 
 ---
 
@@ -162,6 +166,8 @@ export class ItemsComponent implements OnInit {
   }
 }
 ```
+
+> This `.subscribe()` + `markForCheck()` shape is the classic OnPush pattern and still useful to know conceptually, but it is **not** what most current code looks like — see Section 12.  The idiomatic version today is `readonly items = toSignal(this.apiService.getItems(), { initialValue: [] })`, with no explicit `markForCheck()` call at all.
 
 ### Dependency Injection
 `inject(SomeService)` is how you get singletons.  Angular's injector creates `SomeService` once and hands the same instance to every class that asks for it.  This is the same concept as Python's dependency-injection containers (e.g. `dependency-injector`), but built into the framework.
@@ -193,7 +199,7 @@ Always present.  Contains:
 - `<p-toast position="bottom-right">` — PrimeNG toast notification layer
 
 ### `TopNavigationComponent`
-Renders the horizontal navigation tabs.  On init, fetches the full server info and connects the WebSocket.  Subscribes to `AuthService.loggedIn$` to show/hide the login link.  Displays the connected-server hostname.
+Renders the horizontal navigation tabs.  On init, fetches the full server info and connects the WebSocket.  Subscribes to `AuthService.loggedIn$` to show/hide the login link.  Displays the connected-server hostname, a context-sensitive Help menu, and a Light/Dark/Follow-System theme picker (backed by `ThemeService`, see 6.9).  `TopNavigationComponent` now lives in its own top-level folder, `src/app/top-navigation/`, not under `common/components/`.
 
 ### `OfflineBannerComponent`
 Subscribes to `ConnectivityService.online$` and `ConnectivityService.retryIn$`.  When `online$` emits `false`, shows a sticky banner at the top with a countdown to the next reconnect attempt.  Provides a "Retry now" button.
@@ -203,6 +209,7 @@ Each area of the admin UI is a separate **lazy-loaded module**.  Angular downloa
 
 | Route | Module | What it does |
 |---|---|---|
+| `/dashboard` | dashboard/ | At-a-glance status cards: system status, stopped plugins, overdue schedulers, optional database-connection properties, recent warnings/errors. This is the default landing page (see 3.7). |
 | `/system` | system/ | CPU/RAM/swap/disk/thread charts using WebSocket real-time data |
 | `/items` | items/ | Browse the item tree, view/edit item attributes and values |
 | `/logics` | logics/ | List, create, edit, enable/trigger Python logic scripts |
@@ -318,7 +325,9 @@ Reads and writes `localStorage`.  Currently only stores the user's language pref
 
 `src/app/common/services/*-api.service.ts`
 
-There are 12 of these, one per backend domain.  They all follow the same pattern:
+There are 14 of these, one per backend domain.  The legacy `OlddataService` (which used to cover the item tree, item details, value changes, and `/admin/systeminfo.json`/`/admin/pypi.json` via old-style `/admin/` URLs) has been removed entirely — `ItemsApiService` now covers the item-tree/detail/value-change endpoints under `/api/items/...`, and `ServerApiService.getSystemStats()`/`getPypiInfo()` cover what `getSysteminfo()`/`getPypiinfo()` used to (see 14, System and Items subsections).
+
+They all follow the same pattern:
 
 ```typescript
 @Injectable({ providedIn: 'root' })
@@ -341,6 +350,18 @@ Each service:
 - Reads `apiUrl` from `AppConfigService` to build URLs.
 - Returns Observables — the caller subscribes and handles the data.
 - Does NOT store state (no properties, no caching) — it only issues HTTP calls.
+
+### 6.9 `ThemeService`
+
+`src/app/common/services/theme.service.ts`
+
+Owns light/dark theme state and applies a `dark-mode` class to `<html>`, which both PrimeNG (`darkModeSelector: '.dark-mode'` in `main.ts`) and the app's own `--shng-*` CSS variables key off.  Precedence, highest wins: an explicit local choice (`UserPreferencesService.themePreference: 'light'|'dark'|'system'`) → OS `prefers-color-scheme` (live, via a `matchMedia` listener) → the server's `admin.dark_mode` default, used only as a last resort when the browser has no `prefers-color-scheme` support at all.
+
+### 6.10 `AttributeCatalogService`
+
+`src/app/common/services/attribute-catalog.service.ts`
+
+Loads the combined core + plugin item-attribute catalog (`ItemsApiService.getCoreItemAttributes()` + `PluginsApiService`), used to power autocomplete suggestions in the item create/edit attribute editor (see 14, Items subsection).
 
 ---
 
@@ -393,10 +414,12 @@ Guards are functions that run before a route is activated.  They can allow, redi
 
 ![Route Guards](img/06-route-guards.svg)
 
-All 8 protected routes have:
+All 9 protected routes (`dashboard`, `system`, `items`, `logics`, `schedulers`, `plugins`, `scenes`, `logs`, `services`) have:
 ```typescript
 canActivate: [appReadyGuard, authGuard]
 ```
+
+Until mid-2026 each feature's own `*.routes.ts` also carried a second, legacy `AuthGuardService` on its child routes — a synchronous class guard that checked only `authService.isLoggedIn()`, with no knowledge of `loginRequired`.  It raced against the async anonymous-login flow on a cold start and could strand a healthy, no-password-required install on `/login` (see commit `890f68f`).  It has been removed from all `*.routes.ts` files along with `auth-guard.service.ts` itself; `appReadyGuard`/`authGuard` on the parent route are now the only guard layer.
 
 ### 8.1 `appReadyGuard`
 
@@ -582,29 +605,26 @@ This auto-unsubscribes when the component is destroyed.  However, it only works 
 
 ---
 
-## 12. Change Detection: Why `markForCheck()` Matters
+## 12. Change Detection: Signals, Zoneless, and the Rare `markForCheck()`
 
-Angular optimises rendering by only checking components when something might have changed.  All components in this app use `ChangeDetectionStrategy.OnPush`.
+**This section describes the current (post mid-2026 migration) model.**  The app is **zoneless** (`provideZonelessChangeDetection()` in `main.ts`, no `zone.js` anywhere in the bundle) and all components use `ChangeDetectionStrategy.OnPush`.  Component state is overwhelmingly held in **Signals** (`signal()`, `computed()`, `linkedSignal()`, and `toSignal()` wrapping an Observable), not in plain fields set inside `.subscribe()` callbacks.
 
-**What OnPush means**: Angular will NOT re-render the component unless:
-1. An `@Input()` binding reference changes.
-2. An Observable used via the `async` pipe emits.
-3. The component explicitly calls `this.cdr.markForCheck()`.
-4. An event handler on this component fires.
+**Why this matters**: writing to a `signal()` (`mySignal.set(x)` / `.update(...)`) or a `toSignal()`'s source Observable emitting is itself enough to schedule a re-render — Angular tracks which signals a template reads and re-renders exactly those components.  There is no Zone.js layer patching async APIs to guess when "something might have changed"; the signal graph *is* the "something changed" notification.
 
-**Why you see `cdr.markForCheck()` everywhere**: All HTTP subscription callbacks are imperative (not via `async` pipe).  When data arrives and you set `this.items = response`, Angular doesn't know about it.  You must call `this.cdr.markForCheck()` to schedule a re-render.
+**House patterns you'll see throughout the codebase:**
+1. One-shot GET → `toSignal(service.getX().pipe(...), { initialValue })`.
+2. Refetch-after-action → `refresh$ = new Subject<void>()`; `toSignal(merge(of(undefined), refresh$).pipe(switchMap(fetch)))`.
+3. Sort/filter → signals + a pure `computed` over a copy (never sorted/filtered in place).
+4. Two-way bindings → a writable signal binds bare in `[(ngModel)]` (no parens); template assignments become `x.set(false)` instead of `x = false`.
+5. A child component receiving a mutable object via `input()`, under OnPush: if the parent ever mutates a field on that object outside a template event (e.g. a discard/reset flow), the child won't re-render — the parent must rebuild with a fresh object reference (`{...row, value: x}`), not mutate in place.
+
+**`cdr.markForCheck()` / `cdr.detectChanges()` are now the exception, not the rule.**  As of the signals migration, there is exactly **one** remaining manual change-detection call in the whole app: `TopNavigationComponent` (`top-navigation.component.ts`), which uses `this.cdr.detectChanges()` — documented inline — because the theme-toggle icon could otherwise go stale after `applyServerDefault()` fires deep inside the `getServerinfo()`/`login()` async chain, where `markForCheck()` alone wasn't reliably followed by a render pass.  Treat this as a deliberate, narrow workaround, not a pattern to reach for — if you find yourself wanting `markForCheck()` in new code, look for a signal-based way to express the same state change first.
 
 ```typescript
-// ✓ Correct
-this.api.getItems().subscribe(items => {
-  this.items = items;
-  this.cdr.markForCheck();  // essential — without this, the template doesn't update
-});
+// ✓ Current idiom — no manual CD call needed
+readonly items = toSignal(this.api.getItems(), { initialValue: [] });
 
-// ✗ Wrong — template will never show the new data
-this.api.getItems().subscribe(items => {
-  this.items = items;
-});
+// Template reads items() directly; a new emission re-renders automatically.
 ```
 
 ---
@@ -647,13 +667,18 @@ const label = this.translate.instant('ITEMS.SEARCH_PLACEHOLDER');
 
 ## 14. Feature Modules In Depth
 
+### Dashboard (`src/app/dashboard/`)
+The default landing page (see 3.7).  `DashboardOverviewComponent` shows five status cards: system status (hostname, SHNG version/uptime, OS, Python/venv, item and logic counts — one-shot fetch), stopped plugins (polled 15s, per-row Start button), overdue schedulers (polled 15s, active cyclic/cron entries past their `next` fire time by more than a grace window), an optional database-connection-properties card (only rendered when a `database` plugin instance is configured; driver, database name, host, connection status, engine version), and a full-width recent-warnings/errors log tail (polled 15s). The polled cards and the system-status card carry a stale/error indicator (icon + tooltip, dimmed body, last-known-good data kept on failure) — detection rigor varies by data source and is documented per-field in `dashboard-overview.component.ts`; the database card is a deliberate exception (fails closed / stays hidden rather than showing a stale indicator, since there's nothing to be stale about when the feature isn't configured).
+
 ### System (`src/app/system/`)
 Displays real-time charts for CPU load, memory, swap, disk, and threads.  Data comes from `WebsocketPluginService` BehaviorSubjects.  The component subscribes to `AppConfigService.serverReady$` before connecting, then feeds the data into Chart.js instances.
 
-The system overview also shows the frontend version in the same format as ShNG core and plugins: `v1.12.0-c9fbffb.work   in   /path/to/shngadmin   (heads/work)`.  This string is assembled at build time by `scripts/generate-version.js`, which runs automatically via npm `prebuild`/`prestart`/`postinstall` hooks and writes `src/app/git-version.auto.ts` (listed in `.gitignore`).  The generated file exports `GIT_COMMIT`, `GIT_BRANCH`, `GIT_REF`, and `BUILD_PATH`.  `app.component.ts` re-exports these as `APP_VERSION_DETAIL`, `APP_VERSION_REF`, and `APP_BUILD_PATH` for use in the system properties table.  The `postinstall` hook creates the file after `npm install` so fresh clones always have it before the first build.
+The system overview also shows the frontend version in the same format as ShNG core and plugins: `v1.12.2-c9fbffb.work   (heads/work)`.  This string is assembled at build time by `scripts/generate-version.js`, which runs automatically via npm `prebuild`/`prestart`/`postinstall` hooks and writes `src/app/git-version.auto.ts` (listed in `.gitignore`).  The generated file exports `GIT_COMMIT`, `GIT_BRANCH`, and `GIT_REF`.  `app.component.ts` re-exports these as `APP_VERSION_DETAIL` and `APP_VERSION_REF` for use in the system properties table.  The `postinstall` hook creates the file after `npm install` so fresh clones always have it before the first build.  (A third generated field, `BUILD_PATH` — the absolute filesystem path of the machine that ran `ng build` — was removed in commit `dec097a`: it was meaningless on a deployed instance and frozen at build time, so it couldn't even be corrected later.)
 
 ### Items (`src/app/items/`)
-The item tree is the core of SHNG — items are variables that represent sensor readings, actuator states, and computed values.  The items module shows a hierarchical tree (fetched from `/api/items/tree`), lets you drill into individual items, and uses `DynamicFieldComponent` to render editable attributes.
+The item tree is the core of SHNG — items are variables that represent sensor readings, actuator states, and computed values.  The items module shows a hierarchical tree (`ItemsApiService.getItemTree()` — `GET /api/items/tree`), lets you drill into individual items, and uses `DynamicFieldComponent` to render editable attributes.  All item-tree data access now goes through `ItemsApiService`; the legacy `OlddataService` (which used to serve the tree, item details, and value changes via `/admin/...` URLs) has been removed.
+
+`ItemsApiService` also backs a full set of item-management dialogs added to the tree view: create (`item-tree/create-item-dialog`, supports a multi-level path, `mkdir -p` style, with auto-created ancestors), edit attributes (`item-tree/edit-item-dialog`), rename/move (`item-tree/rename-item-dialog`, single path field; a changed parent segment is a move, same endpoint), and delete (`item-tree/delete-item-dialog`, with reference lookup/cleanup and a recursive-delete confirmation for items with sub-items).  Type-aware attribute inputs are shared between the create and edit flows via `items/attribute-value-input/`, with suggestions sourced from `AttributeCatalogService` (`items/attribute-browser/`, see 6.10).
 
 ### Logics (`src/app/logics/`)
 Logics are Python scripts that run inside SHNG.  This module has:
@@ -698,6 +723,8 @@ interface ServerInfo {
 
 **`ItemDetails`** (`item-details.ts`): Full item object with `type`, `value`, `enforce_updates`, `eval`, `cron`, `cycle`, etc.
 
+**`ItemAttributeInfo`** (`item-attribute-info.ts`), **`ItemCopyResult`**, **`ItemReference`**, **`ItemRemoveReferencesResult`**, **`ItemRenameResult`**: added alongside the item create/edit/rename/copy/delete dialogs (`src/app/common/models/`) — shapes for `ItemsApiService`'s attribute catalog and mutation-endpoint responses.
+
 **`LogicsInfo`** (`logics-info.ts`): Logic metadata — `name`, `enabled`, `logictype`, `watch_item`, etc.
 
 **`PluginInfo`** (`plugin-info.ts`): Plugin metadata, configuration schema, runtime status.
@@ -709,6 +736,8 @@ interface ServerInfo {
 ## 16. Testing Approach
 
 Tests use **Jest** (not Karma/Jasmine).  Jest runs in Node.js with a DOM simulation (`jest-environment-jsdom`), so tests are fast — no browser required.
+
+Because the app is zoneless (Section 12), Angular's `fakeAsync`/`tick()` do not work here — they depend on `zone.js`, which isn't loaded.  Timer-driven signals (e.g. `timer(0, N)` polling) are tested with Jest's own `jest.useFakeTimers()` + `await jest.advanceTimersByTimeAsync(ms)` instead; see `system.component.spec.ts` for the established pattern.
 
 Test files sit next to the source files: `items.component.spec.ts` is in the same directory as `items.component.ts`.
 
@@ -780,7 +809,7 @@ The `secure: false` setting disables TLS certificate verification (necessary for
 npm run build        # outputs to dist/shngadmin/
 ```
 
-Before building (and before `npm start`), the `prebuild`/`prestart` npm hook automatically runs `node scripts/generate-version.js`, which writes `src/app/git-version.auto.ts` with the current git commit hash, branch name, and the project path.  This file is in `.gitignore` and is also created by the `postinstall` hook so a fresh `npm install` on a new clone always has it.
+Before building (and before `npm start`), the `prebuild`/`prestart` npm hook automatically runs `node scripts/generate-version.js`, which writes `src/app/git-version.auto.ts` with the current git commit hash and branch name.  This file is in `.gitignore` and is also created by the `postinstall` hook so a fresh `npm install` on a new clone always has it.
 
 The output is a set of static files that SHNG's built-in web server serves directly.
 
@@ -860,4 +889,4 @@ Or add the real service if it has no side effects in tests.
 
 ---
 
-*Generated 2026-05-18, updated 2026-06-03.  Source: `src/` directory of shngAdmin v1.12.0.*
+*Generated 2026-05-18, updated 2026-06-03, reviewed and partially updated 2026-08-16 (dashboard feature, zoneless/signals migration, item CRUD dialogs, dark mode, Angular 21/PrimeNG 21, `OlddataService` removal — see git history for the underlying commits).  Source: `src/` directory of shngAdmin v1.12.2.*

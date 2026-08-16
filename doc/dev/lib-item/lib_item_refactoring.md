@@ -3,6 +3,23 @@
 A record of the test-coverage and modularisation work carried out on
 `lib/item/item.py` (SmartHomeNG's central Item class).
 
+> **Update note:** this document was originally written on 2026-06-06. Two
+> things changed afterwards that affect the paths and inventory below, but not
+> the extraction rationale or test-first methodology described here:
+> - A further extraction round on 2026-06-07 (commit `5f8ad9abc`, "refactoring
+>   steps 3-5") pulled more code out of `item.py` and added two more
+>   sub-modules, `_lifecycle.py` and `_navigation.py`, not covered by the
+>   phase-by-phase narrative below.
+> - On 2026-06-26 (commit `6ba309547`, "move item.py's extracted submodules
+>   into lib/item/_internal/") every extracted sub-module — all of the ones
+>   below, plus the two above — was moved from `lib/item/_*.py` into
+>   `lib/item/_internal/_*.py`. `item.py` itself did not move.
+>
+> The "New source files" table has been updated to reflect both changes. The
+> phase narrative, line-count deltas, and diagrams below still describe the
+> state as of the original two rounds of work and have **not** been
+> recomputed for the later extraction round.
+
 ---
 
 ## Overview
@@ -311,21 +328,27 @@ after.  No extraction introduced a single regression across all three rounds.
 
 ### New source files
 
+All paths below are as of 2026-06-26 (commit `6ba309547`); at the time each
+module was extracted it lived directly under `lib/item/` instead of
+`lib/item/_internal/` — see the update note above.
+
 | File | Lines | Round | Description |
 |---|---:|---:|---|
-| `lib/item/_typehandler.py` | 157 | 1 | List/dict handler proxy classes |
-| `lib/item/_history.py` | 187 | 1 | `ItemHistory` — timestamp & caller tracking |
-| `lib/item/_logchange.py` | 286 | 1 | log_change rules, text builders |
-| `lib/item/_eval.py` | 289 | 1 | eval / on_change / on_update runners |
-| `lib/item/_hysteresis.py` | 286 | 1 | Hysteresis state machine |
-| `lib/item/_pathresolution.py` | 277 | 1 | Path resolution helpers |
-| `lib/item/_autotimer.py` | 282 | 1 | Autotimer / cycle / scheduler helpers |
-| `lib/item/_casting.py` | 184 | 2 | `castvalue_to_itemtype`, `cast_duration` |
-| `lib/item/_triggers.py` | 156 | 2 | Trigger registration / query |
-| `lib/item/_parsing.py` | 326 | 2 | Attribute parsers + trigger condition builder |
-| `lib/item/_stackinfo.py` | 102 | 3 | Call-stack inspection utilities |
-| `lib/item/_fade.py` | 93 | 3 | Fade/ramp scheduler helper |
-| `lib/item/_json.py` | 78 | 3 | JSON serialisation |
+| `lib/item/_internal/_typehandler.py` | 157 | 1 | List/dict handler proxy classes |
+| `lib/item/_internal/_history.py` | 187 | 1 | `ItemHistory` — timestamp & caller tracking |
+| `lib/item/_internal/_logchange.py` | 286 | 1 | log_change rules, text builders |
+| `lib/item/_internal/_eval.py` | 289 | 1 | eval / on_change / on_update runners |
+| `lib/item/_internal/_hysteresis.py` | 286 | 1 | Hysteresis state machine |
+| `lib/item/_internal/_pathresolution.py` | 277 | 1 | Path resolution helpers |
+| `lib/item/_internal/_autotimer.py` | 282 | 1 | Autotimer / cycle / scheduler helpers |
+| `lib/item/_internal/_casting.py` | 184 | 2 | `castvalue_to_itemtype`, `cast_duration` |
+| `lib/item/_internal/_triggers.py` | 156 | 2 | Trigger registration / query |
+| `lib/item/_internal/_parsing.py` | 326 | 2 | Attribute parsers + trigger condition builder |
+| `lib/item/_internal/_stackinfo.py` | 102 | 3 | Call-stack inspection utilities |
+| `lib/item/_internal/_fade.py` | 93 | 3 | Fade/ramp scheduler helper |
+| `lib/item/_internal/_json.py` | 78 | 3 | JSON serialisation |
+| `lib/item/_internal/_lifecycle.py` | 77 | 4 | `remove()` — item teardown (added 2026-06-07, commit `5f8ad9abc`, not covered by the phase narrative above) |
+| `lib/item/_internal/_navigation.py` | 91 | 4 | `is_top_of_item_tree()`, `return_parent_item()` (added 2026-06-07, commit `5f8ad9abc`, not covered by the phase narrative above) |
 
 ### New test files
 
