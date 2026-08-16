@@ -1480,6 +1480,10 @@ class SmartPluginWebIf:
         tplenv.globals['isfile'] = self.is_staticfile
         tplenv.globals['_'] = self.translate  # use translate method of webinterface class
         tplenv.globals['len'] = len
+        # last-resort dark-mode fallback for browsers without prefers-color-scheme support -
+        # mirrors AppConfigService.darkModeDefault in shngadmin; see base.html's inline theme script
+        mod_admin = Modules.get_instance().get_module('admin')
+        tplenv.globals['dark_mode_default'] = bool(getattr(mod_admin, 'dark_mode', False))
         return tplenv
 
     def is_staticfile(self, path):

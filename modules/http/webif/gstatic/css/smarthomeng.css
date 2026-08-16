@@ -12,6 +12,63 @@
   --shng-border: #dee2e5;
   --shng-secondary-button: #e0e0e0;
   --shng-toggle-off: #a9a9a9;
+  --shng-page-bg: #ffffff;
+
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-muted: #6c757d;
+}
+
+/* Dark palette - values match shngadmin's .dark-mode block (src/styles.css) so plugin webifs
+   look like the same app, not a separately themed one. Theme is applied by base.html's inline
+   script/SSR default, not chosen here - see that file for the light/dark/system precedence. */
+[data-bs-theme="dark"] {
+  color-scheme: dark;
+
+  --shng-border: #444444;
+  --shng-disabled: #5a5a5a;
+  --shng-secondary-button: #3a3a3a;
+  --shng-toggle-off: #666666;
+  --shng-page-bg: #1e1e1e;
+
+  --text-primary: #e0e0e0;
+  --text-secondary: #c0c0c0;
+  --text-muted: #9a9a9a;
+
+  /* re-target Bootstrap 5.3's own dark palette onto shngadmin's, so native components
+     (tables, cards, forms, navbar, ...) match instead of landing on Bootstrap's stock grey */
+  --bs-body-bg: var(--shng-page-bg);
+  --bs-body-color: var(--text-primary);
+  --bs-border-color: var(--shng-border);
+  --bs-border-color-translucent: var(--shng-border);
+  --bs-tertiary-bg: #272727;
+  --bs-secondary-bg: var(--shng-secondary-button);
+  --bs-emphasis-color: var(--text-primary);
+  /* Bootstrap's own [data-bs-theme=dark] hardcodes dropdown-bg to its own stock #343a40 rather
+     than deriving it from --bs-body-bg like it does in light mode (bootstrap-datepicker, used by
+     the database plugin, rides on .dropdown-menu for its popup chrome) - retarget for consistency
+     with the rest of the page instead of a mismatched grey. */
+  --bs-dropdown-bg: var(--shng-page-bg);
+}
+
+/* This vendored Bootstrap build has no plain body{} rule at all (only *-body sub-component
+   selectors like .card-body) - the page canvas was never actually painted by CSS, just the
+   browser's unstyled default white. That happened to look right in light mode by accident, but
+   left dark mode with a body that ignores --bs-body-bg entirely while every component on top of
+   it (navbar, cards, ...) correctly goes dark. Paint the canvas explicitly instead of relying on
+   a rule that isn't there. */
+html, body {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  min-height: 100%;
+}
+
+/* #webif-tabs used a hardcoded .text-dark class for neutral, theme-independent tab-link text -
+   removed as part of dark-mode work since it was flat-out wrong for dark mode, but nothing
+   replaced it, which exposed Bootstrap's own default .nav-link color (--bs-link-color, its
+   vivid blue) instead. Restore the original neutral intent, theme-aware this time. */
+#webif-tabs .nav-link {
+  color: var(--text-primary);
 }
 
 plusIconlist-group-item.py-2.node-tree.node-selected {
@@ -19,16 +76,16 @@ plusIconlist-group-item.py-2.node-tree.node-selected {
 }
 
 .table.table-striped.pluginList>tbody>tr:nth-child(even) {
-    background-color:#fff;
+    background-color: var(--shng-page-bg);
 }
 
 .table.table-striped.logicsList>tbody>tr:nth-child(4n+3) {
-    background-color:#fff;
+    background-color: var(--shng-page-bg);
 }
 
 .table-hover>tbody>tr:hover>td,
 .table-hover>tbody>tr:hover>th {
-  background-color: #ecf3f8;
+  background-color: color-mix(in srgb, var(--shng-blue) 20%, var(--shng-page-bg));
 }
 
 #datepicker > div.datepicker {
@@ -88,6 +145,16 @@ background-color: rgba(0,0,0,.03);
   height: 100%;
   box-sizing: border-box;
 }
+
+/* dataTables.pageResize.min.js injects an <object type="text/html"> covering its container
+   (position:absolute, z-index:-1) purely to detect resize via a separate embedded about:blank
+   document - that document is a distinct browsing context with its own default white canvas,
+   unreachable by this page's CSS. Always painted white behind the content; only ever invisible
+   in light mode by white-on-white coincidence. opacity hides the embedded rendering outright
+   without touching the plugin's own inline position/z-index, which is what it relies on to work. */
+object[type="text/html"] {
+  opacity: 0;
+}
 .tab-content {
   position:absolute;
   top:230px;
@@ -135,8 +202,82 @@ background-color: rgba(0,0,0,.03);
 }
 
 .CodeMirror {
-  border: 1px solid #ddd;
+  border: 1px solid var(--shng-border);
   height: auto;
+}
+
+/* No dark CodeMirror theme is vendored (only the structural codemirror.css) - override the
+   handful of token classes its default theme hardcodes to light colors. */
+[data-bs-theme="dark"] .CodeMirror {
+  background: var(--shng-page-bg);
+  color: var(--text-primary);
+}
+[data-bs-theme="dark"] .CodeMirror-gutters {
+  background: var(--bs-tertiary-bg);
+  border-right-color: var(--shng-border);
+}
+[data-bs-theme="dark"] .CodeMirror-linenumber {
+  color: var(--text-muted);
+}
+[data-bs-theme="dark"] .CodeMirror-cursor {
+  border-left-color: var(--text-primary);
+}
+[data-bs-theme="dark"] .CodeMirror-selected {
+  background: var(--shng-secondary-button);
+}
+[data-bs-theme="dark"] .cm-comment { color: var(--text-muted); }
+[data-bs-theme="dark"] .cm-string, [data-bs-theme="dark"] .cm-string-2 { color: #98c379; }
+[data-bs-theme="dark"] .cm-number { color: #d19a66; }
+[data-bs-theme="dark"] .cm-keyword { color: #c678dd; }
+[data-bs-theme="dark"] .cm-variable, [data-bs-theme="dark"] .cm-variable-2 { color: var(--text-primary); }
+[data-bs-theme="dark"] .cm-def { color: #61afef; }
+[data-bs-theme="dark"] .cm-operator, [data-bs-theme="dark"] .cm-punctuation { color: var(--text-secondary); }
+[data-bs-theme="dark"] .cm-atom { color: var(--shng-orange); }
+
+/* Bootstrap's .bg-light utility is a literal fixed color (--bs-light: #f8f9fa), not a themed
+   role like --bs-body-bg - Bootstrap itself doesn't redefine it under [data-bs-theme=dark],
+   by design (.bg-light/.bg-dark name a color, not a role). Plugins reach for it for things like
+   a suggested-code/YAML preview block (matter's suggested_item_yaml) - override for dark mode. */
+[data-bs-theme="dark"] .bg-light {
+  background-color: var(--bs-tertiary-bg) !important;
+  color: var(--text-primary);
+}
+
+/* bootstrap-treeview's own container background is hardcoded light in its vendored CSS. */
+[data-bs-theme="dark"] .bstreeview {
+  background-color: var(--shng-page-bg);
+  color: var(--text-primary);
+}
+
+/* jQuery UI's datepicker widget (used by the database plugin) is hardcoded light in its
+   vendored theme CSS. */
+[data-bs-theme="dark"] .ui-widget-content {
+  background: var(--shng-page-bg);
+  color: var(--text-primary);
+  border-color: var(--shng-border);
+}
+[data-bs-theme="dark"] .ui-widget-header {
+  background: var(--bs-tertiary-bg);
+  color: var(--text-primary);
+  border-color: var(--shng-border);
+}
+[data-bs-theme="dark"] .ui-state-default,
+[data-bs-theme="dark"] .ui-widget-content .ui-state-default {
+  background: var(--shng-secondary-button);
+  color: var(--text-primary);
+  border-color: var(--shng-border);
+}
+
+/* bootstrap-datepicker's plain day-cell hover/focus and range-hover states are a literal
+   light grey (#eee) in its vendored CSS - low contrast against light-mode-assumed text in
+   dark mode. The today/selected/active accent states were already checked and left as-is
+   (saturated colors, readable on either background, same reasoning as --shng-blue/red/orange). */
+[data-bs-theme="dark"] .datepicker table tr td.day:hover,
+[data-bs-theme="dark"] .datepicker table tr td.day.focused,
+[data-bs-theme="dark"] .datepicker table tr td.range:hover,
+[data-bs-theme="dark"] .datepicker table tr td.range.disabled:hover {
+  background: color-mix(in srgb, var(--text-primary) 15%, var(--shng-secondary-button));
+  color: var(--text-primary);
 }
 
 .CodeMirror-scroll {
@@ -152,8 +293,8 @@ background-color: rgba(0,0,0,.03);
 
 .item-box {
   float:left;
-  border: 1px solid rgba(0,0,0,.125);
-  background-color: rgba(0,0,0,.03);
+  border: 1px solid var(--shng-border);
+  background-color: color-mix(in srgb, var(--text-primary) 3%, var(--shng-page-bg));
   border-radius: .25rem;
 }
 
@@ -307,13 +448,13 @@ a.text-shng:focus, a.text-shng:hover {
 */
 
 .shng_headline {
-  color: #808080;
+  color: var(--text-secondary);
   font-size: 150%;
   font-weight: bold;
 }
 
 .shng_heading {
-  color: #4d4d4d;
+  color: var(--text-secondary);
   font-weight: bold;
 }
 /*
@@ -321,6 +462,12 @@ These are necessary for highligt effect in web interface when a value changes. C
 */
 .shng_effect_highlight {
   background-color: #FFFFE0;
+  color: #212529; /* explicit dark text - this light-yellow flash stays light in dark mode too,
+                      see the override below, so text can't inherit an unreadable light color */
+}
+[data-bs-theme="dark"] .shng_effect_highlight {
+  background-color: #6b6420;
+  color: var(--text-primary);
 }
 .shng_effect_standard {
   background-color: none;
