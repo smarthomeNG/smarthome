@@ -29,8 +29,12 @@ class FakePlugin:
     for testing the rename_item() hook call-site without any real plugin
     machinery."""
 
-    def __init__(self):
+    def __init__(self, shortname='fakeplugin'):
         self.renamed_items = []
+        self._shortname = shortname
+
+    def get_shortname(self):
+        return self._shortname
 
     def rename_item(self, item, old_path, new_path):
         self.renamed_items.append((item, old_path, new_path))
@@ -43,8 +47,8 @@ class FakeStoppablePlugin(FakePlugin):
     pause a plugin around a rename — for testing that pausing happens
     once per rename operation, not once per descendant."""
 
-    def __init__(self, stop_on_item_change=True):
-        super().__init__()
+    def __init__(self, stop_on_item_change=True, shortname='fakeplugin'):
+        super().__init__(shortname=shortname)
         self.STOP_ON_ITEM_CHANGE = stop_on_item_change
         self.alive = True
         self.stop_calls = 0
@@ -330,6 +334,82 @@ class TestRenameItemPausesEachAffectedPluginOnceForTheWholeOperation(_Base):
         self.assertEqual(self.fake_plugin.stop_calls, 0)
         self.assertEqual(self.fake_plugin.run_calls, 0)
         self.assertFalse(self.fake_plugin.alive)
+
+
+class TestRenameItemScopesPauseToRelevantPlugins(_Base):
+    """Regression test: rename_item() used to pause every STOP_ON_ITEM_CHANGE
+    plugin with a rename_item hook, whole-installation-wide, regardless of
+    whether that plugin had anything to do with the item(s) being renamed -
+    the same class of bug edit_item() had (see
+    TestEditItemScopesPauseToRelevantPlugins in test_item_edit.py), left
+    open there because a rename has no old/new attribute config to diff.
+    The rename_item() hook itself still runs for every such plugin
+    unconditionally (verified below); only the stop()/run() bracket is
+    scoped, via Items.plugin_attributes/plugin_attribute_prefixes, to
+    whether the plugin owns an attribute actually present somewhere in the
+    subtree being renamed."""
+
+    def setUp(self):
+        super().setUp()
+        lib.plugin.Plugins(self.sh, 'test')
+
+    def test_plugin_with_no_stake_in_the_subtree_is_not_paused(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute('owner', 'owner_attr', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(owner.stop_calls, 0)
+        self.assertEqual(owner.run_calls, 0)
+        # the rekey hook itself still runs unconditionally (Option B, same as edit_item())
+        self.assertEqual(len(owner.renamed_items), 1)
+
+    def test_plugin_whose_owned_attribute_is_on_the_root_item_is_paused(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute('owner', 'owner_attr', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item('old', {'type': 'num', 'owner_attr': 'x'}, persist=False)
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(owner.stop_calls, 1)
+        self.assertEqual(owner.run_calls, 1)
+
+    def test_plugin_whose_owned_attribute_is_only_on_a_descendant_is_still_paused(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute('owner', 'owner_attr', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item(
+            'old', {'type': 'num', 'child': {'type': 'num', 'owner_attr': 'x'}}, persist=False
+        )
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(owner.stop_calls, 1)
+        self.assertEqual(owner.run_calls, 1)
+
+    def test_plugin_owning_attribute_prefix_is_paused_when_present_in_the_subtree(self):
+        owner = FakeStoppablePlugin(shortname='owner')
+        self.sh.items.add_plugin_attribute_prefix('owner', 'owner_', {'type': 'str'})
+        lib.plugin.Plugins._plugins.append(owner)
+        item = self.sh.items.create_item('old', {'type': 'num', 'owner_mode': 'x'}, persist=False)
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(owner.stop_calls, 1)
+        self.assertEqual(owner.run_calls, 1)
+
+    def test_plugin_that_never_registered_any_attribute_is_always_paused(self):
+        unregistered = FakeStoppablePlugin(shortname='unregistered')
+        lib.plugin.Plugins._plugins.append(unregistered)
+        item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(unregistered.stop_calls, 1)
+        self.assertEqual(unregistered.run_calls, 1)
 
 
 class TestRenameItemRewritesReferences(_Base):

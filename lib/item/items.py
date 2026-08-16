@@ -744,6 +744,13 @@ class Items:
         __item_dict; unlike edit_item(), the item's attribute config is
         untouched, only its identity (path/parent).
 
+        The rename_item() plugin hook runs for every plugin that defines
+        one, unconditionally. Only the STOP_ON_ITEM_CHANGE pause/resume
+        bracket around it is scoped down, to plugins that plausibly have a
+        stake in this specific rename (see _plugin_is_touched() below) -
+        same scoping philosophy as edit_item(), adapted for the fact that
+        a rename has no old/new attribute config to diff.
+
         If the item is persisted, its YAML node moves to: *filename* if
         given explicitly; otherwise the new parent's file, if the new
         parent is a real (non-top-level) Item with one; otherwise the
@@ -806,9 +813,41 @@ class Items:
             if new_is_top_level:
                 setattr(self._sh, leaf_attr, item)
 
+        subtree = list(_flatten_with_children(item))
         rename_hook_plugins = [p for p in item.plugins.return_plugins() if hasattr(p, PLUGIN_RENAME_ITEM)]
+
+        def _plugin_is_touched(plugin_name):
+            """
+            True if *plugin_name* plausibly has a stake in this rename -
+            used only to scope the pause/resume bracket, never to skip the
+            rename_item() hook itself (that still runs for every plugin
+            with one, unconditionally). Mirrors edit_item()'s own
+            _plugin_is_touched(), adapted for the fact that a rename never
+            changes an attribute value - only path/parent - so there is no
+            old/new config to diff; the signal instead is whether the
+            plugin owns any attribute actually present, unchanged,
+            somewhere in the subtree being renamed. Deliberately
+            conservative: with no positive evidence a plugin is
+            unaffected, it's treated as touched.
+            """
+            owned_keys = {k for k, v in self.plugin_attributes.items() if v['plugin'] == plugin_name}
+            owned_prefixes = tuple(k for k, v in self.plugin_attribute_prefixes.items() if v['plugin'] == plugin_name)
+            if not owned_keys and not owned_prefixes:
+                # plugin never declared item_attributes/item_attribute_prefixes at
+                # all - no signal either way, don't assume it's unaffected
+                return True
+
+            def _owns(key):
+                return key in owned_keys or key.startswith(owned_prefixes)
+
+            return any(_owns(key) for descendant in subtree for key in descendant.conf)
+
         # Pause each affected plugin only once for the whole rename
-        paused_plugins = [p for p in rename_hook_plugins if getattr(p, 'STOP_ON_ITEM_CHANGE', False) and p.alive]
+        paused_plugins = [
+            p
+            for p in rename_hook_plugins
+            if getattr(p, 'STOP_ON_ITEM_CHANGE', False) and p.alive and _plugin_is_touched(p.get_shortname())
+        ]
         for plugin in paused_plugins:
             try:
                 plugin.stop()
@@ -816,7 +855,7 @@ class Items:
                 self.logger.warning(f"Plugin '{plugin}' failed to stop for rename of item '{old_path}': {e}")
 
         try:
-            for descendant in _flatten_with_children(item):
+            for descendant in subtree:
                 descendant_old_path = descendant.property.path
                 descendant_new_path = new_path + descendant_old_path[len(old_path) :]
 
