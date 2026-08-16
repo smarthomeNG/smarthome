@@ -38,6 +38,7 @@ from copy import deepcopy
 from ast import literal_eval
 from collections import OrderedDict, deque
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any, Tuple
 
 import lib.shyaml as shyaml
@@ -83,6 +84,8 @@ from lib.model.sdp.globals import (
     INDEX_MODEL,
     ITEM_ATTR_COMMAND,
     ITEM_ATTR_CUSTOM1,
+    ITEM_ATTR_CUSTOM2,
+    ITEM_ATTR_CUSTOM3,
     ITEM_ATTR_CYCLE,
     ITEM_ATTR_GROUP,
     ITEM_ATTR_LOOKUP,
@@ -1822,7 +1825,6 @@ class Standalone:
         self.struct_mode = False
         self.acl = False
         self.lc = False
-        self.indentwidth = 4
 
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.CRITICAL)
@@ -1850,68 +1852,44 @@ class Standalone:
         # make sure we are in shng base dir - needed below to locate
         # plugin.yaml, for both the help text and actually running the
         # plugin, so this has to happen before either
-        if not os.path.exists(os.path.join('bin', 'smarthome.py')):
+        if not (Path('bin') / 'smarthome.py').exists():
             print('Plugin needs to be called from SmartHomeNG base directory. Aborting.')
             return
 
-        # make sure we are called with relative path
-        rel_file = os.path.relpath(plugin_file)
-        if rel_file[0] in ('.', '/', '\\'):
+        # make sure plugin_file resolves inside the current directory tree
+        # - relpath() is always cwd-relative regardless of whether
+        # plugin_file itself was absolute, so a leading '..' is the only
+        # way this can mean "outside of here"
+        rel_file = Path(os.path.relpath(plugin_file))
+        if rel_file.is_absolute() or rel_file.parts[0] == '..':
             print(f'Plugin needs to be called with relative path; called as {plugin_file}. Aborting.')
             return
 
-        # calculate files, paths and modules
-        pfitems = plugin_file.split('/')
-
-        self.plugin_mod_path = '.'.join(pfitems[:-1])
-        self.plugin_path = os.path.join(*pfitems[:-1])
-        if plugin_file.startswith('/') and not self.plugin_path.startswith('/'):
-            self.plugin_path = '/' + self.plugin_path
-
-        self.plugin_name = pfitems[-2]
+        # calculate files, paths and modules - from rel_file, not the raw
+        # (possibly absolute) plugin_file argument
+        self.plugin_path = rel_file.parent
+        self.plugin_mod_path = '.'.join(self.plugin_path.parts)
+        self.plugin_name = self.plugin_path.name
 
         # no shng instance exists in standalone mode - Metadata tolerates
         # sh=None (falls back to cwd, which the base-dir check above just
         # verified, and skips the http-module-only global parameter)
-        self.meta = Metadata(None, self.plugin_name, 'plugin', self.plugin_mod_path.replace('.', os.sep))
+        self.meta = Metadata(None, self.plugin_name, 'plugin', str(self.plugin_path))
 
         self.usage = '<Error: Help text not set>'
         self.set_usage()
 
         if len(sys.argv) == 1 or (len(sys.argv) > 1 and sys.argv[1] not in ['-h', '--help', '-?', '/?', '/h', '/help']):
-            # check for further command line arguments
-            raw_args = {}
-            for arg in range(1, len(sys.argv)):
-                arg_str = sys.argv[arg]
+            flags, raw_args = self._parse_argv(sys.argv[1:])
 
-                if arg_str == '-v':
-                    print('Debug logging enabled')
-                    self.logger.setLevel(logging.DEBUG)
-                    root_logger.setLevel(logging.DEBUG)
+            if flags['v']:
+                print('Debug logging enabled')
+                self.logger.setLevel(logging.DEBUG)
+                root_logger.setLevel(logging.DEBUG)
 
-                elif arg_str[:2].lower() == '-s':
-                    self.struct_mode = True
-
-                elif arg_str[:2].lower() == '-a':
-                    self.acl = True
-
-                elif arg_str[:2].lower() == '-l':
-                    self.lc = True
-
-                else:
-                    if arg_str.startswith('--'):
-                        # '--key=val' is just 'key=val' with a friendlier,
-                        # more familiar-looking CLI flag prefix
-                        arg_str = arg_str[2:]
-                    try:
-                        # convertible to dict?
-                        raw_args.update(literal_eval(arg_str))
-                    except Exception:
-                        # if not: try to parse as 'name=value'
-                        match = re.match('([^= \n]+)=([^= \n]+)', arg_str)
-                        if match:
-                            name, value = match.groups(0)
-                            raw_args[name] = value
+            self.struct_mode = flags['s']
+            self.acl = flags['a']
+            self.lc = flags['l']
 
         else:
             print(self.usage)
@@ -1949,6 +1927,47 @@ class Standalone:
             print("plugin doesn't have a standalone function.")
 
         print('Done.')
+
+    @staticmethod
+    def _parse_argv(argv: list) -> Tuple[dict, dict]:
+        """
+        Parses standalone-mode CLI tokens (``sys.argv[1:]``) into mode
+        flags and raw plugin-parameter args.
+
+        Flags must match exactly (case-insensitive), not by prefix - a
+        param arg starting with '-s'/'-a'/'-l' (e.g. ``-serial=...``) must
+        not be misread as a mode flag.
+
+        Every other token is parsed as a python dict literal (quoted as a
+        single shell arg) or, failing that, a 'name=value' pair; a
+        leading '--' is stripped first as a friendlier alias for either.
+
+        :param argv: command line arguments, excluding argv[0]
+        :return: (flags, raw_args); flags has keys 'v'/'s'/'a'/'l' -> bool
+        """
+        flags = {'v': False, 's': False, 'a': False, 'l': False}
+        raw_args = {}
+        for arg_str in argv:
+            lowered = arg_str.lower()
+            if lowered in ('-v', '-s', '-a', '-l'):
+                flags[lowered[1]] = True
+                continue
+
+            if arg_str.startswith('--'):
+                # '--key=val' is just 'key=val' with a friendlier,
+                # more familiar-looking CLI flag prefix
+                arg_str = arg_str[2:]
+            try:
+                # convertible to dict?
+                raw_args.update(literal_eval(arg_str))
+            except Exception:
+                # if not: try to parse as 'name=value'
+                match = re.match('([^= \n]+)=([^= \n]+)', arg_str)
+                if match:
+                    name, value = match.groups(0)
+                    raw_args[name] = value
+
+        return flags, raw_args
 
     def set_usage(self):
         options = getattr(self.plugin_class, 'STANDALONE_HELP_OPTIONS', '')
@@ -2023,72 +2042,63 @@ class Standalone:
 
         update(self.item_tree, item)
 
-    def walk(
-        self, node, node_name, parent, func, path, indent, gpath, gpathlist, has_models, func_first=True, cut_levels=0
-    ):
-        """traverses a nested dict
+    #: opaque per-command data, not further command-tree levels - must
+    #: not be descended into (a dict-valued custom attribute would else
+    #: be mistaken for a command-tree level of its own)
+    CMD_STRUCTURAL_SKIP_KEYS = (CMD_ATTR_CMD_SETTINGS, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS)
+
+    def walk_commands(self, node, node_name, parent, func, path, gpathlist, cut_levels=0):
+        """pre-order traversal of a (model/section-scoped) commands dict,
+        calling func(node, node_name, parent, path, gpathlist, cut_levels)
+        for every node before recursing into its structural child dicts.
+        Does not descend into CMD_STRUCTURAL_SKIP_KEYS children.
 
         :param node: starting node
         :param node_name: name of the starting node on parent level ('key')
         :param parent: parent node
         :param func: function to call for each node
-        :param path: path of the current node (pparent.parent.node)
-        :param indent: indent level (indent is INDENT ** indent)
-        :param gpath: path of 'current' (next above) read group
-        :param gpathlist: list of all current (above) read groups
-        :param has_models: True is command dict has models ('ALL')
-        -> include top level = model name in read groups and in command paths
-        :param func_first: order of work (func) and walk, True is work first
+        :param path: dotted command path of the current node
+        :param gpathlist: list of all read groups above the current node
         :param cut_levels: cut <n> levels from front of path
-        :type node: dict
-        :type node_name: str
-        :type parent: dict
-        :type func: function
-        :type path: str
-        :type indent: int
-        :type gpath: str
-        :type gpathlist: list
-        :type has_models: bool
-        :type func_first: bool
         """
+        if func:
+            func(node, node_name, parent, path, gpathlist, cut_levels)
 
-        if func and func_first:
-            # first call func -> print current node before descending
-            func(node, node_name, parent, path, indent, gpath, gpathlist, cut_levels)
-
-        # iterate over all children who are dicts
-        for child in list(k for k in node.keys() if isinstance(node[k], dict)):
-            if path:
-                new_path = path + COMMAND_SEP
-            elif not has_models:
-                new_path = node_name + COMMAND_SEP
-            else:
-                new_path = ''
-            new_path += child
-
-            # and recursively walk them
-            self.walk(
-                node[child],
-                child,
-                node,
-                func,
-                new_path,
-                indent + 1,
-                path,
-                gpathlist + ([path] if path else []),
-                has_models,
-                func_first,
-                cut_levels,
+        for child in (k for k in node.keys() if isinstance(node[k], dict) and k not in self.CMD_STRUCTURAL_SKIP_KEYS):
+            new_path = (path + COMMAND_SEP if path else '') + child
+            self.walk_commands(
+                node[child], child, node, func, new_path, gpathlist + ([path] if path else []), cut_levels
             )
 
-        if func and not func_first:
-            # last call func -> process current node after descending
-            func(node, node_name, parent, path, indent, gpath, gpathlist)
+    def prune(self, node, node_name, parent, path, predicate):
+        """post-order traversal that deletes node from parent whenever
+        predicate(node, path) is True, after first recursing into all of
+        node's dict-valued children.
 
-    def find_read_group_triggers(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels):
+        :param node: starting node
+        :param node_name: name of the starting node on parent level ('key')
+        :param parent: parent node, from which node_name may be deleted
+        :param path: dotted command path of the current node
+        :param predicate: called as predicate(node, path) -> bool
+        """
+        for child in list(k for k in node.keys() if isinstance(node[k], dict)):
+            new_path = (path + COMMAND_SEP if path else '') + child
+            self.prune(node[child], child, node, new_path, predicate)
+
+        if predicate(node, path):
+            del parent[node_name]
+
+    def _is_undefined_for_model(self, node, path):
+        return CMD_ATTR_ITEM_TYPE in node and path not in self.cmdlist
+
+    @staticmethod
+    def _is_empty_dict(node, path):
+        return len(node) == 0
+
+    def find_read_group_triggers(self, node, node_name, parent, path, gpathlist, cut_levels):
         """find custom read trigger definitions, create trigger item
 
-        for params see walk() above, they are the same there
+        for params see walk_commands() above, they are the same there
 
         To keep things manageable, we only support relative addressing in the
         most simple form:
@@ -2106,6 +2116,12 @@ class Standalone:
                     rg_list = [rg_list]
                 for entry in rg_list:
                     itempath = entry.get('trigger')
+                    if not itempath:
+                        print(
+                            f"Warning: read_groups entry for '{path}' is missing "
+                            f"required 'trigger' key, skipping: {entry}"
+                        )
+                        continue
 
                     # resolve relative item position
                     lvl_up = 0
@@ -2120,13 +2136,21 @@ class Standalone:
                     item_path = '.'.join(['.'.join(src_path_elems), itempath])
 
                     self.add_item_to_tree(
-                        item_path, {'type': 'bool', 'enforce_updates': 'true', ITEM_ATTR_READ_GRP: entry.get('name')}
+                        item_path,
+                        {
+                            'type': 'bool',
+                            'enforce_updates': 'true',
+                            self._item_attrs.get('ITEM_ATTR_READ_GRP', ITEM_ATTR_READ_GRP): entry.get('name'),
+                        },
                     )
 
-    def create_item(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
+    def create_item(self, node, node_name, parent, path, gpathlist, cut_levels=0):
         """create item or read item for current node/command
 
-        for params see walk() above, they are the same there
+        for params see walk_commands() above, they are the same there.
+        Only ever called for real command-tree nodes - walk_commands()
+        already filters out CMD_STRUCTURAL_SKIP_KEYS - so no need to
+        re-check for those here.
         """
         if not node_name:
             return
@@ -2135,11 +2159,7 @@ class Standalone:
         # item contents goes in item
         item = {}
 
-        # skip known command sub-dict nodes, but include command nodes
-        if CMD_ATTR_ITEM_TYPE in node or (
-            node_name not in (CMD_ATTR_CMD_SETTINGS, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS, CMD_IATTR_ATTRIBUTES)
-            and 'type' not in node
-        ):
+        if CMD_ATTR_ITEM_TYPE in node or 'type' not in node:
             # item -> print item attributes
             if CMD_ATTR_ITEM_TYPE in node:
                 item['type'] = node.get(CMD_ATTR_ITEM_TYPE, 'foo')
@@ -2147,9 +2167,13 @@ class Standalone:
                 if cut_levels:
                     cmd = COMMAND_SEP.join(cmd.split(COMMAND_SEP)[cut_levels:])
                 # add '@instance' to enable multi-instance usage
-                item[ITEM_ATTR_COMMAND + '@instance'] = cmd
-                item[ITEM_ATTR_READ + '@instance'] = node.get(CMD_ATTR_READ, True)
-                item[ITEM_ATTR_WRITE + '@instance'] = node.get(CMD_ATTR_WRITE, False)
+                item[self._item_attrs.get('ITEM_ATTR_COMMAND', ITEM_ATTR_COMMAND) + '@instance'] = cmd
+                item[self._item_attrs.get('ITEM_ATTR_READ', ITEM_ATTR_READ) + '@instance'] = node.get(
+                    CMD_ATTR_READ, True
+                )
+                item[self._item_attrs.get('ITEM_ATTR_WRITE', ITEM_ATTR_WRITE) + '@instance'] = node.get(
+                    CMD_ATTR_WRITE, False
+                )
                 if self.acl:
                     item['visu_acl'] = 'rw' if node.get(CMD_ATTR_WRITE, False) else 'ro'
 
@@ -2180,28 +2204,28 @@ class Standalone:
                             grps.append(entry.get('name'))
                     # only create read_groups if they actually exist
                     if grps:
-                        item[ITEM_ATTR_GROUP + '@instance'] = grps
+                        item[self._item_attrs.get('ITEM_ATTR_GROUP', ITEM_ATTR_GROUP) + '@instance'] = grps
 
                 # item attributes
                 if ia_node:
                     if ia_node.get(CMD_IATTR_ENFORCE):
                         item['enforce_updates'] = True
                     if ia_node.get(CMD_IATTR_INITIAL):
-                        item[ITEM_ATTR_READ_INIT + '@instance'] = True
+                        item[self._item_attrs.get('ITEM_ATTR_READ_INIT', ITEM_ATTR_READ_INIT) + '@instance'] = True
                     if ia_node.get(CMD_IATTR_CYCLIC):
-                        item[ITEM_ATTR_CYCLIC + '@instance'] = True
+                        item[self._item_attrs.get('ITEM_ATTR_CYCLIC', ITEM_ATTR_CYCLIC) + '@instance'] = True
                     cycle = ia_node.get(CMD_IATTR_CYCLE)
                     if cycle:
-                        item[ITEM_ATTR_CYCLE + '@instance'] = cycle
+                        item[self._item_attrs.get('ITEM_ATTR_CYCLE', ITEM_ATTR_CYCLE) + '@instance'] = cycle
                     custom = ia_node.get(CMD_IATTR_CUSTOM1)
                     if custom is not None:
-                        item[ITEM_ATTR_CUSTOM1 + '@instance'] = custom
+                        item[self._item_attrs.get('ITEM_ATTR_CUSTOM1', ITEM_ATTR_CUSTOM1) + '@instance'] = custom
                     custom = ia_node.get(CMD_IATTR_CUSTOM2)
                     if custom is not None:
-                        item[ITEM_ATTR_CUSTOM1[:-1] + '2' + '@instance'] = custom
+                        item[self._item_attrs.get('ITEM_ATTR_CUSTOM2', ITEM_ATTR_CUSTOM2) + '@instance'] = custom
                     custom = ia_node.get(CMD_IATTR_CUSTOM3)
                     if custom is not None:
-                        item[ITEM_ATTR_CUSTOM1[:-1] + '3' + '@instance'] = custom
+                        item[self._item_attrs.get('ITEM_ATTR_CUSTOM3', ITEM_ATTR_CUSTOM3) + '@instance'] = custom
 
                     # custom item attributes: add 1:1
                     attrs = ia_node.get(CMD_IATTR_ATTRIBUTES)
@@ -2225,25 +2249,27 @@ class Standalone:
                         if ltyp is True:
                             ltyp = 'list'
                         item['lookup'] = {'type': 'list' if ltyp == 'list' else 'dict'}
-                        item['lookup'][ITEM_ATTR_LOOKUP + '@instance'] = f'{node.get(CMD_ATTR_LOOKUP)}#{ltyp}'
+                        item['lookup'][self._item_attrs.get('ITEM_ATTR_LOOKUP', ITEM_ATTR_LOOKUP) + '@instance'] = (
+                            f'{node.get(CMD_ATTR_LOOKUP)}#{ltyp}'
+                        )
 
             # 'level node' -> print read item
-            elif node_name not in (
-                CMD_ATTR_CMD_SETTINGS,
-                CMD_ATTR_PARAMS,
-                CMD_ATTR_ITEM_ATTRS,
-                CMD_IATTR_ATTRIBUTES,
-                CMD_IATTR_READ_GROUPS,
-            ):
+            else:
                 item['read'] = {'type': 'bool', 'enforce_updates': True}
-                item['read'][ITEM_ATTR_READ_GRP + '@instance'] = path if path else node_name
+                item['read'][self._item_attrs.get('ITEM_ATTR_READ_GRP', ITEM_ATTR_READ_GRP) + '@instance'] = (
+                    path if path else node_name
+                )
                 try:
                     # set sub-node for readability
                     ia_node = node.get(CMD_ATTR_ITEM_ATTRS)
                     if ia_node.get(CMD_IATTR_INITIAL):
-                        item['read'][ITEM_ATTR_READ_INIT + '@instance'] = True
+                        item['read'][self._item_attrs.get('ITEM_ATTR_READ_INIT', ITEM_ATTR_READ_INIT) + '@instance'] = (
+                            True
+                        )
                     if ia_node.get(CMD_IATTR_CYCLE):
-                        item['read'][ITEM_ATTR_CYCLE + '@instance'] = ia_node.get(CMD_IATTR_CYCLE)
+                        item['read'][self._item_attrs.get('ITEM_ATTR_CYCLE', ITEM_ATTR_CYCLE) + '@instance'] = (
+                            ia_node.get(CMD_IATTR_CYCLE)
+                        )
                 except AttributeError:
                     pass
 
@@ -2251,34 +2277,32 @@ class Standalone:
                 self.add_item_to_tree(path, item)
 
             if CMD_ATTR_ITEM_ATTRS in node:
-                self.find_read_group_triggers(node, node_name, parent, path, indent, gpath, gpathlist, cut_levels)
-
-    def remove_items_undef_cmd(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
-        if CMD_ATTR_ITEM_TYPE in node and path not in self.cmdlist:
-            del parent[node_name]
-
-    def remove_empty_items(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
-        if len(node) == 0:
-            del parent[node_name]
+                self.find_read_group_triggers(node, node_name, parent, path, gpathlist, cut_levels)
 
     def update_item_attributes(self):
-        global_mod = sys.modules.get('lib.model.sdp.globals', '')
-        global_vars = globals()
-        file = self.plugin_path + '/plugin.yaml'
-        yaml = shyaml.yaml_load(file)
-        keys = list(yaml.get('item_attributes').keys())
+        """
+        Resolves this plugin's actual (possibly prefixed) item attribute
+        names from plugin.yaml's 'item_attributes' section into
+        self._item_attrs, e.g. {'ITEM_ATTR_COMMAND': 'viess_command'}.
 
+        Same mechanism as SmartDevicePlugin._set_item_attributes() (this
+        module's runtime counterpart), just sourced from the plugin.yaml
+        file directly since no live Metadata/itemdefinitions exist in
+        standalone mode.
+        """
+        global_mod = sys.modules.get('lib.model.sdp.globals', '')
+        file = self.plugin_path / 'plugin.yaml'
+        yaml = shyaml.yaml_load(file)
+        keys = list((yaml.get('item_attributes') or {}).keys())
+
+        self._item_attrs = {}
         if keys and global_mod:
-            new = {}
             for attr in ATTR_NAMES:
                 attr_val = getattr(global_mod, attr)
                 for key in keys:
                     if key.endswith(attr_val):
-                        new[attr] = key
+                        self._item_attrs[attr] = key
                         break
-
-            for attr in new:
-                global_vars[attr] = new[attr]
 
     def create_struct_yaml(self):
         """read commands.py and export struct.yaml"""
@@ -2314,7 +2338,7 @@ class Standalone:
         self.item_templates = getattr(cmd_module, 'item_templates', {})
 
         # load plugin's plugin.yaml
-        file = os.path.join(self.plugin_path, 'plugin.yaml')
+        file = self.plugin_path / 'plugin.yaml'
         try:
             self.yaml = shyaml.yaml_load(file, ordered=True)
         except OSError as e:
@@ -2339,7 +2363,7 @@ class Standalone:
                 self.item_tree = {}
 
                 # create item tree
-                self.walk(obj[model], '', None, self.create_item, '', 0, model, [model], True)
+                self.walk_commands(obj[model], '', None, self.create_item, '', [model])
 
                 # easiest way to move dict to OrderedDict
                 jdata = json.dumps(self.item_tree)
@@ -2357,7 +2381,7 @@ class Standalone:
                 obj = {section: commands[section]}
 
                 # create item tree
-                self.walk(obj[section], section, None, self.create_item, section, 0, '', [], True)
+                self.walk_commands(obj[section], section, None, self.create_item, section, [])
 
                 # easiest way to move dict to OrderedDict
                 jdata = json.dumps(self.item_tree)
@@ -2372,8 +2396,9 @@ class Standalone:
             for model in models:
                 self.item_tree = {}
 
-                # create list of valid commands
-                self.cmdlist = models[model]
+                # copy - models[model] is the commands.py module's own
+                # list; += below would otherwise mutate it in place
+                self.cmdlist = list(models[model])
                 # add generic commands to every other model
                 if model != INDEX_GENERIC:
                     self.cmdlist += models.get(INDEX_GENERIC, [])
@@ -2384,13 +2409,13 @@ class Standalone:
                 obj = {model: deepcopy(commands)}
 
                 # remove all items with model-invalid 'xx_command'
-                self.walk(obj[model], model, obj, self.remove_items_undef_cmd, '', 0, model, [model], True, False)
+                self.prune(obj[model], model, obj, '', self._is_undefined_for_model)
 
                 # remove all empty items from obj
-                self.walk(obj[model], model, obj, self.remove_empty_items, '', 0, model, [model], True, False)
+                self.prune(obj[model], model, obj, '', self._is_empty_dict)
 
                 # create item tree
-                self.walk(obj[model], model, obj, self.create_item, model, 0, '', [], False, cut_levels=1)
+                self.walk_commands(obj[model], model, obj, self.create_item, model, [], cut_levels=1)
 
                 jdata = json.dumps(self.item_tree)
                 self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)[model]
