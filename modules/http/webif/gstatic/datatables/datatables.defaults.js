@@ -176,21 +176,43 @@ $(window).bind('datatables_defaults', function() {
 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		    const tabId = $(this).attr('href').replace('#', '');
-		    const tables = $('#' + tabId).find('table.dataTable');
+				const pane = document.getElementById(tabId);
 				console.log("Change tab to " + tabId);
-				requestAnimationFrame(() => {
-	        setTimeout(() => {
-	            $('#' + tabId).find('table.dataTable').each(function () {
-	                const dt = $(this).DataTable();
-	                dt.columns.adjust();
-	                dt.responsive.recalc();
-	                dt.fixedHeader.adjust();
-									window.toggle = window.toggle * -1 + 0.1;
-									dt.responsive.recalc();
-	            });
-					}, 100);
+				// A fixed delay here raced the pane's own layout: shown.bs.tab can fire
+				// before the tab-pane's width has actually settled (e.g. was hidden/zero-width
+				// at DataTable init time), so responsive.recalc() would measure stale
+				// dimensions and leave the wrong columns/chevron showing until the user's
+				// own next click forced a correct recalc. Poll until width is stable across
+				// two consecutive frames instead of guessing a delay, with a hard cap so a
+				// pane that never stabilizes can't hang this forever.
+				let lastWidth = -1;
+				let stableFrames = 0;
+				let attempts = 0;
+				const maxAttempts = 60; // ~1s at 60fps
+				function waitForStableWidth() {
+					attempts++;
+					const width = pane ? pane.getBoundingClientRect().width : 0;
+					if (width > 0 && width === lastWidth) {
+						stableFrames++;
+					} else {
+						stableFrames = 0;
+					}
+					lastWidth = width;
+					if (stableFrames < 2 && attempts < maxAttempts) {
+						requestAnimationFrame(waitForStableWidth);
+						return;
+					}
+					$('#' + tabId).find('table.dataTable').each(function () {
+						const dt = $(this).DataTable();
+						dt.columns.adjust();
+						dt.responsive.recalc();
+						dt.fixedHeader.adjust();
+						window.toggle = window.toggle * -1 + 0.1;
+						dt.responsive.recalc();
+					});
+				}
+				requestAnimationFrame(waitForStableWidth);
 			});
-		});
 		}
 	catch (e)
 		{
