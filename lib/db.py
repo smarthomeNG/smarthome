@@ -28,6 +28,7 @@ import threading
 import collections
 import re
 import contextlib
+import importlib
 
 from typing import OrderedDict
 
@@ -60,12 +61,6 @@ def _hang_watchdog(logger, name, label, timeout):
     """Log a single WARNING partway through a bounded wait if it's still
     running, so a genuinely wedged connection is visible in the log before
     (not just after) the eventual timeout/error fires.
-
-    Not shutdown-specific - wraps any bounded wait in this module, including
-    live query execution while SmartHomeNG is running normally. A blocked
-    worker thread doesn't hold the GIL (it's parked in a socket read), so
-    this timer thread runs and logs regardless of what the blocked thread
-    is doing.
 
     Fires once, at half of *timeout*. Cancelled harmlessly if the
     operation finishes first - the normal/fast path never logs anything.
@@ -107,6 +102,8 @@ class Database:
     'rollback()' - rollback a transaction (if the selcted database supports it)
     'lock()' - acquire the database lock (prevent simultaneous reads/writes)
     'release()' - release the database lock
+    'transaction()' - context manager: run several statements as one
+        commit/rollback unit, using lock()/release() internally
     'verify()' - check database connection and reconnect if required
     'connected()' - check if database is connected
 
@@ -193,20 +190,19 @@ class Database:
     }
     _translation_param_types = {'qmark': list, 'format': list, 'numeric': list, 'named': dict, 'pyformat': dict}
 
-    # connect() kwargs that must be an int rather than the literal string from
-    # config (e.g. pymysql's port=). Every other key is passed through as-is -
-    # guessing types via int/float fallback for arbitrary keys previously
-    # turned numeric-looking values (e.g. a numeric password) silently into
-    # the wrong type.
-    _numeric_connect_keys = {'port', 'connect_timeout', 'read_timeout', 'write_timeout'}
+    # connect() kwargs whose values must be type int
+    _numeric_connect_keys = {'port', 'connect_timeout', 'read_timeout', 'write_timeout', 'timeout'}
 
-    # DB-API driver __name__ values that accept pymysql-style timeout kwargs.
-    # These are injected as defaults in __init__ when not already in _params.
-    _pymysql_driver_names = frozenset({'pymysql', 'MySQLdb', 'mysql.connector'})
+    # DB-API driver __name__ values that accept pymysql-style timeout kwargs
+    # (connect_timeout/read_timeout/write_timeout). These are injected as
+    # defaults in __init__ when not already in _params. mysql.connector is
+    # deliberately absent: it rejects unknown connect() kwargs and uses
+    # connection_timeout instead - its users set that in the connect config
+    # themselves.
+    _pymysql_driver_names = frozenset({'pymysql', 'MySQLdb'})
 
-    # connect() kwargs that must be a real bool rather than the literal
-    # string from config - a non-empty string like 'False' is truthy in
-    # Python and would silently defeat an explicit override.
+    # connect() kwargs whose values must be a real bool, not the literal
+    # config string.
     _bool_connect_keys = {'check_same_thread'}
 
     def __init__(self, name, dbapi, connect, formatting='named'):
@@ -226,7 +222,7 @@ class Database:
         implementation.
 
         The 'formatting' parameter can be used to specify a different type
-        of formatting (see DB-API spec) which defaults to 'pyformat'.
+        of formatting (see DB-API spec) which defaults to 'named'.
         """
         self.logger = logging.getLogger(__name__)
         self.shtime = Shtime.get_instance()
@@ -244,9 +240,19 @@ class Database:
 
         self.api_initialized = False
 
+        # Set up-front, before any of the three failure paths below can
+        # return early
+        self._fdb_lock = threading.Lock()
+        self._fdb_lock_owner = None
+
         if type(dbapi) is str:
             try:
-                self._dbapi = __import__(dbapi)
+                # importlib.import_module, not __import__: for a dotted
+                # name like 'mysql.connector', __import__ returns the
+                # top-level 'mysql' package, not the submodule - it has
+                # no paramstyle/no __name__ match in _pymysql_driver_names,
+                # so that driver could never actually work.
+                self._dbapi = importlib.import_module(dbapi)
             except ImportError as e:
                 self.logger.error('DB-API import failed for "{}": {} - module installed?'.format(dbapi, e))
                 return
@@ -279,31 +285,22 @@ class Database:
                         value = value.strip().lower() not in ('false', '0', 'no', '')
                     self._params[key] = value
             elif isinstance(connect[0], OrderedDict):
-                self._params = {k: str(v) for item in connect for k, v in item.items()}
+                # No str() coercion here
+                self._params = {k: v for item in connect for k, v in item.items()}
 
         elif type(connect) in [dict, collections.OrderedDict]:
             self._params = connect
 
         if getattr(self._dbapi, '__name__', '') == 'sqlite3' and 'check_same_thread' not in self._params:
-            # This class already serializes every connection access via
-            # self._fdb_lock below - sqlite3's own check_same_thread=True
-            # default (which rejects any cross-thread use of the connection
-            # object) is therefore redundant, and actively breaks the
-            # scheduler-driven access pattern every caller assumes: connect()
-            # typically runs once on the main thread at startup, while
-            # periodic maintenance tasks (e.g. the database plugin's
-            # remove_older_than_maxage/build_orphanlist) run on a scheduler
-            # thread. Only applied as a default - an explicit
-            # check_same_thread in the connect config always wins.
+            # sqlite3 defaults check_same_thread to True, rejecting
+            # cross-thread use - but self._fdb_lock below already
+            # serializes all access, and callers legitimately connect() on
+            # one thread then use the connection from another.
             self._params['check_same_thread'] = False
 
         if getattr(self._dbapi, '__name__', '') in self._pymysql_driver_names:
             # Without explicit timeouts pymysql blocks indefinitely on a
             # hung server, holding _fdb_lock and preventing shutdown.
-            # connect_timeout covers the TCP handshake; read/write_timeout
-            # cover query execution.  All three are user-overridable via the
-            # connect config; db_query_timeout in smarthome.yaml sets the
-            # read/write default (falls back to _DB_QUERY_TIMEOUT_DEFAULT).
             _qt = _sh_db_query_timeout()
             self._params.setdefault('connect_timeout', 10)
             self._params.setdefault('read_timeout', _qt)
@@ -321,7 +318,15 @@ class Database:
         self._translation = self._translations[self._format_input][self._format_output]
         self._translation_param_type = self._translation_param_types[self._format_output]
 
-        self._fdb_lock = threading.Lock()
+        # PEP 249 connection-trouble classes for _cursor_op_with_reconnect's
+        # error classification: only these justify the close/reconnect/retry
+        # cycle when raised by a statement.
+        classes = tuple(
+            cls
+            for cls in (getattr(self._dbapi, n, None) for n in ('InterfaceError', 'OperationalError', 'InternalError'))
+            if isinstance(cls, type)
+        )
+        self._reconnect_exceptions = classes or (Exception,)
 
         self.api_initialized = True
         return
@@ -358,12 +363,9 @@ class Database:
             acquired = self.lock(timeout=timeout)
         if not acquired:
             # A worker thread is holding the lock while blocked on a query
-            # (e.g. waiting on a hung MySQL server).  We cannot wait forever
-            # during shutdown, so close the underlying connection anyway.
-            # The blocked thread will receive a broken-connection error,
-            # exit its except branch, and release the lock in its finally
-            # block.  _conn=None / _connected=False are written here so
-            # anything the worker tries after recovering fails gracefully.
+            # Close the underlying connection anyway, the blocked thread
+            # will receive a broken-connection error, exit its except branch,
+            # and release the lock in its finally block.
             self.logger.warning(
                 'Database [{}]: could not acquire lock within {}s in close(); '
                 'force-closing connection to unblock hung thread'.format(self._name, timeout)
@@ -417,11 +419,24 @@ class Database:
            db.setup({1: ['CREATE TABLE xyz (...)', 'DROP TABLE xyz'], 2: [...]})
 
         For an extended example take a look into the 'database' plugin.
+
+        Each version's rollout statement and its version-row bookkeeping
+        commit as their own transaction(), not one commit for the whole
+        migration - MySQL/MariaDB DDL (CREATE TABLE/ALTER TABLE/...)
+        commits implicitly as a side effect regardless of any wrapping
+        transaction, so a single end-of-loop commit couldn't make a
+        multi-step migration atomic there anyway; on a crash between one
+        step's DDL and its own version-row commit, only that one step
+        needs to be figured out by hand on restart (the DDL re-running
+        and failing with "already exists"), not the whole remaining
+        migration. On sqlite, Python's sqlite3 module autocommits DDL
+        anyway under its default (legacy) isolation handling - an implicit
+        BEGIN is only issued before DML - so per-step commits match what
+        actually happens there too; neither backend gets multi-step
+        atomicity.
         """
-        self.lock()
-        try:
-            cur = self.cursor()
-            version_table = re.sub('[^a-z0-9_]', '', self._name.lower()) + '_version'
+        version_table = re.sub('[^a-z0-9_]', '', self._name.lower()) + '_version'
+        with self.transaction() as cur:
             try:
                 (version,) = self.fetchone('SELECT MAX(version) FROM ' + version_table + ';', cur=cur, quiet=True)
                 if version is None:
@@ -433,10 +448,15 @@ class Database:
                     cur=cur,
                 )
                 version = 0
-            self.logger.info('Database [{}]: Version {} found'.format(self._name, version))
-            for v in sorted(queries.keys()):
-                if float(v) > version:
-                    self.logger.info('Database [{}]: Upgrading to version {}'.format(self._name, v))
+        self.logger.info('Database [{}]: Version {} found'.format(self._name, version))
+        # sort by numeric value, not string - version keys are strings (the
+        # database plugin's _setup uses '1'..'8'), and plain sorted() would
+        # put '10' before '2' once a caller reaches a double-digit version,
+        # applying that step's DDL before earlier steps it may depend on.
+        for v in sorted(queries.keys(), key=float):
+            if float(v) > version:
+                self.logger.info('Database [{}]: Upgrading to version {}'.format(self._name, v))
+                with self.transaction() as cur:
                     self.execute(queries[v][0], cur=cur)
 
                     dt = self.shtime.utcnow()  # type: ignore (shtime is set dynamically)
@@ -448,32 +468,131 @@ class Database:
                         cur=cur,
                     )
 
-            self.commit()
-            cur.close()
-        finally:
-            self.release()
-
     def lock(self, timeout=-1):
-        """Acquire a database lock"""
-        return self._fdb_lock.acquire(timeout=timeout)
+        """Acquire a database lock
+
+        Raises RuntimeError immediately - never waits out timeout - if the
+        calling thread already holds this lock. self._fdb_lock is a plain,
+        non-reentrant threading.Lock: without this check a same-thread
+        re-entry would just block until timeout, indistinguishable from
+        genuine cross-thread contention. This is what makes transaction()'s
+        non-reentrancy hazard (see its docstring for what triggers it) fail
+        loud and immediately instead of silently hanging.
+
+        Tracks threading.current_thread() (the Thread object), not
+        threading.get_ident() (a small OS-recyclable int) - an owner marker
+        holding a live reference to the actual Thread object can't collide
+        with an unrelated later thread the way a recycled ident could once
+        the original owner had already exited without releasing.
+
+        A stale read of the owner marker (benign: plain attribute read
+        under the GIL, no separate synchronization) can only cause a false
+        negative here - falling through to the real self._fdb_lock.acquire()
+        call, which then behaves exactly as it did before this check
+        existed. It can never falsely raise for a thread that doesn't
+        actually hold the lock.
+        """
+        if self._fdb_lock_owner is threading.current_thread():
+            raise RuntimeError(
+                f'Database [{self._name}]: lock() called re-entrantly by the thread that already holds it - '
+                "see transaction()'s docstring for the non-reentrancy hazard this guards against"
+            )
+        acquired = self._fdb_lock.acquire(timeout=timeout)
+        if acquired:
+            self._fdb_lock_owner = threading.current_thread()
+        return acquired
 
     def release(self):
         """Release the database lock"""
+        self._fdb_lock_owner = None
         self._fdb_lock.release()
+
+    @contextlib.contextmanager
+    def transaction(self, timeout=None):
+        """Run a block of statements as one transaction.
+
+        Acquires self._fdb_lock, yields a cursor for the caller to run
+        multiple statements against, commits on clean exit, rolls back
+        (best-effort) on any exception and re-raises it, always releases
+        the lock. Use this instead of hand-rolling
+        lock()/cursor()/commit()/rollback()/release() at each call site -
+        a hand-rolled block that omits cleanup on failure leaves a
+        corrupted connection for the next caller to inherit.
+
+        Rolling back unconditionally on any exception is always safe here
+        - no DB-API2 exception-class distinction needed. If the connection
+        is genuinely dead, the rollback attempt itself fails, which
+        triggers the existing self-healing reset in rollback() and
+        re-raises - so this gets "reset on real connection failure" for
+        free, without a fragile classification heuristic.
+
+        Usage::
+
+           with self._db.transaction() as cur:
+               self._log_store.insert(item_id, entry, item_type, now_ms, cur=cur)
+
+        IMPORTANT - non-reentrancy: self._fdb_lock is a plain,
+        non-reentrant threading.Lock, held for the entire block. Two
+        hazards follow from this, both enforced by lock() itself raising
+        RuntimeError immediately on a same-thread re-entry (see lock())
+        rather than deadlocking/timing out:
+
+        - transaction() cannot be nested.
+        - Any call from inside the block that acquires the lock
+          internally - a cur=None execute()/fetchone()/fetchall() call, or
+          connect()/close()/verify()/setup() - hits the same wall. Always
+          pass the yielded cur through explicitly to statements run inside
+          the block.
+
+        :param timeout: Seconds to wait for the lock; defaults to the
+                         configured db_query_timeout.
+        """
+        if timeout is None:
+            timeout = _sh_db_query_timeout()
+
+        with _hang_watchdog(self.logger, self._name, 'transaction() waiting for db lock', timeout):
+            locked = self.lock(timeout=timeout)
+        if not locked:
+            raise TimeoutError(
+                'Database [{}]: could not acquire lock within {}s in transaction()'.format(self._name, timeout)
+            )
+
+        cur = self.cursor()
+        if cur is None:
+            self.release()
+            raise ConnectionError(f'Database [{self._name}]: not connected, cannot start transaction()')
+
+        try:
+            with _hang_watchdog(self.logger, self._name, 'transaction() block', timeout):
+                yield cur
+        except Exception:
+            try:
+                cur.close()
+            except Exception:
+                pass
+            try:
+                self.rollback()
+            except Exception as rollback_error:
+                self.logger.warning(
+                    f'Database [{self._name}]: rollback after failed transaction() also failed: {rollback_error}'
+                )
+            raise
+        else:
+            try:
+                cur.close()
+            except Exception:
+                pass
+            self.commit()
+        finally:
+            self.release()
 
     def commit(self):
         """Commit the current transaction"""
         try:
             self._conn.commit()
         except Exception:
-            # A failed commit means the underlying connection is dead (the
-            # driver already tore down its own socket/buffers internally -
-            # this is what turns one query's failure into confusing,
-            # unrelated-looking errors on whatever touches self._conn next:
-            # pymysql leaves attributes like _sock/_rfile set to None, so a
-            # later call fails with AttributeError instead of a clear
-            # "not connected"). Reset state immediately so the next caller
-            # (verify(), the next dump item, the next scheduled task) sees
+            # A failed commit means the underlying connection is dead
+            # Reset state immediately so the next db action sees
             # connected() == False right away instead of inheriting a
             # corrupted connection object.
             self._reset_connection_locked()
@@ -518,54 +637,42 @@ class Database:
         :param error_prefix: Message prefix to log on final failure (the
                           final exception is appended); falls back to a
                           generic message if omitted.
-        :param readonly:  If True, commit after a successful op() while still
-                          holding the lock (see fetchone()/fetchall()).
-                          autocommit is off (see __init__), so even a bare
-                          SELECT opens a real transaction here; without this
-                          it sits open indefinitely, holding back InnoDB
-                          purge. Deliberately commit(), not rollback():
+        :param readonly:  If True, commit after a successful op() while
+                          still holding the lock (see fetchone()/
+                          fetchall()). On MySQL-family drivers autocommit
+                          is off, so even a bare SELECT opens a real
+                          transaction that would otherwise sit open
+                          indefinitely, holding back InnoDB purge (on
+                          sqlite3 a SELECT opens no transaction and this
+                          commit is a no-op). Uses commit(), not rollback():
                           self._fdb_lock already serializes every caller, so
-                          any other write still pending on this connection
-                          already finished its own critical section before
-                          this read could acquire the lock - committing here
-                          only completes work that should already have been
-                          committed, never discards it. rollback() was tried
-                          first and reverted - it silently destroyed
-                          not-yet-committed writes made via the same cur=None
-                          convenience path (e.g. insertLog()/updateLog(),
-                          whose own default cur=None never self-commits),
-                          which a later unrelated cur=None read would then
-                          wipe out from underneath the caller. execute() does
-                          not set this - a write's own commit is explicit,
-                          this parameter only closes out what's left after a
-                          read.
+                          any write still pending on this connection already
+                          finished its own critical section before this
+                          read could acquire the lock - rollback() here
+                          would destroy a not-yet-committed write still
+                          pending on the shared connection instead of
+                          completing it. execute() does not set this - a
+                          write commits explicitly; this only closes out
+                          what a read leaves behind.
 
-        Also closes a separate, longstanding gap: this cur=None path is
-        exactly what ItemStore/LogStore always use, and none of it was ever
-        wrapped in self._fdb_lock - unlike the plugin's older _query()
-        wrapper, which always locked before a cur=None call. Concurrent
-        threads (the scheduler running maxage/orphan cleanup, live item
-        writes, WebIf/logic reads) could hit the same self._conn/cursor at
-        once with no serialization at all. Locked here now, released again
-        before close()/connect() run (both lock internally, and
-        self._fdb_lock is a plain, non-reentrant Lock - holding it across
-        those calls would deadlock).
+        This path is exactly what ItemStore/LogStore always use with
+        cur=None. It holds self._fdb_lock for the duration - concurrent
+        threads (scheduler-driven maxage/orphan cleanup, live item writes,
+        WebIf/logic reads) would otherwise hit the same self._conn/cursor
+        with no serialization at all. Released again before close()/
+        connect() run: both lock internally, and self._fdb_lock is a
+        plain, non-reentrant Lock - holding it across those calls would
+        deadlock.
         """
         last_error = None
         timeout = _sh_db_query_timeout()
-        # this used to be a hardcoded lock(300) independent of the
-        # configurable db_query_timeout - inconsistent with every other
-        # bounded wait in this file, and meant a hung server could still
-        # stall this specific path for up to 5 minutes regardless of what
-        # the user configured. Now tracks the same knob everywhere.
+        # Tracks db_query_timeout like every other bounded wait in this
+        # file - a hardcoded value here would let a hung server stall this
+        # path longer than the user configured elsewhere.
         label = error_prefix or f'Database [{self._name}]: query'
         for attempt in (1, 2):
             if self._conn is None:
-                # never connected, or a previous attempt already gave up
-                # and closed us - not a "stale" condition, just not
-                # connected right now. Preserve today's behaviour: no
-                # reconnect storm here, that's _initialize_db()'s throttled
-                # job. Only an existing-but-broken connection gets retried.
+                # Never connected, or a previous attempt already gave up
                 return empty
 
             with _hang_watchdog(self.logger, self._name, f'{label} - waiting for db lock', timeout):
@@ -575,6 +682,7 @@ class Database:
                 break
 
             c = None
+            retryable = True
             try:
                 # sqlite3 raises immediately on .cursor() against an
                 # already-closed connection; pymysql instead tends to
@@ -602,8 +710,17 @@ class Database:
                         c.close()
                     except Exception:
                         pass
+                    # Statement-level error on a live connection: only
+                    # connection-trouble classes justify tearing down and
+                    # retrying; anything else (IntegrityError, SQL typo)
+                    # fails identically on retry and the teardown would
+                    # needlessly discard the healthy connection.
+                    retryable = isinstance(e, self._reconnect_exceptions)
             finally:
                 self.release()
+
+            if not retryable:
+                break
 
             if attempt == 1:
                 self.close()
@@ -660,7 +777,7 @@ class Database:
             error_prefix=f'Can not execute query: {stmt} (args {args})',
         )
 
-    def verify(self, retry=5, delay=5):
+    def verify(self, retry=5, delay=5, probe_timeout=5):
         """Verifies the connection status and reconnets if required
 
         The connected status of the connection will be checked by executing
@@ -673,57 +790,94 @@ class Database:
 
         To specify the delay between retries use the `delay` parameter,
         which defaults to 5 seconds.
+
+        Cost note: each attempt can cost up to `probe_timeout` (see
+        below) even against a completely unresponsive server, and retry
+        multiplies that. A caller whose own failure path already gets
+        retried on its own cadence (e.g. a scheduled cycle) should still
+        pass a low `retry` here rather than relying on this loop alone.
+
+        probe_timeout (pymysql only, default 5s): a "SELECT 1" probe
+        doesn't need the full db_query_timeout (60s default) a real query
+        gets. Overrides pymysql's read_timeout/write_timeout for the
+        duration of this call, then restores them (finally block below) -
+        including on an already-open connection, since pymysql applies
+        these fresh on every read/write rather than caching them at
+        connect time. hasattr-guarded: read_timeout is not part of
+        pymysql's public API and could be renamed in a future version, in
+        which case this silently no-ops instead of raising. Scoped to the
+        'pymysql' driver name, not the wider _pymysql_driver_names set -
+        MySQLdb/mysql.connector may name this attribute differently.
         """
-        while retry > 0:
-            locked = False
+        is_pymysql = getattr(self._dbapi, '__name__', '') == 'pymysql'
+        saved_read_timeout = self._params.get('read_timeout') if is_pymysql else None
+        saved_write_timeout = self._params.get('write_timeout') if is_pymysql else None
+        if is_pymysql:
+            self._params['read_timeout'] = probe_timeout
+            self._params['write_timeout'] = probe_timeout
 
-            try:
-                if not self.connected():
-                    self.connect()
+        try:
+            while retry > 0:
+                locked = False
 
-                locked = self.lock(2)
+                try:
+                    if not self.connected():
+                        self.connect()
+                    elif is_pymysql:
+                        # Already-open connection: connect() won't run again
+                        # this time round, so the live socket's timeout (set
+                        # when it was originally opened) needs overriding
+                        # directly - see probe_timeout note above.
+                        if hasattr(self._conn, '_read_timeout'):
+                            self._conn._read_timeout = probe_timeout
+                        if hasattr(self._conn, '_write_timeout'):
+                            self._conn._write_timeout = probe_timeout
 
-                if locked:
-                    # explicit cursor: fetchone(cur=None) now locks
-                    # internally too (see _cursor_op_with_reconnect) - we
-                    # already hold self._fdb_lock here, and it's a plain
-                    # non-reentrant Lock, so a cur=None call from the same
-                    # thread would deadlock against itself.
-                    probe_cur = self.cursor()
-                    self.fetchone('SELECT 1', cur=probe_cur)
-                    probe_cur.close()
-                    try:
-                        # autocommit is off (see __init__) - the probe above
-                        # opened a real transaction that would otherwise sit
-                        # idle indefinitely between verify() calls, holding
-                        # back InnoDB purge. commit(), not rollback() - see
-                        # _cursor_op_with_reconnect's readonly= docstring:
-                        # self._fdb_lock already serializes every caller, so
-                        # rollback() here could silently discard an
-                        # unrelated write still pending on this connection
-                        # from an earlier cur=None caller that never
-                        # explicitly committed (e.g. insertLog()). Best-
-                        # effort: a failure here shouldn't turn a successful
-                        # verify() into a reported failure, since
-                        # connectivity IS confirmed.
-                        self.commit()
-                    except Exception as e:
-                        self.logger.warning(f'Database [{self._name}]: could not close verify() probe transaction: {e}')
-                    retry = -1
-                    self.release()
-                else:
-                    self.logger.warning('Database [{}]: Could not acquire lock to verify connection'.format(self._name))
+                    locked = self.lock(2)
+
+                    if locked:
+                        # explicit cursor: fetchone(cur=None) now locks
+                        # internally too (see _cursor_op_with_reconnect) - we
+                        # already hold self._fdb_lock here, and it's a plain
+                        # non-reentrant Lock, so a cur=None call from the same
+                        # thread would deadlock against itself.
+                        probe_cur = self.cursor()
+                        self.fetchone('SELECT 1', cur=probe_cur)
+                        probe_cur.close()
+                        try:
+                            # On MySQL-family drivers autocommit is off
+                            self.commit()
+                        except Exception as e:
+                            self.logger.warning(
+                                f'Database [{self._name}]: could not close verify() probe transaction: {e}'
+                            )
+                        retry = -1
+                        self.release()
+                    else:
+                        self.logger.warning(
+                            'Database [{}]: Could not acquire lock to verify connection'.format(self._name)
+                        )
+                        retry = retry - 1
+
+                except Exception as e:
+                    self.logger.warning('Database [{}]: Connection error {}'.format(self._name, e))
+                    if locked:
+                        self.release()
+                    self.close()
                     retry = retry - 1
 
-            except Exception as e:
-                self.logger.warning('Database [{}]: Connection error {}'.format(self._name, e))
-                if locked:
-                    self.release()
-                self.close()
-                retry = retry - 1
-
-            if retry > 0:
-                time.sleep(delay)
+                if retry > 0:
+                    time.sleep(delay)
+        finally:
+            if is_pymysql:
+                self._params['read_timeout'] = saved_read_timeout
+                self._params['write_timeout'] = saved_write_timeout
+                # Whatever connection exists now must have the real timeout restored
+                if self._conn is not None:
+                    if hasattr(self._conn, '_read_timeout'):
+                        self._conn._read_timeout = saved_read_timeout
+                    if hasattr(self._conn, '_write_timeout'):
+                        self._conn._write_timeout = saved_write_timeout
 
         return retry
 
@@ -745,7 +899,7 @@ class Database:
         return self._cursor_op_with_reconnect(
             op,
             quiet=quiet,
-            empty='',
+            empty=None,
             error_prefix=f'fetchone failed for stmt {stmt} with params {params}',
             readonly=True,
         )
@@ -782,10 +936,15 @@ class Database:
             for key, value in enumerate(params):
                 param_dict[str(key + 1)] = value
 
+        input_format = self._format_input if formatting is None else formatting
         if formatting is None:
             translation = self._translation
         else:
             translation = self._translations[formatting][self._format_output]
+
+        if self._format_output in ('format', 'pyformat') and input_format not in ('format', 'pyformat'):
+            # prevent format() from messing up SQL queries containing literal '%'
+            stmt = stmt.replace('%', '%%')
 
         stmt_result, param_result = self._translate(stmt, param_dict, **translation)
 

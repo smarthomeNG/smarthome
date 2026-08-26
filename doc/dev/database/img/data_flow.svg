@@ -1,12 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" font-family="Helvetica, Arial, sans-serif">
-  <rect width="720" height="500" fill="#f9f9f9"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" font-family="Helvetica, Arial, sans-serif">
+  <rect width="720" height="520" fill="#f9f9f9"/>
 
   <defs>
     <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
       <path d="M0,0 L0,7 L9,3.5 z" fill="#555"/>
-    </marker>
-    <marker id="arr-blue" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
-      <path d="M0,0 L0,7 L9,3.5 z" fill="#4a86e8"/>
     </marker>
     <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
       <path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/>
@@ -15,59 +12,61 @@
 
   <text x="360" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Data Flow — Item Value Change</text>
 
-  <!-- ── Step boxes ── -->
-
   <!-- 1. Item changes -->
-  <rect x="260" y="55" width="200" height="55" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
-  <text x="360" y="78" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">① Item value changes</text>
-  <text x="360" y="97" text-anchor="middle" font-size="10" fill="#555">SmartHomeNG calls update_item()</text>
+  <rect x="260" y="50" width="200" height="50" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="360" y="71" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">① Item value changes</text>
+  <text x="360" y="88" text-anchor="middle" font-size="10" fill="#555">SmartHomeNG calls update_item()</text>
 
-  <!-- arrow down -->
-  <line x1="360" y1="110" x2="360" y2="148" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="360" y1="100" x2="360" y2="136" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- 2. Duration calc -->
-  <rect x="200" y="150" width="320" height="70" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
-  <text x="360" y="173" text-anchor="middle" font-size="11" font-weight="bold" fill="#9c6e00">② Retroactive duration calculation</text>
-  <text x="360" y="191" text-anchor="middle" font-size="10" fill="#555">Look up previous buffer entry for this item.</text>
-  <text x="360" y="207" text-anchor="middle" font-size="10" fill="#555">duration = now_ms − prev_entry.time_ms  →  write back.</text>
+  <rect x="180" y="138" width="360" height="70" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="360" y="160" text-anchor="middle" font-size="11" font-weight="bold" fill="#9c6e00">② Retroactive duration calculation</text>
+  <text x="360" y="177" text-anchor="middle" font-size="10" fill="#555">duration = now_ms − prev_entry.time_ms, written back into the</text>
+  <text x="360" y="193" text-anchor="middle" font-size="10" fill="#555">previous entry. Negative (clock jumped back) → clamped to 0, logged.</text>
 
-  <!-- arrow down -->
-  <line x1="360" y1="220" x2="360" y2="258" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="360" y1="208" x2="360" y2="244" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- 3. Append new entry -->
-  <rect x="200" y="260" width="320" height="70" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
-  <text x="360" y="283" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e7e34">③ Append new buffer entry</text>
-  <text x="360" y="301" text-anchor="middle" font-size="10" fill="#555">BufferEntry(time=now_ms, duration=None,</text>
-  <text x="360" y="317" text-anchor="middle" font-size="10" fill="#555">value=value, quality=0)</text>
+  <rect x="200" y="246" width="320" height="60" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="360" y="267" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e7e34">③ Append new buffer entry</text>
+  <text x="360" y="284" text-anchor="middle" font-size="10" fill="#555">BufferEntry(time=now_ms, duration=None,</text>
+  <text x="360" y="298" text-anchor="middle" font-size="10" fill="#555">value=value, quality=QUALITY_VALID) — not yet in SQL</text>
 
-  <!-- arrow down (dashed — async) -->
-  <line x1="360" y1="330" x2="360" y2="368" stroke="#888" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
-  <text x="378" y="352" font-size="9" fill="#888">60 s scheduler</text>
+  <line x1="360" y1="306" x2="360" y2="342" stroke="#888" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <text x="382" y="328" font-size="9" fill="#888">every `cycle` seconds (default 60s)</text>
 
   <!-- 4. Dump cycle -->
-  <rect x="100" y="370" width="520" height="100" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
-  <text x="360" y="393" text-anchor="middle" font-size="11" font-weight="bold" fill="#b31412">④ Dump cycle — _dump()</text>
+  <rect x="70" y="344" width="580" height="126" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="360" y="365" text-anchor="middle" font-size="11" font-weight="bold" fill="#b31412">④ Dump cycle — _dump()</text>
 
-  <!-- sub-steps inside dump -->
-  <rect x="120" y="403" width="145" height="52" rx="3" fill="#fff" stroke="#d93025" stroke-width="1"/>
-  <text x="192" y="421" text-anchor="middle" font-size="10" font-weight="bold" fill="#b31412">close_open_entries()</text>
-  <text x="192" y="437" text-anchor="middle" font-size="9" fill="#555">temp duration for</text>
-  <text x="192" y="450" text-anchor="middle" font-size="9" fill="#555">still-active rows</text>
+  <rect x="90" y="375" width="130" height="58" rx="3" fill="#fff" stroke="#d93025" stroke-width="1"/>
+  <text x="155" y="393" text-anchor="middle" font-size="10" font-weight="bold" fill="#b31412">_initialize_db()</text>
+  <text x="155" y="408" text-anchor="middle" font-size="9" fill="#555">self-healing reconnect;</text>
+  <text x="155" y="421" text-anchor="middle" font-size="9" fill="#555">return early if it fails</text>
 
-  <rect x="287" y="403" width="145" height="52" rx="3" fill="#fff" stroke="#d93025" stroke-width="1"/>
-  <text x="360" y="421" text-anchor="middle" font-size="10" font-weight="bold" fill="#b31412">LogStore.insert/update()</text>
-  <text x="360" y="437" text-anchor="middle" font-size="9" fill="#555">flush buffer to SQL</text>
-  <text x="360" y="450" text-anchor="middle" font-size="9" fill="#555">in one transaction</text>
+  <rect x="235" y="375" width="130" height="58" rx="3" fill="#fff" stroke="#d93025" stroke-width="1"/>
+  <text x="300" y="393" text-anchor="middle" font-size="10" font-weight="bold" fill="#b31412">pop_all() per item</text>
+  <text x="300" y="408" text-anchor="middle" font-size="9" fill="#555">LogStore.insert/update</text>
+  <text x="300" y="421" text-anchor="middle" font-size="9" fill="#555">one transaction() each</text>
 
-  <rect x="454" y="403" width="145" height="52" rx="3" fill="#fff" stroke="#d93025" stroke-width="1"/>
-  <text x="527" y="421" text-anchor="middle" font-size="10" font-weight="bold" fill="#b31412">ItemStore.update()</text>
-  <text x="527" y="437" text-anchor="middle" font-size="9" fill="#555">refresh latest-value</text>
-  <text x="527" y="450" text-anchor="middle" font-size="9" fill="#555">snapshot</text>
+  <rect x="380" y="375" width="130" height="58" rx="3" fill="#fff" stroke="#d93025" stroke-width="1"/>
+  <text x="445" y="393" text-anchor="middle" font-size="10" font-weight="bold" fill="#b31412">ItemStore.update()</text>
+  <text x="445" y="408" text-anchor="middle" font-size="9" fill="#555">refresh latest-value</text>
+  <text x="445" y="421" text-anchor="middle" font-size="9" fill="#555">snapshot</text>
 
-  <!-- internal arrows inside dump box -->
-  <line x1="265" y1="429" x2="287" y2="429" stroke="#d93025" stroke-width="1" marker-end="url(#arr-red)"/>
-  <line x1="432" y1="429" x2="454" y2="429" stroke="#d93025" stroke-width="1" marker-end="url(#arr-red)"/>
+  <rect x="525" y="375" width="105" height="58" rx="3" fill="#fff" stroke="#d93025" stroke-width="1"/>
+  <text x="577" y="393" text-anchor="middle" font-size="10" font-weight="bold" fill="#b31412">on failure</text>
+  <text x="577" y="408" text-anchor="middle" font-size="9" fill="#555">restore() entries</text>
+  <text x="577" y="421" text-anchor="middle" font-size="9" fill="#555">to buffer, retry next</text>
 
-  <!-- Note -->
-  <text x="360" y="492" text-anchor="middle" font-size="10" fill="#888">Each dump extends the duration of the most-recent log row until the next value change replaces it.</text>
+  <line x1="220" y1="404" x2="235" y2="404" stroke="#d93025" stroke-width="1" marker-end="url(#arr-red)"/>
+  <line x1="365" y1="404" x2="380" y2="404" stroke="#d93025" stroke-width="1" marker-end="url(#arr-red)"/>
+  <line x1="510" y1="404" x2="525" y2="404" stroke="#d93025" stroke-width="1" marker-end="url(#arr-red)"/>
+
+  <text x="360" y="452" text-anchor="middle" font-size="9" fill="#888">Also retries build_orphanlist() here if it hasn't succeeded yet (self._orphanlist_built == False) — §3.</text>
+  <text x="360" y="466" text-anchor="middle" font-size="9" fill="#888">No bulk "close every open entry" step exists — an item's last open entry is closed by its own next</text>
+  <text x="360" y="480" text-anchor="middle" font-size="9" fill="#888">value change (step ②) or at finalize=True (shutdown), via BufferManager.close_open() per item.</text>
+
+  <text x="360" y="505" text-anchor="middle" font-size="10" fill="#888">Each dump extends the duration of the most-recent log row until the next value change replaces it.</text>
 </svg>

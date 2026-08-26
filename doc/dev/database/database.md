@@ -1,108 +1,148 @@
 # SmartHomeNG Database Plugin — Developer Documentation
 
-This document describes the internal design of the `database` plugin, the module-split refactoring it went through, and the associated bug fixes and improvements. It is aimed at Python developers who are already familiar with SmartHomeNG basics.
+This document describes the internal design of the `database` plugin and the connection/locking
+primitive it builds on (`lib/db.py`'s `Database` class). It is aimed at Python developers who are
+already familiar with SmartHomeNG basics.
 
-> **Status (verified 2026-08-16 against `plugins/database/` and `lib/db.py` on `develop`):** The `utils.py`/`buffer.py`/`store.py` split described in §3, and the `val_quality` no-data-gap feature described in §6, have both shipped — the module layout and even the function names (`encode_value`, `decode_value`, `to_timestamp`, `from_timestamp`, `apply_table_names` in `utils.py`) match what was proposed here almost exactly. `query.py` and `maintenance.py` were **not** split out — `_series`, `_single`, `remove_older_than_maxage` and `_query` still live in `__init__.py` (now ~2450 lines, still the largest file in the plugin). Most of the bug fixes (§7) and performance improvements (§8) below have shipped; status is annotated inline per item. `lib/db.py` itself also went through a separate, later hardening pass (bounded lock timeouts, a hang watchdog, self-healing `commit()`/`rollback()`) not originally scoped here — not detailed in this document since it belongs to `lib/db.py`'s own docs, not the plugin's.
+> **Status (verified 2026-08-23 against `plugins/database/` and `lib/db.py` on
+> `database-transaction-refactor` / `db-transaction-refactor`):** Describes the system as it exists
+> today. The plugin went through a module split (`utils.py`/`buffer.py`/`store.py` extracted from
+> `__init__.py`) and, separately, a locking rewrite that replaced hand-rolled
+> `lock()`/`cursor()`/`commit()`/`rollback()`/`release()` sequences throughout both `lib/db.py` and
+> the plugin with a single `transaction()` context manager. Both are complete and are described
+> below as the current design, not as proposals. For the history of *why* — the incidents that
+> motivated the locking rewrite, and the two audit passes that followed it — see this project's
+> commit history; this document does not attempt to be a changelog.
 
 ---
 
 ## 1. Overview
 
-The `database` plugin persists item values to a relational database (SQLite, MySQL, or PostgreSQL via `lib/db.py`). Its distinguishing feature compared to a plain event log is that **every row records not just a value but how long that value was active** — the `duration` column. This makes it straightforward to compute time-weighted averages, cumulative energy totals, and similar analytics directly in SQL.
+The `database` plugin persists item values to a relational database (SQLite or MySQL/MariaDB via
+`lib/db.py`; other DB-API 2 drivers work if `lib/db.py`'s type-conversion tables are extended for
+them). Its distinguishing feature compared to a plain event log is that **every row records not
+just a value but how long that value was active** — the `duration` column. This makes it
+straightforward to compute time-weighted averages, cumulative energy totals, and similar analytics
+directly in SQL.
 
-Four concepts are central to understanding the plugin:
+Five concepts are central to understanding the plugin:
 
 | Concept | Description |
 |---|---|
 | **log table** | The historical record. One row per value-change event, with `time`, `duration`, and the value itself. |
 | **item table** | A single-row-per-item snapshot of the *latest* value. Used for fast lookups without scanning the log. |
 | **buffer** | An in-memory dict (keyed by item id) that accumulates incoming changes between database writes. |
-| **dump cycle** | A scheduler job that runs every 60 seconds and flushes the buffer to SQL in a single transaction. |
+| **dump cycle** | A scheduler job that runs every `cycle` seconds (default 60) and flushes the buffer to SQL in one transaction. |
+| **transaction()** | `lib/db.py`'s locking primitive — acquires the connection's lock, yields a cursor, commits on success or rolls back on exception, always releases. Almost every multi-statement DB access in the plugin goes through it. |
 
 ---
 
-## 2. Architecture Before the Module Split
-
-*(Historical — see §3 for the current, already-implemented layout.)*
-
-The plugin used to be implemented as a single file:
-
-```
-plugins/database/__init__.py   (1 891 lines)
-```
-
-Everything lived inside the `Database(SmartPlugin)` class:
-
-- SQL DDL and schema setup (`_setup` dict, `_initialize_db`)
-- Low-level CRUD helpers (`insertItem`, `updateItem`, `readItem`, `insertLog`, `updateLog`, `readLog`, …)
-- Buffer management (`_buffer`, `_buffer_lock`, `_dump`)
-- Analytics queries (`_series`, `_single`, the `_query` dispatcher)
-- Maintenance tasks (`remove_older_than_maxage`, `_remove_orphans`)
-- Plugin lifecycle (`__init__`, `run`, `stop`, `parse_item`, `update_item`)
-- CSV export (`dump`)
-- Web interface glue
-
-![Current architecture](img/current_architecture.svg)
-
-The consequence of this monolithic design is tight coupling: a one-line change to buffering logic requires touching the same file as a SQL schema migration. Testing any single concern requires instantiating the full `SmartPlugin` stack. Bug fixes in one area risk inadvertently breaking another.
-
----
-
-## 3. Architecture After the Module Split
-
-**Implemented.** `utils.py`, `buffer.py` and `store.py` have been extracted, each matching this section's original proposal closely (see the verified function/class names below). `query.py` and `maintenance.py` were **not** extracted — `_series`/`_single` (analytics) and `remove_older_than_maxage`/orphan cleanup (maintenance) remain methods on `Database` in `__init__.py`, which at ~2450 lines is still the largest file in the plugin, not the thin orchestrator originally envisioned here.
-
-The public API — all method names called by items, the web interface, and user automations — is preserved on the `Database` class as thin delegates to the extracted stores, giving **full backward compatibility** (see `insertItem`/`readItem`/etc. in `__init__.py`, which now just call `self._item_store.insert(...)` / `self._item_store.find(...)`).
+## 2. Architecture
 
 ```
 plugins/database/
-├── __init__.py        # Database(SmartPlugin) — public API, plus _series/_single/
-│                       # remove_older_than_maxage/_query (not extracted, see above)
-├── utils.py            # Pure functions, no side-effects — implemented
-├── buffer.py            # BufferManager — owns buffer dict + lock — implemented
-├── store.py             # ItemStore + LogStore — SQL CRUD — implemented
-├── constants.py         # (existing, now also holds BufferEntry and the
-│                        #  QUALITY_VALID/QUALITY_NO_DATA quality flags — see §6)
-└── webif/               # (existing)
+├── __init__.py    # Database(SmartPlugin) — plugin lifecycle, public API,
+│                  #   _series()/_single() (analytics), remove_older_than_maxage()/
+│                  #   build_orphanlist() (maintenance), _dump() (scheduler callback)
+├── utils.py       # Pure functions, no side effects, no DB connection needed
+├── buffer.py      # BufferManager — owns the in-memory buffer dict + its lock
+├── store.py       # ItemStore + LogStore — SQL CRUD against {item}/{log}
+├── constants.py   # BufferEntry namedtuple, QUALITY_VALID/QUALITY_NO_DATA, column indices
+└── webif/         # Web interface (item/orphan browsing, manual actions)
 ```
 
-### Module responsibilities
+![Architecture](img/architecture.svg)
 
-*(Verified against the actual `plugins/database/` source, not the original proposal — signatures below are the real ones, which differ in a few names/parameter orders from what was originally sketched here.)*
+`_series()`/`_single()` (on-demand analytics for the websocket plugin and logics) and
+`remove_older_than_maxage()`/`build_orphanlist()` (scheduled maintenance) were originally planned
+to move into their own `query.py`/`maintenance.py` modules. That split was never done — they remain
+methods on `Database` in `__init__.py`, which at ~2800 lines is still the largest file in the
+plugin. Nothing about correctness depends on this; it is a maintainability trade-off, not a design
+constraint.
 
-**`utils.py`** — pure functions only, importable without any database connection:
+**`utils.py`** — pure functions, importable without any database connection:
 
-- `encode_value(item_type, value) -> dict` — maps a Python value to the three SQL columns (`val_str`/`val_num`/`val_bool`), as a dict, not a tuple.
+- `encode_value(item_type, value) -> dict` — maps a Python value to the three SQL columns (`val_str`/`val_num`/`val_bool`).
 - `decode_value(item_type, val_str, val_num, val_bool) -> value` — reverse.
-- `to_timestamp(dt) -> int` — converts a `datetime` to milliseconds-since-epoch.
-- `from_timestamp(ts, tzinfo=None) -> datetime` — reverse.
+- `to_timestamp(dt) -> int` / `from_timestamp(ts, tzinfo=None) -> datetime` — ms-since-epoch conversion.
 - `apply_table_names(query, table_names) -> str` — substitutes `{item}`/`{log}`/`{item_columns}`/`{log_columns}` placeholders.
-- `build_where_clause(item_id, *, time=None, time_start=None, ...) -> (sql, params)` — not in the original proposal; replaces the `_slice_condition` flag-trick mentioned in §9 (see the function's own docstring, which references that replacement explicitly).
+- `build_where_clause(item_id, *, time=None, time_start=None, ..., exclude_gaps=False) -> (sql, params)` — builds a parameterised `WHERE` clause. `exclude_gaps` is opt-in — see §6.
 
 **`buffer.py`** — `BufferManager`:
 
-- Owns `self._buffer: dict` and `self._lock: threading.Lock`, plus `register()`/`deregister()` for item lifecycle.
-- `push(item, entry: BufferEntry)` — appends an entry (acquires lock).
-- `close_open(item, end_ts)` / `set_last_duration(item, duration)` — back-fill the duration of the last open (`duration=None`) entry.
-- `push_invalid(item, start_ts)` — opens a `QUALITY_NO_DATA` gap entry (see §6).
+- Owns `self._buffer: dict` and its lock; `register()`/`deregister()` manage item lifecycle.
+- `push(item, entry)` — appends a `BufferEntry`.
+- `close_open(item, end_ts)` / `set_last_duration(item, duration)` — back-fill the duration of the last open (`duration=None`) entry, per item (there is no bulk "close everything" call — see §4).
+- `push_invalid(item, start_ts)` — opens a `QUALITY_NO_DATA` gap entry (§6).
 - `pop_all(item)` / `restore(item, entries)` — drain an item's pending writes for `_dump()`, and put them back if the write fails.
 
-**`store.py`** — `ItemStore` and `LogStore`:
+**`store.py`** — `ItemStore` and `LogStore`, both stateless wrappers around a `lib.db.Database`
+connection and a `table_names` dict, no plugin business logic:
 
-- `ItemStore`: `insert`, `update`, `find`, `find_all`, `count`, `delete` — operates on the `{item}` table.
-- `LogStore`: `insert`, `update`, `upsert`, `find`, `find_range`, `count`, `count_all`, `delete_range`, `oldest_time`, `latest_time`, `edge_value`, `aggregate` — operates on the `{log}` table.
-- Both classes receive a `lib.db.Database` connection and a `table_names` dict; they contain no plugin business logic.
-
-**`query.py` / `maintenance.py`** — **not extracted.** The analytics logic (`_series`, `_single`) and the maintenance logic (`remove_older_than_maxage`, orphan-id reassignment) originally proposed for these two modules still live as methods on `Database` in `__init__.py`.
+- `ItemStore`: `insert`, `update`, `find`, `find_all`, `count`, `delete`.
+- `LogStore`: `insert`, `update`, `upsert`, `find`, `find_range`, `count`, `count_all`,
+  `delete_range`, `oldest_time`, `latest_time`, `edge_value`, `aggregate`.
 
 **`__init__.py`** — `Database(SmartPlugin)`:
 
-- Creates and wires `BufferManager`/`ItemStore`/`LogStore`.
-- Implements `run`, `stop`, `parse_item`, `update_item`, `_dump` (the scheduler callback) — plus `_series`/`_single`/`remove_older_than_maxage` (not extracted, see above).
-- Re-exports all legacy method names (`insertLog`, `readItem`, etc.) as one-line delegates to the store objects — confirmed backward-compatible (see §10).
+- Creates and wires `BufferManager`/`ItemStore`/`LogStore`, plus two independent `lib.db.Database`
+  connections: `self._db` (regular reads/writes) and `self._db_maint` (maintenance —
+  orphan cleanup, `remove_older_than_maxage()`). Kept separate so a long-running maintenance
+  transaction never blocks ordinary item logging, and vice versa.
+- Implements `run`/`stop`/`parse_item`/`update_item`/`_dump` and re-exports every legacy method
+  name (`insertLog`, `readItem`, `insertItem`, ...) as a one-line delegate to the store objects —
+  the public API used by items, the web interface, and user automations is unchanged by any of the
+  above.
 
-![Proposed architecture](img/proposed_architecture.svg)
-*(Diagram predates the actual split above and shows `query.py`/`maintenance.py` as extracted, which they were not — kept for the general before/after shape, not as a literal file listing.)*
+---
+
+## 3. Locking and Transactions
+
+`lib.db.Database` (`lib/db.py`) is a thin wrapper around a DB-API 2 connection, shared by every
+plugin that needs SQL access. Its central primitive is `transaction()`:
+
+```python
+with self._db.transaction() as cur:
+    self._log_store.insert(item_id, entry, item_type, now_ms, cur=cur)
+    self._item_store.update(item_id, entry, cur=cur)
+```
+
+`transaction()` acquires the connection's lock, yields a cursor, commits on clean exit, rolls back
+on any exception (re-raising it), and always releases the lock — regardless of which path was
+taken. This replaced a large number of hand-rolled `lock()`/`cursor()`/`commit()`/`rollback()`/
+`release()` sequences scattered across the plugin, several of which had real gaps: statements
+running with no lock at all, writes left uncommitted on the `cur=None` path, and failures that
+didn't roll back and so left a corrupted connection for the next caller.
+
+**Two rules that matter for anyone adding a new call site:**
+
+- `self._fdb_lock` is a plain, non-reentrant `threading.Lock`, held for the *entire* `transaction()`
+  block. It cannot be nested, and nothing invoked from inside the block may acquire the lock again
+  itself — a `cur=None` call to `execute()`/`fetchone()`/`fetchall()`, or `connect()`/`close()`/
+  `verify()`/`setup()`, all hit the same lock. `lock()` detects same-thread re-entry and raises
+  `RuntimeError` immediately instead of deadlocking. Always pass the yielded `cur` through
+  explicitly to every statement run inside the block.
+- `cur=None` means "acquire your own lock and commit as a self-contained unit" (typically via an
+  internal `transaction()` call). An explicit `cur` means "the caller already holds the lock and
+  owns the commit/rollback decision" — the callee must never call `commit()`/`rollback()` itself.
+  These are the only two supported shapes; a caller-selectable "commit anyway" flag independent of
+  whether `cur` was passed is exactly the pattern that caused several of the bugs `transaction()`
+  replaced, and should not be reintroduced.
+
+**Self-healing reconnect.** Every entry point that touches the database (`id()`, `_dump()`,
+`_query()`, `run()`) calls `_initialize_db()` first, which attempts to (re)connect if not already
+connected, throttled to one real attempt per 20 seconds. None of them crash or exit the plugin on
+failure — they log and return a "no data"/`False` result, and the *next* call retries. `verify()`
+additionally does an active connectivity probe with its own short timeout, used before trusting an
+already-`connected()` socket that may have gone stale server-side.
+
+One consequence worth knowing: `build_orphanlist()` (used by the web interface's orphan list and by
+`remove_orphan_items()`) is only ever *triggered* once at startup (`run()`) and, if that attempt
+fails because the DB wasn't connected yet, once more per `_dump()` cycle until it succeeds —
+piggybacked on the cycle that's already running rather than a separate retry loop.
+`self._orphanlist_built` tracks whether it has ever completed successfully; an empty
+`self.orphanlist` alone does not mean "confirmed no orphans" — it can also mean "haven't been able
+to check yet".
 
 ---
 
@@ -112,73 +152,92 @@ This section traces what happens when an item value changes.
 
 ![Data flow](img/data_flow.svg)
 
-> **Note:** the actual `_dump()` (`plugins/database/__init__.py:1716`) does not call a `BufferManager.close_open_entries()` method — no such method exists on `BufferManager` (which has `close_open(item, end_ts)`/`set_last_duration(item, duration)` instead, operating per-item, not as a bulk "close everything" pass). The still-open (`duration=None`) most-recent entry for an item is not written to the log table until it is closed by a later value change or by `finalize=True` at shutdown. Whether the step-by-step description below still matches in every detail was not fully re-verified line-by-line against the current `_dump()`/`update_item()` code; treat it as directionally correct but confirm against source before relying on specifics.
+1. **Item changes.** SmartHomeNG calls `Database.update_item(item, caller, source, dest)`. The
+   method checks whether the item has the `database` attribute and bails out early if not.
 
-### Step-by-step
+2. **Duration is calculated retroactively.** The database does not know in advance how long a value
+   will be active. When a *new* value arrives, the plugin looks up the previous buffer entry for
+   this item and computes `duration = now_ms - prev_entry.time_ms`, writing that duration back into
+   the previous (now-closed) entry. A duration that comes out negative (system clock jumped
+   backward — NTP correction, DST, VM resume) is clamped to `0` and logged, rather than corrupting
+   time-weighted aggregates with a negative value.
 
-1. **Item changes.** SmartHomeNG calls `Database.update_item(item, caller, source, dest)`. The method checks whether the item has the `database` attribute and bails out early if not.
+3. **New buffer entry appended**, with `duration=None` — "this value is still active, duration not
+   yet known": `BufferEntry(time=now_ms, duration=None, value=value, quality=QUALITY_VALID)`.
 
-2. **Duration is calculated retroactively.** The database does not know in advance how long a value will be active. When a *new* value arrives, the plugin looks up the *previous* buffer entry for this item. It calculates:
+4. **Dump cycle.** Every `cycle` seconds (default 60) the scheduler calls `Database._dump()`, which:
 
-   ```python
-   duration = now_ms - prev_entry.time_ms
-   ```
+   a. Calls `_initialize_db()` — self-healing, see §3. Returns immediately if that fails; buffered
+      entries stay buffered for the next cycle.
 
-   and writes that duration back into the previous entry before flushing it.
+   b. If `self._orphanlist_built` is still `False`, retries `build_orphanlist()` (see §3).
 
-3. **New buffer entry appended.** The new value is pushed into the buffer with `duration=None`, meaning "this value is still active, duration not yet known":
-
-   ```python
-   buffer[item_id].append(BufferEntry(time=now_ms, duration=None, value=value, quality=0))
-   ```
-
-4. **Dump cycle.** Every 60 seconds the SmartHomeNG scheduler calls `Database._dump()`. This method:
-
-   a. Calls `BufferManager.close_open_entries(now_ms)` — for the most recent entry of each item, sets `duration = now_ms - entry.time_ms` temporarily (the value is still active, but we need *something* for the SQL row; on the next dump this row will be updated with the real duration).
-
-   b. Calls `BufferManager.pop_all()` to drain the buffer atomically.
-
-   c. For each entry, calls `LogStore.insert` or `LogStore.update` as appropriate.
+   c. For each item with pending entries, calls `BufferManager.pop_all(item)` to drain them
+      atomically, then `LogStore.insert`/`LogStore.update` inside one `self._db.transaction()`
+      block per item.
 
    d. Calls `ItemStore.update` to refresh the latest-value snapshot.
 
-The result is that every log row always has a non-null `duration`, and the duration of the most recent row is continuously extended on each dump cycle.
+   e. If a write fails, the popped entries are restored to the buffer (`BufferManager.restore()`)
+      for the next cycle rather than being dropped.
+
+There is no bulk "close every open entry" pass — the still-open (`duration=None`) most recent entry
+for an item is closed the next time that specific item changes, or at `finalize=True` (plugin
+shutdown), via `BufferManager.close_open()`/`set_last_duration()` operating per item.
 
 ---
 
 ## 5. Database Schema
 
-The plugin manages two tables. Their names are configurable via `db_prefix`; the defaults are `log` and `item`.
+The plugin manages two tables, named via `db_prefix` (default `log` and `item`), created and
+migrated by `lib.db.Database.setup()` against a versioned `_setup` dict — each version is one
+forward-only DDL statement, applied in ascending numeric order to any install below that version on
+every startup. Current version: **11**.
 
 ### `{prefix}item` — latest-value snapshot
 
 ```sql
 CREATE TABLE {item} (
-    id       INTEGER PRIMARY KEY,  -- DB-generated autoincrement, see §7 bug 4
-    name     VARCHAR(255),
-    time     BIGINT,       -- ms since epoch of last change
+    id       INTEGER PRIMARY KEY [AUTO_INCREMENT on MySQL/MariaDB],  -- v2, retrofitted v8
+    name     VARCHAR(1024),   -- VARCHAR(255) on sqlite (no length ever enforced there); v9-11 on MySQL/MariaDB
+    time     BIGINT,          -- ms since epoch of last change
     val_str  TEXT,
     val_num  REAL,
     val_bool BOOLEAN,
-    changed  BIGINT        -- ms since epoch of last write
+    changed  BIGINT           -- ms since epoch of last write
 );
 CREATE UNIQUE INDEX {item}_id   ON {item} (id);
-CREATE INDEX        {item}_name ON {item} (name);
+CREATE INDEX        {item}_name ON {item} (name(191) on MySQL/MariaDB, full column on sqlite);
 ```
 
-One row per tracked item. `id` is assigned by the database itself via `INTEGER PRIMARY KEY` autoincrement (`ItemStore.insert()` reads it back via the cursor's `lastrowid`) — corrected from the original `MAX(id)+1`-based allocation described as buggy in §7, bug 4.
+One row per tracked item. `id` is database-generated (bare `INTEGER PRIMARY KEY` autoincrements
+implicitly on sqlite via `rowid`; MySQL/MariaDB need the explicit `AUTO_INCREMENT`, added for fresh
+installs in schema v2/v8 and retrofitted onto pre-existing installs by v8's `ALTER TABLE`).
+`ItemStore.insert()` reads the new id back via the cursor's own `lastrowid`, not a follow-up query —
+avoids the `MAX(id)+1` race a prior implementation had.
+
+`name` is `varchar(255)` in the original schema and was never widened for MySQL/MariaDB until v9-11,
+which is why the migration is a driver-gated no-op on sqlite and a real `ALTER TABLE` + index
+rebuild elsewhere: MySQL/MariaDB reject item paths over 255 characters outright under strict SQL
+mode, sqlite never enforced the length at all. The index is deliberately a `name(191)` *prefix*
+index on MySQL/MariaDB rather than covering the full widened column — InnoDB's indexed-column byte
+limit is charset/row-format dependent (767 bytes on older configurations, 3072 on modern ones), and
+a 191-character prefix stays safely under the stricter limit regardless. A prefix index does not
+affect the correctness of `WHERE name = ...` lookups, only how much of the value is used to narrow
+candidate rows.
 
 ### `{prefix}log` — historical log
 
 ```sql
 CREATE TABLE {log} (
-    time     BIGINT,       -- ms since epoch when value became active
-    item_id  INTEGER,
-    duration BIGINT,       -- ms the value was active
-    val_str  TEXT,
-    val_num  REAL,
-    val_bool BOOLEAN,
-    changed  BIGINT        -- ms since epoch of last write
+    time         BIGINT,      -- ms since epoch when value became active
+    item_id      INTEGER,
+    duration     BIGINT,      -- ms the value was active
+    val_str      TEXT,
+    val_num      REAL,
+    val_bool     BOOLEAN,
+    changed      BIGINT,      -- ms since epoch of last write
+    val_quality  TINYINT DEFAULT 0   -- v7, see §6
 );
 CREATE UNIQUE INDEX {log}_{item}_id_time    ON {log} (item_id, time);
 CREATE INDEX        {log}_{item}_id_changed ON {log} (item_id, changed);
@@ -186,7 +245,7 @@ CREATE INDEX        {log}_{item}_id_changed ON {log} (item_id, changed);
 
 ### Polymorphic value encoding
 
-Each row stores a value in one of three typed columns. The mapping is:
+Each row stores a value in one of three typed columns:
 
 | Item type | `val_str` | `val_num` | `val_bool` |
 |---|---|---|---|
@@ -194,261 +253,128 @@ Each row stores a value in one of three typed columns. The mapping is:
 | `bool` | NULL | 0 or 1 | 0 or 1 |
 | `str` | the string | NULL | NULL |
 
-`val_str = NULL` does **not** mean "no value was recorded". It means the item is not a string type. Aggregation queries must filter by `item_id` first, and then read the appropriate column based on the known item type.
+`val_str = NULL` does **not** mean "no value was recorded" — it means the item is not a string
+type. Aggregation queries must know the item's type to read the correct column.
 
 ![Schema](img/schema.svg)
 
 ---
 
-## 6. The Missing-Value Problem and Solution
+## 6. Value Quality — No-Data Gaps
 
-**Implemented** (schema version 7, `QUALITY_VALID`/`QUALITY_NO_DATA` in `constants.py`, `item.db_mark_invalid()`/`item.db_mark_valid()` wired up in `parse_item()`) — described below as it exists today, not as a proposal.
+A device that goes offline (a solar inverter at night, a sensor that loses connectivity) leaves its
+SmartHomeNG item holding its last known value indefinitely — items have no built-in concept of
+"value expired", and setting `item(None)` is not a usable substitute (silently ignored or rejected
+depending on item type). Left alone, the database would record that stale last reading as valid and
+continuously active, corrupting any time-weighted average or energy calculation across the gap.
 
-### Problem
-
-Consider a solar inverter that reports power output every 30 seconds while the sun is up, but goes completely offline at night (or on a cloudy day). SmartHomeNG items retain their last known value indefinitely — there is no built-in concept of "value expired" or "data source offline". The database therefore records the last inverter reading as valid and continuously active, potentially for many hours. Any time-weighted average or energy calculation over that period will be wrong.
-
-### Why `None` Does Not Work
-
-SmartHomeNG items are strongly typed. Setting `item(None)` is silently ignored or raises an exception depending on the item type. There is no standard mechanism to represent "this item has no valid data right now" at the item level.
-
-### Solution: `val_quality` Column
-
-A new column is added to the log table:
-
-```sql
-ALTER TABLE {log} ADD COLUMN val_quality TINYINT DEFAULT 0;
-```
-
-Quality codes:
+The `val_quality` column (schema v7) solves this:
 
 | Value | Meaning |
 |---|---|
-| `0` | Valid — normal recorded value |
-| `1` | No data available — value should be ignored in aggregations |
-
-### New Item Methods
+| `0` (`QUALITY_VALID`) | Normal recorded value. |
+| `1` (`QUALITY_NO_DATA`) | No data available — value should be ignored in aggregations. All `val_*` columns are `NULL`. |
 
 The plugin injects two methods onto every tracked item:
 
 ```python
-item.db_mark_invalid()   # injects a quality=1 log entry at current time
-item.db_mark_valid()     # injects a quality=0 log entry (data available again)
+item.db_mark_invalid()   # opens a QUALITY_NO_DATA gap entry at the current time
+item.db_mark_valid()     # explicitly closes an open gap
 ```
 
-A user automation or driver plugin can call `inverter_power.db_mark_invalid()` when it detects the inverter has gone offline. The database will record a log entry with `val_quality=1` at that moment, and `db_mark_valid()` when the inverter comes back online.
-
-### Implicit Re-validation
-
-If a new value arrives via `update_item()` while a gap is still open, the plugin **automatically closes the gap** — no explicit `db_mark_valid()` call is required.
-
-- The gap duration is calculated from the gap's own open timestamp, not from the item's last regular `prev_change()`. This is important: if the gap was opened at `T1` but the item had last changed at `T0 < T1`, using `prev_change()` would produce a wrong (too long) duration.
-- After closing the gap, the new value is written to the buffer as a normal `val_quality=0` entry.
-- There is no separate `_gap_items` tracking dict in the actual implementation — gap state is read directly from `BufferManager.last_entry(item)`: an open gap is `duration is None and quality == QUALITY_NO_DATA`. A subsequent `db_mark_valid()` is a no-op because `_mark_item_valid()` checks the same condition and returns early if it no longer holds (see `plugins/database/__init__.py:_mark_item_valid`).
-
-This means the typical driver usage is simply:
+If a new value arrives via `update_item()` while a gap is still open, the gap is closed **implicitly** —
+no explicit `db_mark_valid()` call is required. The typical driver usage is just:
 
 ```python
-# device goes offline
-item.db_mark_invalid()
-
-# device comes back online — just set the new value; gap closes automatically
-item(new_value, 'driver')
-
-# db_mark_valid() is only needed when closing the gap *before* the first
-# new value is available
+item.db_mark_invalid()          # device goes offline
+item(new_value, 'driver')        # device comes back — gap closes automatically
 ```
 
-### Updated Aggregation Queries
-
-All analytics queries gain a `WHERE val_quality = 0` (or `COALESCE(val_quality, 0) = 0` for backward compatibility with older rows) filter:
-
-```sql
-SELECT SUM(val_num * duration) / SUM(duration)
-FROM {log}
-WHERE item_id = ?
-  AND time BETWEEN ? AND ?
-  AND COALESCE(val_quality, 0) = 0
-```
-
-### `BufferEntry` Namedtuple
-
-The in-memory buffer entries are updated to carry quality:
-
-```python
-from collections import namedtuple
-BufferEntry = namedtuple('BufferEntry', ['time', 'duration', 'value', 'quality'])
-```
+Gap duration is calculated from the gap's own open timestamp, not the item's last regular
+`prev_change()` — those can differ if the gap opened well after the last real value change. There is
+no separate tracking dict for open gaps; state is read directly off `BufferManager`'s last entry for
+the item (`duration is None and quality == QUALITY_NO_DATA`), so a redundant `db_mark_valid()` call
+after the gap has already closed is a harmless no-op.
 
 ![Quality feature](img/quality_feature.svg)
 
----
+**Filtering gaps out of queries.** `utils.build_where_clause()` takes an `exclude_gaps` parameter,
+opt-in rather than blanket:
 
-## 7. Identified Bug Fixes
-
-All six items below were verified against current source on 2026-08-16; status is noted per item.
-
-### 1. `UnboundLocalError` in `remove_older_than_maxage`
-
-**Fixed.** `item_id = None` is now initialized before the `try` block, with the comment `# initialise before try so the except clause can reference it safely` (`plugins/database/__init__.py:2051`).
-
-In the exception handler, the variable `item_id` is referenced but may not have been assigned if the earlier `readItem` call raised before the assignment. Fix: initialize `item_id = None` before the try block and guard the delete call.
-
-### 2. `len(None)` crash in `_dump`
-
-**Superseded by the buffer-manager rewrite**, not fixed as a standalone patch. The `_dump()` method no longer calls `readLog()` at all — it iterates entries popped from `BufferManager` (`self._buffer_mgr.pop_all(item)`), so the specific `len(result)`-on-`None` code path described here no longer exists in this form.
-
-`readLog(...)` can return `None` when the database is unavailable. The dump code calls `len(result)` unconditionally. Fix: add a `if result is None: continue` guard.
-
-### 3. Negative duration stored without correction
-
-**Fixed**, though not by clamping inside the buffer/store layer as originally sketched — the clamp lives in `update_item()` itself: `plugins/database/__init__.py:534-540` computes `end - start`, and if negative, logs `'Negative duration clamped to 0: ...'` and sets `end = start` before the value ever reaches the buffer.
-
-When the system clock jumps backward (NTP correction, DST, VM resume), `duration = now - prev_time` can be negative. Negative durations corrupt time-weighted averages. Fix: clamp to `max(0, duration)` before storing.
-
-### 4. `insertItem` race condition
-
-**Fixed**, using the suggested approach. The `{item}` table's schema (v2 in the `_setup` dict) now declares `id INTEGER PRIMARY KEY`, with the inline comment `# id declared as INTEGER PRIMARY KEY so the DB handles auto-increment; avoids the previous MAX(id)+1 race condition on multi-connection setups`. `ItemStore.insert()` reads the new id back via the cursor's own `lastrowid` rather than a follow-up `SELECT`.
-
-New item IDs are allocated with:
-
-```sql
-SELECT MAX(id) + 1 FROM {item}
-```
-
-This is not atomic. Two threads starting simultaneously can both read the same `MAX(id)` and attempt to insert the same new `id`, causing a unique-index violation. Fix: use `INSERT OR IGNORE` / `INSERT IGNORE` with a database-generated autoincrement id, or hold the lock for the full read-then-insert sequence.
-
-### 5. `readTotalLogCount` silently ignores its parameters
-
-**Fixed.** `readTotalLogCount(self, cur=None)` no longer accepts `id`/`time_start`/`time_end` at all — its docstring states the signature was corrected because those parameters were "silently ignored" (`plugins/database/__init__.py:1123`), and it now delegates to `LogStore.count_all()`, an unfiltered total by design (per-item/time-ranged counts go through the separate `readLogCount()` method instead, which does build a `WHERE` clause).
-
-The method accepts `item_id` and `time_start`/`time_end` parameters but the SQL query it issues contains no `WHERE` clause, returning a count across the entire log table. Fix: add the appropriate `WHERE item_id = ? AND time BETWEEN ? AND ?` clause.
-
-### 6. `fetchone()` returns `''` instead of `None` on cursor failure
-
-**Effectively fixed, as part of a broader `lib/db.py` hardening pass** (see the status note at the top of this document). `fetchone()`'s `cur=None` path now raises the original exception on failure rather than swallowing it into a return value — `''` is only ever returned when there was no connection to query in the first place (`self._conn is None`), which is a distinct, legitimate case, not an error being hidden.
-
-In `lib/db.py`, when `cursor.fetchone()` raises an exception, the except block returns an empty string `''`. Callers test `if result is None`, so the error is invisible and subsequent code unpacks `''` as a row. Fix: return `None` consistently from all error paths.
+- **On-demand analytics** (`_series()`/`_single()`, via `_fetch_log_base_where()`) always filter
+  `(val_quality IS NULL OR val_quality = 0)` unconditionally — a gap row never contributes to a
+  displayed series or a computed single value.
+- **Compaction** (`LogStore.aggregate()`/`edge_value()`, used by `_compact_maxage()`, §7) passes
+  `exclude_gaps=True` explicitly, for the same reason: a gap's `NULL` values must not corrupt the
+  computed aggregate, and its (often large) duration must not skew a duration-weighted average.
+- **Raw row management** (`delete_range()`/`find_range()`/`count()`) deliberately does *not*
+  exclude gaps — a gap marker is still a real row that needs to be counted and cleaned up like any
+  other, not silently skipped.
 
 ---
 
-## 8. Performance Improvements
+## 7. Age-Based Cleanup — Delete vs. Compact
 
-### 1. Double preparation of SQL statements in `_query()`
+![Age-based cleanup](img/maxage_compaction.svg)
 
-**Fixed.** `_query()` now calls `self._prepare(query)` exactly once, with the inline comment `# prepare once` (`plugins/database/__init__.py:2367`).
+Two independent, configurable mechanisms control how long log data is kept.
 
-The current `_query()` helper calls `self._db.prepare(sql)` and then immediately calls `self._db.execute(sql, ...)` which internally calls `prepare` again. The first call is redundant. Fix: remove the standalone `prepare` call.
+**`database_maxage`** (item attribute, in days) / **`default_maxage`** (plugin-level fallback for
+items that don't set their own) — how old a log entry has to be before it's eligible for cleanup.
+`default_maxage` alone (with no item setting its own `database_maxage`) is sufficient to activate
+cleanup — the scheduler's worklist falls back to every item with a plain `database` attribute in
+that case, not just ones with an explicit `database_maxage`.
 
-### 2. Debug string formatting runs unconditionally
+**`database_maxage_action`** (item attribute) / **`default_maxage_action`** (plugin-level fallback)
+— what happens to eligible entries. `'delete'` (the default) removes them outright, in
+`max_delete_logentries`-sized batches per cycle so a very large backlog doesn't hold the lock for an
+unbounded time. Any other value replaces raw entries with **one compacted value per
+`database_maxage_interval`** instead of deleting them:
 
-**Fixed.** No remaining `logger.debug(... % ...)` eager-interpolation calls were found in `plugins/database/__init__.py`; `_query()`'s docstring notes debug formatting now only runs `when self.logger.isEnabledFor(logging.DEBUG)`.
+| Action | SQL expression | Valid item types |
+|---|---|---|
+| `sum` | `SUM(val_num)` | num, bool |
+| `avg` | `AVG(val_num * duration) / AVG(duration)` | num, bool |
+| `min` / `max` | `MIN(val_num)` / `MAX(val_num)` | num, bool |
+| `integrate` | `SUM(val_num * duration)` | num, bool |
+| `on` | `SUM(val_bool * duration) / SUM(duration)` | bool only |
+| `countall` | `COUNT(*)` | any |
+| `first` / `last` | oldest/newest raw value as-is (`ORDER BY time ASC/DESC LIMIT 1`) | any, including str |
 
-Several hot paths contain:
+A `database_maxage_action` invalid for the item's actual type (e.g. `sum` on a `str` item — `val_num`
+is always `NULL` for strings) is rejected at `parse_item()` time with a logged error and falls back
+to `'delete'` for that item. `first`/`last` work for every type because they read back whatever
+`encode_value()` already stored, rather than computing anything over it — the only actions usable
+for `str` items.
 
-```python
-self.logger.debug("query: %s params: %s" % (sql, params))
-```
+**Compaction (`_compact_maxage()`)** proceeds oldest-first, one `database_maxage_interval`-sized
+bucket at a time, bounded by `max_aggregate_intervals` per call. There is no persisted resume
+cursor — the next interval to compact is always simply whatever raw data remains oldest for that
+item, so a crash or restart mid-compaction is self-healing by construction. Each interval's
+aggregate/edge value is computed and its raw rows deleted inside the *same* `transaction()`
+(`delete_range()` does **not** exclude gaps here — see §6 — a gap row is still deleted alongside
+whatever real data shares its interval, since it contributed nothing to the aggregate but is still a
+row to clean up). Delete happens before insert, not after: the aggregate row's timestamp is derived
+from the oldest raw row's own timestamp, so inserting first risks colliding with it under the
+`(item_id, time)` unique index.
 
-The `%` string interpolation runs even when debug logging is disabled, allocating strings unnecessarily. Fix: use lazy `%` formatting via the logging API:
-
-```python
-self.logger.debug("query: %s params: %s", sql, params)
-```
-
-### 3. `_initialize_db()` called on every query
-
-**Fixed**, exactly as proposed. `self._db_initialized` is set in `__init__`/`_initialize_db()`, and `_query()` checks it first with the comment `# fast-path: avoid full init check on every query` (`plugins/database/__init__.py:2350`).
-
-`_initialize_db()` checks whether the schema tables exist and creates them if not. It is currently called at the start of every `_query()` invocation. The schema check involves a `SELECT` against the database metadata on every single query. Fix: add a boolean flag `self._db_initialized` that is set to `True` after the first successful initialization, and skip the call when the flag is set.
-
----
-
-## 9. Code Quality Improvements
-
-### 1. Replace `_slice_condition` flag trick
-
-**Fixed**, in `utils.py` rather than `__init__.py`. `build_where_clause()` builds an explicit list of condition strings joined by `AND`; its docstring states directly: "Replaces the previous `_slice_condition` flag-trick, which passed `1 = :flag` to bypass conditions when parameters were `None`."
-
-The current code uses a mutable flag variable to decide whether to prefix a SQL fragment with `AND` or `WHERE`. Replace with an explicit list of condition strings joined by `AND` and prepended with `WHERE` only when the list is non-empty. This is clearer and less error-prone.
-
-### 2. Merge duplicated `_item_value_tuple` branches
-
-**Fixed**, via the `utils.py` extraction rather than an in-place merge — `_item_value_tuple()` now just delegates to `utils.encode_value()`, whose `'num'`/`'bool'` branch is already merged (`return {'val_str': None, 'val_num': float(value), 'val_bool': int(bool(value))}`).
-
-The `'num'` and `'bool'` branches in `_item_value_tuple` produce nearly identical output (both write to `val_num`). Merge them into a single branch:
-
-```python
-if item_type in ('num', 'bool'):
-    return (None, float(value), int(bool(value)))
-```
-
-### 3. Use `csv` module in `dump()`
-
-**Not done.** `dump()` (`plugins/database/__init__.py:827`) still writes the CSV file with manual `s.join(h)`/`f.write()` calls, no `import csv`/`csv.writer` in the file.
-
-The CSV export method manually escapes commas and quotes. Replace with Python's standard `csv.writer`, which handles all edge cases correctly.
-
-### 4. `isinstance()` instead of `type() ==`
-
-**Fixed** (or never present in this form) — no `type(x) ==` pattern found anywhere in `plugins/database/__init__.py`.
-
-Replace all occurrences of `type(x) == SomeType` with `isinstance(x, SomeType)` to correctly handle subclasses and to follow Python best practices.
-
-### 5. Remove deprecated connection parameters from `lib/db.py`
-
-**Addressed**, though as part of the later, separately-scoped `lib/db.py` hardening pass rather than this refactor specifically (see the status note at the top of this document) — `lib/db.py` now explicitly type-converts known connection kwargs (`_numeric_connect_keys`, `_bool_connect_keys`) and injects pymysql-family timeout defaults (`connect_timeout`/`read_timeout`/`write_timeout`) rather than passing raw config strings through.
-
-`lib/db.py` passes keyword arguments to database drivers that have been deprecated or renamed in recent driver versions. Update to current parameter names.
-
-### 6. Consistent `snake_case` naming
-
-**Achieved via the module split (§3), not via renaming.** The `Database` class's public methods are still `camelCase` (`insertItem`, `readLog`, `updateLog`, etc.), but they are now one-line delegates to `snake_case` methods on `ItemStore`/`LogStore` (`insert`, `update`, `find`, `find_range`, ...) — so the "internally all new code calls snake_case" intent is met, just not by renaming the public surface.
-
-Several methods use `camelCase` names (`insertItem`, `readLog`, `updateLog`, etc.) inherited from the original implementation. New code uses `snake_case`. The public camelCase names are kept as aliases for backward compatibility; internally all new code calls the snake_case variants.
+If an interval's aggregate expression produces no value at all (e.g. every row in it has
+`duration = NULL` — a crash-orphaned, never-closed buffer entry that reached the log table without
+ever going through `_dump()`'s normal duration-fill) but the interval genuinely contains valid rows,
+compaction leaves that interval raw rather than deleting data it cannot represent, logs a warning,
+and stops for that item — it does not skip past the stalled interval to keep compacting newer ones,
+since that would silently reorder which data survives.
 
 ---
 
-## 10. Migration Strategy
+## 8. Further Reading
 
-*(This section originally described the plan; §3's status note above confirms the outcome — `utils.py`/`buffer.py`/`store.py` shipped, `query.py`/`maintenance.py` did not. The subsections below are corrected to match what was actually built, per point.)*
-
-### Backward Compatibility
-
-**Confirmed accurate in principle** — all method names currently used by items, the web interface, and user automations (`insertLog`, `readItem`, `readLog`, `updateItem`, `dump`, etc.) do remain on the `Database` class as one-line delegates. The illustrative code below is corrected to match the real delegate targets, which differ in method name/signature from the original sketch (real store methods use `find`/`find_range` rather than `read`, and take a `BufferEntry`/positional args rather than raw value columns):
-
-```python
-# In Database(__init__.py), actual current code:
-def readItem(self, id, cur=None):
-    return self._item_store.find(id, cur=cur)
-
-def insertItem(self, name, cur=None):
-    return self._item_store.insert(name, cur=cur)
-```
-
-No external caller needs to be updated.
-
-### Incremental Approach
-
-Because the public API is stable, the refactoring proceeded one module at a time, largely as planned — **with step 4 not completed**:
-
-1. Extract `utils.py` first — it has no dependencies on anything else and can be unit-tested immediately. — done.
-2. Extract `store.py` next — replace the inline SQL calls with `ItemStore`/`LogStore` instances. — done.
-3. Extract `buffer.py` — replace `self._buffer` and `self._buffer_lock` usages. — done.
-4. Extract `query.py` and `maintenance.py`. — **not done**; `_series`/`_single`/`remove_older_than_maxage` remain in `__init__.py`.
-5. `__init__.py` becomes the thin orchestrator in the final step. — **not achieved**, as a direct consequence of step 4 not happening; `__init__.py` is still ~2450 lines.
-
-Each step produced a diff that is reviewable in isolation and can be validated against the existing test suite.
-
-### Schema Migration
-
-**Implemented, but via the plugin's existing versioned-schema mechanism, not a bespoke probe.** The `val_quality` column is schema version `'7'` in the `_setup` dict already used for every other schema change (`plugins/database/__init__.py`, versions `'1'`–`'6'`), processed by `lib.db.Database.setup()`'s existing version-table check — not a new `try: SELECT ... except: ALTER TABLE` probe as originally sketched here:
-
-```python
-'7': [
-    'ALTER TABLE {log} ADD COLUMN val_quality TINYINT DEFAULT 0;',
-    '/* val_quality column cannot be removed via ALTER TABLE on SQLite <3.35 */',
-],
-```
-
-Existing databases without the column are upgraded automatically on first startup of the new version, the same way every prior schema version bump has always been applied — quality defaults to `0`/valid for all pre-existing rows via the column's `DEFAULT 0`.
+- `lib/db.py`'s own module docstring and `Database.transaction()`'s docstring cover connection-level
+  concerns (reconnect throttling, the hang watchdog, self-healing `commit()`/`rollback()`) not
+  repeated here since they apply to every plugin using `lib/db.py`, not just this one.
+- This plugin's `user_doc.rst` covers end-user configuration, including the MySQL/MariaDB-specific
+  limits mentioned in §5/§7.
+- For *why* the locking model looks like this — the production incidents and the two audit passes
+  that shaped it — see the project's commit history on the `db-transaction-refactor` /
+  `database-transaction-refactor` branches; this document intentionally describes the current
+  design only, not that process.

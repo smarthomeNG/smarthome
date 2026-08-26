@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" font-family="Helvetica, Arial, sans-serif">
+  <rect width="720" height="480" fill="#f9f9f9"/>
+
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#888"/>
+    </marker>
+    <marker id="arr-lock" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#6b1dc2"/>
+    </marker>
+  </defs>
+
+  <text x="360" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Current Architecture</text>
+
+  <!-- __init__.py orchestrator -->
+  <rect x="180" y="48" width="360" height="90" rx="6" fill="#e8f0fe" stroke="#4a86e8" stroke-width="2"/>
+  <text x="360" y="70" text-anchor="middle" font-size="12" font-weight="bold" fill="#2a5db0">Database(SmartPlugin) — __init__.py  (~2800 lines)</text>
+  <text x="360" y="88" text-anchor="middle" font-size="10" fill="#555">lifecycle (run/stop/parse_item/update_item) · public API delegates</text>
+  <text x="360" y="104" text-anchor="middle" font-size="10" fill="#555">_series() / _single()  (analytics — never extracted)</text>
+  <text x="360" y="120" text-anchor="middle" font-size="10" fill="#555">remove_older_than_maxage() / build_orphanlist() / _dump()  (never extracted)</text>
+
+  <!-- utils.py -->
+  <rect x="30"  y="185" width="140" height="65" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="100" y="208" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e7e34">utils.py</text>
+  <text x="100" y="225" text-anchor="middle" font-size="10" fill="#555">encode/decode_value</text>
+  <text x="100" y="240" text-anchor="middle" font-size="10" fill="#555">build_where_clause</text>
+
+  <!-- buffer.py -->
+  <rect x="195" y="185" width="140" height="65" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="265" y="208" text-anchor="middle" font-size="11" font-weight="bold" fill="#b31412">buffer.py</text>
+  <text x="265" y="225" text-anchor="middle" font-size="10" fill="#555">BufferManager</text>
+  <text x="265" y="240" text-anchor="middle" font-size="10" fill="#555">push · pop_all · close_open</text>
+
+  <!-- store.py -->
+  <rect x="360" y="185" width="140" height="65" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="430" y="208" text-anchor="middle" font-size="11" font-weight="bold" fill="#9c6e00">store.py</text>
+  <text x="430" y="225" text-anchor="middle" font-size="10" fill="#555">ItemStore · LogStore</text>
+  <text x="430" y="240" text-anchor="middle" font-size="10" fill="#555">SQL CRUD only</text>
+
+  <!-- webif -->
+  <rect x="525" y="185" width="140" height="65" rx="5" fill="#f3e8fd" stroke="#9334ea" stroke-width="1.5"/>
+  <text x="595" y="208" text-anchor="middle" font-size="11" font-weight="bold" fill="#6b1dc2">webif/</text>
+  <text x="595" y="225" text-anchor="middle" font-size="10" fill="#555">item/orphan browsing</text>
+  <text x="595" y="240" text-anchor="middle" font-size="10" fill="#555">manual actions</text>
+
+  <!-- arrows from orchestrator down -->
+  <line x1="270" y1="138" x2="100" y2="185" stroke="#888" stroke-width="1.3" marker-end="url(#arr)"/>
+  <line x1="310" y1="138" x2="265" y2="185" stroke="#888" stroke-width="1.3" marker-end="url(#arr)"/>
+  <line x1="410" y1="138" x2="430" y2="185" stroke="#888" stroke-width="1.3" marker-end="url(#arr)"/>
+  <line x1="450" y1="138" x2="595" y2="185" stroke="#888" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <!-- lib/db.py -->
+  <rect x="260" y="330" width="200" height="70" rx="6" fill="#f0f0f0" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="360" y="353" text-anchor="middle" font-size="12" font-weight="bold" fill="#555">lib/db.py — Database</text>
+  <text x="360" y="370" text-anchor="middle" font-size="10" fill="#888">connection, cursor, DB-API driver</text>
+  <text x="360" y="385" text-anchor="middle" font-size="10" fill="#888">(shared by every plugin, not just this one)</text>
+
+  <!-- transaction() as the crossing lock layer -->
+  <rect x="100" y="285" width="520" height="34" rx="5" fill="#f3e8fd" stroke="#9334ea" stroke-width="1.5"/>
+  <text x="360" y="307" text-anchor="middle" font-size="11" font-weight="bold" fill="#6b1dc2">self._db.transaction() / self._db_maint.transaction()  —  §3</text>
+
+  <!-- store -> transaction() -->
+  <line x1="430" y1="250" x2="430" y2="285" stroke="#9334ea" stroke-width="1.3" marker-end="url(#arr-lock)"/>
+  <!-- __init__ maintenance/dump -> transaction() (bypasses store.py for some sites) -->
+  <path d="M300,138 C220,200 220,260 300,285" fill="none" stroke="#9334ea" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr-lock)"/>
+  <text x="175" y="220" font-size="9" fill="#6b1dc2">maintenance/_dump()</text>
+  <text x="175" y="232" font-size="9" fill="#6b1dc2">call transaction() directly</text>
+
+  <!-- transaction() -> lib/db.py -->
+  <line x1="360" y1="319" x2="360" y2="330" stroke="#999" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <!-- two connections note -->
+  <rect x="60" y="420" width="600" height="46" rx="5" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <text x="360" y="438" text-anchor="middle" font-size="10" fill="#333">Two independent lib.db.Database connections: self._db (regular reads/writes) and</text>
+  <text x="360" y="453" text-anchor="middle" font-size="10" fill="#333">self._db_maint (orphan cleanup / remove_older_than_maxage) — kept separate so one never blocks the other.</text>
+</svg>

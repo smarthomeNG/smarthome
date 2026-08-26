@@ -4,6 +4,8 @@ import sqlite3
 import threading
 import logging
 import time
+import importlib
+from collections import OrderedDict
 from unittest.mock import patch
 import lib.db
 
@@ -14,6 +16,28 @@ class TestDbBase:
 
     def db(self, connect='', paramstyle='qmark', format_input='qmark'):
         return lib.db.Database('test', self.api(paramstyle=paramstyle), connect, format_input)
+
+    def _hold_lock_in_thread(self, db):
+        """Acquire the lock in a daemon thread; return (release_event, thread).
+
+        For simulating genuine cross-thread contention - a different
+        thread's Thread object never matches the reentrancy guard's owner
+        check, so this exercises real timeout/blocking behaviour rather
+        than the same-thread RuntimeError path.
+        """
+        locked = threading.Event()
+        release = threading.Event()
+
+        def _worker():
+            db.lock()
+            locked.set()
+            release.wait()
+            db.release()
+
+        t = threading.Thread(target=_worker, daemon=True)
+        t.start()
+        locked.wait()
+        return release, t
 
 
 class TestDbTests(unittest.TestCase, TestDbBase):
@@ -28,6 +52,20 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         #            self.db(paramstyle='wrongformat')
         test_db = self.db(paramstyle='wrongformat')  # 'driver format style .* not supported'
         self.assertFalse(test_db.api_initialized)
+
+    def test_lock_release_safe_on_failed_init(self):
+        # Regression: __init__ has three early-return failure paths (bad
+        # dbapi import, unsupported format_input, unsupported
+        # format_output) - self._fdb_lock used to only get created at the
+        # very end, right before api_initialized = True, so any of the
+        # three left a half-built object without it. Generic cleanup code
+        # (e.g. a defensive `finally: db.release()`) calling lock()/
+        # release() on such an object used to hit AttributeError instead
+        # of just harmlessly working on an object nothing else will use.
+        test_db = self.db(paramstyle='wrongformat')
+        self.assertFalse(test_db.api_initialized)
+        self.assertTrue(test_db.lock(timeout=0))
+        test_db.release()
 
     def test_connect(self):
         db = self.db(connect='host:server | user:username | password:secret')
@@ -49,6 +87,27 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         db = self.db(connect='passwd:123456 | port:3306 | host:myhost')
         self.assertEqual('123456', db._params['passwd'])
         self.assertEqual(3306, db._params['port'])
+        self.assertEqual('myhost', db._params['host'])
+
+    def test_connect_ordered_dict_list_preserves_native_yaml_types(self):
+        # Regression: this shape (a list of single-key OrderedDicts) is
+        # exactly what shyaml.yaml_load(..., ordered=True) produces for a
+        # real etc/plugin.yaml connect: list written as multi-line YAML
+        # entries (config.py loads plugin instance config with
+        # ordered=True) - each value already has its correct native YAML
+        # type (port: 3307 -> int, check_same_thread: false -> bool). A
+        # blanket str(v) here used to destroy that; pymysql.connect()
+        # rejects a string port outright ("port should be of type int",
+        # verified against a real pymysql connection).
+        connect = [
+            OrderedDict([('port', 3307)]),
+            OrderedDict([('check_same_thread', False)]),
+            OrderedDict([('host', 'myhost')]),
+        ]
+        db = self.db(connect=connect)
+        self.assertEqual(3307, db._params['port'])
+        self.assertIsInstance(db._params['port'], int)
+        self.assertIs(False, db._params['check_same_thread'])
         self.assertEqual('myhost', db._params['host'])
 
     def test_connect_set_connected(self):
@@ -76,9 +135,24 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertTrue(db.lock())
 
     def test_lock_already_locked(self):
+        # Genuine cross-thread contention - a same-thread double lock() is
+        # a different case now (see test_lock_reentrant_same_thread_raises).
+        db = self.db()
+        release, t = self._hold_lock_in_thread(db)
+        try:
+            self.assertFalse(db.lock(0))
+        finally:
+            release.set()
+            t.join(timeout=1)
+
+    def test_lock_reentrant_same_thread_raises_immediately(self):
         db = self.db()
         db.lock()
-        self.assertFalse(db.lock(0))
+        try:
+            with self.assertRaisesRegex(RuntimeError, r'lock\(\) called re-entrantly'):
+                db.lock()
+        finally:
+            db.release()
 
     def test_release(self):
         db = self.db()
@@ -109,19 +183,36 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertTrue(db._conn.cursor_kwargs is not None)
 
     def test_setup(self):
+        # Each version commits its own transaction() (see setup()'s
+        # docstring - MySQL/MariaDB DDL commits implicitly regardless, so
+        # one end-of-loop commit couldn't make the whole migration atomic
+        # there anyway; per-step commits narrow a crash's blast radius to
+        # one step instead of the whole remaining migration). That means a
+        # fresh cursor per transaction() - track cursor creation order to
+        # inspect each step's own statements, rather than relying on one
+        # shared cursor across the whole call the way a single-transaction
+        # setup() would have.
         db = self.db()
         db.connect()
+        cursors = []
+        orig_cursor_method = db._conn.cursor
+
+        def spy_cursor(**kwargs):
+            c = orig_cursor_method(**kwargs)
+            cursors.append(c)
+            return c
+
+        db._conn.cursor = spy_cursor
         db.setup({1: ['ROLLOUT 1', 'ROLLBACK 1'], 2: ['ROLLOUT 2', 'ROLLBACK 2']})
 
-        # Statement 0: SELECT version - ignore
-        # Statement 1: Rollout statment 1 - check:
-        self.assertEqual('ROLLOUT 1', db._conn.cursor_return.execute_kwargs[1][0])
-        # Statement 2: INSERT version - ignore
-        # Statement 3: Rollout statment 2 - check:
-        self.assertEqual('ROLLOUT 2', db._conn.cursor_return.execute_kwargs[3][0])
-        # Statement 4: INSERT version - check
-        self.assertEqual('INSERT INTO test_version', db._conn.cursor_return.execute_kwargs[4][0][0:24])
-        self.assertEqual(2, db._conn.cursor_return.execute_kwargs[4][1][0])
+        self.assertEqual(3, len(cursors), 'bootstrap check + one transaction() per version step')
+        # cursors[0]: bootstrap check (SELECT version) - not asserted here
+        self.assertEqual('ROLLOUT 1', cursors[1].execute_kwargs[0][0])
+        self.assertEqual('INSERT INTO test_version', cursors[1].execute_kwargs[1][0][0:24])
+        self.assertEqual(1, cursors[1].execute_kwargs[1][1][0])
+        self.assertEqual('ROLLOUT 2', cursors[2].execute_kwargs[0][0])
+        self.assertEqual('INSERT INTO test_version', cursors[2].execute_kwargs[1][0][0:24])
+        self.assertEqual(2, cursors[2].execute_kwargs[1][1][0])
 
     def test_setup_releases_lock_even_if_upgrade_fails(self):
         db = self.db()
@@ -142,6 +233,58 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         # every future connect()/close()/setup()/verify() call would hang
         self.assertTrue(db.lock(0), 'self._fdb_lock was left held after setup() raised')
         db.release()
+
+    def test_setup_step_failure_does_not_undo_earlier_committed_steps(self):
+        # Regression: setup() used to run the whole migration as one
+        # transaction() - on MySQL/MariaDB that was never actually atomic
+        # anyway (DDL commits implicitly), it just meant a crash between
+        # any two steps could lose every already-applied step's version
+        # row, and re-running would fail on already-applied DDL ("table
+        # already exists") rather than just retrying the one step that
+        # never got recorded. Uses a real sqlite3 file (not the mock) so
+        # version persistence across the failure is genuinely checked, not
+        # just call counts.
+        db = lib.db.Database('setup_step_test', 'sqlite3', {'database': ':memory:'}, 'qmark')
+        db.connect()
+
+        orig_execute = db.execute
+
+        def fail_on_step_2(stmt, *a, **kw):
+            if stmt == 'SELECT 2':
+                raise RuntimeError('simulated failure applying step 2')
+            return orig_execute(stmt, *a, **kw)
+
+        db.execute = fail_on_step_2
+        with self.assertRaises(RuntimeError):
+            db.setup({1: ['SELECT 1', 'SELECT 1'], 2: ['SELECT 2', 'SELECT 2']})
+        db.execute = orig_execute
+
+        (version,) = db.fetchone('SELECT MAX(version) FROM setup_step_test_version')
+        self.assertEqual(1, version, "step 1's commit must survive step 2's failure")
+
+    def test_setup_applies_string_version_keys_in_numeric_not_lexicographic_order(self):
+        # Regression: setup() iterated sorted(queries.keys()) - version keys
+        # are strings (the database plugin's real schema uses '1'..'8'), and
+        # plain string sort puts '10' before '2' once a caller reaches
+        # double digits. A fresh/multi-step-behind install applying several
+        # pending versions in one run would then execute step 10's DDL
+        # before steps 2-9 it may depend on.
+        db = lib.db.Database('setup_order_test', 'sqlite3', {'database': ':memory:'}, 'qmark')
+        db.connect()
+
+        applied = []
+        orig_execute = db.execute
+
+        def spy_execute(stmt, *a, **kw):
+            if stmt.startswith('SELECT ') and stmt != 'SELECT MAX(version) FROM setup_order_test_version;':
+                applied.append(stmt)
+            return orig_execute(stmt, *a, **kw)
+
+        db.execute = spy_execute
+        db.setup({'2': ['SELECT 2', ''], '9': ['SELECT 9', ''], '10': ['SELECT 10', '']})
+        db.execute = orig_execute
+
+        self.assertEqual(['SELECT 2', 'SELECT 9', 'SELECT 10'], applied)
 
     def test_execute_internal_cursor(self):
         db = self.db()
@@ -317,6 +460,88 @@ class TestDbTests(unittest.TestCase, TestDbBase):
             with self.assertLogs('lib.db', level='ERROR'):
                 db.fetchall('SELECT 1')
 
+    def test_operational_error_from_statement_still_reconnects(self):
+        # A driver exposing the PEP 249 exception hierarchy: connection-
+        # level errors (OperationalError - lost connection, server gone)
+        # raised by the statement itself must keep the close/reconnect/
+        # retry behavior.
+        db = lib.db.Database('test', MockClassifiedDbApi('qmark'), '', 'qmark')
+        db.connect()
+        first_conn = db._conn
+        original_cursor = first_conn.cursor
+        calls = {'n': 0}
+
+        def wrapped_cursor(**kwargs):
+            cur = original_cursor(**kwargs)
+            original_execute = cur.execute
+
+            def failing_execute(*a, **kw):
+                calls['n'] += 1
+                if calls['n'] == 1:
+                    raise MockClassifiedDbApi.OperationalError('simulated lost connection')
+                return original_execute(*a, **kw)
+
+            cur.execute = failing_execute
+            return cur
+
+        first_conn.cursor = wrapped_cursor
+
+        result = db.fetchall('SELECT 1')
+
+        self.assertEqual([[0]], result)
+        self.assertIsNot(first_conn, db._conn, 'must have reconnected to a new connection object')
+
+    def test_statement_error_does_not_tear_down_healthy_connection(self):
+        # A statement-level failure (IntegrityError, ProgrammingError -
+        # duplicate key, SQL typo) on a live connection is permanent:
+        # retrying it fails identically, and the close/reconnect teardown
+        # would discard whatever else is pending on the connection. It must
+        # raise immediately and leave the connection untouched.
+        db = lib.db.Database('test', MockClassifiedDbApi('qmark'), '', 'qmark')
+        db.connect()
+        first_conn = db._conn
+        original_cursor = first_conn.cursor
+
+        def wrapped_cursor(**kwargs):
+            cur = original_cursor(**kwargs)
+
+            def failing_execute(*a, **kw):
+                raise MockClassifiedDbApi.IntegrityError('simulated duplicate key')
+
+            cur.execute = failing_execute
+            return cur
+
+        first_conn.cursor = wrapped_cursor
+
+        with self.assertRaisesRegex(MockClassifiedDbApi.IntegrityError, 'simulated duplicate key'):
+            db.execute('INSERT INTO x VALUES (1)')
+
+        self.assertIs(first_conn, db._conn, 'a statement error must not tear down the connection')
+        self.assertTrue(db.connected())
+
+    def test_cursor_level_failure_still_reconnects_regardless_of_class(self):
+        # cursor() raising at all means the connection object itself is
+        # unusable (sqlite3 raises ProgrammingError on a closed
+        # connection) - always reconnect-worthy, whatever the class.
+        db = lib.db.Database('test', MockClassifiedDbApi('qmark'), '', 'qmark')
+        db.connect()
+        first_conn = db._conn
+        original_cursor = first_conn.cursor
+        calls = {'n': 0}
+
+        def failing_cursor(**kwargs):
+            calls['n'] += 1
+            if calls['n'] == 1:
+                raise MockClassifiedDbApi.ProgrammingError('Cannot operate on a closed database.')
+            return original_cursor(**kwargs)
+
+        first_conn.cursor = failing_cursor
+
+        result = db.fetchall('SELECT 1')
+
+        self.assertEqual([[0]], result)
+        self.assertIsNot(first_conn, db._conn, 'must have reconnected to a new connection object')
+
     def test_fetchall_not_connected_returns_empty_without_reconnect_attempt(self):
         # never connected at all - must preserve today's behaviour exactly
         # (empty result, no attempted reconnect / no connection storm).
@@ -324,6 +549,15 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         # retry's.
         db = self.db()
         self.assertEqual([], db.fetchall('SELECT 1'))
+        self.assertIsNone(db._conn)
+
+    def test_fetchone_not_connected_returns_none_not_empty_string(self):
+        # Regression: fetchone()'s disconnect sentinel used to be '' - a
+        # caller checking `if row is None` (the normal DB-API2 "no row"
+        # check) would not catch it, and `row[0]` on '' raises IndexError
+        # instead of the TypeError a None check would cleanly catch.
+        db = self.db()
+        self.assertIsNone(db.fetchone('SELECT 1'))
         self.assertIsNone(db._conn)
 
     def test_cursor_op_lock_wait_tracks_configured_timeout_not_hardcoded_300(self):
@@ -485,6 +719,48 @@ class TestDbQueryPyformat(unittest.TestCase, DbQueryBaseTests):
         self.assertEqual('SELECT * FROM TABLE WHERE ID = %s AND Name = %s', args[0])
 
 
+class TestDbLiteralPercentEscaping(unittest.TestCase, TestDbBase):
+    # Regression: pymysql (paramstyle 'pyformat') substitutes parameters via
+    # Python's own '%' string formatting (query % args) - a literal '%'
+    # anywhere in the SQL text (e.g. the modulo operator, as used by the
+    # database plugin's bucket-boundary GROUP BY expression) is otherwise
+    # misread as the start of another format spec, raising "not enough
+    # arguments for format string" even though the query has nothing to do
+    # with that parameter. Caught via a real MariaDB/pymysql target - every
+    # other test in this file uses sqlite3 (paramstyle 'qmark'), which does
+    # real positional binding, not string substitution, so a literal '%'
+    # was always safe there and this path had no prior coverage at all.
+    #
+    # Deliberately not built on DbQueryBaseTests - that mixin's own
+    # test_execute_* methods would also get collected here, and rely on
+    # class attributes (query_formatter, query_argsreuse, ...) this test
+    # doesn't set. Only its execute() helper's pattern is reused, inline.
+
+    def _prepared(self, sql, args, format_input, paramstyle):
+        db = self.db(paramstyle=paramstyle, format_input=format_input)
+        db.connect()
+        db.execute(sql, args)
+        return db._conn.cursor_return.execute_kwargs[0]
+
+    def test_literal_percent_survives_named_to_pyformat_translation(self):
+        stmt, params = self._prepared('SELECT time - (time % :step) FROM log', {'step': 5}, 'named', 'pyformat')
+        self.assertEqual('SELECT time - (time %% %(step)s) FROM log', stmt)
+
+        # the actual failure mode: pymysql's real substitution step is
+        # query % args - prove the translated statement survives it (the
+        # untranslated statement raises TypeError: not enough arguments
+        # for format string on exactly this query).
+        stmt % params
+
+    def test_literal_percent_not_double_escaped_when_source_already_pyformat(self):
+        # pyformat -> pyformat is a no-op translation (empty dict in
+        # _translations) - a source statement already written with real
+        # %(name)s placeholders must not have its own '%' doubled.
+        stmt, params = self._prepared('SELECT * FROM t WHERE id = %(arg1)s', {'arg1': 1}, 'pyformat', 'pyformat')
+        self.assertEqual('SELECT * FROM t WHERE id = %(arg1)s', stmt)
+        stmt % params
+
+
 class MockDbApi:
     def __init__(self, paramstyle):
         self.paramstyle = paramstyle
@@ -497,6 +773,29 @@ class MockDbApi:
 
 class MockPymysqlApi(MockDbApi):
     __name__ = 'pymysql'
+
+
+class MockClassifiedDbApi(MockDbApi):
+    """Mock driver exposing the PEP 249 exception hierarchy, so
+    _cursor_op_with_reconnect's error classification is active (drivers
+    without these attributes fall back to legacy retry-everything)."""
+
+    __name__ = 'classified'
+
+    class InterfaceError(Exception):
+        pass
+
+    class OperationalError(Exception):
+        pass
+
+    class InternalError(Exception):
+        pass
+
+    class IntegrityError(Exception):
+        pass
+
+    class ProgrammingError(Exception):
+        pass
 
 
 class MockDbApiConnection:
@@ -573,21 +872,25 @@ class TestDbConnectHungLock(unittest.TestCase, TestDbBase):
     """connect() must raise instead of blocking indefinitely when lock is held."""
 
     def test_raises_timeout_error_when_lock_held(self):
+        # Genuine cross-thread contention - a same-thread double lock() now
+        # hits the reentrancy guard instead (see TestDbTests), so this must
+        # use a background thread to hold the lock, not a direct db.lock().
         db = self.db()
-        db.lock()
+        release, t = self._hold_lock_in_thread(db)
         try:
             with patch('lib.db._sh_db_query_timeout', return_value=0.05):
                 with self.assertRaises(TimeoutError):
                     db.connect()
         finally:
-            db.release()
+            release.set()
+            t.join(timeout=1)
 
     def test_logs_early_watchdog_warning_before_timeout(self):
         # The watchdog should warn partway through the wait (b), not just
         # after it - so a wedged connect() is visible in the log before it
         # eventually raises, not only in the final error line.
         db = self.db()
-        db.lock()
+        release, t = self._hold_lock_in_thread(db)
         try:
             with patch('lib.db._sh_db_query_timeout', return_value=0.1):
                 with self.assertLogs('lib.db', level='WARNING') as cm:
@@ -595,7 +898,8 @@ class TestDbConnectHungLock(unittest.TestCase, TestDbBase):
                         db.connect()
             self.assertTrue(any('still running' in msg and 'connect()' in msg for msg in cm.output))
         finally:
-            db.release()
+            release.set()
+            t.join(timeout=1)
 
     def test_lock_released_after_failed_connect(self):
         # If dbapi.connect() raises, the lock must still be released.
@@ -610,22 +914,6 @@ class TestDbConnectHungLock(unittest.TestCase, TestDbBase):
 
 class TestDbCloseHungLock(unittest.TestCase, TestDbBase):
     """close() must not block forever when a worker holds _fdb_lock."""
-
-    def _hold_lock_in_thread(self, db):
-        """Acquire the lock in a daemon thread; return (release_event, thread)."""
-        locked = threading.Event()
-        release = threading.Event()
-
-        def _worker():
-            db.lock()
-            locked.set()
-            release.wait()
-            db.release()
-
-        t = threading.Thread(target=_worker, daemon=True)
-        t.start()
-        locked.wait()
-        return release, t
 
     def test_force_closes_conn_when_lock_held(self):
         """Lock held by worker → close() times out, force-closes conn, marks disconnected."""
@@ -857,6 +1145,129 @@ class TestDbReadOnlyTransactionCleanup(unittest.TestCase, TestDbBase):
         self.assertIsNone(db._conn.rollback_kwargs, 'the pending write must never be rolled back by an unrelated read')
 
 
+class TestDbTransaction(unittest.TestCase, TestDbBase):
+    """transaction() - the multi-statement primitive. Commits on clean
+    exit, rolls back on any exception, always releases the lock, and its
+    non-reentrancy is enforced by lock() itself (see TestDbTests'
+    reentrancy tests) rather than tested again here in duplicate.
+    """
+
+    def test_happy_path_commits_and_releases(self):
+        db = self.db()
+        db.connect()
+        with db.transaction() as cur:
+            cur.execute('INSERT INTO x VALUES (1)')
+        self.assertIsNotNone(db._conn.commit_kwargs)
+        self.assertIsNone(db._conn.rollback_kwargs)
+        self.assertIsNotNone(db._conn.cursor_return.close_kwargs, 'cursor must be closed')
+        self.assertTrue(db.lock(0), '_fdb_lock not released after a successful transaction()')
+        db.release()
+
+    def test_yields_a_usable_cursor(self):
+        db = self.db()
+        db.connect()
+        with db.transaction() as cur:
+            cur.execute('SELECT 1')
+        self.assertEqual(('SELECT 1',), db._conn.cursor_return.execute_kwargs[0])
+
+    def test_exception_rolls_back_closes_cursor_releases_lock_and_reraises(self):
+        db = self.db()
+        db.connect()
+        with self.assertRaisesRegex(RuntimeError, 'simulated statement failure'):
+            with db.transaction() as cur:
+                cur.execute('INSERT INTO x VALUES (1)')
+                raise RuntimeError('simulated statement failure')
+        self.assertIsNotNone(db._conn.rollback_kwargs)
+        self.assertIsNone(db._conn.commit_kwargs)
+        self.assertIsNotNone(db._conn.cursor_return.close_kwargs)
+        self.assertTrue(db.lock(0), '_fdb_lock not released after an exception in transaction()')
+        db.release()
+
+    def test_rollback_failure_does_not_mask_original_exception(self):
+        db = self.db()
+        db.connect()
+        db._conn.rollback = lambda **kw: (_ for _ in ()).throw(Exception('simulated rollback failure'))
+        with self.assertLogs('lib.db', level='WARNING') as cm:
+            with self.assertRaisesRegex(RuntimeError, 'original statement failure'):
+                with db.transaction() as cur:
+                    cur.execute('INSERT INTO x VALUES (1)')
+                    raise RuntimeError('original statement failure')
+        self.assertTrue(any('rollback after failed transaction() also failed' in msg for msg in cm.output))
+        # rollback()'s own self-healing reset must still fire here, even
+        # though this transaction()'s own rollback attempt failed
+        self.assertFalse(db.connected(), 'connection state must be reset even when rollback() itself fails')
+
+    def test_commit_failure_propagates_and_still_releases_lock(self):
+        db = self.db()
+        db.connect()
+        db._conn.commit = lambda **kw: (_ for _ in ()).throw(Exception('simulated commit failure'))
+        with self.assertRaisesRegex(Exception, 'simulated commit failure'):
+            with db.transaction() as cur:
+                cur.execute('INSERT INTO x VALUES (1)')
+        # commit()'s own self-healing already reset state - transaction()
+        # must not double-handle this as a rollback case
+        self.assertIsNone(db._conn, 'commit() failure must have reset self._conn via its own self-healing')
+        self.assertTrue(db.lock(0), '_fdb_lock not released after a commit() failure')
+        db.release()
+
+    def test_lock_timeout_raises_promptly_on_cross_thread_contention(self):
+        db = self.db()
+        db.connect()
+        release, t = self._hold_lock_in_thread(db)
+        try:
+            with patch('lib.db._sh_db_query_timeout', return_value=0.05):
+                with self.assertRaisesRegex(TimeoutError, 'could not acquire lock'):
+                    with db.transaction():
+                        pass  # never reached
+        finally:
+            release.set()
+            t.join(timeout=1)
+
+    def test_logs_early_watchdog_warning_while_waiting_for_lock(self):
+        db = self.db()
+        db.connect()
+        release, t = self._hold_lock_in_thread(db)
+        try:
+            with patch('lib.db._sh_db_query_timeout', return_value=0.1):
+                with self.assertLogs('lib.db', level='WARNING') as cm:
+                    with self.assertRaises(TimeoutError):
+                        with db.transaction():
+                            pass
+            self.assertTrue(any('still running' in msg and 'transaction()' in msg for msg in cm.output))
+        finally:
+            release.set()
+            t.join(timeout=1)
+
+    def test_not_connected_raises_connection_error_and_releases_lock(self):
+        db = self.db()  # never connected - db._conn is None
+        with self.assertRaisesRegex(ConnectionError, 'not connected'):
+            with db.transaction():
+                pass
+        self.assertTrue(db.lock(0), '_fdb_lock not released when not connected')
+        db.release()
+
+    def test_nesting_raises_immediately_not_a_timeout(self):
+        db = self.db()
+        db.connect()
+        start = time.monotonic()
+        with patch('lib.db._sh_db_query_timeout', return_value=5):  # would hang 5s if this were a timeout, not a raise
+            with self.assertRaisesRegex(RuntimeError, r'lock\(\) called re-entrantly'):
+                with db.transaction():
+                    with db.transaction():
+                        pass
+        self.assertLess(time.monotonic() - start, 1, 'nesting must fail immediately, not wait out the lock timeout')
+
+    def test_cur_none_call_from_inside_block_raises_immediately_not_a_timeout(self):
+        db = self.db()
+        db.connect()
+        start = time.monotonic()
+        with patch('lib.db._sh_db_query_timeout', return_value=5):
+            with self.assertRaisesRegex(RuntimeError, r'lock\(\) called re-entrantly'):
+                with db.transaction():
+                    db.fetchall('SELECT 1')  # cur=None convenience path - locks internally too
+        self.assertLess(time.monotonic() - start, 1)
+
+
 class TestDbPymysqlTimeouts(unittest.TestCase, TestDbBase):
     """pymysql-family drivers receive socket timeout defaults via setdefault."""
 
@@ -893,6 +1304,15 @@ class TestDbPymysqlTimeouts(unittest.TestCase, TestDbBase):
         self.assertIsInstance(db._params['read_timeout'], int)
         self.assertIsInstance(db._params['write_timeout'], int)
 
+    def test_sqlite_busy_timeout_coerced_to_int_from_string_config(self):
+        # 'timeout' (sqlite3.connect()'s busy-timeout kwarg) is coerced the
+        # same way - without it in _numeric_connect_keys, string connect
+        # config produced sqlite3.connect(timeout='30'), a TypeError against
+        # the real driver.
+        db = self.db(connect='timeout:30')
+        self.assertIsInstance(db._params['timeout'], int)
+        self.assertEqual(30, db._params['timeout'])
+
     def test_non_pymysql_driver_not_affected(self):
         db = self.db()  # MockDbApi has no __name__ → empty string → not in _pymysql_driver_names
         self.assertNotIn('read_timeout', db._params)
@@ -905,6 +1325,53 @@ class TestDbPymysqlTimeouts(unittest.TestCase, TestDbBase):
             db = self._pymysql_db()
         self.assertEqual(99, db._params['read_timeout'])
         self.assertEqual(99, db._params['write_timeout'])
+
+    def test_mysql_connector_gets_no_pymysql_timeout_kwargs(self):
+        # mysql.connector rejects unknown connect() kwargs and does not
+        # accept read_timeout/write_timeout (its own knob is
+        # connection_timeout) - injecting pymysql-style timeouts would make
+        # every mysql.connector connect() fail outright.
+        api = MockPymysqlApi('pyformat')
+        api.__name__ = 'mysql.connector'
+        db = lib.db.Database('test', api, '', 'pyformat')
+        self.assertNotIn('read_timeout', db._params)
+        self.assertNotIn('write_timeout', db._params)
+        self.assertNotIn('connect_timeout', db._params)
+
+
+class TestDbStringDriverImport(unittest.TestCase, TestDbBase):
+    """String-driver-name resolution in __init__ (the 'driver: pymysql' style config)."""
+
+    def test_dotted_driver_name_resolves_to_the_submodule_not_the_top_package(self):
+        # Regression: __import__('mysql.connector') returns the top-level
+        # 'mysql' package, not the 'mysql.connector' submodule - it has no
+        # paramstyle and its __name__ ('mysql') never matches
+        # _pymysql_driver_names ('mysql.connector'), so that driver string
+        # could never actually work. importlib.import_module resolves the
+        # dotted name correctly.
+        fake_submodule = MockPymysqlApi('pyformat')
+        fake_submodule.__name__ = 'mysql.connector'
+        real_import_module = importlib.import_module
+
+        def fake_import(name, *a, **kw):
+            if name == 'mysql.connector':
+                return fake_submodule
+            return real_import_module(name, *a, **kw)  # anything else (e.g. stdlib lazy imports) passes through
+
+        with patch('importlib.import_module', side_effect=fake_import) as mock_import:
+            db = lib.db.Database('test', 'mysql.connector', '', 'pyformat')
+        mock_import.assert_any_call('mysql.connector')
+        self.assertEqual('mysql.connector', db._dbapi.__name__)
+        self.assertTrue(db.api_initialized)
+
+    def test_single_component_driver_name_still_resolves(self):
+        # importlib.import_module and __import__ are equivalent for a
+        # plain (non-dotted) name - confirms the switch didn't change
+        # behaviour for the drivers that already worked (real sqlite3
+        # import here, not mocked - it's always available).
+        db = lib.db.Database('test', 'sqlite3', ':memory:', 'qmark')
+        self.assertEqual('sqlite3', db._dbapi.__name__)
+        self.assertTrue(db.api_initialized)
 
 
 class TestShDbQueryTimeout(unittest.TestCase):
