@@ -62,6 +62,12 @@ def _hang_watchdog(logger, name, label, timeout):
     running, so a genuinely wedged connection is visible in the log before
     (not just after) the eventual timeout/error fires.
 
+    Not shutdown-specific - wraps any bounded wait in this module, including
+    live query execution while SmartHomeNG is running normally. A blocked
+    worker thread doesn't hold the GIL (it's parked in a socket read), so
+    this timer thread runs and logs regardless of what the blocked thread
+    is doing.
+
     Fires once, at half of *timeout*. Cancelled harmlessly if the
     operation finishes first - the normal/fast path never logs anything.
     """
@@ -241,7 +247,12 @@ class Database:
         self.api_initialized = False
 
         # Set up-front, before any of the three failure paths below can
-        # return early
+        # return early: lock()/release() are generic enough that cleanup
+        # code (e.g. a defensive `finally: db.release()`) could reach them
+        # on a half-built object without checking api_initialized first -
+        # AttributeError on self._fdb_lock would be a confusing way to
+        # discover that, versus lock() simply working (harmlessly) on an
+        # object nothing else will use.
         self._fdb_lock = threading.Lock()
         self._fdb_lock_owner = None
 
@@ -285,7 +296,15 @@ class Database:
                         value = value.strip().lower() not in ('false', '0', 'no', '')
                     self._params[key] = value
             elif isinstance(connect[0], OrderedDict):
-                # No str() coercion here
+                # No str() coercion here (unlike the 'key:value' pipe-string
+                # branch above, which genuinely starts with everything as
+                # text) - shyaml.yaml_load(..., ordered=True) (used for the
+                # real etc/plugin.yaml this comes from) already gives each
+                # value its correct native YAML type (port: 3307 -> int,
+                # check_same_thread: false -> bool). Blanket str()'ing here
+                # was actively destroying that - e.g. pymysql.connect()
+                # rejects a string port with "ValueError: port should be of
+                # type int" (verified against a real pymysql connection).
                 self._params = {k: v for item in connect for k, v in item.items()}
 
         elif type(connect) in [dict, collections.OrderedDict]:
@@ -295,12 +314,18 @@ class Database:
             # sqlite3 defaults check_same_thread to True, rejecting
             # cross-thread use - but self._fdb_lock below already
             # serializes all access, and callers legitimately connect() on
-            # one thread then use the connection from another.
+            # one thread then use the connection from another. Only
+            # applied as a default; an explicit check_same_thread in the
+            # connect config always wins.
             self._params['check_same_thread'] = False
 
         if getattr(self._dbapi, '__name__', '') in self._pymysql_driver_names:
             # Without explicit timeouts pymysql blocks indefinitely on a
             # hung server, holding _fdb_lock and preventing shutdown.
+            # connect_timeout covers the TCP handshake; read/write_timeout
+            # cover query execution.  All three are user-overridable via the
+            # connect config; db_query_timeout in smarthome.yaml sets the
+            # read/write default (falls back to _DB_QUERY_TIMEOUT_DEFAULT).
             _qt = _sh_db_query_timeout()
             self._params.setdefault('connect_timeout', 10)
             self._params.setdefault('read_timeout', _qt)
@@ -320,12 +345,16 @@ class Database:
 
         # PEP 249 connection-trouble classes for _cursor_op_with_reconnect's
         # error classification: only these justify the close/reconnect/retry
-        # cycle when raised by a statement.
+        # cycle. A driver exposing none of them (minimal test doubles) falls
+        # back to retrying everything rather than retrying nothing -
+        # is_connection_error() below uses the raw tuple instead, so that
+        # fallback can't hide a real bug's log entry.
         classes = tuple(
             cls
             for cls in (getattr(self._dbapi, n, None) for n in ('InterfaceError', 'OperationalError', 'InternalError'))
             if isinstance(cls, type)
         )
+        self._connection_error_classes = classes
         self._reconnect_exceptions = classes or (Exception,)
 
         self.api_initialized = True
@@ -363,9 +392,12 @@ class Database:
             acquired = self.lock(timeout=timeout)
         if not acquired:
             # A worker thread is holding the lock while blocked on a query
-            # Close the underlying connection anyway, the blocked thread
-            # will receive a broken-connection error, exit its except branch,
-            # and release the lock in its finally block.
+            # (e.g. waiting on a hung MySQL server).  We cannot wait forever
+            # during shutdown, so close the underlying connection anyway.
+            # The blocked thread will receive a broken-connection error,
+            # exit its except branch, and release the lock in its finally
+            # block.  _conn=None / _connected=False are written here so
+            # anything the worker tries after recovering fails gracefully.
             self.logger.warning(
                 'Database [{}]: could not acquire lock within {}s in close(); '
                 'force-closing connection to unblock hung thread'.format(self._name, timeout)
@@ -400,6 +432,15 @@ class Database:
     def connected(self):
         """Return the connected status"""
         return self._connected
+
+    def is_connection_error(self, exc):
+        """True if *exc* is a PEP 249 connection-trouble class for this driver.
+
+        Uses the raw classes tuple, not _reconnect_exceptions' (Exception,)
+        fallback - an unclassifiable driver must never downgrade an
+        unrelated bug's log level just because it can't be classified.
+        """
+        return isinstance(exc, self._connection_error_classes)
 
     def setup(self, queries):
         """Setup or update the database structure.
@@ -565,7 +606,7 @@ class Database:
         try:
             with _hang_watchdog(self.logger, self._name, 'transaction() block', timeout):
                 yield cur
-        except Exception:
+        except Exception as original_exc:
             try:
                 cur.close()
             except Exception:
@@ -573,9 +614,11 @@ class Database:
             try:
                 self.rollback()
             except Exception as rollback_error:
-                self.logger.warning(
-                    f'Database [{self._name}]: rollback after failed transaction() also failed: {rollback_error}'
-                )
+                # Expected shape of a dead connection - only a rollback
+                # failure after some *other* kind of original error is
+                # actually surprising and worth a WARNING.
+                level = self.logger.info if self.is_connection_error(original_exc) else self.logger.warning
+                level(f'Database [{self._name}]: rollback after failed transaction() also failed: {rollback_error}')
             raise
         else:
             try:
@@ -591,8 +634,14 @@ class Database:
         try:
             self._conn.commit()
         except Exception:
-            # A failed commit means the underlying connection is dead
-            # Reset state immediately so the next db action sees
+            # A failed commit means the underlying connection is dead (the
+            # driver already tore down its own socket/buffers internally -
+            # this is what turns one query's failure into confusing,
+            # unrelated-looking errors on whatever touches self._conn next:
+            # pymysql leaves attributes like _sock/_rfile set to None, so a
+            # later call fails with AttributeError instead of a clear
+            # "not connected"). Reset state immediately so the next caller
+            # (verify(), the next dump item, the next scheduled task) sees
             # connected() == False right away instead of inheriting a
             # corrupted connection object.
             self._reset_connection_locked()
@@ -673,6 +722,10 @@ class Database:
         for attempt in (1, 2):
             if self._conn is None:
                 # Never connected, or a previous attempt already gave up
+                # and closed us - not "stale", just not connected right
+                # now. No reconnect storm here; that's _initialize_db()'s
+                # throttled job. Only an existing-but-broken connection
+                # gets retried.
                 return empty
 
             with _hang_watchdog(self.logger, self._name, f'{label} - waiting for db lock', timeout):
@@ -710,7 +763,9 @@ class Database:
                         c.close()
                     except Exception:
                         pass
-                    # Statement-level error on a live connection: only
+                    # Statement-level error on a live connection (c is None
+                    # would mean cursor() itself failed - the connection
+                    # object is unusable, always reconnect-worthy): only
                     # connection-trouble classes justify tearing down and
                     # retrying; anything else (IntegrityError, SQL typo)
                     # fails identically on retry and the teardown would
@@ -730,7 +785,9 @@ class Database:
                     break
         if not quiet:
             prefix = error_prefix or f'Database [{self._name}]: query failed after reconnect attempt'
-            self.logger.error(f'{prefix}: {last_error}')
+            # Same reasoning as execute()'s cur-provided branch below.
+            level = self.logger.info if self.is_connection_error(last_error) else self.logger.error
+            level(f'{prefix}: {last_error}')
         raise last_error
 
     def execute(self, stmt, params=(), formatting=None, cur=None, quiet=False):
@@ -767,7 +824,11 @@ class Database:
                 return cur.execute(stmt, args)
             except Exception as e:
                 if not quiet:
-                    self.logger.error(f'Can not execute query: {stmt} (args {args}): {e}')
+                    # Connection trouble is what transaction() exists to
+                    # survive - ERROR would overstate it; the caller logs
+                    # its own line if the failure matters to report.
+                    level = self.logger.info if self.is_connection_error(e) else self.logger.error
+                    level(f'Can not execute query: {stmt} (args {args}): {e}')
                 raise
 
         return self._cursor_op_with_reconnect(
@@ -845,7 +906,21 @@ class Database:
                         self.fetchone('SELECT 1', cur=probe_cur)
                         probe_cur.close()
                         try:
-                            # On MySQL-family drivers autocommit is off
+                            # On MySQL-family drivers autocommit is off - the
+                            # probe above opened a real transaction that would
+                            # otherwise sit idle indefinitely between verify()
+                            # calls, holding back InnoDB purge (no-op on
+                            # sqlite3, where a SELECT opens no transaction).
+                            # commit(), not rollback() - see
+                            # _cursor_op_with_reconnect's readonly= docstring:
+                            # self._fdb_lock already serializes every caller, so
+                            # rollback() here could silently discard an
+                            # unrelated write still pending on this connection
+                            # from an earlier cur=None caller that never
+                            # explicitly committed (e.g. insertLog()). Best-
+                            # effort: a failure here shouldn't turn a successful
+                            # verify() into a reported failure, since
+                            # connectivity IS confirmed.
                             self.commit()
                         except Exception as e:
                             self.logger.warning(
@@ -872,7 +947,10 @@ class Database:
             if is_pymysql:
                 self._params['read_timeout'] = saved_read_timeout
                 self._params['write_timeout'] = saved_write_timeout
-                # Whatever connection exists now must have the real timeout restored
+                # Whatever connection exists now (reused, or freshly opened
+                # mid-loop with probe_timeout baked in via self._params
+                # above) must have the real timeout restored too - future
+                # real queries on it must not inherit the short probe value.
                 if self._conn is not None:
                     if hasattr(self._conn, '_read_timeout'):
                         self._conn._read_timeout = saved_read_timeout
@@ -943,7 +1021,17 @@ class Database:
             translation = self._translations[formatting][self._format_output]
 
         if self._format_output in ('format', 'pyformat') and input_format not in ('format', 'pyformat'):
-            # prevent format() from messing up SQL queries containing literal '%'
+            # format/pyformat drivers (e.g. pymysql) substitute parameters via
+            # Python's own '%' string formatting (query % args) - a literal
+            # '%' anywhere in the SQL text (e.g. the modulo operator) is
+            # otherwise misread as the start of another format spec and
+            # raises "not enough arguments for format string" or similar,
+            # even though the query has nothing to do with that parameter.
+            # '%%' is '%' string-formatting's own escape for a literal '%',
+            # so doubling it here survives untouched through to the driver.
+            # Only when neither side already uses '%' for its own
+            # placeholder syntax - a 'format'/'pyformat' *source* stmt's
+            # existing %s/%(name)s placeholders must not be double-escaped.
             stmt = stmt.replace('%', '%%')
 
         stmt_result, param_result = self._translate(stmt, param_dict, **translation)
