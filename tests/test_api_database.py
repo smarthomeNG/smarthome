@@ -23,19 +23,16 @@ from modules.admin.api_database import DatabaseController
 
 
 class _FakeDb:
-    def __init__(self, connected=True, params=None, version_row=('10.11.18-MariaDB',), raise_on_fetch=False):
+    def __init__(self, connected=True, params=None, version_string='10.11.18-MariaDB'):
         self._connected_state = connected
         self._params = params or {}
-        self._version_row = version_row
-        self._raise_on_fetch = raise_on_fetch
+        self._version_string = version_string
 
     def connected(self):
         return self._connected_state
 
-    def fetchone(self, stmt):
-        if self._raise_on_fetch:
-            raise OSError('connection reset')
-        return self._version_row
+    def version(self):
+        return self._version_string
 
 
 class _FakeDatabasePlugin(SmartPlugin):
@@ -103,8 +100,8 @@ class TestSqliteConfiguration(unittest.TestCase):
         self.assertNotIn('host', result)
         self.assertEqual(result['connected'], True)
 
-    def test_version_uses_sqlite_version_function(self):
-        db = _FakeDb(connected=True, params={'database': 'x.db'}, version_row=('3.45.1',))
+    def test_reports_engine_version(self):
+        db = _FakeDb(connected=True, params={'database': 'x.db'}, version_string='3.45.1')
         plugin = _FakeDatabasePlugin('sqlite3', db)
         controller = _make_controller([plugin])
 
@@ -130,8 +127,8 @@ class TestMysqlFamilyConfiguration(unittest.TestCase):
         self.assertNotIn('user', result)
         self.assertNotIn('passwd', result)
 
-    def test_version_uses_select_version(self):
-        db = _FakeDb(connected=True, params={'host': '127.0.0.1', 'db': 'smarthome'}, version_row=('10.11.18-MariaDB',))
+    def test_reports_engine_version(self):
+        db = _FakeDb(connected=True, params={'host': '127.0.0.1', 'db': 'smarthome'}, version_string='10.11.18-MariaDB')
         plugin = _FakeDatabasePlugin('pymysql', db)
         controller = _make_controller([plugin])
 
@@ -154,7 +151,9 @@ class TestConnectionState(unittest.TestCase):
         self.assertNotIn('version', result)
 
     def test_version_lookup_failure_does_not_break_response(self):
-        db = _FakeDb(connected=True, params={'database': 'x.db'}, raise_on_fetch=True)
+        # Database.version() itself never raises - it returns None on
+        # failure (see lib/db.py) - so the fake just mirrors that contract.
+        db = _FakeDb(connected=True, params={'database': 'x.db'}, version_string=None)
         plugin = _FakeDatabasePlugin('sqlite3', db)
         controller = _make_controller([plugin])
 

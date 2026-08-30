@@ -1374,6 +1374,98 @@ class TestDbStringDriverImport(unittest.TestCase, TestDbBase):
         self.assertTrue(db.api_initialized)
 
 
+class TestDbVersion(unittest.TestCase, TestDbBase):
+    """version() returns the engine's version string, cached until the
+    connection is torn down and reconnected."""
+
+    def test_sqlite_uses_real_sqlite_version(self):
+        db = lib.db.Database('version_test', 'sqlite3', {'database': ':memory:'}, 'qmark')
+        db.connect()
+        self.assertEqual(sqlite3.sqlite_version, db.version())
+
+    def test_mysql_family_driver_queries_select_version(self):
+        db = lib.db.Database('test', MockPymysqlApi('qmark'), '', 'qmark')
+        db.connect()
+
+        sent = []
+        orig_execute = db.execute
+
+        def spy_execute(stmt, *a, **kw):
+            sent.append(stmt)
+            return orig_execute(stmt, *a, **kw)
+
+        db.execute = spy_execute
+        db.version()
+        self.assertIn('SELECT VERSION()', sent)
+
+    def test_cached_after_first_successful_lookup(self):
+        db = self.db()
+        db.connect()
+
+        calls = []
+        orig_fetchone = db.fetchone
+
+        def spy_fetchone(*a, **kw):
+            calls.append(1)
+            return orig_fetchone(*a, **kw)
+
+        db.fetchone = spy_fetchone
+        first = db.version()
+        second = db.version()
+
+        self.assertEqual(first, second)
+        self.assertEqual(1, len(calls), 'second call must use the cache, not re-query')
+
+    def test_cache_invalidated_on_reconnect(self):
+        db = self.db()
+        db.connect()
+        self.assertIsNotNone(db.version())
+
+        db.close()
+        db.connect()
+
+        calls = []
+        orig_fetchone = db.fetchone
+
+        def spy_fetchone(*a, **kw):
+            calls.append(1)
+            return orig_fetchone(*a, **kw)
+
+        db.fetchone = spy_fetchone
+        db.version()
+        self.assertEqual(1, len(calls), 'reconnect must clear the cache and force a fresh lookup')
+
+    def test_failure_returns_none_and_logs_once(self):
+        db = self.db()
+        db.connect()
+        db.fetchone = lambda *a, **kw: (_ for _ in ()).throw(RuntimeError('simulated failure'))
+
+        with self.assertLogs('lib.db', level='INFO') as cm:
+            result = db.version()
+
+        self.assertIsNone(result)
+        self.assertEqual(1, len(cm.output))
+        self.assertIn('version lookup failed', cm.output[0])
+
+    def test_failure_not_cached_retries_next_call(self):
+        db = self.db()
+        db.connect()
+
+        calls = []
+        orig_fetchone = db.fetchone
+
+        def failing_once(*a, **kw):
+            calls.append(1)
+            if len(calls) == 1:
+                raise RuntimeError('simulated transient failure')
+            return orig_fetchone(*a, **kw)
+
+        db.fetchone = failing_once
+        self.assertIsNone(db.version())
+        self.assertIsNotNone(db.version())
+        self.assertEqual(2, len(calls), 'a failed lookup must not be cached')
+
+
 class TestShDbQueryTimeout(unittest.TestCase):
     """_sh_db_query_timeout() reads sh._db_query_timeout and falls back safely."""
 

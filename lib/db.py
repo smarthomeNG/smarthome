@@ -243,6 +243,7 @@ class Database:
         self._format_input = formatting
         self._connected = False
         self._conn = None
+        self._version = None
 
         self.api_initialized = False
 
@@ -428,6 +429,7 @@ class Database:
             pass
         self._conn = None
         self._connected = False
+        self._version = None
 
     def connected(self):
         """Return the connected status"""
@@ -1003,6 +1005,27 @@ class Database:
             error_prefix=f'fetchall failed for stmt {stmt} with params {params}',
             readonly=True,
         )
+
+    def version(self):
+        """Best-effort database engine/server version string, or None on failure.
+
+        Cached after a successful lookup - the engine version can only
+        change via a server restart, which always tears down and
+        reconnects this object's connection (see
+        _reset_connection_locked()), so that's the only point the cache
+        needs to be invalidated.
+        """
+        if self._version is not None:
+            return self._version
+        stmt = 'SELECT sqlite_version()' if getattr(self._dbapi, '__name__', '') == 'sqlite3' else 'SELECT VERSION()'
+        try:
+            result = self.fetchone(stmt, quiet=True)
+            if result:
+                self._version = str(result[0])
+                return self._version
+        except Exception as e:
+            self.logger.info(f'Database [{self._name}]: version lookup failed: {e}')
+        return None
 
     def _prepare(self, stmt, params, formatting=None):
         """Internal helper method to convert the statement and parameter list"""

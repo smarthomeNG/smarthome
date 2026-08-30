@@ -60,28 +60,6 @@ class DatabaseController(RESTResource):
                 return x
         return None
 
-    def _engine_version(self, db, driver):
-        """
-        Best-effort engine/server version lookup. No version()-style method
-        exists on lib.db.Database (deliberately not added there - see the
-        db-connections hardening notes, that file is mid-refactor and its
-        blast radius is being kept deliberately small) - SELECT VERSION()
-        covers every MySQL-API2 driver uniformly, sqlite_version() is
-        sqlite3's equivalent built-in SQL function; both go through
-        Database's own reconnect-safe fetchone(), not the raw driver
-        connection.
-
-        Never lets a query failure break the rest of the response.
-        """
-        try:
-            stmt = 'SELECT sqlite_version()' if driver == 'sqlite3' else 'SELECT VERSION()'
-            result = db.fetchone(stmt)
-            if result:
-                return str(result[0])
-        except Exception as e:
-            self.logger.info(f'DatabaseController: engine version lookup failed: {e}')
-        return None
-
     def info(self):
         plugin = self._find_database_plugin()
         if plugin is None:
@@ -108,7 +86,7 @@ class DatabaseController(RESTResource):
                 response['host'] = params['host']
 
         if connected:
-            response['version'] = self._engine_version(db, driver)
+            response['version'] = db.version()
 
         return response
 
