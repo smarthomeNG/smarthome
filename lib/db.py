@@ -368,7 +368,9 @@ class Database:
             locked = self.lock(timeout=timeout)
         if not locked:
             raise TimeoutError(
-                'Database [{}]: could not acquire lock within {}s in connect()'.format(self._name, timeout)
+                'Database [{}]: could not acquire lock within {}s in connect(){}'.format(
+                    self._name, timeout, self.lock_holder_description()
+                )
             )
         try:
             self._conn = self._dbapi.connect(**self._params)
@@ -400,8 +402,10 @@ class Database:
             # block.  _conn=None / _connected=False are written here so
             # anything the worker tries after recovering fails gracefully.
             self.logger.warning(
-                'Database [{}]: could not acquire lock within {}s in close(); '
-                'force-closing connection to unblock hung thread'.format(self._name, timeout)
+                'Database [{}]: could not acquire lock within {}s in close(){}; '
+                'force-closing connection to unblock hung thread'.format(
+                    self._name, timeout, self.lock_holder_description()
+                )
             )
         try:
             self._reset_connection_locked()
@@ -550,6 +554,20 @@ class Database:
         self._fdb_lock_owner = None
         self._fdb_lock.release()
 
+    def lock_holder_description(self):
+        """' (lock currently held by thread <name>)', or '' if unheld.
+
+        For a log message reporting a failed lock acquisition - names the
+        cause instead of just the symptom, e.g. distinguishing "someone
+        else is mid-compaction" from a genuine connection failure. Safe to
+        call from a different thread than the one that failed to acquire:
+        same benign, unsynchronized attribute read as lock()'s own
+        reentrancy check (see its docstring) - at worst one step stale,
+        never wrong about a thread that doesn't actually hold the lock.
+        """
+        owner = self._fdb_lock_owner
+        return f' (lock currently held by thread {owner.name!r})' if owner is not None else ''
+
     @contextlib.contextmanager
     def transaction(self, timeout=None):
         """Run a block of statements as one transaction.
@@ -597,7 +615,9 @@ class Database:
             locked = self.lock(timeout=timeout)
         if not locked:
             raise TimeoutError(
-                'Database [{}]: could not acquire lock within {}s in transaction()'.format(self._name, timeout)
+                'Database [{}]: could not acquire lock within {}s in transaction(){}'.format(
+                    self._name, timeout, self.lock_holder_description()
+                )
             )
 
         cur = self.cursor()
@@ -733,7 +753,9 @@ class Database:
             with _hang_watchdog(self.logger, self._name, f'{label} - waiting for db lock', timeout):
                 locked = self.lock(timeout)
             if not locked:
-                last_error = TimeoutError(f'Database [{self._name}]: could not acquire lock within {timeout}s')
+                last_error = TimeoutError(
+                    f'Database [{self._name}]: could not acquire lock within {timeout}s{self.lock_holder_description()}'
+                )
                 break
 
             c = None
@@ -932,7 +954,9 @@ class Database:
                         self.release()
                     else:
                         self.logger.warning(
-                            'Database [{}]: Could not acquire lock to verify connection'.format(self._name)
+                            'Database [{}]: Could not acquire lock to verify connection{}'.format(
+                                self._name, self.lock_holder_description()
+                            )
                         )
                         retry = retry - 1
 

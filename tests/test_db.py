@@ -324,6 +324,18 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertEqual(0, result)
         self.assertEqual(3, len(calls))
 
+    def test_verify_names_lock_holder_on_contention(self):
+        db = self.db()
+        db.connect()
+        release, holder_thread = self._hold_lock_in_thread(db)
+        try:
+            with self.assertLogs('lib.db', level='WARNING') as cm:
+                db.verify(retry=1, delay=0)
+            self.assertTrue(any(holder_thread.name in msg and 'held by thread' in msg for msg in cm.output), cm.output)
+        finally:
+            release.set()
+            holder_thread.join()
+
     def test_execute_error_logs_by_default(self):
         db = self.db()
         db.connect()
