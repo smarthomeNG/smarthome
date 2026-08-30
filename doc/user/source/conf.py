@@ -164,6 +164,7 @@ exclude_patterns = [
     '**/pv_*',
     '**/._*md',
     '**/.pytest*',
+    '**/node_modules/**',
 ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.

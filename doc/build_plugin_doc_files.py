@@ -278,7 +278,15 @@ def make_table_bullet_lines(lines: list, indent: int = 3) -> list:
 def write_heading(fh, heading, level):
 
     liner1 = '=' * len(heading)
-    liner2 = ' - ' * len(heading)
+    # A section underline must be a single repeated character, matching or
+    # exceeding the title's length - the previous ' - ' * len(heading) built
+    # a garbage line like ' -  - ' instead, which RST reads as a bullet
+    # list nested one level deeper per dash rather than a heading underline
+    # (verified against docutils directly: the old string parsed 'id' as a
+    # <definition_list> term with an empty, ever-deepening nested bullet
+    # list body - exactly the malformed output seen on every plugin_functions
+    # parameter in the rendered docs).
+    liner2 = '-' * len(heading)
 
     fh.write('\n')
     if level == 1:
@@ -418,7 +426,17 @@ def write_struct(fh, conf, key, level=0):
         fh.write(msg)
 
     def write_item(fh, conf, name, level):
+        # 'name'/'remark' is only a description here if it's a plain string -
+        # several plugins (appletv, avm, bose_soundtouch, lms, pioneer,
+        # robonect, ...) have a *child struct item* literally called 'name'
+        # (e.g. a device's own display-name item), which would otherwise be
+        # misread as this node's own description text instead of a nested
+        # item to recurse into.
         desc = conf.get('name', conf.get('remark', '---'))
+        if not isinstance(desc, str):
+            desc = '---'
+        # remove newlines to prevent linebreaks in YAML lists
+        desc = (desc or '').replace('\n', ' ')
         ityp = conf.get('type', 'foo')
         text = f'{bold(name)} (`{ityp}`, {desc})'
 
@@ -1012,36 +1030,52 @@ def write_configfile(plg: dict, configfile_dir: str, language: str = 'de'):
                 fh.write('\n')
 
             # func_param_yaml = functions_yaml[f].get('parameters', None)
+            #
+            # Parameters are a *sub*-level of an already-h2 function heading -
+            # rendered as their own h3 sections (write_heading level 3) they
+            # were visually indistinguishable from the function itself (same
+            # font weight/size in the RTD theme, which doesn't indent nested
+            # sections at all - only Item Attributes' top-level h2 entries
+            # looked fine, since that section has no third tier). A
+            # definition list - term at the base indent, body indented under
+            # it - renders with real visual indentation in this theme and
+            # matches Item Attributes' own bullet-list style for the
+            # Datentyp/Standardwert/etc. properties below each one.
             if func_param_yaml is not None:
+                fh.write('**Parameter:**\n')
+                fh.write('\n')
                 for par in func_param_yaml:
-                    write_heading(fh, par, 3)
-                    write_formatted(fh, get_doc_description(func_param_yaml[par], language))
                     datatype = func_param_yaml[par].get('type', '').lower()
                     default = str(func_param_yaml[par].get('default', ''))
                     validlist = func_param_yaml[par].get('valid_list', [])
                     validmin = func_param_yaml[par].get('valid_min', '')
                     validmax = func_param_yaml[par].get('valid_max', '')
-                    fh.write(' - Datentyp: ' + bold(datatype) + '\n')
+
+                    fh.write(bold(par) + '\n')
+                    desc = get_doc_description(func_param_yaml[par], language)
+                    if desc:
+                        fh.write('    ' + desc + '\n')
+                    fh.write('\n')
+                    fh.write('    - Datentyp: ' + bold(datatype) + '\n')
                     if default != '':
                         default_printable = default.replace('\r', '\\r')
                         default_printable = default_printable.replace('\n', '\\n')
-                        fh.write(' - Standardwert: ' + bold(default_printable) + '\n')
-                    fh.write('\n')
+                        fh.write('    - Standardwert: ' + bold(default_printable) + '\n')
                     if validmin != '':
-                        fh.write(' - Minimalwert: ' + bold(str(validmin)) + '\n')
+                        fh.write('    - Minimalwert: ' + bold(str(validmin)) + '\n')
                     if validmax != '':
-                        fh.write(' - Maximalwert: ' + bold(str(validmax)) + '\n')
+                        fh.write('    - Maximalwert: ' + bold(str(validmax)) + '\n')
                     if len(validlist) > 0:
-                        fh.write(' - Mögliche Werte:\n')
+                        fh.write('    - Mögliche Werte:\n')
                         fh.write('\n')
                         for index, v in enumerate(validlist):
-                            desc = get_doc_description(
+                            vdesc = get_doc_description(
                                 func_param_yaml[par], language, key='valid_list_description', index=index
                             )
-                            if desc != '':
-                                desc = ' |_| - |_| ' + desc
-                            fh.write('   - ' + bold(str(v)) + desc + '\n')
-                        fh.write('\n')
+                            if vdesc != '':
+                                vdesc = ' |_| - |_| ' + vdesc
+                            fh.write('       - ' + bold(str(v)) + vdesc + '\n')
+                    fh.write('\n')
 
     fh.write('\n')
 

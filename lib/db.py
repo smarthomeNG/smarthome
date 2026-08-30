@@ -108,8 +108,7 @@ class Database:
     'rollback()' - rollback a transaction (if the selcted database supports it)
     'lock()' - acquire the database lock (prevent simultaneous reads/writes)
     'release()' - release the database lock
-    'transaction()' - context manager: run several statements as one
-        commit/rollback unit, using lock()/release() internally
+    'transaction()' - context manager: run several statements as one commit/rollback unit, using lock()/release() internally
     'verify()' - check database connection and reconnect if required
     'connected()' - check if database is connected
 
