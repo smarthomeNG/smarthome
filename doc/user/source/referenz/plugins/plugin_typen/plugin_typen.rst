@@ -60,7 +60,7 @@ Dabei handelt es sich um die Methoden
 
     - add_subscription(topic, payload_type, bool_values=None, item=None, callback=None)
     - start_subscriptions()
-    - stop_subscription()
+    - stop_subscriptions()
     - publish_topic(topic, payload, item=None, qos=None, retain=False, bool_values=None)
     - get_broker_info()
     - broker_uptime()

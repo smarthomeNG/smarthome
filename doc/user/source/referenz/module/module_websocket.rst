@@ -31,7 +31,7 @@ Metadaten
 Konfiguration
 -------------
 
-Konfigurationsdokumentation ist unter Konfiguration auf der Seite :doc:`../../../konfiguration/module/module_websocket`
+Konfigurationsdokumentation ist auf der Seite :doc:`Konfiguration </konfiguration/module/module_websocket>`
 zu finden.
 
 

@@ -52,6 +52,7 @@ html:
 	@test ! -L "source/plugins" && echo "creating a link to the plugin directory" && ln -s ../../../plugins source/plugins || echo "link to plugins directory already exists"
 	@test ! -L "source/modules" && echo "creating a link to the module directory" && ln -s ../../../modules source/modules || echo "link to modules directory already exists"
 	@test ! -L "source/dev" && echo "creating a link to the dev directory" && ln -s ../../../dev source/dev || echo "link to dev directory already exists"
+	@test ! -L "source/libsrc" && echo "creating a link to the lib source directory" && ln -s ../../../lib source/libsrc || echo "link to lib source directory already exists"
 	@test ! -L "source/logics" && echo "creating a link to the logics directory" && ln -s ../../../logics source/logics || echo "link to logics directory already exists"
 	@test ! -L "source/templates" && echo "creating a link to the templates directory" && ln -s ../../../templates source/templates || echo "link to templates directory already exists"
 	@echo
@@ -61,6 +62,7 @@ html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@test -L "source/dev" && echo "removing link to the dev directory" && unlink source/dev
+	@test -L "source/libsrc" && echo "removing link to the lib source directory" && unlink source/libsrc
 	@test -L "source/modules" && echo "removing link to the modules directory" && unlink source/modules
 	@test -L "source/plugins" && echo "removing link to the plugin directory" && unlink source/plugins
 	@test -L "source/logics" && echo "removing link to the logics directory" && unlink source/logics
@@ -76,6 +78,7 @@ htmlonly:
 	@test ! -L "source/plugins" && echo "creating a link to the plugin directory" && ln -s ../../../plugins source/plugins || echo "link to plugins directory already exists"
 	@test ! -L "source/modules" && echo "creating a link to the module directory" && ln -s ../../../modules source/modules || echo "link to modules directory already exists"
 	@test ! -L "source/dev" && echo "creating a link to the dev directory" && ln -s ../../../dev source/dev || echo "link to dev directory already exists"
+	@test ! -L "source/libsrc" && echo "creating a link to the lib source directory" && ln -s ../../../lib source/libsrc || echo "link to lib source directory already exists"
 	@test ! -L "source/logics" && echo "creating a link to the logics directory" && ln -s ../../../logics source/logics || echo "link to logics directory already exists"
 	@test ! -L "source/templates" && echo "creating a link to the templates directory" && ln -s ../../../templates source/templates || echo "link to templates directory already exists"
 	@echo
@@ -84,6 +87,7 @@ htmlonly:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@test -L "source/dev" && echo "removing link to the dev directory" && unlink source/dev
+	@test -L "source/libsrc" && echo "removing link to the lib source directory" && unlink source/libsrc
 	@test -L "source/modules" && echo "removing link to the modules directory" && unlink source/modules
 	@test -L "source/plugins" && echo "removing link to the plugin directory" && unlink source/plugins
 	@test -L "source/logics" && echo "removing link to the logics directory" && unlink source/logics
@@ -99,6 +103,7 @@ pdf:
 	@test ! -L "source/plugins" && echo "creating a link to the plugin directory" && ln -s ../../../plugins source/plugins || echo "link to plugins directory already exists"
 	@test ! -L "source/modules" && echo "creating a link to the module directory" && ln -s ../../../modules source/modules || echo "link to modules directory already exists"
 	@test ! -L "source/dev" && echo "creating a link to the dev directory" && ln -s ../../../dev source/dev || echo "link to dev directory already exists"
+	@test ! -L "source/libsrc" && echo "creating a link to the lib source directory" && ln -s ../../../lib source/libsrc || echo "link to lib source directory already exists"
 	@test ! -L "source/logics" && echo "creating a link to the logics directory" && ln -s ../../../logics source/logics || echo "link to logics directory already exists"
 	@echo
 	@python3 -V
@@ -107,6 +112,7 @@ pdf:
 	$(SPHINXBUILD) -b pdf $(ALLSPHINXOPTS) $(BUILDDIR)/pdf
 	@echo
 	@test -L "source/dev" && echo "removing link to the dev directory" && unlink source/dev
+	@test -L "source/libsrc" && echo "removing link to the lib source directory" && unlink source/libsrc
 	@test -L "source/modules" && echo "removing link to the modules directory" && unlink source/modules
 	@test -L "source/plugins" && echo "removing link to the plugin directory" && unlink source/plugins
 	@test -L "source/logics" && echo "removing link to the logics directory" && unlink source/logics

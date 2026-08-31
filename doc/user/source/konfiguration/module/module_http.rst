@@ -53,11 +53,11 @@ Datei *etc/module.yaml*
        # use_tls: False
        # tls_cert: shng.cer
        # tls_key: shng.key
-       # port: 8384
+       # servicesport: 8384
        # showpluginlist: True
        # showservicelist: False
        # starturl: backend
-       # threads: 8
+       # threads: 4
        # showtraceback: False
        # webif_pagelength: 0
 
@@ -107,7 +107,7 @@ Datei *etc/module.yaml*
 |                         | werden.                                                                                              |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | port                    | **Optional**: Der Port auf welchem das html Interface lauscht. Dieser Port wird für Webinterfaces    |
-|                         | wie z.B. das Backend Plugin genutzt- Standard Port ist **8383** .                                    |
+|                         | wie z.B. die AdminUI genutzt - Standard Port ist **8383** .                                          |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | tls_port                | **Optional**: Portnummer für die Webinterfaces bei Nutzung von https - Standard Port ist **8385**    |
 +-------------------------+------------------------------------------------------------------------------------------------------+
@@ -120,7 +120,7 @@ Datei *etc/module.yaml*
 | tls_key                 | **Optional**: Name der Datei mit dem privaten Schlüssel und der Endung '.key'. Die Datei muss        |
 |                         | im Verzeichnis ``etc`` liegen                                                                        |
 +-------------------------+------------------------------------------------------------------------------------------------------+
-| serviceport             | **Optional**: Der Port auf welchem das html Interface lauscht. Dieser Port wird für den Zugriff      |
+| servicesport            | **Optional**: Der Port auf welchem das html Interface lauscht. Dieser Port wird für den Zugriff      |
 |                         | auf Webservices genutzt, wie ihn z.B. das Plugin Webservices zur Verfügung stellt. Standard Port     |
 |                         | ist **8384** .                                                                                       |
 +-------------------------+------------------------------------------------------------------------------------------------------+
@@ -133,14 +133,14 @@ Datei *etc/module.yaml*
 |                         | **http://smarthomeNG.local:8383/services** keine Liste der Services mit Web Interface gezeigt.       |
 |                         | **showservicelist** ist standardmäßig **False**.                                                     |
 +-------------------------+------------------------------------------------------------------------------------------------------+
-| starturl                | **Optional**: Wenn **starturl** auf den Namen eines geladenen Plugins gesetzt ist, wird beim Aufruf  |
-|                         | von http://smarthomeNG.local:8383/ auf dieses Plugin weitergeleitet, statt auf die Übersichtsseite.  |
-|                         | Wenn z.B. standardmäßig das Backend Plugin aufgerufen werden soll, muss ``starturl: backend``        |
-|                         | gesetzt werden. Die Übersichtsseite ist weiterhin unter http://smarthomeNG.local:8383/plugins/       |
-|                         | erreichbar.                                                                                          |
+| starturl                | **Optional**: Wenn **starturl** auf den Namen eines geladenen Plugins mit Webinterface (oder auf     |
+|                         | ``admin``) gesetzt ist, wird beim Aufruf von http://smarthomeNG.local:8383/ auf dieses Webinterface  |
+|                         | weitergeleitet, statt auf die Übersichtsseite. Standardmäßig ist ``starturl: admin`` gesetzt, so     |
+|                         | dass die AdminUI aufgerufen wird. Die Übersichtsseite ist weiterhin unter                            |
+|                         | http://smarthomeNG.local:8383/plugins/ erreichbar.                                                   |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | threads                 | **Optional**: Die Anzahl der Threads, die CherryPy für jeden Port startet, auf dem es lauscht.       |
-|                         | Default ist 8, was für leistungsschwächere CPUs zu viel sein kann                                    |
+|                         | Default ist 4, was für leistungsschwächere CPUs zu viel sein kann                                    |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | showtraceback           | **Optional**: Falls dieser Parameter auf  **True** gesetzt wird, zeigen Fehlerseiten (außer Fehler   |
 |                         | bei 404) einen Python Fehler-Trace an. Normalerweise wird dieser Trace nur im **smarthome.log**      |

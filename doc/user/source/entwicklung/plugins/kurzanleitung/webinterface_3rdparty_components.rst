@@ -33,15 +33,15 @@ SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul a
      * JS: <script src="/gstatic/bootstrap/js/bootstrap.min.js"></script>
    * Bootstrap Tree View 1.2.1:
 
-      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-treeview/bootstrap-treeview.css" type="text/css"/>
+      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-treeview/bootstrap-treeview.min.css" type="text/css"/>
       * JS: <script src="/gstatic/bootstrap-treeview/bootstrap-treeview.min.js"></script>
    * Bootstrap Datepicker v1.10.0:
 
-      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" type="text/css"/>
+      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-datepicker/css/bootstrap-datepicker.min.css" type="text/css"/>
       * JS:
 
-        * <script src="/gstatic/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-        * <script src="/gstatic/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"></script>
+        * <script src="/gstatic/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        * <script src="/gstatic/bootstrap-datepicker/locales/bootstrap-datepicker.de.min.js"></script>
    * Popper 2.11.8 (Tooltips):
 
       * CSS: <link rel="stylesheet" href="/gstatic/popper.js/popper.css"/>

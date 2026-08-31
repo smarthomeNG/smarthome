@@ -59,10 +59,11 @@ Die Klasse ``WebInterface`` im Plugin Code muss so erweitert werden, dass sie di
             if dataSet is None:
                 # get the new data
                 data = {}
-                data['fromip'] = 'fromip': self.plugin.fromip)
+                data['fromip'] = self.plugin.fromip
 
                 data['item'] = {}
                 for i in self.plugin.items:
+                    data['item'][i] = {}
                     data['item'][i]['value'] = self.plugin.getitemvalue(i)
 
                 # return it as json the the web page

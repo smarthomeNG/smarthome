@@ -21,11 +21,10 @@ Konfigurationsdateien vom **CONF** Format in das **YAML** Format übernimmt.
 
    smarthome$ python3 tools/conf_to_yaml_converter.py
 
-   conf_to_yaml_converter.py - tool to convert shng .conf files to yaml
+   conf_to_yaml_converter.py - Tool zur Konvertierung von shng .conf-Dateien ins yaml-Format
 
-   converting .conf-files from the following directories:
-   - item-directory  : /usr/local/smarthome/items
-   - config-directory: /usr/local/smarthome/etc
+   Dateien im Verzeichnis items konvertieren (j/n)? j
+   Konvertiere Dateien in items:
 
-   Convert item files (y/n)?: y
-   Convert config files (y/n)?:
+   Dateien im Verzeichnis etc konvertieren (j/n)? j
+   Konvertiere Dateien in etc:

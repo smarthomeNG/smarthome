@@ -9,7 +9,9 @@ Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:
     - ``scene`` - ein ganzzahliger Wert im Bereich von 0 bis 63, der eine Szenen Nummer repräsentiert
     - ``float`` - ein numerischer Wert der Nachkommastellen enthalten darf
     - ``num`` - das Equivalent zum Typ ```float``
+    - ``timestamp`` - das Equivalent zum Typ ```float``
     - ``str`` - ein String`
+    - ``password`` - das Equivalent zum Typ ```str``
     - ``ip`` - ein String, der einen Hostnamen, eine ipv4-Adresse oder eine ipv6-Adresse repräsentiert
     - ``ipv4`` - ein String, der eine ipv4-Adresse repräsentiert
     - ``ipv6`` - ein String, der eine ipv6-Adresse repräsentiert
@@ -67,10 +69,10 @@ Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:
 
   Jeder Sprach-Sub-Key muss eine Liste sein, die für jeden Eintrag in ``valid_list`` eine Beschreibung enthält.
 
-- ``valid_min:`` Optional: Für die Datentypen ``int``, ``pint``, ``float``, ``pfloat``, ``num`` und  ``scene`` kann
+- ``valid_min:`` Optional: Für die Datentypen ``int``, ``float``, ``num``, ``timestamp`` und  ``scene`` kann
   hier ein minimal Wert angegeben werden
 
-- ``valid_max`` Optional: Für die Datentypen ``int``, ``pint``, ``float``, ``pfloat``, ``num`` und  ``scene`` kann
+- ``valid_max`` Optional: Für die Datentypen ``int``, ``float``, ``num``, ``timestamp`` und  ``scene`` kann
   hier ein maximal Wert angegeben werden
 
 - ``mandatory:`` Optional: Falls auf ``True`` gesetzt, muss dieser Wert konfiguriert werden, damit das Plugin/Modul

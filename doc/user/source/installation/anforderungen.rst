@@ -11,7 +11,7 @@ Hard- u. Software Anforderungen
 Um SmartHomeNG nutzen zu können, braucht es nicht viel. Für jemanden,
 der erstmalig SmartHomeNG installiert bietet es sich an zum Kennenlernen
 eine virtuelle Maschine zu erstellen und dort als Betriebssystem ein
-aktuelles Debian Buster (>= 10.x) oder Ubuntu (>= 18.04) zu verwenden.
+aktuelles Debian (>= 12.x, empfohlen 13.x/Trixie) oder Ubuntu (>= 22.04 LTS) zu verwenden.
 
 Da SmartHomeNG in den meisten Fällen im Hintergrund laufen wird,
 benötigt das System keine grafische Benutzeroberfläche und kann

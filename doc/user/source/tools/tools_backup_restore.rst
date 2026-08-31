@@ -31,7 +31,7 @@ Alternativ kann das Skript die Konfigurationsdateien aus einem früheren Backup 
                             [--include dir [dir ...]] [--exclude dir [dir ...]]
                             [-v] [--overwrite]
 
-   optional arguments:
+   options:
      -h, --help            show this help message and exit
      -b, --backup          create a config backup
      -r dir, --restore dir

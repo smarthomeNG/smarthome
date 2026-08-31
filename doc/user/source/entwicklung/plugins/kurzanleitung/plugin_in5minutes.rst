@@ -185,117 +185,13 @@ Der Scheduler kann angewiesen werden, diese zu bestimmten Zeiten oder in festgel
 Das ist näher im Abschnitt "Der Scheduler" beschrieben.
 
 .. hint::
-   Für eine nutzbare Vorlage bitte nicht den folgenden Code, sondern das Beispielplugin (s.o.) verwenden!
 
+   Der folgende Code ist direkt aus dem Beispielplugin (``dev/sample_plugin/__init__.py``) entnommen.
+   Im Zweifel gilt immer die dort vorliegende, aktuelle Version als Referenz.
 
-.. code-block:: python
-
-    #!/usr/bin/env python3
-
-    import logging
-    logger = logging.getlogger(__name__)
-
-    from lib.model.smartplugin import *
-    from lib.item import Items
-
-    class Myplugin(SmartPlugin):
-
-    ALLOW_MULTIINSTANCE = False
-    PLUGIN_VERSION = "a.b.c"
-
-        def __init__(self, sh):
-            """
-            Initializes the plugin. The parameters describe for this method are pulled from the entry in plugin.conf.
-
-            :param sh:  The instance of the smarthome object, save it for later references
-            """
-            # attention:
-            # if your plugin runs standalone, sh will likely be None so do not rely on it later or check it within your code
-
-            self._sh = sh
-            self.logger = logging.getLogger(__name__) 	# get a unique logger for the plugin and provide it internally
-
-            # todo:
-            # put any initialization for your plugin here
-
-
-        def run(self):
-            """
-            Run method for the plugin
-            """
-            self.logger.debug("run method called")
-            self.alive = True
-
-
-        def stop(self):
-            """
-            Stop method for the plugin
-            """
-            self.logger.debug("stop method called")
-            self.alive = False
-
-
-        def parse_item(self, item):
-            """
-            Default plugin parse_item method. Is called when the plugin is initialized.
-            The plugin can, corresponding to its attribute keywords, decide what to do with
-            the item in future, like adding it to an internal array for future reference
-
-            :param item:    The item to process.
-            :return:        If the plugin needs to be informed of an items change you should return a call back function
-                            like the function update_item down below. An example when this is needed is the knx plugin
-                            where parse_item returns the update_item function when the attribute knx_send is found.
-                            This means that when the items value is about to be updated, the call back function is called
-                            with the item, caller, source and dest as arguments and in case of the knx plugin the value
-                            can be sent to the knx with a knx write function within the knx plugin.
-
-            """
-            if self.has_iattr(item.conf, 'foo_itemtag'):
-                self.logger.debug("parse item: {0}".format(item))
-
-            # todo
-            # if interesting item for sending values:
-            #   return update_item
-
-
-        def parse_logic(self, logic):
-            """
-            Default plugin parse_logic method
-            """
-            if 'xxx' in logic.conf:
-                # self.function(logic['name'])
-                pass
-
-
-        def update_item(self, item, caller=None, source=None, dest=None):
-            """
-            Write items values
-
-            :param item: item to be updated towards the plugin
-            :param caller: if given it represents the callers name
-            :param source: if given it represents the source
-            :param dest: if given it represents the dest
-            """
-            # todo
-            # change 'foo_itemtag' into your attribute name
-            if item():
-                if self.has_iattr(item.conf, 'foo_itemtag'):
-                    self.logger("update_item ws called with item '{}' from caller '{}', source '{}' and dest '{}'".format(item, caller, source, dest))
-                    pass
-
-
-    def run_logic(self, logic, caller=None, source=None, dest=None):
-        # …
-
-    def bla(self):
-        logger.info("bla")
-
-
-
-Zuerst werden die benötigten Module importiert und der Logger verfügbar gemacht.
-Diese ermöglicht es, Informationen in die Logdateien von SmartHomeNG auszugeben.
-Danach beginnt die Klassendefinition. Der Klassenname muss dem ``classname``-Parameter
-in der ``/etc/plugin.yaml`` entsprechen. Danach werden die notwendigen Funktionen definiert.
+Die Klasse des Plugins erbt von ``SmartPlugin`` (aus ``lib.model.smartplugin``). Der Klassenname muss dem
+``classname``-Parameter in der ``plugin.yaml`` entsprechen. Im Folgenden werden die Funktionen beschrieben, die
+für ein Plugin benötigt werden bzw. benötigt werden können.
 
 
 Vordefinierte Funktionen des Plugins
@@ -304,17 +200,26 @@ Vordefinierte Funktionen des Plugins
 
 .. code-block:: python
 
-    def __init__(self, sh):
+    def __init__(self, sh=None, **kwargs):
 
 
-Die ``__init__``-Funktion wird einmal aufgerufen, wenn SmartHomeNG im Rahmen der Initialisierung
-das Plugin lädt, bevor die Items geladen sind. Hier wird der Code eingefügt,
-den das Plugin zur Einrichtung benötigt.
-Zum Beispiel könnte ein serieller Port zur Verbindung mit einem externen Gerät vorbereitet,
-Dateien geöffnet, Variablen initialisiert usw. werden. Die Parameter der ``/etc/plugin.yaml``
-können ausgelesen und verarbeitet oder durch Vorgabewerte ersetzt werden, wenn sie nicht konfiguriert sind.
+Die ``__init__``-Funktion wird einmal aufgerufen, wenn SmartHomeNG im Rahmen der Initialisierung das Plugin lädt,
+bevor die Items geladen sind. Hier wird der Code eingefügt, den das Plugin zur Einrichtung benötigt - zum Beispiel
+könnte ein serieller Port zur Verbindung mit einem externen Gerät vorbereitet, Dateien geöffnet oder Variablen
+initialisiert werden.
 
-Die Funktion erhält den Parameter ``sh``, die den Zugriff auf SmartHomeNG-Funktionen ermöglicht. Dieser Parameter sollte in einer Klassenvariable gesichert werden, um ihn später zur Verfügung zu haben.
+Die eigene ``__init__``-Methode **muss** ``super().__init__()`` aufrufen, damit die von ``SmartPlugin`` intern
+benötigten Strukturen (u.a. für die Item-Verwaltung, siehe unten) korrekt pro Instanz angelegt werden - wird das
+vergessen, teilen sich versehentlich alle Instanzen des Plugins dieselben Strukturen.
+
+Auf die Parameter aus ``etc/plugin.yaml`` wird über ``self.get_parameter_value(parametername)`` zugegriffen. Für
+den (in den meisten Fällen nicht mehr benötigten) direkten Zugriff auf das SmartHomeNG-Objekt steht
+``self.get_sh()`` zur Verfügung.
+
+.. literalinclude:: /dev/sample_plugin/__init__.py
+    :language: python
+    :start-after: def __init__(self, sh=None, **kwargs):
+    :end-before: def run(self):
 
 
 ----
@@ -324,7 +229,14 @@ Die Funktion erhält den Parameter ``sh``, die den Zugriff auf SmartHomeNG-Funkt
     def run(self):
 
 
-Die ``run``-Funktion wird einmalig aufgrufen, wenn SmartHomeNG startet. Zu diesem Zeitpunkt sind die Items bereits geladen. Die Variable ``self.alive`` muss hier auf ``True`` gesetzt werden.
+Die ``run``-Funktion wird einmalig aufgerufen, wenn SmartHomeNG startet - zu diesem Zeitpunkt sind die Items bereits
+geladen und ``parse_item()`` wurde bereits für jedes Item aufgerufen. Die Variable ``self.alive`` muss hier auf
+``True`` gesetzt werden (Ausnahme: bei Nutzung von asyncio wird ``self.alive`` von der Coroutine selbst gesetzt).
+
+.. literalinclude:: /dev/sample_plugin/__init__.py
+    :language: python
+    :start-after: def run(self):
+    :end-before: def stop(self):
 
 
 ----
@@ -334,13 +246,17 @@ Die ``run``-Funktion wird einmalig aufgrufen, wenn SmartHomeNG startet. Zu diese
     def stop(self):
 
 
-Diese Routine wird aufgerufen, wenn SmartHomeNG beendet wird.
-Hier können Dateien und Verbindungen geschlossen werden.
-Es müssen alle Threads beendet werden, die das Plugin ggf. gestartet hat.
-Die Variable ``self.alive`` muss auf ``False`` gesetzt werden.
+Diese Routine wird aufgerufen, wenn SmartHomeNG beendet wird oder das Plugin neu geladen wird (siehe ``deinit()``
+weiter unten). Hier müssen alle Verbindungen und Threads beendet werden, die das Plugin gestartet hat. Die Variable
+``self.alive`` muss auf ``False`` gesetzt werden.
 
-Wenn ``self.alive`` auf ``False`` gesetzt ist, sollte das Plugin Änderungen an Items
-nicht mehr weitergeben und auch keine Daten empfangen und in Items sichern.
+Wenn ``self.alive`` auf ``False`` gesetzt ist, sollte das Plugin Änderungen an Items nicht mehr weitergeben und
+auch keine Daten empfangen und in Items sichern.
+
+.. literalinclude:: /dev/sample_plugin/__init__.py
+    :language: python
+    :start-after: def stop(self):
+    :end-before: def parse_item(self, item):
 
 
 ----
@@ -350,42 +266,20 @@ nicht mehr weitergeben und auch keine Daten empfangen und in Items sichern.
     def parse_item(self, item):
 
 
-Diese Funktion wird während des Starts für jedes Item einmal aufgerufen, wenn SmartHomeNG
-die Datei ``/items/items.yaml`` liest. Hier können Item-Parameter ausgelesen und entsprechende Aktionen ausgelöst werden.
-Wenn z.B. das folgende Item definiert ist:
+Diese Funktion wird während des Starts für jedes Item einmal aufgerufen, wenn SmartHomeNG die Item-Konfiguration
+liest - und danach jedes Mal, wenn zur Laufzeit ein neues Item angelegt wird (dynamische Item-Verwaltung, siehe
+Abschnitt `Item-Verwaltung`_ weiter unten). Hier wird geprüft, ob das Item für dieses Plugin relevant ist,
+üblicherweise über ein plugin-eigenes Item-Attribut, das über ``self.has_iattr(item.conf, 'attributname')`` geprüft
+wird.
 
-.. code-block:: yaml
+Ist das Item relevant, **muss** es über ``self.add_item(item, ...)`` beim Plugin registriert werden. Soll das
+Plugin außerdem über Änderungen des Items informiert werden, wird zusätzlich die Methode ``update_item``
+zurückgegeben; diese wird dann von SmartHomeNG jedes Mal aufgerufen, wenn sich der Wert des Items ändert.
 
-    # items/xxx.yaml
-    upstairs:
-        lamp:
-            type: bool
-            visu_acl: rw
-            ivalue: 1
-            knx_dpt: 1
-            …
-
-
-dann kann mit dem folgenden Code auf den Parameter ``ivalue`` zugegriffen werden:
-
-.. code-block:: python
-
-    if 'ivalue' in item.conf:
-        ad=item.conf['ivalue']
-        return self.update_item
-    else:
-        return None
-
-
-Hier wird geprüft, ob der Parameter ``ivalue`` im Item definiert ist.
-Falls ja, wird der Variable ``ad`` der Wert des Parameters zugewiesen und die Funktion
-``update_item()`` zurückgegeben. Diese Funktion wird dann von SmartHomeNG jedes mal aufgerufen,
-wenn sich der Wert des Items ändert. Jedes Mal, wenn die Lampe z.B. per KNX ein- oder ausgeschaltet wird,
-wird wieder die Funktion ``update_item()`` aufgerufen. Parameterwerte sind immer Stringwerte.
-Auch wenn der Wert mit ``ivalue: 1`` definiert ist, wird der String "1" zurückgegeben.
-Wenn eine Zahl benötigt wird, muss der Wert selbst umgewandelt werden.
-Wenn der Parameter ``ivalue`` nicht in der Item-Konfiguration enthalten ist, wird keine Aktion
-ausgelöst und das Item hat keinen Einfluss auf und keine Verbindung zum Plugin.
+.. literalinclude:: /dev/sample_plugin/__init__.py
+    :language: python
+    :start-after: def parse_item(self, item):
+    :end-before: def parse_logic(self, logic):
 
 
 ----
@@ -395,26 +289,17 @@ ausgelöst und das Item hat keinen Einfluss auf und keine Verbindung zum Plugin.
     def parse_logic(self, logic):
 
 
-Diese Funktion wird beim Systemstart für jede Logik aufgerufen, wenn SmartHomeNG die Datei ``/etc/logic.yaml`` liest.
-Hier können Logikparameter ausgelesen und Aktionen ausgeführt werden. Wenn z.B. die folgende Logik definiert ist:
+Diese Funktion wird beim Systemstart für jede Logik aufgerufen. Hier kann geprüft werden, ob ein plugin-spezifischer
+Parameter in der Logik-Konfiguration gesetzt ist. Soll das Plugin über die Ausführung der Logik informiert werden,
+wird eine selbst gewählte Callback-Methode zurückgegeben - im Beispiel unten heißt sie ``run_logic``. Das ist
+**kein** reservierter Methodenname von ``SmartPlugin``, sondern frei wählbar, genau wie ``update_item`` bei
+``parse_item()``. Diese Methode wird dann bei Ausführung der Logik aufgerufen, mit denselben Parametern wie
+``update_item()``.
 
-.. code-block:: yaml
-
-    etc/logic.yaml
-    jalousie_up:
-        filename: jalousie-up.py
-        crontab: sunrise+20m
-        some_plugin_setting: send-notify
-
-kann das Plugin jetzt den Parameter ``some_plugin_setting`` prüfen und feststellen, ob es mit der
-Logik interagieren soll. Der folgende Code könnte genutzt werden, um einen Callback für die Logik einzurichten:
-
-.. code-block:: python
-
-    if 'some_plugin_setting' in logic.conf:
-        return self.run_logic
-    else:
-        return None
+.. literalinclude:: /dev/sample_plugin/__init__.py
+    :language: python
+    :start-after: def parse_logic(self, logic):
+    :end-before: def update_item(self, item, caller=None, source=None, dest=None):
 
 
 ----
@@ -424,17 +309,90 @@ Logik interagieren soll. Der folgende Code könnte genutzt werden, um einen Call
     def update_item(self, item, caller=None, source=None, dest=None):
 
 
-Diese Funktion wird jedes mal aufgerufen, wenn sich der Wert eines Items ändert,
-für das der Aufruf in ``parse_item()`` eingerichtet wurde. Sie erhält die folgenden Parameter:
+Diese Funktion wird jedes Mal aufgerufen, wenn sich der Wert eines Items ändert, für das der Aufruf in
+``parse_item()`` eingerichtet wurde. Sie erhält die folgenden Parameter:
 
 `caller`
-    Dieser String gibt an, wer das Item geändert hat. Der Wert kann z.B. "KNX", wenn der Wert des Items vom KNX-Plugin gesetzt wurde.
+    Dieser String gibt an, wer das Item geändert hat, z.B. der Name eines anderen Plugins.
 
 `source`
-    …
+    Optionale, genauere Angabe zur Quelle der Änderung.
 
 `dest`
-    …
+    Optionales Ziel der Änderung.
+
+Um eine Rückkopplungsschleife zu vermeiden, sollte der neue Wert nur dann an das Gerät weitergegeben werden, wenn
+das Plugin läuft (``self.alive``) und die Änderung nicht von diesem Plugin selbst ausgelöst wurde
+(``caller != self.get_fullname()``).
+
+.. literalinclude:: /dev/sample_plugin/__init__.py
+    :language: python
+    :start-after: def update_item(self, item, caller=None, source=None, dest=None):
+    :end-before: def poll_device(self):
+
+
+----
+
+.. _`Item-Verwaltung`:
+
+Item-Verwaltung: add_item, remove_item, parse_item/unparse_item, init/deinit
+------------------------------------------------------------------------------
+
+SmartHomeNG unterstützt dynamische Item-Verwaltung: Items können zur Laufzeit angelegt, geändert oder gelöscht
+werden, und Plugins können neu geladen werden, ohne dass SmartHomeNG neu gestartet werden muss. Damit das
+funktioniert, muss ein Plugin seine Item-Zuordnungen sauber auf- und wieder abbauen können. Dafür gibt es folgende,
+zueinander passende Methodenpaare.
+
+``add_item`` / ``remove_item``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Diese beiden Methoden sind in ``SmartPlugin`` bereits vollständig implementiert und **dürfen nicht überschrieben
+werden**. ``add_item(item, config_data_dict=None, mapping=None, updating=False)`` wird aus ``parse_item()`` heraus
+aufgerufen, um ein Item mit seinen plugin-spezifischen Konfigurationsdaten zu registrieren - danach ist das Item
+z.B. über ``self.get_item_list()`` auffindbar. ``remove_item(item)`` macht das rückgängig; es wird automatisch von
+``deinit()`` aufgerufen (siehe unten) und muss **nicht** selbst aufgerufen werden.
+
+``parse_item`` / ``unparse_item``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``unparse_item(item)`` ist das symmetrische Gegenstück zu ``parse_item()`` und wird automatisch von
+``remove_item()`` aufgerufen, wenn ein Item entfernt wird (z.B. weil es aus der Konfiguration gelöscht wurde oder
+das Plugin neu geladen wird).
+
+Ruft ``parse_item()`` für ein Item **nur** ``self.add_item(...)`` auf (wie im Beispielplugin oben), muss
+``unparse_item()`` **nicht** implementiert werden - die Standardimplementierung tut nichts, und die von
+``add_item()`` angelegte Buchführung wird bereits automatisch durch ``remove_item()`` aufgeräumt:
+
+.. literalinclude:: /libsrc/model/smartplugin.py
+    :language: python
+    :start-after: def unparse_item(self, item) -> None:
+    :end-before: def get_configname(self) -> str:
+
+Führt ``parse_item()`` darüber hinaus eigene Buchführung durch - z.B. wird das Item zusätzlich in eine eigene
+Liste oder ein eigenes Dictionary des Plugins eingetragen - **muss** ``unparse_item()`` überschrieben werden, um
+diesen Eintrag beim Entfernen des Items wieder zu löschen.
+
+``__init__`` / ``deinit``
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``deinit()`` ist das Gegenstück zu ``__init__()`` bzw. ``run()``/``stop()`` und wird aufgerufen, kurz bevor ein
+Plugin entladen wird (z.B. beim Neuladen des Plugins über die AdminUI). Die Standardimplementierung stoppt das
+Plugin, falls es noch läuft, und entfernt alle registrierten Items über ``remove_item()``:
+
+.. literalinclude:: /libsrc/model/smartplugin.py
+    :language: python
+    :start-after: def deinit(self, items: list | None = None) -> None:
+    :end-before: ###############################################################################
+
+Reicht diese Standardimplementierung nicht aus - etwa weil ``__init__()`` oder ``run()`` dauerhafte Strukturen
+angelegt haben (z.B. eigene Threads, Prozesse oder Verbindungen, die über das hinausgehen, was ``stop()`` bereits
+abbaut) - muss ``deinit()`` überschrieben werden, um diese vor dem Entladen sauber zu beenden. Der eigene Code
+sollte dann zusätzlich ``super().deinit()`` aufrufen (oder den obigen Code sinngemäß nachbilden), damit
+Plugin-Stop und Item-Abmeldung weiterhin passieren.
+
+Das Beispielplugin oben implementiert weder ``unparse_item()`` noch ``deinit()`` - beides ist hier nicht nötig, da
+``parse_item()`` nur ``add_item()`` nutzt und ``__init__()``/``run()`` keine über ``stop()`` hinausgehenden
+dauerhaften Strukturen anlegen.
 
 
 ----
@@ -451,15 +409,6 @@ genutzt werden können. Erweiterungen dieser Komponenten usw. finden sich im Ord
 
 Wenn das Plugin darüber hinaus noch Komponenten benötigt, werden diese im Ordner ``webif/static`` des Plugins abgelegt.
 
-----
-
-.. code-block:: python
-
-    def run_logic(self, logic, caller=None, source=None, dest=None):    # (version>=1.3)
-
-
-Diese Funktion ist analog zu ``update_item()``, nur dass sie bei der Ausführung von Logiken aufgerufen wird.
-
 
 Neben diesen vordefinierten Funktionen können auch eigene Funktionen erstellt werden, die Funktionen im Plugin ausführen.
 
@@ -474,9 +423,8 @@ Der Scheduler
 Der Scheduler ist eine der wichtigsten Komponenten von SmartHomeNG.
 Es ist die zentrale Uhr, die Funktionen zu bestimmten Zeiten aufruft.
 Damit eigene Funktionen ausgeführt werden, müssen diese dem Scheduler bekannt gemacht werden.
-Dies erfolgt durch den Aufruf spezieller Funktionen.
-Der Scheduler ist Teil von SmartHomeNG, also muss er über die Variable angesprochen werden,
-die an die ``__init__``-Funktion des Plugins übergeben wurde.
+Dies erfolgt durch den Aufruf spezieller Funktionen, die ``SmartPlugin`` bereitstellt (``self.scheduler_add()``
+usw.) - ein direkter Zugriff auf den Scheduler von SmartHomeNG ist dafür nicht nötig.
 
 Die wichtigste Funktion ist `add`:
 
@@ -531,7 +479,7 @@ Das Argument ist ein ``dateobject``, das z.B. mit ``datetime`` erstellt werden k
 
 .. code-block:: python
 
-    nd = datetime.strptime('Jan 14 2015 8:09PM','%b %d %Y %I:%M%p').replace(tzinfo=self._sh.tzinfo())
+    nd = datetime.strptime('Jan 14 2015 8:09PM','%b %d %Y %I:%M%p').replace(tzinfo=self.shtime.tzinfo())
 
 
 .. important ::
@@ -554,7 +502,7 @@ In dem Fall sollte der Scheduler mit einer Werteliste aufgerufen werden:
 
 .. code-block:: python
 
-    self.scheduler.add('name',
+    self.scheduler_add('name',
                         self._bla,
                         value={'heinz': bla, 'tom': 10},
                         next=_ndate)
@@ -591,10 +539,14 @@ Items suchen
 
 .. code-block:: python
 
-    sh.return_item(item_path)
+    from lib.item import Items
+    items = Items.get_instance()
+
+    items.return_item(item_path)
 
 
-``return_item`` gibt das Item mit dem Pfad ``item_path`` zurück.
+``return_item`` gibt das Item mit dem Pfad ``item_path`` zurück. Innerhalb einer Logik ist das ``items``-Objekt
+bereits initialisiert und kann direkt genutzt werden.
 
 `item_path=string`
 ~~~~~~~~~~~~~~~~~~

@@ -1,7 +1,10 @@
 
-============
-Installation
-============
+.. role:: bluesup
+.. role:: redsup
+
+==============================
+Installation :bluesup:`Update`
+==============================
 
 Die hier beschriebenen Punkte erläutern die Anforderungen und beschreiben die Installation von
 SmartHomeNG und benötigter oder optionaler Komponenten.

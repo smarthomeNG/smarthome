@@ -16,7 +16,7 @@ Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegrif
     # Metadata for the Smart-plugin
     plugin:
         # Global plugin attributes
-        type: web                   # plugin type (gateway, interface, protocol, system, cloud, un-classified)
+        type: web                   # plugin type (gateway, interface, protocol, system, web)
         description:
             de: 'Plugin für ...'
             en: 'Plugin for ...'
@@ -33,7 +33,7 @@ Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegrif
     #    py_minversion: 3.6          # minimum Python version needed for this plugin (leave empty if no special requirement)
     #    py_maxversion:              # maximum Python version to use this plugin (leave empty if no special requirement)
         multi_instance: true        # plugin supports multi instance (if not specified, False is assumed)
-        restartebly: unknown
+        restartable: unknown
     #    startorder: normal          # should only be set on special plugins
         configuration_needed: true  # False: The plugin will be enabled by the Admin GUI without configuration
 

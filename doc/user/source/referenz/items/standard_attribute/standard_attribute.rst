@@ -150,7 +150,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | ist. Es kann auch ein einzelner Wert notiert werden.                                   |
 +----------------------------+----------------------------------------------------------------------------------------+
 | type                       | Um Werte zu speichern, muss ein Typ vorgegeben werden. Unterstützte Typen              |
-|                            | sind bool, num, str, list, dict, foo, scene                                            |
+|                            | sind bool, num, str, list, dict, foo, scene, datetime, timestamp                       |
 +----------------------------+----------------------------------------------------------------------------------------+
 
 

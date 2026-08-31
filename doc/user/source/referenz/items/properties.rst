@@ -12,7 +12,7 @@ Jedes definierte Item bietet die folgenden Properties an, die unter anderem in *
 genutzt werden können. Alle Properties sind zumindest lesend (r/o) zugreifbar. Einige Properties können
 auch beschrieben (r/w) werden.
 
-Die Property ``remark`` ist **ab SmartHomeNG v12.0** verfügbar.
+Die Property ``remark`` ist **ab SmartHomeNG v1.12** verfügbar.
 
 
 Properties werden in Logiken und eval-Ausdrücken folgendermaßen abgerufen:
@@ -44,6 +44,10 @@ Werte für Properties, die auch geschrieben werden können (z.B. in Logiken), we
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 | defined_in           | r/o        | str      | Liefert den Dateinamen in dem das Item definiert wurde zurück                |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
+| description          | r/o        | str      | Liefert die Beschreibung des Items zurück                                    |
++----------------------+------------+----------+------------------------------------------------------------------------------+
+| enforce_change       | r/w        | bool     | Setzt oder löscht den **enforce_change** Status                              |
++----------------------+------------+----------+------------------------------------------------------------------------------+
 | enforce_updates      | r/w        | bool     | Setzt oder löscht den **enforce_updates** Status                             |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 | eval                 | r/w        | str      | Erlaubt das Abfragen oder Setzen der eval Expression                         |
@@ -51,6 +55,9 @@ Werte für Properties, die auch geschrieben werden können (z.B. in Logiken), we
 | eval_unexpanded      | r/w        | str      | Erlaubt das Abfragen oder Setzen der eval Expression. Beim Beschreiben des   |
 |                      |            |          | Properties werden evtl. enthaltene relative Item Referenzen zur Nutzung      |
 |                      |            |          | expandiert (analog zum Laden aus Item Konfigurationsdateien).                |
++----------------------+------------+----------+------------------------------------------------------------------------------+
+| hysteresis_state     | r/o        | int      | Liefert den inneren Zustand der Hysterese zurück: **1** (On), **0** (Stay,   |
+|                      |            |          | Ausgang bleibt unverändert) oder **-1** (Off).                               |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 | last_change          | r/o        | datetime | Liefert ein *datetime* Objekt mit dem Zeitpunkt der letzten Änderung des     |
 |                      |            |          | Items zurück.                                                                |

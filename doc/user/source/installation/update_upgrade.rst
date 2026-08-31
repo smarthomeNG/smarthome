@@ -101,14 +101,15 @@ Jede SmartHomeNG Version erhöht die Anforderungen an die benötigte Python Vers
 :doc:`/installation/anforderungen` daher sollte vor dem Update von SmarthomeNG
 das Betriebssystem aktualisiert werden.
 
-Bei **Linux** Systemen ist damit ein Distributionsupgrade gemeint. Für die aktuelle SmartHomeNG 1.9 also zum Beispiel
-ein Upgrade auf Debian Bullseye (11.3). Welche Debian Version welche Python Version mitbringt,
-kann im `Debian Wiki <https://wiki.debian.org/Python>`__ nachgelesen werden.
+Bei **Linux** Systemen ist damit ein Distributionsupgrade gemeint, z.B. ein Upgrade auf Debian 13 (Trixie). Welche
+Debian Version welche Python Version mitbringt, kann im `Debian Wiki <https://wiki.debian.org/Python>`__
+nachgelesen werden.
 
 Zusätzlich müssen noch die in der Komplettanleitung :doc:`/installation/komplettanleitung/03_smarthomeng`
 unter *zusätzliche Linux Pakete installieren* angegebenen Pakete installiert werden.
 
-Für Windows bietet sich eine manuelle Installation von Python 3.9 in der letzten Revision an.
+Für Windows bietet sich eine manuelle Installation der letzten Revision einer der aktuell unterstützten Python
+Versionen an - siehe die Übersicht unter :doc:`/installation/anforderungen`.
 
 SmartHomeNG 1.8 oder höher wird benötigte Python Bibliotheken selbständig beim ersten Programmstart installieren.
 
@@ -196,29 +197,27 @@ der Plugins ermittelt. Dies Skript wird aufgerufen mit:
    nicht erfüllt, beendet sich SmartHomeNG mit einem entsprechenden Eintrag im Log.
 
 
+.. attention::
+
+    Auf aktuellen Betriebssystemen (Debian ab Version 12/Bookworm, Ubuntu ab 23.04, ...) markiert Python die
+    System-Installation als *externally managed* (`PEP 668 <https://peps.python.org/pep-0668/>`_) - ``pip install``
+    schlägt dort fehl, egal ob mit oder ohne ``sudo`` bzw. ``--user``. Die Installation von Python Bibliotheken für
+    SmartHomeNG **muss** deshalb in einem virtuellen Environment erfolgen. Wie ein virtuelles Environment angelegt
+    und aktiviert wird, ist unter :doc:`/referenz/python/virtual_environments` beschrieben - dieser Schritt sollte
+    vor den folgenden ``pip3 install`` Kommandos durchgeführt werden.
+
 Vom Programmkern benötigte Bibliotheken herunterladen und installieren mit:
 
    .. code-block:: bash
 
-       pip3 install -r requirements/base.txt --user
+       pip3 install -r requirements/base.txt
 
 Und dann für jedes Plugin einzeln die benötigten Bibliotheken herunterladen
 und installieren mit:
 
    .. code-block:: bash
 
-       pip3 install -r plugins/<pluginname>/requirements.txt --user
-
-
-.. attention::
-
-    In früheren Beschreibungen wurde die globale Installation von Python Packages mit dem sudo Kommando
-    beschrieben:
-
-       sudo pip3 install -r requirements/base.txt
-
-    Dieses funktioniert unter Debian Buster **NICHT** mehr. Zumindest unter Buster **muss** die Installation
-    für den entsprechenden User mit **--user** erfolgen (wie oben beschrieben).
+       pip3 install -r plugins/<pluginname>/requirements.txt
 
 
 Zum Abschluss dann SmarthomeNG starten. Um zu prüfen, ob sich vielleicht

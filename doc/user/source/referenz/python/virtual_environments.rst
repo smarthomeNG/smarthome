@@ -36,11 +36,11 @@ Folgenden wird auch nur vom Einsatz von **venv** ausgegangen.
 |
 
 Die virtuellen Environments werden standardmäßig im Unterverzeichnis ``venvs`` des SmartHomeNG Basisverzeichnises
-gespeichert. Außer den virtuallen Environments enthält das Verzeichnis auch Skripte zur Verwaltung der
-virtuellen Environments.
+gespeichert. Die Skripte zur Verwaltung der virtuellen Environments (``make_venv``, ``act``) liegen im Verzeichnis
+``tools``.
 
-Das postinstall Skript der SmartHomeNG Installation nimmt dieses Verzeichnis in den Pfad auf, so dass die Skripte
-ohne Pfadangabe aufgerufen werden können.
+Das ``tools/postinstall`` Skript der SmartHomeNG Installation nimmt sowohl ``tools`` als auch ``venvs`` in den Pfad
+auf, so dass die Skripte ohne Pfadangabe aufgerufen werden können.
 
 |
 
@@ -126,9 +126,9 @@ deaktivieren.
 Virtuelle Environements als Dienst
 ==================================
 
-Wenn SmartHomeNG als Dienst eingerichtet werden und in einem virtuellen Environment laufen soll, muss die xxx-Datei
-im Vergleich zur Beschreibung in der Komplettanleitung abgeändert werden. Es muss der Pfad zu Python in dem entsprechenden
-Environment angegeben werden.
+Wenn SmartHomeNG als Dienst eingerichtet werden und in einem virtuellen Environment laufen soll, muss die
+``smarthome.service`` Datei im Vergleich zur Beschreibung in der Komplettanleitung abgeändert werden. Es muss der
+Pfad zu Python in dem entsprechenden Environment angegeben werden.
 
 Zum Einrichten den Texteditor starten mit
 

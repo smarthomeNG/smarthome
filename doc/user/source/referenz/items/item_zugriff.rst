@@ -235,7 +235,7 @@ Die Methode `prepend` fügt Werte am Beginn der List ein:
 
 .. code-block:: python
 
-    sh.Oma.Papa.Kind.list.prepend(bar')
+    sh.Oma.Papa.Kind.list.prepend('bar')
 
 Die Methode `insert` fügt Werte an der angegebenen Stelle `index` ein:
 
@@ -251,7 +251,6 @@ Die Methode `pop` entfernt den letzten (bzw. angegebenen) Wert der Liste und gib
     value = sh.Oma.Papa.Kind.list.pop(2)
 
 Die Methode `extend` hängt die Elemente der übergebenen Liste an die Liste des Items an:
-def extend(self, value, caller='Logic', source=None, dest=None):
 
 .. code-block:: python
 

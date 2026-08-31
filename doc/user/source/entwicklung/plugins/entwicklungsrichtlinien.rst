@@ -5,9 +5,9 @@
 .. role:: blacksup
 
 
-=====================================================
-Entwicklungsrichtlinien :bluesup:`under construction`
-=====================================================
+=========================================
+Entwicklungsrichtlinien :bluesup:`Update`
+=========================================
 
 Im folgenden werden eine Hilfen und Richtlinien beschrieben, die wichtig sind, wenn das zu erstellende Plugin in
 das globale Repository von SmartHomeHG aufgenommen werden soll.
@@ -65,9 +65,9 @@ oder
     * ``git clone https://github.com/smarthomeNG/smarthome.git .``
     * ``git clone https://github.com/smarthomeNG/plugins.git plugins``
 
-  * Sie erstellen Ihren eigenen (lokalen) Branch (von Develop):
+  * Sie erstellen Ihren eigenen (lokalen) Branch (von develop):
 
-    ``git checkout -b myplugin Develop``
+    ``git checkout -b myplugin develop``
 
 |
 
@@ -88,33 +88,20 @@ Programmieren beginnen
   * **Bearbeiten** Sie die Hauptdatei: `vi plugins/myplugin/__init__.py`
 
 
-Tools
------
+Tools :bluesup:`Update`
+-----------------------
 
-Schauen Sie sich die folgenden Tools an, um Ihren Code zu testen:
+Nutzen Sie das folgende Tool, um Ihren Code zu testen:
 
 
-pep8
+ruff
 ~~~~
 
-   * Pep8 installieren: ``apt-get install pep8``
-   * Testen Sie Ihren Code: ``pep8 -qq –statistics yourcode.py``
+SmartHomeNG nutzt ``ruff`` für Linting und Formatierung.
 
-
-autopep8
-~~~~~~~~
-
-   * ``pip3 install autopep8``
-   * ``autopep8 yourcode.py -i``
-
-
-flake8
-~~~~~~
-
-   * ``pip3 install flake8``
-   * ``flake8 yourcode.py``
-
-flake8 kann als Vim-Plugin verwendet werden. Der Code wird jedes Mal überprüft, wenn die Datei gespeichert wird.
+   * ``pip3 install ruff``
+   * Code prüfen: ``ruff check yourcode.py``
+   * Code formatieren: ``ruff format yourcode.py``
 
 
 Testen und Dokumentieren
@@ -147,7 +134,7 @@ Fork erstellen
       Ihrem Benutzernamen/Passwort an
     * Klicken Sie rechts oben auf „Fork“.
     * Wechseln Sie zu Ihrem Terminal und geben Sie „git clone https://USER:PASSWORD@github.com/USER/smarthome“ ein
-    * Checken Sie den Entwicklungszweig „git checkout Develop“ aus
+    * Checken Sie den Entwicklungszweig „git checkout develop“ aus
     * Wiederholen Sie dieses für das `Plugin Repo <https://github.com/smarthomeNG/plugins/>`_
 
     * Eine Datei ändern/erstellen.
@@ -157,16 +144,16 @@ Fork erstellen
     * Erstellen Sie eine Pull-Request auf GitHub: Basis: smarthomeNG/develop, Vergleich: USER/develop
 
 
-Merge (description is deprecated, has to be updated)
-----------------------------------------------------
+Merge
+-----
 
 Wenn Sie glauben, dass Ihr Code für die Hauptsendezeit bereit ist, senden Sie einen **Pull-Request über Github**
 
 Mitglieder des Core Teams von SmartHomeNG können dann den Pull-Request prüfen und in das Repository mergen.
 
 
-.git/config (description is deprecated, has to be updated)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.git/config
+~~~~~~~~~~~
 
 Falls Probleme beim pushen auf GitHub bestehen, bitte die ``config``-Datei im ``.git`` Verzeichnis überprüfen.
 Sie sollte zum Beispiel folgendermaßen aussehen:
@@ -205,9 +192,9 @@ Hier ein paar Tipps, wenn Sie mit dem Kommandozeilen-Client von Git arbeiten:
 Nützliche Git-Befehle
 ~~~~~~~~~~~~~~~~~~~~~
 
-  * **Liste der Änderungen** seit der Veröffentlichung mit dem Tag VERSIONTAG: git log –pretty=format:“%s“ <VERSIONTAG>..HEAD
-  * **Commit** mit der ID XXXIDXXX **rückgängig machen**: git reset –hard XXXIXXX && git push origin Develop –force
-  * **Commit** in den aktuellen Zweig **kopieren**: git Cherry-pick <commit>
+  * **Liste der Änderungen** seit der Veröffentlichung mit dem Tag VERSIONTAG: git log --pretty=format:"%s" <VERSIONTAG>..HEAD
+  * **Commit** mit der ID XXXIDXXX **rückgängig machen**: git reset --hard XXXIXXX && git push origin develop --force
+  * **Commit** in den aktuellen Zweig **kopieren**: git cherry-pick <commit>
 
 Folgen Sie dem `Commit Atom Feed <https://github.com/smarthomeNG/smarthome/commits/develop.atom>`_
 
@@ -215,9 +202,9 @@ Folgen Sie dem `Commit Atom Feed <https://github.com/smarthomeNG/smarthome/commi
 Globale Einstellungen
 ~~~~~~~~~~~~~~~~~~~~~
 
-  * Nur den aktuellen Zweig pushen (nicht alle): ``git config –global push.default current``
+  * Nur den aktuellen Zweig pushen (nicht alle): ``git config --global push.default current``
   * Passen Sie Ihre Benutzereinstellungen an:
-    * ``git config –global user.name „Ihr Name“``
-    * ``git config –global user.email you@example.com``
+    * ``git config --global user.name „Ihr Name“``
+    * ``git config --global user.email you@example.com``
 
 

@@ -118,13 +118,9 @@ Es wird für jedes definierte Item ein Objekt erzeugt. Der Wert des Items wird a
 - evtl. aus den parse_item() Methoden der geladenen Plugins.
   (Das wird z.B. im database Plugin genutzt, falls dort das Item Attribut **database:** auf **init** konfiguriert ist.)
 
-
-14 - Startet: Geladene Items vorbereiten
-----------------------------------------
-
-Es wird für alle geladenen Items die _init_prerun() Methode aufgerufen. Diese erzeugt eval Ausdrücke und Trigger
-vor dem ersten Lauf, falls Spezial-Funktionen (**and**, **or**, **sum**, **avg**, **min** oder **max**) verwendet
-wurden.
+Direkt im Anschluss an die Erzeugung wird für jedes Item die _init_prerun() Methode aufgerufen. Diese erzeugt eval
+Ausdrücke und Trigger vor dem ersten Lauf, falls Spezial-Funktionen (**and**, **or**, **sum**, **avg**, **min** oder
+**max**) verwendet wurden.
 
 Es wird für alle geladenen Items Scheduler gestartet, falls für das Item das Attribut **crontab:** oder **cycle:**
 gesetzt wurde.

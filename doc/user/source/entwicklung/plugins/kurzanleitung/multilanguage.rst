@@ -116,7 +116,15 @@ Der Name des Platzhalters muss von geschweiften Klammern eingeschlossen sein
         'de': '='
         'en': 'Deletion of data for the entries of item ID {item_id} in table "log" successfully initiated.'
 
-:Critical: TODO - hier fehlt das Platzhalter Dictionary {'item_id', item.id()}; wie wird das definiert?
+Um diese Übersetzung mit dem Platzhalter-Wert abzurufen, wird ``self.translate`` mit dem Platzhalter-Dictionary
+als zweitem Argument aufgerufen:
+
+.. code-block:: python
+
+   text = self.translate(
+       'Löschauftrag für die Einträge von Item ID {item_id} in der Tabelle "log" wurde erfolgreich initiiert!',
+       {'item_id': item.id()}
+   )
 
 1. Platzhalter in Jinja2-Templates
 ----------------------------------
@@ -137,4 +145,4 @@ Wenn ein Platzhalter in der Übersetzung enthalten ist, muss ``self.translate`` 
 
 .. code-block:: python
 
-   translated_text = self.translate('text', {'item_id', item.id()})
+   translated_text = self.translate('text', {'item_id': item.id()})

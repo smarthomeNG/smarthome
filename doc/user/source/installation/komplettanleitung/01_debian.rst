@@ -51,7 +51,7 @@ können.
 
 Im Allgemeinen braucht ein Server keine grafische Benutzeroberfläche, also ganz normale Installation wählen.
 Statt (oder zusätzlich zu) einer graphischen Oberfläche sollten die Optionen **SSH Server** und **Webserver**
-ausgewählt werden, wenn diese Optionen (wie z.B. unter Debian 12 - Bookworm) zur Verfügung stehen.
+ausgewählt werden, wenn diese Optionen (wie z.B. unter Debian 13 - Trixie) zur Verfügung stehen.
 
 Einige Einstellungen die jetzt vorgenommen werden sind:
 
@@ -173,7 +173,7 @@ installieren sein aber sicher ist sicher.
     .. tab-item:: Tools für VMWare
 
         Wenn die Installation in einer virtuellen Maschine unter VMWare erfolgt ist, so werden für
-        Debian bullseye 11.3 bereits die open-vm-tools mitinstalliert.
+        Debian trixie 13.4 bereits die open-vm-tools mitinstalliert.
 
         Für bereits existierende Systeme können die Tools nachinstalliert werden:
 

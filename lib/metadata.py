@@ -1249,7 +1249,7 @@ class Metadata:
         :param args: Configured parameters with the values
         :param source: human-readable description of where args came from, used
             in log messages (e.g. "the command line" for standalone-mode
-            invocation). Defaults to the addon's /etc/*.yaml config file, which
+            invocation). Defaults to the addon's ``/etc/*.yaml`` config file, which
             is what args actually is for every other caller.
         :type args: dict of parameter-values (values as string)
         :type source: str

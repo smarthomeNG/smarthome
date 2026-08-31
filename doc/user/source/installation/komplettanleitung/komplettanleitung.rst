@@ -4,9 +4,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-=================
-Komplettanleitung
-=================
+===================================
+Komplettanleitung :bluesup:`Update`
+===================================
 
 Diese Anleitung beschreibt eine komplette Installation von **SmartHomeNG v1.12** auf
 einem Linuxsystem mit Debian 13 (trixie).

@@ -15,8 +15,8 @@ der ladbaren Module verzichten.
 
 Einige Plugins benötigen die Features von Modulen. Diese Plugins können ohne die benötigten
 Module nicht genutzt werden oder stellen nur einen eingeschränkten Funktionsumfang zur Verfügung.
-So ist zum Beispiel der Einsatz des Plugins **Backend** ohne das geladene Modul **http** nicht
-möglich.
+So ist zum Beispiel der Einsatz eines Plugins mit eigenem Webinterface ohne das geladene Modul
+**http** nicht möglich.
 
 
 .. note::

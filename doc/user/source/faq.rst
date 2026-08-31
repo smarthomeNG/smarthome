@@ -35,7 +35,7 @@ miteinander reden müssen:
    Auf der Konfigurationsseite muss unter I/O-Connection folgendes
    eingetragen sein:
 
-   -  Driver: Smarthome.py
+   -  Driver: SmartHomeNG
    -  Address:
       ``<IP Adresse oder DNS Name der SmartHomeNG Installation>``
    -  Port: 2424
