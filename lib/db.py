@@ -801,8 +801,13 @@ class Database:
                     break
         if not quiet:
             prefix = error_prefix or f'Database [{self._name}]: query failed after reconnect attempt'
-            # Same reasoning as execute()'s cur-provided branch below.
-            level = self.logger.info if self.is_connection_error(last_error) else self.logger.error
+            if self.is_connection_error(last_error):
+                level = self.logger.info
+            elif isinstance(last_error, TimeoutError):
+                # Own lock timeout (not a DB-API error) - WARNING, not INFO like a connection drop.
+                level = self.logger.warning
+            else:
+                level = self.logger.error
             level(f'{prefix}: {last_error}')
         raise last_error
 
@@ -896,8 +901,11 @@ class Database:
             self._params['read_timeout'] = probe_timeout
             self._params['write_timeout'] = probe_timeout
 
+        attempts = 0
+        last_reason = None
         try:
             while retry > 0:
+                attempts += 1
                 locked = False
 
                 try:
@@ -923,10 +931,8 @@ class Database:
                         if probe_cur is None:
                             # connection was closed by another thread in between
                             # us verifying and using it
-                            self.logger.warning(
-                                'Database [{}]: connection was closed between connect() and lock() '
-                                'acquisition, retrying'.format(self._name)
-                            )
+                            last_reason = 'connection closed between connect() and lock() acquisition'
+                            self.logger.info(f'Database [{self._name}]: {last_reason}, retrying')
                             self.release()
                             retry = retry - 1
                         else:
@@ -942,7 +948,8 @@ class Database:
                             retry = -1
                             self.release()
                     else:
-                        self.logger.warning(
+                        last_reason = 'could not acquire lock'
+                        self.logger.info(
                             'Database [{}]: Could not acquire lock to verify connection{}'.format(
                                 self._name, self.lock_holder_description()
                             )
@@ -950,7 +957,8 @@ class Database:
                         retry = retry - 1
 
                 except Exception as e:
-                    self.logger.warning('Database [{}]: Connection error {}'.format(self._name, e))
+                    last_reason = f'connection error: {e}'
+                    self.logger.info('Database [{}]: Connection error {}'.format(self._name, e))
                     if locked:
                         self.release()
                     self.close()
@@ -958,6 +966,13 @@ class Database:
 
                 if retry > 0:
                     time.sleep(delay)
+
+            if retry == 0:
+                self.logger.warning(
+                    'Database [{}]: verify() gave up after {} attempt(s) ({}){}'.format(
+                        self._name, attempts, last_reason, self.lock_holder_description()
+                    )
+                )
         finally:
             if is_pymysql:
                 self._params['read_timeout'] = saved_read_timeout
