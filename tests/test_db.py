@@ -336,6 +336,35 @@ class TestDbTests(unittest.TestCase, TestDbBase):
             release.set()
             holder_thread.join()
 
+    def test_verify_survives_connection_closed_between_connect_and_lock(self):
+        # Regression: connect() acquires/releases self._fdb_lock internally
+        # before returning; verify() then separately re-acquires it via its
+        # own self.lock(2). Another thread closing the connection in that
+        # gap used to crash verify() with AttributeError ('NoneType' object
+        # has no attribute 'close') from probe_cur.close(), instead of being
+        # treated like any other failed-verification retry.
+        db = self.db()
+        db.connect()
+
+        real_lock = db.lock
+
+        def fake_lock(timeout=-1):
+            acquired = real_lock(timeout)
+            if acquired:
+                # simulate a concurrent close() landing in the window
+                # between connect()'s internal lock release and this
+                # lock() call succeeding
+                db._conn = None
+                db._connected = False
+            return acquired
+
+        db.lock = fake_lock
+
+        with self.assertLogs('lib.db', level='WARNING') as cm:
+            result = db.verify(retry=1, delay=0)
+        self.assertEqual(0, result)
+        self.assertTrue(any('closed between connect() and lock()' in msg for msg in cm.output), cm.output)
+
     def test_execute_error_logs_by_default(self):
         db = self.db()
         db.connect()
@@ -367,6 +396,44 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         db = self.db()
         db.connect()
         db.fetchall('SELECT 1')
+
+    # -- NO_CURSOR sentinel: cur omitted vs. cur=None must be distinguishable -
+
+    def test_execute_cur_omitted_uses_no_cursor_path(self):
+        # Omitting 'cur' entirely must behave exactly as before - it's the
+        # NO_CURSOR sentinel default, not a literal None.
+        db = self.db()
+        db.connect()
+        db.execute('SELECT 1')
+
+    def test_execute_explicit_cur_none_raises(self):
+        # A literal cur=None is a caller bug (something expected to hand in
+        # a real cursor but got None instead) - it must not be silently
+        # treated the same as "omitted".
+        db = self.db()
+        db.connect()
+        with self.assertRaisesRegex(TypeError, 'received cur=None'):
+            db.execute('SELECT 1', cur=None)
+
+    def test_fetchone_explicit_cur_none_raises(self):
+        db = self.db()
+        db.connect()
+        with self.assertRaisesRegex(TypeError, 'received cur=None'):
+            db.fetchone('SELECT 1', cur=None)
+
+    def test_fetchall_explicit_cur_none_raises(self):
+        db = self.db()
+        db.connect()
+        with self.assertRaisesRegex(TypeError, 'received cur=None'):
+            db.fetchall('SELECT 1', cur=None)
+
+    def test_fetchone_real_cursor_still_works(self):
+        # A genuine cursor (e.g. from transaction()) must still take the
+        # "use my cursor" branch unchanged.
+        db = self.db()
+        db.connect()
+        with db.transaction() as cur:
+            db.fetchone('SELECT 1', cur=cur)
 
     # -- reconnect-on-stale-connection (cur=None path) -----------------------
     #
@@ -571,6 +638,17 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         db = self.db()
         self.assertIsNone(db.fetchone('SELECT 1'))
         self.assertIsNone(db._conn)
+
+    def test_not_connected_logs_visibly_instead_of_silent(self):
+        # Regression: this path used to return `empty` with zero logging -
+        # indistinguishable from a real empty/no-rows result to anything
+        # downstream that doesn't itself null-check (e.g. plugins/db_addon's
+        # self._fetchone(query)[0] crashing with TypeError, with nothing in
+        # the log explaining the connection was simply down at query time).
+        db = self.db()
+        with self.assertLogs('lib.db', level='INFO') as cm:
+            self.assertIsNone(db.fetchone('SELECT 1'))
+        self.assertTrue(any('not connected' in msg for msg in cm.output), cm.output)
 
     def test_cursor_op_lock_wait_tracks_configured_timeout_not_hardcoded_300(self):
         # Regression: _cursor_op_with_reconnect used to call self.lock(300),

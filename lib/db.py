@@ -36,6 +36,11 @@ from lib.shtime import Shtime
 
 _DB_QUERY_TIMEOUT_DEFAULT = 60
 
+# Sentinel default for the 'cur' parameter of execute()/fetchone()/fetchall(),
+# distinguishing "not passed cur" from "passed None" (because a function didn't
+# return a cursor, but None as error marker)
+NO_CURSOR = object()
+
 
 def _sh_db_query_timeout() -> int:
     """Return db_query_timeout from the running SmartHomeNG instance.
@@ -247,12 +252,7 @@ class Database:
         self.api_initialized = False
 
         # Set up-front, before any of the three failure paths below can
-        # return early: lock()/release() are generic enough that cleanup
-        # code (e.g. a defensive `finally: db.release()`) could reach them
-        # on a half-built object without checking api_initialized first -
-        # AttributeError on self._fdb_lock would be a confusing way to
-        # discover that, versus lock() simply working (harmlessly) on an
-        # object nothing else will use.
+        # return early
         self._fdb_lock = threading.Lock()
         self._fdb_lock_owner = None
 
@@ -279,11 +279,11 @@ class Database:
         self._params = {}
 
         # Deprecated, remove with 1.7 or 1.8
-        if type(connect) is str:
+        if isinstance(connect, str):
             connect = [p.strip() for p in connect.split('|')]
 
         # -> but keep list of ordered dict as "default" returned by yaml parser!
-        if type(connect) is list:
+        if isinstance(connect, list):
             if isinstance(connect[0], str):
                 for arg in connect:
                     key, sep, value = arg.partition(':')
@@ -296,18 +296,11 @@ class Database:
                         value = value.strip().lower() not in ('false', '0', 'no', '')
                     self._params[key] = value
             elif isinstance(connect[0], OrderedDict):
-                # No str() coercion here (unlike the 'key:value' pipe-string
-                # branch above, which genuinely starts with everything as
-                # text) - shyaml.yaml_load(..., ordered=True) (used for the
-                # real etc/plugin.yaml this comes from) already gives each
-                # value its correct native YAML type (port: 3307 -> int,
-                # check_same_thread: false -> bool). Blanket str()'ing here
-                # was actively destroying that - e.g. pymysql.connect()
-                # rejects a string port with "ValueError: port should be of
-                # type int" (verified against a real pymysql connection).
+                # No str() coercion here - shyaml.yaml_load() gives each
+                # value its correct native YAML type
                 self._params = {k: v for item in connect for k, v in item.items()}
 
-        elif type(connect) in [dict, collections.OrderedDict]:
+        elif isinstance(connect, dict):
             self._params = connect
 
         if getattr(self._dbapi, '__name__', '') == 'sqlite3' and 'check_same_thread' not in self._params:
@@ -358,7 +351,6 @@ class Database:
         self._reconnect_exceptions = classes or (Exception,)
 
         self.api_initialized = True
-        return
 
     def connect(self):
         """Connects to the database"""
@@ -396,10 +388,6 @@ class Database:
             # A worker thread is holding the lock while blocked on a query
             # (e.g. waiting on a hung MySQL server).  We cannot wait forever
             # during shutdown, so close the underlying connection anyway.
-            # The blocked thread will receive a broken-connection error,
-            # exit its except branch, and release the lock in its finally
-            # block.  _conn=None / _connected=False are written here so
-            # anything the worker tries after recovering fails gracefully.
             self.logger.warning(
                 'Database [{}]: could not acquire lock within {}s in close(){}; '
                 'force-closing connection to unblock hung thread'.format(
@@ -655,14 +643,9 @@ class Database:
         try:
             self._conn.commit()
         except Exception:
-            # A failed commit means the underlying connection is dead (the
-            # driver already tore down its own socket/buffers internally -
-            # this is what turns one query's failure into confusing,
-            # unrelated-looking errors on whatever touches self._conn next:
-            # pymysql leaves attributes like _sock/_rfile set to None, so a
-            # later call fails with AttributeError instead of a clear
-            # "not connected"). Reset state immediately so the next caller
-            # (verify(), the next dump item, the next scheduled task) sees
+            # A failed commit means the underlying connection is dead
+            # Reset state immediately so the next caller (verify(),
+            # the next dump item, the next scheduled task) sees
             # connected() == False right away instead of inheriting a
             # corrupted connection object.
             self._reset_connection_locked()
@@ -681,19 +664,33 @@ class Database:
         if self._conn is not None:
             return self._conn.cursor()
 
+    def _reject_none_cursor(self, cur, method_name):
+        """Raise if `cur` is literally None rather than genuinely omitted
+        (the NO_CURSOR sentinel default) - see NO_CURSOR's module-level
+        comment for why these must be distinguishable. A caller reaches
+        this with a real None only by passing one in explicitly, e.g. an
+        unchecked self.cursor() result on a connection that turned out to
+        be closed (see verify()'s own guard against exactly that case).
+        """
+        if cur is None:
+            raise TypeError(
+                f'Database [{self._name}]: {method_name}() received cur=None - expected a real cursor '
+                "object, or omit the 'cur' argument entirely to let this method manage its own."
+            )
+
     def _cursor_op_with_reconnect(self, op, quiet=False, empty=None, error_prefix=None, readonly=False):
-        """Run *op(cursor)* against a fresh cursor of our own (the ``cur is
-        None`` case in execute()/fetchone()/fetchall()), retrying exactly
-        once after a reconnect if the connection has gone stale.
+        """Run *op(cursor)* against a fresh cursor of our own (the ``cur``
+        omitted/NO_CURSOR case in execute()/fetchone()/fetchall()), retrying
+        exactly once after a reconnect if the connection has gone stale.
 
         ``verify()`` is the dedicated, actively-called health check for a
         connection - but callers that go through the newer ItemStore/
         LogStore CRUD layer (store.py) always call execute()/fetchone()/
-        fetchall() with ``cur=None`` and never call verify() themselves.
+        fetchall() with ``cur`` omitted and never call verify() themselves.
         Without this, a single dropped connection (network blip, MySQL
         restarting, "Lost connection to MySQL server during query") leaves
         ``self._conn`` in a broken-but-not-None state that nothing ever
-        resets - every subsequent cur=None call fails identically until
+        resets - every subsequent such call fails identically until
         something unrelated happens to call verify() or the process
         restarts. This mirrors verify()'s own close-then-reconnect recovery,
         scoped to the one statement actually being run instead of a
@@ -726,7 +723,7 @@ class Database:
                           what a read leaves behind.
 
         This path is exactly what ItemStore/LogStore always use with
-        cur=None. It holds self._fdb_lock for the duration - concurrent
+        ``cur`` omitted. It holds self._fdb_lock for the duration - concurrent
         threads (scheduler-driven maxage/orphan cleanup, live item writes,
         WebIf/logic reads) would otherwise hit the same self._conn/cursor
         with no serialization at all. Released again before close()/
@@ -743,10 +740,10 @@ class Database:
         for attempt in (1, 2):
             if self._conn is None:
                 # Never connected, or a previous attempt already gave up
-                # and closed us - not "stale", just not connected right
-                # now. No reconnect storm here; that's _initialize_db()'s
-                # throttled job. Only an existing-but-broken connection
-                # gets retried.
+                #
+                # Logged (not silent) because the caller gets back the same
+                # `empty` value a genuinely-empty result would produce
+                self.logger.info(f'{label}: not connected, returning {empty!r} without querying')
                 return empty
 
             with _hang_watchdog(self.logger, self._name, f'{label} - waiting for db lock', timeout):
@@ -770,10 +767,6 @@ class Database:
                     result = op(c)
                 c.close()
                 if readonly:
-                    # commit(), not rollback() - see the readonly= docstring
-                    # above. Best-effort: a cleanup failure here shouldn't
-                    # turn an already-successful read into an error for the
-                    # caller.
                     try:
                         self.commit()
                     except Exception as e:
@@ -786,7 +779,7 @@ class Database:
                         c.close()
                     except Exception:
                         pass
-                    # Statement-level error on a live connection (c is None
+                    # Statement-level error on a live connection,  (c is None
                     # would mean cursor() itself failed - the connection
                     # object is unusable, always reconnect-worthy): only
                     # connection-trouble classes justify tearing down and
@@ -813,7 +806,7 @@ class Database:
             level(f'{prefix}: {last_error}')
         raise last_error
 
-    def execute(self, stmt, params=(), formatting=None, cur=None, quiet=False):
+    def execute(self, stmt, params=(), formatting=None, cur=NO_CURSOR, quiet=False):
         """Execute the given statement
 
         This will execute the statement specified in the 'stmt' parameter
@@ -829,7 +822,9 @@ class Database:
 
         If already aqcuired a cursor you can use this cursor by using the
         'cur' parameter. If omitted a new cursor will be aqcuire for this
-        statement and released afterwards.
+        statement and released afterwards. Passing 'cur' explicitly as None
+        is treated as a caller error (TypeError) rather than "omitted" -
+        see the NO_CURSOR module comment.
 
         Set 'quiet' to True to suppress the error-level log entry for an
         expected failure (e.g. a first-run "table does not exist yet" probe).
@@ -842,7 +837,8 @@ class Database:
             self.logger.error('Can not prepare query: {} (args {}): {}'.format(stmt, params, e))
             raise
 
-        if cur is not None:
+        if cur is not NO_CURSOR:
+            self._reject_none_cursor(cur, 'execute')
             try:
                 return cur.execute(stmt, args)
             except Exception as e:
@@ -921,36 +917,30 @@ class Database:
 
                     if locked:
                         # explicit cursor: fetchone(cur=None) now locks
-                        # internally too (see _cursor_op_with_reconnect) - we
-                        # already hold self._fdb_lock here, and it's a plain
-                        # non-reentrant Lock, so a cur=None call from the same
+                        # internally, so a cur=None call from the same
                         # thread would deadlock against itself.
                         probe_cur = self.cursor()
-                        self.fetchone('SELECT 1', cur=probe_cur)
-                        probe_cur.close()
-                        try:
-                            # On MySQL-family drivers autocommit is off - the
-                            # probe above opened a real transaction that would
-                            # otherwise sit idle indefinitely between verify()
-                            # calls, holding back InnoDB purge (no-op on
-                            # sqlite3, where a SELECT opens no transaction).
-                            # commit(), not rollback() - see
-                            # _cursor_op_with_reconnect's readonly= docstring:
-                            # self._fdb_lock already serializes every caller, so
-                            # rollback() here could silently discard an
-                            # unrelated write still pending on this connection
-                            # from an earlier cur=None caller that never
-                            # explicitly committed (e.g. insertLog()). Best-
-                            # effort: a failure here shouldn't turn a successful
-                            # verify() into a reported failure, since
-                            # connectivity IS confirmed.
-                            self.commit()
-                        except Exception as e:
+                        if probe_cur is None:
+                            # connection was closed by another thread in between
+                            # us verifying and using it
                             self.logger.warning(
-                                f'Database [{self._name}]: could not close verify() probe transaction: {e}'
+                                'Database [{}]: connection was closed between connect() and lock() '
+                                'acquisition, retrying'.format(self._name)
                             )
-                        retry = -1
-                        self.release()
+                            self.release()
+                            retry = retry - 1
+                        else:
+                            self.fetchone('SELECT 1', cur=probe_cur)
+                            probe_cur.close()
+                            try:
+                                # On MySQL-family drivers autocommit is off
+                                self.commit()
+                            except Exception as e:
+                                self.logger.warning(
+                                    f'Database [{self._name}]: could not close verify() probe transaction: {e}'
+                                )
+                            retry = -1
+                            self.release()
                     else:
                         self.logger.warning(
                             'Database [{}]: Could not acquire lock to verify connection{}'.format(
@@ -972,10 +962,8 @@ class Database:
             if is_pymysql:
                 self._params['read_timeout'] = saved_read_timeout
                 self._params['write_timeout'] = saved_write_timeout
-                # Whatever connection exists now (reused, or freshly opened
-                # mid-loop with probe_timeout baked in via self._params
-                # above) must have the real timeout restored too - future
-                # real queries on it must not inherit the short probe value.
+                # Whatever connection exists now must have the real timeout restored too -
+                # future real queries on it must not inherit the short probe value.
                 if self._conn is not None:
                     if hasattr(self._conn, '_read_timeout'):
                         self._conn._read_timeout = saved_read_timeout
@@ -984,14 +972,15 @@ class Database:
 
         return retry
 
-    def fetchone(self, stmt, params=(), formatting=None, cur=None, quiet=False):
+    def fetchone(self, stmt, params=(), formatting=None, cur=NO_CURSOR, quiet=False):
         """Execute given statement and fetch one row from result
 
         This method can be used in case you only want to fetch one row from
         the result. It accepts the same arguments as mentioned in the
         'execute()' method.
         """
-        if cur is not None:
+        if cur is not NO_CURSOR:
+            self._reject_none_cursor(cur, 'fetchone')
             self.execute(stmt, params, formatting=formatting, cur=cur, quiet=quiet)
             return cur.fetchone()
 
@@ -1007,13 +996,14 @@ class Database:
             readonly=True,
         )
 
-    def fetchall(self, stmt, params=(), formatting=None, cur=None, quiet=False):
+    def fetchall(self, stmt, params=(), formatting=None, cur=NO_CURSOR, quiet=False):
         """Execute given statement and fetch all rows from result
 
         This method can be used to fetch all rows from the result. It accepts
         the same arguments as mentioned in the 'execute()' method.
         """
-        if cur is not None:
+        if cur is not NO_CURSOR:
+            self._reject_none_cursor(cur, 'fetchall')
             self.execute(stmt, params, formatting=formatting, cur=cur, quiet=quiet)
             return cur.fetchall()
 
@@ -1067,17 +1057,7 @@ class Database:
             translation = self._translations[formatting][self._format_output]
 
         if self._format_output in ('format', 'pyformat') and input_format not in ('format', 'pyformat'):
-            # format/pyformat drivers (e.g. pymysql) substitute parameters via
-            # Python's own '%' string formatting (query % args) - a literal
-            # '%' anywhere in the SQL text (e.g. the modulo operator) is
-            # otherwise misread as the start of another format spec and
-            # raises "not enough arguments for format string" or similar,
-            # even though the query has nothing to do with that parameter.
-            # '%%' is '%' string-formatting's own escape for a literal '%',
-            # so doubling it here survives untouched through to the driver.
-            # Only when neither side already uses '%' for its own
-            # placeholder syntax - a 'format'/'pyformat' *source* stmt's
-            # existing %s/%(name)s placeholders must not be double-escaped.
+            # prevent literal SQL formatting '%' to be read by format/pyformat
             stmt = stmt.replace('%', '%%')
 
         stmt_result, param_result = self._translate(stmt, param_dict, **translation)
