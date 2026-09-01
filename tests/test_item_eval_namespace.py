@@ -6,8 +6,8 @@ compatibility shim (lib/item/_eval.py, lib/item/_eval_compat.py).
 
 These tests form the before/after gate for the eval-namespace refactoring:
   - Every documented name must be reachable inside an item eval expression.
-  - Names that were previously leaked via item.py module globals (datetime,
-    time, …) must be available even after the extraction to _eval.py.
+  - Names available via item.py module globals (datetime, time, …) must
+    remain available after the extraction to _eval.py.
   - The compat shim (_eval_compat.py) must log a deprecation warning and
     still return the correct result for expressions using non-documented
     names; it must return _EVAL_FAILED when both namespaces fail.
@@ -625,12 +625,12 @@ class TestRunEvalCompatIntegration(_Base):
 
 class TestBareEvalRunsOnce(_Base):
     """
-    Regression test: bare (no "dest =") on_change/on_update expressions must
-    only run once. run_on_xxx() used to eval() the expression a second time
-    "for its side effect", even though the first eval() (needed to compute
-    dest_value) already ran it - any bare expression whose result was not
-    None (e.g. a uf. function call returning a status) had its side effects
-    executed twice per trigger.
+    Bare (no "dest =") on_change/on_update expressions must only run once:
+    run_on_xxx() must not eval() the expression a second time "for its side
+    effect" when the first eval() (needed to compute dest_value) already
+    ran it - otherwise any bare expression whose result is not None (e.g. a
+    uf. function call returning a status) executes its side effects twice
+    per trigger.
     """
 
     def _tracked(self):

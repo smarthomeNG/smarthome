@@ -414,9 +414,9 @@ class TestCoordinateConversions(unittest.TestCase):
 class TestCoordinateConversionsUseConfiguredTz(unittest.TestCase):
     """Regression tests: unaware_datetime_to_utc/utc_to_local must use shng's
     configured timezone (self.shtime.tzinfo()), not whatever the OS-level
-    timezone happens to be. force_os_tz creates a genuine mismatch so these
-    actually exercise the bug rather than relying on OS/configured tz happening
-    to agree in the test environment."""
+    timezone happens to be. force_os_tz creates a genuine mismatch so a
+    config/OS tz disagreement is actually exercised, rather than relying on
+    them happening to agree in the test environment."""
 
     def setUp(self):
         self.shtime = _make_shtime('Pacific/Honolulu')
@@ -535,10 +535,10 @@ class TestMoonRiseSetSkyfieldCached(TestMoonRiseSet):
 # ===========================================================================
 # High-latitude (midnight sun / polar night) regression tests
 #
-# Orb.rise()/set() with doff=0 (the default) used to crash with an uncaught
-# ephem.AlwaysUpError/NeverUpError at any location where the sun's plain
-# horizon crossing genuinely does not occur on the given day. _avoid_neverup
-# only clamps non-zero degree offsets, so this path had no protection.
+# Orb.rise()/set() with doff=0 (the default) must not crash with an
+# uncaught ephem.AlwaysUpError/NeverUpError at any location where the
+# sun's plain horizon crossing genuinely does not occur on the given day -
+# _avoid_neverup only clamps non-zero degree offsets.
 #
 # The skyfield variant exercises the *different* mechanism that backend uses
 # to signal "no event": checking the find_risings()/find_settings() events
@@ -606,9 +606,9 @@ class TestHighLatitudeNeverUpSkyfieldCached(TestHighLatitudeNeverUp):
 # ===========================================================================
 # Correctness: the cached backend must agree with the uncached one exactly.
 # The cache batches a whole year of events and bisects into it instead of
-# running a fresh search per call - these tests catch the bug we found while
-# building it (a circumpolar query returning the next *real* event months
-# away instead of None - see _SkyfieldCachedBackend.SAME_CIRCUIT_DAYS).
+# running a fresh search per call - a circumpolar query must return None,
+# not the next *real* event months away
+# (_SkyfieldCachedBackend.SAME_CIRCUIT_DAYS).
 # ===========================================================================
 
 
@@ -666,13 +666,11 @@ class TestSkyfieldCachedMatchesUncached(unittest.TestCase):
         self.assertEqual(self.tromso_sun.set(dt=_SPRING_EQUINOX), self.tromso_sun_cached.set(dt=_SPRING_EQUINOX))
 
     def test_query_at_cache_window_boundary_is_not_a_false_none(self):
-        # Regression test: a query landing exactly at the cached window's end
-        # must not be mistaken for "confirmed no event" - that's just where the
-        # search stopped, not proof nothing exists just beyond it (found via
-        # 1000 sequential daily queries at Berlin - never circumpolar - wrongly
-        # returning None right at each yearly cache-refill boundary). Use a
-        # short CACHE_HORIZON_DAYS to hit the boundary deterministically
-        # without iterating a full year.
+        # A query landing exactly at the cached window's end must not be
+        # mistaken for "confirmed no event" - that's just where the search
+        # stopped, not proof nothing exists just beyond it. Use a short
+        # CACHE_HORIZON_DAYS to hit the boundary deterministically without
+        # iterating a full year.
         self.sun_cached._backend.CACHE_HORIZON_DAYS = 3
         self.sun_cached.rise(dt=_SUMMER_SOLSTICE)  # populates the cache, covered_end = +3 days
         boundary = _SUMMER_SOLSTICE + datetime.timedelta(days=3)

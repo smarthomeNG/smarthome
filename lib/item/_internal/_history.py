@@ -31,8 +31,7 @@ __run_eval() on an eval trigger; set_initial_value_caller()/set_from_cache()
 fire once, from __init__'s initial-value/cache-restore paths.
 
 Getters mirror the private attribute names Item held directly before this
-extraction (__last_change etc.), so item.py/property.py call-sites needed
-only trivial one-line changes.
+extraction (__last_change etc.).
 """
 
 

@@ -4,15 +4,12 @@
 Regression test for lib.network.Tcp_client.__receive_thread_worker()'s
 recv() timeout handling.
 
-The exception filter used to be `e.errno not in (60, 65)` -- hardcoded
-macOS/BSD errno values for ETIMEDOUT/EHOSTUNREACH. On Linux (shng's
-primary deployment target) those numbers are different (110/113), so the
-filter never matched there. Worse: a plain socket recv timeout (raised via
-socket.settimeout()) is a TimeoutError with errno=None, not a numbered
-errno at all -- confirmed empirically with a real local socket pair below
--- so even fixing the numbers to be portable (errno.ETIMEDOUT/EHOSTUNREACH)
-would not be enough on its own; the exception type itself must be checked,
-not just its errno.
+The exception filter must check the exception type, not just errno: a
+plain socket recv timeout (raised via socket.settimeout()) is a
+TimeoutError with errno=None, not a numbered errno at all, so an
+errno-only filter (even a portable one, using
+errno.ETIMEDOUT/EHOSTUNREACH instead of hardcoded macOS/BSD values) would
+never match it.
 
 Drives __receive_thread_worker() directly (bypassing connect(), which
 would need a real reachable host) with a mocked selector reporting one

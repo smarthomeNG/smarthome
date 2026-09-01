@@ -3,14 +3,14 @@
 """
 Regression tests for Standalone._parse_argv() (lib.model.smartdeviceplugin).
 
-The original inline argv-parsing loop in Standalone.__init__ matched mode
-flags with `arg_str[:2].lower() == '-s'` (and '-a'/'-l') - a PREFIX match,
-not an exact match, unlike the '-v' check right above it which used '=='.
-Any arg starting with '-s'/'-a'/'-l' was silently swallowed as a mode
-flag instead of reaching the name=value/dict parser, e.g. a plugin
-parameter typed with a stray leading dash (`-address=...`, a natural typo
-of the documented `address=...` form) silently enabled ACL mode instead
-of setting the address parameter - no error, just a missing parameter.
+Mode flags ('-s'/'-a'/'-l') must be matched exactly, like the '-v' check
+right above them (which uses '=='), not via an `arg_str[:2].lower() == '-s'`
+prefix match - a prefix match would silently swallow any arg starting with
+'-s'/'-a'/'-l' as a mode flag instead of reaching the name=value/dict
+parser, e.g. a plugin parameter typed with a stray leading dash
+(`-address=...`, a natural typo of the documented `address=...` form)
+would enable ACL mode instead of setting the address parameter, with no
+error.
 
 _parse_argv() is extracted out of __init__ (which also needs a real cwd
 with bin/smarthome.py and reads sys.argv) so this can be tested directly.

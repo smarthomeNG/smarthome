@@ -460,12 +460,12 @@ class TestUpdateItemLocking(unittest.TestCase):
     """
     Regression test: update_item() is registered as an item method-trigger,
     so it runs synchronously on whatever thread changes the watched item -
-    not the scheduler's own thread. It used to mutate self._scheduler[name]
-    ('cycle', 'value', and via _next_time() also 'next') without taking
-    self._lock, unlike add()/remove()/change() and run()'s own iteration -
-    a concurrent run() iteration or another update_item() call for the same
+    not the scheduler's own thread. It must mutate self._scheduler[name]
+    ('cycle', 'value', and via _next_time() also 'next') under self._lock,
+    like add()/remove()/change() and run()'s own iteration - otherwise a
+    concurrent run() iteration or another update_item() call for the same
     entry could interleave with it. Verifies the whole method (including
-    the trailing _next_time() call) now runs under self._lock.
+    the trailing _next_time() call) runs under self._lock.
     """
 
     def setUp(self):

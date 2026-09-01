@@ -11,11 +11,10 @@ class TestMetadataWithoutSmartHome(unittest.TestCase):
     Regression test for lib/metadata.py's Metadata class working with
     sh=None - needed for standalone-mode plugin invocation (lib/model/
     smartdeviceplugin.py's Standalone class), which runs with no shng
-    instance at all. Metadata previously assumed self._sh was always a
-    real SmartHome instance in two spots: resolving the metadata file's
-    path via self._sh.get_basedir(), and checking for the http module in
-    get_global_plugin_parameters() - both would raise AttributeError on
-    None.
+    instance at all. Metadata must not assume self._sh is always a real
+    SmartHome instance: resolving the metadata file's path via
+    self._sh.get_basedir(), and checking for the http module in
+    get_global_plugin_parameters(), must both tolerate sh=None.
     """
 
     def test_construction_does_not_require_sh(self):

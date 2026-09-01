@@ -4,14 +4,10 @@
 Tests for Admin._error_page_json() (modules/admin/__init__.py) — the
 JSON error body wired into the /api tree's error_page.* hooks.
 
-Before this existed, every /api/* error (400/401/404/405/411/500) went
-through _error_page(), which always returns an HTML page regardless of
-the client's Accept header. The shngadmin frontend reads error text via
-``err.error.error`` (an HttpErrorResponse's parsed JSON body) — against
-an HTML response, that's always undefined, so every error-message-driven
-frontend flow (cycle/collision wording, offering to auto-create missing
-parent items on rename, etc.) silently fell back to a generic message
-instead, with no way to tell flows apart.
+Every /api/* error (400/401/404/405/411/500) must go through this JSON
+path, not _error_page()'s HTML: the shngadmin frontend reads error text
+via ``err.error.error`` (an HttpErrorResponse's parsed JSON body), which
+is undefined against an HTML response.
 """
 
 import json

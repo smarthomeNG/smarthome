@@ -10,11 +10,10 @@ vpath segments (default.py calls it as `self.set_response_headers(*vpath)`,
 and vpath can have more than one element for a sub-resource URL like
 /api/items/<path>/references — two segments after the controller mount).
 
-TestSubResourceActionAuthEnforcement: regression test for a bug where
-default()'s sub-resource-action branch (used for actions like
-/api/items/<path>/rename) called the target method directly instead of
-going through REST_dispatch_execute/REST_check_auth, so a method with
-authentication_needed = True was reachable without a valid JWT.
+TestSubResourceActionAuthEnforcement: default()'s sub-resource-action
+branch (used for actions like /api/items/<path>/rename) must dispatch
+through REST_dispatch_execute/REST_check_auth like every other route, so
+authentication_needed is always enforced.
 """
 
 import json
@@ -62,10 +61,8 @@ class TestSubResourceActionAuthEnforcement(unittest.TestCase):
     """
     /api/<resource>/<action> (e.g. /api/items/<path>/rename) is dispatched by
     default()'s sub-resource-action branch, not REST_dispatch(). That branch
-    used to call the target method directly, bypassing the only place
-    authentication_needed is checked (REST_dispatch_execute), so a method
-    that declared authentication_needed = True was actually reachable
-    without a valid JWT.
+    must dispatch through REST_dispatch_execute, the only place
+    authentication_needed is checked, not call the target method directly.
     """
 
     class _Resource(RESTResource):

@@ -1,29 +1,24 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 """
-Regression tests for two crash bugs in the admin and smartvisu websocket
-protocols (modules/websocket/admin.py, smartvisu.py):
+Regression tests for two crash-prevention invariants in the admin and
+smartvisu websocket protocols (modules/websocket/admin.py, smartvisu.py):
 
-1. `reply` was only ever assigned at the very end of the per-message command
-   dispatch. A handler raising before reaching that point (e.g. a 'item'
-   command missing the 'id' key) left `reply` unbound; the fallback send and
-   the except block's own log message both reference `reply`, so the
-   UnboundLocalError happened *again*. That second, unhandled exception
-   escaped the per-message try/except and aborted the whole
-   `async for message in websocket` loop -- silently dropping every message
-   that arrived after the bad one, not just the bad one itself. Present in
-   both admin.py and smartvisu.py.
+1. `reply` must be bound before any handler in the per-message command
+   dispatch can raise (e.g. a 'item' command missing the 'id' key) - the
+   fallback send and the except block's own log message both reference
+   `reply`, so leaving it unbound on an early raise triggers a second,
+   unhandled UnboundLocalError that escapes the per-message try/except and
+   aborts the whole `async for message in websocket` loop, silently
+   dropping every message that arrives after the bad one. Applies to both
+   admin.py and smartvisu.py.
 
-2. admin.py's prepare_monitor() set `path_parts = 0` (an int) instead of `[]`
-   when `path is None`. A mixed monitor list like `[None, "some.item"]`
-   slipped past the `data['items'] != [None]` guard and reached
-   `len(path_parts)`, raising TypeError. This one does NOT hit bug (1)'s
-   failure mode -- by the time it's raised, `answer` has already been set to
-   `{}` (right before the risky call), so the `if answer != {}:` guard skips
-   the reply-sending code entirely and the loop keeps running. The actual
-   damage is narrower: the client's monitor request silently fails with an
-   ERROR-level log instead of being handled. smartvisu.py's equivalent
-   already correctly used `[]` here, so this one is admin.py-only.
+2. admin.py's prepare_monitor() must set `path_parts = []`, not `0` (an
+   int), when `path is None` - a mixed monitor list like
+   `[None, "some.item"]` slips past the `data['items'] != [None]` guard and
+   reaches `len(path_parts)`, raising TypeError if path_parts isn't a list.
+   smartvisu.py's equivalent already correctly uses `[]` here, so this one
+   is admin.py-only.
 """
 
 import json

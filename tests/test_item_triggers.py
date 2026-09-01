@@ -207,8 +207,8 @@ class TestLogicTriggers(_Base):
 
     def test_logic_removed_mid_iteration_does_not_skip_later_logics(self):
         """
-        Regression test: __trigger_logics() used to iterate
-        self.__logics_to_trigger directly (no snapshot) -- same failure mode
+        __trigger_logics() must iterate a snapshot of
+        self.__logics_to_trigger, not the list directly - same failure mode
         as test_method_removed_mid_iteration_does_not_skip_later_methods,
         for the logic-trigger list.
         """
@@ -341,15 +341,15 @@ class TestMethodTriggers(_Base):
 
     def test_method_removed_mid_iteration_does_not_skip_later_methods(self):
         """
-        Regression test: __update() used to iterate self.__methods_to_trigger
-        directly (no snapshot). Removing an already-visited entry from within
-        a still-running trigger callback (simulating a concurrent
+        __update() must iterate a snapshot of self.__methods_to_trigger, not
+        the list directly. Removing an already-visited entry from within a
+        still-running trigger callback (simulating a concurrent
         remove_method_trigger() call from another thread, e.g. a plugin
         deregistering during reload) shifts list positions under the
         for-loop's cursor and silently skips whatever trigger was next in
-        line -- confirmed via plain-list iteration semantics independent of
-        Item: removing an earlier element while iterating skips the element
-        that shifts into the current cursor position.
+        line - plain-list iteration semantics independent of Item: removing
+        an earlier element while iterating skips the element that shifts
+        into the current cursor position.
         """
         calls = []
         item = _item(self.sh, 'a')

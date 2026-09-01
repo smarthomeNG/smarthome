@@ -3,14 +3,13 @@
 """
 Regression test for lib/model/mqttplugin.py's MqttPlugin._item_values.
 
-MqttPlugin.__init__() used to never set self._item_values, so every plugin
-that correctly calls super().__init__() (mqtt, shelly, tasmota,
-zigbee2mqtt, ...) still ended up sharing the single class-level dict -
-one plugin's item values leaking into another's web interface. __init__()
-now sets an instance-level dict; the class-level default is intentionally
-kept (not switched to a None sentinel) so plugins that skip
-super().__init__() keep working exactly as before, see the TODO/FIXME
-comment above the class attribute.
+MqttPlugin.__init__() must set an instance-level self._item_values, or
+every plugin that correctly calls super().__init__() (mqtt, shelly,
+tasmota, zigbee2mqtt, ...) ends up sharing the single class-level dict -
+one plugin's item values leaking into another's web interface. The
+class-level default is intentionally kept (not a None sentinel) so plugins
+that skip super().__init__() keep working, see the TODO/FIXME comment
+above the class attribute.
 """
 
 import os

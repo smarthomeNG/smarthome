@@ -1,18 +1,11 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 """
-Regression tests for lib.env.location_name()/location_address() crashing on
-a reverse-geocode API response with no 'address' key (rate-limited/no-match
+Regression tests for lib.env.location_name()/location_address() against a
+reverse-geocode API response with no 'address' key (rate-limited/no-match
 responses from the external Nominatim API).
 
-location_name() explicitly detected this case ("No 'address' in json
-response") and set result = '' -- but the suburb lookup right after that
-if/else block was not actually inside the else branch, so it unconditionally
-indexed json_obj['address'] again regardless, raising KeyError exactly on
-the case the code above it just handled.
-
-location_address() had no such check at all: `return json_obj['address']`
-raised KeyError unconditionally whenever 'address' was absent.
+Both must handle a missing 'address' key without raising KeyError.
 """
 
 import os

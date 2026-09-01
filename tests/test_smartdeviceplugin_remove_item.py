@@ -5,12 +5,10 @@ Regression test for lib.model.smartdeviceplugin.SmartDevicePlugin.remove_item():
 
 _plg_item_dict and _items_write are keyed by item.property.path (a string)
 everywhere they're populated (see SmartPlugin.add_item()/parse_item() and
-SmartDevicePlugin.parse_item()), but remove_item() looked both up by the
-Item object itself. Both lookups always missed (a KeyError caught into
-cmd=None, and `item in self._items_write` always False), so the cleanup of
+SmartDevicePlugin.parse_item()) - remove_item() must look them up the same
+way, by path, not by the Item object itself, or the cleanup of
 _commands_read/_commands_pseudo/_commands_initial/_commands_cyclic/
-_commands_read_grp and _items_write silently never ran on item removal --
-stale references accumulated indefinitely across item reload/reconfiguration.
+_commands_read_grp and _items_write silently never runs on item removal.
 
 Bypasses SmartDevicePlugin.__init__() (which needs a real device
 connection) and seeds only the dict state remove_item() actually touches,

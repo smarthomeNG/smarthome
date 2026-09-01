@@ -6,10 +6,8 @@ create_missing_parents flag (lib/item/items.py).
 
 Coverage
 --------
-- parent=None with a dotted path resolves the parent by path (previously
-  unsupported — a direct create_item() call with a dotted path and no
-  explicit parent object used to silently misconstruct a broken top-level
-  item; it now behaves the same as the admin API's own resolution did).
+- parent=None with a dotted path resolves the parent by path, the same
+  way the admin API's own resolution does.
 - Missing parent, flag off: raises ValueError, nothing is created.
 - Missing parent, flag on: the whole missing ancestor chain is created (in
   order, shallow to deep) as empty items, then the requested item itself

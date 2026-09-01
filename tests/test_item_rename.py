@@ -337,17 +337,15 @@ class TestRenameItemPausesEachAffectedPluginOnceForTheWholeOperation(_Base):
 
 
 class TestRenameItemScopesPauseToRelevantPlugins(_Base):
-    """Regression test: rename_item() used to pause every STOP_ON_ITEM_CHANGE
-    plugin with a rename_item hook, whole-installation-wide, regardless of
-    whether that plugin had anything to do with the item(s) being renamed -
-    the same class of bug edit_item() had (see
-    TestEditItemScopesPauseToRelevantPlugins in test_item_edit.py), left
-    open there because a rename has no old/new attribute config to diff.
-    The rename_item() hook itself still runs for every such plugin
-    unconditionally (verified below); only the stop()/run() bracket is
-    scoped, via Items.plugin_attributes/plugin_attribute_prefixes, to
-    whether the plugin owns an attribute actually present somewhere in the
-    subtree being renamed."""
+    """rename_item()'s stop()/run() pause bracket must be scoped to plugins
+    with a plausible stake in the item(s) being renamed (via
+    Items.plugin_attributes/plugin_attribute_prefixes, checking whether the
+    plugin owns an attribute present somewhere in the renamed subtree), not
+    every STOP_ON_ITEM_CHANGE plugin with a rename_item hook - see
+    TestEditItemScopesPauseToRelevantPlugins in test_item_edit.py for the
+    same scoping on edit_item(). The rename_item() hook itself still runs
+    for every such plugin unconditionally (verified below); only the
+    stop()/run() bracket is scoped."""
 
     def setUp(self):
         super().setUp()

@@ -417,9 +417,9 @@ class _SkyfieldCachedBackend(_SkyfieldBackend):
         # searched - bisecting the list is only valid evidence of "no event here"
         # for queries that fall inside it. A query outside [start, end] must
         # trigger a fresh search instead of trusting whatever the list happens to
-        # contain nearby (see test_sun_rise_matches_across_several_dates in
-        # tests/test_orb.py for the bug this fixes: a query earlier than the
-        # cache's start could otherwise bisect straight to a much later entry).
+        # contain nearby - see test_sun_rise_matches_across_several_dates in
+        # tests/test_orb.py (a query earlier than the cache's start could
+        # otherwise bisect straight to a much later entry).
         self._rise_cache = {}
         self._set_cache = {}
         self._transit_cache = {}

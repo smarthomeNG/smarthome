@@ -23,13 +23,10 @@
 Assembles modules/admin/openapi.yaml from the ApiDoc metadata attached
 directly to the exposed REST methods in modules/admin/api_*.py.
 
-This replaces the old, hand-maintained modules/admin/api.raml, which went
-stale because nothing forced it to change alongside the code it described.
-The fix isn't a different file format - it's that the metadata now lives in
-the same few lines as the route it documents (see modules/admin/rest.py's
-ApiDoc/ApiParam), so a route change and its doc change are far more likely
-to land in the same diff. This script only assembles what's already there;
-it does not invent or infer anything.
+The metadata lives in the same few lines as the route it documents (see
+modules/admin/rest.py's ApiDoc/ApiParam), so a route change and its doc
+change are far more likely to land in the same diff. This script only
+assembles what's already there; it does not invent or infer anything.
 
 The procedure is as follows:
 1) statically import modules.admin (its __init__.py already does

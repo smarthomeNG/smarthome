@@ -76,11 +76,11 @@ class SmartPlugin(SmartObject, Utils):
     # instance-level versions for every plugin that *does* call
     # super().__init__() (the common case), so these class-level defaults
     # only get shared across instances for plugins that skip it - confirmed
-    # happening today (e.g. miflora, traffic). Same trade-off, same fix
-    # shape as lib/model/mqttplugin.py's _item_values. Revisit once the
-    # 3rd-party plugin fleet has been audited for super().__init__()
-    # compliance, then these can become None sentinels to fail loudly
-    # instead of sharing state.
+    # happening today (e.g. miflora, traffic). Same trade-off as
+    # lib/model/mqttplugin.py's _item_values. Revisit once the 3rd-party
+    # plugin fleet has been audited for super().__init__() compliance,
+    # then these can become None sentinels to fail loudly instead of
+    # sharing state.
 
     logger = logging.getLogger(__name__)
 

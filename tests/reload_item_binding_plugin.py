@@ -1,14 +1,10 @@
 """Test-only plugin that binds to every item.
 
 Used by tests/test_plugin_reload.py to verify that reload_plugin() doesn't
-register the freshly-reloaded instance's update_item twice on the same
-item - regression test for a real bug found live against the matter
-plugin: reload_plugin() called _parse_existing_items() both via
-load_plugin()'s own internal call and again explicitly itself, adding the
-same trigger twice. Since item.remove_method_trigger() is a plain
-list.remove() (removes only the first match) and cleanup runs once per
-unload, one of the two duplicate entries survives every unload and
-becomes permanently orphaned the moment that instance is later replaced.
+register the freshly-reloaded instance's update_item twice on the same item:
+item.remove_method_trigger() is a plain list.remove() (removes only the
+first match), so a duplicate registration leaves one entry permanently
+orphaned once cleanup removes only one match.
 """
 
 from lib.model.smartplugin import SmartPlugin

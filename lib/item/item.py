@@ -1480,7 +1480,6 @@ class Item:
 
         if _changed or self._enforce_updates or self._type == 'scene':
             # Trigger methods (update_item methods of plugins)
-            ### Test for fix for unwanted plugin retrigger in combination with eval expressions
             # snapshot: add_method_trigger()/remove_method_trigger() (_triggers.py) mutate
             # this list with no lock, from any thread, concurrently with this iteration
             for method in list(self.__methods_to_trigger):

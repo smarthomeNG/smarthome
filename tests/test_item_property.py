@@ -593,10 +593,8 @@ class TestPropertyOnChangeUpdate(_PropertyTestBase):
 # ===========================================================================
 #
 # eval_unexpanded/on_change_unexpanded/on_update_unexpanded/trigger_unexpanded
-# setters used to call self._item._process_eval() / _process_on_xx_list() /
-# _process_trigger_list(), none of which exist on Item - guaranteed
-# AttributeError on every call. Only the getters were covered above; these
-# setters were never exercised, so the break went unnoticed.
+# setters must call the real _parse_* methods that exist on Item, not
+# self._item._process_eval()/_process_on_xx_list()/_process_trigger_list().
 
 
 class TestUnexpandedSetters(_PropertyTestBase):
@@ -625,13 +623,12 @@ class TestUnexpandedSetters(_PropertyTestBase):
 
 class TestUnexpandedSettersReleaseLockOnException(_PropertyTestBase):
     """
-    Regression test: these setters used to acquire item._lock with a bare
-    acquire()/release() pair, no try/finally. If the underlying _parse_*
-    call raised, release() was skipped and the lock leaked. Since
-    item._lock is an RLock, checking "is it free" from the same thread
-    that (maybe) leaked it is meaningless - the owning thread can always
-    re-acquire an RLock regardless of whether it released it - so these
-    checks run from a separate thread.
+    These setters must release item._lock even if the underlying _parse_*
+    call raises (acquire()/release() around a try/finally, not bare).
+    Since item._lock is an RLock, checking "is it free" from the same
+    thread that (maybe) leaked it is meaningless - the owning thread can
+    always re-acquire an RLock regardless of whether it released it - so
+    these checks run from a separate thread.
     """
 
     def _assert_lock_is_free(self, item):

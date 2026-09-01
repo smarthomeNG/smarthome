@@ -15,12 +15,11 @@ class TestGetPluginthreadEarlyOrder(unittest.TestCase):
     Regression test for lib/plugin.py's get_pluginthread(): plugins loaded at
     runtime (i.e. any load_plugin() call outside the initial bulk __init__
     loop) with startorder: early/late in their plugin.yaml get appended to
-    Plugins.threads_early/threads_late instead of Plugins._threads. Those two
-    lists are only ever merged into _threads once, inside __init__ - never
-    again afterward. get_pluginthread() only searched _threads, so it could
-    never find such a plugin once loaded post-startup, which in turn broke
-    unload_plugin() (self._threads.remove(None) raises ValueError, silently
-    caught, unload_plugin returns False). Real plugins hit by this:
+    Plugins.threads_early/threads_late instead of Plugins._threads - those two
+    lists are only ever merged into _threads once, inside __init__, never
+    again afterward. get_pluginthread() must also find such a plugin once
+    loaded post-startup, or unload_plugin() fails (self._threads.remove(None)
+    raises ValueError, silently caught, unload_plugin returns False). Affects
     plugins/database, plugins/influxdb, plugins/influxdb2 (all
     startorder: early).
     """
@@ -57,8 +56,7 @@ class TestStartPlugin(unittest.TestCase):
     Plugins.start_plugin() must start an already-loaded plugin via its own
     dedicated PluginWrapper thread (thread.start()), the same path bulk
     startup uses (Plugins.start()) - not by calling myplugin.run() directly
-    on the caller's thread, which is what reload_plugin() and the admin
-    API's 'load' action used to do.
+    on the caller's thread.
     """
 
     def setUp(self):
@@ -122,12 +120,12 @@ class TestStartPlugin(unittest.TestCase):
 
 class TestReloadPluginReturnValues(unittest.TestCase):
     """
-    reload_plugin() used to always return True, even when unload_plugin() or
-    load_plugin() (steps it calls internally) failed - reporting success to
-    callers (e.g. the admin API) while actually leaving the plugin unloaded,
-    or - worse, when unload_plugin() itself failed - leaving a second, fresh
-    instance registered alongside a still-present, half-unloaded original
-    under the same configname.
+    reload_plugin() must return False when unload_plugin() or load_plugin()
+    (steps it calls internally) fails, not report success to callers (e.g.
+    the admin API) while actually leaving the plugin unloaded - or, when
+    unload_plugin() itself fails, leaving a second, fresh instance
+    registered alongside a still-present, half-unloaded original under the
+    same configname.
 
     Uses tests/resources/plugin_reload.yaml, a dedicated fixture (not the
     shared tests/resources/plugin.yaml), because reload_plugin() re-reads
@@ -293,18 +291,15 @@ class TestReloadSubmodules(unittest.TestCase):
 
 class TestReloadDoesNotDuplicateItemTriggers(unittest.TestCase):
     """
-    Regression test for a real bug found live against the matter plugin:
-    reload_plugin() called _parse_existing_items() twice on the freshly
-    reloaded instance - once via load_plugin()'s own internal call, and
-    again explicitly itself right after - registering the same instance's
-    update_item on every matching item twice.
-
-    Since item.remove_method_trigger() is a plain list.remove() (only
-    removes the first matching entry) and deinit()'s cleanup runs once per
-    item, one of the two duplicate entries survives every unload and
-    becomes permanently orphaned the moment that instance is later
-    replaced by another reload - a small, unbounded leak that accumulates
-    by exactly one stale trigger per reload, forever.
+    reload_plugin() must call _parse_existing_items() on the freshly
+    reloaded instance exactly once (via load_plugin()'s own internal call),
+    not again explicitly itself. Registering the same instance's
+    update_item on every matching item twice would leak a trigger on every
+    reload: item.remove_method_trigger() is a plain list.remove() (only
+    removes the first matching entry), and deinit()'s cleanup runs once per
+    item, so one of the two duplicate entries survives every unload and
+    becomes permanently orphaned the moment that instance is later replaced
+    by another reload.
     """
 
     def setUp(self):

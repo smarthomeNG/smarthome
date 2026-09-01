@@ -3,21 +3,14 @@
 """
 Regression test for lib.userfunctions.reload().
 
-import_user_module() registers a loaded module via globals()['{m}'] = ...
-(a dict-style assignment inside an exec()'d string -- works for any string
-key). reload() instead did exec(f'importlib.reload({userlib})') -- a bare
-identifier expression, not a dict lookup. For any userfunctions filename
-that isn't a valid Python identifier (e.g. contains a hyphen, a common and
-legal filename character), that parses as something else entirely (a
-hyphenated name like 'my-functions' becomes the subtraction `my - functions`)
-and raises the wrong NameError, which didn't match the code's own
-expected-error string check, so the "module not loaded, try importing it"
-fallback never triggered -- reload() just returned False.
-
-Confirmed empirically that importlib.import_module('functions.my-functions')
-imports a hyphenated filename fine -- the bug was specific to reload()'s use
-of exec() with the module name spliced in as a bare identifier, not to
-import machinery in general.
+reload() must resolve the module the same way import_user_module() does -
+via a dict-style globals()['{m}'] lookup, not
+exec(f'importlib.reload({userlib})') with the module name spliced in as a
+bare identifier. Any userfunctions filename that isn't a valid Python
+identifier (e.g. contains a hyphen, a common and legal filename character)
+breaks the bare-identifier form (a hyphenated name like 'my-functions'
+parses as the subtraction `my - functions`), so the "module not loaded,
+try importing it" fallback must still trigger correctly.
 """
 
 import importlib
@@ -77,9 +70,9 @@ class TestUserfunctionsReload(unittest.TestCase):
         # Force the mtime forward: importlib's source cache validates by
         # mtime+size, and a same-tick rewrite (write, immediately reload,
         # both within one filesystem mtime-granularity window) can leave it
-        # not noticing the file changed at all -- reproduced independently
-        # of this fix/hyphenated names, it's a general reload() timing
-        # quirk, not something under test here.
+        # not noticing the file changed at all - a general reload() timing
+        # quirk, unrelated to hyphenated names, not something under test
+        # here.
         functions_dir = os.path.join(self._tmpdir.name, 'functions')
         path = os.path.join(functions_dir, 'hyphen-mod.py')
         with open(path, 'w') as f:

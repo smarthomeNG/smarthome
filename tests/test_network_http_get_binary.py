@@ -3,12 +3,12 @@
 """
 Regression test for lib.network.Http.get_binary().
 
-Unlike its siblings get_json()/get_text()/download(), get_binary() didn't
+Like its siblings get_json()/get_text()/download(), get_binary() must
 check the return value of the internal __get() call before touching
-self._response -- on any failed request, __get() sets self._response = None
-and returns False, so get_binary() raised AttributeError
-('NoneType' object has no attribute 'content') instead of returning None
-like the rest of the family documents/does.
+self._response: on a failed request, __get() sets self._response = None
+and returns False, so get_binary() must return None like the rest of the
+family, not raise AttributeError ('NoneType' object has no attribute
+'content').
 """
 
 import os

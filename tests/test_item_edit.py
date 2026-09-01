@@ -250,12 +250,10 @@ class TestEditItemRebindsPlugins(_Base):
 
 
 class TestEditItemPausesAndResumesStoppablePlugins(_Base):
-    """Regression test: edit_item() used to call plugin.remove_item(), which
-    stops a STOP_ON_ITEM_CHANGE plugin internally, but never called run()
-    again afterward - any such plugin (e.g. one driving a background
-    asyncio loop) stayed dead after any item edit touching it. Fixed by
-    giving edit_item() the same pause-once/resume-once wrapper
-    Items.rename_item() already had."""
+    """edit_item() must pause and resume STOP_ON_ITEM_CHANGE plugins around
+    the edit, the same pause-once/resume-once wrapper Items.rename_item()
+    uses - otherwise a plugin stopped by plugin.remove_item() (e.g. one
+    driving a background asyncio loop) stays dead after the edit."""
 
     def setUp(self):
         super().setUp()
@@ -297,15 +295,13 @@ class TestEditItemPausesAndResumesStoppablePlugins(_Base):
 
 
 class TestEditItemScopesPauseToRelevantPlugins(_Base):
-    """Regression test: edit_item() used to pause every STOP_ON_ITEM_CHANGE
-    plugin in the whole installation on every item edit, regardless of
-    whether that plugin had anything to do with the edited item - the root
-    cause of the matter plugin's self-edit-during-startup recursion.
+    """edit_item()'s stop()/run() pause bracket must be scoped to plugins
+    with a plausible stake in the edited item (via
+    Items.plugin_attributes/plugin_attribute_prefixes), not every
+    STOP_ON_ITEM_CHANGE plugin in the installation.
     plugin.remove_item()/plugin.parse_item() still run for every plugin
     unconditionally (unchanged, verified below); only the stop()/run()
-    bracket is scoped down, via Items.plugin_attributes/
-    plugin_attribute_prefixes, to plugins with a plausible stake in this
-    specific edit."""
+    bracket is scoped down."""
 
     def setUp(self):
         super().setUp()
@@ -421,11 +417,9 @@ class TestEditItemNotifyPluginsFalse(_Base):
 
 
 class TestEditItemPluginHookFailureIsolation(_Base):
-    """Regression test: plugin.remove_item()/plugin.parse_item() calls were
-    unguarded - one plugin raising aborted the whole edit (config never
-    applied, no other plugin's remove_item()/parse_item() ran). Now
-    isolated per plugin, mirroring the stop()/run() bracket's existing
-    try/except pattern."""
+    """plugin.remove_item()/plugin.parse_item() calls must be isolated per
+    plugin, mirroring the stop()/run() bracket's try/except pattern - one
+    plugin raising must not abort the whole edit for every other plugin."""
 
     def setUp(self):
         super().setUp()

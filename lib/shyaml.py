@@ -342,13 +342,10 @@ def yaml_exists(filename):
     Check whether the yaml file for *filename* exists on disk, regardless
     of whether *filename* already includes a .yaml/.yml extension or not.
 
-    A bare ``os.path.isfile(filename + YAML_FILE)`` silently returns False
-    (making callers wrongly conclude "doesn't exist yet") when *filename*
-    already ends in an extension, since it would then look for a
-    nonexistent ``...yaml.yaml`` path - this was the root cause of an
-    existing item's file being silently overwritten instead of loaded and
-    merged into, whenever create_item()/rename_item() were handed a
-    filename that still had its extension attached.
+    A bare ``os.path.isfile(filename + YAML_FILE)`` would silently return
+    False (making callers wrongly conclude "doesn't exist yet") when
+    *filename* already ends in an extension, since it would then look for
+    a nonexistent ``...yaml.yaml`` path.
 
     :param filename: Basename of the yaml file, with or without extension
     :type filename: str

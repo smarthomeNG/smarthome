@@ -192,10 +192,10 @@ class TestFindAttributeWithInstance(_Base):
         self.assertEqual(lamp.find_attribute_with_instance('inst_attr', plugin=shop), 'from_room_shop')
 
     def test_bare_attr_is_invisible_to_a_named_instance(self):
-        """The actual bug this whole mechanism exists to fix: a bare attr
-        (meant for the default/unnamed instance) must not leak into a named
-        instance's resolution - inst_lamp itself has no inst_attr@other
-        anywhere in its ancestor chain, only the bare default one."""
+        """A bare attr (meant for the default/unnamed instance) must not leak
+        into a named instance's resolution - inst_lamp itself has no
+        inst_attr@other anywhere in its ancestor chain, only the bare
+        default one."""
         lamp = self.sh.items.return_item('inst_room.inst_lamp')
         other = _make_plugin('other')
 

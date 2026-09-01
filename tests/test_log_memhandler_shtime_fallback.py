@@ -3,13 +3,10 @@
 """
 Regression test for lib/log.py's ShngMemLogHandler.emit().
 
-emit() used to call self._shtime.tzinfo() unconditionally; if self._shtime
-was None (only reachable if the handler is used before Shtime is set up -
-doesn't happen on a real startup, where Shtime is created before logging is
-configured, but does happen in a minimal test harness), this raised
-AttributeError, which got caught by the handler's own except-block and
-silently dropped the log record instead of storing it. Now falls back to
-UTC instead.
+emit() must fall back to UTC, not raise, when self._shtime is None (only
+reachable if the handler is used before Shtime is set up - doesn't happen
+on a real startup, where Shtime is created before logging is configured,
+but does happen in a minimal test harness).
 """
 
 import datetime

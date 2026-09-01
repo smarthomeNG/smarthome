@@ -249,14 +249,11 @@ class TestCrontab(unittest.TestCase):
 
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
 class TestSkytimeSolsticeGuard(unittest.TestCase):
-    """Regression guard for a forum-reported bug: a sun-bound trigger like
-    'sunset+35m', re-triggered day after day across the summer solstice, was
-    reported to occasionally skip forward by several weeks instead of firing
-    the next evening (smarthome v1.9.5). This was NOT reproducible against
-    current develop with real pyephem (verified empirically: every gap across
-    2024-06-01..2024-07-30 at Berlin coordinates came out to a clean ~24h).
-    This test locks in that correct behaviour so a future change (e.g. the
-    planned ephem->skyfield port) can't silently reintroduce the jump."""
+    """Regression guard: a sun-bound trigger like 'sunset+35m', re-triggered
+    day after day across the summer solstice, must not skip forward by
+    several weeks instead of firing the next evening. Locks in that correct
+    behaviour so a future change (e.g. the planned ephem->skyfield port)
+    can't silently reintroduce the jump."""
 
     MAX_PLAUSIBLE_GAP = datetime.timedelta(hours=30)
 

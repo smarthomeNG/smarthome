@@ -218,7 +218,7 @@ class Modules:
     def _unwrap_conf_string(value):
         """
         _get_conf_args() wraps original string config values as "'value'" (for the
-        old exec()-based call-string builder this method used to feed). Undo that
+        exec()-based call-string builder this method feeds). Undo that
         wrapping to recover the real string for use as an actual keyword argument
         value. Non-string values (bool/int/list/dict/... from YAML) pass through
         unchanged -- _get_conf_args() never wraps those.

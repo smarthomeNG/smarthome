@@ -95,16 +95,13 @@ class TestAbsolutePathInvocation(_StandaloneInitTestCase):
     """plugin_file given as an absolute path while cwd is still the shng
     base dir - e.g. a user pastes the full path on the command line.
 
-    Confirmed BROKEN on current code: pfitems is derived by splitting the
-    raw (absolute) plugin_file argument, not the already-relativized
-    rel_file. plugin_path gets a manual patch-up to re-add the leading
-    '/' the split/join round-trip drops - but plugin_mod_path (built from
-    the SAME split, via '.'.join()) never gets an equivalent fix, so it
-    ends up as e.g. '.private.var.folders.xx.tmpXXXX.plugins.viessmann'
-    (leading dot, entire absolute filesystem prefix baked in as bogus
-    package segments) instead of 'plugins.viessmann'. That value later
-    feeds importlib.import_module() in create_struct_yaml(), so struct
-    generation invoked with an absolute path fails outright."""
+    plugin_mod_path must resolve to the same dotted form as a relative
+    invocation ('plugins.viessmann'), not leak the absolute filesystem
+    prefix as bogus package segments (e.g.
+    '.private.var.folders.xx.tmpXXXX.plugins.viessmann') - that value
+    feeds importlib.import_module() in create_struct_yaml(), so a leaked
+    prefix would make struct generation invoked with an absolute path fail
+    outright."""
 
     def test_plugin_path_matches_relative_invocation(self):
         plugin_dir = self._make_plugin_dir('plugins', 'viessmann')

@@ -218,9 +218,8 @@ class Protocol:
                 answer = {'error': 'unhandled command'}
                 # keep in sync with the reassignment at the end of the try block below --
                 # this default must always be valid, since a handler raising before reaching
-                # that reassignment must not leave reply undefined (regression: used to raise
-                # UnboundLocalError here, and again in the except below referencing reply,
-                # which terminated the whole connection)
+                # that reassignment must not leave reply undefined (the fallback send and the
+                # except block below both reference reply)
                 reply = json.dumps(answer, default=self.json_serial)
 
                 try:

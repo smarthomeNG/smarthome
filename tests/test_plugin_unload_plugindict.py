@@ -6,14 +6,14 @@ from tests.mock.core import MockSmartHome
 
 class TestUnloadPluginClearsPlugindict(unittest.TestCase):
     """
-    Regression test for lib/plugin.py's unload_plugin(): its cleanup used
-    getattr(self._plugindict, key, None) instead of self._plugindict.get(key,
-    None). _plugindict is a plain dict, which has no such attribute, so the
-    check was always False and the stale entry was never deleted - leaking a
-    reference to the unloaded plugin, and (since load_plugin() only claims
-    the plain-name key "if not already set") permanently pinning
-    Plugins.get(name) to the *first-ever-loaded* instance across any number
-    of later reloads.
+    Regression test for lib/plugin.py's unload_plugin(): its cleanup must
+    use self._plugindict.get(key, None), not getattr(self._plugindict, key,
+    None) - _plugindict is a plain dict, which has no such attribute, so the
+    getattr form always returns None and never deletes the stale entry,
+    leaking a reference to the unloaded plugin, and (since load_plugin()
+    only claims the plain-name key "if not already set") permanently
+    pinning Plugins.get(name) to the *first-ever-loaded* instance across
+    any number of later reloads.
     """
 
     CONF = {

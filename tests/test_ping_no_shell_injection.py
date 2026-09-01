@@ -4,12 +4,10 @@
 Regression test for shell injection in lib/tools.py's Tools.ping() and
 lib/network.py's Network.ping().
 
-Both used to build the ping command by string-concatenating/f-string-
-interpolating the caller-supplied host into subprocess.call(..., shell=True),
-so a host value containing shell metacharacters (e.g. from an item fed by an
-external, less-trusted source) could execute an arbitrary second shell
-command. The fix passes the command as an argv list with no shell, so the
-host is always exactly one literal argument to the ping binary.
+Both must build the ping command as an argv list with no shell, so a host
+value containing shell metacharacters (e.g. from an item fed by an
+external, less-trusted source) is always exactly one literal argument to
+the ping binary, never interpolated into a shell=True command string.
 """
 
 import os

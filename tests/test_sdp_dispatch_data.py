@@ -3,17 +3,15 @@
 """
 Regression test for SmartDevicePlugin.dispatch_data()'s command-list build.
 
-dispatch_data() used to do:
-    items = self._commands_read.get(command, [])
-    items += self._commands_pseudo.get(command, [])
-
-dict.get() returns the actual stored list (not a copy) when the key exists,
-and `+=` on a list mutates in place (list.__iadd__), not "items = items + x".
-So for any command present in both self._commands_read and
-self._commands_pseudo, every dispatch_data() call permanently appended the
-pseudo items onto the real, persistent self._commands_read[command] list -
-unbounded growth, and the pseudo item(s) getting updated more times each
-call as the (growing) list gets walked in full every time.
+dispatch_data() must not mutate self._commands_read[command] in place:
+dict.get() returns the actual stored list (not a copy) when the key
+exists, and `+=` on a list mutates in place (list.__iadd__). Building the
+combined read+pseudo command list must copy first - otherwise, for any
+command present in both self._commands_read and self._commands_pseudo,
+every call would permanently append the pseudo items onto the real,
+persistent self._commands_read[command] list (unbounded growth, with the
+pseudo item(s) updated more times each call as the growing list is walked
+in full every time).
 """
 
 import builtins

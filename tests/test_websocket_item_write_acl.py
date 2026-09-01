@@ -4,12 +4,11 @@
 Regression tests for the item-write ACL check in the admin and smartvisu
 websocket protocols (modules/websocket/admin.py, modules/websocket/smartvisu.py).
 
-Both handlers used to only refuse a write when acl == 'ro', never for
-'deny' - which is the actual default (adm_acl/sv_acl = 'deny') - so any
-item without an explicit 'ro' acl was writable by any client connected to
-the protocol (which itself performs no login/handshake). The fix requires
-acl == 'rw' explicitly (default-deny), matching the pattern already used
-on the read/monitor path (prepare_monitor()).
+Both handlers must require acl == 'rw' explicitly (default-deny), matching
+the pattern already used on the read/monitor path (prepare_monitor()) -
+not refuse a write only when acl == 'ro', which would leave any item
+without an explicit 'ro' acl writable under the actual default
+(adm_acl/sv_acl = 'deny').
 """
 
 import json

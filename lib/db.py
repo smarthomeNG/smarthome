@@ -606,9 +606,9 @@ class Database:
         A stale read of the owner marker (benign: plain attribute read
         under the GIL, no separate synchronization) can only cause a false
         negative here - falling through to the real self._fdb_lock.acquire()
-        call, which then behaves exactly as it did before this check
-        existed. It can never falsely raise for a thread that doesn't
-        actually hold the lock.
+        call, which behaves as if this check weren't here at all. It can
+        never falsely raise for a thread that doesn't actually hold the
+        lock.
         """
         if self._fdb_lock_owner is threading.current_thread():
             raise RuntimeError(

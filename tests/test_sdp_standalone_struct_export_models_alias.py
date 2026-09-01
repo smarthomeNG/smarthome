@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 """
-Regression test for a models[model] list-aliasing bug in
-Standalone.create_struct_yaml() (lib.model.smartdeviceplugin).
+Regression test for Standalone.create_struct_yaml()'s models[model]
+handling (lib.model.smartdeviceplugin).
 
 In the flat-commands-plus-models-dict branch, per model:
 

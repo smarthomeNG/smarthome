@@ -3,9 +3,9 @@
 """
 Regression test for Standalone.find_read_group_triggers()
 (lib.model.smartdeviceplugin): a read_groups entry missing its required
-'trigger' key crashed struct generation with a bare TypeError
-('NoneType' object is not subscriptable) instead of a clear error
-pointing at the actual misconfigured commands.py entry.
+'trigger' key must raise a clear error pointing at the misconfigured
+commands.py entry, not a bare TypeError ('NoneType' object is not
+subscriptable).
 """
 
 import os

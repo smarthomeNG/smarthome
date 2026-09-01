@@ -197,14 +197,10 @@ class GetItemdefinitionTest(unittest.TestCase):
 
 class TimestampTypeTest(unittest.TestCase):
     """
-    Regression tests: META_DATA_TYPES/ITEM_TYPES declare 'timestamp' as a
-    valid type, but _convert_valuetotype()'s if/elif chain had no branch for
-    it -- falling to the trailing else, which logs an error but never sets
-    `result`, so `return result` raised UnboundLocalError. Its sibling
-    _test_valuetype() had the same gap without an else branch at all, so it
-    implicitly returned None (falsy) -- a timestamp-typed value was always
-    treated as invalid. Both are now handled the same as 'float'/'num',
-    matching META_DATA_DEFAULTS['timestamp'] == 0.0 in lib/constants.py.
+    META_DATA_TYPES/ITEM_TYPES declare 'timestamp' as a valid type;
+    _convert_valuetotype() and _test_valuetype() must handle it the same as
+    'float'/'num', matching META_DATA_DEFAULTS['timestamp'] == 0.0 in
+    lib/constants.py.
     """
 
     def setUp(self):
@@ -223,17 +219,13 @@ class TimestampTypeTest(unittest.TestCase):
 
 class ListlenTest(unittest.TestCase):
     """
-    Regression tests: _get_definition_listlen() called definitions.get('type', ...)
-    / definitions.get('listlen', ...) -- 'definitions' is the whole name->definition
-    dict, not the single definition -- so it was indexing the wrong dict and 'type'
-    was (almost) never actually a key there, meaning the 'list' branch never fired
-    and listlen was always 0. Its sibling _get_definition_subtype() already used the
-    correct definitions[definition].get(...) form -- matched that pattern here too.
+    _get_definition_listlen() must index definitions[definition] (the
+    single definition), not definitions itself (the whole name->definition
+    dict) - matching its sibling _get_definition_subtype()'s existing
+    pattern.
 
-    Separately, get_parameter_listlen()/get_itemdefinition_listlen() called
-    self.get_definition_listlen(...) (no leading underscore); only the
-    underscore-prefixed _get_definition_listlen() actually exists, so both public
-    methods raised AttributeError unconditionally.
+    get_parameter_listlen()/get_itemdefinition_listlen() must call the
+    real, underscore-prefixed _get_definition_listlen().
     """
 
     def setUp(self):

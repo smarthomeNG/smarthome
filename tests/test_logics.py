@@ -153,13 +153,12 @@ class TestLogics(unittest.TestCase):
 
     def test_07_empty_logic_section_does_not_crash(self):
         """
-        Regression test: an empty logic YAML section ('mylogic:' with nothing
-        under it) parses to attributes=None. Logic.__init__() used to compare
-        `attributes != 'None'` (the string) instead of `attributes is not
-        None`, which is True even when attributes really is None, so
-        execution reached `for attribute in attributes:` with attributes=None
-        and crashed with TypeError instead of hitting the intended
-        "not configured correctly" error-log branch.
+        An empty logic YAML section ('mylogic:' with nothing under it)
+        parses to attributes=None. Logic.__init__() must check `attributes
+        is not None`, not `attributes != 'None'` (the string) - the string
+        comparison is True even when attributes really is None, reaching
+        `for attribute in attributes:` with attributes=None instead of the
+        intended "not configured correctly" error-log branch.
         """
         logger.warning('----- Logic Test: test_07_empty_logic_section_does_not_crash')
         from lib.logic import Logic

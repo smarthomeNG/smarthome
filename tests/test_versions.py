@@ -96,10 +96,10 @@ class TestModule(unittest.TestCase):
         self.assertEqual([1, 2, 0, 1], Version.to_list('1.2a'))
         self.assertEqual([1, 9, 0, 1], Version.to_list('1.9.0.1'))
 
-        # Regression: an empty component (e.g. from '1.2..3' or a trailing
-        # separator '1.2.3.') used to crash to_list() with IndexError on
-        # v[-1] -- v was '' and indexing an empty string raises. Empty
-        # components must be treated as 0, like any other non-numeric part.
+        # An empty component (e.g. from '1.2..3' or a trailing separator
+        # '1.2.3.') must be treated as 0, like any other non-numeric part -
+        # not crash to_list() with IndexError on v[-1] (v == '', indexing
+        # an empty string raises).
         self.assertEqual([1, 2, 0, 3], Version.to_list('1.2..3'))
         self.assertEqual([1, 2, 3, 0], Version.to_list('1.2.3.'))
 
@@ -137,14 +137,10 @@ class TestModule(unittest.TestCase):
 
 class TestGetGitDataDoesNotChangeCwd(unittest.TestCase):
     """
-    _get_git_data() used to os.chdir(BASE) to run 'git' scoped to either
-    the core repo or the plugins/ repo (a separate nested .git root) and
-    never restored the original cwd — corrupting every other thread's
-    relative paths for the rest of the process's life (see the database
-    plugin's relative sqlite path bug this caused). Fixed by using
-    'git -C <path>' instead, which needs no process-wide cwd mutation at
-    all — the process's cwd should never change no matter how many times
-    or in what order core/plugins git data is fetched.
+    _get_git_data() must run 'git' scoped to either the core repo or the
+    plugins/ repo (a separate nested .git root) via 'git -C <path>', not
+    os.chdir(BASE) - the process's cwd must never change no matter how many
+    times or in what order core/plugins git data is fetched.
     """
 
     def test_single_core_call_leaves_cwd_unchanged(self):

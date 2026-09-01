@@ -627,9 +627,9 @@ class TestItem(unittest.TestCase):
     def test_update_releases_lock_on_bad_list_index(self):
         """
         item(value, index=N) with an out-of-range index raises ValueError from
-        inside the locked section of __update(). Regression test for a bug where
-        the lock was never released on that path, permanently deadlocking the
-        item for every later item()/.set() call from any *other* thread.
+        inside the locked section of __update() - the lock must still be
+        released, or the item deadlocks for every later item()/.set() call
+        from any *other* thread.
         """
         sh = MockSmartHome()
         conf = {'type': 'list', 'value': ['a', 'b']}
@@ -646,8 +646,8 @@ class TestItem(unittest.TestCase):
 
     def test_set_releases_lock_on_error(self):
         """
-        Regression test: Item.set() must release its lock even if _set_value()
-        raises, mirroring the __update() fix above.
+        Item.set() must release its lock even if _set_value() raises, like
+        __update() above.
         """
         sh = MockSmartHome()
         conf = {'type': 'num'}

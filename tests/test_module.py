@@ -50,9 +50,9 @@ class TestModule(unittest.TestCase):
         Regression test for lib.module.Modules._load_module(): a module whose
         class can't be resolved (bad classname) must fail cleanly and must not
         leave a previously-loaded module's instance registered under the new,
-        failing module's name -- self.loadedmodule used to be reused as-is
-        across loop iterations when the class-resolution exec() raised without
-        being reassigned.
+        failing module's name - self.loadedmodule must be reassigned every
+        loop iteration, not reused as-is when the class-resolution exec()
+        raises.
         """
         self.sh = MockSmartHome()
         self.modules = self.sh.with_modules_from(common.BASE + '/tests/resources/module_stale_reuse')

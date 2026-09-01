@@ -32,14 +32,14 @@ import os
 class MqttPlugin(SmartPlugin):
     # TODO/FIXME: _item_values is a class-level mutable default, kept (not
     # switched to a None sentinel) so plugins that skip super().__init__()
-    # keep working exactly as before - they just still share this single
-    # dict across every MqttPlugin instance/subclass that doesn't set its
-    # own (confirmed happening today between mqtt/shelly/tasmota/
-    # zigbee2mqtt). __init__ below now sets the instance-level dict for
-    # every plugin that *does* call super().__init__(), which is already
-    # the fix for the common case. Revisit once the 3rd-party plugin fleet
-    # has been audited for super().__init__() compliance, then this can
-    # become _item_values = None to fail loudly instead of sharing state.
+    # keep working - they just still share this single dict across every
+    # MqttPlugin instance/subclass that doesn't set its own (confirmed
+    # happening today between mqtt/shelly/tasmota/zigbee2mqtt). __init__
+    # below sets the instance-level dict for every plugin that *does* call
+    # super().__init__(), covering the common case. Revisit once the
+    # 3rd-party plugin fleet has been audited for super().__init__()
+    # compliance, then this can become _item_values = None to fail loudly
+    # instead of sharing state.
     _item_values = {}  # dict of dicts
 
     # Initialization of SmartPlugin class called by super().__init__() from the plugin's __init__() method

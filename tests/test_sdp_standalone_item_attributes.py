@@ -4,29 +4,21 @@
 Regression tests for Standalone.update_item_attributes() and its use in
 create_item() (lib.model.smartdeviceplugin).
 
-Two separate bugs, both around plugin-specific item-attribute prefixes
+Two separate requirements around plugin-specific item-attribute prefixes
 (e.g. viessmann's plugin.yaml renames the generic '_command' attribute to
 'viess_command'):
 
-1. update_item_attributes() did `yaml.get('item_attributes').keys()` -
-   AttributeError on any plugin.yaml with no 'item_attributes' section at
-   all (a legitimate case - not every SDP plugin renames its attributes).
+1. update_item_attributes() must tolerate a plugin.yaml with no
+   'item_attributes' section at all (a legitimate case - not every SDP
+   plugin renames its attributes), not raise AttributeError.
 
-2. The resolved rename was applied by reassigning bare names
-   (ITEM_ATTR_COMMAND etc.) in THIS MODULE's own globals() dict at
-   runtime - a self-monkeypatch that only "works" because standalone mode
-   is a short-lived, single-purpose process. The custom2/custom3 case was
-   additionally broken independently of that: instead of resolving
-   ITEM_ATTR_CUSTOM2/3 themselves, create_item derived their prefixed
-   name from the (mutated) ITEM_ATTR_CUSTOM1 string via
-   `ITEM_ATTR_CUSTOM1[:-1] + '2'` - this only produces the right answer
-   when a plugin's custom2/custom3 renames happen to share custom1's
-   exact stem with just the trailing digit changed (true for viessmann's
-   viess_custom1/2/3, which is why it was never noticed).
-
-The fix mirrors SmartDevicePlugin._set_item_attributes()'s already-
-established pattern: resolve into an instance dict (self._item_attrs)
-instead of mutating module globals.
+2. Each renamed attribute (ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM1/2/3, ...)
+   must be resolved from the plugin's own declaration, into an instance
+   dict (self._item_attrs) - not derived from another attribute's resolved
+   name (e.g. deriving custom2/custom3 from custom1's string via
+   `ITEM_ATTR_CUSTOM1[:-1] + '2'`), and not by mutating this module's own
+   globals() dict at runtime. This mirrors SmartDevicePlugin.
+   _set_item_attributes()'s established instance-dict pattern.
 """
 
 import os

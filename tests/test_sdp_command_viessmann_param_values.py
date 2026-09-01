@@ -7,10 +7,7 @@ Viessmann device commands.py files (e.g. plugins/viessmann/commands.py)
 define 'params' as a single dict of {name: value} pairs, e.g.
 {'value': 'VAL', 'len': 2} - there is no separate 'param_values' list in
 any real command definition. get_send_data()/_build_dict() must turn that
-dict into a populated data-dict; regressing to a names-list/param_values-list
-pairing silently returns an empty data-dict for every real command, which
-crashes downstream in protocol.py's _build_payload() with a KeyError on
-'len'.
+dict into a populated data-dict.
 """
 
 import builtins
@@ -45,9 +42,7 @@ class TestParamsDictFormat(unittest.TestCase):
         self.assertEqual(result, {'value': b'\x01\x02', 'len': 2})
 
     def test_get_send_data_produces_non_empty_data_for_read_command(self):
-        # mirrors the real 'Anlagentyp' command (viessmann/commands.py) whose
-        # opcode is '00f8' and whose read crashed protocol.py's
-        # _build_payload() with KeyError: 'len' due to this regression
+        # mirrors the real 'Anlagentyp' command (viessmann/commands.py)
         cmd_conf = {'read': True, 'write': False, 'opcode': '00f8', 'params': {'value': 'VAL', 'len': 2}}
         cmd = SDPCommandViessmann('Anlagentyp', DT.DT_raw, cmd=cmd_conf, plugin={})
         data_dict = cmd.get_send_data(None)

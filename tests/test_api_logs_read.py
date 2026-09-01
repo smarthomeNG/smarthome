@@ -140,12 +140,9 @@ class TestReadServesFileChunks(unittest.TestCase):
         self.assertTrue(result['lastchunk'])
 
     def test_traceback_spanning_chunk_boundary_keeps_next_chunk_aligned(self):
-        # chunksize=2 (logical entries). Entry 1 merges a 3-line traceback,
-        # so chunk 1 (entries 0-1) consumes 5 raw lines, not 2. Under the old
-        # skiplines = chunksize*(chunk-1) math, chunk 2's request would skip
-        # only 2 raw lines and start reading mid-traceback (raw line 3) -
-        # this pins down that chunk 2 instead starts at the correct raw
-        # line 6, right after chunk 1's true raw-line span.
+        # chunksize=2 (logical entries). Entry 1 merges a 3-line traceback, so
+        # chunk 1 (entries 0-1) consumes 5 raw lines, not 2 - chunk 2 must
+        # start at raw line 6, right after chunk 1's true raw-line span.
         lines = [
             'INFO entry 0\n',
             'INFO entry 1\n',

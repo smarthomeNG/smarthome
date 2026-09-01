@@ -4,13 +4,12 @@
 Regression test for lib/logic.py's Logics.scheduler_add/scheduler_change/
 scheduler_remove.
 
-All three used to call self.get_fullname(), a method that only exists on
-SmartPlugin, not Logics - guaranteed AttributeError on every call, despite
-being documented public API (logics.scheduler_add() etc. in
-doc/user/source/referenz/logiken/logiken_logic_objekt.rst). scheduler_change
-also passed its kwargs dict positionally instead of expanding it with **,
-landing it in Scheduler.change()'s from_smartplugin parameter instead of
-being applied as the actual settings to change.
+All three must work as documented public API (logics.scheduler_add() etc.
+in doc/user/source/referenz/logiken/logiken_logic_objekt.rst), not call
+self.get_fullname() (a method that only exists on SmartPlugin, not
+Logics). scheduler_change must expand its kwargs dict with ** into
+Scheduler.change(), not pass it positionally into the from_smartplugin
+parameter.
 """
 
 import logging

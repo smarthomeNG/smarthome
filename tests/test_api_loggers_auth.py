@@ -3,11 +3,10 @@
 """
 Regression test for modules/admin/api_loggers.py's LoggersController.read().
 
-GET /api/loggers used to be the only `read` handler in the entire JWT-gated
-REST API with authentication_needed = False - every sibling controller
-(api_items, api_system, api_plugin, ...) requires a valid token for its read
-handler. Confirmed via shngadmin source that the frontend only calls this
-API from logged-in routes, so there's no legitimate pre-auth caller.
+GET /api/loggers must require a valid token like every sibling controller's
+read handler (api_items, api_system, api_plugin, ...) - the shngadmin
+frontend only calls this API from logged-in routes, so there's no
+legitimate pre-auth caller.
 """
 
 import os

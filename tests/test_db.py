@@ -56,14 +56,11 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertFalse(test_db.api_initialized)
 
     def test_lock_release_safe_on_failed_init(self):
-        # Regression: __init__ has three early-return failure paths (bad
-        # dbapi import, unsupported format_input, unsupported
-        # format_output) - self._fdb_lock used to only get created at the
-        # very end, right before api_initialized = True, so any of the
-        # three left a half-built object without it. Generic cleanup code
-        # (e.g. a defensive `finally: db.release()`) calling lock()/
-        # release() on such an object used to hit AttributeError instead
-        # of just harmlessly working on an object nothing else will use.
+        # self._fdb_lock must exist even on __init__'s three early-return
+        # failure paths (bad dbapi import, unsupported format_input,
+        # unsupported format_output), so generic cleanup code (e.g. a
+        # defensive `finally: db.release()`) can call lock()/release() on
+        # a half-built object without hitting AttributeError.
         test_db = self.db(paramstyle='wrongformat')
         self.assertFalse(test_db.api_initialized)
         self.assertTrue(test_db.lock(timeout=0))
@@ -81,26 +78,22 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertEqual('secret', args['password'])
 
     def test_connect_only_port_is_coerced_to_int(self):
-        # Every connect value used to be guessed via int/float/str fallback
-        # typing, so a numeric-looking value for ANY key (e.g. a numeric
-        # password) silently became an int. 'port' genuinely needs to be an
-        # int for drivers like pymysql; everything else must stay the exact
-        # string from config.
+        # 'port' must be coerced to int (drivers like pymysql require it);
+        # every other connect value must stay the exact string from config,
+        # not be guessed via int/float/str fallback typing.
         db = self.db(connect='passwd:123456 | port:3306 | host:myhost')
         self.assertEqual('123456', db._params['passwd'])
         self.assertEqual(3306, db._params['port'])
         self.assertEqual('myhost', db._params['host'])
 
     def test_connect_ordered_dict_list_preserves_native_yaml_types(self):
-        # Regression: this shape (a list of single-key OrderedDicts) is
-        # exactly what shyaml.yaml_load(..., ordered=True) produces for a
-        # real etc/plugin.yaml connect: list written as multi-line YAML
-        # entries (config.py loads plugin instance config with
-        # ordered=True) - each value already has its correct native YAML
-        # type (port: 3307 -> int, check_same_thread: false -> bool). A
-        # blanket str(v) here used to destroy that; pymysql.connect()
-        # rejects a string port outright ("port should be of type int",
-        # verified against a real pymysql connection).
+        # This shape (a list of single-key OrderedDicts) is exactly what
+        # shyaml.yaml_load(..., ordered=True) produces for a real
+        # etc/plugin.yaml connect: list written as multi-line YAML entries
+        # (config.py loads plugin instance config with ordered=True). Each
+        # value must keep its native YAML type (port: 3307 -> int,
+        # check_same_thread: false -> bool); pymysql.connect() requires an
+        # int port, not a string.
         connect = [
             OrderedDict([('port', 3307)]),
             OrderedDict([('check_same_thread', False)]),
@@ -237,15 +230,12 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         db.release()
 
     def test_setup_step_failure_does_not_undo_earlier_committed_steps(self):
-        # Regression: setup() used to run the whole migration as one
-        # transaction() - on MySQL/MariaDB that was never actually atomic
-        # anyway (DDL commits implicitly), it just meant a crash between
-        # any two steps could lose every already-applied step's version
-        # row, and re-running would fail on already-applied DDL ("table
-        # already exists") rather than just retrying the one step that
-        # never got recorded. Uses a real sqlite3 file (not the mock) so
-        # version persistence across the failure is genuinely checked, not
-        # just call counts.
+        # setup() must commit each version step independently - a crash
+        # between steps must not lose an already-applied step's version
+        # row, and re-running must retry only the step that failed, not
+        # re-apply already-committed DDL. Uses a real sqlite3 file (not the
+        # mock) so version persistence across the failure is genuinely
+        # checked, not just call counts.
         db = lib.db.Database('setup_step_test', 'sqlite3', {'database': ':memory:'}, 'qmark')
         db.connect()
 
@@ -265,11 +255,10 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertEqual(1, version, "step 1's commit must survive step 2's failure")
 
     def test_setup_applies_string_version_keys_in_numeric_not_lexicographic_order(self):
-        # Regression: setup() iterated sorted(queries.keys()) - version keys
-        # are strings (the database plugin's real schema uses '1'..'8'), and
-        # plain string sort puts '10' before '2' once a caller reaches
-        # double digits. A fresh/multi-step-behind install applying several
-        # pending versions in one run would then execute step 10's DDL
+        # setup() must apply string version keys ('1'..'8'-style, per the
+        # database plugin's real schema) in numeric order, not
+        # lexicographic - a plain string sort puts '10' before '2' once a
+        # caller reaches double digits, which would apply step 10's DDL
         # before steps 2-9 it may depend on.
         db = lib.db.Database('setup_order_test', 'sqlite3', {'database': ':memory:'}, 'qmark')
         db.connect()
@@ -339,12 +328,12 @@ class TestDbTests(unittest.TestCase, TestDbBase):
             holder_thread.join()
 
     def test_verify_survives_connection_closed_between_connect_and_lock(self):
-        # Regression: connect() acquires/releases self._fdb_lock internally
-        # before returning; verify() then separately re-acquires it via its
-        # own self.lock(2). Another thread closing the connection in that
-        # gap used to crash verify() with AttributeError ('NoneType' object
-        # has no attribute 'close') from probe_cur.close(), instead of being
-        # treated like any other failed-verification retry.
+        # connect() acquires/releases self._fdb_lock internally before
+        # returning; verify() then separately re-acquires it via its own
+        # self.lock(2). A connection closed by another thread in that gap
+        # must be treated like any other failed-verification retry, not
+        # crash verify() with AttributeError ('NoneType' object has no
+        # attribute 'close') from probe_cur.close().
         db = self.db()
         db.connect()
 
@@ -443,11 +432,10 @@ class TestDbTests(unittest.TestCase, TestDbBase):
     # with cur=None - this is the path store.py's ItemStore/LogStore CRUD
     # layer always uses, and it never calls verify() itself. A connection
     # that goes stale between calls (network blip, server-side disconnect)
-    # used to wedge every subsequent cur=None call identically until
-    # something unrelated called verify() or the process restarted - see
-    # plugins/database's "Lost connection to MySQL server during query" /
-    # "read of closed file" incident. These tests cover the fix directly on
-    # lib.db.Database rather than through the plugin.
+    # must reconnect and retry rather than wedge every subsequent cur=None
+    # call until something unrelated calls verify() or the process
+    # restarts. These tests cover lib.db.Database directly rather than
+    # through the plugin.
 
     def _break_connection_once(self, db, where='cursor'):
         """Make the *current* connection's cursor()/execute() raise exactly
@@ -633,33 +621,29 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertIsNone(db._conn)
 
     def test_fetchone_not_connected_returns_none_not_empty_string(self):
-        # Regression: fetchone()'s disconnect sentinel used to be '' - a
-        # caller checking `if row is None` (the normal DB-API2 "no row"
-        # check) would not catch it, and `row[0]` on '' raises IndexError
-        # instead of the TypeError a None check would cleanly catch.
+        # fetchone()'s disconnect sentinel must be None, not '' - a caller
+        # checking `if row is None` (the normal DB-API2 "no row" check)
+        # must catch it; `row[0]` on '' raises IndexError instead of the
+        # TypeError a None check would cleanly catch.
         db = self.db()
         self.assertIsNone(db.fetchone('SELECT 1'))
         self.assertIsNone(db._conn)
 
     def test_not_connected_logs_visibly_instead_of_silent(self):
-        # Regression: this path used to return `empty` with zero logging -
-        # indistinguishable from a real empty/no-rows result to anything
-        # downstream that doesn't itself null-check (e.g. plugins/db_addon's
-        # self._fetchone(query)[0] crashing with TypeError, with nothing in
-        # the log explaining the connection was simply down at query time).
+        # A not-connected fetchone() must log visibly, not just return an
+        # empty result indistinguishable from a real no-rows result to
+        # callers that don't null-check (e.g. plugins/db_addon's
+        # self._fetchone(query)[0]).
         db = self.db()
         with self.assertLogs('lib.db', level='INFO') as cm:
             self.assertIsNone(db.fetchone('SELECT 1'))
         self.assertTrue(any('not connected' in msg for msg in cm.output), cm.output)
 
     def test_cursor_op_lock_wait_tracks_configured_timeout_not_hardcoded_300(self):
-        # Regression: _cursor_op_with_reconnect used to call self.lock(300),
-        # a value hardcoded independent of db_query_timeout - meaning a
-        # hung server could stall this specific path (the cur=None path
-        # store.py's ItemStore/LogStore always use) for up to 5 minutes
-        # regardless of what the user configured. Prove the lock wait now
-        # actually respects the configured value by holding the lock in a
-        # background thread and using a tiny configured timeout.
+        # _cursor_op_with_reconnect's lock wait must respect the configured
+        # db_query_timeout, not a hardcoded value - this is the cur=None
+        # path store.py's ItemStore/LogStore always use, so a hung server
+        # must not stall it regardless of what the user configured.
         db = self.db()
         db.connect()
 
@@ -892,16 +876,15 @@ class TestDbQueryPyformat(unittest.TestCase, DbQueryBaseTests):
 
 
 class TestDbLiteralPercentEscaping(unittest.TestCase, TestDbBase):
-    # Regression: pymysql (paramstyle 'pyformat') substitutes parameters via
-    # Python's own '%' string formatting (query % args) - a literal '%'
-    # anywhere in the SQL text (e.g. the modulo operator, as used by the
-    # database plugin's bucket-boundary GROUP BY expression) is otherwise
-    # misread as the start of another format spec, raising "not enough
-    # arguments for format string" even though the query has nothing to do
-    # with that parameter. Caught via a real MariaDB/pymysql target - every
-    # other test in this file uses sqlite3 (paramstyle 'qmark'), which does
-    # real positional binding, not string substitution, so a literal '%'
-    # was always safe there and this path had no prior coverage at all.
+    # pymysql (paramstyle 'pyformat') substitutes parameters via Python's
+    # own '%' string formatting (query % args) - a literal '%' anywhere in
+    # the SQL text (e.g. the modulo operator, as used by the database
+    # plugin's bucket-boundary GROUP BY expression) is otherwise misread as
+    # the start of another format spec, raising "not enough arguments for
+    # format string" even though the query has nothing to do with that
+    # parameter. Requires a real MariaDB/pymysql target - sqlite3
+    # (paramstyle 'qmark') does real positional binding, not string
+    # substitution, so this can't be exercised there.
     #
     # Deliberately not built on DbQueryBaseTests - that mixin's own
     # test_execute_* methods would also get collected here, and rely on
@@ -1140,14 +1123,14 @@ class TestDbConnectionSelfHealing(unittest.TestCase, TestDbBase):
     """commit()/rollback() reset connection state on failure instead of
     leaving a corrupted connection object for the next caller to inherit.
 
-    Regression context: a failed commit/rollback (e.g. the underlying
-    driver tore its own socket down after a protocol error or a client-side
-    timeout) used to leave self._connected/self._conn untouched. The next
-    thing to touch the connection - verify()'s probe, the next dump item,
-    an unrelated later call - would inherit the same broken connection
-    object and fail with a confusing, unrelated-looking error (pymysql
-    leaves attributes like _sock/_rfile as None, so callers see
-    AttributeError instead of a clear "not connected").
+    A failed commit/rollback (e.g. the underlying driver tore its own
+    socket down after a protocol error or a client-side timeout) must not
+    leave self._connected/self._conn untouched - the next thing to touch
+    the connection (verify()'s probe, the next dump item, an unrelated
+    later call) would otherwise inherit the same broken connection object
+    and fail with a confusing, unrelated-looking error (pymysql leaves
+    attributes like _sock/_rfile as None, so callers see AttributeError
+    instead of a clear "not connected").
     """
 
     def test_commit_failure_resets_connection_state(self):
@@ -1230,16 +1213,15 @@ class TestDbReadOnlyTransactionCleanup(unittest.TestCase, TestDbBase):
     managing its own transaction, e.g. _dump()) must never trigger internal
     cleanup either.
 
-    commit(), not rollback(), for that cleanup - regression coverage below
-    for why: self._fdb_lock serializes every caller, so any other write
-    still pending on the same connection already finished its own critical
-    section before this read could acquire the lock. rollback() was tried
-    first and reverted - it silently destroyed not-yet-committed writes
-    made via the same cur=None convenience path (e.g. insertLog()'s own
-    cur=None default, which never self-commits), the moment an unrelated
-    later cur=None read ran. Caught by plugins/database's real (sqlite3)
-    test suite, not by these mocks - the mock harness can't model pending
-    transactional state, only which method got called.
+    Must commit, not rollback, for that cleanup: self._fdb_lock serializes
+    every caller, so any other write still pending on the same connection
+    already finished its own critical section before this read could
+    acquire the lock. A rollback here would silently destroy not-yet-
+    committed writes made via the same cur=None convenience path (e.g.
+    insertLog()'s own cur=None default, which never self-commits) the
+    moment an unrelated later cur=None read ran. The mock harness here
+    can't model pending transactional state, only which method got called
+    - plugins/database's real (sqlite3) test suite covers that.
     """
 
     def test_verify_commits_after_successful_probe(self):
@@ -1300,12 +1282,12 @@ class TestDbReadOnlyTransactionCleanup(unittest.TestCase, TestDbBase):
         self.assertEqual([[0]], result, 'a cleanup-only failure must not turn a successful read into an error')
 
     def test_uncommitted_cur_none_write_survives_a_later_cur_none_read(self):
-        # The actual regression: insertLog()'s cur=None default never
-        # self-commits (plugins/database/__init__.py) - a later, unrelated
-        # cur=None read used to roll that write back via this exact code
-        # path, silently discarding it. Simulate the same shape here:
-        # write, then read, then confirm the write's own commit()/rollback
-        # state was never touched by the read's cleanup.
+        # insertLog()'s cur=None default never self-commits
+        # (plugins/database/__init__.py) - a later, unrelated cur=None read
+        # must not roll that write back via this exact code path. Simulate
+        # the same shape here: write, then read, then confirm the write's
+        # own commit()/rollback state was never touched by the read's
+        # cleanup.
         db = self.db()
         db.connect()
         db.execute('INSERT INTO x VALUES (1)')  # cur=None, not yet committed by caller
@@ -1515,12 +1497,12 @@ class TestDbStringDriverImport(unittest.TestCase, TestDbBase):
     """String-driver-name resolution in __init__ (the 'driver: pymysql' style config)."""
 
     def test_dotted_driver_name_resolves_to_the_submodule_not_the_top_package(self):
-        # Regression: __import__('mysql.connector') returns the top-level
-        # 'mysql' package, not the 'mysql.connector' submodule - it has no
+        # __import__('mysql.connector') returns the top-level 'mysql'
+        # package, not the 'mysql.connector' submodule - it has no
         # paramstyle and its __name__ ('mysql') never matches
         # _pymysql_driver_names ('mysql.connector'), so that driver string
-        # could never actually work. importlib.import_module resolves the
-        # dotted name correctly.
+        # would never work. importlib.import_module resolves the dotted
+        # name correctly.
         fake_submodule = MockPymysqlApi('pyformat')
         fake_submodule.__name__ = 'mysql.connector'
         real_import_module = importlib.import_module

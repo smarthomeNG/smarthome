@@ -5,12 +5,9 @@ Regression test for lib/env/__init__.py's distance and speed unit
 conversions.
 
 miles_to_meter/nauticalmiles_to_meter/meter_to_miles/meter_to_nauticalmiles
-referenced undefined names 'miles'/'meter' instead of their own 'distance'
-parameter - guaranteed NameError on every call.
-
-kn_to_kmh/kmh_to_kn used _nautical_mile (1852, meters) instead of the
-km/h-per-knot factor (1.852) - off by exactly 1000x since their
-introduction in 2023.
+must use their own 'distance' parameter, not the undefined names
+'miles'/'meter'. kn_to_kmh/kmh_to_kn must use the km/h-per-knot factor
+(1.852), not the nautical-mile-in-meters constant (1852).
 """
 
 import os
