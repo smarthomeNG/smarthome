@@ -5,6 +5,8 @@ import threading
 import logging
 import time
 import importlib
+import os
+import tempfile
 from collections import OrderedDict
 from unittest.mock import patch
 import lib.db
@@ -683,6 +685,86 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         finally:
             release_evt.set()
             t.join(timeout=1)
+
+
+class TestDbWalMode(unittest.TestCase):
+    """wal_mode needs a real, file-backed sqlite3 database - WAL is not
+    supported for ':memory:' databases, and verifying it actually took
+    effect means reading back PRAGMA journal_mode, not just call counts."""
+
+    def setUp(self):
+        fd, self._db_path = tempfile.mkstemp(suffix='.db')
+        os.close(fd)
+        self.addCleanup(os.unlink, self._db_path)
+
+    def _journal_mode(self, db):
+        (mode,) = db.fetchone('PRAGMA journal_mode;')
+        return str(mode).lower()
+
+    def test_wal_mode_false_by_default(self):
+        db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark')
+        db.connect()
+        self.assertNotEqual('wal', self._journal_mode(db))
+
+    def test_wal_mode_true_activates_wal(self):
+        db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark', wal_mode=True)
+        db.connect()
+        self.assertEqual('wal', self._journal_mode(db))
+
+    def test_wal_mode_persists_across_reconnect(self):
+        # WAL is a property of the database file, not the connection - a
+        # later connect() (even with wal_mode not explicitly requested
+        # again) must see it still active once the file has it.
+        db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark', wal_mode=True)
+        db.connect()
+        db.close()
+
+        db2 = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark')
+        db2.connect()
+        self.assertEqual('wal', self._journal_mode(db2), 'WAL, once set on the file, must survive a plain reconnect')
+
+    def test_wal_mode_idempotent_on_second_connect(self):
+        db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark', wal_mode=True)
+        db.connect()
+        db.close()
+        db.connect()  # must not raise or warn on an already-WAL file
+        self.assertEqual('wal', self._journal_mode(db))
+
+    def test_wal_mode_warns_for_non_sqlite3_driver(self):
+        with self.assertLogs('lib.db', level='WARNING') as log:
+            lib.db.Database('wal_test', MockPymysqlApi('qmark'), {}, 'qmark', wal_mode=True)
+        self.assertTrue(any('wal_mode' in m and 'not sqlite3' in m for m in log.output))
+
+    def test_wal_mode_no_warning_for_sqlite3(self):
+        with self.assertNoLogs('lib.db', level='WARNING'):
+            db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark', wal_mode=True)
+            db.connect()
+
+    def test_reports_wal_left_active_when_not_requested(self):
+        # A prior run (or another tool) left the file in WAL mode; this
+        # instance never asked for wal_mode - read-only check, must still
+        # surface that the file itself disagrees with the current setting.
+        db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark', wal_mode=True)
+        db.connect()
+        db.close()
+
+        with self.assertLogs('lib.db', level='INFO') as log:
+            db2 = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark')
+            db2.connect()
+        self.assertTrue(
+            any('WAL' in m and 'not requested' in m for m in log.output),
+            f'expected a WAL-left-active notice, got: {log.output}',
+        )
+        # Read-only: must not have (re-)issued the setting PRAGMA itself.
+        self.assertEqual('wal', self._journal_mode(db2))
+
+    def test_no_report_when_file_is_not_wal_and_not_requested(self):
+        # connect() itself always logs one INFO line ("Connected with...") -
+        # asserting on content, not blanket absence of any INFO log.
+        with self.assertLogs('lib.db', level='INFO') as log:
+            db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark')
+            db.connect()
+        self.assertFalse(any('WAL' in m and 'not requested' in m for m in log.output))
 
 
 class DbQueryBaseTests(TestDbBase):

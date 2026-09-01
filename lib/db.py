@@ -215,7 +215,7 @@ class Database:
     # config string.
     _bool_connect_keys = {'check_same_thread'}
 
-    def __init__(self, name, dbapi, connect, formatting='named'):
+    def __init__(self, name, dbapi, connect, formatting='named', wal_mode=False):
         """Create a new database instance
 
         The 'name' parameter identifies the name for the database access .
@@ -233,6 +233,17 @@ class Database:
 
         The 'formatting' parameter can be used to specify a different type
         of formatting (see DB-API spec) which defaults to 'named'.
+
+        The 'wal_mode' parameter (sqlite3 only, ignored for other drivers)
+        switches the database file to WAL journal mode on every successful
+        connect() - see _apply_wal_mode_locked() for what that means and
+        why it's checked on every connect, not just the first one. WAL is
+        a property of the database FILE, not of any one connection: once
+        set, it persists across process restarts and is picked up by any
+        future connection - including ones opened by other tools - until
+        something explicitly switches it back. Callers exposing this as a
+        user-facing setting should treat enabling it as a one-way decision,
+        not a toggle to flip back and forth.
         """
         self.logger = logging.getLogger(__name__)
         self.shtime = Shtime.get_instance()
@@ -248,6 +259,7 @@ class Database:
         self._connected = False
         self._conn = None
         self._version = None
+        self._wal_mode = bool(wal_mode)
 
         self.api_initialized = False
 
@@ -312,6 +324,9 @@ class Database:
             # connect config always wins.
             self._params['check_same_thread'] = False
 
+        if self._wal_mode and getattr(self._dbapi, '__name__', '') != 'sqlite3':
+            self.logger.warning(f'Database [{self._name}]: wal_mode requested but driver is not sqlite3 - ignored')
+
         if getattr(self._dbapi, '__name__', '') in self._pymysql_driver_names:
             # Without explicit timeouts pymysql blocks indefinitely on a
             # hung server, holding _fdb_lock and preventing shutdown.
@@ -365,6 +380,10 @@ class Database:
             )
         try:
             self._conn = self._dbapi.connect(**self._params)
+            if self._wal_mode:
+                self._apply_wal_mode_locked()
+            else:
+                self._check_unrequested_wal_mode_locked()
         except Exception as e:
             self.logger.error(
                 "Database [{}]: Could not connect to the database using '{}': {}".format(
@@ -378,6 +397,71 @@ class Database:
         self.logger.info(
             'Database [{}]: Connected with {} using "{}" style'.format(self._name, self._conn, self._format_output)
         )
+
+    def _apply_wal_mode_locked(self):
+        """Switch this connection's database file to WAL journal mode.
+
+        Called from connect(), while still holding self._fdb_lock - uses
+        the raw connection cursor directly rather than self.execute(), which
+        would try to re-acquire the same (non-reentrant) lock and raise.
+
+        Runs on every connect(), not just the first: WAL is a property of
+        the database file, so a file already in WAL mode makes this a
+        harmless no-op - but it's the only way to guarantee the very first
+        connect() after enabling the setting actually converts the file,
+        across every driver/reconnect path that calls connect(). A failure
+        here is not fatal - the connection stays usable in whatever journal
+        mode SQLite falls back to, just without WAL's concurrency benefit.
+        """
+        if getattr(self._dbapi, '__name__', '') != 'sqlite3':
+            return
+        try:
+            cur = self._conn.cursor()
+            try:
+                cur.execute('PRAGMA journal_mode=WAL;')
+                row = cur.fetchone()
+            finally:
+                cur.close()
+            mode = row[0] if row else None
+            if mode and str(mode).lower() == 'wal':
+                self.logger.info(f'Database [{self._name}]: journal_mode=WAL active')
+            else:
+                self.logger.warning(
+                    f'Database [{self._name}]: requested journal_mode=WAL but sqlite reports '
+                    f'{mode!r} - continuing in that mode instead'
+                )
+        except Exception as e:
+            self.logger.warning(f'Database [{self._name}]: could not set journal_mode=WAL: {e}')
+
+    def _check_unrequested_wal_mode_locked(self):
+        """Log if the database file is already in WAL mode despite wal_mode
+        not being requested on this instance.
+
+        Read-only - never issues 'PRAGMA journal_mode=WAL', only reads the
+        current mode. Same locking reasoning as _apply_wal_mode_locked().
+        Surfaces the one-way nature documented on wal_mode: this is exactly
+        what a file left over from an earlier run with wal_mode enabled,
+        or converted by another tool, looks like - disabling the setting
+        does not revert it.
+        """
+        if getattr(self._dbapi, '__name__', '') != 'sqlite3':
+            return
+        try:
+            cur = self._conn.cursor()
+            try:
+                cur.execute('PRAGMA journal_mode;')
+                row = cur.fetchone()
+            finally:
+                cur.close()
+            mode = row[0] if row else None
+            if mode and str(mode).lower() == 'wal':
+                self.logger.info(
+                    f'Database [{self._name}]: journal_mode is WAL even though wal_mode was not requested - '
+                    'likely left over from an earlier run with it enabled (or another tool); WAL persists in '
+                    'the file until explicitly switched back, this setting alone does not revert it'
+                )
+        except Exception as e:
+            self.logger.debug(f'Database [{self._name}]: could not check journal_mode: {e}')
 
     def close(self):
         """Closes the database connection"""
