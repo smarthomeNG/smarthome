@@ -1029,7 +1029,9 @@ class SmartDevicePlugin(SmartPlugin):
 
         return resend_info
 
-    def send_command(self, command: str, value: Any = None, return_result: bool = False, **kwargs):
+    def send_command(
+        self, command: str, value: Any = None, return_result: bool = False, raise_on_error: bool = False, **kwargs
+    ):
         """
         Sends the specified command to the device providing <value> as data
         Not providing data will issue a read command, trying to read the value
@@ -1037,7 +1039,9 @@ class SmartDevicePlugin(SmartPlugin):
 
         :param command: the command to send
         :param value: the data to send, if applicable
+        :param raise_on_error: re-raise the underlying error instead of returning False on failure
         :type command: str
+        :type raise_on_error: bool
         :return: True if send was successful, False otherwise
         :rtype: bool
         """
@@ -1055,17 +1059,26 @@ class SmartDevicePlugin(SmartPlugin):
                 return False
 
         if not self.alive:
-            self.logger.warning(f'trying to send command {command} with value {value}, but plugin is not active.')
+            msg = f'trying to send command {command} with value {value}, but plugin is not active.'
+            self.logger.warning(msg)
+            if raise_on_error:
+                raise SDPError(msg)
             return False
 
         if self.suspended:
-            self.logger.warning(f'trying to send command {command} with value {value}, but plugin is suspended.')
+            msg = f'trying to send command {command} with value {value}, but plugin is suspended.'
+            self.logger.warning(msg)
+            if raise_on_error:
+                raise SDPError(msg)
             return False
 
         if not self._connection:
-            self.logger.warning(
+            msg = (
                 f"trying to send command {command} with value {value}, but connection is None. This shouldn't happen..."
             )
+            self.logger.warning(msg)
+            if raise_on_error:
+                raise SDPError(msg)
             return False
 
         kwargs.update(self._parameters)
@@ -1084,9 +1097,12 @@ class SmartDevicePlugin(SmartPlugin):
                 self.connect()
 
             if not self._connection.connected():
-                self.logger.warning(
+                msg = (
                     f'trying to send command {command} with value {value}, but connection could not be re-established.'
                 )
+                self.logger.warning(msg)
+                if raise_on_error:
+                    raise SDPError(msg)
                 return False
 
         # enable doing something before sending data normally
@@ -1101,10 +1117,15 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.warning(
                 f'command {command} with value {value} produced error on converting value, aborting. Error was: {e}'
             )
+            if raise_on_error:
+                raise
             return False
 
         if data_dict['payload'] is None or data_dict['payload'] == '':
-            self.logger.warning(f'command {command} with value {value} yielded empty command payload, aborting')
+            msg = f'command {command} with value {value} yielded empty command payload, aborting'
+            self.logger.warning(msg)
+            if raise_on_error:
+                raise SDPError(msg)
             return False
 
         data_dict = self._transform_send_data(data_dict, **kwargs)
@@ -1118,6 +1139,8 @@ class SmartDevicePlugin(SmartPlugin):
             result = self._send(data_dict, resend_info=resend_info)
         except (SDPError, RuntimeError) as e:
             self.logger.debug(f'error on sending command {command}: {e}')
+            if raise_on_error:
+                raise
             return False
         if result:
             by = kwargs.get('by')
