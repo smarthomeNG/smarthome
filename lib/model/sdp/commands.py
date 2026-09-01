@@ -463,7 +463,20 @@ class SDPCommands(object):
             if INDEX_GENERIC in cmds:
                 # if INDEX_GENERIC is present, take all generic commands.from commands dict..
                 cmds = cmd_module.commands[INDEX_GENERIC]  # type: ignore
-                # and add model-specific, if present
+                # and add model-specific, if present. A model may be defined via commands,
+                # lookups and/or structs alone (e.g. a model that only overrides a lookup
+                # table), so check all three before rejecting an unrecognized model name.
+                if self._model:
+                    known_models = (
+                        set(cmd_module.commands)  # type: ignore
+                        | set(getattr(cmd_module, 'lookups', {}))
+                        | set(getattr(cmd_module, 'structs', {}))
+                    )
+                    known_models.discard(INDEX_GENERIC)
+                    if self._model not in known_models:
+                        raise CommandsError(
+                            f'configured model {self._model} not found in commands.py commands/lookups/structs {sorted(known_models)}'
+                        )
                 cmds.update(cmd_module.commands.get(self._model, {}))  # type: ignore
 
             elif self._model:
