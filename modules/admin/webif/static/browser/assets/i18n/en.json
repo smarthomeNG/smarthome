@@ -64,6 +64,7 @@
     "DB_DRIVER": "Driver",
     "DB_NAME": "Database name",
     "DB_HOST": "Host",
+    "DB_JOURNAL_MODE": "Journal mode",
     "DB_STATUS": "Status",
     "DB_CONNECTED": "Connected",
     "DB_DISCONNECTED": "Not connected",

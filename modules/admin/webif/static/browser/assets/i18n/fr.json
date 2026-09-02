@@ -64,6 +64,7 @@
     "DB_DRIVER": "Pilote",
     "DB_NAME": "Nom de la base de données",
     "DB_HOST": "Hôte",
+    "DB_JOURNAL_MODE": "Mode journal",
     "DB_STATUS": "État",
     "DB_CONNECTED": "Connecté",
     "DB_DISCONNECTED": "Non connecté",

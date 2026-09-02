@@ -267,6 +267,7 @@ class Database:
         # return early
         self._fdb_lock = threading.Lock()
         self._fdb_lock_owner = None
+        self._last_verify_reason = None
 
         if type(dbapi) is str:
             try:
@@ -463,6 +464,19 @@ class Database:
         except Exception as e:
             self.logger.debug(f'Database [{self._name}]: could not check journal_mode: {e}')
 
+    def current_journal_mode(self):
+        """Live sqlite journal_mode ('wal', 'delete', 'truncate', ...).
+
+        None if this isn't a sqlite3 connection, it isn't connected, or the
+        query itself fails. Not cached - reflects the file's actual current
+        state, unlike wal_mode (the constructor argument), which only says
+        what was requested.
+        """
+        if getattr(self._dbapi, '__name__', '') != 'sqlite3':
+            return None
+        row = self.fetchone('PRAGMA journal_mode;', quiet=True)
+        return str(row[0]).lower() if row and row[0] is not None else None
+
     def close(self):
         """Closes the database connection"""
         timeout = _sh_db_query_timeout()
@@ -638,6 +652,16 @@ class Database:
         """
         owner = self._fdb_lock_owner
         return f' (lock currently held by thread {owner.name!r})' if owner is not None else ''
+
+    def last_verify_reason(self):
+        """Why the most recent verify() call's last attempt failed.
+
+        Updated at the end of every verify() call. None if that call's first
+        attempt succeeded outright; otherwise the reason its last failed
+        attempt gave, regardless of whether verify() ultimately succeeded
+        on a later retry or gave up.
+        """
+        return self._last_verify_reason
 
     @contextlib.contextmanager
     def transaction(self, timeout=None):
@@ -1016,7 +1040,7 @@ class Database:
                             # connection was closed by another thread in between
                             # us verifying and using it
                             last_reason = 'connection closed between connect() and lock() acquisition'
-                            self.logger.info(f'Database [{self._name}]: {last_reason}, retrying')
+                            self.logger.debug(f'Database [{self._name}]: {last_reason}, retrying')
                             self.release()
                             retry = retry - 1
                         else:
@@ -1033,7 +1057,7 @@ class Database:
                             self.release()
                     else:
                         last_reason = 'could not acquire lock'
-                        self.logger.info(
+                        self.logger.debug(
                             'Database [{}]: Could not acquire lock to verify connection{}'.format(
                                 self._name, self.lock_holder_description()
                             )
@@ -1042,7 +1066,7 @@ class Database:
 
                 except Exception as e:
                     last_reason = f'connection error: {e}'
-                    self.logger.info('Database [{}]: Connection error {}'.format(self._name, e))
+                    self.logger.debug('Database [{}]: Connection error {}'.format(self._name, e))
                     if locked:
                         self.release()
                     self.close()
@@ -1051,8 +1075,9 @@ class Database:
                 if retry > 0:
                     time.sleep(delay)
 
+            self._last_verify_reason = last_reason
             if retry == 0:
-                self.logger.warning(
+                self.logger.info(
                     'Database [{}]: verify() gave up after {} attempt(s) ({}){}'.format(
                         self._name, attempts, last_reason, self.lock_holder_description()
                     )

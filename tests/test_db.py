@@ -320,7 +320,7 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         db.connect()
         release, holder_thread = self._hold_lock_in_thread(db)
         try:
-            with self.assertLogs('lib.db', level='WARNING') as cm:
+            with self.assertLogs('lib.db', level='INFO') as cm:
                 db.verify(retry=1, delay=0)
             self.assertTrue(any(holder_thread.name in msg and 'held by thread' in msg for msg in cm.output), cm.output)
         finally:
@@ -351,7 +351,7 @@ class TestDbTests(unittest.TestCase, TestDbBase):
 
         db.lock = fake_lock
 
-        with self.assertLogs('lib.db', level='WARNING') as cm:
+        with self.assertLogs('lib.db', level='INFO') as cm:
             result = db.verify(retry=1, delay=0)
         self.assertEqual(0, result)
         self.assertTrue(any('closed between connect() and lock()' in msg for msg in cm.output), cm.output)
@@ -749,6 +749,24 @@ class TestDbWalMode(unittest.TestCase):
             db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark')
             db.connect()
         self.assertFalse(any('WAL' in m and 'not requested' in m for m in log.output))
+
+    def test_current_journal_mode_reports_wal(self):
+        db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark', wal_mode=True)
+        db.connect()
+        self.assertEqual('wal', db.current_journal_mode())
+
+    def test_current_journal_mode_reports_non_wal(self):
+        db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark')
+        db.connect()
+        self.assertNotEqual('wal', db.current_journal_mode())
+
+    def test_current_journal_mode_none_for_non_sqlite3_driver(self):
+        db = lib.db.Database('wal_test', MockPymysqlApi('qmark'), {}, 'qmark')
+        self.assertIsNone(db.current_journal_mode())
+
+    def test_current_journal_mode_none_when_not_connected(self):
+        db = lib.db.Database('wal_test', 'sqlite3', {'database': self._db_path}, 'qmark')
+        self.assertIsNone(db.current_journal_mode())
 
 
 class DbQueryBaseTests(TestDbBase):

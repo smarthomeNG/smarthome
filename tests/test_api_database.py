@@ -23,16 +23,20 @@ from modules.admin.api_database import DatabaseController
 
 
 class _FakeDb:
-    def __init__(self, connected=True, params=None, version_string='10.11.18-MariaDB'):
+    def __init__(self, connected=True, params=None, version_string='10.11.18-MariaDB', journal_mode='wal'):
         self._connected_state = connected
         self._params = params or {}
         self._version_string = version_string
+        self._journal_mode = journal_mode
 
     def connected(self):
         return self._connected_state
 
     def version(self):
         return self._version_string
+
+    def current_journal_mode(self):
+        return self._journal_mode
 
 
 class _FakeDatabasePlugin(SmartPlugin):
@@ -110,6 +114,26 @@ class TestSqliteConfiguration(unittest.TestCase):
 
         self.assertEqual(result['version'], '3.45.1')
 
+    def test_reports_journal_mode(self):
+        db = _FakeDb(connected=True, params={'database': 'x.db'}, journal_mode='wal')
+        plugin = _FakeDatabasePlugin('sqlite3', db)
+        controller = _make_controller([plugin])
+
+        with patch('lib.db._sh_db_query_timeout', return_value=60):
+            result = json.loads(controller.read(id='info'))
+
+        self.assertEqual(result['journal_mode'], 'wal')
+
+    def test_reports_non_wal_journal_mode(self):
+        db = _FakeDb(connected=True, params={'database': 'x.db'}, journal_mode='delete')
+        plugin = _FakeDatabasePlugin('sqlite3', db)
+        controller = _make_controller([plugin])
+
+        with patch('lib.db._sh_db_query_timeout', return_value=60):
+            result = json.loads(controller.read(id='info'))
+
+        self.assertEqual(result['journal_mode'], 'delete')
+
 
 class TestMysqlFamilyConfiguration(unittest.TestCase):
     def test_reports_database_name_and_host(self):
@@ -126,6 +150,8 @@ class TestMysqlFamilyConfiguration(unittest.TestCase):
         # credentials must never leak into the response
         self.assertNotIn('user', result)
         self.assertNotIn('passwd', result)
+        # journal_mode is a sqlite-only concept
+        self.assertNotIn('journal_mode', result)
 
     def test_reports_engine_version(self):
         db = _FakeDb(connected=True, params={'host': '127.0.0.1', 'db': 'smarthome'}, version_string='10.11.18-MariaDB')
@@ -149,6 +175,7 @@ class TestConnectionState(unittest.TestCase):
 
         self.assertEqual(result['connected'], False)
         self.assertNotIn('version', result)
+        self.assertNotIn('journal_mode', result)
 
     def test_version_lookup_failure_does_not_break_response(self):
         # Database.version() itself never raises - it returns None on

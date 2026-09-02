@@ -64,6 +64,7 @@
     "DB_DRIVER": "Treiber",
     "DB_NAME": "Datenbankname",
     "DB_HOST": "Host",
+    "DB_JOURNAL_MODE": "Journal-Modus",
     "DB_STATUS": "Status",
     "DB_CONNECTED": "Verbunden",
     "DB_DISCONNECTED": "Nicht verbunden",

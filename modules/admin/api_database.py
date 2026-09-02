@@ -80,6 +80,8 @@ class DatabaseController(RESTResource):
         if driver == 'sqlite3':
             db_path = params.get('database', '')
             response['database'] = os.path.splitext(os.path.basename(db_path))[0] if db_path else ''
+            if connected:
+                response['journal_mode'] = db.current_journal_mode()
         else:
             response['database'] = params.get('db') or params.get('database') or ''
             if params.get('host'):
