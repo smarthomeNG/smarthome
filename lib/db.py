@@ -456,7 +456,7 @@ class Database:
                 cur.close()
             mode = row[0] if row else None
             if mode and str(mode).lower() == 'wal':
-                self.logger.info(
+                self.logger.warning(
                     f'Database [{self._name}]: journal_mode is WAL even though wal_mode was not requested - '
                     'likely left over from an earlier run with it enabled (or another tool); WAL persists in '
                     'the file until explicitly switched back, this setting alone does not revert it'
