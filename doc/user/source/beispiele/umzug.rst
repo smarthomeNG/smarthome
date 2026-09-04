@@ -252,10 +252,21 @@ Bei Verwendung von MySQL müssen die entsprechenden Daten nur übertragen werden
 läuft wie SmartHomeNG. In diesem Fall bitte die MySQL Dokumentation zu rate ziehen, welche Daten übertragen werden
 müssen.
 
+Bei Verwendung von PostgreSQL+TimescaleDB gilt das Gleiche: Die Daten müssen nur übertragen werden, falls der
+Datenbank-Server auf demselben System läuft wie SmartHomeNG. In diesem Fall bitte die PostgreSQL-Dokumentation
+(z.B. ``pg_dump``/``pg_restore``) zu rate ziehen, welche Daten übertragen werden müssen.
+
 Um die Datenbank zu übertragen, muss der Inhalt der Verzeichnisses ``/usr/local/smarthome/var/db`` des
 alten Systems in das gleichnamige Verzeichnis auf dem neuen System übertragen werden.
 
 Dieser Vorgang dauert einige Zeit, da die Datenbank Datei mehrere Gigabyte groß sein kann.
+
+.. tip::
+
+   Soll bei dieser Gelegenheit gleich das Datenbank-Backend gewechselt werden (z.B. von SQLite3
+   zu PostgreSQL+TimescaleDB), reicht ein reines Kopieren der Datenverzeichnisse nicht aus. Für
+   diesen Fall bietet sich das Migrations-Tool :doc:`/tools/tools_db_migrate` an, welches Item-
+   und Log-Daten direkt zwischen zwei beliebigen unterstützten Backends überträgt.
 
 
 executor Verzeichnis kopieren

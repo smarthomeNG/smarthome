@@ -42,6 +42,20 @@ _DB_QUERY_TIMEOUT_DEFAULT = 60
 NO_CURSOR = object()
 
 
+class DatabaseSetupError(Exception):
+    """Raised by Database.setup() when schema-migration DDL fails.
+
+    A permanent condition, not a transient one: once raised, the same
+    instance is cached and re-raised by every later setup() call on this
+    Database instance without touching the database again - retrying
+    cannot succeed since the schema is already in a state the DDL wasn't
+    designed to run against (e.g. tables that already exist). Callers must
+    treat this as fatal for the whole Database instance, not just retry
+    setup() - stop scheduling further work against it rather than relying
+    on setup() staying cheap to call.
+    """
+
+
 def _sh_db_query_timeout() -> int:
     """Return db_query_timeout from the running SmartHomeNG instance.
 
@@ -211,6 +225,9 @@ class Database:
     # themselves.
     _pymysql_driver_names = frozenset({'pymysql', 'MySQLdb'})
 
+    # DB-API driver __name__ values for PostgreSQL/TimescaleDB drivers.
+    _psycopg_driver_names = frozenset({'psycopg2', 'psycopg'})
+
     # connect() kwargs whose values must be a real bool, not the literal
     # config string.
     _bool_connect_keys = {'check_same_thread'}
@@ -260,6 +277,7 @@ class Database:
         self._conn = None
         self._version = None
         self._wal_mode = bool(wal_mode)
+        self._setup_error = None
 
         self.api_initialized = False
 
@@ -339,6 +357,18 @@ class Database:
             self._params.setdefault('connect_timeout', 10)
             self._params.setdefault('read_timeout', _qt)
             self._params.setdefault('write_timeout', _qt)
+
+        if getattr(self._dbapi, '__name__', '') in self._psycopg_driver_names:
+            # Same reasoning as pymysql above - without an explicit timeout
+            # psycopg blocks indefinitely on a hung server. connect_timeout
+            # is a real libpq connect() parameter, but statement_timeout is
+            # not: passing it directly raises "invalid connection option"
+            # (confirmed against a live instance) - it has to go through
+            # the 'options' startup parameter as a '-c name=value' pair,
+            # which libpq applies as a session GUC on connect.
+            _qt = _sh_db_query_timeout()
+            self._params.setdefault('connect_timeout', 10)
+            self._params.setdefault('options', f'-c statement_timeout={_qt * 1000}')
 
         self._format_output = self._dbapi.paramstyle
         if self._format_output not in self._styles:
@@ -566,39 +596,59 @@ class Database:
         BEGIN is only issued before DML - so per-step commits match what
         actually happens there too; neither backend gets multi-step
         atomicity.
-        """
-        version_table = re.sub('[^a-z0-9_]', '', self._name.lower()) + '_version'
-        with self.transaction() as cur:
-            try:
-                (version,) = self.fetchone('SELECT MAX(version) FROM ' + version_table + ';', cur=cur, quiet=True)
-                if version is None:
-                    version = 0
-            except Exception:
-                self.logger.info('Missing table ' + version_table + ' error can be ignored, will be created now!')
-                self.execute(
-                    'CREATE TABLE ' + version_table + '(version NUMERIC, updated BIGINT, rollout TEXT, rollback TEXT)',
-                    cur=cur,
-                )
-                version = 0
-        self.logger.info('Database [{}]: Version {} found'.format(self._name, version))
-        # sort by numeric value, not string - version keys are strings (the
-        # database plugin's _setup uses '1'..'8'), and plain sorted() would
-        # put '10' before '2' once a caller reaches a double-digit version,
-        # applying that step's DDL before earlier steps it may depend on.
-        for v in sorted(queries.keys(), key=float):
-            if float(v) > version:
-                self.logger.info('Database [{}]: Upgrading to version {}'.format(self._name, v))
-                with self.transaction() as cur:
-                    self.execute(queries[v][0], cur=cur)
 
-                    dt = self.shtime.utcnow()  # type: ignore (shtime is set dynamically)
-                    ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
+        :raises DatabaseSetupError: if this or any previous call to
+            setup() on this instance failed - see its docstring. The
+            underlying DDL failure is chained via __cause__.
+        """
+        if self._setup_error is not None:
+            raise self._setup_error
+        try:
+            version_table = re.sub('[^a-z0-9_]', '', self._name.lower()) + '_version'
+            with self.transaction() as cur:
+                try:
+                    (version,) = self.fetchone('SELECT MAX(version) FROM ' + version_table + ';', cur=cur, quiet=True)
+                    if version is None:
+                        version = 0
+                except Exception:
+                    self.logger.info('Missing table ' + version_table + ' error can be ignored, will be created now!')
+                    # PostgreSQL aborts the whole transaction on a failed
+                    # statement - unlike sqlite3/MySQL, any further statement
+                    # on this cursor would raise InFailedSqlTransaction until
+                    # explicitly rolled back (confirmed against a live
+                    # instance). No-op on sqlite3/MySQL, essential here.
+                    self.rollback()
                     self.execute(
-                        'INSERT INTO ' + version_table + '(version, updated, rollout, rollback) VALUES(?, ?, ?, ?);',
-                        (v, ts, queries[v][0], queries[v][1]),
-                        formatting='qmark',
+                        'CREATE TABLE '
+                        + version_table
+                        + '(version NUMERIC, updated BIGINT, rollout TEXT, rollback TEXT)',
                         cur=cur,
                     )
+                    version = 0
+            self.logger.info('Database [{}]: Version {} found'.format(self._name, version))
+            # sort by numeric value, not string - version keys are strings (the
+            # database plugin's _setup uses '1'..'8'), and plain sorted() would
+            # put '10' before '2' once a caller reaches a double-digit version,
+            # applying that step's DDL before earlier steps it may depend on.
+            for v in sorted(queries.keys(), key=float):
+                if float(v) > version:
+                    self.logger.info('Database [{}]: Upgrading to version {}'.format(self._name, v))
+                    with self.transaction() as cur:
+                        self.execute(queries[v][0], cur=cur)
+
+                        dt = self.shtime.utcnow()  # type: ignore (shtime is set dynamically)
+                        ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
+                        self.execute(
+                            'INSERT INTO '
+                            + version_table
+                            + '(version, updated, rollout, rollback) VALUES(?, ?, ?, ?);',
+                            (v, ts, queries[v][0], queries[v][1]),
+                            formatting='qmark',
+                            cur=cur,
+                        )
+        except Exception as e:
+            self._setup_error = DatabaseSetupError(f'Database [{self._name}]: schema setup failed permanently: {e}')
+            raise self._setup_error from e
 
     def lock(self, timeout=-1):
         """Acquire a database lock

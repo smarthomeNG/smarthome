@@ -221,8 +221,9 @@ class TestDbTests(unittest.TestCase, TestDbBase):
             return original_execute(stmt, *a, **kw)
 
         with patch.object(db, 'execute', side_effect=failing_execute):
-            with self.assertRaises(RuntimeError):
+            with self.assertRaises(lib.db.DatabaseSetupError) as ctx:
                 db.setup({1: ['ROLLOUT 1', 'ROLLBACK 1']})
+        self.assertIsInstance(ctx.exception.__cause__, RuntimeError)
 
         # a failed upgrade statement must not leave self._fdb_lock held -
         # every future connect()/close()/setup()/verify() call would hang
@@ -247,12 +248,70 @@ class TestDbTests(unittest.TestCase, TestDbBase):
             return orig_execute(stmt, *a, **kw)
 
         db.execute = fail_on_step_2
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(lib.db.DatabaseSetupError) as ctx:
             db.setup({1: ['SELECT 1', 'SELECT 1'], 2: ['SELECT 2', 'SELECT 2']})
+        self.assertIsInstance(ctx.exception.__cause__, RuntimeError)
         db.execute = orig_execute
 
         (version,) = db.fetchone('SELECT MAX(version) FROM setup_step_test_version')
         self.assertEqual(1, version, "step 1's commit must survive step 2's failure")
+
+    def test_setup_failure_is_cached_and_reraised_without_retrying_ddl(self):
+        # A DatabaseSetupError is a permanent condition, not a transient
+        # one (see its docstring) - a second setup() call on the same
+        # instance must get back the identical exception instantly,
+        # without touching the database again, rather than re-running (and
+        # re-failing on) the same DDL.
+        db = lib.db.Database('cache_test', 'sqlite3', {'database': ':memory:'}, 'qmark')
+        db.connect()
+
+        orig_execute = db.execute
+        call_count = 0
+
+        def failing_execute(stmt, *a, **kw):
+            nonlocal call_count
+            call_count += 1
+            raise RuntimeError('simulated bad SQL')
+
+        db.execute = failing_execute
+        with self.assertRaises(lib.db.DatabaseSetupError) as first:
+            db.setup({1: ['ROLLOUT 1', 'ROLLBACK 1']})
+        calls_after_first_failure = call_count
+
+        with self.assertRaises(lib.db.DatabaseSetupError) as second:
+            db.setup({1: ['ROLLOUT 1', 'ROLLBACK 1']})
+        db.execute = orig_execute
+
+        self.assertIs(first.exception, second.exception, 'a repeated setup() call must return the cached exception')
+        self.assertEqual(calls_after_first_failure, call_count, 'a cached failure must not re-invoke execute() at all')
+
+    def test_setup_failure_does_not_poison_a_fresh_instance_on_the_same_file(self):
+        # The cached DatabaseSetupError lives on one Python object, not the
+        # database file - a new Database instance (e.g. after a process
+        # restart) must retry normally and resume from whatever version
+        # was actually committed, unaffected by the earlier instance's
+        # cached failure.
+        with tempfile.NamedTemporaryFile(suffix='.db') as f:
+            db1 = lib.db.Database('fresh_test', 'sqlite3', {'database': f.name}, 'qmark')
+            db1.connect()
+            orig_execute = db1.execute
+
+            def fail_on_step_2(stmt, *a, **kw):
+                if stmt == 'SELECT 2':
+                    raise RuntimeError('simulated failure applying step 2')
+                return orig_execute(stmt, *a, **kw)
+
+            db1.execute = fail_on_step_2
+            with self.assertRaises(lib.db.DatabaseSetupError):
+                db1.setup({1: ['SELECT 1', 'SELECT 1'], 2: ['SELECT 2', 'SELECT 2']})
+            db1.close()
+
+            db2 = lib.db.Database('fresh_test', 'sqlite3', {'database': f.name}, 'qmark')
+            db2.connect()
+            db2.setup({1: ['SELECT 1', 'SELECT 1'], 2: ['SELECT 2', 'SELECT 2']})  # must not raise
+            (version,) = db2.fetchone('SELECT MAX(version) FROM fresh_test_version')
+            self.assertEqual(2, version)
+            db2.close()
 
     def test_setup_applies_string_version_keys_in_numeric_not_lexicographic_order(self):
         # setup() must apply string version keys ('1'..'8'-style, per the
@@ -948,6 +1007,10 @@ class MockPymysqlApi(MockDbApi):
     __name__ = 'pymysql'
 
 
+class MockPsycopgApi(MockDbApi):
+    __name__ = 'psycopg2'
+
+
 class MockClassifiedDbApi(MockDbApi):
     """Mock driver exposing the PEP 249 exception hierarchy, so
     _cursor_op_with_reconnect's error classification is active (drivers
@@ -1509,6 +1572,49 @@ class TestDbPymysqlTimeouts(unittest.TestCase, TestDbBase):
         self.assertNotIn('read_timeout', db._params)
         self.assertNotIn('write_timeout', db._params)
         self.assertNotIn('connect_timeout', db._params)
+
+
+class TestDbPsycopgTimeouts(unittest.TestCase, TestDbBase):
+    """psycopg2/psycopg drivers receive connect_timeout + a statement_timeout
+    default, the latter via the 'options' startup parameter rather than a
+    bare kwarg - statement_timeout isn't a real libpq connection parameter
+    (confirmed against a live PostgreSQL instance: passing it directly
+    raises "invalid connection option"), so it has to go through
+    '-c statement_timeout=...', which libpq applies as a session GUC."""
+
+    def _psycopg_db(self, connect=''):
+        return lib.db.Database('test', MockPsycopgApi('pyformat'), connect, 'pyformat')
+
+    def test_connect_timeout_injected(self):
+        db = self._psycopg_db()
+        self.assertEqual(10, db._params['connect_timeout'])
+
+    def test_statement_timeout_injected_via_options(self):
+        db = self._psycopg_db()
+        self.assertIn('options', db._params)
+        self.assertIn('-c statement_timeout=', db._params['options'])
+
+    def test_statement_timeout_reflects_sh_config_in_milliseconds(self):
+        # PostgreSQL's statement_timeout GUC is in milliseconds - _sh_db_query_timeout()
+        # returns seconds like everywhere else in this file, so this must scale by 1000.
+        with patch('lib.db._sh_db_query_timeout', return_value=45):
+            db = self._psycopg_db()
+        self.assertIn('-c statement_timeout=45000', db._params['options'])
+
+    def test_user_connect_timeout_not_overridden(self):
+        db = self._psycopg_db(connect='connect_timeout:5')
+        self.assertEqual(5, db._params['connect_timeout'])
+
+    def test_user_options_not_overridden(self):
+        # If the user already configured their own 'options' string
+        # (possibly with their own statement_timeout), setdefault() must
+        # leave it alone rather than trying to merge into it.
+        db = self._psycopg_db(connect='options:-c statement_timeout=9999')
+        self.assertEqual('-c statement_timeout=9999', db._params['options'])
+
+    def test_non_psycopg_driver_not_affected(self):
+        db = self.db()  # MockDbApi has no __name__ → empty string → not in _psycopg_driver_names
+        self.assertNotIn('options', db._params)
 
 
 class TestDbStringDriverImport(unittest.TestCase, TestDbBase):
