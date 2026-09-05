@@ -69,7 +69,10 @@
     "DB_CONNECTED": "Connecté",
     "DB_DISCONNECTED": "Non connecté",
     "DB_VERSION": "Version du moteur",
-    "DB_QUERY_TIMEOUT": "Délai d'expiration des requêtes"
+    "DB_QUERY_TIMEOUT": "Délai d'expiration des requêtes",
+    "DB_HYPERTABLE": "Hypertable active",
+    "DB_NATIVE_CAGG": "Agrégats continus natifs actifs",
+    "DB_NATIVE_RETENTION": "Rétention native active"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Propriétés du système",
@@ -714,6 +717,7 @@
   },
   "YES": "Oui",
   "NO": "Non",
+  "UNKNOWN": "Inconnu",
   "DAY": "jour",
   "DAYS": "jours",
   "HOUR": "heure",

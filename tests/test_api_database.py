@@ -40,16 +40,20 @@ class _FakeDb:
 
 
 class _FakeDatabasePlugin(SmartPlugin):
-    def __init__(self, driver, db, shortname='database'):
+    def __init__(self, driver, db, shortname='database', timescale_status=None):
         self._shortname = shortname
         self.driver = driver
         self._db = db
+        self._timescale_status = timescale_status or {}
 
     def get_shortname(self):
         return self._shortname
 
     def db(self):
         return self._db
+
+    def timescale_status(self):
+        return self._timescale_status
 
 
 class FakePlugins:
@@ -152,6 +156,10 @@ class TestMysqlFamilyConfiguration(unittest.TestCase):
         self.assertNotIn('passwd', result)
         # journal_mode is a sqlite-only concept
         self.assertNotIn('journal_mode', result)
+        # timescale_status() is a psycopg-only concept
+        self.assertNotIn('hypertable', result)
+        self.assertNotIn('native_cagg', result)
+        self.assertNotIn('native_retention', result)
 
     def test_reports_engine_version(self):
         db = _FakeDb(connected=True, params={'host': '127.0.0.1', 'db': 'smarthome'}, version_string='10.11.18-MariaDB')
@@ -162,6 +170,81 @@ class TestMysqlFamilyConfiguration(unittest.TestCase):
             result = json.loads(controller.read(id='info'))
 
         self.assertEqual(result['version'], '10.11.18-MariaDB')
+
+
+class TestPsycopgFamilyConfiguration(unittest.TestCase):
+    def test_reports_database_name_and_host(self):
+        db = _FakeDb(connected=True, params={'host': '127.0.0.1', 'database': 'shng_test'}, version_string='16.4')
+        plugin = _FakeDatabasePlugin('psycopg2', db)
+        controller = _make_controller([plugin])
+
+        with patch('lib.db._sh_db_query_timeout', return_value=60):
+            result = json.loads(controller.read(id='info'))
+
+        self.assertEqual(result['driver'], 'psycopg2')
+        self.assertEqual(result['database'], 'shng_test')
+        self.assertEqual(result['host'], '127.0.0.1')
+        self.assertNotIn('journal_mode', result)
+
+    def test_merges_reality_checked_timescale_status(self):
+        # Real driver, but not actually a hypertable - i.e. plain PostgreSQL,
+        # not TimescaleDB, even though the DB-API driver can't tell the two
+        # apart by name alone.
+        db = _FakeDb(connected=True, params={'host': '127.0.0.1', 'database': 'shng_test'})
+        plugin = _FakeDatabasePlugin(
+            'psycopg2', db, timescale_status={'hypertable': False, 'native_cagg': False, 'native_retention': False}
+        )
+        controller = _make_controller([plugin])
+
+        with patch('lib.db._sh_db_query_timeout', return_value=60):
+            result = json.loads(controller.read(id='info'))
+
+        self.assertFalse(result['hypertable'])
+        self.assertFalse(result['native_cagg'])
+        self.assertFalse(result['native_retention'])
+
+    def test_reports_active_but_unconfigured_native_retention(self):
+        # The case that actually matters: native retention active in the
+        # real database even though nothing in plugin.yaml asked for it -
+        # reality, not configured intent.
+        db = _FakeDb(connected=True, params={'host': '127.0.0.1', 'database': 'shng_test'})
+        plugin = _FakeDatabasePlugin(
+            'psycopg2', db, timescale_status={'hypertable': True, 'native_cagg': True, 'native_retention': True}
+        )
+        controller = _make_controller([plugin])
+
+        with patch('lib.db._sh_db_query_timeout', return_value=60):
+            result = json.loads(controller.read(id='info'))
+
+        self.assertTrue(result['hypertable'])
+        self.assertTrue(result['native_cagg'])
+        self.assertTrue(result['native_retention'])
+
+    def test_a_failed_reality_check_surfaces_as_none(self):
+        db = _FakeDb(connected=True, params={'host': '127.0.0.1', 'database': 'shng_test'})
+        plugin = _FakeDatabasePlugin(
+            'psycopg2', db, timescale_status={'hypertable': None, 'native_cagg': False, 'native_retention': False}
+        )
+        controller = _make_controller([plugin])
+
+        with patch('lib.db._sh_db_query_timeout', return_value=60):
+            result = json.loads(controller.read(id='info'))
+
+        self.assertIsNone(result['hypertable'])
+
+    def test_disconnected_skips_timescale_status(self):
+        db = _FakeDb(connected=False, params={'host': '127.0.0.1', 'database': 'shng_test'})
+        plugin = _FakeDatabasePlugin(
+            'psycopg2', db, timescale_status={'hypertable': True, 'native_cagg': True, 'native_retention': True}
+        )
+        controller = _make_controller([plugin])
+
+        with patch('lib.db._sh_db_query_timeout', return_value=60):
+            result = json.loads(controller.read(id='info'))
+
+        self.assertNotIn('hypertable', result)
+        self.assertNotIn('native_cagg', result)
+        self.assertNotIn('native_retention', result)
 
 
 class TestConnectionState(unittest.TestCase):

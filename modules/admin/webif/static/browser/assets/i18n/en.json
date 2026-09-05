@@ -69,7 +69,10 @@
     "DB_CONNECTED": "Connected",
     "DB_DISCONNECTED": "Not connected",
     "DB_VERSION": "Engine version",
-    "DB_QUERY_TIMEOUT": "Query timeout"
+    "DB_QUERY_TIMEOUT": "Query timeout",
+    "DB_HYPERTABLE": "Hypertable active",
+    "DB_NATIVE_CAGG": "Native continuous aggregates active",
+    "DB_NATIVE_RETENTION": "Native retention active"
   },
   "SYSTEM": {
     "SYSTEMINFO": "Systeminfo",
@@ -734,6 +737,7 @@
   },
   "YES": "Yes",
   "NO": "No",
+  "UNKNOWN": "Unknown",
   "DAY": "day",
   "DAYS": "days",
   "HOUR": "hour",

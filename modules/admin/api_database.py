@@ -86,6 +86,8 @@ class DatabaseController(RESTResource):
             response['database'] = params.get('db') or params.get('database') or ''
             if params.get('host'):
                 response['host'] = params['host']
+            if connected:
+                response.update(plugin.timescale_status())
 
         if connected:
             response['version'] = db.version()
