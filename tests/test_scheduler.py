@@ -26,6 +26,8 @@ import threading
 import unittest
 from unittest.mock import MagicMock, patch
 
+from dateutil import tz as dateutil_tz
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import tests.common as common
@@ -33,6 +35,7 @@ import tests.common as common
 common.register_shng_log_levels()
 
 from lib.scheduler import _PriorityQueue, Scheduler
+from lib.shtime import Shtime
 import lib.scheduler as _scheduler_module
 
 
@@ -165,6 +168,7 @@ def _make_scheduler():
     now = datetime.datetime(2024, 6, 21, 12, 0, 0, tzinfo=datetime.timezone.utc)
     shtime = MagicMock()
     shtime.now.return_value = now
+    shtime.add_seconds.side_effect = Shtime.add_seconds  # _next_time() delegates the addition to this
 
     # Mock items
     items = MagicMock()
@@ -454,6 +458,106 @@ class TestSchedulerNextTimeCalculation(unittest.TestCase):
         self.sched._scheduler['multi_cron']['obj'].__class__.__name__ = 'function'
         self.sched._next_time('multi_cron')
         self.assertEqual(self.sched._scheduler['multi_cron']['next'], soon)
+
+
+class TestSchedulerDstTransition(unittest.TestCase):
+    """Regression tests for a cycle scheduler stalling across a DST
+    fall-back (and the mirror-image rapid-refire risk at spring-forward):
+    plain `aware_datetime + timedelta` does wall-clock field arithmetic,
+    silently gaining/losing the transition hour when the interval crosses
+    it. Uses a real Europe/Berlin tzinfo (not the UTC-only fixture the
+    other tests in this file use) since UTC has no DST transitions to
+    reproduce the bug against.
+    """
+
+    BERLIN = dateutil_tz.gettz('Europe/Berlin')
+    FALL_BACK_2026 = datetime.datetime(
+        2026, 10, 25, 2, 55, 0, tzinfo=BERLIN, fold=0
+    )  # 65 real minutes before 03:00 CET
+    SPRING_FORWARD_2026 = datetime.datetime(2026, 3, 29, 1, 55, 0, tzinfo=BERLIN, fold=0)  # 02:00-03:00 doesn't exist
+
+    def setUp(self):
+        self.sched, _ = _make_scheduler()
+
+    @staticmethod
+    def _real_elapsed_seconds(before, after):
+        return (after.astimezone(datetime.timezone.utc) - before.astimezone(datetime.timezone.utc)).total_seconds()
+
+    def test_next_time_cycle_survives_fall_back(self):
+        # Matches the bug report exactly: cycle: 300, sitting at 02:55 CEST.
+        self.sched.shtime.now.return_value = self.FALL_BACK_2026
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched._scheduler['rtr'] = {
+            'prio': 3,
+            'obj': obj,
+            'source': '??',
+            'cron': None,
+            'cycle': {300: None},
+            'value': None,
+            'next': None,
+            'active': True,
+        }
+        self.sched._next_time('rtr', offset=300)
+        next_time = self.sched._scheduler['rtr']['next']
+        self.assertEqual(300.0, self._real_elapsed_seconds(self.FALL_BACK_2026, next_time))
+
+    def test_next_time_cycle_survives_spring_forward(self):
+        self.sched.shtime.now.return_value = self.SPRING_FORWARD_2026
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched._scheduler['rtr'] = {
+            'prio': 3,
+            'obj': obj,
+            'source': '??',
+            'cron': None,
+            'cycle': {300: None},
+            'value': None,
+            'next': None,
+            'active': True,
+        }
+        self.sched._next_time('rtr', offset=300)
+        next_time = self.sched._scheduler['rtr']['next']
+        self.assertEqual(300.0, self._real_elapsed_seconds(self.SPRING_FORWARD_2026, next_time))
+
+    def test_due_check_compares_real_elapsed_time_not_wall_clock_fields(self):
+        """Locks in the `.timestamp()`-based comparison contract shared by
+        run()'s cycle due-check and _triggerq due-check (both were a bare
+        `<=`/`<`): two aware datetimes sharing the same tzinfo object
+        compare on raw field values (ignoring fold), so this pair -
+        next_time genuinely 5 real minutes *ahead* of now - would wrongly
+        read as already due under a bare operator. run() isn't unit-tested
+        directly (never-started thread, per this file's own strategy
+        above), so this pins the comparison expression it must use."""
+        next_time = datetime.datetime(2026, 10, 25, 2, 0, 0, tzinfo=self.BERLIN, fold=1)  # UTC 01:00:00
+        now = datetime.datetime(2026, 10, 25, 2, 55, 0, tzinfo=self.BERLIN, fold=0)  # UTC 00:55:00 - 5 real min earlier
+        self.assertFalse(next_time.timestamp() <= now.timestamp())
+        self.assertTrue(next_time <= now, 'characterizes the bare-<= pitfall this fix avoids')
+
+    def test_cron_tiebreak_picks_the_really_sooner_candidate(self):
+        # cycle offset 300s from 02:55 CEST correctly lands on 02:00+01:00
+        # (fold=1, UTC 01:00:00) via _add_seconds(). cron's candidate below
+        # is naive-field-later (02:59) but really 1 minute *earlier* in UTC
+        # (00:59:00) - a bare `ct < next_time` would keep the cycle result;
+        # the real elapsed comparison must pick cron instead.
+        cron_ct = datetime.datetime(2026, 10, 25, 2, 59, 0, tzinfo=self.BERLIN, fold=0)  # UTC 00:59:00
+        self.sched.shtime.now.return_value = self.FALL_BACK_2026
+        self.sched.crontabs.get_next.return_value = cron_ct
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched._scheduler['both'] = {
+            'prio': 3,
+            'obj': obj,
+            'source': '??',
+            'cron': {'* * * * *': None},
+            'cycle': {300: None},
+            'value': None,
+            'next': None,
+            'active': True,
+        }
+        self.sched._next_time('both', offset=300)
+        self.assertEqual(cron_ct, self.sched._scheduler['both']['next'])
+        self.assertEqual('cron', self.sched._scheduler['both']['source']['source'])
 
 
 class TestUpdateItemLocking(unittest.TestCase):

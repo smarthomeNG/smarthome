@@ -243,8 +243,9 @@ class Scheduler(threading.Thread):
         while self.alive:
             now = self.shtime.now()
             if self._runq.qsize() > len(self._workers):
-                delta = now - self._last_worker
-                if delta.seconds > self._worker_delta:
+                # .timestamp() avoids the same-tzinfo fold bug - see Shtime.add_seconds()'s docstring
+                delta_seconds = now.timestamp() - self._last_worker.timestamp()
+                if delta_seconds > self._worker_delta:
                     if len(self._workers) < self._worker_max:
                         self._add_worker()
                     else:
@@ -283,7 +284,8 @@ class Scheduler(threading.Thread):
                     logger.warning(f'Trigger queue exception: {e}')
                     break
 
-                if dt < now:  # run it
+                # .timestamp() avoids the same-tzinfo fold bug - see Shtime.add_seconds()'s docstring
+                if dt.timestamp() < now.timestamp():  # run it
                     self._runc.acquire()
                     self._runq.insert(prio, (name, obj, by, source, dest, value))
                     self._runc.notify()
@@ -306,7 +308,8 @@ class Scheduler(threading.Thread):
                 for name in self._scheduler:
                     task = self._scheduler[name]
                     if task['next'] is not None:
-                        if task['next'] <= now:
+                        # .timestamp() avoids the same-tzinfo fold bug - see Shtime.add_seconds()'s docstring
+                        if task['next'].timestamp() <= now.timestamp():
                             self._runc.acquire()
                             # insert priority and a tuple of (name, obj, by, source, dest, value) # ms
                             self._runq.insert(
@@ -760,7 +763,7 @@ class Scheduler(threading.Thread):
             if offset is None:
                 offset = cycle
 
-            next_time = now + datetime.timedelta(seconds=offset)
+            next_time = self.shtime.add_seconds(now, offset)
             job['source'] = {'source': 'cycle', 'details': str(cycle)}
         if job['cron'] is not None:
             for entry in job['cron']:
@@ -768,7 +771,8 @@ class Scheduler(threading.Thread):
                     continue
                 ct = self.crontabs.get_next(entry, now)
                 if next_time is not None:
-                    if ct < next_time:
+                    # .timestamp() avoids the same-tzinfo fold bug - see Shtime.add_seconds()'s docstring
+                    if ct.timestamp() < next_time.timestamp():
                         next_time = ct
                         job['source'] = {'source': 'cron', 'details': str(entry)}
                         value = job['cron'][entry]
