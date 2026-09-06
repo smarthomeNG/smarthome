@@ -26,6 +26,7 @@ import logging
 import sys
 import os
 import unittest
+from unittest.mock import patch
 
 # Make shng root importable
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -652,6 +653,69 @@ class TestTimeDiff(unittest.TestCase):
         future = datetime.datetime.now(self.tz) + datetime.timedelta(seconds=10)
         result = self.st.time_until(future, 's')
         self.assertGreater(result, 0)
+
+
+class TestTimeDiffDstTransition(unittest.TestCase):
+    """time_diff()/time_since()/time_until() must return real elapsed
+    time, not a wall-clock field difference that silently gains/loses
+    the transition hour. Uses Europe/Berlin (not the UTC default the
+    rest of this file uses) since UTC has no DST to reproduce the bug
+    against."""
+
+    def setUp(self):
+        self.st = _make_shtime('Europe/Berlin')
+        self.tz = self.st.tzinfo()
+
+    def test_add_seconds_correct_across_fall_back(self):
+        before = datetime.datetime(2026, 10, 25, 2, 55, 0, tzinfo=self.tz, fold=0)
+        after = self.st.add_seconds(before, 300)
+        self.assertEqual(300, self.st.time_diff(before, after, 's'))
+
+    def test_add_seconds_correct_across_spring_forward(self):
+        before = datetime.datetime(2026, 3, 29, 1, 55, 0, tzinfo=self.tz, fold=0)
+        after = self.st.add_seconds(before, 300)
+        self.assertEqual(300, self.st.time_diff(before, after, 's'))
+
+    def test_add_seconds_naive_correct_across_fall_back(self):
+        # naive in, naive out - the shape a "stored past timestamp +
+        # duration, compared to a fresh naive now()" watchdog needs
+        # (mieleathome/tasmota/mpd/thz all have this pattern).
+        before = datetime.datetime(2026, 10, 25, 2, 55, 0)
+        after = self.st.add_seconds_naive(before, 300)
+        self.assertIsNone(after.tzinfo)
+        aware_before = before.replace(tzinfo=self.tz)
+        aware_after = after.replace(tzinfo=self.tz)
+        self.assertEqual(300, self.st.time_diff(aware_before, aware_after, 's'))
+
+    def test_add_seconds_naive_correct_across_spring_forward(self):
+        before = datetime.datetime(2026, 3, 29, 1, 55, 0)
+        after = self.st.add_seconds_naive(before, 300)
+        self.assertIsNone(after.tzinfo)
+        aware_before = before.replace(tzinfo=self.tz)
+        aware_after = after.replace(tzinfo=self.tz)
+        self.assertEqual(300, self.st.time_diff(aware_before, aware_after, 's'))
+
+    def test_diff_across_fall_back(self):
+        before = datetime.datetime(2026, 10, 25, 2, 55, 0, tzinfo=self.tz, fold=0)
+        after = datetime.datetime(2026, 10, 25, 2, 5, 0, tzinfo=self.tz, fold=1)  # 10 real minutes later
+        self.assertEqual(600, self.st.time_diff(before, after, 's'))
+
+    def test_diff_across_spring_forward(self):
+        before = datetime.datetime(2026, 3, 29, 1, 55, 0, tzinfo=self.tz, fold=0)
+        after = datetime.datetime(2026, 3, 29, 3, 5, 0, tzinfo=self.tz, fold=0)  # 10 real minutes later
+        self.assertEqual(600, self.st.time_diff(before, after, 's'))
+
+    def test_time_since_across_fall_back(self):
+        past = datetime.datetime(2026, 10, 25, 2, 55, 0, tzinfo=self.tz, fold=0)
+        now = datetime.datetime(2026, 10, 25, 2, 5, 0, tzinfo=self.tz, fold=1)  # 10 real minutes later
+        with patch.object(self.st, 'now', return_value=now):
+            self.assertEqual(600, self.st.time_since(past, 's'))
+
+    def test_time_until_across_fall_back(self):
+        now = datetime.datetime(2026, 10, 25, 2, 55, 0, tzinfo=self.tz, fold=0)
+        future = datetime.datetime(2026, 10, 25, 2, 5, 0, tzinfo=self.tz, fold=1)  # 10 real minutes later
+        with patch.object(self.st, 'now', return_value=now):
+            self.assertEqual(600, self.st.time_until(future, 's'))
 
 
 if __name__ == '__main__':

@@ -316,6 +316,41 @@ class Shtime:
     #   Following methods implement some time handling
     # -----------------------------------------------------------------------------------------------------
 
+    @staticmethod
+    def _utc_delta(a, b):
+        """a - b as a timedelta, safe across a DST transition either
+        datetime might fall on. Raw subtraction of two aware datetimes
+        that share the same tzinfo object (as any two datetimes routed
+        through this class's shared self._tzinfo do) ignores fold and
+        compares/subtracts on raw field values - wrong whenever a and b
+        straddle a fall-back/spring-forward boundary. Converting both to
+        UTC first sidesteps this entirely, since UTC has no DST."""
+        return a.astimezone(datetime.timezone.utc) - b.astimezone(datetime.timezone.utc)
+
+    @staticmethod
+    def add_seconds(dt, seconds):
+        """Add `seconds` of real elapsed time to an aware datetime `dt`,
+        safe across a DST transition that falls within the interval.
+        Plain `dt + timedelta(seconds=seconds)` does wall-clock field
+        arithmetic - it silently gains or loses an hour whenever the
+        interval crosses a fall-back/spring-forward boundary, since the
+        tzinfo is just re-resolved against the shifted field values
+        rather than the arithmetic happening against a DST-free clock.
+        Use this for any "N seconds/minutes from now" computation whose
+        result may be compared against a later `now()` - a scheduler
+        `next` time, a suspend-until point, a delayed-action trigger."""
+        return (dt.astimezone(datetime.timezone.utc) + datetime.timedelta(seconds=seconds)).astimezone(dt.tzinfo)
+
+    def add_seconds_naive(self, dt, seconds):
+        """Like add_seconds(), but for a naive datetime `dt` assumed to
+        be in this instance's configured timezone - tags it, adds
+        `seconds` DST-safely, then strips the tag again. For code that
+        deliberately stays naive throughout (e.g. comparing two locally-
+        captured timestamps, like a device-offline or reconnect
+        watchdog) but still needs the addition itself to be real-
+        elapsed-time-safe across a DST transition."""
+        return self.add_seconds(dt.replace(tzinfo=self._tzinfo), seconds).replace(tzinfo=None)
+
     def _build_timediff_resulttype(self, delta, resulttype):
         if resulttype == 's':
             return delta.days * 24 * 3600 + delta.seconds
@@ -363,7 +398,7 @@ class Shtime:
         """
         dt = self.datetime_transform(dt)
         if type(dt) is datetime.datetime:
-            delta = self.now() - dt
+            delta = self._utc_delta(self.now(), dt)
             if delta.days < 0:
                 self.logger.error(
                     'time_since: '
@@ -392,7 +427,7 @@ class Shtime:
         """
         dt = self.datetime_transform(dt)
         if type(dt) is datetime.datetime:
-            delta = dt - self.now()
+            delta = self._utc_delta(dt, self.now())
             if delta.days < 0:
                 self.logger.error(
                     'time_until: '
@@ -424,9 +459,9 @@ class Shtime:
         dt1 = self.datetime_transform(dt1)
         dt2 = self.datetime_transform(dt2)
         if type(dt1) is datetime.datetime and type(dt2) is datetime.datetime:
-            delta = dt2 - dt1
+            delta = self._utc_delta(dt2, dt1)
             if delta.days < 0:
-                delta = dt1 - dt2
+                delta = self._utc_delta(dt1, dt2)
             return self._build_timediff_resulttype(delta, resulttype)
         else:
             self.logger.error(
