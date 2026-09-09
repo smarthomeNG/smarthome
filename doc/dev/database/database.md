@@ -4,13 +4,15 @@ This document describes the internal design of the `database` plugin and the con
 primitive it builds on (`lib/db.py`'s `Database` class). It is aimed at Python developers who are
 already familiar with SmartHomeNG basics.
 
-> **Status (verified 2026-08-23 against `plugins/database/` and `lib/db.py` on
+> **Status (verified 2026-09-07 against `plugins/database/` and `lib/db.py` on
 > `database-transaction-refactor` / `db-transaction-refactor`):** Describes the system as it exists
 > today. The plugin went through a module split (`utils.py`/`buffer.py`/`store.py` extracted from
 > `__init__.py`) and, separately, a locking rewrite that replaced hand-rolled
 > `lock()`/`cursor()`/`commit()`/`rollback()`/`release()` sequences throughout both `lib/db.py` and
 > the plugin with a single `transaction()` context manager. Both are complete and are described
-> below as the current design, not as proposals. For the history of *why* — the incidents that
+> below as the current design, not as proposals. Since the previous verification pass, PostgreSQL
+> support (optionally with the TimescaleDB extension) was added as a third backend alongside
+> SQLite3 and MySQL/MariaDB — covered in §8. For the history of *why* — the incidents that
 > motivated the locking rewrite, and the two audit passes that followed it — see this project's
 > commit history; this document does not attempt to be a changelog.
 
@@ -18,12 +20,15 @@ already familiar with SmartHomeNG basics.
 
 ## 1. Overview
 
-The `database` plugin persists item values to a relational database (SQLite or MySQL/MariaDB via
-`lib/db.py`; other DB-API 2 drivers work if `lib/db.py`'s type-conversion tables are extended for
-them). Its distinguishing feature compared to a plain event log is that **every row records not
-just a value but how long that value was active** — the `duration` column. This makes it
-straightforward to compute time-weighted averages, cumulative energy totals, and similar analytics
-directly in SQL.
+The `database` plugin persists item values to a relational database via `lib/db.py`. Three backends
+are supported directly: SQLite3, MySQL/MariaDB (`pymysql`), and PostgreSQL (`psycopg2`/`psycopg`),
+optionally extended with TimescaleDB (see §8) — other DB-API 2 drivers work if `lib/db.py`'s
+type-conversion tables are extended for them. The `driver` parameter also accepts friendly database
+names (`mysql`/`mariadb`, `postgres`/`postgresql`/`timescale`/`timescaledb`) resolved to the real
+module name at startup — see §8. Its distinguishing feature compared to a plain event log is that
+**every row records not just a value but how long that value was active** — the `duration` column.
+This makes it straightforward to compute time-weighted averages, cumulative energy totals, and
+similar analytics directly in SQL.
 
 Five concepts are central to understanding the plugin:
 
@@ -41,24 +46,36 @@ Five concepts are central to understanding the plugin:
 
 ```
 plugins/database/
-├── __init__.py    # Database(SmartPlugin) — plugin lifecycle, public API,
-│                  #   _series()/_single() (analytics), remove_older_than_maxage()/
-│                  #   build_orphanlist() (maintenance), _dump() (scheduler callback)
-├── utils.py       # Pure functions, no side effects, no DB connection needed
-├── buffer.py      # BufferManager — owns the in-memory buffer dict + its lock
-├── store.py       # ItemStore + LogStore — SQL CRUD against {item}/{log}
-├── constants.py   # BufferEntry namedtuple, QUALITY_VALID/QUALITY_NO_DATA, column indices
-└── webif/         # Web interface (item/orphan browsing, manual actions)
+├── __init__.py       # Database(SmartPlugin) — plugin lifecycle, public API,
+│                     #   legacy CRUD delegates, one-line delegates to every
+│                     #   module below
+├── utils.py          # Pure functions, no side effects, no DB connection needed
+├── buffer.py         # BufferManager — owns the in-memory buffer dict + its lock
+├── store.py          # ItemStore + LogStore — SQL CRUD against {item}/{log}
+├── maxage.py         # MaxageResolver — per-item database_maxage_action/_interval
+│                     #   resolution, shared by maintenance.py/query.py/timescale.py
+├── maintenance.py    # MaintenanceManager — age-based cleanup (delete/compact,
+│                     #   scheduled) and orphan item/log handling
+├── query.py          # QueryEngine — on-demand analytics (item.series/item.db)
+│                     #   and native-cagg query routing
+├── timescale.py      # TimescaleManager — driver-alias resolution and every
+│                     #   PostgreSQL/TimescaleDB feature-activation/status method
+├── constants.py      # BufferEntry namedtuple, QUALITY_VALID/QUALITY_NO_DATA, column indices
+└── webif/            # Web interface (item/orphan browsing, manual actions)
 ```
 
 ![Architecture](img/architecture.svg)
 
-`_series()`/`_single()` (on-demand analytics for the websocket plugin and logics) and
-`remove_older_than_maxage()`/`build_orphanlist()` (scheduled maintenance) were originally planned
-to move into their own `query.py`/`maintenance.py` modules. That split was never done — they remain
-methods on `Database` in `__init__.py`, which at ~2800 lines is still the largest file in the
-plugin. Nothing about correctness depends on this; it is a maintainability trade-off, not a design
-constraint.
+`__init__.py` was, until recently, ~4000 lines — `_series()`/`_single()` (analytics),
+`remove_older_than_maxage()`/`build_orphanlist()` (maintenance), and the TimescaleDB feature set
+(§8) all lived directly on `Database`. All four moved out into the dedicated modules listed above,
+following the same pattern `buffer.py`/`store.py` already established: `Database` keeps a one-line
+delegate for every moved method (`insertLog`, `readItem`, `_compact_maxage`, `timescale_status`,
+...), so the public API used by items, the web interface, and user automations is unchanged by any
+of this — and so is anything (mainly the test suite) that reaches into a "private" method directly.
+Each new module takes a back-reference to the `Database` instance rather than individual
+parameters, for the same reason a full dependency-injection split wasn't worth it: the goal here is
+file-size/navigability, not decoupling. `__init__.py` is now ~2300 lines.
 
 **`utils.py`** — pure functions, importable without any database connection:
 
@@ -83,16 +100,37 @@ connection and a `table_names` dict, no plugin business logic:
 - `LogStore`: `insert`, `update`, `upsert`, `find`, `find_range`, `count`, `count_all`,
   `delete_range`, `oldest_time`, `latest_time`, `edge_value`, `aggregate`.
 
+**`maxage.py`** — `MaxageResolver` (`self._maxage`): `action_for(item)`/`interval_seconds_for(item)`
+(database_maxage_action/database_maxage_interval, falling back to the plugin-level defaults) and
+`native_relevant_items()`. Small and shared by three other modules on purpose — see §7's action
+table and §8's native-aggregation item selection.
+
+**`maintenance.py`** — `MaintenanceManager` (`self._maintenance`): `remove_older_than_maxage()`/
+`compact_maxage()` (§7's delete-vs-compact scheduler) and `build_orphanlist()`/
+`remove_orphan_items()`/`reassign_orphaned_id()`/`cleanup()` (orphan item/log handling).
+
+**`query.py`** — `QueryEngine` (`self._query_engine` — named to avoid colliding with the
+pre-existing `Database._query()` execute/fetchone/fetchall helper): `series()`/`single()` (bound
+onto `item.series`/`item.db` in `parse_item()`) plus every `native_cagg_*()` routing method — see
+§8's merge/exclusive/additive distinction between `_series()`, `_single()`, and `readLogCount()`.
+
+**`timescale.py`** — `TimescaleManager` (`self._timescale`): `resolve_driver_alias()`/
+`resolve_postgres_driver_alias()` (called first in `__init__()`, before any other plugin state
+exists — see §8's driver resolution) and every hypertable/compression/native-aggregation/
+native-retention/status method. All PostgreSQL/psycopg-specific; every method is a no-op or returns
+early on every other driver.
+
 **`__init__.py`** — `Database(SmartPlugin)`:
 
-- Creates and wires `BufferManager`/`ItemStore`/`LogStore`, plus two independent `lib.db.Database`
-  connections: `self._db` (regular reads/writes) and `self._db_maint` (maintenance —
-  orphan cleanup, `remove_older_than_maxage()`). Kept separate so a long-running maintenance
-  transaction never blocks ordinary item logging, and vice versa.
-- Implements `run`/`stop`/`parse_item`/`update_item`/`_dump` and re-exports every legacy method
-  name (`insertLog`, `readItem`, `insertItem`, ...) as a one-line delegate to the store objects —
-  the public API used by items, the web interface, and user automations is unchanged by any of the
-  above.
+- Creates and wires `BufferManager`/`ItemStore`/`LogStore`/`MaxageResolver`/`MaintenanceManager`/
+  `QueryEngine`/`TimescaleManager`, plus two independent `lib.db.Database` connections: `self._db`
+  (regular reads/writes) and `self._db_maint` (maintenance — orphan cleanup,
+  `remove_older_than_maxage()`). The two connections are kept separate so a long-running
+  maintenance transaction never blocks ordinary item logging, and vice versa.
+- Implements `run`/`stop`/`parse_item`/`update_item`/`_dump`/`_initialize_db`/`id` — plugin
+  lifecycle and buffer-flush machinery too entangled with each other to split out cleanly — and
+  re-exports every legacy method name (`insertLog`, `readItem`, `insertItem`, ...) as a one-line
+  delegate to the store objects, on top of the one-line delegates to the four modules above.
 
 ---
 
@@ -258,6 +296,20 @@ type. Aggregation queries must know the item's type to read the correct column.
 
 ![Schema](img/schema.svg)
 
+### Per-driver type differences
+
+`_setup()` branches on the driver to pick column/DDL variants — sqlite3 and MySQL/MariaDB are
+described above; PostgreSQL (`psycopg2`/`psycopg`) differs in three ways:
+
+- `id SERIAL PRIMARY KEY` — a real column-default sequence, auto-increments like sqlite3's bare
+  `INTEGER PRIMARY KEY` out of the box, so (unlike MySQL/MariaDB's v8 migration) no retrofit is
+  needed.
+- `val_quality`/`val_bool` are `SMALLINT`, not `TINYINT` (PostgreSQL has no `TINYINT`). PostgreSQL's
+  own `BOOLEAN` is strictly typed and rejects the integer 0/1 `encode_value()` always writes, so
+  `val_bool` deliberately stays `SMALLINT` rather than a native `BOOLEAN` column.
+- `{item}_name` is a plain, full-column index, not a `name(191)` prefix index — PostgreSQL has no
+  InnoDB-style indexed-column byte limit to work around.
+
 ---
 
 ## 6. Value Quality — No-Data Gaps
@@ -337,7 +389,7 @@ unbounded time. Any other value replaces raw entries with **one compacted value 
 | `avg` | `AVG(val_num * duration) / AVG(duration)` | num, bool |
 | `min` / `max` | `MIN(val_num)` / `MAX(val_num)` | num, bool |
 | `integrate` | `SUM(val_num * duration)` | num, bool |
-| `on` | `SUM(val_bool * duration) / SUM(duration)` | bool only |
+| `duty_cycle` (legacy alias: `on`) | `SUM(val_bool * duration) / SUM(duration)` | bool only |
 | `countall` | `COUNT(*)` | any |
 | `first` / `last` | oldest/newest raw value as-is (`ORDER BY time ASC/DESC LIMIT 1`) | any, including str |
 
@@ -365,15 +417,182 @@ compaction leaves that interval raw rather than deleting data it cannot represen
 and stops for that item — it does not skip past the stalled interval to keep compacting newer ones,
 since that would silently reorder which data survives.
 
+**None of this section applies under `timescale_native_aggregation: true`.** `_start_schedulers()`
+never registers `remove_older_than_maxage()` in that mode — TimescaleDB continuous aggregates and,
+optionally, a native retention policy take over both roles server-side instead. See §8.
+
 ---
 
-## 8. Further Reading
+## 8. PostgreSQL + TimescaleDB Backend
+
+PostgreSQL (`psycopg2`/`psycopg`) is a backend in its own right, with the [TimescaleDB
+extension](https://www.timescale.com/) available as an opt-in layer on top of it — hypertables,
+native compression, native continuous aggregates, and native retention, each independently toggled
+and each falling back cleanly (a logged warning, nothing else affected) if its precondition isn't
+met.
+
+### Driver resolution
+
+`driver` accepts the real module names (`psycopg2`, `psycopg`) as well as friendly aliases —
+`postgres`/`postgresql`/`timescale`/`timescaledb` (all four resolve identically; TimescaleDB is a
+Postgres extension, not a separate driver) and `mysql`/`mariadb` for `pymysql`. Resolution happens
+once in `__init__()`, before `self.driver` is used anywhere else:
+
+- `mysql`/`mariadb` → `pymysql` directly (`_DRIVER_ALIASES`, a plain lookup table).
+- `postgres`/`postgresql`/`timescale`/`timescaledb` → `_resolve_postgres_driver_alias()` probes
+  `importlib.import_module()` for `psycopg2` then `psycopg`, preferring `psycopg2` if both are
+  installed. Neither installed → falls back to `'psycopg2'` *without* having confirmed it imports,
+  so the resulting error names a real, searchable package instead of the friendly alias.
+- Anything else (including an already-real module name) passes through unchanged.
+
+Every later psycopg-specific check in the plugin (hypertable/compression/native-mode gating, the
+`_setup()` schema branch in §5) tests `self.driver.lower() in lib.db.Database._psycopg_driver_names`
+— the resolved real name, never the original alias.
+
+### Hypertables and compression
+
+Both are set up once, inside `_initialize_db()`'s schema-setup path (`self._db` only — both
+operations are database-global, so running them again from `self._db_maint` would just be redundant
+work against the already-converted table). Both are non-fatal on failure: a logged warning, and the
+table stays a plain, uncompressed table — every other part of the plugin works identically either
+way, since a hypertable is queried exactly like a regular table.
+
+- **`timescale_hypertable`** (default **`true`**) — `CREATE EXTENSION IF NOT EXISTS timescaledb`,
+  then `create_hypertable('log', 'time', chunk_time_interval => timescale_chunk_interval, ...)`.
+  Splits `{log}` into time-based chunks (default width `168h`/7 days), which is what makes
+  time-range queries on a large table fast — this is the feature that makes PostgreSQL worth
+  choosing over plain MySQL/MariaDB for a large installation in the first place.
+- **`timescale_compress`** (default `false`) — native columnar compression on `{log}`, segmented by
+  `item_id`, ordered by `time DESC`, with a compression policy compressing everything older than one
+  chunk width. The current chunk is deliberately left uncompressed — it's the only one that can hold
+  a mutable "open" row (see `_compact_maxage()`'s `find_open()`). Measured 17.39× on a real
+  22-million-row dataset; TimescaleDB's own documentation cites 10–20× as typical for time-series
+  data. **One-way**: setting this back to `false` only stops future (re-)activation attempts, it
+  does not decompress already-compressed chunks.
+
+### Native aggregation
+
+**`timescale_native_aggregation`** (default `false`) replaces the plugin-side compaction described
+in §7 with TimescaleDB continuous aggregates, computed server-side instead of by
+`_compact_maxage()`. Same `database_maxage`/`database_maxage_action`/`database_maxage_interval`
+item attributes still control it — only *where* the aggregation runs changes, not how it's
+configured. Activation happens in `run()`, not `_initialize_db()`'s setup path — it needs the real
+item list, which `parse_item()` has not populated yet at `__init__()`'s own `_initialize_db()` call:
+
+1. Register an integer-now function (`set_integer_now_func`) TimescaleDB needs for continuous
+   aggregates on this bigint-epoch-ms schema. **Not idempotent** — every call after the first
+   errors, even re-registering the same function — so this is called with `quiet=True` and the
+   "already set" case is tolerated silently in the plugin's own `except` block; anything else is a
+   real failure.
+2. One continuous aggregate **per distinct `database_maxage_interval` actually in use**, grouped
+   across every item sharing that width — not one per item, and not one per
+   `database_maxage_action` (an item's action is just an extra column on the shared view). Items
+   resolving to action `'delete'` are skipped entirely; native retention (if enabled) drops their
+   raw chunks directly instead.
+
+See [img/timescale_native_setup_flow.svg](img/timescale_native_setup_flow.svg) for the full call
+sequence including every failure branch, and
+[img/query_read_flow.svg](img/query_read_flow.svg) for how `_series()`/`_single()`/`readLogCount()`
+each route between raw data and the native caggs — the three differ in an important way:
+
+- **`_series()`** always queries the raw log for the full requested range, and separately queries
+  `_native_cagg_series()` for whatever portion of that range predates the raw floor (native
+  retention may have dropped it) — a genuine **merge**, prepending cagg tuples to the raw ones so a
+  chart gets one continuous line across the boundary.
+- **`_single()`** only takes the cagg path when the *entire* requested range predates the raw
+  floor; any overlap with still-raw data falls through to the normal precise raw-log query
+  instead — **exclusive**, never both, because a single scalar has no boundary to stitch.
+- **`readLogCount()`** adds `_native_cagg_count()` to the raw count — safe unconditionally, since
+  the two ranges never overlap by construction.
+
+### Native retention
+
+**`timescale_native_retention`** (default `false`, requires `timescale_native_aggregation: true`)
+drops old raw-data chunks server-side via `add_retention_policy()`, instead of
+`remove_older_than_maxage()`'s per-item `DELETE`. **This is the one significant behavioral
+difference from every other backend, and it's a deliberate design decision, not a gap to
+"fix":**
+
+- The drop threshold is **one global value for the whole hypertable** — the *longest*
+  `database_maxage` across every relevant item, plus one `timescale_chunk_interval` as a safety
+  margin — not a per-item value. An item configured for 5 days keeps its raw data until the
+  longest-configured item's threshold passes, because chunks are shared across items.
+  `remove_older_than_maxage()` never runs at all in this mode (see §7's closing note), even for
+  `database_maxage_action: delete` items specifically — reintroducing per-item deletion would
+  defeat the reason a coarse global threshold is acceptable, since native compression already
+  absorbs the cost of keeping raw data a bit longer than any single item strictly needs.
+- **Every item is affected, including ones without `database_maxage` set at all** — there is no
+  "leave this item's raw data alone forever" option once native retention is on. If no item and no
+  `default_maxage` configures a maxage, activation is skipped with a warning (nothing to retain
+  against); otherwise `default_maxage`/`default_maxage_action` are worth setting explicitly so
+  items that never opted into cleanup don't fall back to `'delete'` unexpectedly.
+- Reversing native aggregation back to plugin-side compaction is **not implemented** and not
+  possible without data loss — there is no code path that reads cagg values back out and reinserts
+  them into `{log}`.
+
+### Status introspection
+
+`timescale_status()` reality-checks the database itself (`{'hypertable': bool|None, 'native_cagg':
+bool|None, 'native_retention': bool|None}`, `{}` on a non-psycopg driver) rather than trusting
+`plugin.yaml` — config can drift from what's actually active in the database (e.g. a feature enabled
+once, then the parameter reverted, without ever undoing the database-side change). `None` for a key
+means the check itself failed (extension not installed → no catalog views to query), distinct from
+`False` (checked, genuinely inactive). Not exposed in this plugin's own web interface — consumed by shngadmin's dashboard
+database-properties widget.
+
+`run()` also calls `_reconcile_native_retention_reality()` (psycopg drivers only, before any
+native-mode setup), which checks specifically whether a **retention policy** is actually active in
+the database and self-corrects on drift — an admin editing `plugin.yaml` while shng is stopped, or
+an unattended restart, could otherwise leave an active TimescaleDB retention policy (which runs on
+its own schedule regardless of shng's state) silently paired with `timescale_native_aggregation:
+false`, which would mean plugin-side compaction storing aggregates in-place in chunks TimescaleDB is
+dropping out from under it — real, silent data corruption, not just a missed optimization. A policy
+active with aggregation disabled in config forces `_timescale_native_aggregation = True` for that
+run only (never rewrites `plugin.yaml`, logged at CRITICAL); a policy active with
+`timescale_native_retention: false` gets removed to match configured intent (falling back to the
+same forced-aggregation fix if removal itself fails); `timescale_native_retention: true` with no
+policy actually active and aggregation off is refused for that run (nothing dangerous is happening
+yet, so nothing needs forcing, just not created).
+
+### Migrating between backends
+
+`tools/db_migrate.py` moves item and log data directly between any two supported backends (e.g.
+SQLite3 → TimescaleDB), independent of SmartHomeNG (run only while it's stopped). Supports resume
+and `--dry-run`. Refuses to migrate *from* a source that already has native continuous aggregates
+active unless `--force` is given — such a source's raw data past the native-retention floor is
+already gone, so a straight raw-table copy would silently produce an incomplete migration with no
+error. Budget real time for a large table: a 22-million-row transfer took roughly three hours on the
+hardware it was tested against.
+
+---
+
+## 9. Code Flow Diagrams
+
+Detailed, code-level flowcharts for the plugin's major workflows — branches, exception paths, and
+requeue/retry logic included, not just the high-level shape already covered in §2/§4/§7/§8 above.
+
+| Workflow | Diagram |
+|---|---|
+| Plugin startup (`__init__()` → `_initialize_db()` → `run()`) | [img/init_startup_flow.svg](img/init_startup_flow.svg) |
+| Item value change (`update_item()`) | [img/item_update_flow.svg](img/item_update_flow.svg) |
+| Dump cycle (`_dump()`) | [img/dump_cycle_flow.svg](img/dump_cycle_flow.svg) |
+| Age-based cleanup (`remove_older_than_maxage()` / `_compact_maxage()`) | [img/compacting_pruning_flow.svg](img/compacting_pruning_flow.svg) |
+| No-data gaps (`db_mark_invalid()`/`db_mark_valid()`, `database_invalid_after`) | [img/invalidity_check_flow.svg](img/invalidity_check_flow.svg) |
+| On-demand queries (`_series()`/`_single()`/`readLogCount()` native-cagg routing) | [img/query_read_flow.svg](img/query_read_flow.svg) |
+| TimescaleDB native-mode activation (hypertable/compression/native aggregation/retention) | [img/timescale_native_setup_flow.svg](img/timescale_native_setup_flow.svg) |
+
+---
+
+## 10. Further Reading
 
 - `lib/db.py`'s own module docstring and `Database.transaction()`'s docstring cover connection-level
   concerns (reconnect throttling, the hang watchdog, self-healing `commit()`/`rollback()`) not
   repeated here since they apply to every plugin using `lib/db.py`, not just this one.
 - This plugin's `user_doc.rst` covers end-user configuration, including the MySQL/MariaDB-specific
-  limits mentioned in §5/§7.
+  limits mentioned in §5/§7, the PostgreSQL+TimescaleDB setup covered in §8, and worked
+  configuration examples for both.
+- `doc/user/source/tools/tools_db_migrate.rst` documents `tools/db_migrate.py` (§8) from a user's
+  perspective — CLI flags, prerequisites, worked examples.
 - For *why* the locking model looks like this — the production incidents and the two audit passes
   that shaped it — see the project's commit history on the `db-transaction-refactor` /
   `database-transaction-refactor` branches; this document intentionally describes the current

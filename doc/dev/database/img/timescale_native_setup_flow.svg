@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 973" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1160" height="973" fill="#f9f9f9"/>
+
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L9,3.5 z" fill="#555"/>
+    </marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/>
+    </marker>
+  </defs>
+
+  <text x="580.0" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">TimescaleDB Native-Mode Activation</text>
+  <rect x="220.0" y="44" width="720" height="59" rx="5" fill="#ffffff" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="62" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">Phase 1 — inside _initialize_db()'s setup path (self._db connection only)</text>
+  <text x="580.0" y="77" text-anchor="middle" font-size="9" fill="#555">if timescale_hypertable / timescale_compress &amp; driver is psycopg2/psycopg</text>
+  <line x1="580.0" y1="103" x2="580.0" y2="123" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="250.0" y="123" width="660" height="59" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="141" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">_enable_timescale_hypertable()</text>
+  <text x="580.0" y="156" text-anchor="middle" font-size="9" fill="#555">CREATE EXTENSION IF NOT EXISTS timescaledb;</text>
+  <line x1="580.0" y1="182" x2="580.0" y2="202" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="910.0" y1="152.5" x2="820" y2="152.5" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="820" y="116.0" width="280" height="73" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="960.0" y="134.0" text-anchor="middle" font-size="9" font-weight="bold" fill="#b31412">on failure</text>
+  <text x="960.0" y="149.0" text-anchor="middle" font-size="8.5" fill="#555">extension missing/no privilege →</text>
+  <text x="960.0" y="163.0" text-anchor="middle" font-size="8.5" fill="#555">warn, keep {log} as a plain table, return</text>
+  <rect x="250.0" y="202" width="660" height="32" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="221.33333333333334" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">create_hypertable('log', 'time', chunk_time_interval=..., if_not_exists=TRUE, migrate_data=TRUE)</text>
+  <line x1="580.0" y1="234" x2="580.0" y2="254" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="910.0" y1="218.0" x2="820" y2="218.0" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="820" y="181.5" width="280" height="73" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="960.0" y="199.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#b31412">on failure</text>
+  <text x="960.0" y="214.5" text-anchor="middle" font-size="8.5" fill="#555">warn — {log} stays plain;</text>
+  <text x="960.0" y="228.5" text-anchor="middle" font-size="8.5" fill="#555">every other feature still works identically</text>
+  <rect x="300.0" y="254" width="560" height="59" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="272" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">_enable_timescale_compression()</text>
+  <text x="580.0" y="287" text-anchor="middle" font-size="8.5" fill="#555">ALTER TABLE {log} SET (compress, compress_segmentby='item_id', compress_orderby='time DESC')</text>
+  <line x1="580.0" y1="313" x2="580.0" y2="333" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="300.0" y="333" width="560" height="59" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="351" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">add_compression_policy(compress_after = timescale_chunk_interval)</text>
+  <text x="580.0" y="366" text-anchor="middle" font-size="8.5" fill="#555">current chunk always stays uncompressed — it's the only one that can hold a live open row</text>
+  <line x1="580.0" y1="392" x2="580.0" y2="412" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="860.0" y1="362.5" x2="820" y2="362.5" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="820" y="333.0" width="280" height="59" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="960.0" y="351.0" text-anchor="middle" font-size="9" font-weight="bold" fill="#b31412">on failure</text>
+  <text x="960.0" y="366.0" text-anchor="middle" font-size="8.5" fill="#555">warn — {log} stays uncompressed</text>
+  <rect x="220.0" y="422" width="720" height="59" rx="5" fill="#ffffff" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="440" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">Phase 2 — inside run(), once parse_item() has populated the real item lists</text>
+  <text x="580.0" y="455" text-anchor="middle" font-size="9" fill="#555">if timescale_native_aggregation &amp; psycopg &amp; _db_initialized</text>
+  <line x1="580.0" y1="481" x2="580.0" y2="501" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="250.0" y="501" width="660" height="59" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="519" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">_enable_timescale_native_aggregation()</text>
+  <text x="580.0" y="534" text-anchor="middle" font-size="8.5" fill="#555">CREATE OR REPLACE FUNCTION log_time_now() ... (integer-now function TimescaleDB needs for caggs)</text>
+  <line x1="580.0" y1="560" x2="580.0" y2="580" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="910.0" y1="530.5" x2="820" y2="530.5" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="820" y="494.0" width="280" height="73" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="960.0" y="512.0" text-anchor="middle" font-size="9" font-weight="bold" fill="#b31412">on failure</text>
+  <text x="960.0" y="527.0" text-anchor="middle" font-size="8.5" fill="#555">warn — native aggregation</text>
+  <text x="960.0" y="541.0" text-anchor="middle" font-size="8.5" fill="#555">cannot activate, return</text>
+  <rect x="250.0" y="580" width="660" height="73" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="598" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">set_integer_now_func('log', 'log_time_now')  — quiet=True</text>
+  <text x="580.0" y="613" text-anchor="middle" font-size="8.5" fill="#555">not idempotent: errors on every call after the first. 'already set' → tolerated silently,</text>
+  <text x="580.0" y="627" text-anchor="middle" font-size="8.5" fill="#555">anything else → warn, return</text>
+  <line x1="580.0" y1="653" x2="580.0" y2="673" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="250.0" y="673" width="660" height="73" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="580.0" y="691" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e7e34">One _create_native_cagg() per distinct database_maxage_interval in use</text>
+  <text x="580.0" y="706" text-anchor="middle" font-size="8.5" fill="#555">grouped across items sharing an interval width — one cagg per width, not per item.</text>
+  <text x="580.0" y="720" text-anchor="middle" font-size="8.5" fill="#555">delete-action items skipped entirely (native retention drops their chunks directly)</text>
+  <line x1="580.0" y1="746" x2="580.0" y2="766" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="250.0" y="766" width="660" height="32" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="580.0" y="785.5" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#9c6e00">if timescale_native_retention: _enable_timescale_native_retention()</text>
+  <line x1="580.0" y1="798" x2="580.0" y2="818" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="250.0" y="818" width="660" height="32" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="837.3333333333334" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">max_maxage_days = max(default_maxage, every item's own database_maxage)</text>
+  <line x1="580.0" y1="850" x2="580.0" y2="870" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="910.0" y1="834.0" x2="820" y2="834.0" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="820" y="797.5" width="280" height="73" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="960.0" y="815.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#b31412">on failure</text>
+  <text x="960.0" y="830.5" text-anchor="middle" font-size="8.5" fill="#555">&lt;=0 → warn, nothing to</text>
+  <text x="960.0" y="844.5" text-anchor="middle" font-size="8.5" fill="#555">retain against, skip</text>
+  <rect x="230.0" y="870" width="700" height="73" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="580.0" y="888" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e7e34">add_retention_policy(drop_after = max_maxage_days + timescale_chunk_interval)</text>
+  <text x="580.0" y="903" text-anchor="middle" font-size="8.5" fill="#555">ONE global threshold for the whole hypertable — not per item (deliberate, see docstring):</text>
+  <text x="580.0" y="917" text-anchor="middle" font-size="8.5" fill="#555">compression already absorbs the cost of keeping raw data a bit longer than any single item needs</text>
+</svg>
