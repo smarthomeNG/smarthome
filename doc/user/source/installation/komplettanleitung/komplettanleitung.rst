@@ -29,6 +29,7 @@ Es bietet sich an die allererste Installation einfach in einer virtuellen Maschi
    01_debian
    02_smartvisu
    03_smarthomeng
+   03a_datenbank
    04_mosquitto
    05_knxd
    06_onewire
