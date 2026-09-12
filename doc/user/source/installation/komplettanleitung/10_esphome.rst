@@ -87,7 +87,7 @@ esphome zu betreiben. Dazu muss der folgende Text in die Datei ``/etc/systemd/sy
     RestartSec=30
     TimeoutStartSec=900
     RestartForceExitStatus=5
-    Environment="PATH=/usr/local/smarthome/venvs/py_esphome/bin:/usr/local/sbin:/usr$
+    Environment="PATH=/usr/local/smarthome/venvs/py_esphome/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
     [Install]
     WantedBy=default.target
