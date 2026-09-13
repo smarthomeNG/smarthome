@@ -597,6 +597,8 @@
     "SELECT_LOG": "Choisir journal",
     "TIMEFRAME": "Plage de temps",
     "SELECT_FILE": "Choisir fichier",
+    "PREVIOUS_FILE": "Fichier journal plus ancien",
+    "NEXT_FILE": "Fichier journal plus récent",
     "LOADCHUNK": "Chargement une section du fichier journal"
   },
   "LOGGERS": {

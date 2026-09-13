@@ -613,6 +613,8 @@
     "SELECT_LOG": "Log auswählen",
     "TIMEFRAME": "Zeitrahmen",
     "SELECT_FILE": "Datei auswählen",
+    "PREVIOUS_FILE": "Ältere Log-Datei",
+    "NEXT_FILE": "Neuere Log-Datei",
     "ACTUAL": "aktuell",
     "LOADCHUNK": "Lade einen Abschnitt der Log-Datei"
   },

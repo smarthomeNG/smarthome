@@ -613,6 +613,8 @@
     "SELECT_LOG": "Select a log",
     "TIMEFRAME": "Timeframe",
     "SELECT_FILE": "Select a file",
+    "PREVIOUS_FILE": "Older logfile",
+    "NEXT_FILE": "Newer logfile",
     "ACTUAL": "actual",
     "LOADCHUNK": "Loading chunk of logfile"
   },
