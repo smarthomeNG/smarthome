@@ -387,7 +387,7 @@ Jedes Plugin kann weitere Abhängigkeiten von Bibliotheken mit sich bringen. Die
 .. code-block:: bash
 
    cd /usr/local/smarthome
-   pip3 install -r plugins/<plugin-name-hier-einsetzen>/requirements.txt --user
+   pip3 install -r plugins/<plugin-name-hier-einsetzen>/requirements.txt
 
 .. note::
 
