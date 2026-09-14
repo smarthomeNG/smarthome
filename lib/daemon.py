@@ -122,19 +122,38 @@ def write_pidfile(pid, pidfile):
     if not os.path.isdir(os.path.dirname(pidfile)):
         os.makedirs(os.path.dirname(pidfile))
 
-    with open(pidfile, 'w+') as fh:
-        fh.write('%s' % pid)
-
+    # 'a+', not 'w+' - the previous code truncated and overwrote the file with
+    # *this* process's own PID before even attempting the lock, so a failed lock
+    # attempt (another instance genuinely running) still left the file on disk
+    # holding this (by-then-exited) process's PID instead of the real running
+    # instance's - corrupting the very record check_sh_is_running() relies on for
+    # its own next check. Locking first and writing only on success means a failed
+    # attempt leaves the file exactly as it was.
     global _pidfile_handle
+    _pidfile_handle = open(pidfile, 'a+')
     try:
-        _pidfile_handle = open(pidfile, 'r')
-        # print(f"_pidfile_handle = '{_pidfile_handle}'")
         # LOCK_EX - acquire an exclusive lock
         # LOCK_NB - non blocking
         portalocker.lock(_pidfile_handle, portalocker.LOCK_EX | portalocker.LOCK_NB)
     # don't close _pidfile_handle or lock is gone!!!
-    except portalocker.AlreadyLocked as e:
-        print('Could not lock pid file: %d (%s)' % (e.errno, e.strerror), file=sys.stderr)
+    except portalocker.LockException:
+        # LockException (AlreadyLocked's own base, see check_sh_is_running() below
+        # for the same catch), not OSError - it carries no .errno/.strerror of its
+        # own, unlike the OSError it wraps as __cause__; accessing those (the
+        # previous code) raised an unrelated AttributeError instead of reporting the
+        # actual, entirely expected "another instance is already running" condition.
+        _pidfile_handle.seek(0)
+        previous_pid = _pidfile_handle.read().strip() or '?'
+        print(
+            f'Could not lock pid file {pidfile} - SmartHomeNG is already running (pid {previous_pid}). Exiting.',
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    _pidfile_handle.seek(0)
+    _pidfile_handle.truncate()
+    _pidfile_handle.write('%s' % pid)
+    _pidfile_handle.flush()
 
 
 def read_pidfile(pidfile):
@@ -172,24 +191,25 @@ def check_sh_is_running(pidfile):
     :rtype: bool
     """
 
-    pid = read_pidfile(pidfile)
-    # print("daemon.check_sh_is_running: pidfile={}, pid={}, psutil.pid_exists(pid)={}".format(pidfile, pid, psutil.pid_exists(pid)))
-    isRunning = False
-    if pid > 0 and psutil.pid_exists(pid):
-        # print("daemon.check_sh_is_running: pid={}, psutil.pid_exists(pid)={}".format(pid, psutil.pid_exists(pid)))
-        try:
-            fh = open(pidfile, 'r')
-            # LOCK_EX - acquire an exclusive lock
-            # LOCK_NB - non blocking
-            portalocker.lock(fh, portalocker.LOCK_EX | portalocker.LOCK_NB)
-            print('daemon.check_sh_is_running: portalocker.lock erfolgreich')
-            # pidfile not locked, so sh is terminated
-        except portalocker.LockException:
-            isRunning = True
-        finally:
-            if fh:
-                fh.close()
-    return isRunning
+    if not os.path.isfile(pidfile):
+        return False
+
+    # The lock is the authoritative check, not the pid recorded in the file's text
+    # content - gating this on psutil.pid_exists(read_pidfile(pidfile)) (the
+    # previous code) meant a stale/incorrect recorded pid (e.g. left behind by a
+    # process that itself failed to acquire the lock and exited) short-circuited
+    # straight to "not running" without ever attempting the real lock check, even
+    # while a different, genuinely running instance still held it.
+    fh = open(pidfile, 'r')
+    try:
+        # LOCK_EX - acquire an exclusive lock
+        # LOCK_NB - non blocking
+        portalocker.lock(fh, portalocker.LOCK_EX | portalocker.LOCK_NB)
+        return False
+    except portalocker.LockException:
+        return True
+    finally:
+        fh.close()
 
 
 def kill(pidfile, waittime=15, pid0_warning=True):

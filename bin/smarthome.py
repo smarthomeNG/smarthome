@@ -262,6 +262,15 @@ if __name__ == '__main__':
         time.sleep(5)
         lib.daemon.kill(PIDFILE, 30, pid0_warning=False)
     elif args.interactive:
+        # Unlike every other mode here, this branch constructs SmartHome() (hence
+        # write_pidfile()) itself, inline, rather than falling through to the
+        # shared check below - so it needs its own copy of that same check, or it
+        # never gets the friendly early message at all, only write_pidfile()'s own
+        # (correct, but less helpful) error once construction is already underway.
+        if lib.daemon.check_sh_is_running(PIDFILE):
+            print('SmartHomeNG already running with pid {}'.format(lib.daemon.read_pidfile(PIDFILE)))
+            print("Run 'smarthome.py -s' to stop it or 'smarthome.py -r' to restart it.")
+            exit(1)
         MODE = 'interactive'
         import code
         import rlcompleter  # noqa
