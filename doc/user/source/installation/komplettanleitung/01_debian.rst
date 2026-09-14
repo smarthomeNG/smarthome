@@ -9,7 +9,7 @@ Debian Linux installieren
 =========================
 
 Die genaue Schritt für Schritt Installation des Betriebsystems wird hier nicht beschrieben, das hier ist der falsche
-Ort dafür. Jedoch werden als Referenz die Paketauswahl während der Installation hier beschrieben.
+Ort dafür. Jedoch wird als Referenz die Paketauswahl während der Installation beschrieben.
 
 Am kompaktesten ist die Netinstall ISO-Datei. Zur Installation auf einem externen Rechner (z.B. NUC o.ä.) kann die
 ISO-Datei am einfachsten mit dem Tool `Balena Etcher <https://etcher.balena.io>`__ auf einen USB-Stick übertragen werden.
@@ -105,6 +105,10 @@ Einloggen via SSH oder an der Konsole
   Putty installieren und umbenennen in Putty.exe.bak. Dann Kitty ins   Verzeichnis vom Putty schreiben
   und umbenennen als Putty.exe. Natürlich ``<ip_des_servers>`` ersetzen durch die IP Adresse oder den
   Namen des neuen SmartHomeNG Servers. **smarthome** ist der Username mit dem man sich anmelden möchte.
+  In neueren Windows 11 Versionen ist der SSH Client im Terminal (Eingabeaufforderung) enthalten und es 
+  erübrigt sich die Installation von Putty/Kitty. Nach Starten der Eingabeaufforderung gibt man wieder
+  ``ssh smarthome@<ip_des_servers>`` ein. In den Einstellungen der Eingabeaufforderung kann man das
+  komfortabel als Profil ablegen und künftig per drop-down Menü aufrufen.
 
 Oder alternativ (z.B. bei einer virtuellen Maschine) direkt an der **Konsole** anmelden.
 
@@ -243,12 +247,22 @@ Den Benutzer **smarthome** in die **sudo** Gruppe hinzufügen:
     sudo usermod -aG sudo smarthome
 
 
+Vorbereitung für die Installation von SmartHomeNG und smartVISU
+---------------------------------------------------------------
+
+Zum Laden der Software-Quellen von SmartHomeNG und smartVISU müssen noch weitere Pakete installiert werden:   
+
+.. code-block:: bash
+
+   sudo apt-get -y install git-core wget unzip
+
+
 Standby/Energiesparmodus abschalten
 -----------------------------------
 
 Standardmäßig gehen Debian Installationen nach einiger Zeit in den Energiesparmodus. Zur Nutzung für SmartHomeNG
 ist das natürlich wenig hilfreich. Durch Editieren der Datei ``/etc/systemd/sleep.conf`` können der Sleep- und der
-Hybernate Moduls abgeschaltet werden:
+Hibernate Modus abgeschaltet werden:
 
 .. code-block:: ini
 
