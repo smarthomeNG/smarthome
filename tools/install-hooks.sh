@@ -116,6 +116,14 @@ if $INSTALL_PLUGINS; then
 PLUGINS_DIR="\$(git rev-parse --show-toplevel)"
 cd "\$PLUGINS_DIR" || exit 1
 
+# Run a private, untracked local hook first if present - git itself only
+# ever invokes the exact name "pre-commit", so "pre-commit-local" is a safe,
+# unused slot for a personal addition that shouldn't be published here.
+LOCAL_HOOK="\$(git rev-parse --git-dir)/hooks/pre-commit-local"
+if [ -x "\$LOCAL_HOOK" ]; then
+    "\$LOCAL_HOOK" "\$@" || exit \$?
+fi
+
 RUFF="${RUFF_BIN}"
 [ -x "\$RUFF" ] || RUFF="ruff"
 
