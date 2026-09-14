@@ -107,7 +107,8 @@ Einloggen via SSH oder an der Konsole
   Namen des neuen SmartHomeNG Servers. **smarthome** ist der Username mit dem man sich anmelden möchte.
   In neueren Windows 11 Versionen ist der SSH Client im Terminal (Eingabeaufforderung) enthalten und es 
   erübrigt sich die Installation von Putty/Kitty. Nach Starten der Eingabeaufforderung gibt man wieder
-  ``ssh smarthome@<ip_des_servers>`` ein. 
+  ``ssh smarthome@<ip_des_servers>`` ein. In den Einstellungen der Eingabeaufforderung kann man das
+  komfortabel als Profil ablegen und künftig per drop-down Menü aufrufen.
 
 Oder alternativ (z.B. bei einer virtuellen Maschine) direkt an der **Konsole** anmelden.
 
