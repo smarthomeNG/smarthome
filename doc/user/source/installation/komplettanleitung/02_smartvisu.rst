@@ -137,7 +137,9 @@ entsprechenden Änderungen vorzunehmen **bevor man weiter macht**.
 Über den Knopf **Config** kommt man ins SmartVISU Interface direkt auf die Config Seite.
 
 Bei I/O Connection **SmartHomeNG** auswählen. Bei Adresse (URL / IP) die IP Adresse des
-Servers oder den DNS Namen eingeben auf dem SmartHomeNG installiert ist.
+Servers eingeben, auf dem SmartHomeNG installiert ist. Alternativ kann der Hostname des Serves 
+angegeben werden. Damit der Treiber dies von einer externen URL unterscheiden kann, muss derselbe
+Hostname im Untermenü **smartVISU Hostname / Proxy Server** als Hostname bekannt gemacht werden.
 Bei Port ist standardmäßig ``2424`` einzugeben.
 
 **ACHTUNG**: Hier **NICHT** ``localhost`` oder ``127.0.0.1``
@@ -145,11 +147,11 @@ eingeben, denn diese Adresse wird vom Client Browser benutzt
 (Javascripts) um aktuelle Daten über einen Websocket direkt von
 SmartHomeNG abzufragen.
 
-Im Tab **Interfaces** muss noch die anzuzeigende Visu Seite eingestellt
-werden. Dort kann unter anderem gewählt werden zwischen verschiedenen
-Demoseiten.
+Im Tab **Benutzeroberfläche** müssen noch die anzuzeigenden Visu-Seiten eingestellt
+werden. Bevor man eigene Seiten erstellt, kann man dort verschiedene Demoseiten ausprobieren,
+die dann als Basis für die eigene Visu dienen können.
 
-Um die Einstellungen zu sichern bitte **Save** auswählen.
+Um die Einstellungen zu sichern bitte **Einstellungen speichern** auswählen.
 
 
 Eigene Visu Seiten anlegen
@@ -162,22 +164,36 @@ kopiert ``cp _template <meineneuevisu>``. Für ``<meineneuevisu>`` sollte **nich
 wenn später die Visu vom SmartHomeNG Plugin **smartvisu** erstellt werden soll. Die manuell erstellten Seiten
 könnten sonst einfach von SmartHomeNG überschrieben werden.
 
-Die Dateien für die SmartVISU sind einfache HTML Dateien. Die einzelnen Bedienelemente wie Buttons, Flips,
-Werteanzeigen (sogenannte Widgets) sind Makros die mit der Makrosprache **TWIG** definiert sind.
-Die HTML können auf eigene Bedürfnisse beliebig angepasst werden.
-Im einzelnen ist das zwar auf der  `Projektseite smartVISU <http://www.smartvisu.de/>`__ nachzulesen,
-es wird aber empfohlen die entsprechende Dokumentation aus GitGub nachzuinstallieren, wo immer die aktuellste Version gepflegt ist (siehe unten).
-Die durch die SmartVISU generierten HTML Seiten sind zwar responsiv aber durchweg statisch.
-Die Kommunikation zwischen SmartHomeNG und der SmartVISU erfolgt über ein Websocket Plugin
-für SmartHomeNG und JavaScript Code der in der HTML Seite eingebunden wird. Der Javascript Code manipuliert dann
-aufgrund der via Websocket übermittelten Daten von Items in SmartHomeNG dynamisch den Inhalt der Webseite (DOM).
+Die Dateien für die SmartVISU sind einfache HTML Dateien, die auf eigene Bedürfnisse beliebig angepasst werden
+können. Die einzelnen Bedienelemente wie Buttons, Flips und Werteanzeigen (sogenannte Widgets) sind Makros, 
+die mit der Makrosprache **TWIG** definiert sind und mit vielen Optionen für die jeweilige Aufgabe parametriert 
+werden können. Als Hilfestellung für die Parametrierung bringt smartVISU eine integrierte interaktive Dokumentation
+in Englisch mit, die über die Systemseite (Zahnradsymbbol in der Kopfzeile) aufgerufen wird. Sie enthält viele
+Widget-Beispiele, deren Funktion live, aber offline getestet werden kann. 
+
+Ebenfalls auf der Systemseite befindet sich der Widget-Assistent. Mit ihm können Widgets live parametriert und 
+online am Backend (z.B. SmartHomeNG) getestet werden. Der eingegebene Code wird automatisch in die Zwischenablage
+kopiert und kann direkt in die HTML-Seiten hineinkopiert werden.
+
+Wer noch tiefer in die Zusammenhänge einsteigen will, kann die sog. "Kurzanleitung"  in Deutscher Sprache verwenden
+(siehe unten). Dort werden für viele Grundfunktionen die Parametrierung der Items in SmartHomeNG gemeinsam mit der 
+Widget-Parametrierung in smartVISU erklärt.
+
+Dokumentation und Kurzanleitung sind zwar auf der `Projektseite smartVISU <http://www.smartvisu.de/>`__ zu finden, 
+es wird aber empfohlen die entsprechende Inline-Dokumentation in der Visu zu verwenden, die immer zur installierten
+Version passt und aktuell ist. 
+
+Die für die SmartVISU generierten HTML Seiten sind zwar responsiv aber durchweg statisch. Die Kommunikation zwischen 
+SmartHomeNG und der SmartVISU erfolgt über das Websocketmodul für SmartHomeNG und JavaScript Code, der automatisch 
+zu den Widgets in die HTML Seite eingebunden wird. Der Javascript Code steuert dann dynamisch das Verhalten der Seite 
+in Abhängigkeit von den via Websocket übermittelten Daten von Items in SmartHomeNG. 
 
 
 SmartVISU Kurzanleitung
 =======================
 
-Die SmartVISU 3.7 bringt die Kurzanleitung im Unterordner pages bereits mit. 
-Für alle älteren SmartVISU Installationen <= 3.6 muß die Kurzanleitung manuell nachinstalliert werden.
+Ab Version v3.7 wird smartVISU die Kurzanleitung im Unterordner pages bereits mitbringen. 
+Für alle älteren SmartVISU Installationen <= v3.6 muß die Kurzanleitung manuell nachinstalliert werden.
 Dazu sind folgende Kommandos auszuführen:
 
 .. code-block:: bash
@@ -190,11 +206,12 @@ Dazu sind folgende Kommandos auszuführen:
 (Bitte wie immer auf den Punkt am Ende des letzten Befehls achten)
 
 
-Der Aufruf der Kurzanleitung kann anschließend im Browser mit dem
-Befehl ``http://<ip-des-servers>/smartvisu/index.php?pages=kurzanleitung`` erfolgen.
+Wenn die Kurzanleitung installiert ist, erscheint automatisch ein entsprechender Menüpunkt auf der
+Systemseite. Alternativ kann die Kurzanleitung im Browser mit det URL 
+``http://<ip-des-servers>/smartvisu/index.php?pages=kurzanleitung`` aufgerufen werden. 
 
 
-SmartHomeNG Plugin **visu\_smartvisu**
+SmartHomeNG Plugin **smartvisu**
 ======================================
 
 .. hint::
@@ -208,13 +225,18 @@ SmartHomeNG Plugin **visu\_smartvisu**
     getestet und in die Zwischenablage kopiert werden können. Der Widget Assistent ist über das
     Systemmenü zu erreichen.
 
-Mit dem Plugin **smartvisu** können aus der Definition der Items in SmartHomeNG automatisch Visuseiten
-erstellt werden. Diese Visu Seiten werden im Verzeichnis ``smarthome`` des ``pages`` Verzeichnisses der
-smartVISU erstellt. Das Plugin unterstützt smartVISU Versionen von v2.8 bis zur aktuellen Version.
+Mit dem Plugin **smartvisu** können aus der Definition der Items in SmartHomeNG automatisch Visu-Seiten
+erstellt werden. Hierzu müssen die benötigten Seitenformate und der benötigte Widget-Code direkt in die 
+Item-Definitionen von SmartHomeNG geschrieben werden. Dies ist im Abschnitt 
+:doc:`Visualisierung </visualisierung/visualisierung>` genau beschrieben. Die so erstellten Visu-Seiten 
+werden im Verzeichnis ``smarthome`` des ``pages`` Verzeichnisses der smartVISU abgelegt. In der Konfiguration
+von smartVISU ist dafür ``Smarthome`` für die Seiten der Benutzeroberfläche einzustellen. 
+
+Das Plugin unterstützt smartVISU Versionen von v2.8 bis zur aktuellen Version.
 
 
 Mischung von generierten und manuell erstellten Seiten
 ------------------------------------------------------
 
 Es ist möglich automatisch generierte und manuell erstellte Seiten zu mischen. Das Vorgehen hierzu ist
-in unter :doc:`Visualisierung </visualisierung/visualisierung>`  beschrieben.
+in unter :doc:`Visualisierung </visualisierung/visualisierung>` beschrieben.
