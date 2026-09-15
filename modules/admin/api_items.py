@@ -116,11 +116,12 @@ class ItemsController(RESTResource, ItemData):
         """
         Read the core item-attribute catalog (modules/core/items.yaml's
         ``item_attributes:`` section) and shape it for the admin frontend:
-        ``{<name>: {"type": ..., "valid_list": [...]}}`` — ``valid_list`` is
-        omitted (not null) for attributes that don't define one, matching
-        the shape api_plugins.py uses for plugin item attributes.
+        ``{<name>: {"type": ..., "valid_list": [...], "valid_min": ..., "valid_max": ...}}``
+        — each of ``valid_list``/``valid_min``/``valid_max``/``description`` is
+        omitted (not null) for attributes that don't define it, matching the
+        shape api_plugins.py uses for plugin item attributes.
 
-        :return: dict of attribute name -> {"type": ..., ["valid_list": ...]}
+        :return: dict of attribute name -> {"type": ..., ["valid_list": ...], ["valid_min": ...], ["valid_max": ...]}
         :rtype: dict
         """
         filename = os.path.join(self._sh.get_basedir(), 'modules', 'core', 'items.yaml')
@@ -133,6 +134,12 @@ class ItemsController(RESTResource, ItemData):
             valid_list = definition.get('valid_list')
             if valid_list is not None:
                 entry['valid_list'] = valid_list
+            valid_min = definition.get('valid_min')
+            if valid_min is not None:
+                entry['valid_min'] = valid_min
+            valid_max = definition.get('valid_max')
+            if valid_max is not None:
+                entry['valid_max'] = valid_max
             description = definition.get('description')
             if description is not None:
                 entry['description'] = description

@@ -483,6 +483,12 @@ class PluginsInfoController(RESTResource):
                     valid_list = x._metadata.get_itemdefinition(a, 'valid_list')
                     if valid_list is not None:
                         a_dict['valid_list'] = valid_list
+                    valid_min = x._metadata.get_itemdefinition(a, 'valid_min')
+                    if valid_min is not None:
+                        a_dict['valid_min'] = valid_min
+                    valid_max = x._metadata.get_itemdefinition(a, 'valid_max')
+                    if valid_max is not None:
+                        a_dict['valid_max'] = valid_max
                     description = x._metadata.get_itemdefinition(a, 'description')
                     if description is not None:
                         a_dict['description'] = description

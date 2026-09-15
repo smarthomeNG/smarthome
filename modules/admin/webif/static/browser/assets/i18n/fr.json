@@ -420,7 +420,10 @@
     "RENAME_FILE_NAME": "Nouveau nom de fichier (sans .py)",
     "RENAME_NAME_IN_USE": "Ce nom de logique est déjà utilisé.",
     "RENAME_FILE_IN_USE": "Ce nom de fichier est déjà utilisé par une autre logique.",
-    "GROUP": "Groupe(s)"
+    "GROUP": "Groupe(s)",
+    "SAVED": "Enregistré",
+    "SAVED_AND_LOADED": "Enregistré et chargé",
+    "RENAMED": "Logique renommée"
   },
   "LOGIC_GROUPS": {
     "GROUP_NAME": "Nom de groupe",
@@ -437,7 +440,8 @@
     "MERGE_SELECT_TARGET": "Fusionner '{{source}}' dans :",
     "MERGE_PREVIEW": "{{added}} membre(s) seront ajoutés à '{{target}}' ({{before}} → {{after}} au total)",
     "MERGE_CONFIRM": "Fusionner",
-    "MERGE_SELECT_PLACEHOLDER": "Sélectionner un groupe…"
+    "MERGE_SELECT_PLACEHOLDER": "Sélectionner un groupe…",
+    "MERGED": "Groupes fusionnés"
   },
   "SCHEDULERS": {
     "ITEM SCHEDULERS": "Planificateurs d'objets",
@@ -536,6 +540,7 @@
     "LOADING": "Chargement du plugin",
     "UNLOADING": "Déchargement du plugin",
     "RELOADING": "Rechargement du plugin",
+    "SAVED": "Configuration enregistrée",
     "SAVE_FAILED": "Échec de l'enregistrement de la configuration. Vérifiez les valeurs et réessayez.",
     "LOAD_FAILED": "Le plugin n'a pas pu être chargé. Vérifiez les paramètres et utilisez 'Redémarrer le core' si le problème persiste.",
     "LOAD_DISABLED": "Le plugin est désactivé - activez-le dans sa configuration avant de le charger.",
@@ -675,7 +680,6 @@
     "NEW_LOGGER": "Nouvelle générateur",
     "NEW_SCENE": "Nouvelle scène",
     "RELOAD_SCENES": "Szenen neu laden",
-    "RELOAD_SCENE": "Charge",
     "NEW_FUNCTION": "Nouvelle bibliothèque",
     "RELOAD_FUNCTIONS": "Tout recharger",
     "RELOAD_FUNCTION": "Charger",

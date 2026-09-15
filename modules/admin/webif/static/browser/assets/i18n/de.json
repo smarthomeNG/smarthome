@@ -437,7 +437,10 @@
     "RENAME_FILE_NAME": "Neuer Dateiname (ohne .py)",
     "RENAME_NAME_IN_USE": "Dieser Logikname ist bereits vergeben.",
     "RENAME_FILE_IN_USE": "Dieser Dateiname wird bereits von einer anderen Logik verwendet.",
-    "RENAME_FILE_CASE_NOOP": "Dateinamen werden in Kleinbuchstaben gespeichert – diese Änderung hat keine Auswirkung."
+    "RENAME_FILE_CASE_NOOP": "Dateinamen werden in Kleinbuchstaben gespeichert – diese Änderung hat keine Auswirkung.",
+    "SAVED": "Gespeichert",
+    "SAVED_AND_LOADED": "Gespeichert und geladen",
+    "RENAMED": "Logik umbenannt"
   },
   "LOGIC_GROUPS": {
     "GROUP_NAME": "Gruppenname",
@@ -454,7 +457,8 @@
     "MERGE_SELECT_TARGET": "'{{source}}' eingliedern in:",
     "MERGE_PREVIEW": "{{added}} Mitglied(er) werden zu '{{target}}' hinzugefügt ({{before}} → {{after}} gesamt)",
     "MERGE_CONFIRM": "Zusammenführen",
-    "MERGE_SELECT_PLACEHOLDER": "Gruppe auswählen…"
+    "MERGE_SELECT_PLACEHOLDER": "Gruppe auswählen…",
+    "MERGED": "Gruppen zusammengeführt"
   },
   "SCHEDULERS": {
     "ITEM SCHEDULERS": "Item Scheduler",
@@ -553,6 +557,7 @@
     "LOADING": "Plugin wird geladen",
     "UNLOADING": "Plugin wird entladen",
     "RELOADING": "Plugin wird neu geladen",
+    "SAVED": "Konfiguration gespeichert",
     "SAVE_FAILED": "Konfiguration konnte nicht gespeichert werden. Bitte Werte prüfen und erneut versuchen.",
     "LOAD_FAILED": "Das Plugin konnte nicht geladen werden. Parameter prüfen und bei anhaltenden Problemen 'Core neu starten' verwenden.",
     "LOAD_DISABLED": "Plugin ist deaktiviert - vor dem Laden in der Konfiguration aktivieren.",
@@ -695,7 +700,6 @@
     "NEW_LOGGER": "weiterer Logger",
     "NEW_SCENE": "Neue Szene",
     "RELOAD_SCENES": "Szenen neu laden",
-    "RELOAD_SCENE": "Laden",
     "NEW_FUNCTION": "Neue Bibliothek",
     "RELOAD_FUNCTIONS": "Alle erneut laden",
     "RELOAD_FUNCTION": "Laden",

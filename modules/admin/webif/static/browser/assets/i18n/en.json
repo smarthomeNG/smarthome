@@ -437,7 +437,10 @@
     "RENAME_NAME_IN_USE": "This logic name is already in use.",
     "RENAME_FILE_IN_USE": "This filename is already used by another logic.",
     "RENAME_FILE_CASE_NOOP": "Filenames are stored in lowercase — this change has no effect.",
-    "GROUP": "Group(s)"
+    "GROUP": "Group(s)",
+    "SAVED": "Saved",
+    "SAVED_AND_LOADED": "Saved and loaded",
+    "RENAMED": "Logic renamed"
   },
   "LOGIC_GROUPS": {
     "GROUP_NAME": "Groupname",
@@ -454,7 +457,8 @@
     "MERGE_SELECT_TARGET": "Merge '{{source}}' into:",
     "MERGE_PREVIEW": "{{added}} member(s) will be added to '{{target}}' ({{before}} → {{after}} total)",
     "MERGE_CONFIRM": "Merge",
-    "MERGE_SELECT_PLACEHOLDER": "Select group…"
+    "MERGE_SELECT_PLACEHOLDER": "Select group…",
+    "MERGED": "Groups merged"
   },
   "SCHEDULERS": {
     "ITEM SCHEDULERS": "Item Schedulers",
@@ -553,6 +557,7 @@
     "LOADING": "Loading plugin",
     "UNLOADING": "Unloading plugin",
     "RELOADING": "Reloading plugin",
+    "SAVED": "Configuration saved",
     "SAVE_FAILED": "Failed to save configuration. Please check the values and try again.",
     "LOAD_FAILED": "The plugin could not be loaded. Check the parameters and use 'Restart Core' if the problem persists.",
     "LOAD_DISABLED": "Plugin is disabled - enable it in its configuration before loading.",
@@ -695,7 +700,6 @@
     "NEW_LOGGER": "additional Logger",
     "NEW_SCENE": "New Scene",
     "RELOAD_SCENES": "Reload scenes",
-    "RELOAD_SCENE": "Load",
     "NEW_FUNCTION": "New library",
     "RELOAD_FUNCTIONS": "Reload all",
     "RELOAD_FUNCTION": "Load",
