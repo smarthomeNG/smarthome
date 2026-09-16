@@ -26,14 +26,14 @@ Gültige Einträge für **sv_page** sind:
 +===============+===============================================================+
 | room          | Die Seite erscheint in der Raum-Navigation der smartVISU      |
 +---------------+---------------------------------------------------------------+
-| seperator     | Fügt einen Separator in die Raum-Navigation ein               |
+| separator     | Fügt einen Separator in die Raum-Navigation ein               |
 +---------------+---------------------------------------------------------------+
 | overview      | Erzeugt eine Seite, die verschiedene Items zusammen gruppiert |
 |               | und fügt diese in die Raum-Navigation ein                     |
 +---------------+---------------------------------------------------------------+
 | category      | Die Seite erscheint in der Category-Navigation der smartVISU  |
 +---------------+---------------------------------------------------------------+
-| cat_seperator | Fügt einen Separator in die Category-Navigation ein           |
+| cat_separator | Fügt einen Separator in die Category-Navigation ein           |
 +---------------+---------------------------------------------------------------+
 | cat_overview  | Erzeugt eine Seite, die verschiedene Items zusammen gruppiert |
 |               | und fügt diese in die Category-Navigation ein                 |
@@ -123,7 +123,7 @@ Example
     first:
      ...
     menu_divider:
-        sv_page: seperator
+        sv_page: separator
         name: Private area of the house
 
     second:

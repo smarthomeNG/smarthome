@@ -33,7 +33,7 @@ In dem Fall gibt es im Internet genügend andere Quellen die Hilfe versprechen.
 
         .. code-block:: bash
 
-           sudo apt-get install apache2 libawl-php php-curl php-fpm php-json php-xml php-mbstring php-zip libapache2-mod-php
+           sudo apt-get install apache2 libawl-php php-curl php-json php-xml php-mbstring php-zip libapache2-mod-php
            # nun zur Sicherheit den apache neu starten
            sudo systemctl restart apache2
 
@@ -70,27 +70,27 @@ In dem Fall gibt es im Internet genügend andere Quellen die Hilfe versprechen.
           sudo chown www-data:www-data /etc/nginx/sites-available/default
 
 
-Sollte es Probleme mit PHP geben(egal ob Apache2 oder NGINX), sind folgende Schritte durchzuführen:
+        Sollte es Probleme mit PHP geben, sind folgende Schritte durchzuführen:
 
-.. code-block:: bash
+        .. code-block:: bash
 
-  sudo mkdir /etc/systemd/system/php-fpm.service.d/
-  sudo nano /etc/systemd/system/php-fpm.service.d/service_php_fix.conf
+          sudo mkdir /etc/systemd/system/php-fpm.service.d/
+          sudo nano /etc/systemd/system/php-fpm.service.d/service_php_fix.conf
 
-Hier ist folgender Inhalt einzutragen. Danach die Datei speichern und schließen.
+        Hier ist folgender Inhalt einzutragen. Danach die Datei speichern und schließen.
 
-.. code-block:: bash
+        .. code-block:: bash
 
-  [Service]
-    RuntimeDirectory=php
-    RuntimeDirectoryMode=755
+          [Service]
+            RuntimeDirectory=php
+            RuntimeDirectoryMode=755
 
-Schließlich sollte PHP und der Webserver neu gestartet werden.
+        Schließlich sollte PHP und der Webserver neu gestartet werden.
 
-.. code-block:: bash
+        .. code-block:: bash
 
-   sudo systemctl restart php-fpm.service
-   sudo systemctl restart nginx ODER sudo systemctl restart apache2
+           sudo systemctl restart php-fpm.service
+           sudo systemctl restart nginx
 
 
 SmartVISU Quellcode laden
@@ -134,18 +134,20 @@ mit der IP oder dem Hostnamen deines SmartVISU Servers ersetzen: ``http://<ip-de
 Bei **Checking your configuration** sollte alles mit einem Haken versehen sein. Falls nicht, sind die
 entsprechenden Änderungen vorzunehmen **bevor man weiter macht**.
 
-Über den Knopf **Config** kommt man ins SmartVISU Interface direkt auf die Config Seite.
+Über den Knopf **Config** kommt man ins smartVISU Interface direkt auf die Config Seite. Diese ist anfangs in Englischer
+Sprache. Unter **User Interface > Language** kann man die Sprache auf Deutsch einstellen und mit **Save Settings** speichern.
+Danach sind alle Menüpunkte und Hilfetexte in Deutscher Sprache (wird im Folgenden vorausgesetzt).
 
-Bei I/O Connection **SmartHomeNG** auswählen. Bei Adresse (URL / IP) die IP Adresse des
-Servers eingeben, auf dem SmartHomeNG installiert ist. Alternativ kann der Hostname des Serves 
-angegeben werden. Damit der Treiber dies von einer externen URL unterscheiden kann, muss derselbe
-Hostname im Untermenü **smartVISU Hostname / Proxy Server** als Hostname bekannt gemacht werden.
-Bei Port ist standardmäßig ``2424`` einzugeben.
+Bei Smarthome/IoT-Datenquelle ist **SmartHomeNG** auszuwählen. Bei der Adresse (Host / IP) muss die IP Adresse des
+Servers eingeben werden, auf dem SmartHomeNG installiert ist. Alternativ kann der Hostname des Serves 
+angegeben werden. Bei Port ist standardmäßig ``2424`` einzugeben und TLS-Port ``2425``.
 
-**ACHTUNG**: Hier **NICHT** ``localhost`` oder ``127.0.0.1``
-eingeben, denn diese Adresse wird vom Client Browser benutzt
-(Javascripts) um aktuelle Daten über einen Websocket direkt von
-SmartHomeNG abzufragen.
+**ACHTUNG**: Hier **NICHT** ``localhost`` oder ``127.0.0.1`` eingeben, denn die Adresse wird vom Client Browser benötigt,
+um aktuelle Daten über einen Websocket direkt von SmartHomeNG abzufragen. 
+
+Soll die Visu über einen Hostnamen anstatt der IP-Adresse aufgerufen werden, muss der Hostnamne im Untermenü 
+**smartVISU Hostname / Proxy Server** als Hostname bekannt gemacht werden, damit der Treiber dies von einer externen URL 
+unterscheiden kann.
 
 Im Tab **Benutzeroberfläche** müssen noch die anzuzeigenden Visu-Seiten eingestellt
 werden. Bevor man eigene Seiten erstellt, kann man dort verschiedene Demoseiten ausprobieren,
@@ -169,21 +171,23 @@ können. Die einzelnen Bedienelemente wie Buttons, Flips und Werteanzeigen (soge
 die mit der Makrosprache **TWIG** definiert sind und mit vielen Optionen für die jeweilige Aufgabe parametriert 
 werden können. Als Hilfestellung für die Parametrierung bringt smartVISU eine integrierte interaktive Dokumentation
 in Englisch mit, die über die Systemseite (Zahnradsymbbol in der Kopfzeile) aufgerufen wird. Sie enthält viele
-Widget-Beispiele, deren Funktion live, aber offline getestet werden kann. 
+Widget-Beispiele, deren Funktionen live, aber offline getestet werden können. 
 
 Ebenfalls auf der Systemseite befindet sich der Widget-Assistent. Mit ihm können Widgets live parametriert und 
 online am Backend (z.B. SmartHomeNG) getestet werden. Der eingegebene Code wird automatisch in die Zwischenablage
-kopiert und kann direkt in die HTML-Seiten hineinkopiert werden.
+kopiert und kann direkt in die HTML-Seiten hineinkopiert werden. Um die volle Funktionalität nutzen zu können, 
+muss SmartHomeNG fertig konfiguriert und gestartet sein und das smartvisu-Plugin muss die Datei "masteritem.json"
+erstellt haben, die dem Assistenten die definierten Items und ihre Typen bekannt macht.
 
 Wer noch tiefer in die Zusammenhänge einsteigen will, kann die sog. "Kurzanleitung"  in Deutscher Sprache verwenden
 (siehe unten). Dort werden für viele Grundfunktionen die Parametrierung der Items in SmartHomeNG gemeinsam mit der 
-Widget-Parametrierung in smartVISU erklärt.
+zugehörigen Widget-Parametrierung in smartVISU erklärt.
 
 Dokumentation und Kurzanleitung sind zwar auf der `Projektseite smartVISU <http://www.smartvisu.de/>`__ zu finden, 
-es wird aber empfohlen die entsprechende Inline-Dokumentation in der Visu zu verwenden, die immer zur installierten
+es wird aber empfohlen die integrierte Dokumentation in der Visu zu verwenden, die immer zur installierten
 Version passt und aktuell ist. 
 
-Die für die SmartVISU generierten HTML Seiten sind zwar responsiv aber durchweg statisch. Die Kommunikation zwischen 
+Die für die SmartVISU generierten HTML Seiten sind zwar responsiv, aber durchweg statisch. Die Kommunikation zwischen 
 SmartHomeNG und der SmartVISU erfolgt über das Websocketmodul für SmartHomeNG und JavaScript Code, der automatisch 
 zu den Widgets in die HTML Seite eingebunden wird. Der Javascript Code steuert dann dynamisch das Verhalten der Seite 
 in Abhängigkeit von den via Websocket übermittelten Daten von Items in SmartHomeNG. 
@@ -192,7 +196,7 @@ in Abhängigkeit von den via Websocket übermittelten Daten von Items in SmartHo
 SmartVISU Kurzanleitung
 =======================
 
-Ab Version v3.7 wird smartVISU die Kurzanleitung im Unterordner pages bereits mitbringen. 
+Ab Version v3.7 bringt smartVISU die Kurzanleitung im Unterordner pages bereits mit. 
 Für alle älteren SmartVISU Installationen <= v3.6 muß die Kurzanleitung manuell nachinstalliert werden.
 Dazu sind folgende Kommandos auszuführen:
 
@@ -227,8 +231,8 @@ SmartHomeNG Plugin **smartvisu**
 
 Mit dem Plugin **smartvisu** können aus der Definition der Items in SmartHomeNG automatisch Visu-Seiten
 erstellt werden. Hierzu müssen die benötigten Seitenformate und der benötigte Widget-Code direkt in die 
-Item-Definitionen von SmartHomeNG geschrieben werden. Dies ist im Abschnitt 
-:doc:`Visualisierung </visualisierung/visualisierung>` genau beschrieben. Die so erstellten Visu-Seiten 
+Item-Definitionen von SmartHomeNG geschrieben werden. Dies ist im
+Abschnitt :doc:`Visualisierung </visualisierung/visualisierung>` genau beschrieben. Die so erstellten Visu-Seiten 
 werden im Verzeichnis ``smarthome`` des ``pages`` Verzeichnisses der smartVISU abgelegt. In der Konfiguration
 von smartVISU ist dafür ``Smarthome`` für die Seiten der Benutzeroberfläche einzustellen. 
 

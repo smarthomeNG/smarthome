@@ -44,4 +44,5 @@ des Items und des Attributes des Items, in dem das entsprechende Widget genutzt 
     2020-09-12  10:37:53 WARNING  plugins.smartvisu    Deprecated widget used in item wohnung.kochen.plot_temperaturen 'sv_widget': 'plot.multiaxis'
     2020-09-12  10:56:03 ERROR    plugins.smartvisu    Removed widget used in item wohnung.kochen.visu_insel 'sv_widget': 'basic.button'
 
-|
+Hilfestellung bei der Korrektur der beanstandeten Widget-Aufrufe gibt die smartVISU Inline-Dokumentation
+unter dem Menüpunkt **misc > Replacing deprecated Widets** und der Templatechecker von smartVISU.
