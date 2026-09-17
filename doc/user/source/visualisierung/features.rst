@@ -338,7 +338,24 @@ die gewünschten Modifikationen vornehmen.
    Alternativ kann die generierte Seite erneut kopiert werden und die Änderungen können dort eingearbeitet werden,
    wie dieses ursprünglich erfolgt ist.
 
-|
+
+.. index:: smartVISU Autogenerierung; Anpassung von Stilen in generierten Seiten
+
+Anpassung von Stilen in generierten Seiten
+------------------------------------------
+
+Das smartisu Plugin speichert bis einschhließlich Version 1.9.0 (SmartHomeNG v1.12.x) die Vorlagen zur Seitengenerierung 
+im smartVISU-Ordner ./dropins. Ab Version 1.9.1 (im auf SmartHomeNG v1.12.2 folgenden Release) wird dazu der 
+Ordner ./dropins/shtemplates verwendet. Setzt man in der Konfiguration des Plugins den
+Parameter ``overwrite_templates: False``, dann werden diese Vorlagen nicht vom Plugin überschrieben und man kann individuelle 
+Änderungen vornehmen, die beim nächsten Neustart von SmartHomeNG in die erstellten Seiten übernommen werden. 
+
+Eigene Änderungen und Ergänzungen an den Stilregeln kann man in einer CSS-Datei im Ordner ./dropins ablegen. Diese kann einen 
+beliebigen Namen haben, wobei der Name "visu.css" üblich ist und in der Doku, sowie in den meisten Forenbeiträgen verwendet wird. 
+In v1.9.0 bringt das smartvisu-Plugin eine eigene visu.css mit und man muss selbst dafür sorgen, dass die eigenen Änderungen
+nicht überschrieben wurden. Ab v1.9.1 ist dieser Konflikt beseitigt. Die vom Plugin gelieferte Datei heißt "shtemplates.css"
+und eigene Änderungen können wieder in der visu.css abgelegt werden.
+
 
 .. toctree::
    :maxdepth: 5

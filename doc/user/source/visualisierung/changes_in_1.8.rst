@@ -24,21 +24,16 @@ das **smartvisu** Plugins zu konfigurieren.
    smartvisu:
        plugin_name: smartvisu
    #    smartvisu_dir: /var/www/smartvisu
-   #    generate_pages: True
-   #    overwrite_templates: Yes
-   #    visu_style: blk
+   #    generate_pages: False
+   #    overwrite_templates: True
+   #    visu_style: std
    #    default_acl: rw
    #    handle_widgets: True
+   #    create_masteritem_file: True
    #    list_deprecated_warnings: False
-
 
 Für die vollständige Dokumentation der Parameter bitte in der Dokumentation des Websocket Moduls und des
 smartVISU Plugins auf den folgenden Seiten dieser Dokumentation nachlesen:
 
-- für das **websocket** unter :doc:`../konfiguration/module/module_websocket`
-- für das **smartvisu** unter :doc:`../plugins/smartvisu/user_doc`
-
-Falls die Funktionalitäten zur automatischen Generierung von smartVISU Seiten und zur Installation
-von Widgets in die smartVISU nicht benötigt werden, ist es hinreichend das Modul **websocket**
-zu konfigurieren.
-
+- für das **websocket** Modul unter :doc:`../konfiguration/module/module_websocket`
+- für das **smartvisu** Plugin unter :doc:`../plugins/smartvisu/user_doc`

@@ -12,7 +12,7 @@ Ein Widget zu einem Plugin hinzufügen
 
 Um Widgets zu einem Plugin hinzuzufügen, muss das Plugin Verzeichnis ein Unterverzeichnis mit dem Namen ``sv_widgets``
 haben, in welchem die Plugins abgelegt werden. Alle Dateien aus diesem Verzeichnis werden beim Start von SmartHomeNG
-in die smartVISU Installation kopiert. Falls
+in die smartVISU Installation kopiert, sofern der Parameter ``handle_widgets: True`` gesetzt ist.
 
 Ab smartVISU v2.9 gibt es in der smartVISU hierzu ein Verzeichnis ``dropins``, wo die Dateien des Widgets abgelegt
 werden. Die eigentlichen Widgets werden in ``dropins/widgets`` kopiert. Ab smartVISU v3.0 und shNG v1.9.2 wird das 
