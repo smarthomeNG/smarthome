@@ -164,6 +164,8 @@ class Protocol:
         except Exception:
             pass
         self.adm_clients[client_addr]['sw'] = ''
+        # deprecated: superseded by modules/admin/api_stream.py - logged to audit remaining callers
+        self.logger.notice(f"Deprecated 'adm' websocket protocol used by {self.build_log_info(client_addr)}")
         self.logger.info(f'Client {self.build_log_info(client_addr)} started')
         self.adm_clients[client_addr]['sw'] = "'some_visu'"
         # client_addr = websocket.remote_address[0] + ':' + str(websocket.remote_address[1])
