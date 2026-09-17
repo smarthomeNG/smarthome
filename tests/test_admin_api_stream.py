@@ -23,6 +23,7 @@ import os
 import sys
 import time
 import unittest
+from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -66,6 +67,7 @@ class _Base(unittest.TestCase):
         self.sh = MockSmartHome()
         module = MagicMock()
         module._sh = self.sh
+        module.shtime = self.sh.shtime
         self.controller = StreamController(module)
         self.controller.items = Items.get_instance()
 
@@ -149,7 +151,7 @@ class TestSeriesSubscriptions(_Base):
 
         self.assertIn('s1', self.entry['series'])
         self.assertEqual(self.entry['series']['s1']['item'], 'a')
-        self.assertEqual(self.entry['series']['s1']['next_poll'], 0.0)
+        self.assertIsNone(self.entry['series']['s1']['next_poll'])
 
     def test_add_series_subscription_without_sid_is_ignored(self):
         self.assertFalse(self.controller._add_series_subscription(self.entry, {'item': 'a'}))
@@ -164,7 +166,8 @@ class TestSeriesSubscriptions(_Base):
 
     def test_poll_due_series_enqueues_reply_and_advances_next_poll(self):
         item = _item(self.sh, 'a')
-        item.series = MagicMock(return_value={'update': time.time() + 100, 'series': [[0, 1]]})
+        update_at = self.sh.shtime.now() + timedelta(seconds=100)
+        item.series = MagicMock(return_value={'update': update_at, 'series': [[0, 1]]})
         connection_id = 'conn-1'
         self.controller._streams[connection_id] = self.entry
         self.controller._add_series_subscription(
@@ -178,7 +181,8 @@ class TestSeriesSubscriptions(_Base):
         self.assertEqual(event['sid'], 's1')
         self.assertEqual(event['series'], [[0, 1]])
         item.series.assert_called_once_with('avg', '48h', 'now', 10)
-        self.assertGreater(self.entry['series']['s1']['next_poll'], time.time())
+        self.assertEqual(self.entry['series']['s1']['next_poll'], update_at)
+        self.assertGreater(self.entry['series']['s1']['next_poll'], self.sh.shtime.now())
 
     def test_poll_due_series_skips_not_yet_due(self):
         item = _item(self.sh, 'a')
@@ -186,7 +190,7 @@ class TestSeriesSubscriptions(_Base):
         connection_id = 'conn-1'
         self.controller._streams[connection_id] = self.entry
         self.controller._add_series_subscription(self.entry, {'sid': 's1', 'item': 'a'})
-        self.entry['series']['s1']['next_poll'] = time.time() + 100
+        self.entry['series']['s1']['next_poll'] = self.sh.shtime.now() + timedelta(seconds=100)
 
         self.controller._poll_due_series(connection_id, self.entry['queue'])
 

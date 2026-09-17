@@ -26,6 +26,7 @@ import secrets
 import threading
 import time
 import uuid
+from datetime import timedelta
 
 import cherrypy
 
@@ -220,7 +221,7 @@ class StreamController(RESTResource):
             'start': spec.get('start'),
             'end': spec.get('end'),
             'count': spec.get('count'),
-            'next_poll': 0.0,
+            'next_poll': None,
         }
         return True
 
@@ -232,9 +233,9 @@ class StreamController(RESTResource):
             entry = self._streams.get(connection_id)
             series_items = list(entry['series'].items()) if entry else []
 
-        now = time.time()
+        now = self.module.shtime.now()
         for sid, series_params in series_items:
-            if series_params['next_poll'] > now:
+            if series_params['next_poll'] is not None and series_params['next_poll'] > now:
                 continue
             item = self.items.return_item(series_params['item'])
             if item is None or not hasattr(item, 'series'):
@@ -251,7 +252,7 @@ class StreamController(RESTResource):
 
             with self._lock:
                 if sid in entry['series']:
-                    entry['series'][sid]['next_poll'] = reply.get('update', now + 5)
+                    entry['series'][sid]['next_poll'] = reply.get('update', now + timedelta(seconds=5))
             # only the datapoint array crosses the wire - reply's other keys are internal cadence bookkeeping
             q.put({'type': 'series', 'sid': sid, 'series': reply.get('series')})
 
