@@ -353,17 +353,7 @@ Parameter ``overwrite_templates: False``, dann werden diese Vorlagen nicht vom P
 Eigene Änderungen und Ergänzungen an den Stilregeln kann man in einer CSS-Datei im Ordner ./dropins ablegen. Diese kann einen 
 beliebigen Namen haben, wobei der Name "visu.css" üblich ist und in der Doku, sowie in den meisten Forenbeiträgen verwendet wird. 
 In v1.9.0 bringt das smartvisu-Plugin eine eigene visu.css mit und man muss selbst dafür sorgen, dass die eigenen Änderungen
-nicht überschrieben wurden. Ab v1.9.1 ist dieser Konflikt beseitigt. Die vom Plugin gelieferte Datei heißt "shtemplates.css"
+nicht überschrieben wurden. Ab v1.9.1 ist dieser Konflikt beseitigt. Die vom Plugin gelieferte Datei heißt "shstylees.css"
 und eigene Änderungen können wieder in der visu.css abgelegt werden.
 
-
-.. toctree::
-   :maxdepth: 5
-   :hidden:
-   :titlesonly:
-
-   deprecated_widgets
-   top_navigation
-
-|
 
