@@ -566,7 +566,13 @@
     "INVALID_HOSTNAME": "is not a valid hostname or IP address",
     "LOADED": "Plugin loaded",
     "UNLOADED": "Plugin unloaded",
-    "RELOADED": "Plugin reloaded"
+    "RELOADED": "Plugin reloaded",
+    "STARTING": "Starting plugin",
+    "STOPPING": "Stopping plugin",
+    "STARTED": "Plugin started",
+    "STOPPED_OK": "Plugin stopped",
+    "START_FAILED": "The plugin could not be started.",
+    "STOP_FAILED": "The plugin could not be stopped."
   },
   "SCENES": {
     "SCENE": "Scene",

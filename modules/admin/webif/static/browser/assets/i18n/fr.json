@@ -549,7 +549,13 @@
     "INVALID_HOSTNAME": "n'est pas un nom d'hôte ou une adresse IP valide",
     "LOADED": "Plugin chargé",
     "UNLOADED": "Plugin déchargé",
-    "RELOADED": "Plugin rechargé"
+    "RELOADED": "Plugin rechargé",
+    "STARTING": "Démarrage du plugin",
+    "STOPPING": "Arrêt du plugin",
+    "STARTED": "Plugin démarré",
+    "STOPPED_OK": "Plugin arrêté",
+    "START_FAILED": "Le plugin n'a pas pu être démarré.",
+    "STOP_FAILED": "Le plugin n'a pas pu être arrêté."
   },
   "SCENES": {
     "SCENE": "Scène",
