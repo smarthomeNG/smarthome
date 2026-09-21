@@ -152,6 +152,24 @@
 	}
   initVariables();
 </script>
+<script>
+	// Restores the tab last active before a reload, overriding the server-rendered start_tab.
+	function restoreActiveTab() {
+		let storedTab = getCookie("activetab");
+		if (storedTab) {
+			let triggerEl = document.querySelector('#webif-tabs a[data-bs-target="#' + storedTab + '"]');
+			if (triggerEl) {
+				window.activeTab = storedTab;
+				bootstrap.Tab.getOrCreateInstance(triggerEl).show();
+			}
+		}
+	}
+	$(document).on("shown.bs.tab", "#webif-tabs a[data-bs-toggle='tab']", function (event) {
+		window.activeTab = $(event.target).attr("data-bs-target").substring(1);
+		setCookie("activetab", window.activeTab, 3650, window.pluginname);
+	});
+	$(document).ready(restoreActiveTab);
+</script>
 <script src="/gstatic/js/smarthomeng_pageupdate.js"></script>
 {%- endblock scripts %}
 
