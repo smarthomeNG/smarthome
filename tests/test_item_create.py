@@ -12,10 +12,14 @@ create_item():
   nested item under an existing parent (no sh binding, not in
   Items._children, but registered and findable)
   nested config (grandchildren) are created and fully initialized too
+  a 'struct' attribute (top-level or in a nested child config) is
+  expanded, and the persisted yaml keeps the struct reference unexpanded
 """
 
+import collections
 import os
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -26,7 +30,10 @@ common.register_shng_log_levels()
 
 import lib.item.item
 import lib.item.items
+import lib.shyaml as shyaml
+from lib.constants import YAML_FILE
 from lib.item.items import Items
+from lib.item.structs import Structs
 from tests.mock.core import MockSmartHome
 
 
@@ -39,6 +46,8 @@ def _reset():
     Items.plugin_attributes = {}
     Items.plugin_attribute_prefixes = {}
     Items.plugin_prefixes_tuple = None
+    Structs._struct_definitions = collections.OrderedDict()
+    Structs._finalized_structs = []
 
 
 def _make_sh():
@@ -143,6 +152,63 @@ class TestCreateItemWithNestedConfig(_Base):
 
         self.assertIsNotNone(grandchild)
         self.assertIn('items.top.sub', self.recorder.added_names())
+
+
+def _register_widget_struct(sh):
+    """A struct with a top-level attribute and a nested child item, for the struct-expansion tests below."""
+    struct = collections.OrderedDict({'type': 'num', 'sub': collections.OrderedDict({'type': 'bool'})})
+    sh.items.structs.add_struct_definition('', 'test.widget', struct)
+
+
+class TestCreateItemStructExpansion(_Base):
+    def test_toplevel_struct_attribute_is_expanded(self):
+        _register_widget_struct(self.sh)
+
+        item = self.sh.items.create_item('x', {'struct': 'test.widget'}, persist=False)
+
+        self.assertEqual(item.type(), 'num')
+        sub = self.sh.items.return_item('x.sub')
+        self.assertIsNotNone(sub)
+        self.assertEqual(sub.type(), 'bool')
+
+    def test_struct_attribute_on_nested_child_config_is_expanded(self):
+        _register_widget_struct(self.sh)
+
+        self.sh.items.create_item('top', {'type': 'num', 'child': {'struct': 'test.widget'}}, persist=False)
+
+        child = self.sh.items.return_item('top.child')
+        grandchild = self.sh.items.return_item('top.child.sub')
+        self.assertIsNotNone(child)
+        self.assertEqual(child.type(), 'num')
+        self.assertIsNotNone(grandchild)
+        self.assertEqual(grandchild.type(), 'bool')
+
+    def test_config_without_struct_keeps_attribute_value_types(self):
+        # no 'struct' anywhere must skip the stringifying expansion machinery entirely
+        item = self.sh.items.create_item('plain', {'type': 'bool', 'custom_flag': True}, persist=False)
+
+        self.assertIs(item.conf['custom_flag'], True)
+
+
+class TestCreateItemStructPersistence(_Base):
+    def setUp(self):
+        super().setUp()
+        self.tmpdir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmpdir.cleanup)
+        self.sh._items_dir = self.tmpdir.name
+        self.sh._created_items_file = 'created'
+
+    def test_persisted_yaml_keeps_struct_reference_unexpanded(self):
+        _register_widget_struct(self.sh)
+
+        self.sh.items.create_item('x', {'struct': 'test.widget'})
+
+        yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, 'created' + YAML_FILE))
+        yf.load()
+        data = yf.data
+        self.assertEqual(data['x']['struct'], 'test.widget')
+        # struct content must stay unexpanded on disk - only the live Item gets it
+        self.assertNotIn('sub', data['x'])
 
 
 if __name__ == '__main__':

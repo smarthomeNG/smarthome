@@ -52,6 +52,7 @@ They can be used the following way: To call eg. **get_toplevel_items()**, use th
 
 """
 
+import collections
 import copy
 import logging
 import os
@@ -87,6 +88,42 @@ def _flatten_with_children(item):
     yield item
     for child in item.return_children():
         yield from _flatten_with_children(child)
+
+
+def _to_ordereddict(value):
+    """
+    Recursively convert a plain dict/list structure into collections.OrderedDict.
+
+    lib.config's struct-expansion machinery (search_for_struct_in_items() /
+    merge()) type-checks for collections.OrderedDict specifically and silently
+    drops plain dict values instead of recursing into them - this normalizes
+    a caller-supplied config dict (as accepted by Items.create_item()) into
+    the shape that machinery expects.
+
+    :param value: value to convert (dict, list, or any other value passed through unchanged)
+    :return: OrderedDict-converted equivalent of *value*
+    """
+    if isinstance(value, dict):
+        return collections.OrderedDict((k, _to_ordereddict(v)) for k, v in value.items())
+    if isinstance(value, list):
+        return [_to_ordereddict(v) for v in value]
+    return value
+
+
+def _config_has_struct_ref(config):
+    """
+    Return True if *config*, or any nested child-item dict within it, contains
+    a 'struct' attribute.
+
+    :param config: item attribute configuration dict to scan
+    :type config: dict
+    :rtype: bool
+    """
+    if not isinstance(config, dict):
+        return False
+    if 'struct' in config:
+        return True
+    return any(_config_has_struct_ref(v) for v in config.values() if isinstance(v, dict))
 
 
 class Items:
@@ -329,6 +366,13 @@ class Items:
         item — same as calling create_item() on each of them individually
         with an empty config.
 
+        A 'struct' attribute in *config* (or in any nested child-item dict
+        within it) is expanded against the live struct definitions, the
+        same as for items loaded from items.yaml at startup. The
+        persisted YAML (when *persist* is True) keeps the struct
+        reference unexpanded, so it stays in sync if the struct
+        definition itself changes before the next restart.
+
         :param path: Full path of the item to create
         :param config: Attribute configuration dict for the item
         :param parent: Item under which to create this item; None to
@@ -387,6 +431,9 @@ class Items:
             lib.config._add_filenames_to_config({'_': item_config}, filename)
             self._write_to_yaml_file(filename, path, config)
 
+        if _config_has_struct_ref(item_config):
+            item_config = self._expand_struct_refs(path, item_config)
+
         item = self._construct_and_link(path, item_config, parent=parent)
         if item is None:
             return None
@@ -400,6 +447,41 @@ class Items:
             new_item._init_run()
 
         return item
+
+    def _expand_struct_refs(self, path, config):
+        """
+        Expand every 'struct' attribute in *config* (including ones nested
+        in child-item dicts within it), the same way lib.config does for
+        items loaded from items.yaml at startup.
+
+        Resolves against self.structs._struct_definitions - a live dict, so
+        a struct registered by a plugin (add_struct_definition()) after
+        startup is picked up too, not just structs known at boot time.
+
+        Only called by create_item() when _config_has_struct_ref(config) is
+        True: the underlying lib.config.merge() machinery stringifies
+        scalar attribute values as a side effect (matching how normal
+        YAML-loaded item configs already behave, since YAML text is
+        inherently string-based and Item does its own type-casting from
+        the 'type' attribute) - skipping this entirely for the common
+        no-struct case keeps create_item() from changing the type of
+        values (e.g. a Python bool staying a bool) for callers who never
+        asked for struct expansion.
+
+        :param path: Full dotted path of the item *config* is for
+        :param config: Attribute configuration dict to expand
+        :type path: str
+        :type config: dict
+        :return: *config* with every 'struct' reference expanded
+        :rtype: collections.OrderedDict
+        """
+        parent_path, _sep, leaf_name = path.rpartition('.')
+        wrapped = collections.OrderedDict({leaf_name: _to_ordereddict(config)})
+        result = collections.OrderedDict()
+        lib.config.search_for_struct_in_items(
+            wrapped, self.structs._struct_definitions, result, source_name='create_item', parent=parent_path
+        )
+        return result.get(leaf_name, collections.OrderedDict())
 
     @staticmethod
     def _load_yaml_file(yf, filename):
