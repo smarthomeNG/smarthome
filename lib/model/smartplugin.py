@@ -31,8 +31,10 @@ import logging
 import os
 import threading
 import asyncio
+import concurrent.futures
+import functools
 import time
-from typing import Coroutine, Any
+from typing import Callable, Collection, Coroutine, Any
 
 
 class SmartPlugin(SmartObject, Utils):
@@ -1324,6 +1326,44 @@ class SmartPlugin(SmartObject, Utils):
         #         self.logger.exception(f"run_asyncio_coro: Exception {ex} getting coro result ({coro=}, loop={self._asyncio_loop})")
         return result
 
+    def submit_asyncio_coro(
+        self, coro: Coroutine, on_error: Callable[[BaseException], None] | None = None
+    ) -> concurrent.futures.Future | None:
+        """
+        Schedule a coroutine in the eventloop of the plugin without waiting for its result
+
+        Non-blocking counterpart to run_asyncio_coro() for fire-and-forget work from the
+        thread-operated part of the plugin, e.g. update_item(), where the calling thread (often
+        another plugin's receive thread or a scheduler worker) must not be held up until the
+        device answers. Coroutines submitted from one thread start in submission order.
+
+        :param coro: A coroutine that should be run in the eventloop of the asyncio-thread
+        :param on_error: Called with the exception if the coroutine raises; if omitted, the exception is logged
+
+        :return: A future tracking the coroutine, or None if no eventloop is active (the coroutine is closed then)
+        """
+        if self._asyncio_loop is None:
+            self.logger.error(f"submit_asyncio_coro: Cannot run coro '{coro}' because no eventloop is active")
+            coro.close()
+            return None
+        future = asyncio.run_coroutine_threadsafe(coro, self._asyncio_loop)
+        future.add_done_callback(functools.partial(self._report_submitted_coro_error, on_error))
+        return future
+
+    def _report_submitted_coro_error(
+        self, on_error: Callable[[BaseException], None] | None, future: concurrent.futures.Future
+    ) -> None:
+        """Done-callback for submit_asyncio_coro(): hands a raised exception to on_error, or logs it."""
+        if future.cancelled():
+            return
+        ex = future.exception()
+        if ex is None:
+            return
+        if on_error is not None:
+            on_error(ex)
+        else:
+            self.logger.error(f'submit_asyncio_coro: coroutine raised {ex!r}', exc_info=ex)
+
     async def wait_for_asyncio_termination(self) -> None:
         """
         Wait for the command to stop the plugin_coro
@@ -1461,9 +1501,16 @@ class SmartPluginWebIf:
     def __init__(self, **kwargs):
         pass
 
-    def init_template_environment(self):
+    def init_template_environment(self, autoescape_templates: Collection[str] = ()):
         """
         Initialize the Jinja2 template engine environment
+
+        HTML autoescaping is opt-in per template name: only the templates listed in
+        *autoescape_templates* (typically the plugin's own, e.g. ``('index.html',)``) escape their
+        output. Global templates such as base_plugin.html stay unescaped, since they render
+        HTML-carrying variables (tab titles, ...) as-is.
+
+        :param autoescape_templates: Names of the templates that autoescape their output
 
         :return: Jinja2 template engine environment
         :rtype: object
@@ -1475,7 +1522,10 @@ class SmartPluginWebIf:
 
         mytemplates = self.plugin.path_join(self.webif_dir, 'templates')
         globaltemplates = self.plugin.mod_http.gtemplates_dir
-        tplenv = Environment(loader=FileSystemLoader([mytemplates, globaltemplates]))
+        escaped = frozenset(autoescape_templates)
+        tplenv = Environment(
+            loader=FileSystemLoader([mytemplates, globaltemplates]), autoescape=lambda name: name in escaped
+        )
 
         tplenv.globals['isfile'] = self.is_staticfile
         tplenv.globals['_'] = self.translate  # use translate method of webinterface class
