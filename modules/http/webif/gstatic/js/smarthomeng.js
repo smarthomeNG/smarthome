@@ -80,14 +80,41 @@ function humanBytes(bytes) {
    return (Number.isInteger(rounded) ? rounded : rounded) + ' ' + unit;
 }
 
+/**
+ * escapes a value for use as element content - the serialization the browser itself uses for a text node
+ * @param {*} text value to escape
+ * @return {string} the value with &, < and > escaped
+ */
+function shngEscapeHtml(text) {
+    return $('<div>').text(text.toString()).html();
+}
+
+/**
+ * normalizes markup to the browser's own serialization of it, without loading or running anything it contains
+ * @param {string} markup HTML markup
+ * @return {string} the markup as the browser serializes it
+ */
+function shngNormalizeHtml(markup) {
+    const template = document.createElement('template');
+    template.innerHTML = markup;
+    return template.innerHTML;
+}
+
  /**
-  * inserts text into a dom element. To be used for ajax updates
+  * inserts a value into a dom element or a datatables cell. To be used for ajax updates
+  *
+  * The value is inserted as text: markup in it is shown literally, never interpreted. Set as_html only for
+  * markup the web interface builds itself (icons, links). Values from items, devices or any other external
+  * source must not be passed with as_html - they could inject script into the admin's browser. Values
+  * must be sent unescaped; a value escaped by the plugin is shown with its entities visible.
+  *
   * @param {string} id of the dom element
-  * @param {string} text to insert
-  * @param {string} table id of datatable
-  * @param {number} duration of highlight effect in seconds (integer)
+  * @param {*} text value to insert
+  * @param {string} table_id id of datatable (null for a plain element)
+  * @param {number} highlight duration of highlight effect in seconds (integer)
+  * @param {boolean} as_html insert the value as HTML markup instead of text
 */
-function shngInsertText (id, text, table_id=null, highlight=0) {
+function shngInsertText (id, text, table_id=null, highlight=0, as_html=false) {
 
     function sanitize(text, spaces=false, quotes=false, entities=true, trim=true, normalize=true) {
       text = text.toString();
@@ -104,32 +131,32 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
       return;
     }
     text = text.toString();
+    // what the element or cell holds as HTML: the escaped text, or the markup as the browser serializes it
+    const markup = as_html ? shngNormalizeHtml(text) : shngEscapeHtml(text);
     if (table_id == null) {
-      element = $("#" + $.escapeSelector(id));
+      let element = $("#" + $.escapeSelector(id));
       if (highlight > 0) {
-        let old_text = sanitize($('#' + $.escapeSelector(id)).text(), true);
+        let old_text = sanitize(element.html(), true);
         let alternative_old_text = sanitize(old_text, false, true);
-        let new_content = (old_text !== sanitize(text)) && (alternative_old_text !== sanitize(text));
+        let new_content = (old_text !== sanitize(markup)) && (alternative_old_text !== sanitize(markup));
         // compare old value of cell with new one and highlight
         if (old_text != "..." && new_content) {
           startAnimation(element, highlight);
         }
       }
-      // update HTML element
-      element.html(text);
+      element.html(markup);
     }
     else {
       try {
         // check if cell id exists on current page
-        test = $('#' + table_id).DataTable().cell( $("#" + $.escapeSelector(id)), { page:'current'}).data();
+        let test = $('#' + table_id).DataTable().cell( $("#" + $.escapeSelector(id)), { page:'current'}).data();
         if ( test ) {
           // fix HTML entities and quotation
           let old_text = sanitize($('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(), true);
           let alternative_old_text = sanitize(old_text, false, true);
-          let new_content = (old_text !== sanitize(text)) && (alternative_old_text !== sanitize(text));
+          let new_content = (old_text !== sanitize(markup)) && (alternative_old_text !== sanitize(markup));
 
           if (highlight > 0) {
-            element = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).node();
             // compare old value of cell with new one and highlight
             if (old_text != "..." && new_content) {
               startAnimation($('#' + $.escapeSelector(id)), highlight);
@@ -138,7 +165,7 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
           // update datatable cell
           if (new_content) {
             let table = $('#' + table_id).DataTable();
-            table.cell( $('#' + $.escapeSelector(id)) ).data(text).invalidate();
+            table.cell( $('#' + $.escapeSelector(id)) ).data(markup).invalidate();
             table.responsive.rebuild();
             table.responsive.recalc();
             console.log("Updating table because new cell data found: " + text + " for id " + id + ", old text: " + old_text);

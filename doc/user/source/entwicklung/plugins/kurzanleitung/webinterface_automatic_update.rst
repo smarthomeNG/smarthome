@@ -222,6 +222,17 @@ Die Parameter der shngInsertText-Funktion sind dabei wie folgt:
 
 #. (optional) Möchte man beim Ändern eines Werts einen Highlight-Effekt, kann die Dauer in Sekunden angegeben werden
 
+#. (optional) ``true``, wenn der Wert HTML-Markup ist, das dargestellt werden soll (Standard: ``false``)
+
+.. important::
+
+    Der Wert wird standardmäßig als Text eingefügt: enthaltenes Markup wird wörtlich angezeigt und nie
+    interpretiert. Das 5. Argument ``true`` ist nur für Markup gedacht, das das Webinterface selbst
+    erzeugt (Icons, Links, Buttons). Werte aus Items, von Geräten oder anderen externen Quellen dürfen nicht
+    als HTML eingefügt werden - sie könnten sonst Script im Browser des Admins ausführen. Werte werden
+    unmaskiert an die Seite geschickt; ein vom Plugin bereits HTML-maskierter Wert (``&amp;``, ``&lt;``)
+    würde mit sichtbaren Entities angezeigt.
+
 
 .. code-block:: html+jinja
 
