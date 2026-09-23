@@ -183,6 +183,16 @@ class TestCreateItemStructExpansion(_Base):
         self.assertIsNotNone(grandchild)
         self.assertEqual(grandchild.type(), 'bool')
 
+    def test_struct_attribute_on_a_non_toplevel_item_is_expanded(self):
+        _register_widget_struct(self.sh)
+        self.sh.items.create_item('top', {'type': 'foo'}, persist=False)
+
+        item = self.sh.items.create_item('top.x', {'struct': 'test.widget', 'custom': 'kept'}, persist=False)
+
+        self.assertEqual(item.type(), 'num')
+        self.assertEqual(item.conf['custom'], 'kept')
+        self.assertIsNotNone(self.sh.items.return_item('top.x.sub'))
+
     def test_config_without_struct_keeps_attribute_value_types(self):
         # no 'struct' anywhere must skip the stringifying expansion machinery entirely
         item = self.sh.items.create_item('plain', {'type': 'bool', 'custom_flag': True}, persist=False)

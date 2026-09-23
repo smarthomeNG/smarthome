@@ -481,7 +481,11 @@ class Items:
         lib.config.search_for_struct_in_items(
             wrapped, self.structs._struct_definitions, result, source_name='create_item', parent=parent_path
         )
-        return result.get(leaf_name, collections.OrderedDict())
+        # the expanded config is nested under the item's full path, parents included
+        expanded = result
+        for name in path.split('.'):
+            expanded = expanded.get(name, collections.OrderedDict())
+        return expanded
 
     @staticmethod
     def _load_yaml_file(yf, filename):
