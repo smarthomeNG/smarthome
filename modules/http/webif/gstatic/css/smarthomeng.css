@@ -49,6 +49,14 @@
      the database plugin, rides on .dropdown-menu for its popup chrome) - retarget for consistency
      with the rest of the page instead of a mismatched grey. */
   --bs-dropdown-bg: var(--shng-page-bg);
+  /* DataTables' own dark-mode CSS (datatables.min.css) gates --dt-html-background behind
+     :root.dark, a class shng never sets - shng's dark mode is [data-bs-theme=dark] instead, so
+     that variable is left at DataTables' light-mode default (white). Most DataTables chrome never
+     hits this since it inherits color from its container, but FixedHeader's floating header clone
+     is a detached table pinned to <body> and paints this variable as its own background directly -
+     without this override it stays white while its text still follows the (correctly dark) text
+     color, becoming close to unreadable. */
+  --dt-html-background: var(--shng-page-bg);
 }
 
 /* This vendored Bootstrap build has no plain body{} rule at all (only *-body sub-component
@@ -61,6 +69,13 @@ html, body {
   background-color: var(--bs-body-bg);
   color: var(--bs-body-color);
   min-height: 100%;
+}
+
+/* DataTables' own default has no width/spacing rule for the length-menu select - it renders
+   flush against the "entries per page" label with barely room for its own option text. */
+.dt-length select {
+  min-width: 70px;
+  margin-right: 6px;
 }
 
 /* #webif-tabs used a hardcoded .text-dark class for neutral, theme-independent tab-link text -

@@ -59,11 +59,21 @@ $(window).bind('datatables_defaults', function() {
 						}
 					});
 					// update content on searching - if activated
-					$(".dataTables_filter").change( function () {
+					$(".dt-search").change( function () {
 						if (window.initial_update == 'true'){
 							console.log("Instant value update after search filter");
 							shngGetUpdatedData();
 						}
+					});
+					// pageResize can compute a page length (e.g. "8 rows fit") that isn't one of
+					// the static lengthMenu options, so the <select> can't show it as selected -
+					// re-show "Auto" whenever this table is still in auto mode, regardless of the
+					// actual current row count. DataTables' own length.dt doesn't bubble, so this
+					// has to bind directly per table rather than delegate from a shared ancestor.
+					$(this).on('length.dt', function () {
+						let tableId = $(this).attr('id');
+						if (!window.pageLength[tableId] || window.pageLength[tableId].pagelength != 1) return;
+						$(this).closest('.dt-container').find('.dt-length select').val('1');
 					});
 					// Warning if first column is not empty (for responsive + sign)
 					td_content = $(this).find('tbody').find('td:first-child').html();
@@ -74,10 +84,14 @@ $(window).bind('datatables_defaults', function() {
 					this.api().responsive.recalc();
 					initialized = true;
 					$(this).show();
-					// update pagelength and save cookie
-					let tab = $(this).closest('.tab-pane').attr('id');
-					window.pageLength[tab]['tableid'] = this.attr('id');
-					setCookie("pagelength", window.pageLength, 30, window.pluginname);
+					// Seed this table's remembered page length the first time it's ever seen -
+					// keyed by table id (see base_plugin.html) so tabs with more than one
+					// DataTable don't clobber each other's entry.
+					let tableId = this.attr('id');
+					if (!window.pageLength[tableId]) {
+						window.pageLength[tableId] = {pagelength: window.defaultPageLength};
+						setCookie("pagelength", window.pageLength, 3650, window.pluginname);
+					}
 
 					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false') {
 						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after init is " + window.row_count);}, 200);
@@ -98,7 +112,7 @@ $(window).bind('datatables_defaults', function() {
 				preDrawCallback: function (oSettings) {
 
 					// scroll
-        	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();
+        	pageScrollPos = $(oSettings.nTableWrapper).find('.dt-scroll-body').scrollTop();
 					bodyScrollPos = $('html, body').scrollTop();
 
     		},
@@ -113,13 +127,13 @@ $(window).bind('datatables_defaults', function() {
 
 					console.log("draw datatable " + oSettings.sTableId + " in tab " + tab + " with pagelength " + this.api().page.len());
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
-						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+						 $(oSettings.nTableWrapper).find('.dt-paging').hide();
 					} else {
-							$(oSettings.nTableWrapper).find('.dataTables_paginate').show();
-							$(oSettings.nTableWrapper).find('.paginate_button').on('click', function(){
+							$(oSettings.nTableWrapper).find('.dt-paging').show();
+							$(oSettings.nTableWrapper).find('.dt-paging-button').on('click', function(){
 								// scroll to top on page change
 							  $('html, body').animate({
-								  scrollTop: $('#'+oSettings.sTableId).offset().top - top_offset - $(oSettings.nTableWrapper).find('.dataTables_filter').outerHeight() - 10
+								  scrollTop: $('#'+oSettings.sTableId).offset().top - top_offset - $(oSettings.nTableWrapper).find('.dt-search').outerHeight() - 10
 							  }, 'slow');
 	 							 console.log("Instant value update is " + window.initial_update);
 	 							 if (window.initial_update == 'true') {

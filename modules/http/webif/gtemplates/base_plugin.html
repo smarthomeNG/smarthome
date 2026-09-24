@@ -16,49 +16,40 @@
 {{ super() }}
 <script src="/gstatic/js/smarthomeng_cookies.js"></script>
 <script>
-	$(document).on("change", ".dataTables_length select", function(){
-	          var selectedVal = $(this).val();
-						var tab = $(this).closest('.tab-pane').attr('id');
-	          window.pageLength[tab]['pagelength'] = parseInt(selectedVal);
-						setCookie("pagelength", window.pageLength, 3650, window.pluginname);
-						if (selectedVal == 1)
-						{
-							window.toggle = window.toggle * -1 + 0.1;
-							$(window).resize();
-							this.options[this.selectedIndex].disabled = true;
-							console.log("Triggering resize window because pagelength in tab " + tab + " is set to " + selectedVal);
-						}
-						else {
-							this.options[0].disabled = false;
-						}
-	    });
+	// window.pageLength is keyed by table id, not tab id - a tab can host more than one
+	// DataTable (e.g. the database plugin's audit tab), and a tab-keyed map made two tables
+	// silently clobber each other's remembered page length.
+	//
+	// Capture phase, and stopImmediatePropagation(): DataTables 2.3.7's own length-menu change
+	// handler corrupts pagination (_iDisplayLength/_iDisplayStart end up null, "Showing NaN to
+	// NaN") when the new length is 1 and the table isn't already showing its first page -
+	// reproduces on a bare DataTable with no SmartHomeNG code involved, so it's an upstream bug,
+	// not something introduced here. Calling .page.len().draw() through the public API directly
+	// does not hit it, so capture the event before DataTables' own handler (bound in the target
+	// phase) ever sees it, and drive the length change ourselves instead.
+	document.addEventListener('change', function(e) {
+		if (!e.target.matches('.dt-length select')) return;
+		e.stopImmediatePropagation();
+		var selectedVal = parseInt(e.target.value);
+		var tableId = $(e.target).closest('.dt-container').find('table.dataTable').attr('id');
+		if (!tableId) return;
+		window.pageLength[tableId] = {pagelength: selectedVal};
+		setCookie("pagelength", window.pageLength, 3650, window.pluginname);
+		$('#' + tableId).DataTable().page.len(selectedVal).draw();
+		if (selectedVal == 1) {
+			// Resize before pageResize's own auto-fit calculation runs (capture phase again) -
+			// establishes #resize_wrapper's viewport-derived height while the table is still at
+			// its previous size, so it measures real available space instead of the collapsed
+			// table it's about to become.
+			window.toggle = window.toggle * -1 + 0.1;
+			$(window).resize();
+			e.target.options[0].disabled = true;
+		} else {
+			e.target.options[0].disabled = false;
+		}
+	}, true);
 </script>
 <script>
-	$(document).ready(function(){
-		const select_menu = document.querySelector(".dataTables_length select");
-		if (select_menu != null) {
-			if (select_menu.selectedIndex == -1)
-			{
-				select_menu.selectedIndex = 0;
-				select_menu.options[select_menu.selectedIndex].disabled = true;
-			}
-		}
-	});
-	</script>
-<script>
-	function pagelengthCookies(tabcount) {
-		for (let i = 1; i <= tabcount; i++) {
-			let pagelength = 0;
-			{%- if webif_pagelength is defined %}
-				if (isNaN(parseFloat({{ webif_pagelength }})) || {{ webif_pagelength }} == 0)
-					pagelength = 1;
-				else
-					pagelength = {{ webif_pagelength }};
-			{%- endif %}
-			window.pageLength["bodytab_"+i] = {'tableid': 'unknown', 'pagelength': parseInt(pagelength)};
-		}
-		setCookie("pagelength", window.pageLength, 3650, window.pluginname);
-	}
 	function initVariables() {
 		// Make refresh variable, dataSet and update_params available for plugins html files.
 		window.refresh = new timer();
@@ -71,36 +62,18 @@
 		window.toggle = 1;
 		window.pluginname = '{{ p.get_fullname() }}';
 		window.pageLength = getCookie("pagelength");
-		let tabcount = 0;
-		{%- if tabcount is defined %}
-			if (isNaN(parseFloat({{ tabcount }})))
-				tabcount = 1;
-			else
-				tabcount = {{ tabcount }};
+		if (!window.pageLength || typeof window.pageLength !== 'object') {
+			window.pageLength = {};
+		}
+		// Default page length for a table this browser has no remembered choice for yet - a
+		// single plugin-wide setting (webif_pagelength), not per-tab, so it's computed once here
+		// rather than re-seeded per tab. Tables pick it up in datatables.defaults.js's
+		// initComplete, the first time each one is actually seen.
+		let webifPagelength = 0;
+		{%- if webif_pagelength is defined %}
+			webifPagelength = {{ webif_pagelength }};
 		{%- endif %}
-
-	  if (window.pageLength == "" || Object.keys(window.pageLength).length === 0)
-	  {
-			window.pageLength = {}
-			pagelengthCookies(tabcount);
-		}
-		if (!("bodytab_"+tabcount in window.pageLength))
-		{
-			console.log("Extending cookies for pagelength as more bodytabs found.");
-			pagelengthCookies(tabcount);
-		}
-		let remove = false;
-		for (let key in window.pageLength) {
-		  // Extract the numeric part of the key
-		  let tabNumber = parseInt(key.replace("bodytab_", ""));
-		  if (tabNumber > tabcount) {
-		    delete window.pageLength[key];
-				console.log("Removing bodytab_" + key + " from pagelength.");
-				remove = true;
-		  }
-		}
-		if (remove === true)
-			setCookie("pagelength", window.pageLength, 3650, window.pluginname);
+		window.defaultPageLength = (isNaN(parseFloat(webifPagelength)) || webifPagelength == 0) ? 1 : parseInt(webifPagelength);
 		window.initial_update = false;
 		{%- if row_count is defined %}
 		  window.row_count = '{{ row_count|lower }}';
