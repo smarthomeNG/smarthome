@@ -555,13 +555,17 @@ class Database:
         return self._connected
 
     def is_connection_error(self, exc):
-        """True if *exc* is a PEP 249 connection-trouble class for this driver.
+        """True if *exc* is a PEP 249 connection-trouble class for this driver,
+        or the plain ``ConnectionError`` transaction() itself raises for
+        "not connected" (see its docstring) - that one is never a driver
+        exception, so it's never in _connection_error_classes, but it's
+        exactly the condition every caller of this method is trying to detect.
 
         Uses the raw classes tuple, not _reconnect_exceptions' (Exception,)
         fallback - an unclassifiable driver must never downgrade an
         unrelated bug's log level just because it can't be classified.
         """
-        return isinstance(exc, self._connection_error_classes)
+        return isinstance(exc, self._connection_error_classes) or isinstance(exc, ConnectionError)
 
     def setup(self, queries):
         """Setup or update the database structure.
