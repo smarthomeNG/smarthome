@@ -83,6 +83,7 @@ class MockSmartHome:
     _default_logtext = None
 
     shng_status = {'code': 20, 'text': 'Running'}
+    alive = True
 
     _restart_on_num_workers = 30
 

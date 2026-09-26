@@ -290,7 +290,8 @@ class StreamController(RESTResource):
         def _generate():
             try:
                 yield self._format_event('connection', {'connectionId': connection_id})
-                while True:
+                # without this check, only client disconnect ends the loop - cheroot's shutdown join() has no timeout.
+                while self._sh.alive:
                     try:
                         event = q.get(timeout=SERIES_POLL_INTERVAL)
                         yield self._format_event(event['type'], event)
