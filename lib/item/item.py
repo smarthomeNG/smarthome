@@ -1248,10 +1248,16 @@ class Item:
         Run initial eval to set an initial value for the item
 
         Called from Items.load_itemdefinitions
+
+        Skipped if a plugin already assigned a real value during parse_item()
+        (e.g. database/rrd 'init' restore via item.set()) - changed_by no
+        longer starts with 'Init' in that case, so forcing the eval here
+        would recompute from an already-current value (double-counting for
+        accumulator-style evals).
         """
         if self._trigger:
             # Only if item has an eval_trigger
-            if self._eval and not self._cache:
+            if self._eval and not self._cache and self._history.get_last_change_by().startswith('Init'):
                 # Only if item has an eval expression
                 self._sh.trigger(
                     name=self._path,
