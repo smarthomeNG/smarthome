@@ -449,7 +449,20 @@ class DbMigrator:
     ) -> tuple[int, list[tuple[str, int, str]]]:
         """id_map/names as returned by migrate_items(). Per-item, strict:
         a failure on one item aborts that item immediately (see
-        _copy_log_rows) rather than silently skipping the bad row."""
+        _copy_log_rows) rather than silently skipping the bad row.
+
+        Resumable: an item that already has rows on the destination is not
+        skipped - migration continues from the destination's own latest
+        {time} (LogStore.latest_time()), after deleting and re-copying that
+        one row from source. That reconciliation matters because the most
+        recent row for an item can still be "open" (duration=NULL) when
+        first copied, then have its real duration back-filled on the source
+        afterwards (BufferManager.close_open()/set_last_duration(), see
+        doc/dev/database/database.md §4) - a plain append-from-cursor would
+        otherwise leave that one row permanently stale on the destination.
+        Safe to interrupt and re-run repeatedly. --force instead deletes and
+        fully redoes an item regardless of destination state.
+        """
         dest_log_store = LogStore(self.dest, self.dest_tn)
         total_migrated: int = 0
         summary: list[tuple[str, int, str]] = []
@@ -472,13 +485,6 @@ class DbMigrator:
             else:
                 existing_count = dest_log_store.count(dest_id)
 
-            if existing_count > 0 and not forced:
-                self.stream.write(
-                    f'{display_name}: already has {existing_count} rows on destination, skipping (resume)\n'
-                )
-                summary.append((name, 0, 'skipped-resume'))
-                continue
-
             if forced and existing_count > 0:
                 if self.dry_run:
                     self.stream.write(
@@ -488,18 +494,54 @@ class DbMigrator:
                     # dest_id is None only for a dry-run's not-yet-created item (see migrate_items()); guaranteed real here.
                     assert dest_id is not None
                     self._delete_dest_log_rows(dest_id)
+                existing_count = 0
+
+            resume_from: int | None = None
+            if existing_count > 0:
+                assert dest_id is not None
+                if self.dry_run:
+                    # dry-run: existing_count>0 already confirmed the table exists, but guard anyway for symmetry
+                    # with the existing_count lookup above.
+                    try:
+                        resume_from = dest_log_store.latest_time(dest_id)
+                    except Exception:
+                        resume_from = None
+                else:
+                    # existing_count>0 came from a real, successful count() - latest_time() must not silently
+                    # fail here, since that would fall through to a full re-copy into a non-empty destination.
+                    resume_from = dest_log_store.latest_time(dest_id)
+                if resume_from is not None:
+                    if self.dry_run:
+                        self.stream.write(
+                            f'{display_name}: [dry-run] would resume from time={resume_from} '
+                            f'({existing_count} rows already present)\n'
+                        )
+                    else:
+                        self._delete_dest_log_rows_at(dest_id, resume_from)
 
             source_count: int = LogStore(self.source, self.source_tn).count(source_id)
-            self.stream.write(f'{display_name}: migrating {source_count} rows...\n')
+            remaining_count: int = (
+                source_count
+                if resume_from is None
+                else LogStore(self.source, self.source_tn).count(source_id, time_start=resume_from - 1)
+            )
+            action: str = 'migrating' if resume_from is None else 'resuming'
+            self.stream.write(f'{display_name}: {action} {remaining_count} rows...\n')
 
             if self.dry_run:
-                summary.append((name, source_count, 'would-migrate'))
-                total_migrated += source_count
+                summary.append((name, remaining_count, 'would-migrate' if resume_from is None else 'would-resume'))
+                total_migrated += remaining_count
                 continue
 
             # dest_id is None only for a dry-run item (see migrate_items()); the dry-run branch above always continues.
             assert dest_id is not None
-            migrated: int = self._copy_log_rows(source_id, dest_id, source_count, display_name)
+            migrated: int = self._copy_log_rows(
+                source_id,
+                dest_id,
+                remaining_count,
+                display_name,
+                start_after=(resume_from - 1 if resume_from is not None else None),
+            )
             total_migrated += migrated
 
             dest_count: int = dest_log_store.count(dest_id)
@@ -507,7 +549,7 @@ class DbMigrator:
                 raise MigrationError(
                     f'{display_name}: row count mismatch after migration - source had {source_count}, destination has {dest_count}'
                 )
-            summary.append((name, migrated, 'migrated'))
+            summary.append((name, migrated, 'migrated' if resume_from is None else 'resumed'))
         return total_migrated, summary
 
     def _delete_dest_log_rows(self, dest_id: int) -> None:
@@ -516,10 +558,29 @@ class DbMigrator:
                 apply_table_names('DELETE FROM {log} WHERE item_id=:id;', self.dest_tn), {'id': dest_id}, cur=cur
             )
 
-    def _copy_log_rows(self, source_id: int, dest_id: int, total_rows: int, name: str) -> int:
+    def _delete_dest_log_rows_at(self, dest_id: int, time: int) -> None:
+        """Delete the destination's row(s) for *dest_id* at exactly *time* -
+        the resume reconciliation point (see migrate_logs()) that gets
+        deleted and re-copied from source rather than left in place."""
+        with self.dest.transaction() as cur:
+            self.dest.execute(
+                apply_table_names('DELETE FROM {log} WHERE item_id=:id AND time=:time;', self.dest_tn),
+                {'id': dest_id, 'time': time},
+                cur=cur,
+            )
+
+    def _copy_log_rows(
+        self, source_id: int, dest_id: int, total_rows: int, name: str, start_after: int | None = None
+    ) -> int:
+        """Copy *source_id*'s log rows to *dest_id*, oldest first.
+
+        :param start_after: If given, only copy rows with ``time >
+            start_after`` - the resumed-item case (see migrate_logs()).
+            ``None`` copies everything, from the start.
+        """
         progress = DotProgress(total_rows, stream=self.stream, tick=self.batch_size)
         migrated: int = 0
-        last_time: int | None = None
+        last_time: int | None = start_after
         select_sql: str = apply_table_names(
             'SELECT time, duration, val_str, val_num, val_bool, changed, val_quality FROM {log} '
             'WHERE item_id=:id AND (:last_time_null = 1 OR time > :last_time) ORDER BY time LIMIT :row_limit;',
@@ -719,9 +780,9 @@ def main(argv: list[str] | None = None) -> None:
     print(f'\n{"[dry-run] " if args.dry_run else ""}Summary:')
     print(f'  items: {len(id_map)}')
     print(f'  rows migrated: {total_rows}')
-    skipped: int = sum(1 for _n, _c, status in summary if status == 'skipped-resume')
-    if skipped:
-        print(f'  items skipped (already on destination): {skipped}')
+    resumed: int = sum(1 for _n, _c, status in summary if status in ('resumed', 'would-resume'))
+    if resumed:
+        print(f'  items resumed (already partially on destination): {resumed}')
     print(f'  elapsed: {elapsed:.1f}s')
 
     source_db.close()

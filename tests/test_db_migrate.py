@@ -289,7 +289,13 @@ class TestMigrationEndToEnd(unittest.TestCase):
         summary_names = {name for name, _count, _status in summary}
         self.assertEqual({'solar.power', 'outside.temp'}, summary_names)
 
-    def test_resumed_run_skips_already_migrated_items(self):
+    def test_resumed_run_reconciles_last_row_per_item(self):
+        """A fully-resumed run against an unchanged source isn't a true
+        no-op: the one row already sitting at each item's latest
+        destination {time} is deleted and re-copied from source rather
+        than left alone (see migrate_logs()'s own docstring - this is what
+        lets a resumed run correct a row whose duration was back-filled on
+        the source after it was first copied). No duplicates result."""
         migrator = self._migrator()
         migrator.ensure_destination_schema()
         id_map, names = migrator.migrate_items()
@@ -300,9 +306,67 @@ class TestMigrationEndToEnd(unittest.TestCase):
         id_map2, names2 = migrator2.migrate_items()  # item migration itself is idempotent by name
         total2, summary2 = migrator2.migrate_logs(id_map2, names2)
 
-        self.assertEqual(0, total2, 'a fully resumed run must not re-migrate any rows')
+        self.assertEqual(2, total2, 'one reconciled row per item (2 items), not zero and not a full re-copy')
         statuses = {name: status for name, _count, status in summary2}
-        self.assertTrue(all(s == 'skipped-resume' for s in statuses.values()))
+        self.assertTrue(all(s == 'resumed' for s in statuses.values()), statuses)
+
+        dest_log_store = LogStore(self.dest, db_migrate.build_table_names(''))
+        self.assertEqual(2, dest_log_store.count(id_map2[self.source_ids['solar.power']]), 'no duplicate rows')
+        self.assertEqual(1, dest_log_store.count(id_map2[self.source_ids['outside.temp']]), 'no duplicate rows')
+
+    def test_resume_reconciles_backfilled_duration_and_copies_new_rows(self):
+        """The most recent row for an item can still be 'open' (duration=
+        None) when first copied, then get its real duration filled in
+        afterwards on the source (BufferManager.close_open()/
+        set_last_duration() in the real plugin). A resumed run must correct
+        that one row and append whatever is genuinely new after it -
+        exactly the sequence a live source keeps producing between two
+        migration passes."""
+        migrator = self._migrator()
+        migrator.ensure_destination_schema()
+        id_map, names = migrator.migrate_items()
+        migrator.migrate_logs(id_map, names)
+        solar_source_id = self.source_ids['solar.power']
+        solar_dest_id = id_map[solar_source_id]
+        tn = db_migrate.build_table_names('')
+        source_log_store = LogStore(self.source, tn)
+        dest_log_store = LogStore(self.dest, tn)
+
+        # A new, still-open value arrives on the source after the first migration.
+        source_log_store.insert(
+            solar_source_id, BufferEntry(time=2000, duration=None, value=44.0, quality=QUALITY_VALID), 'num', 2000
+        )
+
+        id_map, names = migrator.migrate_items()
+        _total, summary = migrator.migrate_logs(id_map, names)
+        solar_count = {n: c for n, c, _s in summary}['solar.power']
+        self.assertEqual(2, solar_count, 'reconciled row at time=1500 + the new row at time=2000')
+        self.assertEqual('resumed', {n: s for n, _c, s in summary}['solar.power'])
+        rows = {r[0]: r[2] for r in dest_log_store.find_range(solar_dest_id)}  # time -> duration
+        self.assertEqual({1000: 500, 1500: 300, 2000: None}, rows)
+
+        # Source closes that row (real duration back-filled) and a further new value arrives.
+        with self.source.transaction() as cur:
+            self.source.execute(
+                db_migrate.apply_table_names(
+                    'UPDATE {log} SET duration=:duration WHERE item_id=:id AND time=:time;', tn
+                ),
+                {'duration': 750, 'id': solar_source_id, 'time': 2000},
+                cur=cur,
+            )
+        source_log_store.insert(
+            solar_source_id, BufferEntry(time=2750, duration=None, value=45.0, quality=QUALITY_VALID), 'num', 2750
+        )
+
+        id_map, names = migrator.migrate_items()
+        _total, summary = migrator.migrate_logs(id_map, names)
+        solar_count = {n: c for n, c, _s in summary}['solar.power']
+        self.assertEqual(2, solar_count, 'the reconciled row at time=2000 + the new row at time=2750')
+        self.assertEqual('resumed', {n: s for n, _c, s in summary}['solar.power'])
+        rows = {r[0]: r[2] for r in dest_log_store.find_range(solar_dest_id)}
+        self.assertEqual(
+            {1000: 500, 1500: 300, 2000: 750, 2750: None}, rows, 'duration corrected, no duplicate, new row present'
+        )
 
     def test_force_redoes_a_specific_item(self):
         migrator = self._migrator()
@@ -314,10 +378,10 @@ class TestMigrationEndToEnd(unittest.TestCase):
         id_map2, names2 = forced.migrate_items()
         total2, summary2 = forced.migrate_logs(id_map2, names2)
 
-        self.assertEqual(2, total2, "forcing 'solar.power' must redo its 2 rows, not skip them")
+        self.assertEqual(3, total2, "forced item's full 2-row redo + the other item's 1-row resume reconciliation")
         statuses = {name: status for name, _count, status in summary2}
         self.assertEqual('migrated', statuses['solar.power'])
-        self.assertEqual('skipped-resume', statuses['outside.temp'])
+        self.assertEqual('resumed', statuses['outside.temp'])
 
     def test_dry_run_writes_nothing(self):
         migrator = self._migrator(dry_run=True)
