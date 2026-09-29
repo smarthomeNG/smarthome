@@ -294,7 +294,8 @@ class RESTResource:
     REST_children = {}
 
     logger = logging.getLogger('REST')
-    jwt_secret = 'SmartHomeNG$0815'
+    # injected by Admin.__init__; None makes verification fail closed until then
+    jwt_secret = None
 
     def set_response_headers(self, *vpath):
         """

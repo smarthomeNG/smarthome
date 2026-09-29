@@ -52,14 +52,10 @@ class AuthController(RESTResource):
             self.logger.notice('REST_dispatch_execute warnlevel is set to EXCEPTION')
 
         # self._user_dict = user_dict
-        self.send_hash = module.send_hash
         self.jwt_secret = module.jwt_secret
 
         http_user_dict = self.module.mod_http.get_user_dict()
-        self._user_dict = {}
-        for user in http_user_dict:
-            if http_user_dict[user]['password_hash'] != '':
-                self._user_dict[Utils.create_hash(user + self.send_hash)] = http_user_dict[user]
+        self._user_dict = {user: data for user, data in http_user_dict.items() if data['password_hash'] != ''}
 
         return
 
@@ -126,7 +122,7 @@ class AuthController(RESTResource):
             user = self._user_dict.get(credentials['username'], None)
             if user:
                 self.logger.info('AuthController.authenticate(): user = {}'.format(user))
-                if Utils.create_hash(user.get('password_hash', 'x') + self.send_hash) == credentials['password']:
+                if Utils.create_hash(credentials['password']) == user.get('password_hash', 'x'):
                     url = cherrypy.url().split(':')[0] + ':' + cherrypy.url().split(':')[1]
                     payload = {'iss': url, 'iat': self.module.shtime.now(), 'jti': self.module.shtime.now().timestamp()}
                     self.logger.info(
@@ -228,16 +224,13 @@ class AuthController(RESTResource):
     add.authentication_needed = False
     add.api_doc = [
         ApiDoc(
-            summary='Log in with SHA-512-hashed credentials, get a JWT',
+            summary='Log in with username/password, get a JWT',
             method='post',
             path='/authenticate/user',
             auth=False,
             tags=['authenticate'],
             request_body='application/json',
-            request_example=(
-                '{"username": "<sha512(username + \'shNG0160$\')>", '
-                '"password": "<sha512(sha512(password) + \'shNG0160$\')>"}'
-            ),
+            request_example='{"username": "<username>", "password": "<password>"}',
             response_example='{"token": "<jwt>"}',
         )
     ]

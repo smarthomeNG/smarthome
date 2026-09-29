@@ -23,6 +23,7 @@
 import json
 import os
 import logging
+import secrets
 import cherrypy
 
 from lib.utils import Utils
@@ -81,8 +82,9 @@ class Admin(Module):
         self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, str(self._parameters)))
 
         # for authentication
-        self.send_hash = 'shNG0160$'
-        self.jwt_secret = 'SmartHomeNG$0815'
+        self.jwt_secret = self._load_or_create_jwt_secret()
+        # most controllers verify against this class default instead of an instance copy
+        RESTResource.jwt_secret = self.jwt_secret
 
         try:
             self.mod_http = Modules.get_instance().get_module(
@@ -160,6 +162,45 @@ class Admin(Module):
         self.shng_url_root = 'http://' + ip + ':' + str(self._port)  # for links mto plugin webinterfaces
         self.url_root = self.shng_url_root + mysuburl
         self.api_url_root = self.shng_url_root + 'api'
+
+    def _load_or_create_jwt_secret(self):
+        """
+        Load this installation's JWT signing secret for the admin API, generating
+        and persisting a new random one on first run.
+
+        The secret has to survive restarts (issued tokens stay valid for
+        ``login_expiration`` hours), but must stay unique per installation and
+        never appear in the source tree. It is kept in ``var/admin/``, not
+        ``etc/``: unlike ``etc/``, ``var/`` isn't config users copy into forum
+        posts or their own repos when asking for help.
+
+        :return: secret to sign/verify admin API JWTs with
+        :rtype: str
+        """
+        secret_dir = os.path.join(self._sh.get_vardir(), 'admin')
+        secret_file = os.path.join(secret_dir, 'jwt_secret')
+
+        try:
+            with open(secret_file, 'r') as f:
+                secret = f.read().strip()
+            if secret:
+                return secret
+        except FileNotFoundError:
+            pass
+        except OSError as e:
+            self.logger.warning(
+                "Module '{}': Could not read jwt secret file '{}': {}".format(self._shortname, secret_file, e)
+            )
+
+        secret = secrets.token_urlsafe(32)
+        os.makedirs(secret_dir, exist_ok=True)
+        fd = os.open(secret_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, 'w') as f:
+            f.write(secret)
+        self.logger.notice(
+            "Module '{}': Generated a new admin API jwt secret, stored in '{}'".format(self._shortname, secret_file)
+        )
+        return secret
 
     def start(self):
         """
