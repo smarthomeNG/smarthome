@@ -20,9 +20,13 @@ Quelle und Ziel können auf drei Arten angegeben werden: über den Namen einer b
 über explizite Treiber-/Verbindungsparameter (``--source-driver``/``--source-connect`` bzw.
 ``--dest-driver``/``--dest-connect``), oder interaktiv über Rückfragen (``--interactive``).
 
-Der Migrationslauf ist fortsetzbar: bereits auf dem Ziel vorhandene Items werden übersprungen,
-sofern nicht ``--force`` für dieses Item angegeben wird. Mit ``--dry-run`` lässt sich der
-geplante Ablauf ohne tatsächliche Schreibvorgänge prüfen.
+Der Migrationslauf ist fortsetzbar: für ein bereits teilweise auf dem Ziel vorhandenes Item wird
+nicht neu begonnen, sondern ab dessen letztem dort vorhandenem Zeitstempel fortgesetzt. Der zu
+diesem Zeitpunkt bereits kopierte Datensatz wird dabei verworfen und erneut aus der Quelle
+kopiert - relevant, falls sich seine Dauer nachträglich geändert hat (z.B. ein zum Zeitpunkt der
+Kopie noch offener, nicht abgeschlossener Eintrag). Mit ``--force`` wird ein Item stattdessen
+unabhängig vom Ziel-Zustand vollständig gelöscht und komplett neu migriert. Mit ``--dry-run``
+lässt sich der geplante Ablauf ohne tatsächliche Schreibvorgänge prüfen.
 
 .. note::
 
