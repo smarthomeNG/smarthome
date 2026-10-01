@@ -59,7 +59,10 @@ Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
       ``de`` und ``en`` müssen angegeben werden. Weitere Sprachen sind optional.
     - ``maintainer:`` Hier kann angegeben werden, wer das Plugin pflegt und weiterentwickelt
     - ``tester:`` Optional können hier die Nutzer angegeben werden, die sich bereit erklärt haben das Plugin zu testen
-    - ``state:`` Entwicklungs-Status des Plugins (gültige Werte: ``develop``, ``ready``, ``qa-passed``)
+    - ``state:`` Entwicklungs-Status des Plugins (gültige Werte: ``develop``, ``development``, ``ready``, ``qa-passed``,
+      ``deprecated``).
+      Plugins mit dem Status ``deprecated`` werden weiterhin geladen, beim Laden wird jedoch eine Warnung ins Log
+      geschrieben.
     - ``keywords:`` Liste der Schlüsselwörter die das Plugin beschreiben (durch Leerzeichen getrennt)
     - ``documentation:`` url die auf eine weiterführende Dokumentation verweist (damit sind **nicht** die Dateien
       user_doc.rst oder die veraltete README.md gemeint)

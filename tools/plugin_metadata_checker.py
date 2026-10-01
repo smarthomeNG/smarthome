@@ -58,6 +58,9 @@ plugin_sections = [
 
 MISSING_TEXT = 'Missing'
 
+# valid values of the 'state' attribute in the plugin metadata
+PLUGIN_STATES = ['develop', 'development', 'ready', 'qa-passed', 'deprecated']
+
 # ==================================================================================
 #   Functions of the tool
 #
@@ -196,7 +199,7 @@ def list_plugins(option, suboption=None, list_versions=False):
             sectionPlg = 'Ok'
             version = metadata['plugin'].get('version', '-')
             plgstate = metadata['plugin'].get('state', '-')
-            if plgstate not in ['qa-passed', 'ready', 'develop', 'deprecated']:
+            if plgstate not in PLUGIN_STATES:
                 plgstate = 'INVALID'
             shng_min_vers = str(metadata['plugin'].get('sh_minversion', '-'))
             shng_max_vers = str(metadata['plugin'].get('sh_maxversion', '-'))
@@ -257,11 +260,7 @@ def list_plugins(option, suboption=None, list_versions=False):
         if (
             (option == 'all')
             or (option == 'state' and plgstate.lower() == suboption)
-            or (
-                option == 'state'
-                and suboption == 'other'
-                and (plgstate.lower() not in ['qa-passed', 'ready', 'develop', 'deprecated'])
-            )
+            or (option == 'state' and suboption == 'other' and (plgstate.lower() not in PLUGIN_STATES))
             or (option == plgtype.lower())
             or (
                 option == 'inc'
@@ -762,13 +761,13 @@ def check_metadata(
             if metadata['plugin'].get('state', None) is None:
                 disp_error(
                     'No development state given for the plugin',
-                    "Add 'state:' to the plugin section and set it to one of the following values ['develop', 'ready', 'qa-passed']",
+                    f"Add 'state:' to the plugin section and set it to one of the following values {PLUGIN_STATES}",
                     "The state'qa-passed' should only be set by the shNG core team",
                 )
-            elif metadata['plugin'].get('state', None) not in ['qa-passed', 'ready', 'develop', 'deprecated', '-']:
+            elif metadata['plugin'].get('state', None) not in [*PLUGIN_STATES, '-']:
                 disp_error(
                     'An invalid development state is given for the plugin',
-                    "Set'state:' to one of the followind valid values ['develop', 'ready', 'qa-passed', 'deprecated']",
+                    f"Set'state:' to one of the followind valid values {PLUGIN_STATES}",
                     "The state'qa-passed' should only be set by the shNG core team",
                 )
 
@@ -975,7 +974,7 @@ def check_plglist(option, list_classic=False):
             sectionPlg = 'Ok'
             version = metadata['plugin'].get('version', '-')
             plgstate = metadata['plugin'].get('state', '-')
-            if plgstate not in ['qa-passed', 'ready', 'develop', '-']:
+            if plgstate not in [*PLUGIN_STATES, '-']:
                 plgstate = 'INVALID'
         plgtype = get_plugintype(plg)
         if plgtype == 'Smart':
