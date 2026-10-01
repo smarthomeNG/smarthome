@@ -182,7 +182,7 @@ of that type, or read/write one with `?filename=`), plus the special cases `logg
 
 Separate from the REST API above: `ws(s)://{host}:{ws_port}/adm`, handled by the
 `websocket` module's admin protocol (`modules/websocket/admin.py`), documented in
-[websocket_admingui_requests.rst](websocket_admingui_requests.rst). Used for live item
+{doc}`websocket_admingui_requests`. Used for live item
 value monitoring and the System Overview page's resource-usage graphs. No JWT is used on
 this channel.
 

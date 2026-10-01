@@ -194,6 +194,8 @@ pygments_style = 'sphinx'
 def setup(app):
     # deprecated in Sphinx 4: app.add_stylesheet('custom.css')
     app.add_css_file('custom.css')
+    # priority < 200 (searchtools.js's own) so our Scorer override wins the "already defined" check
+    app.add_js_file('search_scorer.js', priority=100)
 
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -203,7 +205,7 @@ html_theme = 'sphinx_rtd_theme'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {'collapse_navigation': False, 'display_version': False, 'navigation_depth': 5}
+html_theme_options = {'collapse_navigation': False, 'navigation_depth': 5}
 
 
 # Add any paths that contain custom themes here, relative to this directory.
