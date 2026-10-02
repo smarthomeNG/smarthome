@@ -271,21 +271,38 @@ werden, was passiert, wenn z.B. auf der Visu ein Button geklickt wird.
 
 Die häufigsten Fehler sind:
 
-+-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
-| Ursache                                 | Fehlerbild                                                         | Behebungsansatz                                 |
-+=========================================+====================================================================+=================================================+
-| Dateiformat der Item-Datei ist          | Beim Start von SmartHomeNG bricht der Einlesevorgang für die Items | Per Telnet verbinden und Items auflisten lassen |
-| nicht im UTF-8 ohne BOM angelegt.       | in der betreffenden Datei ab und die Items werden nicht angelegt.  |                                                 |
-+-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
-| In der Smartvisu werden bei den Widgets | Keine Funktion bei einigen Widgets bzw. merkwürdige Seiteneffekte  | Debug-Ausgabe zeigt zu ändernde Items an,       |
-| doppelte ID vergeben oder Itemname und  |                                                                    | diese auf Plausibilität prüfen                  |
-| ID vertauscht oder aber Leerzeichen     |                                                                    |                                                 |
-| innerhalb der ID oder des Itemnamen.    |                                                                    |                                                 |
-+-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
-| Zugriff auf ein Item ist über die Visu  | Kein Schalten möglich, Werte werden nicht aktualisiert             | visu_acl: rw oder visu: yes fehlt bei einem     |
-| nicht gegeben.                          |                                                                    | Item oder als globales Setting beim Plugin      |
-|                                         |                                                                    | visu_smartvisu                                  |
-+-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Ursache                                 | Fehlerbild                                               | Behebungsansatz                                           |
++=========================================+==========================================================+===========================================================+
+| Item-Datei ist nicht im Format UTF8     | Beim Start von SmartHomeNG bricht der Einlesevorgang     | In der Admin-GUI die Log-Datei anzeigen und Fehler-       |
+| ohne BOM.                               | für die Items in der betreffenden Datei ab und die       | Einträge auswerten.                                       |
+| Fehlerhafte Einrückungen in der         | Items werden nicht angelegt. Keine Reaktion bei          |                                                           |
+| Item-Datei (z.B. Tab statt Leerzeichen) | Bedienung über die Visu                                  |                                                           |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Fehlerhafte IP-Adresse oder Port für    | Fehlermeldung in smartVISU: die Verbindung zu            | IP und Port überprüfen. Als IP muss die echte IP-Adresse  |
+| die Websocket-Verbindung angegeben.     | smarthomeNG kann nicht hergestellt werden.               | des Systems angegeben sein, auf dem SmartHomeNG läuft.    |
+|                                         |                                                          | NICHT "localhost" oder "127.0.0.1"!                       |
+| Hostname nicht bekannt.                 |                                                          | Wenn die Visu mit einem Hostnamen aus dem internen Netz   |
+|                                         |                                                          | aufgerufen wird, muss der Hostname als smartVISU-         |
+|                                         |                                                          | Hostname in der Konfiguration eingetragen sein.           |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| In der smartVISU werden bei den Widgets | Keine Funktion bei einigen Widgets. Wenn in smartVISU    | Debug-Ausgabe zeigt zu ändernde Items an.                 |
+| Itemnamen falsch geschrieben oder mit   | die Option "Aktivitätsanzeige" aktiviert ist, blinkt     | Log-Datei registriert ungültige Item-Abrufe.              |
+| den IDs vertauscht                      | das smartVISU-Logo dauerhaft (ab v3.5) und die Widgets   | smartVISU Cache ausschalten und Browser-Konsole (F12)     |
+|                                         | mit fehlenden Daten werden rot eingerahmt (ab v3.6)      | öffnen. Datenverkehr auf Websocket wird dort angezeigt.   |
+|                                         |                                                          | Ab v3.5 mit Eingabe "io.openItems" die fehlenden Items    |
+|                                         |                                                          | anzeigen.                                                 |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Zugriff auf ein Item ist über die Visu  | Kein Schalten möglich, Werte werden nicht aktualisiert   | visu_acl: rw oder visu: yes fehlt bei einem Item oder als |
+| nicht gegeben.                          |                                                          | globales Setting beim Plugin smartvisu                    |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Zwischengespeicherte Dateien (Cache)    | Änderungen an Visu-Seiten werden nicht übernommen,       | smartVISU Cache löschen. Browser-Cache / Websitedaten     |
+| sind nicht aktuell                      | fehlerhafte Darstellungen                                | löschen                                                   |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Fehlerhafte Widget-Parametrierung       | Widget funktioniert nicht oder zeigt unplausible         | Templatechecker zeigt Fehler in Parametrierungen an.      |
+|                                         | Daten an.                                                | Widget-Aufruf in Widget-Assistent kopieren und mit        |
+|                                         |                                                          | Hilfestellung die Korrekturen vornehmen und testen.       | 
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
 
 
 Zugriff auf SH.py via CLI Plugin aus Windows mit putty oder kitty
