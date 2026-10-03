@@ -1,0 +1,133 @@
+# Metadata for the test-only SmartDevicePlugin fixture used by
+# tests/sdp_harness to run the real SDP stack (metadata, parameters,
+# item attributes, commands.py) without any device connection.
+plugin:
+    type: interface
+    description:
+        de: 'Test-Fixture fuer SmartDevicePlugin'
+        en: 'Test fixture for SmartDevicePlugin'
+    version: 1.0.0
+    sdp_minversion: '1.0.0'
+    multi_instance: True
+    classname: FixtureSDP
+
+parameters:
+    model:
+        type: str
+        default: ''
+        description:
+            en: 'device model'
+    suspend_item:
+        type: str
+        default: ''
+        description:
+            en: 'suspend item path'
+    cycle:
+        type: int
+        default: 0
+        description:
+            en: 'plugin-wide cyclic read interval'
+    delay_initial_read:
+        type: num
+        default: 0
+        description:
+            en: 'delay initial read'
+    resume_initial_read:
+        type: bool
+        default: false
+        description:
+            en: 'repeat initial read on resume'
+    autoreconnect:
+        type: bool
+        default: false
+        description:
+            en: 'reconnect on disconnect'
+    autoconnect:
+        type: bool
+        mandatory: false
+        description:
+            en: 'connect on send'
+    send_retries:
+        type: int
+        default: 0
+        description:
+            en: 'resend retries'
+    loop_guard_count:
+        type: int
+        default: 0
+        description:
+            en: 'loop guard count'
+    loop_guard_window:
+        type: num
+        default: 5
+        description:
+            en: 'loop guard window'
+    loop_guard_source:
+        type: str
+        default: ''
+        description:
+            en: 'loop guard source prefix'
+
+item_attributes:
+    fx_command:
+        type: str
+        description:
+            en: 'command'
+    fx_read:
+        type: bool
+        description:
+            en: 'read'
+    fx_read_group:
+        type: list(str)
+        description:
+            en: 'read groups'
+    fx_read_cycle:
+        type: num
+        description:
+            en: 'item read cycle'
+    fx_read_cyclic:
+        type: bool
+        description:
+            en: 'use plugin-wide cycle'
+    fx_read_initial:
+        type: bool
+        description:
+            en: 'read on startup'
+    fx_write:
+        type: bool
+        description:
+            en: 'write'
+    fx_readafterwrite:
+        type: num
+        description:
+            en: 'read after write delay'
+    fx_read_group_trigger:
+        type: str
+        description:
+            en: 'read group trigger'
+    fx_lookup:
+        type: str
+        description:
+            en: 'lookup table'
+    fx_valid_list:
+        type: str
+        description:
+            en: 'valid list for command'
+    fx_custom1:
+        type: str
+        description:
+            en: 'custom attribute 1'
+    fx_custom2:
+        type: str
+        description:
+            en: 'custom attribute 2'
+    fx_custom3:
+        type: str
+        description:
+            en: 'custom attribute 3'
+
+item_structs: NONE
+
+plugin_functions: NONE
+
+logic_parameters: NONE

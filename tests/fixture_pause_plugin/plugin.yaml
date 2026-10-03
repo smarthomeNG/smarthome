@@ -1,0 +1,24 @@
+# Metadata of the test-only pause item fixtures
+plugin:
+    type: system
+    description:
+        de: 'Test-Fixture fuer Pause-Item'
+        en: 'Test fixture for pause item'
+    version: 1.0.0
+    multi_instance: True
+    classname: FixturePause
+
+parameters:
+    pause_item:
+        type: str
+        default: ''
+        description:
+            en: 'pause item path'
+
+item_attributes: NONE
+
+item_structs: NONE
+
+plugin_functions: NONE
+
+logic_parameters: NONE

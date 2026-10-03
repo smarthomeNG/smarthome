@@ -184,14 +184,7 @@ class SmartPlugin(SmartObject, Utils):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
-        # check for pause item
-        if item is self._pause_item:
-            if caller != self.get_shortname():
-                self.logger.debug(f'pause item changed to {item()}')
-                if item() and self.alive:
-                    self.stop()
-                elif not item() and not self.alive:
-                    self.run()
+        if self._handle_pause_item(item, caller):
             return
 
         if not self.alive:
@@ -199,6 +192,27 @@ class SmartPlugin(SmartObject, Utils):
                 f'Received item update for item {item.property.path}, but plugin is not running. Ignoring...'
             )
             return
+
+    def _handle_pause_item(self, item, caller=None) -> bool:
+        """
+        Handle a change of the pause item; changes by this plugin instance are ignored.
+
+        :return: True if ``item`` is the pause item
+        """
+        if item is not self._pause_item:
+            return False
+
+        if caller != self.get_fullname():
+            self.logger.debug(f'pause item changed to {item()}')
+            self.on_pause_item_change(bool(item()))
+        return True
+
+    def on_pause_item_change(self, paused: bool) -> None:
+        """Pause by stop(), resume by run(). Overwrite for other pausing."""
+        if paused and self.alive:
+            self.stop()
+        elif not paused and not self.alive:
+            self.run()
 
     def parse_item(self, item) -> Any:
         """

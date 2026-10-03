@@ -167,12 +167,9 @@ class SamplePlugin(SmartPlugin):
                         with the item, caller, source and dest as arguments and in case of the knx plugin the value
                         can be sent to the knx with a knx write function within the knx plugin.
         """
-        # check for pause item
+        # the pause item is registered by SmartPlugin
         if item.property.path == self._pause_item_path:
-            self.logger.debug(f'pause item {item.property.path} registered')
-            self._pause_item = item
-            self.add_item(item, updating=True)
-            return self.update_item
+            return super().parse_item(item)
 
         if self.has_iattr(item.conf, 'foo_itemtag'):
             self.logger.debug(f'parse item: {item}')
@@ -206,14 +203,8 @@ class SamplePlugin(SmartPlugin):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
-        # check for pause item
-        if item is self._pause_item:
-            if caller != self.get_shortname():
-                self.logger.debug(f'pause item changed to {item()}')
-                if item() and self.alive:
-                    self.stop()
-                elif not item() and not self.alive:
-                    self.run()
+        # pause item changes call on_pause_item_change(), which stops/runs the plugin unless overwritten
+        if self._handle_pause_item(item, caller):
             return
 
         if self.alive and caller != self.get_fullname():

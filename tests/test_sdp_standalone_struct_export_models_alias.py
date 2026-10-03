@@ -19,9 +19,8 @@ right after), but calling create_struct_yaml() twice in the same process
 a fresh `python __init__.py -s` each time - corrupts the model's command
 list further on every call.
 
-denon/commands.py has a real per-model 'models' dict (unlike plugins that
-only use the '{"ALL": {...}}' generic-key branch, e.g. viessmann), so it
-actually exercises this code path.
+The synthetic plugin has flat commands and a per-model 'models' dict, so it
+exercises this code path.
 """
 
 import copy
@@ -37,18 +36,33 @@ import tests.common as common
 
 common.register_shng_log_levels()
 
-from tests._sdp_standalone_export_helper import build_standalone
+from tests._sdp_standalone_export_helper import build_synthetic_standalone
+
+_COMMANDS_SRC = """
+commands = {
+    'power': {'read': True, 'write': True, 'opcode': 'PW', 'item_type': 'bool', 'dev_datatype': 'raw'},
+    'volume': {'read': True, 'write': True, 'opcode': 'MV', 'item_type': 'num', 'dev_datatype': 'raw'},
+    'tuner': {'read': True, 'write': False, 'opcode': 'TU', 'item_type': 'str', 'dev_datatype': 'raw'},
+}
+
+models = {
+    'ALL': ['power'],
+    'model_a': ['volume'],
+    'model_b': ['volume', 'tuner'],
+}
+"""
+
+_PLUGIN_YAML = {'plugin': {'type': 'interface'}}
 
 
 class TestModelsDictNotMutatedAcrossRuns(unittest.TestCase):
     def test_second_struct_export_leaves_models_dict_unchanged(self):
         with tempfile.TemporaryDirectory() as tmp:
-            standalone = build_standalone(tmp, 'denon')
+            standalone = build_synthetic_standalone(tmp, 'modelsalias', _COMMANDS_SRC, _PLUGIN_YAML)
             standalone.create_struct_yaml()
 
-            # commands module is now cached in sys.modules under
-            # plugins_denon.denon.commands - inspect its live 'models' dict
-            cmd_module = sys.modules['plugins_denon.denon.commands']
+            # commands module is now cached in sys.modules - inspect its live 'models' dict
+            cmd_module = sys.modules['synthplugins_modelsalias.modelsalias.commands']
             models = cmd_module.models
             model = next(m for m in models if m != 'ALL')
             before = copy.deepcopy(models[model])
@@ -56,7 +70,7 @@ class TestModelsDictNotMutatedAcrossRuns(unittest.TestCase):
             # re-running against the SAME cached module (a fresh Standalone
             # instance, but importlib.import_module hits sys.modules) must
             # not further mutate models[model]
-            standalone2 = build_standalone(tmp, 'denon')
+            standalone2 = build_synthetic_standalone(tmp, 'modelsalias', _COMMANDS_SRC, _PLUGIN_YAML)
             standalone2.create_struct_yaml()
 
             after = models[model]
