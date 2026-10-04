@@ -12,6 +12,8 @@ that skip super().__init__() keep working, see the TODO/FIXME comment
 above the class attribute.
 """
 
+import datetime
+import json
 import os
 import sys
 import unittest
@@ -48,6 +50,51 @@ class TestMqttPluginItemValuesIsInstanceSpecific(unittest.TestCase):
         p1._item_values['some.item'] = {'value': 42}
 
         self.assertNotIn('some.item', p2._item_values)
+
+
+class _StubItem:
+    """Minimal item exposing what _update_item_values() reads."""
+
+    class property:
+        path = 'some.item'
+
+    @staticmethod
+    def last_update():
+        return datetime.datetime(2026, 1, 2, 3, 4, 5)
+
+    last_change = last_update
+
+
+class TestMqttPluginItemValuesJsonPayload(unittest.TestCase):
+    """Dict/list payloads must reach the web interface as JSON text, not as JSON objects (-> '[object Object]')."""
+
+    def _stored_value(self, payload):
+        with patch('lib.model.mqttplugin.Modules') as mock_modules:
+            mock_modules.get_instance.return_value.get_module.return_value = MagicMock()
+            from lib.model.mqttplugin import MqttPlugin
+
+            plugin = MqttPlugin()
+        plugin._update_item_values(_StubItem, payload)
+        return plugin._item_values['some.item']['value']
+
+    def test_dict_payload_is_stored_as_json_text(self):
+        payload = {'temp': 21.5, 'unit': 'C'}
+        value = self._stored_value(payload)
+
+        self.assertIsInstance(value, str)
+        self.assertEqual(json.loads(value), payload)
+
+    def test_list_payload_is_stored_as_json_text(self):
+        payload = [1, 'two', {'three': 3}]
+        value = self._stored_value(payload)
+
+        self.assertIsInstance(value, str)
+        self.assertEqual(json.loads(value), payload)
+
+    def test_scalar_payloads_keep_their_type(self):
+        self.assertEqual(self._stored_value(42), 42)
+        self.assertEqual(self._stored_value('on'), 'on')
+        self.assertEqual(self._stored_value(True), 'True')
 
 
 if __name__ == '__main__':

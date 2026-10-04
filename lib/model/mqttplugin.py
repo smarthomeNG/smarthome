@@ -26,6 +26,7 @@ from lib.model.smartplugin import SmartPlugin
 from lib.shtime import Shtime
 from lib.translation import translate as lib_translate
 
+import json
 import os
 
 
@@ -298,6 +299,8 @@ class MqttPlugin(SmartPlugin):
             self._item_values[item.property.path] = {}
         if isinstance(payload, bool):
             self._item_values[item.property.path]['value'] = str(payload)
+        elif isinstance(payload, (dict, list)):
+            self._item_values[item.property.path]['value'] = json.dumps(payload)
         else:
             self._item_values[item.property.path]['value'] = payload
         self._item_values[item.property.path]['last_update'] = item.last_update().strftime('%d.%m.%Y %H:%M:%S')
