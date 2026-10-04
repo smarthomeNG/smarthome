@@ -157,6 +157,7 @@ from ._internal._parsing import (
     parse_autotimer_attribute as _parse_autotimer_attribute,
     build_trigger_condition_eval as _build_trigger_condition_eval,
     get_attribute_value as _get_attribute_value_fn,
+    apply_base_text as _apply_base_text,
     build_on_xx_list as _build_on_xx_list_fn,
     init_prerun as _init_prerun_fn,
     check_item_name_collision as _check_item_name_collision,
@@ -447,6 +448,7 @@ class Item:
         self._cache = False
         self.cast = cast_bool
         self.conf = {}
+        self._base_text = {}
         self._crontab = None
         self._enforce_updates = False
         self._enforce_change = False
@@ -685,15 +687,12 @@ class Item:
                     self.conf[attr] = value
         # end of loop 'for attr, value in config.items()' - handling of all attributes of an item
 
+        _apply_base_text(self, config)
+
         # test for attribute copy within the same item to ensure replace in every definition order of attributes
         for attr in self.conf:
             if str(self.conf[attr]).startswith('.:'):
-                value = self.conf[attr]
-                fromattr = value.split(':')[1]
-                if fromattr in ['', '.']:
-                    fromattr = attr
-                value = self._get_attr(fromattr)
-                self.conf[attr] = value
+                self.conf[attr] = self._get_attribute_value(self.conf[attr], current_attr=attr)
 
         # variable replacement for attributes
         for attr in dict(self.conf):
@@ -714,13 +713,8 @@ class Item:
                         break
 
                 # store resolved attribute value under name w/o underline
-                attr_new = attr[:-1]
-                if attr_new == 'name':
-                    self._name = attr_value
-                    del self.conf[attr]
-                else:
-                    self.conf[attr_new] = attr_value
-                    del self.conf[attr]
+                self.conf[attr[:-1]] = attr_value
+                del self.conf[attr]
 
         # Test if attributes are defined in metadata
         for attr in self.conf:

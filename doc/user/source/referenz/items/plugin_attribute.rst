@@ -122,8 +122,37 @@ Es ist auch möglich, auf Attribute des aktuellen Items zuzugreifen. Dazu wird f
 ein :code:`.` (für das aktuelle Item) angegeben (:code:`.:<Attribut>`).
 
 
-.. index:: Platzhalter in Attributwerten
-.. index:: Items; Platzhalter in Attributwerten
+.. index:: Referenzen auf name, description und remark
+.. index:: Items; Referenzen auf name, description und remark
+
+.. _Standard_Attribute_Referenzen:
+
+Referenzen bei name, description und remark
+-------------------------------------------
+
+Von den Standard-Attributen können nur **name**, **description** und **remark** Referenzen verwenden. Sie können
+sowohl Ziel einer Referenz sein (:code:`description: ..:.`, :code:`remark: ..:description`), als auch von
+plugin-spezifischen Attributen referenziert werden (:code:`my_attribute: ..:name`).
+
+Für die Referenz gilt dieselbe Syntax wie bei plugin-spezifischen Attributen (:code:`<Ebene>:<Attribut>`).
+Auch Platzhalter sind möglich. Dazu wird wie oben ein Unterstrich an den Attributnamen angefügt
+(:code:`name_: "Griff {..:name}"`, :code:`description_`, :code:`remark_`).
+
+Verweist eine Referenz auf ein Attribut, das beim referenzierten Item nicht konfiguriert ist, bleibt das
+Zielattribut ungesetzt (**name** wird dann der Item-Pfad). Das gleiche gilt für Verweise im Kreis
+(:code:`description: .:remark` zusammen mit :code:`remark: .:description`).
+
+.. code-block:: yaml
+
+   fenster_kueche:
+       name: Küchenfenster
+       description: Fenster in der Küche
+
+       griff:
+           name_: "Griff ({..:name})"
+           description: ..:.
+
+.. index:: Platzhalter in Attributwerten.. index:: Items; Platzhalter in Attributwerten
 
 .. _Platzhalter_in_Attributwerten:
 
@@ -144,8 +173,8 @@ angegeben werden. Im Zuge des Ladens wird beim Ersetzen der Platzhalter der Unte
 hal zur Laufzeit also den Namen **my_attribute** und nicht (wie man denken könnte) **my_attribute_**.
 
 Platzhalter können (wie die Vererbung und die Nutzung anderer Attributwerte) **nur** bei
-plugin-spezifischen Attributen verwendet werden. Die einzige Ausnahme ist das Standard-Attribut **name**. Hier können
-Platzhalter verwendet werden (:code:`name_: "Text {..:my_value}"`).
+plugin-spezifischen Attributen verwendet werden. Die Ausnahmen sind die Standard-Attribute **name**,
+**description** und **remark** (siehe :ref:`Standard_Attribute_Referenzen`).
 
 Die Nutzung der Platzhalter wird am Beispiel der folgenden **structs** verdeutlicht:
 

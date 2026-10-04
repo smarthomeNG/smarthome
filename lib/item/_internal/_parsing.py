@@ -44,6 +44,7 @@ from lib.constants import (
     KEY_HYSTERESIS_LOWER_THRESHOLD,
     KEY_ON_CHANGE,
     KEY_CONDITION,
+    REF_BASE_KEYS,
 )
 
 from ..helpers import split_duration_value_string
@@ -396,6 +397,136 @@ def build_trigger_condition_eval(item, trigger_condition):
 # ---------------------------------------------------------------------------
 
 
+def parse_attribute_ref(attr_ref: str, current_attr: str):
+    """
+    Split an attribute reference of the form ``<levels>:<attr>`` into ancestor level and attribute name.
+
+    ``<levels>`` is a run of dots: one dot = current item, two = parent, etc.
+    An empty or ``.`` attribute part refers to *current_attr*.
+
+    :param attr_ref:      Raw attribute value, e.g. ``..:foo`` or ``..:.``
+    :param current_attr:  Attribute currently being processed
+    :return:              ``(level, attr)`` or ``None`` if *attr_ref* is not a reference
+    :rtype:               tuple | None
+    """
+    parts = attr_ref.strip().split(':')
+    if len(parts) < 2:
+        return None
+    fromitem, fromattr = parts[0], parts[1]
+    if not fromitem or not all(x == '.' for x in fromitem):
+        return None
+    if fromattr in ['', '.']:
+        fromattr = current_attr
+    return len(fromitem) - 1, fromattr
+
+
+def find_base_text(item, attr: str, level: int):
+    """
+    Return the configured value of base text attribute *attr* on the ancestor *level* steps above *item*.
+
+    :param item:   ``Item`` instance the walk starts at.
+    :param attr:   One of ``REF_BASE_KEYS``.
+    :param level:  Number of parent steps (0 = *item* itself).
+    :return:       The configured value, or ``None`` if the ancestor does not exist or has none configured.
+    """
+    current = item
+    for _ in range(level):
+        if current._is_top_of_item_tree():
+            return None
+        current = current.return_parent()
+    return current._base_text.get(attr)
+
+
+def find_referenced_value(item, level: int, attr: str, default=''):
+    """
+    Return the value of *attr* on the ancestor *level* steps above *item* (0 = *item* itself).
+
+    Base text attributes (``REF_BASE_KEYS``) are read from the configured base text, all other attributes
+    from the plugin-specific attributes (``conf``).
+
+    :param item:     ``Item`` instance the lookup starts at.
+    :param level:    Number of parent steps.
+    :param attr:     Attribute name.
+    :param default:  Value returned if the ancestor does not exist or has no such attribute.
+    :return:         Attribute value or *default*.
+    """
+    if attr in REF_BASE_KEYS:
+        value = find_base_text(item, attr, level)
+        return default if value is None else value
+    return item.find_attribute(attr, default, level=level, strict=True)
+
+
+def apply_base_text(item, config: dict) -> None:
+    """
+    Resolve attribute references and placeholders for the base text attributes (``REF_BASE_KEYS``) of *item*.
+
+    A base text attribute is either a plain value, a reference (``..:attr``, ``.:attr``) or, written with a
+    trailing underscore (``name_``), a text with ``{<levels>:<attr>}`` placeholders. References between the
+    attributes of the same item are followed; a cycle or a reference to an unset attribute leaves the target
+    unset. Unset attributes get their defaults (``name`` = item path, others ``None``).
+
+    Reads the underscore forms from ``item.conf`` (and removes them there), so it has to run after the
+    attribute loop of ``Item._apply_config``. Sets ``item._name``, ``item._description``, ``item._remark``
+    and ``item._base_text``.
+
+    :param item:    ``Item`` instance being configured.
+    :param config:  Attribute configuration dict of *item*.
+    """
+    raw = {}
+    for attr in REF_BASE_KEYS:
+        template = item.conf.pop(attr + '_', None)
+        if template is not None:
+            raw[attr] = (str(template), True)
+        elif attr in config:
+            raw[attr] = (config[attr], False)
+
+    done = {}
+    active = set()
+
+    def lookup(ref):
+        level, fromattr = ref
+        if level == 0:
+            return resolve(fromattr) if fromattr in REF_BASE_KEYS else item.conf.get(fromattr)
+        return find_referenced_value(item, level, fromattr, default=None)
+
+    def expand(attr, text):
+        while '{' in text:
+            head, _, rest = text.partition('{')
+            varname, closed, tail = rest.partition('}')
+            if not closed:
+                logger.warning(f"Item {item._path}, attribute {attr}_: Invalid var definition - '}}' is missing")
+                break
+            ref = parse_attribute_ref(varname, attr)
+            value = varname if ref is None else lookup(ref)
+            text = head + ('' if value is None else str(value)) + tail
+        return text
+
+    def resolve(attr):
+        if attr in done:
+            return done[attr]
+        if attr in active or attr not in raw:
+            return None
+        active.add(attr)
+        value, is_template = raw[attr]
+        if is_template:
+            value = expand(attr, value)
+        elif isinstance(value, str):
+            ref = parse_attribute_ref(value, attr)
+            if ref is not None:
+                value = lookup(ref)
+        active.discard(attr)
+        done[attr] = value
+        return value
+
+    for attr in REF_BASE_KEYS:
+        value = resolve(attr)
+        if value is not None:
+            item._base_text[attr] = value
+    item._name = item._base_text.get('name', item._path)
+    item._description = item._base_text.get('description')
+    item._remark = item._base_text.get('remark')
+
+
 def get_attribute_value(
     item, attr_ref: str, current_attr: str, default: str = '', ignore_current_item: bool = False
 ) -> str:
@@ -421,21 +552,13 @@ def get_attribute_value(
     :return:                   Resolved value string (or *attr_ref* unchanged).
     :rtype:                    str
     """
-    value = attr_ref
-    attr_ref = attr_ref.strip()
-    if ':' in attr_ref:
-        fromattr = attr_ref.split(':')[1]
-        if fromattr in ['', '.']:
-            fromattr = current_attr
-
-        fromitem = attr_ref.split(':')[0]
-        if fromitem == '.' and ignore_current_item:
-            return value
-
-        if all(x == '.' for x in fromitem):
-            level = len(fromitem) - 1
-            value = item.find_attribute(fromattr, default, level=level, strict=True)
-    return value
+    ref = parse_attribute_ref(attr_ref, current_attr)
+    if ref is None:
+        return attr_ref
+    level, fromattr = ref
+    if level == 0 and ignore_current_item:
+        return attr_ref
+    return find_referenced_value(item, level, fromattr, default)
 
 
 # ---------------------------------------------------------------------------

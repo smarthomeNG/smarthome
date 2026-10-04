@@ -118,6 +118,9 @@ ATTRIBUTE_SEPARATOR = ';'
 KEY_STRUCT = 'struct'
 KEY_REMARK = 'remark'
 
+# base text attributes that take part in attribute references (``..:attr``, ``{..:attr}``)
+REF_BASE_KEYS = (KEY_NAME, KEY_DESCRIPTION, KEY_REMARK)
+
 # global config params for plugins
 KEY_INSTANCE = 'instance'
 KEY_DEFAULT_INSTANCE = 'default_instance'
