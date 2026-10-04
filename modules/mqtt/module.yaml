@@ -116,8 +116,8 @@ parameters:
         gui_type: yes_no
         default: False
         description:
-            de: 'Ermöglicht das Monitoring einiger Broker Werte durch das Web Interfase.'
-            en: 'Enables monitoring some broker data through the web interface.'
+            de: 'Ermöglicht das Monitoring einiger Broker Werte durch das Web Interface des MQTT Plugins.'
+            en: "Enables monitoring some broker data through the MQTT plugin's web interface."
 
     qos:
         type: int
