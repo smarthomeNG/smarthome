@@ -148,9 +148,8 @@ class ItemData:
                 prev_value = html.escape(prev_value)
                 last_value = html.escape(last_value)
 
-            description = item.property.description
-            if description is None:
-                description = ''
+            description = item.property.description or ''
+            remark = item.property.remark or ''
 
             # cycle = ''
             crontab = ''
@@ -250,6 +249,7 @@ class ItemData:
                 'path': item.property.path,
                 'name': item.property.name,
                 'description': description,
+                'remark': remark,
                 'type': item.property.type,
                 'value': value,
                 'change_age': item.property.last_change_age,

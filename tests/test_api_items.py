@@ -599,5 +599,22 @@ class TestRemoveReferences(_Base):
         self.assertEqual(ctx.exception.status, 405)
 
 
+class TestItemDetails(_Base):
+    def _details(self, config):
+        self.sh.items.create_item('target', dict({'type': 'num'}, **config), persist=False)
+        return json.loads(self.controller.item_detail_json_html('target'))[0]
+
+    def test_details_include_description_and_remark(self):
+        details = self._details({'description': 'Kitchen window', 'remark': 'check battery'})
+
+        self.assertEqual(details['description'], 'Kitchen window')
+        self.assertEqual(details['remark'], 'check battery')
+
+    def test_details_have_empty_remark_if_unset(self):
+        details = self._details({})
+
+        self.assertEqual(details['remark'], '')
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
