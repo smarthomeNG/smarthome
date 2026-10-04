@@ -309,5 +309,5 @@ Connection - Telnet:
 - Keyboard sends Telnet special commands -> Haken setzen
 - Return key sends Telnet New Line instead of ^M -> Haken entfernen
 
-Mehr Informationen zum CLI Plugin unter: :doc:`./plugins/cli/README`
+Mehr Informationen zum CLI Plugin unter: :doc:`/plugins/cli/user_doc`
 
