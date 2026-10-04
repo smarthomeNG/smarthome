@@ -19,6 +19,7 @@ import bin.shngversion as shngversion
 import plugins as pluginsversion
 
 import datetime
+import logging
 import locale
 
 try:
@@ -61,7 +62,7 @@ templates_path = ['_templates']
 # Markdown Support via MyST
 # without the following, we will get warnings from Parsing old Readme.md as described in
 # https://myst-parser.readthedocs.io/en/latest/using/howto.html#suppress-warnings
-suppress_warnings = ['myst.header']
+suppress_warnings = ['myst.header', 'sphinx_autodoc_typehints.forward_reference']
 
 # Not used any more
 # from recommonmark.parser import CommonMarkParser
@@ -196,6 +197,11 @@ def setup(app):
     app.add_css_file('custom.css')
     # priority < 200 (searchtools.js's own) so our Scorer override wins the "already defined" check
     app.add_js_file('search_scorer.js', priority=100)
+
+    # Sphinx logs 'document is referenced in multiple toctrees' at info level, which suppress_warnings can't filter
+    logging.getLogger('sphinx.sphinx.environment').addFilter(
+        lambda record: getattr(record, 'subtype', '') != 'multiple_toc_parents'
+    )
 
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for

@@ -10,7 +10,7 @@ SmartHomeNG installieren
 ========================
 
 SmartHomeNG ist eine in Python erstellte Anwendung. Daher muss bevor SmartHomeNG genutzt werden kann,
-Python installiert werden. Außerdem muß der git Client installiert sein, wie im Abschnitt :doc:`debian`  beschrieben.
+Python installiert werden. Außerdem muß der git Client installiert sein, wie im Abschnitt :doc:`01_debian`  beschrieben.
 
 
 .. contents:: Schritte der Installation
