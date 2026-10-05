@@ -523,12 +523,15 @@ class Items:
         :param filename: Basename (without extension) of the target file
         :param path: Full dotted path at which to insert *config*
         :param config: Attribute configuration dict to persist
+        :raises ValueError: if the file cannot hold *path*, e.g. an ancestor
+                            is defined there as an attribute with a value
         """
         target = os.path.join(self._sh._items_dir, filename)
         yf = shyaml.yamlfile(target)
         if shyaml.yaml_exists(target):
             self._load_yaml_file(yf, filename)
-        yf.setvalue(path, config)
+        if not yf.setvalue(path, config):
+            raise ValueError(f"Item '{path}' cannot be persisted to '{filename}.yaml': an ancestor is not an item")
         yf.save()
 
     def _preserve_existing_children(self, filename, path, config):

@@ -364,8 +364,30 @@ class TestYamlfileClass(unittest.TestCase):
         yf2.load()
         self.assertEqual(yf2.getnode('new'), {'type': 'num'})
 
+    def test_setvalue_creates_missing_ancestors(self):
+        path = self._make_file('existing: yes\n')
+        yf = shyaml.yamlfile(path)
+        yf.load()
+
+        self.assertTrue(yf.setvalue('a.b.c', {'type': 'num'}))
+        yf.save()
+
+        yf2 = shyaml.yamlfile(path)
+        yf2.load()
+        self.assertEqual(yf2.getnode('a.b.c'), {'type': 'num'})
+        self.assertEqual(yf2.getvalue('existing'), 'yes')
+
+    def test_setvalue_below_a_leaf_fails_and_keeps_the_leaf(self):
+        path = self._make_file('a:\n    type: num\n')
+        yf = shyaml.yamlfile(path)
+        yf.load()
+
+        self.assertFalse(yf.setvalue('a.type.x', 1))
+        self.assertFalse(yf.setvalue('a.type.x.y', 1))
+        self.assertEqual(yf.getvalue('a.type'), 'num')
+
     def test_setleafvalue_creates_branch_and_leaf(self):
-        # setvalue requires the parent branch to exist; setleafvalue creates it.
+        # setleafvalue creates the branch of the leaf and the leaf.
         path = self._make_file('existing: yes\n')
         yf = shyaml.yamlfile(path)
         yf.load()

@@ -805,13 +805,19 @@ class yamlfile:
 
     # Add a leaf to an empty node
     def _add_node_and_leaf(self, path, value):
-        if not setInDict(self.data, path, value):
-            parent = get_parent(path)
-            attr = path[len(parent) + 1 :]
-            cm = yaml.comments.CommentedMap([(attr, value)])
-            if not setInDict(self.data, parent, cm):
+        """
+        Set ``value`` at ``path``, creating missing ancestors as branches
+
+        :return: False if an ancestor is a leaf holding a value, True otherwise
+        """
+        node = self.data
+        for key in path.split('.')[:-1]:
+            if node.get(key) is None:
+                node[key] = yaml.comments.CommentedMap()
+            node = node[key]
+            if not isinstance(node, dict):
                 return False
-        return True
+        return setInDict(self.data, path, value)
 
     # Get a given data from a dictionary with position provided as a list
     def _getFromDict(self, path):

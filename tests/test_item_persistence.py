@@ -128,6 +128,30 @@ class TestCreateItemPersistDefault(_Base):
         self.assertIsNone(item.property.defined_in)
 
 
+class TestCreateItemPersistDeepPath(_Base):
+    """The persisted file gets the branch nodes above the item, even if they are defined in another file."""
+
+    def test_item_below_parent_defined_elsewhere_is_persisted(self):
+        self.sh.items.create_item('a', {'type': 'num'}, persist=False)
+        self.sh.items.create_item('a.b', {'type': 'num'}, persist=False)
+
+        self.sh.items.create_item('a.b.c', {'type': 'num'})
+
+        data = self._read_file('created')
+        self.assertEqual(data['a']['b']['c']['type'], 'num')
+
+    def test_path_through_a_leaf_of_the_file_raises_and_creates_nothing(self):
+        self.sh.items.create_item('a', {'type': 'num', 'k': 'text'})
+        self.sh.items.create_item('a.k', {'type': 'num'}, persist=False)
+
+        with self.assertRaises(ValueError) as ctx:
+            self.sh.items.create_item('a.k.c', {'type': 'num'})
+
+        self.assertIn('a.k.c', str(ctx.exception))
+        self.assertIsNone(self.sh.items.return_item('a.k.c'))
+        self.assertEqual(self._read_file('created')['a']['k'], 'text')
+
+
 class TestRemoveItemPersist(_Base):
     def test_remove_persisted_item_removes_entry_from_file(self):
         item = self.sh.items.create_item('new', {'type': 'num'})
