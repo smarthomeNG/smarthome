@@ -26,8 +26,40 @@ from lib.model.smartplugin import SmartPlugin
 from lib.shtime import Shtime
 from lib.translation import translate as lib_translate
 
+import functools
 import json
 import os
+
+
+DBGHIGH = 13  # numeric level of logger.dbghigh()
+
+
+def compile_select(expression):
+    """
+    Compile a JMESPath expression for use with select_from_payload()
+
+    :param expression: JMESPath expression, e.g. 'temp' or 'sensors[0].value'
+    :type expression:  str
+    :return:           compiled expression
+    :raises ValueError: if the expression is not valid JMESPath
+    """
+    import jmespath  # only needed when a select is configured
+
+    try:
+        return jmespath.compile(expression)
+    except jmespath.exceptions.JMESPathError as e:
+        raise ValueError(f"invalid select expression '{expression}': {e}") from e
+
+
+def select_from_payload(payload, expression):
+    """
+    Select a part of a parsed payload
+
+    :param payload:    parsed payload (dict or list)
+    :param expression: expression compiled by compile_select()
+    :return:           the selected value, None if the expression matches nothing
+    """
+    return expression.search(payload)
 
 
 class MqttPlugin(SmartPlugin):
@@ -149,7 +181,7 @@ class MqttPlugin(SmartPlugin):
         )
         return
 
-    def add_subscription(self, topic, payload_type, bool_values=None, item=None, callback=None):
+    def add_subscription(self, topic, payload_type, bool_values=None, item=None, callback=None, select=None):
         """
         Add mqtt subscription to subscribed_topics list
 
@@ -160,8 +192,19 @@ class MqttPlugin(SmartPlugin):
         :param bool_values:  bool values (for this subscription to the topic)
         :param item:         item that should receive the payload as value. Used by the standard handler (if no callback function is specified)
         :param callback:     a plugin can provide an own callback function, if special handling of the payload is needed
+        :param select:       JMESPath expression. The standard handler parses the payload as dict and gives the item
+                             only the selected part; nothing is written if the expression matches nothing.
+                             Overrides payload_type.
         :return:
         """
+        compiled_select = None
+        if select is not None:
+            try:
+                compiled_select = compile_select(select)
+            except ValueError as e:
+                self.logger.error(f"add_subscription: topic '{topic}', not subscribing: {e}")
+                return
+            payload_type = 'dict'
 
         with self._subscribed_topics_lock:
             # test if topic is new
@@ -180,6 +223,10 @@ class MqttPlugin(SmartPlugin):
             self._subscribed_topics[topic][item_path]['payload_type'] = payload_type
             if callback:
                 self._subscribed_topics[topic][item_path]['callback'] = callback
+            elif item is not None:
+                self._subscribed_topics[topic][item_path]['callback'] = functools.partial(
+                    self._on_mqtt_item_message, item, select=compiled_select
+                )
             else:
                 self._subscribed_topics[topic][item_path]['callback'] = self._on_mqtt_message
             self._subscribed_topics[topic][item_path]['bool_values'] = bool_values
@@ -269,24 +316,42 @@ class MqttPlugin(SmartPlugin):
             for item_path in self._subscribed_topics[topic]:
                 item = self._subscribed_topics[topic][item_path].get('item', None)
                 if item is not None:
-                    try:
-                        log_info = float(payload) != float(item())
-                    except (ValueError, TypeError):
-                        log_info = str(payload) != str(item())
-                    if log_info:
-                        self.logger.dbghigh(
-                            f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.property.path}' (value={item()})"
-                        )
-                    else:
-                        self.logger.debug(
-                            f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.property.path}' (value={item()})"
-                        )
-                    item(payload, self.get_shortname())
-                    # Update dict for periodic updates of the web interface
-                    self._update_item_values(item, payload)
+                    self._on_mqtt_item_message(item, topic, payload, qos, retain)
         else:
             self.logger.error(f"_on_mqtt_message: No definition found for subscribed topic '{topic}'")
         return
+
+    def _on_mqtt_item_message(self, item, topic, payload, qos=None, retain=None, select=None):
+        """
+        Default callback of an item subscription: deliver the payload to this item only
+
+        :param item:    item that receives the payload
+        :param topic:   topic of the received message
+        :param payload: payload, cast to the payload type of the item's subscription
+        :param qos:
+        :param retain:
+        :param select:  expression compiled by compile_select(); the item receives only the selected part of the payload
+        """
+        if select is not None:
+            payload = select_from_payload(payload, select)
+            if payload is None:
+                return
+        if self.logger.isEnabledFor(DBGHIGH):
+            self._log_item_message(item, topic, payload, qos, retain)
+        item(payload, self.get_shortname())
+        # Update dict for periodic updates of the web interface
+        self._update_item_values(item, payload)
+
+    def _log_item_message(self, item, topic, payload, qos, retain):
+        """Log a message delivered to an item; changes of the item value are logged at dbghigh, repeats at debug level"""
+        try:
+            log_info = float(payload) != float(item())
+        except (ValueError, TypeError):
+            log_info = str(payload) != str(item())
+        log = self.logger.dbghigh if log_info else self.logger.debug
+        log(
+            f"_on_mqtt_message: Received topic '{topic}', payload '{payload}' (item-type {item.type()}), QoS '{qos}', retain '{retain}' for item '{item.property.path}' (value={item()})"
+        )
 
     def _update_item_values(self, item, payload):
         """

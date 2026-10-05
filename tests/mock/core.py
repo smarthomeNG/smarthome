@@ -347,7 +347,7 @@ class MockSmartHome:
             if isinstance(value, dict):
                 child_path = attr
                 try:
-                    child = lib.item.item.Item(self, self, child_path, value)
+                    child = lib.item.item.Item(self, self.items, child_path, value, items_instance=self.items)
                 except Exception as e:
                     print('Item {}: problem creating: {}'.format(child_path, e))
                 else:

@@ -545,9 +545,11 @@ class Mqtt(Module):
         subscription_found = False
         if logic:
             self.logger.info(
-                "_trigger_logic: Using topic '{}', payload '{} (type {})' for triggering logic '{}'".format(
-                    topic, payload, datatype, logic
-                )
+                "_trigger_logic: Using topic '%s', payload '%s (type %s)' for triggering logic '%s'",
+                topic,
+                payload,
+                datatype,
+                logic,
             )
             self._sh.logics.trigger_logic(logic, source='mqtt', by=topic, value=payload)
             subscription_found = True
@@ -577,9 +579,12 @@ class Mqtt(Module):
         subscription_found = False
         if plugin:
             self.logger.info(
-                "_callback_to_plugin: Using topic '{}', payload '{}' (type {}) for callback to plugin '{}' {}".format(
-                    topic, payload, datatype, plugin_name, plugin
-                )
+                "_callback_to_plugin: Using topic '%s', payload '%s' (type %s) for callback to plugin '%s' %s",
+                topic,
+                payload,
+                datatype,
+                plugin_name,
+                plugin,
             )
 
             # s elf._sh.logics.trigger_logic(logic, source='mqtt', by=topic, value=payload)
@@ -600,9 +605,11 @@ class Mqtt(Module):
                           This is a class with members topic, payload, qos, retain.
         """
         self.logger.debug(
-            "_on_mqtt_message: RECEIVED topic '{}', payload '{}, QoS '{}', retain '{}'".format(
-                message.topic, message.payload, message.qos, message.retain
-            )
+            "_on_mqtt_message: RECEIVED topic '%s', payload '%s, QoS '%s', retain '%s'",
+            message.topic,
+            message.payload,
+            message.qos,
+            message.retain,
         )
 
         with self._subscribed_topics_lock:
@@ -632,9 +639,7 @@ class Mqtt(Module):
                 topic_dict = self._subscribed_topics[topic]
 
                 for subscription in list(topic_dict):
-                    self.logger.debug(
-                        "_on_mqtt_message: subscription '{}': {}".format(subscription, topic_dict[subscription])
-                    )
+                    self.logger.debug("_on_mqtt_message: subscription '%s': %s", subscription, topic_dict[subscription])
                     subscriber_type = topic_dict[subscription].get('subscriber_type', None)
                     try:
                         if subscriber_type == 'plugin':
