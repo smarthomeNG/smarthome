@@ -205,6 +205,15 @@ parameters:
             en: 'If set, the loop guard only counts write attempts whose "caller" string starts with this prefix
                  (e.g. "MQTT"). Writes from all other callers always pass through freely.'
 
+    # mark items invalid in the database log on connection loss (opt-in, off if not declared)
+    # !! remove if not applicable to the plugin
+    invalidate_on_disconnect:
+        type: bool
+        default: false
+        description:
+            de: 'Items bei Verbindungsverlust im Datenbank-Log als ungültig markieren (Datenlücke)'
+            en: 'mark items invalid in the database log when the connection is lost (data gap)'
+
     # more fundamental connection settings
     # !! plugin defaults can be set here (add default:) or in code
     # adjust/set only if necessary for plugin

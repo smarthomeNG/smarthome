@@ -32,6 +32,7 @@ import sys
 import time
 import json
 import datetime
+import itertools
 import textwrap
 import ruamel.yaml as yaml
 from copy import deepcopy
@@ -234,6 +235,11 @@ class SmartDevicePlugin(SmartPlugin):
         _lgs = self.get_parameter_value('loop_guard_source')
         self._loop_guard_source: str = str(_lgs) if _lgs is not None else ''
 
+        # mark device-mirroring items invalid in the database log on connection loss (opt-in)
+        self._invalidate_on_disconnect = bool(self.get_parameter_value('invalidate_on_disconnect'))
+        self._suspended_by_connection = False
+        self._has_connected = False
+
         # connection instance
         # self._connection: SDPConnection | None = None
         # commands instance
@@ -382,7 +388,7 @@ class SmartDevicePlugin(SmartPlugin):
         self._parameters.update(kwargs)
 
         # set callback for tcp client etc.
-        self._parameters[PLUGIN_ATTR_CB_SUSPEND] = self.set_suspend
+        self._parameters[PLUGIN_ATTR_CB_SUSPEND] = self._on_connection_aborted
 
         # this is only viable for the base class. All derived plugin classes
         # will probably be created towards a specific command class
@@ -432,6 +438,7 @@ class SmartDevicePlugin(SmartPlugin):
         if self.alive:
             self.logger.info(f'plugin resumed by {by if by else "unknown"}, connections will be resumed')
             self.suspended = False
+            self._suspended_by_connection = False
             if self._suspend_item is not None:
                 self._suspend_item(False, self.get_fullname())
             self.connect()
@@ -446,6 +453,18 @@ class SmartDevicePlugin(SmartPlugin):
     def on_resume(self):
         """called when suspend is disabled. Overwrite as needed"""
         pass
+
+    def _on_connection_aborted(self, suspend_active: bool | None = None, by: str | None = None):
+        """
+        Connection callback for exhausted connect attempts: invalidate items, then suspend.
+
+        Unlike a manual suspend, the connection loss is real, so the items are marked
+        invalid here and the suspend-induced disconnect is not treated as manual.
+        """
+        if suspend_active:
+            self._suspended_by_connection = True
+            self._invalidate_items(by)
+        self.set_suspend(suspend_active, by)
 
     def set_suspend(self, suspend_active: bool | None = None, by: str | None = None):
         """
@@ -1391,6 +1410,7 @@ class SmartDevicePlugin(SmartPlugin):
 
     def on_connect(self, by: str | None = None):
         """callback if connection is made."""
+        self._has_connected = True
         # neither of these are meaningful in standalone mode: there's no
         # shng scheduler (self._sh is None) to schedule either through, and
         # standalone diagnostic flows (e.g. run_standalone()) do their own
@@ -1421,6 +1441,43 @@ class SmartDevicePlugin(SmartPlugin):
                     self.scheduler_add(
                         reconnect_name, self.connect, next=self.shtime.now() + datetime.timedelta(seconds=5)
                     )
+            if not self.suspended or self._suspended_by_connection:
+                self._invalidate_items(by)
+
+    def should_invalidate_item(self, item: Item, by: str | None = None) -> bool:
+        """
+        Whether ``item`` is marked invalid when the connection is lost. Overwrite to filter.
+
+        By default these are the items that receive device data, i.e. those mapped to a
+        readable or pseudo command. Write-only items and the suspend item hold values
+        set by shng, not device state.
+
+        :param item: item of this plugin that has ``db_mark_invalid``
+        :param by: origin of the connection loss as reported by the connection
+        """
+        return any(
+            item in items for items in itertools.chain(self._commands_read.values(), self._commands_pseudo.values())
+        )
+
+    def _invalidate_items(self, by: str | None = None):
+        """
+        Mark this plugin's items invalid in the database log, if enabled by ``invalidate_on_disconnect``.
+
+        Items without ``db_mark_invalid`` (not logged by the database plugin) are skipped.
+        The item values stay unchanged; only the database log records a gap.
+        """
+        # before the first connect nothing was received, so there is nothing to invalidate
+        if not self._invalidate_on_disconnect or not self._has_connected:
+            return
+        for item in self.get_item_list():
+            mark_invalid = getattr(item, 'db_mark_invalid', None)
+            if mark_invalid is None or not self.should_invalidate_item(item, by):
+                continue
+            # db_mark_invalid() is not idempotent: repeating it would split one gap into several
+            is_invalid = getattr(item, 'db_is_invalid', None)
+            if is_invalid is not None and is_invalid():
+                continue
+            mark_invalid(caller=self.get_fullname(), source='connection_lost')
 
     def _process_additional_data(self, command: str, data: Any, value: Any, custom: int, by: str | None = None):
         """do additional processing of received data

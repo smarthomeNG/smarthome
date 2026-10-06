@@ -6,5 +6,6 @@ commands = {
     'status': {
         'power': {'read': True, 'write': True, 'opcode': 'PW', 'item_type': 'bool', 'dev_datatype': 'raw'},
         'volume': {'read': True, 'write': True, 'opcode': 'VO', 'item_type': 'num', 'dev_datatype': 'raw'},
-    }
+    },
+    'control': {'key': {'read': False, 'write': True, 'opcode': 'KY', 'item_type': 'bool', 'dev_datatype': 'raw'}},
 }

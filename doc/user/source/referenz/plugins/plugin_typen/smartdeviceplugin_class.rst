@@ -242,6 +242,40 @@ Der Guard wird automatisch zurückgesetzt, wenn der Item-Wert sich ändert, die 
 erfolgreich wiederhergestellt wird, oder das Zeitfenster abläuft ohne weitere Versuche.
 
 
+Datenlücken bei Verbindungsverlust
+----------------------------------
+
+Mit dem Parameter ``invalidate_on_disconnect`` markiert das Plugin bei Verbindungsverlust seine Items im
+Datenbank-Log des ``database``-Plugins als ungültig (``item.db_mark_invalid()``). Der Item-Wert selbst bleibt
+unverändert, im Log entsteht eine Datenlücke. Sie endet mit dem nächsten vom Gerät gelieferten Wert; ein
+explizites ``db_mark_valid()`` erfolgt nicht.
+
+.. list-table:: Parameter
+   :header-rows: 1
+
+   * - Parameter (plugin.yaml)
+     - Standardwert
+     - Beschreibung
+   * - ``invalidate_on_disconnect``
+     - ``False``
+     - ``True`` aktiviert die Markierung. Wird der Parameter in der ``plugin.yaml`` des Plugins nicht
+       deklariert, ist die Funktion aus.
+
+Voraussetzungen und Verhalten:
+
+- Es werden nur Items markiert, die das ``database``-Plugin loggt (``database: yes``); alle anderen werden
+  übersprungen.
+- Ausgelöst wird beim Verbindungsverlust (``on_disconnect()``) und beim Abbruch der Verbindungsversuche
+  (``retry_suspend``), unmittelbar bevor das Plugin in den Suspend-Modus wechselt. Ein manuell gesetzter Suspend
+  markiert nichts.
+- Vor der ersten erfolgreichen Verbindung wird nichts markiert.
+- Bereits als ungültig markierte Items werden nicht erneut markiert.
+
+Welche Items markiert werden, bestimmt ``should_invalidate_item(item, by)``. Standardmäßig sind das Items, die
+Gerätedaten empfangen (lesbare Kommandos und Pseudo-Kommandos), nicht aber reine Schreib-Items und das
+Suspend-Item. Ein Plugin kann die Methode überschreiben, um die Auswahl anzupassen.
+
+
 DataTypes
 ---------
 

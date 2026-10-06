@@ -67,6 +67,11 @@ parameters:
         default: ''
         description:
             en: 'loop guard source prefix'
+    invalidate_on_disconnect:
+        type: bool
+        default: false
+        description:
+            en: 'mark items invalid in the database log on connection loss'
 
 item_attributes:
     fx_command:
