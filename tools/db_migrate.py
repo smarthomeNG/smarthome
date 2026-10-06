@@ -249,8 +249,7 @@ def connection_identity(driver: str, connect: ConnectParams, prefix: str) -> tup
 def source_has_native_cagg(source: lib.db.Database, source_driver: str, source_tn: dict[str, str]) -> bool:
     """True if source is TimescaleDB and at least one continuous aggregate
     exists on its {log} hypertable (plugins/database's
-    timescale_aggregation_mode: native - see ~/.claude/handoff/
-    handoff-shng-timescaledb.md). This tool only ever reads raw {log}; a
+    timescale_native_aggregation). This tool only ever reads raw {log}; a
     cagg-covered source may already have raw chunks dropped by native
     retention, for buckets only the cagg still covers - a raw-only
     migration would silently be incomplete there.
