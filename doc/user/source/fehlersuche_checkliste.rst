@@ -81,13 +81,19 @@ SmartHomeNG im Debugmodus starten
 ---------------------------------
 
 Eine einfache Möglichkeit Logeinträge bis zum Level DEBUG zu erhalten, ist es SmartHomeNG im Debug Modus zu starten.
-Allerdings werden dabei aus allen Komponenten und Plugins die Logausgaben bis zum Level DEBUG erweitert. Dieses führt
-zu einer sehr großen Anzahl von Log Einträgen und ist deshalb recht unübersichtlich.
+Dabei wird ``logging.yaml`` komplett ignoriert und eine eingebaute Logging-Konfiguration verwendet. Das hilft auch,
+wenn ``logging.yaml`` fehlerhaft ist. Alle Logger von SmartHomeNG (Core, Module, Plugins, Logiken, Items und Funktionen)
+loggen dabei auf Level DEBUG, alle anderen Logger (z.B. von Python-Paketen) auf Level INFO. Die Ausgaben erfolgen auf
+der Konsole und in der Datei ``var/log/smarthome-debug.log``. Dieses führt zu einer sehr großen Anzahl von Log
+Einträgen und ist deshalb recht unübersichtlich.
 
 .. note::
 
-    Vorzuziehen ist eine gezielte Aktivierung der DBUG Ausgaben für einzelne Komponenten oder Plugins. Dieses geschieht
+    Vorzuziehen ist eine gezielte Aktivierung der DEBUG Ausgaben für einzelne Komponenten oder Plugins. Dieses geschieht
     über die Logging Konfiguration in ``/etc/logging.yaml`` bzw. über die GUI des Admin Interfaces.
+
+    Im Debug Modus werden Änderungen an der Logging Konfiguration im Admin Interface zwar gespeichert, aber weder
+    angewendet noch geprüft. Sie wirken erst nach einem Neustart ohne ``-d``.
 
 
 .. code::

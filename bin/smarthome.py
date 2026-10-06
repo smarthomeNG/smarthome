@@ -74,7 +74,7 @@ argparser.add_argument('-p', '--pip3_command', help='set path of pip3 command, i
 arggroup.add_argument(
     '-i',
     '--interactive',
-    help='open an interactive shell with tab completion and with verbose logging to the logfile',
+    help='open an interactive shell with tab completion, logging as configured in logging.yaml',
     action='store_true',
 )
 arggroup.add_argument('-l', '--logics', help='reload all logics', action='store_true')
@@ -115,21 +115,12 @@ argparser.add_argument(
 )
 
 arggroup.add_argument(
-    '-v',
-    '--verbose',
-    help='verbose (info output) logging to the logfile - DEPRECATED use logging-configuration',
-    action='store_true',
-)
-arggroup.add_argument(
     '-d',
     '--debug',
-    help='stay in the foreground with verbose output - DEPRECATED use logging-configuration',
+    help='stay in the foreground and log at debug level to the console and var/log/smarthome-debug.log, ignoring logging.yaml completely',
     action='store_true',
 )
 arggroup.add_argument('-f', '--foreground', help='stay in the foreground', action='store_true')
-arggroup.add_argument(
-    '-q', '--quiet', help='reduce logging to the logfile - DEPRECATED use logging-configuration', action='store_true'
-)
 # When running under pytest, sys.argv contains pytest's own arguments, which
 # argparse would reject with sys.exit(2). Parse an empty arg list in that case
 # so import-time parsing (needed to bootstrap core requirements below) stays safe.
@@ -346,11 +337,6 @@ if __name__ == '__main__':
         exit(0)
     elif args.debug:
         MODE = 'debug'
-    elif args.quiet:
-        pass
-    elif args.verbose:
-        MODE = 'verbose'
-        pass
     elif args.foreground:
         MODE = 'foreground'
         pass

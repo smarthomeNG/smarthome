@@ -133,6 +133,8 @@ class FilesController(RESTResource):
 
         Backs up the current config to logging.yaml.bak before writing.
         If the new config is invalid, the backup is automatically restored.
+        While the built-in debug logging (``smarthome.py -d``) is active, the file is only
+        written: it is neither applied nor validated.
 
         :return: status dict
         """
@@ -159,6 +161,10 @@ class FilesController(RESTResource):
         # Write new config
         with open(filename, 'w', encoding='UTF-8') as f:
             f.write(params)
+
+        if not self._sh.logs.uses_logging_yaml:
+            # logging.yaml is ignored while the built-in debug logging (-d) is active
+            return json.dumps({'result': 'ok', 'config_reloaded': False, 'debug_mode': True})
 
         # Apply new config at runtime
         reload_ok = self._sh.logs.reload_logging_config()

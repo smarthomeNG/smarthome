@@ -33,6 +33,7 @@ import pytz
 from babel.dates import format_datetime, get_timezone_name
 
 from pathlib import Path
+from typing import Any
 
 import collections
 
@@ -41,11 +42,62 @@ from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG, DIR_ETC, DIR_VAR
 
 logs_instance = None
 
+DEBUG_LOGFILE = os.path.join('.', DIR_VAR, 'log', 'smarthome-debug.log')
+
+# Logger families of SmartHomeNG itself (as defined in the default logging.yaml)
+SHNG_LOGGER_FAMILIES = ('functions', 'lib', 'lib.smarthome', 'modules', 'plugins', 'logics', 'items')
+
+
+def debug_logging_config(logfile: str = DEBUG_LOGFILE) -> dict[str, Any]:
+    """
+    Build the built-in logging configuration used by ``smarthome.py -d``.
+
+    It does not depend on ``logging.yaml``: all SmartHomeNG loggers (see ``SHNG_LOGGER_FAMILIES``)
+    log at DEBUG, all other loggers (third-party packages) at INFO. Everything goes to stdout and
+    to ``logfile``.
+
+    :param logfile: Path of the debug logfile
+    :return: configuration dict for ``logging.config.dictConfig``
+    """
+    handler_names = ['shng_debug_console', 'shng_debug_file']
+    return {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'shng_debug': {
+                'format': '%(asctime)s %(levelname)-8s %(name)-19s %(funcName)-25s ln:%(lineno)-4d %(message)s  ----  %(threadName)-12s',
+                'datefmt': '%Y-%m-%d %H:%M:%S',
+            }
+        },
+        'handlers': {
+            'shng_debug_console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'shng_debug',
+                'level': 'DEBUG',
+                'stream': 'ext://sys.stdout',
+            },
+            'shng_debug_file': {
+                '()': 'lib.log.ShngTimedRotatingFileHandler',
+                'formatter': 'shng_debug',
+                'level': 'DEBUG',
+                'when': 'midnight',
+                'backupCount': 2,
+                'filename': logfile,
+                'encoding': 'utf8',
+            },
+        },
+        'loggers': {name: {'level': 'DEBUG'} for name in SHNG_LOGGER_FAMILIES},
+        'root': {'level': 'INFO', 'handlers': handler_names},
+    }
+
 
 class Logs:
     _logs = {}
     logging_levels = {}
     root_handler_name = ''
+
+    #: False while the built-in debug configuration (``-d``) is active instead of ``logging.yaml``
+    uses_logging_yaml = True
 
     NOTICE_level = 29
     DBGHIGH_level = 13
@@ -69,17 +121,37 @@ class Logs:
         self._sh = sh
         return
 
-    def configure_logging(self, config_filename=''):
+    def configure_debug_logging(self, logfile: str = DEBUG_LOGFILE) -> bool:
+        """
+        Configure logging with the built-in debug configuration instead of ``logging.yaml``.
 
-        if not config_filename:
-            config_filename = self._sh.get_config_file(BASE_LOG)
-        config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
+        See :func:`debug_logging_config`. The directory of ``logfile`` is created if missing.
 
+        :param logfile: Path of the debug logfile
+        :return: True on success
+        """
+        os.makedirs(os.path.dirname(os.path.abspath(logfile)), exist_ok=True)
+        return self.configure_logging(config_dict=debug_logging_config(logfile))
+
+    def configure_logging(self, config_filename='', config_dict: dict[str, Any] | None = None):
+        """
+        Configure logging from ``logging.yaml`` (or ``config_filename``), or from ``config_dict`` if given.
+
+        :param config_filename: Name of the logging configuration file; ignored if ``config_dict`` is given
+        :param config_dict: Ready-made ``dictConfig`` dict that replaces the configuration file
+        :return: True on success, the exception if ``dictConfig`` failed
+        """
+        self.uses_logging_yaml = config_dict is None
         if config_dict is None:
-            print()
-            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
-            print()
-            exit(1)
+            if not config_filename:
+                config_filename = self._sh.get_config_file(BASE_LOG)
+            config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
+
+            if config_dict is None:
+                print()
+                print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
+                print()
+                exit(1)
 
         config_dict = self.add_all_handlers_logger(config_dict)
 

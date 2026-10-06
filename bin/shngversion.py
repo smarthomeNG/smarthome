@@ -27,7 +27,10 @@ import datetime
 
 sys.path.append('..')
 
-import plugins.__init__ as plugin_vers
+try:
+    import plugins.__init__ as plugin_vers
+except ImportError:  # SmartHomeNG can run without a plugins folder
+    plugin_vers = None
 from lib.utils import Version
 
 # Update auf 1.3d   wg. neuer item features on_update, on_change

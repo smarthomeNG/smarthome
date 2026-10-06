@@ -134,10 +134,14 @@ handlers:
     #    filename: ./var/log/item-value-change.log
     #    encoding: utf8
 
-    #console:
-    #    class: logging.StreamHandler
-    #    formatter: shng_simple
-    #    stream: ext://sys.stdout
+    console:
+        # Writes NOTICE and above to stdout. Visible in foreground, debug and interactive mode;
+        # in daemon mode stdout is /dev/null.
+        #
+        class: logging.StreamHandler
+        formatter: shng_simple
+        level: NOTICE
+        stream: ext://sys.stdout
 
 loggers:
     # The following default loggers should not be changed. If additional logging
@@ -250,4 +254,4 @@ root:
     # to other log files than the warnings file.
     #
     level: WARNING
-    handlers: [shng_warnings_file]
+    handlers: [shng_warnings_file, console]

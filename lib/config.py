@@ -67,6 +67,10 @@ def parse_basename(basename, configtype=''):
     if config == {}:
         if configtype == 'module':
             logger.warning(f"No valid file '{basename}{YAML_FILE}' found with {configtype} configuration")
+        elif configtype == 'plugin':
+            logger.warning(
+                f"No plugins configured: no valid file '{basename}{YAML_FILE}' found with plugin configuration"
+            )
         elif configtype != 'logics':
             logger.error(f"No valid file '{basename}.*' found with {configtype} configuration")
     return config

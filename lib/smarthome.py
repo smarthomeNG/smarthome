@@ -464,15 +464,7 @@ class SmartHome:
 
         #############################################################
         # Test if plugins are installed
-        if not os.path.isdir(self._plugins_dir):
-            self._logger.critical('Plugin folder does not exist!')
-            self._logger.critical(f"Please create folder '{self._plugins_dir}' and install plugins.")
-            self._logger.critical('Aborting')
-            exit(1)
-        if not os.path.isdir(os.path.join(self._plugins_dir, 'database')):
-            self._logger.critical(f"No plugins found in folder '{self._plugins_dir}'. Please install plugins.")
-            self._logger.critical('Aborting')
-            exit(1)
+        self.check_plugins_installed()
 
         #############################################################
         # test if needed Python packages for configured plugins
@@ -725,6 +717,18 @@ class SmartHome:
         self._deprecated_warning('sh.get_basedir()')
         return self._base_dir
 
+    def check_plugins_installed(self) -> bool:
+        """
+        Check that the plugins folder exists. SmartHomeNG also runs without plugins, so a missing
+        folder is only reported as a warning.
+
+        :return: True if the plugins folder exists
+        """
+        if os.path.isdir(self._plugins_dir):
+            return True
+        self._logger.warning(f"No plugins installed: plugins folder '{self._plugins_dir}' does not exist")
+        return False
+
     def checkConfigFiles(self):
         """
         This function checks if the needed configuration files exist. It checks for CONF and YAML files.
@@ -752,7 +756,12 @@ class SmartHome:
     def init_logging(self, conf_basename='', MODE='default'):
         """
         This function initiates the logging for SmartHomeNG.
+
+        In MODE 'debug' (``-d``) the built-in debug configuration is used and ``logging.yaml`` is not read at all.
         """
+        if MODE == 'debug':
+            return self.logs.configure_debug_logging()
+
         if conf_basename == '':
             conf_basename = self._log_conf_basename
         logsetup = self.logs.configure_logging()
@@ -768,14 +777,6 @@ class SmartHome:
                 exit(1)
             print('Starting with default logging configuration')
 
-        if MODE == 'interactive':  # remove default stream handler
-            logging.getLogger().disabled = True
-        elif MODE == 'verbose':
-            logging.getLogger().setLevel(logging.INFO)
-        elif MODE == 'debug':
-            logging.getLogger().setLevel(logging.DEBUG)
-        elif MODE == 'quiet':
-            logging.getLogger().setLevel(logging.WARNING)
         return logsetup
 
     #################################################################

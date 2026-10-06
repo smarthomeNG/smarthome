@@ -10,8 +10,8 @@ smarthome.py kann mit folgenden Kommandozeilen Optionen gestartet werden:
 | -p         | --pip3_command       | Setzt den Pfad des pip3 Kommandos (notwendig falls es nicht autmatisch         |
 |            |                      | gefunden wird)                                                                 |
 +------------+----------------------+--------------------------------------------------------------------------------+
-| -i         | --interactive        | Eine interactive Shell öffen (mit Tab Vervollständigung und ausführlichem      |
-|            |                      | Logging)                                                                       |
+| -i         | --interactive        | Eine interaktive Shell öffnen (mit Tab Vervollständigung). Das Logging erfolgt |
+|            |                      | gemäß ``logging.yaml``.                                                        |
 +------------+----------------------+--------------------------------------------------------------------------------+
 | -l         | --logics             | Alle Logiken neu laden                                                         |
 +------------+----------------------+--------------------------------------------------------------------------------+
@@ -39,16 +39,10 @@ smarthome.py kann mit folgenden Kommandozeilen Optionen gestartet werden:
 |            |                      | logics, scenes, uf) unterhalb von etc suchen                                   |
 |            |                      | (``etc/items/`` statt ``items/``, ``etc/structs/`` statt ``structs/`` usw.)    |
 +------------+----------------------+--------------------------------------------------------------------------------+
-| -v         | --verbose            | Ausführliches Logging - DEPRECATED bitte die Logging-Konfiguration benutzen    |
-+------------+----------------------+--------------------------------------------------------------------------------+
-| -d         | --debug              | Im Vordergrund bleiben mit ausführlichem Logging - DEPRECATED bitte die        |
-|            |                      | Logging-Konfiguration benutzen                                                 |
+| -d         | --debug              | Im Vordergrund bleiben mit Debug-Logging. ``logging.yaml`` wird dabei komplett |
+|            |                      | ignoriert: Alle SmartHomeNG-Logger (lib, modules, plugins, logics, items,      |
+|            |                      | functions) loggen auf Level DEBUG, alle anderen auf INFO, jeweils auf die      |
+|            |                      | Konsole und in die Datei ``var/log/smarthome-debug.log``.                      |
 +------------+----------------------+--------------------------------------------------------------------------------+
 | -f         | --foreground         | Im Vordergrund bleiben                                                         |
 +------------+----------------------+--------------------------------------------------------------------------------+
-| -q         | --quiet              | Reduziertes Logging - DEPRECATED bitte die Logging-Konfiguration benutzen      |
-+------------+----------------------+--------------------------------------------------------------------------------+
-
-Die als DEPRECATED gekennzeichneten Optionen werden in einem der nächsten Releases entfernt werden.
-
-
