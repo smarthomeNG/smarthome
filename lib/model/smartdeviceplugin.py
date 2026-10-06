@@ -2333,6 +2333,23 @@ class Standalone:
         def isnumstr(val):
             return all(c in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.') for c in val)
 
+        def is_block_safe(data):
+            """
+            True if shyaml.yaml_save() writes ``data`` as a literal block that reads back unchanged
+
+            yaml_save() halves every doubled line break and puts a blank line before each line ending in ':'
+            unless a list entry follows. Blocks therefore hold the text with doubled line breaks (see
+            str_presenter()), and cannot hold carriage returns, a leading or doubled trailing line break, or
+            a line ending in ':' that no list entry follows.
+            """
+            if '\r' in data or data.startswith('\n') or data.strip('\n') == '' or data.endswith('\n\n'):
+                return False
+            lines = data[:-1].split('\n') if data.endswith('\n') else data.split('\n')
+            following = lines[1:] + ['']
+            return not any(
+                line.endswith(':') and not nxt.strip().startswith('-') for line, nxt in zip(lines, following)
+            )
+
         def str_presenter(dumper, data):
             """configures yaml for dumping multiline strings and version number strings"""
 
@@ -2340,9 +2357,11 @@ class Standalone:
             if isnumstr(data):
                 return dumper.represent_scalar('tag:yaml.org,2002:str', data, style="'")
 
-            # dump multiline strings in | format
-            if data.count('\n') > 0:
-                return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+            if '\n' in data:
+                if not is_block_safe(data):
+                    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
+                text, end = (data[:-1], '\n') if data.endswith('\n') else (data, '')
+                return dumper.represent_scalar('tag:yaml.org,2002:str', text.replace('\n', '\n\n') + end, style='|')
 
             # default
             return dumper.represent_scalar('tag:yaml.org,2002:str', data)
@@ -2363,9 +2382,14 @@ class Standalone:
         # load plugin's plugin.yaml
         file = self.plugin_path / 'plugin.yaml'
         try:
-            self.yaml = shyaml.yaml_load(file, ordered=True)
+            plugin_yaml_text = file.read_text(encoding='utf8')
         except OSError as e:
             print(f'Error: file {file} could not be opened. Original error: {e}')
+            return
+        # not shyaml.yaml_load(): it doubles every line break, which changes multiline values
+        self.yaml, error = shyaml.yaml_load_fromstring(plugin_yaml_text, ordered=True)
+        if self.yaml is None:
+            print(f'Error: file {file} could not be parsed. Original error: {error}')
             return
 
         self.yaml['item_structs'] = OrderedDict()
