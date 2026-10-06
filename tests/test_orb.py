@@ -24,6 +24,7 @@ import math
 import sys
 import os
 import unittest
+from unittest import mock
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -45,6 +46,7 @@ try:
 except ImportError:
     HAS_SKYFIELD = False
 
+import lib.orb as orb_module
 from lib.orb import Orb
 from lib.shtime import Shtime
 
@@ -116,6 +118,36 @@ def _make_shtime(tz='UTC'):
     st = Shtime(_Sh())
     st.set_tz(tz)
     return st
+
+
+class TestResolveBackend(unittest.TestCase):
+    """lib.orb.resolve_backend(): configured name -> usable backend name (ephem fallback)."""
+
+    def test_registered_backend_returned_unchanged(self):
+        with mock.patch.dict(orb_module._BACKENDS, {'ephem': object, 'skyfield': object}, clear=True):
+            self.assertEqual(orb_module.resolve_backend('skyfield'), 'skyfield')
+
+    def test_unavailable_skyfield_falls_back_to_ephem(self):
+        with mock.patch.dict(orb_module._BACKENDS, {'ephem': object}, clear=True):
+            with self.assertLogs('lib.orb', level='WARNING') as logs:
+                self.assertEqual(orb_module.resolve_backend('skyfield-cached'), 'ephem')
+        self.assertIn('ephem', logs.output[0])
+
+    def test_unavailable_ephem_falls_back_to_skyfield(self):
+        with mock.patch.dict(orb_module._BACKENDS, {'skyfield': object, 'skyfield-cached': object}, clear=True):
+            with self.assertLogs('lib.orb', level='WARNING') as logs:
+                self.assertEqual(orb_module.resolve_backend('ephem'), 'skyfield')
+        self.assertIn('skyfield', logs.output[0])
+
+    def test_unknown_name_falls_back_to_ephem(self):
+        with mock.patch.dict(orb_module._BACKENDS, {'ephem': object}, clear=True):
+            with self.assertLogs('lib.orb', level='WARNING'):
+                self.assertEqual(orb_module.resolve_backend('nonexistent'), 'ephem')
+
+    def test_no_backend_available_returns_none(self):
+        with mock.patch.dict(orb_module._BACKENDS, {}, clear=True):
+            with self.assertLogs('lib.orb', level='WARNING'):
+                self.assertIsNone(orb_module.resolve_backend('skyfield'))
 
 
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')

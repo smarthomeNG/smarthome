@@ -541,6 +541,37 @@ if Loader is not None:
     _BACKENDS['skyfield-cached'] = _SkyfieldCachedBackend
 
 
+_FALLBACK_ORDER = ('ephem', 'skyfield')
+
+
+def resolve_backend(name: str) -> str | None:
+    """
+    Map a configured backend name to one that is registered in ``_BACKENDS``.
+
+    A configured backend that is registered is always returned unchanged, even if its
+    data still has to be fetched on first use. A backend that is not registered
+    (package not installed, or unknown name) is replaced by the first registered one
+    of ``_FALLBACK_ORDER``, with a warning.
+
+    :param name: backend name from the configuration
+    :return: name of a registered backend, or None if no backend is available at all
+    """
+    if name in _BACKENDS:
+        return name
+    if name.startswith('skyfield') and Loader is None:
+        reason = "skyfield is not installed (run 'tools/fetch_skyfield_data.py' once to install it)"
+    elif name == 'ephem':
+        reason = 'ephem is not installed'
+    else:
+        reason = 'unknown backend'
+    for fallback in _FALLBACK_ORDER:
+        if fallback in _BACKENDS:
+            logger.warning(f"Ephemeris backend '{name}' not usable: {reason}. Falling back to '{fallback}'.")
+            return fallback
+    logger.warning(f"Ephemeris backend '{name}' not usable: {reason}, and no other backend is installed.")
+    return None
+
+
 class Orb:
     """
     Save an observers location and the name of a celestial body for future use

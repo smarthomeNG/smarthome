@@ -58,3 +58,8 @@ außer "Cache-Aufbau" = einmalige Kosten für die erste Abfrage
 Die Backends können über den ``etc/smarthome.yaml``-Parameter
 `orb_backend: <Wert>` konfiguriert werden. Gültige Werte sind
 "ephem", "skyfield" und "skyfield-cache".
+
+Ist das konfigurierte Backend nicht installiert (oder unbekannt), weicht SmartHomeNG mit einer
+Warnung auf ein installiertes Backend aus (Reihenfolge: ``ephem``, ``skyfield``). Ist keines
+installiert, stehen ``sh.sun`` und ``sh.moon`` nicht zur Verfügung. Ist ``skyfield`` installiert
+und konfiguriert, aber die Ephemeriden-Datei fehlt, wird sie bei der ersten Abfrage heruntergeladen.
