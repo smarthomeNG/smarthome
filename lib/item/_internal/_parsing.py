@@ -463,7 +463,8 @@ def apply_base_text(item, config: dict) -> None:
     A base text attribute is either a plain value, a reference (``..:attr``, ``.:attr``) or, written with a
     trailing underscore (``name_``), a text with ``{<levels>:<attr>}`` placeholders. References between the
     attributes of the same item are followed; a cycle or a reference to an unset attribute leaves the target
-    unset. Unset attributes get their defaults (``name`` = item path, others ``None``).
+    unset. Unset attributes get their defaults (``name`` = item path, others ``None``). A dict value is a
+    child item of that name, not the attribute.
 
     Reads the underscore forms from ``item.conf`` (and removes them there), so it has to run after the
     attribute loop of ``Item._apply_config``. Sets ``item._name``, ``item._description``, ``item._remark``
@@ -477,7 +478,7 @@ def apply_base_text(item, config: dict) -> None:
         template = item.conf.pop(attr + '_', None)
         if template is not None:
             raw[attr] = (str(template), True)
-        elif attr in config:
+        elif attr in config and not isinstance(config[attr], dict):
             raw[attr] = (config[attr], False)
 
     done = {}

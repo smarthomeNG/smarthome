@@ -190,6 +190,29 @@ class TestOtherBaseAttributesUntouched(_Base):
         self.assertEqual(get('top.child').property.eval, '..:.')
 
 
+class TestChildItemNamedLikeBaseAttribute(_Base):
+    """A child item may be called ``name``, ``description`` or ``remark``; it is not the attribute."""
+
+    def test_child_named_name_keeps_the_item_name_a_string(self):
+        get = self.build({'type': 'foo', 'name': {'type': 'str'}})
+
+        self.assertEqual(str(get('top')), 'top')
+        self.assertEqual(get('top').property.name, 'top')
+        self.assertIsNotNone(get('top.name'))
+
+    def test_child_named_description_leaves_the_description_unset(self):
+        get = self.build({'type': 'foo', 'description': {'type': 'str'}})
+
+        self.assertIsNone(get('top').property.description)
+        self.assertIsNotNone(get('top.description'))
+
+    def test_child_named_remark_leaves_the_remark_unset(self):
+        get = self.build({'type': 'foo', 'remark': {'type': 'str'}})
+
+        self.assertIsNone(get('top').property.remark)
+        self.assertIsNotNone(get('top.remark'))
+
+
 class TestEditItem(_Base):
     def test_edit_item_resolves_against_parent(self):
         self.sh.items.create_item('top', {'type': 'foo', 'description': 'Kitchen window'}, persist=False)
