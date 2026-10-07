@@ -534,6 +534,45 @@ class Items:
             raise ValueError(f"Item '{path}' cannot be persisted to '{filename}.yaml': an ancestor is not an item")
         yf.save()
 
+    def _rename_target_filename(self, item, new_parent_obj, new_is_top_level, filename):
+        """
+        File a persisted item's YAML node moves to on rename: *filename* if given, else the new
+        parent's file (non-top-level parent with one), else the item's own current file.
+        """
+        if filename:
+            return filename
+        if not new_is_top_level and getattr(new_parent_obj, '_filename', None):
+            return new_parent_obj._filename
+        return item._filename
+
+    def _check_persistable(self, filename, path):
+        """
+        Raise ValueError if ``items_dir/<filename>.yaml`` cannot hold *path*: it fails to parse,
+        or an ancestor of *path* is defined there as an attribute with a value instead of an item.
+        A missing file or missing ancestors are fine - they get created on write.
+        """
+        target = os.path.join(self._sh._items_dir, filename)
+        if not shyaml.yaml_exists(target):
+            return
+        yf = shyaml.yamlfile(target)
+        self._load_yaml_file(yf, filename)
+        node = yf.data
+        for key in path.split('.')[:-1]:
+            child = node.get(key)
+            if child is None:
+                return
+            if not isinstance(child, dict):
+                raise ValueError(
+                    f"Item '{path}' cannot be persisted to '{filename}.yaml': '{key}' is not an item there"
+                )
+            node = child
+
+    @staticmethod
+    def _set_or_raise(yf, path, node, filename):
+        """Set *node* at *path* in the loaded yamlfile *yf*, raising ValueError if the file cannot hold it; None writes nothing."""
+        if node is not None and not yf.setvalue(path, node):
+            raise ValueError(f"Item '{path}' cannot be persisted to '{filename}.yaml': an ancestor is not an item")
+
     def _preserve_existing_children(self, filename, path, config):
         """
         Return a copy of *config* with any child-item entries (dict-valued
@@ -886,6 +925,12 @@ class Items:
         if check_item_name_collision(self._sh, objects_to_check, leaf_attr, new_path):
             raise ValueError(f"Item '{old_path}' cannot be renamed to '{new_path}': name collision")
 
+        target_filename = None
+        if item._filename:
+            target_filename = self._rename_target_filename(item, new_parent_obj, new_is_top_level, filename)
+            self._check_persistable(item._filename, old_path)
+            self._check_persistable(target_filename, new_path)
+
         old_is_top_level = item._is_top_of_item_tree()
         old_parent_obj = self if old_is_top_level else item.return_parent()
         if new_parent_obj is not old_parent_obj:
@@ -974,38 +1019,36 @@ class Items:
                             f"Plugin '{plugin}' failed to resume after rename of item '{old_path}': {e}"
                         )
 
-        if item._filename:
-            target_filename = filename or (
-                new_parent_obj._filename
-                if not new_is_top_level and getattr(new_parent_obj, '_filename', None)
-                else item._filename
-            )
-
+        if target_filename is not None:
             if target_filename == item._filename:
                 target = os.path.join(self._sh._items_dir, item._filename)
                 if shyaml.yaml_exists(target):
                     yf = shyaml.yamlfile(target)
                     self._load_yaml_file(yf, item._filename)
                     node = yf.getnode(old_path)
+                    self._set_or_raise(yf, new_path, node, item._filename)
                     yf.setvalue(old_path, None)
-                    yf.setvalue(new_path, node)
                     yf.save()
             else:
                 old_target = os.path.join(self._sh._items_dir, item._filename)
+                old_yf = None
                 node = None
                 if shyaml.yaml_exists(old_target):
                     old_yf = shyaml.yamlfile(old_target)
                     self._load_yaml_file(old_yf, item._filename)
                     node = old_yf.getnode(old_path)
-                    old_yf.setvalue(old_path, None)
-                    old_yf.save()
 
+                # new location first: a failing write must not have removed the old definition already
                 new_target = os.path.join(self._sh._items_dir, target_filename)
                 new_yf = shyaml.yamlfile(new_target)
                 if shyaml.yaml_exists(new_target):
                     self._load_yaml_file(new_yf, target_filename)
-                new_yf.setvalue(new_path, node)
+                self._set_or_raise(new_yf, new_path, node, target_filename)
                 new_yf.save()
+
+                if old_yf is not None:
+                    old_yf.setvalue(old_path, None)
+                    old_yf.save()
 
                 for descendant in _flatten_with_children(item):
                     descendant._filename = target_filename

@@ -272,6 +272,61 @@ class TestRenameItemPersists(unittest.TestCase):
         with open(path, encoding='utf8') as f:
             self.assertEqual(f.read(), original_contents)
 
+    def _write_file(self, filename, text):
+        path = os.path.join(self.tmpdir.name, filename + '.yaml')
+        with open(path, 'w', encoding='utf8') as f:
+            f.write(text)
+        return path
+
+    def test_rename_refuses_a_target_whose_ancestor_is_an_attribute_value_and_changes_nothing(self):
+        parent = self.sh.items.create_item('new_parent', {'type': 'num'}, persist=False)
+        self.sh.items.create_item('new_parent.sub', {'type': 'num'}, parent=parent, persist=False)
+        parent_file = self._write_file('parent_file', 'new_parent:\n    sub: 5\n')
+        parent_contents = open(parent_file, encoding='utf8').read()
+        item = self.sh.items.create_item('item', {'type': 'num', 'eval': '1'}, persist=True, filename='item_file')
+
+        with self.assertRaises(ValueError):
+            self.sh.items.rename_item(item, 'new_parent.sub.item', filename='parent_file')
+
+        self.assertEqual(item.property.path, 'item')
+        self.assertIs(self.sh.items.return_item('item'), item)
+        self.assertEqual(self._read_file('item_file')['item']['eval'], '1')
+        with open(parent_file, encoding='utf8') as f:
+            self.assertEqual(f.read(), parent_contents)
+
+    def test_same_file_rename_refuses_a_target_under_an_attribute_value_and_keeps_the_definition(self):
+        holder = self.sh.items.create_item('holder', {'type': 'num'}, persist=False)
+        self.sh.items.create_item('holder.val', {'type': 'num'}, parent=holder, persist=False)
+        self._write_file('shared', 'holder:\n    val: 5\nitem:\n    type: num\n    eval: 1\n')
+        item = self.sh.items.create_item('item', {'type': 'num'}, persist=False)
+        item._filename = 'shared'
+
+        with self.assertRaises(ValueError):
+            self.sh.items.rename_item(item, 'holder.val.item')
+
+        self.assertEqual(item.property.path, 'item')
+        self.assertEqual(self._read_file('shared')['item']['eval'], 1)
+
+    def test_move_of_an_item_missing_from_its_recorded_file_still_renames(self):
+        self._write_file('item_file', 'other:\n    type: num\n')
+        item = self.sh.items.create_item('item', {'type': 'num'}, persist=False)
+        item._filename = 'item_file'
+
+        self.sh.items.rename_item(item, 'moved', filename='target_file')
+
+        self.assertEqual(item.property.path, 'moved')
+
+    def test_rename_with_unparseable_source_file_leaves_the_item_in_place(self):
+        self._write_file('broken_file', 'a:\n  remark: one\n  remark: two\n')
+        item = self.sh.items.create_item('a', {'type': 'num'}, persist=False)
+        item._filename = 'broken_file'
+
+        with self.assertRaises(ValueError):
+            self.sh.items.rename_item(item, 'b')
+
+        self.assertEqual(item.property.path, 'a')
+        self.assertIsNone(self.sh.items.return_item('b'))
+
 
 class TestRenameItemCallsPluginHook(_Base):
     def setUp(self):
