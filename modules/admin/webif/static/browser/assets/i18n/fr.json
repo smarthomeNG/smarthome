@@ -249,6 +249,7 @@
     "PATH": "Chemin de l'objet",
     "NAME": "Nom de l'objet",
     "DESCRIPTION": "Description",
+    "REMARK": "Remarque",
     "TYPE": "Type de donnée",
     "STRUCT": "Contient des structures",
     "UPDATE INFORMATION": "Informations des mises à hour",

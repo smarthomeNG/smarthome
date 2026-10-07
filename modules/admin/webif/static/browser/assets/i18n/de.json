@@ -256,6 +256,7 @@
     "PATH": "Item Pfad",
     "NAME": "Item Name",
     "DESCRIPTION": "Beschreibung",
+    "REMARK": "Bemerkung",
     "TYPE": "Datentyp",
     "STRUCT": "Beinhaltet Struktur(en)",
     "UPDATE INFORMATION": "Änderungsinformationen",
@@ -665,7 +666,9 @@
     "CONFIG_ERROR_TEXT": "Fehler in der Konfigurationsdatei gefunden.\nUngültiges Format der Konfigurationsdatei.\n",
     "SAVE_OK": "Logging-Konfiguration erfolgreich gespeichert und angewendet.",
     "SAVE_ERROR_RESTORED": "Ungültige Logging-Konfiguration — die vorherige Konfiguration wurde wiederhergestellt.",
-    "SAVE_ERROR_NO_RESTORE": "Ungültige Logging-Konfiguration, Wiederherstellung fehlgeschlagen — logging.yaml.bak prüfen."
+    "SAVE_ERROR_NO_RESTORE": "Ungültige Logging-Konfiguration, Wiederherstellung fehlgeschlagen — logging.yaml.bak prüfen.",
+    "SAVE_DEBUG_MODE_SUMMARY": "Debug-Modus (-d): logging.yaml wird ignoriert",
+    "SAVE_DEBUG_MODE": "Die Datei wurde gespeichert, aber SmartHomeNG wurde mit -d gestartet und nutzt eine eingebaute Debug-Logging-Konfiguration (alle Ausgaben auf die Konsole und in var/log/smarthome-debug.log). Die Datei wurde weder angewendet noch geprüft. SmartHomeNG ohne -d neu starten, um sie zu verwenden."
   },
   "BUTTON": {
     "OK": "Ok",

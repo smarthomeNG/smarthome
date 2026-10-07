@@ -256,6 +256,7 @@
     "PATH": "Item Path",
     "NAME": "Item Name",
     "DESCRIPTION": "Description",
+    "REMARK": "Remark",
     "TYPE": "Datatype",
     "STRUCT": "Contains structure(s)",
     "UPDATE INFORMATION": "Update Information",
@@ -665,7 +666,9 @@
     "CONFIG_ERROR_TEXT": "Error found in configuration file.\nInvalid format of configuration file. \n",
     "SAVE_OK": "Logging configuration saved and applied successfully.",
     "SAVE_ERROR_RESTORED": "Invalid logging configuration — the previous configuration has been restored.",
-    "SAVE_ERROR_NO_RESTORE": "Invalid logging configuration and restore failed — check logging.yaml.bak."
+    "SAVE_ERROR_NO_RESTORE": "Invalid logging configuration and restore failed — check logging.yaml.bak.",
+    "SAVE_DEBUG_MODE_SUMMARY": "Debug mode (-d): logging.yaml is ignored",
+    "SAVE_DEBUG_MODE": "The file was saved, but SmartHomeNG was started with -d and uses a built-in debug logging setup (all output to the console and var/log/smarthome-debug.log). The file was not applied and not validated. Restart SmartHomeNG without -d to use it."
   },
   "BUTTON": {
     "OK": "Ok",
