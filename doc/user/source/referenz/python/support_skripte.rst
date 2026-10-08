@@ -21,7 +21,7 @@ make_venv Skript
 Das Skript **make_venv** dient zum Erzeugen von virtuellen Python Umgebungen. Es wird mit einem oder zwei Parametern
 aufgerufen. Der erste (Pflicht-)Parameter ist die Python Version. Der zweite optionale Parameter ist der Name
 des Environments. Wenn dieser Parameter weg gelassen wird, wird die Python Version als Name des Environments
-herangezogen.
+herangezogen. Empfohlen ist ein von der Python Version unabhängiger Name, z.B. ``shng3.13``.
 
 .. note::
 
@@ -30,27 +30,29 @@ herangezogen.
     :ref:`Python Version Installieren <Python_Version_Installieren>` beschrieben.
 
 
-Um zum Beispiel ein Environment für Python 3.8 zu erzeugen, kann einfach der folgende Befehl eingegeben werden:
+Um zum Beispiel ein Environment für Python 3.13 mit dem Namen ``shng3.13`` zu erzeugen, kann einfach der folgende Befehl eingegeben werden:
 
 .. code-block:: bash
 
-    $ make_venv 3.8
+    $ make_venv 3.13 shng3.13
 
-    Python virtual environment 'py_3.8' (Python 3.8.3) created
+    Python virtual environment 'py_shng3.13' (Python 3.13.14) created
     in SmartHomeNG installation '/usr/local/shng_dev'
 
     Package    Version
     ---------- -------
-    pip        23.2.1
-    setuptools 41.2.0
-    wheel      0.41.1
+    packaging  26.3
+    pip        26.2.1
+    setuptools 84.0.0
+    wheel      0.48.0
 
     $
 
 Um dieses Environment nu nutzen, muss es noch mit Hilfe des Skriptes **act** aktiviert werden.
 
-Falls das entsprechende virtual Environment bereits vor dem Aufruf von make_venv existiert, wird das exisiterende
-virtual Environment gelöscht und es wird ein neues virtual Environemnt angelegt.
+Falls das entsprechende virtual Environment bereits vor dem Aufruf von make_venv existiert, wird es nicht gelöscht.
+``python -m venv`` verwendet das vorhandene Verzeichnis weiter, und ``pip``, ``wheel`` und ``setuptools`` werden
+aktualisiert. Soll ein Environment neu aufgebaut werden, muss das Verzeichnis vorher gelöscht werden.
 
 |
 
@@ -62,23 +64,23 @@ Parameter aufgerufen. Der Parameter ist der Name des Environments. Dem Aufruf de
 vorangestellt werden, damit die Ergebisse des Skripts auf die aktuelle Shell wirken. Wird ``source`` vergessen,
 gibt das skript eine Fehlermeldung aus.
 
-Um zum Beispiel das Environment für Python 3.8 zu aktivieren, kann einfach der folgende Befehl eingegeben werden:
+Um zum Beispiel das Environment ``shng3.13`` zu aktivieren, kann einfach der folgende Befehl eingegeben werden:
 
 .. code-block:: bash
 
-    $ source act 3.8
+    $ source act shng3.13
 
-    Activating virtual environment py_3.8 (Python 3.8.3)
+    Activating virtual environment py_shng3.13 (Python 3.13.14)
 
     To deactivate the virtual environment simply type the command 'deactivate'
 
-    (py_3.8) $
+    (py_shng3.13) $
 
 Ein aktives virtuelles Environment wird mit dem Befehl **deactivate** verlassen:
 
 .. code-block:: bash
 
-    (py_3.8) $ deactivate
+    (py_shng3.13) $ deactivate
     $
 
 

@@ -90,8 +90,8 @@ konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folg
    test_requirements: 'ruamel.yaml' not installed. Minimum v0.13.7 needed
 
    Installing core requirements for the current user, please wait...
-   Running in a virtualenv environment,
-   installing core requirements only to current virtualenv, please wait...
+   Running in a virtual environment environment,
+   installing core requirements only to current virtual environment, please wait...
 
    core requirements installed
 
