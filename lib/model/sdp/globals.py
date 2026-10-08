@@ -322,7 +322,7 @@ CMD_STRINGS = (
 JSON_MOVE_KEYS = 'json_move_keys'
 
 # keys for min / max values for data bounds
-MINMAXKEYS = ('valid_min', 'valid_max', 'force_min', 'force_max')
+MINMAXKEYS = ('force_min', 'force_max', 'valid_min', 'valid_max')  # force_* first: clamping takes precedence
 
 # name of non-model specific key for commands, models and lookups
 INDEX_GENERIC = 'ALL'  # placeholder for generic data

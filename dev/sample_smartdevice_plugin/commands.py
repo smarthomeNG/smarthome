@@ -264,7 +264,9 @@ If the device is configured without a model name, all commands will be available
 If the device is configured with a model name not listed here (but the ``models``
 dict is present), the device will not load.
 If the device is configured with a model name, but the ``models`` dict is not
-present, the device will have all commands available.
+present, the device will load the commands under ``ALL`` plus those of the model,
+if the commands dict has an ``ALL`` key (see example 2 above), and all commands
+otherwise.
 
 If the second variant (see example 3 above) of defining commands is chosen,
 this dict will be ignored.

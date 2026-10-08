@@ -480,7 +480,7 @@ class SDPCommands(object):
                         )
                 update(cmds, cmd_module.commands.get(self._model, {}))  # type: ignore
 
-            elif self._model:
+            elif self._model and hasattr(cmd_module, 'models'):
                 # otherwise, take list of generic and specific commands from models dict
                 cmdlist = cmd_module.models.get(INDEX_GENERIC, []) + cmd_module.models.get(self._model, [])  # type: ignore
                 self.logger.debug(f'found {len(cmd_module.models.get(INDEX_GENERIC, []))} generic commands')  # type: ignore
