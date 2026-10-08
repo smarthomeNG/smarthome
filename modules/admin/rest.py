@@ -418,6 +418,14 @@ class RESTResource:
         return None
 
     def REST_dispatch_execute(self, m, method, root, resource, **params):
+        """
+        Authenticate and invoke the exposed resource method m.
+
+        cherrypy.HTTPError/HTTPRedirect raised by m propagate to cherrypy with their own status; any other
+        exception is returned to the client as a 200 JSON body {'result': 'error', 'description': ...}.
+
+        :return: m's return value, a JSON error response, or None if m is not an exposed resource method
+        """
         if m and getattr(m, 'expose_resource', False):
             auth_error = self.REST_check_auth(m, root)
             if auth_error is not None:
@@ -425,6 +433,8 @@ class RESTResource:
 
             try:
                 return m(resource, **params)
+            except (cherrypy.HTTPError, cherrypy.HTTPRedirect):
+                raise
             except Exception as e:
                 if self.module.rest_dispatch_force_exception:
                     self.logger.notice(

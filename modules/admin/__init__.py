@@ -266,6 +266,7 @@ class Admin(Module):
                 'error_page.400': self._error_page_json,
                 'error_page.401': self._error_page_json,
                 'error_page.405': self._error_page_json,
+                'error_page.409': self._error_page_json,
                 'error_page.411': self._error_page_json,
                 'error_page.500': self._error_page_json,
             }

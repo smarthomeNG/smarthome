@@ -14,6 +14,11 @@ TestSubResourceActionAuthEnforcement: default()'s sub-resource-action
 branch (used for actions like /api/items/<path>/rename) must dispatch
 through REST_dispatch_execute/REST_check_auth like every other route, so
 authentication_needed is always enforced.
+
+TestBareResourceHttpErrorPropagation: cherrypy.HTTPError/HTTPRedirect raised by
+a bare-resource verb method (GET/POST/PUT/PATCH/DELETE via REST_defaults/REST_map)
+must reach cherrypy with their own status instead of being turned into a
+200 {"result": "error"} body; any other exception keeps that JSON form.
 """
 
 import json
@@ -102,6 +107,68 @@ class TestSubResourceActionAuthEnforcement(unittest.TestCase):
         self.assertTrue(hasattr(self.resource, 'called_with'))
         self.assertEqual(self.resource.called_with[0], 'some.item.path')
         self.assertEqual(json.loads(result)['result'], 'ok')
+
+
+class TestBareResourceHttpErrorPropagation(unittest.TestCase):
+    class _Resource(RESTResource):
+        REST_map = {'PATCH': 'edit'}
+
+        def read(self, id=None):
+            raise cherrypy.HTTPError(404, 'nothing here')
+
+        read.expose_resource = True
+
+        def add(self, id=None):
+            raise cherrypy.HTTPError(409, 'exists')
+
+        add.expose_resource = True
+
+        def edit(self, id=None):
+            raise cherrypy.HTTPRedirect('/elsewhere')
+
+        edit.expose_resource = True
+
+        def update(self, id=None):
+            raise ValueError('boom')
+
+        update.expose_resource = True
+
+    def setUp(self):
+        self.resource = self._Resource()
+        self.resource.module = MagicMock(rest_dispatch_force_exception=False)
+        request = MagicMock()
+        request.headers = {'Origin': 'http://example.test'}
+        response = MagicMock()
+        response.headers = {}
+        self._patches = [patch.object(cherrypy, 'request', request), patch.object(cherrypy, 'response', response)]
+        for p in self._patches:
+            p.start()
+        self.addCleanup(lambda: [p.stop() for p in self._patches])
+
+    def _dispatch(self, method):
+        cherrypy.request.method = method
+        return self.resource.REST_dispatch(True, None)
+
+    def test_http_error_keeps_its_status(self):
+        with self.assertRaises(cherrypy.HTTPError) as ctx:
+            self._dispatch('GET')
+        self.assertEqual(ctx.exception.code, 404)
+
+    def test_http_error_from_rest_defaults_post(self):
+        with self.assertRaises(cherrypy.HTTPError) as ctx:
+            self._dispatch('POST')
+        self.assertEqual(ctx.exception.code, 409)
+
+    def test_http_redirect_propagates_via_rest_map(self):
+        with self.assertRaises(cherrypy.HTTPRedirect):
+            self._dispatch('PATCH')
+
+    def test_other_exceptions_still_become_json_error(self):
+        result = self._dispatch('PUT')
+
+        body = json.loads(result)
+        self.assertEqual(body['result'], 'error')
+        self.assertIn('ValueError', body['description'])
 
 
 if __name__ == '__main__':
