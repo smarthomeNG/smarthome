@@ -1469,15 +1469,9 @@ class SmartDevicePlugin(SmartPlugin):
         # before the first connect nothing was received, so there is nothing to invalidate
         if not self._invalidate_on_disconnect or not self._has_connected:
             return
-        for item in self.get_item_list():
-            mark_invalid = getattr(item, 'db_mark_invalid', None)
-            if mark_invalid is None or not self.should_invalidate_item(item, by):
-                continue
-            # db_mark_invalid() is not idempotent: repeating it would split one gap into several
-            is_invalid = getattr(item, 'db_is_invalid', None)
-            if is_invalid is not None and is_invalid():
-                continue
-            mark_invalid(caller=self.get_fullname(), source='connection_lost')
+        self.db_invalidate_items(
+            self.get_item_list(), 'connection_lost', accept=lambda item: self.should_invalidate_item(item, by)
+        )
 
     def _process_additional_data(self, command: str, data: Any, value: Any, custom: int, by: str | None = None):
         """do additional processing of received data

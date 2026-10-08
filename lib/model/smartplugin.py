@@ -34,7 +34,10 @@ import asyncio
 import concurrent.futures
 import functools
 import time
-from typing import Callable, Collection, Coroutine, Any
+from typing import TYPE_CHECKING, Callable, Collection, Coroutine, Any, Iterable
+
+if TYPE_CHECKING:
+    from lib.item.item import Item
 
 
 class SmartPlugin(SmartObject, Utils):
@@ -614,6 +617,30 @@ class SmartPlugin(SmartObject, Utils):
             for item_path in self._plg_item_dict
             if self._plg_item_dict[item_path]['is_updating']
         ]
+
+    def db_invalidate_items(
+        self, items: 'Iterable[Item]', source: str, accept: 'Callable[[Item], bool] | None' = None
+    ) -> None:
+        """
+        Mark items invalid in the database log, so the log records a gap; the item values stay unchanged.
+
+        Only items logged by the database plugin have the ``db_mark_invalid`` function and are marked.
+        Items whose gap is already open are skipped, as repeated marking would split one gap into several.
+
+        Only available in SmartHomeNG versions **v1.13.0 and up**.
+
+        :param items: items to mark
+        :param source: reason for the gap, e.g. ``'connection_lost'``
+        :param accept: if given, only items for which it returns True are marked
+        """
+        for item in items:
+            mark_invalid = getattr(item, 'db_mark_invalid', None)
+            if mark_invalid is None or (accept is not None and not accept(item)):
+                continue
+            is_invalid = getattr(item, 'db_is_invalid', None)
+            if is_invalid is not None and is_invalid():
+                continue
+            mark_invalid(caller=self.get_fullname(), source=source)
 
     def get_items_for_mapping(self, mapping: str) -> list:
         """
