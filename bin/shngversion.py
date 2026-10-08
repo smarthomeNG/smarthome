@@ -121,9 +121,10 @@ from lib.utils import Version
 # Update auf 1.12.1    wg. Release
 # Update auf 1.12.1.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.12.1 Release"
 # Update auf 1.12.2    wg. Release
-# Update auf 1.12.1.2  wg. Kennzeichnung des Repo Stands als "nach dem v1.12.2 Release"
+# Update auf 1.12.2.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.12.2 Release"
+# Update auf 1.12.2.2  wg. Kennzeichnung für sh_minversion
 
-shNG_version = '1.12.2.1'
+shNG_version = '1.12.2.2'
 shNG_branch = 'develop'
 shNG_releasedate = '10. Juli 2026'
 
