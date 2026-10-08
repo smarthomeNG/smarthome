@@ -56,6 +56,7 @@ plugins/database/
 │                     #   resolution, shared by maintenance.py/query.py/timescale.py
 ├── maintenance.py    # MaintenanceManager — age-based cleanup (delete/compact,
 │                     #   scheduled) and orphan item/log handling
+├── recovery.py       # CrashRecovery — closes log rows an unclean shutdown left open
 ├── query.py          # QueryEngine — on-demand analytics (item.series/item.db)
 │                     #   and native-cagg query routing
 ├── timescale.py      # TimescaleManager — driver-alias resolution and every
@@ -222,6 +223,24 @@ This section traces what happens when an item value changes.
 There is no bulk "close every open entry" pass — the still-open (`duration=None`) most recent entry
 for an item is closed the next time that specific item changes, or at `finalize=True` (plugin
 shutdown), via `BufferManager.close_open()`/`set_last_duration()` operating per item.
+
+After a crash the most recent row of each item stays open (`duration = NULL`). `CrashRecovery`
+(`recovery.py`) closes such rows:
+
+- At startup, in `run()` before the schedulers start, each registered item's last row is closed at
+  the newest `changed` of the item table (the last time any item was flushed), but not after the start
+  of the current run. The row restored as the active value by `database: init` (its `time` equals
+  `item.last_change()`) stays open. The item table's `changed` is only written for items that have
+  buffered entries (or at shutdown), so for a quiet installation it lags the crash.
+- Open rows with a newer row behind them, left by earlier crashes, are closed at the time of that newer
+  row (but not after the last flush before this run). This runs as the scheduler job `Recover open rows`,
+  on the maintenance connection, in windows of `CrashRecovery.window_rows` log rows per item. A window is
+  bounded by row count (found on the `(item_id, time)` index), so no statement reads more than that many
+  rows of an item, and the lock is released between windows. The job removes itself once every item has
+  been scanned. Rows at or after the start of the current run are never touched.
+
+Left open, such a row is counted by reads as running to the end of the queried range (skewing
+`avg`/`integrate`/`on`/`duty_cycle`), and it stalls compaction as described in §7.
 
 ---
 
@@ -416,6 +435,9 @@ ever going through `_dump()`'s normal duration-fill) but the interval genuinely 
 compaction leaves that interval raw rather than deleting data it cannot represent, logs a warning,
 and stops for that item — it does not skip past the stalled interval to keep compacting newer ones,
 since that would silently reorder which data survives.
+
+Crash-orphaned rows are closed by `CrashRecovery` (§4), so this stall only persists for rows it
+could not close, e.g. while the maintenance connection is unavailable.
 
 **None of this section applies under `timescale_native_aggregation: true`.** `_start_schedulers()`
 never registers `remove_older_than_maxage()` in that mode — TimescaleDB continuous aggregates and,
