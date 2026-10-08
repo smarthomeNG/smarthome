@@ -164,9 +164,8 @@ Packages selbst. Für ein Environment gilt dabei:
 * **Module und Plugins:** Danach werden die Requirements der Module und der konfigurierten Plugins geprüft und
   gegebenenfalls installiert. Für diese Installationen wird ein Eintrag ``pip_command`` in ``etc/smarthome.yaml``
   berücksichtigt.
-* **Option ``--user``:** SmartHomeNG ruft pip zunächst mit ``--user`` auf. In einem Environment lehnt pip diese Option
-  ab; SmartHomeNG erkennt das und wiederholt den Aufruf ohne ``--user``. Der Hinweis, dass die Requirements nur in
-  das aktuelle virtuelle Environment installiert werden, ist daher normal. Das pip Protokoll steht in
+* **Option ``--user``:** In einem Environment ruft SmartHomeNG pip ohne ``--user`` auf, da pip diese Option dort
+  ablehnt. Außerhalb eines Environments wird ``--user`` verwendet. Das pip Protokoll steht in
   ``var/log/pip3_outout.log`` und ``var/log/pip3_error.log``.
 * **Requirements Dateien:** Die Dateien in ``requirements/`` (z.B. ``core.txt``, ``base.txt``, ``all.txt``) werden bei
   Bedarf aus den ``requirements.txt`` des Cores, der Module und der Plugins erzeugt (siehe

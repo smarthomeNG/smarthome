@@ -58,6 +58,11 @@ from lib.vardir import get_var_dir
 _shpypi_instance = None  # Pointer to the initialized instance of the Shpypi class (for use by static methods)
 
 
+def is_virtualenv() -> bool:
+    """Return True if the running interpreter is inside a virtual environment."""
+    return sys.prefix != sys.base_prefix
+
+
 class Shpypi:
     def __init__(self, sh=None, base=None, version=None, for_tests=False):
         """
@@ -404,6 +409,23 @@ class Shpypi:
         stdout, stderr = Utils.execute_subprocess(command_line)
         return
 
+    @staticmethod
+    def build_install_command(pip_command: str, req_filepath: str, in_virtualenv: bool | None = None) -> str:
+        """
+        Build the pip command line to install a requirements file
+
+        pip rejects ``--user`` inside a virtual environment, so it is only added outside of one.
+
+        :param pip_command: pip executable (or command) to call
+        :param req_filepath: requirements file to install
+        :param in_virtualenv: whether to build for a virtual environment; auto-detected if None
+        :return: the command line
+        """
+        if in_virtualenv is None:
+            in_virtualenv = is_virtualenv()
+        user_flag = '' if in_virtualenv else ' --user'
+        return f'{pip_command} install -r {req_filepath}{user_flag} --no-warn-script-location'
+
     def install_requirements(self, req_type, logging=True, pip3_command=None):
         req_type_display = req_type
         if req_type == 'conf_all':
@@ -434,7 +456,7 @@ class Shpypi:
             self.logger.warning(f"Using {msg} PIP: '{pip_command}'")
 
         req_filepath = os.path.join(self._sh_dir, 'requirements', req_type + '.txt')
-        command_line = pip_command + ' install -r ' + req_filepath + ' --user --no-warn-script-location'
+        command_line = self.build_install_command(pip_command, req_filepath)
         if logging:
             self.logger.info('> ' + command_line)
         else:
@@ -455,7 +477,7 @@ class Shpypi:
             pip_log_name = os.path.join(log_dir, 'pip3_error.log')
             with open(pip_log_name, 'w', encoding='utf8') as outfile:
                 outfile.write(stderr)
-            if 'virtualenv' in stderr and '--user' in stderr:
+            if '--user' in command_line and 'virtualenv' in stderr and '--user' in stderr:
                 if logging:
                     try:
                         self.logger.notice(
@@ -1554,7 +1576,7 @@ class Requirements_files:
         return packagelist_consolidated
 
     def _write_header(self, ofile, filename):
-        pip_statement = 'pip3 install -r ' + filename + ' --user'
+        pip_statement = 'pip3 install -r ' + filename
         pip_statement = pip_statement.ljust(49)
         ofile.write('\n')
         ofile.write('#   +--------------------------------------------------+\n')
