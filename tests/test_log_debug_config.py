@@ -30,6 +30,7 @@ import tests.common as common
 common.register_shng_log_levels()
 
 import lib.log as _log_module
+from lib import vardir
 from lib.log import Logs
 
 SHNG_LOGGER_FAMILIES = ['functions', 'lib', 'lib.smarthome', 'modules', 'plugins', 'logics', 'items']
@@ -135,6 +136,8 @@ class TestInitLoggingDebugMode(_LoggingStateGuard):
         os.chdir(self._tmp.name)
         self.addCleanup(os.chdir, self._cwd)
         self.logfile = os.path.join(self._tmp.name, 'var', 'log', 'smarthome-debug.log')
+        vardir.set_var_dir(os.path.join(self._tmp.name, 'var'))
+        self.addCleanup(vardir.set_var_dir, None)
 
     def init_logging(self, mode):
         import lib.smarthome

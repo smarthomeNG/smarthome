@@ -252,7 +252,7 @@ class ServicesController(RESTResource):
 
         if self._sh.shng_status['code'] == 20:
             # {'code': 20, 'text': 'Running'}
-            cache_path = os.path.join(self.base_dir, 'var', 'cache')
+            cache_path = os.path.join(self._sh.get_vardir(), 'cache')
             onlyfiles = [f for f in os.listdir(cache_path) if os.path.isfile(os.path.join(cache_path, f))]
 
             for file in onlyfiles:
@@ -294,7 +294,7 @@ class ServicesController(RESTResource):
         response = {'result': 'error', 'description': "cache file '" + filename + "' not found"}
         for filename in filenames:
             if len(filename) > 0:
-                file_path = os.path.join(self.base_dir, 'var', 'cache', filename)
+                file_path = os.path.join(self._sh.get_vardir(), 'cache', filename)
                 if os.path.isfile(file_path):
                     self.logger.info("cachefile_delete: cachefile '{}' deleted".format(file_path))
                     os.remove(file_path)

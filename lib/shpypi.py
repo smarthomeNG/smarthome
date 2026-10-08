@@ -52,6 +52,7 @@ except Exception:
 from lib.utils import Utils
 from lib.utils import Version
 from lib.constants import YAML_FILE
+from lib.vardir import get_var_dir
 
 
 _shpypi_instance = None  # Pointer to the initialized instance of the Shpypi class (for use by static methods)
@@ -444,14 +445,14 @@ class Shpypi:
         # ToDo
         # create_directories is available in lib.smarthome.py but shpypi.py might be started prior to SH object creation
         # thus it is needed to create the var/log directory here
-        os.makedirs(os.path.join(self._sh_dir, 'var'), exist_ok=True)
-        os.makedirs(os.path.join(self._sh_dir, 'var', 'log'), exist_ok=True)
+        log_dir = os.path.join(get_var_dir(), 'log')
+        os.makedirs(log_dir, exist_ok=True)
 
-        pip_log_name = os.path.join(self._sh_dir, 'var', 'log', 'pip3_outout.log')
+        pip_log_name = os.path.join(log_dir, 'pip3_outout.log')
         with open(pip_log_name, 'w', encoding='utf8') as outfile:
             outfile.write(stdout)
         if stderr != '':
-            pip_log_name = os.path.join(self._sh_dir, 'var', 'log', 'pip3_error.log')
+            pip_log_name = os.path.join(log_dir, 'pip3_error.log')
             with open(pip_log_name, 'w', encoding='utf8') as outfile:
                 outfile.write(stderr)
             if 'virtualenv' in stderr and '--user' in stderr:

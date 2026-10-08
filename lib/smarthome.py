@@ -63,7 +63,6 @@ except ImportError:
     CryptographyDeprecationWarning = None
 
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
-PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
 
 #####################################################################
 # Import SmartHomeNG Modules
@@ -80,6 +79,7 @@ import lib.scene
 import lib.scheduler
 import lib.tools
 import lib.utils
+import lib.vardir
 import lib.orb
 import lib.backup
 import lib.translation
@@ -187,7 +187,7 @@ class SmartHome:
             self._conf_dir = self._extern_conf_dir
 
         # shng system dirs
-        self._var_dir = os.path.join(self._base_dir, DIR_VAR)
+        self._var_dir = lib.vardir.get_var_dir()
         self._lib_dir = os.path.join(self._base_dir, DIR_LIB)
         self._plugins_dir = os.path.join(self._base_dir, DIR_PLUGINS)
         self._modules_dir = os.path.join(self._base_dir, DIR_MODULES)
@@ -346,7 +346,7 @@ class SmartHome:
 
         self.connections = None
 
-        self._pidfile = PIDFILE
+        self._pidfile = os.path.join(lib.vardir.get_var_dir(), 'run', 'smarthome.pid')
 
         # check config files
         self.checkConfigFiles()
@@ -420,15 +420,15 @@ class SmartHome:
         #############################################################
         # Fork process and write pidfile
         if self._mode == 'default':
-            lib.daemon.daemonize(PIDFILE)
+            lib.daemon.daemonize(self._pidfile)
         else:
-            lib.daemon.write_pidfile(os.getpid(), PIDFILE)
+            lib.daemon.write_pidfile(os.getpid(), self._pidfile)
             print(f'MODE = {self._mode}')
             print(f'--------------------   Init SmartHomeNG {self.version}   --------------------')
 
         #############################################################
         # Write startup message to log(s)
-        pid = lib.daemon.read_pidfile(PIDFILE)
+        pid = lib.daemon.read_pidfile(self._pidfile)
         virtual_text = ''
         if lib.utils.running_virtual():
             virtual_text = ' in virtual environment'
@@ -454,6 +454,8 @@ class SmartHome:
 
         if self._extern_conf_dir != BASE:
             self._logger.notice(f'Using config dir {self._extern_conf_dir}')
+        if self._var_dir != os.path.join(BASE, DIR_VAR):
+            self._logger.notice(f'Using var dir {self._var_dir}')
 
         #############################################################
         # Initialize multi-language support
@@ -660,6 +662,19 @@ class SmartHome:
         :rtype: str
         """
         return self._var_dir
+
+    def resolve_var_path(self, path):
+        """
+        Resolve a path from a plugin parameter to an absolute path, honoring a custom var directory
+
+        Relative paths starting with ``var`` (like the default ``var/knx``) are located below the var directory,
+        other relative paths below the base directory. Absolute paths are returned unchanged.
+
+        :param path: path as given in the plugin configuration
+        :return: absolute path
+        :rtype: str
+        """
+        return lib.vardir.resolve_var_path(path)
 
     def get_config_dir(self, config):
         """
@@ -967,7 +982,7 @@ class SmartHome:
 
         self.shng_status = {'code': 33, 'text': 'Stopped'}
 
-        lib.daemon.remove_pidfile(PIDFILE)
+        lib.daemon.remove_pidfile(self._pidfile)
 
         logging.shutdown()
         # stop() can be called from any thread (e.g. a web/websocket request
@@ -1101,7 +1116,7 @@ class SmartHome:
         self._logger.dbghigh(f'Garbage collector: collected {c} objects.')
 
     def _export_threadinfo(self):
-        filename = os.path.join(self.base_dir, 'var', 'run', 'threadinfo.json')
+        filename = os.path.join(self._var_dir, 'run', 'threadinfo.json')
         if self._threadinfo_export:
             all_threads = []
             for t in threading.enumerate():

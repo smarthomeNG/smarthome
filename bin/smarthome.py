@@ -107,6 +107,11 @@ argparser.add_argument(
     '-c', '--config_dir', help='use external config dir (should contain "etc", "logics" and "items" subdirectories)'
 )
 argparser.add_argument(
+    '-u',
+    '--var_dir',
+    help='use external var dir for cache, logs, pidfile, databases and other runtime data (default: <base>/var)',
+)
+argparser.add_argument(
     '-e',
     '--config_etc',
     help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory. If config directories exist at SmartHomeNG base dir, they are migrated to etc/<dir>.',
@@ -150,7 +155,11 @@ except ImportError:
 #####################################################################
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 sys.path.insert(0, BASE)
-PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
+
+import lib.vardir
+
+lib.vardir.set_var_dir(args.var_dir)
+PIDFILE = os.path.join(lib.vardir.get_var_dir(), 'run', 'smarthome.pid')
 
 # Only used for Version Check in Plugins to decide if a logger must be explicitly declared
 import bin.shngversion

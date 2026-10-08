@@ -45,10 +45,10 @@ from lib.constants import (
     DIR_SCENES,
     DIR_STRUCTS,
     DIR_UF,
-    DIR_VAR,
     DIR_PRIV_TOOLS,
     YAML_FILE,
 )
+from lib.vardir import get_var_dir
 
 logger = logging.getLogger(__name__)
 
@@ -75,8 +75,8 @@ def make_backup_directories(base_dir):
     :return:
     """
     global backup_dir
-    backup_dir = os.path.join(base_dir, DIR_VAR, 'backup')
-    restore_dir = os.path.join(base_dir, DIR_VAR, 'restore')
+    backup_dir = os.path.join(get_var_dir(), 'backup')
+    restore_dir = os.path.join(get_var_dir(), 'restore')
 
     if not os.path.isdir(backup_dir):
         try:
@@ -110,7 +110,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     """
 
     make_backup_directories(base_dir)
-    backup_dir = os.path.join(base_dir, DIR_VAR, 'backup')
+    backup_dir = os.path.join(get_var_dir(), 'backup')
 
     backup_filename = 'shng_config_backup'
     if before_restore:
@@ -134,10 +134,10 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     scenes_dir = os.path.join(conf_dir, DIR_SCENES)
     structs_dir = os.path.join(conf_dir, DIR_STRUCTS)
     uf_dir = os.path.join(conf_dir, DIR_UF)
-    var_dir = os.path.join(conf_dir, DIR_VAR)
+    var_dir = get_var_dir()
     priv_tools_dir = os.path.join(conf_dir, DIR_PRIV_TOOLS)
     plugins_dir = os.path.join(base_dir, 'plugins')
-    esphome_conf_dir = os.path.join(conf_dir, 'var', 'esphome', 'config')
+    esphome_conf_dir = os.path.join(get_var_dir(), 'esphome', 'config')
 
     # create new zip file
     backupzip = zipfile.ZipFile(backup_dir + os.path.sep + backup_filename, mode='w', compression=zipfile.ZIP_DEFLATED)
@@ -364,7 +364,7 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
     logger.info('Beginning restore of configuration')
 
     make_backup_directories(base_dir)
-    restore_dir = os.path.join(base_dir, 'var', 'restore')
+    restore_dir = os.path.join(get_var_dir(), 'restore')
 
     etc_dir = os.path.join(conf_base_dir, 'etc')
 
@@ -379,7 +379,7 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
     structs_dir = os.path.join(conf_dir, DIR_STRUCTS)
     uf_dir = os.path.join(conf_dir, DIR_UF)
     priv_tools_dir = os.path.join(base_dir, DIR_PRIV_TOOLS)
-    esphome_conf_dir = os.path.join(base_dir, 'var', 'esphome', 'config')
+    esphome_conf_dir = os.path.join(get_var_dir(), 'esphome', 'config')
 
     archive_file = ''
     for filename in os.listdir(restore_dir):

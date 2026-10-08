@@ -38,17 +38,18 @@ from typing import Any
 import collections
 
 import lib.shyaml as shyaml
-from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG, DIR_ETC, DIR_VAR
+from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG, DIR_ETC
+from lib.vardir import get_var_dir, rebase_var_prefix
 
 logs_instance = None
 
-DEBUG_LOGFILE = os.path.join('.', DIR_VAR, 'log', 'smarthome-debug.log')
+DEBUG_LOGFILE_NAME = 'smarthome-debug.log'
 
 # Logger families of SmartHomeNG itself (as defined in the default logging.yaml)
 SHNG_LOGGER_FAMILIES = ('functions', 'lib', 'lib.smarthome', 'modules', 'plugins', 'logics', 'items')
 
 
-def debug_logging_config(logfile: str = DEBUG_LOGFILE) -> dict[str, Any]:
+def debug_logging_config(logfile: str | None = None) -> dict[str, Any]:
     """
     Build the built-in logging configuration used by ``smarthome.py -d``.
 
@@ -56,9 +57,11 @@ def debug_logging_config(logfile: str = DEBUG_LOGFILE) -> dict[str, Any]:
     log at DEBUG, all other loggers (third-party packages) at INFO. Everything goes to stdout and
     to ``logfile``.
 
-    :param logfile: Path of the debug logfile
+    :param logfile: Path of the debug logfile; defaults to ``log/smarthome-debug.log`` in the var directory
     :return: configuration dict for ``logging.config.dictConfig``
     """
+    if logfile is None:
+        logfile = os.path.join(get_var_dir(), 'log', DEBUG_LOGFILE_NAME)
     handler_names = ['shng_debug_console', 'shng_debug_file']
     return {
         'version': 1,
@@ -91,6 +94,19 @@ def debug_logging_config(logfile: str = DEBUG_LOGFILE) -> dict[str, Any]:
     }
 
 
+def rebase_handler_filenames(config_dict: dict[str, Any]) -> None:
+    """
+    Re-root the file handlers' relative ``var/...`` filenames of a logging configuration under the var directory.
+
+    Needed because ``logging.yaml`` names its logfiles ``./var/log/...``, which would otherwise ignore ``--var_dir``.
+    Handlers without ``filename`` and filenames not starting with ``var`` are left alone; changes ``config_dict`` in place.
+    """
+    for handler in config_dict.get('handlers', {}).values():
+        filename = handler.get('filename')
+        if isinstance(filename, str):
+            handler['filename'] = rebase_var_prefix(filename)
+
+
 class Logs:
     _logs = {}
     logging_levels = {}
@@ -121,17 +137,19 @@ class Logs:
         self._sh = sh
         return
 
-    def configure_debug_logging(self, logfile: str = DEBUG_LOGFILE) -> bool:
+    def configure_debug_logging(self, logfile: str | None = None) -> bool:
         """
         Configure logging with the built-in debug configuration instead of ``logging.yaml``.
 
         See :func:`debug_logging_config`. The directory of ``logfile`` is created if missing.
 
-        :param logfile: Path of the debug logfile
+        :param logfile: Path of the debug logfile; defaults to ``log/smarthome-debug.log`` in the var directory
         :return: True on success
         """
+        config_dict = debug_logging_config(logfile)
+        logfile = config_dict['handlers']['shng_debug_file']['filename']
         os.makedirs(os.path.dirname(os.path.abspath(logfile)), exist_ok=True)
-        return self.configure_logging(config_dict=debug_logging_config(logfile))
+        return self.configure_logging(config_dict=config_dict)
 
     def configure_logging(self, config_filename='', config_dict: dict[str, Any] | None = None):
         """
@@ -215,6 +233,8 @@ class Logs:
         self.add_logging_level('DBGMED', self.DBGMED_level)
         self.add_logging_level('DBGLOW', self.DBGLOW_level)
         self.add_logging_level('DEVELOP', self.DEVELOP_level)
+
+        rebase_handler_filenames(config_dict)
 
         try:
             logging.config.dictConfig(config_dict)
@@ -985,9 +1005,7 @@ class ShngMemLogHandler(logging.StreamHandler):
         self._cache = cache
         self._maxlen = maxlen
         # save cache files in var/log/cache directory
-        cache_directory = os.path.join(
-            logs_instance._sh.get_config_dir(DIR_VAR), 'log' + os.path.sep, 'cache' + os.path.sep
-        )
+        cache_directory = os.path.join(logs_instance._sh.get_vardir(), 'log' + os.path.sep, 'cache' + os.path.sep)
         if cache is True:
             if not os.path.isdir(cache_directory):
                 os.makedirs(cache_directory)

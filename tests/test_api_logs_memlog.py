@@ -33,6 +33,9 @@ class FakeSh:
     def get_basedir(self):
         return common.BASE
 
+    def get_vardir(self):
+        return os.path.join(common.BASE, 'var')
+
     def get_config_dir(self, config):
         return os.path.join(common.BASE, 'tests', 'resources', 'etc')
 

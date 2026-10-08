@@ -35,6 +35,12 @@ smarthome.py kann mit folgenden Kommandozeilen Optionen gestartet werden:
 | -c         | --config_dir         | Ein externes Konfigurations-Verzeichnis benutzen. Dieses Verzeichnis sollte    |
 |            |                      | die Unter-Verzeichnisse "etc", "items", "logics" and "scenes" enthalten.       |
 +------------+----------------------+--------------------------------------------------------------------------------+
+| -u         | --var_dir            | Ein externes var-Verzeichnis benutzen (Cache, Logs, PID-Datei, Datenbanken und |
+|            |                      | andere Laufzeitdaten). Standard: ``var/`` unterhalb des SmartHomeNG-Verzeich-  |
+|            |                      | nisses. Relative ``var/...``-Pfade in der ``logging.yaml`` folgen dieser       |
+|            |                      | Option. Beim Stoppen/Neustarten (``-s``, ``-r``) muss dieselbe Option          |
+|            |                      | angegeben werden.                                                              |
++------------+----------------------+--------------------------------------------------------------------------------+
 | -e         | --config_etc         | Die Verzeichnisse mit benutzerdefinierter Konfiguration (items, structs,       |
 |            |                      | logics, scenes, uf) unterhalb von etc suchen                                   |
 |            |                      | (``etc/items/`` statt ``items/``, ``etc/structs/`` statt ``structs/`` usw.)    |

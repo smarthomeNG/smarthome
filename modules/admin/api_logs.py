@@ -42,7 +42,7 @@ class LogsController(RESTResource):
         )
 
         self.etc_dir = self._sh.get_config_dir(DIR_ETC)
-        self.log_dir = os.path.join(self.base_dir, 'var', 'log')
+        self.log_dir = os.path.join(self._sh.get_vardir(), 'log')
 
         self.logging_conf = shyaml.yaml_load(self._sh.get_config_file(BASE_LOG))
 

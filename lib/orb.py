@@ -45,7 +45,8 @@ if __name__ == '__main__':
     # itself is the script being executed.
     sys.path.insert(0, _BASE_DIR)
 
-from lib.constants import DIR_CACHE, DIR_VAR
+from lib.constants import DIR_CACHE
+from lib.vardir import get_var_dir
 from lib.shtime import Shtime
 
 logger = logging.getLogger(__name__)
@@ -269,11 +270,8 @@ class _SkyfieldBackend(_OrbBackend):
 
     @staticmethod
     def _data_dir():
-        # var/cache/ is shng's established location for runtime-downloaded/
-        # regenerable data that should never be committed to the repo. Fixed
-        # relative to shng's own install location - no dependency on a live
-        # Shtime/smarthome instance, and no fallback to the user's home dir.
-        return os.path.join(_BASE_DIR, DIR_VAR, DIR_CACHE, 'skyfield-data')
+        # needs no live Shtime/smarthome instance and never falls back to the user's home dir
+        return os.path.join(get_var_dir(), DIR_CACHE, 'skyfield-data')
 
     def _body(self, body):
         self._ensure_loaded()

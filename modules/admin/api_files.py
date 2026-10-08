@@ -573,7 +573,7 @@ class FilesController(RESTResource):
 
         if self._sh.shng_status['code'] == 20:
             # {'code': 20, 'text': 'Running'}
-            cache_path = os.path.join(self.base_dir, 'var', 'cache')
+            cache_path = os.path.join(self._sh.get_vardir(), 'cache')
             onlyfiles = [f for f in os.listdir(cache_path) if os.path.isfile(os.path.join(cache_path, f))]
 
             for file in onlyfiles:
@@ -638,7 +638,7 @@ class FilesController(RESTResource):
         self._sh.shng_status = {'code': 101, 'text': 'Restore: Uploading'}
 
         # create restore directory, if it does not exist
-        restore_dir = os.path.join(self.base_dir, 'var', 'restore')
+        restore_dir = os.path.join(self._sh.get_vardir(), 'restore')
         if not os.path.isdir(restore_dir):
             try:
                 os.makedirs(restore_dir)

@@ -14,6 +14,7 @@ import lib.plugin
 from lib.shtime import Shtime
 from lib.module import Modules
 import lib.utils
+import lib.vardir
 from lib.model.smartplugin import SmartPlugin
 from lib.constants import YAML_FILE, DEFAULT_FILE, BASES, DIRS
 
@@ -273,6 +274,15 @@ class MockSmartHome:
         :rtype: str
         """
         return self._var_dir
+
+    def resolve_var_path(self, path):
+        """
+        Function to resolve a plugin path parameter to an absolute path (see SmartHome.resolve_var_path())
+
+        :return: absolute path
+        :rtype: str
+        """
+        return lib.vardir.resolve_var_path(path)
 
     def getBaseDir(self):
         """
