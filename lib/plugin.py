@@ -58,6 +58,7 @@ import logging
 import threading
 import collections
 import os.path  # until Backend is modified
+from typing import NamedTuple
 
 from importlib import import_module, reload
 
@@ -88,6 +89,15 @@ def namestr(obj, namespace):
 
 class PyObject(ctypes.Structure):
     _fields_ = [('refcnt', ctypes.c_long)]
+
+
+class PluginConfigRefresh(NamedTuple):
+    """Result of :meth:`Plugins.refresh_plugin_config`"""
+
+    conf: dict
+    """Parsed content of the plugin configuration file"""
+    notices: list[str]
+    """Warnings for the user that result from the refreshed configuration"""
 
 
 class Plugins:
@@ -126,30 +136,16 @@ class Plugins:
         self._plugin_conf_filename = configfile + YAML_FILE
         smarthome._plugin_conf = self._plugin_conf_filename  # type: ignore
 
-        # read plugin configuration (from etc/plugin.yaml)
-        _conf = lib.config.parse_basename(configfile, configtype='plugin')
+        self._plugins_count = {}
+        self.threads_early = []
+        self.threads_late = []
+
+        # read plugin configuration (from etc/plugin.yaml) and count plugin usage
+        _conf = self.refresh_plugin_config().conf
         if _conf == {}:
             return
 
-        # count plugin usage in plugin conf
-        # do this here and now because _conf isn't available later or elsewhere
-        # TODO: think about central plugin config?
-
-        # get all unique plugin names
-        # __plugins = set(_conf[p].get('plugin_name', 'unknown') for p in _conf)
-        # to keep "old" config compatibility (class_name/class_path), also check for class_name
-        __plugins = set(_conf[p].get('plugin_name', _conf[p].get('class_name', 'unknown')) for p in _conf)
-
-        # prepopulate counter dict
-        self._plugins_count = {p: 0 for p in __plugins}
-
-        # count plugin usage
-        for plugin in _conf:
-            self._plugins_count[_conf[plugin].get('plugin_name', _conf[plugin].get('class_name', 'unknown'))] += 1
-
         logger.info('Load plugins')
-        self.threads_early = []
-        self.threads_late = []
 
         # for every section (plugin) in the plugin.yaml file
         for plugin in _conf:
@@ -262,6 +258,86 @@ class Plugins:
         #        logger.warning("_get_classname_and_classpath: plugin_name = {}, classpath = {}, classname = {}".format(plugin_name, classpath, classname))
         return (classname, classpath + plugin_version)
 
+    @classmethod
+    def _count_plugin_usage(cls, conf: dict) -> dict[str, int]:
+        """
+        Count the enabled sections of a plugin configuration per plugin name
+
+        Sections with ``plugin_enabled: false`` are never loaded and are not counted.
+
+        :param conf: parsed plugin configuration
+        :return: number of enabled sections by plugin name
+        """
+        count: dict[str, int] = {}
+        for section in conf.values():
+            if cls._is_section_enabled(section):
+                name = cls._section_plugin_name(section)
+                count[name] = count.get(name, 0) + 1
+        return count
+
+    def _unnamed_instance_notices(self, old_count: dict[str, int], conf: dict) -> list[str]:
+        """
+        Build warnings for plugins that just changed from single to multiple use while an instance
+        is loaded under the default (unnamed) instance
+
+        A loaded instance cannot be renamed at runtime. After a restart it would be named after its section.
+
+        :param old_count: usage count before the refresh
+        :param conf: parsed plugin configuration, used to find the plugin name of loaded instances
+        :return: one warning per affected loaded instance
+        """
+        notices = []
+        for thread in self._threads + self.threads_early + self.threads_late:
+            plugin = thread.plugin
+            section = conf.get(thread.name)
+            if not isinstance(plugin, SmartPlugin) or section is None or plugin.get_instance_name():
+                continue
+            name = self._section_plugin_name(section)
+            new = self._plugins_count.get(name, 0)
+            if new > 1 and old_count.get(name, 0) <= 1:
+                notices.append(
+                    f"Plugin '{name}' is now used by {new} sections. The loaded instance from section "
+                    f"'{thread.name}' keeps the default instance name until SmartHomeNG is restarted."
+                )
+        return notices
+
+    def refresh_plugin_config(self) -> PluginConfigRefresh:
+        """
+        Re-read the plugin configuration file and update the plugin usage count from it
+
+        The usage count decides whether a plugin section gets the default instance or an instance named
+        after the section. Call this before loading plugins at runtime, so that sections added or removed
+        since startup are taken into account.
+
+        :return: the parsed configuration and warnings for the user (also logged as warnings)
+        """
+        conf = lib.config.parse_basename(self._configfile, configtype='plugin')
+        old_count = self._plugins_count
+        self._plugins_count = self._count_plugin_usage(conf)
+        notices = self._unnamed_instance_notices(old_count, conf)
+        for notice in notices:
+            logger.warning(notice)
+        return PluginConfigRefresh(conf, notices)
+
+    @staticmethod
+    def _section_plugin_name(plg_conf: dict) -> str:
+        """
+        Return the plugin name of a plugin.yaml section (falls back to ``class_name`` for legacy configurations)
+
+        :param plg_conf: loaded section of the plugin.yaml
+        :return: plugin name, or 'unknown' if the section defines neither ``plugin_name`` nor ``class_name``
+        """
+        return plg_conf.get('plugin_name', plg_conf.get('class_name', 'unknown'))
+
+    @staticmethod
+    def _is_section_enabled(plg_conf: dict) -> bool:
+        """
+        Return False if a plugin.yaml section is switched off with ``plugin_enabled: false``
+
+        :param plg_conf: loaded section of the plugin.yaml
+        """
+        return str(plg_conf.get('plugin_enabled', None)).lower() != 'false'
+
     def _get_instancename(self, plg_name: str, plg_conf: dict):
         """
         Returns the instance name for the given plugin
@@ -283,7 +359,7 @@ class Plugins:
                     instance = ''
             return instance
 
-        count = self._plugins_count.get(plg_conf.get('plugin_name', plg_conf.get('class_name', 'unknown')), 0)
+        count = self._plugins_count.get(self._section_plugin_name(plg_conf), 0)
 
         # rewrite should retain prior instance naming, but enable
         # "automagic instances" if nothing is explicitly given
@@ -494,7 +570,7 @@ class Plugins:
                 self._sh.items.add_struct_definition(plugin_name, struct_name, item_structs[struct_name])
 
         # Test if plugin is disabled
-        if str(conf.get('plugin_enabled', None)).lower() == 'false':
+        if not self._is_section_enabled(conf):
             logger.info(
                 f'Section {configname} (plugin_name {conf.get("plugin_name", "unknown")}) is disabled - plugin not loaded'
             )
@@ -712,7 +788,7 @@ class Plugins:
         alive = myplugin.alive
 
         # read plugin configuration (from etc/plugin.yaml)
-        _conf = lib.config.parse_basename(self._configfile, configtype='plugin')
+        _conf = self.refresh_plugin_config().conf
         if _conf == {}:
             logger.warning(f'Reading plugin config {self._configfile} returned no data, check config')
             return False

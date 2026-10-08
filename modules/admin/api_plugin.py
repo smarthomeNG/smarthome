@@ -262,14 +262,17 @@ class PluginController(RESTResource):
         if action == 'load':
             if self.plugins.return_plugin(id):
                 return {'result': 'error', 'description': "Plugin '{}' is already loaded".format(id)}
-            _conf = lib.config.parse_basename(self.plugins._configfile, configtype='plugin')
-            plg_conf = _conf.get(id)
+            refreshed = self.plugins.refresh_plugin_config()
+            plg_conf = refreshed.conf.get(id)
             if plg_conf is None:
                 return {'result': 'error', 'description': "No configuration section '{}' found".format(id)}
             result = self.plugins.load_plugin(id, plg_conf)
             if result:
                 self.plugins.start_plugin(id)
-                return {'result': 'ok'}
+                response = {'result': 'ok'}
+                if refreshed.notices:
+                    response['warnings'] = refreshed.notices
+                return response
             return {'result': 'error', 'description': "load_plugin('{}') returned False".format(id)}
 
         elif action == 'unload':
@@ -360,6 +363,8 @@ class PluginController(RESTResource):
                 ApiParam(name='action', required=True, enum=['start', 'stop', 'load', 'unload', 'reload']),
                 ApiParam(name='filename'),
             ],
+            description='A successful load may add "warnings" (list of strings) to the response, to be shown to the user.',
+            response_example='{"result": "ok", "warnings": ["..."]}',
         ),
     ]
 
