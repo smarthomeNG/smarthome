@@ -1,0 +1,15 @@
+# Logic without .py file
+logic1:
+    filename: logic1.py
+    crontab: init
+    
+# Logic with .py file
+logic2:
+    filename: logic2.py
+    crontab: init
+
+# Logic with .py and .xml file
+logic3:
+    filename: logic3.py
+    crontab: init
+

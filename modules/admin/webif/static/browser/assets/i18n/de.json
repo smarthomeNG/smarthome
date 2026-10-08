@@ -562,6 +562,7 @@
     "SAVE_FAILED": "Konfiguration konnte nicht gespeichert werden. Bitte Werte prüfen und erneut versuchen.",
     "LOAD_FAILED": "Das Plugin konnte nicht geladen werden. Parameter prüfen und bei anhaltenden Problemen 'Core neu starten' verwenden.",
     "LOAD_DISABLED": "Plugin ist deaktiviert - vor dem Laden in der Konfiguration aktivieren.",
+    "INSTANCE_NAME_WARNING": "Neustart erforderlich, damit die Instanznamen konsistent sind.",
     "UNLOAD_FAILED": "Das Plugin konnte nicht entladen werden.",
     "RELOAD_FAILED": "Das Plugin konnte nicht neu geladen werden.",
     "INVALID_HOSTNAME": "ist kein gültiger Hostname oder eine gültige IP-Adresse",

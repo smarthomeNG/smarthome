@@ -562,6 +562,7 @@
     "SAVE_FAILED": "Failed to save configuration. Please check the values and try again.",
     "LOAD_FAILED": "The plugin could not be loaded. Check the parameters and use 'Restart Core' if the problem persists.",
     "LOAD_DISABLED": "Plugin is disabled - enable it in its configuration before loading.",
+    "INSTANCE_NAME_WARNING": "Restart required for consistent instance naming.",
     "UNLOAD_FAILED": "The plugin could not be unloaded.",
     "RELOAD_FAILED": "The plugin could not be reloaded.",
     "INVALID_HOSTNAME": "is not a valid hostname or IP address",

@@ -545,6 +545,7 @@
     "SAVE_FAILED": "Échec de l'enregistrement de la configuration. Vérifiez les valeurs et réessayez.",
     "LOAD_FAILED": "Le plugin n'a pas pu être chargé. Vérifiez les paramètres et utilisez 'Redémarrer le core' si le problème persiste.",
     "LOAD_DISABLED": "Le plugin est désactivé - activez-le dans sa configuration avant de le charger.",
+    "INSTANCE_NAME_WARNING": "Redémarrage nécessaire pour des noms d'instance cohérents.",
     "UNLOAD_FAILED": "Le plugin n'a pas pu être déchargé.",
     "RELOAD_FAILED": "Le plugin n'a pas pu être rechargé.",
     "INVALID_HOSTNAME": "n'est pas un nom d'hôte ou une adresse IP valide",

@@ -188,8 +188,8 @@ $(window).bind('datatables_defaults', function() {
 			$.fn.dataTable.moment('HH:mm:ss DD.MM.YYYY');
 			$.fn.dataTable.moment('HH:mm:ss.SSSS DD.MM.YYYY');
 
-			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		    const tabId = $(this).attr('href').replace('#', '');
+			$(document).off('shown.bs.tab.datatables').on('shown.bs.tab.datatables', '[data-bs-toggle="tab"]', function (e) {
+		    const tabId = ($(this).attr('data-bs-target') || $(this).attr('href')).replace('#', '');
 				const pane = document.getElementById(tabId);
 				console.log("Change tab to " + tabId);
 				// A fixed delay here raced the pane's own layout: shown.bs.tab can fire
