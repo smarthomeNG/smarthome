@@ -12,6 +12,7 @@ the plugin-specific attributes that support references already.
 import os
 import sys
 import unittest
+from collections import OrderedDict
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -19,6 +20,7 @@ import tests.common as common
 
 common.register_shng_log_levels()
 
+import lib.config
 import lib.item.item
 import lib.item.items
 from lib.item.items import Items
@@ -158,6 +160,52 @@ class TestPlaceholders(_Base):
 
         self.assertNotIn('description_', get('top.child').conf)
         self.assertNotIn('description', get('top.child').conf)
+
+
+class TestPlaceholdersWithInstanceName(_Base):
+    """``attr_@instance``: the ``_`` marker sits before the ``@instance`` suffix."""
+
+    def test_named_instance_placeholder_is_resolved(self):
+        get = self.build({'room': 'kitchen', 'child': {'foo_@inst': 'dev/{..:room}/state'}})
+
+        self.assertEqual(get('top.child').conf['foo@inst'], 'dev/kitchen/state')
+
+    def test_named_instance_underscore_form_does_not_leak_into_conf(self):
+        get = self.build({'room': 'kitchen', 'child': {'foo_@inst': 'dev/{..:room}/state'}})
+
+        self.assertNotIn('foo_@inst', get('top.child').conf)
+
+    def test_default_instance_placeholder_is_resolved(self):
+        get = self.build({'room': 'kitchen', 'child': {'foo_': 'dev/{..:room}/state'}})
+
+        self.assertEqual(get('top.child').conf['foo'], 'dev/kitchen/state')
+
+    def test_instances_resolve_independently(self):
+        get = self.build({'room': 'kitchen', 'child': {'foo_@a': 'a/{..:room}', 'foo_@b': 'b/{..:room}'}})
+
+        self.assertEqual(get('top.child').conf['foo@a'], 'a/kitchen')
+        self.assertEqual(get('top.child').conf['foo@b'], 'b/kitchen')
+
+    def test_named_instance_without_underscore_is_untouched(self):
+        get = self.build({'room': 'kitchen', 'child': {'foo@inst': 'dev/{..:room}/state'}})
+
+        self.assertEqual(get('top.child').conf['foo@inst'], 'dev/{..:room}/state')
+
+    def test_struct_instance_expansion_resolves_placeholder(self):
+        subtree = OrderedDict([('foo_@instance', 'dev/{..:room}/state')])
+        lib.config.replace_struct_instance('top.child', subtree, 'inst')
+
+        get = self.build({'room': 'kitchen', 'child': dict(subtree)})
+
+        self.assertEqual(get('top.child').conf['foo@inst'], 'dev/kitchen/state')
+
+    def test_struct_without_instance_name_resolves_placeholder(self):
+        subtree = OrderedDict([('foo_@instance', 'dev/{..:room}/state')])
+        lib.config.replace_struct_instance('top.child', subtree, '')
+
+        get = self.build({'room': 'kitchen', 'child': dict(subtree)})
+
+        self.assertEqual(get('top.child').conf['foo'], 'dev/kitchen/state')
 
 
 class TestPluginAttributeTargets(_Base):

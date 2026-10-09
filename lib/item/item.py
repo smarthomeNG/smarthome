@@ -696,7 +696,9 @@ class Item:
 
         # variable replacement for attributes
         for attr in dict(self.conf):
-            if attr.endswith('_'):
+            # the '_' marker may also precede an '@instance' suffix: 'attr_@instance'
+            name, at, instance = attr.partition('@')
+            if attr.endswith('_') or name.endswith('_'):
                 # Only for attributes which's name ends with an underline
                 attr_value = str(self.conf[attr])
                 while attr_value.find('{') > -1:
@@ -713,7 +715,7 @@ class Item:
                         break
 
                 # store resolved attribute value under name w/o underline
-                self.conf[attr[:-1]] = attr_value
+                self.conf[attr[:-1] if attr.endswith('_') else name[:-1] + at + instance] = attr_value
                 del self.conf[attr]
 
         # Test if attributes are defined in metadata

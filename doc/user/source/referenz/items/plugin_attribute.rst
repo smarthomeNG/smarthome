@@ -172,6 +172,9 @@ der Konfigurationsdatei :code:`my_attribute: "Text"` zu schreiben, :code:`my_att
 angegeben werden. Im Zuge des Ladens wird beim Ersetzen der Platzhalter der Unterstrich entfernt. Das Attribut
 hal zur Laufzeit also den Namen **my_attribute** und nicht (wie man denken könnte) **my_attribute_**.
 
+Bei Attributen mit Instanz Namen (in Strukturen ``@instance``) steht der Unterstrich vor dem
+``@``: :code:`my_attribute_@instance: "Text {..:my_value}"` wird zu **my_attribute@<instance-name>**.
+
 Platzhalter können (wie die Vererbung und die Nutzung anderer Attributwerte) **nur** bei
 plugin-spezifischen Attributen verwendet werden. Die Ausnahmen sind die Standard-Attribute **name**,
 **description** und **remark** (siehe :ref:`Standard_Attribute_Referenzen`).
