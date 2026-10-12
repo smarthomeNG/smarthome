@@ -191,6 +191,20 @@ class TestLogicTriggers(_Base):
         item(42)
         self.assertEqual(fired, [42])
 
+    def test_logic_gets_details_of_same_value_update(self):
+        """source details of an enforce_updates write name that write, also when the value is unchanged."""
+        sources = []
+        item = _item(self.sh, 'a', enforce_updates=True)
+
+        class _Logic:
+            def trigger(self, by, source, value):
+                sources.append(source)
+
+        item(1, 'A', 'x')
+        item.add_logic_trigger(_Logic())
+        item(1, 'B', 'y')
+        self.assertEqual(sources, [{'item': 'a', 'details': 'B:y'}])
+
     def test_logic_not_triggered_after_removal(self):
         fired = []
         item = _item(self.sh, 'a')

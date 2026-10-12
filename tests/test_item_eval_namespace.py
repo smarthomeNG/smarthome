@@ -189,6 +189,14 @@ class TestMakeEvalEnvKeys(_Base):
         ns = _make_eval_env(self.item)
         self.assertIsNone(ns['caller'])
 
+    def test_has_source_details(self):
+        ns = _make_eval_env(self.item, source_details='KNX:1.1.4:ga=2/4/0')
+        self.assertEqual(ns['source_details'], 'KNX:1.1.4:ga=2/4/0')
+
+    def test_source_details_defaults_to_none(self):
+        ns = _make_eval_env(self.item)
+        self.assertIsNone(ns['source_details'])
+
 
 # ===========================================================================
 # TestRunEvalDocumentedVars — documented names work in real eval expressions
@@ -663,6 +671,49 @@ class TestBareEvalRunsOnce(_Base):
             source(5)
 
         self.assertEqual(calls, [5])
+
+
+# ── TestEvalTriggerSourceDetails ──────────────────────────────────────────
+
+
+class TestEvalTriggerSourceDetails(_Base):
+    """
+    An eval triggered via eval_trigger gets the triggering update's
+    'caller:source' as ``source_details``, captured when the trigger is
+    queued - later updates of the trigger item before the eval runs do not
+    change it.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.queued = []
+        self.sh.trigger = lambda name, obj=None, by='Logic', source=None, value=None, dest=None, **kw: (
+            self.queued.append((name, obj, by, source, dest, value))
+        )
+        self.pos = _item(self.sh, 'pos')
+        self.watcher = _item(self.sh, 'watcher', itype='str', eval='source_details', eval_trigger='pos')
+        self.pos._init_prerun()
+        self.watcher._init_prerun()
+
+    def _run_queued(self):
+        from lib.scheduler import Scheduler
+
+        queued, self.queued = self.queued, []
+        for task in queued:
+            Scheduler._task(None, *task)
+
+    def test_eval_gets_details_of_triggering_update(self):
+        self.pos(55, 'Visu', '192.168.2.10')
+        self._run_queued()
+
+        self.assertEqual(self.watcher(), 'Visu:192.168.2.10')
+
+    def test_later_update_of_trigger_item_does_not_change_details(self):
+        self.pos(55, 'Visu', '192.168.2.10')
+        self.pos(55, 'KNX', '1.1.4:ga=2/4/0')
+        self._run_queued()
+
+        self.assertEqual(self.watcher(), 'Visu:192.168.2.10')
 
 
 if __name__ == '__main__':

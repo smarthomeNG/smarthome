@@ -125,6 +125,11 @@ zur Vefügung:
     - **math** - das Python Package mit mathematischen Funktionen
     - **uf** - geladene Userfunctions
 
+Wird das eval durch ein Item aus **eval_trigger** ausgelöst, enthält **source_details** ``<caller>:<source>``
+des Updates, das das eval ausgelöst hat (wie ``trigger['source_details']`` in Logiken). Der Wert wird beim
+Auslösen festgehalten; spätere Updates des auslösenden Items bis zur Ausführung des eval ändern ihn nicht.
+Ohne Auslösung über **eval_trigger** ist **source_details** ``None``.
+
 
 Für **eval** Ausdrücke können auch :doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>`
 genutzt werden. Dann müssen Bezüge auf andere Items nicht mehr absolut angegeben werden, sondern können sich relativ

@@ -47,7 +47,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 
-def _make_eval_env(item, value=None, caller=None, source=None, dest=None) -> dict:
+def _make_eval_env(item, value=None, caller=None, source=None, dest=None, source_details=None) -> dict:
     """
     Build the standard eval namespace for item expressions.
 
@@ -71,6 +71,10 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None) -> dic
     * ``caller`` — string identifying what triggered the eval
     * ``source`` — source item path or ``None``
     * ``dest``   — destination or ``None``
+    * ``source_details`` — ``'caller:source'`` of the update of the
+      ``eval_trigger`` item that triggered this eval, as recorded at that
+      update (same as ``trigger['source_details']`` in logics); ``None``
+      when the eval was not triggered via ``eval_trigger``
     * ``item``   — the ``Item`` instance itself
 
     :param item:   ``Item`` instance being evaluated.
@@ -78,6 +82,7 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None) -> dic
     :param caller: Caller label (``None`` for attribute evals).
     :param source: Source path (``None`` for attribute evals).
     :param dest:   Destination (``None`` for attribute evals).
+    :param source_details: ``'caller:source'`` of the triggering update.
     :returns:      Namespace dict suitable for passing to ``eval()``.
     """
     import math
@@ -99,6 +104,7 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None) -> dic
         'caller': caller,
         'source': source,
         'dest': dest,
+        'source_details': source_details,
         # ── modules documented in official examples ────────────────────────
         'datetime': datetime,
         'time': time,
@@ -114,7 +120,7 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None) -> dic
 # ---------------------------------------------------------------------------
 
 
-def run_eval(item, value=None, caller='Eval', source=None, dest=None):
+def run_eval(item, value=None, caller='Eval', source=None, dest=None, source_details=None):
     """
     Evaluate the item's ``eval`` expression.
 
@@ -151,7 +157,7 @@ def run_eval(item, value=None, caller='Eval', source=None, dest=None):
         return
 
     # Build the eval namespace once; reused for both condition and main eval.
-    _ns = _make_eval_env(item, value=value, caller=caller, source=source, dest=dest)
+    _ns = _make_eval_env(item, value=value, caller=caller, source=source, dest=dest, source_details=source_details)
 
     # Test if a conditional trigger is defined
     if item._trigger_condition is not None:

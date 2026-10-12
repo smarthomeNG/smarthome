@@ -1285,9 +1285,9 @@ class Item:
         """Return hysteresis diagnostics dict — delegates to _hysteresis.get_hysteresis_data()"""
         return get_hysteresis_data(self)
 
-    def __run_eval(self, value=None, caller='Eval', source=None, dest=None):
+    def __run_eval(self, value=None, caller='Eval', source=None, dest=None, source_details=None):
         """evaluate the 'eval' entry of the actual item — delegates to _eval.run_eval()"""
-        run_eval(self, value=value, caller=caller, source=source, dest=dest)
+        run_eval(self, value=value, caller=caller, source=source, dest=dest, source_details=source_details)
 
     # New for on_update / on_change
     def _run_on_xxx(self, path, value, on_dest, on_eval, attr='?', caller=None, source=None, dest=None):
@@ -1421,7 +1421,6 @@ class Item:
 
         with self._lock:
             _changed = False
-            trigger_source_details = self._history.get_last_update_by()
 
             if key is not None and self._type == 'dict':
                 # Update a dict item element or add an element (selected by key)
@@ -1463,9 +1462,9 @@ class Item:
             if value != self._value or self._enforce_change:
                 _changed = True
                 self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
-                trigger_source_details = self._history.get_last_change_by()
             else:
                 self._history.record_update_only(caller, source, self.shtime)
+            trigger_source_details = self._history.get_last_update_by()
 
         # Test for fix for unwanted plugin retrigger in combination with eval expressions
         # remove existing prefix from caller
@@ -1504,7 +1503,7 @@ class Item:
             elif self.__logics_to_trigger:
                 self.__trigger_logics(trigger_source_details)
             for item in self._items_to_trigger:
-                args = {'value': value, 'source': self._path}
+                args = {'value': value, 'source': self._path, 'source_details': trigger_source_details}
                 self._sh.trigger(
                     name='items.' + item.property.path,
                     obj=item.__run_eval,
