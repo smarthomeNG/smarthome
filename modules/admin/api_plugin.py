@@ -255,13 +255,39 @@ class PluginController(RESTResource):
 
         return response
 
+    def _activate_disabled_section(self, id):
+        """
+        Remove ``plugin_enabled: false`` from section ``id`` of etc/plugin.yaml
+
+        :param id: section name in etc/plugin.yaml
+        :return: True if the section was disabled and has been enabled, False if nothing changed
+        """
+        config_filename = self.get_config_filename()
+        if self.test_for_old_config(config_filename):
+            return False
+        plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
+        sect = plugin_conf.get(id)
+        if sect is None or Plugins._is_section_enabled(sect):
+            return False
+        del sect['plugin_enabled']
+        shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
+        self.logger.info("PluginController: Enabled plugin section '{}' to load it".format(id))
+        return True
+
     def handle_plugin_lifecycle(self, id, action):
+        """
+        Load, unload or reload the plugin of section ``id``
+
+        'load' enables a section that is switched off with ``plugin_enabled: false`` first; the section stays
+        enabled if loading then fails.
+        """
         if self.plugins is None:
             self.plugins = Plugins.get_instance()
 
         if action == 'load':
             if self.plugins.return_plugin(id):
                 return {'result': 'error', 'description': "Plugin '{}' is already loaded".format(id)}
+            self._activate_disabled_section(id)
             refreshed = self.plugins.refresh_plugin_config()
             plg_conf = refreshed.conf.get(id)
             if plg_conf is None:
@@ -363,7 +389,8 @@ class PluginController(RESTResource):
                 ApiParam(name='action', required=True, enum=['start', 'stop', 'load', 'unload', 'reload']),
                 ApiParam(name='filename'),
             ],
-            description='A successful load may add "warnings" (list of strings) to the response, to be shown to the user.',
+            description='A successful load may add "warnings" (list of strings) to the response, to be shown to the user. '
+            'Action load removes "plugin_enabled: false" from the section in etc/plugin.yaml before loading.',
             response_example='{"result": "ok", "warnings": ["..."]}',
         ),
     ]

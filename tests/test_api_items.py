@@ -448,6 +448,48 @@ class TestEdit(_Base):
         self.assertEqual(ctx.exception.status, 400)
 
 
+class TestSetValue(_Base):
+    def _put(self, item_type, text):
+        with self._post_body({'config': {'type': item_type}}):
+            self.controller.add(id='target')
+        with self._post_body({'value': text}):
+            self.controller.update(id='target')
+        return self.sh.items.return_item('target')()
+
+    def test_foo_dict_text_sets_a_dict(self):
+        self.assertEqual({'index': 0, 'name': 'MP3'}, self._put('foo', "{'index': 0, 'name': 'MP3'}"))
+
+    def test_foo_list_text_sets_a_list(self):
+        self.assertEqual([1, 'a'], self._put('foo', "[1, 'a']"))
+
+    def test_foo_literal_text_sets_that_value(self):
+        for text, expected in (('0', 0), ('-1', -1), ('1.5', 1.5), ('True', True), (' 7 ', 7)):
+            with self.subTest(text=text):
+                value = self._put('foo', text)
+                self.assertEqual(expected, value)
+                self.assertIs(type(expected), type(value))
+                _reset()
+                self.setUp()
+
+    def test_foo_quoted_text_sets_that_string(self):
+        self.assertEqual('0', self._put('foo', "'0'"))
+
+    def test_foo_other_text_stays_a_string(self):
+        for text in ('hello', 'off', 'None', '{unbalanced', '[1, 2', '1,2', '(1, 2)', ''):
+            with self.subTest(text=text):
+                self.assertEqual(text, self._put('foo', text))
+                _reset()
+                self.setUp()
+
+    def test_foo_detail_text_can_be_set_again(self):
+        original = {'index': 0, 'name': 'MP3 stereo', 'language': ''}
+
+        self.assertEqual(original, self._put('foo', str(original)))
+
+    def test_str_item_keeps_container_looking_text(self):
+        self.assertEqual("{'a': 1}", self._put('str', "{'a': 1}"))
+
+
 class TestDelete(_Base):
     def test_delete_removes_item(self):
         with self._post_body({'config': {'type': 'num'}}):

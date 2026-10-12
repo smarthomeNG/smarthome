@@ -50,6 +50,11 @@ default_language: de     # default_language is used, where multiple languages ar
 # Stem for name of configuration backup files
 #backup_name_stem: myinstallation
 
+# Allow the AdminUI to power off or reboot the host (Linux, macOS, Windows).
+# The command runs as the user SmartHomeNG runs as - the operating system's
+# configuration (polkit, sudoers, ...) decides whether it is permitted.
+#allow_system_power: true
+
 
 #-----------------------------------------
 # develop (might be altered for release)

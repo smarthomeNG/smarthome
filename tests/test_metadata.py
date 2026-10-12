@@ -195,6 +195,31 @@ class GetItemdefinitionTest(unittest.TestCase):
         self.assertIn('en', description)
 
 
+class DescriptionNewlineTest(unittest.TestCase):
+    """
+    Single-quoted YAML keeps '\\n' as two literal characters; descriptions
+    are normalized to real line breaks when the metadata is loaded.
+    """
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.meta = Metadata(self.sh, 'test_resources', 'plugin', 'tests.resources.test_metadata')
+
+    def test_mlstring_has_real_newlines(self):
+        self.sh.set_defaultlanguage('en')
+        self.assertEqual(self.meta.get_mlstring('description_long'), 'First line\nsecond line\nthird line')
+
+    def test_raw_meta_description_has_real_newlines(self):
+        self.assertEqual(self.meta.meta['plugin']['description_long']['en'], 'First line\nsecond line\nthird line')
+
+    def test_itemdefinition_description_has_real_newlines(self):
+        description = self.meta.get_itemdefinition('with_escaped_newline', 'description')
+        self.assertEqual(description['en'], 'one\ntwo')
+
+    def test_non_description_values_are_untouched(self):
+        self.assertEqual(self.meta.get_itemdefinition('with_escaped_newline', 'default'), 'a\\nb')
+
+
 class TimestampTypeTest(unittest.TestCase):
     """
     META_DATA_TYPES/ITEM_TYPES declare 'timestamp' as a valid type;

@@ -33,6 +33,7 @@ are implemented in this library.
 
 import logging
 import os
+import re
 import shutil
 
 from collections import OrderedDict
@@ -70,27 +71,65 @@ def editing_is_enabled():
 #
 
 
-def convert_linenumber(s, occ=1):
-    if occ == 1:
-        s2 = s[s.find('line: ') + 6 :]
-    elif occ == 2:
-        p = s.find('line: ') + 6
-        s2 = s[s.find('line: ', p) + 6 :]
-    else:
-        return '*' + s
-    lineold = s2[: s2.find(')')]
-    try:
-        linenew = str(int((int(lineold) + 1) / 2))
-    except Exception:
-        logger.warning('Unable to correct line number for yaml-file error. Wrong line number is {}'.format(lineold))
-        linenew = str(lineold)
-    lo = 'line ' + lineold
-    ln = 'line ' + linenew
-    lo2 = '(line: ' + lineold + ')'
-    ln2 = '(line: ' + linenew + ')'
-    s = s.replace(lo, ln)
-    s = s.replace(lo2, ln2)
-    return s
+MERGE_TAG = 'tag:yaml.org,2002:merge'
+_LINE_REFERENCE = re.compile(r'\bline(: | )(\d+)')
+
+
+def convert_linenumbers(text):
+    """
+    Map the line numbers in a YAML parser message back to the file's real lines.
+
+    Files are parsed with every line break doubled, so the parser's line n is line (n + 1) / 2
+    of the file. Converts both ``line 5, column 9`` and ``(line: 5)`` references.
+
+    :param text: parser error message
+    :type text: str
+    :return: message with the real line numbers
+    :rtype: str
+    """
+    return _LINE_REFERENCE.sub(lambda m: f'line{m.group(1)}{(int(m.group(2)) + 1) // 2}', text)
+
+
+def _duplicate_key_warning_loader(base_loader, source, doubled):
+    """
+    Build a loader class that logs a warning for every key defined twice in one mapping.
+
+    :param base_loader: loader class to extend
+    :param source: file name (or other label) shown in the warning
+    :param doubled: True if the parsed text has every line break doubled
+    :type source: str
+    :type doubled: bool
+    :return: loader class
+    """
+
+    class DuplicateKeyWarningLoader(base_loader):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self._checked_mappings = set()
+
+        def flatten_mapping(self, node):
+            if id(node) not in self._checked_mappings:
+                self._checked_mappings.add(id(node))
+                self._warn_duplicate_keys(node)
+            super().flatten_mapping(node)
+
+        def _warn_duplicate_keys(self, node):
+            first_lines = {}
+            for key_node, _value_node in node.value:
+                if key_node.tag == MERGE_TAG:
+                    continue
+                key = (key_node.tag, key_node.value)
+                line = key_node.start_mark.line + 1
+                line = (line + 1) // 2 if doubled else line
+                if key not in first_lines:
+                    first_lines[key] = line
+                else:
+                    logger.warning(
+                        f'{source}: duplicate key "{key_node.value}" in line {line}, first defined in line '
+                        f'{first_lines[key]} - the last definition replaces the earlier ones'
+                    )
+
+    return DuplicateKeyWarningLoader
 
 
 def yaml_load(filename, ordered=False, ignore_notfound=False):
@@ -117,7 +156,7 @@ def yaml_load(filename, ordered=False, ignore_notfound=False):
             sdata = stream.read()
         sdata = sdata.replace('\n', '\n\n')
         if ordered:
-            y = _ordered_load(sdata, yaml.SafeLoader)
+            y = _ordered_load(sdata, _duplicate_key_warning_loader(yaml.SafeLoader, filename, doubled=True))
         else:
             y = yaml.load(sdata, yaml.SafeLoader)
     except Exception as e:
@@ -131,10 +170,7 @@ def yaml_load(filename, ordered=False, ignore_notfound=False):
                 'The colon (:) following a key has to be followed by a space. The space is missing!\nError in ' + estr
             )
         if '(line: ' in estr:
-            line = convert_linenumber(estr)
-            line = convert_linenumber(line, 2)
-            #            estr += '\nNOTE: To find correct line numbers: add 1 to line and divide by 2 -> '+line
-            estr = line
+            estr = convert_linenumbers(estr)
             estr += '\nNOTE: Look for the error at the expected <block end>, near the second specified line number'
         if '[Errno 2]' in estr:
             if not ignore_notfound:
@@ -169,7 +205,7 @@ def yaml_load_fromstring(string, ordered=False):
         sdata = string
         #        sdata = sdata.replace('\n', '\n\n')
         if ordered:
-            y = _ordered_load(sdata, yaml.SafeLoader)
+            y = _ordered_load(sdata, _duplicate_key_warning_loader(yaml.SafeLoader, '<string>', doubled=False))
         else:
             y = yaml.load(sdata, yaml.SafeLoader)
     except Exception as e:
@@ -385,9 +421,10 @@ def yaml_load_roundtrip(filename, raise_on_error=False):
         sdata = sdata.replace('\n', '\n\n')
         y = yaml.load(sdata, yaml.RoundTripLoader)
     except Exception as e:
-        logger.error("yaml_load_roundtrip: YAML-file load error: '%s'" % (e))
+        message = convert_linenumbers(str(e))
+        logger.error("yaml_load_roundtrip: YAML-file load error in %s: '%s'" % (filename, message))
         if raise_on_error:
-            raise
+            raise ValueError(message) from e
         y = {}
     return y
 

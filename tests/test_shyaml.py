@@ -221,6 +221,78 @@ class TestYamlRoundtrip(unittest.TestCase):
 # ===========================================================================
 
 
+DUPLICATE_KEY_YAML = textwrap.dedent("""\
+    kino:
+        ps3:
+            enter:
+                lirc_key: kreuz
+            left:
+                lirc_key: left
+            enter:
+                lirc_key: return
+""")
+
+
+class TestDuplicateKeys(unittest.TestCase):
+    """A key defined twice in one mapping is reported with its real line numbers."""
+
+    def _write_tmpfile(self, content):
+        f = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8')
+        f.write(content)
+        f.close()
+        self.addCleanup(os.unlink, f.name)
+        return f.name
+
+    def test_yaml_load_warns_naming_key_and_lines(self):
+        path = self._write_tmpfile(DUPLICATE_KEY_YAML)
+        with self.assertLogs('lib.shyaml', 'WARNING') as logs:
+            result = shyaml.yaml_load(path, ordered=True)
+        text = '\n'.join(logs.output)
+        self.assertIn('"enter"', text)
+        self.assertIn('line 7', text)
+        self.assertIn('line 3', text)
+        self.assertNotIn('line 13', text)
+        self.assertEqual(result['kino']['ps3']['enter']['lirc_key'], 'return')
+
+    def test_yaml_load_unordered_rejects_duplicates_with_real_lines(self):
+        path = self._write_tmpfile(DUPLICATE_KEY_YAML)
+        with self.assertLogs('lib.shyaml', 'ERROR') as logs:
+            result = shyaml.yaml_load(path)
+        self.assertIsNone(result)
+        text = '\n'.join(logs.output)
+        self.assertIn('"enter"', text)
+        self.assertIn('line 7', text)
+        self.assertNotIn('line 13', text)
+
+    def test_yaml_load_fromstring_warns_with_unscaled_lines(self):
+        with self.assertLogs('lib.shyaml', 'WARNING') as logs:
+            shyaml.yaml_load_fromstring(DUPLICATE_KEY_YAML, ordered=True)
+        text = '\n'.join(logs.output)
+        self.assertIn('line 7', text)
+        self.assertIn('line 3', text)
+
+    def test_no_warning_for_unique_keys(self):
+        path = self._write_tmpfile('a:\n    x: 1\nb:\n    x: 2\n')
+        with self.assertNoLogs('lib.shyaml', 'WARNING'):
+            shyaml.yaml_load(path, ordered=True)
+
+    def test_no_warning_for_key_overriding_a_merge(self):
+        path = self._write_tmpfile('base: &b\n    a: 1\nx:\n    <<: *b\n    a: 2\n')
+        with self.assertNoLogs('lib.shyaml', 'WARNING'):
+            result = shyaml.yaml_load(path)
+        self.assertEqual(result['x']['a'], 2)
+
+    def test_roundtrip_error_has_key_and_real_line_numbers(self):
+        path = self._write_tmpfile(DUPLICATE_KEY_YAML)
+        with self.assertLogs('lib.shyaml', 'ERROR') as logs:
+            with self.assertRaises(Exception) as ctx:
+                shyaml.yaml_load_roundtrip(path, raise_on_error=True)
+        for text in (str(ctx.exception), '\n'.join(logs.output)):
+            self.assertIn('"enter"', text)
+            self.assertIn('line 7', text)
+            self.assertNotIn('line 13', text)
+
+
 class TestPathHelpers(unittest.TestCase):
     def test_set_in_dict_top_level(self):
         d = {}

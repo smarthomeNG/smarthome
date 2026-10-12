@@ -28,6 +28,7 @@ import cherrypy
 
 from lib.module import Modules
 import lib.shyaml as shyaml
+from lib.utils import Utils
 from lib.constants import DIR_ETC, DIR_MODULES, BASE_SH, BASE_HOLIDAY, BASE_MODULE
 
 from .rest import ApiDoc, ApiParam, RESTResource
@@ -69,6 +70,32 @@ class ConfigController(RESTResource):
             else:
                 config_dict[key] = update_data[key]
         return
+
+    def apply_live_params(self, saved_conf):
+        """
+        Apply the options of etc/smarthome.yaml flagged ``live: True`` in modules/core/module.yaml
+        to the running core. Options that are not flagged need a restart to take effect.
+
+        An option missing from saved_conf is reset to its default from module.yaml, or unset
+        if it has none.
+
+        :param saved_conf: content of etc/smarthome.yaml as just saved
+        """
+        for name, meta in self.core_conf.get('parameters', {}).items():
+            if not meta.get('live'):
+                continue
+            attr = '_' + name
+            if name in saved_conf:
+                value = saved_conf[name]
+            elif 'default' in meta:
+                value = meta['default']
+            else:
+                if hasattr(self._sh, attr):
+                    delattr(self._sh, attr)
+                continue
+            if meta.get('type') == 'bool':
+                value = Utils.to_bool(value, bool(meta.get('default', False)))
+            setattr(self._sh, attr, value)
 
     # ======================================================================
     #  Read holidays
@@ -274,6 +301,7 @@ class ConfigController(RESTResource):
             self.core_confdata = shyaml.yaml_load_roundtrip(self._sh.get_config_file(BASE_SH))
             self.update_configdict(self.core_confdata, data, 'common')
             shyaml.yaml_save_roundtrip(self._sh.get_config_file(BASE_SH), self.core_confdata, create_backup=True)
+            self.apply_live_params(self.core_confdata)
 
             # update etc/module.yaml with data from admin frontend
             self.module_confdata = shyaml.yaml_load_roundtrip(self._sh.get_config_file(BASE_MODULE))

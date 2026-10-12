@@ -23,6 +23,7 @@
 import os
 import logging
 import json
+import threading
 import cherrypy
 
 from .rest import ApiDoc, RESTResource
@@ -32,6 +33,7 @@ import lib.daemon
 import lib.backup as backup
 from lib.constants import DIR_ETC, DIR_MODULES
 from lib.shpypi import Shpypi
+from lib.syspower import PowerAction, is_supported, run_power_action
 
 
 # ======================================================================
@@ -70,6 +72,8 @@ class ServerController(RESTResource):
     """
     Controller for REST API /api/server
     """
+
+    STOP_DELAY = 1.0  # seconds between sending the stop response and stopping the core
 
     def __init__(self, module):
         self._sh = module._sh
@@ -156,6 +160,7 @@ class ServerController(RESTResource):
         response['dark_mode'] = self.module.dark_mode
         response['resource_graph_period'] = self.module.resource_graph_period
         response['restart_stops_only'] = self._sh._mode in ('foreground', 'debug', 'interactive')
+        response['system_power_available'] = self.system_power_available
         response['help_local_available'] = os.path.isfile(
             os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html', 'index.html')
         )
@@ -283,6 +288,51 @@ class ServerController(RESTResource):
         self.logger.info("ServerController.update(): /{} - response '{}'".format(id, response))
         return json.dumps(response)
 
+    @property
+    def system_power_available(self):
+        """True if smarthome.yaml allows host power actions and the platform supports them."""
+        return bool(self._sh._allow_system_power) and is_supported()
+
+    def system_power(self, action: PowerAction):
+        """
+        power off or reboot the host the core runs on
+
+        :param action: 'poweroff' or 'reboot'
+        :return: status dict
+        """
+        self.logger.info(f'ServerController.system_power({action})')
+
+        if not self.system_power_available:
+            response = {'result': 'error', 'text': 'System power actions are not enabled (allow_system_power)'}
+        else:
+            ok, text = run_power_action(action)
+            response = {'result': 'ok'} if ok else {'result': 'error', 'text': text}
+
+        self.logger.info(f"ServerController.system_power(): response '{response}'")
+        return json.dumps(response)
+
+    # /api/server/stop
+    def stop(self):
+        """
+        stop the SmartHomeNG server software without restarting it
+
+        The core is stopped after STOP_DELAY seconds, so that the response
+        reaches the client. Exit code 0 keeps a systemd service from
+        restarting the core (only exit code 5 forces a restart).
+
+        :return: status dict
+        """
+        self.logger.info('ServerController.stop()')
+
+        if self._sh.shng_status['code'] == 20:
+            threading.Timer(self.STOP_DELAY, self._sh.stop, kwargs={'exitcode': 0}).start()
+            response = {'result': 'ok'}
+        else:
+            response = {'result': 'error', 'text': "SmartHomeNG is not in state 'running'"}
+
+        self.logger.info(f"ServerController.stop(): response '{response}'")
+        return json.dumps(response)
+
     # ======================================================================
     #  /api/server/pypi
     #
@@ -342,7 +392,7 @@ class ServerController(RESTResource):
         ApiDoc(
             summary=(
                 'Extended server info: timezone, core/plugins git branch, developer_mode, '
-                'dark_mode default, resource_graph_period, restart_stops_only, and more.'
+                'dark_mode default, resource_graph_period, restart_stops_only, system_power_available, and more.'
             ),
             method='get',
             path='/server/info',
@@ -360,9 +410,28 @@ class ServerController(RESTResource):
 
         if id == 'restart':
             return self.restart()
+        if id == 'stop':
+            return self.stop()
+        if id in ('poweroff', 'reboot'):
+            return self.system_power(id)
 
         return None
 
     update.expose_resource = True
     update.authentication_needed = True
-    update.api_doc = [ApiDoc(summary='Restart shng core', method='put', path='/server/restart/', tags=['server'])]
+    update.api_doc = [
+        ApiDoc(summary='Restart shng core', method='put', path='/server/restart/', tags=['server']),
+        ApiDoc(summary='Stop shng core without restarting it', method='put', path='/server/stop/', tags=['server']),
+        ApiDoc(
+            summary='Power off the host (requires allow_system_power in smarthome.yaml)',
+            method='put',
+            path='/server/poweroff/',
+            tags=['server'],
+        ),
+        ApiDoc(
+            summary='Reboot the host (requires allow_system_power in smarthome.yaml)',
+            method='put',
+            path='/server/reboot/',
+            tags=['server'],
+        ),
+    ]

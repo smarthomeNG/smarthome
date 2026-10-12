@@ -9,6 +9,7 @@ module:
         fr: 'Coeur du système SmartHomeNG'
 
 parameters:
+    # live: True = a change saved from the admin UI applies to the running core without restart
     # Definition of parameters to be configured in etc/module.yaml
     lat:
         type: num
@@ -77,6 +78,7 @@ parameters:
             fr: "Avancé: Autoriser l'utilisation de déclencheurs conditionnels"
 
     deprecated_warnings:
+        live: True
         type: bool
         default: False
         gui_type: yes_no
@@ -86,11 +88,21 @@ parameters:
             fr: "Avancé: Enregistrer les avertissements si des fonctions / méthodes sont utilisées qui sont affichées comme obsolètes"
 
     backup_name_stem:
+        live: True
         # Stem for name of configuration backup files
         type: str
         description:
             de: "Falls mehrere Instanzen von SmartHomeNG gesichert werden sollen, kann es hilfreich sein, dem Namen der jeweiligen Sicherungsdatei einen Namens-Stamm voran zu stellen."
             en: "If backing up multiple instances of SmartHomeNG it can be useful to define a stem for the name of the backup file"
+
+    allow_system_power:
+        live: True
+        type: bool
+        gui_type: yes_no
+        default: False
+        description:
+            de: "Erlaubt der AdminUI, den Rechner (Host) auszuschalten oder neu zu starten. Der Befehl wird mit den Rechten des SmartHomeNG-Benutzers ausgeführt, das Betriebssystem entscheidet über die Berechtigung."
+            en: "Allow the AdminUI to power off or reboot the host. The command runs with the permissions of the SmartHomeNG user, the operating system decides whether it is permitted."
 
     holidays_country:
         type: str
@@ -180,12 +192,14 @@ parameters:
             en: "Use instance names from 'instance' parameter in plugin.yaml (False = future default behaviour)"
 
     pip_command:
+        live: True
         type: str
         description:
             de: "PIP-Befehl, falls pip3 nicht automatisch gefunden wird (z.B. 'python3 -m pip')"
             en: "PIP command to use if pip3 is not found automatically (e.g. 'python3 -m pip')"
 
     db_query_timeout:
+        live: True
         type: num
         default: 60
         description:

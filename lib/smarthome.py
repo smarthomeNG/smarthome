@@ -161,6 +161,7 @@ class SmartHome:
 
         self._config_etc = False
         self._legacy_instances = True
+        self._allow_system_power = False
         self._orb_backend = 'ephem'
 
         # if set: create items with illegal named and warn, but go on
@@ -374,6 +375,7 @@ class SmartHome:
         #############################################################
         # check / set legacy_instance option from config file
         self._legacy_instances = lib.utils.Utils.to_bool(self._legacy_instances, True)
+        self._allow_system_power = lib.utils.Utils.to_bool(self._allow_system_power, False)
 
         #############################################################
         # check / set config_etc option from cmdline or config file

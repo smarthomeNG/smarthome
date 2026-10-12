@@ -21,6 +21,7 @@
 
 import logging
 import os
+import re
 import sys
 import collections
 
@@ -44,6 +45,41 @@ META_STRUCT_SECTION = 'item_structs'
 
 
 logger = logging.getLogger(__name__)
+
+META_DESCRIPTION_KEYS = ('description', 'description_long', 'valid_list_description')
+_ESCAPED_NEWLINE = re.compile(r'\\n[ \t]*\n?')
+
+
+def _normalize_description_newlines(node):
+    """
+    Replace literal backslash-n sequences in description texts with real line breaks
+
+    Single-quoted YAML scalars do not process escapes, so ``'a\\nb'`` is loaded with the
+    two characters backslash and ``n``. The walk converts the strings (also inside
+    language dicts and lists) below the keys in ``META_DESCRIPTION_KEYS``, in place.
+    All other values are left untouched.
+
+    :param node: loaded metadata (dict, list or scalar)
+    :return: the same structure, with normalized descriptions
+    """
+
+    def convert(value):
+        if isinstance(value, str):
+            return _ESCAPED_NEWLINE.sub('\n', value)
+        if isinstance(value, dict):
+            return {k: convert(v) for k, v in value.items()}
+        if isinstance(value, list):
+            return [convert(v) for v in value]
+        return value
+
+    if isinstance(node, dict):
+        for key, value in node.items():
+            node[key] = convert(value) if key in META_DESCRIPTION_KEYS else _normalize_description_newlines(value)
+    elif isinstance(node, list):
+        for i, value in enumerate(node):
+            node[i] = _normalize_description_newlines(value)
+    return node
+
 
 # global variables to take definitions of multiple plugins
 all_itemdefinitions = {}
@@ -95,7 +131,7 @@ class Metadata:
         # that situation are already required to keep at the shng base dir
         basedir = self._sh.get_basedir() if self._sh is not None else '.'
         filename = os.path.join(basedir, self.relative_filename)
-        self.meta = shyaml.yaml_load(filename, ordered=True)
+        self.meta = _normalize_description_newlines(shyaml.yaml_load(filename, ordered=True))
 
         self.parameters = None
         self._paramlist = []

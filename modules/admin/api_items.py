@@ -20,6 +20,7 @@
 #########################################################################
 
 
+import ast
 import os
 import logging
 import json
@@ -181,8 +182,32 @@ class ItemsController(RESTResource, ItemData):
                 else:
                     value = int(value) if value != '' else 0
 
+        if item.type() == 'foo' and isinstance(value, str):
+            value = self._foo_value_from_text(value)
+
         item(value, caller='admin')
         return json.dumps({'result': 'ok'})
+
+    @staticmethod
+    def _foo_value_from_text(text):
+        """
+        Value of a ``foo`` item from the text entered in the admin UI.
+
+        Text that is a literal int, float, bool, list or dict (as the item detail shows it) becomes that
+        value, a quoted string literal becomes the string inside the quotes. Any other text stays a string;
+        ``None`` is not accepted as a literal, as setting an item to None only reads it.
+
+        :param text: entered text
+        :type text: str
+        :return: parsed value or the unchanged text
+        """
+        try:
+            parsed = ast.literal_eval(text.strip())
+        except (ValueError, SyntaxError, MemoryError, RecursionError):
+            return text
+        if isinstance(parsed, (int, float, str, list, dict)):
+            return parsed
+        return text
 
     update.expose_resource = True
     update.authentication_needed = True
