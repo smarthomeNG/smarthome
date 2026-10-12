@@ -1,26 +1,16 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 """
-Harness for running real plugins, especially the SmartDevicePlugin stack, in tests.
+Loads real plugins in tests via the real plugin loader on MockSmartHome.
 
-A plugin is loaded through the real ``lib.plugin.Plugins`` loader (metadata,
-parameters, item attributes, for SDP plugins ``commands.py``) on a
-``MockSmartHome``; items are created from yaml text, which runs the plugin's
-real ``parse_item()``. Only the outer boundaries are replaced:
-
-- the shng scheduler, by :class:`RecordingScheduler`, which records jobs
-  instead of running them, so tests can inspect and fire them explicitly
-- for SDP plugins, the device connection, by :class:`RecordingConnection`, which records
-  outgoing ``data_dict``s and answers with scripted replies, and fires the
-  connect/disconnect callbacks on open/close like a real transport does
-
-Used by SDP framework tests in ``tests/`` and by characterization tests of
-SDP-based plugins in ``plugins/<plugin>/tests/``.
+Scheduler and (for SDP plugins) device connection are replaced by recording
+stand-ins: RecordingScheduler and RecordingConnection.
 """
 
 from __future__ import annotations
 
 import builtins
+import logging
 import os
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -32,9 +22,13 @@ import tests.common as common  # noqa: E402
 
 common.register_shng_log_levels()
 
+import lib.item.item  # noqa: E402
+import lib.item.items  # noqa: E402
 from lib.item.item import Item  # noqa: E402
+from lib.item.items import Items  # noqa: E402
 from lib.model.sdp.connection import SDPConnection  # noqa: E402
-from lib.model.sdp.globals import PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT  # noqa: E402
+from lib.model.sdp.carriers import ConnectionHooks, DeviceConfig  # noqa: E402
+from lib.model.sdp.protocol import SDPProtocol  # noqa: E402
 from lib.model.smartdeviceplugin import SmartDevicePlugin  # noqa: E402
 from lib.model.smartplugin import SmartPlugin  # noqa: E402
 from tests.mock.core import MockScheduler, MockSmartHome  # noqa: E402
@@ -95,30 +89,30 @@ class RecordingScheduler(MockScheduler):
 
 class RecordingConnection(SDPConnection):
     """
-    Transport stand-in: records every sent ``data_dict`` and returns the reply
-    scripted for its payload (``None`` if none is scripted).
+    Records sent data_dicts; replies from ``responder``, else ``replies`` by payload.
 
-    Opening and closing fire the plugin's connect/disconnect callbacks, as
-    the real network and serial transports do.
+    Opening and closing fire the connect/disconnect callbacks.
     """
 
-    def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs) -> None:
-        super().__init__(data_received_callback, name, **kwargs)
+    def _setup(self) -> None:
         self.sent: list[dict] = []
         self.replies: dict[Any, Any] = {}
+        self.responder: Callable[[dict], Any] | None = None
 
     def _open(self) -> bool:
         self._is_connected = True
-        if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
-            self._params[PLUGIN_ATTR_CB_ON_CONNECT](self.__class__.__name__)
+        if self._hooks.on_connect:
+            self._hooks.on_connect(self.__class__.__name__)
         return True
 
     def _close(self) -> None:
-        if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
-            self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](self.__class__.__name__)
+        if self._hooks.on_disconnect:
+            self._hooks.on_disconnect(self.__class__.__name__)
 
     def _send(self, data_dict: dict, **kwargs) -> Any:
         self.sent.append(data_dict)
+        if self.responder:
+            return self.responder(data_dict)
         return self.replies.get(data_dict.get('payload'))
 
     @property
@@ -127,18 +121,40 @@ class RecordingConnection(SDPConnection):
         return [d.get('payload') for d in self.sent]
 
 
+class LogCapture(logging.Handler):
+    """Collects all log records."""
+
+    def __init__(self) -> None:
+        super().__init__(level=logging.DEBUG)
+        self.records: list[logging.LogRecord] = []
+
+    def emit(self, record: logging.LogRecord) -> None:
+        self.records.append(record)
+
+    def messages(self, level: int = logging.WARNING) -> list[str]:
+        """Messages of all records of at least ``level``."""
+        return [r.getMessage() for r in self.records if r.levelno >= level]
+
+
 @dataclass
 class PluginRig:
-    """A loaded plugin with its recording scheduler."""
+    """A loaded plugin with its recording scheduler and captured log records."""
 
     sh: MockSmartHome
     plugin: SmartPlugin
     scheduler: RecordingScheduler
     tmp_dir: str
+    logs: LogCapture
 
     def item(self, path: str) -> Item:
         """Return the item at ``path``."""
         return self.sh.return_item(path)
+
+    def rename(self, item: Item, new_path: str) -> None:
+        """Rename ``item`` in place, as Items.rename_item() does towards plugins."""
+        old_path = item.property.path
+        item._path = new_path
+        self.plugin.rename_item(item, old_path, new_path)
 
     def job(self, name: str) -> ScheduledJob | None:
         """Return the scheduler job the plugin added as ``scheduler_add(name, ...)``, or None."""
@@ -157,6 +173,26 @@ class SDPRig(PluginRig):
 
     plugin: SmartDevicePlugin
     connection: SDPConnection
+
+
+class PluginNotLoaded(RuntimeError):
+    """The plugin loader did not load the plugin; ``logs`` holds the log records of the attempt."""
+
+    def __init__(self, message: str, logs: LogCapture) -> None:
+        super().__init__(message)
+        self.logs = logs
+
+
+def _reset_items() -> None:
+    """Empty the class-level item tree and attribute registrations of Items."""
+    lib.item.items._items_instance = None
+    lib.item.item._items_instance = None
+    Items._Items__items = []
+    Items._Items__item_dict = {}
+    Items._children = []
+    Items.plugin_attributes = {}
+    Items.plugin_attribute_prefixes = {}
+    Items.plugin_prefixes_tuple = None
 
 
 def _yaml_section(name: str, conf: dict[str, Any]) -> str:
@@ -178,17 +214,16 @@ def load_plugin(
     """
     Load a plugin through the real plugin loader and create its items.
 
-    :param tmp_dir: writable directory for the generated plugin config/item files
-    :param class_path: module path of the plugin, e.g. ``tests.fixture_sdp_plugin``
+    :param tmp_dir: writable directory for generated config files
+    :param class_path: module path of the plugin
     :param class_name: plugin class name
     :param items_yaml: item definitions as yaml text
-    :param params: plugin parameters as in ``etc/plugin.yaml``
+    :param params: plugin parameters
     :param section: plugin config section name
-    :param before_items: called with the plugin after loading, before any item is created
-    :param other_sections: further sections of the same plugin class by section name, with their
-        parameters; with any given, every section's instance name is its section name
-    :return: the loaded rig for ``section``; the plugin is not yet running
-    :raises RuntimeError: if the plugin loader did not load the plugin
+    :param before_items: called with the plugin before items are created
+    :param other_sections: further sections of the plugin class with their parameters
+    :return: the rig for ``section``; the plugin is not running
+    :raises PluginNotLoaded: if the plugin loader did not load the plugin
     """
     sections = {section: params or {}, **(other_sections or {})}
     plugin_conf = os.path.join(tmp_dir, 'plugin')
@@ -196,12 +231,21 @@ def load_plugin(
         for name, sec_params in sections.items():
             f.write(_yaml_section(name, {'class_path': class_path, 'class_name': class_name, **sec_params}))
 
+    _reset_items()
     sh = MockSmartHome()
+    logs = LogCapture()
+    root = logging.getLogger()
+    for handler in [h for h in root.handlers if isinstance(h, LogCapture)]:
+        root.removeHandler(handler)
+    root.addHandler(logs)
+    root.setLevel(logging.DEBUG)
+    sh._cache_dir = os.path.join(tmp_dir, 'cache') + os.path.sep
+    os.makedirs(sh._cache_dir, exist_ok=True)
     scheduler = RecordingScheduler()
     sh.scheduler = scheduler
     plugin = sh.with_plugins_from(plugin_conf).return_plugin(section)
     if plugin is None:
-        raise RuntimeError(f'plugin {class_path}.{class_name} could not be loaded')
+        raise PluginNotLoaded(f'plugin {class_path}.{class_name} could not be loaded', logs)
 
     if before_items:
         before_items(plugin)
@@ -211,11 +255,30 @@ def load_plugin(
         f.write(items_yaml)
     sh.with_items_from(items_file)
 
-    return PluginRig(sh=sh, plugin=plugin, scheduler=scheduler, tmp_dir=tmp_dir)
+    return PluginRig(sh=sh, plugin=plugin, scheduler=scheduler, tmp_dir=tmp_dir, logs=logs)
+
+
+def transport(conn: SDPConnection) -> SDPConnection:
+    """The transport doing the I/O: ``conn`` itself, or the transport a protocol wraps."""
+    return conn._connection if isinstance(conn, SDPProtocol) else conn
 
 
 def _install_recording_connection(plugin: SmartDevicePlugin) -> None:
-    plugin._connection = RecordingConnection(plugin.on_data_received, name=plugin.get_fullname(), **plugin._parameters)
+    config = DeviceConfig.from_params(plugin._connection_params())
+    plugin._connection = RecordingConnection(config, plugin._connection_hooks(), plugin, plugin.get_fullname())
+
+
+def _install_recording_transport(plugin: SmartDevicePlugin) -> None:
+    protocol = plugin._connection
+    if not isinstance(protocol, SDPProtocol):
+        raise TypeError(f'plugin connection {protocol} is no protocol, no inner transport to replace')
+    hooks = ConnectionHooks(
+        on_data=protocol.on_data_received,
+        on_connect=protocol.on_connect,
+        on_disconnect=protocol.on_disconnect,
+        on_abort=protocol._hooks.on_abort,
+    )
+    protocol._connection = RecordingConnection(protocol._config, hooks, plugin, plugin.get_fullname())
 
 
 def load_sdp_plugin(
@@ -226,29 +289,24 @@ def load_sdp_plugin(
     params: dict[str, Any] | None = None,
     section: str = 'sdp',
     record: bool = True,
+    record_transport: bool = False,
 ) -> SDPRig:
     """
-    Load an SDP plugin through the real plugin loader and create its items.
+    Load an SDP plugin like load_plugin().
 
-    With ``record`` set, the plugin's connection is replaced by a
-    :class:`RecordingConnection` built from the plugin's own resolved
-    parameters (so its callbacks are wired exactly as the plugin wired them)
-    before any item is created; otherwise the plugin keeps the connection it
-    built itself, and ``SDPRig.connection`` is that connection.
-
-    Parameters as for :func:`load_plugin`, plus:
-
-    :param record: replace the plugin's connection by a recording one
+    :param record: replace the plugin's connection by a RecordingConnection
+    :param record_transport: replace only the transport wrapped by the plugin's protocol
     """
-    rig = load_plugin(
-        tmp_dir,
-        class_path,
-        class_name,
-        items_yaml,
-        params=params,
-        section=section,
-        before_items=_install_recording_connection if record else None,
-    )
+    if record_transport:
+        install = _install_recording_transport
+    elif record:
+        install = _install_recording_connection
+    else:
+        install = None
+    rig = load_plugin(tmp_dir, class_path, class_name, items_yaml, params=params, section=section, before_items=install)
+    connection = rig.plugin._connection
+    if record_transport:
+        connection = connection._connection
     return SDPRig(
-        sh=rig.sh, plugin=rig.plugin, scheduler=rig.scheduler, tmp_dir=tmp_dir, connection=rig.plugin._connection
+        sh=rig.sh, plugin=rig.plugin, scheduler=rig.scheduler, tmp_dir=tmp_dir, logs=rig.logs, connection=connection
     )

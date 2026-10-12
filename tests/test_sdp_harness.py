@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
-"""
-Smoke tests for tests/sdp_harness: the fixture SDP plugin loads through the
-real plugin loader, its items are parsed, and item writes reach the
-recording connection as real send data.
-"""
+"""Smoke tests for tests/sdp_harness."""
 
 import tempfile
 import unittest

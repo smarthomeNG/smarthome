@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 720" font-family="Helvetica, Arial, sans-serif">
+  <rect width="760" height="720" fill="#f9f9f9"/>
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#555"/></marker>
+    <marker id="arr-blue" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#2a5db0"/></marker>
+    <marker id="arr-green" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#1e7e34"/></marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/></marker>
+    <marker id="arr-purple" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#681da8"/></marker>
+    <marker id="arr-yellow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#9c6e00"/></marker>
+  </defs>
+  <text x="380" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Receive path: device → item</text>
+  <rect x="40" y="50" width="470" height="48" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="50" y="70" text-anchor="start" font-size="10" font-weight="bold" fill="#1e7e34">I/O thread: transport.on_data_received(by, data)</text>
+  <text x="50" y="86" text-anchor="start" font-size="9" font-weight="normal" fill="#555">Tcp_client line, serial queue worker, UDP listener, or sync reply</text>
+  <path d="M275,100 L275,112" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="114" width="470" height="48" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="50" y="134" text-anchor="start" font-size="10" font-weight="bold" fill="#1e7e34">protocol.on_data_received()  (if a protocol is used)</text>
+  <text x="50" y="150" text-anchor="start" font-size="9" font-weight="normal" fill="#555">JSON-RPC: buffer, split JSON, id → sent method → on_data(by, json, method)</text>
+  <path d="M275,164 L275,176" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="178" width="470" height="34" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="50" y="199" text-anchor="start" font-size="10" font-weight="bold" fill="#2a5db0">SmartDevicePlugin.on_data_received(by, data, command=None)</text>
+  <path d="M275,214 L275,226" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="228" width="470" height="48" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="50" y="248" text-anchor="start" font-size="10" font-weight="bold" fill="#681da8">_transform_received_data(data)</text>
+  <text x="50" y="264" text-anchor="start" font-size="9" font-weight="normal" fill="#555">clean / decode / log raw data</text>
+  <path d="M510,252 L540,252" fill="none" stroke="#a142f4" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="546" y="256" text-anchor="start" font-size="9" font-weight="normal" fill="#681da8" font-style="italic">plugin hook</text>
+  <path d="M275,278 L275,290" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="292" width="470" height="62" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="50" y="312" text-anchor="start" font-size="10" font-weight="bold" fill="#9c6e00">command known?  else get_commands_from_reply(data)</text>
+  <text x="50" y="327" text-anchor="start" font-size="9" font-weight="normal" fill="#555">re.search against every command&#x27;s reply_patterns → all matches</text>
+  <text x="50" y="342" text-anchor="start" font-size="9" font-weight="normal" fill="#555">no match → discarded (or _unknown_command) · suspended → dropped</text>
+  <path d="M275,356 L275,368" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="370" width="470" height="62" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="50" y="390" text-anchor="start" font-size="10" font-weight="bold" fill="#9c6e00">_process_received_data(data, cmd)   per command</text>
+  <text x="50" y="405" text-anchor="start" font-size="9" font-weight="normal" fill="#555">custom token (token_re, known tokens only) → SDPCommand.get_shng_data</text>
+  <text x="50" y="420" text-anchor="start" font-size="9" font-weight="normal" fill="#555">(e.g. capture group) → DT.get_shng_data → forward lookup</text>
+  <path d="M275,434 L275,446" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="448" width="470" height="48" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="50" y="468" text-anchor="start" font-size="10" font-weight="bold" fill="#1e7e34">connection.check_reply(cmd, value)</text>
+  <text x="50" y="484" text-anchor="start" font-size="9" font-weight="normal" fill="#555">resend protocol: expected reply received?</text>
+  <path d="M275,498 L275,510" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="512" width="470" height="62" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="50" y="532" text-anchor="start" font-size="10" font-weight="bold" fill="#2a5db0">_dispatch_callback(cmd, value, by)  = dispatch_data()</text>
+  <text x="50" y="547" text-anchor="start" font-size="9" font-weight="normal" fill="#555">every item bound to cmd (or cmd#token): item(value, plugin)</text>
+  <text x="50" y="562" text-anchor="start" font-size="9" font-weight="normal" fill="#555">caller = plugin → no echo into update_item</text>
+  <path d="M275,576 L275,588" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="590" width="470" height="48" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="50" y="610" text-anchor="start" font-size="10" font-weight="bold" fill="#681da8">_process_additional_data(cmd, data, value, custom, by)</text>
+  <text x="50" y="626" text-anchor="start" font-size="9" font-weight="normal" fill="#555">follow-up reads, derived values via _dispatch_callback</text>
+  <path d="M510,614 L540,614" fill="none" stroke="#a142f4" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="546" y="618" text-anchor="start" font-size="9" font-weight="normal" fill="#681da8" font-style="italic">plugin hook</text>
+  <rect x="40" y="658" width="14" height="11" rx="2" fill="#e8f0fe" stroke="#4a86e8"/>
+  <text x="60" y="667" text-anchor="start" font-size="9" font-weight="normal" fill="#555">SmartDevicePlugin</text>
+  <rect x="230" y="658" width="14" height="11" rx="2" fill="#f3e8fd" stroke="#a142f4"/>
+  <text x="250" y="667" text-anchor="start" font-size="9" font-weight="normal" fill="#555">plugin hook</text>
+  <rect x="420" y="658" width="14" height="11" rx="2" fill="#fef7e0" stroke="#f9ab00"/>
+  <text x="440" y="667" text-anchor="start" font-size="9" font-weight="normal" fill="#555">command layer</text>
+  <rect x="610" y="658" width="14" height="11" rx="2" fill="#e6f4ea" stroke="#34a853"/>
+  <text x="630" y="667" text-anchor="start" font-size="9" font-weight="normal" fill="#555">connection layer</text>
+</svg>

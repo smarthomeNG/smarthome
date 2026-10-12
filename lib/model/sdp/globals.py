@@ -29,6 +29,8 @@
 import types
 from ast import literal_eval
 from collections import abc
+from collections.abc import Mapping
+from typing import Any, TypeVar
 
 from lib.utils import Utils
 
@@ -43,7 +45,7 @@ from lib.utils import Utils
 # flake8: noqa
 
 # this is the internal SDP version
-SDP_VERSION = '1.1.0'
+SDP_VERSION = '2.0.0'
 
 # plugin attributes, used in plugin config 'device' and instance creation (**kwargs)
 
@@ -85,11 +87,9 @@ PLUGIN_ATTR_SERIAL_STOP = 'stopbits'  # stopbits for serial connection
 PLUGIN_ATTR_PROTOCOL = (
     'protocol'  # manually choose protocol class, classname or type (see below). Don't set if not necessary!
 )
-PLUGIN_ATTR_SEND_RETRIES = 'send_retries'  # how often should a command be resent when not receiving expected answer (JSON-RPC/resend protocols only)
-PLUGIN_ATTR_SEND_RETRY_CYCLE = 'send_retries_cycle'  # if using resend protocol: how many seconds to wait between resend rounds (JSON-RPC/resend protocols only)
-PLUGIN_ATTR_SEND_TIMEOUT = (
-    'send_retries_timeout'  # how many seconds to wait for reply to command? (JSON-RPC/resend protocols only)
-)
+PLUGIN_ATTR_SEND_RETRIES = 'send_retries'  # resends of an unanswered command (jsonrpc and resend protocols)
+PLUGIN_ATTR_SEND_RETRY_CYCLE = 'send_retries_cycle'  # seconds between resend rounds (resend protocol)
+PLUGIN_ATTR_SEND_TIMEOUT = 'send_timeout'  # seconds to wait for a reply before resending (jsonrpc protocol)
 
 # callback functions, not in plugin.yaml
 PLUGIN_ATTR_CB_ON_CONNECT = 'connected_callback'  # callback function, called if connection is established
@@ -376,6 +376,9 @@ class SDPProtocolError(SDPError):
 #############################################################################################################################################################################################################################################
 
 
+T = TypeVar('T')
+
+
 def sanitize_param(val):
     """
     Try to correct type of val if val is string:
@@ -404,6 +407,23 @@ def sanitize_param(val):
         except Exception:
             pass
     return val
+
+
+def resolve_class(selection: Any, classes: Mapping[str, type[T]], base: type, kind: str) -> type[T]:
+    """
+    Resolve ``selection`` - a ``base`` subclass, a key of ``classes`` or a class name in ``classes``.
+
+    :raises RuntimeError: if nothing matches
+    """
+    if isinstance(selection, type) and issubclass(selection, base):
+        return selection
+    if isinstance(selection, str):
+        if selection in classes:
+            return classes[selection]
+        for cls in classes.values():
+            if cls.__name__ == selection:
+                return cls
+    raise RuntimeError(f'{kind} {selection!r} is neither one of {sorted(classes)} nor one of their class names')
 
 
 def update(d, u):

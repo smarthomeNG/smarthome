@@ -12,7 +12,7 @@ plugins/myplugin/, adapt as follows:
                        YamlPluginContractTest,
                        SdpPluginContractTest):
         PLUGIN_CLASS = MyPlugin
-        PLUGIN_INIT_PARAMS = {}    # conn_type=CONN_NULL injected automatically
+        PLUGIN_INIT_PARAMS = {}    # runs on the null transport automatically
         SDP_ITEM_ATTR_SETS = [
             {'ex_command': 'Device.Power', 'ex_read': True},
             {'ex_command': 'Device.Power', 'ex_write': True},
@@ -25,8 +25,9 @@ Standalone mode (``if __name__ == '__main__'``) is not exercised by these tests
 — they test the plugin as a normal SmartHomeNG plugin, importing it via the
 ``else`` branch of the standalone guard.
 
-Note on conn_type: SdpPluginContractTest injects conn_type=CONN_NULL into
-PLUGIN_INIT_PARAMS so no real network or serial connection is attempted.
+Note on connections: SdpPluginContractTest runs plugins declaring TRANSPORTS
+on the null transport (and injects conn_type=CONN_NULL for others), so no real
+network or serial connection is attempted.
 """
 
 import os
@@ -51,15 +52,7 @@ class TestSdpExampleStandalone(BasePluginContractTest, YamlPluginContractTest, S
     """
 
     PLUGIN_CLASS = SdpExample
-    PLUGIN_INIT_PARAMS = {}  # conn_type=CONN_NULL is injected by SdpPluginContractTest
-
-    def test_pause_item_registered_via_parse_item(self):
-        """SDP uses _suspend_item_path / _suspend_item, not _pause_item_path."""
-        self.skipTest(
-            'SmartDevicePlugin uses the suspend mechanism (_suspend_item_path), '
-            'not the SmartPlugin pause mechanism (_pause_item_path). '
-            'Test the suspend item via plugin.yaml suspend_item parameter instead.'
-        )
+    PLUGIN_INIT_PARAMS = {}  # SdpPluginContractTest runs the plugin on the null transport
 
     def test_run_standalone_exists(self):
         """run_standalone() must be defined for standalone-capable SDP plugins."""

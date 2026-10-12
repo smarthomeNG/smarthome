@@ -10,7 +10,6 @@ functions (``db_mark_invalid``/``db_is_invalid``) are replaced by :class:`GapRec
 import tempfile
 import unittest
 
-from lib.model.sdp.globals import PLUGIN_ATTR_CB_SUSPEND
 from tests.gap_recorder import GapRecorder
 from tests.sdp_harness import SDPRig, load_sdp_plugin
 
@@ -59,7 +58,7 @@ class InvalidateOnDisconnectBase(unittest.TestCase):
 
     def abort_connecting(self) -> None:
         """The transport gives up reconnecting and asks the plugin to suspend (``retry_suspend`` reached)."""
-        self.rig.connection._params[PLUGIN_ATTR_CB_SUSPEND](True, by='test')
+        self.rig.connection._hooks.on_abort('test')
 
 
 class TestInvalidateOnDisconnect(InvalidateOnDisconnectBase):

@@ -139,6 +139,12 @@ Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
 Die einzelnen Attribute der command-Definitionen sind in der Datei `./dev/sample_smartdevice_plugin/commands.py` im
 Detail erklärt.
 
+``read`` und ``write`` beschreiben die Operationen am Gerät: ``read`` erlaubt, den Wert vom Gerät anzufordern (auf
+Anforderung, beim Start, zyklisch oder in Lesegruppen), ``write`` erlaubt, Item-Werte an das Gerät zu senden. Werte
+empfangen dagegen alle Items, die an das Kommando gebunden sind - unabhängig davon, ob der Wert aus einer Antwort,
+einer Meldung des Geräts oder aus dem Plugin-Code stammt. Ein Kommando ohne ``read`` und ohne ``write`` ist ein
+Pseudo-Kommando: es existiert nicht auf dem Gerät und wird nur vom Plugin befüllt.
+
 
 Protokoll
 ---------

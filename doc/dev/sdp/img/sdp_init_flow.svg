@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 725" font-family="Helvetica, Arial, sans-serif">
+  <rect width="760" height="725" fill="#f9f9f9"/>
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#555"/></marker>
+    <marker id="arr-blue" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#2a5db0"/></marker>
+    <marker id="arr-green" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#1e7e34"/></marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/></marker>
+    <marker id="arr-purple" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#681da8"/></marker>
+    <marker id="arr-yellow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#9c6e00"/></marker>
+  </defs>
+  <text x="380" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">SmartDevicePlugin.__init__ — order and configuration precedence</text>
+  <rect x="40" y="50" width="440" height="52" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="260" y="72" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">① _set_item_attributes()</text>
+  <text x="260" y="88" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">symbolic ITEM_ATTR_* → real attribute names by suffix</text>
+  <path d="M260,102 L260,116" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="118" width="440" height="52" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="260" y="140" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">② runtime state, template_vars = ChainMap({}, _parameters)</text>
+  <text x="260" y="156" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">autoconnect defaults to autoreconnect</text>
+  <path d="M260,170 L260,184" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="186" width="440" height="52" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="260" y="208" text-anchor="middle" font-size="11" font-weight="bold" fill="#3c4043">③ SmartPlugin.__init__()</text>
+  <text x="260" y="224" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">suspend_item → _pause_item_path</text>
+  <path d="M260,238 L260,252" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="254" width="440" height="66" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="260" y="276" text-anchor="middle" font-size="11" font-weight="bold" fill="#9c6e00">④ _apply_declared_defaults()</text>
+  <text x="260" y="291" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">TRANSPORTS, PROTOCOL, COMMAND_CLASS,</text>
+  <text x="260" y="306" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">LINE_TERMINATED, JSON_MOVE_KEYS, CUSTOM_TOKEN</text>
+  <path d="M260,320 L260,334" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="336" width="440" height="52" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="260" y="358" text-anchor="middle" font-size="11" font-weight="bold" fill="#681da8">⑤ _set_device_defaults()   (legacy hook)</text>
+  <text x="260" y="374" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">writes to _parameters win over declarations</text>
+  <path d="M260,388 L260,402" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="404" width="440" height="66" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="260" y="426" text-anchor="middle" font-size="11" font-weight="bold" fill="#9c6e00">⑥ _check_legacy_defaults()</text>
+  <text x="260" y="441" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">debug hint per changed parameter, _use_callbacks warning,</text>
+  <text x="260" y="456" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">conn_type resolution</text>
+  <path d="M260,470 L260,484" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="486" width="440" height="66" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="260" y="508" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e7e34">⑦ update_plugin_config()</text>
+  <text x="260" y="523" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">transport from TRANSPORTS → SDPCommands (commands.py)</text>
+  <text x="260" y="538" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">→ _get_connection() → structs</text>
+  <path d="M260,552 L260,566" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="568" width="440" height="52" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="260" y="590" text-anchor="middle" font-size="11" font-weight="bold" fill="#681da8">⑧ _post_init()   (hook)</text>
+  <text x="260" y="606" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">own attributes, template_vars values, self._webif</text>
+  <path d="M260,620 L260,634" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="636" width="440" height="52" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="260" y="658" text-anchor="middle" font-size="11" font-weight="bold" fill="#3c4043">⑨ init_webinterface()</text>
+  <text x="260" y="674" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">if _post_init() set self._webif</text>
+  <text x="260" y="708" text-anchor="middle" font-size="10" font-weight="normal" fill="#a50e0e" font-style="italic">any failure in ⑦ → _init_complete = False, plugin not loaded</text>
+  <rect x="510" y="50" width="225" height="310" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="622" y="72" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">precedence where both apply</text>
+  <rect x="522" y="90" width="185" height="32" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="614" y="110" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">_set_device_defaults()</text>
+  <rect x="522" y="134" width="185" height="32" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="614" y="154" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">class declarations</text>
+  <rect x="522" y="178" width="185" height="32" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="614" y="198" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">etc/plugin.yaml value</text>
+  <rect x="522" y="222" width="185" height="32" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="614" y="242" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">plugin.yaml default</text>
+  <rect x="522" y="266" width="185" height="32" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="614" y="286" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">transport/protocol CONFIG_DEFAULTS</text>
+  <rect x="522" y="310" width="185" height="32" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="614" y="330" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">DeviceConfig field default</text>
+  <text x="722" y="86" text-anchor="middle" font-size="9" font-weight="normal" fill="#555" font-style="italic">wins</text>
+  <path d="M722,340 L722,94" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+</svg>

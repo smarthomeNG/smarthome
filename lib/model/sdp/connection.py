@@ -30,8 +30,7 @@ import json
 import logging
 import requests
 import socket
-import sys
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from contextlib import contextmanager
 from importlib import import_module
 from queue import SimpleQueue
@@ -47,39 +46,24 @@ _STALE_CONNECTION_TIMEOUT = 60
 # with an OSError on Linux (shng's primary deployment target), but this isn't guaranteed
 # on every platform -- bound the join so a stuck thread can't hang the calling thread.
 _UDP_CLOSE_JOIN_TIMEOUT = 5
-from typing import Any, Generator
+from typing import Any, ClassVar, Generator
 
 from lib.network import Tcp_client
+from lib.model.sdp.carriers import ConnectionHooks, DeviceConfig, SchedulerPort
 from lib.model.sdp.globals import (
-    sanitize_param,
+    resolve_class,
     SDPConnectionError,
     SDPProtocolError,
+    CONN_NET_TCP_CLI,
+    CONN_NET_TCP_JSONRPC,
     CONN_NET_TCP_REQ,
+    CONN_NET_UDP_SRV,
     CONN_NULL,
+    CONN_SER_ASYNC,
     CONN_SER_DIR,
-    CONNECTION_TYPES,
-    PLUGIN_ATTR_CB_ON_CONNECT,
-    PLUGIN_ATTR_CB_ON_DISCONNECT,
     PLUGIN_ATTR_CONNECTION,
-    PLUGIN_ATTR_CONN_AUTO_CONN,
-    PLUGIN_ATTR_CONN_AUTO_RECONN,
-    PLUGIN_ATTR_CONN_BINARY,
-    PLUGIN_ATTR_CONN_CYCLE,
-    PLUGIN_ATTR_CONN_RETRIES,
-    PLUGIN_ATTR_CONN_RETRY_CYCLE,
-    PLUGIN_ATTR_CONN_RETRY_SUSPD,
-    PLUGIN_ATTR_CONN_TERMINATOR,
-    PLUGIN_ATTR_CB_SUSPEND,
-    PLUGIN_ATTR_CONN_TIMEOUT,
     PLUGIN_ATTR_NET_HOST,
-    PLUGIN_ATTR_NET_PORT,
-    PLUGIN_ATTR_PROTOCOL,
-    PLUGIN_ATTR_SERIAL_BAUD,
-    PLUGIN_ATTR_SERIAL_BSIZE,
-    PLUGIN_ATTR_SERIAL_PARITY,
     PLUGIN_ATTR_SERIAL_PORT,
-    PLUGIN_ATTR_SERIAL_STOP,
-    PLUGIN_ATTRS,
     REQUEST_DICT_ARGS,
 )
 
@@ -99,11 +83,54 @@ class SDPConnection(object):
     is something to implement in the interface-specific derived classes.
     """
 
-    def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
+    #: the transport reconnects by itself after a lost connection
+    SELF_RECONNECTS: ClassVar[bool] = False
+
+    #: defaults for the configuration fields not set by the plugin
+    CONFIG_DEFAULTS: ClassVar[Mapping[str, Any]] = {}
+
+    #: classes already warned about the pre-2.0 constructor signature
+    _warned_legacy: ClassVar[set[type]] = set()
+
+    def __init__(
+        self,
+        config: DeviceConfig | Callable | None,
+        hooks: ConnectionHooks | str | None = None,
+        scheduler: SchedulerPort | None = None,
+        name: str | None = None,
+        **kwargs,
+    ):
+        """
+        Set up the connection.
+
+        The pre-2.0 signature ``(data_received_callback, name=None, **params)``
+        is converted, with a warning once per class.
+
+        :param config: device configuration
+        :param hooks: callbacks for received data and connection events
+        :param scheduler: scheduler for timed jobs
+        :param name: name for logging and threads
+        :raises TypeError: if keyword arguments or hooks other than ConnectionHooks are given with the current signature
+        """
+        if not hasattr(self, 'logger'):
+            self.logger = logging.getLogger(__name__)
+
+        if SDP_standalone:  # noqa  # type: ignore
+            self.logger = logging.getLogger('__main__')
+
+        if not isinstance(config, DeviceConfig):
+            config, hooks, scheduler, name = self._from_legacy_args(config, hooks, scheduler, name, kwargs)
+        elif kwargs:
+            raise TypeError(f'{type(self).__name__}() got unexpected keyword arguments {sorted(kwargs)}')
+        elif not isinstance(hooks, (ConnectionHooks, type(None))):
+            raise TypeError(f'{type(self).__name__}() expects ConnectionHooks as hooks, got {hooks!r}')
+
+        self._config = config.with_defaults(self._config_defaults(config))
+        self._hooks = hooks or ConnectionHooks()
+        self._scheduler = scheduler
+        self._name = name or ''
 
         self._is_connected = False
-        self._data_received_callback = data_received_callback
-        self._suspend_callback: Callable | None = None
 
         # return this if sending is not overwritten by derived classes...
         self.dummy = None
@@ -112,52 +139,33 @@ class SDPConnection(object):
         self._send_lock = Lock()
         self.use_send_lock = False
 
-        self._params = {}
+        self.logger.debug(f'connection initializing from {self.__class__.__name__} with {self._config}')
+        self._setup()
+        self.logger.debug(f'connection initialized from {self.__class__.__name__}')
 
-        if not hasattr(self, 'logger'):
-            self.logger = logging.getLogger(__name__)
+    def _from_legacy_args(
+        self, data_received_callback: Any, second: Any, scheduler: Any, name: str | None, params: dict[str, Any]
+    ) -> tuple[DeviceConfig, ConnectionHooks, SchedulerPort | None, str | None]:
+        """Convert the pre-2.0 constructor arguments."""
+        if type(self) not in self._warned_legacy:
+            self._warned_legacy.add(type(self))
+            self.logger.warning(
+                f'{type(self).__name__} is constructed with (data_received_callback, name, **params), '
+                'which is deprecated; use (config, hooks, scheduler, name)'
+            )
+        params.pop('done', None)
+        name = params.pop('name', name) or (second if isinstance(second, str) else None)
+        config = DeviceConfig.from_params(params)
+        hooks = ConnectionHooks.from_params(data_received_callback, params)
+        return config, hooks, scheduler or params.get('plugin'), name
 
-        if SDP_standalone:  # noqa  # type: ignore
-            self.logger = logging.getLogger('__main__')
+    def _config_defaults(self, config: DeviceConfig) -> Mapping[str, Any]:
+        """Defaults for the configuration fields not set by the plugin; ``CONFIG_DEFAULTS`` unless overwritten."""
+        return self.CONFIG_DEFAULTS
 
-        self.logger.debug(f'connection initializing from {self.__class__.__name__} with arguments {kwargs}')
-
-        # we set defaults for all possible connection parameters, so we don't
-        # need to care later if a parameter is set or not
-        # these will be overwritten by all parameters set in plugin.yaml
-        self._params = {
-            PLUGIN_ATTR_SERIAL_PORT: '',
-            PLUGIN_ATTR_SERIAL_BAUD: 9600,
-            PLUGIN_ATTR_SERIAL_BSIZE: 8,
-            PLUGIN_ATTR_SERIAL_PARITY: 'N',
-            PLUGIN_ATTR_SERIAL_STOP: 1,
-            PLUGIN_ATTR_PROTOCOL: None,
-            PLUGIN_ATTR_NET_HOST: '',
-            PLUGIN_ATTR_NET_PORT: 0,
-            PLUGIN_ATTR_CONN_BINARY: False,
-            PLUGIN_ATTR_CONN_TIMEOUT: 1.0,
-            PLUGIN_ATTR_CONN_AUTO_RECONN: True,
-            PLUGIN_ATTR_CONN_AUTO_CONN: True,
-            PLUGIN_ATTR_CONN_RETRIES: 3,
-            PLUGIN_ATTR_CONN_CYCLE: 5,
-            PLUGIN_ATTR_CONN_RETRY_CYCLE: 30,
-            PLUGIN_ATTR_CONN_RETRY_SUSPD: 0,
-            PLUGIN_ATTR_CONN_TERMINATOR: '',
-            PLUGIN_ATTR_CB_ON_CONNECT: None,
-            PLUGIN_ATTR_CB_ON_DISCONNECT: None,
-            PLUGIN_ATTR_CB_SUSPEND: None,
-        }
-
-        # "import" options from plugin
-        self._params.update(kwargs)
-        self._plugin = self._params.get('plugin')
-
-        # check if some of the arguments are usable
-        self._set_connection_params()
-
-        # tell someone about our actual class
-        if not kwargs.get('done', True):
-            self.logger.debug(f'connection initialized from {self.__class__.__name__}')
+    def _setup(self):
+        """Set up the transport after the configuration is resolved. Overwrite as needed."""
+        pass
 
     def open(self) -> bool:
         """wrapper method provides stable interface and allows overwriting"""
@@ -194,7 +202,7 @@ class SDPConnection(object):
         :return: raw response data if applicable, None otherwise. Errors need to raise exceptions
         """
         if not self._is_connected:
-            if self._params[PLUGIN_ATTR_CONN_AUTO_CONN]:
+            if self._config.autoconnect:
                 self._open()
                 if not self._is_connected:
                     raise SDPConnectionError('cannot send: autoconnect failed to open connection')
@@ -228,26 +236,30 @@ class SDPConnection(object):
         """getter for self._is_connected"""
         return self._is_connected
 
+    def self_reconnects(self) -> bool:
+        """True if the transport reconnects by itself after a lost connection."""
+        return self.SELF_RECONNECTS
+
     def on_data_received(self, by: str | None, data: Any, command: str | None = None):
         """callback for on_data_received event"""
         if data:
             self.logger.debug(f'received raw data "{data}" from "{by}"')
-            if self._data_received_callback:
-                self._data_received_callback(by, data)
+            if self._hooks.on_data:
+                self._hooks.on_data(by, data)
 
     def on_connect(self, by: str | None = None):
         """callback for on_connect event"""
         self._is_connected = True
         self.logger.info(f'on_connect called by {by}')
-        if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
-            self._params[PLUGIN_ATTR_CB_ON_CONNECT](by)
+        if self._hooks.on_connect:
+            self._hooks.on_connect(by)
 
     def on_disconnect(self, by: str | None = None):
         """callback for on_disconnect event"""
         self.logger.debug(f'on_disconnect called by {by}')
         self._is_connected = False
-        if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
-            self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](by)
+        if self._hooks.on_disconnect:
+            self._hooks.on_disconnect(by)
 
     #
     #
@@ -262,7 +274,7 @@ class SDPConnection(object):
         :return: True if successful
         :rtype: bool
         """
-        self.logger.debug(f'simulating opening connection as {__name__} with params {self._params}')
+        self.logger.debug(f'simulating opening connection as {__name__} with {self._config}')
         self._is_connected = True
         return True
 
@@ -270,7 +282,7 @@ class SDPConnection(object):
         """
         overwrite with closing of connection
         """
-        self.logger.debug(f'simulating closing connection as {__name__} with params {self._params}')
+        self.logger.debug(f'simulating closing connection as {__name__} with {self._config}')
 
     def _send(self, data_dict: dict, **kwargs) -> Any:
         """
@@ -323,15 +335,6 @@ class SDPConnection(object):
     #
     #
 
-    def _set_connection_params(self):
-        """
-        Try to set some of the common parameters.
-        Might need to be overwritten...
-        """
-        for arg in PLUGIN_ATTRS:
-            if arg in self._params:
-                self._params[arg] = sanitize_param(self._params[arg])
-
     def __str__(self) -> str:
         return self.__class__.__name__
 
@@ -342,74 +345,32 @@ class SDPConnection(object):
         connection_type: str | None = None,
         **params,
     ) -> type[SDPConnection]:
+        """
+        Return the transport class selected by the arguments or the ``conn_type`` parameter.
 
-        connection_module = sys.modules.get('lib.model.sdp.connection', '')
-        if not connection_module:
-            raise RuntimeError('unable to get object handle of SDPConnection module')
+        An unset or empty ``conn_type`` selects by ``host`` (TCP request), then
+        ``serialport`` (serial), else the null connection.
 
-        try:
-            # class not set
-            if not connection_cls:
-                # do we have a class type from parameters?
-                if (
-                    PLUGIN_ATTR_CONNECTION in params
-                    and type(params[PLUGIN_ATTR_CONNECTION]) is type
-                    and issubclass(params[PLUGIN_ATTR_CONNECTION], SDPConnection)
-                ):
-                    # directly assign class
-                    connection_cls = params[PLUGIN_ATTR_CONNECTION]
-                    connection_classname = connection_cls.__name__  # type: ignore (previous assignment makes connection_cls type SDPConnection)
+        :raises RuntimeError: if the selection names no known transport
+        """
+        if connection_cls:
+            return connection_cls
 
-                else:
-                    # classname not known
-                    if not connection_classname:
-                        # do we have an unknown connection type from parameters?
-                        if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] not in CONNECTION_TYPES:
-                            # assume name of unknown class
-                            connection_classname = params[PLUGIN_ATTR_CONNECTION]
-                            connection_type = 'manual'
+        selection = connection_classname or connection_type or params.get(PLUGIN_ATTR_CONNECTION)
+        if not selection:
+            if params.get(PLUGIN_ATTR_NET_HOST):
+                selection = CONN_NET_TCP_REQ
+            elif params.get(PLUGIN_ATTR_SERIAL_PORT):
+                selection = CONN_SER_DIR
+            else:
+                selection = CONN_NULL
 
-                        # wanted connection type not known yet
-                        if not connection_type:
-                            # known connection type given in parameters?
-                            if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] in CONNECTION_TYPES:
-                                # user given connection type
-                                connection_type = params[PLUGIN_ATTR_CONNECTION]
+        if selection == CONN_NET_TCP_JSONRPC:
+            raise RuntimeError(
+                f'{CONN_NET_TCP_JSONRPC} is not a connection type, use conn_type {CONN_NET_TCP_CLI} with protocol jsonrpc'
+            )
 
-                            # host given in parameters?
-                            elif PLUGIN_ATTR_NET_HOST in params and params[PLUGIN_ATTR_NET_HOST]:
-                                # no further information on network specifics, use basic HTTP TCP client
-                                connection_type = CONN_NET_TCP_REQ
-
-                            # serial port given in parameters?
-                            elif PLUGIN_ATTR_SERIAL_PORT in params and params[PLUGIN_ATTR_SERIAL_PORT]:
-                                # this seems to be a serial killer application
-                                connection_type = CONN_SER_DIR
-
-                            if not connection_type:
-                                # if not preset and not identified, use "empty" connection, e.g. for testing
-                                # when physical device is not present
-                                connection_type = CONN_NULL
-
-                        # build classname from type
-                        connection_classname = 'SDPConnection' + ''.join(
-                            [tok.capitalize() for tok in connection_type.split('_')]
-                        )
-
-                    # get class from classname -> only for predefined classes, not for custom plugin classes!
-                    connection_cls = getattr(
-                        connection_module, connection_classname, getattr(connection_module, 'SDPConnection')
-                    )
-
-        except (TypeError, AttributeError):
-            # raise RuntimeError(f'could not identify wanted connection class from {connection_cls}, {connection_classname}, {connection_type}. Using default connection.')
-            # logging not - easily - possible in static method, just return default
-            connection_cls = SDPConnection
-
-        if not connection_cls:
-            connection_cls = SDPConnection
-
-        return connection_cls
+        return resolve_class(selection, CONNECTION_CLASSES, SDPConnection, 'connection')
 
 
 class SDPConnectionNetTcpRequest(SDPConnection):
@@ -428,12 +389,12 @@ class SDPConnectionNetTcpRequest(SDPConnection):
     """
 
     def _open(self) -> bool:
-        self.logger.debug(f'{self.__class__.__name__} opening connection as {__name__} with params {self._params}')
+        self.logger.debug(f'{self.__class__.__name__} opening connection as {__name__} with {self._config}')
         self._is_connected = True
         return True
 
     def _close(self):
-        self.logger.debug(f'{self.__class__.__name__} closing connection as {__name__} with params {self._params}')
+        self.logger.debug(f'{self.__class__.__name__} closing connection as {__name__} with {self._config}')
 
     def _send(self, data_dict: dict, **kwargs) -> Any:
         url = data_dict.get('payload', None)
@@ -498,38 +459,33 @@ class SDPConnectionNetTcpClient(SDPConnection):
     If callbacks are class members, they need the additional first parameter 'self'
     """
 
-    def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
+    SELF_RECONNECTS = True
 
-        super().__init__(data_received_callback, done=False, **kwargs)
-
-        if isinstance(self._params[PLUGIN_ATTR_CONN_TERMINATOR], str):
-            self._params[PLUGIN_ATTR_CONN_TERMINATOR] = bytes(self._params[PLUGIN_ATTR_CONN_TERMINATOR], 'utf-8')
-
-        self._suspend_callback = self._params[PLUGIN_ATTR_CB_SUSPEND]
+    def _setup(self):
+        terminator = self._config.terminator
+        if isinstance(terminator, str):
+            terminator = bytes(terminator, 'utf-8')
 
         # initialize connection
         self._tcp = Tcp_client(
-            host=self._params[PLUGIN_ATTR_NET_HOST],
-            port=self._params[PLUGIN_ATTR_NET_PORT],
-            name=name,
-            autoreconnect=self._params[PLUGIN_ATTR_CONN_AUTO_RECONN],
-            autoconnect=self._params[PLUGIN_ATTR_CONN_AUTO_CONN],
-            connect_retries=self._params[PLUGIN_ATTR_CONN_RETRIES],
-            connect_cycle=self._params[PLUGIN_ATTR_CONN_CYCLE],
-            retry_cycle=self._params[PLUGIN_ATTR_CONN_RETRY_CYCLE],
-            retry_abort=self._params[PLUGIN_ATTR_CONN_RETRY_SUSPD],
+            host=self._config.host,
+            port=self._config.port,
+            name=self._name or None,
+            autoreconnect=self._config.autoreconnect,
+            autoconnect=self._config.autoconnect,
+            connect_retries=self._config.connect_retries,
+            connect_cycle=self._config.connect_cycle,
+            retry_cycle=self._config.retry_cycle,
+            retry_abort=self._config.retry_suspend,
             abort_callback=self._on_abort,
-            terminator=self._params[PLUGIN_ATTR_CONN_TERMINATOR],
+            terminator=terminator,
         )
         self._tcp.set_callbacks(
             data_received=self.on_data_received, disconnected=self.on_disconnect, connected=self.on_connect
         )
 
-        # tell someone about our actual class
-        self.logger.debug(f'connection initialized from {self.__class__.__name__}')
-
     def _open(self) -> bool:
-        self.logger.debug(f'{self.__class__.__name__} opening connection with params {self._params}')
+        self.logger.debug(f'{self.__class__.__name__} opening connection with {self._config}')
         if not self._tcp.connected():
             self._tcp.connect()
             # give a moment to establish connection (threaded call).
@@ -549,8 +505,8 @@ class SDPConnectionNetTcpClient(SDPConnection):
         return None
 
     def _on_abort(self):
-        if self._suspend_callback:
-            self._suspend_callback(True, by=self.__class__.__name__)
+        if self._hooks.on_abort:
+            self._hooks.on_abort(self.__class__.__name__)
         else:
             self.logger.warning('suspend callback wanted, but not set by plugin. Check plugin code...')
 
@@ -584,10 +540,7 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
     Response data is returned as text. Errors raise HTTPException
     """
 
-    def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
-
-        super().__init__(data_received_callback, name, **kwargs)
-
+    def _setup(self):
         self.alive = False
         self._sock: socket.socket | None = None
         self._srv_buffer = 1024
@@ -595,7 +548,7 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
         self._connected = True
 
     def _open(self) -> bool:
-        self.logger.debug(f'{self.__class__.__name__} opening connection with params {self._params}')
+        self.logger.debug(f'{self.__class__.__name__} opening connection with {self._config}')
         self.alive = True
         self.__receive_thread = Thread(target=self._receive_thread_worker, name='UDP_Listener')
         self.__receive_thread.daemon = True
@@ -622,9 +575,9 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
         self._connected = False
 
     def _receive_thread_worker(self):
-        self._sock = UDPServer(self._params[PLUGIN_ATTR_NET_PORT])
-        if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
-            self._params[PLUGIN_ATTR_CB_ON_CONNECT](self.__str__() + ' UDP_listener')
+        self._sock = UDPServer(self._config.port)
+        if self._hooks.on_connect:
+            self._hooks.on_connect(self.__str__() + ' UDP_listener')
         while self.alive:
             data, addr = self._sock.recvfrom(self._srv_buffer)
             try:
@@ -635,13 +588,35 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
             else:
                 # connected device sends updates every second for
                 # about 10 minutes without further interaction
-                if self._data_received_callback:
-                    self._data_received_callback(host, data.decode('utf-8'))
+                if self._hooks.on_data:
+                    self._hooks.on_data(host, data.decode('utf-8'))
 
         self._connected = False
         self._sock.close()
-        if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
-            self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](self.__str__() + ' UDP_listener')
+        if self._hooks.on_disconnect:
+            self._hooks.on_disconnect(self.__str__() + ' UDP_listener')
+
+
+class _TimeoutLock(object):
+    """Lock with a context manager acquiring it with a timeout."""
+
+    def __init__(self):
+        self._lock = Lock()
+
+    def acquire(self, blocking=True, timeout=-1) -> bool:
+        return self._lock.acquire(blocking, timeout)
+
+    @contextmanager
+    def acquire_timeout(self, timeout) -> Generator[bool]:
+        result = self._lock.acquire(timeout=timeout)
+        try:
+            yield result
+        finally:
+            if result:
+                self._lock.release()
+
+    def release(self):
+        self._lock.release()
 
 
 class SDPConnectionSerial(SDPConnection):
@@ -664,29 +639,7 @@ class SDPConnectionSerial(SDPConnection):
     If callbacks are class members, they need the additional first parameter 'self'
     """
 
-    def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
-
-        class TimeoutLock(object):
-            def __init__(self):
-                self._lock = Lock()
-
-            def acquire(self, blocking=True, timeout=-1) -> bool:
-                return self._lock.acquire(blocking, timeout)
-
-            @contextmanager
-            def acquire_timeout(self, timeout) -> Generator[bool]:
-                result = self._lock.acquire(timeout=timeout)
-                try:
-                    yield result
-                finally:
-                    if result:
-                        self._lock.release()
-
-            def release(self):
-                self._lock.release()
-
-        super().__init__(data_received_callback, done=False, name=name, **kwargs)
-
+    def _setup(self):
         # only import serial now we know we need it -> reduce requirements for non-serial setups
         try:
             self.serial = import_module('serial')
@@ -695,7 +648,7 @@ class SDPConnectionSerial(SDPConnection):
             return
 
         # set class properties
-        self._lock = TimeoutLock()
+        self._lock = _TimeoutLock()
         self.__lock_timeout = 2
         self._timeout_mult = 3
         self._lastbyte = b''
@@ -707,32 +660,29 @@ class SDPConnectionSerial(SDPConnection):
 
         # initialize connection
         self._connection = self.serial.Serial()
-        self._connection.baudrate = self._params[PLUGIN_ATTR_SERIAL_BAUD]
-        self._connection.parity = self._params[PLUGIN_ATTR_SERIAL_PARITY]
-        self._connection.bytesize = self._params[PLUGIN_ATTR_SERIAL_BSIZE]
-        self._connection.stopbits = self._params[PLUGIN_ATTR_SERIAL_STOP]
-        self._connection.port = self._params[PLUGIN_ATTR_SERIAL_PORT]
-        self._connection.timeout = self._params[PLUGIN_ATTR_CONN_TIMEOUT]
-
-        # tell someone about our actual class
-        self.logger.debug(f'connection initialized from {self.__class__.__name__}')
+        self._connection.baudrate = self._config.baudrate
+        self._connection.parity = self._config.parity
+        self._connection.bytesize = self._config.bytesize
+        self._connection.stopbits = self._config.stopbits
+        self._connection.port = self._config.serialport
+        self._connection.timeout = self._config.timeout
 
     def _open(self) -> bool:
-        self.logger.debug(f'{self.__class__.__name__} _open called with params {self._params}')
+        self.logger.debug(f'{self.__class__.__name__} _open called with {self._config}')
 
         if self._is_connected:
             self.logger.debug(f'{self.__class__.__name__} _open called while connected, doing nothing')
             return True
 
-        while not self._is_connected and self._connection_attempts <= self._params[PLUGIN_ATTR_CONN_RETRIES]:
+        while not self._is_connected and self._connection_attempts <= self._config.connect_retries:
             self._connection_attempts += 1
             self._lock.acquire()
             try:
                 self._connection.open()
                 self._is_connected = True
-                self.logger.info(f'connected to {self._params[PLUGIN_ATTR_SERIAL_PORT]}')
+                self.logger.info(f'connected to {self._config.serialport}')
             except (self.serial.SerialException, ValueError) as e:
-                self.logger.error(f'error on connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]}. Error was: {e}')
+                self.logger.error(f'error on connection to {self._config.serialport}. Error was: {e}')
             finally:
                 self._lock.release()
 
@@ -741,17 +691,15 @@ class SDPConnectionSerial(SDPConnection):
                 self._lastbytetime = time()
                 self._setup_listener()
                 # only call on_connect callback after listener is set up
-                if self._params[PLUGIN_ATTR_CB_ON_CONNECT]:
-                    self._params[PLUGIN_ATTR_CB_ON_CONNECT](self)
+                if self._hooks.on_connect:
+                    self._hooks.on_connect(self)
                 return True
             else:
-                self.logger.debug(
-                    f'sleeping {self._params[PLUGIN_ATTR_CONN_CYCLE]} seconds before next connection attempt'
-                )
-                sleep(self._params[PLUGIN_ATTR_CONN_CYCLE])
+                self.logger.debug(f'sleeping {self._config.connect_cycle} seconds before next connection attempt')
+                sleep(self._config.connect_cycle)
 
         self.logger.error(
-            f'error on connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]}, max number of connection attempts reached'
+            f'error on connection to {self._config.serialport}, max number of connection attempts reached'
         )
         self._connection_attempts = 0
         return False
@@ -762,10 +710,10 @@ class SDPConnectionSerial(SDPConnection):
         try:
             self._connection.close()
         except Exception as e:
-            self.logger.debug(f'closing socket {self._params[PLUGIN_ATTR_SERIAL_PORT]} raised error {e}')
-        self.logger.info(f'connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]} closed')
-        if self._params[PLUGIN_ATTR_CB_ON_DISCONNECT]:
-            self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](self)
+            self.logger.debug(f'closing socket {self._config.serialport} raised error {e}')
+        self.logger.info(f'connection to {self._config.serialport} closed')
+        if self._hooks.on_disconnect:
+            self._hooks.on_disconnect(self)
 
     def _send(self, data_dict: dict, **kwargs) -> Any:
         """
@@ -794,7 +742,7 @@ class SDPConnectionSerial(SDPConnection):
         if isinstance(data, str):
             data = data.encode('utf-8')
 
-        if self._params[PLUGIN_ATTR_CONN_AUTO_CONN]:
+        if self._config.autoconnect:
             self._open()
 
         if not self._is_connected:
@@ -819,7 +767,7 @@ class SDPConnectionSerial(SDPConnection):
             return None
         else:
             res = self._read_bytes(rlen)
-            if not self._params[PLUGIN_ATTR_CONN_BINARY]:
+            if not self._config.binary:
                 try:
                     res = str(res, 'utf-8', errors='replace').strip()
                 except Exception as e:
@@ -827,9 +775,6 @@ class SDPConnectionSerial(SDPConnection):
                         f'could not convert received result {res} to str, discarding value. Error was: {e}'
                     )
                     return
-
-            if self._data_received_callback:
-                self._data_received_callback(self, res, None)
 
             return res
 
@@ -843,14 +788,14 @@ class SDPConnectionSerial(SDPConnection):
         :raises SDPConnectionError: if not connected or write fails
         """
         if not self._is_connected:
-            raise SDPConnectionError(f'cannot send, not connected to {self._params[PLUGIN_ATTR_SERIAL_PORT]}')
+            raise SDPConnectionError(f'cannot send, not connected to {self._config.serialport}')
 
         try:
             return self._connection.write(packet)
         except self.serial.SerialTimeoutException as e:
-            raise SDPConnectionError(f'serial write timeout on {self._params[PLUGIN_ATTR_SERIAL_PORT]}') from e
+            raise SDPConnectionError(f'serial write timeout on {self._config.serialport}') from e
         except self.serial.SerialException as e:
-            raise SDPConnectionError(f'serial write error on {self._params[PLUGIN_ATTR_SERIAL_PORT]}: {e}') from e
+            raise SDPConnectionError(f'serial write error on {self._config.serialport}: {e}') from e
 
     def _read_bytes(self, limit_response: int | bytes | bytearray | str, clear_buffer=False) -> bytes:
         """
@@ -890,8 +835,8 @@ class SDPConnectionSerial(SDPConnection):
         # prevent concurrent read attempts;
         with self._lock.acquire_timeout(self.__lock_timeout) as locked:
             if locked:
-                # don't wait for input indefinitely, stop after timeout_mult * self._params[PLUGIN_ATTR_CONN_TIMEOUT] seconds
-                while time() <= starttime + self._timeout_mult * self._params[PLUGIN_ATTR_CONN_TIMEOUT]:
+                # don't wait for input indefinitely, stop after timeout_mult * self._config.timeout seconds
+                while time() <= starttime + self._timeout_mult * self._config.timeout:
                     readbyte = self._connection.read()
                     self._lastbyte = readbyte
                     # self.logger.debug(f'_read_bytes: read {readbyte}')
@@ -924,7 +869,7 @@ class SDPConnectionSerial(SDPConnection):
                 self.logger.error(
                     'read_bytes could not acquire serial lock within timeout — possible deadlock or hung connection'
                 )
-                raise SDPConnectionError(f'serial read lock timeout on {self._params[PLUGIN_ATTR_SERIAL_PORT]}')
+                raise SDPConnectionError(f'serial read lock timeout on {self._config.serialport}')
 
         # timeout reached, did we read anything?
         # Do NOT set _is_connected = False here. A read timeout means the device
@@ -941,8 +886,7 @@ class SDPConnectionSerial(SDPConnection):
             elapsed = time() - self._lastbytetime
             if elapsed > _STALE_CONNECTION_TIMEOUT:
                 self.logger.warning(
-                    f'no data from {self._params[PLUGIN_ATTR_SERIAL_PORT]} for '
-                    f'{elapsed:.0f}s — closing stale connection'
+                    f'no data from {self._config.serialport} for {elapsed:.0f}s — closing stale connection'
                 )
                 self._close()
 
@@ -981,14 +925,13 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
     If callbacks are class members, they need the additional first parameter 'self'
     """
 
-    def __init__(self, data_received_callback: Callable | None, name: str | None = None, **kwargs):
+    def _setup(self):
         # set additional class members
         self.__receive_thread: Thread | None = None
         self.__queue_thread: Thread | None = None
-        self._name = name if name else ''
         self._queue = SimpleQueue()
 
-        super().__init__(data_received_callback, name=name, **kwargs)
+        super()._setup()
 
     def _setup_listener(self):
         if not self._is_connected:
@@ -1031,31 +974,29 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
                 if msg:
                     self.logger.debug(f'received raw data {msg}, buffer is {__buffer}')
                     # If we work in line mode (with a terminator) slice buffer into single chunks based on terminator
-                    if self._params[PLUGIN_ATTR_CONN_TERMINATOR]:
+                    if self._config.terminator:
                         __buffer += msg
                         while self._listener_active:
                             # terminator = int means fixed size chunks
-                            if isinstance(self._params[PLUGIN_ATTR_CONN_TERMINATOR], int):
-                                i = self._params[PLUGIN_ATTR_CONN_TERMINATOR]
+                            if isinstance(self._config.terminator, int):
+                                i = self._config.terminator
                                 if i > len(__buffer):
                                     break
                             # terminator is str or bytes means search for it
                             else:
-                                i = __buffer.find(self._params[PLUGIN_ATTR_CONN_TERMINATOR])
+                                i = __buffer.find(self._config.terminator)
                                 if i == -1:
                                     break
-                                i += len(self._params[PLUGIN_ATTR_CONN_TERMINATOR])
+                                i += len(self._config.terminator)
                             line = __buffer[:i]
                             __buffer = __buffer[i:]
-                            self._queue.put(
-                                line if self._params[PLUGIN_ATTR_CONN_BINARY] else str(line, 'utf-8').strip()
-                            )
+                            self._queue.put(line if self._config.binary else str(line, 'utf-8').strip())
                             # possibly deactivate in production?
                             self.logger.debug(f'put {line} in queue, queue size is {self._queue.qsize()}')
 
                     else:
                         # forward what we received
-                        self._queue.put(msg if self._params[PLUGIN_ATTR_CONN_BINARY] else str(msg, 'utf-8').strip())
+                        self._queue.put(msg if self._config.binary else str(msg, 'utf-8').strip())
                         # possibly deactivate in production?
                         self.logger.debug(f'put {msg} in queue, queue size is {self._queue.qsize()}')
 
@@ -1094,5 +1035,16 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
             # not be dismissed... shame to that implementer, though!
             # check also for listener_active as this is the "shutdown flag" ->
             # don't send anything back if flag is unset
-            if self._data_received_callback and self._listener_active:
-                self._data_received_callback(self, item)
+            if self._hooks.on_data and self._listener_active:
+                self._hooks.on_data(self, item)
+
+
+#: transport classes by connection type
+CONNECTION_CLASSES: dict[str, type[SDPConnection]] = {
+    CONN_NULL: SDPConnection,
+    CONN_NET_TCP_REQ: SDPConnectionNetTcpRequest,
+    CONN_NET_TCP_CLI: SDPConnectionNetTcpClient,
+    CONN_NET_UDP_SRV: SDPConnectionNetUdpRequest,
+    CONN_SER_DIR: SDPConnectionSerial,
+    CONN_SER_ASYNC: SDPConnectionSerialAsync,
+}

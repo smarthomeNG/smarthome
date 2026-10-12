@@ -24,12 +24,14 @@ import builtins
 builtins.SDP_standalone = False
 
 import logging
+import tempfile
 import time
 import unittest
 from collections import deque
 from unittest.mock import patch
 
 from lib.model.smartdeviceplugin import SmartDevicePlugin
+from tests.sdp_harness import load_sdp_plugin
 
 
 HAS_LOOP_GUARD = hasattr(SmartDevicePlugin, '_check_loop_guard')
@@ -197,50 +199,44 @@ class TestLoopGuardSourceFilter(unittest.TestCase):
 
 @skip_if_not_implemented
 class TestLoopGuardUpdateItemIntegration(unittest.TestCase):
-    """
-    Verify that update_item() respects the guard result.
-    Uses a minimal SDP stub that records whether send_command was called.
-    """
+    """Writes of an item reach the device unless the loop guard suppresses repeats from the guarded source."""
 
-    def _make_item_stub(self, value=True):
-        item = unittest.mock.MagicMock()
-        item.return_value = value
-        item.property.path = 'test.item'
-        item.property.last_value = not value
-        item.conf = {'viess_command': 'cmd.test'}
-        return item
+    ITEMS = """
+dev:
+    power:
+        type: bool
+        enforce_updates: true
+        fx_command: status.power
+        fx_write: true
+"""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        params = {'loop_guard_count': 2, 'loop_guard_window': 60, 'loop_guard_source': 'MQTT'}
+        self.rig = load_sdp_plugin(self._tmp.name, 'tests.fixture_sdp_plugin', 'FixtureSDP', self.ITEMS, params=params)
+        self.rig.plugin.run()
+        self.item = self.rig.item('dev.power')
+
+    def tearDown(self):
+        self.rig.plugin.stop()
+        self._tmp.cleanup()
 
     def test_update_item_calls_send_when_guard_not_triggered(self):
-        import unittest.mock as mock
+        self.item(True, 'MQTT')
 
-        sdp = _make_sdp_with_guard(count=5, window=5.0)
-        sdp.alive = True
-        sdp.suspended = False
-        sdp._suspend_item = None
-        sdp._items_write = {'test.item': 'cmd.test'}
-        sdp._items_custom = {'test.item': {1: None, 2: None, 3: None}}
-        sdp._items_read_all = []
-        sdp._items_read_grp = {}
-        sdp._items_lookup = {}
-        sdp._items_vlist = {}
-        sdp._item_attrs = {
-            'ITEM_ATTR_COMMAND': 'viess_command',
-            'ITEM_ATTR_READ_GRP': 'viess_read_group_trigger',
-            'ITEM_ATTR_LOOKUP': 'viess_lookup',
-            'ITEM_ATTR_VALID_LIST': 'viess_valid_list',
-            'ITEM_ATTR_WRITE': 'viess_write',
-            'ITEM_ATTR_READ': 'viess_read',
-            'ITEM_ATTR_READAFTERWRITE': 'viess_readafterwrite',
-        }
-        sdp.get_fullname = lambda: 'testplugin'
-        sdp.has_iattr = SmartDevicePlugin.has_iattr.__get__(sdp)
-        sdp.get_iattr_value = SmartDevicePlugin.get_iattr_value.__get__(sdp)
-        sdp.send_command = mock.MagicMock(return_value=True)
-        sdp._reset_loop_guard = mock.MagicMock()
+        self.assertEqual(['PW'], self.rig.connection.payloads)
 
-        item = self._make_item_stub()
-        SmartDevicePlugin.update_item(sdp, item, caller='MQTT')
-        sdp.send_command.assert_called_once()
+    def test_repeated_value_from_guarded_source_is_suppressed(self):
+        for _ in range(3):
+            self.item(True, 'MQTT')
+
+        self.assertEqual(['PW'], self.rig.connection.payloads)
+
+    def test_repeated_value_from_other_source_passes(self):
+        for _ in range(3):
+            self.item(True, 'logic')
+
+        self.assertEqual(['PW', 'PW', 'PW'], self.rig.connection.payloads)
 
 
 if __name__ == '__main__':

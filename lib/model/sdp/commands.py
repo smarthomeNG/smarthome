@@ -30,6 +30,7 @@ import logging
 import re
 from copy import deepcopy
 from pydoc import locate
+from collections.abc import Mapping
 from typing import Any
 
 import lib.model.sdp.datatypes as DT
@@ -81,7 +82,16 @@ class SDPCommands(object):
     Furthermore, this could be overwritten if so needed for special extensions.
     """
 
-    def __init__(self, command_obj_class: type[SDPCommand] = SDPCommand, **kwargs):
+    def __init__(
+        self, command_obj_class: type[SDPCommand] = SDPCommand, template_vars: Mapping[str, Any] | None = None, **kwargs
+    ):
+        """
+        Read the commands of the plugin.
+
+        :param command_obj_class: class of the command objects
+        :param template_vars: values for ``{PARAM:...}`` templates, the configuration parameters if not given
+        :param kwargs: configuration parameters, ``plugin_path`` and ``model`` among them
+        """
 
         self.logger = logging.getLogger(__name__)
 
@@ -93,6 +103,7 @@ class SDPCommands(object):
         self._cmd_class = command_obj_class
         self._params = {}
         self._params.update(kwargs)
+        self._template_vars: Mapping[str, Any] = self._params if template_vars is None else template_vars
         self._parsed_commands = {}
 
         self._model: str | None = self._params.get('model', None)
@@ -509,7 +520,7 @@ class SDPCommands(object):
         """parse command's reply patterns and return parsed patterns as list"""
 
         def get_param(matchobj):
-            returnvalue = self._params.get(matchobj.group(2))
+            returnvalue = self._template_vars.get(matchobj.group(2))
             if returnvalue is None:
                 self.logger.warning(f'Parameter {matchobj.group(2)} does not exist.')
                 returnvalue = ''
@@ -678,7 +689,9 @@ class SDPCommands(object):
                     f'importing command {cmd} found invalid datatype "{dev_datatype}", replacing with DT_raw. Check function of device'
                 )
                 dt_class = DT.DT_raw
-            self._commands[cmd] = self._cmd_class(cmd, dt_class, **{'cmd': cmd_params, 'plugin': self._params})
+            self._commands[cmd] = self._cmd_class(
+                cmd, dt_class, **{'cmd': cmd_params, 'template_vars': self._template_vars}
+            )
 
             # store in self.parsed_commands for access by webif
             # skip sections only including section settings

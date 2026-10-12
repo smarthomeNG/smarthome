@@ -9,20 +9,20 @@ plugin:
     description:
         de: 'Example-Plugin'        # !! fill
         en: 'Example-Plugin'        # !! fill
-    maintainer: Morg                # !! fill
+    maintainer:                     # !! fill
     # tester:                       # !! fill
-    state: develop
+    state: develop                  # Initial 'develop'. change to 'ready' when done with development
     keywords: iot device
     # documentation: https://github.com/smarthomeNG/smarthome/wiki/
     # support: https://knx-user-forum.de/forum/supportforen/smarthome-py/
     version: 0.1.0                  # !! adjust — must match PLUGIN_VERSION in __init__.py
 
     # these min/max-versions MUST be given in quotes, or e.g. 3.10 will be interpreted as 3.1 (3.1 < 3.9 < 3.10)
-    sh_minversion: '1.10'           # minimum shNG version to use this plugin
-#    sh_maxversion: '1.11'          # maximum shNG version to use this plugin (omit if latest)
-#    py_minversion: '3.10'          # minimum Python version to use for this plugin
-#    py_maxversion: '4.25'          # maximum Python version to use for this plugin (omit if latest)
-    sdp_minversion: '1.0.4'         # minimum SDP version to use this plugin
+    sh_minversion: '1.12'           # minimum shNG version to use this plugin
+#    sh_maxversion: '2.718'          # maximum shNG version to use this plugin (omit if latest)
+#    py_minversion: '3.14'          # minimum Python version to use for this plugin
+#    py_maxversion: '6.28'          # maximum Python version to use for this plugin (omit if latest)
+    sdp_minversion: '2.0.0'         # minimum SDP version to use this plugin
 
     multi_instance: true
     restartable: true
@@ -128,18 +128,24 @@ parameters:
         description:
             de: 'Pause zwischen Verbindungsversuchen'
             en: 'wait time between connect retries'
-    message_timeout:
+    send_retries:
         type: num
-        default: 2
+        default: 0
         description:
-            de: 'Timeout für Antwort auf Protokollebene'
-            en: 'timeout for reply at protocol level'
-    message_repeat:
+            de: 'Anzahl Sendewiederholungen für unbeantwortete Befehle; > 0 aktiviert das resend-Protokoll, falls das Plugin kein Protokoll festlegt'
+            en: 'number of resends of unanswered commands; > 0 activates the resend protocol unless the plugin sets a protocol'
+    send_retries_cycle:
         type: num
-        default: 3
+        default: 1
         description:
-            de: 'Anzahl Sendewiederholungen auf Protokollebene'
-            en: 'number of message retries at protocol level'
+            de: 'Sekunden zwischen Sendewiederholungen (resend-Protokoll)'
+            en: 'seconds between resend rounds (resend protocol)'
+    send_timeout:
+        type: num
+        default: 5
+        description:
+            de: 'Sekunden bis zur Wiederholung einer unbeantworteten Nachricht (JSON-RPC-Protokoll)'
+            en: 'seconds to wait for a reply before resending a message (JSON-RPC protocol)'
 
     # network connection parameters
     # !! set mandatory to yes / default port if using network connection
@@ -181,11 +187,11 @@ parameters:
         type: str
         default: N
         valid_list:
-            - N  # None
-            - E  # Even
-            - O  # Odd
-            - M  # Mark (1)
-            - S  # Space (0)
+            - 'N'  # None
+            - 'E'  # Even
+            - 'O'  # Odd
+            - 'M'  # Mark (1)
+            - 'S'  # Space (0)
         description:
             de: 'Parität'
             en: 'parity'
@@ -195,46 +201,6 @@ parameters:
         description:
             de: 'Anzahl Stopbits'
             en: 'number of stop bits'
-
-    # more fundamental connection settings
-    # adjust/set only if necessary for plugin
-    # not meant for user configuration
-    conn_type:
-        type: str
-        default: ''
-        valid_list:
-            - ''
-            - net_tcp_request
-            - net_tcp_client
-            - net_tcp_jsonrpc
-            - net_udp_server
-            - serial
-            - serial_async
-        description:
-            de: 'Verbindungstyp'
-            en: 'connection type'
-    protocol:
-        type: str
-        mandatory: false
-        valid_list:
-            - ''            # NULL protocol, for testing
-            - jsonrpc       # JSON-RPC protocol
-            - viessmann     # Viessmann P300/KW serial protocols
-        description:
-            de: 'Protokolltyp für Verbindung'
-            en: 'protocol type for connection'
-    command_class:
-        type: str
-        default: SDPCommandStr
-        valid_list:
-            - SDPCommand
-            - SDPCommandStr
-            - SDPCommandParseStr
-            - SDPCommandJSON
-            - SDPCommandViessmann
-        description:
-            de: 'Klasse für Verarbeitung von Kommandos'
-            en: 'class for command processing'
 
 item_attributes:
     # Definition of item attributes defined by this plugin
@@ -248,8 +214,8 @@ item_attributes:
     ex_read:
         type: bool
         description:
-            de: 'Item liest/erhält Werte vom Gerät'
-            en: 'Item reads/receives data from the device'
+            de: 'Item fordert Werte vom Gerät an (Werte empfängt jedes Item mit Kommando)'
+            en: 'Item requests data from the device (every item with a command receives its values)'
     ex_read_group:
         type: list(str)
         description:

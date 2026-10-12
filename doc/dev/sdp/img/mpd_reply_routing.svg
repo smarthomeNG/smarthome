@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 470" font-family="Helvetica, Arial, sans-serif">
+  <rect width="860" height="470" fill="#f9f9f9"/>
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#555"/></marker>
+    <marker id="arr-blue" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#2a5db0"/></marker>
+    <marker id="arr-green" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#1e7e34"/></marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/></marker>
+    <marker id="arr-purple" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#681da8"/></marker>
+    <marker id="arr-yellow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#9c6e00"/></marker>
+  </defs>
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">MPD example: one request, many receivers</text>
+  <rect x="30" y="55" width="190" height="52" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="125" y="78" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">item mpd.state</text>
+  <text x="125" y="92" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">mpds_read, read_cycle 10</text>
+  <path d="M125,107 L125,143" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="133" y="128" text-anchor="start" font-size="9" font-weight="normal" fill="#666" font-style="italic">send_command(&quot;status.state&quot;)</text>
+  <rect x="30" y="145" width="190" height="40" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="125" y="169" text-anchor="middle" font-size="10" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">&quot;status\n&quot;  →  TCP</text>
+  <path d="M220,165 L253,165" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="255" y="55" width="160" height="330" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="335" y="76" text-anchor="middle" font-size="11" font-weight="bold" fill="#3c4043">MPD reply lines</text>
+  <rect x="267" y="95" width="136" height="30" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="335" y="114" text-anchor="middle" font-size="10" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">volume: 42</text>
+  <path d="M403,110 L443,110" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="445" y="91" width="255" height="38" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="572" y="106" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">status.volume</text>
+  <text x="572" y="122" text-anchor="middle" font-size="8" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">r&quot;^volume: (-?\d+)$&quot;  DT_int</text>
+  <path d="M700,110 L718,110" fill="none" stroke="#2a5db0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <text x="722" y="114" text-anchor="start" font-size="9" font-weight="normal" fill="#2a5db0">mpd.volume = 42</text>
+  <rect x="267" y="143" width="136" height="30" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="335" y="162" text-anchor="middle" font-size="10" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">repeat: 0</text>
+  <path d="M403,158 L443,158" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="445" y="139" width="255" height="38" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="572" y="154" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">status.repeat</text>
+  <text x="572" y="170" text-anchor="middle" font-size="8" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">r&quot;^repeat: ([01])$&quot;  DT_mpdflag</text>
+  <path d="M700,158 L718,158" fill="none" stroke="#2a5db0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <text x="722" y="162" text-anchor="start" font-size="9" font-weight="normal" fill="#2a5db0">mpd.repeat = False</text>
+  <rect x="267" y="191" width="136" height="30" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="335" y="210" text-anchor="middle" font-size="10" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">random: 1</text>
+  <path d="M403,206 L443,206" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="445" y="187" width="255" height="38" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="572" y="202" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">status.random</text>
+  <text x="572" y="218" text-anchor="middle" font-size="8" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">r&quot;^random: ([01])$&quot;  DT_mpdflag</text>
+  <path d="M700,206 L718,206" fill="none" stroke="#2a5db0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <text x="722" y="210" text-anchor="start" font-size="9" font-weight="normal" fill="#2a5db0">mpd.random = True</text>
+  <rect x="267" y="239" width="136" height="30" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="335" y="258" text-anchor="middle" font-size="10" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">state: pause</text>
+  <path d="M403,254 L443,254" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="445" y="235" width="255" height="38" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="572" y="250" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">status.state</text>
+  <text x="572" y="266" text-anchor="middle" font-size="8" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">^state: {LOOKUP}$  + lookup</text>
+  <path d="M700,254 L718,254" fill="none" stroke="#2a5db0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <text x="722" y="258" text-anchor="start" font-size="9" font-weight="normal" fill="#2a5db0">mpd.state = &quot;paused&quot;</text>
+  <rect x="267" y="287" width="136" height="30" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="335" y="306" text-anchor="middle" font-size="10" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">elapsed: 12.500</text>
+  <path d="M403,302 L443,302" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="445" y="283" width="255" height="38" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="572" y="298" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">status.elapsed</text>
+  <text x="572" y="314" text-anchor="middle" font-size="8" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">r&quot;^elapsed: ([\d.]+)$&quot;  DT_num</text>
+  <path d="M700,302 L718,302" fill="none" stroke="#2a5db0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <text x="722" y="306" text-anchor="start" font-size="9" font-weight="normal" fill="#2a5db0">mpd.elapsed = 12.5</text>
+  <rect x="267" y="335" width="136" height="30" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="335" y="354" text-anchor="middle" font-size="10" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">OK</text>
+  <path d="M403,350 L443,350" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <text x="451" y="354" text-anchor="start" font-size="9" font-weight="normal" fill="#999" font-style="italic">discarded — matches no reply_pattern</text>
+  <text x="30" y="420" text-anchor="start" font-size="10" font-weight="normal" fill="#555">Only status.state is readable (read_cmd &quot;status&quot;); the other status commands are receive-only (read: False) or write-only.</text>
+  <text x="30" y="438" text-anchor="start" font-size="10" font-weight="normal" fill="#555">Every received line is matched against all reply patterns; every item bound to a matching command receives the value.</text>
+  <text x="30" y="456" text-anchor="start" font-size="10" font-weight="normal" fill="#555">Reading each status command separately would send &quot;status&quot; five times per cycle.</text>
+</svg>

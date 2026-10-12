@@ -26,6 +26,7 @@ from lib.model.sdp.globals import (
     CMD_ATTR_SEND_RETRIES,
     PLUGIN_ATTR_CONN_AUTO_CONN,
 )
+from lib.model.sdp.carriers import DeviceConfig
 from lib.model.sdp.connection import SDPConnection
 from lib.model.smartdeviceplugin import SmartDevicePlugin
 
@@ -117,7 +118,7 @@ class TestSDPConnectionSendGuards(unittest.TestCase):
         conn = object.__new__(SDPConnection)
         conn.logger = logging.getLogger('test.conn')
         conn._is_connected = True
-        conn._params = {PLUGIN_ATTR_CONN_AUTO_CONN: False}
+        conn._config = DeviceConfig.from_params({PLUGIN_ATTR_CONN_AUTO_CONN: False})
         conn._send_lock = __import__('threading').Lock()
         conn.use_send_lock = False
         conn.dummy = None
@@ -126,14 +127,14 @@ class TestSDPConnectionSendGuards(unittest.TestCase):
     def test_send_raises_sdp_connection_error_when_not_connected_no_autoconn(self):
         conn = self._make_conn()
         conn._is_connected = False
-        conn._params[PLUGIN_ATTR_CONN_AUTO_CONN] = False
+        conn._config = DeviceConfig.from_params({PLUGIN_ATTR_CONN_AUTO_CONN: False})
         with self.assertRaises(SDPConnectionError):
             conn.send({'payload': b'\x01'})
 
     def test_send_raises_sdp_connection_error_when_autoconn_fails(self):
         conn = self._make_conn()
         conn._is_connected = False
-        conn._params[PLUGIN_ATTR_CONN_AUTO_CONN] = True
+        conn._config = DeviceConfig.from_params({PLUGIN_ATTR_CONN_AUTO_CONN: True})
         conn._open = lambda: None  # _open() succeeds but doesn't set _is_connected
         with self.assertRaises(SDPConnectionError):
             conn.send({'payload': b'\x01'})

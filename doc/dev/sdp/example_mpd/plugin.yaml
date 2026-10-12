@@ -1,0 +1,393 @@
+%YAML 1.1
+# vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+---
+plugin:
+    type: interface
+
+    description:
+        de: MPD-Beispiel für SmartDevicePlugin
+        en: MPD example for SmartDevicePlugin
+    maintainer: null
+    state: develop
+    keywords: iot device mpd
+    version: '0.1.0'
+    sh_minversion: '1.12'
+    sdp_minversion: '2.0.0'
+    multi_instance: true
+    restartable: true
+    suspendable: true
+    classname: MpdSdp
+
+parameters:
+
+    host:
+        type: str
+        mandatory: true
+
+        description:
+            de: Host des MPD
+            en: MPD host
+
+    port:
+        type: int
+        default: 6600
+
+        description:
+            de: Port des MPD
+            en: MPD port
+
+    terminator:
+        type: str
+        default: "\n"
+        description:
+            de: Zeilenende des MPD-Protokolls
+            en: line terminator of the MPD protocol
+
+    timeout:
+        type: num
+        default: 3
+
+        description:
+            de: Timeout für Antworten
+            en: reply timeout
+
+    autoreconnect:
+        type: bool
+        default: true
+
+        description:
+            de: Automatisches Neuverbinden bei Abbruch
+            en: automatic reconnect on disconnect
+
+    connect_retries:
+        type: int
+        default: 5
+
+        description:
+            de: Anzahl Verbindungsversuche
+            en: number of connect retries
+
+    connect_cycle:
+        type: int
+        default: 3
+
+        description:
+            de: Pause zwischen Verbindungsversuchen
+            en: wait time between connect retries
+
+    suspend_item:
+        type: str
+        default: ''
+
+        description:
+            de: Item zum Schalten des Suspend-Modus
+            en: item for toggling suspend mode
+
+    delay_initial_read:
+        type: num
+        default: 0
+
+        description:
+            de: Verzögerung für das erstmalige Lesen (Sekunden)
+            en: delay for the initial read (seconds)
+
+    resume_initial_read:
+        type: bool
+        default: true
+
+        description:
+            de: Erstmaliges Lesen nach Resume oder Neuverbindung wiederholen
+            en: repeat the initial read after resume or reconnect
+
+item_attributes:
+
+    mpds_command:
+        type: str
+
+        description:
+            de: Kommando des Items
+            en: command of the item
+
+    mpds_read:
+        type: bool
+
+        description:
+            de: Item fordert Werte vom Gerät an (Werte empfängt jedes Item mit Kommando)
+            en: item requests values from the device (every item with a command receives its values)
+
+    mpds_write:
+        type: bool
+
+        description:
+            de: Änderungen des Items werden an das Gerät gesendet
+            en: changes of the item are sent to the device
+
+    mpds_read_group:
+        type: list(str)
+
+        description:
+            de: Lesegruppe(n) des Items
+            en: read group(s) of the item
+
+    mpds_read_cycle:
+        type: num
+
+        description:
+            de: Intervall für zyklisches Lesen (Sekunden)
+            en: cyclic read interval (seconds)
+
+    mpds_read_initial:
+        type: bool
+
+        description:
+            de: Wert beim Start lesen
+            en: read the value on startup
+
+    mpds_read_group_trigger:
+        type: str
+
+        description:
+            de: Setzen des Items liest die angegebene Lesegruppe, 0 liest alles
+            en: setting the item reads the given read group, 0 reads all
+
+    mpds_lookup:
+        type: str
+
+        description:
+            de: Item enthält die angegebene Lookup-Tabelle (name#modus)
+            en: item holds the given lookup table (name#mode)
+
+item_structs:
+
+    status:
+
+        read:
+            type: bool
+            enforce_updates: true
+            mpds_read_group_trigger@instance: status
+
+        state:
+            type: str
+            mpds_command@instance: status.state
+            mpds_read@instance: true
+            mpds_write@instance: false
+            mpds_read_group@instance:
+            -   status
+            mpds_read_initial@instance: true
+            mpds_read_cycle@instance: 10
+
+        volume:
+            type: num
+            mpds_command@instance: status.volume
+            mpds_read@instance: false
+            mpds_write@instance: true
+
+        random:
+            type: bool
+            mpds_command@instance: status.random
+            mpds_read@instance: false
+            mpds_write@instance: true
+
+        repeat:
+            type: bool
+            mpds_command@instance: status.repeat
+            mpds_read@instance: false
+            mpds_write@instance: true
+
+        elapsed:
+            type: num
+            mpds_command@instance: status.elapsed
+            mpds_read@instance: false
+            mpds_write@instance: false
+
+    currentsong:
+
+        read:
+            type: bool
+            enforce_updates: true
+            mpds_read_group_trigger@instance: currentsong
+
+        title:
+            type: str
+            mpds_command@instance: currentsong.title
+            mpds_read@instance: true
+            mpds_write@instance: false
+            mpds_read_group@instance:
+            -   currentsong
+            mpds_read_initial@instance: true
+            mpds_read_cycle@instance: 10
+
+        artist:
+            type: str
+            mpds_command@instance: currentsong.artist
+            mpds_read@instance: false
+            mpds_write@instance: false
+
+        album:
+            type: str
+            mpds_command@instance: currentsong.album
+            mpds_read@instance: false
+            mpds_write@instance: false
+
+    control:
+
+        read:
+            type: bool
+            enforce_updates: true
+            mpds_read_group_trigger@instance: control
+
+        pause:
+            type: bool
+            mpds_command@instance: control.pause
+            mpds_read@instance: false
+            mpds_write@instance: true
+
+        play:
+            type: bool
+            mpds_command@instance: control.play
+            mpds_read@instance: false
+            mpds_write@instance: true
+            enforce_updates: true
+
+        stop:
+            type: bool
+            mpds_command@instance: control.stop
+            mpds_read@instance: false
+            mpds_write@instance: true
+            enforce_updates: true
+
+        next:
+            type: bool
+            mpds_command@instance: control.next
+            mpds_read@instance: false
+            mpds_write@instance: true
+            enforce_updates: true
+
+        previous:
+            type: bool
+            mpds_command@instance: control.previous
+            mpds_read@instance: false
+            mpds_write@instance: true
+            enforce_updates: true
+
+    ALL:
+
+        read:
+            type: bool
+            enforce_updates: true
+            mpds_read_group_trigger@instance: ALL
+
+        status:
+
+            read:
+                type: bool
+                enforce_updates: true
+                mpds_read_group_trigger@instance: ALL.status
+
+            state:
+                type: str
+                mpds_command@instance: status.state
+                mpds_read@instance: true
+                mpds_write@instance: false
+                mpds_read_group@instance:
+                -   ALL
+                -   ALL.status
+                mpds_read_initial@instance: true
+                mpds_read_cycle@instance: 10
+
+            volume:
+                type: num
+                mpds_command@instance: status.volume
+                mpds_read@instance: false
+                mpds_write@instance: true
+
+            random:
+                type: bool
+                mpds_command@instance: status.random
+                mpds_read@instance: false
+                mpds_write@instance: true
+
+            repeat:
+                type: bool
+                mpds_command@instance: status.repeat
+                mpds_read@instance: false
+                mpds_write@instance: true
+
+            elapsed:
+                type: num
+                mpds_command@instance: status.elapsed
+                mpds_read@instance: false
+                mpds_write@instance: false
+
+        currentsong:
+
+            read:
+                type: bool
+                enforce_updates: true
+                mpds_read_group_trigger@instance: ALL.currentsong
+
+            title:
+                type: str
+                mpds_command@instance: currentsong.title
+                mpds_read@instance: true
+                mpds_write@instance: false
+                mpds_read_group@instance:
+                -   ALL
+                -   ALL.currentsong
+                mpds_read_initial@instance: true
+                mpds_read_cycle@instance: 10
+
+            artist:
+                type: str
+                mpds_command@instance: currentsong.artist
+                mpds_read@instance: false
+                mpds_write@instance: false
+
+            album:
+                type: str
+                mpds_command@instance: currentsong.album
+                mpds_read@instance: false
+                mpds_write@instance: false
+
+        control:
+
+            read:
+                type: bool
+                enforce_updates: true
+                mpds_read_group_trigger@instance: ALL.control
+
+            pause:
+                type: bool
+                mpds_command@instance: control.pause
+                mpds_read@instance: false
+                mpds_write@instance: true
+
+            play:
+                type: bool
+                mpds_command@instance: control.play
+                mpds_read@instance: false
+                mpds_write@instance: true
+                enforce_updates: true
+
+            stop:
+                type: bool
+                mpds_command@instance: control.stop
+                mpds_read@instance: false
+                mpds_write@instance: true
+                enforce_updates: true
+
+            next:
+                type: bool
+                mpds_command@instance: control.next
+                mpds_read@instance: false
+                mpds_write@instance: true
+                enforce_updates: true
+
+            previous:
+                type: bool
+                mpds_command@instance: control.previous
+                mpds_read@instance: false
+                mpds_write@instance: true
+                enforce_updates: true
+plugin_functions: NONE
+logic_parameters: NONE

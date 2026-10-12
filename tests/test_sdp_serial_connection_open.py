@@ -23,6 +23,7 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CONN_CYCLE,
     PLUGIN_ATTR_CB_ON_CONNECT,
 )
+from lib.model.sdp.carriers import ConnectionHooks, DeviceConfig  # noqa: E402
 from lib.model.sdp.connection import SDPConnectionSerial
 
 
@@ -52,12 +53,14 @@ def _make_serial_conn(retries=3, cycle=1):
     conn.serial = mock_serial_module
     conn._connection = mock_port
     conn._setup_listener = MagicMock()
-    conn._params = {
+    params = {
         PLUGIN_ATTR_SERIAL_PORT: '/dev/mock_tty',
         PLUGIN_ATTR_CONN_RETRIES: retries,
         PLUGIN_ATTR_CONN_CYCLE: cycle,
         PLUGIN_ATTR_CB_ON_CONNECT: None,
     }
+    conn._config = DeviceConfig.from_params(params)
+    conn._hooks = ConnectionHooks.from_params(None, params)
 
     return conn, mock_port, mock_serial_module
 

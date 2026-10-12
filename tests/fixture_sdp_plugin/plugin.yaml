@@ -1,6 +1,4 @@
-# Metadata for the test-only SmartDevicePlugin fixture used by
-# tests/sdp_harness to run the real SDP stack (metadata, parameters,
-# item attributes, commands.py) without any device connection.
+# Metadata of the test-only SmartDevicePlugin fixtures
 plugin:
     type: interface
     description:
@@ -52,6 +50,36 @@ parameters:
         default: 0
         description:
             en: 'resend retries'
+    conn_type:
+        type: str
+        mandatory: false
+        description:
+            en: 'connection type or class name'
+    protocol:
+        type: str
+        mandatory: false
+        description:
+            en: 'protocol type or class name'
+    host:
+        type: str
+        mandatory: false
+        description:
+            en: 'network host'
+    port:
+        type: int
+        default: 0
+        description:
+            en: 'network port'
+    serialport:
+        type: str
+        mandatory: false
+        description:
+            en: 'serial port'
+    terminator:
+        type: str
+        default: "\r"
+        description:
+            en: 'line or reply terminator'
     loop_guard_count:
         type: int
         default: 0

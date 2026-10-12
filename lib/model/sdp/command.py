@@ -28,11 +28,13 @@ from __future__ import annotations
 
 import logging
 import re
+from collections.abc import Mapping
 from copy import deepcopy
 from typing import Any
 
 import lib.model.sdp.datatypes as DT
 from lib.model.sdp.globals import (
+    REQUEST_DICT_ARGS,
     CMD_ATTR_PARAMS,
     CMD_STR_VAL_RAW,
     CMD_STR_VAL_UPP,
@@ -95,7 +97,7 @@ class SDPCommand(object):
 
         self.reply_token = []
         self._cmd_params = kwargs['cmd']
-        self._plugin_params = kwargs['plugin']
+        self._template_vars: Mapping[str, Any] = kwargs.get('template_vars', {})
 
         self._apply_kwargs(COMMAND_PARAMS, **(kwargs.get('cmd', {})))
 
@@ -259,9 +261,12 @@ class SDPCommandStr(SDPCommand):
     (recursively), to enable the following parameters:
 
     - '{OPCODE}' is replaced with the opcode,
-    - '{PARAM:attr}' is replaced with the value of the attr element from the plugin configuration,
+    - '{PARAM:attr}' is replaced with the value of the attr element from the plugin's template_vars,
     - '{VALUE}' is replaced with the given value (converted by DT-class)
     - '{CUSTOM_ATTR1}'..'{CUSTOM_ATTR3}' is replaced by the respective custom attribute
+
+    The data_dict gets ``request_method`` and the request arguments
+    (``headers``, ``data``, ...) from template_vars, parsed the same way.
 
     The returned data is only parsed by the DT_... classes.
     For the DT_json class, the read_data dict can be used to extract a specific
@@ -282,7 +287,6 @@ class SDPCommandStr(SDPCommand):
 
     def get_send_data(self, data: Any, **kwargs) -> dict:
 
-        self._plugin_params.update(kwargs)
         data = self._check_value(data)
 
         if data is None:
@@ -298,10 +302,10 @@ class SDPCommandStr(SDPCommand):
             else:
                 cmd_str = self._parse_str(self.opcode, data, **kwargs)
 
-        data_dict = {}
-        data_dict['payload'] = cmd_str
-        for k in self._plugin_params.keys():
-            data_dict[k] = self._parse_tree(self._plugin_params[k], data, **kwargs)
+        data_dict = {'payload': cmd_str}
+        for key in ('request_method', *REQUEST_DICT_ARGS):
+            if key in self._template_vars:
+                data_dict[key] = self._parse_tree(self._template_vars[key], data, **kwargs)
 
         return data_dict
 
@@ -325,7 +329,7 @@ class SDPCommandStr(SDPCommand):
         """
 
         def get_param(matchobj):
-            returnvalue = self._plugin_params.get(matchobj.group(2))
+            returnvalue = self._template_vars.get(matchobj.group(2))
             if returnvalue is None:
                 returnvalue = ''
                 self.logger.warning(f'Parameter {matchobj.group(2)} does not exist.')
@@ -335,7 +339,7 @@ class SDPCommandStr(SDPCommand):
             if kwargs and 'custom' in kwargs:
                 custom_entry = kwargs['custom'].get(int(matchobj.group(2)))
                 try:
-                    return str(self._plugin_params.get(matchobj.group(3)).get(custom_entry, ''))
+                    return str(self._template_vars.get(matchobj.group(3)).get(custom_entry, ''))
                 except TypeError as e:
                     self.logger.warning(
                         f'Issue getting custom parameter. Plugin parameter must contain an entry like '
@@ -431,7 +435,6 @@ class SDPCommandParseStr(SDPCommandStr):
 
     def get_send_data(self, data: Any, **kwargs) -> dict:
 
-        self._plugin_params.update(kwargs)
         data = self._check_value(data)
 
         if data is None:
@@ -582,10 +585,9 @@ class SDPCommandJSON(SDPCommand):
 
             return val
 
-        if not hasattr(self, CMD_ATTR_PARAMS):
+        params = deepcopy(getattr(self, CMD_ATTR_PARAMS, None))
+        if params is None:
             return {}
-
-        params = deepcopy(getattr(self, CMD_ATTR_PARAMS))
 
         if isinstance(params, list):
             # unnamed parameters, list format

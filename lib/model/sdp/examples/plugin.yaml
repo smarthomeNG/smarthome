@@ -225,7 +225,6 @@ parameters:
             - ''
             - net_tcp_request
             - net_tcp_client
-            - net_tcp_jsonrpc
             - net_udp_server
             - serial
             - serial_async

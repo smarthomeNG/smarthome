@@ -11,7 +11,7 @@ plugins/myplugin/, adapt as follows:
                        YamlPluginContractTest,
                        SdpPluginContractTest):
         PLUGIN_CLASS = MyPlugin
-        PLUGIN_INIT_PARAMS = {}    # conn_type=CONN_NULL injected automatically
+        PLUGIN_INIT_PARAMS = {}    # runs on the null transport automatically
         SDP_ITEM_ATTR_SETS = [
             {'ex_command': 'Device.Power', 'ex_read': True},
             {'ex_command': 'Device.Power', 'ex_write': True},
@@ -20,10 +20,9 @@ plugins/myplugin/, adapt as follows:
             {'ex_command': 'Device.Power', 'ex_read': True},
         ]
 
-Note on conn_type: SdpPluginContractTest injects conn_type=CONN_NULL into
-PLUGIN_INIT_PARAMS so no real network or serial connection is attempted.
-The sample plugin already sets CONN_NULL in _set_device_defaults(), making it
-doubly safe for testing.
+Note on connections: SdpPluginContractTest runs plugins declaring TRANSPORTS
+on the null transport (and injects conn_type=CONN_NULL for others), so no real
+network or serial connection is attempted.
 """
 
 import os
@@ -48,16 +47,7 @@ class TestSdpExample(BasePluginContractTest, YamlPluginContractTest, SdpPluginCo
     """
 
     PLUGIN_CLASS = SdpExample
-    PLUGIN_INIT_PARAMS = {}  # conn_type=CONN_NULL is injected by SdpPluginContractTest
-
-    # Minimal attribute combinations that must result in an item being registered
-    def test_pause_item_registered_via_parse_item(self):
-        """SDP uses _suspend_item_path / _suspend_item, not _pause_item_path."""
-        self.skipTest(
-            'SmartDevicePlugin uses the suspend mechanism (_suspend_item_path), '
-            'not the SmartPlugin pause mechanism (_pause_item_path). '
-            'Test the suspend item via plugin.yaml suspend_item parameter instead.'
-        )
+    PLUGIN_INIT_PARAMS = {}  # SdpPluginContractTest runs the plugin on the null transport
 
     # Command names in the model-specific format (Style 3) are referenced without
     # the 'ALL.' prefix — SDP flattens 'ALL.cmd1' to 'cmd1' when loading commands.

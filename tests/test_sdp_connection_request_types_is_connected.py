@@ -24,13 +24,16 @@ import logging
 import unittest
 from unittest.mock import patch
 
+from lib.model.sdp.carriers import ConnectionHooks, DeviceConfig  # noqa: E402
 from lib.model.sdp.connection import SDPConnection, SDPConnectionNetTcpRequest, SDPConnectionNetUdpRequest
 
 
 def _make_conn(cls):
     conn = object.__new__(cls)
     conn.logger = logging.getLogger('test.conn.request')
-    conn._params = {}
+    params = {}
+    conn._config = DeviceConfig.from_params(params)
+    conn._hooks = ConnectionHooks.from_params(None, params)
     conn._is_connected = False
     return conn
 

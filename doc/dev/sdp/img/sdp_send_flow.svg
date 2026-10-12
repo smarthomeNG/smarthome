@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 790" font-family="Helvetica, Arial, sans-serif">
+  <rect width="760" height="790" fill="#f9f9f9"/>
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#555"/></marker>
+    <marker id="arr-blue" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#2a5db0"/></marker>
+    <marker id="arr-green" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#1e7e34"/></marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/></marker>
+    <marker id="arr-purple" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#681da8"/></marker>
+    <marker id="arr-yellow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#9c6e00"/></marker>
+  </defs>
+  <text x="380" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Send path: item → device</text>
+  <rect x="40" y="50" width="470" height="48" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="50" y="70" text-anchor="start" font-size="10" font-weight="bold" fill="#3c4043">shng: item changed → update_item(item, caller)</text>
+  <text x="50" y="86" text-anchor="start" font-size="9" font-weight="normal" fill="#555">skip: not alive · pause item · unbound item · caller == plugin itself</text>
+  <path d="M275,100 L275,112" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="114" width="470" height="62" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="50" y="134" text-anchor="start" font-size="10" font-weight="bold" fill="#2a5db0">role dispatch (ItemBinding.roles)</text>
+  <text x="50" y="149" text-anchor="start" font-size="9" font-weight="normal" fill="#555">WRITE → _write_item · GROUP_TRIGGER → read_all_commands(group)</text>
+  <text x="50" y="164" text-anchor="start" font-size="9" font-weight="normal" fill="#555">LOOKUP → update_lookup · VALID_LIST → set_valid_list</text>
+  <path d="M275,178 L275,190" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="192" width="470" height="62" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="50" y="212" text-anchor="start" font-size="10" font-weight="bold" fill="#2a5db0">_write_item()</text>
+  <text x="50" y="227" text-anchor="start" font-size="9" font-weight="normal" fill="#555">loop guard → send_command(cmd, value, custom=…)</text>
+  <text x="50" y="242" text-anchor="start" font-size="9" font-weight="normal" fill="#555">failure → item reset to last value · success → x_readafterwrite job</text>
+  <path d="M275,256 L275,268" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="270" width="470" height="62" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="50" y="290" text-anchor="start" font-size="10" font-weight="bold" fill="#2a5db0">send_command(command, value=None, …)</text>
+  <text x="50" y="305" text-anchor="start" font-size="9" font-weight="normal" fill="#555">refuse: not alive · read of non-readable command · suspended · no connection</text>
+  <text x="50" y="320" text-anchor="start" font-size="9" font-weight="normal" fill="#555">split custom token · connect if autoconnect</text>
+  <path d="M275,334 L275,346" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="348" width="470" height="48" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="50" y="368" text-anchor="start" font-size="10" font-weight="bold" fill="#681da8">_do_before_send(command, value, kwargs)</text>
+  <text x="50" y="384" text-anchor="start" font-size="9" font-weight="normal" fill="#555">(False, result) ends here; may add per-send kwargs</text>
+  <path d="M510,372 L540,372" fill="none" stroke="#a142f4" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="546" y="376" text-anchor="start" font-size="9" font-weight="normal" fill="#681da8" font-style="italic">plugin hook</text>
+  <path d="M275,398 L275,410" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="412" width="470" height="62" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="50" y="432" text-anchor="start" font-size="10" font-weight="bold" fill="#9c6e00">SDPCommands.get_send_data()</text>
+  <text x="50" y="447" text-anchor="start" font-size="9" font-weight="normal" fill="#555">reverse lookup → SDPCommand.get_send_data(): _check_value,</text>
+  <text x="50" y="462" text-anchor="start" font-size="9" font-weight="normal" fill="#555">read/write string, substitutions, DT.get_send_data → data_dict</text>
+  <path d="M275,476 L275,488" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="490" width="470" height="48" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="50" y="510" text-anchor="start" font-size="10" font-weight="bold" fill="#681da8">_transform_send_data(data_dict)</text>
+  <text x="50" y="526" text-anchor="start" font-size="9" font-weight="normal" fill="#555">LINE_TERMINATED: + terminator, limit_response</text>
+  <path d="M510,514 L540,514" fill="none" stroke="#a142f4" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="546" y="518" text-anchor="start" font-size="9" font-weight="normal" fill="#681da8" font-style="italic">plugin hook</text>
+  <path d="M275,540 L275,552" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="554" width="470" height="48" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="50" y="574" text-anchor="start" font-size="10" font-weight="bold" fill="#2a5db0">_build_resend_info() → _send(data_dict, resend_info)</text>
+  <text x="50" y="590" text-anchor="start" font-size="9" font-weight="normal" fill="#555">_send is a hook; default → self._connection.send()</text>
+  <path d="M510,578 L540,578" fill="none" stroke="#a142f4" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="546" y="582" text-anchor="start" font-size="9" font-weight="normal" fill="#681da8" font-style="italic">plugin hook</text>
+  <path d="M275,604 L275,616" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="618" width="470" height="48" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="50" y="638" text-anchor="start" font-size="10" font-weight="bold" fill="#1e7e34">SDPConnection.send()  [protocol → transport]</text>
+  <text x="50" y="654" text-anchor="start" font-size="9" font-weight="normal" fill="#555">autoconnect · optional _send_lock · _send_init_on_send() · _send()</text>
+  <path d="M275,668 L275,680" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="682" width="470" height="62" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="50" y="702" text-anchor="start" font-size="10" font-weight="bold" fill="#1e7e34">reply?</text>
+  <text x="50" y="717" text-anchor="start" font-size="9" font-weight="normal" fill="#555">sync transport: returned → on_data_received(by, reply, command)</text>
+  <text x="50" y="732" text-anchor="start" font-size="9" font-weight="normal" fill="#555">async transport: None → reply arrives via callback (receive path)</text>
+  <rect x="40" y="764" width="14" height="11" rx="2" fill="#e8f0fe" stroke="#4a86e8"/>
+  <text x="60" y="773" text-anchor="start" font-size="9" font-weight="normal" fill="#555">SmartDevicePlugin</text>
+  <rect x="230" y="764" width="14" height="11" rx="2" fill="#f3e8fd" stroke="#a142f4"/>
+  <text x="250" y="773" text-anchor="start" font-size="9" font-weight="normal" fill="#555">plugin hook</text>
+  <rect x="420" y="764" width="14" height="11" rx="2" fill="#fef7e0" stroke="#f9ab00"/>
+  <text x="440" y="773" text-anchor="start" font-size="9" font-weight="normal" fill="#555">command layer</text>
+  <rect x="610" y="764" width="14" height="11" rx="2" fill="#e6f4ea" stroke="#34a853"/>
+  <text x="630" y="773" text-anchor="start" font-size="9" font-weight="normal" fill="#555">connection layer</text>
+</svg>

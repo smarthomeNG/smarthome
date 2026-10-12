@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 720" font-family="Helvetica, Arial, sans-serif">
+  <rect width="760" height="720" fill="#f9f9f9"/>
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#555"/></marker>
+    <marker id="arr-blue" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#2a5db0"/></marker>
+    <marker id="arr-green" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#1e7e34"/></marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/></marker>
+    <marker id="arr-purple" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#681da8"/></marker>
+    <marker id="arr-yellow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#9c6e00"/></marker>
+  </defs>
+  <text x="380" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Transport and protocol selection</text>
+  <polygon points="190,55.0 300.0,85 190,115.0 80.0,85" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="190" y="82" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">TRANSPORTS</text>
+  <text x="190" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">declared?</text>
+  <rect x="360" y="60" width="300" height="50" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="510" y="82" text-anchor="middle" font-size="11" font-weight="bold" fill="#9c6e00">first rule whose `requires` is set</text>
+  <text x="510" y="96" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">none → error, plugin disabled; several → warning</text>
+  <path d="M300,85 L358,85" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="328" y="78" text-anchor="middle" font-size="9" font-weight="normal" fill="#666" font-style="italic">yes</text>
+  <polygon points="190,155.0 300.0,185 190,215.0 80.0,185" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="190" y="182" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">conn_type</text>
+  <text x="190" y="196" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">parameter set?</text>
+  <path d="M190,115 L190,153" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="200" y="138" text-anchor="start" font-size="9" font-weight="normal" fill="#666" font-style="italic">no</text>
+  <rect x="360" y="160" width="300" height="50" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="510" y="182" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">resolve_class(conn_type)</text>
+  <text x="510" y="196" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">type name, class name or class</text>
+  <path d="M300,185 L358,185" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="328" y="178" text-anchor="middle" font-size="9" font-weight="normal" fill="#666" font-style="italic">yes</text>
+  <path d="M510,110 L510,158" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="518" y="138" text-anchor="start" font-size="9" font-weight="normal" fill="#666" font-style="italic">rule.use as conn_type</text>
+  <polygon points="190,255.0 300.0,285 190,315.0 80.0,285" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="190" y="289" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e7e34">host set?</text>
+  <path d="M190,215 L190,253" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="200" y="238" text-anchor="start" font-size="9" font-weight="normal" fill="#666" font-style="italic">no</text>
+  <rect x="360" y="265" width="170" height="40" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="445" y="289" text-anchor="middle" font-size="10" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">net_tcp_request</text>
+  <path d="M300,285 L358,285" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="328" y="278" text-anchor="middle" font-size="9" font-weight="normal" fill="#666" font-style="italic">yes</text>
+  <polygon points="190,345.0 300.0,375 190,405.0 80.0,375" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="190" y="379" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e7e34">serialport set?</text>
+  <path d="M190,315 L190,343" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="200" y="333" text-anchor="start" font-size="9" font-weight="normal" fill="#666" font-style="italic">no</text>
+  <rect x="360" y="355" width="170" height="40" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="445" y="379" text-anchor="middle" font-size="10" font-weight="normal" fill="#555" font-family="Menlo, Consolas, monospace">serial</text>
+  <path d="M300,375 L358,375" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="328" y="368" text-anchor="middle" font-size="9" font-weight="normal" fill="#666" font-style="italic">yes</text>
+  <rect x="100" y="425" width="180" height="36" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="190" y="447" text-anchor="middle" font-size="10" font-weight="normal" fill="#555">null transport SDPConnection</text>
+  <path d="M190,405 L190,423" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="200" y="418" text-anchor="start" font-size="9" font-weight="normal" fill="#666" font-style="italic">no</text>
+  <path d="M660,185 L700,185" fill="none" stroke="#555" stroke-width="1.5"/>
+  <path d="M530,285 L700,285" fill="none" stroke="#555" stroke-width="1.5"/>
+  <path d="M530,375 L700,375" fill="none" stroke="#555" stroke-width="1.5"/>
+  <path d="M700,185 L700,488" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M190,461 L190,488" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="490" width="680" height="40" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="380" y="506" text-anchor="middle" font-size="11" font-weight="bold" fill="#3c4043">transport class</text>
+  <text x="380" y="522" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">DeviceConfig.from_params(), ConnectionHooks from the plugin</text>
+  <path d="M200,530 L200,558" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="40" y="560" width="320" height="50" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="200" y="582" text-anchor="middle" font-size="11" font-weight="bold" fill="#681da8">send_retries &gt; 0 and no protocol?</text>
+  <text x="200" y="596" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">→ protocol = resend</text>
+  <polygon points="540,555.0 670.0,585 540,615.0 410.0,585" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="540" y="582" text-anchor="middle" font-size="10" font-weight="bold" fill="#681da8">&#x27;protocol&#x27; key in</text>
+  <text x="540" y="596" text-anchor="middle" font-size="10" font-weight="bold" fill="#681da8">parameters?</text>
+  <path d="M360,585 L408,585" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="400" y="650" width="150" height="40" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="475" y="674" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">protocol(config, hooks, …)</text>
+  <rect x="580" y="650" width="150" height="40" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="655" y="674" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">transport(config, hooks, …)</text>
+  <path d="M480,608 L475,648" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="468" y="634" text-anchor="end" font-size="9" font-weight="normal" fill="#666" font-style="italic">yes</text>
+  <path d="M610,608 L655,648" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="640" y="626" text-anchor="start" font-size="9" font-weight="normal" fill="#666" font-style="italic">no</text>
+  <text x="40" y="704" text-anchor="start" font-size="9" font-weight="normal" fill="#555" font-style="italic">the protocol builds its own transport in _setup() from config.conn_type</text>
+</svg>

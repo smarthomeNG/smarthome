@@ -23,9 +23,9 @@ commands = {
     # provided values are defaults; dicts default to None, but are shown to
     # illustrate valid contents
     'cmd': {
-        # can this command read = request values from the device?
+        # may the value be requested from the device? Items bound to the command receive its values either way
         'read': True,
-        # can this command write = send item values to the device?
+        # may item values be sent to the device? Neither read nor write: pseudo command, filled by the plugin
         'write': False,
         # general / fallback command sequence/string/..., HTTP URL for SDP_Connection_Net_Tcp_Request
         #

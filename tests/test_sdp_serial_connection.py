@@ -27,6 +27,7 @@ from lib.model.sdp.globals import (
     PLUGIN_ATTR_CONN_TIMEOUT,
     PLUGIN_ATTR_CB_ON_DISCONNECT,
 )
+from lib.model.sdp.carriers import ConnectionHooks, DeviceConfig  # noqa: E402
 from lib.model.sdp.connection import SDPConnectionSerial
 
 
@@ -67,12 +68,14 @@ def _make_serial_conn(is_connected=True, disconnect_cb=None):
     conn._connection = mock_port
 
     cb = disconnect_cb if disconnect_cb else MagicMock()
-    conn._params = {
+    params = {
         PLUGIN_ATTR_SERIAL_PORT: '/dev/mock_tty',
         PLUGIN_ATTR_CONN_AUTO_CONN: False,
         PLUGIN_ATTR_CONN_TIMEOUT: 0.1,  # short for tests
         PLUGIN_ATTR_CB_ON_DISCONNECT: cb,
     }
+    conn._config = DeviceConfig.from_params(params)
+    conn._hooks = ConnectionHooks.from_params(None, params)
     # __lock_timeout uses Python name-mangling; must be set with the mangled name
     conn._SDPConnectionSerial__lock_timeout = 2
     conn._lock = _make_timeout_lock()
