@@ -33,6 +33,10 @@ pytest>=3.6.0
 # against both backends, so it's needed here to get full coverage in CI/dev.
 skyfield>=1.49,<2.0.0
 
+# used by tests/test_sdp_serial_reply.py (lib.model.sdp serial connection, imported lazily
+# and not part of the core requirements)
+pyserial>=3.4.0
+
 # used by tests/mock/core.py:
 #python-dateutil
 

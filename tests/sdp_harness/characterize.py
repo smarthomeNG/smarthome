@@ -14,7 +14,6 @@ import json
 import os
 import re
 import tempfile
-import re._parser as sre_parse
 import unittest
 from collections.abc import Callable, Iterable
 from typing import Any
@@ -24,6 +23,11 @@ from ruamel.yaml import YAML
 
 from lib.model.sdp.globals import CMD_ATTR_CMD_SETTINGS, CMD_ATTR_LOOKUP, CMD_ATTR_REPLY_PATTERN
 from tests.sdp_harness import RecordingConnection, SDPRig, load_sdp_plugin
+
+try:
+    import re._parser as sre_parse
+except ImportError:  # Python < 3.11: `re` is a module, the parser is top-level sre_parse
+    import sre_parse
 
 #: environment variable; if set to 1, snapshots are rewritten instead of compared
 SNAPSHOT_UPDATE_ENV = 'SDP_SNAPSHOT_UPDATE'
