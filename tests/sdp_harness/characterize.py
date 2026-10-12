@@ -68,6 +68,14 @@ _CATEGORY_SAMPLES = {
     sre_parse.CATEGORY_NOT_WORD: ' ',
 }
 
+_REPEAT_OPS = tuple(
+    getattr(sre_parse, name) for name in ('MAX_REPEAT', 'MIN_REPEAT', 'POSSESSIVE_REPEAT') if hasattr(sre_parse, name)
+)
+"""Repeat opcodes of the running interpreter; possessive repeats exist from Python 3.11."""
+
+_ATOMIC_GROUP = getattr(sre_parse, 'ATOMIC_GROUP', None)
+"""Atomic group opcode, None before Python 3.11."""
+
 
 def _sample(parsed) -> str:
     out = []
@@ -84,10 +92,10 @@ def _sample(parsed) -> str:
             out.append(_sample(arg[1][0]))
         elif op is sre_parse.SUBPATTERN:
             out.append(_sample(arg[-1]))
-        elif op in (sre_parse.MAX_REPEAT, sre_parse.MIN_REPEAT, sre_parse.POSSESSIVE_REPEAT):
+        elif op in _REPEAT_OPS:
             low, high, sub = arg
             out.append(_sample(sub) * max(low, min(1, high)))
-        elif op is sre_parse.ATOMIC_GROUP:
+        elif op is _ATOMIC_GROUP:
             out.append(_sample(arg))
         # anchors, lookarounds and group references contribute no characters
     return ''.join(out)
