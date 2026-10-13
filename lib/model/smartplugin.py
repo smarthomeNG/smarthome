@@ -1281,7 +1281,6 @@ class SmartPlugin(SmartObject, Utils):
         self.logger.info('Shutting down asyncio loop and thread...')
 
         self.put_command_to_run_queue('STOP')
-        time.sleep(3)
         try:
             self.pluginThread.join()
             self.logger.debug('_asyncio_loop_thread of plugin stopped')
@@ -1429,13 +1428,12 @@ class SmartPlugin(SmartObject, Utils):
         if self._asyncio_loop is not None:
             self.logger.info(f"Writing command '{command}' to run-queue")
             try:
-                # Send a command to plugin_coro
-                asyncio.run_coroutine_threadsafe(self._run_queue.put(command), self._asyncio_loop)
+                # Send a command to plugin_coro and wait until it is enqueued
+                asyncio.run_coroutine_threadsafe(self._run_queue.put(command), self._asyncio_loop).result(timeout=3)
             except Exception as e:
                 self.logger.warning(
                     f"put_command_to_run_queue: Exception '{e}' in _run_queue.put ({self._asyncio_loop=})"
                 )
-            time.sleep(3)
         else:
             self.logger.warning(
                 f"put_command_to_run_queue: Cannot write command '{command}' to run-queue, no active event-loop"
