@@ -1308,7 +1308,10 @@ class SmartPlugin(SmartObject, Utils):
         :param plugin_coro: Coroutine that should be started in the eventloop of the asyncio-thread
         """
         self.logger.debug('_asyncio main task of plugin started')
-        self._asyncio_loop = asyncio.get_event_loop()
+        self._asyncio_loop = asyncio.get_running_loop()
+        self._asyncio_loop.set_default_executor(
+            concurrent.futures.ThreadPoolExecutor(thread_name_prefix=f'plugins.{self.get_fullname()}.asyncio')
+        )
         task = asyncio.current_task()
         task.set_name('MainTask')
         # Create queue to send termination command to plugin_coro when the plugin should be stopped
