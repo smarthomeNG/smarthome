@@ -1289,6 +1289,21 @@ class SmartPlugin(SmartObject, Utils):
             pass
         self._asyncio_state = 'stopped'
 
+    def set_asyncio_executor_names(self, loop: asyncio.AbstractEventLoop) -> None:
+        """
+        Name the default-executor worker threads of an asyncio loop after this plugin
+
+        Workers of the loop's default executor (``run_in_executor(None, ...)``, ``asyncio.to_thread()``,
+        DNS lookups) are named ``plugins.<fullname>.asyncio_<n>`` instead of the anonymous ``asyncio_<n>``.
+        Plugins that create their own eventloop call this once, right after creating it and before
+        anything uses the executor. The loop started by ``start_asyncio()`` is set up automatically.
+
+        :param loop: Eventloop owned by this plugin
+        """
+        loop.set_default_executor(
+            concurrent.futures.ThreadPoolExecutor(thread_name_prefix=f'plugins.{self.get_fullname()}.asyncio')
+        )
+
     def _asyncio_loop_thread(self, plugin_coro: Coroutine) -> None:
         """
         Thread to start and execute the asyncio event loop
@@ -1309,9 +1324,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         self.logger.debug('_asyncio main task of plugin started')
         self._asyncio_loop = asyncio.get_running_loop()
-        self._asyncio_loop.set_default_executor(
-            concurrent.futures.ThreadPoolExecutor(thread_name_prefix=f'plugins.{self.get_fullname()}.asyncio')
-        )
+        self.set_asyncio_executor_names(self._asyncio_loop)
         task = asyncio.current_task()
         task.set_name('MainTask')
         # Create queue to send termination command to plugin_coro when the plugin should be stopped

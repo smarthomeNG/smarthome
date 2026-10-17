@@ -62,5 +62,19 @@ class TestExecutorThreadNames(unittest.TestCase):
         self.assertTrue(name.startswith('plugins.nameplug_inst1.asyncio'), name)
 
 
+class TestSetAsyncioExecutorNames(unittest.TestCase):
+    def test_plugin_owned_loop_gets_named_executor_workers(self):
+        plugin = AsyncioPlugin()
+        plugin._shortname = 'nameplug'
+        plugin._set_instance_name('inst1')
+        loop = asyncio.new_event_loop()
+        self.addCleanup(loop.close)
+
+        plugin.set_asyncio_executor_names(loop)
+        name = loop.run_until_complete(asyncio.to_thread(lambda: threading.current_thread().name))
+
+        self.assertTrue(name.startswith('plugins.nameplug_inst1.asyncio'), name)
+
+
 if __name__ == '__main__':
     unittest.main()
