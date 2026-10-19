@@ -38,6 +38,17 @@ class TestDeviceConfigFromParams(unittest.TestCase):
 
         self.assertEqual((23, True), (config.port, config.binary))
 
+    def test_num_params_get_field_types(self):
+        config = DeviceConfig.from_params({'connect_retries': 3.0, 'baudrate': 9600.0, 'timeout': 2})
+
+        self.assertEqual((3, int), (config.connect_retries, type(config.connect_retries)))
+        self.assertEqual((9600, int), (config.baudrate, type(config.baudrate)))
+        self.assertEqual((2.0, float), (config.timeout, type(config.timeout)))
+
+    def test_fractional_value_for_int_field_raises(self):
+        with self.assertRaises(ValueError):
+            DeviceConfig.from_params({'connect_retries': 2.5})
+
     def test_json_move_keys_become_tuple(self):
         self.assertEqual(('playerid',), DeviceConfig.from_params({'json_move_keys': ['playerid']}).json_move_keys)
 

@@ -157,6 +157,13 @@ class TestDeviceLoss(SerialAsyncTestCase):
             self.conn.send({'payload': 'MU?\r', 'limit_response': b'\r'})
 
 
+class TestNumParams(SerialAsyncTestCase):
+    CONNECT_RETRIES = 3.0
+
+    def test_opens_with_retries_from_num_param(self):
+        self.assertTrue(self.conn.open())
+
+
 class TestConcurrentOpen(SerialAsyncTestCase):
     CONNECT_RETRIES = 3
 

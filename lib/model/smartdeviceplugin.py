@@ -341,7 +341,7 @@ class SmartDevicePlugin(SmartPlugin):
         # instantiate connection object
         try:
             self._connection = self._get_connection(name=self.get_fullname())
-        except RuntimeError as e:
+        except (RuntimeError, ValueError) as e:
             self.logger.error(f'could not set up connection, plugin disabled: {e}')
             return False
         if not self._connection:

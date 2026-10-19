@@ -76,8 +76,8 @@ class DeviceConfig:
     autoreconnect: bool = True
     autoconnect: bool = True
     connect_retries: int = 3
-    connect_cycle: int = 5
-    retry_cycle: int = 30
+    connect_cycle: float = 5.0
+    retry_cycle: float = 30.0
     retry_suspend: int = 0
     conn_type: str | type | None = None
     protocol: str | type | None = None
@@ -98,17 +98,20 @@ class DeviceConfig:
         """
         Build the configuration from plugin parameters.
 
-        ``None`` values count as unset, string values are sanitized.
+        ``None`` values count as unset, string values are sanitized, numbers
+        get the field's type (``num`` parameters arrive as ``float``).
 
         :param params: plugin parameters
+        :raises ValueError: if an ``int`` field gets a fractional number
         """
         names = cls.fields()
+        types = {f.name: f.type for f in dataclasses.fields(cls)}
         values: dict[str, Any] = {}
         for name in names:
             value = params.get(name)
             if value is None:
                 continue
-            value = sanitize_param(value)
+            value = _as_field_type(name, types[name], sanitize_param(value))
             values[name] = tuple(value) if name == 'json_move_keys' else value
         extra = {key: val for key, val in params.items() if key not in names and key not in RUNTIME_PARAMS}
         return cls(**values, extra=MappingProxyType(extra), explicit=frozenset(values))
@@ -122,6 +125,23 @@ class DeviceConfig:
         """
         unset = {name: value for name, value in defaults.items() if name not in self.explicit}
         return dataclasses.replace(self, **unset, explicit=self.explicit | frozenset(defaults))
+
+
+def _as_field_type(name: str, field_type: str, value: Any) -> Any:
+    """
+    ``value`` converted to the ``int`` or ``float`` field type ``field_type``, unchanged for other types.
+
+    :raises ValueError: if ``value`` has a fraction and the field is ``int``
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return value
+    if field_type == 'float':
+        return float(value)
+    if field_type == 'int':
+        if isinstance(value, float) and not value.is_integer():
+            raise ValueError(f'{name} needs an integer, got {value}')
+        return int(value)
+    return value
 
 
 def _abort_by_suspend(suspend: Callable[..., Any]) -> Callable[[str], None]:

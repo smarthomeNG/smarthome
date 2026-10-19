@@ -438,8 +438,8 @@ class SDPProtocolResend(SDPProtocol):
 
     def _setup(self):
         # get relevant plugin parameters
-        self._send_retries = int(self._config.send_retries or 0)
-        self._send_retries_cycle = int(self._config.send_retries_cycle or 1)
+        self._send_retries = self._config.send_retries
+        self._send_retries_cycle = self._config.send_retries_cycle or 1
         self._sending = {}
         self._sending_retries = {}
         self._sending_lock = Lock()
