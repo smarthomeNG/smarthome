@@ -34,7 +34,7 @@ from collections.abc import Callable, Mapping
 from contextlib import contextmanager
 from importlib import import_module
 from queue import SimpleQueue
-from threading import Lock, Thread
+from threading import Lock, RLock, Thread, current_thread
 from time import sleep, time
 
 # Seconds of serial silence while connected before declaring the connection stale.
@@ -136,7 +136,7 @@ class SDPConnection(object):
         self.dummy = None
 
         # try to assure no concurrent sending is done
-        self._send_lock = Lock()
+        self._send_lock = RLock()
         self.use_send_lock = False
 
         self.logger.debug(f'connection initializing from {self.__class__.__name__} with {self._config}')
@@ -618,6 +618,12 @@ class _TimeoutLock(object):
     def release(self):
         self._lock.release()
 
+    def __enter__(self) -> bool:
+        return self._lock.acquire()
+
+    def __exit__(self, *exc_info):
+        self._lock.release()
+
 
 class SDPConnectionSerial(SDPConnection):
     """Connection for serial connectivity
@@ -639,6 +645,9 @@ class SDPConnectionSerial(SDPConnection):
     If callbacks are class members, they need the additional first parameter 'self'
     """
 
+    #: send() reads the reply from the port and returns it
+    REPLY_ON_SEND: ClassVar[bool] = True
+
     def _setup(self):
         # only import serial now we know we need it -> reduce requirements for non-serial setups
         try:
@@ -647,13 +656,16 @@ class SDPConnectionSerial(SDPConnection):
             self.logger.critical('SDP plugin wants to use serial connection, but pyserial module not installed.')
             return
 
+        # a reply belongs to the request only if no other request is written before it is read
+        self.use_send_lock = self.REPLY_ON_SEND
+
         # set class properties
         self._lock = _TimeoutLock()
         self.__lock_timeout = 2
         self._timeout_mult = 3
         self._lastbyte = b''
         self._lastbytetime = 0
-        self._connection_attempts = 0
+        self._open_lock = RLock()
         self._read_buffer = b''
         self.__use_read_buffer = True
         self._listener_active = False
@@ -668,40 +680,37 @@ class SDPConnectionSerial(SDPConnection):
         self._connection.timeout = self._config.timeout
 
     def _open(self) -> bool:
+        """Open the port, retrying ``connect_retries`` times; concurrent calls connect once."""
         self.logger.debug(f'{self.__class__.__name__} _open called with {self._config}')
 
-        if self._is_connected:
-            self.logger.debug(f'{self.__class__.__name__} _open called while connected, doing nothing')
-            return True
-
-        while not self._is_connected and self._connection_attempts <= self._config.connect_retries:
-            self._connection_attempts += 1
-            self._lock.acquire()
-            try:
-                self._connection.open()
-                self._is_connected = True
-                self.logger.info(f'connected to {self._config.serialport}')
-            except (self.serial.SerialException, ValueError) as e:
-                self.logger.error(f'error on connection to {self._config.serialport}. Error was: {e}')
-            finally:
-                self._lock.release()
-
+        with self._open_lock:
             if self._is_connected:
-                self._connection_attempts = 0
-                self._lastbytetime = time()
-                self._setup_listener()
-                # only call on_connect callback after listener is set up
-                if self._hooks.on_connect:
-                    self._hooks.on_connect(self)
+                self.logger.debug(f'{self.__class__.__name__} _open called while connected, doing nothing')
                 return True
-            else:
+
+            for _ in range(self._config.connect_retries + 1):
+                with self._lock:
+                    try:
+                        self._connection.open()
+                        self._is_connected = True
+                        self.logger.info(f'connected to {self._config.serialport}')
+                    except (self.serial.SerialException, ValueError) as e:
+                        self.logger.error(f'error on connection to {self._config.serialport}. Error was: {e}')
+
+                if self._is_connected:
+                    self._lastbytetime = time()
+                    self._setup_listener()
+                    # only call on_connect callback after listener is set up
+                    if self._hooks.on_connect:
+                        self._hooks.on_connect(self)
+                    return True
+
                 self.logger.debug(f'sleeping {self._config.connect_cycle} seconds before next connection attempt')
                 sleep(self._config.connect_cycle)
 
         self.logger.error(
             f'error on connection to {self._config.serialport}, max number of connection attempts reached'
         )
-        self._connection_attempts = 0
         return False
 
     def _close(self):
@@ -758,25 +767,20 @@ class SDPConnectionSerial(SDPConnection):
             self._is_connected = False
             raise self.serial.SerialException(f'data {data} could not be sent')
 
-        # don't try to read response if listener is active
-        if self._listener_active:
+        if not self.REPLY_ON_SEND:
             return None
 
         rlen = data_dict.get('limit_response', None)
         if rlen is None:
             return None
         else:
-            res = self._read_bytes(rlen)
-            if not self._config.binary:
-                try:
-                    res = str(res, 'utf-8', errors='replace').strip()
-                except Exception as e:
-                    self.logger.warning(
-                        f'could not convert received result {res} to str, discarding value. Error was: {e}'
-                    )
-                    return
+            return self._received(self._read_bytes(rlen))
 
-            return res
+    def _received(self, data: bytes) -> bytes | str:
+        """Received ``data`` as passed on: unchanged in binary mode, else decoded and stripped."""
+        if self._config.binary:
+            return data
+        return str(data, 'utf-8', errors='replace').strip()
 
     def _send_bytes(self, packet: bytes | bytearray) -> int:
         """
@@ -843,14 +847,7 @@ class SDPConnectionSerial(SDPConnection):
                     if readbyte != b'':
                         self._lastbytetime = time()
                     else:
-                        if self._listener_active:
-                            # async listener: empty read is normal; return
-                            # accumulated bytes immediately so the listener
-                            # thread can loop without busy-waiting
-                            return totalreadbytes
-                        # sync mode: no more data from device right now;
-                        # break out so the disconnect-detection block below
-                        # can run if we received nothing at all
+                        # no more data right now; the stale check below runs if nothing was read
                         break
                     totalreadbytes += readbyte
 
@@ -893,6 +890,22 @@ class SDPConnectionSerial(SDPConnection):
         # return what we got so far, might be b''
         return totalreadbytes
 
+    def _read_available(self) -> bytes:
+        """
+        Read the bytes the device has sent, waiting at most the read timeout for the first one.
+
+        :return: read bytes, b'' if none arrived within the timeout
+        :raises SDPConnectionError: if the read lock can't be acquired
+        :raises SerialException: if reading from the port fails
+        """
+        with self._lock.acquire_timeout(self.__lock_timeout) as locked:
+            if not locked:
+                raise SDPConnectionError(f'serial read lock timeout on {self._config.serialport}')
+            data = self._connection.read(max(1, self._connection.in_waiting))
+        if data:
+            self._lastbytetime = time()
+        return data
+
     def reset_input_buffer(self):
         if self._connection:
             self._connection.reset_input_buffer()
@@ -911,8 +924,11 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
     As this is derived from ``SDPConnectionSerial``, most of the documentation
     is identical.
 
-    The timeout needs to be set small enough not to block reading for too long.
-    Recommended times are between 0.2 and 0.8 seconds.
+    Received data is passed on as soon as it arrives; the timeout only bounds
+    how long closing the connection waits for the listener thread.
+
+    ``send()`` never returns the reply, the reply is dispatched by the listener.
+    A listener stopped by an error closes the connection.
 
     The ``data_received_callback`` needs to be set or you won't get data. Due
     to timing issues, read values are written into a queue and dispatched to
@@ -924,6 +940,8 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         def data_received_callback(by, message)
     If callbacks are class members, they need the additional first parameter 'self'
     """
+
+    REPLY_ON_SEND: ClassVar[bool] = False
 
     def _setup(self):
         # set additional class members
@@ -950,10 +968,8 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         if self.__receive_thread is not None:
             self.logger.debug(f'stopping receive thread {self.__receive_thread.name}')
         self._listener_active = False
-        try:
-            self.__receive_thread.join()  # type: ignore (try/except)
-        except Exception:
-            pass
+        if self.__receive_thread is not None and self.__receive_thread is not current_thread():
+            self.__receive_thread.join()
         self.__receive_thread = None
         super()._close()
 
@@ -962,14 +978,12 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         __buffer = b''
 
         msg = None
+        died = False
         self._is_receiving = True
         # try to find possible "hidden" errors
         try:
             while self._is_connected and self._listener_active:
-                try:
-                    msg = self._read_bytes(0)
-                except self.serial.SerialTimeoutException:
-                    pass
+                msg = self._read_available()
 
                 if msg:
                     self.logger.debug(f'received raw data {msg}, buffer is {__buffer}')
@@ -990,13 +1004,13 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
                                 i += len(self._config.terminator)
                             line = __buffer[:i]
                             __buffer = __buffer[i:]
-                            self._queue.put(line if self._config.binary else str(line, 'utf-8').strip())
+                            self._queue.put(self._received(line))
                             # possibly deactivate in production?
                             self.logger.debug(f'put {line} in queue, queue size is {self._queue.qsize()}')
 
                     else:
                         # forward what we received
-                        self._queue.put(msg if self._config.binary else str(msg, 'utf-8').strip())
+                        self._queue.put(self._received(msg))
                         # possibly deactivate in production?
                         self.logger.debug(f'put {msg} in queue, queue size is {self._queue.qsize()}')
 
@@ -1006,9 +1020,12 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
 
         except Exception as e:
             if not self._listener_active:
-                self.logger.debug(f'serial receive thread {self.__receive_thread.name} shutting down')
+                self.logger.debug(f'serial receive thread {current_thread().name} shutting down')
             else:
-                self.logger.error(f'serial receive thread {self.__receive_thread.name} died with unexpected error: {e}')
+                died = True
+                self.logger.error(
+                    f'serial receive thread {current_thread().name} died with unexpected error: {e}, closing connection'
+                )
 
         finally:
             # clean up queue worker
@@ -1026,6 +1043,9 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
             # delete thread as reuse is not possible (just to be sure)
             self.__queue_thread = None
 
+            if died:
+                self._close()
+
     def __queue_worker(self):
         """thread worker to get items from queue and pass them on to sdp"""
         while self._listener_active:
@@ -1036,7 +1056,10 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
             # check also for listener_active as this is the "shutdown flag" ->
             # don't send anything back if flag is unset
             if self._hooks.on_data and self._listener_active:
-                self._hooks.on_data(self, item)
+                try:
+                    self._hooks.on_data(self, item)
+                except Exception as e:
+                    self.logger.exception(f'error processing received data {item!r}: {e}')
 
 
 #: transport classes by connection type

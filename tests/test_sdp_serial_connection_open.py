@@ -48,7 +48,7 @@ def _make_serial_conn(retries=3, cycle=1):
     conn = object.__new__(SDPConnectionSerial)
     conn.logger = logging.getLogger('test.serial.open')
     conn._is_connected = False
-    conn._connection_attempts = 0
+    conn._open_lock = threading.RLock()
     conn._lock = threading.Lock()
     conn.serial = mock_serial_module
     conn._connection = mock_port
