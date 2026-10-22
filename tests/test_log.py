@@ -80,6 +80,39 @@ class TestAddLoggingLevel(unittest.TestCase):
         self.logs.add_logging_level('TESTLEVEL96', 96)
         self.assertEqual(logging.TESTLEVEL96, 96)
 
+    def test_logger_method_records_its_caller_location(self):
+        self.logs.add_logging_level('TESTLEVEL95', 95)
+        logger = logging.getLogger('tests.log.caller')
+
+        with self.assertLogs(logger, 95) as logs:
+            logger.testlevel95('msg')
+            expected_line = sys._getframe().f_lineno - 1
+
+        record = logs.records[0]
+        self.assertEqual(record.funcName, 'test_logger_method_records_its_caller_location')
+        self.assertEqual(record.filename, os.path.basename(__file__))
+        self.assertEqual(record.lineno, expected_line)
+
+    def test_logger_method_honours_explicit_stacklevel(self):
+        self.logs.add_logging_level('TESTLEVEL94', 94)
+        logger = logging.getLogger('tests.log.caller')
+
+        def helper():
+            logger.testlevel94('msg', stacklevel=2)
+
+        with self.assertLogs(logger, 94) as logs:
+            helper()
+
+        self.assertEqual(logs.records[0].funcName, 'test_logger_method_honours_explicit_stacklevel')
+
+    def test_module_function_records_its_caller_location(self):
+        self.logs.add_logging_level('TESTLEVEL93', 93)
+
+        with self.assertLogs(level=93) as logs:
+            logging.testlevel93('msg')
+
+        self.assertEqual(logs.records[0].funcName, 'test_module_function_records_its_caller_location')
+
 
 # ===========================================================================
 # Logs.add_log / return_logs

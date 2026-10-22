@@ -29,6 +29,7 @@ def register_shng_log_levels():
             def _make_method(lvl):
                 def _method(self, msg, *args, **kwargs):
                     if self.isEnabledFor(lvl):
+                        kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + 1
                         self._log(lvl, msg, args, **kwargs)
 
                 return _method

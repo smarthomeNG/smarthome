@@ -268,9 +268,12 @@ class Logs:
 
         def logForLevel(self, message, *args, **kwargs):
             if self.isEnabledFor(value):
+                # +1 skips this wrapper, so the record names its caller's function and line
+                kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + 1
                 self._log(value, message, args, **kwargs)
 
         def logToRoot(message, *args, **kwargs):
+            kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + 1
             logging.log(value, message, *args, **kwargs)
 
         logging.addLevelName(value, description)
