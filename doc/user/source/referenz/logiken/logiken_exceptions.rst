@@ -78,3 +78,46 @@ Optional kann der Exception ein Grund als Parameter mitgegeben werden.
 
 Falls ein Grund angegeben wird, erfolgt ein Logeintrag mit dem Level INFO, der das Verlassen und diesen Grund loggt.
 
+
+.. index:: Logiken; TaskCancelled
+.. _logik_exceptions_taskcancelled:
+
+Exception TaskCancelled
+=======================
+
+Wird der Abbruch einer laufenden Logik angefordert, über die :ref:`Threads-Seite der Admin GUI <admin_threads_abbrechen>`
+oder automatisch über den Parameter ``runtime_cancel``, löst SmartHomeNG in der Logik die Exception ``TaskCancelled``
+aus. Sie beendet den aktuellen Lauf der Logik. Die Logik bleibt geladen und wird beim nächsten Trigger erneut ausgeführt.
+
+``TaskCancelled`` ist von ``BaseException`` abgeleitet, nicht von ``Exception``. Ein ``except Exception:`` in der Logik
+fängt sie deshalb nicht ab. Ein ``except:`` ohne Exception-Typ fängt sie dagegen ab und verhindert so den Abbruch.
+
+Muss eine Logik beim Abbruch aufräumen (z.B. eine Verbindung schließen oder ein Item zurücksetzen), geht das mit
+``try/finally``. Der ``finally``-Block läuft beim Abbruch genauso wie beim normalen Ende:
+
+.. code-block:: python
+
+   verbindung = oeffne_verbindung()
+   try:
+       while not fertig():
+           arbeite(verbindung)
+   finally:
+       verbindung.close()
+
+Soll die Logik speziell auf den Abbruch reagieren, kann sie ``TaskCancelled`` abfangen. Danach sollte sie die Exception
+erneut auslösen, damit der Lauf auch wirklich endet:
+
+.. code-block:: python
+
+   try:
+       ...
+   except TaskCancelled:
+       sh.mein.status('abgebrochen')
+       raise
+
+Die Exception wird ausgelöst, sobald die Logik wieder Python-Code ausführt: in einer Rechenschleife sofort, in einem
+blockierenden Aufruf (``time.sleep()``, ``Event.wait()``, Netzwerkzugriff, ``subprocess``) erst, wenn dieser zurückkehrt.
+
+Ein abgebrochener Lauf wird mit der Stelle, an der er unterbrochen wurde, als Warnung in das Log der Logik geschrieben.
+Der Zeitpunkt des letzten Laufs (``logic.last_run()``) wird für einen abgebrochenen Lauf nicht aktualisiert.
+

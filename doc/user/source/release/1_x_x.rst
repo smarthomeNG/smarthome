@@ -68,6 +68,10 @@ Allgmein
 Bugfixes im CORE
 ----------------
 
+* lib.log: Meldungen der SmartHomeNG-eigenen Log-Level (NOTICE, DBGHIGH, DBGMED, DBGLOW, DEVELOP) nennen jetzt die
+  aufrufende Funktion und Zeile statt ``logForLevel``
+* lib.scheduler: Ein Task, der eingereiht wird während alle Worker beschäftigt sind, wartet nicht mehr bis zu einer Sekunde,
+  nachdem ein Worker frei geworden ist
 * ...
 
 
@@ -91,6 +95,14 @@ Updates in the CORE
 
 * Libs:
 
+  * lib.scheduler:
+
+    * Laufende Tasks (Logiken, Item-Zyklen/Crontabs, Plugin-Scheduler) werden mit Laufzeit erfasst
+    * Überschreitet ein Task die Laufzeit ``runtime_warn`` (Standard 120 s, global in ``smarthome.yaml``, für Logiken
+      auch pro Logik), wird eine Warnung mit seinem aktuellen Stacktrace geloggt, erneut bei jeder Verdopplung
+    * Laufende Logiken können abgebrochen werden (Exception ``TaskCancelled``), manuell über die Admin GUI oder
+      automatisch über den neuen Logik-Parameter ``runtime_cancel``
+
   * ...:
 
     * ...
@@ -99,6 +111,13 @@ Updates in the CORE
     * ...
 
 * Modules:
+
+  * modules.admin:
+
+    * Threads-Seite zeigt Typ und Laufzeit laufender Tasks, überfällige Tasks hervorgehoben, den aktuellen Stack eines
+      Tasks und erlaubt das Abbrechen von Logiken
+    * REST-API: ``GET /api/threads`` liefert Informationen zu laufenden Tasks, ``GET /api/threads/<ident>`` deren Stack,
+      ``POST /api/threads/<ident>/cancel`` bricht eine Logik ab
 
   * modules. ...:
 
@@ -174,4 +193,6 @@ Weitere Änderungen
 Dokumentation
 -------------
 
+* Admin GUI: Threads-Seite mit laufenden Tasks und dem Abbrechen von Logiken
+* Logiken: Exception ``TaskCancelled``, Parameter ``runtime_warn`` und ``runtime_cancel``
 * ...
