@@ -700,7 +700,7 @@ class TestEvalTriggerSourceDetails(_Base):
 
         queued, self.queued = self.queued, []
         for task in queued:
-            Scheduler._task(None, *task)
+            Scheduler._dispatch_task(None, *task)
 
     def test_eval_gets_details_of_triggering_update(self):
         self.pos(55, 'Visu', '192.168.2.10')

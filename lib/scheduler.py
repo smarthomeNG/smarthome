@@ -30,6 +30,10 @@ import traceback
 import threading
 import random
 import inspect
+import dataclasses
+import typing
+import ctypes
+import itertools
 
 import lib.env
 
@@ -63,6 +67,185 @@ _scheduler_instance = None  # Pointer to the initialized instance of the schedul
 
 class LeaveLogic(Exception):
     pass  # declare a label for 'raise LeaveLogic'
+
+
+class TaskCancelled(BaseException):
+    """
+    Raised inside a running logic whose cancellation was requested.
+
+    Derives from BaseException, so ``except Exception`` in logic code does not swallow it;
+    ``try/finally`` blocks still run.
+    """
+
+
+TaskType = typing.Literal['logic', 'item', 'method']
+
+CancelResult = typing.Literal['requested', 'not_found', 'not_cancellable']
+
+DEFAULT_RUNTIME_WARN = 120  # seconds a scheduler task may run before a warning is logged; 0 disables
+
+
+def _parse_seconds(value) -> float | None:
+    """``value`` as a threshold in seconds (a number >= 0), None if invalid."""
+    try:
+        seconds = float(value)
+    except (TypeError, ValueError):
+        return None
+    return seconds if seconds >= 0 else None
+
+
+def _set_async_exc(thread_ident: int, exc: type[BaseException] | None) -> None:
+    """
+    Raise ``exc`` in thread ``thread_ident`` at its next bytecode boundary; None clears a pending one.
+
+    A thread blocked in a C call (sleep, lock, socket, ...) gets the exception only when that call returns.
+    """
+    ctypes.pythonapi.PyThreadState_SetAsyncExc(
+        ctypes.c_ulong(thread_ident), None if exc is None else ctypes.py_object(exc)
+    )
+
+
+@dataclasses.dataclass
+class RunningTask:
+    """
+    A scheduler task currently executing on a worker thread.
+
+    :ivar thread_ident: ``threading.get_ident()`` of the worker thread running the task
+    :ivar task_type: kind of task object - logic, item (cycle/cron/autotimer) or method
+    :ivar name: scheduler name of the task
+    :ivar started: ``time.monotonic()`` at task start, basis for runtime calculation
+    :ivar started_at: wall-clock time at task start, for display
+    :ivar runtime_warn: seconds after which a runtime warning is logged; 0 disables warnings
+    :ivar trigger: trigger dict of a logic (by, source, source_details, dest, value), None for other types
+    :ivar warnings_logged: number of runtime warnings logged so far
+    :ivar task_id: unique id of this task run, assigned by the registry; distinguishes runs on the same thread
+    :ivar runtime_cancel: seconds after which cancellation is requested automatically; 0 disables
+    :ivar cancel_requested_at: ``time.monotonic()`` of the first cancellation request, None if never requested
+    :ivar cancel_requests: number of cancellation requests so far
+    """
+
+    thread_ident: int
+    task_type: TaskType
+    name: str
+    started: float
+    started_at: datetime.datetime
+    runtime_warn: float = 0
+    trigger: dict | None = None
+    warnings_logged: int = 0
+    task_id: int = 0
+    runtime_cancel: float = 0
+    cancel_requested_at: float | None = None
+    cancel_requests: int = 0
+
+    @property
+    def runtime(self) -> float:
+        """Seconds since the task started."""
+        return time.monotonic() - self.started
+
+    @property
+    def cancellable(self) -> bool:
+        """True if the task may be cancelled; only logics are."""
+        return self.task_type == 'logic'
+
+    @property
+    def next_warn_after(self) -> float | None:
+        """Runtime in seconds at which the next warning is due (runtime_warn, then each doubling); None if disabled."""
+        if self.runtime_warn <= 0:
+            return None
+        return self.runtime_warn * 2**self.warnings_logged
+
+    @property
+    def overdue(self) -> bool:
+        """True once the task has exceeded its runtime_warn threshold."""
+        return self.runtime_warn > 0 and self.runtime >= self.runtime_warn
+
+
+class _TaskRegistry:
+    """Thread-safe registry of the tasks currently running on scheduler worker threads, keyed by thread ident."""
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._tasks: dict[int, RunningTask] = {}
+        self._task_ids = itertools.count(1)
+
+    def start(self, task: RunningTask) -> None:
+        """Register ``task`` as running on its worker thread and assign its ``task_id``."""
+        with self._lock:
+            task.task_id = next(self._task_ids)
+            self._tasks[task.thread_ident] = task
+
+    def finish(self, thread_ident: int) -> RunningTask | None:
+        """
+        Remove and return the task running on ``thread_ident``, None if there is none.
+
+        A cancellation requested but not yet delivered is withdrawn, so it cannot hit the
+        worker's next task. Must be called from the worker thread itself; a TaskCancelled
+        raised while this runs means it has to be called again (see ``Scheduler._finish_task()``).
+        """
+        with self._lock:
+            task = self._tasks.get(thread_ident)
+            if task is not None and task.cancel_requested_at is not None:
+                _set_async_exc(thread_ident, None)
+            return self._tasks.pop(thread_ident, None)
+
+    def request_cancel(self, thread_ident: int, task_id: int, now: float) -> tuple[CancelResult, RunningTask | None]:
+        """
+        Raise TaskCancelled in the task ``task_id`` running on ``thread_ident``.
+
+        Every call raises it again, since a delivered exception may have been swallowed by the task.
+
+        :return: result and a copy of the task (None if not found)
+        """
+        with self._lock:
+            task = self._tasks.get(thread_ident)
+            if task is None or task.task_id != task_id:
+                return 'not_found', None
+            if not task.cancellable:
+                return 'not_cancellable', dataclasses.replace(task)
+            _set_async_exc(thread_ident, TaskCancelled)
+            if task.cancel_requested_at is None:
+                task.cancel_requested_at = now
+            task.cancel_requests += 1
+            return 'requested', dataclasses.replace(task)
+
+    def due_cancels(self, now: float) -> list[RunningTask]:
+        """Copies of the tasks that passed their runtime_cancel at monotonic time ``now`` and were not cancelled yet."""
+        with self._lock:
+            return [
+                dataclasses.replace(t)
+                for t in self._tasks.values()
+                if t.runtime_cancel > 0 and t.cancel_requested_at is None and now - t.started >= t.runtime_cancel
+            ]
+
+    def snapshot(self) -> list[RunningTask]:
+        """Copies of all running tasks."""
+        with self._lock:
+            return [dataclasses.replace(t) for t in self._tasks.values()]
+
+    def get(self, thread_ident: int) -> RunningTask | None:
+        """Copy of the task running on ``thread_ident``, None if there is none."""
+        with self._lock:
+            task = self._tasks.get(thread_ident)
+            return None if task is None else dataclasses.replace(task)
+
+    def due_warnings(self, now: float) -> list[RunningTask]:
+        """
+        Tasks whose next runtime warning is due at monotonic time ``now``, marked as warned.
+
+        A task is returned at most once per call; if several thresholds have passed since the last
+        call, ``warnings_logged`` skips to the highest one passed.
+        """
+        due = []
+        with self._lock:
+            for task in self._tasks.values():
+                threshold = task.next_warn_after
+                if threshold is None or now - task.started < threshold:
+                    continue
+                while threshold <= now - task.started:
+                    task.warnings_logged += 1
+                    threshold = task.next_warn_after
+                due.append(dataclasses.replace(task))
+        return due
 
 
 class _PriorityQueue:
@@ -149,6 +332,8 @@ class Scheduler(threading.Thread):
         self._lock = threading.Lock()
         self._runc = threading.Condition()
         self._cycle_items = {}  # store items for dynamic cycles {'item2.property.path': {name1, name2, ...}}
+        self._running = _TaskRegistry()
+        self._reported_invalid_runtime_warn = None
 
         global _scheduler_instance
         if _scheduler_instance is not None:
@@ -234,6 +419,78 @@ class Scheduler(threading.Thread):
             if w.name != 'idle':
                 worker_names.append(w.name)
         return worker_names
+
+    def get_running_tasks(self) -> list[RunningTask]:
+        """
+        Get the tasks currently executing on worker threads
+
+        :return: copies of the running tasks, in no particular order
+        """
+        return self._running.snapshot()
+
+    def get_task_stack(self, thread_ident: int) -> list[str] | None:
+        """
+        Get the current call stack of a running task
+
+        :param thread_ident: thread ident of the worker thread running the task
+        :return: stack as formatted by ``traceback.format_stack()``, None if no task runs on that thread
+        """
+        if self._running.get(thread_ident) is None:
+            return None
+        frame = sys._current_frames().get(thread_ident)
+        if frame is None:
+            return None
+        return traceback.format_stack(frame)
+
+    def cancel_task(self, thread_ident: int, task_id: int) -> CancelResult:
+        """
+        Request cancellation of a running logic by raising TaskCancelled in it
+
+        The exception arrives at the logic's next bytecode boundary: immediately in a busy loop,
+        but only after a blocking call (sleep, wait, lock, socket, subprocess) returns. A logic
+        swallowing it (bare ``except:``) keeps running; repeated requests raise it again.
+
+        :param thread_ident: thread ident of the worker thread running the task
+        :param task_id: ``task_id`` of the task run to cancel; a different run on that thread is not touched
+        :return: 'requested', 'not_found' (no such task run) or 'not_cancellable' (not a logic)
+        """
+        result, task = self._running.request_cancel(thread_ident, task_id, time.monotonic())
+        if result == 'requested':
+            self._task_logger(task).notice(
+                f'{task.name} ({task.task_type}) cancellation requested after {task.runtime:.0f} s '
+                f'(request {task.cancel_requests})'
+            )
+        return result
+
+    @staticmethod
+    def _task_logger(task: RunningTask) -> logging.Logger:
+        """Logger for messages about ``task``: the logic's own logger for logics, the scheduler logger otherwise."""
+        if task.task_type == 'logic':
+            return logging.getLogger(task.name)
+        return logger
+
+    def _check_task_runtimes(self, now: float | None = None) -> None:
+        """
+        Check running tasks against their runtime thresholds.
+
+        Logs a warning with the current stack for each task that passed its next runtime_warn
+        threshold, and requests cancellation of each logic that passed its runtime_cancel.
+
+        :param now: ``time.monotonic()`` value to check against, defaults to the current one
+        """
+        if now is None:
+            now = time.monotonic()
+        for task in self._running.due_warnings(now):
+            stack = ''.join(self.get_task_stack(task.thread_ident) or ['(not available)\n'])
+            self._task_logger(task).warning(
+                f'{task.name} ({task.task_type}) running for {now - task.started:.0f} s '
+                f'(runtime_warn {task.runtime_warn:g} s, thread {task.thread_ident}), current stack:\n{stack}'
+            )
+        for task in self._running.due_cancels(now):
+            self._task_logger(task).warning(
+                f'{task.name} ({task.task_type}) exceeded runtime_cancel {task.runtime_cancel:g} s, cancelling'
+            )
+            self.cancel_task(task.thread_ident, task.task_id)
 
     def run(self):
         self.alive = True
@@ -333,6 +590,10 @@ class Scheduler(threading.Thread):
                 logger.warning(f'Exception: {e} while searching scheduler for due tasks. Traceback: {tb_str}')
             finally:
                 self._lock.release()
+            try:
+                self._check_task_runtimes()
+            except Exception as e:
+                logger.exception(f'Exception: {e} while checking task runtimes')
             time.sleep(0.5)
 
         if self._sh.shng_status['code'] > 20:
@@ -805,19 +1066,141 @@ class Scheduler(threading.Thread):
     def _worker(self):
         while self.alive:
             self._runc.acquire()
-            self._runc.wait(timeout=1)
+            if self._runq.qsize() == 0:
+                self._runc.wait(timeout=1)
             try:
                 prio, (name, obj, by, source, dest, value) = self._runq.get()
             except IndexError:
                 continue
             finally:
                 self._runc.release()
-            self._task(name, obj, by, source, dest, value)
+            try:
+                self._task(name, obj, by, source, dest, value)
+            except TaskCancelled:
+                # cancellation delivered after _task() caught the first one; the task is already finished
+                threading.current_thread().name = 'idle'
+
+    @staticmethod
+    def _task_type(obj) -> TaskType:
+        """Classify a scheduler task object the way ``_dispatch_task()`` executes it."""
+        class_name = obj.__class__.__name__
+        if class_name == 'Logic':
+            return 'logic'
+        if class_name == 'Item':
+            return 'item'
+        return 'method'
+
+    @staticmethod
+    def _logic_trigger(by, source, dest, value) -> dict:
+        """
+        Build the ``trigger`` dict handed to a logic.
+
+        A dict ``source`` (item/cron/cycle trigger) is flattened: ``source`` becomes its item path,
+        or its 'source' entry ('cron'/'cycle') if no item is given; its 'details' go to ``source_details``.
+        """
+        source_details = None
+        if isinstance(source, dict):
+            source_details = source.get('details', '')
+            src = source.get('item', '')
+            if src == '':
+                src = source.get('source', '')
+            source = src
+        return {'by': by, 'source': source, 'source_details': source_details, 'dest': dest, 'value': value}
+
+    def _global_runtime_warn(self) -> float:
+        """
+        Global runtime warning threshold in seconds (``runtime_warn`` in smarthome.yaml, changeable live).
+
+        An invalid value is replaced by ``DEFAULT_RUNTIME_WARN`` and logged once per distinct invalid value.
+        """
+        value = self._sh._runtime_warn
+        runtime_warn = _parse_seconds(value)
+        if runtime_warn is not None:
+            return runtime_warn
+        if value != self._reported_invalid_runtime_warn:
+            self._reported_invalid_runtime_warn = value
+            logger.warning(
+                f"smarthome.yaml: invalid runtime_warn '{value}' (must be a number >= 0), using {DEFAULT_RUNTIME_WARN}"
+            )
+        return DEFAULT_RUNTIME_WARN
+
+    @staticmethod
+    def _logic_seconds(name, obj, task_type: TaskType, attr: str, default: float) -> float:
+        """
+        A logic's threshold attribute ``attr`` (logic.yaml) in seconds.
+
+        ``default`` applies to other task types, to logics without the attribute, and replaces an
+        invalid value, which is logged.
+        """
+        value = getattr(obj, attr, None) if task_type == 'logic' else None
+        if value is None:
+            return default
+        seconds = _parse_seconds(value)
+        if seconds is None:
+            logger.warning(f"{name}: invalid {attr} '{value}' (must be a number >= 0), using {default:g}")
+            return default
+        return seconds
+
+    @staticmethod
+    def _task_frames(tb) -> traceback.StackSummary:
+        """Frames of traceback ``tb`` inside the task code, i.e. below the last frame of this module."""
+        frames = traceback.extract_tb(tb)
+        own = [i for i, frame in enumerate(frames) if frame.filename == __file__]
+        return traceback.StackSummary.from_list(frames[own[-1] + 1 :] if own else frames)
+
+    def _finish_task(self, thread_ident: int) -> RunningTask | None:
+        """
+        Remove the task of ``thread_ident`` from the registry, withdrawing an undelivered cancellation.
+
+        A cancellation delivered while the registry is being updated is absorbed and the update
+        retried; once the task is removed, no new cancellation can target it.
+        """
+        while True:
+            try:
+                return self._running.finish(thread_ident)
+            except TaskCancelled:
+                continue
 
     def _task(self, name, obj, by, source, dest, value):
-        threading.current_thread().name = name
-        # logger = logging.getLogger('_task.' + name)
+        """
+        Execute a task on the current worker thread, tracking it as running for its duration.
 
+        The worker thread carries the task name while the task runs and 'idle' afterwards.
+        A cancelled task (TaskCancelled) is logged with the task code frames it was interrupted in.
+        """
+        thread = threading.current_thread()
+        thread.name = name
+        task_type = self._task_type(obj)
+        self._running.start(
+            RunningTask(
+                thread_ident=thread.ident,
+                task_type=task_type,
+                name=name,
+                started=time.monotonic(),
+                started_at=self.shtime.now(),
+                runtime_warn=self._logic_seconds(name, obj, task_type, 'runtime_warn', self._global_runtime_warn()),
+                runtime_cancel=self._logic_seconds(name, obj, task_type, 'runtime_cancel', 0),
+                trigger=self._logic_trigger(by, source, dest, value) if task_type == 'logic' else None,
+            )
+        )
+        cancelled_in = None
+        try:
+            self._dispatch_task(name, obj, by, source, dest, value)
+        except TaskCancelled as e:
+            cancelled_in = self._task_frames(e.__traceback__)
+        finally:
+            task = self._finish_task(thread.ident)
+            if task is not None and cancelled_in is not None:
+                self._task_logger(task).warning(
+                    f'{task.name} ({task.task_type}) cancelled after {task.runtime:.0f} s, interrupted in:\n'
+                    + ''.join(cancelled_in.format())
+                )
+            elif task is not None and task.warnings_logged:
+                self._task_logger(task).notice(f'{task.name} ({task.task_type}) finished after {task.runtime:.0f} s')
+            thread.name = 'idle'
+
+    def _dispatch_task(self, name, obj, by, source, dest, value):
+        """Execute a task according to its type (logic, item or method)."""
         # logger.warning(f'task {obj} ({obj.__class__.__name__}) with {value} by {by} source {source}')
         if obj.__class__.__name__ == 'Logic':
             self._execute_logic_task(obj, by, source, dest, value)
@@ -864,8 +1247,6 @@ class Scheduler(threading.Thread):
             except Exception as e:
                 tasks_logger.exception(f'Method {name} exception: {e}')
 
-        threading.current_thread().name = 'idle'
-
     def _execute_logic_task(self, logic, by, source, dest, value):
         """
         Execute a logic from _task method
@@ -877,15 +1258,8 @@ class Scheduler(threading.Thread):
         name = 'logics.' + logic.name
         logger = logging.getLogger(name)
 
-        source_details = None
-        if isinstance(source, dict):
-            source_details = source.get('details', '')
-            src = source.get('item', '')
-            if src == '':
-                # get source ('cron' or 'cycle')
-                src = source.get('source', '')
-            source = src
-        trigger = {'by': by, 'source': source, 'source_details': source_details, 'dest': dest, 'value': value}  # noqa
+        trigger = self._logic_trigger(by, source, dest, value)
+        source = trigger['source']
 
         # TODO: remove comment block? or move to docstring
 

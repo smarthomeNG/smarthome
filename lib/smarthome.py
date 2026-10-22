@@ -137,6 +137,7 @@ class SmartHome:
 
     # for scheduler
     _restart_on_num_workers = 30
+    _runtime_warn = lib.scheduler.DEFAULT_RUNTIME_WARN
 
     BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 

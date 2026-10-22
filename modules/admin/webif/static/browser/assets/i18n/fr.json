@@ -600,7 +600,21 @@
     "TOTAL": "total",
     "THREAD-ID": "Id de tâche",
     "SYSTEM-PID": "Id de processus",
-    "ACTIVE": "Actif"
+    "ACTIVE": "Actif",
+    "TYPE": "Type",
+    "RUNTIME": "Durée d'exécution",
+    "STACK": "Pile",
+    "RELOAD": "Actualiser",
+    "TASK_FINISHED": "La tâche est terminée entre-temps.",
+    "CANCEL": "Interrompre",
+    "CANCEL_CONFIRM": "Interrompre la logique {{name}} ?",
+    "CANCEL_HINT": "Les boucles de calcul sont interrompues immédiatement. Les appels bloquants (sleep, wait, réseau, sous-processus) seulement à leur retour. Un except: sans type d'exception dans la logique absorbe l'interruption.",
+    "CANCEL_PENDING": "Interruption demandée (×{{count}})",
+    "CANCEL_REQUESTED": "Interruption demandée",
+    "CANCEL_NOT_FOUND": "La logique est déjà terminée",
+    "CANCEL_NOT_CANCELLABLE": "Seules les logiques peuvent être interrompues",
+    "CANCEL_FAILED": "L'interruption n'a pas pu être demandée",
+    "CANCEL_LOGIC": "Interrompre la logique"
   },
   "FILTER": "Filtre",
   "LOGS": {

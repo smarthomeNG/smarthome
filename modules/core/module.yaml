@@ -205,3 +205,12 @@ parameters:
         description:
             de: "Timeout in Sekunden für Datenbankabfragen (z.B. MySQL). Verhindert dauerhaftes Blockieren bei einem nicht erreichbaren Datenbankserver. Gilt auch als Lock-Timeout beim Schließen der Verbindung."
             en: "Timeout in seconds for database queries (e.g. MySQL). Prevents indefinite blocking when the database server is unresponsive. Also used as the lock-acquisition timeout when closing the connection."
+
+    runtime_warn:
+        live: True
+        type: num
+        default: 120
+        valid_min: 0
+        description:
+            de: "Laufzeit in Sekunden, ab der für einen Scheduler-Task (Logik, Item-Zyklus/Crontab, Plugin-Scheduler) eine Warnung mit Stacktrace geloggt wird, erneut bei jeder Verdopplung. 0 = aus. Logiken können den Wert mit ihrem eigenen Parameter runtime_warn überschreiben."
+            en: "Runtime in seconds after which a warning with stack trace is logged for a scheduler task (logic, item cycle/crontab, plugin scheduler), again at each doubling. 0 = off. Logics can override it with their own runtime_warn parameter."

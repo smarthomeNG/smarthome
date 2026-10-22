@@ -617,7 +617,21 @@
     "TOTAL": "gesamt",
     "THREAD-ID": "Thread-Id",
     "SYSTEM-PID": "Prozess-Id",
-    "ACTIVE": "Aktiv"
+    "ACTIVE": "Aktiv",
+    "TYPE": "Typ",
+    "RUNTIME": "Laufzeit",
+    "STACK": "Stack",
+    "RELOAD": "Aktualisieren",
+    "TASK_FINISHED": "Der Task ist inzwischen beendet.",
+    "CANCEL": "Abbrechen",
+    "CANCEL_CONFIRM": "Logik {{name}} abbrechen?",
+    "CANCEL_HINT": "Rechenschleifen werden sofort unterbrochen. Blockierende Aufrufe (sleep, wait, Netzwerk, Unterprozesse) erst, wenn sie zurückkehren. Ein except: ohne Exception-Typ in der Logik verschluckt den Abbruch.",
+    "CANCEL_PENDING": "Abbruch angefordert (×{{count}})",
+    "CANCEL_REQUESTED": "Abbruch angefordert",
+    "CANCEL_NOT_FOUND": "Die Logik ist bereits beendet",
+    "CANCEL_NOT_CANCELLABLE": "Nur Logiken können abgebrochen werden",
+    "CANCEL_FAILED": "Abbruch konnte nicht angefordert werden",
+    "CANCEL_LOGIC": "Logik abbrechen"
   },
   "FILTER": "Filter",
   "LOGS": {

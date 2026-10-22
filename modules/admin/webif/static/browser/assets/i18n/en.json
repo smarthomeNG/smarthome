@@ -617,7 +617,21 @@
     "TOTAL": "total",
     "THREAD-ID": "Thread-Id",
     "SYSTEM-PID": "Process-Id",
-    "ACTIVE": "Active"
+    "ACTIVE": "Active",
+    "TYPE": "Type",
+    "RUNTIME": "Runtime",
+    "STACK": "Stack",
+    "RELOAD": "Reload",
+    "TASK_FINISHED": "The task has finished in the meantime.",
+    "CANCEL": "Cancel",
+    "CANCEL_CONFIRM": "Cancel logic {{name}}?",
+    "CANCEL_HINT": "Busy loops are interrupted immediately. Blocking calls (sleep, wait, network, subprocesses) only when they return. A bare except: in the logic swallows the cancellation.",
+    "CANCEL_PENDING": "Cancellation requested (×{{count}})",
+    "CANCEL_REQUESTED": "Cancellation requested",
+    "CANCEL_NOT_FOUND": "The logic has already finished",
+    "CANCEL_NOT_CANCELLABLE": "Only logics can be cancelled",
+    "CANCEL_FAILED": "Cancellation could not be requested",
+    "CANCEL_LOGIC": "Cancel logic"
   },
   "FILTER": "Filter",
   "LOGS": {

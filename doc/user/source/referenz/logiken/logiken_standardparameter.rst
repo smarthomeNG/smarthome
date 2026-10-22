@@ -40,6 +40,17 @@ Die folgenden Parameter können für eine Logik in der Konfigurationsdatei im Ve
 |                  | implementiert. Wenn dieser Parameter auf **True** gesetzt wird, kann die Logik                |
 |                  | von einer Visualisierung aus (z.B. smartVISU) ausgelöst werden.                               |
 +------------------+-----------------------------------------------------------------------------------------------+
+| runtime_warn     | **Optional**: Laufzeit in Sekunden, ab der eine Warnung mit Stacktrace in das Log der Logik   |
+|                  | geschrieben wird, erneut bei jeder Verdopplung der Laufzeit. ``0`` schaltet die Warnung für   |
+|                  | diese Logik ab. Ohne Angabe gilt ``runtime_warn`` aus ``smarthome.yaml`` (Standard: 120).     |
++------------------+-----------------------------------------------------------------------------------------------+
+| runtime_cancel   | **Optional**: Laufzeit in Sekunden, nach der die Logik automatisch abgebrochen wird (wie über |
+|                  | den Button "Abbrechen" auf der Threads-Seite der Admin GUI). Ohne Angabe oder mit ``0`` wird  |
+|                  | nie automatisch abgebrochen. Der Abbruch löst in der Logik die Exception ``TaskCancelled``    |
+|                  | aus: sofort in einer Rechenschleife, bei blockierenden Aufrufen (``time.sleep()``,            |
+|                  | ``Event.wait()``, Netzwerk, ``subprocess``) erst wenn diese zurückkehren. ``try/finally``     |
+|                  | Blöcke laufen beim Abbruch. Ein ``except:`` ohne Exception-Typ verschluckt den Abbruch.       |
++------------------+-----------------------------------------------------------------------------------------------+
 | enabled          | **Optional**: ``enabled`` kann auf ``False`` gesetzt werden um die Ausführung der Logik       |
 |                  | auszusetzen. Der Ausführungsstatus der Logik kann über das CLI-Plugin oder das Admin          |
 |                  | Interface gesetzt werden.                                                                     |

@@ -55,6 +55,11 @@ default_language: de     # default_language is used, where multiple languages ar
 # configuration (polkit, sudoers, ...) decides whether it is permitted.
 #allow_system_power: true
 
+# Log a warning with stack trace when a scheduler task (logic, item cycle/crontab,
+# plugin scheduler) runs longer than this many seconds, again at each doubling (0 = off).
+# Logics can override it with their own 'runtime_warn' parameter in logic.yaml.
+#runtime_warn: 120
+
 
 #-----------------------------------------
 # develop (might be altered for release)
