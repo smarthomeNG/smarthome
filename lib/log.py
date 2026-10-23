@@ -29,6 +29,7 @@ import os
 import datetime
 import pickle
 import re
+import sys
 import pytz
 from babel.dates import format_datetime, get_timezone_name
 
@@ -47,6 +48,10 @@ DEBUG_LOGFILE_NAME = 'smarthome-debug.log'
 
 # Logger families of SmartHomeNG itself (as defined in the default logging.yaml)
 SHNG_LOGGER_FAMILIES = ('functions', 'lib', 'lib.smarthome', 'modules', 'plugins', 'logics', 'items')
+
+# Frames to add to ``stacklevel`` so a custom level's wrapper is skipped; < 3.11 doesn't count the wrapper itself, and counts logging.log()
+_LEVEL_METHOD_STACKLEVEL_SKIP = 1 if sys.version_info >= (3, 11) else 0
+_LEVEL_FUNCTION_STACKLEVEL_SKIP = 1 if sys.version_info >= (3, 11) else 2
 
 
 def debug_logging_config(logfile: str | None = None) -> dict[str, Any]:
@@ -268,12 +273,12 @@ class Logs:
 
         def logForLevel(self, message, *args, **kwargs):
             if self.isEnabledFor(value):
-                # +1 skips this wrapper, so the record names its caller's function and line
-                kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + 1
+                # skips this wrapper, so the record names its caller's function and line
+                kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + _LEVEL_METHOD_STACKLEVEL_SKIP
                 self._log(value, message, args, **kwargs)
 
         def logToRoot(message, *args, **kwargs):
-            kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + 1
+            kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + _LEVEL_FUNCTION_STACKLEVEL_SKIP
             logging.log(value, message, *args, **kwargs)
 
         logging.addLevelName(value, description)
