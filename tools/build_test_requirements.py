@@ -36,6 +36,7 @@ The procedure is as following:
    the core/module requirements and write it all to requirements/test_plugins.txt
 """
 
+import fnmatch
 import os
 import sys
 
@@ -44,29 +45,7 @@ sys.path.insert(0, sh_basedir)
 
 import bin.shngversion
 
-VERSION = bin.shngversion.get_shng_version()
-
 from lib.shpypi import Shpypi
-
-shpypi = Shpypi.get_instance()
-if shpypi is None:
-    shpypi = Shpypi(base=sh_basedir, version=VERSION, for_tests=True)
-
-# ==========================================================================
-
-plugins_dir = os.path.join(sh_basedir, 'plugins')
-
-if not os.path.exists(os.path.join(sh_basedir, 'modules')):
-    print('Directory <shng-root>/modules not found!')
-    exit(1)
-if not os.path.exists(plugins_dir):
-    print('Directory <shng-root>/plugins not found!')
-    exit(1)
-if not os.path.exists(os.path.join(sh_basedir, 'requirements')):
-    print('Directory <shng-root>/requirements not found!')
-    exit(1)
-
-import fnmatch
 
 
 def _has_test_files(tests_dir):
@@ -78,25 +57,67 @@ def _has_test_files(tests_dir):
     return False
 
 
-tested_plugin_files = []
-for entry in sorted(os.listdir(plugins_dir)):
-    if '_pv' in entry:
-        # superseded plugin version directories are never test-relevant
-        continue
-    plugin_path = os.path.join(plugins_dir, entry)
-    if not os.path.isdir(plugin_path):
-        continue
-    tests_dir = os.path.join(plugin_path, 'tests')
-    if not os.path.isdir(tests_dir) or not _has_test_files(tests_dir):
-        continue
-    req_file = os.path.join(plugin_path, 'requirements.txt')
-    if os.path.isfile(req_file):
-        tested_plugin_files.append(req_file)
-    print(f"Plugin '{entry}' has tests - requirements included.")
+def collect_tested_plugin_requirements(plugins_dir, req_files):
+    """
+    Return the requirements.txt paths of all plugins in plugins_dir that have tests.
 
-shpypi.req_files.set_conf_plugin_files(tested_plugin_files, label='tested plugin ')
-fn = shpypi.req_files.create_requirementsfile('test_plugins')
-# clear it again so this temporary use doesn't leak into any other requirementsfile build
-shpypi.req_files.set_conf_plugin_files([])
+    Plugins whose plugin.yaml version bounds (sh_/py_ min/max) exclude the running
+    SmartHomeNG or Python version are left out.
 
-print('File {} created.'.format(fn))
+    :param plugins_dir: directory containing one subdirectory per plugin
+    :param req_files: Requirements_files instance
+    :return: list of requirements.txt paths
+    """
+    tested_plugin_files = []
+    for entry in sorted(os.listdir(plugins_dir)):
+        if '_pv' in entry:
+            # superseded plugin version directories are never test-relevant
+            continue
+        plugin_path = os.path.join(plugins_dir, entry)
+        if not os.path.isdir(plugin_path):
+            continue
+        tests_dir = os.path.join(plugin_path, 'tests')
+        if not os.path.isdir(tests_dir) or not _has_test_files(tests_dir):
+            continue
+        req_file = os.path.join(plugin_path, 'requirements.txt')
+        if os.path.isfile(req_file):
+            use_it, msg = req_files._test_plugin_versions(req_file)
+            if not use_it:
+                print(f"Plugin '{entry}' has tests - requirements skipped ({msg}).")
+                continue
+            tested_plugin_files.append(req_file)
+        print(f"Plugin '{entry}' has tests - requirements included.")
+    return tested_plugin_files
+
+
+def main():
+    version = bin.shngversion.get_shng_version()
+
+    shpypi = Shpypi.get_instance()
+    if shpypi is None:
+        shpypi = Shpypi(base=sh_basedir, version=version, for_tests=True)
+
+    plugins_dir = os.path.join(sh_basedir, 'plugins')
+
+    if not os.path.exists(os.path.join(sh_basedir, 'modules')):
+        print('Directory <shng-root>/modules not found!')
+        exit(1)
+    if not os.path.exists(plugins_dir):
+        print('Directory <shng-root>/plugins not found!')
+        exit(1)
+    if not os.path.exists(os.path.join(sh_basedir, 'requirements')):
+        print('Directory <shng-root>/requirements not found!')
+        exit(1)
+
+    tested_plugin_files = collect_tested_plugin_requirements(plugins_dir, shpypi.req_files)
+
+    shpypi.req_files.set_conf_plugin_files(tested_plugin_files, label='tested plugin ')
+    fn = shpypi.req_files.create_requirementsfile('test_plugins')
+    # clear it again so this temporary use doesn't leak into any other requirementsfile build
+    shpypi.req_files.set_conf_plugin_files([])
+
+    print('File {} created.'.format(fn))
+
+
+if __name__ == '__main__':
+    main()
