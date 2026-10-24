@@ -662,10 +662,100 @@ class Version:
 
         return 'v' + vers
 
+    _SEMVER_RE = re.compile(r'^v?(?P<core>\d+(?:\.\d+)*)(?:-(?P<pre>[0-9A-Za-z.-]+))?(?:\+(?P<build>[0-9A-Za-z.-]+))?$')
+
+    @classmethod
+    def _split(cls, vers):
+        """
+        Split a version string of the form [v]N[.N...][-prerelease][+build]
+
+        :param vers: version string
+        :type vers: str
+
+        :return: numeric parts (padded/cut to 4), prerelease and build (None if absent), or None if vers is not of that form
+        :rtype: tuple or None
+        """
+        m = cls._SEMVER_RE.match(vers)
+        if m is None:
+            return None
+        numbers = cls.check_list([int(n) for n in m.group('core').split('.')])
+        return numbers, m.group('pre'), m.group('build')
+
+    _STRICT_SEMVER_RE = re.compile(
+        r'^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)'
+        r'(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?'
+        r'(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+    )
+
+    @classmethod
+    def is_semver(cls, vers):
+        """
+        Test if a string is a valid Semantic Versioning 2.0.0 version (semver.org, rule 2, 9 and 10)
+
+        :param vers: version
+        :type vers: str
+
+        :return: True if vers is MAJOR.MINOR.PATCH with optional pre-release and build metadata
+        :rtype: bool
+        """
+        return cls._STRICT_SEMVER_RE.match(vers) is not None
+
+    @staticmethod
+    def strip_build(vers):
+        """
+        Remove the build metadata ('+...') from a version string
+
+        :param vers: version
+        :type vers: str
+
+        :return: version without build metadata
+        :rtype: str
+        """
+        return vers.split('+', 1)[0]
+
     @classmethod
     def format(cls, vers):
+        """
+        Normalize a version to 'v' + at least three numeric parts, keeping prerelease and build metadata
 
-        return cls.to_string(cls.to_list(str(vers)))
+        :param vers: version
+        :type vers: str
+
+        :return: normalized version, '' for an empty version
+        :rtype: str
+        """
+        vers = str(vers)
+        parts = cls._split(vers)
+        if parts is None:
+            return cls.to_string(cls.to_list(vers))
+        numbers, pre, build = parts
+        core = cls.to_string(numbers)
+        if core == '':
+            return ''
+        return core + ('' if pre is None else '-' + pre) + ('' if build is None else '+' + build)
+
+    @classmethod
+    def _precedence_key(cls, vers):
+        """
+        Build a sort key implementing semver precedence for a version string
+
+        Strings that are not of the form [v]N[.N...][-prerelease][+build] (e.g. legacy letter
+        suffixes like '1.2.3a') are ordered by their legacy list form, as releases.
+
+        :param vers: version string
+        :type vers: str
+
+        :return: key which orders like the version
+        :rtype: tuple
+        """
+        parts = cls._split(vers)
+        if parts is None:
+            return cls.to_list(vers), (1,)
+        numbers, pre, _ = parts
+        if pre is None:
+            return numbers, (1,)
+        # numeric identifiers rank below alphanumeric ones, which compare in ASCII order
+        return numbers, (0, tuple((0, int(i), '') if i.isdigit() else (1, 0, i) for i in pre.split('.')))
 
     @classmethod
     def compare(cls, v1, v2, operator):
@@ -682,10 +772,14 @@ class Version:
         :return: true if condition is met
         :rtype: bool
         """
-        if isinstance(v1, str):
-            v1 = cls.to_list(v1)
-        if isinstance(v2, str):
-            v2 = cls.to_list(v2)
+        if isinstance(v1, str) and isinstance(v2, str):
+            v1 = cls._precedence_key(v1)
+            v2 = cls._precedence_key(v2)
+        else:
+            if isinstance(v1, str):
+                v1 = cls.to_list(v1)
+            if isinstance(v2, str):
+                v2 = cls.to_list(v2)
 
         result = False
         if v1 == v2 and operator in ['>=', '==', '<=']:

@@ -37,6 +37,12 @@ item_attributes:
             de: "Definiert ein regelmäßiges Aufrufen des Items (und damit der verknüpften Logik oder Eval-Funktion)."
             en: "Defines a regular call of the item (and thus the linked logic or Eval function)."
 
+    description:
+        type: str
+        description:
+            de: "Eine optionale Beschreibung für das Item. Hier können zum Beispiel Bedeutungen der Werte des Items erläutert werden. Diese Beschreibung wird in der Admin GUI oberhalb des Item-Wertes angezeigt."
+            en: "An optional description for the item. It can be used, for example, to explain the meanings of the values of the item. The description is shown above the item value in the admin GUI."
+
     enforce_updates:
         type: bool
         description:
@@ -46,7 +52,7 @@ item_attributes:
             en: "If the attribute is set to True, each value assignment to the item leads to the dependent logic
                  and item evaluations are triggered, even if the value of the item does not change when assigned."
 
-    enforce_changes:
+    enforce_change:
         type: bool
         description:
             de: "Wenn das Attribut auf True gesetzt wird, führt jede Wertzuweisung ans Item dazu, dass ein Update
@@ -63,6 +69,12 @@ item_attributes:
             en: "eval specifies an expression according to which the value of the item is calculated. With eval_trigger
                  stipulates when a (new) calculation takes place (see description of eval_trigger)"
 
+    eval_on_trigger_only:
+        type: bool
+        description:
+            de: "Wenn das Attribut auf True gesetzt wird, wird die Auswertung des eval Ausdrucks übersprungen, wenn sie nicht durch einen definierten eval_trigger ausgelöst wurde."
+            en: "If the attribute is set to True, the evaluation of the eval expression is skipped if it was not caused by a defined eval_trigger."
+
     eval_trigger:
         type: list
         description:
@@ -70,6 +82,24 @@ item_attributes:
                  erfolgen soll."
             en: "List of items - If one of those is changed, a recalculation of the formula of this item defined in
                  eval is triggered."
+
+    hysteresis_input:
+        type: str
+        description:
+            de: "Pfad eines Items, welches als Eingabewert für die Hysterese dient. Der Wert dieses Items wird gegen die beiden Schwellwerte verglichen. Das angegebene Item muss als num definiert sein, das Item mit den Hysterese Attributen als bool."
+            en: "Path of an item that provides the input value for the hysteresis. Its value is compared against the two thresholds. The specified item must be defined as num, the item using the hysteresis attributes as bool."
+
+    hysteresis_lower_threshold:
+        type: str
+        description:
+            de: "Unterer Schwellwert für die Hysterese. Bei Unterschreitung dieses Wertes im Eingabe-Item wird dieses Item auf False gesetzt. Optional kann eine Dauer angegeben werden, welche die Unterschreitung andauern muss."
+            en: "Lower threshold for the hysteresis. If the input item falls below this value, this item is set to False. Optionally a duration can be specified for which the value must stay below the threshold."
+
+    hysteresis_upper_threshold:
+        type: str
+        description:
+            de: "Oberer Schwellwert für die Hysterese. Bei Überschreitung dieses Wertes im Eingabe-Item wird dieses Item auf True gesetzt. Optional kann eine Dauer angegeben werden, welche die Überschreitung andauern muss."
+            en: "Upper threshold for the hysteresis. If the input item exceeds this value, this item is set to True. Optionally a duration can be specified for which the value must stay above the threshold."
 
     initial_value:
         type: str
@@ -88,6 +118,30 @@ item_attributes:
             en: "Allows you to log every change of the item value. To do this, log_change must be set to the <name> of
                  the logger to be used. In logging.yaml, the logger must be configured as 'items.<name>'.
                  Value changes of the item are then logged with the level INFO."
+
+    log_level:
+        type: str
+        description:
+            de: "Legt einen anderen Loglevel für den durch log_change ausgelösten Log-Eintrag fest. Möglich ist jeder in SmartHomeNG unterstützte Python Loglevel, als Name oder als Integer Wert. Die Angabe kann auch ein eval-Ausdruck in geschweiften Klammern sein."
+            en: "Sets a different log level for the log entry caused by log_change. Any Python log level supported by SmartHomeNG can be used, by name or as integer value. The value can also be an eval expression in curly braces."
+
+    log_mapping:
+        type: list
+        description:
+            de: "Legt fest, auf welche Strings der Wert des Items für das Logging gemappt wird. Eine Liste von Zuweisungen im Format Wert: String. Der gemappte Wert steht in log_text als {mvalue} zur Verfügung."
+            en: "Defines to which strings the value of the item is mapped for logging. A list of assignments in the format value: string. The mapped value is available in log_text as {mvalue}."
+
+    log_rules:
+        type: list
+        description:
+            de: "Legt zusätzliche Regeln für das Erzeugen des Log-Eintrags fest. Eine Liste mit den möglichen Definitionen lowlimit, highlimit, filter, exclude und itemvalue."
+            en: "Defines additional rules for creating the log entry. A list with the possible definitions lowlimit, highlimit, filter, exclude and itemvalue."
+
+    log_text:
+        type: str
+        description:
+            de: "Legt einen eigenen Text für den Logeintrag von log_change fest. Der Text kann Variablen (z.B. value, caller, source, dest, id, name, age) und eval-Ausdrücke enthalten und darf keine Single-Quotes enthalten."
+            en: "Defines a custom text for the log entry of log_change. The text can contain variables (e.g. value, caller, source, dest, id, name, age) and eval expressions and must not contain single quotes."
 
     name:
         type: str
@@ -144,6 +198,18 @@ item_attributes:
                  the form of two numeric values separated by a colon. (e.g. 21.4: 25.0). It can also a single value
                  can be noted."
 
+    trigger:
+        type: list
+        description:
+            de: "Liste von Items, bei deren Auslösung die Auswertung dieses Items erfolgt (wie eval_trigger). Wird nur ausgewertet, wenn use_conditional_triggers in der smarthome.yaml auf true gesetzt ist."
+            en: "List of items whose trigger causes this item to be evaluated (like eval_trigger). Only evaluated if use_conditional_triggers is set to true in smarthome.yaml."
+
+    trigger_condition:
+        type: list
+        description:
+            de: "Bedingungen, die bei einer Auslösung des Items erfüllt sein müssen, damit der eval Ausdruck ausgeführt wird. Eine Liste von ODER-Klauseln, die jeweils UND-verknüpfte Bedingungen enthalten. Wirkt nur, wenn use_conditional_triggers in der smarthome.yaml auf true gesetzt ist."
+            en: "Conditions that must be met when the item is triggered for the eval expression to be executed. A list of OR clauses, each containing AND-linked conditions. Only effective if use_conditional_triggers is set to true in smarthome.yaml."
+
     type:
         type: str
         valid_list:
@@ -154,8 +220,10 @@ item_attributes:
             - dict
             - foo
             - scene
+            - datetime
+            - timestamp
         description:
             de: "Um Werte zu speichern, muss ein Typ vorgegeben werden. Unterstützte Typen sind bool, num, str, list,
-            dict, foo, scene"
-            en: "To save values, a type must be specified. Supported types are bool, num, str, list, dict, foo, scene"
-
+                 dict, foo, scene, datetime, timestamp"
+            en: "To save values, a type must be specified. Supported types are bool, num, str, list, dict, foo, scene,
+                 datetime, timestamp"

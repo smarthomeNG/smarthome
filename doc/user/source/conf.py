@@ -16,6 +16,7 @@ for i in sys.path:
     print(i)
 
 import bin.shngversion as shngversion
+from lib.utils import Version
 import plugins as pluginsversion
 
 import datetime
@@ -123,14 +124,15 @@ else:
     tags.add('develop_branch')
 # release = sphinx_bootstrap_theme.__version__
 
-plgrelease = shngversion.get_shng_plugins_version()
+plgversion = shngversion.get_shng_plugins_version()
+plgrelease = plgversion
 plgbranch = pluginsversion.plugin_branch()
 if plgbranch != 'master':
     copyright = '2016-2026 SmartHomeNG Team  -  ACHTUNG: Dokumentation zum Develop Branch - Work in Progress'
     plgrelease += ' ' + plgbranch
 version = plgrelease
 
-if plgrelease > shversion:
+if Version.compare(plgversion, shversion, '>'):
     project += plgrelease
 else:
     project += shversion

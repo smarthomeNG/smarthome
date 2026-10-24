@@ -1211,7 +1211,7 @@ class Requirements_files:
         self._conf_plugin_files = []
         self._conf_plugin_files_label = 'configured plugin '
 
-        self.shng_version = Version.format(version.split('-')[0])
+        self.shng_version = Version.format(version)
         vi = sys.version_info
         self.py_version = Version.format(str(vi[0]) + '.' + str(vi[1]) + '.' + str(vi[2]))
 

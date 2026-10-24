@@ -40,6 +40,7 @@ import collections
 
 import lib.shyaml as shyaml
 from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG, DIR_ETC
+from lib.utils import Version
 from lib.vardir import get_var_dir, rebase_var_prefix
 
 logs_instance = None
@@ -359,7 +360,7 @@ class Logs:
         Save dict to logging.yaml
         """
         if logging_config is not None:
-            logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
+            logging_config['shng_version'] = Version.strip_build(self._sh.version).lstrip('v')
             conf_filename = self._sh.get_config_file(BASE_LOG)
             shyaml.yaml_save_roundtrip(conf_filename, logging_config, create_backup=create_backup)
         return
@@ -378,7 +379,7 @@ class Logs:
         )
 
         if logging_config.get('shng_version', None) is None:
-            logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
+            logging_config['shng_version'] = Version.strip_build(self._sh.version).lstrip('v')
             self.save_logging_config(logging_config, create_backup=True)
 
         return logging_config

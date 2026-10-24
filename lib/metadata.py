@@ -565,7 +565,7 @@ class Metadata:
         :return: True if the SmartHomeNG version is in the supported range
         :rtype: bool
         """
-        shng_version = Version.format(self._sh.version.split('-')[0])
+        shng_version = Version.format(self._sh.version)
         min_shngversion = Version.format(str(self.get_string('sh_minversion')))
         max_shngversion = Version.format(str(self.get_string('sh_maxversion')))
         mod_version = Version.format(self.get_string('version'))

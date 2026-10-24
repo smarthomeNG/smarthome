@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# pre-push — pytest must pass before a push is allowed.
+# pre-push — version bumps must follow semver and pytest must pass before a push is allowed.
 # Installed via: git config core.hooksPath .githooks
+
+# git feeds the pushed refs on stdin; keep them for the version check below
+REFS="$(cat)"
 
 # Run a private, untracked local hook first if present — .git/hooks/ is
 # never read by git itself while core.hooksPath points here, so this is
@@ -10,7 +13,7 @@
 # without waiting on the test suite.
 LOCAL_HOOK="$(git rev-parse --git-dir)/hooks/$(basename "$0")"
 if [ -x "$LOCAL_HOOK" ]; then
-    "$LOCAL_HOOK" "$@" || exit $?
+    printf '%s\n' "$REFS" | "$LOCAL_HOOK" "$@" || exit $?
 fi
 
 # switch to shng root dir for checks/tests to run properly
@@ -19,9 +22,28 @@ cd "$SHNG_DIR" || exit 1
 
 PYTEST="${SHNG_DIR}/venvs/shng/bin/pytest"
 [ -x "$PYTEST" ] || PYTEST="pytest"
+PYTHON="${SHNG_DIR}/venvs/shng/bin/python"
+[ -x "$PYTHON" ] || PYTHON="python3"
 
 echo ""
 echo "── pre-push gate (shng) ────────────────────────────────────────"
+echo "  checking version numbers (doc/dev/public_api.md) ..."
+echo ""
+
+if ! printf '%s\n' "$REFS" | "$PYTHON" tools/check_versions.py core --from-pre-push; then
+    echo ""
+    echo "==> PUSH REJECTED: version numbers do not follow semver."
+    echo ""
+    echo "    Bump shNG_version in bin/shngversion.py, then:  git push"
+    echo "    Deliberate exception:  'no-version-bump: core' trailer in a commit message,"
+    echo "                           or  git push --no-verify"
+    echo "────────────────────────────────────────────────────────────────"
+    echo ""
+    exit 1
+fi
+
+echo "  versions: OK"
+echo ""
 echo "  running tests/ ..."
 echo ""
 

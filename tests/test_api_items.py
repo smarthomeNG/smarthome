@@ -77,7 +77,10 @@ class TestReadAttributes(_Base):
         result = json.loads(self.controller.read(id='attributes'))
 
         self.assertEqual(result['type']['type'], 'str')
-        self.assertEqual(result['type']['valid_list'], ['bool', 'num', 'str', 'list', 'dict', 'foo', 'scene'])
+        self.assertEqual(
+            result['type']['valid_list'],
+            ['bool', 'num', 'str', 'list', 'dict', 'foo', 'scene', 'datetime', 'timestamp'],
+        )
 
     def test_read_attributes_omits_valid_list_when_absent(self):
         result = json.loads(self.controller.read(id='attributes'))

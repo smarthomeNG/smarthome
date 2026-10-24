@@ -21,6 +21,7 @@
 #########################################################################
 
 import os
+import re
 import sys
 import subprocess
 import datetime
@@ -124,7 +125,9 @@ from lib.utils import Version
 # Update auf 1.12.2.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.12.2 Release"
 # Update auf 1.12.2.2  wg. Kennzeichnung für sh_minversion
 
-shNG_version = '1.12.2.2'
+# Update auf 2.0.0-dev.1 wg. Umstellung auf Semantic Versioning (siehe doc/dev/public_api.md)
+
+shNG_version = '2.0.0-dev.1'
 shNG_branch = 'develop'
 shNG_releasedate = '10. Juli 2026'
 
@@ -188,25 +191,31 @@ def _get_git_data(sub='', printout=False):
 # ---------------------------------------------------------------------------------
 
 
+def build_version(version, *build_parts):
+    """
+    Append semver build metadata (``+part.part``) to a version
+
+    Characters outside of ``[0-9A-Za-z-]`` (e.g. in branch names like ``feature/x``) are replaced by ``-``;
+    empty parts are skipped.
+    """
+    build = '.'.join(re.sub(r'[^0-9A-Za-z-]', '-', part) for part in build_parts if part)
+    return version + '+' + build if build else version
+
+
 def get_shng_main_version():
     return Version.format(shNG_version)
 
 
 def get_shng_plugins_version():
-    plgversion = get_plugins_version().split('-')[0]
-    return Version.format(plgversion)
+    return Version.format(Version.strip_build(get_plugins_version()))
 
 
 def get_shng_version():
     commit, commit_short, branch, describe = _get_git_data()
     VERSION = get_shng_main_version()
-    if branch == 'master':
-        VERSION += '-' + branch + ' (' + commit_short + ')'
-    elif branch == 'manual':
-        VERSION += '-' + shNG_branch + ' (' + branch + ')'
-    else:
-        VERSION += '-' + commit_short + '.' + branch
-    return VERSION
+    if branch == 'manual':
+        return build_version(VERSION, 'manual', shNG_branch)
+    return build_version(VERSION, commit_short, branch)
 
 
 def get_shng_version_date():
@@ -240,18 +249,10 @@ def get_plugins_version():
     except AttributeError:
         PLUGINS_SOURCE_BRANCH = ''
 
-    if branch == 'master':
-        VERSION = Version.format(PLUGINS_VERSION)
-        VERSION += '-' + branch + ' (' + commit_short + ')'
-    elif branch == 'manual':
-        VERSION = Version.format(PLUGINS_VERSION)
-        if PLUGINS_SOURCE_BRANCH != '':
-            VERSION += '-' + PLUGINS_SOURCE_BRANCH
-        VERSION += ' (' + branch + ')'
-    else:
-        VERSION = Version.format(PLUGINS_VERSION)
-        VERSION += '-' + commit_short + '.' + branch
-    return VERSION
+    VERSION = Version.format(PLUGINS_VERSION)
+    if branch == 'manual':
+        return build_version(VERSION, 'manual', PLUGINS_SOURCE_BRANCH)
+    return build_version(VERSION, commit_short, branch)
 
 
 def get_plugins_branch():

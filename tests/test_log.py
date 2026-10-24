@@ -26,8 +26,12 @@ import datetime
 import logging
 import os
 import sys
+import tempfile
+import types
 import unittest
 from unittest.mock import MagicMock, patch
+
+import yaml
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -52,6 +56,23 @@ def _make_logs():
     logs._logs = {}
     logs.logging_levels = {}
     return logs
+
+
+class TestSaveLoggingConfigVersion(unittest.TestCase):
+    def test_saved_shng_version_keeps_the_prerelease_and_drops_build_metadata_and_prefix(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, 'logging.yaml')
+            _log_module.logs_instance = None
+            sh = types.SimpleNamespace(
+                version='v2.0.0-dev.1+abc1234.develop',
+                get_config_file=lambda base: path,
+                return_event_listeners=lambda: [],
+            )
+            logs = Logs(sh)
+            logs.save_logging_config({'version': 1})
+            with open(path, encoding='utf-8') as f:
+                saved = yaml.safe_load(f)
+        self.assertEqual('2.0.0-dev.1', saved['shng_version'])
 
 
 # ===========================================================================

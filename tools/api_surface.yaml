@@ -1,0 +1,41 @@
+# Declares which files make up the SmartHomeNG public API. Documented in doc/dev/public_api.md;
+# consumed by tools/api_snapshot.py.
+
+# Python API for addon (plugin/module) authors and logic scripts: public (non-underscore)
+# classes, methods, functions and UPPER_CASE constants of these files.
+python_globs:
+    - lib/model/*.py
+    - lib/model/sdp/*.py
+    - lib/item/*.py
+    - lib/smarthome.py
+    - lib/constants.py
+    - lib/metadata.py
+    - lib/module.py
+    - lib/shtime.py
+    - lib/utils.py
+    - lib/network.py
+    - lib/logic.py
+    - lib/db.py
+    - lib/shyaml.py
+    - lib/config.py
+    - lib/plugin.py
+    - lib/tools.py
+    - lib/log.py
+    - lib/translation.py
+    - lib/scheduler.py
+    - lib/orb.py
+    - lib/triggertimes.py
+
+# Configuration keys users write into etc/<module>.yaml, declared in each module's module.yaml
+parameter_globs:
+    - modules/*/module.yaml
+
+# Item attributes users put on items (the catalog also drives the admin item editor)
+item_attribute_globs:
+    - modules/core/items.yaml
+
+# Command line flags of the main executable
+cli_file: bin/smarthome.py
+
+# smartVISU websocket protocol: commands accepted and sent
+websocket_file: modules/websocket/smartvisu.py

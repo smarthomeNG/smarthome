@@ -21,11 +21,13 @@
 
 from . import common
 import os
+import tempfile
 import unittest
 import logging
 
 import bin.shngversion as shngversion
 from lib.model.smartplugin import SmartPlugin
+from lib.shpypi import Requirements_files
 
 from tests.mock.core import MockSmartHome
 
@@ -133,6 +135,145 @@ class TestModule(unittest.TestCase):
 
 
 # ----------------------------------------------------------
+
+
+class TestSemverPrecedence(unittest.TestCase):
+    """
+    Version.compare() orders version strings by semver.org rule 11, extended
+    with an optional legacy 4th numeric 'sub-patch' level.
+    """
+
+    def test_prerelease_sorts_below_its_release(self):
+        self.assertTrue(Version.compare('1.13.0-dev.1', '1.13.0', '<'))
+        self.assertFalse(Version.compare('1.13.0-dev.1', '1.13.0', '>='))
+
+    def test_semver_org_precedence_chain(self):
+        chain = [
+            '1.0.0-alpha',
+            '1.0.0-alpha.1',
+            '1.0.0-alpha.beta',
+            '1.0.0-beta',
+            '1.0.0-beta.2',
+            '1.0.0-beta.11',
+            '1.0.0-rc.1',
+            '1.0.0',
+        ]
+        for lower, higher in zip(chain, chain[1:]):
+            with self.subTest(lower=lower, higher=higher):
+                self.assertTrue(Version.compare(lower, higher, '<'))
+                self.assertTrue(Version.compare(higher, lower, '>'))
+
+    def test_build_metadata_is_ignored(self):
+        self.assertTrue(Version.compare('1.13.0-dev.1+abc1234.develop', '1.13.0-dev.1+ffff000.master', '=='))
+        self.assertTrue(Version.compare('1.13.0+abc1234', '1.13.0', '>='))
+        self.assertTrue(Version.compare('1.13.0-dev.1+zzz', '1.13.0-dev.2+aaa', '<'))
+
+    def test_sub_patch_level_sorts_between_patch_releases(self):
+        self.assertTrue(Version.compare('1.12.2', '1.12.2.2', '<'))
+        self.assertTrue(Version.compare('1.12.2.2', '1.12.2.10', '<'))
+        self.assertTrue(Version.compare('1.12.2.2', '1.12.3', '<'))
+        self.assertTrue(Version.compare('1.12.2.2', '1.13.0-dev.1', '<'))
+
+    def test_format_keeps_prerelease_and_build(self):
+        self.assertEqual('v1.13.0-dev.1', Version.format('1.13.0-dev.1'))
+        self.assertEqual('v1.13.0-dev.1+abc1234.develop', Version.format('v1.13-dev.1+abc1234.develop'))
+        self.assertEqual('v1.13.0+abc1234', Version.format('1.13.0+abc1234'))
+        self.assertEqual('v1.12.2.2', Version.format('1.12.2.2'))
+        self.assertEqual('v1.6.0', Version.format('1.6'))
+        self.assertEqual('', Version.format(''))
+
+    def test_is_semver_accepts_only_strict_three_part_versions(self):
+        for ok in ('0.0.1', '1.12.2', '2.0.0-dev.1', '1.0.0-rc.1+build.5', '1.0.0+sha-1', '10.20.30'):
+            with self.subTest(version=ok):
+                self.assertTrue(Version.is_semver(ok))
+        for bad in (
+            '',
+            '1.2',
+            '1.2.3.4',
+            'v1.2.3',
+            '01.2.3',
+            '1.02.3',
+            '1.2.3-',
+            '1.2.3-01',
+            '1.2.3+',
+            '1.2.3-a..b',
+            '1.2.3a',
+            ' 1.2.3',
+        ):
+            with self.subTest(version=bad):
+                self.assertFalse(Version.is_semver(bad))
+
+    def test_strip_build_removes_only_the_build_part(self):
+        self.assertEqual('v1.13.0-dev.1', Version.strip_build('v1.13.0-dev.1+abc1234.develop'))
+        self.assertEqual('2.0.0', Version.strip_build('2.0.0+abc1234'))
+        self.assertEqual('1.12.2.2', Version.strip_build('1.12.2.2'))
+        self.assertEqual('', Version.strip_build(''))
+
+    def test_short_and_v_prefixed_forms_equal_full_form(self):
+        self.assertTrue(Version.compare('1.6', '1.6.0', '=='))
+        self.assertTrue(Version.compare('v1.13.0-dev.1', '1.13.0-dev.1', '=='))
+        self.assertTrue(Version.compare('1.13-dev.1', '1.13.0-dev.1', '=='))
+
+
+# ----------------------------------------------------------
+
+
+class TestVersionDisplay(unittest.TestCase):
+    """The version strings shown at startup and in the admin UI are valid semver with build metadata."""
+
+    def test_build_version_appends_sanitized_build_metadata(self):
+        self.assertEqual(
+            'v2.0.0-dev.1+abc1234.develop', shngversion.build_version('v2.0.0-dev.1', 'abc1234', 'develop')
+        )
+        self.assertEqual(
+            'v2.0.0+abc1234.feature-semver-x', shngversion.build_version('v2.0.0', 'abc1234', 'feature/semver_x')
+        )
+        self.assertEqual('v2.0.0+manual', shngversion.build_version('v2.0.0', 'manual', ''))
+        self.assertEqual('v2.0.0', shngversion.build_version('v2.0.0'))
+
+    def test_build_version_result_is_a_comparable_version(self):
+        shown = shngversion.build_version('v2.0.0-dev.1', 'abc1234', 'feature/x')
+        self.assertEqual(shown, Version.format(shown))
+        self.assertTrue(Version.compare(shown, 'v2.0.0-dev.1', '=='))
+        self.assertTrue(Version.compare(shown, 'v2.0.0', '<'))
+
+    def test_shng_version_equals_main_version_apart_from_build_metadata(self):
+        shown = shngversion.get_shng_version()
+        self.assertTrue(Version.compare(shown, shngversion.get_shng_main_version(), '=='))
+        self.assertEqual(shngversion.get_shng_main_version(), Version.strip_build(shown))
+
+    def test_plugins_version_carries_build_metadata_but_the_release_label_does_not(self):
+        self.assertEqual(Version.strip_build(shngversion.get_plugins_version()), shngversion.get_shng_plugins_version())
+        self.assertNotIn('+', shngversion.get_shng_plugins_version())
+
+
+class TestShngVersionGate(unittest.TestCase):
+    """Plugins are gated by sh_minversion/sh_maxversion against the running (development) version."""
+
+    RUNNING = 'v2.0.0-dev.1+abc1234.develop'
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.requirements = Requirements_files(version=self.RUNNING, for_tests=True)
+
+    def gate(self, **bounds):
+        lines = ''.join(f"    {key}: '{value}'\n" for key, value in bounds.items())
+        with open(os.path.join(self._tmp.name, 'plugin.yaml'), 'w') as f:
+            f.write(f'plugin:\n    version: 1.0.0\n{lines}')
+        return self.requirements._test_plugin_versions(os.path.join(self._tmp.name, 'requirements.txt'))
+
+    def test_minversion_at_or_below_the_running_version_is_accepted(self):
+        self.assertEqual((True, ''), self.gate(sh_minversion='1.12.2.2'))
+        self.assertEqual((True, ''), self.gate(sh_minversion='2.0.0-dev.1'))
+
+    def test_minversion_of_the_unreleased_final_version_is_refused(self):
+        self.assertEqual((False, 'SmartHomeNG min version'), self.gate(sh_minversion='2.0.0'))
+        self.assertEqual((False, 'SmartHomeNG min version'), self.gate(sh_minversion='2.0.0-dev.2'))
+
+    def test_maxversion_below_the_running_version_is_refused(self):
+        self.assertEqual((False, 'SmartHomeNG max version'), self.gate(sh_maxversion='1.12'))
+        self.assertEqual((True, ''), self.gate(sh_maxversion='2.0.0'))
 
 
 class TestGetGitDataDoesNotChangeCwd(unittest.TestCase):
