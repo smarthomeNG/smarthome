@@ -32,6 +32,7 @@ from typing import Literal, TypedDict
 
 PullTarget = Literal['core', 'plugins', 'all']
 RepoStatus = Literal['ok', 'error', 'skipped']
+RepoState = Literal['current', 'behind', 'ahead', 'diverged', 'blocked', 'no_upstream', 'unknown']
 
 
 class RepoPullResult(TypedDict):
@@ -41,6 +42,16 @@ class RepoPullResult(TypedDict):
     status: RepoStatus
     text: str  # git's output, or the reason for an error or skip
     changed: bool  # True if HEAD moved, i.e. a restart is needed to run the new code
+
+
+class RepoCheck(TypedDict):
+    """How a repository stands against its upstream, as of a fresh fetch."""
+
+    repo: str
+    state: RepoState  # 'unknown' if the upstream could not be fetched
+    behind: int  # upstream commits the checked-out branch does not have
+    ahead: int  # commits the checked-out branch has that the upstream does not
+    text: str  # why the state is 'blocked', 'diverged', 'no_upstream' or 'unknown', otherwise ''
 
 
 def _git(path: Path, *args: str, timeout: float = 60) -> tuple[bool, str]:
@@ -80,6 +91,41 @@ def has_upstream(path: Path) -> bool:
     return ok
 
 
+def check_repo(name: str, path: Path, timeout: float = 60) -> RepoCheck:
+    """
+    Fetches the upstream of the checked-out branch of the repository at path and reports how the
+    branch stands against it. Only remote-tracking refs change, never the working tree.
+
+    'blocked' means the branch is behind, but a local change (tracked or untracked) is in the way
+    of the fast-forward; git's complaint is in the text.
+
+    :param name: label for the result ('core' or 'plugins')
+    :param path: repository directory
+    :param timeout: seconds to wait for each fetch before giving up
+    """
+
+    def result(state: RepoState, behind: int = 0, ahead: int = 0, text: str = '') -> RepoCheck:
+        return {'repo': name, 'state': state, 'behind': behind, 'ahead': ahead, 'text': text}
+
+    if not has_upstream(path):
+        return result('no_upstream', text='the checked-out branch has no upstream')
+    ok, text = _git(path, 'fetch', timeout=timeout)
+    if not ok:
+        return result('unknown', text=text)
+    ok, text = _git(path, 'rev-list', '--left-right', '--count', 'HEAD...@{u}')
+    if not ok:
+        return result('unknown', text=text)
+    ahead, behind = (int(n) for n in text.split())
+
+    if ahead and behind:
+        return result('diverged', behind, ahead, 'the checked-out branch has diverged from its upstream')
+    if behind:
+        # dry-run two-tree merge: fails like the real fast-forward would on local changes in its way
+        ok, text = _git(path, 'read-tree', '-m', '-u', '-n', 'HEAD', '@{u}')
+        return result('behind' if ok else 'blocked', behind, text='' if ok else text)
+    return result('ahead' if ahead else 'current', ahead=ahead)
+
+
 def _head(path: Path) -> str:
     """Returns the commit id HEAD points at, or '' if it cannot be determined."""
     ok, output = _git(path, 'rev-parse', 'HEAD')
@@ -107,27 +153,10 @@ def pull_repo(name: str, path: Path, timeout: float = 60) -> RepoPullResult:
     return _advance(name, path, ('pull', '--ff-only'), timeout)
 
 
-def _preflight(path: Path, timeout: float) -> str:
-    """
-    Returns why the repository at path cannot be fast-forwarded to its upstream, or '' if it can.
-
-    Fetches the upstream, which only updates remote-tracking refs, never the working tree.
-    """
-    if not has_upstream(path):
-        return 'the checked-out branch has no upstream'
-    ok, text = _git(path, 'fetch', timeout=timeout)
-    if not ok:
-        return text
-    behind, _ = _git(path, 'merge-base', '--is-ancestor', 'HEAD', '@{u}')
-    ahead, _ = _git(path, 'merge-base', '--is-ancestor', '@{u}', 'HEAD')
-    if not (behind or ahead):
-        return 'the checked-out branch has diverged from its upstream'
-    if behind and not ahead:
-        # dry-run two-tree merge: fails like the real fast-forward would on local changes in its way
-        ok, text = _git(path, 'read-tree', '-m', '-u', '-n', 'HEAD', '@{u}')
-        if not ok:
-            return text
-    return ''
+def _preflight(name: str, path: Path, timeout: float) -> str:
+    """Returns why the repository at path cannot be fast-forwarded to its upstream, or '' if it can."""
+    check = check_repo(name, path, timeout)
+    return check['text'] if check['state'] in ('no_upstream', 'unknown', 'diverged', 'blocked') else ''
 
 
 def pull_all(repos: list[tuple[str, Path]], timeout: float = 60) -> list[RepoPullResult]:
@@ -141,7 +170,7 @@ def pull_all(repos: list[tuple[str, Path]], timeout: float = 60) -> list[RepoPul
     :param repos: (label, directory) per repository
     :param timeout: seconds to wait for each git call before giving up
     """
-    problems = {name: _preflight(path, timeout) for name, path in repos}
+    problems = {name: _preflight(name, path, timeout) for name, path in repos}
     if any(problems.values()):
         return [
             {

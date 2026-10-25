@@ -3,7 +3,7 @@ Tests for modules/admin/gitpull.py - the git logic behind shngadmin's "pull core
 pull all" buttons (PUT /api/server/pull_*). All tests run real git against throwaway repositories.
 """
 
-from modules.admin.gitpull import has_upstream, pull_all, pull_repo
+from modules.admin.gitpull import check_repo, has_upstream, pull_all, pull_repo
 
 from .git_fixtures import GitTestCase, RepoPair, commit_file, git
 
@@ -30,6 +30,98 @@ class TestHasUpstream(GitTestCase):
 
     def test_missing_directory_has_no_upstream(self):
         self.assertFalse(has_upstream(self.root / 'nope'))
+
+
+class TestCheckRepo(GitTestCase):
+    def test_counts_the_upstream_commits_it_is_behind_without_touching_the_checkout(self):
+        pair = RepoPair(self.root, 'core')
+        pair.push_upstream_commit('f.txt', 'two\n')
+        pair.push_upstream_commit('f.txt', 'three\n')
+        head = git(pair.clone, 'rev-parse', 'HEAD')
+
+        check = check_repo('core', pair.clone)
+
+        self.assertEqual(check, {'repo': 'core', 'state': 'behind', 'behind': 2, 'ahead': 0, 'text': ''})
+        self.assertEqual(git(pair.clone, 'rev-parse', 'HEAD'), head)
+        self.assertEqual((pair.clone / 'f.txt').read_text(), 'one\n')
+
+    def test_repo_in_sync_with_its_upstream_is_current(self):
+        pair = RepoPair(self.root, 'core')
+
+        check = check_repo('core', pair.clone)
+
+        self.assertEqual(check, {'repo': 'core', 'state': 'current', 'behind': 0, 'ahead': 0, 'text': ''})
+
+    def test_repo_with_only_local_commits_is_ahead(self):
+        pair = RepoPair(self.root, 'core')
+        commit_file(pair.clone, 'local.txt', 'local\n')
+
+        check = check_repo('core', pair.clone)
+
+        self.assertEqual((check['state'], check['ahead'], check['behind']), ('ahead', 1, 0))
+
+    def test_repo_with_commits_on_both_sides_is_diverged(self):
+        pair = RepoPair(self.root, 'core')
+        pair.push_upstream_commit('f.txt', 'upstream\n')
+        commit_file(pair.clone, 'f.txt', 'local\n')
+
+        check = check_repo('core', pair.clone)
+
+        self.assertEqual((check['state'], check['ahead'], check['behind']), ('diverged', 1, 1))
+        self.assertTrue(check['text'])
+
+    def test_local_change_in_the_way_of_the_pull_is_blocked(self):
+        pair = RepoPair(self.root, 'core')
+        pair.push_upstream_commit()
+        (pair.clone / 'f.txt').write_text('local edit\n')
+
+        check = check_repo('core', pair.clone)
+
+        self.assertEqual((check['state'], check['behind']), ('blocked', 1))
+        self.assertIn('f.txt', check['text'])
+
+    def test_untracked_file_in_the_way_of_the_pull_is_blocked(self):
+        pair = RepoPair(self.root, 'core')
+        pair.push_upstream_commit('new.txt', 'upstream\n')
+        (pair.clone / 'new.txt').write_text('mine\n')
+
+        check = check_repo('core', pair.clone)
+
+        self.assertEqual(check['state'], 'blocked')
+
+    def test_local_change_in_an_untouched_file_leaves_the_repo_behind(self):
+        pair = RepoPair(self.root, 'core')
+        commit_file(pair.upstream, 'g.txt', 'g\n')
+        git(pair.clone, 'pull', '-q')
+        pair.push_upstream_commit()
+        (pair.clone / 'g.txt').write_text('local edit\n')
+
+        self.assertEqual(check_repo('core', pair.clone)['state'], 'behind')
+
+    def test_branch_without_upstream_has_no_upstream(self):
+        pair = RepoPair(self.root, 'core')
+        git(pair.clone, 'switch', '-q', '-c', 'feature')
+
+        check = check_repo('core', pair.clone)
+
+        self.assertEqual((check['state'], check['behind'], check['ahead']), ('no_upstream', 0, 0))
+
+    def test_unreachable_upstream_is_unknown(self):
+        pair = RepoPair(self.root, 'core')
+        git(pair.clone, 'remote', 'set-url', 'origin', str(self.root / 'gone'))
+
+        check = check_repo('core', pair.clone)
+
+        self.assertEqual(check['state'], 'unknown')
+        self.assertTrue(check['text'])
+
+    def test_timeout_is_unknown(self):
+        pair = RepoPair(self.root, 'core')
+
+        check = check_repo('core', pair.clone, timeout=0)
+
+        self.assertEqual(check['state'], 'unknown')
+        self.assertIn('timed out', check['text'])
 
 
 class TestPullRepo(GitTestCase):

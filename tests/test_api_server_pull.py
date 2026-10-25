@@ -137,3 +137,36 @@ class TestPullAvailability(PullTestCase):
     def test_missing_plugins_checkout_is_not_available(self):
         controller = ServerController(_FakeModule(_FakeSh(self.root / 'elsewhere')))
         self.assertEqual(controller.pull_availability, {'core': False, 'plugins': False})
+
+
+class TestPullStatus(PullTestCase):
+    def get(self, action):
+        return json.loads(self.controller.read(action))
+
+    def test_reports_each_checkout_against_its_upstream(self):
+        self.core.push_upstream_commit()
+
+        response = self.get('pull_status')
+
+        self.assertEqual(response['result'], 'ok')
+        self.assertEqual(
+            [(r['repo'], r['state'], r['behind']) for r in response['repos']],
+            [('core', 'behind', 1), ('plugins', 'current', 0)],
+        )
+
+    def test_changes_nothing_in_the_checkouts(self):
+        self.core.push_upstream_commit()
+        core_head = git(self.core.clone, 'rev-parse', 'HEAD')
+
+        self.get('pull_status')
+
+        self.assertEqual(git(self.core.clone, 'rev-parse', 'HEAD'), core_head)
+
+    def test_is_refused_while_a_pull_is_running(self):
+        self.assertTrue(self.controller._pull_lock.acquire(blocking=False))
+        self.addCleanup(self.controller._pull_lock.release)
+
+        response = self.get('pull_status')
+
+        self.assertEqual(response['result'], 'error')
+        self.assertEqual(response['repos'], [])

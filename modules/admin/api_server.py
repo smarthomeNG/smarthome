@@ -28,7 +28,7 @@ from pathlib import Path
 
 import cherrypy
 
-from .gitpull import PullTarget, has_upstream, pull_all, pull_repo
+from .gitpull import PullTarget, check_repo, has_upstream, pull_all, pull_repo
 from .rest import ApiDoc, RESTResource
 
 import bin.shngversion
@@ -77,6 +77,8 @@ class ServerController(RESTResource):
     """
 
     STOP_DELAY = 1.0  # seconds between sending the stop response and stopping the core
+
+    PULL_STATUS_TIMEOUT = 15.0  # seconds per fetch when checking the checkouts for new commits
 
     PULL_ACTIONS: dict[str, PullTarget] = {'pull_core': 'core', 'pull_plugins': 'plugins', 'pull_all': 'all'}
 
@@ -331,6 +333,29 @@ class ServerController(RESTResource):
         """Per checkout: True if its branch has an upstream, i.e. it can be pulled."""
         return {name: has_upstream(path) for name, path in self.pull_repos.items()}
 
+    # /api/server/pull_status
+    def pull_status(self):
+        """
+        fetch the upstream of the core and plugins checkout and report how each stands against it
+
+        Only remote-tracking refs change, never the working tree. Refused while a pull is running.
+
+        :return: status dict with one gitpull.RepoCheck per checkout in 'repos'
+        """
+        self.logger.info('ServerController.pull_status()')
+
+        if not self._pull_lock.acquire(blocking=False):
+            response = {'result': 'error', 'text': 'A pull is already running', 'repos': []}
+        else:
+            try:
+                repos = [check_repo(name, path, self.PULL_STATUS_TIMEOUT) for name, path in self.pull_repos.items()]
+            finally:
+                self._pull_lock.release()
+            response = {'result': 'ok', 'repos': repos}
+
+        self.logger.info(f"ServerController.pull_status(): response '{response}'")
+        return json.dumps(response)
+
     # /api/server/pull_core, pull_plugins, pull_all
     def pull(self, target: PullTarget):
         """
@@ -419,6 +444,8 @@ class ServerController(RESTResource):
             return self.info()
         elif id == 'pypi':
             return self.pypi()
+        elif id == 'pull_status':
+            return self.pull_status()
 
         return None
 
@@ -450,6 +477,16 @@ class ServerController(RESTResource):
         ),
         ApiDoc(summary='shng core running/stopped status', method='get', path='/server/status/', tags=['server']),
         ApiDoc(summary='PyPI package/version check data', method='get', path='/server/pypi', tags=['server']),
+        ApiDoc(
+            summary=(
+                'Fetch the upstream of the core and plugins checkout and report per checkout how it stands against it '
+                '(state current/behind/ahead/diverged/blocked/no_upstream/unknown, behind, ahead, text). Changes '
+                'remote-tracking refs only, never the working tree.'
+            ),
+            method='get',
+            path='/server/pull_status',
+            tags=['server'],
+        ),
     ]
 
     def update(self, id='', level=None):
