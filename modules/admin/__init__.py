@@ -60,7 +60,7 @@ suburl = 'admin'
 
 
 class Admin(Module):
-    version = '1.9.0'
+    version = '1.10.0'
     longname = 'Admin module for SmartHomeNG'
     _port = 0
 

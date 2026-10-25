@@ -24,8 +24,11 @@ import os
 import logging
 import json
 import threading
+from pathlib import Path
+
 import cherrypy
 
+from .gitpull import PullTarget, has_upstream, pull_all, pull_repo
 from .rest import ApiDoc, RESTResource
 
 import bin.shngversion
@@ -75,6 +78,8 @@ class ServerController(RESTResource):
 
     STOP_DELAY = 1.0  # seconds between sending the stop response and stopping the core
 
+    PULL_ACTIONS: dict[str, PullTarget] = {'pull_core': 'core', 'pull_plugins': 'plugins', 'pull_all': 'all'}
+
     def __init__(self, module):
         self._sh = module._sh
         self.module = module
@@ -85,6 +90,7 @@ class ServerController(RESTResource):
 
         self.etc_dir = self._sh.get_config_dir(DIR_ETC)  # not used?
         self.modules_dir = self._sh.get_config_dir(DIR_ETC)  # not used?
+        self._pull_lock = threading.Lock()
 
     # ======================================================================
     #  /api/server
@@ -129,6 +135,7 @@ class ServerController(RESTResource):
         """
         client_ip = cherrypy.request.wsgi_environ.get('REMOTE_ADDR')
 
+        pull_availability = self.pull_availability
         response = {}
         response['default_language'] = self._sh.get_defaultlanguage()
         def_lang = response['default_language'].lower()
@@ -161,6 +168,8 @@ class ServerController(RESTResource):
         response['resource_graph_period'] = self.module.resource_graph_period
         response['restart_stops_only'] = self._sh._mode in ('foreground', 'debug', 'interactive')
         response['system_power_available'] = self.system_power_available
+        response['core_pull_available'] = pull_availability['core']
+        response['plugins_pull_available'] = pull_availability['plugins']
         response['help_local_available'] = os.path.isfile(
             os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html', 'index.html')
         )
@@ -311,6 +320,47 @@ class ServerController(RESTResource):
         self.logger.info(f"ServerController.system_power(): response '{response}'")
         return json.dumps(response)
 
+    @property
+    def pull_repos(self) -> dict[str, Path]:
+        """The checkouts the pull actions operate on, in pull order."""
+        base = Path(self.base_dir)
+        return {'core': base, 'plugins': base / 'plugins'}
+
+    @property
+    def pull_availability(self) -> dict[str, bool]:
+        """Per checkout: True if its branch has an upstream, i.e. it can be pulled."""
+        return {name: has_upstream(path) for name, path in self.pull_repos.items()}
+
+    # /api/server/pull_core, pull_plugins, pull_all
+    def pull(self, target: PullTarget):
+        """
+        fast-forward the core and/or plugins checkout to its upstream
+
+        Only files on disk change; the running core keeps its loaded code until it is restarted.
+        A second pull is refused while one is running.
+
+        :param target: 'core', 'plugins' or 'all' (all or none, see gitpull.pull_all)
+        :return: status dict with the per-repository results in 'repos'
+        """
+        self.logger.info(f'ServerController.pull({target})')
+
+        if not self._pull_lock.acquire(blocking=False):
+            response = {'result': 'error', 'text': 'A pull is already running', 'repos': []}
+        else:
+            try:
+                repos = self.pull_repos
+                if target == 'all':
+                    results = pull_all(list(repos.items()))
+                else:
+                    results = [pull_repo(target, repos[target])]
+            finally:
+                self._pull_lock.release()
+            failed = any(r['status'] == 'error' for r in results)
+            response = {'result': 'error' if failed else 'ok', 'repos': results}
+
+        self.logger.info(f"ServerController.pull(): response '{response}'")
+        return json.dumps(response)
+
     # /api/server/stop
     def stop(self):
         """
@@ -392,7 +442,7 @@ class ServerController(RESTResource):
         ApiDoc(
             summary=(
                 'Extended server info: timezone, core/plugins git branch, developer_mode, '
-                'dark_mode default, resource_graph_period, restart_stops_only, system_power_available, and more.'
+                'dark_mode default, resource_graph_period, restart_stops_only, system_power_available, core_pull_available, plugins_pull_available, and more.'
             ),
             method='get',
             path='/server/info',
@@ -412,6 +462,8 @@ class ServerController(RESTResource):
             return self.restart()
         if id == 'stop':
             return self.stop()
+        if id in self.PULL_ACTIONS:
+            return self.pull(self.PULL_ACTIONS[id])
         if id in ('poweroff', 'reboot'):
             return self.system_power(id)
 
@@ -422,6 +474,31 @@ class ServerController(RESTResource):
     update.api_doc = [
         ApiDoc(summary='Restart shng core', method='put', path='/server/restart/', tags=['server']),
         ApiDoc(summary='Stop shng core without restarting it', method='put', path='/server/stop/', tags=['server']),
+        ApiDoc(
+            summary=(
+                'Fast-forward the core checkout to its upstream (git pull --ff-only). Only files on disk change, '
+                'the running core needs a restart to use them. Response: result and per-repository results '
+                '(repo, status, text, changed).'
+            ),
+            method='put',
+            path='/server/pull_core/',
+            tags=['server'],
+        ),
+        ApiDoc(
+            summary='Same as pull_core, for the plugins checkout',
+            method='put',
+            path='/server/pull_plugins/',
+            tags=['server'],
+        ),
+        ApiDoc(
+            summary=(
+                'Fast-forward core and plugins checkouts, or neither: nothing is pulled unless both have an '
+                'upstream, can be fast-forwarded and have no local changes in the way. Same response as pull_core.'
+            ),
+            method='put',
+            path='/server/pull_all/',
+            tags=['server'],
+        ),
         ApiDoc(
             summary='Power off the host (requires allow_system_power in smarthome.yaml)',
             method='put',

@@ -1,0 +1,221 @@
+"""
+Tests for modules/admin/gitpull.py - the git logic behind shngadmin's "pull core / pull plugins /
+pull all" buttons (PUT /api/server/pull_*). All tests run real git against throwaway repositories.
+"""
+
+from modules.admin.gitpull import has_upstream, pull_all, pull_repo
+
+from .git_fixtures import GitTestCase, RepoPair, commit_file, git
+
+
+class TestHasUpstream(GitTestCase):
+    def test_clone_tracking_a_remote_branch_has_upstream(self):
+        pair = RepoPair(self.root, 'core')
+        self.assertTrue(has_upstream(pair.clone))
+
+    def test_repo_without_remote_has_no_upstream(self):
+        pair = RepoPair(self.root, 'core')
+        git(pair.clone, 'remote', 'remove', 'origin')
+        self.assertFalse(has_upstream(pair.clone))
+
+    def test_local_branch_without_tracking_has_no_upstream(self):
+        pair = RepoPair(self.root, 'core')
+        git(pair.clone, 'switch', '-q', '-c', 'feature')
+        self.assertFalse(has_upstream(pair.clone))
+
+    def test_detached_head_has_no_upstream(self):
+        pair = RepoPair(self.root, 'core')
+        git(pair.clone, 'checkout', '-q', '--detach')
+        self.assertFalse(has_upstream(pair.clone))
+
+    def test_missing_directory_has_no_upstream(self):
+        self.assertFalse(has_upstream(self.root / 'nope'))
+
+
+class TestPullRepo(GitTestCase):
+    def test_fast_forwards_to_the_upstream_commit(self):
+        pair = RepoPair(self.root, 'core')
+        pair.push_upstream_commit()
+
+        result = pull_repo('core', pair.clone)
+
+        self.assertEqual(result['repo'], 'core')
+        self.assertEqual(result['status'], 'ok')
+        self.assertTrue(result['changed'])
+        self.assertEqual((pair.clone / 'f.txt').read_text(), 'two\n')
+
+    def test_up_to_date_repo_is_ok_but_unchanged(self):
+        pair = RepoPair(self.root, 'core')
+
+        result = pull_repo('core', pair.clone)
+
+        self.assertEqual(result['status'], 'ok')
+        self.assertFalse(result['changed'])
+
+    def test_repo_without_upstream_is_an_error(self):
+        pair = RepoPair(self.root, 'core')
+        git(pair.clone, 'switch', '-q', '-c', 'feature')
+
+        result = pull_repo('core', pair.clone)
+
+        self.assertEqual(result['status'], 'error')
+        self.assertFalse(result['changed'])
+        self.assertTrue(result['text'])
+
+    def test_diverged_branch_is_an_error_and_stays_as_it_was(self):
+        pair = RepoPair(self.root, 'core')
+        pair.push_upstream_commit('f.txt', 'upstream\n')
+        commit_file(pair.clone, 'f.txt', 'local\n')
+        head = git(pair.clone, 'rev-parse', 'HEAD')
+
+        result = pull_repo('core', pair.clone)
+
+        self.assertEqual(result['status'], 'error')
+        self.assertFalse(result['changed'])
+        self.assertEqual(git(pair.clone, 'rev-parse', 'HEAD'), head)
+        self.assertEqual((pair.clone / 'f.txt').read_text(), 'local\n')
+
+    def test_local_change_that_the_pull_would_overwrite_is_kept(self):
+        pair = RepoPair(self.root, 'core')
+        pair.push_upstream_commit()
+        (pair.clone / 'f.txt').write_text('local edit\n')
+
+        result = pull_repo('core', pair.clone)
+
+        self.assertEqual(result['status'], 'error')
+        self.assertFalse(result['changed'])
+        self.assertEqual((pair.clone / 'f.txt').read_text(), 'local edit\n')
+
+    def test_local_change_in_an_untouched_file_does_not_block_the_pull(self):
+        pair = RepoPair(self.root, 'core')
+        commit_file(pair.upstream, 'g.txt', 'g\n')
+        git(pair.clone, 'pull', '-q')
+        pair.push_upstream_commit()
+        (pair.clone / 'g.txt').write_text('local edit\n')
+
+        result = pull_repo('core', pair.clone)
+
+        self.assertEqual(result['status'], 'ok')
+        self.assertTrue(result['changed'])
+        self.assertEqual((pair.clone / 'g.txt').read_text(), 'local edit\n')
+
+    def test_timeout_is_an_error(self):
+        pair = RepoPair(self.root, 'core')
+        pair.push_upstream_commit()
+
+        result = pull_repo('core', pair.clone, timeout=0)
+
+        self.assertEqual(result['status'], 'error')
+        self.assertIn('timed out', result['text'])
+
+
+class TestPullAll(GitTestCase):
+    def setUp(self):
+        super().setUp()
+        self.core = RepoPair(self.root, 'core')
+        self.plugins = RepoPair(self.root, 'plugins')
+        self.repos = [('core', self.core.clone), ('plugins', self.plugins.clone)]
+
+    def test_pulls_core_then_plugins(self):
+        self.core.push_upstream_commit()
+        self.plugins.push_upstream_commit()
+
+        results = pull_all(self.repos)
+
+        self.assertEqual([r['repo'] for r in results], ['core', 'plugins'])
+        self.assertEqual([r['status'] for r in results], ['ok', 'ok'])
+        self.assertEqual([r['changed'] for r in results], [True, True])
+        self.assertEqual((self.core.clone / 'f.txt').read_text(), 'two\n')
+        self.assertEqual((self.plugins.clone / 'f.txt').read_text(), 'two\n')
+
+    def test_repo_without_upstream_blocks_the_whole_pull(self):
+        self.core.push_upstream_commit()
+        self.plugins.push_upstream_commit()
+        git(self.plugins.clone, 'switch', '-q', '-c', 'feature')
+        core_head = git(self.core.clone, 'rev-parse', 'HEAD')
+
+        results = pull_all(self.repos)
+
+        self.assertEqual({r['repo']: r['status'] for r in results}, {'core': 'skipped', 'plugins': 'error'})
+        self.assertFalse(any(r['changed'] for r in results))
+        self.assertEqual(git(self.core.clone, 'rev-parse', 'HEAD'), core_head)
+
+    def test_diverged_repo_blocks_the_whole_pull(self):
+        self.core.push_upstream_commit()
+        self.plugins.push_upstream_commit('f.txt', 'upstream\n')
+        commit_file(self.plugins.clone, 'f.txt', 'local\n')
+        core_head = git(self.core.clone, 'rev-parse', 'HEAD')
+
+        results = pull_all(self.repos)
+
+        self.assertEqual({r['repo']: r['status'] for r in results}, {'core': 'skipped', 'plugins': 'error'})
+        self.assertEqual(git(self.core.clone, 'rev-parse', 'HEAD'), core_head)
+
+    def test_repo_that_is_only_ahead_of_its_upstream_does_not_block_the_pull(self):
+        self.core.push_upstream_commit()
+        commit_file(self.plugins.clone, 'local.txt', 'local\n')
+        plugins_head = git(self.plugins.clone, 'rev-parse', 'HEAD')
+
+        results = pull_all(self.repos)
+
+        self.assertEqual({r['repo']: r['status'] for r in results}, {'core': 'ok', 'plugins': 'ok'})
+        self.assertEqual({r['repo']: r['changed'] for r in results}, {'core': True, 'plugins': False})
+        self.assertEqual(git(self.plugins.clone, 'rev-parse', 'HEAD'), plugins_head)
+
+    def test_local_change_that_the_pull_would_overwrite_blocks_the_whole_pull(self):
+        self.core.push_upstream_commit()
+        self.plugins.push_upstream_commit()
+        (self.plugins.clone / 'f.txt').write_text('local edit\n')
+        core_head = git(self.core.clone, 'rev-parse', 'HEAD')
+
+        results = pull_all(self.repos)
+
+        self.assertEqual({r['repo']: r['status'] for r in results}, {'core': 'skipped', 'plugins': 'error'})
+        self.assertEqual(git(self.core.clone, 'rev-parse', 'HEAD'), core_head)
+        self.assertEqual((self.plugins.clone / 'f.txt').read_text(), 'local edit\n')
+
+    def test_untracked_file_that_the_pull_would_overwrite_blocks_the_whole_pull(self):
+        self.core.push_upstream_commit()
+        self.plugins.push_upstream_commit('new.txt', 'upstream\n')
+        (self.plugins.clone / 'new.txt').write_text('mine\n')
+        core_head = git(self.core.clone, 'rev-parse', 'HEAD')
+
+        results = pull_all(self.repos)
+
+        self.assertEqual({r['repo']: r['status'] for r in results}, {'core': 'skipped', 'plugins': 'error'})
+        self.assertEqual(git(self.core.clone, 'rev-parse', 'HEAD'), core_head)
+        self.assertEqual((self.plugins.clone / 'new.txt').read_text(), 'mine\n')
+
+    def test_local_change_in_an_untouched_file_does_not_block_the_pull(self):
+        commit_file(self.plugins.upstream, 'g.txt', 'g\n')
+        git(self.plugins.clone, 'pull', '-q')
+        self.core.push_upstream_commit()
+        self.plugins.push_upstream_commit()
+        (self.plugins.clone / 'g.txt').write_text('local edit\n')
+
+        results = pull_all(self.repos)
+
+        self.assertEqual([r['status'] for r in results], ['ok', 'ok'])
+        self.assertEqual((self.plugins.clone / 'g.txt').read_text(), 'local edit\n')
+
+    def test_failing_fetch_blocks_the_whole_pull(self):
+        self.core.push_upstream_commit()
+        self.plugins.push_upstream_commit()
+        git(self.plugins.clone, 'remote', 'set-url', 'origin', str(self.root / 'gone'))
+        core_head = git(self.core.clone, 'rev-parse', 'HEAD')
+
+        results = pull_all(self.repos)
+
+        self.assertEqual({r['repo']: r['status'] for r in results}, {'core': 'skipped', 'plugins': 'error'})
+        self.assertEqual(git(self.core.clone, 'rev-parse', 'HEAD'), core_head)
+
+    def test_timeout_blocks_the_whole_pull(self):
+        self.core.push_upstream_commit()
+        self.plugins.push_upstream_commit()
+        core_head = git(self.core.clone, 'rev-parse', 'HEAD')
+
+        results = pull_all(self.repos, timeout=0)
+
+        self.assertTrue(all(r['status'] != 'ok' for r in results))
+        self.assertTrue(any('timed out' in r['text'] for r in results))
+        self.assertEqual(git(self.core.clone, 'rev-parse', 'HEAD'), core_head)
