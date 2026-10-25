@@ -11,7 +11,7 @@ listed under a different name than the code uses, is invisible to the API checks
 import os
 import unittest
 
-import yaml
+from ruamel import yaml
 
 import tests.common as common  # noqa: F401  (puts the shng base dir on sys.path)
 import lib.constants as constants

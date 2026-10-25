@@ -18,7 +18,7 @@ from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
 
-import yaml
+from ruamel import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))

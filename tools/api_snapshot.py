@@ -24,7 +24,7 @@ from pathlib import Path
 from collections.abc import Callable
 from typing import NamedTuple, TypeAlias, TypedDict
 
-import yaml
+from ruamel import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
