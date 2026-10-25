@@ -34,7 +34,7 @@ import asyncio
 import concurrent.futures
 import functools
 import time
-from typing import TYPE_CHECKING, Callable, Collection, Coroutine, Any, Iterable
+from typing import TYPE_CHECKING, Callable, Collection, Coroutine, Any, Iterable, Mapping, MutableMapping
 
 if TYPE_CHECKING:
     from lib.item.item import Item
@@ -993,18 +993,18 @@ class SmartPlugin(SmartObject, Utils):
         else:
             return f'{attr}@{self.__instance}'
 
-    def __get_iattr_conf(self, conf: str, attr: str) -> Any:
+    def __get_iattr_conf(self, conf: Mapping[str, Any], attr: str) -> str | None:
         """
         returns item attribute name including instance if required and found
         in item configuration
 
         :param conf: item configuration
         :param attr: attribute name
-        :type conf: str
+        :type conf: Mapping[str, Any]
         :type attr: str
 
         :return: name of item attribute (including instance) or None (if not found)
-        :rtype: str
+        :rtype: str | None
         """
         __attr = self.__get_iattr(attr)
         if __attr in conf:
@@ -1013,7 +1013,7 @@ class SmartPlugin(SmartObject, Utils):
             return f'{attr}@*'
         return None
 
-    def has_iattr(self, conf: str, attr: str) -> bool:
+    def has_iattr(self, conf: Mapping[str, Any], attr: str) -> bool:
         """
         checks item configuration for an attribute
 
@@ -1025,7 +1025,7 @@ class SmartPlugin(SmartObject, Utils):
         __attr = self.__get_iattr_conf(conf, attr)
         return __attr is not None
 
-    def get_iattr_value(self, conf: str, attr: str, default=None) -> str:
+    def get_iattr_value(self, conf: Mapping[str, Any], attr: str, default: Any = None) -> Any:
         """
         Returns value for an attribute from item config
 
@@ -1040,16 +1040,21 @@ class SmartPlugin(SmartObject, Utils):
         __attr = self.__get_iattr_conf(conf, attr)
         return default if __attr is None else conf[__attr]
 
-    def set_attr_value(self, conf: str, attr: str, value: str) -> None:
+    def set_attr_value(self, conf: MutableMapping[str, Any], attr: str, value: Any) -> None:
         """
         Set value for an attribute in item configuration
 
+        Does nothing if the attribute is not in the configuration. The value is stored under
+        this instance's own attribute name (``attr@<instance>``, or ``attr`` without an
+        instance), also if the attribute was found as ``attr@*``; the ``attr@*`` entry is left
+        unchanged, so other instances still read the original value.
+
         :param conf: item configuration
         :param attr: attribute name
-        :param value: value to set the atteibute to
-        :type conf: str
+        :param value: value to set the attribute to
+        :type conf: MutableMapping[str, Any]
         :type attr: str
-        :type value: str
+        :type value: Any
         """
         __attr = self.__get_iattr_conf(conf, attr)
         if __attr is not None:
