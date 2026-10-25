@@ -39,6 +39,24 @@ def register_shng_log_levels():
             setattr(logging.getLoggerClass(), name.lower(), _make_method(level))
 
 
+def logs_instance_fixtures():
+    """Return ``(setUpModule, tearDownModule)`` that restore lib.log's global ``logs_instance`` after a test module.
+
+    For modules that replace it with a ``Logs`` built on a mock; later tests would otherwise log through that mock.
+    """
+    import lib.log
+
+    saved = []
+
+    def set_up_module():
+        saved.append(lib.log.logs_instance)
+
+    def tear_down_module():
+        lib.log.logs_instance = saved.pop()
+
+    return set_up_module, tear_down_module
+
+
 @contextlib.contextmanager
 def force_os_tz(tz_name):
     """Force the process's OS-level timezone to tz_name for the duration of the block.

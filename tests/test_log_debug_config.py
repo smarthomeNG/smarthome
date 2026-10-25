@@ -36,6 +36,9 @@ from lib.log import Logs
 SHNG_LOGGER_FAMILIES = ['functions', 'lib', 'lib.smarthome', 'modules', 'plugins', 'logics', 'items']
 
 
+setUpModule, tearDownModule = common.logs_instance_fixtures()
+
+
 class _LoggingStateGuard(unittest.TestCase):
     """Restores global logging state touched by dictConfig after each test."""
 

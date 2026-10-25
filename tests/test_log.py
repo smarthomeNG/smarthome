@@ -43,6 +43,9 @@ import lib.log as _log_module
 from lib.log import Logs, Log, EnglishLocale
 
 
+setUpModule, tearDownModule = common.logs_instance_fixtures()
+
+
 # ---------------------------------------------------------------------------
 # Helper: create a minimal Logs instance without configure_logging
 # ---------------------------------------------------------------------------

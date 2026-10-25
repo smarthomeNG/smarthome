@@ -7,6 +7,7 @@ Tasks run through the real ``Scheduler._task()`` on real threads; a ``threading.
 keeps a task "hanging" until the test (or tearDown) releases it.
 """
 
+import math
 import os
 import sys
 import tempfile
@@ -30,6 +31,14 @@ HANGING_LOGIC_CODE = 'logic.entered.set()\nlogic.release.wait(5)\n'
 BUSY_LOGIC_CODE = 'logic.entered.set()\nwhile not logic.release.is_set():\n    pass\n'
 
 POLLING_LOGIC_CODE = 'logic.entered.set()\nwhile not logic.release.is_set():\n    logic.release.wait(0.05)\n'
+
+
+def _elapsed(task, seconds):
+    """``now`` value at which ``task`` has run at least ``seconds`` (float addition can land just below)."""
+    now = task.started + seconds
+    while now - task.started < seconds:
+        now = math.nextafter(now, math.inf)
+    return now
 
 
 class _HangingTask:
@@ -182,13 +191,13 @@ class TestRuntimeWarnings(_TaskTestCase):
         with self.assertNoLogs('logics.slow', 'WARNING'):
             self.sched._check_task_runtimes(now=running.started + 4.9)
         with self.assertLogs('logics.slow', 'WARNING') as logs:
-            self.sched._check_task_runtimes(now=running.started + 5)
+            self.sched._check_task_runtimes(now=_elapsed(running, 5))
         self.assertIn('running for 5 s', logs.output[0])
         self.assertIn('logic.release.wait(5)', logs.output[0])
         with self.assertNoLogs('logics.slow', 'WARNING'):
             self.sched._check_task_runtimes(now=running.started + 9.9)
         with self.assertLogs('logics.slow', 'WARNING') as logs:
-            self.sched._check_task_runtimes(now=running.started + 10)
+            self.sched._check_task_runtimes(now=_elapsed(running, 10))
         self.assertIn('running for 10 s', logs.output[0])
 
     def test_skipped_thresholds_produce_one_warning_and_next_one_after_highest(self):
@@ -201,13 +210,13 @@ class TestRuntimeWarnings(_TaskTestCase):
         with self.assertNoLogs('logics.slow', 'WARNING'):
             self.sched._check_task_runtimes(now=running.started + 39.9)
         with self.assertLogs('logics.slow', 'WARNING'):
-            self.sched._check_task_runtimes(now=running.started + 40)
+            self.sched._check_task_runtimes(now=_elapsed(running, 40))
 
     def test_warned_logic_logs_notice_when_it_finishes(self):
         logic, t = self._run_hanging_logic('slow', runtime_warn=5)
         [running] = self.sched.get_running_tasks()
         with self.assertLogs('logics.slow', 'WARNING'):
-            self.sched._check_task_runtimes(now=running.started + 5)
+            self.sched._check_task_runtimes(now=_elapsed(running, 5))
 
         with self.assertLogs('logics.slow', 'INFO') as logs:
             logic.release.set()
@@ -228,7 +237,7 @@ class TestRuntimeWarnings(_TaskTestCase):
         [running] = self.sched.get_running_tasks()
 
         with self.assertLogs('lib.scheduler', 'WARNING') as logs:
-            self.sched._check_task_runtimes(now=running.started + 5)
+            self.sched._check_task_runtimes(now=_elapsed(running, 5))
         self.assertIn('plugins.foo.poll', logs.output[0])
 
 
@@ -293,7 +302,7 @@ class TestCancelTask(_TaskTestCase):
         self.assertIsNone(still_running.cancel_requested_at)
 
         with self.assertLogs('logics.busy', 'WARNING') as logs:
-            self.sched._check_task_runtimes(now=running.started + 8)
+            self.sched._check_task_runtimes(now=_elapsed(running, 8))
             t.join(JOIN_TIMEOUT)
         self.assertFalse(t.is_alive())
         self.assertIn('cancelled after', logs.output[-1])
