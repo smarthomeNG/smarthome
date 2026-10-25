@@ -140,6 +140,18 @@ class TestSend(SerialAsyncTestCase):
         self.assertEqual(['MUOFF'], self.received)
 
 
+class TestClose(SerialAsyncTestCase):
+    def test_close_does_not_wait_for_read_timeout(self):
+        self.conn.open()
+        time.sleep(0.2)
+
+        start = time.time()
+        self.conn.close()
+
+        self.assertLess(time.time() - start, TIMEOUT / 2)
+        self.assertFalse(self.conn.connected())
+
+
 class TestDeviceLoss(SerialAsyncTestCase):
     def test_lost_device_disconnects(self):
         self.conn.open()

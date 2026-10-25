@@ -924,8 +924,8 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
     As this is derived from ``SDPConnectionSerial``, most of the documentation
     is identical.
 
-    Received data is passed on as soon as it arrives; the timeout only bounds
-    how long closing the connection waits for the listener thread.
+    Received data is passed on as soon as it arrives; closing the connection
+    cancels the listener's pending read instead of waiting for the timeout.
 
     ``send()`` never returns the reply, the reply is dispatched by the listener.
     A listener stopped by an error closes the connection.
@@ -968,10 +968,20 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         if self.__receive_thread is not None:
             self.logger.debug(f'stopping receive thread {self.__receive_thread.name}')
         self._listener_active = False
-        if self.__receive_thread is not None and self.__receive_thread is not current_thread():
-            self.__receive_thread.join()
+        receiver = self.__receive_thread
+        if receiver is not None and receiver is not current_thread():
+            while receiver.is_alive():
+                self._cancel_read()
+                receiver.join(0.05)
         self.__receive_thread = None
         super()._close()
+
+    def _cancel_read(self):
+        """Make a read blocked in the listener thread return immediately."""
+        try:
+            self._connection.cancel_read()
+        except Exception as e:
+            self.logger.debug(f'cancelling read on {self._config.serialport} raised error {e}')
 
     def __receive_thread_worker(self):
         """thread worker to handle receiving"""
