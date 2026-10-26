@@ -290,7 +290,7 @@ class Plugins:
         for thread in self._threads + self.threads_early + self.threads_late:
             plugin = thread.plugin
             section = conf.get(thread.name)
-            if not isinstance(plugin, SmartPlugin) or section is None or plugin.get_instance_name():
+            if section is None or plugin.get_instance_name():
                 continue
             name = self._section_plugin_name(section)
             new = self._plugins_count.get(name, 0)

@@ -56,7 +56,7 @@ class DatabaseController(RESTResource):
         if self.plugins is None:
             return None
         for x in self.plugins.return_plugins():
-            if isinstance(x, SmartPlugin) and x.get_shortname() == 'database':
+            if x.get_shortname() == 'database':
                 return x
         return None
 

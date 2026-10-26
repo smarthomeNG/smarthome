@@ -365,36 +365,35 @@ class PluginsInfoController(RESTResource):
                 for plugin in self.plugins.return_plugins():
                     if not self._update_bloglinks_active:
                         break
-                    if isinstance(plugin, SmartPlugin):
-                        plugin_name = plugin.get_shortname()
-                        if temp_blog_urls.get(plugin_name, None) is None:
-                            # Link to Blog:
-                            #   add link to blog, if articles exist, that have the pluginname as a tag
-                            #   example: Blog articles with tag 'backend'
-                            #   - https://www.smarthomeng.de/tag/backend
-                            #   alternative example: Blog articles with category 'plugins' and tag 'backend'
-                            #   - https://www.smarthomeng.de/category/plugins?tag=backend
-                            temp_blog_urls[plugin_name] = 'https://www.smarthomeng.de/tag/' + plugin_name
-                            r = requests.get(temp_blog_urls[plugin_name])
-                            if r.status_code == 404:
-                                temp_blog_urls[plugin_name] = ''
-                            elif r.status_code != 200:
-                                if r.status_code in [500, 503]:
-                                    self.logger.info(
-                                        'www.smarthomeng.de sent status_code {} for get-request to {}'.format(
-                                            r.status_code, temp_blog_urls[plugin_name]
-                                        )
+                    plugin_name = plugin.get_shortname()
+                    if temp_blog_urls.get(plugin_name, None) is None:
+                        # Link to Blog:
+                        #   add link to blog, if articles exist, that have the pluginname as a tag
+                        #   example: Blog articles with tag 'backend'
+                        #   - https://www.smarthomeng.de/tag/backend
+                        #   alternative example: Blog articles with category 'plugins' and tag 'backend'
+                        #   - https://www.smarthomeng.de/category/plugins?tag=backend
+                        temp_blog_urls[plugin_name] = 'https://www.smarthomeng.de/tag/' + plugin_name
+                        r = requests.get(temp_blog_urls[plugin_name])
+                        if r.status_code == 404:
+                            temp_blog_urls[plugin_name] = ''
+                        elif r.status_code != 200:
+                            if r.status_code in [500, 503]:
+                                self.logger.info(
+                                    'www.smarthomeng.de sent status_code {} for get-request to {}'.format(
+                                        r.status_code, temp_blog_urls[plugin_name]
                                     )
-                                else:
-                                    self.logger.notice(
-                                        'www.smarthomeng.de sent status_code {} for get-request to {}'.format(
-                                            r.status_code, temp_blog_urls[plugin_name]
-                                        )
+                                )
+                            else:
+                                self.logger.notice(
+                                    'www.smarthomeng.de sent status_code {} for get-request to {}'.format(
+                                        r.status_code, temp_blog_urls[plugin_name]
                                     )
-                                temp_blog_urls[plugin_name] = ''
-                        else:
-                            pass
-                        time.sleep(1)
+                                )
+                            temp_blog_urls[plugin_name] = ''
+                    else:
+                        pass
+                    time.sleep(1)
             except OSError as e:
                 if str(e).find('[Errno 101]') > -1:  # [Errno 101] Das Netzwerk ist nicht erreichbar
                     pass
@@ -449,69 +448,53 @@ class PluginsInfoController(RESTResource):
                 plugin['triggers'].append(it._path)
             # self.logger.warning("{} items={}, itemlist={}".format(x.get_shortname(), len(plugin['triggers']), plugin['triggers']))
 
-            if isinstance(x, SmartPlugin):
-                plugin['pluginname'] = x.get_shortname()
-                plugin['configname'] = x.get_configname()
-                plugin['version'] = x.get_version()
-                plugin['smartplugin'] = True
-                plugin['multiinstance'] = x.is_multi_instance_capable()
-                plugin['instancename'] = x.get_instance_name()
+            plugin['pluginname'] = x.get_shortname()
+            plugin['configname'] = x.get_configname()
+            plugin['version'] = x.get_version()
+            plugin['multiinstance'] = x.is_multi_instance_capable()
+            plugin['instancename'] = x.get_instance_name()
 
-                plugin['webif_url'] = ''
-                if self.module.mod_http.get_webifs_for_plugin(x.get_shortname()) != []:
-                    for webif in self.module.mod_http.get_webifs_for_plugin(x.get_shortname()):
-                        if webif['Instance'] == plugin['instancename']:
-                            # plugin['webif_url'] = self.shng_url_root + webif['Mount']  # don't specify full path (for docker installations reletive path is needed)
-                            plugin['webif_url'] = webif['Mount']
+            plugin['webif_url'] = ''
+            if self.module.mod_http.get_webifs_for_plugin(x.get_shortname()) != []:
+                for webif in self.module.mod_http.get_webifs_for_plugin(x.get_shortname()):
+                    if webif['Instance'] == plugin['instancename']:
+                        # plugin['webif_url'] = self.shng_url_root + webif['Mount']  # don't specify full path (for docker installations reletive path is needed)
+                        plugin['webif_url'] = webif['Mount']
 
-                plugin['blog_url'] = self.blog_urls.get(plugin['pluginname'], '')
+            plugin['blog_url'] = self.blog_urls.get(plugin['pluginname'], '')
 
-                plugin['parameters'] = []
-                if bool(x._parameters):
-                    #                    for p in x._parameters:
-                    for p in x._metadata.get_parameterlist():
-                        p_dict = {}
-                        p_dict['name'] = str(p)
-                        p_dict['type'] = x._metadata.get_parameter_type_with_subtype(p)
-                        p_dict['value'] = str(x._parameters[p])
-                        p_dict['default'] = x._metadata.get_parameter_defaultvalue(p)
-                        plugin['parameters'].append(p_dict)
+            plugin['parameters'] = []
+            if bool(x._parameters):
+                #                    for p in x._parameters:
+                for p in x._metadata.get_parameterlist():
+                    p_dict = {}
+                    p_dict['name'] = str(p)
+                    p_dict['type'] = x._metadata.get_parameter_type_with_subtype(p)
+                    p_dict['value'] = str(x._parameters[p])
+                    p_dict['default'] = x._metadata.get_parameter_defaultvalue(p)
+                    plugin['parameters'].append(p_dict)
 
-                plugin['attributes'] = []
-                for a in x._metadata.get_itemdefinitionlist():
-                    a_dict = {}
-                    a_dict['name'] = str(a)
-                    a_dict['type'] = x._metadata.get_itemdefinition_type_with_subtype(a)
-                    valid_list = x._metadata.get_itemdefinition(a, 'valid_list')
-                    if valid_list is not None:
-                        a_dict['valid_list'] = valid_list
-                    valid_min = x._metadata.get_itemdefinition(a, 'valid_min')
-                    if valid_min is not None:
-                        a_dict['valid_min'] = valid_min
-                    valid_max = x._metadata.get_itemdefinition(a, 'valid_max')
-                    if valid_max is not None:
-                        a_dict['valid_max'] = valid_max
-                    description = x._metadata.get_itemdefinition(a, 'description')
-                    if description is not None:
-                        a_dict['description'] = description
-                    plugin['attributes'].append(a_dict)
+            plugin['attributes'] = []
+            for a in x._metadata.get_itemdefinitionlist():
+                a_dict = {}
+                a_dict['name'] = str(a)
+                a_dict['type'] = x._metadata.get_itemdefinition_type_with_subtype(a)
+                valid_list = x._metadata.get_itemdefinition(a, 'valid_list')
+                if valid_list is not None:
+                    a_dict['valid_list'] = valid_list
+                valid_min = x._metadata.get_itemdefinition(a, 'valid_min')
+                if valid_min is not None:
+                    a_dict['valid_min'] = valid_min
+                valid_max = x._metadata.get_itemdefinition(a, 'valid_max')
+                if valid_max is not None:
+                    a_dict['valid_max'] = valid_max
+                description = x._metadata.get_itemdefinition(a, 'description')
+                if description is not None:
+                    a_dict['description'] = description
+                plugin['attributes'].append(a_dict)
 
-                plugin['metadata']['classpath'] = x._classpath  # str
-                plugin['metadata']['classname'] = x.get_classname()
-            else:
-                plugin['pluginname'] = x._shortname
-                plugin['configname'] = x._configname
-                plugin['version'] = ''
-                plugin['smartplugin'] = False
-                plugin['multiinstance'] = False
-                plugin['instancename'] = ''
-                plugin['webif_url'] = ''
-                plugin['parameters'] = []
-                plugin['attributes'] = []
-
-                plugin['metadata']['classpath'] = str(x._classpath)  # str
-                plugin['metadata']['classname'] = str(x._classname)  # str
-                plugin['stopped'] = False
+            plugin['metadata']['classpath'] = x._classpath  # str
+            plugin['metadata']['classname'] = x.get_classname()
 
             plugin['metadata']['type'] = x._metadata.get_string('type')
             plugin['metadata']['state'] = x._metadata.get_string('state')
@@ -533,7 +516,7 @@ class PluginsInfoController(RESTResource):
             # construct urls to config page and user_doc page
             plugin['documentation_config_doc'] = ''
             plugin['documentation_user_doc'] = ''
-            if plugin['smartplugin'] and not (plugin['pluginname'].startswith('priv_')):
+            if not plugin['pluginname'].startswith('priv_'):
                 plugin['documentation_config_doc'] = (
                     documentation_base_url + f'plugins_doc/config/{plugin["pluginname"]}.html'
                 )
@@ -595,13 +578,12 @@ class PluginsAPIController(RESTResource):
             self.plugins = Plugins.get_instance()
         self.plugin_list = []
         for x in self.plugins.return_plugins():
-            if isinstance(x, SmartPlugin):
-                plugin_config_name = x.get_configname()
-                if x.metadata is not None:
-                    api = x.metadata.get_plugin_function_defstrings(with_type=True, with_default=True)
-                    if api is not None:
-                        for function in api:
-                            self.plugin_list.append(plugin_config_name + '.' + function)
+            plugin_config_name = x.get_configname()
+            if x.metadata is not None:
+                api = x.metadata.get_plugin_function_defstrings(with_type=True, with_default=True)
+                if api is not None:
+                    for function in api:
+                        self.plugin_list.append(plugin_config_name + '.' + function)
 
         return json.dumps(self.plugin_list)
 
