@@ -56,18 +56,13 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 |                  | geladen werden. Dazu muss die Versionsnummer des Plugins angegeben werden.          |
 |                  | (z.B.  **plugin_version: 1.4.9**)                                                   |
 +------------------+-------------------------------------------------------------------------------------+
-| instance         | **DEPRECATED** Optional: Dieser Parameter muss nur verwendet werden, wenn mehrere   |
-|                  | Instanzen des selben Plugins geladen werden sollen. Das Plugin selbst muss dazu     |
-|                  | **Multiinstance**-fähig sein. Damit die Items der richtigen Plugin-Instanz          |
-|                  | izugeordnet werden, muss in der jeweiligen Item Definition der Name des Plugin-     |
-|                  | spezifische Attributes um die Angabe der Instanz ergänzt werden. Also z.B.: Statt   |
-|                  | **avm_data_type: uptime** muss **avm_data_type@<instance>: uptime** geschrieben     |
-|                  | werden.                                                                             |
-|                  | Zukünftig wird bei mehrfacher Einbindung desselben Plugins der Bezeichner des       |
-|                  | Abschnitts in der ``plugin.yaml`` als Instanzbezeichner verwendet werden.           |
+| instance         | Optional: Nur der Wert **default** wird ausgewertet. Er legt fest, dass diese       |
+|                  | Instanz den leeren Instanzbezeichner erhält (für Item-Attribute ohne                |
+|                  | Instanzangabe).                                                                     |
 +------------------+-------------------------------------------------------------------------------------+
-| default_instance | Optional: Kann zukünftig festlegen, welche Instanz von mehreren den leeren Instanz- |
-|                  | bezeichner erhält (für Item-Attribute ohne Instanzangabe)                           |
+| default_instance | Optional: Legt fest, welche Instanz von mehreren den leeren Instanzbezeichner       |
+|                  | erhält (für Item-Attribute ohne Instanzangabe). Die Angabe des Parameters genügt,   |
+|                  | z.B. **default_instance: true**.                                                    |
 +------------------+-------------------------------------------------------------------------------------+
 | webif_pagelength | Optional: Anzahl an Tabellenreihen, die im Plugin Webinterface standardmäßig        |
 |                  | pro Seite angezeigt werden sollen. Bei **-1** werden alle Einträge auf einer Seite  |
@@ -80,8 +75,11 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 
 .. note::
 
-    Die zukünftigen Konfigurationsmöglichkeiten für Multiinstanz-Plugins können jetzt schon aktiviert
-    werden, wenn in der ``etc/smarthome.yaml`` der Eintrag **legacy_instances: false** angegeben wird.
+    Wird dasselbe Plugin mehrfach eingebunden, ist der Name des jeweiligen Abschnitts in der ``plugin.yaml``
+    der Instanzbezeichner. Item-Attribute werden dann um diesen Bezeichner ergänzt, also z.B.
+    **avm_data_type@<abschnittsname>: uptime**. Mit **legacy_instances: true** in der ``etc/smarthome.yaml``
+    gilt wieder das bis SmartHomeNG 1.12 übliche Verfahren, bei dem der Instanzname aus dem Parameter
+    **instance** gelesen wird.
 
 
 Die weiteren Einträge sind Plugin spezifisch. Welche Parameter ein Plugin kennt ist auch der
@@ -104,19 +102,17 @@ beachten. Dann wird ein solches Plugin konfiguriert wie alle andern Plugins auch
 
 Wenn mehrere Instanzen eines Plugins konfiguriert werden, muss in der Konfiguration der Items
 eine Information hinterlegt werden, auf welche Instanz des Plugins sich das Item bezieht. Dazu
-**muss** jeder Instanz ein eindeutiger Name gegeben werden. Das erfolgt in der ``etc/plugin.yaml``
-dadurch, dass jeder Instanz ein Parameter **instance** hinzugefügt wird:
+**muss** jeder Instanz ein eindeutiger Name gegeben werden. Das ist der Name des Abschnitts in der
+``etc/plugin.yaml``:
 
 .. code:: yaml
 
-   fritzbox_1:
+   fb6360:
        plugin_name: avm
-       instance: fb6360
        ...
 
-   fritzbox_2:
+   fb7490:
        plugin_name: avm
-       instance: fb7490
        ...
 
 
@@ -128,6 +124,9 @@ Außerdem muss jedem Item die Information mitgegeben werden, auf welche Instanz 
        connection_status:
            type: str
            avm_data_type@fb7490: wan_connection_status
+
+Items ohne Instanzangabe gehören zu der Instanz, die den leeren Instanzbezeichner hat. Welche das ist,
+wird mit dem Parameter **default_instance** (oder **instance: default**) festgelegt.
 
 
 Wenn ein Item mehrere Attribute nutzt, die das Plugin zur Verfügung stellt, ist als Grundregel

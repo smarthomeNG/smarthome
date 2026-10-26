@@ -114,7 +114,7 @@ argparser.add_argument(
 argparser.add_argument(
     '-e',
     '--config_etc',
-    help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory. If config directories exist at SmartHomeNG base dir, they are migrated to etc/<dir>.',
+    help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory (default; overrides config_etc: false in smarthome.yaml). If config directories exist at SmartHomeNG base dir, they are migrated to etc/<dir>.',
     default=False,
     action='store_true',
 )

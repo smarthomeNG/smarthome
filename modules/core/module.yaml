@@ -178,18 +178,18 @@ parameters:
     config_etc:
         type: bool
         gui_type: yes_no
-        default: False
+        default: True
         description:
-            de: "Konfigurationsverzeichnisse (items, logics, structs, scenes, functions) unterhalb von etc/ suchen. Die Migration erfolgt beim nächsten Neustart automatisch."
-            en: "Look for config directories (items, logics, structs, scenes, functions) below etc/. Migration runs automatically on next restart."
+            de: "Konfigurationsverzeichnisse (items, logics, structs, scenes, functions) unterhalb von etc/ suchen. Vorhandene Verzeichnisse im Hauptverzeichnis werden beim Start automatisch dorthin verschoben. False verwendet die bis 1.12 übliche Struktur."
+            en: "Look for config directories (items, logics, structs, scenes, functions) below etc/. Existing directories in the base directory are moved there on startup. False keeps the layout used up to 1.12."
 
     legacy_instances:
         type: bool
         gui_type: yes_no
-        default: True
+        default: False
         description:
-            de: "Instanznamen aus dem 'instance'-Parameter in plugin.yaml verwenden (False = zukünftiges Standardverhalten)"
-            en: "Use instance names from 'instance' parameter in plugin.yaml (False = future default behaviour)"
+            de: "True: Instanznamen aus dem 'instance'-Parameter in plugin.yaml verwenden (Verhalten bis 1.12). False: der Name des Abschnitts in plugin.yaml ist der Instanzname"
+            en: "True: use instance names from the 'instance' parameter in plugin.yaml (behaviour up to 1.12). False: the name of the section in plugin.yaml is the instance name"
 
     pip_command:
         live: True

@@ -73,6 +73,7 @@ Veröffentlichungen vor 2.0.0 werden nicht nachträglich eingeordnet.
 |---|---|
 | Entfernter oder umbenannter öffentlicher Name; geänderte Signatur, die bestehende Aufrufer bricht; geänderter Parametertyp; neuer Pflichtparameter; eingeschränkte zulässige Werte (`valid_*`); entfernte Kommandozeilen-Option oder entferntes Websocket-Kommando | **Major** |
 | Erhöhte `sh_minversion` eines Plugins oder Moduls | **Major** |
+| Geänderter Standardwert eines in einer `module.yaml` deklarierten Konfigurationsparameters (einschließlich der Kernparameter der `smarthome.yaml`) | **Major** |
 | Erhöhte `py_minversion` (Python-Versionen werden gemäß dem Python-EOL-Zeitplan aufgegeben und in den Release Notes angekündigt) | **Minor** |
 | Neuer öffentlicher Name, neuer optionaler Parameter, neue Kommandozeilen-Option, neues Websocket-Kommando oder erweiterte zulässige Werte (`valid_*`) | **Minor** |
 | Fehlerbehebung, interne Änderung, Dokumentation | **Patch** |

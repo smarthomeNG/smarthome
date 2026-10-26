@@ -76,9 +76,9 @@ class SmarthomeTest(unittest.TestCase):
                 logger.warning('        check paths & basenames')
                 _etc_dir = os.path.join(conf_dir, 'etc')
                 self.assertEqual(sh._etc_dir, _etc_dir)
-                _items_dir = os.path.join(conf_dir, 'items' + os.path.sep)
+                _items_dir = os.path.join(_etc_dir, 'items' + os.path.sep)
                 self.assertEqual(sh._items_dir, _items_dir)
-                _logic_dir = os.path.join(conf_dir, 'logics' + os.path.sep)
+                _logic_dir = os.path.join(_etc_dir, 'logics' + os.path.sep)
                 self.assertEqual(sh._logic_dir, _logic_dir)
 
                 _plugin_conf_basename = os.path.join(_etc_dir, 'plugin')
@@ -91,6 +91,8 @@ class SmarthomeTest(unittest.TestCase):
                 self.assertEqual(sh._module_conf_basename, _module_conf_basename)
 
                 self.assertEqual(sh._created_items_file, 'created')
+                self.assertTrue(sh._config_etc)
+                self.assertFalse(sh._legacy_instances)
 
                 _cache_dir = os.path.join(base_dir, 'var', 'cache' + os.path.sep)
                 self.assertEqual(sh._cache_dir, _cache_dir)

@@ -53,6 +53,7 @@ Build metadata after `+` (commit, branch) is informative and ignored when compar
 |---|---|
 | Removed or renamed public name; changed signature that breaks existing callers; changed parameter type; new mandatory parameter; narrowed `valid_*`; removed command line flag or websocket command | **major** |
 | Raised `sh_minversion` of a plugin or module *(decided)* | **major** |
+| Changed default value of a configuration parameter declared in a `module.yaml` (including the core parameters of `smarthome.yaml`) *(decided)* | **major** |
 | Raised `py_minversion` *(decided)* - Python versions are dropped on the Python EOL schedule, announced in the release notes | **minor** |
 | New public name, optional parameter, command line flag, websocket command, or widened `valid_*` | **minor** |
 | Bug fix, internal change, documentation | **patch** |

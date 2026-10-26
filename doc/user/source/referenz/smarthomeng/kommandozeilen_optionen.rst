@@ -42,8 +42,8 @@ smarthome.py kann mit folgenden Kommandozeilen Optionen gestartet werden:
 |            |                      | angegeben werden.                                                              |
 +------------+----------------------+--------------------------------------------------------------------------------+
 | -e         | --config_etc         | Die Verzeichnisse mit benutzerdefinierter Konfiguration (items, structs,       |
-|            |                      | logics, scenes, uf) unterhalb von etc suchen                                   |
-|            |                      | (``etc/items/`` statt ``items/``, ``etc/structs/`` statt ``structs/`` usw.)    |
+|            |                      | logics, scenes, functions) unterhalb von etc suchen (Standard, überschreibt    |
+|            |                      | ``config_etc: false`` in der ``etc/smarthome.yaml``)                           |
 +------------+----------------------+--------------------------------------------------------------------------------+
 | -d         | --debug              | Im Vordergrund bleiben mit Debug-Logging. ``logging.yaml`` wird dabei komplett |
 |            |                      | ignoriert: Alle SmartHomeNG-Logger (lib, modules, plugins, logics, items,      |

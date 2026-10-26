@@ -40,9 +40,8 @@ oder im `Chat auf gitter.im <https://app.gitter.im/#/room/#smarthomeNG_smarthome
    Mit Release der Version 1.12 wurden die folgenden Konventionen in der Dokumentation eingeführt:
 
    - Datei- und Ordnernamen werden relativ zum SmartHomeNG-Stammverzeichnis (standardmäßig ``/usr/local/smarthome/``) angegeben
-   - Dateien und Ordner, die Nutzerkonfigurationen enthalten, werden unterhalb von ``etc`` referenziert. Dies entspricht
-     dem zukünftigen Standard, der mit der Kommandozeilenoption **-e** / **--config_etc** oder mit der Option
-     **config_etc: true**  in der ``etc/smarthome.yaml`` aktiviert werden kann.
+   - Dateien und Ordner, die Nutzerkonfigurationen enthalten, werden unterhalb von ``etc`` referenziert. Dies ist die
+     Standardstruktur (Option **config_etc** in der ``etc/smarthome.yaml``, Kommandozeilenoption **-e** / **--config_etc**).
 
 .. note::
 

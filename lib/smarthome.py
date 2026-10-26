@@ -160,8 +160,8 @@ class SmartHome:
         self.modules = None
         self.__children = []
 
-        self._config_etc = False
-        self._legacy_instances = True
+        self._config_etc = True
+        self._legacy_instances = False
         self._allow_system_power = False
         self._orb_backend = 'ephem'
 
@@ -374,7 +374,7 @@ class SmartHome:
 
         #############################################################
         # check / set legacy_instance option from config file
-        self._legacy_instances = lib.utils.Utils.to_bool(self._legacy_instances, True)
+        self._legacy_instances = lib.utils.Utils.to_bool(self._legacy_instances, False)
         self._allow_system_power = lib.utils.Utils.to_bool(self._allow_system_power, False)
 
         #############################################################
@@ -385,7 +385,7 @@ class SmartHome:
             self._config_etc = config_etc
         elif hasattr(self, '_config_etc'):
             # set by smarthome.yaml
-            self._config_etc = lib.utils.Utils.to_bool(self._config_etc, False)
+            self._config_etc = lib.utils.Utils.to_bool(self._config_etc, True)
 
         # at this point self._config_etc is of type bool
         self.initialize_dir_vars()
