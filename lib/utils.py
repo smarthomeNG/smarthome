@@ -818,8 +818,6 @@ def execute_subprocess(commandline, wait=True):
     # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
     # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
     (result, err) = p.communicate()
-    # logger.warning("execute_subprocess: commandline='{}', result='{}', err='{}'".format(command, result, err))
-    print("err='{}'".format(err))
     if wait:
         ## Wait for date to terminate. Get return returncode ##
         p.wait()

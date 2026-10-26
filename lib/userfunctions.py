@@ -48,8 +48,6 @@ def import_user_module(m):
     :return: True, if import was successful
     """
     modulename = _uf_subdir + '.' + m
-    #
-    print(f'import uf {m}')
     import importlib
 
     try:
@@ -106,7 +104,6 @@ def init_lib(shng_base_dir=None, sh=None):
         _func_dir = _sh.get_config_dir(DIR_UF)
         if _sh._config_etc:
             _uf_subdir = 'etc.' + _uf_subdir
-            print('added etc to uf_subdir')
     else:
         _func_dir = os.path.join(base_dir, _uf_subdir)
 
