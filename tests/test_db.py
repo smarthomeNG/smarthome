@@ -67,7 +67,7 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         test_db.release()
 
     def test_connect(self):
-        db = self.db(connect='host:server | user:username | password:secret')
+        db = self.db(connect=['host:server', 'user:username', 'password:secret'])
         db.connect()
         args = db._dbapi.connect_kwargs
         self.assertTrue('host' in args)
@@ -77,11 +77,20 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.assertTrue('password' in args)
         self.assertEqual('secret', args['password'])
 
+    def test_connect_string_is_rejected(self):
+        db = self.db(connect='host:server | user:username')
+        self.assertFalse(db.api_initialized)
+
+    def test_connect_empty_string_means_no_parameters(self):
+        db = self.db(connect='')
+        self.assertTrue(db.api_initialized)
+        self.assertNotIn('host', db._params)
+
     def test_connect_only_port_is_coerced_to_int(self):
         # 'port' must be coerced to int (drivers like pymysql require it);
         # every other connect value must stay the exact string from config,
         # not be guessed via int/float/str fallback typing.
-        db = self.db(connect='passwd:123456 | port:3306 | host:myhost')
+        db = self.db(connect=['passwd:123456', 'port:3306', 'host:myhost'])
         self.assertEqual('123456', db._params['passwd'])
         self.assertEqual(3306, db._params['port'])
         self.assertEqual('myhost', db._params['host'])
@@ -1521,21 +1530,21 @@ class TestDbPymysqlTimeouts(unittest.TestCase, TestDbBase):
         self.assertEqual(10, db._params['connect_timeout'])
 
     def test_user_read_timeout_not_overridden(self):
-        db = self._pymysql_db(connect='read_timeout:120')
+        db = self._pymysql_db(connect=['read_timeout:120'])
         self.assertEqual(120, db._params['read_timeout'])
 
     def test_user_write_timeout_not_overridden(self):
-        db = self._pymysql_db(connect='write_timeout:90')
+        db = self._pymysql_db(connect=['write_timeout:90'])
         self.assertEqual(90, db._params['write_timeout'])
 
     def test_user_connect_timeout_not_overridden(self):
-        db = self._pymysql_db(connect='connect_timeout:5')
+        db = self._pymysql_db(connect=['connect_timeout:5'])
         self.assertEqual(5, db._params['connect_timeout'])
 
     def test_timeout_keys_coerced_to_int_from_string_config(self):
         # Keys in _numeric_connect_keys get int() coercion when the connect
-        # param is a pipe-separated string (the common YAML config form).
-        db = self._pymysql_db(connect='read_timeout:60 | write_timeout:60')
+        # entries are 'key:value' strings (the common YAML config form).
+        db = self._pymysql_db(connect=['read_timeout:60', 'write_timeout:60'])
         self.assertIsInstance(db._params['read_timeout'], int)
         self.assertIsInstance(db._params['write_timeout'], int)
 
@@ -1544,7 +1553,7 @@ class TestDbPymysqlTimeouts(unittest.TestCase, TestDbBase):
         # same way - without it in _numeric_connect_keys, string connect
         # config produced sqlite3.connect(timeout='30'), a TypeError against
         # the real driver.
-        db = self.db(connect='timeout:30')
+        db = self.db(connect=['timeout:30'])
         self.assertIsInstance(db._params['timeout'], int)
         self.assertEqual(30, db._params['timeout'])
 
@@ -1602,14 +1611,14 @@ class TestDbPsycopgTimeouts(unittest.TestCase, TestDbBase):
         self.assertIn('-c statement_timeout=45000', db._params['options'])
 
     def test_user_connect_timeout_not_overridden(self):
-        db = self._psycopg_db(connect='connect_timeout:5')
+        db = self._psycopg_db(connect=['connect_timeout:5'])
         self.assertEqual(5, db._params['connect_timeout'])
 
     def test_user_options_not_overridden(self):
         # If the user already configured their own 'options' string
         # (possibly with their own statement_timeout), setdefault() must
         # leave it alone rather than trying to merge into it.
-        db = self._psycopg_db(connect='options:-c statement_timeout=9999')
+        db = self._psycopg_db(connect=['options:-c statement_timeout=9999'])
         self.assertEqual('-c statement_timeout=9999', db._params['options'])
 
     def test_non_psycopg_driver_not_affected(self):
@@ -1647,7 +1656,7 @@ class TestDbStringDriverImport(unittest.TestCase, TestDbBase):
         # plain (non-dotted) name - confirms the switch didn't change
         # behaviour for the drivers that already worked (real sqlite3
         # import here, not mocked - it's always available).
-        db = lib.db.Database('test', 'sqlite3', ':memory:', 'qmark')
+        db = lib.db.Database('test', 'sqlite3', {'database': ':memory:'}, 'qmark')
         self.assertEqual('sqlite3', db._dbapi.__name__)
         self.assertTrue(db.api_initialized)
 

@@ -309,11 +309,13 @@ class Database:
 
         self._params = {}
 
-        # Deprecated, remove with 1.7 or 1.8
-        if isinstance(connect, str):
-            connect = [p.strip() for p in connect.split('|')]
+        if isinstance(connect, str) and connect.strip():
+            self.logger.error(
+                f"Database [{self._name}]: 'connect' must be a list of 'key:value' entries or a dict, not a string"
+            )
+            return
 
-        # -> but keep list of ordered dict as "default" returned by yaml parser!
+        # list of ordered dict is the "default" returned by yaml parser
         if isinstance(connect, list):
             if isinstance(connect[0], str):
                 for arg in connect:
