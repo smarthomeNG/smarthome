@@ -32,7 +32,7 @@ The result is printed to stdout
 import os
 import argparse
 
-VERSION = '1.8.3'
+VERSION = '1.9.0'
 
 start_dir = os.getcwd()
 
@@ -698,13 +698,7 @@ def print_errorcount(checkname, errors, warnings, hints):
 
 
 def check_metadata(
-    plg,
-    with_description,
-    check_quiet=False,
-    only_inc=False,
-    list_classic=False,
-    pluginsdirectory=None,
-    suppress_summery=False,
+    plg, with_description, check_quiet=False, only_inc=False, pluginsdirectory=None, suppress_summery=False
 ):
 
     global errors, warnings, hints, quiet
@@ -754,7 +748,9 @@ def check_metadata(
         if metadata['plugin'].get('maintainer', None) is None:
             disp_warning('The maintainer of the plugin is not documented', "Add 'maintainer:' to the plugin section")
 
-    if plg_type != 'classic' and not list_classic:
+    if plg_type == 'classic':
+        disp_error('Plugin is not derived from SmartPlugin (classic plugins are not supported)')
+    else:
         if metadata.get('plugin', None) is None:
             disp_error("No section 'plugin' in metadata found")
         else:
@@ -924,7 +920,7 @@ def check_metadata(
     if metadata.get('plugin', None) is not None:
         state = metadata['plugin'].get('state', '-')
 
-    if (plg_type == 'classic' and list_classic) or (plg_type != 'classic' and not list_classic):
+    if plg_type != 'classic':
         #    global errors, warnings, hints
         if errors == 0 and warnings == 0 and hints == 0:
             res = 'OK'
@@ -950,7 +946,7 @@ def check_metadata(
     return
 
 
-def check_plglist(option, list_classic=False):
+def check_plglist(option):
     option = option.strip().lower()
     header_displayed = False
     plgcount = 0
@@ -1038,18 +1034,14 @@ def check_plglist(option, list_classic=False):
                 list_formatted(ul, ul, ul, ul, ul, ul, ul, '', '')
                 header_displayed = True
 
-            check_metadata(plg, False, check_quiet=True, only_inc=(option == 'inc'), list_classic=list_classic)
+            check_metadata(plg, False, check_quiet=True, only_inc=(option == 'inc'))
             if option == 'inc' and (errors > 0 or warnings > 0 or hints > 0):
-                if ((not list_classic) and (plgtype.lower() != 'classic')) or (
-                    list_classic and (plgtype.lower() == 'classic')
-                ):
+                if plgtype.lower() != 'classic':
                     plgcount += 1
                     if plg.startswith('priv_'):
                         priv_plgcount += 1
             elif option != 'inc':
-                if ((not list_classic) and (plgtype.lower() != 'classic')) or (
-                    list_classic and (plgtype.lower() == 'classic')
-                ):
+                if plgtype.lower() != 'classic':
                     plgcount += 1
                     if plg.startswith('priv_'):
                         priv_plgcount += 1
@@ -1109,9 +1101,6 @@ if __name__ == '__main__':
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         '-la', '--list_all', action='store_true', default=False, help='list plugin information of all plugins'
-    )
-    group.add_argument(
-        '-lcl', '--list_classic', action='store_true', default=False, help='list plugin information of classic plugins'
     )
     group.add_argument(
         '-lsm', '--list_smart', action='store_true', default=False, help='list plugin information of smart plugins'
@@ -1178,8 +1167,6 @@ if __name__ == '__main__':
             list_plugins('all', list_versions=list_versions)
         elif args.list_all:
             list_plugins('all')
-        elif args.list_classic:
-            list_plugins('classic')
         elif args.list_smart:
             list_plugins('smart')
         elif args.list_inc:
@@ -1209,10 +1196,9 @@ if __name__ == '__main__':
         elif args.check_list:
             check_plglist('all')
         elif args.check_clist:
-            check_plglist('compl', list_classic=False)
+            check_plglist('compl')
         elif args.check_ilist:
-            check_plglist('inc', list_classic=True)
-            check_plglist('inc', list_classic=False)
+            check_plglist('inc')
         else:
             parser.print_help()
             print()
