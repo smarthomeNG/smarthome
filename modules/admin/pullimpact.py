@@ -26,7 +26,7 @@ the plugins whose files changed.
 import threading
 from typing import Callable, Iterable, TypedDict
 
-import yaml
+from ruamel.yaml import YAML, YAMLError
 
 CORE_CODE_DIRS = ('bin', 'lib', 'modules')
 
@@ -83,8 +83,8 @@ def _metadata_restart_reasons(directory: str, old: str, new: str) -> list[str]:
     :param new: plugin.yaml after the pull
     """
     try:
-        before, after = yaml.safe_load(old) or {}, yaml.safe_load(new) or {}
-    except yaml.YAMLError:
+        before, after = YAML(typ='safe').load(old) or {}, YAML(typ='safe').load(new) or {}
+    except YAMLError:
         return [f'{directory}: plugin.yaml not readable']
     if not isinstance(before, dict) or not isinstance(after, dict):
         return [f'{directory}: plugin.yaml not readable']
