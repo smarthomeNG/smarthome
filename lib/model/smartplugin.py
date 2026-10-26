@@ -1541,18 +1541,6 @@ class SmartPlugin(SmartObject, Utils):
 
         return True
 
-    #
-    # deprecated methods, kept in place in case anybody still uses them
-    #
-
-    def _get_itemlist(self):
-        self._sh._deprecated_warning('SmartPlugin.get_items()')
-        return self.get_items()
-
-    def _append_to_itemlist(self, item):
-        self._sh._deprecated_warning('SmartPlugin.add_item()')
-        self.add_item(item)
-
 
 # from lib.module import Modules
 

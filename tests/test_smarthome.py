@@ -47,30 +47,6 @@ logger = logging.getLogger(__name__)
 
 
 class SmarthomeTest(unittest.TestCase):
-    def test_to_bool(self):
-
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, None))
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, False))
-        self.assertIsNone(lib.smarthome.SmartHome.string2bool(self, 'werwer'))
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, 'No'))
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, '0'))
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, ''))
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, 'n'))
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, 'false'))
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, 'False'))
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, 'f'))
-        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, 0))
-
-        self.assertTrue(lib.smarthome.SmartHome.string2bool(self, 1.2))
-        self.assertTrue(lib.smarthome.SmartHome.string2bool(self, True))
-        self.assertTrue(lib.smarthome.SmartHome.string2bool(self, 'yes'))
-        self.assertTrue(lib.smarthome.SmartHome.string2bool(self, '1'))
-        self.assertTrue(lib.smarthome.SmartHome.string2bool(self, 'y'))
-        self.assertTrue(lib.smarthome.SmartHome.string2bool(self, 'true'))
-        self.assertTrue(lib.smarthome.SmartHome.string2bool(self, 'True'))
-        self.assertTrue(lib.smarthome.SmartHome.string2bool(self, 't'))
-        # self.assertTrue(lib.smarthome.SmartHome.string2bool(self,1))
-
     #####################################################################
     # Diplay DEPRECATED warning
     #####################################################################

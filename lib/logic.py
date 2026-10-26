@@ -42,8 +42,6 @@ They can be used the following way: To call eg. **enable_logic(name)**, use the 
     logics.enable_logic(name)
 
 
-:Note: Do not use the functions or variables of the main smarthome object any more. They are deprecated. Use the methods of the class **Logics** instead.
-
 :Note: This library is part of the core of SmartHomeNG. Regular plugins should not need to use this API.  It is manily implemented for plugins near to the core like **backend** or **blockly**!
 
 """

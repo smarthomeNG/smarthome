@@ -79,7 +79,6 @@ class MockSmartHome:
     print(f'MockSmartHome: __file__={__file__}')
 
     _base_dir = BASE
-    base_dir = _base_dir  # for external modules using that var (backend, ...?)
     _default_language = 'de'
     _default_logtext = None
 
@@ -284,17 +283,6 @@ class MockSmartHome:
         """
         return lib.vardir.resolve_var_path(path)
 
-    def getBaseDir(self):
-        """
-        Function to return the base directory of the running SmartHomeNG installation
-
-        **getBaseDir()** is deprecated. Use method get_basedir() instead.
-
-        :return: Base directory as an absolute path
-        :rtype: str
-        """
-        return self._base_dir
-
     def get_config_dir(self, config):
         """
         Function to return a config dir used by SmartHomeNG
@@ -362,7 +350,7 @@ class MockSmartHome:
                     print('Item {}: problem creating: {}'.format(child_path, e))
                 else:
                     vars(self)[attr] = child
-                    self.add_item(child_path, child)
+                    self.items.add_item(child_path, child)
                     self.children.append(child)
         return item_conf
 
@@ -437,49 +425,6 @@ class MockSmartHome:
             return self.__event_listeners[event]
         else:
             return []
-
-    # ------------------------------------------------------------
-    #  Deprecated methods
-    # ------------------------------------------------------------
-
-    def now(self):
-        return self.shtime.now()
-
-    def tzinfo(self):
-        return self.shtime.tzinfo()
-
-    def add_item(self, path, item):
-        return self.items.add_item(path, item)
-
-    def return_item(self, string):
-        return self.items.return_item(string)
-
-    def return_items(self):
-        return self.items.return_items()
-
-    def return_plugins(self):
-        # return self.plugins.get_module(name) ???
-        return self.plugins
-
-    def return_modules(self):
-        return self.modules.return_modules()
-
-    def get_module(self, name):
-        return self.modules.get_module(name)
-
-    def string2bool(self, string):
-        #        if isinstance(string, bool):
-        #            return string
-        #        if string.lower() in ['0', 'false', 'n', 'no', 'off']:
-        #            return False
-        #        if string.lower() in ['1', 'true', 'y', 'yes', 'on']:
-        #            return True
-        #        else:
-        #            return None
-        try:
-            return lib.utils.Utils.to_bool(string)
-        except Exception:
-            return None
 
     def return_none(self):
         return None
