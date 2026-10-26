@@ -34,5 +34,4 @@ Folgende Libraries mit Hilfsfunktionen stehen zur Verfügung:
    :titlesonly:
 
    /lib/env
-   /lib/tools
    /lib/utils

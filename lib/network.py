@@ -432,7 +432,7 @@ class Http(object):
             self.logger.warning(f'{self._id} download error: {Network.clean_uri(url, self._hide_login)}')
             return False
 
-    def get_binary(self, url=None, params=None):
+    def get_binary(self, url=None, params=None, auth=None, timeout=None, verify=True, require_ok=False):
         """
         Launch a GET request and return answer as raw binary data or None on error.
 
@@ -440,14 +440,27 @@ class Http(object):
 
         :param url: Optional URL to fetch from. Default is to use baseurl given to constructor.
         :param params: Optional dict of parameters to add to URL query string.
+        :param auth: Optional authentication object or (user, password) tuple
+        :param timeout: Optional timeout in seconds. Default is the timeout given to constructor.
+        :param verify: Set to false to ignore SSL certificate verification errors (for self-signed for example)
+        :param require_ok: Return None (and log a warning) unless the HTTP status code is 200
 
         :type url: str
         :type params: dict
+        :type auth: HTTPBasicAuth | HTTPDigestAuth | tuple | ...
+        :type timeout: int
+        :type verify: bool
+        :type require_ok: bool
 
-        :return: Answer as raw binary objector None on whatever error occured
+        :return: Answer as raw binary object or None on whatever error occured
         :rtype: bytes | None
         """
-        if self.__get(url=url, params=params):
+        if self.__get(url=url, params=params, timeout=timeout, verify=verify, auth=auth):
+            if require_ok and self._response.status_code != 200:
+                self.logger.warning(
+                    f'{self._id} problem fetching {Network.clean_uri(self._response.url, self._hide_login)}: {self.response_status()}'
+                )
+                return None
             return self._response.content
         return None
 

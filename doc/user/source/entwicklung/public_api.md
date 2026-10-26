@@ -20,7 +20,7 @@ im Verzeichnis `lib/`. Bei Klassen zählen auch die Signaturen von `__init__` un
 | Plugin-Basisklassen | `lib/model/*.py` (u. a. `SmartPlugin`, `MqttPlugin`), `lib/model/sdp/*.py` (`SmartDevicePlugin`, SDP) |
 | Items | `lib/item/*.py` (`Item`, `Items`) |
 | Kern und Infrastruktur | `lib/smarthome.py`, `lib/plugin.py`, `lib/module.py`, `lib/logic.py`, `lib/scheduler.py`, `lib/config.py`, `lib/metadata.py`, `lib/constants.py` |
-| Hilfsklassen | `lib/utils.py`, `lib/tools.py`, `lib/shtime.py`, `lib/network.py`, `lib/db.py`, `lib/shyaml.py`, `lib/log.py`, `lib/translation.py`, `lib/orb.py`, `lib/triggertimes.py` |
+| Hilfsklassen | `lib/utils.py`, `lib/shtime.py`, `lib/network.py`, `lib/db.py`, `lib/shyaml.py`, `lib/log.py`, `lib/translation.py`, `lib/orb.py`, `lib/triggertimes.py` |
 
 ### 2. Konfiguration für Anwender
 

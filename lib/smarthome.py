@@ -77,7 +77,6 @@ import lib.network
 import lib.plugin
 import lib.scene
 import lib.scheduler
-import lib.tools
 import lib.utils
 import lib.vardir
 import lib.orb
@@ -549,10 +548,6 @@ class SmartHome:
                 self._logger.error('Locale for the enviroment is not set. Defaulting to en_US.UTF-8')
                 os.environ['LANG'] = 'en_US.UTF-8'
                 os.environ['LC_ALL'] = 'en_US.UTF-8'
-
-        #############################################################
-        # Link Tools
-        self.tools = lib.tools.Tools()
 
         #############################################################
         # Link Sun and Moon

@@ -19,7 +19,6 @@ python_globs:
     - lib/shyaml.py
     - lib/config.py
     - lib/plugin.py
-    - lib/tools.py
     - lib/log.py
     - lib/translation.py
     - lib/scheduler.py

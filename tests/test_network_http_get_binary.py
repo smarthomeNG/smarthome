@@ -43,6 +43,45 @@ class TestHttpGetBinary(unittest.TestCase):
             result = http.get_binary('/some/path')
         self.assertEqual(result, b'\x00\x01binarydata')
 
+    def test_passes_auth_and_timeout_to_the_request(self):
+        http = Http(baseurl='http://example.invalid')
+
+        class _FakeResponse:
+            content = b'x'
+            url = 'http://example.invalid/'
+            status_code = 200
+
+        with patch.object(http._session, 'get', return_value=_FakeResponse()) as get:
+            http.get_binary('/', auth=('user', 'secret'), timeout=2)
+        _, kwargs = get.call_args
+        self.assertEqual(('user', 'secret'), kwargs['auth'])
+        self.assertEqual(2, kwargs['timeout'])
+
+    def test_require_ok_returns_none_for_other_status_codes(self):
+        http = Http(baseurl='http://example.invalid')
+
+        class _NotFound:
+            content = b'<html>not found</html>'
+            url = 'http://example.invalid/missing'
+            status_code = 404
+            reason = 'Not Found'
+
+        with patch.object(http._session, 'get', return_value=_NotFound()):
+            self.assertEqual(b'<html>not found</html>', http.get_binary('/missing'))
+            self.assertIsNone(http.get_binary('/missing', require_ok=True))
+
+    def test_require_ok_returns_content_for_status_200(self):
+        http = Http(baseurl='http://example.invalid')
+
+        class _Ok:
+            content = b'data'
+            url = 'http://example.invalid/'
+            status_code = 200
+            reason = 'OK'
+
+        with patch.object(http._session, 'get', return_value=_Ok()):
+            self.assertEqual(b'data', http.get_binary('/', require_ok=True))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

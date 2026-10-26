@@ -11,5 +11,4 @@ Die folgenden Programm Module können ebenfalls für die Plugin Entwicklung verw
    /lib/logutils
    /lib/network
    /lib/orb
-   /lib/tools
    /lib/utils

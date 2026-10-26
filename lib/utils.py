@@ -29,6 +29,7 @@ New helper-functions are going to be implemented in this library.
 
 import logging
 
+import math
 import sys
 import re
 import hashlib
@@ -567,6 +568,53 @@ class Utils(object):
         """
 
         return str(type(var))[8:-2]
+
+    @staticmethod
+    def dewpoint(t: float, rf: float) -> float:
+        """
+        Return the dew point (Magnus formula)
+
+        :param t: temperature in degrees Celsius
+        :param rf: relative humidity in percent (0 < rf <= 100)
+
+        :return: dew point in degrees Celsius, rounded to two decimals
+        """
+        log = math.log((rf + 0.01) / 100)  # + 0.01 to 'cast' float
+        return round((241.2 * log + 4222.03716 * t / (241.2 + t)) / (17.5043 - log - 17.5043 * t / (241.2 + t)), 2)
+
+    @staticmethod
+    def rel2abs(t: float, rf: float) -> float:
+        """
+        Return the absolute humidity from the relative humidity and the temperature
+
+        :param t: temperature in degrees Celsius
+        :param rf: relative humidity in percent, or as a fraction (values up to 1)
+
+        :return: absolute humidity in g/m3
+        """
+        t += 273.15
+        if rf > 1:
+            rf /= 100
+        sat = 611.0 * math.exp(-2.5e6 * 18.0160 / 8.31432e3 * (1.0 / t - 1.0 / 273.16))
+        mix = 18.0160 / 28.9660 * rf * sat / (100000 - rf * sat)
+        rhov = 100000 / (287.0 * (1 - mix) + 462.0 * mix) / t
+        return mix * rhov * 1000
+
+    @staticmethod
+    def abs2rel(t: float, ah: float) -> float:
+        """
+        Return the relative humidity from the absolute humidity and the temperature
+
+        :param t: temperature in degrees Celsius
+        :param ah: absolute humidity
+
+        :return: relative humidity in percent
+        """
+        T = t + 273.15
+        ah = ah / 1000
+        sat_p = math.exp(77.3450 + 0.0057 * T - 7235 / T) / math.pow(T, 8.2)
+        sat_density = 0.0022 * sat_p / T
+        return ah / sat_density * 100
 
     @staticmethod
     def execute_subprocess(commandline, wait=True):
