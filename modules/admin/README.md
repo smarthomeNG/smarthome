@@ -178,13 +178,11 @@ of that type, or read/write one with `?filename=`), plus the special cases `logg
 
 - `GET /api/system/info` — CPU/memory/disk stats for the System Overview page.
 
-### WebSocket API — live item values and time-series charts
+### STREAM API — live item values and time-series charts
 
-Separate from the REST API above: `ws(s)://{host}:{ws_port}/adm`, handled by the
-`websocket` module's admin protocol (`modules/websocket/admin.py`), documented in
-{doc}`websocket_admingui_requests`. Used for live item
-value monitoring and the System Overview page's resource-usage graphs. No JWT is used on
-this channel.
+Server-Sent-Events (`modules/admin/api_stream.py`): `GET /api/stream/token` mints a short-lived,
+single-use token (JWT auth), `GET /api/stream?token=..` opens the event stream. Used for live item
+value monitoring and the System Overview page's resource-usage graphs.
 
 ##
 

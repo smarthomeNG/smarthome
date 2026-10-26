@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 """
-Regression tests for the item-write ACL check in the admin and smartvisu
-websocket protocols (modules/websocket/admin.py, modules/websocket/smartvisu.py).
+Regression tests for the item-write ACL check in the smartvisu
+websocket protocol (modules/websocket/smartvisu.py).
 
-Both handlers must require acl == 'rw' explicitly (default-deny), matching
+The handler must require acl == 'rw' explicitly (default-deny), matching
 the pattern already used on the read/monitor path (prepare_monitor()) -
 not refuse a write only when acl == 'ro', which would leave any item
 without an explicit 'ro' acl writable under the actual default
-(adm_acl/sv_acl = 'deny').
+(sv_acl = 'deny').
 """
 
 import json
@@ -24,7 +24,6 @@ import tests.common as common
 
 common.register_shng_log_levels()
 
-from modules.websocket.admin import Protocol as AdminProtocol
 from modules.websocket.smartvisu import Protocol as SmartvisuProtocol
 
 
@@ -50,13 +49,13 @@ class _FakeWebsocket:
 
 class _WebsocketItemWriteAclTestBase:
     """
-    Shared regression tests for the item-write ACL check, run once per
-    protocol (admin, smartvisu) via the concrete subclasses below.
+    Shared regression tests for the item-write ACL check, parametrised by
+    protocol through the concrete subclass below.
     """
 
     protocol_class = None
-    acl_attr = None  # 'adm_acl' or 'sv_acl'
-    clients_attr = None  # 'adm_clients' or 'sv_clients'
+    acl_attr = None  # e.g. 'sv_acl'
+    clients_attr = None  # e.g. 'sv_clients'
     protocol_method = None  # name of the async connection-handler method
 
     def _make_protocol(self, item_acl):
@@ -97,13 +96,6 @@ class _WebsocketItemWriteAclTestBase:
         proto, fake_item = self._make_protocol(item_acl='rw')
         await self._run(proto)
         fake_item.assert_called_once()
-
-
-class TestAdminWebsocketItemWriteAcl(_WebsocketItemWriteAclTestBase, unittest.IsolatedAsyncioTestCase):
-    protocol_class = AdminProtocol
-    acl_attr = 'adm_acl'
-    clients_attr = 'adm_clients'
-    protocol_method = 'adm_protocol'
 
 
 class TestSmartvisuWebsocketItemWriteAcl(_WebsocketItemWriteAclTestBase, unittest.IsolatedAsyncioTestCase):

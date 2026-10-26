@@ -39,10 +39,8 @@ SERIES_POLL_INTERVAL = 1.0  # generator wakeup cadence for checking due series p
 
 class StreamController(RESTResource):
     """
-    Server-Sent-Events replacement for the legacy websocket ``/adm`` push
-    protocol (see ``modules/websocket/admin.py``): live item value changes
-    and live series (history) polling, addressed to a REST client instead
-    of a persistent websocket.
+    Server-Sent-Events push for the admin UI: live item value changes
+    and live series (history) polling, addressed to a REST client.
 
     ``GET /api/stream/token`` mints a short-lived, single-use token (JWT
     auth via the normal Authorization header). ``GET /api/stream?token=..``
