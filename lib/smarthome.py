@@ -743,17 +743,17 @@ class SmartHome:
 
     def checkConfigFiles(self):
         """
-        This function checks if the needed configuration files exist. It checks for CONF and YAML files.
+        This function checks if the needed configuration files exist.
         If they dont exist, it is checked if a default configuration exist. If so, the default configuration
         is copied to corresponding configuration file.
 
         The check is done for the files that have to exist (with some content) or SmartHomeNG won't start:
 
-        - smarthome.yaml / smarthome.conf
+        - smarthome.yaml
         - logging.yaml
-        - plugin.yaml / plugin.conf
-        - module.yaml / module.conf
-        - logic.yaml / logic.conf
+        - plugin.yaml
+        - module.yaml
+        - logic.yaml
 
         """
         configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'admin', 'smarthome']

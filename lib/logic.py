@@ -771,13 +771,13 @@ class Logics:
         """
         Return the used config type
 
-        After initialization this function returns '.conf', if the used logic configuration file in /etc
-        is in the old file format or '.yaml' if the used configuration file is in YAML format.
+        After initialization this function returns '.yaml' if the logic configuration file in /etc could be
+        read, otherwise None.
 
         To use the following functions for reading and manipulating the logic configuration, the
         configuration file **has to be** in YAML format. Otherwise the functions will not work/return empty results.
 
-        :return: '.yaml', '.conf' or None
+        :return: '.yaml' or None
         :rtype: str or None
         """
         return self._config_type

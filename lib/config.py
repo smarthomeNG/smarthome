@@ -52,8 +52,7 @@ def parse_basename(basename, configtype=''):
     """
     Load and parse a single configuration and merge it to the configuration tree
     The configuration is only specified by the basename.
-    At the moment it looks for a .yaml file or a .conf file
-    .yaml files take preference
+    The configuration is read from the .yaml file.
 
     :param basename: Name of the configuration
     :param configtype: Optional string with config type (only used for log output)
@@ -80,8 +79,7 @@ def parse_itemsdir(itemsdir, item_conf, addfilenames=False, struct_dict: dict | 
     """
     Load and parse item configurations and merge it to the configuration tree
     The configuration is only specified by the name of the directory.
-    At the moment it looks for .yaml files and a .conf files
-    Both filetypes are read, even if they have the same basename
+    All .yaml files in the directory are read.
 
     :param itemsdir:      Name of folder containing the configuration files
     :param item_conf:     Optional OrderedDict tree, into which the configuration should be merged
