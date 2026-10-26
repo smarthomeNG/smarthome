@@ -8,7 +8,7 @@ shngAdmin is a **Single-Page Application (SPA)**. That means:
 
 - The server sends one HTML file, once, when you first open the browser.
 - After that, the browser never loads another page from the server. All navigation happens by JavaScript rewriting the DOM.
-- Data comes in and out via HTTP API calls and a WebSocket, just like `requests.get()` in Python, but running inside the browser.
+- Data comes in and out via HTTP API calls and a Server-Sent-Events stream, just like `requests.get()` in Python, but running inside the browser.
 
 The contrast with a traditional web app (Django, Flask with Jinja templates):
 
@@ -114,17 +114,17 @@ export class LogicsListComponent {
 │  │  Service Layer                                           │   │
 │  │  API Services          Infrastructure Services           │   │
 │  │  server-api            auth        connectivity          │   │
-│  │  items-api             websocket   app-config            │   │
+│  │  items-api             stream      app-config            │   │
 │  │  logics-api            log         shared                │   │
 │  │  plugins-api           user-prefs  theme                 │   │
 │  │  ... (one per feature)                                   │   │
 │  └────────┬──────────────────────────┬───────────────────────┘  │
-│           │ HTTP (REST)              │ WebSocket                │
+│           │ HTTP (REST)              │ SSE                      │
 └───────────┼──────────────────────────┼──────────────────────────┘
             │                          │
             ▼                          ▼
 ┌───────────────────────┐   ┌─────────────────────────┐
-│  SmartHomeNG REST API │   │  SmartHomeNG WebSocket  │
+│  SmartHomeNG REST API │   │  SmartHomeNG SSE stream │
 │  http://host:8383/api │   │  ws://host:2424/adm     │
 │                       │   │                         │
 │  GET  /api/items/...  │   │  Real-time item values  │
@@ -207,8 +207,7 @@ src/app/
 │   │   │   app-config.service.ts      global config store
 │   │   │   auth.service.ts            login/logout/token
 │   │   │   connectivity.service.ts    offline detection
-│   │   │   websocket.service.ts       raw WebSocket wrapper
-│   │   │   websocket-plugin.service.ts  smarthomeng protocol
+│   │   │   stream.service.ts          SSE stream: item monitoring + chart series (signals)
 │   │   │   log.service.ts             logging wrapper
 │   │   │   user-preferences.service.ts localStorage prefs
 │   │   │   shared.service.ts          formatting utilities
@@ -352,27 +351,36 @@ Detects when the SmartHomeNG backend goes offline.
 ```
 
 ```
-WebsocketService  (low level)
-─────────────────
-Raw WebSocket wrapper. Handles connect, disconnect, reconnect backoff, message queue.
-Not used directly by components — WebsocketPluginService sits on top of it.
-
-WebsocketPluginService  (SmartHomeNG protocol)
-──────────────────────
-Speaks the SmartHomeNG WebSocket protocol. Two functions:
+StreamService  (SSE stream to SmartHomeNG)
+─────────────
+Opens a Server-Sent-Events stream (GET /api/stream/, authorised with a
+single-use token from GET /api/stream/token) and changes what it receives
+with PATCH /api/stream/<connectionId>. Its public state is entirely
+signals — components read e.g. stream.systemload() directly in a template,
+no .subscribe() needed. Reconnects with backoff (2 → 30 s); after every
+reconnect it re-sends the complete subscription state.
 
   1. MONITORING  (real-time item values)
      getMonitoredItems(itemList, callback)
-       → sends:  {cmd: 'monitor', items: ['my.item.path', ...]}
-       ← receives updates as item values change
-       → calls callback(item, value) for each update
+       → PATCH:  {addItems: ['my.item.path'], removeItems: [...]}
+       ← receives 'item' events as item values change
+       → invokes callback(data) for each event
 
-  2. SERIES  (historical chart data)
+  2. SERIES  (historical chart data — feeds the System dashboard)
      getSeriesLoad(period='24h', count=100)
-       → sends:  {cmd: 'series', item: 'env.system.load', ...}
-       ← receives: [{time: timestamp, value: float}, ...]
-       → puts data into systemloadUpdate$ Subject
-       → SystemComponent subscribes to that Subject and redraws chart
+       → PATCH:  {addSeries: [{sid: 'env.system.load', item: ..., start, end, count}]}
+       ← receives 'series' events, matched by sid
+       → writes into the systemload signal
+       → SystemComponent reads that signal directly; the chart redraws
+
+  IMPORTANT: SystemComponent and ItemTreeComponent each declare their own
+  PRIVATE instance of this service in their @Component({ providers: [...] })
+  — each gets a fresh StreamService when you navigate to the page, which is
+  destroyed again (stream closed) when you navigate away. That's exactly
+  why the monitored-items LIST itself doesn't live on this service (it
+  would be wiped on every navigation) — it lives on SharedService instead,
+  a true root singleton, and is mirrored to localStorage so it also
+  survives a full page reload (see the SharedService entry below).
 ```
 
 ```
@@ -692,7 +700,7 @@ SystemComponent
 ├── Data sources:
 │   ├── ServerApiService.getSystemStats()   → uptime, version, host info
 │   ├── ServerApiService.getPypiInfo()      → Python package requirements
-│   └── WebsocketPluginService series data → chart data
+│   └── StreamService series signals → chart data
 │
 ├── On init:
 │   ├── getSystemStats() → displays: host, uptime, sh_uptime, version, python version
@@ -704,8 +712,8 @@ SystemComponent
 │   ├── getPypiInfo()   → displays: required packages, installed versions, status
 │   └── initCharts()
 │       ├── Waits for AppConfigService.serverReady$ (take 1) before connecting
-│       │   This ensures wsPort is set before the WebSocket connection attempt.
-│       ├── WebsocketPluginService.connect()
+│       │   The stream is only opened once the server config is available.
+│       ├── StreamService.connect()
 │       ├── getSeriesLoad()      → subscribes to systemloadUpdate$
 │       ├── getSeriesSystemMemory() → subscribes to systemmemoryUpdate$
 │       ├── getSeriesSwap()
@@ -744,7 +752,7 @@ data access below goes through ItemsApiService (/api/items/...) instead.
 ├── Data sources:
 │   ├── ItemsApiService.getItemTree()           → full item hierarchy
 │   ├── ItemsApiService.getItemDetails(path)    → details for selected item
-│   └── WebsocketPluginService.getMonitoredItems() → live value updates
+│   └── StreamService.getMonitoredItems()        → live value updates
 │
 ├── Left panel: PrimeNG Tree component (virtual-scrolled)
 │   ├── Hierarchical display of all items
@@ -764,10 +772,10 @@ data access below goes through ItemsApiService (/api/items/...) instead.
 │         calls ItemsApiService.changeItemValue(path, value)
 │
 ├── Bottom panel: monitored items
-│   ├── Waits for AppConfigService.serverReady$ before connecting WebSocket
-│   │   (ensures wsPort is available before the subscription is sent)
+│   ├── Waits for AppConfigService.serverReady$ before connecting the stream
+│   │   (server config must be available before the subscription is sent)
 │   ├── monitorItem(path, true): subscribe to live updates
-│   ├── WebSocket pushes new value → updateMonitoredItem() updates display
+│   ├── SSE 'item' event delivers new value → updateMonitoredItem() updates display
 │   ├── monitorItem(path, false): unsubscribe
 │   └── Monitored-item paths persist across a full page reload via
 │       SharedService (localStorage key 'shng.items.monitored'); fresh
@@ -1115,60 +1123,68 @@ is past its renewAfter threshold (some time before actual expiry).
 
 ---
 
-## Part 12 — Real-time data (WebSocket)
+## Part 12 — Real-time data (Server-Sent Events)
 
-The charts and item monitoring don't poll the REST API. They use a persistent WebSocket connection.
+The charts and item monitoring don't poll the REST API. They use a persistent Server-Sent-Events (SSE) stream from `/api/stream/`; subscriptions are changed with REST `PATCH` requests.
 
 ```
-WebSocket lifecycle:
+Stream lifecycle:
 ─────────────────────────────────────────────────────────────────
 
-SystemComponent.ngOnInit() and ItemTreeComponent.ngOnInit():
-  └─ Both subscribe to AppConfigService.serverReady$ (take 1)
-     before connecting.  This ensures wsPort is populated from
-     /api/server/info before the WebSocket URL is built.
-     Without this, the connection attempt fires before the port
-     is known, causing empty charts on first production load.
-  └─ websocketPlugin.connect()
-     └─ WebsocketService.connect('ws://host:2424/adm')
-        └─ new WebSocket(url)
-           └─ on open: send identity message
-              {cmd: 'identity', sw: 'shngAdmin', ver: '1.0.0', browser: 'Chrome...'}
+SystemComponent / ItemTreeComponent (once serverReady$ has emitted)
+  └─ stream.connect()                    ← component-private StreamService
+     └─ GET /api/stream/token            ← single-use token (JWT-authorised)
+        └─ new EventSource(`/api/stream/?token=...`)
+           └─ first event 'connection': {connectionId}
+              → the service PATCHes its complete subscription state
 
 SystemComponent requests chart data:
-  └─ websocketPlugin.getSeriesLoad('24h', 100)
-     └─ sends: {cmd: 'series', item: 'env.system.load', ...}
+  └─ stream.getSeriesLoad('24h', 100)
+     └─ PATCH /api/stream/<connectionId>
+        {addSeries: [{sid: 'env.system.load', item: ..., series: 'avg',
+                      start: '24h', end: 'now', count: 100}]}
 
-SmartHomeNG sends back:
-  ← {cmd: 'series', item: 'env.system.load', series: [{t:..., v:...}, ...]}
+SmartHomeNG sends back (event 'series'):
+  ← {type: 'series', sid: 'env.system.load', series: [[t, v], ...]}
 
-WebsocketPluginService receives message:
-  └─ updateSeries() → this.systemloadUpdate$.next(seriesData)
+StreamService receives the event:
+  └─ handleResponseSeries() → this.systemload.set(newSeriesData)
+     (a signal write — see Part 17 for why this alone is enough to
+      trigger a re-render, no manual "please redraw" call needed)
 
-SystemComponent is subscribed:
-  └─ this.websocketPlugin.systemloadUpdate$.subscribe(data => {
-       this.loadChartData = convertToChartFormat(data)
-       // Angular re-renders the chart
-     })
+SystemComponent reads the signal directly in its template/computed():
+  └─ chartdataLoad = computed(() => convertToChartFormat(this.stream.systemload()))
 
 
 Item monitoring (ItemTreeComponent):
 ─────────────────────────────────────────────────────────────────
 
-User clicks "Monitor" button for item 'home.livingroom.temp':
-  └─ websocketPlugin.getMonitoredItems(['home.livingroom.temp'], callback)
-     └─ sends: {cmd: 'monitor', items: ['home.livingroom.temp']}
+ItemTreeComponent has its OWN private StreamService instance
+(declared in its own @Component({ providers: [...] })), as does
+SystemComponent. It gets destroyed and recreated every time you
+navigate to/from the item tree.
 
-SmartHomeNG pushes updates whenever the item changes:
-  ← {cmd: 'item', items: [['home.livingroom.temp', 21.5]]}
+User clicks "Monitor" for item 'env.core.threads':
+  └─ stream.getMonitoredItems(['env.core.threads'], callback)
+     └─ PATCH /api/stream/<connectionId>  {addItems: ['env.core.threads']}
 
-WebsocketPluginService receives, calls monitorCallbackFunction:
-  └─ callback('home.livingroom.temp', 21.5)
-     └─ ItemTreeComponent.updateMonitoredItem(path, value) → re-renders
+SmartHomeNG pushes an 'item' event whenever the item changes:
+  ← {type: 'item', path: 'env.core.threads', value: 44, last_change: ..., ...}
 
-WebSocket reconnect:
-  If disconnected: WebsocketService retries with backoff (same intervals as HTTP)
-  On reconnect: re-sends all pending messages from messageQueue
+StreamService receives it and calls the registered callback:
+  └─ callback(data)
+     └─ writes into SharedService.monitoredItemsList (a signal, and a
+        ROOT singleton — see Part 6) → the monitored-items table
+        re-renders wherever it's shown, survives this component being
+        destroyed on navigation, and (via a localStorage mirror of the
+        watched paths) survives a full page reload too.
+
+Stream reconnect:
+  If the stream breaks: StreamService reconnects with backoff
+  (2 → 4 → 8 → 16 → 30 s). A new connection gets a new connectionId,
+  and the service re-sends its complete subscription state (every
+  monitored path and every series), including paths just restored from
+  localStorage.
 ```
 
 ---
@@ -1256,12 +1272,13 @@ INFRASTRUCTURE SERVICES (no feature, pure plumbing)
   OfflineBannerComponent
 
 
-  WebsocketService (raw)
-       │ wrapped by
-  WebsocketPluginService ──► systemloadUpdate$, monitorCallback, ...
-       │                          │
-       ▼                          ▼
-  SmartHomeNG WebSocket    SystemComponent, ItemTreeComponent
+  SmartHomeNG SSE stream (GET /api/stream/)
+       │
+       ▼
+  StreamService (private per component) ──► systemload, memory, ... signals; monitor callback
+                                                │
+                                                ▼
+                                          SystemComponent, ItemTreeComponent
 
 
 FEATURE COMPONENTS AND THEIR SERVICE DEPENDENCIES
@@ -1276,7 +1293,7 @@ FEATURE COMPONENTS AND THEIR SERVICE DEPENDENCIES
 
   SystemComponent
     ├── ServerApiService        (system stats, pypi info, restart)
-    ├── WebsocketPluginService  (chart series data)
+    ├── StreamService           (chart series data)
     └── SharedService           (date/time formatting)
 
   SystemConfigComponent
@@ -1286,7 +1303,7 @@ FEATURE COMPONENTS AND THEIR SERVICE DEPENDENCIES
     ├── ItemsApiService         (item tree, item details, value change,
     │                            create/edit/rename/copy/delete, references)
     ├── AttributeCatalogService (attribute autocomplete for create/edit)
-    ├── WebsocketPluginService  (monitored item values)
+    ├── StreamService           (monitored item values)
     ├── AppConfigService        (searchstart config)
     └── SharedService           (validators, formatters, monitored-item
                                   persistence)
@@ -1326,7 +1343,6 @@ FEATURE COMPONENTS AND THEIR SERVICE DEPENDENCIES
 
   TopNavigationComponent
     ├── ServerApiService        (full server info)
-    ├── WebsocketPluginService  (connect on startup)
     ├── AuthService             (loggedIn$, for the login link)
     └── ThemeService            (Light/Dark/Follow-System picker)
 ```
@@ -1353,8 +1369,7 @@ INFRASTRUCTURE
                                 previously auth-guard.service.ts — was removed, commit 890f68f)
   connectivity.service.ts      heartbeat, offline detection, retry backoff
   connectivity.interceptor.ts  HTTP middleware: cancels offline debounce on API success
-  websocket.service.ts         raw WebSocket with reconnect and message queue
-  websocket-plugin.service.ts  SmartHomeNG protocol: item monitoring + chart series
+  stream.service.ts            SSE stream with reconnect: item monitoring + chart series
   log.service.ts               console.log wrapper (suppressed in production)
   shared.service.ts            formatting/validation utilities + monitored-item localStorage persistence
   user-preferences.service.ts  localStorage wrapper for language + theme preference

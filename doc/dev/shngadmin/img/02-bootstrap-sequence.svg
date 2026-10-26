@@ -103,7 +103,7 @@
   <text x="816" y="412" text-anchor="middle" font-size="9" fill="#166534">GET /api/server/info → full config.</text>
   <text x="816" y="424" text-anchor="middle" font-size="9" fill="#166534">Patches wsPort, tz, branches etc.</text>
   <text x="816" y="436" text-anchor="middle" font-size="9" fill="#166534">→ serverReady$ emits.</text>
-  <text x="816" y="448" text-anchor="middle" font-size="9" fill="#166534">WebsocketPluginService connects WS.</text>
+  <text x="816" y="448" text-anchor="middle" font-size="9" fill="#166534">SystemComponent / ItemTreeComponent open the stream later.</text>
 
   <!-- AuthService parallel track -->
   <rect x="708" y="476" width="216" height="80" rx="6" fill="#FCE7F3" stroke="#F9A8D4" stroke-width="1.5"/>
@@ -132,7 +132,7 @@
   <rect x="240" y="616" width="430" height="52" rx="6" fill="#EDE9FE" stroke="#C4B5FD" stroke-width="1.5"/>
   <text x="455" y="636" text-anchor="middle" font-size="10" font-weight="bold" fill="#4C1D95">⑩ Lazy feature module loads</text>
   <text x="455" y="651" text-anchor="middle" font-size="9" fill="#5B21B6">Angular downloads the JS chunk for system / items / logics / etc.</text>
-  <text x="455" y="663" text-anchor="middle" font-size="9" fill="#5B21B6">SystemComponent and ItemTreeComponent wait for serverReady$ before connecting WebSocket.</text>
+  <text x="455" y="663" text-anchor="middle" font-size="9" fill="#5B21B6">SystemComponent and ItemTreeComponent wait for serverReady$ before connecting the event stream.</text>
 
   <!-- Arrows -->
   <!-- 5 → TopNav (render parallel) -->
