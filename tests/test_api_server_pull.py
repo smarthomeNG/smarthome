@@ -11,6 +11,11 @@ from . import common
 common.register_shng_log_levels()
 
 from modules.admin.api_server import ServerController
+from modules.admin.pullimpact import PendingReloads
+
+from lib.item.items import Items
+
+from .mock.core import MockSmartHome
 
 from .git_fixtures import GitTestCase, RepoPair, git
 
@@ -32,6 +37,7 @@ class _FakeSh:
 class _FakeModule:
     def __init__(self, sh):
         self._sh = sh
+        self.pending_plugin_reloads = PendingReloads()
 
 
 class PullTestCase(GitTestCase):
@@ -170,3 +176,52 @@ class TestPullStatus(PullTestCase):
 
         self.assertEqual(response['result'], 'error')
         self.assertEqual(response['repos'], [])
+
+
+class TestPullImpact(PullTestCase):
+    def setUp(self):
+        super().setUp()
+        registered = (dict(Items.plugin_attributes), dict(Items.plugin_attribute_prefixes))
+        self.addCleanup(self._restore_item_registries, *registered)
+        plugins = MockSmartHome().with_plugins_from(common.BASE + '/tests/resources/plugin_pull_impact')
+        self.wol_configs = [p.get_configname() for p in plugins.return_plugins() if p._classpath == 'plugins.wol']
+        self.assertTrue(self.wol_configs, 'fixture must load the wol plugin')
+
+    @staticmethod
+    def _restore_item_registries(attributes, prefixes):
+        """Loading plugins fills the class-level registries of item attributes; other tests must not see them."""
+        Items.plugin_attributes.clear()
+        Items.plugin_attributes.update(attributes)
+        Items.plugin_attribute_prefixes.clear()
+        Items.plugin_attribute_prefixes.update(prefixes)
+
+    def test_changed_core_code_demands_a_restart(self):
+        self.core.push_upstream_commit('lib/x.py', 'x\n')
+
+        impact = self.put('pull_core')['impact']
+
+        self.assertEqual(impact, {'restart': ['core: lib changed'], 'reload': []})
+
+    def test_changed_core_documentation_demands_nothing(self):
+        self.core.push_upstream_commit('doc/x.md', 'x\n')
+        self.assertEqual(self.put('pull_core')['impact'], {'restart': [], 'reload': []})
+
+    def test_changed_plugin_code_demands_a_reload_of_its_instances_and_remembers_them(self):
+        self.plugins.push_upstream_commit('wol/__init__.py', 'x\n')
+
+        impact = self.put('pull_plugins')['impact']
+
+        self.assertEqual(impact, {'restart': [], 'reload': self.wol_configs})
+        self.assertEqual(self.controller.module.pending_plugin_reloads.names(), sorted(self.wol_configs))
+
+    def test_a_restart_makes_the_reload_moot(self):
+        self.core.push_upstream_commit('lib/x.py', 'x\n')
+        self.plugins.push_upstream_commit('wol/__init__.py', 'x\n')
+
+        impact = self.put('pull_all')['impact']
+
+        self.assertEqual(impact, {'restart': ['core: lib changed'], 'reload': []})
+        self.assertEqual(self.controller.module.pending_plugin_reloads.names(), [])
+
+    def test_a_pull_that_changes_nothing_demands_nothing(self):
+        self.assertEqual(self.put('pull_all')['impact'], {'restart': [], 'reload': []})

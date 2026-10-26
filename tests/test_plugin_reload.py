@@ -348,3 +348,54 @@ class TestReloadDoesNotDuplicateItemTriggers(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
+
+
+class TestReloadMultiInstancePlugin(unittest.TestCase):
+    """
+    A plugin configured in several sections shares one module: reloading its code
+    replaces every instance. reload_plugin() on any one of them therefore unloads
+    all instances, reloads the code once and loads them all again.
+
+    Uses the multia/multib sections of tests/resources/plugin_reload.yaml.
+    """
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.plugins = self.sh.with_plugins_from(common.BASE + '/tests/resources/plugin_reload')
+
+    def test_reload_replaces_every_instance_of_the_plugin(self):
+        old_a = self.plugins.return_plugin('multia')
+        old_b = self.plugins.return_plugin('multib')
+        self.assertIsNotNone(old_a)
+        self.assertIsNotNone(old_b)
+
+        result = self.plugins.reload_plugin('multia')
+
+        self.assertTrue(result)
+        self.assertIsNot(self.plugins.return_plugin('multia'), old_a)
+        self.assertIsNot(self.plugins.return_plugin('multib'), old_b)
+
+    def test_reload_restarts_only_the_instances_that_were_running(self):
+        self.assertTrue(self.plugins.start_plugin('multia'))
+        self.plugins.get_pluginthread('multia').join(timeout=2)
+        self.assertTrue(self.plugins.return_plugin('multia').alive)
+        self.assertFalse(self.plugins.return_plugin('multib').alive)
+
+        self.assertTrue(self.plugins.reload_plugin('multib'))
+
+        self.plugins.get_pluginthread('multia').join(timeout=2)
+        self.assertTrue(self.plugins.return_plugin('multia').alive)
+        self.assertFalse(self.plugins.return_plugin('multib').alive)
+
+    def test_reload_restores_unloaded_instances_when_a_later_unload_fails(self):
+        # reverse unload order: failingsibling goes first (succeeds), failingstop fails while running
+        stuck = self.plugins.return_plugin('failingstop')
+        stuck.alive = True
+        sibling = self.plugins.return_plugin('failingsibling')
+        self.assertIsNotNone(sibling)
+
+        result = self.plugins.reload_plugin('failingstop')
+
+        self.assertFalse(result)
+        self.assertIs(self.plugins.return_plugin('failingstop'), stuck)
+        self.assertIsNotNone(self.plugins.return_plugin('failingsibling'), 'the unloaded sibling must be loaded again')

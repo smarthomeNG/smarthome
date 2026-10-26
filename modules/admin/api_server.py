@@ -28,13 +28,15 @@ from pathlib import Path
 
 import cherrypy
 
-from .gitpull import PullTarget, check_repo, has_upstream, pull_all, pull_repo
+from .gitpull import PullTarget, RepoPullResult, check_repo, file_at, has_upstream, pull_all, pull_repo
+from .pullimpact import PullImpact, core_restart_reasons, plugin_configs_by_dir, plugins_impact
 from .rest import ApiDoc, RESTResource
 
 import bin.shngversion
 import lib.daemon
 import lib.backup as backup
 from lib.constants import DIR_ETC, DIR_MODULES
+from lib.plugin import Plugins
 from lib.shpypi import Shpypi
 from lib.syspower import PowerAction, is_supported, run_power_action
 
@@ -381,10 +383,54 @@ class ServerController(RESTResource):
             finally:
                 self._pull_lock.release()
             failed = any(r['status'] == 'error' for r in results)
-            response = {'result': 'error' if failed else 'ok', 'repos': results}
+            try:
+                impact = self.pull_impact(results)
+            except Exception:
+                self.logger.exception('ServerController.pull(): could not work out what the pull changed')
+                impact = {'restart': ['could not determine what changed'], 'reload': []}
+            response = {'result': 'error' if failed else 'ok', 'repos': results, 'impact': impact}
 
         self.logger.info(f"ServerController.pull(): response '{response}'")
         return json.dumps(response)
+
+    def pull_impact(self, results: list[RepoPullResult]) -> PullImpact:
+        """
+        Works out what the pulled changes demand of the running core: a restart, or a reload of plugins.
+
+        If a restart is needed it reloads everything anyway, so no reloads are listed. Otherwise the plugins to
+        reload are recorded in the module's pending reloads, until they are reloaded or the core restarts.
+
+        :param results: per-repository results of the pull
+        """
+        restart: list[str] = []
+        reload: list[str] = []
+        for result in results:
+            if result['repo'] == 'core':
+                restart.extend(f'core: {directory} changed' for directory in core_restart_reasons(result['files']))
+            elif result['repo'] == 'plugins' and result['files']:
+                path = self.pull_repos['plugins']
+                impact = plugins_impact(
+                    result['files'],
+                    self._plugin_configs_by_dir(),
+                    lambda relpath: file_at(path, result['before'], relpath),
+                    lambda relpath: file_at(path, 'HEAD', relpath),
+                )
+                restart.extend(impact['restart'])
+                reload.extend(impact['reload'])
+        if restart:
+            reload = []
+        self.module.pending_plugin_reloads.add(reload)
+        return {'restart': restart, 'reload': reload}
+
+    @staticmethod
+    def _plugin_configs_by_dir() -> dict[str, list[str]]:
+        """Returns the configuration names of the loaded plugin instances, grouped by plugin directory."""
+        plugins = Plugins.get_instance()
+        if plugins is None:
+            return {}
+        return plugin_configs_by_dir(
+            (plugin.get_configname(), plugin._classpath) for plugin in plugins.return_plugins()
+        )
 
     # /api/server/stop
     def stop(self):
@@ -514,8 +560,10 @@ class ServerController(RESTResource):
         ApiDoc(
             summary=(
                 'Fast-forward the core checkout to its upstream (git pull --ff-only). Only files on disk change, '
-                'the running core needs a restart to use them. Response: result and per-repository results '
-                '(repo, status, text, changed).'
+                'the running core needs a restart to use them. Response: result, per-repository results '
+                '(repo, status, text, changed, before, files) and impact: restart (reasons a restart is needed, '
+                'empty if none) and reload (plugin configurations to reload instead; also reported by '
+                'GET /plugins/config/ as _reload_pending until reloaded or the core restarts).'
             ),
             method='put',
             path='/server/pull_core/',

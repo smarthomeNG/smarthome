@@ -311,3 +311,42 @@ class TestPullAll(GitTestCase):
         self.assertTrue(all(r['status'] != 'ok' for r in results))
         self.assertTrue(any('timed out' in r['text'] for r in results))
         self.assertEqual(git(self.core.clone, 'rev-parse', 'HEAD'), core_head)
+
+
+class TestPullResultFiles(GitTestCase):
+    def test_pull_repo_lists_the_changed_files(self):
+        pair = RepoPair(self.root, 'core')
+        old_head = git(pair.clone, 'rev-parse', 'HEAD')
+        pair.push_upstream_commit('f.txt', 'two\n')
+        (pair.upstream / 'sub').mkdir()
+        pair.push_upstream_commit('sub/g.txt', 'new\n')
+
+        result = pull_repo('core', pair.clone)
+
+        self.assertEqual(sorted(result['files']), ['f.txt', 'sub/g.txt'])
+        self.assertEqual(result['before'], old_head)
+
+    def test_pull_all_lists_the_changed_files_per_repository(self):
+        core = RepoPair(self.root, 'core')
+        plugins = RepoPair(self.root, 'plugins')
+        plugins.push_upstream_commit('g.txt', 'new\n')
+
+        results = pull_all([('core', core.clone), ('plugins', plugins.clone)])
+
+        self.assertEqual([(r['repo'], r['files']) for r in results], [('core', []), ('plugins', ['g.txt'])])
+
+    def test_nothing_changed_lists_no_files(self):
+        pair = RepoPair(self.root, 'core')
+        self.assertEqual(pull_repo('core', pair.clone)['files'], [])
+
+
+class TestPlainOutput(GitTestCase):
+    def test_output_has_no_color_codes_even_if_git_is_configured_to_always_color(self):
+        pair = RepoPair(self.root, 'core')
+        git(pair.clone, 'config', 'color.ui', 'always')
+        pair.push_upstream_commit('f.txt', 'two\n')
+
+        result = pull_repo('core', pair.clone)
+
+        self.assertIn('f.txt', result['text'])
+        self.assertNotIn('\x1b', result['text'])

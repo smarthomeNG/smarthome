@@ -29,3 +29,21 @@ itembinding:
     class_path: tests.reload_item_binding_plugin
     class_name: ItemBindingPlugin
     instance: itembinding
+
+multia:
+    plugin_name: wol
+    class_path: tests.reload_multi_instance_plugin
+    class_name: MultiInstancePlugin
+    instance: multia
+
+multib:
+    plugin_name: wol
+    class_path: tests.reload_multi_instance_plugin
+    class_name: MultiInstancePlugin
+    instance: multib
+
+failingsibling:
+    plugin_name: wol
+    class_name: FailingStopPlugin
+    class_path: tests.reload_failing_stop_plugin
+    instance: failingsibling

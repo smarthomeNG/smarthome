@@ -25,6 +25,7 @@ def git(path: Path, *args: str) -> str:
 
 def commit_file(path: Path, name: str, content: str) -> None:
     """Writes content to name in the repository at path and commits it."""
+    (path / name).parent.mkdir(parents=True, exist_ok=True)
     (path / name).write_text(content)
     git(path, 'add', name)
     git(path, 'commit', '-qm', f'{name}: {content}')

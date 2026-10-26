@@ -774,7 +774,14 @@ class Plugins:
         """
         attempt to reload plugin code
 
-        plugin will be unloaded, code reloaded and re-loaded. It it was running, it will be restarted.
+        The plugin is unloaded, its code reloaded and the plugin loaded again. If it was running, it is restarted.
+
+        All instances of a multi-instance plugin share their code, so all of them are replaced: they are
+        unloaded in reverse order of their configuration sections, the code is reloaded once, and they are
+        loaded (and, if they were running, started) again in configuration order.
+
+        :param configname: name of the plugin's section in etc/plugin.yaml; any instance of a multi-instance plugin
+        :return: True if every instance was reloaded
         """
         logger.warning(f'Reloading plugin {configname}, step 1: get/check data')
 
@@ -785,7 +792,7 @@ class Plugins:
 
         mymodule = myplugin.__module__
         classpath = myplugin._classpath
-        alive = myplugin.alive
+        del myplugin
 
         # read plugin configuration (from etc/plugin.yaml)
         _conf = self.refresh_plugin_config().conf
@@ -793,27 +800,26 @@ class Plugins:
             logger.warning(f'Reading plugin config {self._configfile} returned no data, check config')
             return False
 
-        plg_conf = _conf.get(configname)
-        if plg_conf is None:
-            logger.warning(f'No config section {configname} found, check config')
-            return False
-        if 'plugin_name' not in plg_conf:
-            logger.warning(f'No plugin_name configured for {configname}, check config')
-            return False
-
-        logger.info(f'Reloading plugin {configname}, step 1a: checking multi instance loading')
-        for plg_name in _conf:
-            plg_instance = self.return_plugin(plg_name)
-            if plg_instance and plg_instance.__module__ == mymodule and plg_name != configname:
-                # TODO: possibly allow direct unloading of all plugin instances, possibly config option?
-                logger.error(f'Plugin {configname} also loaded as {plg_name} - unload all other instances first!')
+        group = [
+            name
+            for name in _conf
+            if name == configname or getattr(self.return_plugin(name), '__module__', None) == mymodule
+        ]
+        was_alive = {name: self.return_plugin(name).alive for name in group}
+        for name in group:
+            plg_conf = _conf.get(name)
+            if plg_conf is None or 'plugin_name' not in plg_conf:
+                logger.warning(f'No usable config section {name} found, check config')
                 return False
 
-        logger.info(f'Reloading plugin {configname}, step 2: unload plugin')
-        del myplugin
-        if not self.unload_plugin(configname):
-            logger.warning(f'Reloading plugin {configname}: unload_plugin failed, aborting reload')
-            return False
+        logger.info(f'Reloading plugin {configname}, step 2: unload plugin instances {group}')
+        unloaded = []
+        for name in reversed(group):
+            if not self.unload_plugin(name):
+                logger.warning(f'Reloading plugin {configname}: unload_plugin({name}) failed, aborting reload')
+                self._restore_plugins(reversed(unloaded), _conf, was_alive)
+                return False
+            unloaded.append(name)
 
         logger.info(f'Reloading plugin {configname}, step 3: reload plugin code')
         if not self._reload_module_tree(classpath, mymodule):
@@ -821,19 +827,29 @@ class Plugins:
             return False
 
         logger.info(f'Reloading plugin {configname}, step 4: load plugin')
-        if not self.load_plugin(configname, plg_conf):
-            logger.warning(f'Reloading plugin {configname}: load_plugin failed, aborting reload')
-            return False
-        # load_plugin() already calls _parse_existing_items() itself on
-        # success - a second, explicit call here used to double-register
-        # every matching item's trigger on the same instance
+        return self._restore_plugins(group, _conf, was_alive)
 
-        if alive:
-            logger.info(f'Reloading plugin {configname}, step 5: start plugin')
-            self.start_plugin(configname)
+    def _restore_plugins(self, confignames, conf: dict, was_alive: dict) -> bool:
+        """
+        Loads the given plugin sections, in the given order, and starts those that were running.
 
-        logger.info(f'Reloading plugin {configname} complete')
-        return True
+        load_plugin() already calls _parse_existing_items() itself on success - a second, explicit call
+        used to double-register every matching item's trigger on the same instance.
+
+        :param confignames: names of the sections to load
+        :param conf: content of etc/plugin.yaml
+        :param was_alive: per section name, whether the plugin was running before it was unloaded
+        :return: True if every plugin was loaded
+        """
+        success = True
+        for name in confignames:
+            if not self.load_plugin(name, conf[name]):
+                logger.warning(f'Reloading plugin {name}: load_plugin failed')
+                success = False
+            elif was_alive[name]:
+                logger.info(f'Reloading plugin {name}, step 5: start plugin')
+                self.start_plugin(name)
+        return success
 
     def _reload_module_tree(self, classpath: str, mymodule: str) -> bool:
         """

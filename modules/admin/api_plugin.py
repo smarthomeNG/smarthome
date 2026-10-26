@@ -305,6 +305,8 @@ class PluginController(RESTResource):
             if self.plugins.return_plugin(id) is None:
                 return {'result': 'error', 'description': "Plugin '{}' is not loaded".format(id)}
             result = self.plugins.unload_plugin(id)
+            if result:
+                self.module.pending_plugin_reloads.discard(id)
             return (
                 {'result': 'ok'}
                 if result
@@ -314,7 +316,15 @@ class PluginController(RESTResource):
         elif action == 'reload':
             if self.plugins.return_plugin(id) is None:
                 return {'result': 'error', 'description': "Plugin '{}' is not loaded".format(id)}
+            instances = [
+                plugin.get_configname()
+                for plugin in self.plugins.return_plugins()
+                if plugin.__module__ == self.plugins.return_plugin(id).__module__
+            ]
             result = self.plugins.reload_plugin(id)
+            if result:
+                for configname in instances:
+                    self.module.pending_plugin_reloads.discard(configname)
             return (
                 {'result': 'ok'}
                 if result

@@ -177,6 +177,7 @@ class PluginsInstalledController(RESTResource):
 
 class PluginsConfigController(RESTResource):
     def __init__(self, module):
+        self.module = module
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = self._sh.get_config_dir(DIR_PLUGINS)
@@ -258,6 +259,7 @@ class PluginsConfigController(RESTResource):
                 plg = _conf[confplg].get('class_path', '?')
             plginstance = self.plugins.return_plugin(confplg)
             _conf[confplg]['_loaded'] = plginstance is not None
+            _conf[confplg]['_reload_pending'] = confplg in self.module.pending_plugin_reloads
             if plginstance is not None:
                 # self.logger.warning("confplg {}: type(plginstance) = {}".format(confplg, type(plginstance)))
                 # self.logger.warning("confplg {}: type(plginstance.metadata) = {}".format(confplg, type(plginstance.metadata)))
@@ -293,7 +295,7 @@ class PluginsConfigController(RESTResource):
     read.authentication_needed = True
     read.api_doc = [
         ApiDoc(
-            summary='Configuration of all currently configured plugins',
+            summary='Configuration of all currently configured plugins; `_reload_pending` marks plugins whose files a pull updated',
             method='get',
             path='/plugins/config/',
             tags=['plugins'],

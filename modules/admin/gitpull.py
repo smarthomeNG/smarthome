@@ -41,7 +41,9 @@ class RepoPullResult(TypedDict):
     repo: str
     status: RepoStatus
     text: str  # git's output, or the reason for an error or skip
-    changed: bool  # True if HEAD moved, i.e. a restart is needed to run the new code
+    changed: bool  # True if HEAD moved, i.e. the files on disk differ from what the running core loaded
+    before: str  # commit id HEAD pointed at before the pull, '' if it could not be determined
+    files: list[str]  # paths that differ between before and the new HEAD, relative to the repository root
 
 
 class RepoCheck(TypedDict):
@@ -58,14 +60,15 @@ def _git(path: Path, *args: str, timeout: float = 60) -> tuple[bool, str]:
     """
     Runs git in the repository at path and waits for it to finish.
 
-    Credential prompts are disabled, so a remote that wants authentication fails instead of hanging.
+    Credential prompts are disabled, so a remote that wants authentication fails instead of hanging. Output is
+    never colored, whatever the git configuration says.
 
     :param path: repository directory
     :param args: git arguments
     :param timeout: seconds to wait before killing git
     :return: (True, output) on exit code 0, otherwise (False, git's error output or the failure reason)
     """
-    argv = ['git', '-C', str(path), *args]
+    argv = ['git', '-c', 'color.ui=never', '-C', str(path), *args]
     try:
         result = subprocess.run(
             argv, capture_output=True, text=True, timeout=timeout, env={**os.environ, 'GIT_TERMINAL_PROMPT': '0'}
@@ -132,11 +135,33 @@ def _head(path: Path) -> str:
     return output if ok else ''
 
 
+def changed_files(path: Path, before: str, after: str = 'HEAD') -> list[str]:
+    """Returns the paths that differ between two commits of the repository at path, or [] if git fails."""
+    if not before:
+        return []
+    ok, output = _git(path, 'diff', '--name-only', '-z', before, after)
+    return [name for name in output.split('\0') if name] if ok else []
+
+
+def file_at(path: Path, rev: str, relpath: str) -> str | None:
+    """Returns the content of relpath at commit rev of the repository at path, or None if it does not exist there."""
+    ok, output = _git(path, 'show', f'{rev}:{relpath}')
+    return output if ok else None
+
+
 def _advance(name: str, path: Path, git_args: tuple[str, ...], timeout: float) -> RepoPullResult:
     """Runs the given git command, which is expected to move HEAD forward, and reports the outcome."""
     before = _head(path)
     ok, text = _git(path, *git_args, timeout=timeout)
-    return {'repo': name, 'status': 'ok' if ok else 'error', 'text': text, 'changed': ok and _head(path) != before}
+    changed = ok and _head(path) != before
+    return {
+        'repo': name,
+        'status': 'ok' if ok else 'error',
+        'text': text,
+        'changed': changed,
+        'before': before,
+        'files': changed_files(path, before) if changed else [],
+    }
 
 
 def pull_repo(name: str, path: Path, timeout: float = 60) -> RepoPullResult:
@@ -178,6 +203,8 @@ def pull_all(repos: list[tuple[str, Path]], timeout: float = 60) -> list[RepoPul
                 'status': 'error' if problems[name] else 'skipped',
                 'text': problems[name] or 'not pulled because another repository cannot be pulled',
                 'changed': False,
+                'before': '',
+                'files': [],
             }
             for name, _ in repos
         ]

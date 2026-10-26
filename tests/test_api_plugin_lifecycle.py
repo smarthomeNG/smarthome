@@ -15,6 +15,7 @@ from tests.mock.core import MockSmartHome
 common.register_shng_log_levels()
 
 from modules.admin.api_plugin import PluginController
+from modules.admin.pullimpact import PendingReloads
 
 SECOND_SECTION = """
 second:
@@ -28,6 +29,7 @@ second:
 class _FakeModule:
     def __init__(self, sh):
         self._sh = sh
+        self.pending_plugin_reloads = PendingReloads()
 
 
 class TestLoadReportsInstanceNameNotice(unittest.TestCase):
@@ -107,3 +109,47 @@ class TestLoadActivatesDisabledSection(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
+
+
+class TestLifecycleClearsPendingReload(unittest.TestCase):
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmpdir)
+        shutil.copy(common.BASE + '/tests/resources/plugin_disabled_sections.yaml', self.tmpdir + '/plugin.yaml')
+        with open(self.tmpdir + '/plugin.yaml', 'a', encoding='utf8') as f:
+            f.write(SECOND_SECTION)
+            f.write(SECOND_SECTION.replace('second', 'third'))
+        self.sh = MockSmartHome()
+        self.plugins = self.sh.with_plugins_from(self.tmpdir + '/plugin')
+        self.module = _FakeModule(self.sh)
+        self.controller = PluginController(self.module)
+        self.controller.plugins = self.plugins
+        patcher = patch.object(self.plugins, 'start_plugin')
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.assertIsNotNone(self.plugins.return_plugin('second'))
+        self.module.pending_plugin_reloads.add(['second', 'other'])
+
+    def test_reload_clears_the_plugin_and_only_that_one(self):
+        response = self.controller.handle_plugin_lifecycle('second', 'reload')
+
+        self.assertEqual(response['result'], 'ok')
+        self.assertEqual(self.module.pending_plugin_reloads.names(), ['other'])
+
+    def test_reload_clears_every_instance_of_the_plugin_because_all_are_reloaded(self):
+        self.module.pending_plugin_reloads.add(['third'])
+
+        self.controller.handle_plugin_lifecycle('second', 'reload')
+
+        self.assertEqual(self.module.pending_plugin_reloads.names(), ['other'])
+
+    def test_a_failed_reload_keeps_the_plugin_pending(self):
+        with patch.object(self.plugins, 'reload_plugin', return_value=False):
+            response = self.controller.handle_plugin_lifecycle('second', 'reload')
+
+        self.assertEqual(response['result'], 'error')
+        self.assertEqual(self.module.pending_plugin_reloads.names(), ['other', 'second'])
+
+    def test_unload_clears_the_plugin(self):
+        self.controller.handle_plugin_lifecycle('second', 'unload')
+        self.assertEqual(self.module.pending_plugin_reloads.names(), ['other'])

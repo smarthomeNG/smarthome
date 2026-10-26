@@ -32,6 +32,7 @@ from lib.model.module import Module
 from lib.module import Modules
 from lib.shtime import Shtime
 
+from .pullimpact import PendingReloads
 from .rest import RESTResource
 
 from .api_server import *
@@ -60,7 +61,7 @@ suburl = 'admin'
 
 
 class Admin(Module):
-    version = '1.10.0'
+    version = '1.11.0'
     longname = 'Admin module for SmartHomeNG'
     _port = 0
 
@@ -80,6 +81,8 @@ class Admin(Module):
         self.logger.debug("Module '{}': Initializing".format(self._shortname))
 
         self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, str(self._parameters)))
+
+        self.pending_plugin_reloads = PendingReloads()
 
         # for authentication
         self.jwt_secret = self._load_or_create_jwt_secret()
