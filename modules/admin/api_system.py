@@ -138,10 +138,10 @@ class SystemController(RESTResource):
             user = os.getlogin()
 
         if os.name != 'nt':
-            space = os.statvfs(self._sh.base_dir)
+            space = os.statvfs(self._sh.get_basedir())
             freespace = space.f_frsize * space.f_bavail / 1024 / 1024
         else:
-            space = psutil.disk_usage(self._sh.base_dir)
+            space = psutil.disk_usage(self._sh.get_basedir())
             freespace = space.free / 1024 / 1024
 
         rt = Shtime.get_instance().runtime_as_dict()
@@ -206,7 +206,7 @@ class SystemController(RESTResource):
             response['pid'] = str(os.getpid())
 
         # SmartHomeNG
-        response['sh_dir'] = self._sh.base_dir
+        response['sh_dir'] = self._sh.get_basedir()
         response['help_local_available'] = os.path.isfile(
             os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html', 'index.html')
         )

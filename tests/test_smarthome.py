@@ -90,12 +90,12 @@ class SmarthomeTest(unittest.TestCase):
             for sh_config in [None, ext_conf]:
                 if sh_config is None:
                     sh = lib.smarthome.SmartHome(MODE=bin.smarthome.MODE)
-                    conf_dir = sh.base_dir
+                    conf_dir = sh.get_basedir()
                 else:
                     sh = lib.smarthome.SmartHome(MODE=bin.smarthome.MODE, extern_conf_dir=sh_config)
                     conf_dir = sh_config
                 logger.warning('    test with config files in folder {}'.format(conf_dir))
-                base_dir = sh.base_dir
+                base_dir = sh.get_basedir()
                 sh.alive = False
                 logger.warning('        check paths & basenames')
                 _etc_dir = os.path.join(conf_dir, 'etc')

@@ -110,7 +110,7 @@ Unterstützt werden folgende Variablen/Platzhalter:
 +-----------------+------------------------------------------------------------------------------+
 |  {date}         |  aktuelles Datum im Format DD.MM.YYYY                                        |
 +-----------------+------------------------------------------------------------------------------+
-|  {now}          |  aktuelle Zeit im Format von sh.now (YYYY-MM-DD HH:MM:SS.ss+TZ)              |
+|  {now}          |  aktuelle Zeit im Format von shtime.now (YYYY-MM-DD HH:MM:SS.ss+TZ)          |
 +-----------------+------------------------------------------------------------------------------+
 |  {itemvalue}    |  der Wert eines Items (z.B, ein Text) aus dem ``log_rules`` Attribut         |
 +-----------------+------------------------------------------------------------------------------+

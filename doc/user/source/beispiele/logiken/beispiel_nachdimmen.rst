@@ -34,7 +34,7 @@ durch die Logik nachgedimmt.
    logger.info("Nachdimmen Logik gestartet")
 
    itemname = trigger['source']
-   item = sh.return_item(itemname)
+   item = sh.items.return_item(itemname)
 
    if trigger['value'] == True:
 

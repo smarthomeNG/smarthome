@@ -43,7 +43,7 @@ This parameter ...
 self.classname = self.__class__.__name__
 
 try:
-    self.mod_sample = self._sh.get_module('sample')
+    self.mod_sample = self._sh.modules.get_module('sample')
 except:
     self.mod_sample = None
     

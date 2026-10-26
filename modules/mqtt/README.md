@@ -89,7 +89,7 @@ If set to **True, error-pages (except for error 404) will show the Python traceb
 self.classname = self.__class__.__name__
 
 try:
-    self.mod_mqtt = self._sh.get_module('mqtt')
+    self.mod_mqtt = self._sh.modules.get_module('mqtt')
 except:
     self.mod_mqtt = None
     

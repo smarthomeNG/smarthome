@@ -195,7 +195,7 @@ value monitoring and the System Overview page's resource-usage graphs.
 self.classname = self.__class__.__name__
 
 try:
-    self.mod_admin = self._sh.get_module('admin')
+    self.mod_admin = self._sh.modules.get_module('admin')
 except:
     self.mod_admin = None
     

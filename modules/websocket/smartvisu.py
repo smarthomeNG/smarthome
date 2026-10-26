@@ -1002,7 +1002,7 @@ class Protocol:
         """
         self.logger.info(f'Client {self.build_log_info(client_addr)} requested a list of defined items.')
         myitems = []
-        for i in self._sh.return_items():
+        for i in self.items.return_items():
             include = False
             #            if i.get('visu_acl', '').lower() != 'no':
             if (path == '') and ('.' not in i._path):
