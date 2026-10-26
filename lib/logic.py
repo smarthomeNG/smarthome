@@ -59,7 +59,7 @@ import lib.shyaml as shyaml
 from lib.utils import Utils
 
 from lib.constants import PLUGIN_PARSE_LOGIC
-from lib.constants import YAML_FILE, DIR_LOGICS, DIR_ETC, BASE_LOGIC, BASE_ADMIN, BASE_LOGIC_GROUPS
+from lib.constants import DIR_LOGICS, DIR_ETC, BASE_LOGIC, BASE_ADMIN, BASE_LOGIC_GROUPS
 
 from lib.item import Items
 from lib.plugin import Plugins
@@ -80,7 +80,6 @@ class Logics:
     plugins = None
     scheduler = None
 
-    _config_type = None
     _logicname_prefix = 'logics.'  # prefix for scheduler names
 
     _groups = {}
@@ -267,12 +266,9 @@ class Logics:
         """
         logger.debug('Reading Logics from {}.*'.format(filename))
         config = lib.config.parse_basename(filename, configtype='logics')
-        if config != {}:
-            self._config_type = YAML_FILE
-
-            for name in config:
-                if 'filename' in config[name]:
-                    config[name]['pathname'] = directory + config[name]['filename']
+        for name in config:
+            if 'filename' in config[name]:
+                config[name]['pathname'] = directory + config[name]['filename']
 
         return config
 
@@ -765,21 +761,6 @@ class Logics:
             logic_list.append(logic)
         return logic_list
 
-    def return_config_type(self):
-        """
-        Return the used config type
-
-        After initialization this function returns '.yaml' if the logic configuration file in /etc could be
-        read, otherwise None.
-
-        To use the following functions for reading and manipulating the logic configuration, the
-        configuration file **has to be** in YAML format. Otherwise the functions will not work/return empty results.
-
-        :return: '.yaml' or None
-        :rtype: str or None
-        """
-        return self._config_type
-
     def read_config_section(self, section):
         """
         Read a section from /etc/logic.yaml
@@ -796,10 +777,6 @@ class Logics:
         :return: config_list: list of configuration entries. Each entry of this list is a list with three string entries: ['key', 'value', 'comment']
         :rtype: list of lists
         """
-        if self.return_config_type() != YAML_FILE:
-            logger.error('read_config_section: Editing of configuration only possible with new (yaml) config format')
-            return False
-
         # load /etc/logic.yaml
         _conf = shyaml.yaml_load_roundtrip(self._logic_conf)
 
@@ -889,10 +866,6 @@ class Logics:
         """
         if section == '':
             logger.error('update_config_section: No section name specified. Not updatind logics configuration.')
-            return False
-
-        if self.return_config_type() != YAML_FILE:
-            logger.error('update_config_section: Editing of configuration only possible with new (yaml) config format')
             return False
 
         # load /etc/logic.yaml
