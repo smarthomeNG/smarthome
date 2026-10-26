@@ -24,7 +24,9 @@ Checks:
 """
 
 import argparse
+import ast
 import csv
+import functools
 import io
 import json
 import re
@@ -45,26 +47,6 @@ from ruamel.yaml.scalarstring import DoubleQuotedScalarString  # noqa: E402
 
 BACKUP_DIR = 'upgrade_check_backup'
 
-#: attributes of the ``sh`` object that a plugin or item must not hide
-RESERVED_SH_NAMES = frozenset(
-    {
-        'items',
-        'plugins',
-        'modules',
-        'logics',
-        'shtime',
-        'scheduler',
-        'scenes',
-        'connections',
-        'logs',
-        'sun',
-        'moon',
-        'env',
-        'now',
-        'version',
-    }
-)
-
 #: removed ``sh`` methods and the sub-object that replaces them
 SH_METHOD_HOMES: dict[str, str] = {
     **dict.fromkeys(('add_item', 'return_item', 'return_items', 'match_items', 'find_items', 'find_children'), 'items'),
@@ -73,6 +55,36 @@ SH_METHOD_HOMES: dict[str, str] = {
     **dict.fromkeys(('reload_logics', 'return_logic', 'return_logics'), 'logics'),
     **dict.fromkeys(('now', 'tzinfo', 'utcnow', 'utcinfo', 'runtime'), 'shtime'),
 }
+
+
+#: top level items that the core itself creates (``lib/env/*.yaml``)
+CORE_TOP_LEVEL_ITEMS = frozenset({'env'})
+
+
+@functools.lru_cache(maxsize=1)
+def smarthome_attribute_names() -> frozenset[str]:
+    """Names of the class members and instance attributes of ``SmartHome``, read from ``lib/smarthome.py``."""
+    tree = ast.parse((Path(__file__).resolve().parent.parent / 'lib' / 'smarthome.py').read_text(encoding='utf-8'))
+    smarthome = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'SmartHome')
+    names = set()
+    for node in smarthome.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            names.add(node.name)
+        elif isinstance(node, ast.Assign):
+            names |= {t.id for t in node.targets if isinstance(t, ast.Name)}
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            names.add(node.target.id)
+    for node in ast.walk(smarthome):
+        if isinstance(node, ast.Attribute) and isinstance(node.ctx, ast.Store):
+            if isinstance(node.value, ast.Name) and node.value.id == 'self':
+                names.add(node.attr)
+    return frozenset(n for n in names if not n.startswith('__'))
+
+
+def reserved_sh_names() -> frozenset[str]:
+    """Names a plugin section cannot claim on ``sh``: members of ``SmartHome``, removed methods, core items."""
+    return smarthome_attribute_names() | SH_METHOD_HOMES.keys() | CORE_TOP_LEVEL_ITEMS
+
 
 #: removed ``sh.tools`` functions that have no automatic replacement, with the hint what to use
 SH_TOOLS_HINTS: dict[str, str] = {
@@ -443,7 +455,7 @@ class PluginAliasChecker:
         if sections is None:
             return []
         names = set(enabled_sections(sections))
-        blocked = names & (RESERVED_SH_NAMES | self.top_level_items(project))
+        blocked = names & (reserved_sh_names() | self.top_level_items(project))
         findings = [
             Finding(
                 self.name,

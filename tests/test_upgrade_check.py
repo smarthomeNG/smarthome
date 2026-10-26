@@ -244,10 +244,41 @@ class TestPluginAlias(InstallationTestCase):
         self.assertIn('sh.knx.send', self.read('etc/logics/lights.py'))
         self.assertTrue(any(not f.fixable and "'knx'" in f.message for f in findings))
 
+    def test_a_section_named_like_a_smarthome_attribute_is_left_alone(self):
+        self.write('etc/plugin.yaml', 'trigger:\n    plugin_name: knx\nalive:\n    plugin_name: mqtt\n')
+        self.write('etc/logics/lights.py', 'sh.trigger.send()\nsh.alive.send()\n')
+
+        findings = self.run_check('plugin-alias', fix=True)
+
+        self.assertEqual('sh.trigger.send()\nsh.alive.send()\n', self.read('etc/logics/lights.py'))
+        self.assertEqual({'trigger', 'alive'}, {f.message.split("'")[1] for f in findings if not f.fixable})
+
+    def test_a_section_named_like_a_removed_sh_method_or_core_item_is_left_alone(self):
+        self.write('etc/plugin.yaml', 'now:\n    plugin_name: knx\nenv:\n    plugin_name: mqtt\n')
+        self.write('etc/logics/lights.py', 'sh.now.send()\nsh.env.send()\n')
+
+        self.run_check('plugin-alias', fix=True)
+
+        self.assertEqual('sh.now.send()\nsh.env.send()\n', self.read('etc/logics/lights.py'))
+
     def test_second_run_finds_nothing(self):
         self.run_check('plugin-alias', fix=True)
 
         self.assertEqual([], self.run_check('plugin-alias'))
+
+
+class TestShAttributeNames(unittest.TestCase):
+    def test_covers_everything_the_smarthome_class_defines(self):
+        from lib.smarthome import SmartHome
+
+        public = {name for name in dir(SmartHome) if not name.startswith('__')}
+
+        self.assertEqual(set(), public - tool.smarthome_attribute_names())
+
+    def test_covers_attributes_set_on_the_instance(self):
+        names = tool.smarthome_attribute_names()
+
+        self.assertLessEqual({'items', 'plugins', 'trigger', 'alive', 'shtime', 'item_count', 'version'}, names)
 
 
 class TestPluginClass(InstallationTestCase):
