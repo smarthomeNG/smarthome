@@ -22,4 +22,5 @@ hilfreich sind. Daneben befinden sich dort auch Shell-Skripte für Entwicklungsa
    tools_getshngpid
    tools_install_hooks
    tools_plugin_metadata_checker
+   tools_upgrade_check
 
