@@ -33,8 +33,6 @@ Datei *etc/module.yaml*
        # login_autorenew: True
        # itemtree_fullpath: True
        # itemtree_searchstart: 2
-       # websocket_host: smarthomeng.local
-       # websocket_port: 2424
        # log_chunksize: 1000
        # developer_mode: False
        # rest_dispatch_force_exception: False
@@ -64,11 +62,6 @@ Datei *etc/module.yaml*
 +-------------------------------+------------------------------------------------------------------------------------------------+
 | itemtree_searchstart          | **Optional**: Anzahl Zeichen die eingegeben sein muss, damit die Suche im Itemtree startet.    |
 |                               | Standardmäßig wird nach der Eingabe des zweiten Zeichens mit der Suche begonnen.               |
-+-------------------------------+------------------------------------------------------------------------------------------------+
-| websocket_host                | **VERALTET**: IP Adresse für den websocket Zugriff - bitte im Websocket-Modul konfigurieren.   |
-+-------------------------------+------------------------------------------------------------------------------------------------+
-| websocket_port                | **VERALTET**: Port der für den Websocket Zugriff verwendet wird - bitte im Websocket-Modul     |
-|                               | konfigurieren.                                                                                 |
 +-------------------------------+------------------------------------------------------------------------------------------------+
 | log_chunksize                 | **Optional**: Größe der gelesenen Blöcke bei der Anzeige großer Logdateien.                    |
 +-------------------------------+------------------------------------------------------------------------------------------------+

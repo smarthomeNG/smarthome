@@ -45,24 +45,6 @@ parameters:
             en: 'Minimum number of entered characters to start searching the item tree'
             fr: "Nombre minimum de caractères entrés pour démarrer la recherche dans l'arborescence"
 
-    websocket_host:
-        type: ip
-        default: 'None*'
-        description:
-            de: 'VERALTET: IP Adresse für den Websocket Zugriff - bitte im Websocket-Modul konfigurieren'
-            en: 'DEPRECATED: ip address for websocket access - configure in the websocket module instead'
-            fr: "OBSOLÈTE: Adresse IP pour l'accès websocket - à configurer dans le module websocket"
-
-    websocket_port:
-        type: int
-        valid_min: 0
-        valid_max: 65535
-        default: 2424
-        description:
-            de: 'VERALTET: Port für den Websocket Zugriff - bitte im Websocket-Modul konfigurieren'
-            en: 'DEPRECATED: port for websocket access - configure in the websocket module instead'
-            fr: "OBSOLÈTE: Port pour l'accès websocket - à configurer dans le module websocket"
-
     log_chunksize:
         type: int
         valid_min: 25
