@@ -25,7 +25,6 @@ import logging
 import os
 
 import lib.db
-from lib.model.smartplugin import SmartPlugin
 from lib.plugin import Plugins
 
 from .rest import ApiDoc, RESTResource

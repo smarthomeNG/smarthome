@@ -21,7 +21,6 @@
 
 
 import os
-import shutil
 import logging
 import json
 import collections
@@ -35,9 +34,9 @@ import lib.config
 from lib.module import Modules
 from lib.plugin import Plugins
 from lib.metadata import Metadata
-from lib.model.smartplugin import SmartPlugin
 from lib.constants import YAML_FILE, DIR_PLUGINS
 
+from .api_plugin import ensure_plugin_yaml_backup
 from .rest import ApiDoc, RESTResource
 
 
@@ -232,21 +231,9 @@ class PluginsConfigController(RESTResource):
             self.plugins = Plugins.get_instance()
 
         config_filename = self.plugins._get_plugin_conf_filename()
-        _etc_dir = os.path.dirname(config_filename)
 
         info = {}
-        # make it 'readonly', if plugin.conf is used
-        info['readonly'] = not (os.path.splitext(config_filename)[1].lower() == '.yaml')
-
-        if not info['readonly']:
-            # for beta-testing: create a backup of ../etc/plugin.yaml
-            if not os.path.isfile(os.path.join(_etc_dir, 'plugin_before_admin_config.yaml')):
-                shutil.copy2(config_filename, os.path.join(_etc_dir, 'plugin_before_admin_config.yaml'))
-                self.logger.warning(
-                    'Created a backup copy of plugin.yaml ({})'.format(
-                        os.path.join(_etc_dir, 'plugin_before_admin_config.yaml')
-                    )
-                )
+        ensure_plugin_yaml_backup(config_filename, self.logger)
 
         # get path to plugin configuration file, withou extension
         _conf = lib.config.parse_basename(os.path.splitext(config_filename)[0], configtype='plugin')
