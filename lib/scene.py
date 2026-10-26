@@ -26,7 +26,6 @@ This file implements scenes in SmartHomeNG
 
 import logging
 import os.path
-import csv
 
 from lib.translation import translate
 
@@ -48,8 +47,6 @@ class Scenes:
     """
     This class loads all scene definitions from /scenes folder and adds the necessary triggers
     for the scenes to function.
-
-    :Note: The scene definitions are stored in /scenes files with the extension .conf but don't follow the file format for conf-files of smarthome.py!
 
     :param smarthome: Main SmartHomeNG object
     :type smarthome: object
@@ -136,25 +133,13 @@ class Scenes:
 
                     self._load_learned_values(str(item.property.path))
                 else:
-                    # Trying to read conf file with scene definition
-                    scene_conf_file = self.scene_file + '.conf'
-                    try:
-                        with open(scene_conf_file, 'r', encoding='UTF-8') as f:
-                            reader = csv.reader(f, delimiter=' ')
-                            for row in reader:
-                                if row == []:  # ignore empty lines
-                                    continue
-                                if row[0][0] == '#':  # ignore comments
-                                    continue
-                                self._add_scene_entry(item, row[0], row[1], row[2])
-                    except Exception:
-                        logger.warning(
-                            translate(
-                                'Problem reading scene file {file}: No .yaml or .conf file found with this name',
-                                {'file': self.scene_file},
-                            )
+                    logger.warning(
+                        translate(
+                            'Problem reading scene file {file}: No .yaml file found with this name',
+                            {'file': self.scene_file},
                         )
-                        continue
+                    )
+                    continue
                 item.add_method_trigger(self._trigger)
 
         return
