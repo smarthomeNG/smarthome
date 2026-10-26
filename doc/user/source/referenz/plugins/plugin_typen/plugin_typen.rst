@@ -21,9 +21,8 @@ eine Datei im restructured-Text Format (user_doc.rst) ergänzt werden.
 Classic Plugin
 ==============
 
-Das klassische Plugin aus smarthome.py wird zwar noch unterstützt, neue Plugins sollten jedoch aufgrund der geringeren
-Funktionalität des des Classic Plugins nicht auf seiner Basis erstellt werden. Plugins, die nicht von der Klasse
-``SmartPlugin`` abgeleitet sind, werden nicht mehr in das Plugin Repo von SmartHomeNG aufgenommen.
+Das klassische Plugin aus smarthome.py wird nicht mehr unterstützt. Plugins, die nicht von der Klasse
+``SmartPlugin`` abgeleitet sind, werden von SmartHomeNG nicht geladen.
 
 |
 
