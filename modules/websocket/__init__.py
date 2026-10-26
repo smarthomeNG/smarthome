@@ -39,7 +39,7 @@ from lib.utils import Utils
 
 
 class Websocket(Module):
-    version = '1.1.2'
+    version = '2.0.0'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
