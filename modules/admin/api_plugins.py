@@ -36,7 +36,7 @@ from lib.module import Modules
 from lib.plugin import Plugins
 from lib.metadata import Metadata
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import KEY_CLASS_PATH, YAML_FILE, DIR_PLUGINS
+from lib.constants import YAML_FILE, DIR_PLUGINS
 
 from .rest import ApiDoc, RESTResource
 
@@ -207,7 +207,7 @@ class PluginsConfigController(RESTResource):
         if plugin_name != '':
             meta = Metadata(self._sh, (plugin_name + plugin_version).replace('.', os.sep), 'plugin')
         else:
-            classpath = plg_conf.get(KEY_CLASS_PATH, '')
+            classpath = Plugins._class_override(plg_conf)[1]
             if classpath != '':
                 plugin_name = classpath.split('.')[len(classpath.split('.')) - 1].lower()
                 if plugin_name.startswith('_pv'):
@@ -216,9 +216,7 @@ class PluginsConfigController(RESTResource):
                 meta = Metadata(self._sh, plugin_name, 'plugin', (classpath + plugin_version).replace('.', os.sep))
             else:
                 self.logger.error(
-                    "Plugin configuration section '{}': Neither 'plugin_name' nor '{}' are defined.".format(
-                        plg_section, KEY_CLASS_PATH
-                    )
+                    "Plugin configuration section '{}': 'plugin_name' is not defined.".format(plg_section)
                 )
                 meta = Metadata(self._sh, plugin_name, 'plugin', classpath)
         return (plugin_name + plugin_version, meta)

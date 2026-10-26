@@ -20,6 +20,9 @@ from lib.constants import YAML_FILE, DEFAULT_FILE, BASES, DIRS
 
 from tests.common import BASE
 
+# fixture plugins of the tests are loaded through class_path/class_name
+lib.plugin.Plugins._allow_class_override = True
+
 
 # logging.addLevelName(29, 'NOTICE')
 # logging.addLevelName(13, 'DBGHIGH')

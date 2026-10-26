@@ -329,8 +329,8 @@ wohnzimmer:
 Ein Unter-Item pro Struct: Jeder Struct hat ein eigenes Trigger-Item `read`;
 mehrere Structs an einem Item würden zu einem zusammengeführt.
 
-(Das Struct-Präfix ist der Plugin-Name: `plugin_name` aus `etc/plugin.yaml`,
-sonst der letzte Teil von `class_path` — hier `example_mpd`.)
+(Das Struct-Präfix ist der Plugin-Name: `plugin_name` aus `etc/plugin.yaml` — hier
+`example_mpd`.)
 
 ## Schritt 11: testen
 

@@ -116,6 +116,9 @@ class Plugins:
 
     _plugindict = {}
 
+    #: honour ``class_name``/``class_path`` of a plugin.yaml section (set by tests to load fixture plugins)
+    _allow_class_override = False
+
     def __init__(self, smarthome, configfile: str):
         self._sh = smarthome
         self._configfile = configfile
@@ -193,7 +196,7 @@ class Plugins:
         if plugin_name != '':
             meta = Metadata(self._sh, (plugin_name + plugin_version).replace('.', os.sep), 'plugin')
         else:
-            classpath = plg_conf.get(KEY_CLASS_PATH, '')
+            classpath = self._class_override(plg_conf)[1]
             if classpath != '':
                 plugin_name = classpath.split('.')[len(classpath.split('.')) - 1].lower()
                 if plugin_name.startswith('_pv'):
@@ -201,9 +204,7 @@ class Plugins:
                 logger.debug(f"Plugins __init__: pluginname = '{plugin_name}', classpath '{classpath}'")
                 meta = Metadata(self._sh, plugin_name, 'plugin', (classpath + plugin_version).replace('.', os.sep))
             else:
-                logger.error(
-                    f"Plugin configuration section '{plg_section}': Neither 'plugin_name' nor '{KEY_CLASS_PATH}' are defined."
-                )
+                logger.error(f"Plugin configuration section '{plg_section}': 'plugin_name' is not defined.")
                 meta = Metadata(self._sh, plugin_name, 'plugin', classpath)
         return (plugin_name + plugin_version, meta)
 
@@ -239,7 +240,7 @@ class Plugins:
         :return: classname, classpass
         :rtype: str, str
         """
-        classname = plg_conf.get(KEY_CLASS_NAME, '')
+        classname, override_path = self._class_override(plg_conf)
         plugin_version = ''
         if plugin_name == '':
             plugin_version = plg_conf.get('plugin_version', '').lower()
@@ -248,14 +249,12 @@ class Plugins:
 
         if classname == '':
             classname = self.meta.get_string('classname')
-        try:
-            classpath = plg_conf[KEY_CLASS_PATH]
-        except Exception:
-            if plugin_name == '':
-                classpath = ''
-            else:
-                classpath = DIR_PLUGINS + '.' + plugin_name
-        #        logger.warning("_get_classname_and_classpath: plugin_name = {}, classpath = {}, classname = {}".format(plugin_name, classpath, classname))
+        if override_path != '':
+            classpath = override_path
+        elif plugin_name == '':
+            classpath = ''
+        else:
+            classpath = DIR_PLUGINS + '.' + plugin_name
         return (classname, classpath + plugin_version)
 
     @classmethod
@@ -319,15 +318,26 @@ class Plugins:
             logger.warning(notice)
         return PluginConfigRefresh(conf, notices)
 
-    @staticmethod
-    def _section_plugin_name(plg_conf: dict) -> str:
+    @classmethod
+    def _class_override(cls, plg_conf: dict) -> tuple[str, str]:
         """
-        Return the plugin name of a plugin.yaml section (falls back to ``class_name`` for legacy configurations)
+        Return ``(class_name, class_path)`` of a plugin.yaml section; both are empty unless overriding is allowed
 
         :param plg_conf: loaded section of the plugin.yaml
-        :return: plugin name, or 'unknown' if the section defines neither ``plugin_name`` nor ``class_name``
         """
-        return plg_conf.get('plugin_name', plg_conf.get('class_name', 'unknown'))
+        if not cls._allow_class_override:
+            return '', ''
+        return plg_conf.get(KEY_CLASS_NAME, ''), plg_conf.get(KEY_CLASS_PATH, '')
+
+    @classmethod
+    def _section_plugin_name(cls, plg_conf: dict) -> str:
+        """
+        Return the plugin name of a plugin.yaml section
+
+        :param plg_conf: loaded section of the plugin.yaml
+        :return: plugin name, or 'unknown' if the section does not define ``plugin_name``
+        """
+        return plg_conf.get('plugin_name') or cls._class_override(plg_conf)[0] or 'unknown'
 
     @staticmethod
     def _is_section_enabled(plg_conf: dict) -> bool:
@@ -538,6 +548,10 @@ class Plugins:
         return True if plugin was loaded successfully, False if not (even if disabled)
         """
         logger.debug(f'Attempting to load plugin "{conf.get("plugin_name", "(unknown)")}" from section {configname}')
+        if not self._allow_class_override and (KEY_CLASS_NAME in conf or KEY_CLASS_PATH in conf):
+            logger.warning(
+                f"Plugin section '{configname}': '{KEY_CLASS_NAME}' and '{KEY_CLASS_PATH}' are not supported any more and are ignored, use 'plugin_name'"
+            )
         plugin_name, self.meta = self._get_pluginname_and_metadata(configname, conf)
         self._sh.shng_status['details'] = plugin_name  # Namen des Plugins übertragen
 
@@ -578,9 +592,9 @@ class Plugins:
             if (classname == '') and (classpath == ''):
                 logger.error(f'Plugins, section {configname}: plugin_name is not defined')
             elif classname == '':
-                logger.error(f'Plugins, section {configname}: class_name is not defined')
+                logger.error(f'Plugins, section {configname}: classname is not defined in the metadata')
             elif classpath == '':
-                logger.error(f'Plugins, section {configname}: class_path is not defined')
+                logger.error(f'Plugins, section {configname}: plugin_name is not defined')
             else:
                 args = self._get_conf_args(conf)
                 instance = self._get_instancename(configname, conf).lower()

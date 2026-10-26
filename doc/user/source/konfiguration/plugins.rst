@@ -33,8 +33,7 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 | Parameter        | Bedeutung                                                                           |
 +==================+=====================================================================================+
 | plugin_name      | Der Kurzname des Plugins, das eingebunden werden soll (Name des Verzeichnisses      |
-|                  | im ``../plugins`` Verzeichnis). Statt des Parameters **plugin_name** konnten bisher |
-|                  | auch die Parameter **class_name** und **class_path** angegeben werden.              |
+|                  | im ``../plugins`` Verzeichnis).                                                     |
 |                  |                                                                                     |
 |                  | **WICHTIG**: Bitte darauf achten, dass der Plugin Name Case-sensitive ist und der   |
 |                  | Schreibweise des Verzeichnisnamens des Plugin entsprechen muss.                     |
@@ -42,14 +41,6 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 | plugin_enabled   | Optional: Wenn dieser Parameter auf **False** gesetzt wird, wird das Plugin nicht   |
 |                  | geladen, die Konfiguration bleibt jedoch erhalten und die Verwendung von Item-      |
 |                  | Attributen dieses Plugins in den Itemkonfigurationen erzeugt keine Warnungen im Log.|
-+------------------+-------------------------------------------------------------------------------------+
-| class_name       | **DEPRECATED**: Name der Klasse in der Plugin Datei. Was hier einzutragen ist,      |
-|                  | steht in der Dokumentation zum jeweiligen Plugin. Stattdessen ist die               |
-|                  | Konfiguration über den Parameter **plugin_name** vorzunehmen.                       |
-+------------------+-------------------------------------------------------------------------------------+
-| class_path       | **DEPRECATED**: Pfad zur Plugin Datei. Was hier einzutragen ist, steht in der       |
-|                  | Dokumentation zum jeweiligen Plugin. Stattdessen ist die Konfiguration  über den    |
-|                  | Parameter **plugin_name** vorzunehmen.                                              |
 +------------------+-------------------------------------------------------------------------------------+
 | plugin_version   | Optional: Wenn im Plugin Repository mehrere Versionen eines Plugins zur Verfügung   |
 |                  | stehen, kann über diesen Parameter eine andere als die neueste Version des Plugins  |

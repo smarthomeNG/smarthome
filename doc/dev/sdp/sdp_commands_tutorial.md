@@ -316,8 +316,8 @@ wohnzimmer:
 One sub-item per struct: each struct has its own `read` trigger item, so
 listing several structs on one item would merge them into one.
 
-(The struct prefix is the plugin name: `plugin_name` from `etc/plugin.yaml`,
-else the last part of `class_path` — here `example_mpd`.)
+(The struct prefix is the plugin name: `plugin_name` from `etc/plugin.yaml` — here
+`example_mpd`.)
 
 ## Step 11: test it
 
