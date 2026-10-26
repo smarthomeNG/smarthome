@@ -300,7 +300,7 @@ Konfiguration
 
 Je nach Struktur der Konfiguration ist deren Übernahme etwas mehr oder weniger aufwändig.
 
-Wenn schon die Konfiguration mit **-e**, **--config-etc** oder der Einstellung **config_etc: true** in der ``etc/smarthome.yaml`` vorgenommen wurde, ist es simpel. Ansonsten muss etwas mehr Aufwand getrieben werden.
+Wenn schon die Konfiguration mit **-e**, **--config_etc** oder der Einstellung **config_etc: true** in der ``etc/smarthome.yaml`` vorgenommen wurde, ist es simpel. Ansonsten muss etwas mehr Aufwand getrieben werden.
 
 .. tab-set::
 

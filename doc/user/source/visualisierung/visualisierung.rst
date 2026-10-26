@@ -18,37 +18,19 @@ Visualisierung mit smartVISU
 Überblick
 =========
 
-Bis zum SmartHomeNG Release v1.7 wurde die Unterstützung für die smartVISU über die Plugins
-visu_smartvisu und visu_websocket implementiert.
+Die Unterstützung für die smartVISU besteht aus zwei Teilen:
 
-- Das erste Plugin (**visu_websocket**) implementiert das Websocket Protokoll über das die smartVISU
-  Seiten im Browser mit SmartHomeNG kommunizieren.
-- Das zweite Plugin (**visu_smartvisu**) implementiert die Möglichkeit zur automatischen Generierung
-  von smartVISU Seiten. Weiterhin ermöglicht dieses Plugin die Installation von Widgets in die smartVISU,
-  die die Entwickler von SmartHomeNG Plugins geschrieben und ihren Plugins beigefügt haben.
+- Die Kommunikation über das Websocket Protokoll, über das die smartVISU Seiten im Browser mit SmartHomeNG
+  kommunizieren, wird vom Core-Modul **websocket** übernommen.
+- **Das smartvisu Plugin muss geladen sein**. Es aktiviert das Nutzdatenprotoll für die smartVISU im
+  Websocket Modul. Wenn dieses Plugin nicht geladen ist, reagiert das Websocket Modul nicht auf Kommandos von der
+  smartVISU.
 
-Mit dem Release v1.8 ändert sich hier einiges:
-
-- Die Kommunikation über das Websocket Protokoll wird von einem neuen Core-Modul übernommen und das
-  bisher genutzte Plugin **visu_websocket** ist nun **deprecated**. Das Plugin wird mit dem Release v1.9
-  retired werden.
-- **Das smartvisu Plugin muss geladen sein**. Es aktiviert das Nutzdatenprotoll für die smartVISU im neuen Websocket
-  Modul. Wenn dieses Plugin nicht geladen ist, reagiert das Websocket Modul nicht auf Kommandos von der smartVISU.
-
-- Das Plugin zur Generierung der smartVISU Seiten **visu_smartvisu** wird durch ein neues Plugin **smartvisu**
-  ersetzt, welches zusätzliche Funktionalitäten bietet. Das bisher genutzte Plugin **visu_smartvisu** ist
-  nun **deprecated**. Das Plugin wird mit dem Release v1.9 retired werden.
-
-  Das neue Plugin **smartvisu** unterstützt smartVISU ab v2.8. Die Unterstützung für smartVISU v2.7 entfällt.
-
-Das **smartvisu** Plugin implementiert die selben Funktionen wie das bisherige **visu_smartvisu** Plugin:
+Das **smartvisu** Plugin unterstützt smartVISU ab v2.8 und bietet folgende Funktionen:
 
 - eine erweiterte Möglichkeit zum automatischen Generieren von smartVISU Seiten
 - die Fähigkeit zur Widget Installation in die smartVISU, die es Plugin Entwicklern ermöglicht,
   mit ihrem  Plugin smartVISU Widgets auszuliefern.
-
-Zusätzlich bietet das neue Plugin folgende Funktionalitäten:
-
 - zur Unterstützung des Widget Assistenten der smartVISU erstellt es eine aktuelle Liste der
   SmartHomeNG Items
 - bei der Generierung der Seiten für die Visualisierung wird geprüft, ob veraltete Widgets der smartVISU genutzt werden

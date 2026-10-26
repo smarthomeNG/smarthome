@@ -60,7 +60,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       gesichert werden, zur Verfügung.
 
     - **Konfiguration unterhalb von etc mit Migration**: Wenn SmartHomeNG mit der Kommandozeilenoption **-e** gestartet
-      wird, sucht es die Konfigurationsverzeichnisse ``items``, ``structs``, ``logics``, ``uf`` und ``scenes``
+      wird, sucht es die Konfigurationsverzeichnisse ``items``, ``structs``, ``logics``, ``functions`` und ``scenes``
       nicht mehr im Stammverzeichnis, sondern unterhalb von ``etc``. Dies ist auch durch die Option
       **config_etc: true** in der ``etc/smarthome.yaml`` möglich.
 
@@ -101,7 +101,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
   - **Dokumentation**:
 
     - **Ordner/Dateien**: Vor dem Hintergrund, dass die Konfiguration zukünftig vollständig unterhalb von
-      ``etc`` abgelegt werden soll (Option **-e**/**--config-etc**), werden alle Datei- und Pfadnamen von
+      ``etc`` abgelegt werden soll (Option **-e**/**--config_etc**), werden alle Datei- und Pfadnamen von
       Konfigurationsdateien unterhalb von ``etc`` angegeben. In Ausnahmefällen können z.B. in Beispielen
       nur lokale Dateinamen angegeben werden.
 
