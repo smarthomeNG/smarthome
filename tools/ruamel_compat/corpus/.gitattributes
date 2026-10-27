@@ -1,0 +1,2 @@
+# keep the test files byte-exact (CRLF, BOM, missing final newline)
+* -text

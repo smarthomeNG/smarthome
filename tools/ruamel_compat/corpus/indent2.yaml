@@ -1,0 +1,11 @@
+room:
+  name: Room
+  light:
+    type: bool
+    knx_listen:
+    - 1/1/1
+    - 1/1/2
+    # comment at two spaces
+    dimmer:
+      type: num
+      knx_dpt: 5

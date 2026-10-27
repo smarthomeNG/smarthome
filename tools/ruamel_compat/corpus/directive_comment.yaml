@@ -1,0 +1,8 @@
+%YAML 1.1
+# vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+---
+
+disk:
+    type: str
+    free:
+        type: num

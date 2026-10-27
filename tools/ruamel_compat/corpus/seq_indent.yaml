@@ -1,0 +1,18 @@
+seq_zero:
+- a
+- b
+seq_two:
+  - a
+  - b
+seq_four:
+    - a
+    - b
+seq_of_maps:
+    -   key: 1
+        other: 2
+    - key: 3
+      other: 4
+nested_seq:
+    - - a
+      - b
+    - - c

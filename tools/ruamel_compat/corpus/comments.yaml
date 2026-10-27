@@ -1,0 +1,19 @@
+# header comment line 1
+# header comment line 2
+
+first:   # comment after key without value
+    a: 1  # inline comment
+    # comment between keys
+    b: 2
+
+    # comment after blank line
+    c:
+        - x   # comment after list item
+        # comment inside list
+        - y
+second: value # trailing
+#commented_out_key: 3
+third:
+    deep:
+        deeper: 'quoted' # q
+# comment at end without newline

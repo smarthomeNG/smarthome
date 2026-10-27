@@ -1,0 +1,30 @@
+colon: 'a: b'
+hash_inline: 'value # not a comment'
+hash_plain: value#notacomment
+at: '@home'
+backtick: '`cmd`'
+percent: '%s'
+ampersand: '&anchorlike'
+asterisk: '*aliaslike'
+exclamation: '!taglike'
+pipe: '|'
+gt: '>'
+braces: '{x}'
+brackets: '[x]'
+comma_plain: a, b, c
+backslash_single: 'C:\path\to'
+backslash_double: "C:\\path\\to"
+dq_in_sq: 'say "hi"'
+sq_in_dq: "it's"
+unicode_escape: "\u00fc\u00df"
+umlauts: Grüße aus Köln
+emoji: 🙂 ok
+cjk: 漢字
+nbsp: "a\u00a0b"
+trailing_space: 'x '
+leading_space: ' x'
+empty_sq: ''
+empty_dq: ""
+tab_in_dq: "a\tb"
+url: http://192.168.2.1:8384/ws/items/x?y=1&z=2
+mqtt_topic: shellies/+/relay/#

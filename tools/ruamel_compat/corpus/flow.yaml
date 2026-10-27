@@ -1,0 +1,6 @@
+flow_map: {a: 1, b: two, c: [1, 2, 3]}
+flow_seq: [x, 'y', "z", {k: v}]
+empty_map: {}
+empty_seq: []
+nested:
+    inline: {on: yes, off: no}
