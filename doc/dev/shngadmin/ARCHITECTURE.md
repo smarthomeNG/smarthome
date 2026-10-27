@@ -67,7 +67,6 @@ The full system architecture is shown in the first illustration:
 | Code editing | CodeMirror 6 | Embedded editor (Python, YAML, JS, XML) |
 | Translation | ngx-translate | Runtime language switching (en/de/fr) |
 | Auth tokens | @auth0/angular-jwt | JWT decode, expiry check, HTTP interceptor |
-| Hashing | js-sha512 | SHA-512 password hashing before sending |
 | Testing | Jest 30 + jest-preset-angular | Unit tests; runs in Node (no browser needed) |
 | Linting | ESLint + angular-eslint | Code quality |
 | Formatting | Prettier | Consistent code style |
@@ -383,14 +382,7 @@ Token contents (decoded by `jwtHelper.decodeToken()`):
 
 ### 7.2 Password hashing
 
-Passwords are **never sent in plain text**.  Before the `POST /api/authenticate/user` request, `AuthService.login()` applies SHA-512 twice with a fixed salt:
-
-```
-username_hash = sha512(username + "shNG0160$")
-password_hash = sha512(sha512(password) + "shNG0160$")
-```
-
-This prevents the raw password from appearing in network logs.
+`AuthService.login()` sends username and password as entered; the API is meant to be reached over https only. The backend checks the password against `hashed_password` of the http module with `Utils.check_hashed_password()` (salted PBKDF2, legacy unsalted SHA-512 still accepted). shngadmin never hashes passwords itself: the services page and the password dialog of the system configuration use `PUT /api/services/hashpassword/` and `PUT /api/services/checkpassword/`, and plaintext passwords saved with the http configuration are hashed by the backend.
 
 ### 7.3 Token storage
 

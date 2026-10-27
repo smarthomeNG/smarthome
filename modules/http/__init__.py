@@ -187,18 +187,10 @@ class Http(Module):
         # Check user information and fill _user_dict
         self._user_dict = {}
 
-        if self._is_set(self._password) and self._is_set(self._hashed_password):
-            self.logger.warning(
-                "http: Webinterfaces: Both 'password' and 'hashed_password' given. Ignoring 'password' and using 'hashed_password'!"
-            )
-            self._password = None
-
-        if self._is_set(self._password) and (not self._is_set(self._hashed_password)):
-            self.logger.warning(
-                "http: Webinterfaces: Giving plaintext password in configuration is insecure. Consider using 'hashed_password' instead!"
-            )
-            self._hashed_password = Utils.create_hash(self._password)
-            self._password = None
+        self._hashed_password = self._resolve_password_hash(
+            'Webinterfaces', 'password', self._password, 'hashed_password', self._hashed_password
+        )
+        self._password = None
 
         self._basic_auth = self._is_set(self._hashed_password)
         self._user_dict[self._user] = {
@@ -210,18 +202,14 @@ class Http(Module):
         # Check service-user information and fill _serviceuser_dict
         self._serviceuser_dict = {}
 
-        if self._is_set(self._service_password) and self._is_set(self._service_hashed_password):
-            self.logger.warning(
-                "http: Services: Both 'service_password' and 'service_hashed_password' given. Ignoring 'service_password' and using 'service_hashed_password'!"
-            )
-            self._service_password = None
-
-        if self._is_set(self._service_password) and (not self._is_set(self._service_hashed_password)):
-            self.logger.warning(
-                "http: Services: Giving plaintext service_password in configuration is insecure. Consider using 'service_hashed_password' instead!"
-            )
-            self._service_hashed_password = Utils.create_hash(self._service_password)
-            self._service_password = None
+        self._service_hashed_password = self._resolve_password_hash(
+            'Services',
+            'service_password',
+            self._service_password,
+            'service_hashed_password',
+            self._service_hashed_password,
+        )
+        self._service_password = None
 
         self._service_basic_auth = self._is_set(self._service_hashed_password)
         self._serviceuser_dict[self._service_user] = {
@@ -378,11 +366,7 @@ class Http(Module):
             '/static': {'tools.staticdir.on': True, 'tools.staticdir.dir': 'static'},
         }
         self.logger.info("Module http: config dict: '{}'".format(config))
-        self.logger.info(
-            " - user '{}', password '{}', hashed_password '{}'".format(
-                self._user, self._password, self._hashed_password
-            )
-        )
+        self.logger.info(f" - user '{self._user}', password set: {self._basic_auth}")
 
         if self._showpluginlist:
             # Register the plugin-list as a cherrypy app
@@ -509,6 +493,35 @@ class Http(Module):
         """
         return password is not None and password != ''
 
+    def _resolve_password_hash(self, area, password_param, password, hash_param, hashed_password):
+        """
+        Return the password hash to check logins of ``area`` against (unset if no password is configured).
+
+        A plaintext password is hashed (``hash_param`` wins if both are set); a warning is logged for a
+        plaintext password and for a legacy (unsalted sha512) hash.
+
+        :param area: 'Webinterfaces' or 'Services', for the log messages
+        :param password_param: name of the plaintext password parameter
+        :param password: value of the plaintext password parameter
+        :param hash_param: name of the hashed password parameter
+        :param hashed_password: value of the hashed password parameter
+        """
+        if self._is_set(password) and self._is_set(hashed_password):
+            self.logger.warning(
+                f"http: {area}: Both '{password_param}' and '{hash_param}' given. Ignoring '{password_param}' and using '{hash_param}'!"
+            )
+        elif self._is_set(password):
+            self.logger.warning(
+                f"http: {area}: Giving plaintext {password_param} in configuration is insecure. Consider using '{hash_param}' instead!"
+            )
+            return Utils.hash_password(password)
+        if Utils.is_legacy_password_hash(hashed_password):
+            self.logger.warning(
+                f"http: {area}: '{hash_param}' is an unsalted sha512 hash. Replace it by a salted hash "
+                '(admin interface: Services > password hash, or tools/hash_password.py)'
+            )
+        return hashed_password
+
     def get_user_dict(self):
         """
         Returns the user(s) defined in ../etc/module.yaml (section http) as a dict
@@ -535,17 +548,10 @@ class Http(Module):
         :param password:
         :return:
         """
-        pwd_hash = Utils.create_hash(password)
-        # self.logger.warning("realm: {}, username: {}, password: {}, self._password: {}, self._hashed_password: {}".format(realm, username, password, self._password, self._hashed_password))
-        # self.logger.warning("pwd_hash: {}, self._user_dict: {}".format(pwd_hash, self._user_dict))
-
         user = self._user_dict.get(username, None)
         if user is None:
             return False
-        user_pwd_hash = user.get('password_hash', '')
-        pwd_hash = Utils.create_hash(password)
-
-        return pwd_hash == user_pwd_hash
+        return Utils.check_hashed_password(password, user.get('password_hash', ''))
 
     def validate_service_password(self, realm, username, password):
         """ """

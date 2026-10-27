@@ -54,7 +54,7 @@ class AuthController(RESTResource):
         self.jwt_secret = module.jwt_secret
 
         http_user_dict = self.module.mod_http.get_user_dict()
-        self._user_dict = {user: data for user, data in http_user_dict.items() if data['password_hash'] != ''}
+        self._user_dict = {user: data for user, data in http_user_dict.items() if data.get('password_hash')}
 
         return
 
@@ -98,7 +98,7 @@ class AuthController(RESTResource):
         else:
             username = credentials.get('username', '')
             user = self._user_dict.get(username, None)
-            if user and Utils.create_hash(credentials.get('password', '')) == user.get('password_hash', 'x'):
+            if user and Utils.check_hashed_password(credentials.get('password', ''), user.get('password_hash', '')):
                 admin = 'admin' in user.get('groups', [])
                 response['token'] = self._issue_token(user.get('name', '?'), admin, self.module.login_expiration)
                 self.logger.info(f"AuthController.authenticate(): login of user '{username}' from {remote_ip}")

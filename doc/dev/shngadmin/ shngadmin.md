@@ -316,7 +316,6 @@ Owns the login session.
     loggedIn$                ← BehaviorSubject<boolean>
 
   login(username, password)
-    → hashes password with SHA-512 + hardcoded salt
     → POST /api/authenticate/user
     ← JWT token → stored in sessionStorage
     → decodes JWT to get currentUser (username, roles, expiry)
@@ -1085,9 +1084,8 @@ LoginComponent renders login form
 
 User types credentials, clicks Login:
   └─ AuthService.login({username: 'admin', password: 'xxx'})
-     ├─ hashes: SHA512('shNG0160$' + 'xxx')  ← client-side, fixed salt
      └─ POST /api/authenticate/user
-        body: {username: 'admin', password: '<hash>'}
+        body: {username: 'admin', password: 'xxx'}
         ← JWT token: 'eyJhbGc...'
 
      AuthService stores token:

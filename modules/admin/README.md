@@ -62,7 +62,7 @@ header.
 
 ### AUTH API — login and token renewal
 
-- `POST /api/authenticate/user` — log in with SHA-512-hashed credentials, get a JWT. *No auth required.*
+- `POST /api/authenticate/user` — log in with username and password, get a JWT. *No auth required.*
 - `PUT /api/authenticate/renew` — renew the current JWT before it expires.
 
 ### CONFIG API — read/write etc/smarthome.yaml and etc/module.yaml sections

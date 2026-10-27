@@ -28,6 +28,7 @@ import json
 import cherrypy
 
 from lib.item import Items
+from lib.utils import Utils
 from .rest import ApiDoc, ApiParam, RESTResource
 
 import bin.shngversion
@@ -57,11 +58,13 @@ class ServicesController(RESTResource):
         self.etc_dir = self._sh.get_config_dir(DIR_ETC)  # not used?
         self.modules_dir = self._sh.get_config_dir(DIR_ETC)  # not used?
 
-    def get_body(self, text=False):
+    def get_body(self, text=False, log_body=True):
         """
         Get content body of received request header
 
-        :return:
+        :param text: return the body as text instead of parsed JSON
+        :param log_body: log the raw body at DEBUG (off for bodies containing secrets)
+        :return: body, None if it cannot be decoded
         """
         cl = cherrypy.request.headers.get('Content-Length', 0)
         if cl == 0:
@@ -69,7 +72,8 @@ class ServicesController(RESTResource):
             # return 'Bad request'
             raise cherrypy.HTTPError(status=411)
         rawbody = cherrypy.request.body.read(int(cl))
-        self.logger.debug('ServicesController(): get_body(): rawbody = {}'.format(rawbody))
+        if log_body:
+            self.logger.debug('ServicesController(): get_body(): rawbody = {}'.format(rawbody))
         try:
             if text:
                 params = rawbody.decode('utf-8')
@@ -211,6 +215,35 @@ class ServicesController(RESTResource):
             return json.dumps({'expression': expanded_code, 'result': str(eval_result), 'type': result_type})
 
     # ======================================================================
+    #  /api/services/hashpassword
+    #
+    def hashpassword(self):
+        """
+        Create a salted hash of the password in the request body (text) for the http module's configuration
+
+        :return: JSON with 'hash'
+        """
+        password = self.get_body(text=True, log_body=False)
+        if not password:
+            raise cherrypy.HTTPError(status=400)
+        return json.dumps({'hash': Utils.hash_password(password)})
+
+    # ======================================================================
+    #  /api/services/checkpassword
+    #
+    def checkpassword(self):
+        """
+        Check a password against a password hash (salted or legacy sha512), both given in the JSON body
+
+        :return: JSON with 'match' (bool)
+        """
+        params = self.get_body(text=False, log_body=False)
+        if not isinstance(params, dict):
+            raise cherrypy.HTTPError(status=400)
+        match = Utils.check_hashed_password(params.get('password', ''), params.get('hash', ''))
+        return json.dumps({'match': match})
+
+    # ======================================================================
     #  /api/server/yamlcheck
     #
     def yamlcheck(self):
@@ -339,6 +372,10 @@ class ServicesController(RESTResource):
             return self.yamlconvert()
         elif id == 'cachefile_delete':
             return self.cachefile_delete(filename)
+        elif id == 'hashpassword':
+            return self.hashpassword()
+        elif id == 'checkpassword':
+            return self.checkpassword()
 
         return None
 
@@ -364,5 +401,22 @@ class ServicesController(RESTResource):
             path='/services/cachefile_delete',
             tags=['services'],
             params=[ApiParam(name='filename', required=True)],
+        ),
+        ApiDoc(
+            summary='Create a salted password hash for hashed_password in etc/module.yaml',
+            method='put',
+            path='/services/hashpassword/',
+            tags=['services'],
+            request_body='text/plain',
+            response_example='{"hash": "pbkdf2_sha256$600000$<salt>$<digest>"}',
+        ),
+        ApiDoc(
+            summary='Check a password against a password hash',
+            method='put',
+            path='/services/checkpassword/',
+            tags=['services'],
+            request_body='application/json',
+            request_example='{"password": "<password>", "hash": "<hash>"}',
+            response_example='{"match": true}',
         ),
     ]

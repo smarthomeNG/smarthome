@@ -73,6 +73,12 @@ class TestAuthenticate(AuthControllerTestCase):
         self.assertEqual('Admin', decoded['name'])
         self.assertTrue(decoded['admin'])
 
+    def test_salted_hash_login(self):
+        users = {'admin': {'password_hash': Utils.hash_password(PASSWORD), 'name': 'Admin', 'groups': ['admin']}}
+        response = self.post_credentials(make_controller(users), {'username': 'admin', 'password': PASSWORD})
+
+        self.assertIn('token', response)
+
     def test_wrong_password_returns_no_token(self):
         response = self.post_credentials(make_controller(self.users), {'username': 'admin', 'password': 'nope'})
 
