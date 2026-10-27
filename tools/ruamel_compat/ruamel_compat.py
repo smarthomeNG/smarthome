@@ -182,6 +182,8 @@ class ShngPipeline:
         self.capture = LogCapture()
         logger = logging.getLogger('lib.shyaml')
         logger.addHandler(self.capture)
+        logger.setLevel(logging.WARNING)
+        logger.disabled = False
         logger.propagate = False
 
     def read(self, path: Path) -> dict:

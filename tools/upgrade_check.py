@@ -25,6 +25,9 @@ Checks:
     Item and ``etc`` configuration files in the old ``.conf`` format, which are no longer read.
 ``module-params``
     Parameters in ``etc/module.yaml`` that modules no longer have.
+``multiline``
+    Values in item and struct files that span several lines (plain, quoted or folded): SmartHomeNG 2.0 joins
+    their lines with a space, as YAML defines it; before, they were joined without one.
 ``password-hash``
     Unsalted SHA-512 password hashes (http module, cli plugin) become salted hashes of the old hash
     (``pbkdf2_sha256_sha512$...``); the passwords stay the same.
@@ -51,6 +54,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import lib.shyaml as shyaml  # noqa: E402
 from lib.utils import Utils  # noqa: E402
 from ruamel import yaml as ruamel_yaml  # noqa: E402
+from ruamel.yaml.nodes import MappingNode, ScalarNode, SequenceNode  # noqa: E402
 from ruamel.yaml.scalarstring import DoubleQuotedScalarString  # noqa: E402
 
 BACKUP_DIR = 'upgrade_check_backup'
@@ -792,6 +796,48 @@ class PasswordHashChecker:
             if changed:
                 project.save_sections(path, sections)
         return findings
+
+
+@register
+class MultilineChecker:
+    """Multi-line values in item and struct files, whose lines SmartHomeNG 2.0 joins with a space."""
+
+    name = 'multiline'
+    description = 'multi-line values in items/structs: lines are joined with a space now (before: without)'
+
+    #: block scalar style whose line breaks SmartHomeNG removes from item values either way
+    LITERAL = '|'
+
+    def run(self, project: Project, fix: bool) -> list[Finding]:
+        findings: list[Finding] = []
+        for path in project.item_files():
+            try:
+                root = self._compose(read_text(path))
+            except Exception:
+                continue
+            for key, node in self._scalars(root):
+                if node.style != self.LITERAL and node.end_mark.line > node.start_mark.line:
+                    message = f"'{key}' spans several lines; check that joining them with a space is right"
+                    findings.append(Finding(self.name, path, message, node.start_mark.line + 1, False))
+        return findings
+
+    @staticmethod
+    def _compose(text: str):
+        """The node tree of *text* (YAML.compose() exists only from ruamel.yaml 0.17 on)."""
+        yaml = ruamel_yaml.YAML(typ='rt')
+        yaml.get_constructor_parser(text)
+        return yaml.composer.get_single_node()
+
+    def _scalars(self, node, key=''):
+        """(key, scalar node) of every mapping value below *node*."""
+        if isinstance(node, MappingNode):
+            for key_node, value_node in node.value:
+                yield from self._scalars(value_node, str(key_node.value))
+        elif isinstance(node, SequenceNode):
+            for value_node in node.value:
+                yield from self._scalars(value_node, key)
+        elif isinstance(node, ScalarNode):
+            yield key, node
 
 
 def run_checks(project: Project, names: Iterable[str], fix: bool) -> list[Finding]:

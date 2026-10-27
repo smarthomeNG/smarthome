@@ -31,7 +31,7 @@ import types
 import unittest
 from unittest.mock import MagicMock, patch
 
-from ruamel import yaml
+from ruamel.yaml import YAML
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -74,7 +74,7 @@ class TestSaveLoggingConfigVersion(unittest.TestCase):
             logs = Logs(sh)
             logs.save_logging_config({'version': 1})
             with open(path, encoding='utf-8') as f:
-                saved = yaml.safe_load(f)
+                saved = YAML(typ='safe', pure=True).load(f)
         self.assertEqual('2.0.0-dev.1', saved['shng_version'])
 
 

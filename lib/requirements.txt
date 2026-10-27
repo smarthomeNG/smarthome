@@ -31,5 +31,5 @@ netifaces2
 # lib.shpypi
 xmltodict
 
-# lib.shyaml:
-ruamel.yaml>=0.15.78,<=0.16.8
+# lib.shyaml (tools/ruamel_compat compares versions before the upper bound is raised):
+ruamel.yaml>=0.16.7,<0.20

@@ -293,6 +293,95 @@ class TestDuplicateKeys(unittest.TestCase):
             self.assertNotIn('line 13', text)
 
 
+class TestRoundtripFidelity(unittest.TestCase):
+    """Loading and saving a file changes nothing but the edited values."""
+
+    def _write_tmpfile(self, content):
+        f = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8')
+        f.write(content)
+        f.close()
+        self.addCleanup(os.unlink, f.name)
+        return f.name
+
+    def _save_unchanged(self, content):
+        path = self._write_tmpfile(content)
+        shyaml.yaml_save_roundtrip(path, shyaml.yaml_load_roundtrip(path, raise_on_error=True))
+        with open(path, encoding='utf-8') as f:
+            return path, f.read()
+
+    def test_unchanged_file_is_written_back_as_it_was(self):
+        content = textwrap.dedent("""\
+            # header comment
+
+            room:
+                # comment before a key
+                light:
+                    type: bool  # inline comment
+                    visu_acl: 'rw'
+                    knx_listen:
+                    -   1/1/1
+                    -   1/1/2
+
+                temp:
+                    type: num
+        """)
+        self.assertEqual(content, self._save_unchanged(content)[1])
+
+    def test_edit_changes_only_the_edited_line(self):
+        content = 'a:\n    # keep me\n    b: 1\n    c: two\n'
+        path = self._write_tmpfile(content)
+        data = shyaml.yaml_load_roundtrip(path, raise_on_error=True)
+        data['a']['b'] = 2
+        shyaml.yaml_save_roundtrip(path, data)
+        with open(path, encoding='utf-8') as f:
+            self.assertEqual('a:\n    # keep me\n    b: 2\n    c: two\n', f.read())
+
+    def test_block_scalars_are_read_unchanged(self):
+        path = self._write_tmpfile('literal: |\n    line 1\n    line 2\nfolded: >\n    one\n    two\n')
+        for data in (shyaml.yaml_load(path), shyaml.yaml_load_roundtrip(path)):
+            self.assertEqual('line 1\nline 2\n', data['literal'])
+            self.assertEqual('one two\n', data['folded'])
+
+    def test_yaml_version_of_the_file_is_kept(self):
+        path, text = self._save_unchanged('%YAML 1.1\n---\na: yes\nb: 1\n')
+        self.assertTrue(text.startswith('%YAML 1.1'))
+        self.assertIs(True, shyaml.yaml_load(path)['a'])
+
+        path, text = self._save_unchanged('a: yes\nb: 1\n')
+        self.assertNotIn('%YAML', text)
+        self.assertEqual('yes', shyaml.yaml_load(path)['a'])
+
+    def test_comments_between_directive_and_document_start_are_kept(self):
+        content = '%YAML 1.1\n# vim: set expandtab\n---\n\na:\n    b: 1\n'
+        self.assertEqual(content, self._save_unchanged(content)[1])
+        content = '\n%YAML 1.1\n# vim: set expandtab\n---\na: 1\n'
+        self.assertEqual(content, self._save_unchanged(content)[1])
+
+    def test_data_is_written_in_shng_style(self):
+        self.assertEqual('a:\n    l:\n    -   x\n', shyaml.yaml_dump_roundtrip({'a': {'l': ['x']}}))
+
+    def test_numbers_with_leading_zeros_keep_their_value(self):
+        path, _ = self._save_unchanged('a: 010\nb: 0123\nphone: 0049123456\n')
+        data = shyaml.yaml_load(path)
+        self.assertEqual({'a': 10, 'b': 123, 'phone': 49123456}, data)
+
+    def test_new_file_has_no_yaml_directive(self):
+        path = self._write_tmpfile('')
+        data = shyaml.get_emptynode()
+        data['a'] = 'on'
+        shyaml.yaml_save_roundtrip(path, data)
+        with open(path, encoding='utf-8') as f:
+            text = f.read()
+        self.assertNotIn('%YAML', text)
+        self.assertEqual('on', shyaml.yaml_load(path)['a'])
+
+    def test_parse_error_reports_the_real_line(self):
+        path = self._write_tmpfile('a: 1\nb: 2\nc: [unclosed\n')
+        with self.assertLogs('lib.shyaml', 'ERROR') as logs:
+            shyaml.yaml_load(path)
+        self.assertIn('line 3', '\n'.join(logs.output))
+
+
 class TestPathHelpers(unittest.TestCase):
     def test_set_in_dict_top_level(self):
         d = {}

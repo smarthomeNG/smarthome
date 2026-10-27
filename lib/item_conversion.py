@@ -28,11 +28,13 @@ support the conversion from CONF to YAML format. This configuration loader is on
 by the converter tools/conf_to_yaml_converter.py.
 """
 
+import io
 import os
 
 RUAMEL_YAML_INSTALLED = False
 try:
-    import ruamel.yaml as yaml
+    from ruamel.yaml import YAML
+    from ruamel.yaml.representer import SafeRepresenter
 
     RUAMEL_YAML_INSTALLED = True
 except ImportError:
@@ -48,7 +50,6 @@ import collections
 from collections import OrderedDict
 
 
-yaml_version = '1.1'
 indent_spaces = 4
 store_raw_output = False  # Only for testing, otherwise False
 
@@ -273,15 +274,13 @@ def _yaml_save_roundtrip(filename, data):
     Dump yaml using the RoundtripDumper and correct linespacing in output file
     """
 
-    sdata = yaml.dump(
-        data,
-        Dumper=yaml.RoundTripDumper,
-        version=yaml_version,
-        indent=indent_spaces,
-        block_seq_indent=2,
-        width=32768,
-        allow_unicode=True,
-    )
+    yaml = YAML(typ='rt')
+    yaml.indent(mapping=indent_spaces, sequence=indent_spaces, offset=2)
+    yaml.width = 32768
+    yaml.allow_unicode = True
+    stream = io.StringIO()
+    yaml.dump(data, stream)
+    sdata = stream.getvalue()
 
     ldata = sdata.split('\n')
     rdata = []
@@ -326,7 +325,7 @@ def yaml_save(filename, data):
             outfile.write(sdata)
 
     # Test if roundtrip gives the same result
-    data = yaml.load(sdata, yaml.RoundTripLoader)
+    data = YAML(typ='rt').load(sdata)
     _yaml_save_roundtrip(filename, data)
 
 
@@ -340,29 +339,15 @@ def convert_yaml(data):
     :return: yaml formated data
     """
 
-    ordered = type(data).__name__ == 'OrderedDict'
-    if ordered:
-        sdata = _ordered_dump(
-            data,
-            Dumper=yaml.SafeDumper,
-            version=yaml_version,
-            indent=indent_spaces,
-            block_seq_indent=2,
-            width=32768,
-            allow_unicode=True,
-            default_flow_style=False,
-        )
-    else:
-        sdata = yaml.dump(
-            data,
-            Dumper=yaml.SafeDumper,
-            indent=indent_spaces,
-            block_seq_indent=2,
-            width=32768,
-            allow_unicode=True,
-            default_flow_style=False,
-        )
-    sdata = _format_yaml_dump(sdata)
+    yaml = YAML(typ='safe', pure=True)
+    yaml.Representer = _OrderedSafeRepresenter
+    yaml.indent(mapping=indent_spaces, sequence=indent_spaces, offset=2)
+    yaml.width = 32768
+    yaml.allow_unicode = True
+    yaml.default_flow_style = False
+    stream = io.StringIO()
+    yaml.dump(data, stream)
+    sdata = _format_yaml_dump(stream.getvalue())
 
     return sdata
 
@@ -443,24 +428,11 @@ def _format_yaml_dump(data):
     return fdata
 
 
-def _ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
-    """
-    Ordered yaml dumper
-    Use this instead ot yaml.Dumper/yaml.SaveDumper to get an Ordereddict
+if RUAMEL_YAML_INSTALLED:
 
-    :param stream: stream to write to
-    :param Dumper: yaml-dumper to use
-    :**kwds: Additional keywords
+    class _OrderedSafeRepresenter(SafeRepresenter):
+        """Safe representer that writes an OrderedDict as a plain mapping in its order."""
 
-    :return: OrderedDict structure
-    """
-
-    # usage example: ordered_dump(data, Dumper=yaml.SafeDumper)
-    class OrderedDumper(Dumper):
-        pass
-
-    def _dict_representer(dumper, data):
-        return dumper.represent_mapping(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, data.items())
-
-    OrderedDumper.add_representer(OrderedDict, _dict_representer)
-    return yaml.dump(data, stream, OrderedDumper, **kwds)
+    _OrderedSafeRepresenter.add_representer(
+        OrderedDict, lambda representer, data: representer.represent_mapping('tag:yaml.org,2002:map', data.items())
+    )

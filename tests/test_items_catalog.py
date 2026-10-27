@@ -11,7 +11,7 @@ listed under a different name than the code uses, is invisible to the API checks
 import os
 import unittest
 
-from ruamel import yaml
+from ruamel.yaml import YAML
 
 import tests.common as common  # noqa: F401  (puts the shng base dir on sys.path)
 import lib.constants as constants
@@ -37,7 +37,7 @@ NOT_ITEM_ATTRIBUTES = {
 
 def catalog():
     with open(CATALOG_PATH, encoding='utf-8') as f:
-        return yaml.safe_load(f)['item_attributes']
+        return YAML(typ='safe', pure=True).load(f)['item_attributes']
 
 
 def code_attributes():

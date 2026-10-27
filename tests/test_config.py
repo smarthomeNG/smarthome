@@ -124,8 +124,8 @@ class TestConfigYaml(unittest.TestCase, ConfigBaseTests):
             print()
             print('=== TestConfigYaml:')
         conf = self.config('keyvalues')
-        self.assertEqual(conf['section']['key_multiline'], 'line1line2')
-        self.assertEqual(conf['section']['key_multiline_quotes'], 'line1line2')
+        self.assertEqual(conf['section']['key_multiline'], 'line1 line2')
+        self.assertEqual(conf['section']['key_multiline_quotes'], 'line1 line2')
 
 
 class TestAddFilenamesToConfig(unittest.TestCase):

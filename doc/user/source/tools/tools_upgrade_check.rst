@@ -51,6 +51,12 @@ Die Prüfungen:
 | ``module-params`` | Parameter in ``etc/module.yaml``, die es in den Modulen nicht mehr gibt (admin:                 |
 |                   | ``websocket_host``, ``websocket_port``, ``pypi_timeout``), werden entfernt.                     |
 +-------------------+-------------------------------------------------------------------------------------------------+
+| ``multiline``     | Werte in Item- und Struct-Dateien, die über mehrere Zeilen gehen (ohne Anführungszeichen, in    |
+|                   | Anführungszeichen oder gefaltet mit ``>``), werden gemeldet. Seit SmartHomeNG 2.0 werden ihre   |
+|                   | Zeilen, wie YAML es vorsieht, mit einem Leerzeichen verbunden; vorher wurden sie ohne           |
+|                   | Leerzeichen aneinandergehängt. Eine über zwei Zeilen umbrochene URL muss z.B. in eine Zeile     |
+|                   | geschrieben werden.                                                                             |
++-------------------+-------------------------------------------------------------------------------------------------+
 | ``password-hash`` | Ungesalzene SHA-512 Passwort-Hashes (``hashed_password`` und ``service_hashed_password`` des    |
 |                   | http Moduls, ``hashed_password`` des cli Plugins) werden durch einen gesalzenen Hash des alten  |
 |                   | Hashes (``pbkdf2_sha256_sha512$...``) ersetzt. Das Passwort bleibt dasselbe.                    |

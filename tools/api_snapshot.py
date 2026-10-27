@@ -26,6 +26,7 @@ from collections.abc import Callable
 from typing import NamedTuple, TypeAlias, TypedDict
 
 from ruamel import yaml
+from ruamel.yaml import YAML
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -69,7 +70,7 @@ class Surface:
     @classmethod
     def load(cls, path: Path) -> 'Surface':
         """Read a surface declaration (YAML mapping of the field names above)."""
-        declared = yaml.safe_load(path.read_text(encoding='utf-8')) or {}
+        declared = YAML(typ='safe', pure=True).load(path.read_text(encoding='utf-8')) or {}
         unknown = set(declared) - set(cls.__dataclass_fields__)
         if unknown:
             raise ValueError(f'{path}: unknown surface keys {sorted(unknown)}')
@@ -272,7 +273,7 @@ def snapshot(root: Path, surface: Surface) -> Snapshot:
 def _collect_declared(root: Path, globs: list[str], section: str, kind: str, snap: Snapshot) -> None:
     """Record the entries of a metadata section (`parameters:`, `item_attributes:`) of YAML files."""
     for path in sorted({p for pattern in globs for p in root.glob(pattern)}):
-        declared = (yaml.safe_load(path.read_text(encoding='utf-8')) or {}).get(section) or {}
+        declared = (YAML(typ='safe', pure=True).load(path.read_text(encoding='utf-8')) or {}).get(section) or {}
         for name, spec in declared.items():
             snap[f'{kind}:{path.parent.name}:{name}'] = _parameter(spec if isinstance(spec, dict) else {})
 
@@ -433,7 +434,7 @@ def _plugin_function(spec: dict[str, JsonValue]) -> PluginFunction:
 def _collect_plugin_metadata(root: Path, globs: list[str], snap: Snapshot) -> None:
     """Record what plugin.yaml files declare: config, item attributes, logic parameters, functions, structs, bounds."""
     for path in sorted({p for pattern in globs for p in root.glob(pattern)}):
-        data = yaml.safe_load(path.read_text(encoding='utf-8')) or {}
+        data = YAML(typ='safe', pure=True).load(path.read_text(encoding='utf-8')) or {}
         plugin = path.parent.name
         for section, kind in _PLUGIN_SPEC_SECTIONS.items():
             for name, spec in _section(data, section).items():

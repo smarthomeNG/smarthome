@@ -31,6 +31,7 @@ are implemented in this library.
 
 """
 
+import io
 import logging
 import os
 import re
@@ -44,22 +45,26 @@ from lib.constants import YAML_FILE
 logger = logging.getLogger(__name__)
 
 try:
-    import ruamel.yaml as yaml
+    from ruamel.yaml import YAML
+    from ruamel.yaml.comments import CommentedMap, CommentedSeq
+    from ruamel.yaml.constructor import SafeConstructor
+    from ruamel.yaml.representer import SafeRepresenter
 
     EDITING_ENABLED = True
-    # check to be enabled after migrating to the new ruamel.yaml api
-#    if str(yaml.__version__) < '0.15.0':
-#        logger.critical("shyaml: Loaded version of ruamel.yaml ({}) is too old".format(yaml.__version__))
-#        exit(1)
-
 except ImportError:
     EDITING_ENABLED = False
     logger.critical('shyaml: ruamel.yaml is not installed')
     exit(1)
 
-yaml_version = '1.1'
-indent_spaces = 4
-block_seq_indent = 0
+#: indentation of mappings and sequences in files written by SmartHomeNG
+_INDENT = 4
+#: line width up to which the round trip dumper does not wrap scalars
+_ROUNDTRIP_WIDTH = 12288
+#: attribute of round trip loaded data: YAML version of the file ((1, 1) for '%YAML 1.1', None without directive)
+_VERSION_ATTR = '_shng_yaml_version'
+#: attribute of round trip loaded data: the file's directives section up to '---' (ruamel drops its comments)
+_HEADER_ATTR = '_shng_yaml_header'
+_HEADER = re.compile(r'\A((?:[ \t]*\n)*%[^\n]*\n(?:[%#][^\n]*\n|[ \t]*\n)*---)(?=[ \n])')
 
 
 def editing_is_enabled():
@@ -72,37 +77,19 @@ def editing_is_enabled():
 
 
 MERGE_TAG = 'tag:yaml.org,2002:merge'
-_LINE_REFERENCE = re.compile(r'\bline(: | )(\d+)')
 
 
-def convert_linenumbers(text):
+def _ordered_constructor(source):
     """
-    Map the line numbers in a YAML parser message back to the file's real lines.
+    Build a safe constructor class that loads mappings as OrderedDict and logs a warning for every key
+    defined twice in one mapping (the last definition wins).
 
-    Files are parsed with every line break doubled, so the parser's line n is line (n + 1) / 2
-    of the file. Converts both ``line 5, column 9`` and ``(line: 5)`` references.
-
-    :param text: parser error message
-    :type text: str
-    :return: message with the real line numbers
-    :rtype: str
-    """
-    return _LINE_REFERENCE.sub(lambda m: f'line{m.group(1)}{(int(m.group(2)) + 1) // 2}', text)
-
-
-def _duplicate_key_warning_loader(base_loader, source, doubled):
-    """
-    Build a loader class that logs a warning for every key defined twice in one mapping.
-
-    :param base_loader: loader class to extend
     :param source: file name (or other label) shown in the warning
-    :param doubled: True if the parsed text has every line break doubled
     :type source: str
-    :type doubled: bool
-    :return: loader class
+    :return: constructor class
     """
 
-    class DuplicateKeyWarningLoader(base_loader):
+    class OrderedConstructor(SafeConstructor):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self._checked_mappings = set()
@@ -111,7 +98,7 @@ def _duplicate_key_warning_loader(base_loader, source, doubled):
             if id(node) not in self._checked_mappings:
                 self._checked_mappings.add(id(node))
                 self._warn_duplicate_keys(node)
-            super().flatten_mapping(node)
+            return super().flatten_mapping(node)
 
         def _warn_duplicate_keys(self, node):
             first_lines = {}
@@ -120,7 +107,6 @@ def _duplicate_key_warning_loader(base_loader, source, doubled):
                     continue
                 key = (key_node.tag, key_node.value)
                 line = key_node.start_mark.line + 1
-                line = (line + 1) // 2 if doubled else line
                 if key not in first_lines:
                     first_lines[key] = line
                 else:
@@ -129,7 +115,37 @@ def _duplicate_key_warning_loader(base_loader, source, doubled):
                         f'{first_lines[key]} - the last definition replaces the earlier ones'
                     )
 
-    return DuplicateKeyWarningLoader
+    def construct_ordered_mapping(constructor, node):
+        constructor.flatten_mapping(node)
+        return OrderedDict(constructor.construct_pairs(node))
+
+    OrderedConstructor.add_constructor('tag:yaml.org,2002:map', construct_ordered_mapping)
+    return OrderedConstructor
+
+
+def _safe_yaml(ordered, source):
+    """
+    Return a safe loader: plain dicts that reject duplicate keys, or (ordered) OrderedDicts that warn about them.
+
+    :param ordered: load mappings as OrderedDict
+    :param source: file name (or other label) shown in duplicate key warnings
+    """
+    yaml = YAML(typ='safe', pure=True)
+    if ordered:
+        yaml.Constructor = _ordered_constructor(source)
+        yaml.allow_duplicate_keys = True
+    return yaml
+
+
+def _explain_load_error(estr):
+    """Add a hint to the parser messages for the two most common mistakes (TABs, missing space after a colon)."""
+    if "found character '\\t'" in estr:
+        estr = estr[estr.find('line') :]
+        estr = 'TABs are not allowed in YAML files, use spaces for indentation instead!\nError in ' + estr
+    if ('while scanning a simple key' in estr) and ("could not find expected ':'" in estr):
+        estr = estr[estr.find('column') : estr.find('could not')]
+        estr = 'The colon (:) following a key has to be followed by a space. The space is missing!\nError in ' + estr
+    return estr
 
 
 def yaml_load(filename, ordered=False, ignore_notfound=False):
@@ -152,25 +168,12 @@ def yaml_load(filename, ordered=False, ignore_notfound=False):
     y = None
 
     try:
-        with open(filename, 'r', encoding='utf8') as stream:
+        with open(filename, 'r', encoding='utf-8-sig') as stream:
             sdata = stream.read()
-        sdata = sdata.replace('\n', '\n\n')
-        if ordered:
-            y = _ordered_load(sdata, _duplicate_key_warning_loader(yaml.SafeLoader, filename, doubled=True))
-        else:
-            y = yaml.load(sdata, yaml.SafeLoader)
+        y = _safe_yaml(ordered, filename).load(sdata)
     except Exception as e:
-        estr = str(e)
-        if "found character '\\t'" in estr:
-            estr = estr[estr.find('line') :]
-            estr = 'TABs are not allowed in YAML files, use spaces for indentation instead!\nError in ' + estr
-        if ('while scanning a simple key' in estr) and ("could not found expected ':'" in estr):
-            estr = estr[estr.find('column') : estr.find('could not')]
-            estr = (
-                'The colon (:) following a key has to be followed by a space. The space is missing!\nError in ' + estr
-            )
+        estr = _explain_load_error(str(e))
         if '(line: ' in estr:
-            estr = convert_linenumbers(estr)
             estr += '\nNOTE: Look for the error at the expected <block end>, near the second specified line number'
         if '[Errno 2]' in estr:
             if not ignore_notfound:
@@ -202,24 +205,20 @@ def yaml_load_fromstring(string, ordered=False):
 
     estr = ''
     try:
-        sdata = string
-        #        sdata = sdata.replace('\n', '\n\n')
-        if ordered:
-            y = _ordered_load(sdata, _duplicate_key_warning_loader(yaml.SafeLoader, '<string>', doubled=False))
-        else:
-            y = yaml.load(sdata, yaml.SafeLoader)
+        y = _safe_yaml(ordered, '<string>').load(string)
     except Exception as e:
-        estr = str(e)
-        if "found character '\\t'" in estr:
-            estr = estr[estr.find('line') :]
-            estr = 'TABs are not allowed in YAML files, use spaces for indentation instead!\nError in ' + estr
-        if ('while scanning a simple key' in estr) and ("could not found expected ':'" in estr):
-            estr = estr[estr.find('column') : estr.find('could not')]
-            estr = (
-                'The colon (:) following a key has to be followed by a space. The space is missing!\nError in ' + estr
-            )
+        estr = _explain_load_error(str(e))
 
     return y, estr
+
+
+class _OrderedSafeRepresenter(SafeRepresenter):
+    """Safe representer that writes an OrderedDict as a plain mapping."""
+
+
+_OrderedSafeRepresenter.add_representer(
+    OrderedDict, lambda representer, data: representer.represent_mapping('tag:yaml.org,2002:map', data.items())
+)
 
 
 def yaml_save(filename, data):
@@ -235,65 +234,22 @@ def yaml_save(filename, data):
     :returns: Nothing
     """
 
-    ordered = type(data).__name__ == 'OrderedDict'
-    dict_type = 'dict'
-    if ordered:
-        dict_type = 'OrderedDict'
+    dict_type = 'OrderedDict' if isinstance(data, OrderedDict) else 'dict'
     logger.info("Saving '{}' to '{}'".format(dict_type, filename))
-    if ordered:
-        sdata = _ordered_dump(
-            data, Dumper=yaml.SafeDumper, indent=4, width=768, allow_unicode=True, default_flow_style=False
-        )
-    else:
-        sdata = yaml.dump(
-            data, Dumper=yaml.SafeDumper, indent=4, width=768, allow_unicode=True, default_flow_style=False
-        )
-    sdata = _format_yaml_dump(sdata)
+    yaml = YAML(typ='safe', pure=True)
+    yaml.Representer = _OrderedSafeRepresenter
+    yaml.default_flow_style = False
+    yaml.indent(mapping=_INDENT, sequence=_INDENT, offset=0)
+    yaml.width = 768
+    yaml.allow_unicode = True
+    stream = io.StringIO()
+    yaml.dump(data, stream)
+    sdata = _format_yaml_dump(stream.getvalue())
     with open(filename, 'w', encoding='utf8') as outfile:
         outfile.write(sdata)
 
 
 # ==================================================================================
-
-
-def _format_yaml_load(data):
-    """
-    Reinsert '\n's that have been removed fom comments to make file more readable
-
-    :param data: string to format
-
-    :return: formatted string
-    """
-
-    #    ptr = 0
-    #    cptr = data[ptr:].find('comment: ')
-
-    data = data.replace('\n', '\n\n')
-    return data
-
-
-def _ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
-    """
-    Ordered yaml loader
-    Use this instead ot yaml.loader/yaml.saveloader to get an Ordereddict
-
-    :param stream: stream to read from
-    :param Loader: yaml-loader to use
-    :object_pairs_hook: ...
-
-    :return: OrderedDict structure
-    """
-
-    # usage example: ordered_load(stream, yaml.SafeLoader)
-    class OrderedLoader(Loader):
-        pass
-
-    def construct_mapping(loader, node):
-        loader.flatten_mapping(node)
-        return object_pairs_hook(loader.construct_pairs(node))
-
-    OrderedLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, construct_mapping)
-    return yaml.load(stream, OrderedLoader)
 
 
 def _format_yaml_dump(data):
@@ -321,29 +277,6 @@ def _format_yaml_dump(data):
             rdata.append(line)
     fdata = '\n'.join(rdata)
     return fdata
-
-
-def _ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
-    """
-    Ordered yaml dumper
-    Use this instead ot yaml.Dumper/yaml.SaveDumper to get an Ordereddict
-
-    :param stream: stream to write to
-    :param Dumper: yaml-dumper to use
-    :**kwds: Additional keywords
-
-    :return: OrderedDict structure
-    """
-
-    # usage example: ordered_dump(data, Dumper=yaml.SafeDumper)
-    class OrderedDumper(Dumper):
-        pass
-
-    def _dict_representer(dumper, data):
-        return dumper.represent_mapping(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, data.items())
-
-    OrderedDumper.add_representer(OrderedDict, _dict_representer)
-    return yaml.dump(data, stream, OrderedDumper, **kwds)
 
 
 # ==================================================================================
@@ -392,9 +325,30 @@ def yaml_exists(filename):
     return os.path.isfile(strip_yaml_extension(filename) + YAML_FILE)
 
 
+def _roundtrip_yaml(version=None):
+    """
+    Return a round trip loader/dumper: comments, key order, quotes and the YAML version of a file are kept;
+    indentation is SmartHomeNG's (4 spaces, dashes below their key).
+
+    :param version: YAML version to write ((1, 1) adds a '%YAML 1.1' directive), None for none
+    """
+    yaml = YAML(typ='rt')
+    yaml.indent(mapping=_INDENT, sequence=_INDENT, offset=0)
+    yaml.width = _ROUNDTRIP_WIDTH
+    yaml.allow_unicode = True
+    yaml.preserve_quotes = True
+    if version is not None:
+        yaml.version = version
+    return yaml
+
+
 def yaml_load_roundtrip(filename, raise_on_error=False):
     """
     Load contents of a yaml file into an dict structure for editing (using Roundtrip Loader)
+
+    The YAML version of the file is kept with the returned data, so yaml_save_roundtrip() writes the
+    file back in the same version; values would change their meaning otherwise (``yes`` is a boolean
+    in YAML 1.1 and a string in 1.2, ``010`` is 8 in 1.1 and 10 in 1.2).
 
     :param filename: name of the yaml file to load
     :param raise_on_error: if True, re-raise a load/parse failure instead
@@ -416,12 +370,16 @@ def yaml_load_roundtrip(filename, raise_on_error=False):
     y = None
     filename = strip_yaml_extension(filename) + YAML_FILE
     try:
-        with open(filename, 'r', encoding='utf8') as stream:
+        with open(filename, 'r', encoding='utf-8-sig') as stream:
             sdata = stream.read()
-        sdata = sdata.replace('\n', '\n\n')
-        y = yaml.load(sdata, yaml.RoundTripLoader)
+        yaml = _roundtrip_yaml()
+        y = yaml.load(sdata)
+        if isinstance(y, (CommentedMap, CommentedSeq)):
+            setattr(y, _VERSION_ATTR, yaml.version)
+            header = _HEADER.match(sdata)
+            setattr(y, _HEADER_ATTR, header.group(1) if header else None)
     except Exception as e:
-        message = convert_linenumbers(str(e))
+        message = str(e)
         logger.error("yaml_load_roundtrip: YAML-file load error in %s: '%s'" % (filename, message))
         if raise_on_error:
             raise ValueError(message) from e
@@ -433,39 +391,39 @@ def get_emptynode():
     """
     Return an empty node
     """
-    return yaml.comments.CommentedMap([])
+    return CommentedMap([])
 
 
 def get_commentedseq(lst):
     """
     Convert a list to a commented sequence
     """
-    return yaml.comments.CommentedSeq(lst)
+    return CommentedSeq(lst)
 
 
 def yaml_dump_roundtrip(data):
     """
-    Dump yaml to a string using the RoundtripDumper and correct linespacing in output file
+    Dump yaml to a string using the round trip dumper
+
+    Data loaded by yaml_load_roundtrip() is written in the YAML version of its file, with the file's own
+    directives section (including comments in it); other data without a version directive (YAML 1.2).
+    Indentation is always SmartHomeNG's (4 spaces, dashes below their key).
 
     :param data: data structure to save
     """
 
-    sdata = yaml.dump(
-        data,
-        Dumper=yaml.RoundTripDumper,
-        version=yaml_version,
-        indent=indent_spaces,
-        block_seq_indent=block_seq_indent,
-        width=12288,
-        allow_unicode=True,
-    )
-    sdata = _format_yaml_dump2(sdata)
+    stream = io.StringIO()
+    _roundtrip_yaml(getattr(data, _VERSION_ATTR, None)).dump(data, stream)
+    sdata = stream.getvalue()
+    header = getattr(data, _HEADER_ATTR, None)
+    if header:
+        sdata = _HEADER.sub(lambda _match: header, sdata, count=1)
     return sdata
 
 
 def yaml_save_roundtrip(filename, data, create_backup=False):
     """
-    Dump yaml using the RoundtripDumper and correct linespacing in output file
+    Dump yaml using the round trip dumper (see yaml_dump_roundtrip())
 
     :param filename: name of the yaml file to save to
     :param data: data structure to save
@@ -473,16 +431,7 @@ def yaml_save_roundtrip(filename, data, create_backup=False):
 
     if not EDITING_ENABLED:
         return
-    sdata = yaml.dump(
-        data,
-        Dumper=yaml.RoundTripDumper,
-        version=yaml_version,
-        indent=indent_spaces,
-        block_seq_indent=block_seq_indent,
-        width=12288,
-        allow_unicode=True,
-    )
-    sdata = _format_yaml_dump2(sdata)
+    sdata = yaml_dump_roundtrip(data)
 
     filename = strip_yaml_extension(filename) + YAML_FILE
     if create_backup:
@@ -491,95 +440,6 @@ def yaml_save_roundtrip(filename, data, create_backup=False):
 
     with open(filename, 'w', encoding='utf8') as outfile:
         outfile.write(sdata)
-
-
-def _strip_empty_lines(data):
-    ldata = data.split('\n')
-
-    rdata = []
-    for index, line in enumerate(ldata):
-        if len(line.strip()) == 0:
-            line = line.strip()
-        rdata.append(line)
-
-    fdata = '\n'.join(rdata)
-    if fdata[0] == '\n':
-        fdata = fdata[1:]
-    return fdata
-
-
-def _format_yaml_dump2(sdata):
-    """
-    Format yaml-dump to make file more readable, used by yaml_save_roundtrip()
-    (yaml structure must be dumped to a stream before using this function)
-    | Currently does the following:
-    | - Insert empty line after section w/o a value
-    | - Insert empty line before section (key w/o a value)
-    | - Adjust indentation of list entries
-    | - Remove double line spacing introduced by ruamel.yaml
-    | - Multiline strings: Remove '4' inserted by ruamel.yaml after '|'
-    | - Remove empty line after section w/o a value, if the following line is a child-line
-
-
-    :param data: string to format
-
-    :return: formatted string
-    """
-
-    # Strip lines containing only spaces and strip empty lines inserted by ruamel.yaml
-    sdata = _strip_empty_lines(sdata)
-    sdata = sdata.replace('\n\n\n', '\n')
-    sdata = sdata.replace('\n\n', '\n')
-    #    sdata = sdata.replace(': |4\n', ': |\n')    # Multiline strings: remove '4' inserted by ruyaml
-
-    ldata = sdata.split('\n')
-    rdata = []
-    for index, line in enumerate(ldata):
-        # Remove empty line after section w/o a value, if the following line is a child-line
-        if len(line.strip()) == 0:
-            try:
-                nextline = ldata[index + 1]
-            except IndexError:
-                nextline = ''
-            indentprevline = len(ldata[index - 1]) - len(ldata[index - 1].lstrip(' '))
-            indentnextline = len(nextline) - len(nextline.lstrip(' '))
-            if indentnextline != indentprevline + indent_spaces:
-                rdata.append(line)
-        # Insert empty line after section w/o a value
-        elif len(line.lstrip()) > 0 and line.lstrip()[0] == '#':
-            if line.lstrip()[-1:] == ':':
-                rdata.append('')
-            # only insert empty line, if last line was not a comment
-            elif len(ldata[index - 1].strip()) > 0 and ldata[index - 1][0] != '#':
-                # Only insert empty line, if next line is not commented out
-                if len(ldata[index + 1].strip()) > 0 and ldata[index + 1][-1:] == ':' and ldata[index + 1][0] != '#':
-                    rdata.append('')
-            rdata.append(line)
-
-        # Insert empty line before section (key w/o a value)
-        elif line[-1:] == ':':
-            # only, if last line is not empty and last line is not a comment
-            if len(ldata[index - 1].lstrip()) > 0 and not (
-                len(ldata[index - 1].lstrip()) > 0 and ldata[index - 1].lstrip()[0] == '#'
-            ):
-                # no empty line before list attributes
-                if ldata[index + 1].strip() != '':
-                    if ldata[index + 1].strip()[0] != '-':
-                        rdata.append('')
-                else:
-                    rdata.append('')
-                rdata.append(line)
-            else:
-                rdata.append(line)
-        else:
-            rdata.append(line)
-
-    sdata = '\n'.join(rdata)
-
-    sdata = sdata.replace('\n---\n\n', '\n---\n')
-    if sdata[0] == '\n':
-        sdata = sdata[1:]
-    return sdata
 
 
 # ==================================================================================
@@ -665,7 +525,7 @@ class yamlfile:
             self.filename_write = strip_yaml_extension(filename_write)
         self.filename_bak = self.filename_write + '.bak' + YAML_FILE
         self._create_bak = create_bak
-        self.data = yaml.comments.CommentedMap([])
+        self.data = CommentedMap([])
 
     def load(self):
         """
@@ -687,7 +547,7 @@ class yamlfile:
         """
         self.data = yaml_load_roundtrip(self.filename, raise_on_error=True)
         if self.data is None:
-            self.data = yaml.comments.CommentedMap([])
+            self.data = CommentedMap([])
 
     def save(self):
         """
@@ -778,7 +638,7 @@ class yamlfile:
                 parent_node.pop(get_key(path), None)
             except AttributeError:
                 pass
-            if parent_path != '' and self.getnode(parent_path) == yaml.comments.CommentedMap():
+            if parent_path != '' and self.getnode(parent_path) == CommentedMap():
                 node = self.getnode(get_parent(parent_path))
                 root = node is None
                 if root:
@@ -850,7 +710,7 @@ class yamlfile:
         node = self.data
         for key in path.split('.')[:-1]:
             if node.get(key) is None:
-                node[key] = yaml.comments.CommentedMap()
+                node[key] = CommentedMap()
             node = node[key]
             if not isinstance(node, dict):
                 return False
@@ -868,7 +728,7 @@ class yamlfile:
             nodetype = 'none'
             dataDict = None
         else:
-            if isinstance(dataDict, yaml.comments.CommentedMap):
+            if isinstance(dataDict, CommentedMap):
                 nodetype = 'branch'
             else:
                 nodetype = 'leaf'

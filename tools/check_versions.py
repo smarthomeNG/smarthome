@@ -18,7 +18,7 @@ from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
 
-from ruamel import yaml
+from ruamel.yaml import YAML
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -94,7 +94,7 @@ def _is_shipped(path: str) -> bool:
 
 
 def _declared_version(yaml_text: str) -> str:
-    plugin = (yaml.safe_load(yaml_text) or {}).get('plugin')
+    plugin = (YAML(typ='safe', pure=True).load(yaml_text) or {}).get('plugin')
     return str(plugin.get('version', '')) if isinstance(plugin, dict) else ''
 
 

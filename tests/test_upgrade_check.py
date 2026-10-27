@@ -529,6 +529,43 @@ class TestPasswordHashes(InstallationTestCase):
         self.assertTrue(Utils.check_hashed_password('secret', stored))
 
 
+class TestMultilineValues(InstallationTestCase):
+    ITEMS = """\
+room:
+    url: http://host/
+        path
+    quoted: 'line1
+        line2'
+    folded: >
+        one
+        two
+    literal: |
+        a
+        b
+    single: one line
+"""
+
+    def test_multiline_values_are_reported(self):
+        self.write('etc/items/room.yaml', self.ITEMS)
+
+        findings = self.run_check('multiline', fix=True)
+
+        self.assertEqual([2, 4, 6], [f.line for f in findings])
+        self.assertTrue(all(not f.fixable for f in findings))
+        self.assertIn('url', findings[0].message)
+        self.assertEqual(self.ITEMS, self.read('etc/items/room.yaml'))
+
+    def test_structs_are_checked_too(self):
+        self.write('etc/structs/s.yaml', 's:\n    eval: sh.a() +\n        sh.b()\n')
+
+        self.assertEqual(1, len(self.run_check('multiline')))
+
+    def test_broken_file_is_skipped(self):
+        self.write('etc/items/bad.yaml', 'a: [unclosed\n')
+
+        self.assertEqual([], self.run_check('multiline'))
+
+
 class TestScenes(InstallationTestCase):
     def test_conf_scene_becomes_yaml(self):
         self.write(
