@@ -193,6 +193,37 @@ class TestInstances(InstallationTestCase):
 
         self.assertTrue(any(not f.fixable and 'same' in f.message for f in findings))
 
+    def test_two_sections_without_instance_cannot_be_fixed(self):
+        self.write(
+            'etc/plugin.yaml',
+            """
+            a:
+                plugin_name: avm
+                default_instance: true
+            b:
+                plugin_name: avm
+            """,
+        )
+
+        findings = self.run_check('instances', fix=True)
+
+        self.assertEqual([False], [f.fixable for f in findings])
+        self.assertIn("'a'", findings[0].message)
+        self.assertIn("'b'", findings[0].message)
+        self.assertNotIn(' instance:', self.read('etc/plugin.yaml'))
+
+    def test_explicit_legacy_instances_setting_skips_the_check(self):
+        for value in ('true', 'false'):
+            with self.subTest(legacy_instances=value):
+                self.write('etc/smarthome.yaml', f'location: home\nlegacy_instances: {value}\n')
+
+                self.assertEqual([], self.run_check('instances'))
+
+    def test_smarthome_yaml_without_legacy_instances_does_not_skip_the_check(self):
+        self.write('etc/smarthome.yaml', 'location: home\n')
+
+        self.assertEqual(2, len(self.run_check('instances')))
+
 
 class TestPluginAlias(InstallationTestCase):
     def setUp(self):
@@ -244,7 +275,14 @@ class TestPluginAlias(InstallationTestCase):
         findings = self.run_check('plugin-alias', fix=True)
 
         self.assertIn('sh.knx.send', self.read('etc/logics/lights.py'))
-        self.assertTrue(any(not f.fixable and "'knx'" in f.message for f in findings))
+        self.assertFalse(any('knx' in f.message for f in findings))
+
+    def test_a_struct_named_like_a_section_does_not_block_it(self):
+        self.write('etc/structs/rollo.yaml', 'knx:\n    type: str\n')
+
+        self.run_check('plugin-alias', fix=True)
+
+        self.assertIn("sh.plugins.knx.send('1/1/1', 1)", self.read('etc/logics/lights.py'))
 
     def test_a_section_named_like_a_smarthome_attribute_is_left_alone(self):
         self.write('etc/plugin.yaml', 'trigger:\n    plugin_name: knx\nalive:\n    plugin_name: mqtt\n')
@@ -253,7 +291,7 @@ class TestPluginAlias(InstallationTestCase):
         findings = self.run_check('plugin-alias', fix=True)
 
         self.assertEqual('sh.trigger.send()\nsh.alive.send()\n', self.read('etc/logics/lights.py'))
-        self.assertEqual({'trigger', 'alive'}, {f.message.split("'")[1] for f in findings if not f.fixable})
+        self.assertEqual([], findings)
 
     def test_a_section_named_like_a_removed_sh_method_or_core_item_is_left_alone(self):
         self.write('etc/plugin.yaml', 'now:\n    plugin_name: knx\nenv:\n    plugin_name: mqtt\n')

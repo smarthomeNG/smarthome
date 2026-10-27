@@ -12,7 +12,8 @@ Checks:
 ``instances``
     Plugin instance names: since 2.0 the name of a ``plugin.yaml`` section is the instance name of a plugin
     that is used by several sections. A section without ``instance:`` gets ``instance: default`` so that it
-    keeps the empty instance; item attributes ``attr@old`` are renamed to the new instance name.
+    keeps the empty instance; item attributes ``attr@old`` are renamed to the new instance name. Skipped when
+    ``etc/smarthome.yaml`` sets ``legacy_instances``: then the instance names do not change with the upgrade.
 ``plugin-alias``
     ``sh.<section>`` accesses to plugins become ``sh.plugins.<section>``.
 ``plugin-class``
@@ -174,6 +175,11 @@ class Project:
     def plugin_yaml(self) -> Path:
         """Path of the plugin configuration."""
         return self.etc / 'plugin.yaml'
+
+    @property
+    def smarthome_yaml(self) -> Path:
+        """Path of the core configuration."""
+        return self.etc / 'smarthome.yaml'
 
     @property
     def module_yaml(self) -> Path:
@@ -375,9 +381,15 @@ class InstancesChecker:
         prefixes = tuple((data.get('item_attribute_prefixes') or {}).keys()) if isinstance(data, dict) else ()
         return attributes, prefixes
 
+    @staticmethod
+    def legacy_instances_set(project: Project) -> bool:
+        """True if ``etc/smarthome.yaml`` sets ``legacy_instances`` (to either value)."""
+        config = load_sections(project.smarthome_yaml)
+        return isinstance(config, Mapping) and 'legacy_instances' in config
+
     def run(self, project: Project, fix: bool) -> list[Finding]:
         sections = load_plugin_sections(project)
-        if sections is None:
+        if sections is None or self.legacy_instances_set(project):
             return []
         enabled = enabled_sections(sections)
         by_plugin: dict[str, list[str]] = {}
@@ -389,22 +401,26 @@ class InstancesChecker:
         set_default: list[str] = []
         renames: dict[str, dict[str, str]] = {}
         for plugin, names in by_plugin.items():
-            seen: dict[str, str] = {}
+            by_legacy: dict[str, list[str]] = {}
             for name in names:
-                section = enabled[name]
-                legacy = self.legacy_instance(section)
-                new = self.new_instance(name, section, len(names))
-                if legacy in seen and legacy != '':
+                by_legacy.setdefault(self.legacy_instance(enabled[name]), []).append(name)
+            for legacy, shared in by_legacy.items():
+                if len(shared) > 1:
+                    instance = f"the instance '{legacy}'" if legacy else 'the unnamed instance'
+                    sections_list = ', '.join(f"'{n}'" for n in shared)
                     findings.append(
                         Finding(
                             self.name,
                             project.plugin_yaml,
-                            f"sections '{seen[legacy]}' and '{name}' of plugin '{plugin}' use the instance '{legacy}'",
+                            f"sections {sections_list} of plugin '{plugin}' use {instance}",
                             fixable=False,
                         )
                     )
-                seen.setdefault(legacy, name)
-                if legacy == new:
+            for name in names:
+                section = enabled[name]
+                legacy = self.legacy_instance(section)
+                new = self.new_instance(name, section, len(names))
+                if legacy == new or len(by_legacy[legacy]) > 1:
                     continue
                 if legacy == '':
                     set_default.append(name)
@@ -484,7 +500,7 @@ class PluginAliasChecker:
     def top_level_items(self, project: Project) -> set[str]:
         """Names of the top level items; they win over a plugin of the same name."""
         names: set[str] = set()
-        for path in project.item_files():
+        for path in project.files('items', '*.yaml'):
             try:
                 data = ruamel_yaml.YAML(typ='safe').load(read_text(path))
             except Exception:
@@ -497,20 +513,11 @@ class PluginAliasChecker:
         sections = load_plugin_sections(project)
         if sections is None:
             return []
-        names = set(enabled_sections(sections))
-        blocked = names & (reserved_sh_names() | self.top_level_items(project))
-        findings = [
-            Finding(
-                self.name,
-                project.plugin_yaml,
-                f"section '{name}' has the name of an item or of an attribute of sh: sh.{name} is not the plugin",
-                fixable=False,
-            )
-            for name in sorted(blocked)
-        ]
-        names -= blocked
+        # sh.<name> of an item or a SmartHome attribute never was the plugin, so there is nothing to rewrite
+        names = set(enabled_sections(sections)) - reserved_sh_names() - self.top_level_items(project)
         if not names:
-            return findings
+            return []
+        findings: list[Finding] = []
 
         def plan(chain):
             first = chain[0]
