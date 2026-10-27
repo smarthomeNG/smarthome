@@ -944,7 +944,7 @@ class Skytime(TriggerTime):
                                     )
                                 except Exception:
                                     logger.error(
-                                        'Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]'
+                                        f'Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]'
                                     )
                                     return get_invalid_time()
                                 if dmin > eventtime:
@@ -958,7 +958,7 @@ class Skytime(TriggerTime):
                                     logger.debug(f'searchtime={searchtime}, eventtime={eventtime}, dmax={dmax}')
                                 except Exception:
                                     logger.error(
-                                        'Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]'
+                                        f'Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]'
                                     )
                                     return get_invalid_time()
 

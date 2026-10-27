@@ -352,7 +352,7 @@ class Protocol:
                         )
 
                     else:
-                        self.logger.error("unsupported event: '{}'", data)
+                        self.logger.error(f"unsupported event: '{data}'")
                     reply = json.dumps(answer, default=self.json_serial)
                 except Exception as e:
                     self.logger.exception(f'visu_protocol Exception {e}')

@@ -1687,7 +1687,7 @@ class Udp_server(object):
         Run the asyncio loop in a separate thread to not block the Udp_server.start() method.
         """
         self._is_listening = True
-        self.logger.debug('{self._id} listening thread set is_listening to True')
+        self.logger.debug(f'{self._id} listening thread set is_listening to True')
         asyncio.set_event_loop(self.__loop)
         try:
             self.__loop.run_forever()

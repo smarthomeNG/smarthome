@@ -920,7 +920,7 @@ class Shpypi:
             )
 
         if reads >= max_tries:
-            self.logger.info("get_package_releases_data: pypi.org returned no data for package {package['name']}")
+            self.logger.info(f'get_package_releases_data: pypi.org returned no data for package {package["name"]}')
         return
 
     def _build_sortstring(self, package):

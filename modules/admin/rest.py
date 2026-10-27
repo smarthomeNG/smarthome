@@ -564,7 +564,7 @@ class RESTResource:
         """
         Handle OPTIONS requests
         """
-        self.logger.notice('RESTResource.options for class {self.__class__.__name__}')
+        self.logger.notice(f'RESTResource.options for class {self.__class__.__name__}')
 
         return json.dumps(False)
 
