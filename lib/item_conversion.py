@@ -42,7 +42,6 @@ except ImportError:
     print('sudo pip3 install ruamel.yaml')
     print('')
     RUAMEL_YAML_INSTALLED = False
-    import yaml
 
 
 import collections

@@ -14,7 +14,7 @@ import textwrap
 import unittest
 from pathlib import Path
 
-import yaml
+from ruamel.yaml import YAML
 
 TOOL_PATH = os.path.join(os.path.dirname(__file__), '..', 'tools', 'upgrade_check.py')
 
@@ -98,7 +98,7 @@ class TestInstances(InstallationTestCase):
     def test_section_without_instance_gets_default(self):
         self.run_check('instances', fix=True)
 
-        sections = yaml.safe_load(self.read('etc/plugin.yaml'))
+        sections = YAML(typ='safe').load(self.read('etc/plugin.yaml'))
         self.assertEqual('default', sections['fritzbox_2']['instance'])
         self.assertNotIn('instance', sections['knx'])
         self.assertIn('# keep this comment', self.read('etc/plugin.yaml'))
@@ -300,7 +300,7 @@ class TestPluginClass(InstallationTestCase):
 
         self.run_check('plugin-class', fix=True)
 
-        section = yaml.safe_load(self.read('etc/plugin.yaml'))['fritz']
+        section = YAML(typ='safe').load(self.read('etc/plugin.yaml'))['fritz']
         self.assertEqual({'plugin_name': 'avm', 'host': '1.2.3.4'}, section)
 
     def test_old_plugin_version_is_kept_as_plugin_version(self):
@@ -308,7 +308,7 @@ class TestPluginClass(InstallationTestCase):
 
         self.run_check('plugin-class', fix=True)
 
-        section = yaml.safe_load(self.read('etc/plugin.yaml'))['bridge']
+        section = YAML(typ='safe').load(self.read('etc/plugin.yaml'))['bridge']
         self.assertEqual({'plugin_name': 'hue', 'plugin_version': '1.1.83'}, section)
 
     def test_ignored_keys_next_to_plugin_name_are_removed(self):
@@ -316,7 +316,7 @@ class TestPluginClass(InstallationTestCase):
 
         self.run_check('plugin-class', fix=True)
 
-        self.assertEqual({'plugin_name': 'avm'}, yaml.safe_load(self.read('etc/plugin.yaml'))['fritz'])
+        self.assertEqual({'plugin_name': 'avm'}, YAML(typ='safe').load(self.read('etc/plugin.yaml'))['fritz'])
 
     def test_plugin_outside_of_the_plugins_directory_needs_manual_work(self):
         text = 'own:\n    class_name: Own\n    class_path: myplugins.own\n'
@@ -419,7 +419,7 @@ class TestScenes(InstallationTestCase):
 
         self.assertTrue(all(f.fixed for f in findings))
         self.assertFalse((self.base / 'etc/scenes/example.conf').exists())
-        scene = yaml.safe_load(self.read('etc/scenes/example.yaml'))
+        scene = YAML(typ='safe').load(self.read('etc/scenes/example.yaml'))
         self.assertEqual({'actions': [{'item': 'otheritem', 'value': 2}]}, scene[0])
         self.assertEqual(
             [{'item': 'otheritem', 'value': 20}, {'item': 'LogicName', 'value': 'run'}], scene[1]['actions']
@@ -451,7 +451,7 @@ class TestScenes(InstallationTestCase):
         findings = self.run_check('scenes', fix=True)
 
         self.assertEqual(2, sum(1 for f in findings if not f.fixable))
-        scene = yaml.safe_load(self.read('etc/scenes/example.yaml'))
+        scene = YAML(typ='safe').load(self.read('etc/scenes/example.yaml'))
         self.assertEqual([0], list(scene))
 
 
