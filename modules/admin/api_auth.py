@@ -24,8 +24,7 @@ import os
 import logging
 import json
 import cherrypy
-from datetime import datetime, timedelta
-import time
+from datetime import timedelta
 
 import jwt
 
@@ -74,117 +73,96 @@ class AuthController(RESTResource):
     #  /api/authenticate/user (POST)
     #
     def authenticate(self):
-        self.logger.info(
-            'AuthController.authenticate(): cherrypy.request.headers = {}'.format(cherrypy.request.headers)
-        )
+        """
+        Check the posted credentials and return a JWT for a valid login.
 
+        Without configured users every request gets an admin token named 'Autologin'.
+
+        :return: JSON with a 'token' key on success, an empty JSON object otherwise
+        """
         cl = cherrypy.request.headers.get('Content-Length', 0)
         if cl == 0:
-            # cherrypy.reponse.headers["Status"] = "400"
-            # return 'Bad request'
             raise cherrypy.HTTPError(status=411)
         rawbody = cherrypy.request.body.read(int(cl))
-        self.logger.info('AuthController.authenticate(): rawbody = {}'.format(rawbody))
         try:
             credentials = json.loads(rawbody.decode('utf-8'))
         except Exception as e:
             self.logger.warning('AuthController.authenticate(): Exception {}'.format(e))
             return 'Bad, bad request'
-        self.logger.info('AuthController.authenticate(): credentials = {}'.format(credentials))
 
         response = {}
+        remote_ip = cherrypy.request.remote.ip
         if self._user_dict == {}:
-            # no password required
-            url = cherrypy.url().split(':')[0] + ':' + cherrypy.url().split(':')[1]
-            payload = {'iss': url, 'iat': self.module.shtime.now(), 'jti': self.module.shtime.now().timestamp()}
-            payload['exp'] = self.module.shtime.now() + timedelta(days=7)
-            payload['ttl'] = 7 * 24
-            payload['name'] = 'Autologin'
-            payload['admin'] = True
-
-            # up to pyJWT 1.7.1:
-            # response['token'] = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
-            jwt_token = jwt.encode(payload, self.jwt_secret, algorithm='HS256')
-            if isinstance(jwt_token, str):
-                # For PyJWT >= 2.0.0a1
-                response['token'] = jwt_token
-            elif isinstance(jwt_token, bytes):
-                # For PyJWT <= 1.7.1
-                response['token'] = jwt_token.decode('utf-8')
-            else:
-                self.logger.error(
-                    'AuthController.authenticate(): jwt_token is of unsupported type {}'.format(type(jwt_token))
-                )
-
-            self.logger.info('AuthController.authenticate(): Autologin')
-            self.logger.info('AuthController.authenticate(): payload = {}'.format(payload))
+            response['token'] = self._issue_token('Autologin', True, 7 * 24)
+            self.logger.info(f'AuthController.authenticate(): Autologin from {remote_ip}')
         else:
-            user = self._user_dict.get(credentials['username'], None)
-            if user:
-                self.logger.info('AuthController.authenticate(): user = {}'.format(user))
-                if Utils.create_hash(credentials['password']) == user.get('password_hash', 'x'):
-                    url = cherrypy.url().split(':')[0] + ':' + cherrypy.url().split(':')[1]
-                    payload = {'iss': url, 'iat': self.module.shtime.now(), 'jti': self.module.shtime.now().timestamp()}
-                    self.logger.info(
-                        'AuthController.authenticate() login: login_expiration = {}'.format(
-                            self.module.login_expiration
-                        )
-                    )
-                    payload['exp'] = self.module.shtime.now() + timedelta(hours=self.module.login_expiration)
-                    payload['ttl'] = self.module.login_expiration
-                    payload['name'] = user.get('name', '?')
-                    payload['admin'] = 'admin' in user.get('groups', [])
-                    # try/except to support PyJWT 1.7.x and 2.x
-                    try:
-                        # For PyJWT <= 1.7.1 (and maybe higher?)
-                        response['token'] = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
-                    except AttributeError:
-                        # For PyJWT >= 2.3.0 (and maybe lower?)
-                        response['token'] = jwt.encode(payload, self.jwt_secret, algorithm='HS256')
-                    self.logger.info('AuthController.authenticate(): payload = {}'.format(payload))
-                    self.logger.info('AuthController.authenticate(): response = {}'.format(response))
-                    self.logger.info('AuthController.authenticate(): cherrypy.url = {}'.format(cherrypy.url()))
-                    self.logger.info(
-                        'AuthController.authenticate(): remote.ip    = {}'.format(cherrypy.request.remote.ip)
-                    )
-        self.logger.info('AuthController.authenticate(): response = {}'.format(response))
+            username = credentials.get('username', '')
+            user = self._user_dict.get(username, None)
+            if user and Utils.create_hash(credentials.get('password', '')) == user.get('password_hash', 'x'):
+                admin = 'admin' in user.get('groups', [])
+                response['token'] = self._issue_token(user.get('name', '?'), admin, self.module.login_expiration)
+                self.logger.info(f"AuthController.authenticate(): login of user '{username}' from {remote_ip}")
+            else:
+                self.logger.warning(
+                    f"AuthController.authenticate(): failed login for user '{username}' from {remote_ip}"
+                )
         return json.dumps(response)
+
+    def _issue_token(self, name: str, admin: bool, ttl_hours: float) -> str:
+        """
+        Return a signed JWT for a login.
+
+        :param name: display name of the logged in user
+        :param admin: True if the user belongs to the admin group
+        :param ttl_hours: validity of the token in hours
+        """
+        url = cherrypy.url().split(':')[0] + ':' + cherrypy.url().split(':')[1]
+        now = self.module.shtime.now()
+        payload = {
+            'iss': url,
+            'iat': now,
+            'jti': now.timestamp(),
+            'exp': now + timedelta(hours=ttl_hours),
+            'ttl': ttl_hours,
+            'name': name,
+            'admin': admin,
+        }
+        return self._encode_token(payload)
+
+    def _encode_token(self, payload: dict) -> str:
+        """Sign ``payload`` as HS256 JWT; PyJWT < 2 returns bytes, PyJWT >= 2 str."""
+        token = jwt.encode(payload, self.jwt_secret, algorithm='HS256')
+        return token.decode('utf-8') if isinstance(token, bytes) else token
 
     # ======================================================================
     #  /api/authenticate/renew (PUT)
     #
     def renew_token(self):
+        """
+        Return the request's token, with a new expiry time if login_autorenew is set.
 
+        :return: JSON with 'token', 'result' and 'description'
+        """
         response = {}
 
         old_token = self.REST_get_jwt_token()
         self.logger.debug('- renew_token(): decoded old token = {}'.format(old_token))
-        new_token = old_token
 
         if self.module.login_autorenew:
+            new_token = dict(old_token)
             new_token['iat'] = self.module.shtime.now()
             new_token['exp'] = self.module.shtime.now() + timedelta(hours=self.module.login_expiration)
-            try:
-                response['token'] = jwt.encode(new_token, self.jwt_secret, algorithm='HS256').decode('utf-8')
-            except AttributeError:
-                response['token'] = jwt.encode(new_token, self.jwt_secret, algorithm='HS256')
-            decoded = jwt.decode(response['token'], self.jwt_secret, verify=True, algorithms='HS256')
-            self.logger.debug('- renew_token(): re-decoded  token = {}'.format(decoded))
-
-            # self.logger.info("AuthController.renew_token(): new_token = {}".format(new_token))
+            response['token'] = self._encode_token(new_token)
             self.logger.info(
                 'AuthController.renew_token(): remote.ip = {}, user = {}'.format(
                     cherrypy.request.remote.ip, new_token['name']
                 )
             )
-
-            response['result'] = 'ok'
             response['description'] = 'token renewed'
         else:
-            response['token'] = jwt.encode(old_token, self.jwt_secret, algorithm='HS256').decode('utf-8')
-
-            response['result'] = 'ok'
+            response['token'] = self._encode_token(old_token)
             response['description'] = 'token not renewed'
+        response['result'] = 'ok'
 
         return json.dumps(response)
 
