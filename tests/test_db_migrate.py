@@ -471,3 +471,38 @@ class TestDiscoverDatabaseInstances(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
+
+
+class TestRunningInstanceInVarDir(unittest.TestCase):
+    """The running-instance guard reads the pidfile of the var directory given with -u."""
+
+    def setUp(self):
+        import lib.vardir
+
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.addCleanup(lib.vardir.set_var_dir, None)
+        os.makedirs(os.path.join(self._tmp.name, 'run'))
+        self.pidfile = os.path.join(self._tmp.name, 'run', 'smarthome.pid')
+        with open(self.pidfile, 'w') as f:
+            f.write(str(os.getpid()))
+
+    def test_var_dir_option(self):
+        self.assertEqual('/srv/var', db_migrate.build_arg_parser().parse_args(['-u', '/srv/var']).var_dir)
+
+    def test_locked_pidfile_in_var_dir_refuses(self):
+        import portalocker
+
+        import lib.vardir
+
+        lib.vardir.set_var_dir(self._tmp.name)
+        with open(self.pidfile) as held:
+            portalocker.lock(held, portalocker.LOCK_EX | portalocker.LOCK_NB)
+            with self.assertRaises(db_migrate.ShngRunningError):
+                db_migrate.assert_shng_not_running()
+
+    def test_unlocked_pidfile_passes(self):
+        import lib.vardir
+
+        lib.vardir.set_var_dir(self._tmp.name)
+        db_migrate.assert_shng_not_running()

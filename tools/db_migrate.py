@@ -30,6 +30,7 @@ sh_basedir: str = os.sep.join(os.path.realpath(__file__).split(os.sep)[:-2])
 sys.path.insert(0, sh_basedir)
 
 import lib.daemon
+import lib.vardir
 import lib.db
 import lib.shyaml
 from plugins.database import Database as DatabasePlugin
@@ -39,8 +40,6 @@ from plugins.database.utils import apply_table_names
 
 # A driver connect spec - plugin.yaml's 'key:value' list form, or a dict from CLI/interactive input.
 ConnectParams = dict[str, str | int] | list[str]
-
-PIDFILE: str = os.path.join(sh_basedir, 'var', 'run', 'smarthome.pid')
 
 # Matches max_delete_logentries' "safe batch size" precedent - see plugins/database/plugin.yaml.
 DEFAULT_BATCH_SIZE: int = 20000
@@ -68,8 +67,9 @@ def assert_shng_not_running() -> None:
     side of the migration while this tool runs would corrupt or silently
     miss data.
     """
-    if lib.daemon.check_sh_is_running(PIDFILE):
-        pid = lib.daemon.read_pidfile(PIDFILE)
+    pidfile = lib.vardir.get_pidfile()
+    if lib.daemon.check_sh_is_running(pidfile):
+        pid = lib.daemon.read_pidfile(pidfile)
         raise ShngRunningError(
             f'SmartHomeNG is currently running (pid {pid}). Stop it first '
             "('smarthome.py -s') - this tool must never run against a live instance."
@@ -678,6 +678,13 @@ def build_arg_parser() -> argparse.ArgumentParser:
         'Must be run with SmartHomeNG stopped.'
     )
     p.add_argument('--etc-dir', default=os.path.join(sh_basedir, 'etc'), help='etc/ directory to read plugin.yaml from')
+    p.add_argument(
+        '-u',
+        '--var-dir',
+        '--var_dir',
+        dest='var_dir',
+        help='var directory of the instance, as given to smarthome.py -u',
+    )
     p.add_argument('--interactive', action='store_true', help='prompt for any side not fully specified via flags')
     p.add_argument('--dry-run', action='store_true', help='report what would happen, write nothing')
     p.add_argument('--bulk', action='store_true', help='use multi-row bulk inserts instead of row-by-row (default)')
@@ -726,6 +733,7 @@ def build_database(driver: str, connect: ConnectParams, role: str, prefix: str =
 
 def main(argv: list[str] | None = None) -> None:
     args = build_arg_parser().parse_args(argv)
+    lib.vardir.set_var_dir(args.var_dir)
 
     assert_shng_not_running()
 

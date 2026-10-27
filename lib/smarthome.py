@@ -344,7 +344,7 @@ class SmartHome:
 
         self.connections = None
 
-        self._pidfile = os.path.join(lib.vardir.get_var_dir(), 'run', 'smarthome.pid')
+        self._pidfile = lib.vardir.get_pidfile()
 
         # check config files
         self.checkConfigFiles()
@@ -1092,7 +1092,7 @@ class SmartHome:
         self._logger.dbghigh(f'Garbage collector: collected {c} objects.')
 
     def _export_threadinfo(self):
-        filename = os.path.join(self._var_dir, 'run', 'threadinfo.json')
+        filename = lib.vardir.get_run_file('threadinfo.json')
         if self._threadinfo_export:
             all_threads = []
             for t in threading.enumerate():

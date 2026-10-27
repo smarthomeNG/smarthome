@@ -1,8 +1,14 @@
-import psutil
+import argparse
+import json
+import os
 import sys
 import time
-import os
-import json
+
+import psutil
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import lib.vardir  # noqa: E402
 
 
 def clear():
@@ -21,16 +27,8 @@ def get_threads_cpu_percent(p, interval=0.1):
     ]
 
 
-def get_basedir():
-    cwd = os.getcwd()
-    path_split = cwd.split('/')
-    if path_split[-1] == 'tools' or path_split[-1] == 'priv_tools':
-        del path_split[-1]
-    return '/'.join(path_split)
-
-
 def get_pid():
-    file = os.path.join(base_dir, 'var', 'run', 'smarthome.pid')
+    file = lib.vardir.get_pidfile()
 
     # if shng is not yet (or not anymore) running, we need to wait for it
     waiting = False
@@ -54,7 +52,7 @@ def get_threadinfo():
     threadinfo = {}
     threadinfo_list = []
     try:
-        with open(os.path.join(base_dir, 'var', 'run', 'threadinfo.json')) as f:
+        with open(lib.vardir.get_run_file('threadinfo.json')) as f:
             threadinfo_list = json.load(f)
     except (OSError, ValueError):
         print_info = True
@@ -64,7 +62,10 @@ def get_threadinfo():
     return threadinfo
 
 
-base_dir = get_basedir()
+parser = argparse.ArgumentParser(description='Show the cpu usage of the threads of a running SmartHomeNG')
+parser.add_argument('-u', '--var_dir', help='var directory of the instance, as given to smarthome.py -u')
+lib.vardir.set_var_dir(parser.parse_args().var_dir)
+base_dir = lib.vardir.BASE_DIR
 shng_pid = get_pid()
 threadinfo = get_threadinfo()
 

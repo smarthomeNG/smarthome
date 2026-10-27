@@ -55,6 +55,21 @@ class TestGetSetVarDir(_VarDirTestCase):
         self.assertEqual(vardir.get_var_dir(), os.path.join(vardir.BASE_DIR, 'var'))
 
 
+class TestGetPidfile(_VarDirTestCase):
+    def test_default(self):
+        self.assertEqual(os.path.join(vardir.BASE_DIR, 'var', 'run', 'smarthome.pid'), vardir.get_pidfile())
+
+    def test_follows_override(self):
+        vardir.set_var_dir('/srv/shng-var')
+        self.assertEqual(os.path.join('/srv/shng-var', 'run', 'smarthome.pid'), vardir.get_pidfile())
+
+    def test_threadinfo_file(self):
+        vardir.set_var_dir('/srv/shng-var')
+        self.assertEqual(
+            os.path.join('/srv/shng-var', 'run', 'threadinfo.json'), vardir.get_run_file('threadinfo.json')
+        )
+
+
 class TestRebaseVarPrefix(_VarDirTestCase):
     def test_unchanged_with_default_var_dir(self):
         self.assertEqual(vardir.rebase_var_prefix('./var/log/x.log'), './var/log/x.log')

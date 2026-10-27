@@ -36,6 +36,16 @@ def set_var_dir(path: str | None) -> None:
     _var_dir = os.path.abspath(os.path.expanduser(path)) if path else _DEFAULT_VAR_DIR
 
 
+def get_run_file(name: str) -> str:
+    """Return the path of the runtime file ``name`` (pidfile, thread info...) below ``<var>/run``."""
+    return os.path.join(_var_dir, 'run', name)
+
+
+def get_pidfile() -> str:
+    """Return the path of SmartHomeNG's pidfile."""
+    return get_run_file('smarthome.pid')
+
+
 def _split_var_prefix(path: str) -> str | None:
     """Return the part of a relative ``path`` below its leading ``var`` segment, or None if it has no such prefix."""
     if os.path.isabs(path):

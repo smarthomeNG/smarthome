@@ -158,7 +158,7 @@ sys.path.insert(0, BASE)
 import lib.vardir
 
 lib.vardir.set_var_dir(args.var_dir)
-PIDFILE = os.path.join(lib.vardir.get_var_dir(), 'run', 'smarthome.pid')
+PIDFILE = lib.vardir.get_pidfile()
 
 # Only used for Version Check in Plugins to decide if a logger must be explicitly declared
 import bin.shngversion

@@ -31,7 +31,7 @@ import argparse
 
 import plugin_metadata_checker as mc
 
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(os.path.basename(__file__))))
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 VERSION = '0.6.3'
 
