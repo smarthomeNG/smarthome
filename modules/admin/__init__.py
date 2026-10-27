@@ -136,7 +136,9 @@ class Admin(Module):
         self._port = self.mod_http._port
         # self.logger.warning('port = {}'.format(self._port))
         self.shng_url_root = 'http://' + ip + ':' + str(self._port)  # for links mto plugin webinterfaces
-        self.url_root = self.shng_url_root + mysuburl
+        # path of the admin interface on this server, for links from pages served by the same server
+        self.url_path = mysuburl
+        self.url_root = self.shng_url_root + self.url_path
         self.api_url_root = self.shng_url_root + 'api'
 
     def _load_or_create_jwt_secret(self):
