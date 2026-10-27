@@ -129,6 +129,23 @@ class TestHysteresisConfigParsing(_Base):
         super().setUp()
         _load_items(self.sh, 'item_hysteresis')
 
+    def test_numeric_thresholds_kept_as_numbers(self):
+        sensor = _item(self.sh, 'sensor_num')
+        output = _item(
+            self.sh,
+            'out_num',
+            'bool',
+            hysteresis_input='sensor_num',
+            hysteresis_upper_threshold=22,
+            hysteresis_lower_threshold=18.5,
+        )
+        output._init_prerun()
+        self.assertEqual(output._hysteresis_upper_threshold, 22)
+        self.assertEqual(output._hysteresis_lower_threshold, 18.5)
+        self.assertIsNone(output._hysteresis_upper_timer)
+        sensor(25)
+        self.assertEqual(output.hysteresis_state(), 'On')
+
     def test_input_path_stored(self):
         output = self.sh.items.return_item('heating_active')
         self.assertEqual(output._hysteresis_input, 'sensor_temp')

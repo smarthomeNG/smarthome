@@ -52,10 +52,10 @@ def get_items_from_string(item, string):
     Return a list of all Item objects referenced as ``sh.path.to.item()`` in *string*.
 
     :param item:   any Item instance (used only for the Items singleton lookup)
-    :param string: string that may contain item references
+    :param string: string that may contain item references; anything else yields no items
     :return:       list of Item objects
     """
-    if not string:
+    if not string or not isinstance(string, str):
         return []
 
     from lib.item.items import Items

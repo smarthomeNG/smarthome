@@ -202,9 +202,9 @@ def parse_hysteresis_xx_threshold_attribute(item, attr, value):
     :param item:  ``Item`` instance.
     :param attr:  Either ``KEY_HYSTERESIS_UPPER_THRESHOLD`` or
                   ``KEY_HYSTERESIS_LOWER_THRESHOLD``.
-    :param value: Raw attribute value.
+    :param value: Raw attribute value; a number is taken as the threshold alone.
     """
-    if value.find(ATTRIBUTE_SEPARATOR) == -1:
+    if not isinstance(value, str) or value.find(ATTRIBUTE_SEPARATOR) == -1:
         threshold = item.get_stringwithabsolutepathes(value, 'sh.', '(', attr)
         timer = None
     else:
