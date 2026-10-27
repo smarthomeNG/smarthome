@@ -777,7 +777,7 @@ class SmartHome:
 
         self.shng_status = {'code': 10, 'text': 'Starting'}
 
-        threading.currentThread().name = 'Main'
+        threading.current_thread().name = 'Main'
 
         #############################################################
         # Prepare TriggerTimes for Scheduler

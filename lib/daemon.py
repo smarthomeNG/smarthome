@@ -169,8 +169,8 @@ def read_pidfile(pidfile):
 
     try:
         if os.path.isfile(pidfile):
-            fd = open(pidfile, 'r')
-            line = fd.readline()
+            with open(pidfile, 'r') as fd:
+                line = fd.readline()
             pid = int(line)
             return pid
     except ValueError:
