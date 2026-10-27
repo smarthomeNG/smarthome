@@ -38,6 +38,36 @@ class TestPluginTypes(unittest.TestCase):
         self.assertEqual(set(PLUGIN_TYPES), sections)
 
 
+class TestGetPluginType(unittest.TestCase):
+    """get_plugintype() tells plugins derived from one of the plugin base classes from classic ones."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory(prefix='SHNG_plgtype.')
+        self.addCleanup(self._tmp.cleanup)
+        self.addCleanup(os.chdir, os.getcwd())
+        os.chdir(self._tmp.name)
+        os.mkdir('foo')
+
+    def plugin_type(self, code: str) -> str:
+        with open('foo/__init__.py', 'w') as f:
+            f.write(code)
+        return tool.get_plugintype('foo')
+
+    def test_base_classes(self):
+        for base in ('SmartPlugin', 'MqttPlugin', 'SmartDevicePlugin', 'model.smartplugin.SmartPlugin'):
+            with self.subTest(base):
+                self.assertEqual('Smart', self.plugin_type(f'class Foo({base}):\n    pass\n'))
+
+    def test_base_class_with_further_bases(self):
+        self.assertEqual('Smart', self.plugin_type('class Foo(Mixin, SmartDevicePlugin):\n    pass\n'))
+
+    def test_classic_plugin(self):
+        self.assertEqual('Classic', self.plugin_type('class Foo:\n    pass\n'))
+
+    def test_base_class_name_in_a_comment_does_not_count(self):
+        self.assertEqual('Classic', self.plugin_type('# class Foo(SmartPlugin)\nclass Foo:\n    pass\n'))
+
+
 class TestPluginType(unittest.TestCase):
     """check_metadata() runs inside a plugins directory that holds one plugin."""
 

@@ -29,6 +29,7 @@ of the plugins on the .../plugins folder.
 The result is printed to stdout
 """
 
+import ast
 import os
 import argparse
 
@@ -91,22 +92,32 @@ def get_local_pluginlist(pluginsdirectory=None):
     return sorted(plglist)
 
 
-def get_plugintype(plgName):
+#: base classes of plugins (SmartPlugin and its subclasses in lib/model)
+PLUGIN_BASE_CLASSES = frozenset({'SmartPlugin', 'MqttPlugin', 'SmartDevicePlugin'})
 
+
+def get_plugintype(plgName):
+    """
+    Return 'Smart' if a class in the plugin's ``__init__.py`` derives from one of PLUGIN_BASE_CLASSES,
+    'Classic' if none does, 'None' if the file is missing.
+    """
     fn = './' + plgName + '/__init__.py'
     try:
         with open(fn, 'r') as myfile:
             code = myfile.read()
     except OSError:
         return 'None'
-    if (
-        (code.find('(SmartPlugin') == -1)
-        and (code.find('( SmartPlugin') == -1)
-        and (code.find('(MqttPlugin') == -1)
-        and (code.find('( MqttPlugin') == -1)
-    ):
+    try:
+        tree = ast.parse(code)
+    except SyntaxError:
         return 'Classic'
-    return 'Smart'
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef):
+            for base in node.bases:
+                name = base.attr if isinstance(base, ast.Attribute) else getattr(base, 'id', None)
+                if name in PLUGIN_BASE_CLASSES:
+                    return 'Smart'
+    return 'Classic'
 
 
 def readMetadata(metaplugin, plugins_local):
