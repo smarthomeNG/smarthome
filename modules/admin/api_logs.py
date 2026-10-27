@@ -29,7 +29,7 @@ import lib.shyaml as shyaml
 from lib.utils import Utils
 from lib.constants import DIR_ETC, BASE_LOG
 import jwt
-from .rest import ApiDoc, ApiParam, RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource, contained_path
 
 
 class LogsController(RESTResource):
@@ -196,7 +196,7 @@ class LogsController(RESTResource):
             logs = self.get_logs_with_files()
             return json.dumps({'logs': logs, 'default': self.root_logname})
 
-        logfile_path = os.path.join(self.log_dir, id)
+        logfile_path = contained_path(self.log_dir, id)
         if os.path.isfile(logfile_path):
             # return content of the logfile specified in id, if file is found
 

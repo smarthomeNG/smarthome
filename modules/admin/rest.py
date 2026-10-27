@@ -23,12 +23,29 @@
 
 
 import json
+import os
+
 import cherrypy
 import logging
 import jwt
 
 from dataclasses import dataclass, field
 from typing import Any, List, Optional
+
+
+def contained_path(base_dir: str, name: str) -> str:
+    """
+    Return the path of ``name`` below ``base_dir`` for a file name taken from a request.
+
+    Subdirectories are allowed; symlinks are not resolved.
+
+    :raises cherrypy.HTTPError: 400 if ``name`` is absolute or ``..`` leads outside ``base_dir``
+    """
+    base = os.path.abspath(base_dir)
+    path = os.path.abspath(os.path.join(base, name))
+    if os.path.commonpath([base, path]) != base:
+        raise cherrypy.HTTPError(400, 'invalid file name')
+    return path
 
 
 @dataclass
