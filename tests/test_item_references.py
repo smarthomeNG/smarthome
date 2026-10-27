@@ -172,5 +172,27 @@ class TestFindReferencesTriggerAndHysteresis(_Base):
         self.assertIn((output, 'hysteresis_input', 'sensor', True), refs)
 
 
+class TestFindReferencesRuntimeSetAttributes(_Base):
+    """cycle/autotimer set at runtime via the API hold non-string values."""
+
+    def test_runtime_int_autotimer_does_not_break_search(self):
+        target = _item(self.sh, 'a')
+        timed = _item(self.sh, 'b')
+        timed.autotimer(60, 1)
+
+        refs = self.sh.items.find_references('a')
+
+        self.assertEqual(refs, [])
+        self.assertIsNotNone(target)
+
+    def test_string_autotimer_still_matched(self):
+        _item(self.sh, 'a')
+        source = _item(self.sh, 'b', autotimer='sh.a() = 1')
+
+        refs = self.sh.items.find_references('a')
+
+        self.assertIn((source, 'autotimer', 'sh.a()', True), refs)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

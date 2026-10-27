@@ -1754,33 +1754,30 @@ class Items:
         sh.-expanded runtime parts (time/value, threshold/timer) — both
         are yielded under the same attribute_name, since the raw config
         value being rewritten is one string either way.
+
+        Only string values are yielded: cycle/autotimer parts set at
+        runtime (``item.autotimer(60, 1)``) hold numbers, which cannot
+        contain a reference.
         """
-        if item._eval:
-            yield ('eval', item._eval)
-        for text in item._on_change or []:
-            yield ('on_change', text)
-        for text in item._on_update or []:
-            yield ('on_update', text)
-        for text in item._trigger or []:
-            yield ('trigger', text)
-        if item._hysteresis_input:
-            yield ('hysteresis_input', item._hysteresis_input)
-        if item._cycle_time:
-            yield ('cycle', item._cycle_time)
-        if item._cycle_value:
-            yield ('cycle', item._cycle_value)
-        if item._autotimer_time:
-            yield ('autotimer', item._autotimer_time)
-        if item._autotimer_value:
-            yield ('autotimer', item._autotimer_value)
-        if item._hysteresis_upper_threshold:
-            yield ('hysteresis_upper_threshold', item._hysteresis_upper_threshold)
-        if item._hysteresis_upper_timer:
-            yield ('hysteresis_upper_threshold', item._hysteresis_upper_timer)
-        if item._hysteresis_lower_threshold:
-            yield ('hysteresis_lower_threshold', item._hysteresis_lower_threshold)
-        if item._hysteresis_lower_timer:
-            yield ('hysteresis_lower_threshold', item._hysteresis_lower_timer)
+        scalars = (
+            ('eval', item._eval),
+            ('hysteresis_input', item._hysteresis_input),
+            ('cycle', item._cycle_time),
+            ('cycle', item._cycle_value),
+            ('autotimer', item._autotimer_time),
+            ('autotimer', item._autotimer_value),
+            ('hysteresis_upper_threshold', item._hysteresis_upper_threshold),
+            ('hysteresis_upper_threshold', item._hysteresis_upper_timer),
+            ('hysteresis_lower_threshold', item._hysteresis_lower_threshold),
+            ('hysteresis_lower_threshold', item._hysteresis_lower_timer),
+        )
+        lists = (('on_change', item._on_change), ('on_update', item._on_update), ('trigger', item._trigger))
+        pairs = list(scalars)
+        for attr_name, texts in lists:
+            pairs.extend((attr_name, text) for text in texts or [])
+        for attr_name, text in pairs:
+            if isinstance(text, str) and text:
+                yield (attr_name, text)
 
     def current_config_for_edit(self, item):
         """

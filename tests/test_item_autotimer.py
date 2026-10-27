@@ -135,6 +135,16 @@ class TestCycleConfigParsing(_Base):
         self.assertIn('60', item._cycle_time)
         self.assertIn('99', str(item._cycle_value))
 
+    def test_numeric_cycle_kept_as_number(self):
+        item = _item(self.sh, 'cyn', cycle=30)
+        self.assertEqual(item._cycle_time, 30)
+        self.assertIsNone(item._cycle_value)
+
+    def test_numeric_autotimer_kept_as_number(self):
+        item = _item(self.sh, 'atn', autotimer=30)
+        self.assertEqual(item._autotimer_time, 30)
+        self.assertIsNone(item._autotimer_value)
+
     def test_no_cycle_leaves_cycle_time_none(self):
         item = _item(self.sh, 'nc')
         self.assertIsNone(item._cycle_time)
@@ -166,6 +176,11 @@ class TestInitStartScheduler(_Base):
         item._init_start_scheduler()
         add_calls = self.recorder.adds()
         self.assertTrue(any(c['cycle'] is not None for c in add_calls))
+
+    def test_numeric_cycle_registers_scheduler(self):
+        item = _item(self.sh, 'cyn', cycle=45)
+        item._init_start_scheduler()
+        self.assertEqual([c['cycle'] for c in self.recorder.adds()], [45])
 
     def test_crontab_registers_scheduler(self):
         item = _item(self.sh, 'cr', crontab='0 * * * *')
@@ -201,6 +216,11 @@ class TestAutotimerArmedOnChange(_Base):
         item(1)  # triggers __update → autotimer fires
         names = self.recorder.added_names()
         self.assertTrue(any('Timer' in n for n in names))
+
+    def test_numeric_autotimer_arms_scheduler_on_value_change(self):
+        item = _item(self.sh, 'atn', autotimer=30)
+        item(1)
+        self.assertEqual(len(self.recorder.adds()), 1)
 
     def test_autotimer_scheduler_call_has_next_kwarg(self):
         item = _item(self.sh, 'at2', autotimer='5m = 42')

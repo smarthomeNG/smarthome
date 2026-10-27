@@ -200,9 +200,12 @@ def split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT):
     - value
     - possibly compat (obsolete, kept for backward compatibility)
 
-    :param value: raw attribute string containing duration, value
+    :param value: raw attribute string containing duration, value; a number is taken as the time alone
     :return: three strings, representing time, value and compatibility attribute
     """
+    if not isinstance(value, str):
+        return (value, None, ATTRIB_COMPAT_DEFAULT)
+
     compat = ''
 
     if value.find(ATTRIBUTE_SEPARATOR) >= 0:
