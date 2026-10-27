@@ -56,6 +56,29 @@ class TestCheckHashedPassword(unittest.TestCase):
             self.assertTrue(Utils.check_hashed_password('secret', hashed))
 
 
+class TestWrapLegacyPasswordHash(unittest.TestCase):
+    def test_wrapped_hash_checks_the_original_password(self):
+        wrapped = Utils.wrap_legacy_password_hash(LEGACY_HASH_42)
+
+        self.assertTrue(wrapped.startswith('pbkdf2_sha256_sha512$'))
+        self.assertTrue(Utils.check_hashed_password('42', wrapped))
+        self.assertFalse(Utils.check_hashed_password('43', wrapped))
+
+    def test_uppercase_legacy_hash(self):
+        self.assertTrue(Utils.check_hashed_password('42', Utils.wrap_legacy_password_hash(LEGACY_HASH_42.upper())))
+
+    def test_wrapped_hash_is_salted_and_no_legacy_hash(self):
+        wrapped = Utils.wrap_legacy_password_hash(LEGACY_HASH_42)
+
+        self.assertNotEqual(wrapped, Utils.wrap_legacy_password_hash(LEGACY_HASH_42))
+        self.assertTrue(Utils.is_hash(wrapped))
+        self.assertFalse(Utils.is_legacy_password_hash(wrapped))
+
+    def test_only_legacy_hashes_can_be_wrapped(self):
+        with self.assertRaises(ValueError):
+            Utils.wrap_legacy_password_hash(Utils.hash_password('42'))
+
+
 class TestIsHash(unittest.TestCase):
     def test_salted_hash(self):
         self.assertTrue(Utils.is_hash(Utils.hash_password('secret')))

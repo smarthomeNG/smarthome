@@ -87,8 +87,9 @@ Datei *etc/module.yaml*
 |                         | Basisauthentifizierung deaktiviert. **hashed_password** ist ein gesalzener PBKDF2-Hash               |
 |                         | (``pbkdf2_sha256$...``). Um ihn zu erstellen, kann die Funktion **Passwort-Hash erzeugen** auf der   |
 |                         | Seite **Dienste** im Backend oder ``tools/hash_password.py`` verwendet werden. Ungesalzene           |
-|                         | SHA-512-Hashes älterer Versionen werden weiter akzeptiert, beim Start wird aber empfohlen, sie zu    |
-|                         | ersetzen.                                                                                            |
+|                         | SHA-512-Hashes älterer Versionen werden weiter akzeptiert; ``tools/upgrade_check.py --fix --only     |
+|                         | password-hash`` wandelt sie in gesalzene Hashes (``pbkdf2_sha256_sha512$...``) um, das Passwort      |
+|                         | bleibt dasselbe.                                                                                     |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | service_user            | **Optional**: Der Benutzername mit dem man sich zur Nutzung der Webservices authentifizieren muss.   |
 |                         | Der Standardwert ist **serviceuser**                                                                 |

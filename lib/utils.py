@@ -47,6 +47,8 @@ TIMEFRAME_REGEX = re.compile(r'^(\d+)([ihdwmy]?)$', re.VERBOSE | re.IGNORECASE)
 
 
 PASSWORD_HASH_ALGORITHM = 'pbkdf2_sha256'
+#: salted hash of a legacy sha512 hash (Utils.wrap_legacy_password_hash()): the sha512 hex digest is the PBKDF2 input
+WRAPPED_HASH_ALGORITHM = 'pbkdf2_sha256_sha512'
 PASSWORD_HASH_ITERATIONS = 600_000
 
 
@@ -60,17 +62,27 @@ def _b64decode(text: str) -> bytes:
     return base64.b64decode(text + '=' * (-len(text) % 4), validate=True)
 
 
-def _parse_salted_hash(value: str) -> tuple[int, bytes, bytes] | None:
-    """Return (iterations, salt, digest) of a hash created by Utils.hash_password(), None for anything else."""
+def _parse_salted_hash(value: str) -> tuple[str, int, bytes, bytes] | None:
+    """
+    Return (algorithm, iterations, salt, digest) of a hash created by Utils.hash_password() or
+    Utils.wrap_legacy_password_hash(), None for anything else.
+    """
     if not isinstance(value, str):
         return None
     parts = value.split('$')
-    if len(parts) != 4 or parts[0] != PASSWORD_HASH_ALGORITHM or not parts[1].isdigit():
+    if len(parts) != 4 or parts[0] not in (PASSWORD_HASH_ALGORITHM, WRAPPED_HASH_ALGORITHM) or not parts[1].isdigit():
         return None
     try:
-        return int(parts[1]), _b64decode(parts[2]), _b64decode(parts[3])
+        return parts[0], int(parts[1]), _b64decode(parts[2]), _b64decode(parts[3])
     except ValueError:
         return None
+
+
+def _salted_hash(algorithm: str, secret: str) -> str:
+    """Return the salted hash of ``secret`` in the format ``<algorithm>$<iterations>$<salt>$<digest>``."""
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac('sha256', secret.encode(), salt, PASSWORD_HASH_ITERATIONS)
+    return '$'.join((algorithm, str(PASSWORD_HASH_ITERATIONS), _b64encode(salt), _b64encode(digest)))
 
 
 @functools.lru_cache(maxsize=64)
@@ -461,14 +473,29 @@ class Utils(object):
         """
         if not plaintext:
             raise ValueError('an empty password cannot be hashed')
-        salt = secrets.token_bytes(16)
-        digest = hashlib.pbkdf2_hmac('sha256', plaintext.encode(), salt, PASSWORD_HASH_ITERATIONS)
-        return '$'.join((PASSWORD_HASH_ALGORITHM, str(PASSWORD_HASH_ITERATIONS), _b64encode(salt), _b64encode(digest)))
+        return _salted_hash(PASSWORD_HASH_ALGORITHM, plaintext)
+
+    @staticmethod
+    def wrap_legacy_password_hash(legacy_hash: str) -> str:
+        """
+        Turn an unsalted sha512 password hash into a salted one without knowing the password
+
+        The result has the format ``pbkdf2_sha256_sha512$<iterations>$<salt>$<digest>``: the PBKDF2 input is the
+        legacy hash, so check_hashed_password() derives it from the sha512 hash of the password to check.
+
+        :param legacy_hash: sha512 hash as created by create_hash() (128 hex characters, any case)
+
+        :return: salted password hash
+        """
+        if not Utils.is_legacy_password_hash(legacy_hash):
+            raise ValueError('not an unsalted sha512 password hash')
+        return _salted_hash(WRAPPED_HASH_ALGORITHM, legacy_hash.lower())
 
     @staticmethod
     def is_hash(value: str) -> bool:
         """
-        Check if value is a password hash: a salted hash created by hash_password() or a legacy sha512 hash
+        Check if value is a password hash: a salted hash (hash_password(), wrap_legacy_password_hash()) or a
+        legacy sha512 hash
 
         :param value: value to check
 
@@ -481,7 +508,8 @@ class Utils(object):
         """
         Check if value is an unsalted sha512 hash (128 hex characters), the password hash format before v2.0
 
-        Such hashes are still accepted, but should be replaced by one created with hash_password().
+        Such hashes are still accepted, but should be replaced by one created with hash_password() or
+        wrap_legacy_password_hash().
 
         :param value: value to check
         """
@@ -499,7 +527,7 @@ class Utils(object):
         Check if given plaintext password matches the hashed password
         An empty password is always rejected
 
-        Both salted hashes (hash_password()) and legacy sha512 hashes are accepted. Results for salted hashes
+        Salted hashes (hash_password(), wrap_legacy_password_hash()) and legacy sha512 hashes are accepted. Results for salted hashes
         are cached, since the key derivation is deliberately slow and http basic auth checks every request.
 
         :param pwd_to_check: plaintext password to check
@@ -514,7 +542,9 @@ class Utils(object):
 
         parsed = _parse_salted_hash(hashed_pwd)
         if parsed is not None:
-            return _pbkdf2_matches(pwd_to_check, *parsed)
+            algorithm, iterations, salt, digest = parsed
+            secret = Utils.create_hash(pwd_to_check) if algorithm == WRAPPED_HASH_ALGORITHM else pwd_to_check
+            return _pbkdf2_matches(secret, iterations, salt, digest)
         if Utils.is_legacy_password_hash(hashed_pwd):
             return hmac.compare_digest(Utils.create_hash(pwd_to_check), hashed_pwd.lower())
         return False

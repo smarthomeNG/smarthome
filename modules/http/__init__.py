@@ -517,8 +517,8 @@ class Http(Module):
             return Utils.hash_password(password)
         if Utils.is_legacy_password_hash(hashed_password):
             self.logger.warning(
-                f"http: {area}: '{hash_param}' is an unsalted sha512 hash. Replace it by a salted hash "
-                '(admin interface: Services > password hash, or tools/hash_password.py)'
+                f"http: {area}: '{hash_param}' is an unsalted sha512 hash. Convert it with "
+                "'tools/upgrade_check.py --fix --only password-hash' (the password stays the same)"
             )
         return hashed_password
 

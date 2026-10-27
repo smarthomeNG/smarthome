@@ -52,8 +52,8 @@ Die Prüfungen:
 |                   | ``websocket_host``, ``websocket_port``, ``pypi_timeout``), werden entfernt.                     |
 +-------------------+-------------------------------------------------------------------------------------------------+
 | ``password-hash`` | Ungesalzene SHA-512 Passwort-Hashes (``hashed_password`` und ``service_hashed_password`` des    |
-|                   | http Moduls, ``hashed_password`` des cli Plugins) werden gemeldet. Sie funktionieren weiter,    |
-|                   | sollten aber durch einen gesalzenen Hash von ``tools/hash_password.py`` ersetzt werden.         |
+|                   | http Moduls, ``hashed_password`` des cli Plugins) werden durch einen gesalzenen Hash des alten  |
+|                   | Hashes (``pbkdf2_sha256_sha512$...``) ersetzt. Das Passwort bleibt dasselbe.                    |
 +-------------------+-------------------------------------------------------------------------------------------------+
 
 Optionen:

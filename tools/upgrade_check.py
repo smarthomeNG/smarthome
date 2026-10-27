@@ -26,7 +26,8 @@ Checks:
 ``module-params``
     Parameters in ``etc/module.yaml`` that modules no longer have.
 ``password-hash``
-    Unsalted SHA-512 password hashes (http module, cli plugin), to be replaced by salted ones.
+    Unsalted SHA-512 password hashes (http module, cli plugin) become salted hashes of the old hash
+    (``pbkdf2_sha256_sha512$...``); the passwords stay the same.
 """
 
 import argparse
@@ -214,6 +215,11 @@ class Project:
         """Delete *path* after backing it up."""
         self.backup(path)
         path.unlink()
+
+    def save_sections(self, path: Path, sections: Mapping) -> None:
+        """Write configuration sections loaded with :func:`load_sections` back to *path* after backing it up."""
+        self.backup(path)
+        shyaml.yaml_save_roundtrip(str(path), sections, create_backup=False)
 
 
 class Checker(Protocol):
@@ -461,8 +467,7 @@ class InstancesChecker:
                 section.insert(list(section.keys()).index('plugin_name') + 1, 'instance', 'default')
             else:
                 section['instance'] = 'default'
-        project.backup(project.plugin_yaml)
-        shyaml.yaml_save_roundtrip(str(project.plugin_yaml), sections, create_backup=False)
+        project.save_sections(project.plugin_yaml, sections)
 
 
 @register
@@ -585,8 +590,7 @@ class PluginClassChecker:
                 changed = True
             findings.append(Finding(self.name, project.plugin_yaml, message, None, True, fix))
         if fix and changed:
-            project.backup(project.plugin_yaml)
-            shyaml.yaml_save_roundtrip(str(project.plugin_yaml), sections, create_backup=False)
+            project.save_sections(project.plugin_yaml, sections)
         return findings
 
 
@@ -756,8 +760,7 @@ class ModuleParamsChecker:
                 if fix:
                     del section[param]
         if fix and findings:
-            project.backup(project.module_yaml)
-            shyaml.yaml_save_roundtrip(str(project.module_yaml), sections, create_backup=False)
+            project.save_sections(project.module_yaml, sections)
         return findings
 
 
@@ -766,21 +769,28 @@ class PasswordHashChecker:
     """Unsalted SHA-512 password hashes."""
 
     name = 'password-hash'
-    description = 'unsalted sha512 password hashes (http module, cli plugin)'
+    description = 'unsalted sha512 password hashes (http module, cli plugin) become salted hashes'
 
     def run(self, project: Project, fix: bool) -> list[Finding]:
         findings: list[Finding] = []
-        for filename, name_key, owner, param in PASSWORD_HASH_PARAMS:
+        for filename in dict.fromkeys(entry[0] for entry in PASSWORD_HASH_PARAMS):
             path = project.etc / filename
-            for section_name, section in (load_sections(path) or {}).items():
-                if not isinstance(section, Mapping) or str(section.get(name_key, '')).lower() != owner:
-                    continue
-                if Utils.is_legacy_password_hash(str(section.get(param, ''))):
-                    message = (
-                        f'{section_name}: {param} is an unsalted sha512 hash; replace it by the output of '
-                        'tools/hash_password.py (or the password hash function of the admin interface)'
-                    )
-                    findings.append(Finding(self.name, path, message, None, False))
+            sections = load_sections(path) or {}
+            changed = False
+            for _, name_key, owner, param in (e for e in PASSWORD_HASH_PARAMS if e[0] == filename):
+                for section_name, section in sections.items():
+                    if not isinstance(section, Mapping) or str(section.get(name_key, '')).lower() != owner:
+                        continue
+                    legacy = str(section.get(param, ''))
+                    if not Utils.is_legacy_password_hash(legacy):
+                        continue
+                    message = f'{section_name}: {param} is an unsalted sha512 hash -> salted hash of it, same password'
+                    findings.append(Finding(self.name, path, message, None, True, fix))
+                    if fix:
+                        section[param] = Utils.wrap_legacy_password_hash(legacy)
+                        changed = True
+            if changed:
+                project.save_sections(path, sections)
         return findings
 
 

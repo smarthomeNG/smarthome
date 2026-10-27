@@ -16,6 +16,8 @@ from pathlib import Path
 
 from ruamel.yaml import YAML
 
+from lib.utils import Utils
+
 TOOL_PATH = os.path.join(os.path.dirname(__file__), '..', 'tools', 'upgrade_check.py')
 
 
@@ -483,7 +485,32 @@ class TestPasswordHashes(InstallationTestCase):
 
         self.assertEqual(1, len(findings))
         self.assertIn('hashed_password', findings[0].message)
-        self.assertFalse(findings[0].fixable)
+        self.assertTrue(findings[0].fixable)
+        self.assertFalse(findings[0].fixed)
+        self.assertIn(self.LEGACY, self.read('etc/module.yaml'))
+
+    def test_legacy_hashes_are_wrapped_with_fix(self):
+        legacy = Utils.create_hash('secret')
+        self.write(
+            'etc/module.yaml',
+            f"""
+            http:
+                module_name: http
+                # keep this comment
+                hashed_password: {legacy}
+            """,
+        )
+
+        findings = self.run_check('password-hash', fix=True)
+
+        self.assertTrue(findings[0].fixed)
+        stored = YAML(typ='safe').load(self.read('etc/module.yaml'))['http']['hashed_password']
+        self.assertTrue(stored.startswith('pbkdf2_sha256_sha512$'))
+        self.assertTrue(Utils.check_hashed_password('secret', stored))
+        self.assertIn('# keep this comment', self.read('etc/module.yaml'))
+        self.assertEqual([], self.run_check('password-hash'))
+        backups = list((self.base / 'etc' / tool.BACKUP_DIR).rglob('module.yaml'))
+        self.assertEqual(1, len(backups))
 
     def test_legacy_cli_hash_is_reported(self):
         self.write('etc/plugin.yaml', f'cli:\n    plugin_name: cli\n    hashed_password: {self.LEGACY}\n')
@@ -491,6 +518,15 @@ class TestPasswordHashes(InstallationTestCase):
         findings = self.run_check('password-hash')
 
         self.assertEqual(['plugin.yaml'], [f.path.name for f in findings])
+
+    def test_legacy_cli_hash_is_wrapped_with_fix(self):
+        legacy = Utils.create_hash('secret')
+        self.write('etc/plugin.yaml', f'cli:\n    plugin_name: cli\n    hashed_password: {legacy}\n')
+
+        self.run_check('password-hash', fix=True)
+
+        stored = YAML(typ='safe').load(self.read('etc/plugin.yaml'))['cli']['hashed_password']
+        self.assertTrue(Utils.check_hashed_password('secret', stored))
 
 
 class TestScenes(InstallationTestCase):
