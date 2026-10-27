@@ -313,24 +313,28 @@ class RESTResource:
     logger = logging.getLogger('REST')
     # injected by Admin.__init__; None makes verification fail closed until then
     jwt_secret = None
+    #: origins other than the admin interface's own that may call the API from a browser (admin: cors_origins)
+    cors_origins: frozenset[str] = frozenset()
 
     def set_response_headers(self, *vpath):
         """
-        Set http response headers for CORS support
+        Set the CORS response headers for a request from an origin listed in cors_origins
 
-        :param vpath: unused (kept for the commented-out debug logging
-                       below); accepts any number of segments since
-                       default() calls this as set_response_headers(*vpath),
-                       and vpath can have more than one element for a
-                       sub-resource URL (e.g. /api/items/<path>/references).
+        Requests from the admin interface itself are same-origin and need no CORS headers; for any other
+        origin the browser keeps the response from the calling page.
+
+        :param vpath: unused; accepts any number of segments since default() calls this as
+                      set_response_headers(*vpath), and vpath can have more than one element for a
+                      sub-resource URL (e.g. /api/items/<path>/references).
         """
-        #        if vpath != 'status':
-        #            self.logger.notice(f"set_response_headers ({vpath=}): request headers: {cherrypy.request.headers}")
-        cherrypy.response.headers['Access-Control-Allow-Headers'] = '*'
-        # cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
-        origin = cherrypy.request.headers.get('Origin', '*')
+        origin = cherrypy.request.headers.get('Origin')
+        if not origin or origin not in self.cors_origins:
+            return
         cherrypy.response.headers['Access-Control-Allow-Origin'] = origin
         cherrypy.response.headers['Access-Control-Allow-Credentials'] = 'true'
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+        cherrypy.response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        cherrypy.response.headers['Vary'] = 'Origin'
 
     #        if vpath != 'status':
     #            self.logger.notice(f"set_response_headers: response headers for: {cherrypy.response.headers}")

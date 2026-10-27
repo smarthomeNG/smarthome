@@ -62,6 +62,45 @@ class TestSetResponseHeaders(unittest.TestCase):
         self.resource.set_response_headers('d.aussentemperatur.fahrenheit', 'references')  # must not raise
 
 
+class TestCorsAllowlist(unittest.TestCase):
+    """CORS headers are only sent for origins listed in the admin parameter cors_origins."""
+
+    def headers_for(self, origin, allowed):
+        request = MagicMock()
+        request.headers = {'Origin': origin} if origin else {}
+        response = MagicMock()
+        response.headers = {}
+        with (
+            patch.object(cherrypy, 'request', request),
+            patch.object(cherrypy, 'response', response),
+            patch.object(RESTResource, 'cors_origins', frozenset(allowed)),
+        ):
+            RESTResource().set_response_headers()
+        return response.headers
+
+    def test_foreign_origin_gets_no_cors_headers(self):
+        headers = self.headers_for('http://evil.example', [])
+
+        self.assertNotIn('Access-Control-Allow-Origin', headers)
+        self.assertNotIn('Access-Control-Allow-Credentials', headers)
+
+    def test_request_without_origin_gets_no_cors_headers(self):
+        self.assertNotIn('Access-Control-Allow-Origin', self.headers_for(None, ['http://localhost:4200']))
+
+    def test_listed_origin_is_allowed(self):
+        headers = self.headers_for('http://localhost:4200', ['http://localhost:4200'])
+
+        self.assertEqual('http://localhost:4200', headers['Access-Control-Allow-Origin'])
+        self.assertEqual('true', headers['Access-Control-Allow-Credentials'])
+        self.assertIn('Authorization', headers['Access-Control-Allow-Headers'])
+        self.assertEqual('Origin', headers['Vary'])
+
+    def test_no_wildcard_headers(self):
+        headers = self.headers_for('http://localhost:4200', ['http://localhost:4200'])
+
+        self.assertNotIn('*', headers['Access-Control-Allow-Headers'])
+
+
 class TestSubResourceActionAuthEnforcement(unittest.TestCase):
     """
     /api/<resource>/<action> (e.g. /api/items/<path>/rename) is dispatched by

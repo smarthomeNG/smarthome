@@ -40,6 +40,7 @@ Datei *etc/module.yaml*
        # dark_mode: False
        # resource_graph_period: '24h'
        # start_page: dashboard
+       # cors_origins: []
 
 
 .. note::
@@ -79,5 +80,11 @@ Datei *etc/module.yaml*
 +-------------------------------+------------------------------------------------------------------------------------------------+
 | start_page                    | **Optional**: Seite, die nach dem Login im Administrations-Interface angezeigt wird. Standard  |
 |                               | ist **dashboard**.                                                                             |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| cors_origins                  | **Optional**: Liste von Origins (z.B. ``http://localhost:4200``), die die REST API aus einem   |
+|                               | Browser aufrufen dürfen, zusätzlich zum Admin Interface selbst. Standard ist eine leere Liste: |
+|                               | Die API sendet dann keine CORS-Header, und Browser geben ihre Antworten nur an das Admin       |
+|                               | Interface weiter. Für die Entwicklung mit ``ng serve`` ist kein Eintrag nötig, solange der     |
+|                               | Proxy aus ``proxy.conf.js`` verwendet wird.                                                    |
 +-------------------------------+------------------------------------------------------------------------------------------------+
 

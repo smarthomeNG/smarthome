@@ -101,6 +101,13 @@ parameters:
                  A shorter span makes the graphs update live more often, since the update interval is tied to the
                  number of plotted data points.'
 
+    cors_origins:
+        type: list(str)
+        default: []
+        description:
+            de: 'Origins (z.B. http://localhost:4200), die die REST API aus einem Browser aufrufen dürfen, zusätzlich zum Admin Interface selbst. Ohne Eintrag antwortet die API nur dem Admin Interface.'
+            en: 'Origins (e.g. http://localhost:4200) that may call the REST API from a browser, besides the admin interface itself. Without an entry the API answers only the admin interface.'
+
     start_page:
         type: str
         default: 'dashboard'
