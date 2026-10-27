@@ -507,8 +507,8 @@ def _parse_cpu_brand_string_dx(cpu_string):
     import re
 
     # Find all the strings inside brackets ()
-    starts = [m.start() for m in re.finditer('\(', cpu_string)]
-    ends = [m.start() for m in re.finditer('\)', cpu_string)]
+    starts = [m.start() for m in re.finditer(r'\(', cpu_string)]
+    ends = [m.start() for m in re.finditer(r'\)', cpu_string)]
     insides = {k: v for k, v in zip(starts, ends)}
     insides = [cpu_string[start + 1 : end] for start, end in insides.items()]
 
@@ -660,7 +660,7 @@ def _parse_arch(arch_string_raw):
     arch_string_raw = arch_string_raw.lower()
 
     # X86
-    if re.match('^i\d86$|^x86$|^x86_32$|^i86pc$|^ia32$|^ia-32$|^bepc$', arch_string_raw):
+    if re.match(r'^i\d86$|^x86$|^x86_32$|^i86pc$|^ia32$|^ia-32$|^bepc$', arch_string_raw):
         arch = 'X86_32'
         bits = 32
     elif re.match('^x64$|^x86_64$|^x86_64t$|^i686-64$|^amd64$|^ia64$|^ia-64$', arch_string_raw):
