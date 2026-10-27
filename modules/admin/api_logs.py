@@ -191,21 +191,10 @@ class LogsController(RESTResource):
             if not (fn.startswith('.')):
                 if os.path.isfile(os.path.join(self.log_dir, fn)):
                     self.files.append(fn)
-        # get names of logs (from filenames enting with '.log')
-        logs = self.get_logs()
         if id is None:
             # get list of existing logs and name of default log
             logs = self.get_logs_with_files()
             return json.dumps({'logs': logs, 'default': self.root_logname})
-
-        # Deactivated 2026-07-20 to check whether anything still depends on it: shngadmin's
-        # log-display.component.ts already gets each log's rotated-file list from the bulk
-        # GET /api/logs/ response (get_logs_with_files() above embeds it) and never calls
-        # this branch separately. If nothing breaks, remove for good.
-        # if id in logs:
-        #     # get filenames available for the specified log (if log is specified without extension)
-        #     logfiles = self.get_files_of_log(id)
-        #     return json.dumps(sorted(logfiles))
 
         logfile_path = os.path.join(self.log_dir, id)
         if os.path.isfile(logfile_path):

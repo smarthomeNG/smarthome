@@ -41,6 +41,8 @@ from .rest import ApiDoc, RESTResource
 
 
 class PluginsController(RESTResource):
+    """Mount point of the /api/plugins/* sub-resources; /api/plugins itself serves nothing."""
+
     def __init__(self, module):
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
@@ -49,46 +51,7 @@ class PluginsController(RESTResource):
             __name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:]
         )
 
-        self.plugin_data = {}
         return
-
-    # ======================================================================
-    #  GET /api/plugins
-    #
-    def read(self, id=None):
-        """
-        Handle GET requests for threads API
-
-        return an object with type info about all installed plugins
-        """
-        self.logger.info('PluginsController(): read')
-
-        if self.plugin_data == {}:
-            plugins_list = sorted(os.listdir(self.plugins_dir))
-
-            self.logger.info('- plugins_list_sorted = {}'.format(plugins_list))
-            for p in plugins_list:
-                if p[0] not in ['.', '_']:
-                    if os.path.isfile(os.path.join(self.plugins_dir, p, 'plugin.yaml')):
-                        plg_yaml = shyaml.yaml_load(os.path.join(os.path.join(self.plugins_dir, p, 'plugin.yaml')))
-                        if plg_yaml is None:
-                            self.logger.warning('- no valid plugin.yaml found for plugin {}'.format(p))
-                        else:
-                            plg_data = plg_yaml.get('plugin', None)
-                            if plg_data is None:
-                                self.logger.info("- plugin.yaml has no section 'plugin': {}".format(p))
-                            else:
-                                self.plugin_data[p] = plg_data.get('type', '')
-                    else:
-                        self.logger.info('- no plugin.yaml: {}'.format(p))
-
-        return json.dumps(self.plugin_data)
-
-    # Deactivated 2026-07-20 to check whether anything still depends on it: this is a strict
-    # subset of GET /api/plugins/installed/ (name -> type only, vs. full metadata), which
-    # shngadmin already fetches. No other caller found. If nothing breaks, remove for good.
-    # read.expose_resource = True
-    read.authentication_needed = True
 
 
 class PluginsInstalledController(RESTResource):
