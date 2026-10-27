@@ -171,7 +171,7 @@ Python Versionen
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.12.x ist **Python 3.11**. SmartHomeNG kann
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 2.0.x ist **Python 3.12**. SmartHomeNG kann
 auch unter älteren Python Versionen lauffähig sein, das wird durch uns jedoch nicht (mehr) supported.
 
 Die Grundregel nach der sich der Support für Python Versionen richten soll ist folgende:
@@ -189,7 +189,7 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
   "v1.10", "28.01.2024", "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.8"
   "v1.11", "30.03.2025", "Python 3.12", "Python 3.10, 3.11, 3.12", "Python 3.8"
   "v1.12", "09.05.2026", "Python 3.13", "Python 3.11, 3.12, 3.13", "Python 3.9"
-  "v1.13", "--",         "Python 3.14", "Python 3.11, 3.12, 3.13", "Python 3.10"
+  "v2.0",  "--",         "Python 3.14", "Python 3.12, 3.13, 3.14", "Python 3.11"
 
 Wenn die eingesetzte Python Version nicht in den unterstützen Python Versionen aufgelistet ist, bedeutet das nicht
 automatisch, dass SmartHomeNG mit älteren/neueren Python Versionen nicht funktioniert. Die Entwicklung wird nur

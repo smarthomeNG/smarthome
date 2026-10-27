@@ -27,13 +27,12 @@
 #####################################################################
 # Check mimimum Python Version
 #####################################################################
-from hashlib import new
 import sys
 
-if sys.hexversion < 0x030A0000:
+if sys.hexversion < 0x030B0000:
     print()
     print(
-        f'Sorry your python interpreter ({sys.version_info[0]}.{sys.version_info[1]}) is too old. Please update to 3.10 or newer.'
+        f'Sorry your python interpreter ({sys.version_info[0]}.{sys.version_info[1]}) is too old. Please update to 3.11 or newer.'
     )
     print()
     exit(1)

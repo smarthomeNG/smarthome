@@ -17,7 +17,7 @@ plugin:
     # support: https://knx-user-forum.de/forum/supportforen/smarthome-py/
     version: 0.0.1                  # !! adjust
     sh_minversion: 1.9.1
-    py_minversion: 3.6
+#    py_minversion:
     multi_instance: false
     restartable: true
     classname:                      # !! fill

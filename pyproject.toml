@@ -14,7 +14,7 @@
 # ------------------------------------------------------------------------------
 
 [tool.ruff]
-target-version = "py310"   # matches enforced minimum in bin/smarthome.py
+target-version = "py311"   # matches enforced minimum in bin/smarthome.py
 line-length = 120
 exclude = [
     "deprecated",
@@ -142,7 +142,7 @@ reportUnboundVariable = "error"
 # description = "Open-source home automation platform running on Python 3."
 # license = { text = "GPL-3.0-or-later" }
 # readme = "README.md"
-# requires-python = ">=3.10"     # enforced at runtime in bin/smarthome.py
+# requires-python = ">=3.11"     # enforced at runtime in bin/smarthome.py
 # keywords = ["home", "automation", "smarthome"]
 # authors = []                   # populate as desired
 #

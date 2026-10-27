@@ -26,7 +26,6 @@ import janus
 import threading
 import decimal
 
-import sys
 import socket
 import logging
 from datetime import date, datetime
@@ -80,13 +79,8 @@ class Protocol:
         self.loop = loop
         # self.client_address = ws_server.client_address
 
-        python_version = str(sys.version_info[0]) + '.' + str(sys.version_info[1])
-        if python_version == '3.7':
-            self.loop.create_task(self.update_visu())
-            self.loop.create_task(self.update_all_series())
-        else:
-            self.loop.create_task(self.update_visu(), name='update_visu')
-            self.loop.create_task(self.update_all_series(), name='update_all_series')
+        self.loop.create_task(self.update_visu(), name='update_visu')
+        self.loop.create_task(self.update_all_series(), name='update_all_series')
 
         self.logger.dbghigh('start_global_tasks: create_task(s) for update_visu() and update_all_series()')
         return

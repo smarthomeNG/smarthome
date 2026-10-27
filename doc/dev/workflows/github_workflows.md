@@ -66,14 +66,14 @@ because it only contains built HTML and never contains Python code.
 
 ```yaml
 matrix:
-  python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+  python-version: ['3.11', '3.12', '3.13', '3.14']
 ```
 
-The job runs **five times in parallel**, once for each Python version. This catches
+The job runs **four times in parallel**, once for each Python version. This catches
 regressions that only appear on a specific interpreter — for example, Python 3.12
 introduced stricter typing rules that can silently change behaviour.
 
-`fail-fast: false` means all five runs complete even if one fails, giving you the
+`fail-fast: false` means all four runs complete even if one fails, giving you the
 full picture rather than stopping at the first failure.
 
 ### Step-by-step walkthrough

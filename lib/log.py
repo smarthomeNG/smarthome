@@ -50,9 +50,9 @@ DEBUG_LOGFILE_NAME = 'smarthome-debug.log'
 # Logger families of SmartHomeNG itself (as defined in the default logging.yaml)
 SHNG_LOGGER_FAMILIES = ('functions', 'lib', 'lib.smarthome', 'modules', 'plugins', 'logics', 'items')
 
-# Frames to add to ``stacklevel`` so a custom level's wrapper is skipped; < 3.11 doesn't count the wrapper itself, and counts logging.log()
-_LEVEL_METHOD_STACKLEVEL_SKIP = 1 if sys.version_info >= (3, 11) else 0
-_LEVEL_FUNCTION_STACKLEVEL_SKIP = 1 if sys.version_info >= (3, 11) else 2
+# Frames to add to ``stacklevel`` so a custom level's wrapper is skipped
+_LEVEL_METHOD_STACKLEVEL_SKIP = 1
+_LEVEL_FUNCTION_STACKLEVEL_SKIP = 1
 
 
 def debug_logging_config(logfile: str | None = None) -> dict[str, Any]:

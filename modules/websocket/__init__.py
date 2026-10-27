@@ -28,7 +28,6 @@ import websockets
 import time
 
 import os
-import sys
 import socket
 import logging
 
@@ -230,20 +229,10 @@ class Websocket(Module):
         The websocket server itself is using asyncio
         """
         self.loop = asyncio.new_event_loop()
-        python_version = str(sys.version_info[0]) + '.' + str(sys.version_info[1])
-
-        if python_version == '3.6':
-            self.loop.ensure_future(self.ws_server(self.ip, self.port))
-        elif python_version == '3.7':
-            self.loop.create_task(self.ws_server(self.ip, self.port))
-        else:
-            self.loop.create_task(self.ws_server(self.ip, self.port), name='ws_server')
+        self.loop.create_task(self.ws_server(self.ip, self.port), name='ws_server')
         # self.loop.ensure_future(self.ws_server(self.ip, self.port))
         if self.ssl_context is not None:
-            if python_version == '3.7':
-                self.loop.create_task(self.ws_server(self.ip, self.tls_port, self.ssl_context))
-            else:
-                self.loop.create_task(self.ws_server(self.ip, self.tls_port, self.ssl_context), name='wss_server')
+            self.loop.create_task(self.ws_server(self.ip, self.tls_port, self.ssl_context), name='wss_server')
 
             # self.loop.ensure_future(self.ws_server(self.ip, self.tls_port, self.ssl_context))
 
