@@ -18,6 +18,8 @@ BASE = os.path.join(os.path.dirname(__file__), '..')
 TOOL_PATH = os.path.join(BASE, 'tools', 'plugin_metadata_checker.py')
 sys.path.insert(0, os.path.join(BASE, 'lib'))
 
+from lib.constants import PLUGIN_TYPES  # noqa: E402
+
 
 def load_tool():
     spec = importlib.util.spec_from_file_location('plugin_metadata_checker', TOOL_PATH)
@@ -27,6 +29,13 @@ def load_tool():
 
 
 tool = load_tool()
+
+
+class TestPluginTypes(unittest.TestCase):
+    def test_listing_sections_cover_the_plugin_types(self):
+        sections = {section[0] for section in tool.plugin_sections} - {tool.type_unclassified}
+
+        self.assertEqual(set(PLUGIN_TYPES), sections)
 
 
 class TestPluginType(unittest.TestCase):
@@ -85,7 +94,7 @@ class TestPluginType(unittest.TestCase):
         self.assertIn('gadget', findings[0])
 
     def test_known_types_are_accepted(self):
-        for plugin_type in ('gateway', 'interface', 'protocol', 'system', 'web'):
+        for plugin_type in PLUGIN_TYPES:
             with self.subTest(plugin_type):
                 shutil.rmtree('foo', ignore_errors=True)
                 self.assertEqual([], self.type_findings(self.check(f'type: {plugin_type}')))

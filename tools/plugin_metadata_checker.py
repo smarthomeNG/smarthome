@@ -44,6 +44,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, '..')
 sys.path.insert(0, '../lib')
 import shyaml
+from lib.constants import PLUGIN_TYPES
 
 
 type_unclassified = 'unclassified'
@@ -55,9 +56,6 @@ plugin_sections = [
     [type_unclassified, 'Non classified', 'nicht klassifizierte'],
     ['web', 'Web/Cloud', 'Web/Cloud'],
 ]
-
-# valid values of the 'type' attribute in the plugin metadata
-PLUGIN_TYPES = [section[0] for section in plugin_sections if section[0] != type_unclassified]
 
 MISSING_TEXT = 'Missing'
 
@@ -750,12 +748,12 @@ def check_metadata(
         if not plugin_type:
             disp_error(
                 'No plugin type set',
-                f"Add 'type:' to the plugin section and set it to one of the following values {PLUGIN_TYPES}",
+                f"Add 'type:' to the plugin section and set it to one of the following values {list(PLUGIN_TYPES)}",
             )
         elif plugin_type not in PLUGIN_TYPES:
             disp_error(
                 f"Invalid plugin type '{plugin_type}'",
-                f"Set 'type:' in the plugin section to one of the following values {PLUGIN_TYPES}",
+                f"Set 'type:' in the plugin section to one of the following values {list(PLUGIN_TYPES)}",
             )
         if metadata['plugin'].get('maintainer', None) is None:
             disp_warning('The maintainer of the plugin is not documented', "Add 'maintainer:' to the plugin section")

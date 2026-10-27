@@ -138,6 +138,9 @@ PLUGIN_PARSE_LOGIC = 'parse_logic'
 PLUGIN_REMOVE_ITEM = 'remove_item'
 PLUGIN_RENAME_ITEM = 'rename_item'
 
+# valid values of the 'type' attribute in the metadata (plugin.yaml) of a plugin
+PLUGIN_TYPES = ('gateway', 'interface', 'protocol', 'system', 'web')
+
 # file extensions
 YAML_FILE = '.yaml'
 DEFAULT_FILE = '.default'
