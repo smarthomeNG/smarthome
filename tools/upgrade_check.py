@@ -21,6 +21,12 @@ Checks:
     Methods of the ``sh`` object that are removed (``sh.return_item()``, ``sh.now()``, ``sh.base_dir``, ...).
 ``scenes``
     Scene definitions in the old ``.conf`` format become ``.yaml`` files.
+``conf-files``
+    Item and ``etc`` configuration files in the old ``.conf`` format, which are no longer read.
+``module-params``
+    Parameters in ``etc/module.yaml`` that modules no longer have.
+``password-hash``
+    Unsalted SHA-512 password hashes (http module, cli plugin), to be replaced by salted ones.
 """
 
 import argparse
@@ -42,6 +48,7 @@ from typing import ClassVar, Protocol
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import lib.shyaml as shyaml  # noqa: E402
+from lib.utils import Utils  # noqa: E402
 from ruamel import yaml as ruamel_yaml  # noqa: E402
 from ruamel.yaml.scalarstring import DoubleQuotedScalarString  # noqa: E402
 
@@ -98,6 +105,23 @@ SH_TOOLS_HINTS: dict[str, str] = {
 }
 
 
+#: parameters removed from modules, by module name, with what replaces them
+REMOVED_MODULE_PARAMS: dict[str, dict[str, str]] = {
+    'admin': {
+        'websocket_host': 'no longer used: the admin interface gets its live data from /api/stream; remove it',
+        'websocket_port': 'no longer used: the admin interface gets its live data from /api/stream; remove it',
+        'pypi_timeout': 'no longer used; remove it',
+    }
+}
+
+#: password hash parameters: (configuration file, name key, module/plugin name, parameter)
+PASSWORD_HASH_PARAMS: tuple[tuple[str, str, str, str], ...] = (
+    ('module.yaml', 'module_name', 'http', 'hashed_password'),
+    ('module.yaml', 'module_name', 'http', 'service_hashed_password'),
+    ('plugin.yaml', 'plugin_name', 'cli', 'hashed_password'),
+)
+
+
 @dataclass(frozen=True)
 class Finding:
     """One problem found in the configuration."""
@@ -145,6 +169,11 @@ class Project:
     def plugin_yaml(self) -> Path:
         """Path of the plugin configuration."""
         return self.etc / 'plugin.yaml'
+
+    @property
+    def module_yaml(self) -> Path:
+        """Path of the module configuration."""
+        return self.etc / 'module.yaml'
 
     def config_dir(self, name: str) -> Path:
         """The directory below ``etc`` if it exists, else the legacy directory in the base directory."""
@@ -212,14 +241,19 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding='utf-8', errors='surrogateescape')
 
 
-def load_plugin_sections(project: Project) -> dict[str, dict] | None:
-    """The sections of ``plugin.yaml``, or None if the file does not exist or is not readable."""
-    if not project.plugin_yaml.is_file():
+def load_sections(path: Path) -> dict[str, dict] | None:
+    """The sections of a configuration file (round trip), or None if it does not exist or is not readable."""
+    if not path.is_file():
         return None
     try:
-        return shyaml.yaml_load_roundtrip(str(project.plugin_yaml), raise_on_error=True)
+        return shyaml.yaml_load_roundtrip(str(path), raise_on_error=True)
     except Exception:
         return None
+
+
+def load_plugin_sections(project: Project) -> dict[str, dict] | None:
+    """The sections of ``plugin.yaml``, or None if the file does not exist or is not readable."""
+    return load_sections(project.plugin_yaml)
 
 
 def is_enabled(section: Mapping) -> bool:
@@ -564,6 +598,7 @@ class RemovedApiChecker:
     description = 'removed sh.* methods (sh.return_item, sh.now, sh.base_dir, sh.tools, ...)'
 
     PATTERN = re.compile(r'(?<![\w.])sh\.(' + '|'.join(sorted(SH_METHOD_HOMES, key=len, reverse=True)) + r')\b')
+    LIB_TOOLS = re.compile(r'^[^#\n]*\b(?:from\s+lib\.tools\s+import|import\s+lib\.tools\b|lib\.tools\.)', re.M)
 
     @staticmethod
     def plan(chain: list[tokenize.TokenInfo]) -> list[tuple[tokenize.TokenInfo, str | None, str]]:
@@ -595,6 +630,10 @@ class RemovedApiChecker:
             for row, message in notes:
                 automatic = '->' in message
                 findings.append(Finding(self.name, path, message, row, automatic, automatic and fix))
+            for match in self.LIB_TOOLS.finditer(text):
+                row = text.count('\n', 0, match.start()) + 1
+                message = "lib.tools is removed: use Utils from 'lib.utils', Network/Http from 'lib.network'"
+                findings.append(Finding(self.name, path, message, row, False))
             if fix and new != text:
                 project.write_text(path, new)
         for path in project.item_files():
@@ -674,6 +713,74 @@ class ScenesChecker:
                 yaml.dump(scene, buffer)
                 project.write_text(target, buffer.getvalue())
                 project.remove(path)
+        return findings
+
+
+@register
+class ConfFilesChecker:
+    """Configuration files in the old ``.conf`` format, which SmartHomeNG no longer reads."""
+
+    name = 'conf-files'
+    description = 'items/*.conf and etc/*.conf are no longer read'
+
+    def run(self, project: Project, fix: bool) -> list[Finding]:
+        findings: list[Finding] = []
+        for path in sorted(project.etc.glob('*.conf')) + project.files('items', '*.conf'):
+            if path.with_suffix('.yaml').exists():
+                message = f'{path.with_suffix(".yaml").name} is used instead; remove the .conf file'
+            else:
+                message = 'no longer read: convert it with tools/conf_to_yaml_converter.py'
+            findings.append(Finding(self.name, path, message, None, False))
+        return findings
+
+
+@register
+class ModuleParamsChecker:
+    """Parameters in ``etc/module.yaml`` that the modules no longer have."""
+
+    name = 'module-params'
+    description = 'parameters removed from modules (admin: websocket_host, websocket_port, pypi_timeout)'
+
+    def run(self, project: Project, fix: bool) -> list[Finding]:
+        sections = load_sections(project.module_yaml)
+        if not sections:
+            return []
+        findings: list[Finding] = []
+        for section_name, section in sections.items():
+            if not isinstance(section, Mapping):
+                continue
+            removed = REMOVED_MODULE_PARAMS.get(str(section.get('module_name', section_name)).lower(), {})
+            for param in [p for p in section if p in removed]:
+                message = f'{section_name}: {param} - {removed[param]}'
+                findings.append(Finding(self.name, project.module_yaml, message, None, True, fix))
+                if fix:
+                    del section[param]
+        if fix and findings:
+            project.backup(project.module_yaml)
+            shyaml.yaml_save_roundtrip(str(project.module_yaml), sections, create_backup=False)
+        return findings
+
+
+@register
+class PasswordHashChecker:
+    """Unsalted SHA-512 password hashes."""
+
+    name = 'password-hash'
+    description = 'unsalted sha512 password hashes (http module, cli plugin)'
+
+    def run(self, project: Project, fix: bool) -> list[Finding]:
+        findings: list[Finding] = []
+        for filename, name_key, owner, param in PASSWORD_HASH_PARAMS:
+            path = project.etc / filename
+            for section_name, section in (load_sections(path) or {}).items():
+                if not isinstance(section, Mapping) or str(section.get(name_key, '')).lower() != owner:
+                    continue
+                if Utils.is_legacy_password_hash(str(section.get(param, ''))):
+                    message = (
+                        f'{section_name}: {param} is an unsalted sha512 hash; replace it by the output of '
+                        'tools/hash_password.py (or the password hash function of the admin interface)'
+                    )
+                    findings.append(Finding(self.name, path, message, None, False))
         return findings
 
 

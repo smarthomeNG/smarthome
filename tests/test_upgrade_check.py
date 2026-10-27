@@ -401,6 +401,98 @@ class TestRemovedApi(InstallationTestCase):
         self.assertEqual([], self.run_check('removed-api', fix=True))
 
 
+class TestLibToolsImport(InstallationTestCase):
+    def test_lib_tools_imports_are_reported(self):
+        text = 'from lib.tools import Tools\nimport lib.tools\nx = lib.tools.Tools()\n'
+        self.write('etc/logics/l.py', text)
+
+        findings = self.run_check('removed-api', fix=True)
+
+        self.assertEqual(text, self.read('etc/logics/l.py'))
+        self.assertEqual([1, 2, 3], [f.line for f in findings])
+        self.assertTrue(all(not f.fixable for f in findings))
+        self.assertIn('lib.tools', findings[0].message)
+
+
+class TestConfFiles(InstallationTestCase):
+    def test_leftover_conf_files_are_reported(self):
+        self.write('etc/plugin.conf', '[x]\n')
+        self.write('etc/items/house.conf', '[a]\n')
+        self.write('etc/logics/notes.conf', 'x\n')
+        self.write('etc/items/house.yaml', 'a: {}\n')
+
+        findings = self.run_check('conf-files', fix=True)
+
+        names = sorted(f.path.name for f in findings)
+        self.assertEqual(['house.conf', 'plugin.conf'], names)
+        self.assertTrue(all(not f.fixable for f in findings))
+        self.assertTrue((self.base / 'etc' / 'plugin.conf').exists())
+
+    def test_scene_conf_files_are_left_to_the_scenes_check(self):
+        self.write('etc/scenes/s.conf', '0 a.b 1\n')
+
+        self.assertEqual([], self.run_check('conf-files'))
+
+
+class TestModuleParams(InstallationTestCase):
+    MODULE_YAML = """
+        http:
+            module_name: http
+        admin:
+            module_name: admin
+            # keep this comment
+            websocket_host: 0.0.0.0
+            websocket_port: 2424
+            pypi_timeout: 5
+            log_chunksize: 100
+        """
+
+    def test_removed_parameters_are_reported(self):
+        self.write('etc/module.yaml', self.MODULE_YAML)
+
+        findings = self.run_check('module-params')
+
+        self.assertEqual(3, len(findings))
+        self.assertTrue(all(f.fixable and not f.fixed for f in findings))
+
+    def test_removed_parameters_are_deleted_with_fix(self):
+        self.write('etc/module.yaml', self.MODULE_YAML)
+
+        self.run_check('module-params', fix=True)
+
+        admin = YAML(typ='safe').load(self.read('etc/module.yaml'))['admin']
+        self.assertEqual({'module_name': 'admin', 'log_chunksize': 100}, admin)
+        self.assertIn('# keep this comment', self.read('etc/module.yaml'))
+
+
+class TestPasswordHashes(InstallationTestCase):
+    LEGACY = 'a' * 128
+
+    def test_legacy_http_hashes_are_reported(self):
+        self.write(
+            'etc/module.yaml',
+            f"""
+            http:
+                module_name: http
+                hashed_password: {self.LEGACY}
+                service_hashed_password: pbkdf2_sha256$600000$c2FsdA$ZGlnZXN0
+            """,
+        )
+
+        findings = self.run_check('password-hash')
+
+        self.assertEqual(1, len(findings))
+        self.assertIn('hashed_password', findings[0].message)
+        self.assertFalse(findings[0].fixable)
+
+    def test_legacy_cli_hash_is_reported(self):
+        self.write('etc/plugin.yaml', f'cli:\n    plugin_name: cli\n    hashed_password: {self.LEGACY}\n')
+
+        findings = self.run_check('password-hash')
+
+        self.assertEqual(['plugin.yaml'], [f.path.name for f in findings])
+
+
 class TestScenes(InstallationTestCase):
     def test_conf_scene_becomes_yaml(self):
         self.write(
