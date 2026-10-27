@@ -619,23 +619,11 @@ class Utils(object):
     @staticmethod
     def execute_subprocess(commandline, wait=True):
         """
-        Executes a subprocess via a shell and returns the output written to stdout by this process as a string
+        Executes a subprocess via a shell and returns the output written to stdout and stderr
+
+        :return: tuple (stdout, stderr) as strings
         """
-        # call date command
-        p = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-
-        # Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
-        # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
-        # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
-        (result, err) = p.communicate()
-        #    logger.warning("get_process_info: commandline='{}', result='{}', err='{}'".format(command, result, err))
-
-        #    print("result="+str(result))
-        #    print("err="+str(err))
-        if wait:
-            # Wait for date to terminate. Get return returncode
-            p.wait()
-        return (str(result, encoding='utf-8', errors='strict'), str(err, encoding='utf-8', errors='strict'))
+        return _run_shell(commandline, wait, subprocess.PIPE)
 
 
 # --------------------------------------------------------------------------------------------
@@ -861,15 +849,24 @@ def get_python_version():
 def execute_subprocess(commandline, wait=True):
     """
     Executes a subprocess via a shell and returns the output written to stdout by this process as a string
+
+    The output to stderr is not captured.
     """
-    p = subprocess.Popen(commandline, stdout=subprocess.PIPE, shell=True)
-    # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
-    # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
-    (result, err) = p.communicate()
+    return _run_shell(commandline, wait, None)[0]
+
+
+def _run_shell(commandline, wait, stderr):
+    """
+    Run ``commandline`` through the shell and return its decoded (stdout, stderr).
+
+    :param wait: wait for the process to terminate after its output has been read
+    :param stderr: subprocess.PIPE to capture stderr, None to leave it to the parent
+    """
+    p = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=stderr, shell=True)
+    result, err = p.communicate()
     if wait:
-        ## Wait for date to terminate. Get return returncode ##
         p.wait()
-    return str(result, encoding='utf-8', errors='strict')
+    return str(result, encoding='utf-8', errors='strict'), str(err or b'', encoding='utf-8', errors='strict')
 
 
 def running_virtual():
