@@ -9,6 +9,7 @@ imported or executed.
 """
 
 import ast
+import fnmatch
 import argparse
 import enum
 import io
@@ -62,6 +63,8 @@ class Surface:
     plugin_metadata_globs: list[str] = field(default_factory=list)  # plugin.yaml files of addons
     cli_file: str | None = None  # script defining the command line with argparse
     websocket_file: str | None = None  # websocket protocol handler dispatching on `command == '<name>'`
+    # '<module>:<Class>.<member>' fnmatch patterns of public members that are internal to the core
+    internal_members: list[str] = field(default_factory=list)
 
     @classmethod
     def load(cls, path: Path) -> 'Surface':
@@ -255,7 +258,9 @@ def snapshot(root: Path, surface: Surface) -> Snapshot:
                         snap[f'constant:{module}:{target.id}'] = _literal(node.value)
     for key in classes:
         for member, signature in _effective_members(key, classes).items():
-            snap[f'member:{key[0]}:{key[1]}.{member}'] = signature
+            name = f'{key[0]}:{key[1]}.{member}'
+            if not any(fnmatch.fnmatchcase(name, pattern) for pattern in surface.internal_members):
+                snap[f'member:{name}'] = signature
     _collect_declared(root, surface.parameter_globs, 'parameters', 'parameter', snap)
     _collect_declared(root, surface.item_attribute_globs, 'item_attributes', 'item_attribute', snap)
     _collect_plugin_metadata(root, surface.plugin_metadata_globs, snap)

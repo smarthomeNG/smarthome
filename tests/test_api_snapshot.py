@@ -8,6 +8,7 @@ severity the diff assigns to the difference.
 """
 
 import contextlib
+import fnmatch
 import importlib.util
 import io
 import json
@@ -18,7 +19,8 @@ import textwrap
 import unittest
 from pathlib import Path
 
-TOOL_PATH = os.path.join(os.path.dirname(__file__), '..', 'tools', 'api_snapshot.py')
+REPO = os.path.join(os.path.dirname(__file__), '..')
+TOOL_PATH = os.path.join(REPO, 'tools', 'api_snapshot.py')
 
 
 def load_tool():
@@ -141,6 +143,36 @@ class TestPythonMembers(ApiTreeTestCase):
         old = {'lib/plug.py': 'class Plug:\n    def _helper(self): ...\nclass _Internal:\n    def run(self): ...\n'}
         new = {'lib/plug.py': 'class Plug:\n    def _other(self): ...\n'}
         self.assertEqual({}, self.changes(old, new))
+
+
+class TestInternalMembers(ApiTreeTestCase):
+    def test_internal_members_are_not_api(self):
+        self.surface = self.tool.Surface(
+            python_globs=['lib/*.py'], internal_members=['lib/plug:Plug.start', 'lib/plug:Plug.load_*']
+        )
+        old = {
+            'lib/plug.py': 'class Plug:\n    def run(self): ...\n    def start(self): ...\n    def load_a(self): ...\n'
+        }
+        new = {'lib/plug.py': 'class Plug:\n    def run(self): ...\n    def start(self, x): ...\n'}
+        self.assertEqual({}, self.changes(old, new))
+
+    def test_other_members_stay_api(self):
+        self.surface = self.tool.Surface(python_globs=['lib/*.py'], internal_members=['lib/plug:Plug.start'])
+        old = {'lib/plug.py': 'class Plug:\n    def run(self): ...\n    def start(self): ...\n'}
+        new = {'lib/plug.py': 'class Plug:\n    def start(self): ...\n'}
+        self.assertEqual({'member:lib/plug:Plug.run': self.tool.Level.MAJOR}, self.changes(old, new))
+
+    def test_declared_internal_members_exist(self):
+        """Every entry of internal_members in tools/api_surface.yaml matches a public member of the core."""
+        surface = self.tool.Surface.load(Path(REPO) / 'tools' / 'api_surface.yaml')
+        names = [
+            key.removeprefix('member:')
+            for key in self.tool.snapshot(Path(REPO), self.tool.Surface(python_globs=surface.python_globs))
+            if key.startswith('member:')
+        ]
+        for pattern in surface.internal_members:
+            with self.subTest(pattern):
+                self.assertTrue(fnmatch.filter(names, pattern), f'{pattern} matches no public member')
 
 
 class TestModuleLevel(ApiTreeTestCase):

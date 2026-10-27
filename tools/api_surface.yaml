@@ -38,3 +38,34 @@ cli_file: bin/smarthome.py
 
 # smartVISU websocket protocol: commands accepted and sent
 websocket_file: modules/websocket/smartvisu.py
+
+# Public members that are internal to the core (startup, loader, admin interface): not part of the API,
+# they may change in any release. '<module>:<Class>.<member>', fnmatch patterns allowed.
+internal_members:
+    - lib/smarthome:SmartHome.checkConfigFiles
+    - lib/smarthome:SmartHome.check_migrate_config
+    - lib/smarthome:SmartHome.create_*
+    - lib/smarthome:SmartHome.init_logging
+    - lib/smarthome:SmartHome.initialize_*
+    - lib/smarthome:SmartHome.start
+    - lib/smarthome:SmartHome.stop
+    - lib/scheduler:Scheduler.run
+    - lib/scheduler:Scheduler.stop
+    - lib/scheduler:Scheduler.check_caller
+    - lib/scheduler:Scheduler.get_task_stack
+    - lib/plugin:Plugins.load_plugin
+    - lib/plugin:Plugins.unload_plugin
+    - lib/plugin:Plugins.reload_plugin
+    - lib/plugin:Plugins.start_plugin
+    - lib/plugin:Plugins.refresh_plugin_config
+    - lib/log:Logs.configure_*
+    - lib/log:Logs.*_logging_config*
+    - lib/item/structs:Structs.__init__
+    - lib/item/structs:Structs.add_struct_definition
+    - lib/item/structs:Structs.load_*
+    - lib/item/structs:Structs.merge*
+    - lib/item/structs:Structs.migrate_*
+    - lib/item/structs:Structs.process_struct_node
+    - lib/item/structs:Structs.resolve_structs
+    - lib/item/structs:Structs.traverse_struct
+    - lib/metadata:Metadata.*

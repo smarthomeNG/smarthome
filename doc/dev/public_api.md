@@ -27,6 +27,9 @@ list is [`tools/api_surface.yaml`](../../tools/api_surface.yaml); this document 
 
 - Names starting with an underscore, and modules whose file name starts with an underscore
   (e.g. `lib/item/_internal/`).
+- Public members listed under `internal_members` in `tools/api_surface.yaml`: core startup and
+  shutdown (`SmartHome.start`, `init_logging`, ...), the plugin loader, logging configuration,
+  struct loading and `Metadata`. They are public for the core and the admin interface, not for addons.
 - The admin REST API and the admin websocket protocol. Their only client is the first-party
   shngadmin.
 - Web interface assets and templates, `tools/`, `tests/`, log message texts.
