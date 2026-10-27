@@ -627,7 +627,7 @@ class SmartPlugin(SmartObject, Utils):
         Only items logged by the database plugin have the ``db_mark_invalid`` function and are marked.
         Items whose gap is already open are skipped, as repeated marking would split one gap into several.
 
-        Only available in SmartHomeNG versions **v1.13.0 and up**.
+        Only available in SmartHomeNG versions **v2.0.0 and up**.
 
         :param items: items to mark
         :param source: reason for the gap, e.g. ``'connection_lost'``
