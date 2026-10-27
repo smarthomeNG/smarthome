@@ -12,7 +12,7 @@ auf inhaltliche Richtigkeit zu überprüfen. Das Tool hat eine ganze Reihe von m
 
    smarthome$ python3 tools/plugin_metadata_checker.py
 
-   plugin_metadata_checker.py v1.9.0 - Checks the care status of plugin metadata
+   plugin_metadata_checker.py v1.10.0 - Checks the care status of plugin metadata
 
    usage: plugin_metadata_checker.py
                                      [-la | -lsm | -lst | -li | -lc | -lip | -lia | -d DISP_PLUGIN | -dd DISPD_PLUGIN | -c CHECK_PLUGIN | -cl | -clc | -cli | -v]
@@ -46,7 +46,7 @@ Idealfall sieht das Ergebnis aus wie im folgenden Beispiel beim knx Plugin:
 
    smarthome$ python3 tools/plugin_metadata_checker.py -c knx
 
-   plugin_metadata_checker.py v1.9.0 - Checks the care status of plugin metadata
+   plugin_metadata_checker.py v1.10.0 - Checks the care status of plugin metadata
 
    Check metadata of smart plugin 'knx'
 
@@ -62,7 +62,7 @@ und das Ergebnis sieht ähnlich aus wie beim folgenden Beispiel beim smartvisu P
 
    smarthome$ python3 tools/plugin_metadata_checker.py -c smartvisu
 
-   plugin_metadata_checker.py v1.9.0 - Checks the care status of plugin metadata
+   plugin_metadata_checker.py v1.10.0 - Checks the care status of plugin metadata
 
    Check metadata of smart plugin 'smartvisu'
 

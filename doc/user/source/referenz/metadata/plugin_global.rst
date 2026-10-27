@@ -41,7 +41,7 @@ Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegrif
 
 Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
 
-    - ``type:`` Beschreibt den Typ des Plugins (gültige Werte: ``gateway``, ``interface``, ``protocol``, ``system``, ``web`` oder *leer* für ein nicht klassifiziertes Plugin.
+    - ``type:`` Beschreibt den Typ des Plugins (gültige Werte: ``gateway``, ``interface``, ``protocol``, ``system``, ``web``). Der Eintrag ist verpflichtend; ``plugin_metadata_checker.py`` meldet einen fehlenden oder ungültigen Typ als Fehler.
 
       Die Typen sind wie folgt definiert:
 

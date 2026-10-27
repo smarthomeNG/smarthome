@@ -32,7 +32,7 @@ The result is printed to stdout
 import os
 import argparse
 
-VERSION = '1.9.0'
+VERSION = '1.10.0'
 
 start_dir = os.getcwd()
 
@@ -55,6 +55,9 @@ plugin_sections = [
     [type_unclassified, 'Non classified', 'nicht klassifizierte'],
     ['web', 'Web/Cloud', 'Web/Cloud'],
 ]
+
+# valid values of the 'type' attribute in the plugin metadata
+PLUGIN_TYPES = [section[0] for section in plugin_sections if section[0] != type_unclassified]
 
 MISSING_TEXT = 'Missing'
 
@@ -743,8 +746,17 @@ def check_metadata(
                 "Add 'classname:' to the plugin section and set it to the name of the Python class that implements the plugin",
             )
 
-        if metadata['plugin'].get('type', None) is None:
-            disp_warning('No plugin type set', "Add 'type:' to the plugin section")
+        plugin_type = metadata['plugin'].get('type', None)
+        if not plugin_type:
+            disp_error(
+                'No plugin type set',
+                f"Add 'type:' to the plugin section and set it to one of the following values {PLUGIN_TYPES}",
+            )
+        elif plugin_type not in PLUGIN_TYPES:
+            disp_error(
+                f"Invalid plugin type '{plugin_type}'",
+                f"Set 'type:' in the plugin section to one of the following values {PLUGIN_TYPES}",
+            )
         if metadata['plugin'].get('maintainer', None) is None:
             disp_warning('The maintainer of the plugin is not documented', "Add 'maintainer:' to the plugin section")
 
