@@ -68,6 +68,7 @@ BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 # Import SmartHomeNG Modules
 #####################################################################
 import lib.config
+import lib.configdirs
 import lib.daemon
 import lib.item
 import lib.log
@@ -181,10 +182,7 @@ class SmartHome:
         self._etc_dir = os.path.join(self._extern_conf_dir, DIR_ETC)
 
         # self._conf_dir contains the base dir for config folders
-        if self._config_etc:
-            self._conf_dir = self._etc_dir
-        else:
-            self._conf_dir = self._extern_conf_dir
+        self._conf_dir = lib.configdirs.user_conf_dir(self._extern_conf_dir, self._config_etc)
 
         # shng system dirs
         self._var_dir = lib.vardir.get_var_dir()
@@ -379,14 +377,7 @@ class SmartHome:
         #############################################################
         # check / set config_etc option from cmdline or config file
         # re-check / re-set affected directories
-        if config_etc:
-            # manual set from cmdline overrides config file setting
-            self._config_etc = config_etc
-        elif hasattr(self, '_config_etc'):
-            # set by smarthome.yaml
-            self._config_etc = lib.utils.Utils.to_bool(self._config_etc, True)
-
-        # at this point self._config_etc is of type bool
+        self._config_etc = lib.configdirs.resolve_config_etc(config_etc, self._config_etc)
         self.initialize_dir_vars()
         self.create_conf_directories()
         self.check_migrate_config()

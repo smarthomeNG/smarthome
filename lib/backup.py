@@ -48,6 +48,7 @@ from lib.constants import (
     DIR_PRIV_TOOLS,
     YAML_FILE,
 )
+from lib.configdirs import read_config_etc, user_conf_dir
 from lib.vardir import get_var_dir
 
 logger = logging.getLogger(__name__)
@@ -105,6 +106,8 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     :param conf_base_dir: basedir for configuration
                           (should be 'extern_conf_dir' to reflect --config_dir option)
     :param base_dir:      var-directory. If empty or ommited, conf_base_dir/var is used.
+    :param config_etc:    True if --config_etc was given on the command line; otherwise the
+                          config_etc setting of etc/smarthome.yaml decides where the user config lives
 
     :return:
     """
@@ -119,15 +122,8 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
         backup_filename += '_' + get_backupdate() + '_' + get_backuptime()
     backup_filename += '.zip'
 
-    # let backup.py create file/directory names the "old way", because this can
-    # be invoked by command line without a working SmartHome instance and so
-    # needs to create the paths for itself. Hope this always works... :)
-    etc_dir = os.path.join(conf_base_dir, 'etc')
-
-    if config_etc:
-        conf_dir = etc_dir
-    else:
-        conf_dir = base_dir
+    etc_dir = os.path.join(conf_base_dir, DIR_ETC)
+    conf_dir = user_conf_dir(conf_base_dir, read_config_etc(conf_base_dir, config_etc))
 
     items_dir = os.path.join(conf_dir, DIR_ITEMS)
     logic_dir = os.path.join(conf_dir, DIR_LOGICS)
@@ -169,7 +165,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     dest_dir = 'plugins'
     for filename in sorted(os.listdir(source_dir)):
         if filename.startswith('priv_'):
-            logger.dbghigh(f'Backup private plugin: {filename}')
+            logger.debug(f'Backup private plugin: {filename}')
             backup_directory2(
                 backupzip, os.path.join(source_dir, filename), '.*', dest_dir=os.path.join(dest_dir, filename)
             )
@@ -358,6 +354,8 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
     :param conf_base_dir: basedir for configuration
                           (should be 'extern_conf_dir' to reflect --config_dir option)
     :param base_dir:       var-directory. If empty or ommited, conf_base_dir/var is used.
+    :param config_etc:     True if --config_etc was given on the command line; otherwise the
+                           config_etc setting of etc/smarthome.yaml decides where the user config lives
 
     :return:
     """
@@ -366,19 +364,15 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
     make_backup_directories(base_dir)
     restore_dir = os.path.join(get_var_dir(), 'restore')
 
-    etc_dir = os.path.join(conf_base_dir, 'etc')
-
-    if config_etc:
-        conf_dir = etc_dir
-    else:
-        conf_dir = base_dir
+    etc_dir = os.path.join(conf_base_dir, DIR_ETC)
+    conf_dir = user_conf_dir(conf_base_dir, read_config_etc(conf_base_dir, config_etc))
 
     items_dir = os.path.join(conf_dir, DIR_ITEMS)
     logic_dir = os.path.join(conf_dir, DIR_LOGICS)
     scenes_dir = os.path.join(conf_dir, DIR_SCENES)
     structs_dir = os.path.join(conf_dir, DIR_STRUCTS)
     uf_dir = os.path.join(conf_dir, DIR_UF)
-    priv_tools_dir = os.path.join(base_dir, DIR_PRIV_TOOLS)
+    priv_tools_dir = os.path.join(conf_dir, DIR_PRIV_TOOLS)
     esphome_conf_dir = os.path.join(get_var_dir(), 'esphome', 'config')
 
     archive_file = ''
@@ -403,7 +397,7 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
     logger.info(f'Restoring configuration from file {restorezip_filename}')
 
     logger.info('Creating a backup of the current configuration before restoring configuration from zip-file')
-    create_backup(conf_base_dir, base_dir, True, True)
+    create_backup(conf_base_dir, base_dir, True, True, config_etc=config_etc)
     overwrite = True
 
     # open existing zip file
@@ -444,9 +438,9 @@ def restore_backup(conf_base_dir, base_dir, config_etc=False):
             )
         )
     )
-    logger.dbghigh(f'Restoring private plugins from zip-file: {pl}')
+    logger.debug(f'Restoring private plugins from zip-file: {pl}')
     fl = [token for token in nl if token.startswith('plugins/')]
-    logger.dbgmed(f'restoring files: {fl}')
+    logger.debug(f'restoring files: {fl}')
     restorezip.extractall(path=base_dir, members=fl)
 
     # restore files to /var/esphome/config
@@ -534,7 +528,7 @@ def restore_directory2(restorezip, arc_dir, dest_dir, overwrite=False):
         prefix = arc_dir + os.path.sep
         if fn.startswith(prefix):
             fn2 = fn[len(prefix) :]
-            logger.dbghigh(f'{arc_dir}: {os.path.basename(fn2)} - {fn}')
+            logger.debug(f'{arc_dir}: {os.path.basename(fn2)} - {fn}')
             restore_file(restorezip, arc_dir, os.path.basename(fn), dest_dir, overwrite)
 
 
