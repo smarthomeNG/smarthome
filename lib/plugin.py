@@ -1033,6 +1033,21 @@ class Plugins:
                 return thread
 
 
+def _log_removal_state(meta: Metadata, plg_section: str, plugin_name: str) -> None:
+    """Log a warning if the metadata marks the plugin as deprecated or defunct (both are removed with the next release)."""
+    state = meta.get_string('state')
+    if state == 'deprecated':
+        logger.warning(
+            f"Plugin '{plugin_name}' (section '{plg_section}') is deprecated and will be removed with the next "
+            'release. Consider to use a replacement instead'
+        )
+    elif state == 'defunct':
+        logger.warning(
+            f"Plugin '{plugin_name}' (section '{plg_section}') is defunct: it does not work anymore and will be "
+            'removed with the next release. Remove it from the plugin configuration'
+        )
+
+
 class PluginWrapper(threading.Thread):
     """
     Wrapper class for loading plugins
@@ -1073,7 +1088,7 @@ class PluginWrapper(threading.Thread):
         self._sh = smarthome
         self._init_complete = False
         self.meta = meta
-        # Load an instance of the plugin
+        _log_removal_state(meta, plg_section, classpath.split('.')[1])
 
         module = None
 
@@ -1118,11 +1133,6 @@ class PluginWrapper(threading.Thread):
         self._ptrans = translation.load_translations(
             'plugin', classpath.replace('.', '/'), 'plugin/' + classpath.split('.')[1]
         )
-
-        if self.meta.get_string('state') == 'deprecated':
-            logger.warning(
-                f"Plugin '{classpath.split('.')[1]}' (section '{plg_section}') is deprecated. Consider to use a replacement instead"
-            )
 
         # initialize attributes of the newly created plugin object instance
         self.get_implementation()._configfilename = configfile

@@ -63,6 +63,11 @@ While a component is below 1.0.0 nothing forces a major bump *(decided)*.
 *(proposed)* Deprecate in a minor release (logged warning, documented in the release notes), remove
 in the next major release.
 
+Plugins *(decided)*: a plugin with `state: deprecated` (replaced by something else) or `state: defunct`
+(does not work anymore, e.g. its library supports no Python version SmartHomeNG runs on) is still
+loaded with a logged warning and removed from the plugins repository with the next minor or major
+release.
+
 Releases before 2.0.0 are not reclassified.
 
 ## Keeping the declaration, the tool and the code in sync

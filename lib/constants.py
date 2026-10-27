@@ -141,6 +141,11 @@ PLUGIN_RENAME_ITEM = 'rename_item'
 # valid values of the 'type' attribute in the metadata (plugin.yaml) of a plugin
 PLUGIN_TYPES = ('gateway', 'interface', 'protocol', 'system', 'web')
 
+# valid values of the 'state' attribute in the metadata (plugin.yaml) of a plugin
+PLUGIN_STATES = ('develop', 'development', 'ready', 'qa-passed', 'deprecated', 'defunct')
+# states of plugins that are removed with the next minor or major release
+PLUGIN_STATES_TO_BE_REMOVED = ('deprecated', 'defunct')
+
 # file extensions
 YAML_FILE = '.yaml'
 DEFAULT_FILE = '.default'
