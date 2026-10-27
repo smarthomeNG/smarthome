@@ -411,6 +411,8 @@ class Admin(Module):
         """
         cherrypy.response.headers['Content-Type'] = 'application/json'
         errno = status.split()[0]
+        if errno == '401':
+            cherrypy.response.headers['WWW-Authenticate'] = 'Bearer'
         body = {'error': message, 'status': errno}
         if self._showtraceback and errno == '500':
             body['traceback'] = traceback

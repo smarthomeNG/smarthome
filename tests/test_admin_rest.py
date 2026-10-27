@@ -130,10 +130,20 @@ class TestSubResourceActionAuthEnforcement(unittest.TestCase):
         self.addCleanup(lambda: [p.stop() for p in self._patches])
 
     def test_sub_resource_action_rejects_missing_token(self):
-        result = self.resource.default('some.item.path', 'rename')
+        with self.assertRaises(cherrypy.HTTPError) as raised:
+            self.resource.default('some.item.path', 'rename')
 
+        self.assertEqual(401, raised.exception.status)
         self.assertFalse(hasattr(self.resource, 'called_with'), 'rename() must not run without a valid token')
-        self.assertEqual(json.loads(result)['result'], 'error')
+
+    def test_expired_token_is_rejected(self):
+        token = jwt.encode({'name': 'tester', 'exp': 1}, self.resource.jwt_secret, algorithm='HS256')
+        cherrypy.request.headers['Authorization'] = f'Bearer {token}'
+
+        with self.assertRaises(cherrypy.HTTPError) as raised:
+            self.resource.default('some.item.path', 'rename')
+
+        self.assertEqual(401, raised.exception.status)
 
     def test_sub_resource_action_allows_valid_token(self):
         token = jwt.encode({'name': 'tester'}, self.resource.jwt_secret, algorithm='HS256')

@@ -78,7 +78,8 @@ class AuthController(RESTResource):
 
         Without configured users every request gets an admin token named 'Autologin'.
 
-        :return: JSON with a 'token' key on success, an empty JSON object otherwise
+        :return: JSON with a 'token' key
+        :raises cherrypy.HTTPError: 401 for an unknown user or a wrong password
         """
         cl = cherrypy.request.headers.get('Content-Length', 0)
         if cl == 0:
@@ -106,6 +107,7 @@ class AuthController(RESTResource):
                 self.logger.warning(
                     f"AuthController.authenticate(): failed login for user '{username}' from {remote_ip}"
                 )
+                raise cherrypy.HTTPError(401, 'invalid user name or password')
         return json.dumps(response)
 
     def _issue_token(self, name: str, admin: bool, ttl_hours: float) -> str:

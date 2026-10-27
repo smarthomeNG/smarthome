@@ -62,7 +62,11 @@ header.
 
 ### AUTH API — login and token renewal
 
-- `POST /api/authenticate/user` — log in with username and password, get a JWT. *No auth required.*
+- `POST /api/authenticate/user` — log in with username and password, get a JWT (HTTP 401 for a wrong user
+  name or password). *No auth required.*
+
+A request to an endpoint that needs authentication without a valid JWT gets HTTP 401 with
+`WWW-Authenticate: Bearer` and a JSON body `{"error": ..., "status": "401"}`.
 - `PUT /api/authenticate/renew` — renew the current JWT before it expires.
 
 ### CONFIG API — read/write etc/smarthome.yaml and etc/module.yaml sections

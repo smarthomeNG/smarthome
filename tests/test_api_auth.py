@@ -79,10 +79,17 @@ class TestAuthenticate(AuthControllerTestCase):
 
         self.assertIn('token', response)
 
-    def test_wrong_password_returns_no_token(self):
-        response = self.post_credentials(make_controller(self.users), {'username': 'admin', 'password': 'nope'})
+    def test_wrong_password_is_rejected_with_401(self):
+        with self.assertRaises(cherrypy.HTTPError) as raised:
+            self.post_credentials(make_controller(self.users), {'username': 'admin', 'password': 'nope'})
 
-        self.assertNotIn('token', response)
+        self.assertEqual(401, raised.exception.status)
+
+    def test_unknown_user_is_rejected_with_401(self):
+        with self.assertRaises(cherrypy.HTTPError) as raised:
+            self.post_credentials(make_controller(self.users), {'username': 'root', 'password': PASSWORD})
+
+        self.assertEqual(401, raised.exception.status)
 
     def test_without_users_autologin_token_is_returned(self):
         response = self.post_credentials(make_controller({}), {'username': '', 'password': ''})
@@ -93,7 +100,8 @@ class TestAuthenticate(AuthControllerTestCase):
         controller = make_controller(self.users)
         with self.assertLogs(controller.logger, level=logging.DEBUG) as logs:
             response = self.post_credentials(controller, {'username': 'admin', 'password': PASSWORD})
-            self.post_credentials(controller, {'username': 'admin', 'password': 'wrong-' + PASSWORD})
+            with self.assertRaises(cherrypy.HTTPError):
+                self.post_credentials(controller, {'username': 'admin', 'password': 'wrong-' + PASSWORD})
 
         logged = '\n'.join(logs.output)
         self.assertNotIn(PASSWORD, logged)

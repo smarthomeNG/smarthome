@@ -419,7 +419,7 @@ class RESTResource:
         This is the single place authentication_needed/public_root are enforced - every
         dispatch path that ends up calling an @expose_resource method must go through it.
 
-        :return: None if the call may proceed, otherwise a JSON error response to return to the client
+        :raises cherrypy.HTTPError: 401 if the method needs authentication and the request has no valid token
         """
         public_root = False
         if root:
@@ -434,9 +434,7 @@ class RESTResource:
                 token_valid, error_text = self.REST_test_jwt_token()
                 if not token_valid:
                     self.logger.info(f'REST_check_auth(): Authentication failed for {str(m).split()[2]}')
-                    response = {'result': 'error', 'description': error_text}
-                    return json.dumps(response)
-        return None
+                    raise cherrypy.HTTPError(401, error_text)
 
     def REST_dispatch_execute(self, m, method, root, resource, **params):
         """
@@ -446,11 +444,10 @@ class RESTResource:
         exception is returned to the client as a 200 JSON body {'result': 'error', 'description': ...}.
 
         :return: m's return value, a JSON error response, or None if m is not an exposed resource method
+        :raises cherrypy.HTTPError: 401 if m needs authentication and the request has no valid token
         """
         if m and getattr(m, 'expose_resource', False):
-            auth_error = self.REST_check_auth(m, root)
-            if auth_error is not None:
-                return auth_error
+            self.REST_check_auth(m, root)
 
             try:
                 return m(resource, **params)
@@ -542,9 +539,7 @@ class RESTResource:
             method = getattr(self, a, None)
             # self.logger.notice(f"dir(method): {dir(method)}")
             if method and getattr(method, 'expose_resource', False):
-                auth_error = self.REST_check_auth(method, False)
-                if auth_error is not None:
-                    return auth_error
+                self.REST_check_auth(method, False)
                 return method(resource, *vpath, **params)
             else:
                 # path component was specified but doesn't

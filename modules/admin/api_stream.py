@@ -74,8 +74,7 @@ class StreamController(RESTResource):
         if id == 'token':
             token_valid, error_text = self.REST_test_jwt_token()
             if not token_valid:
-                cherrypy.response.status = 401
-                return json.dumps({'result': 'error', 'description': error_text})
+                raise cherrypy.HTTPError(401, error_text)
             return json.dumps({'token': self._mint_stream_token()})
 
         token = params.get('token', '')

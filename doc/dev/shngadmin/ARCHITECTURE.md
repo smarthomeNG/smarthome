@@ -483,7 +483,13 @@ Automatically injects the `Authorization: Bearer <token>` header on every reques
 
 The token comes from `AuthService.getToken()`.
 
-### 10.2 Connectivity Interceptor
+### 10.2 Auth Error Interceptor
+
+`src/app/common/interceptors/auth-error.interceptor.ts`
+
+The backend answers a request without a valid token (missing, expired, forged) with HTTP 401. For such an `/api/` response (except the login request itself, which the login form handles) the interceptor drops the token; if the server requires a login it navigates to `/login` with the current URL as `returnUrl`, otherwise it fetches a new anonymous token. The error is passed on to the caller unchanged.
+
+### 10.3 Connectivity Interceptor
 
 `src/app/common/interceptors/connectivity.interceptor.ts`
 
@@ -505,7 +511,7 @@ export const connectivityInterceptor: HttpInterceptorFn = (req, next) => {
 
 The `cancelOfflineDebounce()` call handles a subtle case: Angular destroys a component (e.g. navigating away) which cancels any in-flight HTTP requests.  Those cancellations also produce status 0.  The debounce (1.5 s window) prevents this from falsely triggering the offline banner: if the *next* page's requests succeed, `cancelOfflineDebounce()` clears the timer and the banner never shows.
 
-### 10.3 URL construction
+### 10.4 URL construction
 
 API services don't hard-code host:port.  They read `appConfig.apiUrl` which is built from `window.location` at startup:
 

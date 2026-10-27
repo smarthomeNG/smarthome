@@ -40,6 +40,13 @@ class TestErrorPageJson(unittest.TestCase):
 
         self.assertEqual(json.loads(result), {'error': 'name collision', 'status': '400'})
 
+    def test_401_asks_for_a_bearer_token(self):
+        cherrypy.response.headers.pop('WWW-Authenticate', None)
+
+        Admin._error_page_json(_FakeAdmin(), '401 Unauthorized', 'Unauthorized', 'tb', '18')
+
+        self.assertEqual('Bearer', cherrypy.response.headers.get('WWW-Authenticate'))
+
     def test_sets_json_content_type(self):
         Admin._error_page_json(_FakeAdmin(), '400 Bad Request', 'name collision', 'tb', '18')
 
