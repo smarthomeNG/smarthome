@@ -674,36 +674,23 @@ class Scheduler(threading.Thread):
         a smartplugin instance. If there is an instance name of the calling smartplugin then the instance name of that
         calling smartplugin is appended to the name
 
+        Only the frame of that caller is looked at (``sys._getframe(2)``), since this runs on every trigger, i.e. on
+        every item change that triggers a logic or an eval.
+
         :param name: the name of a scheduler entry
-        :param from_smartplugin:
+        :param from_smartplugin: True if the call comes from a SmartPlugin method that has added the instance name
         :return: returns either the name or name combined with instance name
         """
-        try:
-            stack = inspect.stack()
-        except IndexError:
+        if from_smartplugin:
             return name
-        except Exception as e:
-            logger.exception(f"check_caller('{name}') *1: Exception in inspect.stack(): {e}")
-
         try:
-            obj = stack[2][0].f_locals['self']
-        except KeyError:
+            caller = sys._getframe(2).f_locals.get('self')
+        except ValueError:
             return name
-        except Exception as e:
-            pass
-            logger.exception(f"check_caller('{name}') *2: Exception in inspect.stack(): {e}")
-
-        try:
-            if isinstance(obj, SmartPlugin):
-                iname = obj.get_instance_name()
-                if iname != '':
-                    #                    if not (iname).startswith(self._pluginname_prefix):
-                    if not from_smartplugin:
-                        if not str(name).endswith('_' + iname):
-                            name = name + '_' + obj.get_instance_name()
-        except Exception as e:
-            pass
-            logger.exception(f"check_caller('{name}') *3: Exception in inspect.stack(): {e}")
+        if isinstance(caller, SmartPlugin):
+            iname = caller.get_instance_name()
+            if iname != '' and not str(name).endswith('_' + iname):
+                name = name + '_' + iname
         return name
 
     def return_next(self, name, from_smartplugin=False):
