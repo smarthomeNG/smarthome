@@ -119,6 +119,26 @@ class TestRenameItemBasic(_Base):
         self.assertIs(self.sh.items.return_item('new'), item)
 
 
+class TestRenameItemRebindsAttributeAccess(_Base):
+    def test_renamed_top_level_item_is_reachable_as_sh_attribute(self):
+        item = self.sh.items.create_item('old', {'type': 'num', 'child': {'type': 'num'}}, persist=False)
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertIs(getattr(self.sh, 'new', None), item)
+        self.assertFalse(hasattr(self.sh, 'old'))
+        self.assertIs(self.sh.new.child, self.sh.items.return_item('new.child'))
+
+    def test_renamed_nested_item_is_reachable_as_parent_attribute(self):
+        parent = self.sh.items.create_item('parent', {'type': 'num', 'old': {'type': 'num'}}, persist=False)
+        item = self.sh.items.return_item('parent.old')
+
+        self.sh.items.rename_item(item, 'parent.new')
+
+        self.assertIs(parent.new, item)
+        self.assertFalse(hasattr(parent, 'old'))
+
+
 class TestRenameItemValidatesNewName(_Base):
     def test_rename_refuses_colliding_name(self):
         item = self.sh.items.create_item('old', {'type': 'num'}, persist=False)

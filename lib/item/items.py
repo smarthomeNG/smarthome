@@ -938,19 +938,19 @@ class Items:
 
         old_is_top_level = item._is_top_of_item_tree()
         old_parent_obj = self if old_is_top_level else item.return_parent()
+        old_leaf_attr = old_path.rsplit('.', 1)[-1]
         if new_parent_obj is not old_parent_obj:
-            old_leaf_attr = old_path.rsplit('.', 1)[-1]
             old_parent_obj._remove_child(item)
-            if getattr(old_parent_obj, old_leaf_attr, None) is item:
-                delattr(old_parent_obj, old_leaf_attr)
-            if old_is_top_level and getattr(self._sh, old_leaf_attr, None) is item:
-                delattr(self._sh, old_leaf_attr)
-
             item._reassign_parent(new_parent_obj)
             new_parent_obj._append_child(item)
-            setattr(new_parent_obj, leaf_attr, item)
-            if new_is_top_level:
-                setattr(self._sh, leaf_attr, item)
+
+        if getattr(old_parent_obj, old_leaf_attr, None) is item:
+            delattr(old_parent_obj, old_leaf_attr)
+        if old_is_top_level and getattr(self._sh, old_leaf_attr, None) is item:
+            delattr(self._sh, old_leaf_attr)
+        setattr(new_parent_obj, leaf_attr, item)
+        if new_is_top_level:
+            setattr(self._sh, leaf_attr, item)
 
         subtree = list(_flatten_with_children(item))
         rename_hook_plugins = [p for p in item.plugins.return_plugins() if hasattr(p, PLUGIN_RENAME_ITEM)]
