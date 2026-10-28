@@ -18,6 +18,7 @@ import json
 import os
 import sys
 import tempfile
+import threading
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -659,6 +660,62 @@ class TestItemDetails(_Base):
         details = self._details({})
 
         self.assertEqual(details['remark'], '')
+
+
+class TestItemOperationBusy(_Base):
+    """While another item operation holds the Items lock, every mutating endpoint answers 409 with the running operation named."""
+
+    def setUp(self):
+        super().setUp()
+        for name in ('target', 'other'):
+            with self._post_body({'config': {'type': 'num'}}):
+                self.controller.add(id=name)
+        self._held = threading.Event()
+        self._release = threading.Event()
+        holder = threading.Thread(target=self._hold_lock)
+        holder.start()
+        self.addCleanup(holder.join)
+        self.addCleanup(self._release.set)
+        self.assertTrue(self._held.wait(timeout=10))
+
+    def _hold_lock(self):
+        with self.sh.items._operation_lock.hold('rename_item(busy.item)'):
+            self._held.set()
+            self._release.wait(timeout=10)
+
+    def _request(self, data=None):
+        body = MagicMock()
+        body.read.return_value = json.dumps(data or {}).encode('utf-8')
+        request = MagicMock()
+        request.method = 'POST'
+        request.body = body
+        return patch.object(cherrypy, 'request', request)
+
+    def _assert_conflict(self, call, data):
+        with self._request(data):
+            with self.assertRaises(cherrypy.HTTPError) as ctx:
+                call()
+
+        self.assertEqual(ctx.exception.status, 409)
+        self.assertIn('rename_item(busy.item)', ctx.exception.args[1])
+
+    def test_add_returns_409(self):
+        self._assert_conflict(lambda: self.controller.add(id='fresh'), {'config': {'type': 'num'}})
+
+    def test_edit_returns_409(self):
+        self._assert_conflict(lambda: self.controller.edit(id='target'), {'config': {'type': 'num', 'name': 'x'}})
+
+    def test_delete_returns_409(self):
+        self._assert_conflict(lambda: self.controller.delete(id='target'), {})
+
+    def test_rename_returns_409(self):
+        self._assert_conflict(lambda: self.controller.rename(id='target'), {'new_path': 'renamed'})
+
+    def test_copy_returns_409(self):
+        self._assert_conflict(lambda: self.controller.copy(id='target'), {'new_path': 'copied'})
+
+    def test_remove_references_returns_409(self):
+        self._assert_conflict(lambda: self.controller.remove_references(id='target'), {})
 
 
 if __name__ == '__main__':

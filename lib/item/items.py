@@ -51,10 +51,13 @@ They can be used the following way: To call eg. **get_toplevel_items()**, use th
 """
 
 import collections
+import contextlib
 import copy
+import functools
 import logging
 import os
 import re
+import threading
 import types
 
 import lib.config
@@ -80,6 +83,57 @@ from .structs import Structs
 _items_instance = None  # Pointer to the initialized instance of the Items class (for use by static methods)
 
 _MISSING = object()  # sentinel for Items.edit_item()'s old/new config diff - None is a legitimate attribute value
+
+
+class ItemOperationBusyError(RuntimeError):
+    """Raised when a structural item operation is refused because another one is still running."""
+
+
+class _ExclusiveOperationLock:
+    """
+    Non-blocking, reentrant lock serialising the structural item operations.
+
+    A second operation from another thread is refused (ItemOperationBusyError)
+    rather than queued: an operation can run for minutes (plugin stop/run, DB
+    log reassignment), and a queued caller would hang until its request times out.
+    Nested operations of the owning thread (copy_item -> create_item,
+    rename_item -> edit_item, ...) pass through.
+    """
+
+    def __init__(self):
+        self._lock = threading.RLock()
+        self._depth = 0
+        self._running = None
+
+    @contextlib.contextmanager
+    def hold(self, description):
+        """Hold the lock for *description*, or raise ItemOperationBusyError if another thread holds it."""
+        if not self._lock.acquire(blocking=False):
+            raise ItemOperationBusyError(
+                f"Item operation '{self._running}' is still running - retry when it has finished"
+            )
+        try:
+            if self._depth == 0:
+                self._running = description
+            self._depth += 1
+            yield
+        finally:
+            self._depth -= 1
+            if self._depth == 0:
+                self._running = None
+            self._lock.release()
+
+
+def _exclusive_item_operation(method):
+    """Run an Items method under the instance's exclusive-operation lock; the first argument names the target."""
+
+    @functools.wraps(method)
+    def wrapper(self, target, *args, **kwargs):
+        target_name = target if isinstance(target, str) else target.property.path
+        with self._operation_lock.hold(f'{method.__name__}({target_name})'):
+            return method(self, target, *args, **kwargs)
+
+    return wrapper
 
 
 def _flatten_with_children(item):
@@ -156,6 +210,7 @@ class Items:
     def __init__(self, smarthome):
         self._sh = smarthome
         self.logger = logging.getLogger(__name__)
+        self._operation_lock = _ExclusiveOperationLock()
 
         global _items_instance
         if _items_instance is not None:
@@ -351,6 +406,7 @@ class Items:
 
         return child
 
+    @_exclusive_item_operation
     def create_item(self, path, config, parent=None, persist=True, filename=None, create_missing_parents=False):
         """
         Create a single item at runtime and fully initialize it (and any
@@ -646,6 +702,7 @@ class Items:
             self.__items.append(path)
         self.__item_dict[path] = item
 
+    @_exclusive_item_operation
     def edit_item(self, item, config, notify_plugins=True):
         """
         Edit an existing item's attributes at runtime, in place — preserves
@@ -826,6 +883,7 @@ class Items:
 
         return item
 
+    @_exclusive_item_operation
     def remove_item(self, item, persist=True, recursive=False):
         """
         Function to remove an item from the dictionary of items
@@ -888,6 +946,7 @@ class Items:
         if persist and source_filename:
             self._remove_from_yaml_file(source_filename, path)
 
+    @_exclusive_item_operation
     def rename_item(self, item, new_path, filename=None):
         """
         Rename an item in place, optionally moving it to a new parent (see
@@ -1081,6 +1140,7 @@ class Items:
 
         return item, report
 
+    @_exclusive_item_operation
     def copy_item(self, item, new_path, filename=None, create_missing_parents=False, include_children=True):
         """
         Copy an item to *new_path* as an independent clone — fresh
@@ -1909,6 +1969,7 @@ class Items:
             config['hysteresis_input'] = item._hysteresis_input
         return config
 
+    @_exclusive_item_operation
     def remove_references(self, path):
         """
         Strip dangling unambiguous references to *path* from every other
