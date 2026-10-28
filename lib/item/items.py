@@ -593,7 +593,7 @@ class Items:
             self._load_yaml_file(yf, filename)
         if not self._set_mapping_in_place(yf, path, config):
             raise ValueError(f"Item '{path}' cannot be persisted to '{filename}.yaml': an ancestor is not an item")
-        yf.save()
+        self._save_yaml_file(yf, filename)
 
     @staticmethod
     def _set_mapping_in_place(yf, path, config):
@@ -647,6 +647,26 @@ class Items:
                 )
             node = child
 
+    def _save_yaml_file(self, yf, filename):
+        """Save the loaded yamlfile *yf* (``items_dir/<filename>.yaml``); a live item stored as a null node becomes an empty item first."""
+        self._null_item_nodes_to_empty(yf.data, '', filename)
+        yf.save()
+
+    def _null_item_nodes_to_empty(self, node, prefix, filename):
+        """
+        Replace, in the mapping *node* (the item at *prefix*, '' for the file root), every key that is a live
+        item but holds null by an empty mapping: the loader reads a null node as no item at all.
+        """
+        if not isinstance(node, dict):
+            return
+        for key, value in node.items():
+            path = f'{prefix}.{key}' if prefix else str(key)
+            if value is None and self.return_item(path) is not None:
+                self.logger.warning(f"Item '{path}' was a null node in '{filename}.yaml', saved as an empty item")
+                node[key] = type(node)()
+            else:
+                self._null_item_nodes_to_empty(value, path, filename)
+
     def _remove_yaml_node(self, yf, filename, path):
         """
         Remove the node at *path* from the loaded yamlfile *yf* (``items_dir/<filename>.yaml``), then the ancestors that
@@ -679,7 +699,7 @@ class Items:
             node = self._merge_yaml_nodes(existing, node)
         self._set_or_raise(yf, new_path, node, filename)
         self._remove_yaml_node(yf, filename, old_path)
-        yf.save()
+        self._save_yaml_file(yf, filename)
 
     @staticmethod
     def _merge_yaml_nodes(base, extra):
@@ -1169,11 +1189,11 @@ class Items:
                 if shyaml.yaml_exists(new_target):
                     self._load_yaml_file(new_yf, target_filename)
                 self._set_or_raise(new_yf, new_path, node, target_filename)
-                new_yf.save()
+                self._save_yaml_file(new_yf, target_filename)
 
                 if old_yf is not None:
                     self._remove_yaml_node(old_yf, item._filename, old_path)
-                    old_yf.save()
+                    self._save_yaml_file(old_yf, item._filename)
 
                 for descendant in _flatten_with_children(item):
                     if descendant._filename not in child_files:
@@ -1715,7 +1735,7 @@ class Items:
         yf = shyaml.yamlfile(target)
         self._load_yaml_file(yf, filename)
         self._remove_yaml_node(yf, filename, path)
-        yf.save()
+        self._save_yaml_file(yf, filename)
 
     @staticmethod
     def _rewrite_sh_path_reference(text, old_path, new_path):

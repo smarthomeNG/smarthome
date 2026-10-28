@@ -193,5 +193,35 @@ class TestEmptiedContainerBranches(_MultiFileBase):
         self.assertEqual({'d'}, set(self._file_data('fb')['p']))
 
 
+class TestNullItemNodeGate(_MultiFileBase):
+    """A file written by the core never holds a live item as a null node, whatever state the file was in before."""
+
+    def setUp(self):
+        super().setUp()
+        self.sh = MockSmartHome()
+        self.sh._items_dir = self.tmpdir.name
+        self.sh._created_items_file = 'created'
+        self.items = self.sh.items
+        self.items.create_item('a', {'type': 'num'}, filename='fa')
+        self.items.create_item('a.b', {'type': 'num'}, filename='fa')
+        self.write_file('fa', 'a:\n    type: num\n    b:\n')
+
+    def _file_data(self, name):
+        with open(os.path.join(self.tmpdir.name, name + '.yaml')) as fh:
+            return YAML(typ='safe').load(fh)
+
+    def test_saving_a_file_turns_a_null_item_node_into_an_empty_item(self):
+        self.items.create_item('a.c', {'type': 'num'}, filename='fa')
+
+        self.assertEqual({}, self._file_data('fa')['a']['b'])
+
+    def test_null_attribute_values_are_left_alone(self):
+        self.write_file('fa', 'a:\n    type: num\n    name:\n    b:\n')
+
+        self.items.create_item('a.c', {'type': 'num'}, filename='fa')
+
+        self.assertIsNone(self._file_data('fa')['a']['name'])
+
+
 if __name__ == '__main__':
     unittest.main()
