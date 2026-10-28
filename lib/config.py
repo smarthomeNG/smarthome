@@ -360,6 +360,8 @@ def merge(source, destination, source_name='', dest_name='', filename='', add=No
                                 f'merge: call merge_structlists - key={key}, value={value}, destination.get(key, None)={destination.get(key, None)}'
                             )
                         destination[key] = merge_structlists(destination[key], value, key)
+                elif value in (None, 'None') and isinstance(destination.get(key), collections.OrderedDict):
+                    pass  # a null node never replaces the subtree another file defined
                 else:
                     # convert to string and remove newlines from multiline attributes
                     destination[key] = str(value).replace('\n', '')
