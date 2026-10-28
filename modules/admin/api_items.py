@@ -28,6 +28,7 @@ import cherrypy
 
 import lib.shyaml as shyaml
 from lib.item import Items
+from lib.item.items import ItemOperationBusyError
 from lib.utils import Utils
 
 import jwt
@@ -266,6 +267,8 @@ class ItemsController(RESTResource, ItemData):
             )
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
         if item is None:
             raise cherrypy.HTTPError(400, f"Item '{id}' was not created — its name collides with an existing attribute")
         return json.dumps({'result': 'ok'})
@@ -330,6 +333,8 @@ class ItemsController(RESTResource, ItemData):
             self.items.edit_item(item, config)
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
         return json.dumps({'result': 'ok'})
 
     edit.expose_resource = True
@@ -403,6 +408,8 @@ class ItemsController(RESTResource, ItemData):
             self.items.remove_item(item, persist=persist_value, recursive=recursive_value)
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
         return json.dumps({'result': 'ok'})
 
     delete.expose_resource = True
@@ -488,7 +495,10 @@ class ItemsController(RESTResource, ItemData):
 
         self.logger.info(f'ItemsController POST /api/items/{id}/remove_references')
 
-        result = self.items.remove_references(id)
+        try:
+            result = self.items.remove_references(id)
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
         return json.dumps(result)
 
     remove_references.expose_resource = True
@@ -546,6 +556,8 @@ class ItemsController(RESTResource, ItemData):
             _renamed_item, report = self.items.rename_item(item, new_path, filename=filename)
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
 
         return json.dumps({'result': 'ok', 'new_path': new_path, **report})
 
@@ -622,6 +634,8 @@ class ItemsController(RESTResource, ItemData):
             )
         except ValueError as e:
             raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
         if copied_item is None:
             raise cherrypy.HTTPError(
                 400, f"Item '{new_path}' was not created — its name collides with an existing attribute"

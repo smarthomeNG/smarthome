@@ -53,10 +53,13 @@ They can be used the following way: To call eg. **get_toplevel_items()**, use th
 """
 
 import collections
+import contextlib
 import copy
+import functools
 import logging
 import os
 import re
+import threading
 import types
 
 import lib.config
@@ -82,6 +85,57 @@ from .structs import Structs
 _items_instance = None  # Pointer to the initialized instance of the Items class (for use by static methods)
 
 _MISSING = object()  # sentinel for Items.edit_item()'s old/new config diff - None is a legitimate attribute value
+
+
+class ItemOperationBusyError(RuntimeError):
+    """Raised when a structural item operation is refused because another one is still running."""
+
+
+class _ExclusiveOperationLock:
+    """
+    Non-blocking, reentrant lock serialising the structural item operations.
+
+    A second operation from another thread is refused (ItemOperationBusyError)
+    rather than queued: an operation can run for minutes (plugin stop/run, DB
+    log reassignment), and a queued caller would hang until its request times out.
+    Nested operations of the owning thread (copy_item -> create_item,
+    rename_item -> edit_item, ...) pass through.
+    """
+
+    def __init__(self):
+        self._lock = threading.RLock()
+        self._depth = 0
+        self._running = None
+
+    @contextlib.contextmanager
+    def hold(self, description):
+        """Hold the lock for *description*, or raise ItemOperationBusyError if another thread holds it."""
+        if not self._lock.acquire(blocking=False):
+            raise ItemOperationBusyError(
+                f"Item operation '{self._running}' is still running - retry when it has finished"
+            )
+        try:
+            if self._depth == 0:
+                self._running = description
+            self._depth += 1
+            yield
+        finally:
+            self._depth -= 1
+            if self._depth == 0:
+                self._running = None
+            self._lock.release()
+
+
+def _exclusive_item_operation(method):
+    """Run an Items method under the instance's exclusive-operation lock; the first argument names the target."""
+
+    @functools.wraps(method)
+    def wrapper(self, target, *args, **kwargs):
+        target_name = target if isinstance(target, str) else target.property.path
+        with self._operation_lock.hold(f'{method.__name__}({target_name})'):
+            return method(self, target, *args, **kwargs)
+
+    return wrapper
 
 
 def _flatten_with_children(item):
@@ -158,6 +212,9 @@ class Items:
     def __init__(self, smarthome):
         self._sh = smarthome
         self.logger = logging.getLogger(__name__)
+        self._operation_lock = _ExclusiveOperationLock()
+        self._yaml_batch_files = None
+        self._yaml_batch_changed = None
 
         global _items_instance
         if _items_instance is not None:
@@ -353,6 +410,7 @@ class Items:
 
         return child
 
+    @_exclusive_item_operation
     def create_item(self, path, config, parent=None, persist=True, filename=None, create_missing_parents=False):
         """
         Create a single item at runtime and fully initialize it (and any
@@ -519,6 +577,50 @@ class Items:
         except Exception as e:
             raise ValueError(f"Could not parse '{filename}.yaml': {e}") from e
 
+    def _yaml_file_exists(self, filename):
+        """True if ``items_dir/<filename>.yaml`` exists, or is held by the running _yaml_batch()."""
+        if self._yaml_batch_files is not None and filename in self._yaml_batch_files:
+            return True
+        return shyaml.yaml_exists(os.path.join(self._sh._items_dir, filename))
+
+    def _open_yaml(self, filename):
+        """
+        Return the yamlfile for ``items_dir/<filename>.yaml``, loaded if the file exists and empty otherwise.
+        Within a _yaml_batch() every call for the same *filename* returns the same instance.
+
+        :raises ValueError: if the file fails to parse
+        """
+        batch = self._yaml_batch_files
+        if batch is not None and filename in batch:
+            return batch[filename]
+        target = os.path.join(self._sh._items_dir, filename)
+        yf = shyaml.yamlfile(target)
+        if shyaml.yaml_exists(target):
+            self._load_yaml_file(yf, filename)
+        if batch is not None:
+            batch[filename] = yf
+        return yf
+
+    @contextlib.contextmanager
+    def _yaml_batch(self):
+        """
+        Parse each yaml file once and save each changed one once for the operations run inside: _open_yaml()
+        hands out one shared instance per file and _save_yaml_file() only marks it changed. The changed files
+        are written when the outermost batch ends, also if it ends with an exception.
+        """
+        if self._yaml_batch_files is not None:
+            yield
+            return
+        self._yaml_batch_files = {}
+        self._yaml_batch_changed = set()
+        try:
+            yield
+        finally:
+            files, changed = self._yaml_batch_files, self._yaml_batch_changed
+            self._yaml_batch_files = self._yaml_batch_changed = None
+            for filename in changed:
+                files[filename].save()
+
     def _write_to_yaml_file(self, filename, path, config):
         """
         Write *config* (the original, caller-supplied dict — no internal
@@ -533,13 +635,10 @@ class Items:
         :raises ValueError: if the file cannot hold *path*, e.g. an ancestor
                             is defined there as an attribute with a value
         """
-        target = os.path.join(self._sh._items_dir, filename)
-        yf = shyaml.yamlfile(target)
-        if shyaml.yaml_exists(target):
-            self._load_yaml_file(yf, filename)
+        yf = self._open_yaml(filename)
         if not yf.setvalue(path, config):
             raise ValueError(f"Item '{path}' cannot be persisted to '{filename}.yaml': an ancestor is not an item")
-        yf.save()
+        self._save_yaml_file(yf, filename)
 
     def _rename_target_filename(self, item, new_parent_obj, new_is_top_level, filename):
         """
@@ -558,12 +657,9 @@ class Items:
         or an ancestor of *path* is defined there as an attribute with a value instead of an item.
         A missing file or missing ancestors are fine - they get created on write.
         """
-        target = os.path.join(self._sh._items_dir, filename)
-        if not shyaml.yaml_exists(target):
+        if not self._yaml_file_exists(filename):
             return
-        yf = shyaml.yamlfile(target)
-        self._load_yaml_file(yf, filename)
-        node = yf.data
+        node = self._open_yaml(filename).data
         for key in path.split('.')[:-1]:
             child = node.get(key)
             if child is None:
@@ -573,6 +669,68 @@ class Items:
                     f"Item '{path}' cannot be persisted to '{filename}.yaml': '{key}' is not an item there"
                 )
             node = child
+
+    def _move_cache_file(self, item):
+        """Move the cache file of the renamed *item* (named after its path) to its new name; a missing file is fine."""
+        if not item._cache:
+            return
+        new_cache = os.path.join(self._sh._cache_dir, item.property.path)
+        try:
+            if os.path.isfile(item._cache):
+                os.replace(item._cache, new_cache)
+        except OSError as e:
+            self.logger.warning(f"Item '{item.property.path}': cache file '{item._cache}' could not be moved: {e}")
+            return
+        item._cache = new_cache
+
+    def _save_yaml_file(self, yf, filename):
+        """Save the loaded yamlfile *yf* (``items_dir/<filename>.yaml``); inside a _yaml_batch() only mark it changed."""
+        if self._yaml_batch_files is not None and self._yaml_batch_files.get(filename) is yf:
+            self._yaml_batch_changed.add(filename)
+        else:
+            yf.save()
+
+    def _remove_yaml_node(self, yf, filename, path):
+        """
+        Remove the node at *path* from the loaded yamlfile *yf* (``items_dir/<filename>.yaml``), then the ancestors that
+        leaves empty; an ancestor that is an item defined in *filename* itself stays.
+        """
+        yf.setvalue(path, None)
+        parent = path.rpartition('.')[0]
+        while parent:
+            node = yf.getnode(parent)
+            if node is not None and (not isinstance(node, dict) or node):
+                return
+            owner = self.return_item(parent)
+            if owner is not None and owner._filename == filename:
+                return
+            yf.setvalue(parent, None)
+            parent = parent.rpartition('.')[0]
+
+    def _move_yaml_node(self, filename, old_path, new_path):
+        """Re-key the node at *old_path* in ``items_dir/<filename>.yaml`` to *new_path*; a file without that node is left alone."""
+        if not self._yaml_file_exists(filename):
+            return
+        yf = self._open_yaml(filename)
+        node = yf.getnode(old_path)
+        if node is None:
+            return
+        existing = yf.getnode(new_path)
+        if isinstance(existing, dict) and isinstance(node, dict):
+            node = self._merge_yaml_nodes(existing, node)
+        self._set_or_raise(yf, new_path, node, filename)
+        self._remove_yaml_node(yf, filename, old_path)
+        self._save_yaml_file(yf, filename)
+
+    @staticmethod
+    def _merge_yaml_nodes(base, extra):
+        """Deep-merge the mapping *extra* into the mapping *base*, which wins on conflicting leaves; returns *base*."""
+        for key, value in extra.items():
+            if isinstance(value, dict) and isinstance(base.get(key), dict):
+                Items._merge_yaml_nodes(base[key], value)
+            elif key not in base:
+                base[key] = value
+        return base
 
     @staticmethod
     def _set_or_raise(yf, path, node, filename):
@@ -600,12 +758,9 @@ class Items:
         :return: config, with existing child entries merged in
         :rtype: dict
         """
-        target = os.path.join(self._sh._items_dir, filename)
-        if not shyaml.yaml_exists(target):
+        if not self._yaml_file_exists(filename):
             return config
-        yf = shyaml.yamlfile(target)
-        self._load_yaml_file(yf, filename)
-        existing = yf.getnode(path)
+        existing = self._open_yaml(filename).getnode(path)
         if not isinstance(existing, dict):
             return config
         merged = dict(config)
@@ -629,6 +784,7 @@ class Items:
             self.__items.append(path)
         self.__item_dict[path] = item
 
+    @_exclusive_item_operation
     def edit_item(self, item, config, notify_plugins=True):
         """
         Edit an existing item's attributes at runtime, in place — preserves
@@ -809,6 +965,7 @@ class Items:
 
         return item
 
+    @_exclusive_item_operation
     def remove_item(self, item, persist=True, recursive=False):
         """
         Function to remove an item from the dictionary of items
@@ -871,6 +1028,7 @@ class Items:
         if persist and source_filename:
             self._remove_from_yaml_file(source_filename, path)
 
+    @_exclusive_item_operation
     def rename_item(self, item, new_path, filename=None):
         """
         Rename an item in place, optionally moving it to a new parent (see
@@ -937,6 +1095,11 @@ class Items:
             target_filename = self._rename_target_filename(item, new_parent_obj, new_is_top_level, filename)
             self._check_persistable(item._filename, old_path)
             self._check_persistable(target_filename, new_path)
+
+        # descendants defined in files other than the item's own keep their file; their nodes follow the new path
+        child_files = sorted({d._filename for d in _flatten_with_children(item) if d._filename} - {item._filename})
+        for child_file in child_files:
+            self._check_persistable(child_file, new_path)
 
         old_is_top_level = item._is_top_of_item_tree()
         old_parent_obj = self if old_is_top_level else item.return_parent()
@@ -1008,6 +1171,7 @@ class Items:
                 self.add_item(descendant_new_path, descendant)
 
                 descendant._init_start_scheduler()
+                self._move_cache_file(descendant)
 
                 for plugin in rename_hook_plugins:
                     try:
@@ -1028,42 +1192,32 @@ class Items:
 
         if target_filename is not None:
             if target_filename == item._filename:
-                target = os.path.join(self._sh._items_dir, item._filename)
-                if shyaml.yaml_exists(target):
-                    yf = shyaml.yamlfile(target)
-                    self._load_yaml_file(yf, item._filename)
-                    node = yf.getnode(old_path)
-                    self._set_or_raise(yf, new_path, node, item._filename)
-                    yf.setvalue(old_path, None)
-                    yf.save()
+                self._move_yaml_node(item._filename, old_path, new_path)
             else:
-                old_target = os.path.join(self._sh._items_dir, item._filename)
-                old_yf = None
-                node = None
-                if shyaml.yaml_exists(old_target):
-                    old_yf = shyaml.yamlfile(old_target)
-                    self._load_yaml_file(old_yf, item._filename)
-                    node = old_yf.getnode(old_path)
+                old_yf = self._open_yaml(item._filename) if self._yaml_file_exists(item._filename) else None
+                node = old_yf.getnode(old_path) if old_yf is not None else None
 
                 # new location first: a failing write must not have removed the old definition already
-                new_target = os.path.join(self._sh._items_dir, target_filename)
-                new_yf = shyaml.yamlfile(new_target)
-                if shyaml.yaml_exists(new_target):
-                    self._load_yaml_file(new_yf, target_filename)
+                new_yf = self._open_yaml(target_filename)
                 self._set_or_raise(new_yf, new_path, node, target_filename)
-                new_yf.save()
+                self._save_yaml_file(new_yf, target_filename)
 
                 if old_yf is not None:
-                    old_yf.setvalue(old_path, None)
-                    old_yf.save()
+                    self._remove_yaml_node(old_yf, item._filename, old_path)
+                    self._save_yaml_file(old_yf, item._filename)
 
                 for descendant in _flatten_with_children(item):
-                    descendant._filename = target_filename
+                    if descendant._filename not in child_files:
+                        descendant._filename = target_filename
+
+        for child_file in child_files:
+            self._move_yaml_node(child_file, old_path, new_path)
 
         report = self._rewrite_references(old_path, new_path)
 
         return item, report
 
+    @_exclusive_item_operation
     def copy_item(self, item, new_path, filename=None, create_missing_parents=False, include_children=True):
         """
         Copy an item to *new_path* as an independent clone — fresh
@@ -1150,13 +1304,10 @@ class Items:
         if not item._filename:
             raise ValueError(f"Item '{old_path}' cannot be copied: only persisted items can be copied")
 
-        source_target = os.path.join(self._sh._items_dir, item._filename)
-        if not shyaml.yaml_exists(source_target):
+        if not self._yaml_file_exists(item._filename):
             raise ValueError(f"Item '{old_path}' cannot be copied: source file '{item._filename}' not found")
 
-        yf = shyaml.yamlfile(source_target)
-        self._load_yaml_file(yf, item._filename)
-        node = yf.getnode(old_path)
+        node = self._open_yaml(item._filename).getnode(old_path)
         if not isinstance(node, dict):
             raise ValueError(f"Item '{old_path}' cannot be copied: no config found at its current path")
 
@@ -1539,40 +1690,44 @@ class Items:
 
         rewritten = []
         failed = []
-        for ref_item, attrs in matched_attrs.items():
-            try:
-                config = self.current_config_for_edit(ref_item)
-                for attr_name in attrs:
-                    if attr_name == 'trigger':
-                        for key in (KEY_EVAL_TRIGGER, KEY_TRIGGER):
-                            if key in config:
-                                config[key] = self._map_config_entries(
-                                    config[key],
-                                    lambda entry: self._rewrite_bare_path_reference(entry, old_path, new_path),
+        with self._yaml_batch():
+            for ref_item, attrs in matched_attrs.items():
+                try:
+                    config = self.current_config_for_edit(ref_item)
+                    for attr_name in attrs:
+                        if attr_name == 'trigger':
+                            for key in (KEY_EVAL_TRIGGER, KEY_TRIGGER):
+                                if key in config:
+                                    config[key] = self._map_config_entries(
+                                        config[key],
+                                        lambda entry: self._rewrite_bare_path_reference(entry, old_path, new_path),
+                                    )
+                        elif attr_name == 'hysteresis_input':
+                            if 'hysteresis_input' in config:
+                                config['hysteresis_input'] = self._rewrite_bare_path_reference(
+                                    config['hysteresis_input'], old_path, new_path
                                 )
-                    elif attr_name == 'hysteresis_input':
-                        if 'hysteresis_input' in config:
-                            config['hysteresis_input'] = self._rewrite_bare_path_reference(
-                                config['hysteresis_input'], old_path, new_path
-                            )
-                    elif attr_name in (
-                        'eval',
-                        'cycle',
-                        'autotimer',
-                        'hysteresis_upper_threshold',
-                        'hysteresis_lower_threshold',
-                    ):
-                        if attr_name in config:
-                            config[attr_name] = self._rewrite_sh_path_reference(config[attr_name], old_path, new_path)
-                    elif attr_name in ('on_change', 'on_update'):
-                        if attr_name in config:
-                            config[attr_name] = self._map_config_entries(
-                                config[attr_name], lambda entry: self._rewrite_on_xx_entry(entry, old_path, new_path)
-                            )
-                self.edit_item(ref_item, config)
-                rewritten.append(ref_item.property.path)
-            except Exception as e:
-                failed.append((ref_item.property.path, str(e)))
+                        elif attr_name in (
+                            'eval',
+                            'cycle',
+                            'autotimer',
+                            'hysteresis_upper_threshold',
+                            'hysteresis_lower_threshold',
+                        ):
+                            if attr_name in config:
+                                config[attr_name] = self._rewrite_sh_path_reference(
+                                    config[attr_name], old_path, new_path
+                                )
+                        elif attr_name in ('on_change', 'on_update'):
+                            if attr_name in config:
+                                config[attr_name] = self._map_config_entries(
+                                    config[attr_name],
+                                    lambda entry: self._rewrite_on_xx_entry(entry, old_path, new_path),
+                                )
+                    self.edit_item(ref_item, config)
+                    rewritten.append(ref_item.property.path)
+                except Exception as e:
+                    failed.append((ref_item.property.path, str(e)))
 
         return {'rewritten_references': rewritten, 'failed_references': failed}
 
@@ -1586,13 +1741,11 @@ class Items:
         :param filename: Basename (without extension) of the file to edit
         :param path: Full dotted path of the entry to remove
         """
-        target = os.path.join(self._sh._items_dir, filename)
-        if not shyaml.yaml_exists(target):
+        if not self._yaml_file_exists(filename):
             return
-        yf = shyaml.yamlfile(target)
-        self._load_yaml_file(yf, filename)
-        yf.setvalue(path, None)
-        yf.save()
+        yf = self._open_yaml(filename)
+        self._remove_yaml_node(yf, filename, path)
+        self._save_yaml_file(yf, filename)
 
     @staticmethod
     def _rewrite_sh_path_reference(text, old_path, new_path):
@@ -1870,11 +2023,8 @@ class Items:
         :rtype: dict
         """
         if item._filename:
-            target = os.path.join(self._sh._items_dir, item._filename)
-            if shyaml.yaml_exists(target):
-                yf = shyaml.yamlfile(target)
-                self._load_yaml_file(yf, item._filename)
-                existing = yf.getnode(item.property.path)
+            if self._yaml_file_exists(item._filename):
+                existing = self._open_yaml(item._filename).getnode(item.property.path)
                 if isinstance(existing, dict):
                     return {key: value for key, value in existing.items() if not isinstance(value, dict)}
 
@@ -1892,6 +2042,7 @@ class Items:
             config['hysteresis_input'] = item._hysteresis_input
         return config
 
+    @_exclusive_item_operation
     def remove_references(self, path):
         """
         Strip dangling unambiguous references to *path* from every other
@@ -1925,46 +2076,47 @@ class Items:
                   "skipped_ambiguous": [(item_path, attribute_name, value)]}
         :rtype: dict
         """
-        pending = {}
-        skipped = []
+        with self._yaml_batch():
+            pending = {}
+            skipped = []
 
-        for ref_item, attr_name, value, unambiguous in self.find_references(path):
-            if not unambiguous:
-                skipped.append((ref_item.property.path, attr_name, value))
-                continue
+            for ref_item, attr_name, value, unambiguous in self.find_references(path):
+                if not unambiguous:
+                    skipped.append((ref_item.property.path, attr_name, value))
+                    continue
 
-            entry = pending.setdefault(ref_item, {'config': self.current_config_for_edit(ref_item), 'attrs': set()})
-            config = entry['config']
+                entry = pending.setdefault(ref_item, {'config': self.current_config_for_edit(ref_item), 'attrs': set()})
+                config = entry['config']
 
-            if attr_name == 'trigger':
-                for key in (KEY_EVAL_TRIGGER, KEY_TRIGGER):
-                    if key not in config:
-                        continue
-                    entries = [config[key]] if isinstance(config[key], str) else config[key]
-                    remaining = [entry_path for entry_path in entries if entry_path != path]
-                    if len(remaining) == len(entries):
-                        continue
+                if attr_name == 'trigger':
+                    for key in (KEY_EVAL_TRIGGER, KEY_TRIGGER):
+                        if key not in config:
+                            continue
+                        entries = [config[key]] if isinstance(config[key], str) else config[key]
+                        remaining = [entry_path for entry_path in entries if entry_path != path]
+                        if len(remaining) == len(entries):
+                            continue
+                        if remaining:
+                            config[key] = remaining
+                        else:
+                            config.pop(key)
+                elif attr_name == 'hysteresis_input':
+                    config.pop('hysteresis_input', None)
+                elif attr_name in ('on_change', 'on_update'):
+                    remaining = [text for text in config.get(attr_name, []) if text != value]
                     if remaining:
-                        config[key] = remaining
+                        config[attr_name] = remaining
                     else:
-                        config.pop(key)
-            elif attr_name == 'hysteresis_input':
-                config.pop('hysteresis_input', None)
-            elif attr_name in ('on_change', 'on_update'):
-                remaining = [text for text in config.get(attr_name, []) if text != value]
-                if remaining:
-                    config[attr_name] = remaining
+                        config.pop(attr_name, None)
                 else:
                     config.pop(attr_name, None)
-            else:
-                config.pop(attr_name, None)
 
-            entry['attrs'].add(attr_name)
+                entry['attrs'].add(attr_name)
 
-        removed = []
-        for ref_item, entry in pending.items():
-            self.edit_item(ref_item, entry['config'])
-            removed.append((ref_item.property.path, sorted(entry['attrs'])))
+            removed = []
+            for ref_item, entry in pending.items():
+                self.edit_item(ref_item, entry['config'])
+                removed.append((ref_item.property.path, sorted(entry['attrs'])))
 
         return {'removed': removed, 'skipped_ambiguous': skipped}
 
