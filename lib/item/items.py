@@ -535,9 +535,28 @@ class Items:
         yf = shyaml.yamlfile(target)
         if shyaml.yaml_exists(target):
             self._load_yaml_file(yf, filename)
-        if not yf.setvalue(path, config):
+        if not self._set_mapping_in_place(yf, path, config):
             raise ValueError(f"Item '{path}' cannot be persisted to '{filename}.yaml': an ancestor is not an item")
         yf.save()
+
+    @staticmethod
+    def _set_mapping_in_place(yf, path, config):
+        """
+        Set the mapping at *path* in the loaded yamlfile *yf* to *config*. An existing mapping is
+        edited in place - keys missing from *config* are removed, the others assigned - so the
+        remaining keys keep their position, inline comments and following blank lines. Without an
+        existing mapping at *path* this is ``yf.setvalue()``.
+
+        :return: False if an ancestor of *path* is not an item, True otherwise
+        """
+        existing = yf.getnode(path)
+        if not isinstance(existing, dict):
+            return yf.setvalue(path, config)
+        for key in [key for key in existing if key not in config]:
+            del existing[key]
+        for key, value in config.items():
+            existing[key] = value
+        return True
 
     def _rename_target_filename(self, item, new_parent_obj, new_is_top_level, filename):
         """

@@ -516,6 +516,33 @@ class TestEditItemPersists(unittest.TestCase):
         data = self._read_file('created')
         self.assertNotIn('remark', data['target'])
 
+    def test_edit_item_keeps_comments_and_blank_lines_of_the_file(self):
+        text = (
+            '%YAML 1.1\n---\n'
+            'grp:\n'
+            '    a:\n'
+            '        type: num\n'
+            '        eval: 1\n'
+            '\n'
+            '    # about b\n'
+            '    b:\n'
+            '        type: num\n'
+            '        remark: old  # note\n'
+            '\n'
+            '    c:\n'
+            '        type: num\n'
+        )
+        with open(os.path.join(self.tmpdir.name, 'f.yaml'), 'w') as handle:
+            handle.write(text)
+        for path in ('grp', 'grp.a', 'grp.b', 'grp.c'):
+            self.sh.items.create_item(path, {'type': 'num'}, persist=False)._filename = 'f'
+
+        self.sh.items.edit_item(self.sh.items.return_item('grp.b'), {'type': 'num', 'remark': 'new'})
+
+        with open(os.path.join(self.tmpdir.name, 'f.yaml')) as handle:
+            result = handle.read()
+        self.assertEqual(result, text.replace('remark: old  # note', 'remark: new  # note'))
+
     def test_edit_item_preserves_childs_yaml_entry(self):
         self.sh.items.create_item('parent', {'type': 'num', 'eval': '1', 'child': {'type': 'str'}}, persist=True)
         parent = self.sh.items.return_item('parent')
