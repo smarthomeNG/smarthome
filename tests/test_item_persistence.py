@@ -233,12 +233,8 @@ class TestRemoveItemRecursive(_Base):
         # 'parent' was the only entry in parentfile - it's now empty and
         # gets deleted rather than left behind as a redundant '{}' doc.
         self.assertFalse(os.path.isfile(self._file_path('parentfile')))
-        # childfile only ever held the nested 'parent.child' path — 'parent'
-        # itself is just a structural bridge here, never a real item entry
-        # in this file, so removing the nested path value.setvalue(None)s it
-        # rather than removing the 'parent' key outright (same shyaml
-        # behavior as a nested-path edit anywhere else in this codebase).
-        self.assertIsNone(self._read_file('childfile').get('parent'))
+        # childfile only held 'parent' as a container for 'parent.child' - it goes with the child
+        self.assertFalse(os.path.isfile(self._file_path('childfile')))
 
     def test_removing_recursively_with_persist_false_writes_nothing(self):
         self.sh.items.create_item('parent', {'type': 'num', 'child': {'type': 'num'}})

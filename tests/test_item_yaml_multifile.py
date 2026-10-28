@@ -11,6 +11,8 @@ import sys
 import tempfile
 import unittest
 
+from ruamel.yaml import YAML
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import tests.common as common
@@ -37,14 +39,19 @@ def _reset():
     lib.plugin.Plugins._plugins = []
 
 
-def load_item_paths(items_dir):
-    """Load *items_dir* into a fresh Items instance and return the sorted paths of all loaded items."""
+def load_item_types(items_dir):
+    """Load *items_dir* into a fresh Items instance and return {path: type} of all loaded items."""
     _reset()
     sh = MockSmartHome()
     sh._items_dir = items_dir
     with tempfile.TemporaryDirectory() as empty:
         sh.items.load_itemdefinitions(empty + os.sep, items_dir + os.sep, empty, empty)
-    return sorted(item.property.path for item in sh.items.return_items())
+    return {item.property.path: item.type() for item in sh.items.return_items()}
+
+
+def load_item_paths(items_dir):
+    """Like load_item_types(), but only the sorted paths."""
+    return sorted(load_item_types(items_dir))
 
 
 class _MultiFileBase(unittest.TestCase):
@@ -75,6 +82,115 @@ class TestLoadingNullNodes(_MultiFileBase):
         self.write_file('fz', self.DEFINITION)
 
         self.assertEqual(['a', 'a.b', 'a.b.x'], load_item_paths(self.tmpdir.name))
+
+
+class TestRenameWithChildrenInOtherFiles(_MultiFileBase):
+    """An item's children may be defined in other files than the item itself; a rename must carry them along."""
+
+    def setUp(self):
+        super().setUp()
+        self.sh = MockSmartHome()
+        self.sh._items_dir = self.tmpdir.name
+        self.sh._created_items_file = 'created'
+        self.items = self.sh.items
+        self.items.create_item('p', {'type': 'num'}, filename='fa')
+        self.items.create_item('p.c', {'type': 'num'}, filename='fb')
+        self.items.create_item('p.c.g', {'type': 'num'}, filename='fb')
+        self.items.create_item('t', {'type': 'num'}, filename='fa')
+
+    def _live_paths(self):
+        return sorted(item.property.path for item in self.items.return_items())
+
+    def _live_types(self):
+        return {item.property.path: item.type() for item in self.items.return_items()}
+
+    def test_rename_keeps_the_tree_reloadable_when_children_live_in_another_file(self):
+        self.items.rename_item(self.items.return_item('p'), 'q')
+
+        self.assertEqual(['q', 'q.c', 'q.c.g', 't'], self._live_paths())
+        self.assertEqual(self._live_types(), load_item_types(self.tmpdir.name))
+
+    def test_move_under_another_parent_keeps_the_tree_reloadable(self):
+        self.items.rename_item(self.items.return_item('p'), 't.p')
+
+        self.assertEqual(['t', 't.p', 't.p.c', 't.p.c.g'], self._live_paths())
+        self.assertEqual(self._live_types(), load_item_types(self.tmpdir.name))
+
+    def test_rename_into_another_file_leaves_the_children_in_their_own_file(self):
+        self.items.rename_item(self.items.return_item('p'), 'q', filename='fz')
+
+        self.assertEqual('fz', self.items.return_item('q')._filename)
+        self.assertEqual('fb', self.items.return_item('q.c')._filename)
+        self.assertEqual(self._live_types(), load_item_types(self.tmpdir.name))
+
+    def test_rename_into_the_file_that_holds_the_children_keeps_both_nodes(self):
+        self.items.rename_item(self.items.return_item('p'), 'q', filename='fb')
+
+        self.assertEqual(['q', 'q.c', 'q.c.g', 't'], self._live_paths())
+        self.assertEqual(self._live_types(), load_item_types(self.tmpdir.name))
+
+
+class TestRemovingTheLastChild(_MultiFileBase):
+    """The parent of a moved or removed last child stays an item, in the live tree and after a reload."""
+
+    def setUp(self):
+        super().setUp()
+        self.sh = MockSmartHome()
+        self.sh._items_dir = self.tmpdir.name
+        self.sh._created_items_file = 'created'
+        self.items = self.sh.items
+        self.items.create_item('a', {}, filename='fa')
+        self.items.create_item('a.b', {'type': 'num'}, filename='fa')
+
+    def test_moving_the_last_child_away_keeps_the_parent_after_a_reload(self):
+        self.items.rename_item(self.items.return_item('a.b'), 'c')
+
+        self.assertEqual(['a', 'c'], load_item_paths(self.tmpdir.name))
+
+    def test_removing_the_last_child_keeps_the_parent_after_a_reload(self):
+        self.items.remove_item(self.items.return_item('a.b'))
+
+        self.assertEqual(['a'], load_item_paths(self.tmpdir.name))
+
+
+class TestEmptiedContainerBranches(_MultiFileBase):
+    """A file only holds ancestors of a moved or removed item as containers; those go with it, unless an item is defined there."""
+
+    def setUp(self):
+        super().setUp()
+        self.sh = MockSmartHome()
+        self.sh._items_dir = self.tmpdir.name
+        self.sh._created_items_file = 'created'
+        self.items = self.sh.items
+        self.items.create_item('p', {'type': 'num'}, filename='fa')
+        self.items.create_item('p.c', {'type': 'num'}, filename='fb')
+        self.items.create_item('t', {'type': 'num'}, filename='fa')
+
+    def _file_data(self, name):
+        path = os.path.join(self.tmpdir.name, name + '.yaml')
+        if not os.path.isfile(path):
+            return {}
+        with open(path) as fh:
+            return YAML(typ='safe').load(fh) or {}
+
+    def test_moving_the_child_away_removes_the_containers_it_leaves_empty(self):
+        self.items.rename_item(self.items.return_item('p.c'), 't.c')
+
+        self.assertNotIn('p', self._file_data('fb'))
+        self.assertEqual({'p': 'num', 't': 'num', 't.c': 'num'}, load_item_types(self.tmpdir.name))
+
+    def test_removing_the_child_removes_the_containers_it_leaves_empty(self):
+        self.items.remove_item(self.items.return_item('p.c'))
+
+        self.assertNotIn('p', self._file_data('fb'))
+        self.assertEqual({'p': 'num', 't': 'num'}, load_item_types(self.tmpdir.name))
+
+    def test_container_branch_of_a_file_that_still_holds_siblings_stays(self):
+        self.items.create_item('p.d', {'type': 'num'}, filename='fb')
+
+        self.items.rename_item(self.items.return_item('p.c'), 't.c')
+
+        self.assertEqual({'d'}, set(self._file_data('fb')['p']))
 
 
 if __name__ == '__main__':

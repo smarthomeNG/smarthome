@@ -642,9 +642,9 @@ class yamlfile:
                 node = self.getnode(get_parent(parent_path))
                 root = node is None
                 if root:
-                    self.data[get_key(parent_path)] = None
+                    self.data[get_key(parent_path)] = CommentedMap()
                 else:
-                    node[get_key(parent_path)] = None
+                    node[get_key(parent_path)] = CommentedMap()
             return
         else:
             return self._add_node_and_leaf(path, value)

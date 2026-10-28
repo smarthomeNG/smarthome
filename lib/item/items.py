@@ -647,6 +647,50 @@ class Items:
                 )
             node = child
 
+    def _remove_yaml_node(self, yf, filename, path):
+        """
+        Remove the node at *path* from the loaded yamlfile *yf* (``items_dir/<filename>.yaml``), then the ancestors that
+        leaves empty; an ancestor that is an item defined in *filename* itself stays.
+        """
+        yf.setvalue(path, None)
+        parent = path.rpartition('.')[0]
+        while parent:
+            node = yf.getnode(parent)
+            if not isinstance(node, dict) or node:
+                return
+            owner = self.return_item(parent)
+            if owner is not None and owner._filename == filename:
+                return
+            yf.setvalue(parent, None)
+            parent = parent.rpartition('.')[0]
+
+    def _move_yaml_node(self, filename, old_path, new_path):
+        """Re-key the node at *old_path* in ``items_dir/<filename>.yaml`` to *new_path*; a file without that node is left alone."""
+        target = os.path.join(self._sh._items_dir, filename)
+        if not shyaml.yaml_exists(target):
+            return
+        yf = shyaml.yamlfile(target)
+        self._load_yaml_file(yf, filename)
+        node = yf.getnode(old_path)
+        if node is None:
+            return
+        existing = yf.getnode(new_path)
+        if isinstance(existing, dict) and isinstance(node, dict):
+            node = self._merge_yaml_nodes(existing, node)
+        self._set_or_raise(yf, new_path, node, filename)
+        self._remove_yaml_node(yf, filename, old_path)
+        yf.save()
+
+    @staticmethod
+    def _merge_yaml_nodes(base, extra):
+        """Deep-merge the mapping *extra* into the mapping *base*, which wins on conflicting leaves; returns *base*."""
+        for key, value in extra.items():
+            if isinstance(value, dict) and isinstance(base.get(key), dict):
+                Items._merge_yaml_nodes(base[key], value)
+            elif key not in base:
+                base[key] = value
+        return base
+
     @staticmethod
     def _set_or_raise(yf, path, node, filename):
         """Set *node* at *path* in the loaded yamlfile *yf*, raising ValueError if the file cannot hold it; None writes nothing."""
@@ -1014,6 +1058,11 @@ class Items:
             self._check_persistable(item._filename, old_path)
             self._check_persistable(target_filename, new_path)
 
+        # descendants defined in files other than the item's own keep their file; their nodes follow the new path
+        child_files = sorted({d._filename for d in _flatten_with_children(item) if d._filename} - {item._filename})
+        for child_file in child_files:
+            self._check_persistable(child_file, new_path)
+
         old_is_top_level = item._is_top_of_item_tree()
         old_parent_obj = self if old_is_top_level else item.return_parent()
         old_leaf_attr = old_path.rsplit('.', 1)[-1]
@@ -1104,14 +1153,7 @@ class Items:
 
         if target_filename is not None:
             if target_filename == item._filename:
-                target = os.path.join(self._sh._items_dir, item._filename)
-                if shyaml.yaml_exists(target):
-                    yf = shyaml.yamlfile(target)
-                    self._load_yaml_file(yf, item._filename)
-                    node = yf.getnode(old_path)
-                    self._set_or_raise(yf, new_path, node, item._filename)
-                    yf.setvalue(old_path, None)
-                    yf.save()
+                self._move_yaml_node(item._filename, old_path, new_path)
             else:
                 old_target = os.path.join(self._sh._items_dir, item._filename)
                 old_yf = None
@@ -1130,11 +1172,15 @@ class Items:
                 new_yf.save()
 
                 if old_yf is not None:
-                    old_yf.setvalue(old_path, None)
+                    self._remove_yaml_node(old_yf, item._filename, old_path)
                     old_yf.save()
 
                 for descendant in _flatten_with_children(item):
-                    descendant._filename = target_filename
+                    if descendant._filename not in child_files:
+                        descendant._filename = target_filename
+
+        for child_file in child_files:
+            self._move_yaml_node(child_file, old_path, new_path)
 
         report = self._rewrite_references(old_path, new_path)
 
@@ -1668,7 +1714,7 @@ class Items:
             return
         yf = shyaml.yamlfile(target)
         self._load_yaml_file(yf, filename)
-        yf.setvalue(path, None)
+        self._remove_yaml_node(yf, filename, path)
         yf.save()
 
     @staticmethod
