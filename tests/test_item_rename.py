@@ -17,6 +17,7 @@ import tests.common as common
 
 common.register_shng_log_levels()
 
+import lib.item.helpers
 import lib.item.item
 import lib.item.items
 import lib.plugin
@@ -212,6 +213,47 @@ class _PersistedBase(unittest.TestCase):
         yf = shyaml.yamlfile(os.path.join(self.tmpdir.name, filename))
         yf.load()
         return yf.data
+
+
+class TestRenameItemMovesCacheFile(_PersistedBase):
+    """A cached item keeps its cached value across a rename: the cache file is named after the item path."""
+
+    def setUp(self):
+        super().setUp()
+        self.cache_dir = os.path.join(self.tmpdir.name, 'cache') + os.sep
+        os.makedirs(self.cache_dir)
+        self.sh._cache_dir = self.cache_dir
+
+    def _cache_files(self):
+        return sorted(os.listdir(self.cache_dir))
+
+    def test_rename_moves_the_cache_file_of_the_item_and_of_its_children(self):
+        item = self.sh.items.create_item(
+            'old', {'type': 'num', 'cache': 'yes', 'child': {'type': 'num', 'cache': 'yes'}}
+        )
+        self.assertEqual(['old', 'old.child'], self._cache_files())
+
+        self.sh.items.rename_item(item, 'new')
+
+        self.assertEqual(['new', 'new.child'], self._cache_files())
+
+    def test_value_set_after_the_rename_is_cached_under_the_new_path(self):
+        item = self.sh.items.create_item('old', {'type': 'num', 'cache': 'yes'})
+        self.sh.items.rename_item(item, 'new')
+
+        item(43)
+
+        cache_time, cached = lib.item.helpers.cache_read(os.path.join(self.cache_dir, 'new'), item.shtime.tzinfo())
+        self.assertEqual(43, cached)
+
+    def test_rename_keeps_the_cached_value_for_the_next_start(self):
+        item = self.sh.items.create_item('old', {'type': 'num', 'cache': 'yes'})
+        item(7)
+
+        self.sh.items.rename_item(item, 'new')
+
+        cache_time, cached = lib.item.helpers.cache_read(os.path.join(self.cache_dir, 'new'), item.shtime.tzinfo())
+        self.assertEqual(7, cached)
 
 
 class TestRenameItemPersists(_PersistedBase):

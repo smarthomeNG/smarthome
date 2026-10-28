@@ -647,6 +647,19 @@ class Items:
                 )
             node = child
 
+    def _move_cache_file(self, item):
+        """Move the cache file of the renamed *item* (named after its path) to its new name; a missing file is fine."""
+        if not item._cache:
+            return
+        new_cache = os.path.join(self._sh._cache_dir, item.property.path)
+        try:
+            if os.path.isfile(item._cache):
+                os.replace(item._cache, new_cache)
+        except OSError as e:
+            self.logger.warning(f"Item '{item.property.path}': cache file '{item._cache}' could not be moved: {e}")
+            return
+        item._cache = new_cache
+
     def _save_yaml_file(self, yf, filename):
         """Save the loaded yamlfile *yf* (``items_dir/<filename>.yaml``); a live item stored as a null node becomes an empty item first."""
         self._null_item_nodes_to_empty(yf.data, '', filename)
@@ -1153,6 +1166,7 @@ class Items:
                 self.add_item(descendant_new_path, descendant)
 
                 descendant._init_start_scheduler()
+                self._move_cache_file(descendant)
 
                 for plugin in rename_hook_plugins:
                     try:
