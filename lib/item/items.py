@@ -61,10 +61,17 @@ import lib.config
 import lib.utils
 import lib.shyaml as shyaml
 
-from lib.constants import ITEM_DEFAULTS, PLUGIN_PARSE_ITEM, PLUGIN_REMOVE_ITEM, PLUGIN_RENAME_ITEM
+from lib.constants import (
+    ITEM_DEFAULTS,
+    KEY_EVAL_TRIGGER,
+    KEY_TRIGGER,
+    PLUGIN_PARSE_ITEM,
+    PLUGIN_REMOVE_ITEM,
+    PLUGIN_RENAME_ITEM,
+)
 from lib.item._internal._lifecycle import _detach_from_other_items_triggers, _remove_scheduler_jobs, _stop_fading
 from lib.item._internal._parsing import check_item_name_collision
-from lib.item._internal._pathresolution import get_absolutepath
+from lib.item._internal._pathresolution import get_absolutepath, split_destitem_from_value
 
 from .item import Item
 from .structs import Structs
@@ -1535,10 +1542,12 @@ class Items:
                 config = self.current_config_for_edit(ref_item)
                 for attr_name in attrs:
                     if attr_name == 'trigger':
-                        config['trigger'] = [
-                            self._rewrite_bare_path_reference(entry, old_path, new_path)
-                            for entry in config.get('trigger', [])
-                        ]
+                        for key in (KEY_EVAL_TRIGGER, KEY_TRIGGER):
+                            if key in config:
+                                config[key] = self._map_config_entries(
+                                    config[key],
+                                    lambda entry: self._rewrite_bare_path_reference(entry, old_path, new_path),
+                                )
                     elif attr_name == 'hysteresis_input':
                         if 'hysteresis_input' in config:
                             config['hysteresis_input'] = self._rewrite_bare_path_reference(
@@ -1555,10 +1564,9 @@ class Items:
                             config[attr_name] = self._rewrite_sh_path_reference(config[attr_name], old_path, new_path)
                     elif attr_name in ('on_change', 'on_update'):
                         if attr_name in config:
-                            config[attr_name] = [
-                                self._rewrite_sh_path_reference(entry, old_path, new_path)
-                                for entry in config[attr_name]
-                            ]
+                            config[attr_name] = self._map_config_entries(
+                                config[attr_name], lambda entry: self._rewrite_on_xx_entry(entry, old_path, new_path)
+                            )
                 self.edit_item(ref_item, config)
                 rewritten.append(ref_item.property.path)
             except Exception as e:
@@ -1641,6 +1649,53 @@ class Items:
         if value.startswith(old_path + '.'):
             return new_path + value[len(old_path) :]
         return value
+
+    @staticmethod
+    def _map_config_entries(value, rewrite):
+        """
+        Apply *rewrite* to a config attribute that is either a single string
+        or a list of strings, returning the same shape (a string stays a
+        string, a list stays a list).
+
+        :param value: The attribute value from an item's config
+        :param rewrite: Function mapping one entry to its replacement
+        :type value: str | list
+        :type rewrite: callable
+
+        :return: value with *rewrite* applied to every entry
+        :rtype: str | list
+        """
+        if isinstance(value, str):
+            return rewrite(value)
+        return [rewrite(entry) for entry in value]
+
+    @staticmethod
+    def _rewrite_on_xx_entry(entry, old_path, new_path):
+        """
+        Repoint one ``on_change``/``on_update`` entry (``[dest =] expr``) at
+        a renamed item: the optional destination is a bare item path
+        (``sh.`` prefix allowed), the expression holds ``sh.<path>``
+        references. Whitespace around the ``=`` is kept.
+
+        :param entry: The config text of one on_change/on_update entry
+        :param old_path: The path being renamed away from
+        :param new_path: The path being renamed to
+        :type entry: str
+        :type old_path: str
+        :type new_path: str
+
+        :return: entry with destination and expression repointed
+        :rtype: str
+        """
+        dest, _ = split_destitem_from_value(entry)
+        if not dest:
+            return Items._rewrite_sh_path_reference(entry, old_path, new_path)
+
+        head, separator, tail = entry.partition('=')
+        dest = head.strip()
+        sh_prefix = 'sh.' if dest.startswith('sh.') else ''
+        new_dest = sh_prefix + Items._rewrite_bare_path_reference(dest[len(sh_prefix) :], old_path, new_path)
+        return head.replace(dest, new_dest, 1) + separator + Items._rewrite_sh_path_reference(tail, old_path, new_path)
 
     def find_references(self, path):
         """
@@ -1753,9 +1808,10 @@ class Items:
         are yielded under the same attribute_name, since the raw config
         value being rewritten is one string either way.
 
-        Only string values are yielded: cycle/autotimer parts set at
-        runtime (``item.autotimer(60, 1)``) hold numbers, which cannot
-        contain a reference.
+        on_change/on_update contribute both the expressions and the
+        ``dest =`` destination paths. Only string values are yielded:
+        cycle/autotimer parts set at runtime (``item.autotimer(60, 1)``)
+        hold numbers, which cannot contain a reference.
         """
         scalars = (
             ('eval', item._eval),
@@ -1769,7 +1825,13 @@ class Items:
             ('hysteresis_lower_threshold', item._hysteresis_lower_threshold),
             ('hysteresis_lower_threshold', item._hysteresis_lower_timer),
         )
-        lists = (('on_change', item._on_change), ('on_update', item._on_update), ('trigger', item._trigger))
+        lists = (
+            ('on_change', item._on_change),
+            ('on_change', item._on_change_dest_var),
+            ('on_update', item._on_update),
+            ('on_update', item._on_update_dest_var),
+            ('trigger', item._trigger),
+        )
         pairs = list(scalars)
         for attr_name, texts in lists:
             pairs.extend((attr_name, text) for text in texts or [])
@@ -1873,11 +1935,17 @@ class Items:
             config = entry['config']
 
             if attr_name == 'trigger':
-                remaining = [entry_path for entry_path in config.get('trigger', []) if entry_path != path]
-                if remaining:
-                    config['trigger'] = remaining
-                else:
-                    config.pop('trigger', None)
+                for key in (KEY_EVAL_TRIGGER, KEY_TRIGGER):
+                    if key not in config:
+                        continue
+                    entries = [config[key]] if isinstance(config[key], str) else config[key]
+                    remaining = [entry_path for entry_path in entries if entry_path != path]
+                    if len(remaining) == len(entries):
+                        continue
+                    if remaining:
+                        config[key] = remaining
+                    else:
+                        config.pop(key)
             elif attr_name == 'hysteresis_input':
                 config.pop('hysteresis_input', None)
             elif attr_name in ('on_change', 'on_update'):

@@ -174,7 +174,7 @@ class TestRenameItemRekeysScheduler(_Base):
         self.assertIn('items.cynew', self.recorder.added_names())
 
 
-class TestRenameItemPersists(unittest.TestCase):
+class _PersistedBase(unittest.TestCase):
     def setUp(self):
         _reset()
         self.tmpdir = tempfile.TemporaryDirectory()
@@ -193,6 +193,8 @@ class TestRenameItemPersists(unittest.TestCase):
         yf.load()
         return yf.data
 
+
+class TestRenameItemPersists(_PersistedBase):
     def test_rename_moves_the_yaml_node_to_the_new_path(self):
         item = self.sh.items.create_item('old', {'type': 'num', 'eval': '1', 'child': {'type': 'num'}}, persist=True)
 
@@ -502,6 +504,49 @@ class TestRenameItemRewritesReferences(_Base):
 
         self.sh.items.rename_item(target, 'new')
         self.assertEqual(source._eval, 'sh.new() + sh.other()')
+
+
+class TestRenameItemRewritesPersistedReferences(_PersistedBase):
+    def _create(self, path, config):
+        return self.sh.items.create_item(path, {'type': 'num', **config}, persist=True, filename='f')
+
+    def test_eval_trigger_string_is_rewritten_in_the_yaml(self):
+        target = self._create('old', {})
+        self._create('source', {'eval': '1', 'eval_trigger': 'old'})
+
+        self.sh.items.rename_item(target, 'new')
+
+        source = self._read_file('f')['source']
+        self.assertEqual(source['eval_trigger'], 'new')
+        self.assertNotIn('trigger', source)
+
+    def test_eval_trigger_list_rewrites_only_matching_entries(self):
+        target = self._create('old', {'child': {'type': 'num'}})
+        self._create('other', {})
+        source = self._create('source', {'eval': '1', 'eval_trigger': ['other', 'old.child']})
+
+        self.sh.items.rename_item(target, 'new')
+
+        self.assertEqual(self._read_file('f')['source']['eval_trigger'], ['other', 'new.child'])
+        self.assertEqual(source._trigger, ['other', 'new.child'])
+
+    def test_on_change_destination_is_rewritten_in_the_yaml(self):
+        target = self._create('old', {})
+        self._create('source', {'on_change': ['old = value * 2', 'sh.old.child = sh.old() + 1']})
+
+        self.sh.items.rename_item(target, 'new')
+
+        self.assertEqual(
+            self._read_file('f')['source']['on_change'], ['new = value * 2', 'sh.new.child = sh.new() + 1']
+        )
+
+    def test_on_change_string_form_is_rewritten_as_a_whole(self):
+        target = self._create('old', {})
+        self._create('source', {'on_update': 'old = value'})
+
+        self.sh.items.rename_item(target, 'new')
+
+        self.assertEqual(self._read_file('f')['source']['on_update'], 'new = value')
 
 
 class TestRenameItemPluginHookFailureIsBestEffort(_Base):

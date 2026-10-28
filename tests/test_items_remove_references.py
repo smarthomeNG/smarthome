@@ -69,6 +69,31 @@ class TestRemoveReferencesStripsTriggerEntry(_PersistedBase):
         self.assertEqual(result, {'removed': [('source', ['trigger'])], 'skipped_ambiguous': []})
 
 
+class TestRemoveReferencesStripsEvalTriggerKey(_PersistedBase):
+    def test_remove_references_drops_target_from_eval_trigger_list(self):
+        self.sh.items.create_item('target', {'type': 'num'}, persist=True)
+        self.sh.items.create_item('other', {'type': 'num'}, persist=True)
+        self.sh.items.create_item(
+            'source', {'type': 'num', 'eval': '2', 'eval_trigger': ['target', 'other']}, persist=True
+        )
+
+        self.sh.items.remove_references('target')
+
+        data = self._read_file('created')['source']
+        self.assertEqual(data['eval_trigger'], ['other'])
+        self.assertNotIn('trigger', data)
+
+    def test_remove_references_drops_the_eval_trigger_key_when_a_string_matches(self):
+        self.sh.items.create_item('target', {'type': 'num'}, persist=True)
+        self.sh.items.create_item('source', {'type': 'num', 'eval': '2', 'eval_trigger': 'target'}, persist=True)
+
+        self.sh.items.remove_references('target')
+
+        data = self._read_file('created')['source']
+        self.assertNotIn('eval_trigger', data)
+        self.assertNotIn('trigger', data)
+
+
 class TestRemoveReferencesClearsHysteresisInput(_PersistedBase):
     def test_remove_references_clears_hysteresis_input(self):
         self.sh.items.create_item('target', {'type': 'num', 'eval': '1'}, persist=True)
