@@ -69,6 +69,16 @@ class LeaveLogic(Exception):
     pass  # declare a label for 'raise LeaveLogic'
 
 
+def _leave_logic(code=None):
+    """
+    ``exit()`` / ``quit()`` inside a logic: end the current run of the logic.
+
+    Replaces the builtins of the site module, which close ``sys.stdin`` of the whole process before they
+    raise SystemExit. Closing blocks while another thread reads stdin.
+    """
+    raise SystemExit(code)
+
+
 class TaskCancelled(BaseException):
     """
     Raised inside a running logic whose cancellation was requested.
@@ -1289,6 +1299,7 @@ class Scheduler(threading.Thread):
                     logic_globals['trigger'] = trigger  # logic.trigger_dict
                     logic_globals['logic'] = logic
                     logic_globals['logics'] = logic._logics
+                    logic_globals['exit'] = logic_globals['quit'] = _leave_logic
 
                     # execute logic
                     logger.debug(f'Getriggert durch: {trigger}')
