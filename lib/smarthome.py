@@ -373,6 +373,7 @@ class SmartHome:
         # check / set legacy_instance option from config file
         self._legacy_instances = lib.utils.Utils.to_bool(self._legacy_instances, False)
         self._allow_system_power = lib.utils.Utils.to_bool(self._allow_system_power, False)
+        self._threadinfo_export = lib.utils.Utils.to_bool(self._threadinfo_export, False)
 
         #############################################################
         # check / set config_etc option from cmdline or config file
@@ -727,9 +728,10 @@ class SmartHome:
         - plugin.yaml
         - module.yaml
         - logic.yaml
+        - holidays.yaml
 
         """
-        configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'admin', 'smarthome']
+        configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'smarthome']
 
         for c in configs:
             default = os.path.join(self._templates_dir, c + YAML_FILE + DEFAULT_FILE)
@@ -752,11 +754,11 @@ class SmartHome:
         logsetup = self.logs.configure_logging()
 
         if logsetup is not True:
-            conf_basename = self._log_conf_basename + YAML_FILE + '.default'
+            default_conf = os.path.join(self._templates_dir, BASE_LOG + YAML_FILE + DEFAULT_FILE)
             print('       Trying default logging configuration from:')
-            print(f'       {conf_basename}')
+            print(f'       {default_conf}')
             print()
-            if not self.logs.configure_logging('logging.yaml.default'):
+            if self.logs.configure_logging(default_conf) is not True:
                 print('ABORTING')
                 print()
                 exit(1)

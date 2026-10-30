@@ -77,29 +77,13 @@ function print_installed_pythonversions() {
 }
 
 function get_pythonversion_for_shng() {
-    if [ "`which python3.11`" != "" ]; then
-        echo 3.11
-    else
-        if [ "`which python3.12`" != "" ]; then
-            echo 3.12
-        else
-            if [ "`which python3.10`" != "" ]; then
-                echo 3.10
-            else
-                if [ "`which python3.9`" != "" ]; then
-                    echo 3.9
-                else
-                    if [ "`which python3.13`" != "" ]; then
-                        echo 3.13
-                    else
-                        if [ "`which python3.14`" != "" ]; then
-                            echo 3.14
-                        fi
-                    fi
-                fi
-            fi
+    # Python 3.11 is the minimum version for SmartHomeNG
+    for v in 3.11 3.12 3.13 3.14; do
+        if [ "`which python$v`" != "" ]; then
+            echo $v
+            return
         fi
-    fi
+    done
 }
 
 echo "Checking Python installation(s)..."

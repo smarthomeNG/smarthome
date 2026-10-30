@@ -68,8 +68,9 @@ in the next major release.
 
 Plugins *(decided)*: a plugin with `state: deprecated` (replaced by something else) or `state: defunct`
 (does not work anymore, e.g. its library supports no Python version SmartHomeNG runs on) is still
-loaded with a logged warning and removed from the plugins repository with the next minor or major
-release.
+loaded with a logged warning and removed from the plugins repository with the minor or major release
+that follows the first release shipping it in that state (e.g. defunct in 2.0, removed in 2.1), so users
+get one release to adjust their configuration.
 
 Releases before 2.0.0 are not reclassified.
 

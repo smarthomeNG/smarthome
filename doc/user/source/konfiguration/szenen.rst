@@ -21,9 +21,6 @@ Seit SmartHomeNG v1.4 werden folgende Features für Szenen unterstützt:
 - Für Szenen Aktionen in denen ein absoluter Wert angegeben wird, wird bei Verwendung des neuen Dateiformats das
   Lernen (analog zu KNX Szenen) unterstützt
 
-Das alte Dateiformat (.conf)  von smarthome.py wird weiterhin unterstützt. Allerdings gibt es in diesem Dateiformat
-keine Unterstützung für die neueren Features.
-
 Die Nutzung der neuen Features ist unter :doc:`Konfiguation/Konfigurationsdateien/scenes/\*.yaml <./konfigurationsdateien/scenes>`
 beschrieben. Zu beachten ist, dass die Konfigurationsdateien für Szenen nur eingelesen werden, wenn ein Item **pfad.item**
 des Typs **scene** definiert ist und die Szenen-Datei ``pfad.item.yaml`` benannt ist.

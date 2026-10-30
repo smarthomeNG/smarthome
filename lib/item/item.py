@@ -229,12 +229,7 @@ class Item:
             _items_instance = smarthome.items
 
         self._sh = smarthome
-        self._use_conditional_triggers = False
-        try:
-            if self._sh._use_conditional_triggers.lower() == 'true':
-                self._use_conditional_triggers = True
-        except Exception:
-            pass
+        self._use_conditional_triggers = Utils.to_bool(getattr(self._sh, '_use_conditional_triggers', False), False)
 
         self.plugins = Plugins.get_instance()
         self.shtime = Shtime.get_instance()

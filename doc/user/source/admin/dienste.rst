@@ -6,8 +6,9 @@
 Dienste
 =======
 
-Auf dem Dienste Tab kann temporär die Sprache von SmartHomeNG umgeschaltet werden. Außerdem ist es möglich SmartHomeNG neu
-zu starten und Password-Hashes zu erzeugen (z.B. für das CLI Plugin).
+Auf dem Dienste Tab kann temporär die Sprache von SmartHomeNG umgeschaltet werden. Außerdem ist es möglich, den Core von
+SmartHomeNG neu zu starten oder zu stoppen, den Core und die Plugins aus Git zu aktualisieren, den Rechner auszuschalten
+oder neu zu starten und Password-Hashes zu erzeugen (z.B. für das CLI Plugin).
 
 Weiterhin kann der Status einiger von Plugins genutzter Dienste angesehen werden, soweit diese Dienste auf dem selben
 Rechner laufen wie SmartHomeNG selbst.
@@ -18,9 +19,34 @@ Rechner laufen wie SmartHomeNG selbst.
 
 Auf diesem Tab können folgende Funktionen ausgelöst werden:
 
-* Neu starten des Core von SmartHomeNG
+* **Core neu starten** und **Core stoppen**
 
-  Diese Funktion setzt voraus, dass SmartHomeNG läuft
+  Diese Funktionen setzen voraus, dass SmartHomeNG läuft. Nach dem Stoppen ist SmartHomeNG (und damit auch das
+  Administrations-Interface) nicht mehr erreichbar, bis es auf dem Rechner wieder gestartet wird.
+
+.. index:: Git Pull; Admin GUI
+.. index:: Admin GUI; Aktualisieren aus Git
+
+* **Von Git aktualisieren**: Aktualisieren des Core (**Core**), der Plugins (**Plugins**) oder von beidem (**Alle**)
+
+  Zu jedem Checkout wird angezeigt, ob er aktuell ist oder wie viele neue Commits im Upstream vorliegen
+  (**Auf neue Commits prüfen** fragt den Upstream erneut ab). Die Aktualisierung erfolgt nur als Fast-Forward. Ist
+  das nicht möglich (z.B. lokale Änderungen, abgewichener Branch oder kein Upstream), wird nichts geändert und der
+  Grund angezeigt. Bei **Alle** werden entweder beide Checkouts aktualisiert oder keiner.
+
+  Die Aktualisierung ändert nur die Dateien auf der Festplatte; der laufende Core verwendet den geladenen Code, bis er
+  neu gestartet wird. Im Ergebnis wird angezeigt, ob ein Neustart des Core notwendig ist, oder ob es genügt, die
+  aktualisierten Plugins neu zu laden.
+
+.. index:: Rechner ausschalten; Admin GUI
+.. index:: Admin GUI; Rechner neu starten
+
+* **Rechner (Host)**: Ausschalten oder Neustarten des Rechners, auf dem SmartHomeNG läuft
+
+  Diese Buttons stehen nur zur Verfügung, wenn in der ``etc/smarthome.yaml`` der Parameter
+  ``allow_system_power: true`` gesetzt ist. Der Befehl wird mit den Rechten des Benutzers ausgeführt, unter dem
+  SmartHomeNG läuft; ob er ausgeführt werden darf, entscheidet die Konfiguration des Betriebssystems
+  (z.B. polkit oder sudoers).
 
 .. index:: Sicherung der Konfiguration
 .. index:: Backup; Admin GUI
@@ -28,12 +54,11 @@ Auf diesem Tab können folgende Funktionen ausgelöst werden:
 
 * **Backup**: Herunterladen der Konfigurationsdaten von SmartHomeNG als Zip Archiv
 
-  Das Zip-Archiv enthält die yaml Konfigurationsdateien aus dem ``/etc`` Verzeichnis (``logging.yaml``, ``logic.yaml``,
-  ``module.yaml``, ``plugin.yaml``, ``smarthome.yaml`` und ``struct.yaml``). Weiterhin sind alle yaml Dateien der Verzeichnisse
-  ``items`` und ``scenes`` enthalten. Außerdem enthält das Archiv den Python Code der Logiken aus dem Verzeichnis ``logics``.
-  Ab SmartHomeNG v1.7 werden auch die Zertifikats- und Key Dateien (``\*.cer``, ``\*.key``) für tls/https aus dem ``etc`` Verzeichnis mit gesichert.
+  Der Inhalt des Archivs ist unter :doc:`Backup und Restore der Konfiguration </konfiguration/konfiguration_backup_restore>`
+  beschrieben.
 
   Das heruntergeladene Archiv trägt den Namen ``shng_config_backup_<Jahr>-<Monat>-<Tag>-<Stunde>-<Minuten>.zip``
+  (ggf. mit dem in der ``etc/smarthome.yaml`` konfigurierten ``backup_name_stem`` als Präfix).
 
   Links neben dem **Herunterladen** Button wird Datum/Uhrzeit des letzten Backups angezeigt.
 
@@ -47,7 +72,7 @@ Auf diesem Tab können folgende Funktionen ausgelöst werden:
   wird die in dem Zip Archiv gesicherte Konfiguration wiederhergestellt. Als Vorsichtsmaßnahme wird vor Beginn der
   Wiederherstellung ein Backup der aktuellen Konfiguration vorgenommen. Dieses verbleibt auf dem SmartHomeNG Server
   um im Notfall die aktuelle Konfiguration wiederherstellen zu können, falls die hochgeladene Datei nicht die gewünschte
-  Konfiguration enthielt. Dieses Backup wird im Verzeichnis var/backup abgelegt und trägt den Dateinamen
+  Konfiguration enthielt. Dieses Backup wird im Verzeichnis ``var/backup`` abgelegt und trägt den Dateinamen
   ``shng_config_backup_before_restore_<Jahr>-<Monat>-<Tag>-<Stunde>-<Minuten>.zip``
 
 
@@ -58,9 +83,10 @@ Auf diesem Tab können folgende Funktionen ausgelöst werden:
 In den folgenden Zeilen wird der Status diverser Dienste angezeigt, die optional benötigt werden (abhängig von den
 eingesetzten Plugins).
 
-Außerdem ist es möglich zu einem Passwort einen Hash Wert zu erzeugen, um diesen in der Konfiguration von Plugins zu
-speichern. Für die Passworte, die vom Core bzw. den Modulen verwendet werden ist das nicht notwendig, da hier der
-Hash bei der Konfiguration automatisch erzeugt wird.
+Außerdem ist es möglich zu einem Passwort einen gesalzenen Hash Wert zu erzeugen, um diesen in der Konfiguration von
+Plugins oder als ``hashed_password`` des http Moduls zu speichern. Für die Passworte, die in der Systemkonfiguration des
+Administrations-Interface eingegeben werden, ist das nicht notwendig, da hier der Hash beim Speichern automatisch
+erzeugt wird.
 
 
 eval Syntax-Prüfer
@@ -104,6 +130,8 @@ CONF-YAML Konverter
 ===================
 
 Der CONF-YAML Konverter dient dazu, Snippets die im alten CONF Format vorliegen in das YAML Format zu konvertieren.
+Das CONF Format wird von SmartHomeNG nicht mehr unterstützt, der Konverter steht nur noch für die Migration alter
+Konfigurationen zur Verfügung.
 
 .. image:: assets/services-yamlconverter.jpg
    :class: screenshot

@@ -82,12 +82,13 @@ konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folg
 
    $ python3 bin/smarthome.py
 
-   test_requirements: 'ephem' not installed. Minimum v3.7 needed
-   test_requirements: 'holidays' not installed. Minimum v0.9.11 needed
-   test_requirements: 'psutil' not installed, any version needed
-   test_requirements: 'python-dateutil' not installed. Minimum v2.5.3 needed
-   test_requirements: 'requests' not installed. Minimum v2.20.0 needed
-   test_requirements: 'ruamel.yaml' not installed. Minimum v0.13.7 needed
+   test_requirements: 'ephem' not installed. Minimum v4.2 needed
+   test_requirements: 'python-dateutil' not installed. Minimum v2.9.0 needed
+   test_requirements: 'holidays' not installed. Minimum v0.59 needed
+   test_requirements: 'psutil' not installed. Minimum v6.1.1 needed
+   test_requirements: 'portalocker' not installed. Minimum v3.2.0 needed
+   test_requirements: 'requests' not installed. Minimum v2.31.0 needed
+   test_requirements: 'ruamel.yaml' not installed. Minimum v0.16.7 needed
 
    Installing core requirements for the current user, please wait...
    Running in a virtual environment environment,
@@ -217,10 +218,10 @@ Die Konfiguration kann mit der graphischen Oberfläche (Administrations-Interfac
 Anpassung der Konfigurationsdateien vorgenommen werden. Dieses ist hier im folgenden kurz beschrieben. Eine ausführlichere
 Beschreibung findet sich im Abschnitt :doc:`../../konfiguration/konfiguration` .
 
-Mit der Grundinstallation werden einige Konfigurationsdateien mitgeliefert die den gleichen Namen tragen wie die
-benötigten Dateien aber zusätzlich noch die Endung ``.default``. Wenn SmartHomeNG beim Start eine benötigte
-Konfigurationsdatei sucht, aber noch keine vorhanden ist, so wird eine Kopie von der mitgelieferten ``.default``
-Datei erstellt und diese weiter verwendet. Gelingt dies nicht, so bricht SmartHomeNG beim Start ab.
+Mit der Grundinstallation werden im Verzeichnis ``templates`` Vorlagen für die Konfigurationsdateien mitgeliefert,
+die den gleichen Namen tragen wie die benötigten Dateien, aber zusätzlich noch die Endung ``.default``. Wenn SmartHomeNG
+beim Start eine benötigte Konfigurationsdatei im Verzeichnis ``etc`` sucht, aber noch keine vorhanden ist, so wird
+eine Kopie der mitgelieferten Vorlage erstellt und diese weiter verwendet. Gelingt dies nicht, so bricht SmartHomeNG beim Start ab.
 
 Es werden für einen Systemstart folgende Konfigurationsdateien benötigt:
 
@@ -341,8 +342,8 @@ plugin.yaml
 
 In der ``plugin.yaml`` stehen die Plugins, die verwendet werden sollen, sowie ihre Konfigurationsparameter.
 
-Wenn keine Datei ``plugin.yaml`` existiert, wird beim ersten Start von SmartHomeNG die mitgelieferte Datei ``plugin.yaml.default``
-kopiert. In dieser Datei ist ein minimaler Set von Plugins konfiguriert, so dass z.B. per Browser oder mit der smartVISU auf die
+Wenn keine Datei ``plugin.yaml`` existiert, wird beim ersten Start von SmartHomeNG die mitgelieferte Datei
+``templates/plugin.yaml.default`` kopiert. In dieser Datei ist ein minimaler Set von Plugins konfiguriert, so dass z.B. per Browser oder mit der smartVISU auf die
 SmartHomeNG Instanz zugegriffen werden kann.
 
 .. code-block:: yaml

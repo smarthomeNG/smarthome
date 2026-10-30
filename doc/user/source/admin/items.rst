@@ -52,6 +52,13 @@ Item erstellen, bearbeiten, umbenennen, kopieren und löschen
 Über das Aktionen-Menü in den Item Informationen (bzw. die Buttons oberhalb des Item Baums) können Items direkt
 über die Admin-Oberfläche angelegt, bearbeitet, umbenannt/verschoben, kopiert und gelöscht werden.
 
+Die Änderungen werden in die YAML Datei geschrieben, in der das Item definiert ist. Kommentare und Leerzeilen in
+dieser Datei bleiben dabei erhalten. Ein Item, dessen Definition auf mehrere Dateien verteilt ist, wird in allen
+betroffenen Dateien angepasst. Gecachte Werte (Attribut ``cache``) bleiben beim Umbenennen erhalten.
+
+Es kann immer nur eine dieser Aktionen gleichzeitig ausgeführt werden. Läuft bereits eine Aktion (z.B. aus einem
+zweiten Browser-Fenster), wird eine weitere abgelehnt und kann nach Abschluss der ersten erneut ausgelöst werden.
+
 Item erstellen
 ~~~~~~~~~~~~~~~
 

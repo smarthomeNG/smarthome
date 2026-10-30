@@ -17,7 +17,7 @@ sollen, dann müsst ihr Informationen beisteuern:
 * Debug Ausgabe anhängen, mindestens bis das Problem ersichtlich geloggt wird. (Dazu SmartHome.py mit
   der Option **-d** starten)
 * Error und Warnings soweit möglich bereits vorher beseitigen
-* evtl. die ``etc/plugin.conf`` und die items mit denen Euer Problem zusammenhängt
+* evtl. die ``etc/plugin.yaml`` und die items mit denen Euer Problem zusammenhängt
 * Wichtig ist auch u.U. die verwendete Hardware (VM oder Raspi 1, 2, 3) das Betriebssystem
   (Raspbian, Ubuntu x.y, Debian x.y) und ob eibd oder knxd genutzt werden.
 
@@ -304,7 +304,7 @@ In Putty bitte folgende Settings beachten, damit der Zugriff auf das CLI Plugin 
 Session:
 
 - Connection type -> RAW wählen (nicht Telnet!)
-- Host Namen des Servers eintragen, Port 2323 (oder wie er in der plugin.conf konfiguriert ist)<
+- Host Namen des Servers eintragen, Port 2323 (oder wie er in der ``etc/plugin.yaml`` konfiguriert ist)
 
 Terminal:
 

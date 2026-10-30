@@ -145,8 +145,8 @@ werden. Entscheidend ist nur, dass SmartHomeNG mit dem ``python3`` aus diesem En
 ``source <Verzeichnis>/bin/activate`` oder mit vollem Pfad ``<Verzeichnis>/bin/python3 bin/smarthome.py``).
 
 Beim ersten Start legt SmartHomeNG fehlende Konfigurationsdateien (``smarthome.yaml``, ``logging.yaml``,
-``plugin.yaml``, ``module.yaml``, ``logic.yaml``, ``admin.yaml``, ``holidays.yaml``) im Verzeichnis ``etc``
-aus den Vorlagen ``templates/*.default`` an.
+``plugin.yaml``, ``module.yaml``, ``logic.yaml``, ``holidays.yaml``, ``logic_groups.yaml``) im Verzeichnis ``etc``
+aus den Vorlagen im Verzeichnis ``templates`` an.
 
 |
 

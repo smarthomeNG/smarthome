@@ -250,35 +250,27 @@ class LogsController(RESTResource):
         ApiDoc(summary='List of available log files', method='get', path='/logs/', tags=['logs']),
         ApiDoc(
             summary=(
-                "One chunk of a log file's content. The per-log-name rotated-file-list "
-                'variant of this path was deactivated 2026-07-20 (see the commented-out '
-                'branch above) - only real filenames on disk are served now.'
-            ),
-            method='get',
-            path='/logs/{filename}',
-            tags=['logs'],
-            params=[
-                ApiParam(name='filename', location='path', required=True),
-                ApiParam(
-                    name='chunk',
-                    type='integer',
-                    default=1,
-                    description='1 = first chunk; 0 is the server convention for "last chunk".',
-                ),
-            ],
-        ),
-        ApiDoc(
-            summary=(
-                "Tail of an in-memory log (e.g. 'env.core.log', the root WARNING+ buffer). "
-                'Matched by name against registered memory logs before falling back to the '
-                'file lookup above.'
+                "Newest entries of an in-memory log (e.g. 'env.core.log', the root WARNING+ buffer) "
+                "or one chunk of a log file's content. {name} is matched against the registered "
+                'memory logs first, then against the files in the log directory.'
             ),
             method='get',
             path='/logs/{name}',
             tags=['logs'],
             params=[
-                ApiParam(name='name', location='path', required=True),
-                ApiParam(name='count', type='integer', default=10, description='Number of newest entries to return.'),
+                ApiParam(name='name', location='path', required=True, description='Memory log name or log file name.'),
+                ApiParam(
+                    name='chunk',
+                    type='integer',
+                    default=1,
+                    description='Log files only: 1 = first chunk; 0 is the server convention for "last chunk".',
+                ),
+                ApiParam(
+                    name='count',
+                    type='integer',
+                    default=10,
+                    description='Memory logs only: number of newest entries to return.',
+                ),
             ],
         ),
     ]

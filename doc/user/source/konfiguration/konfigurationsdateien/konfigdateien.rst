@@ -6,7 +6,8 @@
 Konfiguration über Dateien
 ==========================
 
-Für die Konfiguration sind die Verzeichnisse ``etc``, ``etc/items``, ``etc/scenes`` und ``etc/logics`` wichtig.
+Für die Konfiguration sind die Verzeichnisse ``etc``, ``etc/items``, ``etc/structs``, ``etc/logics``, ``etc/scenes``
+und ``etc/functions`` wichtig.
 In diesen Verzeichnissen wird die Konfiguration gespeichert und gepflegt. Im folgenden sind
 die Konfigurationsdateien beschrieben, die in diesen Verzeichnissen gespeichert werdeen.
 
@@ -29,8 +30,12 @@ Dateien:
 - module.yaml
 - plugin.yaml
 - logic.yaml
+- logic_groups.yaml
 - logging.yaml
-- struct.yaml
+
+Fehlt eine dieser Dateien beim Start, legt SmartHomeNG sie aus der Vorlage im Verzeichnis ``templates`` an.
+Eine ``struct.yaml`` oder ``struct_<name>.yaml`` älterer Installationen wird beim Start in das Verzeichnis
+``etc/structs`` verschoben.
 
 
 Verzeichnis *etc/items*
@@ -39,6 +44,15 @@ Verzeichnis *etc/items*
 In diesem Verzeichnis werden eine oder mehrere Dateien abgelegt, welche die Item Definitionen enthalten. Der
 Name der Dateien ist dabei beliebig. Sie müssen nur gültige YAML Dateien sein und die Endung ``.yaml``
 tragen.
+
+- \*.yaml
+
+
+Verzeichnis *etc/structs*
+-------------------------
+
+In diesem Verzeichnis werden die Dateien mit den struct Definitionen (Item-Templates) abgelegt
+(siehe :doc:`struct <struct>`).
 
 - \*.yaml
 
@@ -63,6 +77,15 @@ Die Dateien müssen als Namen den Item-Pfad des Items tragen, welches die Szene 
 - \*.yaml
 
 
+Verzeichnis *etc/functions*
+---------------------------
+
+In diesem Verzeichnis werden die Dateien mit den Userfunctions abgelegt
+(siehe :doc:`Userfunctions </konfiguration/userfunctions>`).
+
+- \*.py
+
+
 Aufbau der Konfigurationsdateien
 ================================
 
@@ -78,8 +101,8 @@ nachsehen.
 Dieser Abschnitt beschäftigt sich nur mit den Teilen der
 Markup-Language, die für SmartHomeNG relevant sind. Bei einem
 weitergehenden Interesse an YAML, bitte auf Wikipedia oder
-`yaml.org <http://yaml.org>`__ (auf Englisch) nachlesen. Der aktuell in
-SmartHomeNG eingesetzte Parser unterstützt die YAML Version 1.1.
+`yaml.org <http://yaml.org>`__ (auf Englisch) nachlesen. SmartHomeNG liest YAML Dateien nach YAML 1.2 (siehe
+:ref:`YAML 1.1 und YAML 1.2 <yaml_versionen>`).
 
 Im YAML Format sehen die Beschreibungen für **Plugins** und **Logiken**
 dann folgendermaßen aus:
@@ -128,35 +151,95 @@ werden folgende Value-Typen unterstützt:
 Besonderheiten boolscher Werte
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-SmartHomeNG verarbeitet, wie schon smarthome.py, die Values als Strings.
-Dies gilt insbesondere bei der Übergabe von Werten an Plugins. Das ist
-besonders bei der Angabe boolscher Werte zu beachten. Da der YAML Parser
-bei einer Angabe wie **``boolwert: true``** einen boolschen Wert in die
-Item Hierarchie von SmartHomeNG schreiben würde, muss durch Quotes
-sichergestellt werden, dass ein String übergeben wird, also
-folgendermaßen: **``boolwert: 'true'``**.
+Boolsche Werte werden ohne Quotes angegeben, z.B. **``cache: true``** oder **``enforce_updates: false``**.
+SmartHomeNG wandelt den Wert in den Typ um, den das Item-Attribut, der Plugin- oder der Logik-Parameter erwartet;
+dabei werden auch Strings wie ``'true'``, ``'yes'`` oder ``'on'`` als boolsche Werte erkannt.
 
-YAML interpretiert bis inclusive Version 1.1 auch **yes** und **no** als
-boolsche Werte. Deshalb müssen auch diese Werte in Quotes eingeschlossen
-werden. Es ist empfehlenswert nur **true** und **false** für boolsche
-Werte zu verwenden.
+Quotes werden nur benötigt, wenn ein Text gemeint ist, der von YAML sonst als boolscher Wert gelesen würde,
+z.B. bei einem Item vom Typ **str**: Ohne Quotes wird aus **``initial_value: true``** der Text ``True``,
+mit **``initial_value: 'true'``** bleibt es ``true``.
+
+Es ist empfehlenswert nur **true** und **false** für boolsche Werte zu verwenden. In Dateien, die noch nach YAML 1.1
+gelesen werden, sind auch **yes**, **no**, **on**, **off** und einzelne Buchstaben wie **y** und **N** boolsche
+Werte (siehe unten).
+
+Quotes für Texte, die wie Zahlen aussehen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Texte, die YAML als Zahl lesen würde, müssen in Quotes eingeschlossen werden, z.B. Telefonnummern, PINs oder
+Passwörter mit führender Null (**``pin: '0815'``**) und Uhrzeiten (**``initial_value: '12:30'``**). Ohne Quotes wird
+aus ``0815`` die Zahl ``815``.
+
+.. _yaml_versionen:
+
+YAML 1.1 und YAML 1.2
+^^^^^^^^^^^^^^^^^^^^^
+
+SmartHomeNG liest YAML Dateien nach YAML 1.2. Beginnt eine Datei mit der Zeile ``%YAML 1.1``, wird sie nach YAML 1.1
+gelesen; beim Speichern über die Admin GUI bleibt die Version einer Datei erhalten. Empfohlen wird YAML 1.2: Die
+mitgelieferten Vorlagen und alle Dateien, die SmartHomeNG neu anlegt, enthalten keine ``%YAML 1.1`` Zeile mehr.
+Dateien früherer Installationen (z.B. die aus den damaligen Vorlagen erzeugten Dateien in ``etc``) können die Zeile
+noch enthalten.
+
+Die beiden Versionen lesen einige Werte ohne Quotes unterschiedlich:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 25 25 30
+
+   * - Wert
+     - YAML 1.1
+     - YAML 1.2
+     - in YAML 1.2 schreiben als
+   * - ``yes``, ``no``, ``on``, ``off``
+     - ``true`` / ``false``
+     - Text
+     - ``true`` / ``false``
+   * - ``y``, ``Y``, ``n``, ``N``
+     - ``true`` / ``false``
+     - Text
+     - ``true`` / ``false`` oder der Text
+   * - ``12:30``, ``1:20:30``
+     - Zahl (Basis 60: 750, 4830)
+     - Text
+     - ``'12:30'``
+   * - ``010``
+     - Zahl 8 (oktal)
+     - Zahl 10
+     - ``0o10`` bzw. ``10``
+   * - ``08``, ``0049123456``
+     - Text
+     - Zahl (8, 49123456)
+     - ``'08'``, ``'0049123456'``
+   * - ``0o17``
+     - Text
+     - Zahl 15
+     - ``'0o17'``
+
+Für boolsche Item-Attribute, Plugin- und Logik-Parameter macht es keinen Unterschied, ob ``yes`` als boolscher Wert
+oder als Text gelesen wird, da SmartHomeNG beides umwandelt. Anders ist es bei Werten, die als Text verwendet werden,
+und in der ``etc/logging.yaml``, deren Werte direkt an das Python Logging übergeben werden.
+
+Umstellen einer Datei von YAML 1.1 auf YAML 1.2:
+
+1. SmartHomeNG beenden.
+2. ``tools/upgrade_check.py --only yaml-1.1`` ausführen. Es listet alle Dateien mit ``%YAML 1.1`` und alle Werte, die
+   YAML 1.2 anders lesen würde.
+3. ``tools/upgrade_check.py --only yaml-1.1 --fix`` ausführen. Bei Dateien, deren Werte eindeutig umgestellt werden
+   können, wird die Zeile ``%YAML 1.1`` entfernt, ``yes``/``no``/``on``/``off`` werden durch ``true``/``false``
+   ersetzt und Texte, die YAML 1.2 als Zahl lesen würde, in Quotes gesetzt. Die geänderten Dateien werden vorher
+   nach ``etc/upgrade_check_backup`` gesichert.
+4. Die übrigen gemeldeten Werte von Hand anpassen: Dabei entscheiden, was gemeint war (z.B. ist ``12:30`` meist als
+   Uhrzeit gemeint, wurde von YAML 1.1 aber als 750 gelesen) und den Wert eindeutig schreiben (siehe Tabelle).
+   Anschließend Schritt 3 wiederholen, oder die Zeile ``%YAML 1.1`` von Hand entfernen.
+5. SmartHomeNG starten und das Log auf Warnungen prüfen.
+
+Ohne das Tool genügt es, die Zeile ``%YAML 1.1`` zu entfernen und die Werte aus der Tabelle in der Datei zu prüfen.
 
 Besonderheiten bei der Angabe von Wertelisten
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Im Gegensatz zu den bisherigen .conf Dateien, in denen Wertelisten auf
-einer Zeile spezifiziert wurden und die Werte durch ein ‘\|’-Zeichen
-getrennt wurden, ist die Spezifikation in einer YAML Datei vorzugsweise
-mehrzeilig.
-
-Statt
-
-::
-
-       [section]
-           key1 = value1 | value2
-
-gibt man jetzt folgendes an:
+Wertelisten werden in einer YAML Datei vorzugsweise mehrzeilig angegeben:
 
 .. code-block:: yaml
 

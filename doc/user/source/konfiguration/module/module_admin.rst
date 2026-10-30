@@ -68,7 +68,7 @@ Datei *etc/module.yaml*
 +-------------------------------+------------------------------------------------------------------------------------------------+
 | developer_mode                | **Optional**: Entwickler Modus aktivieren (Ist für das Core Entwickler Team gedacht).          |
 +-------------------------------+------------------------------------------------------------------------------------------------+
-| rest_dispatch_force_exception | **Optional**: Sollen WARNINGs aus REST_dispatch_execute als EXECPTION geloggt werden?          |
+| rest_dispatch_force_exception | **Optional**: Sollen WARNINGs aus REST_dispatch_execute als EXCEPTION geloggt werden?          |
 +-------------------------------+------------------------------------------------------------------------------------------------+
 | click_dropdown_header         | **Optional**: Click auf Kopfeintrag von Dropdown Menüs erlauben.                               |
 +-------------------------------+------------------------------------------------------------------------------------------------+

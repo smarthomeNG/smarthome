@@ -55,7 +55,7 @@ parameters:
         default: en,de
         valid_list: ['en,de', 'de,en']
         description:
-            de: 'Reihenfolge der Sprachen in der Texte gesucht werden, wenn der Text in der gewählten Sprache nicht vorhanden ist, alls die gewählte Sprache nicht Deutsch oder Englisch ist'
+            de: 'Reihenfolge der Sprachen in der Texte gesucht werden, wenn der Text in der gewählten Sprache nicht vorhanden ist, falls die gewählte Sprache nicht Deutsch oder Englisch ist'
             en: 'Order of languages in which texts are searched, if the text is not available in the selected language'
             fr: "Ordre des langues dans lesquelles les textes sont recherchés, si le texte n'est pas disponible dans la langue sélectionnée"
 
@@ -214,3 +214,69 @@ parameters:
         description:
             de: "Laufzeit in Sekunden, ab der für einen Scheduler-Task (Logik, Item-Zyklus/Crontab, Plugin-Scheduler) eine Warnung mit Stacktrace geloggt wird, erneut bei jeder Verdopplung. 0 = aus. Logiken können den Wert mit ihrem eigenen Parameter runtime_warn überschreiben."
             en: "Runtime in seconds after which a warning with stack trace is logged for a scheduler task (logic, item cycle/crontab, plugin scheduler), again at each doubling. 0 = off. Logics can override it with their own runtime_warn parameter."
+
+    orb_backend:
+        type: str
+        default: ephem
+        valid_list: ['ephem', 'skyfield', 'skyfield-cached']
+        description:
+            de: "Advanced: Bibliothek für die Berechnung von Sonne und Mond (sh.sun, sh.moon). Ist sie nicht installiert, wird mit einer Warnung ein installiertes Backend verwendet."
+            en: "Advanced: Library used to calculate sun and moon (sh.sun, sh.moon). If it is not installed, an installed backend is used and a warning is logged."
+
+    sun_neverup_delta:
+        type: num
+        default: 0.00001
+        description:
+            de: "Advanced: Korrektur in Grad, um die Sonnenauf- und -untergänge nahe der Polartage und -nächte zu berechnen"
+            en: "Advanced: Correction in degrees to calculate sunrise and sunset close to polar days and nights"
+
+    default_logtext:
+        type: str
+        description:
+            de: "Standard-Text für Logeinträge des Item-Attributs log_change, wenn das Item kein log_text hat (Platzhalter siehe Dokumentation von log_change)"
+            en: "Default text for log entries of the item attribute log_change if the item has no log_text (see the documentation of log_change for placeholders)"
+
+    created_items_file:
+        type: str
+        default: created
+        description:
+            de: "Advanced: Name der Datei in etc/items (ohne .yaml), in die zur Laufzeit erzeugte Items geschrieben werden, wenn kein Dateiname angegeben ist"
+            en: "Advanced: Name of the file in etc/items (without .yaml) that items created at runtime are written to if no file name is given"
+
+    ignore_item_collision:
+        type: bool
+        gui_type: yes_no
+        default: False
+        description:
+            de: "Advanced: Items, deren Name mit einem Attribut des übergeordneten Objekts kollidiert, mit einer Warnung trotzdem anlegen, statt sie zu verwerfen"
+            en: "Advanced: Create items whose name collides with an attribute of the parent object with a warning, instead of dropping them"
+
+    restart_on_num_workers:
+        live: True
+        type: int
+        default: 30
+        valid_min: 1
+        description:
+            de: "Advanced: SmartHomeNG wird neu gestartet, wenn der Scheduler so viele Worker-Threads benötigt"
+            en: "Advanced: SmartHomeNG restarts if the scheduler needs this many worker threads"
+
+    shpypi_crontab:
+        type: str
+        default: '7 3 * *'
+        description:
+            de: "Advanced: Crontab-Eintrag für die Abfrage der Paket-Versionen auf PyPI"
+            en: "Advanced: Crontab entry for querying package versions on PyPI"
+
+    module_paths:
+        type: list(str)
+        description:
+            de: "Advanced: Zusätzliche Verzeichnisse für Python-Module (werden sys.path hinzugefügt, normalerweise nicht nötig)"
+            en: "Advanced: Additional directories for Python modules (added to sys.path, normally not needed)"
+
+    threadinfo_export:
+        type: bool
+        gui_type: yes_no
+        default: False
+        description:
+            de: "Develop: Alle 120 Sekunden Informationen zu den Threads für das Tool tools/cpuusage.py exportieren"
+            en: "Develop: Export information about the threads every 120 seconds for the tool tools/cpuusage.py"

@@ -16,11 +16,15 @@ hilfreich sind. Daneben befinden sich dort auch Shell-Skripte für Entwicklungsa
    :maxdepth: 4
    :titlesonly:
 
+   tools_api_snapshot
+   tools_build_openapi
    tools_build_requirements
    tools_conf_to_yaml_converter
    tools_db_migrate
    tools_getshngpid
+   tools_hash_password
    tools_install_hooks
    tools_plugin_metadata_checker
+   tools_ruamel_compat
    tools_upgrade_check
 

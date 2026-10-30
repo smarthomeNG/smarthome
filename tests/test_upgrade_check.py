@@ -630,6 +630,14 @@ class TestScenes(InstallationTestCase):
         self.assertEqual(5.5, scene[2]['actions'][0]['value'])
         self.assertEqual('on', scene[3]['actions'][0]['value'])
 
+    def test_string_with_leading_zeros_is_quoted(self):
+        self.write('etc/scenes/example.conf', '0 a 0049123\n')
+
+        self.run_check('scenes', fix=True)
+
+        scene = YAML(typ='safe').load(self.read('etc/scenes/example.yaml'))
+        self.assertEqual('0049123', scene[0]['actions'][0]['value'])
+
     def test_original_is_backed_up(self):
         self.write('etc/scenes/example.conf', '0 a 1\n')
 
@@ -656,6 +664,89 @@ class TestScenes(InstallationTestCase):
         self.assertEqual(2, sum(1 for f in findings if not f.fixable))
         scene = YAML(typ='safe').load(self.read('etc/scenes/example.yaml'))
         self.assertEqual([0], list(scene))
+
+
+class TestYaml11(InstallationTestCase):
+    MECHANICAL = """\
+%YAML 1.1
+---
+room:
+    light:
+        type: bool
+        cache: yes
+        enforce_updates: off
+    phone:
+        type: str
+        initial_value: 0049123456
+    plain:
+        type: num
+        initial_value: 12
+"""
+
+    def load(self, text: str, version=None):
+        yaml = YAML(typ='safe')
+        if version is not None:
+            yaml.version = version
+        return yaml.load(text)
+
+    def test_mechanical_differences_are_fixed_and_keep_their_meaning(self):
+        self.write('etc/items/room.yaml', self.MECHANICAL)
+
+        findings = self.run_check('yaml-1.1', fix=True)
+
+        self.assertEqual([6, 7, 10], [f.line for f in findings])
+        self.assertTrue(all(f.fixed for f in findings))
+        text = self.read('etc/items/room.yaml')
+        self.assertNotIn('%YAML', text)
+        self.assertEqual(self.load(self.MECHANICAL, (1, 1)), self.load(text))
+
+    def test_value_to_decide_leaves_the_file_unchanged(self):
+        text = self.MECHANICAL + '    clock:\n        type: str\n        initial_value: 12:30\n'
+        self.write('etc/items/room.yaml', text)
+
+        findings = self.run_check('yaml-1.1', fix=True)
+
+        self.assertEqual(text, self.read('etc/items/room.yaml'))
+        self.assertFalse(any(f.fixed for f in findings))
+        self.assertIn("'12:30' is 750 in YAML 1.1", findings[-1].message)
+        self.assertFalse(findings[-1].fixable)
+
+    def test_single_letter_boolean_has_to_be_decided(self):
+        self.write('etc/plugin.yaml', '%YAML 1.1\n---\ndev:\n    parity: N\n')
+
+        findings = self.run_check('yaml-1.1', fix=True)
+
+        self.assertFalse(findings[0].fixable)
+        self.assertIn('parity: N', self.read('etc/plugin.yaml'))
+
+    def test_boolean_word_as_key_has_to_be_decided(self):
+        self.write('etc/items/k.yaml', '%YAML 1.1\n---\nswitch:\n    on:\n        type: bool\n')
+
+        findings = self.run_check('yaml-1.1')
+
+        self.assertEqual(1, len(findings))
+        self.assertFalse(findings[0].fixable)
+
+    def test_file_without_differences_only_loses_the_directive(self):
+        self.write('etc/smarthome.yaml', '%YAML 1.1\n---\n# comment\nlat: 52.5\ntz: Europe/Berlin\n')
+
+        findings = self.run_check('yaml-1.1', fix=True)
+
+        self.assertEqual(1, len(findings))
+        self.assertTrue(findings[0].fixed)
+        self.assertEqual('---\n# comment\nlat: 52.5\ntz: Europe/Berlin\n', self.read('etc/smarthome.yaml'))
+
+    def test_logging_booleans_become_true_and_false(self):
+        self.write('etc/logging.yaml', '%YAML 1.1\n---\nversion: 1\ndisable_existing_loggers: no\n')
+
+        self.run_check('yaml-1.1', fix=True)
+
+        self.assertEqual(False, self.load(self.read('etc/logging.yaml'))['disable_existing_loggers'])
+
+    def test_files_without_directive_are_skipped(self):
+        self.write('etc/items/room.yaml', 'room:\n    cache: yes\n')
+
+        self.assertEqual([], self.run_check('yaml-1.1'))
 
 
 class TestCommandLine(InstallationTestCase):

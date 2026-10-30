@@ -44,107 +44,27 @@ class FunctionsController(RESTResource):
         return
 
     # ======================================================================
-    #  /api/scenes
-    #
-    # def root(self):
-    #     if self.items == None:
-    #         self.items = Items.get_instance()
-    #
-    #     from lib.scene import Scenes
-    #     get_param_func = getattr(Scenes, "get_instance", None)
-    #     if callable(get_param_func):
-    #         supported = True
-    #         self.scenes = Scenes.get_instance()
-    #         scene_list = []
-    #         if self.scenes is not None:
-    #             scene_list = self.scenes.get_loaded_scenes()
-    #
-    #         disp_scene_list = []
-    #         for scene in scene_list:
-    #             scene_dict = {}
-    #             scene_dict['path'] = scene
-    #             #                scene_dict['name'] = str(self._sh.return_item(scene))
-    #             scene_dict['name'] = str(self.items.return_item(scene))
-    #
-    #             action_list = self.scenes.get_scene_actions(scene)
-    #             scene_dict['value_list'] = action_list
-    #             #                scene_dict[scene] = action_list
-    #
-    #             disp_action_list = []
-    #             for value in action_list:
-    #                 action_dict = {}
-    #                 action_dict['action'] = value
-    #                 action_dict['action_name'] = self.scenes.get_scene_action_name(scene, value)
-    #                 action_list = self.scenes.return_scene_value_actions(scene, value)
-    #                 for action in action_list:
-    #                     if not isinstance(action[0], str):
-    #                         action[0] = action[0].id()
-    #                 action_dict['action_list'] = action_list
-    #
-    #                 disp_action_list.append(action_dict)
-    #             scene_dict['values'] = disp_action_list
-    #             self.logger.debug("scenes_html: disp_action_list for scene {} = {}".format(scene, disp_action_list))
-    #
-    #             disp_scene_list.append(scene_dict)
-    #     else:
-    #         supported = False
-    #     return json.dumps(disp_scene_list)
-
-    # ======================================================================
     #  GET /api/functions
     #
     @cherrypy.expose
     def read(self, id=None):
         """
-        Handle GET requests for scenes API
+        Handle GET requests for functions API: the loaded userfunction modules
         """
-        if self.items is None:
-            self.items = Items.get_instance()
+        from lib.userfunctions import get_userlibs
 
-        from lib.userfunctions import reload
-        from lib.userfunctions import reload_all
-        from lib.scene import Scenes
-
-        get_param_func = getattr(Scenes, 'get_instance', None)
-        if callable(get_param_func):
-            self.scenes = Scenes.get_instance()
-            scene_list = []
-            if self.scenes is not None:
-                scene_list = self.scenes.get_loaded_scenes()
-
-            disp_scene_list = []
-            for scene in scene_list:
-                scene_dict = {}
-                scene_dict['path'] = scene
-                #                scene_dict['name'] = str(self._sh.return_item(scene))
-                scene_dict['name'] = str(self.items.return_item(scene))
-
-                action_list = self.scenes.get_scene_actions(scene)
-                scene_dict['value_list'] = action_list
-                #                scene_dict[scene] = action_list
-
-                disp_action_list = []
-                for value in action_list:
-                    action_dict = {}
-                    action_dict['action'] = value
-                    action_dict['action_name'] = self.scenes.get_scene_action_name(scene, value)
-                    action_list = self.scenes.return_scene_value_actions(scene, value)
-                    for action in action_list:
-                        if not isinstance(action[0], str):
-                            action[0] = action[0].id()
-                    action_dict['action_list'] = action_list
-
-                    disp_action_list.append(action_dict)
-                scene_dict['values'] = disp_action_list
-                self.logger.debug('scenes_html: disp_action_list for scene {} = {}'.format(scene, disp_action_list))
-
-                disp_scene_list.append(scene_dict)
-        return json.dumps(disp_scene_list)
+        return json.dumps(get_userlibs())
 
     read.expose_resource = True
     read.authentication_needed = True
     read.api_doc = [
-        ApiDoc(summary='List of registered functions', method='get', path='/functions/', tags=['functions'])
+        ApiDoc(
+            summary='Loaded userfunction modules',
+            method='get',
+            path='/functions/',
+            tags=['functions'],
+            response_example='[{"name": "my_uf", "version": "1.0.0", "description": "my userfunctions"}]',
+        )
     ]
 
 

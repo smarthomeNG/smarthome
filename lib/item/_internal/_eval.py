@@ -170,7 +170,7 @@ def run_eval(item, value=None, caller='Eval', source=None, dest=None, source_det
                 )  # COMPAT-SHIM
                 if cond is _EVAL_FAILED:  # COMPAT-SHIM
                     raise _ce  # COMPAT-SHIM
-            logger.warning(
+            logger.debug(
                 f"Item '{item._path}': Condition result '{cond}' evaluating trigger condition {item._trigger_condition}"
             )
         except Exception as e:

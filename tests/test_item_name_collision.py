@@ -95,6 +95,29 @@ class TestNameCollisionAllowedWhenIgnored(_Base):
         self.assertIsNotNone(self.sh.items.return_item('d.property'))
 
 
+class TestIgnoreItemCollisionSetting(unittest.TestCase):
+    """ignore_item_collision from etc/smarthome.yaml, as Items() reads it"""
+
+    def tearDown(self):
+        _reset()
+
+    def items_flag(self, value):
+        sh = MockSmartHome()
+        _reset()
+        sh._ignore_item_collision = value
+        Items(sh)
+        return sh._ignore_item_collision
+
+    def test_boolean_true(self):
+        self.assertIs(self.items_flag(True), True)
+
+    def test_string_true(self):
+        self.assertIs(self.items_flag('True'), True)
+
+    def test_false(self):
+        self.assertIs(self.items_flag(False), False)
+
+
 class TestNameCollisionIgnoresPluginShadowingOnSh(_Base):
     """
     An item shadowing a plugin instance bound onto sh (e.g. sh.arduino set

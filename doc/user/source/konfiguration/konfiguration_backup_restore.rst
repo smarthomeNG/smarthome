@@ -20,8 +20,9 @@ Die Konfiguration von SmartHomeNG kann in ein zip-Archiv gesichert werden und au
 werden. Dieses kann sowohl von der Kommandozeile aus, als auch über das Administrationsinterface erfolgen.
 
 Von der Kommandozeile wird ein Backup erstellt, indem SmartHomeNG mit der Option **-cb** bzw. **--create_backup**
-gestartet wird. Das zip-Archiv mit dem Backup wird im Verzeichnis ``/var/backup`` abgelegt und hat den Namen
-``shng_config_backup.zip``.
+gestartet wird. Das zip-Archiv mit dem Backup wird im Verzeichnis ``var/backup`` abgelegt und hat den Namen
+``shng_config_backup.zip``. Wird SmartHomeNG mit der Option **-u** bzw. **--var_dir** gestartet, liegt das Verzeichnis
+``backup`` (wie auch ``restore``) im angegebenen var-Verzeichnis.
 
 Wenn beim Backup der Dateiname den Zeitpunkt des Backups enthalten soll, muss SmartHomeNG mit der Option **-cbt** bzw.
 **--create_backup_t** aufgerufen werden. Dann wird der Dateiname um Datum und Zeit der Erstellung des Backups ergänzt.
@@ -34,12 +35,9 @@ nicht notwendig ein laufendes SmartHomeNG vorher zu beenden.
 
    Es werden keine Konfigurationsdateien des alten .CONF Formats gesichert, sondern ausschließlich YAML Dateien.
 
-Ab SmartHomeNG v1.12 werden nun, falls vorhanden, die privaten Plugins (Plugins, deren Name mit ``priv_`` beginnt)
-und die privaten Tools (das Verzeichnis priv_tools) mit gesichert und beim Wiederherstellen aus der Zip Datei zurück
-kopiert.
-
-Dadurch steht jetzt eine einfache Möglichkeit der Sicherung dieser Dateien, die nicht in git gesichert werden,
-zur Verfügung.
+Falls vorhanden, werden auch die privaten Plugins (Plugins, deren Name mit ``priv_`` beginnt) und die privaten Tools
+(das Verzeichnis ``priv_tools``) gesichert und beim Wiederherstellen aus der Zip Datei zurück kopiert. Dadurch steht
+eine einfache Möglichkeit der Sicherung dieser Dateien zur Verfügung, die nicht in git gesichert werden.
 
 .. index:: Restore; Kommandozeile
 .. index:: Wiederherstellen; Kommandozeile
@@ -50,7 +48,7 @@ Wiederherstellen
 ----------------
 
 Zum Wiederherstellen eines Konfigurations-Backups von der Kommandozeile, muss das Backup-Archiv in das Verzeichnis
-``/var/restore`` gelegt werden. Es darf einen beliebigen Namen tragen und muss die einzige Datei in diesem Verzeichnis
+``var/restore`` gelegt werden. Es darf einen beliebigen Namen tragen und muss die einzige Datei in diesem Verzeichnis
 sein. Anschließend muss SmartHomeNG mit der Option **-rb** bzw. **--restore_backup** gestartet werden.
 
 Die Wiederherstellung von der Kommandozeile aus kann durchgeführt werden, während eine Instanz von SmartHomeNG läuft.
@@ -64,46 +62,52 @@ Falls die Wiederherstellung mit der Admin GUI durchgeführt wird, startet SmartH
 Umfang der Sicherung
 --------------------
 
-Beim sichern werden folgende Daten in das zip-Archiv übernommen:
+Beim Sichern werden folgende Daten in das zip-Archiv übernommen. Die Verzeichnisse ``items``, ``logics``, ``scenes``,
+``structs`` und ``functions`` liegen standardmäßig unterhalb von ``etc`` (siehe ``config_etc`` in der
+:doc:`smarthome.yaml <konfigurationsdateien/smarthome>`):
 
-  - /etc
+  - etc
 
     - holidays.yaml
     - logging.yaml
     - logic.yaml
+    - logic_groups.yaml
     - module.yaml
     - plugin.yaml
     - smarthome.yaml
-    - struct.yaml
-    - struct\_\*.yaml
+    - admin.yaml, struct.yaml, struct\_\*.yaml (nur bei älteren Installationen, die noch nicht migriert wurden)
     - \*.cer
     - \*.pem
     - \*.key
-  - /functions
+  - functions
 
     - \*.*
-  - /items
-
-    - items\*.yaml
-  - /logic
+  - items
 
     - \*.yaml
-  - /scenes
+  - logics
+
+    - \*.py
+    - \*.txt
+  - scenes
 
     - \*.yaml
-  - /structs
+  - structs
 
     - \*.yaml
-  - /plugins/priv_*
+  - plugins/priv_*
 
-    - \*.*  mit Subdirectories
-  - /priv_tools
+    - \*.*  mit Unterverzeichnissen
+  - priv_tools
 
     - \*.*
+  - var/esphome/config (als ``esphome_config`` im Archiv)
 
-.. attention::
+    - \*.yaml
 
-    Zertifikats- und Key Dateien (\*.cer, \*.pem und \*.key) für tls/https werden erst ab SmartHomeNG v1.7 gesichert.
+Zusätzlich werden im Archiv unter ``infos`` die Systeminformationen (``systeminfo.yaml``) und eine Liste der
+installierten Python Packages (``pip_list.txt``) abgelegt. Diese Dateien werden beim Wiederherstellen nicht zurück
+kopiert.
 
 
 Falls SmartHomeNG mit der Option **-c** bzw. **--config_dir** gestartet wurde, so wird dieses beim Sichern und

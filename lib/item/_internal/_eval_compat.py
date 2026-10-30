@@ -61,7 +61,7 @@ _EVAL_FAILED = object()
 _COMPAT_NOTE = (
     'This compatibility retry will be removed in a future release. '
     'Please update your configuration to use only the documented eval '
-    'variables: sh, shtime, items, math, uf, env, value, datetime, time.'
+    'variables: sh, shtime, items, math, uf, env, value, caller, source, dest, source_details, datetime, time.'
 )
 
 # ---------------------------------------------------------------------------

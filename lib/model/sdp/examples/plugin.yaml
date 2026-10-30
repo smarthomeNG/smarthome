@@ -16,7 +16,7 @@ plugin:
     # documentation: https://github.com/smarthomeNG/smarthome/wiki/
     # support: https://knx-user-forum.de/forum/supportforen/smarthome-py/
     version: 0.0.1                  # !! adjust
-    sh_minversion: 1.9.1
+    sh_minversion: '2.0.0-dev.2'
 #    py_minversion:
     multi_instance: false
     restartable: true

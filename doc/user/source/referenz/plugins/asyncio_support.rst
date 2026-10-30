@@ -18,11 +18,18 @@ Packages in Plugins nutzen zu können, muss das jeweilige Plugin asyncio unterst
 ist nicht tirvial und die ersten Plugins die asyncio implementiert haben, tun das sehr unterschiedlich und unter
 Nutzung der Low-Level Funktionen von asyncio (was ein erhebliches Error-Handling im Plugin voraussetzt).
 
-Um die Nutzung von asyncio zu vereinfachen und in den Plugins zu standardisieren, unterstützt SmartHomeNG ab
-v1.11 die Nutzung von asyncio in Plugins durch eine Erweiterung der SmartPlugin Klasse um einige Methoden.
+Um die Nutzung von asyncio zu vereinfachen und in den Plugins zu standardisieren, unterstützt SmartHomeNG
+die Nutzung von asyncio in Plugins durch eine Erweiterung der SmartPlugin Klasse um einige Methoden.
 
-Ein Plugin welches die neue asyncio Unterstützung nutzt, ist das hue3 Plugin. Es kann bei der der Erstellung eines
+Ein Plugin welches die asyncio Unterstützung nutzt, ist das hue3 Plugin. Es kann bei der der Erstellung eines
 neuen Plugins als Beispiel herangezogen werden.
+
+Die Worker-Threads des Default-Executors der Eventloop (``run_in_executor(None, ...)``, ``asyncio.to_thread()``,
+DNS-Abfragen) tragen den Namen ``plugins.<Plugin-Name>.asyncio_<n>``, so dass sie z.B. auf der Seite **Threads**
+der Admin GUI dem Plugin zugeordnet werden können. Für die mit ``start_asyncio()`` gestartete Eventloop geschieht das
+automatisch. Ein Plugin, das eine eigene Eventloop erzeugt, ruft dafür direkt nach dem Erzeugen der Eventloop
+``set_asyncio_executor_names(loop)`` auf.
+
 |
 
 Methoden zur Unterstützung von asyncio

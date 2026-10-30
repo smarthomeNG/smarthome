@@ -60,6 +60,9 @@ class TestUserfunctionsReload(unittest.TestCase):
             sys.modules.pop(modname, None)
         self._tmpdir.cleanup()
 
+    def test_get_userlibs_lists_loaded_modules(self):
+        self.assertEqual([{'name': 'hyphen-mod', 'version': '1.0', 'description': 'test'}], uf.get_userlibs())
+
     def test_reload_hyphenated_module_name_succeeds(self):
         self.assertIn('hyphen-mod', uf._user_modules)
         self.assertTrue(uf.reload('hyphen-mod'))

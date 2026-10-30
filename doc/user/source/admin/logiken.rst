@@ -40,6 +40,16 @@ Auf einem 2. Tab kann eine Liste der Systemlogiken eingesehen werden.
 Logiken können in dieser Ansicht gruppiert werden. Wenn mindestens eine Logik einer Gruppe
 zugeordnet wird, ändert sich die Ansicht von einer flachen Liste, in eine Liste aufklappbarer Gruppen.
 
+.. index:: Logiken; Gruppen
+.. index:: logic_groups.yaml
+
+Die Gruppen werden auf der Seite **Logik Gruppen** verwaltet. Dort können Gruppen angelegt, mit Titel und
+Beschreibung versehen, gelöscht oder in eine andere Gruppe eingegliedert werden; außerdem können Logiken einer Gruppe
+zugeordnet oder aus ihr entfernt werden. Die Definitionen der Gruppen werden in der Datei ``etc/logic_groups.yaml``
+gespeichert, die Zuordnung einer Logik zu ihren Gruppen im Parameter ``logic_groupname`` der Logik in der
+``etc/logic.yaml``. Wird in der ``etc/logic.yaml`` eine Gruppe verwendet, die nicht definiert ist, zeigt die Liste der
+Logiken einen Hinweis mit den betroffenen Gruppennamen an.
+
 .. image:: assets/logics-grouped.jpg
    :class: screenshot
 
@@ -81,7 +91,8 @@ Hier kann eine Beschreibung der Logik angegeben werden, die dann in der Liste de
 Gruppe(n)
 ~~~~~~~~~
 
-Wenn mehrere Einträge als Liste eingegeben werden sollen, so sind die Einträge durch ein | Zeichen zu trennen.
+Hier werden die Gruppen ausgewählt, denen die Logik angehört. Nach Eingabe der ersten Zeichen werden die
+definierten Gruppen zur Auswahl angeboten.
 
 
 

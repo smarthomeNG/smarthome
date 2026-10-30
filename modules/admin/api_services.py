@@ -188,7 +188,7 @@ class ServicesController(RESTResource):
         return check_result
 
     # ======================================================================
-    #  /api/server/evalcheck
+    #  /api/services/evalcheck
     #
     def evalcheck(self):
         """
@@ -244,7 +244,7 @@ class ServicesController(RESTResource):
         return json.dumps({'match': match})
 
     # ======================================================================
-    #  /api/server/yamlcheck
+    #  /api/services/yamlcheck
     #
     def yamlcheck(self):
         """
@@ -261,7 +261,7 @@ class ServicesController(RESTResource):
         return self.yaml_syntax_checker(params)
 
     # ======================================================================
-    #  /api/server/yamlconvert
+    #  /api/services/yamlconvert
     #
     def yamlconvert(self):
         """

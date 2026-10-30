@@ -64,8 +64,9 @@ Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
       ``deprecated`` kennzeichnet ein Plugin, das durch eine andere Lösung ersetzt ist, ``defunct`` ein Plugin, das
       nicht mehr lauffähig ist (z.B. weil eine benötigte Bibliothek mit keiner unterstützten Python Version mehr
       funktioniert). Plugins mit einem dieser beiden Status werden weiterhin geladen, beim Laden wird jedoch eine
-      Warnung ins Log geschrieben. Sie werden mit dem nächsten Minor- oder Major-Release aus dem Plugin Repository
-      entfernt.
+      Warnung ins Log geschrieben. Ein Plugin, das in einem Release mit einem dieser beiden Status ausgeliefert wird,
+      wird mit dem darauf folgenden Minor- oder Major-Release aus dem Plugin Repository entfernt (z.B. ein Plugin, das
+      mit 2.0 als ``defunct`` ausgeliefert wird, mit 2.1). So bleibt Zeit, die Konfiguration anzupassen.
     - ``keywords:`` Liste der Schlüsselwörter die das Plugin beschreiben (durch Leerzeichen getrennt)
     - ``documentation:`` url die auf eine weiterführende Dokumentation verweist (damit sind **nicht** die Dateien
       user_doc.rst oder die veraltete README.md gemeint)

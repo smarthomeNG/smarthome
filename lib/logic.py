@@ -48,6 +48,7 @@ They can be used the following way: To call eg. **enable_logic(name)**, use the 
 
 import logging
 import os
+import shutil
 
 from collections import OrderedDict
 
@@ -59,7 +60,7 @@ import lib.shyaml as shyaml
 from lib.utils import Utils
 
 from lib.constants import PLUGIN_PARSE_LOGIC
-from lib.constants import DIR_LOGICS, DIR_ETC, BASE_LOGIC, BASE_ADMIN, BASE_LOGIC_GROUPS
+from lib.constants import DIR_LOGICS, DIR_ETC, DIR_TPL, BASE_LOGIC, BASE_ADMIN, BASE_LOGIC_GROUPS, YAML_FILE
 
 from lib.item import Items
 from lib.plugin import Plugins
@@ -200,7 +201,8 @@ class Logics:
         Load logic group definitions from etc/logic_groups.yaml.
         If that file does not yet exist, migrate the group definitions from
         etc/admin.yaml (legacy location) and write logic_groups.yaml so the
-        migration only happens once.
+        migration only happens once. Without an admin.yaml (new installation)
+        logic_groups.yaml is created from templates/logic_groups.yaml.
 
         After a successful migration, admin.yaml is renamed to admin.yaml.bak
         (overwriting any pre-existing backup) so that the migration can never
@@ -225,9 +227,22 @@ class Logics:
                 return {}
             return dict(groups_conf)
 
+        admconf_filename = self._sh.get_config_file(BASE_ADMIN)
+
+        # --- new installation: start with the groups of the template ---
+        if not os.path.isfile(admconf_filename):
+            template_filename = os.path.join(self._sh.get_config_dir(DIR_TPL), BASE_LOGIC_GROUPS + YAML_FILE)
+            if os.path.isfile(template_filename):
+                try:
+                    shutil.copy2(template_filename, groups_filename)
+                    logger.info('Logics._load_groups: created etc/logic_groups.yaml from the template')
+                    groups_conf = shyaml.yaml_load_roundtrip(groups_filename)
+                    return dict(groups_conf) if groups_conf else {}
+                except OSError as e:
+                    logger.warning(f'Logics._load_groups: could not create logic_groups.yaml from the template: {e}')
+
         # --- first-run migration from admin.yaml ---
         logger.info('Logics._load_groups: logic_groups.yaml not found – migrating from admin.yaml')
-        admconf_filename = self._sh.get_config_file(BASE_ADMIN)
         groups = {}
         try:
             _admin_conf = shyaml.yaml_load_roundtrip(admconf_filename)
@@ -287,7 +302,6 @@ class Logics:
         else:
             return False
         # plugin hook
-        #        for plugin in self._sh._plugins:
         for plugin in self.plugins.return_plugins():
             if hasattr(plugin, PLUGIN_PARSE_LOGIC):
                 update = plugin.parse_logic(logic)
@@ -298,7 +312,6 @@ class Logics:
             if isinstance(logic.watch_item, str):
                 logic.watch_item = [logic.watch_item]
             for entry in logic.watch_item:
-                #                for item in self._sh.match_items(entry):
                 for item in self.items.match_items(entry):
                     item.add_logic_trigger(logic)
         return True
@@ -646,7 +659,6 @@ class Logics:
                 mylogic.watch_item = [mylogic.watch_item]
             for entry in mylogic.watch_item:
                 # item hook
-                #                for item in self._sh.match_items(entry):
                 for item in self.items.match_items(entry):
                     try:
                         item.remove_logic_trigger(mylogic)
@@ -1366,7 +1378,6 @@ class Logic:
 
         This method is called by the scheduler
         """
-        #        self._last_run = self._sh.now()
         self._last_run = self.shtime.now()
 
     def trigger(self, by='Logic', source=None, value=None, dest=None, dt=None):

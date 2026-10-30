@@ -86,13 +86,15 @@ Auf der Seite `Python Logging <https://docs.python.org/3.6/library/logging.html#
 sind die Konfigurationsmöglichkeiten detailliert beschrieben.
 
 SmartHomeNG lädt beim Start die Konfiguration des Logging aus der Datei ``etc/logging.yaml``. Ist diese Datei nicht vorhanden,
-so versucht SmartHomeNG, die Datei ``etc/logging.yaml.default`` nach ``etc/logging.yaml`` zu kopieren und dann daraus
-die Konfiguration des Loggings zu laden.
+so kopiert SmartHomeNG die Vorlage ``templates/logging.yaml.default`` nach ``etc/logging.yaml`` und lädt dann daraus
+die Konfiguration des Loggings. Enthält die ``etc/logging.yaml`` eine Konfiguration, die nicht verarbeitet werden kann,
+startet SmartHomeNG mit der Konfiguration aus der Vorlage und meldet das auf der Konsole.
 
 Wenn bei der Konfiguration des Loggings etwas schief geht, kann also jederzeit die Datei ``etc/logging.yaml`` gelöscht oder
-besser umbenannt werden und wird dann beim nächsten Neustart durch den Inhalt der ``etc/logging.yaml.default`` frisch bereitgestellt.
+besser umbenannt werden und wird dann beim nächsten Neustart durch den Inhalt der ``templates/logging.yaml.default``
+frisch bereitgestellt.
 
-Ein Beispiel für ``etc/logging.yaml.default`` im Folgenden:
+Die Vorlage ``templates/logging.yaml.default`` im Folgenden:
 
 .. literalinclude:: ../../../../templates/logging.yaml.default
    :caption: etc/logging.yaml

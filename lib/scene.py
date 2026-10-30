@@ -92,7 +92,6 @@ class Scenes:
             return
 
         self._learned_values = {}
-        #   for item in smarthome.return_items():
         for item in self.items.return_items():
             if item.type() == 'scene':
                 self.scene_file = os.path.join(self._scenes_dir, item.property.path)
@@ -320,7 +319,6 @@ class Scenes:
             )
         )
         value = item.get_stringwithabsolutepathes(value, 'sh.', '(', 'scene')
-        #        ditem = self._sh.return_item(item.get_absolutepath(ditemname, attribute='scene'))
         ditem = self.items.return_item(item.get_absolutepath(ditemname, attribute='scene'))
 
         if learn:

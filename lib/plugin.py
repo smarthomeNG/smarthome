@@ -1034,7 +1034,7 @@ class Plugins:
 
 
 def _log_removal_state(meta: Metadata, plg_section: str, plugin_name: str) -> None:
-    """Log a warning if the metadata marks the plugin as deprecated or defunct (both are removed with the next release)."""
+    """Log a warning if the metadata marks the plugin as deprecated or defunct (both are removed with the release after this one)."""
     state = meta.get_string('state')
     if state == 'deprecated':
         logger.warning(

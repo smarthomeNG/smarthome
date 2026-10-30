@@ -130,6 +130,11 @@ class Database:
     'transaction()' - context manager: run several statements as one commit/rollback unit, using lock()/release() internally
     'verify()' - check database connection and reconnect if required
     'connected()' - check if database is connected
+    'is_connection_error()' - check if an exception means the connection was lost
+    'version()' - return the version of the database engine
+    'current_journal_mode()' - return the journal mode of a SQLite database (e.g. 'wal')
+    'lock_holder_description()' - describe the thread holding the database lock (for log messages)
+    'last_verify_reason()' - return why the last attempt of the latest verify() call failed
 
 
     The SQL statements executed may have placeholders and parameters which

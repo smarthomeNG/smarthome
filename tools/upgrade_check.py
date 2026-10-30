@@ -32,11 +32,18 @@ Checks:
 ``password-hash``
     Unsalted SHA-512 password hashes (http module, cli plugin) become salted hashes of the old hash
     (``pbkdf2_sha256_sha512$...``); the passwords stay the same.
+``yaml-1.1``
+    Configuration files that start with ``%YAML 1.1``: the directive is dropped, so that the file is read as YAML 1.2
+    like files without directive. Values that YAML 1.2 reads differently are reported: ``yes``/``no``/``on``/``off``
+    become ``true``/``false``, strings that YAML 1.2 would read as numbers (``0049123``, ``08``) are quoted. A file with
+    a value or key whose meaning has to be decided (``12:30`` is 750 in YAML 1.1, ``010`` is 8, ``N`` is false, a key
+    ``on`` is the boolean true) is not changed.
 """
 
 import argparse
 import ast
 import csv
+import dataclasses
 import functools
 import io
 import json
@@ -45,6 +52,7 @@ import shutil
 import sys
 import time
 import tokenize
+import warnings
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -250,6 +258,36 @@ def register(cls: type) -> type:
     """Class decorator adding an instance of a checker class to :data:`CHECKERS`."""
     CHECKERS[cls.name] = cls()
     return cls
+
+
+#: YAML 1.1 (files starting with '%YAML 1.1') and YAML 1.2 (files without directive)
+YAML_VERSIONS = ((1, 1), None)
+
+_SCALAR_READERS: dict = {}
+
+#: a '%YAML 1.1' directive line
+YAML_11_DIRECTIVE = re.compile(r'^%YAML[ \t]+1\.1[ \t]*(#.*)?\r?\n', re.MULTILINE)
+
+
+def read_scalar(token: str, version: tuple[int, int] | None):
+    """
+    What a plain (unquoted) scalar reads as in the given YAML version
+
+    :param version: ``(1, 1)`` for YAML 1.1, None for YAML 1.2
+    :return: the value; the token itself if it cannot be read alone
+    """
+    reader = _SCALAR_READERS.get(version)
+    if reader is None:
+        reader = ruamel_yaml.YAML(typ='safe')
+        if version is not None:
+            reader.version = version
+        _SCALAR_READERS[version] = reader
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            return reader.load(token)
+    except Exception:
+        return token
 
 
 def read_text(path: Path) -> str:
@@ -670,10 +708,6 @@ class ScenesChecker:
     name = 'scenes'
     description = 'scenes/*.conf become scenes/*.yaml'
 
-    #: reads YAML 1.1 like SmartHomeNG does: 'on', 'no' and the like are booleans there
-    PROBE: ClassVar[ruamel_yaml.YAML] = ruamel_yaml.YAML(typ='safe')
-    PROBE.version = (1, 1)
-
     @classmethod
     def value(cls, token: str) -> int | float | str:
         """The token as number if it reads back unchanged, else as string that YAML reads back as string."""
@@ -683,10 +717,8 @@ class ScenesChecker:
                     return convert(token)
             except ValueError:
                 pass
-        try:
-            plain = isinstance(cls.PROBE.load(token), str)
-        except Exception:
-            plain = False
+        # unquoted only if YAML 1.1 and 1.2 both read it as this string ('on' is a boolean in 1.1, '0049' a number in 1.2)
+        plain = all(read_scalar(token, version) == token for version in YAML_VERSIONS)
         return token if plain else DoubleQuotedScalarString(token)
 
     def convert(self, text: str) -> tuple[dict[int, dict], list[tuple[int, str]]]:
@@ -845,6 +877,78 @@ class MultilineChecker:
                 yield from self._scalars(value_node, key)
         elif isinstance(node, ScalarNode):
             yield key, node
+
+
+@register
+class Yaml11Checker:
+    """Files that start with '%YAML 1.1'; SmartHomeNG recommends YAML 1.2, the version of files without directive."""
+
+    name = 'yaml-1.1'
+    description = "files with '%YAML 1.1': drop the directive, values that YAML 1.2 reads differently"
+
+    #: booleans of YAML 1.1 that are strings in YAML 1.2 and are meant as booleans; single letters (y, N, ...) are
+    #: mostly meant as text (e.g. parity N), so they are reported for a decision
+    BOOLEAN_WORDS = re.compile(r'^(yes|Yes|YES|no|No|NO|on|On|ON|off|Off|OFF)$')
+
+    def files(self, project: Project) -> list[Path]:
+        """The configuration files below etc, the item, struct and scene files."""
+        return sorted(project.etc.glob('*.yaml')) + project.item_files() + project.files('scenes', '*.yaml')
+
+    def run(self, project: Project, fix: bool) -> list[Finding]:
+        findings: list[Finding] = []
+        for path in self.files(project):
+            text = read_text(path)
+            if not YAML_11_DIRECTIVE.search(text.split('\n---', 1)[0] + '\n'):
+                continue
+            try:
+                root = MultilineChecker._compose(text)
+            except Exception:
+                continue
+            file_findings, edits = self._differences(path, root)
+            if not file_findings:
+                file_findings.append(Finding(self.name, path, "'%YAML 1.1' can be dropped, nothing reads differently"))
+            if all(f.fixable for f in file_findings):
+                if fix:
+                    project.write_text(path, YAML_11_DIRECTIVE.sub('', apply_edits(text, edits), count=1))
+                    file_findings = [dataclasses.replace(f, fixed=True) for f in file_findings]
+            findings += file_findings
+        return findings
+
+    def _differences(self, path: Path, root) -> tuple[list[Finding], list[tuple[int, int, int, str]]]:
+        """Findings and edits for the plain scalars of *root* that YAML 1.1 and 1.2 read differently."""
+        findings, edits = [], []
+        for node, is_key in self._plain_scalars(root):
+            token = node.value
+            old, new = read_scalar(token, (1, 1)), read_scalar(token, None)
+            if type(old) is type(new) and old == new:
+                continue
+            row = node.start_mark.line + 1
+            replacement = None
+            if node.end_mark.line == node.start_mark.line and not is_key:
+                if isinstance(old, bool) and self.BOOLEAN_WORDS.match(token):
+                    replacement = 'true' if old else 'false'
+                elif isinstance(old, str):
+                    replacement = f"'{token}'" if "'" not in token else json.dumps(token)
+            message = f"'{token}' is {old!r} in YAML 1.1 and {new!r} in YAML 1.2"
+            if replacement is None:
+                message += '; decide which one is meant and write it unambiguously (e.g. quoted)'
+            else:
+                message += f'; becomes {replacement}'
+                edits.append((row, node.start_mark.column, node.end_mark.column, replacement))
+            findings.append(Finding(self.name, path, message, row, replacement is not None))
+        return findings, edits
+
+    def _plain_scalars(self, node, is_key=False):
+        """(node, is_key) of the unquoted scalars (keys and values) below *node*."""
+        if isinstance(node, MappingNode):
+            for key_node, value_node in node.value:
+                yield from self._plain_scalars(key_node, True)
+                yield from self._plain_scalars(value_node)
+        elif isinstance(node, SequenceNode):
+            for value_node in node.value:
+                yield from self._plain_scalars(value_node)
+        elif isinstance(node, ScalarNode) and node.style is None:
+            yield node, is_key
 
 
 def run_checks(project: Project, names: Iterable[str], fix: bool) -> list[Finding]:

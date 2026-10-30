@@ -1,0 +1,473 @@
+=============================
+Release 2.0.0 - xx. xxx 2026
+=============================
+
+Dieses Release ist ein Major-Release. Neben vielen neuen Features im Core von SmartHomeNG und in den Plugins werden
+Funktionen entfernt, die seit längerem als veraltet gekennzeichnet waren. Vor dem Update bitte den Abschnitt
+:ref:`Wichtige Hinweise zum Update <releasenotes_2_0_0_update>` lesen.
+
+|
+
+.. only:: develop_branch
+
+.. note::
+
+        Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
+
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 29. Oktober 2026
+           ('lib.scheduler: exit() and quit() in a logic end the run without closing stdin')
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. x. xxxx 2026
+           (...)
+
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.12.2 sind im Folgenden in diesen
+Release Notes beschrieben.
+
+Ab diesem Release folgt die Versionsnummer von SmartHomeNG dem `Semantic Versioning <https://semver.org/lang/de/>`_
+(``Major.Minor.Patch``). Eine neue Major-Version kennzeichnet Änderungen, die bestehende Konfigurationen, Logiken
+oder Plugins anpassen müssen. Welche Namen zur öffentlichen API gehören, ist in ``doc/dev/public_api.md`` beschrieben.
+
+
+Minimum Python Version
+----------------------
+
+Die minimale Python-Version, die von SmartHomeNG unterstützt wird, ist **Python 3.11**. Mit älteren Python-Versionen
+startet SmartHomeNG nicht.
+
+Bei einer Neuinstallation wird empfohlen, auf einer der neueren Python-Versionen (3.13 oder 3.14) aufzusetzen.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Offiziell unterstützt werden im SmartHomeNG Release 2.0.0 die Python Versionen 3.12, 3.13 und 3.14. Automatisierte
+Tests von SmartHomeNG werden mit den Python Versionen 3.11 bis 3.14 durchgeführt.
+(Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
+zu unterstützten Python Versionen)
+
+|
+
+.. _releasenotes_2_0_0_update:
+
+Wichtige Hinweise zum Update
+============================
+
+Das Tool :doc:`tools/upgrade_check.py </tools/tools_upgrade_check>` prüft eine bestehende Konfiguration auf die
+folgenden Änderungen und kann die meisten davon selbst durchführen (Option ``--fix``, vorher wird eine Sicherung der
+geänderten Dateien angelegt). Es sollte vor dem ersten Start von SmartHomeNG 2.0 ausgeführt werden.
+
+* **Python 3.11** ist die minimale Python-Version (siehe oben).
+
+* **Konfiguration unterhalb von etc**: ``config_etc`` ist jetzt standardmäßig ``true``. SmartHomeNG sucht die
+  Verzeichnisse ``items``, ``structs``, ``logics``, ``scenes`` und ``functions`` unterhalb von ``etc`` und verschiebt
+  vorhandene Verzeichnisse aus dem Stammverzeichnis beim Start dorthin. Mit ``config_etc: false`` in der
+  ``etc/smarthome.yaml`` kann die bisherige Struktur vorübergehend weiter verwendet werden.
+
+* **Instanznamen von Plugins**: ``legacy_instances`` ist jetzt standardmäßig ``false``. Der Name des Abschnitts in der
+  ``etc/plugin.yaml`` ist der Instanzname eines mehrfach eingebundenen Plugins; ``instance:`` wird nicht mehr
+  ausgewertet. Mit ``legacy_instances: true`` kann das bisherige Verhalten vorübergehend beibehalten werden.
+
+* **Kein .conf Format mehr**: Konfigurationsdateien im alten ``.conf`` Format (Items, Logiken, Szenen, Plugins)
+  werden nicht mehr gelesen. Sie können mit :doc:`tools/conf_to_yaml_converter.py </tools/tools_conf_to_yaml_converter>`
+  konvertiert werden.
+
+* **Nur noch SmartPlugins**: Plugins, die nicht von der Klasse ``SmartPlugin`` abgeleitet sind (klassische Plugins aus
+  smarthome.py), werden nicht mehr geladen. Die Parameter ``class_name`` und ``class_path`` eines Plugin-Abschnitts
+  in der ``etc/plugin.yaml`` werden ignoriert.
+
+* **Entfernte Methoden des sh Objekts**: Die als veraltet gekennzeichneten Methoden ``sh.return_item()``,
+  ``sh.return_items()``, ``sh.match_items()``, ``sh.find_items()``, ``sh.find_children()``, ``sh.add_item()``,
+  ``sh.return_plugins()``, ``sh.return_modules()``, ``sh.get_module()``, ``sh.return_logic()``,
+  ``sh.return_logics()``, ``sh.reload_logics()``, ``sh.now()``, ``sh.utcnow()``, ``sh.tzinfo()``, ``sh.utcinfo()``,
+  ``sh.runtime()``, ``sh.string2bool()``, ``sh.getBaseDir()`` und das Attribut ``sh.base_dir`` wurden entfernt. Die
+  Ersetzungen (z.B. ``sh.items.return_item()``, ``sh.shtime.now()``) nennt ``tools/upgrade_check.py``.
+
+* **lib.tools und sh.tools** wurden entfernt. Die Funktionen stehen in ``lib.utils``, ``lib.network`` und ``sh.shtime``
+  zur Verfügung (siehe :doc:`Methoden des SmartHomeNG Objekts </referenz/logiken/logiken_smarthomeng_methoden>`).
+
+* **Passwörter**: http Modul und Admin GUI verwenden gesalzene PBKDF2 Passwort-Hashes. Ungesalzene SHA-512 Hashes
+  älterer Versionen werden weiter akzeptiert; ``tools/upgrade_check.py --fix --only password-hash`` wandelt sie um.
+  Neue Hashes erzeugen die Seite **Dienste** der Admin GUI und ``tools/hash_password.py``.
+
+* **websocket Modul**: Das veraltete Protokoll ``adm`` wurde entfernt; die Admin GUI verwendet dafür die REST API.
+  Die Parameter ``websocket_host`` und ``websocket_port`` des admin Moduls werden nicht mehr unterstützt (Host und Port
+  werden im websocket Modul konfiguriert).
+
+* **REST API der Admin GUI**: ``GET /api/plugins`` und ``GET /api/logs/<logname>`` wurden entfernt, die legacy
+  ``/adm`` Schnittstelle wurde durch eine REST-basierte Stream-API (``/api/stream``) ersetzt.
+  ``GET /api/functions`` liefert die geladenen Userfunction-Module. Fehlgeschlagene Anmeldungen werden mit HTTP 401
+  beantwortet. CORS-Header werden nur noch für die im Parameter ``cors_origins`` konfigurierten Origins gesendet.
+
+* **Datenbank**: ``lib.db.Database`` akzeptiert keinen durch ``|`` getrennten Connect-String mehr.
+
+* **Kommandozeile**: Die veralteten Optionen ``-q`` und ``-v`` von ``bin/smarthome.py`` wurden entfernt.
+
+* **YAML**: SmartHomeNG verwendet nur noch ``ruamel.yaml`` (Version 0.16.7 bis 0.19.x), PyYAML wird nicht mehr
+  benötigt.
+
+* **YAML 1.2**: Empfohlen wird YAML 1.2. Die Vorlagen in ``templates`` enthalten keine Zeile ``%YAML 1.1`` mehr.
+  Dateien, die noch mit ``%YAML 1.1`` beginnen, werden weiter nach YAML 1.1 gelesen; ``tools/upgrade_check.py --only
+  yaml-1.1`` zeigt, welche Werte YAML 1.2 anders lesen würde, und stellt die Dateien mit ``--fix`` um (siehe
+  :ref:`YAML 1.1 und YAML 1.2 <yaml_versionen>`).
+
+* **Logik-Gruppen** werden in der Datei ``etc/logic_groups.yaml`` gespeichert. Die Gruppen-Definitionen aus der
+  ``etc/admin.yaml`` werden beim ersten Start übernommen, die ``etc/admin.yaml`` wird danach in ``etc/admin.yaml.bak``
+  umbenannt.
+
+* **Plugins**: Plugins, die den Core 2.0 benötigen, geben ``sh_minversion: 2.0.0-dev.2`` (bzw. höher) an.
+
+|
+
+Änderungen am Core
+==================
+
+Allgemein
+---------
+
+* add semantic versioning (``2.0.0-dev.2``), ``doc/dev/public_api.md`` and ``tools/api_surface.yaml`` describe the
+  public API
+
+* Workflows:
+
+  * run local-only git hooks
+  * exclude old plugin versions from codeql
+  * unittests: Python 3.11 to 3.14
+
+* lots of fixes after thorough code audit
+
+* log messages with missing f prefix or mismatched arguments
+
+* trim/clean comments, remove leftover debug prints
+
+
+Bugfixes im CORE
+----------------
+
+* bin/smarthome.py: fix lock check on startup, fix startup, ``-d`` skips logging.yaml completely
+
+* lib.log: messages of the SmartHomeNG log levels (NOTICE, DBGHIGH, DBGMED, DBGLOW, DEVELOP) name the calling
+  function and line instead of ``logForLevel``
+
+* lib.scheduler: a task queued while all workers are busy no longer waits up to one second after a worker became free
+
+* lib.scheduler, lib.shtime: fix DST switching bugs
+
+* lib.scheduler: ``exit()`` and ``quit()`` in a logic end the run without closing stdin
+
+* lib.smarthome: the logging configuration falls back to ``templates/logging.yaml.default`` if ``etc/logging.yaml``
+  is rejected
+
+* lib.smarthome, lib.item: ``use_conditional_triggers``, ``ignore_item_collision`` and ``threadinfo_export`` accept
+  booleans
+
+* lib.logic: a new installation gets ``etc/logic_groups.yaml`` from the template, no ``etc/admin.yaml`` is created any
+  more
+
+* lib.backup: back up and restore the user config where SmartHomeNG reads it, back up ``etc/logic_groups.yaml``
+
+* lib.config: a null node in a later item file no longer replaces the subtree an earlier file defined
+
+* lib.db: fix deadlock with verify, fix lock issues, fix default to commit
+
+* lib.item: fix create_item() persistence for parents defined in other files, fix handling of child items named
+  name, description or remark, rename_item() no longer drops an item's yaml definition on a failed write
+
+* lib.shpypi: don't use ``pip --user`` in a venv
+
+* lib.cpuinfo_sh: raw strings for regular expressions with backslashes
+
+* lib: close the pidfile after reading it, ``current_thread()`` instead of ``currentThread()``
+
+* module.admin: keep URL file names inside their directory, reset status after a failed restore, no credentials
+  in the login log, renew_token works with PyJWT 2, fix log view chunking, fix time comparison
+
+
+Updates in the CORE
+-------------------
+
+* Python 3.11 is the minimum version
+
+* ``config_etc`` defaults to true, ``legacy_instances`` to false
+
+* remove the config file format "conf" (scenes are read from .yaml files only)
+
+* plugins that are not derived from SmartPlugin are not loaded, ``class_name`` and ``class_path`` are ignored
+
+* remove the deprecated ``sh.*`` accessor methods, ``sh.base_dir``, ``lib.tools`` and ``sh.tools``
+
+* salted PBKDF2 password hashes for http and admin logins
+
+* plugin state ``defunct`` for plugins that do not work anymore
+
+* templates and samples without ``%YAML 1.1`` directive, YAML 1.2 is recommended (fixes ``parity: N`` read as false in
+  the SDP samples)
+
+* all parameters of ``etc/smarthome.yaml`` are described in ``modules/core/module.yaml`` (and thereby in the
+  Admin GUI) and in the template
+
+* bin
+
+  * smarthome
+
+    * add ``-u`` / ``--var_dir`` to use a separate var directory (similar to ``--config_dir``)
+    * remove the deprecated options ``-q`` and ``-v``
+
+  * shngversion:
+
+    * semantic versioning, core version ``2.0.0-dev.2`` for the plugins' ``sh_minversion``
+
+* Libs:
+
+  * lib.backup:
+
+    * back up and restore the user config where SmartHome reads it
+    * back up ``etc/logic_groups.yaml``
+
+  * lib.config:
+
+    * a null node in a later item file no longer replaces the subtree an earlier file defined
+
+  * lib.db:
+
+    * add ``transaction()`` primitive; harden connection/reconnect handling
+    * add lock timeouts, discard connection on error for clean reconnect, add watchdog
+    * add TimescaleDB support (and ``tools/db_migrate.py``)
+    * report when a SQLite file is in WAL mode, show an unrequested WAL mode as warning
+    * add db version query for the Admin GUI, name the lock holder in failed-lock-acquisition log messages
+    * no longer accepts a pipe-separated connect string
+
+  * lib.item:
+
+    * edit, rename/move, copy and delete items and item trees (Admin GUI and REST API), auto-create missing
+      ancestors, recursive delete
+    * editing an item keeps comments and blank lines in its yaml file
+    * rename carries children defined in other files, moves the cache file of a cached item and its children,
+      rebinds the sh and parent attribute, handles eval_trigger and on_change destinations
+    * structural item operations are mutually exclusive, a concurrent one is refused
+    * expand structs on create_item()
+    * attribute references for name, description, remark
+    * resolve attr\_ placeholders in @instance attributes
+    * pass triggering sources' details to evals (``source_details``)
+    * prevent the initial eval on startup for items a plugin already set (e.g. database: init)
+    * add find_attribute_with_instance()
+    * modify collision detection, ignore plugin names
+    * log the trigger_condition result at debug level
+
+  * lib.item_conversion:
+
+    * ruamel.yaml instead of PyYAML
+
+  * lib.log:
+
+    * custom log levels record their caller's location
+
+  * lib.logic:
+
+    * logic groups in ``etc/logic_groups.yaml``
+
+  * lib.metadata:
+
+    * warn about a missing or invalid plugin type when loading
+
+  * lib.model.mqttplugin:
+
+    * ``add_subscription(select=...)``: JMESPath selector for parts of a JSON payload
+    * show JSON payloads as text in webif
+    * ``__init__`` returns None when the mqtt module is missing
+
+  * lib.model.smartdeviceplugin:
+
+    * SDP 2.0: typed connection config with ConnectionHooks, transport/protocol selection by declared rules
+      (TRANSPORTS/PROTOCOL), see ``doc/dev/sdp``
+    * add ``invalidate_on_disconnect``
+    * DeviceConfig converts numbers to the declared field types
+    * serial: fix timeout/locking, async close cancels a pending read instead of waiting for the timeout
+    * fix standalone mode and struct generation, fix struct export, fix model struct merging, warn if the
+      configured model does not exist, fix command return on failure
+
+  * lib.model.smartplugin:
+
+    * dispatch item writes via asyncio to stop the caller from blocking
+    * name asyncio executor threads after the plugin, add ``set_asyncio_executor_names()`` for plugin-owned loops
+    * ``stop_asyncio()`` without fixed sleeps
+    * add ``db_invalidate_items()`` (from SmartDevicePlugin)
+    * update pause item handling
+    * document set_attr_value for attr@*
+
+  * lib.orb:
+
+    * fall back to another installed ephemeris backend if the configured one is unavailable
+
+  * lib.plugin:
+
+    * reload plugins including their own submodules, refresh plugin count on dynamic add/load
+    * fix double trigger method registration, fix instance handling via the Admin GUI
+
+  * lib.scheduler:
+
+    * running tasks (logics, item cycles/crontabs, plugin schedulers) are recorded with their runtime
+    * a task running longer than ``runtime_warn`` (default 120 s, global in ``smarthome.yaml``, for logics also per
+      logic) logs a warning with its current stack trace, again at each doubling
+    * running logics can be cancelled (exception ``TaskCancelled``), manually in the Admin GUI or automatically with
+      the new logic parameter ``runtime_cancel``
+
+  * lib.shyaml:
+
+    * plain ruamel.yaml round trip with the YAML API, ``ruamel.yaml>=0.16.7,<0.20``
+
+  * lib.userfunctions:
+
+    * add ``get_userlibs()``
+
+* Modules:
+
+  * modules.admin (v2.0.0):
+
+    * dashboard with system status, stopped plugins, recent warnings, overdue schedulers and database info
+      (incl. PostgreSQL/TimescaleDB)
+    * replace the legacy /adm API with the REST based stream API
+    * git pull for core and plugins, ``GET /api/server/pull_status`` reports new commits per checkout
+    * stop the core, power off or reboot the host (``allow_system_power``)
+    * threads page shows type and runtime of running tasks and their current stack, highlights overdue tasks and
+      allows to cancel logics (``GET /api/threads``, ``GET /api/threads/<ident>``,
+      ``POST /api/threads/<ident>/cancel``)
+    * REST API for item edit/rename/copy/delete and references
+    * remove ``GET /api/plugins`` and ``GET /api/logs/<logname>``, ``GET /api/functions`` lists the loaded
+      userfunction modules
+    * remove the static jwt and password salt, create tls certs on startup
+    * HTTP 401 for authentication failures, CORS headers only for configured origins (``cors_origins``)
+    * remove the deprecated ``websocket_host`` and ``websocket_port`` parameters
+    * ``openapi.yaml`` is generated from the route metadata (``tools/build_openapi.py``)
+
+  * modules.http (v1.8.0):
+
+    * webif dark mode (follows the Admin GUI)
+    * salted password hashes
+    * fix datatable entries-per-page calculation, responsive table redraw and row expansion, webif updating with
+      automatic escape, stay on tab on reload
+
+  * modules.mqtt (v1.8.1):
+
+    * requirement ``jmespath`` for the selector of ``MqttPlugin.add_subscription()``
+
+  * modules.websocket (v2.0.0):
+
+    * remove the deprecated ``adm`` payload protocol
+
+* tools:
+
+  * tools/upgrade_check.py:
+
+    * new: checks (and with ``--fix`` repairs) the configuration changes of 2.0
+    * check ``yaml-1.1``: report values that YAML 1.2 reads differently, drop the ``%YAML 1.1`` directive
+    * scenes converted from ``.conf`` quote values that YAML 1.1 or 1.2 would not read as text
+
+  * tools/db_migrate.py:
+
+    * new: migrate the database plugin schema between SQLite3, MySQL/MariaDB and PostgreSQL+TimescaleDB, resume by delta-cursor
+
+  * tools/hash_password.py:
+
+    * new: salted password hash for the configuration
+
+  * tools/api_snapshot.py:
+
+    * new: semver-level diff of the public API between two git refs
+
+  * tools/ruamel_compat:
+
+    * new: compare what ruamel.yaml versions do to SmartHomeNG's YAML files
+
+  * tools/build_openapi.py:
+
+    * new: generate ``modules/admin/openapi.yaml``
+
+  * tools/plugin_metadata_checker.py:
+
+    * a missing or unknown plugin type is an error, no classic plugins any more
+
+  * tools/postinstall:
+
+    * choose only Python versions SmartHomeNG starts with (3.11 and newer)
+
+  * tools/backup_restore.py:
+
+    * removed (use the command line options ``-cb``/``-rb`` or the Admin GUI)
+
+  * tools: ruamel.yaml instead of PyYAML, find the pidfile in the var directory
+
+|
+
+Änderungen bei Plugins
+======================
+
+Allgemein
+---------
+
+* Workflows:
+
+  * ...
+
+
+.. _releasenotes_2_0_0_neue_plugins:
+
+Neue Plugins
+------------
+
+Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* ...: ...
+
+.. _releasenotes_2_0_0_updates_plugins:
+
+Plugin Updates
+--------------
+
+Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* ...:
+
+  * ...
+
+
+Outdated Plugins
+----------------
+
+Seit v1.12.2 wurden keine Plugins in das plugin_archive Repository verschoben.
+
+Die folgenden Plugins funktionieren nicht mehr und sind als ``defunct`` gekennzeichnet. Sie werden beim Laden mit
+einer Warnung gemeldet, bleiben mit 2.0 noch im Plugin-Repo und werden mit Release 2.1 in das Archive-Repo
+verschoben:
+
+* darksky - das API wurde am 31. März 2023 abgeschaltet; Ersatz: piratewthr
+* deebot_ozmo - die Anmeldung bei Ecovacs funktioniert mit diesem Plugin nicht mehr; Ersatz: deebot
+* harmony
+* roomba_980
+* zwave - das benötigte Paket python-openzwave läuft mit keiner unterstützten Python Version; Alternative: zwave-js
+  über MQTT
+
+
+|
+
+Weitere Änderungen
+==================
+
+Dokumentation
+-------------
+
+* upgrade to Sphinx 9, improve search weighing
+* Admin GUI: dashboard, git pull, stopping the core and power actions of the host, threads page with running tasks
+  and cancelling of logics, logic groups, item editing
+* Logiken: exception ``TaskCancelled``, parameters ``runtime_warn`` and ``runtime_cancel``
+* Items: all names of the eval namespace, the initial eval on startup, ``trigger`` and ``trigger_condition``
+* Konfiguration: all parameters of ``etc/smarthome.yaml``, configuration files and directories, the templates in
+  ``templates/``, content of a configuration backup
+* Libraries: pages for lib.backup, lib.configdirs, lib.syspower and lib.vardir
+* Tools: pages for upgrade_check, db_migrate, hash_password, api_snapshot, build_openapi and ruamel_compat
+* Entwickler: ``doc/dev`` describes the design of lib.item, the database layer, SDP 2.0, the Admin GUI and the
+  workflows

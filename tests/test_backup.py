@@ -72,6 +72,13 @@ class TestBackupConfigDirs(unittest.TestCase):
 
         self.assertIn('items/a.yaml', names)
 
+    def test_logic_groups_are_backed_up(self):
+        self._write('etc', 'logic_groups.yaml', text='Mine:\n    title: my logics\n')
+
+        names = self._backup_names()
+
+        self.assertIn('etc/logic_groups.yaml', names)
+
     def test_private_plugins_are_backed_up(self):
         self._write('plugins', 'priv_x', '__init__.py')
 

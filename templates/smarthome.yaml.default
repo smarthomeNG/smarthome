@@ -1,5 +1,3 @@
-%YAML 1.1
----
 # etc/smarthome.yaml
 
 # Ort: 'Airport Berlin Tegel'
@@ -17,18 +15,14 @@ tz: 'Europe/Berlin'      # timezone, the example will be fine for most parts of 
 default_language: de     # default_language is used, where multiple languages are supported (de, if not specified)
 #default_logtext: "Item {id} wurde geändert."
 
-# by default, SmartHomeNG looks for config directories items/structs/logics/scenes/functions
-# in the SmartHomeNG base directory
-# By setting this option, SmartHomeNG looks for them below the etc directory
-# setting this option does NOT migrate old files, use command line option -e to migrate files
-# This is planned to become a default in a future release.
-# config_etc: true
+# SmartHomeNG looks for the config directories items/structs/logics/scenes/functions
+# below the etc directory. Directories found in the SmartHomeNG base directory are moved there on startup.
+# Setting this option to false keeps the layout used up to v1.12 (the command line option -e overrides it).
+#config_etc: true
 
-# Instance names are configured via the "instance" parameter in plugin.yaml
-# The future setting will be derived from the section name of each instance. This
-# behaviour can already be activated by setting the following option.
-# This is planned to become a default in a future release.
-# legacy_instances: false
+# The name of a section in plugin.yaml is the instance name of the plugin.
+# Setting this option to true uses the "instance" parameter in plugin.yaml instead (behaviour up to v1.12).
+#legacy_instances: false
 
 # 
 # control type casting when assiging values to items
@@ -44,8 +38,8 @@ default_language: de     # default_language is used, where multiple languages ar
 # Additional directory for modules - is added to sys.path (should not be needed)
 #module_paths: /usr/local/python/lib    # list of path-entries is possible
 
-# Crontab entry for schedule task in shpypi
-#shpypi_crontab: '9 5 * *'
+# Crontab entry for querying package versions on PyPI
+#shpypi_crontab: '7 3 * *'
 
 # Stem for name of configuration backup files
 #backup_name_stem: myinstallation
@@ -60,6 +54,30 @@ default_language: de     # default_language is used, where multiple languages ar
 # Logics can override it with their own 'runtime_warn' parameter in logic.yaml.
 #runtime_warn: 120
 
+# Library used to calculate sun and moon: ephem (default), skyfield or skyfield-cached
+# (skyfield needs a one-time run of tools/fetch_skyfield_data.py)
+#orb_backend: ephem
+
+# Timeout in seconds for database queries (also the lock timeout when closing the connection)
+#db_query_timeout: 60
+
+# Name of the file in etc/items (without .yaml) that items created at runtime are written to,
+# if no file name is given
+#created_items_file: created
+
+# Create items whose name collides with an attribute of the parent object (with a warning)
+# instead of dropping them
+#ignore_item_collision: false
+
+# Restart SmartHomeNG if the scheduler needs this many worker threads
+#restart_on_num_workers: 30
+
+# Allow the experimental item attributes 'trigger' and 'trigger_condition'
+#use_conditional_triggers: false
+
+# Order of languages in which texts are searched, if a text is not available in the default language
+#fallback_language_order: en,de
+
 
 #-----------------------------------------
 # develop (might be altered for release)
@@ -70,19 +88,6 @@ default_language: de     # default_language is used, where multiple languages ar
 # Loggen von Warnungen, falls abgekündigte Funktionen aufgerufen werden (Standard: False)
 #deprecated_warnings: True
 
-# Change log level for logging of using undefined item attributes
-# (Attributes that are no statdard-attributes and not defined by a configured plugin)
-#undef_item_attr_loglevel_info: True
-
 # To get info which thread consumes how many cpu when using shng tool 'cpuusage.py'
-#threadinfo_export: True
+#threadinfo_export: true
 
-
-#-----------------------------------------
-# not used? - following entries are probably not used
-#
-
-# supportded databases - db: Format: <name>:<python-module>, list of database-entries is possible
-#db:
-#  - sqlite:sqlite3
-#  - mysql:pymysql

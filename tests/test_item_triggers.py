@@ -28,6 +28,9 @@ Item triggers (eval_trigger wiring):
   fresh item → empty list
   after _init_prerun wiring → target item appears in source's list
 
+use_conditional_triggers (smarthome.yaml):
+  boolean true and string 'true' enable conditional triggers, unset or false disable them
+
 Hysteresis item triggers:
   get_hysteresis_item_triggers → returns _hysteresis_items_to_trigger
   fresh item → empty list
@@ -475,6 +478,23 @@ class TestGetHysteresisItemTriggers(_Base):
         sensor._init_prerun()
         plain._init_prerun()
         self.assertNotIn(plain, sensor.get_hysteresis_item_triggers())
+
+
+class TestUseConditionalTriggers(_Base):
+    def test_unset_disables(self):
+        self.assertFalse(_item(self.sh, 'ct_unset')._use_conditional_triggers)
+
+    def test_boolean_true_enables(self):
+        self.sh._use_conditional_triggers = True
+        self.assertTrue(_item(self.sh, 'ct_bool')._use_conditional_triggers)
+
+    def test_string_true_enables(self):
+        self.sh._use_conditional_triggers = 'true'
+        self.assertTrue(_item(self.sh, 'ct_str')._use_conditional_triggers)
+
+    def test_false_disables(self):
+        self.sh._use_conditional_triggers = False
+        self.assertFalse(_item(self.sh, 'ct_false')._use_conditional_triggers)
 
 
 if __name__ == '__main__':

@@ -34,6 +34,7 @@ from lib.shpypi import Shpypi
 from lib.constants import (
     BASE_LOG,
     BASE_LOGIC,
+    BASE_LOGIC_GROUPS,
     BASE_MODULE,
     BASE_PLUGIN,
     BASE_SH,
@@ -239,6 +240,8 @@ def backup_etc_directory(etc_dir, backupzip):
     backup_file(backupzip, source_dir, arc_dir, BASE_MODULE + YAML_FILE)
     backup_file(backupzip, source_dir, arc_dir, BASE_PLUGIN + YAML_FILE)
     backup_file(backupzip, source_dir, arc_dir, BASE_SH + YAML_FILE)
+    backup_file(backupzip, source_dir, arc_dir, BASE_LOGIC_GROUPS + YAML_FILE)
+    # logic groups of an installation that has not migrated them to logic_groups.yaml yet
     backup_file(backupzip, source_dir, arc_dir, 'admin' + YAML_FILE)
 
     backup_file(backupzip, source_dir, arc_dir, BASE_STRUCT + YAML_FILE)

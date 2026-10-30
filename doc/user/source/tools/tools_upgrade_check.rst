@@ -61,6 +61,14 @@ Die Prüfungen:
 |                   | http Moduls, ``hashed_password`` des cli Plugins) werden durch einen gesalzenen Hash des alten  |
 |                   | Hashes (``pbkdf2_sha256_sha512$...``) ersetzt. Das Passwort bleibt dasselbe.                    |
 +-------------------+-------------------------------------------------------------------------------------------------+
+| ``yaml-1.1``      | Dateien, die mit ``%YAML 1.1`` beginnen (``etc/*.yaml``, Items, Structs, Szenen): Die Zeile     |
+|                   | wird entfernt, so dass die Datei wie empfohlen nach YAML 1.2 gelesen wird. Werte, die YAML 1.2  |
+|                   | anders liest, werden gemeldet: ``yes``/``no``/``on``/``off`` werden zu ``true``/``false``,      |
+|                   | Texte, die YAML 1.2 als Zahl lesen würde (z.B. ``0049123``, ``08``), werden in Quotes gesetzt.  |
+|                   | Enthält eine Datei Werte, deren Bedeutung entschieden werden muss (z.B. ``12:30``, in YAML 1.1  |
+|                   | die Zahl 750, ``010``, ``N`` oder ein Schlüssel ``on``), wird sie nicht verändert (siehe        |
+|                   | :ref:`YAML 1.1 und YAML 1.2 <yaml_versionen>`).                                                 |
++-------------------+-------------------------------------------------------------------------------------------------+
 
 Optionen:
 

@@ -149,6 +149,12 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | die durch einen Doppelpunkt getrennt werden. (z.B. 21.4:25.0)                          |
 |                            | ist. Es kann auch ein einzelner Wert notiert werden.                                   |
 +----------------------------+----------------------------------------------------------------------------------------+
+| trigger                    | Experimentell: Liste von Items, bei deren Auslösung der eval Ausdruck ausgewertet wird |
+|                            | (siehe :doc:`trigger_condition <./trigger_condition>`)                                 |
++----------------------------+----------------------------------------------------------------------------------------+
+| trigger_condition          | Experimentell: Bedingungen, die bei einer Auslösung erfüllt sein müssen, damit der     |
+|                            | eval Ausdruck ausgeführt wird (siehe :doc:`trigger_condition <./trigger_condition>`)   |
++----------------------------+----------------------------------------------------------------------------------------+
 | type                       | Um Werte zu speichern, muss ein Typ vorgegeben werden. Unterstützte Typen              |
 |                            | sind bool, num, str, list, dict, foo, scene, datetime, timestamp                       |
 +----------------------------+----------------------------------------------------------------------------------------+
@@ -168,5 +174,6 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
    log_change
    on_update
    struct
+   trigger_condition
    type
 

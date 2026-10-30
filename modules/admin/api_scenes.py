@@ -63,7 +63,6 @@ class ScenesController(RESTResource):
     #         for scene in scene_list:
     #             scene_dict = {}
     #             scene_dict['path'] = scene
-    #             #                scene_dict['name'] = str(self._sh.return_item(scene))
     #             scene_dict['name'] = str(self.items.return_item(scene))
     #
     #             action_list = self.scenes.get_scene_actions(scene)
@@ -114,7 +113,6 @@ class ScenesController(RESTResource):
             for scene in scene_list:
                 scene_dict = {}
                 scene_dict['path'] = scene
-                #                scene_dict['name'] = str(self._sh.return_item(scene))
                 scene_dict['name'] = str(self.items.return_item(scene))
 
                 action_list = self.scenes.get_scene_actions(scene)

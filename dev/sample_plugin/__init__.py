@@ -234,7 +234,7 @@ class SamplePlugin(SmartPlugin):
         # device_value = ...
         #
         # # find the item(s) to update:
-        # for item in self.sh.find_items('...'):
+        # for item in self.get_item_list():
         #
         #     # update the item by calling item(value, caller, source=None, dest=None)
         #     # - value and caller must be specified, source and dest are optional
