@@ -749,6 +749,15 @@ room:
         self.assertEqual([], self.run_check('yaml-1.1'))
 
 
+class TestCompose(unittest.TestCase):
+    def test_node_tree_of_a_text_with_yaml_directive(self):
+        root = tool.MultilineChecker._compose('%YAML 1.1\n---\nroom:\n    cache: yes\n')
+
+        key_node, value_node = root.value[0]
+        self.assertEqual('room', key_node.value)
+        self.assertEqual('yes', value_node.value[0][1].value)
+
+
 class TestCommandLine(InstallationTestCase):
     def run_main(self, *args):
         out = io.StringIO()

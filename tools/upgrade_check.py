@@ -862,8 +862,10 @@ class MultilineChecker:
 
     @staticmethod
     def _compose(text: str):
-        """The node tree of *text* (YAML.compose() exists only from ruamel.yaml 0.17 on)."""
+        """The node tree of *text*; YAML.compose() exists from ruamel.yaml 0.17 on, the composer is used before."""
         yaml = ruamel_yaml.YAML(typ='rt')
+        if hasattr(yaml, 'compose'):
+            return yaml.compose(text)
         yaml.get_constructor_parser(text)
         return yaml.composer.get_single_node()
 
