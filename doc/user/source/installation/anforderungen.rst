@@ -211,11 +211,12 @@ ist in der folgenden Tabelle aufgelistet:
   "3.7",   "end of life",  "27\. Juni 2018",       "27\. Juni 2023"
   "3.8",   "end of life",  "14\. Oktober 2019",    "Oktober 2024"
   "3.9",   "end of life",  "5\. Oktober 2020",     "Oktober 2025"
-  "3.10",  "security",     "4\. Oktober 2021",     "Oktober 2026"
+  "3.10",  "end of life",  "4\. Oktober 2021",     "Oktober 2026"
   "3.11",  "security",     "24\. Oktober 2022",    "Oktober 2027"
   "3.12",  "security",     "2\. Oktober 2023",     "Oktober 2028"
-  "3.13",  "bugfix",       "7\. Oktober 2024",     "Oktober 2029"
-  "3.14",  "bugfix",       "1\. Oktober 2025",     "Oktober 2030"
+  "3.13",  "security",     "7\. Oktober 2024",     "Oktober 2029"
+  "3.14",  "bugfix",       "7\. Oktober 2025",     "Oktober 2030"
+  "3.15",  "bugfix",       "9\. Oktober 2026",     "Oktober 2031"
 
 
 Python (und PHP) Versionen unter Linux

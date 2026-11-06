@@ -44,7 +44,7 @@ Unterstützte Python Versionen
 -----------------------------
 
 Offiziell unterstützt werden im SmartHomeNG Release 2.0.0 die Python Versionen 3.12, 3.13 und 3.14. Automatisierte
-Tests von SmartHomeNG werden mit den Python Versionen 3.11 bis 3.14 durchgeführt.
+Tests von SmartHomeNG werden mit den Python Versionen 3.11 bis 3.15 durchgeführt.
 (Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
 zu unterstützten Python Versionen)
 
@@ -134,7 +134,7 @@ Allgemein
 
   * run local-only git hooks
   * exclude old plugin versions from codeql
-  * unittests: Python 3.11 to 3.14
+  * unittests: Python 3.11 to 3.15
 
 * lots of fixes after thorough code audit
 
