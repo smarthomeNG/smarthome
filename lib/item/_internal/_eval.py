@@ -127,6 +127,9 @@ def run_eval(item, value=None, caller='Eval', source=None, dest=None, source_det
     Called from Item.__run_eval() which is passed to the scheduler as a
     callable.  All scheduler bookkeeping stays in the Item method; this
     function contains only the evaluation logic.
+
+    ``source_details`` is set only by eval_trigger runs, so it also tells them apart from a
+    write to the item itself: see ``triggered`` of ``Item._update_item()``.
     """
     if caller.lower().startswith('admin:'):
         caller = caller[6:] + ':admin'
@@ -247,7 +250,7 @@ def run_eval(item, value=None, caller='Eval', source=None, dest=None, source_det
         if value is None:
             logger.debug(f'Item {item._path}: evaluating {item._eval} returns None')
         else:
-            item._update_item(value, caller, source, dest)
+            item._update_item(value, caller, source, dest, triggered=source_details is not None)
 
 
 # ---------------------------------------------------------------------------

@@ -1343,9 +1343,15 @@ class Item:
             log_on_change(self, value, caller, source, dest)
         return
 
-    def _update_item(self, value, caller='Logic', source=None, dest=None, key=None, index=None):
-        """Public proxy for __update — used by extracted submodules (_eval.py etc.)."""
-        self.__update(value, caller, source, dest, key, index)
+    def _update_item(self, value, caller='Logic', source=None, dest=None, key=None, index=None, triggered=False):
+        """
+        Public proxy for __update — used by extracted submodules (_eval.py etc.).
+
+        :param triggered: the value was derived by an eval_trigger run. Plugins then get the caller
+            with its ``Eval:`` prefix: a plugin compares the caller with its own name to skip
+            echoes, and a derived value is none, even if the plugin wrote the triggering item.
+        """
+        self.__update(value, caller, source, dest, key, index, triggered)
 
     # ------------------------------------------------------------------
     # Proxy properties for name-mangled trigger lists
@@ -1367,7 +1373,7 @@ class Item:
         """Proxy for __parent — used by _navigation.py."""
         return self.__parent
 
-    def __update(self, value, caller='Logic', source=None, dest=None, key=None, index=None):
+    def __update(self, value, caller='Logic', source=None, dest=None, key=None, index=None, triggered=False):
         def check_external_change(entry_type, entry_value):
             matches = []
             for pattern in entry_value:
@@ -1461,16 +1467,13 @@ class Item:
                 self._history.record_update_only(caller, source, self.shtime)
             trigger_source_details = self._history.get_last_update_by()
 
-        # Test for fix for unwanted plugin retrigger in combination with eval expressions
-        # remove existing prefix from caller
         caller_without_prefix = caller
         try:
             if caller.lower().startswith('eval:'):
-                # clean up caller for update_item methods
                 caller_without_prefix = caller[5:]
         except AttributeError:
             pass
-        # END Test for fix for unwanted plugin retrigger in combination with eval expressions
+        plugin_caller = caller if triggered else caller_without_prefix
 
         self.__run_on_update(value, caller=caller, source=source, dest=dest)
 
@@ -1481,10 +1484,9 @@ class Item:
             for method in list(self.__methods_to_trigger):
                 # shortname={method.__self__._shortname} - not every plugin has a var _shortname !!!
                 try:
-                    method(self, caller_without_prefix, source, dest)
+                    method(self, plugin_caller, source, dest)
                 except Exception as e:
                     logger.exception(f'Item {self._path}: problem running {method}: {e}')
-            ### END Test for fix for unwanted plugin retrigger in combination with eval expressions
 
             if self._threshold and self.__logics_to_trigger:
                 if self.__th_crossed and self._value <= self.__th_low:  # cross lower bound

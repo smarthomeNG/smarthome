@@ -132,7 +132,10 @@ handler. Roughly, in order (see the diagram below for the full branching):
 4. `run_on_update()` (`_internal/_eval.py`) always runs, changed or not.
 5. **Only if the value changed** (or `enforce_updates`/type `scene`):
    - every plugin `update_item` method registered on this item runs
-     (`self.__methods_to_trigger`, see below),
+     (`self.__methods_to_trigger`, see below). Plugins compare `caller` with their own name to
+     skip echoes, so a write to an item with an eval reports `<plugin>` without the `Eval:` prefix.
+     An eval run by `eval_trigger` derives a new value and reports `Eval:<origin>`: the plugin
+     sends it even if it wrote the triggering item,
    - every logic registered on this item fires (`self.__logics_to_trigger`,
      optionally gated by a `threshold` crossing),
    - every item that depends on *this* item's value gets its own
