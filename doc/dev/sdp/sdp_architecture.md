@@ -156,9 +156,11 @@ parameter is truthy.
   names equal the plugin parameter names (`host`, `port`, `serialport`,
   `baudrate`, …, `send_retries`, `send_timeout`, `json_move_keys`).
   `extra` holds all other plugin parameters (e.g. `viess_proto`), `explicit`
-  the names that were set. `from_params()` treats `None` as unset and runs
-  `sanitize_param()` on values; `with_defaults()` fills only fields not in
-  `explicit`.
+  the names that were set. `from_params()` treats `None` as unset, runs
+  `sanitize_param()` on values and converts numbers to the field's declared
+  `int`/`float` type (`num` parameters arrive as `float`; a fractional value
+  for an `int` field raises `ValueError`); `with_defaults()` fills only
+  fields not in `explicit`.
 - `ConnectionHooks` (frozen) — `on_data(by, data[, command])`,
   `on_connect(by)`, `on_disconnect(by)`, `on_abort(by)`.
 - `SchedulerPort` (Protocol) — `scheduler_add/get/remove`; `SmartPlugin`
@@ -433,7 +435,7 @@ plugin overrides `on_data_received()` and maps methods to commands itself
 | item update (caller's thread) | `update_item()` → `send_command()` |
 | scheduler workers | `read_initial_values`, `<fullname>_cyclic`, `<item>-readafterwrite`, `<fullname>_reconnect`, `resend` |
 | `Tcp_client` receive thread | callbacks → whole receive path |
-| serial async: reader + queue worker | reader fills a `SimpleQueue`; the worker runs the receive path |
+| serial async: reader + queue worker | reader fills a `SimpleQueue`; the worker runs the receive path; closing the connection cancels the reader's pending read |
 | UDP listener | receive path for UDP notifications |
 
 | Lock | Guards |

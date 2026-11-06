@@ -76,7 +76,7 @@ an eval expression.
 the eval namespace as an explicit dictionary:
 
 ```python
-def _make_eval_env(item, value=None, caller=None, source=None, dest=None) -> dict:
+def _make_eval_env(item, value=None, caller=None, source=None, dest=None, source_details=None) -> dict:
     ...
 ```
 
@@ -84,7 +84,7 @@ Every `eval()` call across `_eval.py` and `_casting.py` passes this dict as
 the second argument:
 
 ```python
-_ns = _make_eval_env(item, value=value, caller=caller, source=source, dest=dest)
+_ns = _make_eval_env(item, value=value, caller=caller, source=source, dest=dest, source_details=source_details)
 value = eval(item._eval, _ns)
 ```
 
@@ -104,10 +104,11 @@ value = eval(item._eval, _ns)
 | `caller` | str or None | Who triggered the eval |
 | `source` | str or None | Source item path |
 | `dest` | str or None | Destination |
+| `source_details` | str or None | `'caller:source'` of the update of the `eval_trigger` item that triggered this eval (same as `trigger['source_details']` in logics); `None` if the eval was not triggered via `eval_trigger` |
 | `item` | Item | The item instance itself |
 | `__builtins__` | dict | Standard Python builtins |
 
-`caller`, `source`, `dest`, and `item` were technically accessible via the old
+`caller`, `source`, `dest`, `source_details`, and `item` were technically accessible via the old
 ambient approach but were never documented.  They are included so that any
 configuration that happened to rely on them continues to work.
 
@@ -150,10 +151,10 @@ On a successful fallback the log will contain a message such as:
 
 ```
 WARNING lib.item: Item 'my.item': eval: name 'os' is not in the standard eval
-environment but was found via the legacy namespace.  This compatibility retry
-will be removed in a future release.  Please update your configuration to use
+environment but was found via the legacy namespace. This compatibility retry
+will be removed in a future release. Please update your configuration to use
 only the documented eval variables: sh, shtime, items, math, uf, env, value,
-datetime, time.
+caller, source, dest, source_details, datetime, time.
 ```
 
 ![Execution flow including compat shim](eval_env_flow.svg)
@@ -182,18 +183,24 @@ All call sites that invoke the fallback are marked with `# COMPAT-SHIM`:
 
 ```python
 # _eval.py — run_eval, main eval:
+_first_exc = None                                    # COMPAT-SHIM
 try:
-    value = eval(item._eval, _ns)
-except Exception:
-    _ns['value'] = item.cast(_ns.get('value'))
-    value = eval(item._eval, _ns)
+    try:
+        value = eval(item._eval, _ns)
+    except Exception as _e0:
+        _first_exc = _e0                             # COMPAT-SHIM
+        _ns['value'] = item.cast(_ns.get('value'))
+        value = eval(item._eval, _ns)
 except Exception as _e:                              # COMPAT-SHIM
     _fb = _eval_with_legacy_fallback(               # COMPAT-SHIM
-        item._eval, _ns, item, 'eval', _e)          # COMPAT-SHIM
+        item._eval, _ns, item, 'eval',
+        _first_exc if _first_exc is not None else _e)  # COMPAT-SHIM
     if _fb is _EVAL_FAILED:                         # COMPAT-SHIM
         raise _e                                    # COMPAT-SHIM
     value = _fb                                     # COMPAT-SHIM
 ```
+
+`run_eval` has a second shim site for the `trigger_condition` expression.
 
 ### Removal procedure
 
@@ -221,12 +228,12 @@ of the fallback warning).
 
 ## 4. Test Coverage
 
-64 tests in `tests/test_item_eval_namespace.py` act as the before/after gate
+68 tests in `tests/test_item_eval_namespace.py` act as the before/after gate
 for this change.
 
 | Test class | Tests | What it verifies |
 |---|---:|---|
-| `TestMakeEvalEnvKeys` | 15 | Every key in the explicit namespace dict |
+| `TestMakeEvalEnvKeys` | 17 | Every key in the explicit namespace dict |
 | `TestRunEvalDocumentedVars` | 13 | `value`, `math`, `datetime`, `time`, `caller`, `source`, `sh` in real `__run_eval` calls |
 | `TestRunEvalItemAccess` | 5 | `item._path`, `item._type`, `item.property.type/path`, identity |
 | `TestRunEvalItemsAccess` | 3 | `items.return_item()` lookup and live-value tracking |
@@ -235,6 +242,7 @@ for this change.
 | `TestEvalCompatShim` | 9 | Fallback success + `_EVAL_FAILED` + warning content; `datetime`/`time` in primary ns |
 | `TestRunEvalCompatIntegration` | 3 | Full-stack: `os` in eval still works (compat), unknown name no crash, `re` in `on_change` |
 | `TestBareEvalRunsOnce` | 2 | Regression gate: bare (no `dest =`) `on_change`/`on_update` expressions with a non-`None` result run exactly once, not twice |
+| `TestEvalTriggerSourceDetails` | 2 | `source_details` reaches the eval of an `eval_trigger`-triggered item |
 
 The `datetime` and `time` tests are the critical regression gate: they would
 have failed silently on the extracted `_eval.py` before this fix.

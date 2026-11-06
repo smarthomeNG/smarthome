@@ -27,8 +27,9 @@ it as `function()` (`file.py`), e.g. `run_eval()` (`_internal/_eval.py`).
   renaming, copying and removal of items.
 
 Every `Item` is created with a reference to the single `Items` instance and
-registers itself there as soon as it exists; nothing about an item is usable
-before that registration has happened.
+is registered there by whoever constructs it (`_construct_and_link()` for a
+top-level item, the parent's `__init__()` for a child) — an item is not
+reachable through `Items` before that registration has happened.
 
 ## Building the tree
 
@@ -41,7 +42,10 @@ references are expanded into that `dict` at this stage too, by `lib.config`
 become the plain attributes it stood for, and `Item` never has to know
 structs exist at all. For each top-level entry, `load_itemdefinitions()`
 calls `_construct_and_link()`, which constructs an `Item` and links it under
-its parent (or under the `Items` instance itself, for a top-level item).
+its parent (or under the `Items` instance itself, for a top-level item). If
+the item's name collides with an existing attribute of the parent (or of `sh`,
+for a top-level item), `check_item_name_collision()` drops the item and
+construction returns `None`.
 
 The recursion isn't in `Items` — it's in `Item.__init__()` itself. While
 building itself from its config `dict`, an item walks that same `dict` a
@@ -53,6 +57,7 @@ for attr, value in config.items():
     if isinstance(value, dict):
         child = Item(smarthome, self, child_path, value)
         ...
+        vars(self)[attr] = child
         _items_instance.add_item(child_path, child)
         self.__children.append(child)
 ```
@@ -67,8 +72,11 @@ the *entire* tree, in order:
 1. `_init_prerun()` — wire up cross-item dependencies (see below).
 2. `_init_start_scheduler()` — start scheduler jobs for items with a
    `crontab` or `cycle` attribute.
-3. `_init_run()` — run the initial `eval` for items that have one and need
-   it (skipped if the item already got its value from cache).
+3. `_init_run()` — run the initial `eval` for items that have both an `eval`
+   and an `eval_trigger`. Skipped for items with a `cache` attribute and for
+   items whose value was already set during construction (e.g. a plugin's
+   `parse_item()` restoring it), recognised by `changed_by` no longer
+   starting with `Init`.
 
 These are three separate passes over *all* items, not folded into
 construction, specifically so that an item's `eval_trigger` can name another
@@ -131,12 +139,12 @@ handler. Roughly, in order (see the diagram below for the full branching):
      eval/hysteresis re-run **scheduled**, not called directly (see next
      section),
    - `run_on_change()` (`_internal/_eval.py`) runs.
-6. If a `cache` file is configured **and** the value changed, the cache
-   file is rewritten.
+6. If a `cache` file is configured, the value changed **and** the item is
+   not fading, the cache file is rewritten.
 7. Separately — and *not* conditional on the value having changed —
-   if `autotimer` is set and this call didn't itself come from the
-   autotimer firing, its timer is (re)armed against the freshly-written
-   value. An autotimer stays armed across same-value updates on purpose:
+   if `autotimer` is set, the item is not fading, and this call didn't itself
+   come from the autotimer firing, its timer is (re)armed against the
+   freshly-written value. An autotimer stays armed across same-value updates on purpose:
    it resets its own countdown on any incoming write, not only on ones
    that changed something.
 
@@ -300,14 +308,23 @@ tree while SmartHomeNG is running:
 - **`create_item()`** does what `_construct_and_link()` does at startup,
   but for a single new (sub)tree at runtime — and, unlike startup, runs the
   three init passes immediately for just that subtree, since there's no
-  batch of sibling items to wait for.
+  batch of sibling items to wait for. A pre-existing item whose wildcard
+  `trigger:` pattern would match the new item is not rewired. `struct:`
+  references in the new config are expanded here (`_expand_struct_refs()`),
+  since the YAML loader isn't involved.
 - **`edit_item()`** changes an existing item's attributes *in place*, via
   `_apply_config()`, instead of replacing the `Item` object. That matters
   because other items hold direct references to this item (in their
   `_items_to_trigger`, from the dependency wiring above) — replacing the
   object would mean finding and rewriting every one of those references.
   Mutating in place means they simply keep pointing at the same object,
-  now with new behaviour.
+  now with new behaviour. The item's own outgoing trigger registrations,
+  scheduler jobs and fade are torn down first; after `_apply_config()` the
+  three init passes re-run for it, and every loaded plugin gets
+  `remove_item()` before and `parse_item()` after the change (plugins with
+  `STOP_ON_ITEM_CHANGE` that have a stake in the edited attributes are
+  stopped and restarted around it). The cached value is re-cast to the
+  (possibly new) type.
 - **`remove_item()`**, **`rename_item()`**, and **`copy_item()`** all have to
   deal with the fact that an item's path is also referenced as a *string* —
   inside other items' `eval`, `on_change`, `trigger`, `hysteresis_input`,
@@ -333,6 +350,14 @@ tree while SmartHomeNG is running:
   classified and flagged for the calling code to report, since what a
   relative reference resolves to depends on the path of the item that
   contains it — and that path just changed.
+
+`create_item()`, `edit_item()`, `remove_item()`, `rename_item()` and
+`copy_item()` also persist their change to the item's YAML file (editing
+keeps comments and blank lines; rename moves the cache file of cached items),
+and are serialised by a non-blocking, reentrant lock (`_ExclusiveOperationLock`):
+a second structural operation from another thread is refused with
+`ItemOperationBusyError` instead of queued, because an operation can run for
+minutes (plugin stop/run). The admin API reports that as HTTP 409.
 
 `Items` also owns two smaller registries worth knowing about:
 `plugin_attributes`/`plugin_attribute_prefixes`, populated by

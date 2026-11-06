@@ -40,7 +40,7 @@ list is [`tools/api_surface.yaml`](../../tools/api_surface.yaml); this document 
 
 | Component | Scheme |
 |---|---|
-| Core | `X.Y.Z`; `develop` carries a pre-release `X.Y.Z-dev.N` until the release; `release.sh` sets `-dev.0` (no change since the release, only the bump) right after a release, and `N` is raised by hand when a plugin needs a specific development state *(decided)* |
+| Core | `X.Y.Z`; `develop` carries a pre-release `X.Y.Z-dev.N` until the release; `release.sh post` (the maintainer's release script, kept outside this repository) sets `-dev.0` (no change since the release, only the bump) right after a release, and `N` is raised by hand when a plugin needs a specific development state *(decided)* |
 | Plugins, modules | `X.Y.Z` in `plugin.yaml`/`module.yaml`, identical to `PLUGIN_VERSION` in the code |
 | SmartDevicePlugin | `SDP_VERSION`, gated by `sdp_minversion` in `plugin.yaml` |
 

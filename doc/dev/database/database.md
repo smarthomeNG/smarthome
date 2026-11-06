@@ -4,9 +4,8 @@ This document describes the internal design of the `database` plugin and the con
 primitive it builds on (`lib/db.py`'s `Database` class). It is aimed at Python developers who are
 already familiar with SmartHomeNG basics.
 
-> **Status (verified 2026-09-07 against `plugins/database/` and `lib/db.py` on
-> `database-transaction-refactor` / `db-transaction-refactor`):** Describes the system as it exists
-> today. The plugin went through a module split (`utils.py`/`buffer.py`/`store.py` extracted from
+> **Status (verified 2026-11-06 against `plugins/database/` and `lib/db.py` on `prerelease`):**
+> Describes the system as it exists today. The plugin went through a module split (`utils.py`/`buffer.py`/`store.py` extracted from
 > `__init__.py`) and, separately, a locking rewrite that replaced hand-rolled
 > `lock()`/`cursor()`/`commit()`/`rollback()`/`release()` sequences throughout both `lib/db.py` and
 > the plugin with a single `transaction()` context manager. Both are complete and are described
@@ -76,7 +75,7 @@ delegate for every moved method (`insertLog`, `readItem`, `_compact_maxage`, `ti
 of this — and so is anything (mainly the test suite) that reaches into a "private" method directly.
 Each new module takes a back-reference to the `Database` instance rather than individual
 parameters, for the same reason a full dependency-injection split wasn't worth it: the goal here is
-file-size/navigability, not decoupling. `__init__.py` is now ~2300 lines.
+file-size/navigability, not decoupling. `__init__.py` is now ~2500 lines.
 
 **`utils.py`** — pure functions, importable without any database connection:
 
@@ -128,7 +127,7 @@ early on every other driver.
   (regular reads/writes) and `self._db_maint` (maintenance — orphan cleanup,
   `remove_older_than_maxage()`). The two connections are kept separate so a long-running
   maintenance transaction never blocks ordinary item logging, and vice versa.
-- Implements `run`/`stop`/`parse_item`/`update_item`/`_dump`/`_initialize_db`/`id` — plugin
+- Implements `run`/`stop`/`parse_item`/`update_item`/`rename_item`/`_dump`/`_initialize_db`/`id` — plugin
   lifecycle and buffer-flush machinery too entangled with each other to split out cleanly — and
   re-exports every legacy method name (`insertLog`, `readItem`, `insertItem`, ...) as a one-line
   delegate to the store objects, on top of the one-line delegates to the four modules above.
@@ -223,6 +222,13 @@ This section traces what happens when an item value changes.
 There is no bulk "close every open entry" pass — the still-open (`duration=None`) most recent entry
 for an item is closed the next time that specific item changes, or at `finalize=True` (plugin
 shutdown), via `BufferManager.close_open()`/`set_last_duration()` operating per item.
+
+**Renaming an item.** `Database.rename_item()` (the plugin's `PLUGIN_RENAME_ITEM` hook, called from
+`Items.rename_item()`) re-keys the plugin's per-item state and re-binds `item.series`/`item.db` to the
+new path. The item's row in the item table keeps its `id` and only gets the new name (`ItemStore.rename()`),
+so the log history stays attached. If another row already carries the new name (history left over from earlier
+use of that path), the old row's log is merged into it via `reassign_orphaned_id()` and the old row is
+removed; a history that cannot be moved stays orphaned and is logged as an error.
 
 After a crash the most recent row of each item stays open (`duration = NULL`). `CrashRecovery`
 (`recovery.py`) closes such rows:
@@ -346,12 +352,16 @@ The `val_quality` column (schema v7) solves this:
 | `0` (`QUALITY_VALID`) | Normal recorded value. |
 | `1` (`QUALITY_NO_DATA`) | No data available — value should be ignored in aggregations. All `val_*` columns are `NULL`. |
 
-The plugin injects two methods onto every tracked item:
+The plugin injects three methods onto every tracked item:
 
 ```python
 item.db_mark_invalid()   # opens a QUALITY_NO_DATA gap entry at the current time
 item.db_mark_valid()     # explicitly closes an open gap
+item.db_is_invalid()     # read-only: is a gap currently open?
 ```
+
+`db_is_invalid()` lets a periodic caller avoid calling `db_mark_invalid()` on an item that is already
+marked, which would fragment one real gap into several.
 
 If a new value arrives via `update_item()` while a gap is still open, the gap is closed **implicitly** —
 no explicit `db_mark_valid()` call is required. The typical driver usage is just:
