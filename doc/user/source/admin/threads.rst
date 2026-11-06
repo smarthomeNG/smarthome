@@ -30,8 +30,8 @@ Für sie zeigt die Liste zusätzlich:
   hervorgehoben (Standard 120 Sekunden, einstellbar in ``smarthome.yaml``, für Logiken auch pro Logik, siehe
   :doc:`Standardparameter von Logiken </referenz/logiken/logiken_standardparameter>`).
 
-Beim Überschreiten von ``runtime_warn`` und erneut bei jeder Verdopplung der Laufzeit wird zusätzlich eine Warnung mit dem
-aktuellen Stacktrace des Tasks geloggt, für Logiken in das Log der Logik.
+Beim Überschreiten von ``runtime_warn`` und erneut bei jeder Verdopplung der Laufzeit wird zusätzlich eine Warnung geloggt, für
+Logiken in das Log der Logik. Der aktuelle Stacktrace des Tasks wird getrennt davon auf Level DEBUG geloggt.
 
 Der Button **Stack** zeigt die Stelle im Code, an der der Task gerade ausgeführt wird. Wechselt die Stelle zwischen zwei
 Aufrufen, läuft der Task in einer Schleife. Bleibt sie gleich, wartet er in einem blockierenden Aufruf.

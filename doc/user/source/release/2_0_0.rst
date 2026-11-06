@@ -310,7 +310,7 @@ Updates in the CORE
 
     * running tasks (logics, item cycles/crontabs, plugin schedulers) are recorded with their runtime
     * a task running longer than ``runtime_warn`` (default 120 s, global in ``smarthome.yaml``, for logics also per
-      logic) logs a warning with its current stack trace, again at each doubling
+      logic) logs a warning (its current stack trace separately at DEBUG), again at each doubling
     * running logics can be cancelled (exception ``TaskCancelled``), manually in the Admin GUI or automatically with
       the new logic parameter ``runtime_cancel``
 

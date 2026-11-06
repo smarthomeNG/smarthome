@@ -89,7 +89,7 @@ die Admin GUI auf der gleichen Seite anzeigt, werden in der :doc:`holidays.yaml 
      - Timeout in Sekunden für Datenbankabfragen (z.B. MySQL). Verhindert dauerhaftes Blockieren bei einem nicht erreichbaren Datenbankserver. Gilt auch als Lock-Timeout beim Schließen der Verbindung.
    * - ``runtime_warn``
      - ``120``
-     - Laufzeit in Sekunden, ab der für einen Scheduler-Task (Logik, Item-Zyklus/Crontab, Plugin-Scheduler) eine Warnung mit Stacktrace geloggt wird, erneut bei jeder Verdopplung. 0 = aus. Logiken können den Wert mit ihrem eigenen Parameter runtime_warn überschreiben.
+     - Laufzeit in Sekunden, ab der für einen Scheduler-Task (Logik, Item-Zyklus/Crontab, Plugin-Scheduler) eine Warnung geloggt wird (der Stacktrace getrennt auf DEBUG), erneut bei jeder Verdopplung. 0 = aus. Logiken können den Wert mit ihrem eigenen Parameter runtime_warn überschreiben.
    * - ``orb_backend``
      - ``ephem``
      - Bibliothek für die Berechnung von Sonne und Mond (``ephem``, ``skyfield``, ``skyfield-cached``, siehe :doc:`lib.orb </lib/orb>`). Ist sie nicht installiert, wird mit einer Warnung ein installiertes Backend verwendet.

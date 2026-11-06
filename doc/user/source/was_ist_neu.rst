@@ -29,7 +29,7 @@ Konfiguration findet und die meisten davon selbst durchführt.
       (Siehe auch :doc:`Admin GUI/Items </admin/items>`)
 
     - **Laufende Tasks**: Der Scheduler erfasst die Laufzeit von Logiken, Item-Zyklen und Plugin-Schedulern. Läuft
-      ein Task zu lange, wird eine Warnung mit Stacktrace geloggt (``runtime_warn``). Logiken können in der Admin GUI
+      ein Task zu lange, wird eine Warnung geloggt (``runtime_warn``), der Stacktrace auf DEBUG. Logiken können in der Admin GUI
       oder automatisch (``runtime_cancel``) abgebrochen werden.
       (Siehe auch :doc:`Admin GUI/Threads </admin/threads>`)
 

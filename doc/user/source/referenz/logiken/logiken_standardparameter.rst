@@ -40,8 +40,8 @@ Die folgenden Parameter können für eine Logik in der Konfigurationsdatei im Ve
 |                  | implementiert. Wenn dieser Parameter auf **True** gesetzt wird, kann die Logik                |
 |                  | von einer Visualisierung aus (z.B. smartVISU) ausgelöst werden.                               |
 +------------------+-----------------------------------------------------------------------------------------------+
-| runtime_warn     | **Optional**: Laufzeit in Sekunden, ab der eine Warnung mit Stacktrace in das Log der Logik   |
-|                  | geschrieben wird, erneut bei jeder Verdopplung der Laufzeit. ``0`` schaltet die Warnung für   |
+| runtime_warn     | **Optional**: Laufzeit in Sekunden, ab der eine Warnung in das Log der Logik geschrieben wird |
+|                  | (der Stacktrace getrennt auf DEBUG), erneut bei jeder Verdopplung. ``0`` schaltet sie für     |
 |                  | diese Logik ab. Ohne Angabe gilt ``runtime_warn`` aus ``smarthome.yaml`` (Standard: 120).     |
 +------------------+-----------------------------------------------------------------------------------------------+
 | runtime_cancel   | **Optional**: Laufzeit in Sekunden, nach der die Logik automatisch abgebrochen wird (wie über |

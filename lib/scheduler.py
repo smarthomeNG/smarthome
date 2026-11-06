@@ -483,19 +483,20 @@ class Scheduler(threading.Thread):
         """
         Check running tasks against their runtime thresholds.
 
-        Logs a warning with the current stack for each task that passed its next runtime_warn
-        threshold, and requests cancellation of each logic that passed its runtime_cancel.
+        Logs a warning for each task that passed its next runtime_warn threshold, followed by its current stack
+        at DEBUG level, and requests cancellation of each logic that passed its runtime_cancel.
 
         :param now: ``time.monotonic()`` value to check against, defaults to the current one
         """
         if now is None:
             now = time.monotonic()
         for task in self._running.due_warnings(now):
-            stack = ''.join(self.get_task_stack(task.thread_ident) or ['(not available)\n'])
-            self._task_logger(task).warning(
-                f'{task.name} ({task.task_type}) running for {now - task.started:.0f} s '
-                f'(runtime_warn {task.runtime_warn:g} s, thread {task.thread_ident}), current stack:\n{stack}'
-            )
+            task_logger = self._task_logger(task)
+            runtime = f'{task.name} ({task.task_type}) running for {now - task.started:.0f} s'
+            task_logger.warning(f'{runtime} (runtime_warn {task.runtime_warn:g} s, thread {task.thread_ident})')
+            if task_logger.isEnabledFor(logging.DEBUG):
+                stack = ''.join(self.get_task_stack(task.thread_ident) or ['(not available)\n'])
+                task_logger.debug(f'{runtime}, current stack:\n{stack}')
         for task in self._running.due_cancels(now):
             self._task_logger(task).warning(
                 f'{task.name} ({task.task_type}) exceeded runtime_cancel {task.runtime_cancel:g} s, cancelling'
