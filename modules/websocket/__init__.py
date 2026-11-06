@@ -96,6 +96,7 @@ class Websocket(Module):
         self.logger.info(f'certificate .....: key: ../etc/{self.tls_cert} / ../etc/{self.tls_key}')
 
         self.loop = None  # Var to hold the event loop for asyncio
+        self._servers = []  # websockets servers started on the loop
 
         self.initialize_payload_protocols()
         return
@@ -132,20 +133,16 @@ class Websocket(Module):
         self.loop.call_soon_threadsafe(self.loop.stop)
 
         try:
-            # join() already blocks until the thread's own finally-block
-            # cleanup (task cancellation, asyncgen shutdown, loop.close())
-            # actually completes - a fixed sleep() beforehand only pads
-            # every shutdown with dead time, it does not help synchronize
-            # anything. Bound it so a regression here surfaces as a warning
-            # instead of an indefinite hang.
+            # join() blocks until the server thread has closed the servers and drained the loop
             self._server_thread.join(timeout=10)
             if self._server_thread.is_alive():
-                self.logger.warning('Websocket Server(s): did not stop within 10s')
+                self.logger.warning(
+                    f'Websocket Server(s): did not stop within 10s - tasks still alive: {self._alive_task_names()}'
+                )
             else:
                 self.logger.info('Websocket Server(s): Stopped')
         except Exception as err:
             self.logger.info(f'Stopping websocket error: {err}')
-            pass
         return
 
     def initialize_payload_protocols(self):
@@ -244,23 +241,62 @@ class Websocket(Module):
             self.loop.run_forever()
         finally:
             try:
-                # cancel and drain all outstanding tasks and generators
-                pending = [t for t in asyncio.all_tasks(loop=self.loop) if not t.done()]
-                for task in pending:
-                    task.cancel()
-                if pending:
-                    # finally stop the loop
-                    self.loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+                self.loop.run_until_complete(self._shutdown_loop())
             except Exception as e:
-                self.logger.warning(f'_ws_server_thread: finally - Exception on cancelling pending tasks: {e}')
-            try:
-                self.loop.run_until_complete(self.loop.shutdown_asyncgens())
-            except Exception as e:
-                self.logger.warning(f'_ws_server_thread: finally - Exception on loop.shutdown_asyncgens(): {e}')
+                self.logger.warning(f'_ws_server_thread: finally - Exception on shutting down the loop: {e}')
             try:
                 self.loop.close()
             except Exception as e:
                 self.logger.warning(f'_ws_server_thread: finally - Exception on loop.close(): {e}')
+
+    SERVER_CLOSE_TIMEOUT = 5  # seconds the servers get to close their connections gracefully
+    DRAIN_ROUNDS = 5
+
+    def _alive_task_names(self):
+        """
+        Names of the unfinished tasks on the module's event loop (for diagnostics, callable from any thread)
+
+        :return: list of task names
+        """
+        try:
+            return [t.get_name() for t in asyncio.all_tasks(loop=self.loop) if not t.done()]
+        except RuntimeError:
+            return []
+
+    async def _shutdown_loop(self):
+        """
+        Wind down the event loop once it has stopped running
+
+        Closes the listening sockets first, so that no connection is accepted while tasks are
+        being cancelled. Then cancels remaining tasks until none is left and shuts down the
+        async generators.
+        """
+        await self._close_servers()
+        await self._cancel_tasks()
+        await self.loop.shutdown_asyncgens()
+
+    async def _close_servers(self):
+        """Stop listening and close all open connections of the websocket servers, bounded by SERVER_CLOSE_TIMEOUT"""
+        for server in self._servers:
+            server.close()
+        try:
+            await asyncio.wait_for(
+                asyncio.gather(*(server.wait_closed() for server in self._servers)), self.SERVER_CLOSE_TIMEOUT
+            )
+        except asyncio.TimeoutError:
+            self.logger.warning(f'Websocket Server(s): connections not closed within {self.SERVER_CLOSE_TIMEOUT}s')
+
+    async def _cancel_tasks(self):
+        """Cancel all tasks except the calling one and wait for them, repeating for tasks spawned meanwhile"""
+        current = asyncio.current_task()
+        for _ in range(self.DRAIN_ROUNDS):
+            pending = [t for t in asyncio.all_tasks() if t is not current and not t.done()]
+            if not pending:
+                return
+            for task in pending:
+                task.cancel()
+            await asyncio.gather(*pending, return_exceptions=True)
+        self.logger.warning(f'Websocket Server(s): tasks still alive after cancelling: {self._alive_task_names()}')
 
     USERS = set()
 
@@ -271,13 +307,13 @@ class Websocket(Module):
         if ssl_context:
             self.logger.info('Secure websocket server started')
             try:
-                await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context)
+                self._servers.append(await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context))
             except OSError as e:
                 self.logger.error(f'Cannot start secure websocket server - error: {e}')
         else:
             self.logger.info('Websocket server started')
             try:
-                await websockets.serve(self.handle_new_connection, ip, port)
+                self._servers.append(await websockets.serve(self.handle_new_connection, ip, port))
             except OSError as e:
                 self.logger.error(f'Cannot start websocket server - error: {e}')
 
