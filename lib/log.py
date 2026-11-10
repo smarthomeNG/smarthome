@@ -37,6 +37,8 @@ from pathlib import Path
 from typing import Any
 
 import collections
+import dataclasses
+from collections.abc import Iterator
 
 import lib.shyaml as shyaml
 from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG, DIR_ETC
@@ -111,6 +113,56 @@ def rebase_handler_filenames(config_dict: dict[str, Any]) -> None:
         filename = handler.get('filename')
         if isinstance(filename, str):
             handler['filename'] = rebase_var_prefix(filename)
+
+
+@dataclasses.dataclass(frozen=True)
+class LogEntry:
+    """
+    A logical entry of a logfile: one log record, including the traceback lines that follow it.
+
+    :ivar end_line: 1-based physical line number of the last line of the entry
+    :ivar lines: the physical lines of the entry as read from the file, line terminators included; the first line
+        is the record, the others are its traceback
+    """
+
+    end_line: int
+    lines: tuple[str, ...]
+
+    @property
+    def text(self) -> str:
+        """The physical lines of the entry joined."""
+        return ''.join(self.lines)
+
+
+def iter_log_entries(path: str) -> Iterator[LogEntry]:
+    """
+    Yield the logical entries of the logfile at ``path`` in file order.
+
+    A line starting with ``Traceback``, and every following line indented by two spaces up to and including the
+    first non-indented line after them, belongs to the preceding entry instead of starting a new one. A file
+    starting with a traceback begins its first entry with that line.
+
+    Entries may span several physical lines, so ``LogEntry.end_line`` is the way to map entries to file lines.
+    """
+    with open(path, 'r', encoding='UTF-8') as logfile:
+        lines: list[str] = []
+        end_line = 0
+        appending = False
+        for line_no, line in enumerate(logfile, start=1):
+            if line.startswith('Traceback'):
+                appending = True
+            if appending and lines:
+                lines.append(line)
+                end_line = line_no
+                if not line.startswith('Traceback') and not line.startswith('  '):
+                    appending = False
+                continue
+            if lines:
+                yield LogEntry(end_line, tuple(lines))
+            lines = [line]
+            end_line = line_no
+        if lines:
+            yield LogEntry(end_line, tuple(lines))
 
 
 class Logs:

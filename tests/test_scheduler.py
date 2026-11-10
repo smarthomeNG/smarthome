@@ -343,6 +343,61 @@ class TestSchedulerJobRegistration(unittest.TestCase):
         self.assertIsNone(result)
 
 
+class TestSchedulerEntries(unittest.TestCase):
+    """get_entries() snapshots; Scheduler._scheduler is class-level, so each test starts from an empty registry."""
+
+    def setUp(self):
+        self.sched, self.now = _make_scheduler()
+        self.sched._scheduler.clear()
+        self.addCleanup(self.sched._scheduler.clear)
+
+    def test_get_entries_empty_without_jobs(self):
+        self.assertEqual(self.sched.get_entries(), [])
+
+    def test_get_entries_describes_every_job_ordered_by_name(self):
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        explicit_next = self.now + datetime.timedelta(minutes=5)
+        self.sched.add('zeta', obj, cycle=60, offset=60, prio=2, value=7)
+        self.sched.add('alpha', obj, cron='0 * * * *', next=explicit_next)
+        entries = self.sched.get_entries()
+        self.assertEqual([entry.name for entry in entries], ['alpha', 'zeta'])
+        alpha, zeta = entries
+        self.assertEqual(alpha.next, explicit_next)
+        self.assertEqual(alpha.cron, {'0 * * * *': None})
+        self.assertIsNone(alpha.cycle)
+        self.assertEqual(zeta.cycle, {60: 7})
+        self.assertIsNone(zeta.cron)
+        self.assertEqual(zeta.next, self.now + datetime.timedelta(seconds=60))
+        self.assertEqual(zeta.prio, 2)
+        self.assertEqual(zeta.value, 7)
+        self.assertTrue(zeta.active)
+        self.assertIs(zeta.obj, obj)
+
+    def test_get_entries_is_a_snapshot(self):
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched.add('job', obj, cycle=60, offset=60)
+        before = self.sched.get_entries()[0]
+        self.sched.change('job', active=False)
+        self.sched.remove('job')
+        self.assertTrue(before.active)
+        self.assertEqual(self.sched.get_entries(), [])
+
+    def test_get_entries_waits_for_the_scheduler_lock(self):
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched.add('job', obj, cycle=60)
+        result = []
+        with self.sched._lock:
+            reader = threading.Thread(target=lambda: result.append(self.sched.get_entries()))
+            reader.start()
+            reader.join(timeout=0.2)
+            self.assertTrue(reader.is_alive(), 'get_entries() must not read while the lock is held')
+        reader.join(timeout=2)
+        self.assertEqual([entry.name for entry in result[0]], ['job'])
+
+
 class TestSchedulerNextTimeCalculation(unittest.TestCase):
     """Verify _next_time() computes correct fire times for cycle-based jobs."""
 

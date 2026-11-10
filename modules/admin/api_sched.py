@@ -92,25 +92,20 @@ class SchedulersController(RESTResource):
         schedule_list = []
 
         # handle all defined schedulers
-        for entry in self._sh.scheduler._scheduler:
+        for s in self._sh.scheduler.get_entries():
+            entry = s.name
             schedule = dict()
-            s = self._sh.scheduler._scheduler[entry]
-            if s['next'] is not None and s['cycle'] != '' and s['cron'] != '':
+            if s.next is not None:
                 schedule['fullname'] = entry
                 schedule['name'] = entry
                 schedule['group'] = 'other'
-                schedule['next'] = s['next'].strftime('%Y-%m-%d %H:%M:%S%z')
-                # unpack cycle dict
-                cy = s['cycle']
-                # keep <cycle> = {'cycle': <value>}, so commented this out
-                # if isinstance(cy, dict) and 'cycle' in cy:
-                #     cy = cy['cycle']
-                schedule['cycle'] = str(cy)
-                #            schedule['cron'] = html.escape(str(s['cron']))
-                schedule['cron'] = str(s['cron'])
-                schedule['prio'] = s['prio']
-                schedule['active'] = s['active']
-                schedule['value'] = str(s['value'])
+                schedule['next'] = s.next.strftime('%Y-%m-%d %H:%M:%S%z')
+                # keep <cycle> = {'cycle': <value>}
+                schedule['cycle'] = str(s.cycle)
+                schedule['cron'] = str(s.cron)
+                schedule['prio'] = s.prio
+                schedule['active'] = s.active
+                schedule['value'] = str(s.value)
 
                 if schedule['cycle'] == 'None':
                     schedule['cycle'] = '-'
@@ -124,7 +119,7 @@ class SchedulersController(RESTResource):
                     del nl[0]
                     schedule['name'] = '.'.join(nl)
 
-                (schedule['task_type'], schedule['task_name']) = self.build_task_info(s['obj'])
+                (schedule['task_type'], schedule['task_name']) = self.build_task_info(s.obj)
                 schedule_list.append(schedule)
 
         # Handle all waiting triggers

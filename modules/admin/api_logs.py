@@ -26,6 +26,7 @@ import json
 import cherrypy
 
 import lib.shyaml as shyaml
+from lib.log import iter_log_entries
 from lib.utils import Utils
 from lib.constants import DIR_ETC, BASE_LOG
 import jwt
@@ -109,50 +110,16 @@ class LogsController(RESTResource):
         return logfiles
 
     @staticmethod
-    def _iter_log_entries(path):
+    def _entry_text(entry):
         """
-        Yield ``(raw_line_no, entry_text)`` for every logical log entry in the
-        file at *path*, merging traceback continuation lines into the entry
-        they belong to: a line starting with ``'Traceback'``, and every
-        following indented (``'  '``-prefixed) line up to and including the
-        first non-indented line after it, is appended to the *previous*
-        entry rather than starting a new one - same convention the reader
-        has always used, just applied consistently across the whole file in
-        one pass instead of being re-derived per chunk request.
+        Return a log entry as shown in the admin UI: spaces replaced by NBSP, traceback lines marked with ``'> '``.
 
-        *raw_line_no* is the 1-based physical file line number of the last
-        raw line consumed by that entry (a running total, not an index) -
-        this is what lets callers compute true chunk/line offsets without
-        assuming a fixed number of raw lines per logical entry, which breaks
-        as soon as any entry spans more than one physical line.
-
-        :param path: Path of the logfile to read
-        :type path: str
-
-        :return: generator of (raw_line_no, entry_text) pairs, in file order
-        :rtype: Iterator[tuple[int, str]]
+        :param entry: logical log entry
+        :type entry: lib.log.LogEntry
+        :rtype: str
         """
-        with open(path, 'r', encoding='UTF-8') as lfile:
-            raw_line_no = 0
-            entry_text = None
-            entry_end_line = 0
-            appending = False
-            for line in lfile:
-                raw_line_no += 1
-                if line.startswith('Traceback'):
-                    appending = True
-                if appending and entry_text is not None:
-                    entry_text += '> ' + line.replace(' ', chr(160))
-                    entry_end_line = raw_line_no
-                    if (not line.startswith('Traceback')) and (not line.startswith('  ')):
-                        appending = False
-                    continue
-                if entry_text is not None:
-                    yield entry_end_line, entry_text
-                entry_text = line.replace(' ', chr(160))
-                entry_end_line = raw_line_no
-            if entry_text is not None:
-                yield entry_end_line, entry_text
+        first, *continuation = (line.replace(' ', chr(160)) for line in entry.lines)
+        return first + ''.join('> ' + line for line in continuation)
 
     # ======================================================================
     #  GET /api/logs
@@ -207,7 +174,7 @@ class LogsController(RESTResource):
             # can no longer be derived from chunksize*index once any entry
             # in an earlier chunk spanned more than one physical line (a
             # traceback), so counting is done directly instead of assumed.
-            entries = list(self._iter_log_entries(logfile_path))
+            entries = [(entry.end_line, self._entry_text(entry)) for entry in iter_log_entries(logfile_path)]
             total_entries = len(entries)
             chunks_total = max(1, -(-total_entries // self.chunksize))  # ceil div
 

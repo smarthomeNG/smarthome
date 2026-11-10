@@ -170,6 +170,31 @@ class RunningTask:
         return self.runtime_warn > 0 and self.runtime >= self.runtime_warn
 
 
+@dataclasses.dataclass(frozen=True)
+class SchedulerEntry:
+    """
+    Snapshot of an entry registered with the scheduler, as returned by :meth:`Scheduler.get_entries`.
+
+    :ivar name: scheduler name, e.g. ``logics.<name>``, ``items.<path>`` or ``plugins.<plugin>.<name>``
+    :ivar obj: the object the scheduler calls (a Logic, an Item or a method)
+    :ivar prio: priority, 1 is the most important
+    :ivar active: False while the entry is paused
+    :ivar next: time of the next run, None if none is scheduled
+    :ivar cycle: ``{seconds: value}`` of the cycle, None if the entry has no cycle
+    :ivar cron: ``{crontab expression: value}``, None if the entry has no crontab
+    :ivar value: value handed to the called object
+    """
+
+    name: str
+    obj: object
+    prio: int
+    active: bool
+    next: datetime.datetime | None
+    cycle: dict | None
+    cron: dict | None
+    value: object
+
+
 class _TaskRegistry:
     """Thread-safe registry of the tasks currently running on scheduler worker threads, keyed by thread ident."""
 
@@ -437,6 +462,28 @@ class Scheduler(threading.Thread):
         :return: copies of the running tasks, in no particular order
         """
         return self._running.snapshot()
+
+    def get_entries(self) -> list[SchedulerEntry]:
+        """
+        Get the entries registered with the scheduler
+
+        :return: snapshots taken under the scheduler lock, ordered by name; later changes to the scheduler do not
+            affect them
+        """
+        with self._lock:
+            return [
+                SchedulerEntry(
+                    name=name,
+                    obj=job['obj'],
+                    prio=job['prio'],
+                    active=job['active'],
+                    next=job['next'],
+                    cycle=dict(job['cycle']) if isinstance(job['cycle'], dict) else None,
+                    cron=dict(job['cron']) if isinstance(job['cron'], dict) else None,
+                    value=job['value'],
+                )
+                for name, job in sorted(self._scheduler.items())
+            ]
 
     def get_task_stack(self, thread_ident: int) -> list[str] | None:
         """

@@ -142,6 +142,26 @@ class TestReadServesFileChunks(unittest.TestCase):
         self.assertEqual(result['chunks'], 1)
         self.assertTrue(result['lastchunk'])
 
+    def test_traceback_lines_are_marked_and_spaces_become_nbsp(self):
+        lines = [
+            'INFO entry 0\n',
+            'Traceback (most recent call last):\n',
+            '  File "x.py", line 1\n',
+            'ValueError: boom\n',
+        ]
+        controller = _make_controller(self.tmp_path, chunksize=500)
+        _write_log(self.tmp_path, 'test.log', lines)
+
+        result = json.loads(controller.read(id='test.log', chunk='1'))
+
+        self.assertEqual(
+            result['loglines'],
+            [
+                'INFO\xa0entry\xa00\n> Traceback\xa0(most\xa0recent\xa0call\xa0last):\n'
+                '> \xa0\xa0File\xa0"x.py",\xa0line\xa01\n> ValueError:\xa0boom\n'
+            ],
+        )
+
     def test_traceback_spanning_chunk_boundary_keeps_next_chunk_aligned(self):
         # chunksize=2 (logical entries). Entry 1 merges a 3-line traceback, so
         # chunk 1 (entries 0-1) consumes 5 raw lines, not 2 - chunk 2 must
