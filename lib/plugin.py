@@ -140,6 +140,7 @@ class Plugins:
         smarthome._plugin_conf = self._plugin_conf_filename  # type: ignore
 
         self._plugins_count = {}
+        self._section_names: set[str] = set()
         self.threads_early = []
         self.threads_late = []
 
@@ -313,10 +314,17 @@ class Plugins:
         conf = lib.config.parse_basename(self._configfile, configtype='plugin')
         old_count = self._plugins_count
         self._plugins_count = self._count_plugin_usage(conf)
+        self._section_names = set(conf)
         notices = self._unnamed_instance_notices(old_count, conf)
         for notice in notices:
             logger.warning(notice)
         return PluginConfigRefresh(conf, notices)
+
+    def get_section_names(self) -> set[str]:
+        """
+        Return the names of all sections of the plugin configuration, including disabled ones
+        """
+        return set(self._section_names)
 
     @classmethod
     def _class_override(cls, plg_conf: dict) -> tuple[str, str]:

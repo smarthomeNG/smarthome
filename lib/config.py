@@ -35,7 +35,7 @@ import os
 
 from lib.utils import Utils
 import lib.shyaml as shyaml
-from lib.constants import YAML_FILE
+from lib.constants import INSTANCE_DEFAULT, YAML_FILE
 
 logger = logging.getLogger(__name__)
 
@@ -763,11 +763,13 @@ def add_struct_to_item_template(path, struct_name, template, struct_dict, instan
 def replace_struct_instance(path, subtree, instance):
     """
     Replace the constant string '@instance' in attribute names with the real instance
-    (or remove the constant string '@instance', if the struct has no instace reference)
+
+    The constant string is removed instead if the instance is empty, ``default`` or a list: the attribute
+    then is bound through the ``instance`` the item inherits.
 
     :param path:
     :param subtree:
-    :param instance:
+    :param instance: instance name, or a list of instance names
     :return:
     """
     keys = list(subtree.keys())
@@ -777,7 +779,7 @@ def replace_struct_instance(path, subtree, instance):
         if Utils.get_type(subtree[key]) == 'collections.OrderedDict':
             replace_struct_instance(path, subtree[key], instance)
         if key.endswith('@instance'):
-            if instance == '':
+            if not isinstance(instance, str) or instance in ('', INSTANCE_DEFAULT):
                 newkey = key[:-9]
             else:
                 newkey = key[:-9] + '@' + instance

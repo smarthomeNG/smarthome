@@ -8,6 +8,8 @@
 .. index:: initial_value
 .. index:: Standard-Attribute; value
 .. index:: value
+.. index:: Standard-Attribute; instance
+.. index:: instance
 .. index:: Standard-Attribute; log_change
 .. index:: log_change
 .. index:: Standard-Attribute; log_level
@@ -95,6 +97,10 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | Wert nicht als Datenstruktur interpretiert.                                            |
 |                            | (Also folgendermaßen: ``initial_value: "{'k1': 'v1', 'k2': 'v2'}"`` )                  |
 +----------------------------+----------------------------------------------------------------------------------------+
+| instance                   | Name eines Plugin-Abschnitts (oder Liste von Namen), dessen Instanz für die            |
+|                            | plugin-spezifischen Attribute des Items und aller darunter liegenden Items gilt        |
+|                            | (siehe :doc:`instance <./instance>`).                                                  |
++----------------------------+----------------------------------------------------------------------------------------+
 | log_change                 | Ermöglicht das Loggen jeder Veränderung des Item-Wertes. **log_change** muss dazu den  |
 |                            | Namen des zu verwendeten Loggers enthalten. In ``logging.yaml`` muss der Logger als    |
 |                            | **items.<Name>** konfiguriert sein. Wertänderungen des Items werden dann mit dem Level |
@@ -171,6 +177,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
    enforce_change
    eval
    hysteresis
+   instance
    log_change
    on_update
    struct

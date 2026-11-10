@@ -14,6 +14,13 @@ Checks:
     that is used by several sections. A section without ``instance:`` gets ``instance: default`` so that it
     keeps the empty instance; item attributes ``attr@old`` are renamed to the new instance name. Skipped when
     ``etc/smarthome.yaml`` sets ``legacy_instances``: then the instance names do not change with the upgrade.
+``item-instance``
+    The item attribute ``instance`` (a ``plugin.yaml`` section name or a list of them) is inherited by the child
+    items and binds the attributes of the plugin whose section it names; before, only structs used it. A plugin
+    attribute without ``@<instance>`` under an ``instance`` that names a section other than the unnamed instance of
+    its plugin gets ``@<section of the unnamed instance>``, so that it keeps its binding. An ``instance`` that holds
+    the instance name of 1.x is renamed to the section name. Skipped when ``etc/smarthome.yaml`` sets
+    ``legacy_instances``.
 ``plugin-alias``
     ``sh.<section>`` accesses to plugins become ``sh.plugins.<section>``.
 ``plugin-class``
@@ -526,6 +533,159 @@ class InstancesChecker:
             else:
                 section['instance'] = 'default'
         project.save_sections(project.plugin_yaml, sections)
+
+
+@register
+class ItemInstanceChecker:
+    """Plugin attributes of items whose binding changes with the inherited item attribute ``instance``."""
+
+    name = 'item-instance'
+    description = "item attribute 'instance' (inherited, binds attributes without @instance)"
+
+    @dataclass
+    class Index:
+        """The enabled ``plugin.yaml`` sections and which plugin owns which item attribute."""
+
+        sections: Mapping[str, Mapping]
+        attributes: dict[str, str]
+        prefixes: list[tuple[str, str]]
+
+        def plugin_of(self, section: str) -> str:
+            """Plugin name of a section."""
+            return plugin_name_of(self.sections[section])
+
+        def owner(self, attribute: str) -> str | None:
+            """Name of the plugin that defines the item attribute, if there is one."""
+            if attribute in self.attributes:
+                return self.attributes[attribute]
+            return next((plugin for prefix, plugin in self.prefixes if attribute.startswith(prefix)), None)
+
+        def resolve(self, value: str) -> list[str]:
+            """Sections that *value* names: a section name, or else an instance name of 1.x."""
+            if value in self.sections:
+                return [value]
+            legacy = value.strip().lower()
+            return [n for n, s in self.sections.items() if legacy and InstancesChecker.legacy_instance(s) == legacy]
+
+        def unnamed(self, plugin: str) -> list[str]:
+            """Sections of the plugin that have the unnamed instance (the carriers of bare attributes)."""
+            return [
+                n
+                for n, s in self.sections.items()
+                if plugin_name_of(s) == plugin and InstancesChecker.legacy_instance(s) == ''
+            ]
+
+    def index(self, project: Project, sections: Mapping) -> Index:
+        """Build the :class:`Index` of the enabled sections."""
+        enabled = enabled_sections(sections)
+        index = self.Index(enabled, {}, [])
+        helper = InstancesChecker()
+        for plugin in {plugin_name_of(s) for s in enabled.values()} - {''}:
+            attributes, prefixes = helper.plugin_attributes(project, plugin)
+            index.attributes.update(dict.fromkeys(attributes, plugin))
+            index.prefixes += [(prefix, plugin) for prefix in prefixes]
+        return index
+
+    def run(self, project: Project, fix: bool) -> list[Finding]:
+        sections = load_plugin_sections(project)
+        if sections is None or InstancesChecker.legacy_instances_set(project):
+            return []
+        index = self.index(project, sections)
+        findings: list[Finding] = []
+        for path in project.item_files():
+            findings += self.check_file(project, path, index, fix)
+        return findings
+
+    def check_file(self, project: Project, path: Path, index: Index, fix: bool) -> list[Finding]:
+        """Find (and with *fix* repair) the attributes in one item file."""
+        root = load_sections(path)
+        if not isinstance(root, Mapping):
+            return []
+        lines = read_text(path).splitlines(keepends=True)
+        edits: list[tuple[int, int, str, str]] = []
+        findings: list[Finding] = []
+
+        def report(line: int, message: str, edit: tuple[int, int, str, str] | None) -> None:
+            fixable = edit is not None and lines[edit[0]][edit[1] : edit[1] + len(edit[2])] == edit[2]
+            if fixable:
+                edits.append(edit)
+            findings.append(Finding(self.name, path, message, line + 1, fixable, fixable and fix))
+
+        def walk(mapping: Mapping, entries: list[str]) -> None:
+            if 'instance' in mapping:
+                entries = self.own_entries(mapping, index, lines, report)
+            if entries and 'struct' in mapping:
+                self.check_struct(mapping, entries, index, report)
+            for key, value in mapping.items():
+                if isinstance(value, Mapping):
+                    walk(value, entries)
+                elif entries and key != 'instance' and '@' not in str(key):
+                    self.check_attribute(mapping, str(key), entries, index, report)
+
+        for value in root.values():
+            if isinstance(value, Mapping):
+                walk(value, [])
+        if fix and edits:
+            for number, column, old, new in sorted(edits, reverse=True):
+                line = lines[number]
+                lines[number] = line[:column] + new + line[column + len(old) :]
+            project.write_text(path, ''.join(lines))
+        return findings
+
+    def own_entries(self, mapping: Mapping, index: Index, lines: list[str], report: Callable) -> list[str]:
+        """Sections named by the ``instance`` of an item; an instance name of 1.x is renamed to its section."""
+        value = mapping['instance']
+        names = [str(v) for v in value] if isinstance(value, list) else [str(value)]
+        entries: list[str] = []
+        line, column = mapping.lc.value('instance') if hasattr(mapping, 'lc') else (0, 0)
+        for name in names:
+            resolved = index.resolve(name)
+            if len(resolved) > 1:
+                report(line, f"instance '{name}' names the sections {', '.join(resolved)}", None)
+            elif resolved and resolved[0] != name:
+                edit = None
+                if not isinstance(value, list):
+                    quote = lines[line][column] if lines[line][column : column + 1] in ('"', "'") else ''
+                    edit = (line, column, f'{quote}{name}{quote}', f'{quote}{resolved[0]}{quote}')
+                report(line, f"instance '{name}' is the instance name of section '{resolved[0]}'", edit)
+            entries += resolved
+        return entries
+
+    def check_struct(self, mapping: Mapping, entries: list[str], index: Index, report: Callable) -> None:
+        """Report a user struct used under an ``instance`` that names a section other than the unnamed one."""
+        plugins = {index.plugin_of(name) for name in index.sections}
+        affected = [e for e in entries if e not in index.unnamed(index.plugin_of(e))]
+        if not affected:
+            return
+        value = mapping['struct']
+        refs = [str(v) for v in value] if isinstance(value, list) else [str(value)]
+        line = mapping.lc.key('struct')[0]
+        for ref in refs:
+            if ref.split('.')[0].split('@')[0] not in plugins:
+                message = (
+                    f"struct '{ref}' is used with instance '{affected[0]}'; its attributes without @instance "
+                    f"of that plugin now belong to '{affected[0]}'"
+                )
+                report(line, message, None)
+
+    def check_attribute(self, mapping: Mapping, key: str, entries: list[str], index: Index, report: Callable) -> None:
+        """Report an attribute without ``@instance`` that an ``instance`` entry takes away from the unnamed instance."""
+        plugin = index.owner(key)
+        if plugin is None:
+            return
+        unnamed = index.unnamed(plugin)
+        named = [e for e in entries if index.plugin_of(e) == plugin and e not in unnamed]
+        if not named:
+            return
+        line, column = mapping.lc.key(key)
+        if len(unnamed) != 1:
+            why = 'it has had no effect so far' if not unnamed else 'it is read by several sections so far'
+            report(line, f"attribute '{key}' of plugin '{plugin}' now belongs to section '{named[0]}'; {why}", None)
+        elif f'{key}@{unnamed[0]}' in mapping:
+            report(line, f"attribute '{key}' would move to section '{named[0]}'; '{key}@{unnamed[0]}' exists", None)
+        else:
+            message = f"attribute '{key}' would move to section '{named[0]}'; it gets @{unnamed[0]}"
+            report(line, message, (line, column, key, f'{key}@{unnamed[0]}'))
 
 
 @register

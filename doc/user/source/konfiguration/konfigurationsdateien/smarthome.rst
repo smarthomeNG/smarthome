@@ -80,7 +80,7 @@ die Admin GUI auf der gleichen Seite anzeigt, werden in der :doc:`holidays.yaml 
      - Konfigurationsverzeichnisse (items, logics, structs, scenes, functions) unterhalb von etc/ suchen. Vorhandene Verzeichnisse im Hauptverzeichnis werden beim Start automatisch dorthin verschoben. False verwendet die bis 1.12 übliche Struktur.
    * - ``legacy_instances``
      - ``false``
-     - True: Instanznamen aus dem 'instance'-Parameter in plugin.yaml verwenden (Verhalten bis 1.12). False: der Name des Abschnitts in plugin.yaml ist der Instanzname
+     - True: Instanznamen aus dem 'instance'-Parameter in plugin.yaml verwenden (Verhalten bis 1.12). False: der Name des Abschnitts in plugin.yaml ist der Instanzname und das Item-Attribut instance wird vererbt
    * - ``pip_command``
      - 
      - PIP-Befehl, falls pip3 nicht automatisch gefunden wird (z.B. 'python3 -m pip')

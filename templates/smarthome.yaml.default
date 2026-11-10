@@ -21,7 +21,8 @@ default_language: de     # default_language is used, where multiple languages ar
 #config_etc: true
 
 # The name of a section in plugin.yaml is the instance name of the plugin.
-# Setting this option to true uses the "instance" parameter in plugin.yaml instead (behaviour up to v1.12).
+# Setting this option to true uses the "instance" parameter in plugin.yaml instead (behaviour up to v1.12),
+# and the item attribute "instance" is only used for structs.
 #legacy_instances: false
 
 # 

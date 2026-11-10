@@ -169,8 +169,10 @@ In der Definition der Items bestehen zwei Möglichkeiten einer **struct** die **
             struct: darksky.weather
             instance: summer_residence
 
-Diese Angabe (**instance: \<instance>**) wird dann auf alle Items übertragen, die durch das Template hinzugefügt wurden.
-Das kann man auch in der Administrationsoberfläche sehen.
+Diese Angabe (**instance: \<instance>**) ersetzt den Platzhalter **@instance** in den Attributen des Templates.
+Außerdem gilt **instance** für alle Items, die durch das Template hinzugefügt wurden (siehe
+:doc:`Plugins <plugins>`). Bei einer Liste von Instanzen oder bei ``default`` wird **@instance** entfernt; das
+Attribut wird dann über das geerbte **instance** der Instanz zugeordnet.
 
 
 2. Die **instance** kann direkt im **struct** Attribut mit angegeben werden:
@@ -187,8 +189,7 @@ Das kann man auch in der Administrationsoberfläche sehen.
 
 .. note::
 
-    Wenn man eigene Items, in den Teilbaum der durch das Template hinzugefügt wurde, einfügen will, muss man für diese
-    selbst hinzugefügten Items natürlich das Attribut **instance** angeben.
+    Items, die in den Teilbaum des Templates eingefügt werden, erben **instance** vom übergeordneten Item.
 
 
 

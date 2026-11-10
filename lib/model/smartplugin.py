@@ -23,6 +23,7 @@
 from lib.model.smartobject import SmartObject
 from lib.shtime import Shtime
 from lib.module import Modules
+from lib.constants import KEY_INSTANCE
 import lib.shyaml as shyaml
 from lib.utils import Utils
 from lib.translation import translate as lib_translate
@@ -730,6 +731,9 @@ class SmartPlugin(SmartObject, Utils):
         """
         Returns the name of this instance of the plugin
 
+        The name is empty for the default instance. Item attributes are additionally matched by the name of
+        the ``plugin.yaml`` section (:meth:`get_configname`), whatever the instance name is.
+
         :return: instance name
         :rtype: str
         """
@@ -993,10 +997,53 @@ class SmartPlugin(SmartObject, Utils):
         else:
             return f'{attr}@{self.__instance}'
 
+    def _sibling_confignames(self) -> set[str]:
+        """
+        Return the plugin.yaml section names of the other loaded instances of this plugin
+
+        :return: section names, empty if the plugin registry is not available
+        """
+        from lib.plugin import Plugins
+
+        plugins = Plugins.get_instance()
+        if plugins is None:
+            return set()
+        return {
+            plugin.get_configname()
+            for plugin in plugins.return_plugins()
+            if isinstance(plugin, SmartPlugin) and plugin is not self and plugin.get_shortname() == self.get_shortname()
+        }
+
+    @staticmethod
+    def __item_instances(conf: Mapping[str, Any]) -> Collection[str]:
+        """
+        Return the section names the item's ``instance`` refers to (empty if the item sets none)
+
+        :param conf: item configuration
+        """
+        return conf[KEY_INSTANCE] if KEY_INSTANCE in conf else ()
+
+    def __item_names_sibling(self, conf: Mapping[str, Any]) -> bool:
+        """
+        Return True if the item's ``instance`` names the section of another instance of this plugin
+
+        :param conf: item configuration
+        """
+        entries = self.__item_instances(conf)
+        return bool(entries) and not self._sibling_confignames().isdisjoint(entries)
+
     def __get_iattr_conf(self, conf: Mapping[str, Any], attr: str) -> str | None:
         """
         returns item attribute name including instance if required and found
         in item configuration
+
+        Candidates in order of precedence:
+
+        1. ``attr@<instance name>``, or the bare ``attr`` for the default (unnamed) instance, unless the
+           item's ``instance`` names the section of another instance of this plugin
+        2. ``attr@<section name>``
+        3. ``attr@*``
+        4. the bare ``attr`` if the item's ``instance`` names this plugin's section
 
         :param conf: item configuration
         :param attr: attribute name
@@ -1007,15 +1054,33 @@ class SmartPlugin(SmartObject, Utils):
         :rtype: str | None
         """
         __attr = self.__get_iattr(attr)
-        if __attr in conf:
+        if __attr in conf and not (self.__instance == '' and self.__item_names_sibling(conf)):
             return __attr
-        elif f'{attr}@*' in conf:
+        if self._configname and f'{attr}@{self._configname}' in conf:
+            return f'{attr}@{self._configname}'
+        if f'{attr}@*' in conf:
             return f'{attr}@*'
+        if attr in conf and self._configname in self.__item_instances(conf):
+            return attr
         return None
 
     def has_iattr(self, conf: Mapping[str, Any], attr: str) -> bool:
         """
         checks item configuration for an attribute
+
+        The attribute is found under one of the following keys, the first one that exists in *conf* wins:
+
+        1. ``attr@<instance>`` (``attr`` for the default instance), unless the item's ``instance`` names the
+           ``plugin.yaml`` section of another instance of this plugin
+        2. ``attr@<section>``, with the name of the ``plugin.yaml`` section of this plugin instance (see
+           :meth:`get_configname`); this also matches if the plugin is the default instance
+        3. ``attr@*``
+        4. ``attr``, if the item's ``instance`` (own or inherited, see below) names the section of this plugin
+           instance
+
+        The key ``instance`` of the item configuration holds the effective ``instance`` of the item as a list of
+        section names; ``''`` stands for the default instance. SmartHomeNG sets it from the item attribute
+        ``instance`` and the one of the parent item.
 
         :param conf: item configuration
         :param attr: attribute name
@@ -1028,6 +1093,8 @@ class SmartPlugin(SmartObject, Utils):
     def get_iattr_value(self, conf: Mapping[str, Any], attr: str, default: Any = None) -> Any:
         """
         Returns value for an attribute from item config
+
+        The attribute is looked up as described for :meth:`has_iattr`.
 
         Parameter default is only available in SmartHomeNG versions **v1.10.0 and up**.
 
@@ -1044,10 +1111,11 @@ class SmartPlugin(SmartObject, Utils):
         """
         Set value for an attribute in item configuration
 
-        Does nothing if the attribute is not in the configuration. The value is stored under
-        this instance's own attribute name (``attr@<instance>``, or ``attr`` without an
-        instance), also if the attribute was found as ``attr@*``; the ``attr@*`` entry is left
-        unchanged, so other instances still read the original value.
+        Does nothing if the attribute is not in the configuration. The value is stored under the key the
+        attribute was found under (see :meth:`has_iattr`). If the attribute was found as ``attr@*``, it is
+        stored under this instance's own attribute name instead (``attr@<instance>``, or ``attr`` without an
+        instance, or ``attr@<section>`` if the item's ``instance`` names another section of this plugin); the
+        ``attr@*`` entry is left unchanged, so other instances still read the original value.
 
         :param conf: item configuration
         :param attr: attribute name
@@ -1057,8 +1125,13 @@ class SmartPlugin(SmartObject, Utils):
         :type value: Any
         """
         __attr = self.__get_iattr_conf(conf, attr)
-        if __attr is not None:
-            conf[self.__get_iattr(attr)] = value
+        if __attr is None:
+            return
+        if __attr == f'{attr}@*':
+            __attr = self.__get_iattr(attr)
+            if self.__instance == '' and self._configname and self.__item_names_sibling(conf):
+                __attr = f'{attr}@{self._configname}'
+        conf[__attr] = value
 
     def __new__(cls, *args, **kargs) -> Any:
         """

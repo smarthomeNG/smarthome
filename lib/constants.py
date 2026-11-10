@@ -123,6 +123,7 @@ REF_BASE_KEYS = (KEY_NAME, KEY_DESCRIPTION, KEY_REMARK)
 
 # global config params for plugins
 KEY_INSTANCE = 'instance'
+INSTANCE_DEFAULT = 'default'  # value of 'instance' that names the default (unnamed) plugin instance
 KEY_DEFAULT_INSTANCE = 'default_instance'
 KEY_WEBIF_PAGELENGTH = 'webif_pagelength'
 KEY_CLASS_PATH = 'class_path'

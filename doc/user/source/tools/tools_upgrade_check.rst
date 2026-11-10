@@ -30,6 +30,12 @@ Die Prüfungen:
 |                   | default`` und behält damit die leere Instanz. Item-Attribute ``attr@alt`` werden auf den neuen  |
 |                   | Instanznamen umgestellt (bei einem nur einmal eingebundenen Plugin entfällt das ``@alt``).      |
 +-------------------+-------------------------------------------------------------------------------------------------+
+| ``item-instance`` | Das Item-Attribut ``instance`` wird seit 2.0 vererbt und ordnet Plugin-Attribute ohne           |
+|                   | ``@<instanz>`` der genannten Instanz zu. Ein solches Attribut, das bisher zur Standard-Instanz  |
+|                   | gehörte, wird zu ``attr@<Abschnitt der Standard-Instanz>``. Ein ``instance`` mit dem Instanz-   |
+|                   | namen aus 1.x wird zum Abschnittsnamen. Nur gemeldet werden Attribute, bei denen das Ziel nicht |
+|                   | eindeutig ist, und structs, die unter einem ``instance`` verwendet werden.                      |
++-------------------+-------------------------------------------------------------------------------------------------+
 | ``plugin-alias``  | ``sh.<Abschnitt>`` wird zu ``sh.plugins.<Abschnitt>`` (in Logiken, Userfunctions und in Items). |
 |                   | Heißt ein Plugin-Abschnitt wie ein Top-Level Item, wird er nur gemeldet.                        |
 +-------------------+-------------------------------------------------------------------------------------------------+

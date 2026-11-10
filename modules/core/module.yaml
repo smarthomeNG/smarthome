@@ -188,8 +188,8 @@ parameters:
         gui_type: yes_no
         default: False
         description:
-            de: "True: Instanznamen aus dem 'instance'-Parameter in plugin.yaml verwenden (Verhalten bis 1.12). False: der Name des Abschnitts in plugin.yaml ist der Instanzname"
-            en: "True: use instance names from the 'instance' parameter in plugin.yaml (behaviour up to 1.12). False: the name of the section in plugin.yaml is the instance name"
+            de: "True: Instanznamen aus dem 'instance'-Parameter in plugin.yaml verwenden (Verhalten bis 1.12). False: der Name des Abschnitts in plugin.yaml ist der Instanzname und das Item-Attribut instance wird vererbt"
+            en: "True: use instance names from the 'instance' parameter in plugin.yaml (behaviour up to 1.12). False: the name of the section in plugin.yaml is the instance name and the item attribute instance is inherited"
 
     pip_command:
         live: True

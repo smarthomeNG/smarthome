@@ -70,6 +70,14 @@ geänderten Dateien angelegt). Es sollte vor dem ersten Start von SmartHomeNG 2.
   ``etc/plugin.yaml`` ist der Instanzname eines mehrfach eingebundenen Plugins; ``instance:`` wird nicht mehr
   ausgewertet. Mit ``legacy_instances: true`` kann das bisherige Verhalten vorübergehend beibehalten werden.
 
+* **Das Item-Attribut instance** wird von allen untergeordneten Items geerbt und bindet die Plugin-Attribute ohne
+  ``@<instanz>`` an die genannte Instanz (siehe :doc:`Plugins </konfiguration/plugins>`). Bisher wurde ``instance:``
+  nur beim Einsetzen von structs ausgewertet. Items, die ``instance:`` setzen und zugleich Attribute der
+  Standard-Instanz eines Plugins ohne ``@<instanz>`` verwenden, müssen angepasst werden. Außerdem passt ein mit
+  ``@<abschnittsname>`` versehenes Attribut jetzt immer auf die Instanz dieses Abschnitts, auch wenn sie die
+  Standard-Instanz ist. ``tools/upgrade_check.py`` (Prüfung ``item-instance``) passt betroffene Items an. Mit
+  ``legacy_instances: true`` gilt weiter das bisherige Verhalten.
+
 * **Kein .conf Format mehr**: Konfigurationsdateien im alten ``.conf`` Format (Items, Logiken, Szenen, Plugins)
   werden nicht mehr gelesen. Sie können mit :doc:`tools/conf_to_yaml_converter.py </tools/tools_conf_to_yaml_converter>`
   konvertiert werden.

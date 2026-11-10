@@ -225,6 +225,141 @@ class TestInstances(InstallationTestCase):
         self.assertEqual(2, len(self.run_check('instances')))
 
 
+class TestItemInstance(InstallationTestCase):
+    def setUp(self):
+        super().setUp()
+        self.plugin_meta('avm', attributes=['avm_data_type'])
+        self.plugin_meta('knx', attributes=['knx_dpt'])
+        self.write(
+            'etc/plugin.yaml',
+            """
+            fritzbox_1:
+                plugin_name: avm
+                instance: fb6360
+            fritzbox_2:
+                plugin_name: avm
+                instance: default
+            knx:
+                plugin_name: knx
+            """,
+        )
+        self.write(
+            'etc/items/wan.yaml',
+            """
+            wan:
+                instance: fritzbox_1
+                type: foo
+                avm_data_type: uptime     # keep this comment
+                knx_dpt: '1'
+                child:
+                    avm_data_type: speed
+                    other:
+                        avm_data_type@fritzbox_1: speed
+            """,
+        )
+
+    def test_finds_but_does_not_change_anything_without_fix(self):
+        before = self.read('etc/items/wan.yaml')
+
+        findings = self.run_check('item-instance')
+
+        self.assertEqual([4, 7], [f.line for f in findings])
+        self.assertTrue(all(f.fixable and not f.fixed for f in findings))
+        self.assertEqual(before, self.read('etc/items/wan.yaml'))
+
+    def test_bare_attributes_keep_the_default_instance_with_its_section_name(self):
+        self.run_check('item-instance', fix=True)
+
+        items = self.read('etc/items/wan.yaml')
+        self.assertIn('avm_data_type@fritzbox_2: uptime     # keep this comment', items)
+        self.assertIn('avm_data_type@fritzbox_2: speed', items)
+        self.assertIn("knx_dpt: '1'", items)
+        self.assertIn('avm_data_type@fritzbox_1: speed', items)
+
+    def test_second_run_finds_nothing(self):
+        self.run_check('item-instance', fix=True)
+
+        self.assertEqual([], self.run_check('item-instance'))
+
+    def test_fix_backs_up_the_changed_file(self):
+        self.run_check('item-instance', fix=True)
+
+        backups = list((self.base / 'etc' / tool.BACKUP_DIR).rglob('wan.yaml'))
+        self.assertEqual(1, len(backups))
+        self.assertIn('avm_data_type: uptime', backups[0].read_text())
+
+    def test_instance_naming_the_unnamed_section_or_nothing_known_is_left_alone(self):
+        for name in ('fritzbox_2', 'knx', 'nosuch', 'default'):
+            with self.subTest(instance=name):
+                self.write('etc/items/wan.yaml', f'wan:\n    instance: {name}\n    avm_data_type: uptime\n')
+                self.assertEqual([], self.run_check('item-instance'))
+
+    def test_instance_name_of_1x_is_renamed_to_the_section_and_bare_attributes_are_kept(self):
+        self.write('etc/items/wan.yaml', "wan:\n    instance: 'fb6360'\n    avm_data_type: uptime\n")
+
+        findings = self.run_check('item-instance', fix=True)
+
+        self.assertEqual(2, len(findings))
+        self.assertEqual(
+            "wan:\n    instance: 'fritzbox_1'\n    avm_data_type@fritzbox_2: uptime\n", self.read('etc/items/wan.yaml')
+        )
+
+    def test_list_names_several_sections(self):
+        self.write('etc/items/wan.yaml', 'wan:\n    instance: [knx, fritzbox_1]\n    avm_data_type: uptime\n')
+
+        self.run_check('item-instance', fix=True)
+
+        self.assertIn('avm_data_type@fritzbox_2: uptime', self.read('etc/items/wan.yaml'))
+
+    def test_child_instance_overrides_the_inherited_one(self):
+        self.write(
+            'etc/items/wan.yaml',
+            'wan:\n    instance: fritzbox_1\n    child:\n        instance: default\n        avm_data_type: uptime\n',
+        )
+
+        self.assertEqual([], self.run_check('item-instance'))
+
+    def test_attribute_that_would_clash_is_reported_not_changed(self):
+        text = 'wan:\n    instance: fritzbox_1\n    avm_data_type: a\n    avm_data_type@fritzbox_2: b\n'
+        self.write('etc/items/wan.yaml', text)
+
+        findings = self.run_check('item-instance', fix=True)
+
+        self.assertEqual([(3, False, False)], [(f.line, f.fixable, f.fixed) for f in findings])
+        self.assertEqual(text, self.read('etc/items/wan.yaml'))
+
+    def test_attribute_of_a_plugin_without_unnamed_section_is_reported_not_changed(self):
+        self.write(
+            'etc/plugin.yaml',
+            'fritzbox_1:\n    plugin_name: avm\n    instance: a\nfritzbox_2:\n    plugin_name: avm\n    instance: b\n',
+        )
+        text = 'wan:\n    instance: fritzbox_1\n    avm_data_type: uptime\n'
+        self.write('etc/items/wan.yaml', text)
+
+        findings = self.run_check('item-instance', fix=True)
+
+        self.assertEqual([(3, False)], [(f.line, f.fixable) for f in findings])
+        self.assertEqual(text, self.read('etc/items/wan.yaml'))
+
+    def test_user_struct_below_an_instance_is_reported_but_plugin_struct_is_not(self):
+        self.write(
+            'etc/items/wan.yaml',
+            'wan:\n    instance: fritzbox_1\n    struct: my.line\n    sub:\n        struct: avm.wan\n',
+        )
+
+        findings = self.run_check('item-instance')
+
+        self.assertEqual([(3, False)], [(f.line, f.fixable) for f in findings])
+
+    def test_skipped_with_legacy_instances(self):
+        self.write('etc/smarthome.yaml', 'legacy_instances: true\n')
+
+        self.assertEqual([], self.run_check('item-instance'))
+
+    def test_is_listed_in_the_command_line(self):
+        self.assertIn('item-instance', tool.CHECKERS)
+
+
 class TestPluginAlias(InstallationTestCase):
     def setUp(self):
         super().setUp()

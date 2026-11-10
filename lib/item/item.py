@@ -111,6 +111,7 @@ from .helpers import (  # noqa - cast_foo methods are accessed via globals()
 )
 from ._internal._typehandler import TypeHandler, ListHandler, DictHandler, HANDLER_MAP  # noqa: F401
 from ._internal._history import ItemHistory
+from ._internal._instance import apply_effective_instance
 from ._internal._logchange import log_on_change
 from ._internal._eval import run_eval, run_on_xxx, run_on_update, run_on_change
 from ._internal._hysteresis import run_hysteresis, get_hysteresis_state, get_hysteresis_data
@@ -719,6 +720,9 @@ class Item:
                 self.conf[attr] = self.plugins.meta.check_itemattribute(
                     self, attr.split('@')[0], self.conf[attr], self._filename
                 )
+
+        # after the metadata check: 'instance' is a core attribute, not a plugin attribute
+        apply_effective_instance(self, config)
 
         self.property.init_dynamic_properties()
 

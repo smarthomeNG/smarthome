@@ -126,6 +126,28 @@ jedes Attribut mit der **@<instance>** zu ergänzen.
 Es kann sein, dass die Ergänzung eines einzelnen Attributes reicht. Das ist dann in der Doku
 des jeweiligen Plugins beschrieben.
 
+Statt jedes Attribut zu ergänzen, kann im Item das Attribut **instance** mit dem Namen des Abschnitts angegeben
+werden. Es gilt für das Item und alle darunter liegenden Items, solange sie kein eigenes **instance** setzen:
+
+.. code:: yaml
+
+   wan:
+       instance: fb7490
+       connection_status:
+           type: str
+           avm_data_type: wan_connection_status    # gilt als avm_data_type@fb7490
+
+- Ein Attribut ohne ``@<instance>`` gehört dann zu der genannten Instanz und nicht mehr zur Standard-Instanz.
+- Mit ``instance: default`` wird wieder die Standard-Instanz verwendet.
+- Items, die Attribute mehrerer Plugins mit benannten Instanzen nutzen, geben eine Liste an:
+  ``instance: [fb7490, broker1]``. Jedes Plugin nutzt den Eintrag, der zu einem seiner Abschnitte passt.
+  Plugins, zu denen kein Eintrag passt, ändern ihr Verhalten nicht.
+- Ein Attribut mit ``@<instance>`` oder ``@*`` hat immer Vorrang. Ein Attribut mit ``@<abschnittsname>`` passt auf die
+  Instanz dieses Abschnitts, auch wenn diese die Standard-Instanz ist.
+- Nennt ``instance`` keinen Abschnitt der ``plugin.yaml``, wird beim Laden des Items eine Warnung ausgegeben.
+- Mit ``legacy_instances: true`` wird ``instance`` nur beim Einsetzen von structs ausgewertet.
+- Die Referenz steht unter :doc:`instance </referenz/items/standard_attribute/instance>`.
+
 
 
 Liste der verfügbaren Plugins

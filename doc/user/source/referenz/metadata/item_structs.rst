@@ -133,6 +133,11 @@ Das sieht z.B. folgendermaßen aus:
 Im geladenen Item (bei Verwendung der Admin GUI), wird ``item3`` dann ein Attribut haben, das
 ``plg_attr1@plg_instance`` benannt ist.
 
+Das Item-Attribut ``instance`` wird von allen Items des eingefügten Teilbaums geerbt (siehe
+:doc:`instance </referenz/items/standard_attribute/instance>`). Wird bei der Verwendung einer Struktur eine Liste von
+Instanzen oder ``default`` angegeben, wird der String ``@instance`` entfernt. Das Attribut wird dann über das geerbte
+``instance`` der richtigen Plugin Instanz zugeordnet. Attribute ohne ``@instance`` verhalten sich genauso.
+
 
 Plugins ohne item-structs
 ~~~~~~~~~~~~~~~~~~~~~~~~~

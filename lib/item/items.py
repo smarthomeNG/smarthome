@@ -67,11 +67,13 @@ import lib.shyaml as shyaml
 from lib.constants import (
     ITEM_DEFAULTS,
     KEY_EVAL_TRIGGER,
+    KEY_INSTANCE,
     KEY_TRIGGER,
     PLUGIN_PARSE_ITEM,
     PLUGIN_REMOVE_ITEM,
     PLUGIN_RENAME_ITEM,
 )
+from lib.item._internal._instance import inheriting_descendants, refresh_inherited_instance
 from lib.item._internal._lifecycle import _detach_from_other_items_triggers, _remove_scheduler_jobs, _stop_fading
 from lib.item._internal._parsing import check_item_name_collision
 from lib.item._internal._pathresolution import get_absolutepath, split_destitem_from_value
@@ -824,6 +826,65 @@ class Items:
         self.__item_dict[path] = item
 
     @_exclusive_item_operation
+    def _plugins_remove_item(self, item):
+        """
+        Call plugin.remove_item() of every loaded plugin for *item*; a failing plugin is logged and skipped
+
+        :param item: the item whose plugin bindings are undone
+        """
+        for plugin in item.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_REMOVE_ITEM):
+                try:
+                    plugin.remove_item(item)
+                except Exception as e:
+                    self.logger.warning(
+                        f"Plugin '{plugin}' remove_item() failed for edit of item '{item.property.path}': {e}"
+                    )
+
+    def _plugins_parse_item(self, item):
+        """
+        Call plugin.parse_item() of every loaded plugin for *item* and register the returned update triggers
+
+        A failing plugin is logged and skipped.
+
+        :param item: the item to bind to the plugins
+        """
+        for plugin in item.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_PARSE_ITEM):
+                update = None
+                try:
+                    update = plugin.parse_item(item)
+                except Exception as e:
+                    self.logger.warning(
+                        f"Plugin '{plugin}' parse_item() failed for edit of item '{item.property.path}': {e}"
+                    )
+                if update:
+                    try:
+                        plugin.add_item(item, updating=True)
+                    except Exception:
+                        pass
+                    item.add_method_trigger(update)
+
+    def _refresh_inherited_instances(self, item, old_instance, notify_plugins):
+        """
+        Pass a changed effective ``instance`` of an edited item on to the descendants that inherit it
+
+        The plugin bindings of each affected descendant are redone, because the plugins read their bare
+        attributes through the item's ``instance``.
+
+        :param item: the item that was edited
+        :param old_instance: effective ``instance`` of *item* before the edit
+        :param notify_plugins: False skips the plugin calls, as in edit_item()
+        """
+        if item.conf.get(KEY_INSTANCE) == old_instance:
+            return
+        for child in inheriting_descendants(item):
+            if notify_plugins:
+                self._plugins_remove_item(child)
+            refresh_inherited_instance(child)
+            if notify_plugins:
+                self._plugins_parse_item(child)
+
     def edit_item(self, item, config, notify_plugins=True):
         """
         Edit an existing item's attributes at runtime, in place — preserves
@@ -943,15 +1004,9 @@ class Items:
         try:
             if notify_plugins:
                 # Undo old plugin bindings before re-parsing
-                for plugin in item.plugins.return_plugins():
-                    if hasattr(plugin, PLUGIN_REMOVE_ITEM):
-                        try:
-                            plugin.remove_item(item)
-                        except Exception as e:
-                            self.logger.warning(
-                                f"Plugin '{plugin}' remove_item() failed for edit of item '{item.property.path}': {e}"
-                            )
+                self._plugins_remove_item(item)
 
+            old_instance = item.conf.get(KEY_INSTANCE)
             item._apply_config(config)
 
             # Re-wire based on the NEW config (eval/trigger/hysteresis_input
@@ -963,21 +1018,9 @@ class Items:
             if notify_plugins:
                 # Rebind to plugins per the NEW config — mirrors the same loop
                 # Item.__init__ runs inline for a freshly constructed item.
-                for plugin in item.plugins.return_plugins():
-                    if hasattr(plugin, PLUGIN_PARSE_ITEM):
-                        update = None
-                        try:
-                            update = plugin.parse_item(item)
-                        except Exception as e:
-                            self.logger.warning(
-                                f"Plugin '{plugin}' parse_item() failed for edit of item '{item.property.path}': {e}"
-                            )
-                        if update:
-                            try:
-                                plugin.add_item(item, updating=True)
-                            except Exception:
-                                pass
-                            item.add_method_trigger(update)
+                self._plugins_parse_item(item)
+
+            self._refresh_inherited_instances(item, old_instance, notify_plugins)
         finally:
             for plugin in paused_plugins:
                 if not plugin.alive:
@@ -2068,6 +2111,9 @@ class Items:
                     return {key: value for key, value in existing.items() if not isinstance(value, dict)}
 
         config = dict(item.conf)
+        config.pop(KEY_INSTANCE, None)
+        if item._own_instance is not None:
+            config[KEY_INSTANCE] = list(item._own_instance)
         config['type'] = item._type
         if item._eval:
             config['eval'] = item._eval
