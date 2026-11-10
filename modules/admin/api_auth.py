@@ -123,7 +123,7 @@ class AuthController(RESTResource):
         payload = {
             'iss': url,
             'iat': now,
-            'jti': now.timestamp(),
+            'jti': str(now.timestamp()),
             'exp': now + timedelta(hours=ttl_hours),
             'ttl': ttl_hours,
             'name': name,
