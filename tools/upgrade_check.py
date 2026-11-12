@@ -422,9 +422,15 @@ class InstancesChecker:
             data = ruamel_yaml.YAML(typ='safe').load(meta.read_text(encoding='utf-8')) or {}
         except Exception:
             return set(), ()
-        attributes = set((data.get('item_attributes') or {}).keys()) if isinstance(data, dict) else set()
-        prefixes = tuple((data.get('item_attribute_prefixes') or {}).keys()) if isinstance(data, dict) else ()
-        return attributes, prefixes
+        if not isinstance(data, dict):
+            return set(), ()
+
+        def names(key: str) -> list[str]:
+            """Keys of a metadata section; a section without definitions is ``NONE``, not a mapping."""
+            section = data.get(key)
+            return list(section) if isinstance(section, dict) else []
+
+        return set(names('item_attributes')), tuple(names('item_attribute_prefixes'))
 
     @staticmethod
     def legacy_instances_set(project: Project) -> bool:

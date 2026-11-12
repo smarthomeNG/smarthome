@@ -258,6 +258,28 @@ class TestItemInstance(InstallationTestCase):
             """,
         )
 
+    def test_plugin_declaring_none_for_attributes_and_prefixes_is_handled(self):
+        self.write(
+            'plugins/beolink/plugin.yaml',
+            """
+            plugin:
+                classname: Beolink
+            item_attributes: NONE
+            item_attribute_prefixes: NONE
+            """,
+        )
+        self.write(
+            'etc/plugin.yaml',
+            """
+            beo_1:
+                plugin_name: beolink
+            beo_2:
+                plugin_name: beolink
+            """,
+        )
+
+        self.assertEqual([], self.run_check('item-instance'))
+
     def test_finds_but_does_not_change_anything_without_fix(self):
         before = self.read('etc/items/wan.yaml')
 
