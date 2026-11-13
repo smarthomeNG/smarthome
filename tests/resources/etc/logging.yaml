@@ -53,6 +53,7 @@ handlers:
     shng_warnings_file:
         class: logging.StreamHandler
         formatter: shng_simple
+        level: NOTICE
         stream: ext://sys.stdout
 
 loggers:
