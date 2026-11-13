@@ -95,23 +95,33 @@ class Network(object):
         return 'IPv6' if family == socket.AF_INET6 else 'IPv4'
 
     @staticmethod
-    def ping(ip):
+    def ping(ip, timeout=2):
         """
         Try to ICMP ping a host using external OS utilities. IPv4 only.
 
+        The ping process is killed after *timeout* seconds and the host counts as offline.
+
         :param ip: IPv4 address as a string
+        :param timeout: Seconds to wait for the answer
+
         :type ip: string
+        :type timeout: float
 
         :return: True if a reachable, false otherwise.
         :rtype: bool
         """
         logger = logging.getLogger(__name__)
-        if subprocess.call(['ping', '-c', '1', ip], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0:
-            logger.debug(f'Ping: {ip} is online')
-            return True
-        else:
-            logger.debug(f'Ping: {ip} is offline')
-            return False
+        try:
+            online = (
+                subprocess.call(
+                    ['ping', '-c', '1', ip], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, timeout=timeout
+                )
+                == 0
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            online = False
+        logger.debug(f'Ping: {ip} is {"online" if online else "offline"}')
+        return online
 
     @staticmethod
     def ping_port(ip, port=80):

@@ -62,6 +62,8 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None, source
     * ``math``    — Python ``math`` module
     * ``uf``      — loaded user-functions (``lib.userfunctions``)
     * ``env``     — ``lib.env`` (environment/platform info)
+    * ``Utils``   — ``lib.utils.Utils`` (conversion and calculation helpers)
+    * ``Network`` — ``lib.network.Network`` (network helpers, e.g. ``Network.ping(host)``)
     * ``value``   — the trigger value passed to the current eval call
     * ``datetime`` — Python ``datetime`` module (documented in examples)
     * ``time``    — Python ``time`` module (documented in item.py comment)
@@ -90,6 +92,8 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None, source
     import datetime
     import lib.userfunctions as uf
     from lib.item.items import Items
+    from lib.network import Network
+    from lib.utils import Utils
 
     return {
         # ── documented public API ──────────────────────────────────────────
@@ -99,6 +103,8 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None, source
         'math': math,
         'uf': uf,
         'env': lib.env,
+        'Utils': Utils,
+        'Network': Network,
         # ── trigger call parameters ───────────────────────────────────────
         'value': value,
         'caller': caller,

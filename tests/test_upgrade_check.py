@@ -560,8 +560,8 @@ class TestRemovedApi(InstallationTestCase):
         self.assertIn("ok = sh.items.return_item('c')", code)
         self.assertIn('other.sh.now()', code)
 
-    def test_replacements_that_need_an_import_are_only_reported(self):
-        text = "x = sh.tools.dewpoint(20, 50)\nflag = sh.string2bool('yes')\n"
+    def test_replacements_without_a_drop_in_equivalent_are_only_reported(self):
+        text = "x = sh.tools.dt2ts(now)\nflag = sh.string2bool('yes')\n"
         self.write('etc/logics/l.py', text)
 
         findings = self.run_check('removed-api', fix=True)
@@ -569,7 +569,79 @@ class TestRemovedApi(InstallationTestCase):
         self.assertEqual(text, self.read('etc/logics/l.py'))
         self.assertEqual(2, len(findings))
         self.assertTrue(all(not f.fixable and not f.fixed for f in findings))
-        self.assertIn('Utils.dewpoint', findings[0].message)
+        self.assertIn('timestamp()', findings[0].message)
+
+    def test_sh_tools_functions_are_replaced_and_imported_in_logics(self):
+        self.write(
+            'etc/logics/l.py',
+            """
+            \"\"\"Docstring.\"\"\"
+            from __future__ import annotations
+
+            import os
+
+            up = sh.tools.ping('1.2.3.4')
+            dew = sh.tools.dewpoint(20, 50)
+            rel = sh.tools.abs2rel(20, 5)
+            ab = sh.tools.rel2abs(20, 50)
+            """,
+        )
+
+        findings = self.run_check('removed-api', fix=True)
+
+        code = self.read('etc/logics/l.py')
+        lines = code.splitlines()
+        self.assertIn("up = Network.ping('1.2.3.4')", code)
+        self.assertIn('dew = Utils.dewpoint(20, 50)', code)
+        self.assertIn('rel = Utils.abs2rel(20, 5)', code)
+        self.assertIn('ab = Utils.rel2abs(20, 50)', code)
+        self.assertEqual(
+            ['from __future__ import annotations', 'from lib.network import Network', 'from lib.utils import Utils'],
+            [line for line in lines if line.startswith('from ')],
+        )
+        self.assertLess(lines.index('from lib.utils import Utils'), lines.index('import os'))
+        self.assertEqual([True] * 4, [f.fixed for f in findings])
+        compile(code, 'l.py', 'exec')
+
+    def test_import_is_added_once_and_only_if_missing(self):
+        self.write(
+            'etc/logics/l.py', "from lib.network import Network\nup = sh.tools.ping('a')\nbp = sh.tools.ping('b')\n"
+        )
+
+        self.run_check('removed-api', fix=True)
+
+        code = self.read('etc/logics/l.py')
+        self.assertEqual(1, code.count('from lib.network import Network'))
+        self.assertIn("bp = Network.ping('b')", code)
+
+    def test_import_goes_before_the_first_statement_of_a_module_without_docstring(self):
+        self.write('etc/logics/l.py', "# header\n@decorator\ndef f():\n    return sh.tools.ping('a')\n")
+
+        self.run_check('removed-api', fix=True)
+
+        self.assertEqual(
+            "# header\nfrom lib.network import Network\n@decorator\ndef f():\n    return Network.ping('a')\n",
+            self.read('etc/logics/l.py'),
+        )
+
+    def test_check_without_fix_does_not_touch_logics(self):
+        text = "up = sh.tools.ping('a')\n"
+        self.write('etc/logics/l.py', text)
+
+        findings = self.run_check('removed-api')
+
+        self.assertEqual(text, self.read('etc/logics/l.py'))
+        self.assertEqual([(True, False)], [(f.fixable, f.fixed) for f in findings])
+
+    def test_python_that_does_not_parse_is_only_reported(self):
+        text = "print 'x'\nup = sh.tools.ping('a')\n"
+        self.write('etc/logics/l.py', text)
+
+        findings = self.run_check('removed-api', fix=True)
+
+        self.assertEqual(text, self.read('etc/logics/l.py'))
+        self.assertEqual([(False, False)], [(f.fixable, f.fixed) for f in findings])
+        self.assertIn('Network.ping', findings[0].message)
 
     def test_functions_directory_is_checked_too(self):
         self.write('etc/functions/f.py', 'def f():\n    return sh.now()\n')
@@ -584,6 +656,38 @@ class TestRemovedApi(InstallationTestCase):
         self.run_check('removed-api', fix=True)
 
         self.assertEqual("a:\n    eval: sh.items.return_item('b')() + sh.items.x\n", self.read('etc/items/a.yaml'))
+
+    def test_sh_tools_functions_in_item_attributes_are_replaced(self):
+        self.write(
+            'etc/items/a.yaml',
+            "a:\n    eval: sh.tools.ping('1.2.3.4')\nb:\n    on_update: x = sh.tools.dewpoint(1, 2)\n",
+        )
+
+        findings = self.run_check('removed-api', fix=True)
+
+        self.assertEqual(
+            "a:\n    eval: Network.ping('1.2.3.4')\nb:\n    on_update: x = Utils.dewpoint(1, 2)\n",
+            self.read('etc/items/a.yaml'),
+        )
+        self.assertEqual([(2, True), (4, True)], [(f.line, f.fixed) for f in findings])
+
+    def test_sh_tools_functions_without_replacement_in_item_attributes_are_only_reported(self):
+        text = 'a:\n    type: num\n    eval: sh.tools.dt2ts(sh.shtime.now())\n'
+        self.write('etc/items/a.yaml', text)
+
+        findings = self.run_check('removed-api', fix=True)
+
+        self.assertEqual(text, self.read('etc/items/a.yaml'))
+        self.assertEqual([(3, False, False)], [(f.line, f.fixable, f.fixed) for f in findings])
+        self.assertIn('timestamp()', findings[0].message)
+
+    def test_sh_tools_runtime_in_item_attributes_is_rewritten(self):
+        self.write('etc/items/a.yaml', 'a:\n    eval: sh.tools.runtime().seconds\n')
+
+        findings = self.run_check('removed-api', fix=True)
+
+        self.assertEqual('a:\n    eval: sh.shtime.runtime().seconds\n', self.read('etc/items/a.yaml'))
+        self.assertEqual([True], [f.fixed for f in findings])
 
     def test_legacy_layout_is_found_when_there_is_no_etc_directory_for_logics(self):
         self.write('logics/l.py', 'x = sh.now()\n')

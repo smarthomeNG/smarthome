@@ -126,6 +126,18 @@ SH_TOOLS_HINTS: dict[str, str] = {
 }
 
 
+#: removed ``sh.tools`` functions that have an equal replacement of the same name: function -> class
+SH_TOOLS_REPLACEMENTS: dict[str, str] = {'ping': 'Network', 'dewpoint': 'Utils', 'rel2abs': 'Utils', 'abs2rel': 'Utils'}
+
+#: module providing the classes of ``SH_TOOLS_REPLACEMENTS``
+SH_TOOLS_MODULES: dict[str, str] = {'Network': 'lib.network', 'Utils': 'lib.utils'}
+
+
+def sh_tools_message(function: str) -> str:
+    """Finding message for a removed ``sh.tools.<function>`` that is not replaced automatically."""
+    return f'sh.tools.{function}: use {SH_TOOLS_HINTS.get(function, "lib.utils / lib.network")}'
+
+
 #: parameters removed from modules, by module name, with what replaces them
 REMOVED_MODULE_PARAMS: dict[str, dict[str, str]] = {
     'admin': {
@@ -367,11 +379,59 @@ def apply_edits(text: str, edits: Iterable[tuple[int, int, int, str]]) -> str:
     return ''.join(lines)
 
 
-def rewrite_code(text: str, plan: Callable[[list[tokenize.TokenInfo]], list[tuple[tokenize.TokenInfo, str, str]]]):
+def parse_python(text: str) -> ast.Module | None:
+    """The syntax tree of Python code, or None if it does not parse."""
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        try:
+            return ast.parse(text)
+        except (SyntaxError, ValueError):
+            return None
+
+
+def import_line(tree: ast.Module) -> int:
+    """Index of the line before which new top level imports go: after the docstring and ``__future__`` imports."""
+    body, last, i = tree.body, 0, 0
+    if body and isinstance(body[0], ast.Expr) and isinstance(body[0].value, ast.Constant):
+        if isinstance(body[0].value.value, str):
+            last, i = body[0].end_lineno or 0, 1
+    while i < len(body) and isinstance(body[i], ast.ImportFrom) and body[i].module == '__future__':
+        last, i = body[i].end_lineno or 0, i + 1
+    if last or not body:
+        return last
+    first = body[0]
+    decorators = getattr(first, 'decorator_list', [])
+    return min([first.lineno] + [d.lineno for d in decorators]) - 1
+
+
+def add_imports(text: str, tree: ast.Module, classes: Iterable[str]) -> str:
+    """
+    Add ``from <module> import <class>`` for the classes of ``SH_TOOLS_MODULES`` that the code does not import yet
+
+    :param tree: syntax tree of *text*
+    """
+    imported = {a.asname or a.name for n in tree.body if isinstance(n, ast.ImportFrom) for a in n.names}
+    lines = text.splitlines(keepends=True)
+    newline = '\r\n' if lines and lines[0].endswith('\r\n') else '\n'
+    new = [f'from {SH_TOOLS_MODULES[c]} import {c}{newline}' for c in sorted(set(classes) - imported)]
+    at = import_line(tree)
+    if new and at and not lines[at - 1].endswith('\n'):
+        lines[at - 1] += newline
+    return ''.join(lines[:at] + new + lines[at:])
+
+
+def rewrite_code(
+    text: str,
+    plan: Callable[
+        [tokenize.TokenInfo, list[tokenize.TokenInfo]],
+        list[tuple[tokenize.TokenInfo | tuple[tokenize.TokenInfo, tokenize.TokenInfo], str | None, str]],
+    ],
+):
     """
     Plan and apply token replacements in Python code
 
-    :param plan: gets the tokens of an ``sh`` chain and returns ``(token, replacement, message)`` triples
+    :param plan: gets the ``sh`` token and the tokens of its attribute chain and returns ``(token, replacement,
+        message)`` triples; *token* may be a ``(first, last)`` pair of tokens in one line that are replaced together
     :return: the new text and the planned ``(row, message)`` pairs; tokenizing errors yield no changes
     """
     try:
@@ -379,11 +439,12 @@ def rewrite_code(text: str, plan: Callable[[list[tokenize.TokenInfo]], list[tupl
     except (tokenize.TokenError, IndentationError, SyntaxError):
         return text, []
     edits, notes = [], []
-    for _, chain in sh_accesses(tokens):
-        for token, replacement, message in plan(chain):
-            notes.append((token.start[0], message))
+    for i, chain in sh_accesses(tokens):
+        for token, replacement, message in plan(tokens[i], chain):
+            first, last = (token, token) if isinstance(token, tokenize.TokenInfo) else token
+            notes.append((first.start[0], message))
             if replacement is not None:
-                edits.append((token.start[0], token.start[1], token.end[1], replacement))
+                edits.append((first.start[0], first.start[1], last.end[1], replacement))
     return apply_edits(text, edits), notes
 
 
@@ -723,7 +784,7 @@ class PluginAliasChecker:
             return []
         findings: list[Finding] = []
 
-        def plan(chain):
+        def plan(sh, chain):
             first = chain[0]
             if first.string in names:
                 return [(first, f'plugins.{first.string}', f'sh.{first.string} -> sh.plugins.{first.string}')]
@@ -817,11 +878,20 @@ class RemovedApiChecker:
     description = 'removed sh.* methods (sh.return_item, sh.now, sh.base_dir, sh.tools, ...)'
 
     PATTERN = re.compile(r'(?<![\w.])sh\.(' + '|'.join(sorted(SH_METHOD_HOMES, key=len, reverse=True)) + r')\b')
+    TOOLS_RUNTIME = re.compile(r'(?<![\w.])sh\.tools\.runtime\b')
+    TOOLS_REPLACED = re.compile(r'(?<![\w.])sh\.tools\.(' + '|'.join(SH_TOOLS_REPLACEMENTS) + r')\b')
+    TOOLS_FUNCTION = re.compile(r'(?<![\w.])sh\.tools\.(\w+)')
     LIB_TOOLS = re.compile(r'^[^#\n]*\b(?:from\s+lib\.tools\s+import|import\s+lib\.tools\b|lib\.tools\.)', re.M)
 
     @staticmethod
-    def plan(chain: list[tokenize.TokenInfo]) -> list[tuple[tokenize.TokenInfo, str | None, str]]:
-        """Replacements for the tokens of one ``sh`` attribute chain."""
+    def plan(
+        sh: tokenize.TokenInfo, chain: list[tokenize.TokenInfo], replace_tools: bool = True
+    ) -> list[tuple[tokenize.TokenInfo | tuple[tokenize.TokenInfo, tokenize.TokenInfo], str | None, str]]:
+        """
+        Replacements for the tokens of one ``sh`` attribute chain
+
+        :param replace_tools: replace the ``sh.tools`` functions of ``SH_TOOLS_REPLACEMENTS``, which needs an import
+        """
         first = chain[0]
         if first.string in SH_METHOD_HOMES:
             home = SH_METHOD_HOMES[first.string]
@@ -836,16 +906,27 @@ class RemovedApiChecker:
             function = chain[1].string
             if function == 'runtime':
                 return [(first, 'shtime', 'sh.tools.runtime -> sh.shtime.runtime')]
-            return [
-                (first, None, f'sh.tools.{function}: use {SH_TOOLS_HINTS.get(function, "lib.utils / lib.network")}')
-            ]
+            if replace_tools and function in SH_TOOLS_REPLACEMENTS and sh.start[0] == chain[1].end[0]:
+                new = f'{SH_TOOLS_REPLACEMENTS[function]}.{function}'
+                return [((sh, chain[1]), new, f'sh.tools.{function} -> {new}')]
+            return [(first, None, sh_tools_message(function))]
         return []
 
     def run(self, project: Project, fix: bool) -> list[Finding]:
         findings: list[Finding] = []
         for path in project.code_files():
             text = read_text(path)
-            new, notes = rewrite_code(text, self.plan)
+            tree = parse_python(text)
+            classes: set[str] = set()
+
+            def plan(sh, chain, tree=tree, classes=classes):
+                edits = self.plan(sh, chain, replace_tools=tree is not None)
+                classes.update(r.partition('.')[0] for _, r, _ in edits if r)
+                return edits
+
+            new, notes = rewrite_code(text, plan)
+            if tree is not None:
+                new = add_imports(new, tree, classes & SH_TOOLS_MODULES.keys())
             for row, message in notes:
                 automatic = '->' in message
                 findings.append(Finding(self.name, path, message, row, automatic, automatic and fix))
@@ -862,6 +943,20 @@ class RemovedApiChecker:
                 Finding(self.name, path, f'{match} -> sh.{SH_METHOD_HOMES[match[3:]]}.{match[3:]}', row, True, fix)
                 for row, match in notes
             ]
+            new, notes = rewrite_text(new, self.TOOLS_RUNTIME, 'sh.shtime.runtime')
+            findings += [
+                Finding(self.name, path, f'{match} -> sh.shtime.runtime', row, True, fix) for row, match in notes
+            ]
+            new, notes = rewrite_text(
+                new, self.TOOLS_REPLACED, lambda m: f'{SH_TOOLS_REPLACEMENTS[m.group(1)]}.{m.group(1)}'
+            )
+            findings += [
+                Finding(self.name, path, f'{match} -> {SH_TOOLS_REPLACEMENTS[match[9:]]}.{match[9:]}', row, True, fix)
+                for row, match in notes
+            ]
+            for match in self.TOOLS_FUNCTION.finditer(new):
+                row = new.count('\n', 0, match.start()) + 1
+                findings.append(Finding(self.name, path, sh_tools_message(match.group(1)), row, False))
             if fix and new != text:
                 project.write_text(path, new)
         return findings

@@ -44,9 +44,12 @@ Die Prüfungen:
 |                   | ``plugins`` werden nur gemeldet.                                                                |
 +-------------------+-------------------------------------------------------------------------------------------------+
 | ``removed-api``   | Entfernte Methoden des ``sh`` Objekts, z.B. ``sh.return_item()`` wird zu                        |
-|                   | ``sh.items.return_item()`` und ``sh.now()`` zu ``sh.shtime.now()``. Für ``sh.tools``,           |
-|                   | ``sh.string2bool`` und Importe von ``lib.tools`` wird nur die Ersetzung genannt, da dafür ein   |
-|                   | Import nötig ist.                                                                               |
+|                   | ``sh.items.return_item()`` und ``sh.now()`` zu ``sh.shtime.now()``.                             |
+|                   | ``sh.tools.ping()``, ``dewpoint()``, ``rel2abs()`` und ``abs2rel()`` werden zu                  |
+|                   | ``Network.ping()`` bzw. ``Utils.*()``. In Logiken wird der Import ergänzt, in                   |
+|                   | Item-Attributen (``eval`` usw.) stehen ``Network`` und ``Utils`` ohne Import zur                |
+|                   | Verfügung. Für die übrigen ``sh.tools`` Funktionen, ``sh.string2bool`` und Importe              |
+|                   | von ``lib.tools`` wird nur die Ersetzung genannt.                                               |
 +-------------------+-------------------------------------------------------------------------------------------------+
 | ``scenes``        | Szenen im alten ``.conf`` Format werden zu ``.yaml`` Dateien.                                   |
 +-------------------+-------------------------------------------------------------------------------------------------+

@@ -98,6 +98,8 @@ value = eval(item._eval, _ns)
 | `math` | module | Python `math` |
 | `uf` | module | `lib.userfunctions` |
 | `env` | module | `lib.env` |
+| `Utils` | class | `lib.utils.Utils` — e.g. `Utils.dewpoint(t, rf)` |
+| `Network` | class | `lib.network.Network` — e.g. `Network.ping(host)` |
 | `value` | any | Trigger value; `None` for attribute evals |
 | `datetime` | module | Python `datetime` — documented in examples |
 | `time` | module | Python `time` — noted in original `item.py` |
@@ -153,8 +155,8 @@ On a successful fallback the log will contain a message such as:
 WARNING lib.item: Item 'my.item': eval: name 'os' is not in the standard eval
 environment but was found via the legacy namespace. This compatibility retry
 will be removed in a future release. Please update your configuration to use
-only the documented eval variables: sh, shtime, items, math, uf, env, value,
-caller, source, dest, source_details, datetime, time.
+only the documented eval variables: sh, shtime, items, math, uf, env, Utils,
+Network, value, caller, source, dest, source_details, datetime, time.
 ```
 
 ![Execution flow including compat shim](eval_env_flow.svg)
