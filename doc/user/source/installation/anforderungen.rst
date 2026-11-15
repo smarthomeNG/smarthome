@@ -165,22 +165,22 @@ Ab SmartHomeNG v1.8.2 sollte eine Installation unter **Windows** möglich sein.
 
 .. _python_versionen:
 
-Python Versionen
+Python-Versionen
 ================
 
-Unterstützte Python Versionen
+Unterstützte Python-Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 2.0.x ist **Python 3.12**. SmartHomeNG kann
-auch unter älteren Python Versionen lauffähig sein, das wird durch uns jedoch nicht (mehr) supported.
+Die älteste offiziell unterstützte Python-Version für das SmartHomeNG-Release 2.0.x ist **Python 3.12**. SmartHomeNG
+kann auch unter älteren Python-Versionen lauffähig sein, diese werden von uns jedoch nicht (mehr) unterstützt.
 
-Die Grundregel nach der sich der Support für Python Versionen richten soll ist folgende:
+Die Grundregel, nach der sich der Support für Python-Versionen richten soll, ist folgende:
 
-**Unterstützt werden die bei Enwicklungsstart einer SmartHomeNG
-Version aktuelle Python Version und die zwei Vorgängerversionen.**
+**Unterstützt werden die bei Entwicklungsstart einer SmartHomeNG-Version aktuelle Python-Version und die zwei
+Vorgängerversionen.**
 
 .. csv-table:: Zur Verdeutlichung
-  :header: "SmartHomeNG", "Release", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen", "minimale Python Version"
+  :header: "SmartHomeNG", "Release", "akt. Python zu Entwicklungsstart", "unterstützte Python-Versionen", "minimale Python-Version"
 
   "v1.6",  "11.05.2019", "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.4"
   "v1.7",  "05.04.2020", "Python 3.7",  "Python 3.5, 3.6, 3.7",    "Python 3.5"
@@ -189,24 +189,27 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
   "v1.10", "28.01.2024", "Python 3.10", "Python 3.8, 3.9, 3.10",   "Python 3.8"
   "v1.11", "30.03.2025", "Python 3.12", "Python 3.10, 3.11, 3.12", "Python 3.8"
   "v1.12", "09.05.2026", "Python 3.13", "Python 3.11, 3.12, 3.13", "Python 3.9"
-  "v2.0",  "--",         "Python 3.14", "Python 3.12, 3.13, 3.14", "Python 3.11"
+  "v2.0",  "--",         "Python 3.14", "Python 3.12, 3.13, 3.14, 3.15", "Python 3.11"
 
-Wenn die eingesetzte Python Version nicht in den unterstützen Python Versionen aufgelistet ist, bedeutet das nicht
-automatisch, dass SmartHomeNG mit älteren/neueren Python Versionen nicht funktioniert. Die Entwicklung wird nur
-nicht (mehr) mit anderen Versionen getestet.
+Python 3.15 ist während der Entwicklung von SmartHomeNG v2.0 erschienen. Da die automatisierten Tests auch mit
+Python 3.15 laufen, wird es abweichend von der Grundregel ebenfalls unterstützt.
 
-Die **minimale Python** Version mit der die jewilige SmartHomeNG Version startet, ist in der Tabelle oben angegeben.
-Ältere Python Versionen können nicht genutzt werden, da die SmartHomeNG Version Python Features nutzt, die in
-den älteren Versionen noch nicht implementiert waren.
+Wenn die eingesetzte Python-Version nicht unter den unterstützten Python-Versionen aufgelistet ist, bedeutet das
+nicht automatisch, dass SmartHomeNG mit älteren oder neueren Python-Versionen nicht funktioniert. Diese Versionen
+werden aber nicht (mehr) offiziell unterstützt.
 
-Zudem bekommen ältere Python Versionen keine Bugfixes mehr sondern nur noch Sicherheits-Updates bzw. fallen ganz
-als dem Python Lifecycle und erhalten keinerlei Updates mehr. Das Supportende der verschiedenen Python Versionen
+Die **minimale Python-Version**, mit der die jeweilige SmartHomeNG-Version startet, ist in der Tabelle oben
+angegeben. Ältere Python-Versionen können nicht genutzt werden, da die SmartHomeNG-Version Python-Features nutzt,
+die in den älteren Versionen noch nicht implementiert waren.
+
+Zudem bekommen ältere Python-Versionen keine Bugfixes mehr, sondern nur noch Sicherheits-Updates, bzw. fallen ganz
+aus dem Python-Lifecycle und erhalten keinerlei Updates mehr. Das Supportende der verschiedenen Python-Versionen
 ist in der folgenden Tabelle aufgelistet:
 
 .. note https://devguide.python.org/versions/
 
-.. csv-table:: Aktive Python Releases (wie auf python.org dokumentiert)
-  :header: "Python Version", "Maintenance Status", "Erstes Release", "Support Ende"
+.. csv-table:: Aktive Python-Releases (wie auf python.org dokumentiert)
+  :header: "Python-Version", "Maintenance-Status", "Erstes Release", "Supportende"
 
   "3.7",   "end of life",  "27\. Juni 2018",       "27\. Juni 2023"
   "3.8",   "end of life",  "14\. Oktober 2019",    "Oktober 2024"
