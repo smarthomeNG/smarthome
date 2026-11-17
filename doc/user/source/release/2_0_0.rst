@@ -58,6 +58,7 @@ Wichtige Hinweise zum Update
 Das Tool :doc:`tools/upgrade_check.py </tools/tools_upgrade_check>` prüft eine bestehende Konfiguration auf die
 folgenden Änderungen und kann die meisten davon selbst durchführen (Option ``--fix``, vorher wird eine Sicherung der
 geänderten Dateien angelegt). Es sollte vor dem ersten Start von SmartHomeNG 2.0 ausgeführt werden.
+Eine Schritt-für-Schritt-Anleitung für das Update steht unter :ref:`Update auf SmartHomeNG v2.0 <update_auf_2_0>`.
 
 Konfiguration
 -------------
@@ -148,7 +149,8 @@ Plugins
   serieller Verbindungen ist standardmäßig 1 s. Bei kodi und lms bedeutet ``*_read`` jetzt "fragt Daten an", jedes
   gebundene Item erhält die Werte. Die Konfiguration dieser Plugins bitte anhand ihrer Dokumentation prüfen.
 
-* Die Plugins darksky, deebot_ozmo, harmony, roomba_980 und zwave funktionieren nicht mehr (siehe
+* Die Plugins darksky, deebot_ozmo, harmony, roomba_980 und zwave funktionieren nicht mehr, die Plugins influxdb
+  und influxdb2 sind veraltet und werden mit Release 2.1 entfernt (siehe
   :ref:`Outdated Plugins <releasenotes_2_0_0_outdated_plugins>`).
 
 |
@@ -395,6 +397,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * ical: mask login data in logs
 * indego: set the config_change and mow_trig items instead of calling return_item with a value
 * indego4shng: remove the pydevd debugger hooks
+* influxdb: fix the escaping and handling of tags and sources in the line protocol, deprecated
+* influxdb2: deprecated
 * jsonread: switch to JMESPath, the web interface lists the items and devices the plugin keeps
 
 * knx:
@@ -473,6 +477,14 @@ verschoben:
 * roomba_980
 * zwave - das benötigte Paket python-openzwave läuft mit keiner unterstützten Python-Version; Alternative: zwave-js
   über MQTT
+
+Die folgenden Plugins funktionieren noch, sind aber als ``deprecated`` gekennzeichnet. Sie werden beim Laden mit
+einer Warnung gemeldet, bleiben mit 2.0 noch im Plugin-Repo und werden mit Release 2.1 in das Archive-Repo
+verschoben:
+
+* influxdb und influxdb2 - die Lizenzsituation von InfluxDB ist kompliziert und unbefriedigend (sie war auch der
+  Anlass für die TimescaleDB-Unterstützung des database Plugins); Ersatz: database Plugin mit
+  PostgreSQL+TimescaleDB
 
 
 |

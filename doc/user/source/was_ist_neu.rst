@@ -78,6 +78,8 @@ Konfiguration findet und die meisten davon selbst durchführt.
     - **database**: Das Plugin unterstützt PostgreSQL mit TimescaleDB und den WAL-Modus von SQLite, kann alte Daten
       automatisch aggregieren und Werte als ungültig markieren statt sie zu löschen (z.B. wenn ein Gerät offline
       ist, auch durch shelly, tasmota, zigbee2mqtt und matter). Das Webinterface ist stark erweitert.
+      Mit PostgreSQL+TimescaleDB ist das database Plugin die empfohlene Wahl für Zeitreihen-Daten, auch als Ersatz
+      für die Plugins influxdb und influxdb2.
 
     - **SmartDevicePlugin 2.0**: Die Basisklasse für Geräte-Plugins ist überarbeitet. Verbindung und Protokoll
       werden über deklarierte Regeln gewählt, die Verbindungs-Konfiguration ist typisiert. Die Plugins denon, epson,
