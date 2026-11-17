@@ -108,6 +108,22 @@ Crontab
 Wenn mehrere Einträge als Liste eingegeben werden sollen, so sind die Einträge durch ein | Zeichen zu trennen.
 
 
+Runtime warning / Runtime cancel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``runtime_warn``: Sekunden, die ein Lauf der Logik dauern darf, bevor eine Warnung in das Log der Logik geschrieben
+wird (danach erneut bei jeder Verdopplung der Laufzeit). Bei leerem Feld gilt ``runtime_warn`` aus
+``smarthome.yaml`` (Standard: 120), ``0`` schaltet die Warnung für diese Logik ab. Für Logiken, die absichtlich lange
+laufen (z.B. mit ``time.sleep``), kann hier ein höherer Wert eingetragen werden.
+
+``runtime_cancel``: Sekunden, nach denen ein Lauf automatisch abgebrochen wird. Bei leerem Feld wird nie automatisch
+abgebrochen.
+
+Beide Parameter werden in ``logic.yaml`` gespeichert, siehe
+:doc:`Standardparameter von Logiken </referenz/logiken/logiken_standardparameter>`. Sie gelten für die geladene Logik
+nach dem Speichern mit Neuladen der Logik.
+
+
 Watch Items
 ~~~~~~~~~~~
 

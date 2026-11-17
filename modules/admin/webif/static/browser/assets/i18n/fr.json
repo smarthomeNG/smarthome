@@ -352,6 +352,7 @@
     "COPY_IN_PROGRESS": "Copie en cours — cela peut prendre du temps si un plugin doit se reconnecter...",
     "COPY_SUCCESS_TITLE": "Item copié",
     "COPY_FAILED": "Impossible de copier l'item",
+    "OPERATION_BUSY": "Une autre opération sur les items est en cours - réessayez une fois terminée",
     "MISSING_PARENTS_TITLE": "Item(s) parent(s) inexistant(s)",
     "MISSING_PARENTS_INTRO": "Le nouveau chemin nécessite ces items parents, qui n'existent pas encore :",
     "MISSING_PARENTS_QUESTION": "Les créer maintenant comme items structurels vides, puis continuer le renommage ?",
