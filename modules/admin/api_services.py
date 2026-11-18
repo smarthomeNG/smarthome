@@ -228,6 +228,15 @@ class ServicesController(RESTResource):
             raise cherrypy.HTTPError(status=400)
         return json.dumps({'hash': Utils.hash_password(password)})
 
+    # ====  /api/services/generatesecret  ===================================
+    def generatesecret(self):
+        """
+        Create a random secret (256 bit, URL-safe base64) for a configuration value that is stored in plain text
+
+        :return: JSON with 'secret'
+        """
+        return json.dumps({'secret': Utils.generate_token()})
+
     # ======================================================================
     #  /api/services/checkpassword
     #
@@ -376,6 +385,8 @@ class ServicesController(RESTResource):
             return self.hashpassword()
         elif id == 'checkpassword':
             return self.checkpassword()
+        elif id == 'generatesecret':
+            return self.generatesecret()
 
         return None
 
@@ -418,5 +429,12 @@ class ServicesController(RESTResource):
             request_body='application/json',
             request_example='{"password": "<password>", "hash": "<hash>"}',
             response_example='{"match": true}',
+        ),
+        ApiDoc(
+            summary='Create a random secret (256 bit) for a plain-text configuration value, e.g. a bearer token',
+            method='put',
+            path='/services/generatesecret/',
+            tags=['services'],
+            response_example='{"secret": "<43 characters A-Z a-z 0-9 - _>"}',
         ),
     ]

@@ -476,6 +476,19 @@ class Utils(object):
         return _salted_hash(PASSWORD_HASH_ALGORITHM, plaintext)
 
     @staticmethod
+    def generate_token(nbytes: int = 32) -> str:
+        """
+        Create a random secret, e.g. a bearer token or a password that is stored in plain text in the configuration
+
+        :param nbytes: number of random bytes, at least 16 (default 32 = 256 bit)
+
+        :return: URL-safe base64 text (characters ``A-Z a-z 0-9 - _``, no padding)
+        """
+        if nbytes < 16:
+            raise ValueError('a token needs at least 16 random bytes')
+        return secrets.token_urlsafe(nbytes)
+
+    @staticmethod
     def wrap_legacy_password_hash(legacy_hash: str) -> str:
         """
         Turn an unsalted sha512 password hash into a salted one without knowing the password

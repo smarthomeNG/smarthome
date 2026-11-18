@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
-"""Tests for PUT /api/services/hashpassword/ of modules/admin/api_services.py."""
+"""Tests for PUT /api/services/hashpassword/, checkpassword/ and generatesecret/ of modules/admin/api_services.py."""
 
 import json
 import logging
@@ -61,6 +61,27 @@ class TestHashPassword(unittest.TestCase):
     def test_empty_password_is_refused(self):
         with self.assertRaises(cherrypy.HTTPError):
             self.put(b'')
+
+
+class TestGenerateSecret(unittest.TestCase):
+    def setUp(self):
+        module = MagicMock()
+        module._sh = MockSmartHome()
+        self.controller = ServicesController(module)
+
+    def test_returns_fresh_urlsafe_secret(self):
+        first = json.loads(self.controller.update('generatesecret'))['secret']
+        second = json.loads(self.controller.update('generatesecret'))['secret']
+
+        self.assertRegex(first, r'^[A-Za-z0-9_-]{43}$')
+        self.assertNotEqual(first, second)
+
+    def test_secret_is_not_logged(self):
+        self.controller.logger.setLevel(logging.DEBUG)
+        with self.assertLogs(level=logging.DEBUG) as logs:
+            logging.getLogger('dummy').debug('x')
+            secret = json.loads(self.controller.update('generatesecret'))['secret']
+        self.assertNotIn(secret, '\n'.join(logs.output))
 
 
 if __name__ == '__main__':
