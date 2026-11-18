@@ -94,6 +94,8 @@ CancelResult = typing.Literal['requested', 'not_found', 'not_cancellable']
 
 DEFAULT_RUNTIME_WARN = 120  # seconds a scheduler task may run before a warning is logged; 0 disables
 
+_LOCK_TIMEOUT = 1  # seconds run() waits for the scheduler lock before logging its holder
+
 
 def _parse_seconds(value) -> float | None:
     """``value`` as a threshold in seconds (a number >= 0), None if invalid."""
@@ -283,6 +285,79 @@ class _TaskRegistry:
         return due
 
 
+@dataclasses.dataclass(frozen=True)
+class _LockHolder:
+    """
+    One acquisition of a :class:`_TracedLock`; a new instance per acquisition.
+
+    :ivar thread_ident: ``threading.get_ident()`` of the holding thread
+    :ivar thread_name: name of the holding thread at acquisition
+    :ivar site: function, file and line that acquired the lock
+    :ivar acquired: ``time.monotonic()`` at acquisition
+    """
+
+    thread_ident: int
+    thread_name: str
+    site: str
+    acquired: float
+
+    @property
+    def held_for(self) -> float:
+        """Seconds since acquisition."""
+        return time.monotonic() - self.acquired
+
+
+class _TracedLock:
+    """
+    Non-reentrant lock that records its current holder, to name it when another thread waits too long.
+
+    Supports the ``threading.Lock`` subset ``acquire()``, ``release()`` and ``with``.
+    """
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._holder: _LockHolder | None = None
+
+    @property
+    def holder(self) -> _LockHolder | None:
+        """Current acquisition, None while the lock is free."""
+        return self._holder
+
+    def acquire(self, blocking: bool = True, timeout: float = -1) -> bool:
+        """Acquire like ``threading.Lock.acquire()``, recording the calling thread and function."""
+        return self._acquire(sys._getframe(1), blocking, timeout)
+
+    def release(self) -> None:
+        """Release like ``threading.Lock.release()``."""
+        self._holder = None
+        self._lock.release()
+
+    def __enter__(self) -> '_TracedLock':
+        self._acquire(sys._getframe(1), True, -1)
+        return self
+
+    def __exit__(self, *exc_info) -> None:
+        self.release()
+
+    def _acquire(self, caller: types.FrameType, blocking: bool, timeout: float) -> bool:
+        if not self._lock.acquire(blocking, timeout):
+            return False
+        try:
+            thread = threading.current_thread()
+            code = caller.f_code
+            self._holder = _LockHolder(
+                thread_ident=thread.ident,
+                thread_name=thread.name,
+                site=f'{code.co_name}() at {os.path.basename(code.co_filename)}:{caller.f_lineno}',
+                acquired=time.monotonic(),
+            )
+        except BaseException:
+            # an async TaskCancelled can land here; the caller's try/finally is not entered yet
+            self._lock.release()
+            raise
+        return True
+
+
 class _PriorityQueue:
     """
     Implements a queue which contain tuples of priority and data sorted by priority.
@@ -364,7 +439,8 @@ class Scheduler(threading.Thread):
         threading.Thread.__init__(self, name='Scheduler')
         logger.info('Init Scheduler')
         self._sh = smarthome
-        self._lock = threading.Lock()
+        self._lock = _TracedLock()
+        self._reported_lock_holder: _LockHolder | None = None
         self._runc = threading.Condition()
         self._cycle_items = {}  # store items for dynamic cycles {'item2.property.path': {name1, name2, ...}}
         self._running = _TaskRegistry()
@@ -550,6 +626,28 @@ class Scheduler(threading.Thread):
             )
             self.cancel_task(task.thread_ident, task.task_id)
 
+    def _log_lock_timeout(self) -> None:
+        """
+        Log that run() could not acquire the scheduler lock within ``_LOCK_TIMEOUT``, naming the holder.
+
+        The first message for an acquisition adds the holder thread's current stack; further
+        messages for the same acquisition name holder and hold time only.
+        """
+        holder = self._lock.holder
+        if holder is None:
+            logger.critical(f'Scheduler: lock not acquired within {_LOCK_TIMEOUT:g} s, released meanwhile')
+            return
+        message = (
+            f'Scheduler: lock not acquired within {_LOCK_TIMEOUT:g} s, held for {holder.held_for:.1f} s '
+            f'by thread {holder.thread_name} (acquired in {holder.site})'
+        )
+        if holder is not self._reported_lock_holder:
+            self._reported_lock_holder = holder
+            frame = sys._current_frames().get(holder.thread_ident)
+            stack = ''.join(traceback.format_stack(frame)) if frame is not None else '(not available)\n'
+            message += f', current stack:\n{stack}'
+        logger.critical(message)
+
     def run(self):
         self.alive = True
         logger.debug(f'creating {self._worker_num} workers')
@@ -608,16 +706,8 @@ class Scheduler(threading.Thread):
                 else:  # put last entry back and break while loop
                     self._triggerq.insert((dt, prio), (name, obj, by, source, dest, value))
                     break
-            # For debugging
-            # task_count = 0
-            # for name in self._scheduler:
-            #     task = self._scheduler[name]
-            #     if task['next'] is not None:
-            #         task_count += 1
-            # End for debugging
-            if not self._lock.acquire(timeout=1):
-                #     logger.critical("Scheduler: Deadlock! - Task Count to enter run queue: {}".format(task_count))
-                logger.critical('Scheduler: Deadlock!')
+            if not self._lock.acquire(timeout=_LOCK_TIMEOUT):
+                self._log_lock_timeout()
                 continue
             try:
                 for name in self._scheduler:
@@ -715,9 +805,9 @@ class Scheduler(threading.Thread):
         :param name: scheduler entry name to remove
         :param from_smartplugin:
         """
+        name = self.check_caller(name, from_smartplugin)
         self._lock.acquire()
         try:
-            name = self.check_caller(name, from_smartplugin)
             logger.debug(f'remove scheduler entry with name: {name}')
             if name in self._scheduler:
                 del self._scheduler[name]
