@@ -183,6 +183,18 @@ class PluginsConfigController(RESTResource):
                 meta = Metadata(self._sh, plugin_name, 'plugin', classpath)
         return (plugin_name + plugin_version, meta)
 
+    @staticmethod
+    def _plugin_description(meta) -> dict:
+        """
+        Return the description of a plugin from its metadata
+
+        :param meta: loaded plugin.yaml, None if the plugin is not installed
+
+        :return: description by language, empty texts if the metadata has none
+        """
+        plugin = (meta or {}).get('plugin') or {}
+        return plugin.get('description') or {'de': '', 'en': ''}
+
     # ======================================================================
     #  GET /api/plugins/config
     #
@@ -228,12 +240,7 @@ class PluginsConfigController(RESTResource):
                 # self.logger.warning("plugin_name = {}, meta = {}".format(plugin_name, metadata.meta))
 
                 _conf[confplg]['_meta'] = metadata.meta
-                try:
-                    _conf[confplg]['_description'] = metadata.meta['plugin']['description']
-                except (AttributeError, KeyError):
-                    _conf[confplg]['_description'] = {}
-                    _conf[confplg]['_description']['de'] = ''
-                    _conf[confplg]['_description']['en'] = ''
+                _conf[confplg]['_description'] = self._plugin_description(metadata.meta)
 
         info['plugin_config'] = _conf
 
