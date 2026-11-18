@@ -18,12 +18,14 @@ from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
 
-from ruamel.yaml import YAML
+from ruamel.yaml import YAML, YAMLError
+from ruamel.yaml.nodes import MappingNode, ScalarNode
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from api_snapshot import DEFAULT_SURFACE, Change, Level, Snapshot, Surface, diff, snapshot, snapshot_ref  # noqa: E402
+from lib.shyaml import yaml_compose_fromstring  # noqa: E402
 from lib.utils import Version  # noqa: E402
 
 _RANK = {'none': 0, 'patch': 1, 'minor': 2, 'major': 3}
@@ -98,6 +100,60 @@ def _declared_version(yaml_text: str) -> str:
     return str(plugin.get('version', '')) if isinstance(plugin, dict) else ''
 
 
+_NUMBER_TAGS = ('tag:yaml.org,2002:int', 'tag:yaml.org,2002:float')
+_UNQUOTED_NUMBER_BOUND = re.compile(r'(?:sh|py|sdp)_(?:min|max)version\s*:[ \t]*(?![^\s#,}]*\.[^\s#,}]*\.)[-+.0-9]')
+VERSION_BOUND_KEYS = tuple(f'{prefix}_{limit}version' for prefix in ('sh', 'py', 'sdp') for limit in ('min', 'max'))
+
+
+@dataclass(frozen=True)
+class MisreadBound:
+    """A version bound of a plugin.yaml that YAML reads as a different version than written."""
+
+    key: str
+    written: str  # text in the file, e.g. 3.10
+    read_as: str  # what the readers of the bound get, e.g. 3.1
+
+    def __str__(self) -> str:
+        return f"{self.key} {self.written} is read as {self.read_as}, quote it: {self.key}: '{self.written}'"
+
+
+def misread_version_bounds(yaml_text: str) -> list[MisreadBound]:
+    """
+    Version bounds in the plugin section of a plugin.yaml that are read as a different version than written
+
+    An unquoted bound is a YAML number that is turned into text with str(): ``py_minversion: 3.10`` is read
+    as ``3.1``. Unquoted bounds whose number reads back as written (``3.11``, ``1.8``) are not
+    reported; quoted, empty and dotted (``1.8.0``, a string) bounds cannot be misread. Text that is not valid
+    YAML reports nothing.
+
+    :param yaml_text: content of a plugin.yaml
+
+    :return: the misread bounds in file order
+    """
+    if not _UNQUOTED_NUMBER_BOUND.search(yaml_text):
+        return []
+    try:
+        root = yaml_compose_fromstring(yaml_text)
+    except YAMLError:
+        return []
+    if not isinstance(root, MappingNode):
+        return []
+    plugin = next((value for key, value in root.value if key.value == 'plugin'), None)
+    if not isinstance(plugin, MappingNode):
+        return []
+    constructor = YAML(typ='safe', pure=True).constructor
+    found = []
+    for key, value in plugin.value:
+        if key.value not in VERSION_BOUND_KEYS or not isinstance(value, ScalarNode) or value.style is not None:
+            continue
+        if value.tag not in _NUMBER_TAGS:
+            continue
+        read_as = str(constructor.construct_object(value))
+        if read_as != value.value:
+            found.append(MisreadBound(key.value, value.value, read_as))
+    return found
+
+
 def _plugin_snapshot(plugin: str, yaml_text: str | None) -> Snapshot:
     """API snapshot of one plugin.yaml given as text."""
     if yaml_text is None:
@@ -129,6 +185,7 @@ def _check_plugin(
     in_code = _PLUGIN_VERSION.search(code)
     if in_code and in_code.group(1) != new_version:
         error(f'plugin.yaml version {new_version} differs from PLUGIN_VERSION {in_code.group(1)}')
+    found += [Finding('warning', plugin, str(bound)) for bound in misread_version_bounds(head_yaml)]
     snap_new = _plugin_snapshot(plugin, head_yaml)
     minimum = snap_new[f'requirement:{plugin}:sh_minversion']['value']
     if minimum and Version.compare(minimum, core_version, '>'):

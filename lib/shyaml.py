@@ -212,6 +212,26 @@ def yaml_load_fromstring(string, ordered=False):
     return y, estr
 
 
+def yaml_compose_fromstring(string):
+    """
+    Return the node tree of a YAML string, without constructing Python objects
+
+    Scalar nodes keep the text as written (``value``) and the quoting (``style``: None if unquoted), which the
+    loaded data loses (an unquoted ``3.10`` loads as the float 3.1).
+
+    :param string: YAML text
+    :type string: str
+
+    :return: root node, None for an empty document
+    :raises ruamel.yaml.YAMLError: if the string is not valid YAML
+    """
+    yaml = YAML(typ='rt')
+    if hasattr(yaml, 'compose'):  # YAML.compose() exists from ruamel.yaml 0.17 on
+        return yaml.compose(string)
+    yaml.get_constructor_parser(string)
+    return yaml.composer.get_single_node()
+
+
 class _OrderedSafeRepresenter(SafeRepresenter):
     """Safe representer that writes an OrderedDict as a plain mapping."""
 

@@ -1112,7 +1112,7 @@ class MultilineChecker:
         findings: list[Finding] = []
         for path in project.item_files():
             try:
-                root = self._compose(read_text(path))
+                root = shyaml.yaml_compose_fromstring(read_text(path))
             except Exception:
                 continue
             for key, node in self._scalars(root):
@@ -1120,15 +1120,6 @@ class MultilineChecker:
                     message = f"'{key}' spans several lines; check that joining them with a space is right"
                     findings.append(Finding(self.name, path, message, node.start_mark.line + 1, False))
         return findings
-
-    @staticmethod
-    def _compose(text: str):
-        """The node tree of *text*; YAML.compose() exists from ruamel.yaml 0.17 on, the composer is used before."""
-        yaml = ruamel_yaml.YAML(typ='rt')
-        if hasattr(yaml, 'compose'):
-            return yaml.compose(text)
-        yaml.get_constructor_parser(text)
-        return yaml.composer.get_single_node()
 
     def _scalars(self, node, key=''):
         """(key, scalar node) of every mapping value below *node*."""
@@ -1164,7 +1155,7 @@ class Yaml11Checker:
             if not YAML_11_DIRECTIVE.search(text.split('\n---', 1)[0] + '\n'):
                 continue
             try:
-                root = MultilineChecker._compose(text)
+                root = shyaml.yaml_compose_fromstring(text)
             except Exception:
                 continue
             file_findings, edits = self._differences(path, root)

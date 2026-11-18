@@ -161,6 +161,30 @@ class TestYamlLoadFromString(unittest.TestCase):
 # ===========================================================================
 
 
+class TestYamlComposeFromString(unittest.TestCase):
+    def test_scalar_nodes_keep_text_and_quoting(self):
+        root = shyaml.yaml_compose_fromstring("a: 3.10\nb: '3.10'\n")
+        (_, plain), (_, quoted) = root.value
+        self.assertEqual(('3.10', None), (plain.value, plain.style))
+        self.assertEqual(('3.10', "'"), (quoted.value, quoted.style))
+
+    def test_text_with_yaml_directive(self):
+        root = shyaml.yaml_compose_fromstring('%YAML 1.1\n---\nroom:\n    cache: yes\n')
+
+        key_node, value_node = root.value[0]
+        self.assertEqual('room', key_node.value)
+        self.assertEqual('yes', value_node.value[0][1].value)
+
+    def test_empty_document_is_none(self):
+        self.assertIsNone(shyaml.yaml_compose_fromstring(''))
+
+    def test_invalid_yaml_raises(self):
+        from ruamel.yaml import YAMLError
+
+        with self.assertRaises(YAMLError):
+            shyaml.yaml_compose_fromstring('a: [\n')
+
+
 class TestYamlSave(unittest.TestCase):
     def test_save_and_reload(self):
         f = tempfile.NamedTemporaryFile(suffix='.yaml', delete=False)
