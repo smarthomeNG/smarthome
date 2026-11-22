@@ -10,6 +10,7 @@ from lib.model.smartplugin import SmartPlugin
 
 from .helper import get_message
 from .dependent_formatter import format_value
+from .typed_helper import get_typed_value
 
 
 class SubmoduleReloadPlugin(SmartPlugin):
@@ -25,3 +26,6 @@ class SubmoduleReloadPlugin(SmartPlugin):
 
     def get_formatted_value(self):
         return format_value()
+
+    def get_typed_value(self):
+        return get_typed_value(self)

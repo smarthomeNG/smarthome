@@ -765,7 +765,7 @@ class Plugins:
             del myplugin
 
             try:
-                logger.warning(f'myplugin refcnt nach del    = {PyObject.from_address(myplugin_address).refcnt}')
+                logger.debug(f'myplugin refcnt nach del    = {PyObject.from_address(myplugin_address).refcnt}')
             except Exception:
                 pass
 
@@ -943,11 +943,32 @@ class Plugins:
         return order
 
     @staticmethod
+    def _runtime_nodes(tree: ast.AST):
+        """
+        Yields the nodes of `tree` like ast.walk(), without the bodies of
+        `if TYPE_CHECKING:` / `if typing.TYPE_CHECKING:` blocks (their else
+        branches run and are kept).
+        """
+        pending = [tree]
+        while pending:
+            node = pending.pop()
+            yield node
+            if isinstance(node, ast.If):
+                test = node.test
+                name = test.id if isinstance(test, ast.Name) else test.attr if isinstance(test, ast.Attribute) else None
+                if name == 'TYPE_CHECKING':
+                    pending.extend(node.orelse)
+                    continue
+            pending.extend(ast.iter_child_nodes(node))
+
+    @staticmethod
     def _module_local_dependencies(name: str, candidates: set) -> set:
         """
         Statically parses module `name`'s own import statements and returns
         which members of `candidates` it imports from (directly or as a
         submodule) - i.e. which of them must be reloaded before it.
+
+        Imports below `if TYPE_CHECKING:` never run and are no dependencies.
         """
         module = sys.modules.get(name)
         if module is None:
@@ -959,7 +980,7 @@ class Plugins:
 
         package = module.__package__ or ''
         dependencies = set()
-        for node in ast.walk(tree):
+        for node in Plugins._runtime_nodes(tree):
             targets = []
             if isinstance(node, ast.ImportFrom):
                 if node.level > 0:

@@ -268,6 +268,29 @@ class TestReloadSubmodules(unittest.TestCase):
             'reload_plugin() must reload a dependency submodule before the sibling that imports from it',
         )
 
+    TYPED_PATH = os.path.join(common.BASE, 'tests', 'fixture_reload_submodule_plugin', 'typed_helper.py')
+
+    def test_reload_picks_up_changes_in_a_submodule_importing_its_package_for_type_checking(self):
+        with open(self.TYPED_PATH) as f:
+            original_source = f.read()
+        self.addCleanup(lambda: open(self.TYPED_PATH, 'w').write(original_source))
+
+        myplugin = self.plugins.return_plugin('submodulereload')
+        self.assertEqual(myplugin.get_typed_value(), 'original')
+
+        with open(self.TYPED_PATH, 'w') as f:
+            f.write(original_source.replace("return 'original'", "return 'updated'"))
+
+        result = self.plugins.reload_plugin('submodulereload')
+        self.assertTrue(result)
+
+        myplugin = self.plugins.return_plugin('submodulereload')
+        self.assertEqual(
+            myplugin.get_typed_value(),
+            'updated',
+            'an import below `if TYPE_CHECKING:` is no import cycle and must not disable submodule reloading',
+        )
+
     def test_reload_does_not_raise_on_a_circular_import_among_submodules(self):
         # module_a.py and module_b.py (tests/fixture_reload_cycle_plugin/)
         # import from each other - graphlib.TopologicalSorter has no valid
