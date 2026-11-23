@@ -176,8 +176,8 @@ Bugfixes im CORE
 * lib.item: fix create_item() persistence for parents defined in other files, fix child items named name,
   description or remark, rename_item() keeps an item's yaml definition on a failed write, evals run by
   ``eval_trigger`` reach plugins with their ``Eval:`` caller prefix
-* lib.log: messages of the SmartHomeNG log levels (NOTICE, DBGHIGH, DBGMED, DBGLOW, DEVELOP) name the calling
-  function and line instead of ``logForLevel``
+* lib.log, lib.plugin: messages of the SmartHomeNG log levels (NOTICE, DBGHIGH, DBGMED, DBGLOW, DEVELOP) name the
+  calling function and line instead of ``logForLevel``, or for plugins instead of ``plugin.py``
 * lib.network: ``Network.ping()`` gives up after a timeout (default 2 s) instead of blocking
 * lib.scheduler: a task queued while all workers are busy no longer waits up to one second; ``exit()`` and ``quit()``
   in a logic end the run without closing stdin
@@ -187,7 +187,7 @@ Bugfixes im CORE
 * lib.shpypi: don't use ``pip --user`` in a venv
 * modules.admin: keep URL file names inside their directory, reset status after a failed restore, no credentials in
   the login log, token handling works with PyJWT 2 (incl. 2.10 and newer, requirement ``pyjwt<3.0``), fix log view
-  chunking, fix time comparison
+  chunking, fix time comparison, the plugin configuration list tolerates configured plugins that are not installed
 * modules.websocket: close the servers before draining the event loop on stop
 
 
@@ -281,10 +281,13 @@ Updates in the CORE
       logic) logs a warning (its current stack trace separately at DEBUG), again at each doubling
     * running logics can be cancelled (exception ``TaskCancelled``), manually in the Admin GUI or automatically with
       the logic parameter ``runtime_cancel``
+    * a lock that cannot be acquired is logged with its holder instead of "Deadlock!"
 
   * lib.shyaml: plain ruamel.yaml round trip with the YAML API, ``ruamel.yaml>=0.16.7,<0.20``
 
   * lib.userfunctions: add ``get_userlibs()``
+
+  * lib.utils: add ``Utils.generate_token()`` for random secrets (e.g. bearer tokens)
 
 * Modules:
 
@@ -298,6 +301,9 @@ Updates in the CORE
     * threads page shows type and runtime of running tasks and their current stack, highlights overdue tasks and
       allows to cancel logics
     * item edit/rename/copy/delete and references in the GUI and the REST API
+    * logic editor: ``runtime_warn`` and ``runtime_cancel`` per logic
+    * configuration forms: generate button and reveal toggle for secret parameters and passwords
+      (``PUT /api/services/generatesecret``), hidden parameters are masked in the system settings
     * REST based stream API instead of the legacy /adm API, ``openapi.yaml`` generated from the route metadata
     * no static jwt and password salt, tls certs are created on startup, HTTP 401 for authentication failures, CORS
       headers only for configured origins (``cors_origins``)
@@ -428,6 +434,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * rrd: newer bindings package
 * shelly: TRV read-only attributes, optionally mark device items invalid in db if offline, fix class-level dicts
 * sma: send the UTC offset of the configured timezone when setting the inverter time
+* smartmeter: state ready, version 1.0.0
 * smarttv: adapted to the current plugin structure, remote control in the web interface
 * smartvisu: new working directory and stylesheet name, improved template handling
 * solarforecast: fix web interface, add get_items(), catch connection errors
@@ -443,6 +450,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
 * viessmann:
 
+  * state ready
   * new devices VScotHO1 and VScotHO1_200_11, item structs, commands split per model, error history datatype
   * fixes for standalone mode, KW2 protocol processing, P300 sync retries, command definitions and the web interface
     (manual reads)
