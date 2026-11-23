@@ -1351,24 +1351,34 @@ class PluginLoggingAdapter(logging.LoggerAdapter):
         return
 
     def notice(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.NOTICE_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level NOTICE."""
+        self._log_custom_level(_SH.logs.NOTICE_level, msg, args, kwargs)
 
     def develop(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.DEVELOP_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level DEVELOP."""
+        self._log_custom_level(_SH.logs.DEVELOP_level, msg, args, kwargs)
 
     def dbghigh(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.DBGHIGH_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level DBGHIGH."""
+        self._log_custom_level(_SH.logs.DBGHIGH_level, msg, args, kwargs)
 
     def dbgmed(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.DBGMED_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level DBGMED."""
+        self._log_custom_level(_SH.logs.DBGMED_level, msg, args, kwargs)
 
     def dbglow(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.DBGLOW_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level DBGLOW."""
+        self._log_custom_level(_SH.logs.DBGLOW_level, msg, args, kwargs)
+
+    def _log_custom_level(self, level: int, msg, args: tuple, kwargs: dict) -> None:
+        """
+        Log through ``LoggerAdapter.log()`` like the standard levels, so ``process()`` adds prefix and extra.
+
+        The record names the caller of the level method: ``stacklevel`` skips this helper and
+        that method (logging's own frames are never counted).
+        """
+        kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + 2
+        self.log(level, msg, *args, **kwargs)
 
     def process(self, msg, kwargs):
         kwargs['extra'] = self.extra
