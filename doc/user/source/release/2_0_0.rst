@@ -428,6 +428,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * fixed structs for Huawei devices
 
 * mqtt: ``mqtt_select_in`` attribute, JSON items are created at runtime (item tree in the web interface)
+* neato: error handling if the backend is not available, the web interface shows the state of the secret key
 * nut: socket instead of the removed telnetlib (Python 3.13+)
 * pioneer: fix standby, volume init
 * resol: catch OS exception
