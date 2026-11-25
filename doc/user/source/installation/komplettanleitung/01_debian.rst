@@ -1,13 +1,10 @@
 
 .. index:: Linux; Debian installieren
 
-.. role:: bluesup
-.. role:: redsup
-.. role:: greensup
 
-============================================
-Debian Linux installieren :greensup:`Update`
-============================================
+=========================
+Debian Linux installieren
+=========================
 
 Die genaue Schritt für Schritt Installation des Betriebsystems wird hier nicht beschrieben, das hier ist der falsche
 Ort dafür. Jedoch wird als Referenz die Paketauswahl während der Installation beschrieben.

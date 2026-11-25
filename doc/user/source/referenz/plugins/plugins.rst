@@ -2,15 +2,11 @@
 .. index:: Referenz; Plugins
 .. Index:: Plugins Referenz
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
-.. role:: blacksup
 
 
-==========================
-Plugins :greensup:`Update`
-==========================
+=======
+Plugins
+=======
 
 Durch Plugins kann die Funktionalität von SmartHomeNG erweitert werden und SmartHomeNG kann mit zu steuernden
 Komponenten bzw. Systemen verbunden werden.

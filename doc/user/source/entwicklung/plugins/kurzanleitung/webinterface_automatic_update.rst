@@ -1,13 +1,10 @@
 .. index:: Web Interface; Automatische Updates
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
 
 
-Automatische Updates der Daten im Webinterface :greensup:`Update`
-=================================================================
+Automatische Updates der Daten im Webinterface
+==============================================
 
 Um die Daten im Webinterface zu aktualisieren, sendet die Webseite periodische AJAX-Anfragen
 an das Plugin und verarbeitet die zurückgelieferten Informationen,

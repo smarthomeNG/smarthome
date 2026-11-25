@@ -2,13 +2,10 @@
 
 .. index:: Fehlersuche
 
-.. role:: bluesup
-.. role:: redsup
-.. role:: greensup
 
-==============================
-Fehlersuche :greensup:`Update`
-==============================
+===========
+Fehlersuche
+===========
 
 Die folgenden Informationen sollen bei der Fehlersuche helfen.
 Ein guter Startpunkt ist die :doc:`fehlersuche_checkliste`

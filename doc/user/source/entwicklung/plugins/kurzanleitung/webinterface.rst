@@ -1,13 +1,10 @@
 .. index:: New; Webinterface
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
 
-===============================
-Webinterface :greensup:`Update`
-===============================
+============
+Webinterface
+============
 
 Allgemeines
 ===========

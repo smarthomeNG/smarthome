@@ -1,8 +1,7 @@
-.. role:: greensup
 
-==========================
-Plugins :greensup:`Update`
-==========================
+=======
+Plugins
+=======
 
 Das Grundsystem von SmartHomeNG kann durch den Einsatz von Plugins erweitert werden. Ein Plugin
 ist ein Zusatzmodul in einem Unterverzeichnis unterhalb des Verzeichnisses ``plugins``.
@@ -84,8 +83,8 @@ Ein **#** wirkt wie auch bei den Konfigurationsdateien der Items als Beginn eine
 
 
 
-Multi-Instance Fähigkeit :greensup:`Update`
-===========================================
+Multi-Instance Fähigkeit
+========================
 
 Es gibt Plugins, die so geschrieben sind, dass von ihnen mehrere Instanzen parallel geladen werden
 können.

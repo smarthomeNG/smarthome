@@ -1,14 +1,11 @@
 :tocdepth: 1
 
-.. role:: bluesup
-.. role:: redsup
-.. role:: greensup
 
 
 .. index:: Fehlersuche; Checkliste
 
-Checkliste für die Fehlersuche :greensup:`Update`
-=================================================
+Checkliste für die Fehlersuche
+==============================
 
 Wenn etwas nach erfolgter Installation nicht funktioniert, kann anhand folgender Punkte geprüft
 werden, was nicht klappt. Hilfe gibt es auch im `Supportforum im KNX-User-Forum <https://knx-user-forum.de/forum/supportforen/smarthome-py>`_

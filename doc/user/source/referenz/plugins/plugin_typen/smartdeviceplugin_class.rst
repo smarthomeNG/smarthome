@@ -2,12 +2,9 @@
 .. index:: Plugin; Class SmartDevicePlugin
 .. index:: Entwicklung; Class SmartDevicePlugin
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
-Class SmartDevicePlugin :greensup:`Update`
-==========================================
+Class SmartDevicePlugin
+=======================
 
 Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.
 
@@ -249,8 +246,8 @@ Der Guard wird automatisch zurückgesetzt, wenn der Item-Wert sich ändert, die 
 erfolgreich wiederhergestellt wird, oder das Zeitfenster abläuft ohne weitere Versuche.
 
 
-Datenlücken bei Verbindungsverlust :redsup:`neu`
-------------------------------------------------
+Datenlücken bei Verbindungsverlust
+----------------------------------
 
 Mit dem Parameter ``invalidate_on_disconnect`` markiert das Plugin bei Verbindungsverlust seine Items im
 Datenbank-Log des ``database``-Plugins als ungültig (``item.db_mark_invalid()``). Der Item-Wert selbst bleibt

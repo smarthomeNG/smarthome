@@ -4,11 +4,9 @@
 .. index:: Items; instance
 .. index:: Plugins; Instanz eines Items
 
-.. role:: redsup
-.. role:: greensup
 
-instance :redsup:`neu`
-----------------------
+instance
+--------
 
 Das Attribut **instance** legt fest, zu welcher Instanz eines mehrfach eingebundenen Plugins die plugin-spezifischen
 Attribute eines Items gehören. Als Wert wird der Name des Abschnitts in der ``etc/plugin.yaml`` angegeben, oder eine

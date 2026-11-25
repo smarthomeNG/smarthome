@@ -1,8 +1,7 @@
 
-.. role:: greensup
 
-Allgemeines zur Konfiguration :greensup:`Update`
-================================================
+Allgemeines zur Konfiguration
+=============================
 
 Die Codebasis von SmartHomeNG ist in der Programmiersprache Python geschrieben. Python ist
 

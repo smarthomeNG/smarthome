@@ -2,14 +2,11 @@
 .. index:: Referenz; SmartHomeNG
 .. Index:: SmartHomeNG; Referenz
 
-.. role:: bluesup
-.. role:: redsup
-.. role:: greensup
 
 
-=========================================
-SmartHomeNG (der Core) :greensup:`Update`
-=========================================
+======================
+SmartHomeNG (der Core)
+======================
 
 Im folgenden sind einige Informationen zusammengestellt die den Core von SmartHomeNG als ganzes betreffen.
 

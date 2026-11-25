@@ -1,9 +1,8 @@
 
-.. role:: greensup
 
-========================================================
-In wenigen Minuten zum eigenen Plugin :greensup:`Update`
-========================================================
+=====================================
+In wenigen Minuten zum eigenen Plugin
+=====================================
 
 
 Plugins sind Erweiterungen von SmartHomeNG mit zusätzlichen Funktionen. Sie sind in Python geschrieben.

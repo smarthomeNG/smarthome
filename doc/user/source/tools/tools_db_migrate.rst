@@ -1,10 +1,9 @@
-.. role:: redsup
 
 .. index:: Datenbank Migrations Tool
 .. index:: Tools; Datenbank Migrations Tool
 
-db_migrate.py :redsup:`neu`
-===========================
+db_migrate.py
+=============
 
 Dieses Skript migriert das Schema des database Plugins (Tabellen ``item``/``log``) zwischen
 zwei beliebigen der unterstützten Datenbank-Backends: SQLite3, MySQL/MariaDB und

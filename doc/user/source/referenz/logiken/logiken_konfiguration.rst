@@ -1,15 +1,13 @@
 :tocdepth: 5
 
-.. role:: bluesup
-.. role:: greensup
 
 .. index:: Konfiguration; Logiken
 .. index:: Logiken; Konfiguration
 
 
-======================================
-Logik Konfiguration :greensup:`Update`
-======================================
+===================
+Logik Konfiguration
+===================
 
 Zur Konfiguration einer Logik wird in der Datei ``etc/logic.yaml`` ein Abschnitt für die
 Logik angelegt. Unter dem Namen dieses Abschnitts wird die Logik an anderen Stellen referenziert.

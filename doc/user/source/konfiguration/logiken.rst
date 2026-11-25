@@ -1,10 +1,9 @@
 .. index:: Logiken; Konfiguration
 
-.. role:: greensup
 
-==========================
-Logiken :greensup:`Update`
-==========================
+=======
+Logiken
+=======
 
 Zur Konfiguration einer Logik wird in der Datei ``etc/logic.yaml`` ein Abschnitt für die
 Logik angelegt. Unter dem Namen dieses Abschnitts wird die Logik an anderen Stellen referenziert.

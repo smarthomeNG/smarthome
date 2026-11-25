@@ -2,11 +2,10 @@
 .. index:: Admin GUI; Scheduler
 .. index:: Scheduler; Admin GUI
 
-.. role:: greensup
 
-============================
-Scheduler :greensup:`Update`
-============================
+=========
+Scheduler
+=========
 
 Die Anzeige der Scheduler ist in 5 Tabs unterteilt, wobei für jeden Scheduler der Name, der nächste Ausführungszeitpunkt,
 sowie Einstellungen zu Ausführungszyklus und Crontab angezeigt werden.

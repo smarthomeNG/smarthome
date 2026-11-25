@@ -1,9 +1,5 @@
 
-.. role:: redsup
-.. role:: bluesup
 .. role:: darkbluesup
-.. role:: greensup
-.. role:: blacksup
 
 .. index:: SmartHomeNG umziehen; Tipps & Tricks
 .. index:: Tipps & Tricks; SmartHomeNG umziehen
@@ -11,9 +7,9 @@
 
 .. _shng_umziehen:
 
-=======================================
-SmartHomeNG umziehen :greensup:`Update`
-=======================================
+====================
+SmartHomeNG umziehen
+====================
 
 Im folgenden wird ein mögliches Vorgehen beschrieben, um SmartHomeNG auf ein neues System (mit neuem Betriebssystem)
 umzuziehen.

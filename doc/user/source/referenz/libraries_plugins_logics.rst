@@ -1,7 +1,6 @@
-.. role:: greensup
 
-Libraries für Plugins und Logiken :greensup:`Update`
-====================================================
+Libraries für Plugins und Logiken
+=================================
 
 Es gibt einige Libraries (Python Module), die bei der Entwicklung von Plugins und Logiken genutzt werden können.
 Der Aufruf der darin bereitgestellten Funktionen ist im Folgenden beschrieben:

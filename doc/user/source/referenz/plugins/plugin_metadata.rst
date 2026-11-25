@@ -1,8 +1,7 @@
 
-.. role:: greensup
 
-Metadaten für Plugins :greensup:`Update`
-========================================
+Metadaten für Plugins
+=====================
 
 Plugins werden in der Datei ``etc/plugin.yaml`` bzw. über die Admit GUI konfiguriert. Die Parameter sind in
 der Dokumentation des Plugins beschrieben.

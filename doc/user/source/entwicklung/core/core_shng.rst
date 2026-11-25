@@ -1,7 +1,6 @@
-.. role:: greensup
 
-Der Core von SmartHomeNG :greensup:`Update`
-===========================================
+Der Core von SmartHomeNG
+========================
 
 Der Core von SmartHomeNG besteht aus einem Haupt-Objekt, welches in ``bin/smarthome.py`` definiert ist und einer
 Reihe von Programm-Modulen, die exklusiv für die Nutzung durch den Core Hilfs-Objekte implementieren.

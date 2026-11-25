@@ -1,15 +1,12 @@
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
 .. index:: item_structs; Plugin Metadaten
 .. index:: structs; Plugin Metadaten
 .. index:: Plugin Metadaten; item_structs
 .. index:: Plugin Metadaten; structs
 
-item_structs :greensup:`Update`
--------------------------------
+item_structs
+------------
 
 Der Abschnitt ``item_structs:`` erlaubt die Definition von Struktur Templates, also von Sub-Trees von Items,
 die an verschiedenen Stellen in den Item Tree eingefügt werden können.

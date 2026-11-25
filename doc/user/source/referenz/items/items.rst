@@ -2,15 +2,11 @@
 .. index:: Referenz; Items
 .. index:: Items; Referenz
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
-.. role:: blacksup
 
 
-========================
-Items :greensup:`Update`
-========================
+=====
+Items
+=====
 
 In den folgenden Abschnitten sind Informationen zu den Items in SmartHomeNG zu finden.
 

@@ -4,11 +4,10 @@
 .. index:: Hardware Anforderungen
 .. index:: Software Anforderungen
 
-.. role:: greensup
 
-==================================================
-Hard- u. Software Anforderungen :greensup:`Update`
-==================================================
+===============================
+Hard- u. Software Anforderungen
+===============================
 
 Um SmartHomeNG nutzen zu können, braucht es nicht viel. Für jemanden,
 der erstmalig SmartHomeNG installiert bietet es sich an zum Kennenlernen

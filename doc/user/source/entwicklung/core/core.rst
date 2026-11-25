@@ -1,13 +1,10 @@
 
 .. index:: Entwicklung; Core
 
-.. role:: bluesup
-.. role:: redsup
-.. role:: greensup
 
 
-Entwicklung des Core :greensup:`Update`
-=======================================
+Entwicklung des Core
+====================
 
 Dieser Teil der Entwickler Dokumentation enthält Informationen zur Entwicklung des Cores von SmartHomeNG.
 

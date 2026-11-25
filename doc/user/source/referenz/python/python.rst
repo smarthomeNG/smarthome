@@ -2,15 +2,11 @@
 .. index:: Referenz; Python
 .. Index:: Python; Referenz
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
-.. role:: blacksup
 
 
-=====================================
-Python Environment :greensup:`Update`
-=====================================
+==================
+Python Environment
+==================
 
 In diesem Abschnitt sind vertiefende Informationen zu Python zu finden.
 

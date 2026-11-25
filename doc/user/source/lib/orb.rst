@@ -1,7 +1,6 @@
-.. role:: greensup
 
-lib.orb :greensup:`Update`
---------------------------
+lib.orb
+-------
 
 .. automodule:: lib.orb
     :members:
@@ -9,8 +8,8 @@ lib.orb :greensup:`Update`
     :show-inheritance:
 
 
-lib.orb Backends :greensup:`Update`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+lib.orb Backends
+^^^^^^^^^^^^^^^^
 
 Die Bibliothek `lib.orb` kann intern mit verschiedenen Backends arbeiten:
  

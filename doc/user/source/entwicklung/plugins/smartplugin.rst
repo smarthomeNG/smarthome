@@ -1,12 +1,9 @@
 .. index:: Class; SmartPlugin
 .. index:: Plugin; Class SmartPlugin
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
-Class SmartPlugin :greensup:`Update`
-====================================
+Class SmartPlugin
+=================
 
 
 Die Klasse ``SmartPlugin`` implementiert die Basisklasse aller SmartPlugins. Die vorhandenen Methoden sind im Folgenden beschrieben.

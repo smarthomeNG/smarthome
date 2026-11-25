@@ -1,17 +1,13 @@
 :tocdepth: 4
 
-.. role:: redsup
-.. role:: bluesup
 .. role:: darkbluesup
-.. role:: greensup
-.. role:: blacksup
 
 .. index:: Visualisierung mit smartVISU
 .. index:: smartVISU; Visualisierung mit smartVISU
 
-###############################################
-Visualisierung mit smartVISU :greensup:`Update`
-###############################################
+############################
+Visualisierung mit smartVISU
+############################
 
 
 =========
@@ -39,9 +35,9 @@ Das **smartvisu** Plugin unterstützt smartVISU ab v2.8 und bietet folgende Funk
     - structure definition file ...
 
 
-==============================================
-Generierung der Visu Seiten :greensup:`Update`
-==============================================
+===========================
+Generierung der Visu Seiten
+===========================
 
 Die Generierung der Visu Seiten erfolgt (wenn sie konfiguriert ist) beim Start von SmartHomeNG durch ein Plugin.
 

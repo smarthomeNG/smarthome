@@ -2,12 +2,9 @@
 .. index:: Items; plugin-spezifische Attribute
 .. index:: plugin-spezifische Attribute
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
-Plugin-spezifische Attribute :greensup:`Update`
-===============================================
+Plugin-spezifische Attribute
+============================
 
 
 In SmartHomeNG werden außer den Standard Attributen weiter Attribute unterstützt, die von Plugins
@@ -128,8 +125,8 @@ ein :code:`.` (für das aktuelle Item) angegeben (:code:`.:<Attribut>`).
 
 .. _Standard_Attribute_Referenzen:
 
-Referenzen bei name, description und remark :redsup:`neu`
----------------------------------------------------------
+Referenzen bei name, description und remark
+-------------------------------------------
 
 Von den Standard-Attributen können nur **name**, **description** und **remark** Referenzen verwenden. Sie können
 sowohl Ziel einer Referenz sein (:code:`description: ..:.`, :code:`remark: ..:description`), als auch von

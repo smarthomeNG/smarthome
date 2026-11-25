@@ -1,13 +1,10 @@
 
 .. index:: Konfiguration; Sichern und Wiederherstellen
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
-=============================================================
-Konfiguration Sichern und Wiederherstellen :greensup:`Update`
-=============================================================
+==========================================
+Konfiguration Sichern und Wiederherstellen
+==========================================
 
 .. index:: Backup; Kommandozeile
 .. index:: Sichern; Kommandozeile

@@ -1,9 +1,8 @@
 
-.. role:: greensup
 
-===============================
-Alle Plugins :greensup:`Update`
-===============================
+============
+Alle Plugins
+============
 
 .. image:: /_static/img/all.png
    :width: 200px

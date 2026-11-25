@@ -3,15 +3,11 @@
 .. index:: Asyncio in Plugins
 .. index:: Plugins; Asyncio in Plugins
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
-.. role:: blacksup
 
 
 
-asyncio Unterstützung in Plugins :greensup:`Update`
-===================================================
+asyncio Unterstützung in Plugins
+================================
 
 Python Packages zur Ansteuerung von Peripherie werden zunehmend unter Verwendung von asyncio erstellt. Um diese
 Packages in Plugins nutzen zu können, muss das jeweilige Plugin asyncio unterstützen. Die Implementierung hiervon

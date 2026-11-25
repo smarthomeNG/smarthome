@@ -1,8 +1,7 @@
 
-.. role:: greensup
 
-Items :greensup:`Update`
-========================
+Items
+=====
 
 .. Aus dem Wiki übernommen: 11. November 2017 von Seite https://github.com/smarthomeNG/smarthome/wiki/Items
 

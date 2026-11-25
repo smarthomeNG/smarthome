@@ -2,12 +2,9 @@
 .. index:: Metadata
 .. index:: Plugin Metadata
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
-Plugin-Metadata :greensup:`Update`
-==================================
+Plugin-Metadata
+===============
 
 Plugins werden in ``etc/plugin.yaml`` konfiguriert. Die Parameter sind in der ``plugin.yaml`` des jeweiligen Plugins
 beschrieben.

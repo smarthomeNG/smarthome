@@ -2,12 +2,10 @@
 .. index:: Admin GUI; Items
 .. index:: Items; Admin GUI
 
-.. role:: redsup
-.. role:: greensup
 
-========================
-Items :greensup:`Update`
-========================
+=====
+Items
+=====
 
 Unter **Items** können die eingelesenen Items und ihre Eigenschaften angezeigt und bearbeitet werden. Außerdem können die zur
 Verfügung stehenden Itemstruktur-Templates angezeigt werden.
@@ -17,8 +15,8 @@ Verfügung stehenden Itemstruktur-Templates angezeigt werden.
 .. index:: Items; Itemtree
 .. index:: Items; Item Baum
 
-Item Baum :greensup:`Update`
-============================
+Item Baum
+=========
 
 Hier kann die Baum-Struktur der geladenen Items angezeigt werden. Außerdem können die Eigenschaften und Attribute eines
 ausgewählten Items angezeigt und bearbeitet werden.
@@ -46,8 +44,8 @@ In den rechts angezeigten Item Informationen kann der Wert des Items live angepa
 .. index:: Items; Item kopieren
 .. index:: Items; Item löschen
 
-Item erstellen, bearbeiten, umbenennen, kopieren und löschen :greensup:`Update`
--------------------------------------------------------------------------------
+Item erstellen, bearbeiten, umbenennen, kopieren und löschen
+------------------------------------------------------------
 
 Über das Aktionen-Menü in den Item Informationen (bzw. die Buttons oberhalb des Item Baums) können Items direkt
 über die Admin-Oberfläche angelegt, bearbeitet, umbenannt/verschoben, kopiert und gelöscht werden.
@@ -78,8 +76,8 @@ entfernt, ist es danach nicht mehr vorhanden.
 .. image:: assets/items-item-edit.jpg
    :class: screenshot
 
-Item umbenennen / verschieben :greensup:`Update`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Item umbenennen / verschieben
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Über den Umbenennen-Dialog kann einem Item ein neuer Name und/oder ein neues übergeordnetes Item zugewiesen
 werden. Fehlt das gewünschte neue übergeordnete Item, wird vor der Ausführung nachgefragt, ob es (leer)
@@ -94,8 +92,8 @@ korrigiert werden können. Der Hinweis dazu bleibt sichtbar, bis der Dialog gesc
 .. image:: assets/items-item-rename.jpg
    :class: screenshot
 
-Item kopieren :redsup:`neu`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Item kopieren
+~~~~~~~~~~~~~
 
 Über den Kopieren-Eintrag im Aktionen-Menü kann ein Item unter einem neuen Pfad dupliziert werden; das
 Quell-Item bleibt dabei unverändert erhalten. Kopiert werden kann nur ein bereits gespeichertes Item (d.h.
@@ -117,8 +115,8 @@ Referenzen, die weiterhin auf das Original zeigen, sowie relative Referenzen, di
 nicht mehr korrekt sind, werden - wie beim Umbenennen - nach der Aktion automatisch in einer Liste angezeigt,
 damit sie manuell überprüft werden können.
 
-Item löschen :greensup:`Update`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Item löschen
+~~~~~~~~~~~~
 
 Besitzt ein zu löschendes Item Unter-Items, so wird vor dem Löschen die Anzahl der betroffenen Items im
 gesamten Unterbaum angezeigt und eine explizite Bestätigung verlangt.

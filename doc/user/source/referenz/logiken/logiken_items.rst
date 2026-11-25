@@ -4,11 +4,10 @@
 .. index:: Logiken; Zugriff auf Items
 
 
-.. role:: greensup
 
-====================================
-Zugriff auf Items :greensup:`Update`
-====================================
+=================
+Zugriff auf Items
+=================
 
 .. index:: Item Wert; Logiken
 .. index:: Logiken; Item Wert

@@ -1,12 +1,8 @@
 
-.. role:: redsup
-.. role:: bluesup
 .. role:: darkbluesup
-.. role:: greensup
-.. role:: blacksup
 
-Features der Generierung :greensup:`Update`
-===========================================
+Features der Generierung
+========================
 
 
 .. index:: smartVISU Autogenerierung; Zusätzliche Infos in der Navigation anzeigen
@@ -321,8 +317,8 @@ die gewünschten Modifikationen vornehmen.
 
 .. index:: smartVISU Autogenerierung; Anpassung von Stilen in generierten Seiten
 
-Anpassung von Stilen in generierten Seiten :redsup:`neu`
---------------------------------------------------------
+Anpassung von Stilen in generierten Seiten
+------------------------------------------
 
 Das smartisu Plugin speichert bis einschhließlich Version 1.9.0 (SmartHomeNG v1.12.x) die Vorlagen zur Seitengenerierung 
 im smartVISU-Ordner ./dropins. Ab Version 1.9.1 (im auf SmartHomeNG v1.12.2 folgenden Release) wird dazu der 

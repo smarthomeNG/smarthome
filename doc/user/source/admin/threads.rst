@@ -1,12 +1,10 @@
 .. index:: Admin GUI; Threads
 .. index:: Threads; Admin GUI
 
-.. role:: greensup
-.. role:: redsup
 
-==========================
-Threads :greensup:`Update`
-==========================
+=======
+Threads
+=======
 
 Unter **Threads** können die in SmartHomeNG laufenden Threads angezeigt werden. Angezeigt wird der Thread Name und die ID
 des Threads. Einige spezielle Threads werden zusammengefasst und es wird nur die Anzahl Threads dieses Typs angezeigt.
@@ -21,8 +19,8 @@ Die Liste wird beim Öffnen der Seite geladen und mit dem Button **Aktualisieren
 
 .. index:: Threads; Laufende Tasks
 
-Laufende Tasks :redsup:`neu`
-============================
+Laufende Tasks
+==============
 
 Worker-Threads des Schedulers, die gerade einen Task ausführen, tragen den Namen des Tasks (z.B. ``logics.meine_logik``).
 Für sie zeigt die Liste zusätzlich:
@@ -43,8 +41,8 @@ Aufrufen, läuft der Task in einer Schleife. Bleibt sie gleich, wartet er in ein
 .. index:: Threads; Logik abbrechen
 .. _admin_threads_abbrechen:
 
-Logik abbrechen :redsup:`neu`
-=============================
+Logik abbrechen
+===============
 
 Laufende Logiken können mit dem Button **Abbrechen** (in der Liste oder im Stack-Dialog) nach einer Bestätigung
 abgebrochen werden. Tasks anderer Typen (Item-Zyklen, Plugin-Methoden) können nicht abgebrochen werden, da sie z.B. Locks

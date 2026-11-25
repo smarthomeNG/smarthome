@@ -1,7 +1,6 @@
-.. role:: greensup
 
-Programm Module zur Nutzung in Plugins :greensup:`Update`
-=========================================================
+Programm Module zur Nutzung in Plugins
+======================================
 
 Die folgenden Programm Module können ebenfalls für die Plugin Entwicklung verwendet und referenziert werden:
 

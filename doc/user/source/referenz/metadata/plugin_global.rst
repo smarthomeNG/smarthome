@@ -1,14 +1,11 @@
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
 .. index:: Plugin Metadaten
 .. index:: Metadaten; Plugin
 .. index:: Plugin Metadaten; Globale Metadaten
 
-plugin :greensup:`Update`
--------------------------
+plugin
+------
 
 Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegriffe:
 

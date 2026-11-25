@@ -1,13 +1,10 @@
 
 .. index:: Komplettanleitung
 
-.. role:: bluesup
-.. role:: redsup
-.. role:: greensup
 
-====================================
-Komplettanleitung :greensup:`Update`
-====================================
+=================
+Komplettanleitung
+=================
 
 Diese Anleitung beschreibt eine komplette Installation von **SmartHomeNG v2.0** auf
 einem Linuxsystem mit Debian 13 (trixie).

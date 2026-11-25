@@ -1,13 +1,10 @@
 .. index:: Web Interface; Drittanbieterkomponenten
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
 
 
-Komponenten von Drittanbietern für Webinterfaces :greensup:`Update`
--------------------------------------------------------------------
+Komponenten von Drittanbietern für Webinterfaces
+------------------------------------------------
 
 SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul aus, welche für erweiterte und komplexere Webinterfaces wie folgt eingebunden werden können:
 

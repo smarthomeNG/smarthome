@@ -24,11 +24,9 @@
 .. index:: threshold
 
 
-.. role:: bluesup
-.. role:: greensup
 
-Standard Attribute :greensup:`Update`
-=====================================
+Standard Attribute
+==================
 
 
 In SmartHomeNG werden eine Reihe von Standard Attributen unterstützt. Diese sind in der folgenden

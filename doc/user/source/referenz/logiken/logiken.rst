@@ -1,17 +1,13 @@
 :tocdepth: 5
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
-.. role:: blacksup
 
 
 .. index:: Referenz; Logiken
 .. Index:: Logiken; Referenz
 
-##########################
-Logiken :greensup:`Update`
-##########################
+#######
+Logiken
+#######
 
 Logiken dienen dazu, komplexere Zustände und Abläufe zu steuern, die über Item Attribute nicht abgebildet werden
 können. Logiken für SmartHomeNG sind Python Skripte. Zur Erstellung von Logiken müssen Sie über Kenntnisse

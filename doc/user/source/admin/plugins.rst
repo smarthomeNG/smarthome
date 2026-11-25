@@ -2,12 +2,10 @@
 .. index:: Admin GUI; Plugins
 .. index:: Plugins; Admin GUI
 
-.. role:: greensup
-.. role:: redsup
 
-##########################
-Plugins :greensup:`Update`
-##########################
+#######
+Plugins
+#######
 
 
 ===========================
@@ -43,9 +41,9 @@ gestoppt und wieder gestartet werden kann.
 
 .. index:: Plugin Konfiguration
 
-=======================================
-Plugin Konfiguration :greensup:`Update`
-=======================================
+====================
+Plugin Konfiguration
+====================
 
 Über diese Funktion können weitere installierte Plugins zur SmartHomeNG Instanz hinzu konfiguriert oder
 bestehende Konfigurationen geändert werden. Weiterhin ist es auch möglich Plugins aus der Konfiguration
@@ -97,8 +95,8 @@ Falls eine Konfiguration nicht nur deaktiviert, sondern endgültig gelöscht wer
 .. index:: Plugins; Laden, Entladen, Neu laden
 .. index:: Admin GUI; Plugin laden
 
-Plugin laden, entladen und neu laden :redsup:`neu`
-==================================================
+Plugin laden, entladen und neu laden
+====================================
 
 Im **Entwicklermodus** (einstellbar unter System/Konfiguration im Tab Admin Modul) stehen sowohl in der Liste der
 konfigurierten Plugins als auch im Dialog zur Konfiguration eines Plugins zusätzliche Aktions-Buttons zur Verfügung:

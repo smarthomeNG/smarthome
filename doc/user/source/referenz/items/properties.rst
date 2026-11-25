@@ -1,13 +1,10 @@
 .. index:: Items; Properties
 .. index:: Properties; Items
 
-.. role:: bluesup
-.. role:: redsup
-.. role:: greensup
 
 
-Properties eines Items :greensup:`Update`
-=========================================
+Properties eines Items
+======================
 
 Jedes definierte Item bietet die folgenden Properties an, die unter anderem in **eval** Ausdrücken
 genutzt werden können. Alle Properties sind zumindest lesend (r/o) zugreifbar. Einige Properties können

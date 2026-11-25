@@ -3,12 +3,9 @@
 .. index:: Entwicklung; Class MqttPlugin
 .. index:: MQTT; Class MqttPlugin
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
-Class MqttPlugin :greensup:`Update`
-===================================
+Class MqttPlugin
+================
 
 Die Klasse ``MqttPlugin`` implementiert die Basisklasse aller SmartPlugins die MQTT nutzen.
 Die vorhandenen Methoden sind im Folgenden beschrieben.

@@ -2,11 +2,10 @@
 .. index:: Admin GUI; System
 .. index:: System; Admin GUI
 
-.. role:: greensup
 
-#########################
-System :greensup:`Update`
-#########################
+######
+System
+######
 
 
 ====================

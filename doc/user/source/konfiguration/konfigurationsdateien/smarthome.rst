@@ -1,10 +1,9 @@
 
-.. role:: greensup
 
 .. _`smarthome.yaml`:
 
-smarthome.yaml :greensup:`Update`
-=================================
+smarthome.yaml
+==============
 
 Um Werte wie *sunrise*, *sunset*, *azimuth* und *elevation* der Sonne oder des Mondes für den
 Ort der SmartHomeNG Installation berechnen zu können, sind die geographischen Koordinaten

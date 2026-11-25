@@ -1,10 +1,9 @@
 
 
-.. role:: greensup
 
-============================================
-*eval* und *eval_trigger* :greensup:`Update`
-============================================
+=========================
+*eval* und *eval_trigger*
+=========================
 
 
 .. index:: Standard-Attribute; eval

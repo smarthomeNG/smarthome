@@ -1,7 +1,6 @@
-.. role:: greensup
 
-Plugins :greensup:`Update`
-==========================
+Plugins
+=======
 
 Es gibt eine Vielzahl von Plugins, welche die Funktionalität von SmartHomeNG erweitern. Die
 Informationen auf diesen Seiten wird aus den Metadaten-Dateien der Plugins ermittelt.

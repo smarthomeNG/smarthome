@@ -4,11 +4,9 @@
 .. index:: trigger_condition
 
 
-.. role:: redsup
-.. role:: bluesup
 
-trigger und trigger_condition :redsup:`neu`
-===========================================
+trigger und trigger_condition
+=============================
 
 .. attention::
 

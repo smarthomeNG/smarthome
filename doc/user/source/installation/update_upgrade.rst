@@ -1,13 +1,10 @@
 . index:: Konfiguration
 .. index:: Konfiguration; Sichern und Wiederherstellen
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
-===================================================
-Update von einer älteren Version :greensup:`Update`
-===================================================
+================================
+Update von einer älteren Version
+================================
 
 Es kann verschiedene Szenarien geben von denen aus man ein Update machen möchte. Es gibt unterschiedliche Ansätze
 wenn es sich um eine Virtuelle Maschine handelt oder wenn ein Raspberry Pi upgedated werden soll. Es gibt hier
@@ -19,8 +16,8 @@ Für das Update auf SmartHomeNG v2.0 gelten zusätzlich die Hinweise im folgende
 
 .. _update_auf_2_0:
 
-Update auf SmartHomeNG v2.0 :redsup:`neu`
-=========================================
+Update auf SmartHomeNG v2.0
+===========================
 
 SmartHomeNG v2.0 ist ein Major-Release: Funktionen, die seit längerem als veraltet gekennzeichnet waren, sind
 entfernt, und einige Voreinstellungen sind geändert. Eine bestehende Installation läuft deshalb nach dem Update nicht

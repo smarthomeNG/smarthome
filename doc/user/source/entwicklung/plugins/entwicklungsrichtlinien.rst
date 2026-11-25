@@ -1,13 +1,9 @@
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
-.. role:: blacksup
 
 
-==========================================
-Entwicklungsrichtlinien :greensup:`Update`
-==========================================
+=======================
+Entwicklungsrichtlinien
+=======================
 
 Im folgenden werden eine Hilfen und Richtlinien beschrieben, die wichtig sind, wenn das zu erstellende Plugin in
 das globale Repository von SmartHomeHG aufgenommen werden soll.
@@ -81,15 +77,15 @@ Der Code sollte `pep 8 <https://www.python.org/dev/peps/pep-0008/>`_ entsprechen
 |
 
 
-Programmieren beginnen :greensup:`Update`
-=========================================
+Programmieren beginnen
+======================
 
   * **Kopieren** Sie das Beispiel-Plugin-Verzeichnis: ``cp -r dev/sample_pluginplugins/myplugin``
   * **Bearbeiten** Sie die Hauptdatei: `vi plugins/myplugin/__init__.py`
 
 
-Tools :greensup:`Update`
-------------------------
+Tools
+-----
 
 Nutzen Sie das folgende Tool, um Ihren Code zu testen:
 

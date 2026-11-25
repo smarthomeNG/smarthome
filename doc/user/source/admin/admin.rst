@@ -3,15 +3,11 @@
 .. index:: Webinterfaces; Administrations GUI
 .. index:: Webinterfaces; Administrations-Interface
 
-.. role:: redsup
-.. role:: bluesup
 .. role:: darkbluesup
-.. role:: greensup
-.. role:: blacksup
 
 
-Administrations-Interface :greensup:`Update`
-=============================================
+Administrations-Interface
+=========================
 
 SmartHomeNG bringt ein graphisches Administrations-Interface mit, welches die vollständige
 Administration von SmartHomeNG ermöglicht.
@@ -64,8 +60,8 @@ nur, wenn das im Browser gespeicherte Token abläuft. Die Lebensdauer des Token 
 .. index:: Hilfe
 .. index:: Admin GUI; Hilfe
 
-Hilfe :redsup:`neu`
--------------------
+Hilfe
+-----
 
 Neben dem Abmelde-Button findet sich ein **Hilfe** Eintrag, der die zur aktuell angezeigten Seite passende
 Dokumentation in einem neuen Tab öffnet.
@@ -82,8 +78,8 @@ per GitHub-Workflow ausschließlich aus dem develop-Branch generiert).
 
 .. _dark-mode-section:
 
-Dark Mode :redsup:`neu`
------------------------
+Dark Mode
+---------
 
 Neben dem Hilfe-Eintrag findet sich ein Schalter, über den zwischen hellem und dunklem Farbschema der
 Administrationsoberfläche wahlweise gewechselt werden kann. Ein Klick öffnet ein Menü mit drei Optionen:

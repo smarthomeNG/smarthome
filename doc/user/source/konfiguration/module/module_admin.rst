@@ -3,13 +3,10 @@
 .. index:: Module; admin
 .. index:: Admin Modul; Konfigurationsdatei
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
-===============================
-Module admin :greensup:`Update`
-===============================
+============
+Module admin
+============
 
 Dieses Modul erlaubt es SmartHomeNG über einen Webbrowser zu konfigurieren. Voraussetzung ist, dass auch das Modul
 http geladen und konfiguriert ist.

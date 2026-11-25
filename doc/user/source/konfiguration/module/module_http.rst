@@ -6,13 +6,10 @@
 .. index:: Webinterfaces; Konfiguration
 .. index:: Webservices; Konfiguration
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
 
-==============================
-Module http :greensup:`Update`
-==============================
+===========
+Module http
+===========
 
 Der vom Module http zur Verfügung gestellte Webserver wird genutzt um die Admin GUI zur Verfügung zu stellen.
 

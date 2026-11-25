@@ -1,15 +1,11 @@
 
 .. index:: Entwicklung; Plugins
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
-.. role:: blacksup
 
 
-==========================
-Plugins :greensup:`Update`
-==========================
+=======
+Plugins
+=======
 
 Informationen über das Schreiben von Plugins und wie sie in SmartHomeNG eingebunden werden, können in diesem
 Abschnitt und den links in der Navigation verlinkten Seiten gefunden werden.

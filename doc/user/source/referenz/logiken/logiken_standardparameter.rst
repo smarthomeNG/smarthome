@@ -3,10 +3,9 @@
 .. index:: Standardparameter; Logiken
 
 
-.. role:: greensup
 
-Standardparameter :greensup:`Update`
-====================================
+Standardparameter
+=================
 
 Die folgenden Parameter können für eine Logik in der Konfigurationsdatei im Verzeichnis ``etc`` angegeben werden.
 

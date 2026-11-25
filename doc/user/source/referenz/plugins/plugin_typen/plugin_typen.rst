@@ -1,14 +1,10 @@
 
 
-.. role:: redsup
-.. role:: bluesup
-.. role:: greensup
-.. role:: blacksup
 
 
-===============================
-Plugin Typen :greensup:`Update`
-===============================
+============
+Plugin Typen
+============
 
 Durch Plugins kann die Funktionalität von SmartHomeNG erweitert werden und SmartHomeNG kann mit zu steuernden
 Komponenten bzw. Systemen verbunden werden.
@@ -29,8 +25,8 @@ Das klassische Plugin aus smarthome.py wird nicht mehr unterstützt. Plugins, di
 .. index:: Referenz; SmartPlugin
 .. Index:: SmartPlugin Referenz
 
-SmartPlugin :greensup:`Update`
-==============================
+SmartPlugin
+===========
 
 Ein Plugin implementiert im Code eine Klasse, welche von der ``class SmartPlugin`` abgeleitet ist. ``SmartPlugin``
 stellt alle grundsätzlichen Funktionalitäten bereit, die benötigt werden, um ein Plugin zu implementieren.
@@ -49,8 +45,8 @@ Die Methoden von ``SmartPlugin`` sind hier dokumentiert:
 .. index:: Referenz; MqttPlugin
 .. Index:: MqttPlugin Referenz
 
-MqttPlugin :greensup:`Update`
-=============================
+MqttPlugin
+==========
 
 Plugins welche MQTT nutzen, sollten stattdessen von ``class MqttPlugin`` abgeleitet werden. ``MqttPlugin`` ist
 eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert ist.
@@ -80,8 +76,8 @@ Die Methoden von ``MqttPlugin`` sind hier dokumentiert:
 .. Index:: SmartDevicePlugin Referenz
 .. Index:: SDP Referenz
 
-SmartDevicePlugin :greensup:`Update`
-====================================
+SmartDevicePlugin
+=================
 
 Wenn ein Plugin Geräte anbinden soll, ist für jedes neue Plugin der gesamte Rahmencode - 
 Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit

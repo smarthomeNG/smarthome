@@ -1,12 +1,9 @@
 
-.. role:: bluesup
-.. role:: redsup
-.. role:: greensup
 
 
-========================
-Tools :greensup:`Update`
-========================
+=====
+Tools
+=====
 
 Im Verzeichnis ``tools`` sind einige Python Skripte abgelegt, die im Umgang mit SmartHomeNG
 hilfreich sind. Daneben befinden sich dort auch Shell-Skripte für Entwicklungsaufgaben.
