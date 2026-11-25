@@ -127,7 +127,7 @@ from lib.utils import Version
 
 # Update auf 2.0.0-dev.1 wg. Umstellung auf Semantic Versioning (siehe doc/dev/public_api.md)
 
-shNG_version = '2.0.0-dev.1'
+shNG_version = '2.1.0-dev.0'
 shNG_branch = 'develop'
 shNG_releasedate = '10. Juli 2026'
 
