@@ -45,7 +45,7 @@ ist.
    #!/usr/bin/env python3
    # zeit.py
 
-   sh_now = sh.now()
+   sh_now = sh.shtime.now()
    debug = False
 
    # Funktionen
@@ -85,7 +85,7 @@ ist.
        print(sh_now.day)  #Tag
        print(sh_now.month) #Monat
        print(sh_now.isoweekday()) #Wochentag
-       print(sh.now().isocalendar()[1]) #Kalenderwoche
+       print(sh.shtime.now().isocalendar()[1]) #Kalenderwoche
 
    # Sekunde/Minute
    sh.second.since.minute(sh_now.second)
@@ -108,8 +108,8 @@ ist.
    sh.hour.until.week(sh.hour.until.midnight() + (24 * sh.day.until.week()))
 
    # Kalenderwoche/Jahr
-   sh.week.since.year(sh.now().isocalendar()[1])
-   sh.week.until.year(52-sh.now().isocalendar()[1])
+   sh.week.since.year(sh.shtime.now().isocalendar()[1])
+   sh.week.until.year(52-sh.shtime.now().isocalendar()[1])
 
    # Monat/Jahr
    sh.month.since.year(sh_now.month)

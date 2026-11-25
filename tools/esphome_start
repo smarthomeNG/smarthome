@@ -1,5 +1,23 @@
 #!/bin/bash
 
-cd /usr/local/shng_dev/tools
+#########################################################################
+#  This file is part of SmartHomeNG
+#
+#  SmartHomeNG is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#########################################################################
+
+# Start the ESPHome dashboard (installed by tools/esphome_install) for the configuration
+# in <var>/esphome/config. Usage: esphome_start [<var directory>]  (default: <base>/var)
+
+SOURCE=${BASH_SOURCE[0]}
+DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+SHNG_BASEDIR=$( dirname "$DIR" )
+VAR_DIR=${1:-$SHNG_BASEDIR/var}
+
+cd "$DIR"
 source act esphome
-esphome dashboard /usr/local/shng_dev/var/esphome/config
+esphome dashboard "$VAR_DIR/esphome/config"

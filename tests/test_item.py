@@ -89,7 +89,7 @@ class TestItem(unittest.TestCase):
                     logger.warning('\nload_items: child_path={}, value={} -> child={}'.format(attr, value, child))
                     vars(self.sh)[attr] = child
                     vars(self)[attr] = child
-                    self.sh.add_item(child_path, child)
+                    self.sh.items.add_item(child_path, child)
                     #                    self.items.add_item(child_path, child)
                     self.sh.children.append(child)
 

@@ -148,7 +148,7 @@ class PluginRig:
 
     def item(self, path: str) -> Item:
         """Return the item at ``path``."""
-        return self.sh.return_item(path)
+        return self.sh.items.return_item(path)
 
     def rename(self, item: Item, new_path: str) -> None:
         """Rename ``item`` in place, as Items.rename_item() does towards plugins."""

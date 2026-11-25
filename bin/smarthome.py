@@ -27,13 +27,12 @@
 #####################################################################
 # Check mimimum Python Version
 #####################################################################
-from hashlib import new
 import sys
 
-if sys.hexversion < 0x030A0000:
+if sys.hexversion < 0x030B0000:
     print()
     print(
-        f'Sorry your python interpreter ({sys.version_info[0]}.{sys.version_info[1]}) is too old. Please update to 3.10 or newer.'
+        f'Sorry your python interpreter ({sys.version_info[0]}.{sys.version_info[1]}) is too old. Please update to 3.11 or newer.'
     )
     print()
     exit(1)
@@ -114,7 +113,7 @@ argparser.add_argument(
 argparser.add_argument(
     '-e',
     '--config_etc',
-    help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory. If config directories exist at SmartHomeNG base dir, they are migrated to etc/<dir>.',
+    help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory (default; overrides config_etc: false in smarthome.yaml). If config directories exist at SmartHomeNG base dir, they are migrated to etc/<dir>.',
     default=False,
     action='store_true',
 )
@@ -159,7 +158,7 @@ sys.path.insert(0, BASE)
 import lib.vardir
 
 lib.vardir.set_var_dir(args.var_dir)
-PIDFILE = os.path.join(lib.vardir.get_var_dir(), 'run', 'smarthome.pid')
+PIDFILE = lib.vardir.get_pidfile()
 
 # Only used for Version Check in Plugins to decide if a logger must be explicitly declared
 import bin.shngversion

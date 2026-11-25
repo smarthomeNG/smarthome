@@ -1,9 +1,12 @@
 .. index:: Admin GUI; Threads
 .. index:: Threads; Admin GUI
 
-=======
-Threads
-=======
+.. role:: greensup
+.. role:: redsup
+
+==========================
+Threads :greensup:`Update`
+==========================
 
 Unter **Threads** können die in SmartHomeNG laufenden Threads angezeigt werden. Angezeigt wird der Thread Name und die ID
 des Threads. Einige spezielle Threads werden zusammengefasst und es wird nur die Anzahl Threads dieses Typs angezeigt.
@@ -18,8 +21,8 @@ Die Liste wird beim Öffnen der Seite geladen und mit dem Button **Aktualisieren
 
 .. index:: Threads; Laufende Tasks
 
-Laufende Tasks
-==============
+Laufende Tasks :redsup:`neu`
+============================
 
 Worker-Threads des Schedulers, die gerade einen Task ausführen, tragen den Namen des Tasks (z.B. ``logics.meine_logik``).
 Für sie zeigt die Liste zusätzlich:
@@ -30,8 +33,8 @@ Für sie zeigt die Liste zusätzlich:
   hervorgehoben (Standard 120 Sekunden, einstellbar in ``smarthome.yaml``, für Logiken auch pro Logik, siehe
   :doc:`Standardparameter von Logiken </referenz/logiken/logiken_standardparameter>`).
 
-Beim Überschreiten von ``runtime_warn`` und erneut bei jeder Verdopplung der Laufzeit wird zusätzlich eine Warnung mit dem
-aktuellen Stacktrace des Tasks geloggt, für Logiken in das Log der Logik.
+Beim Überschreiten von ``runtime_warn`` und erneut bei jeder Verdopplung der Laufzeit wird zusätzlich eine Warnung geloggt, für
+Logiken in das Log der Logik. Der aktuelle Stacktrace des Tasks wird getrennt davon auf Level DEBUG geloggt.
 
 Der Button **Stack** zeigt die Stelle im Code, an der der Task gerade ausgeführt wird. Wechselt die Stelle zwischen zwei
 Aufrufen, läuft der Task in einer Schleife. Bleibt sie gleich, wartet er in einem blockierenden Aufruf.
@@ -40,8 +43,8 @@ Aufrufen, läuft der Task in einer Schleife. Bleibt sie gleich, wartet er in ein
 .. index:: Threads; Logik abbrechen
 .. _admin_threads_abbrechen:
 
-Logik abbrechen
-===============
+Logik abbrechen :redsup:`neu`
+=============================
 
 Laufende Logiken können mit dem Button **Abbrechen** (in der Liste oder im Stack-Dialog) nach einer Bestätigung
 abgebrochen werden. Tasks anderer Typen (Item-Zyklen, Plugin-Methoden) können nicht abgebrochen werden, da sie z.B. Locks

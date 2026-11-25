@@ -47,3 +47,24 @@ class TestReloadPending(unittest.TestCase):
 
     def test_nothing_is_marked_by_default(self):
         self.assertFalse(any(section['_reload_pending'] for section in self.sections().values()))
+
+
+class TestMissingPlugin(unittest.TestCase):
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmpdir)
+        shutil.copy(common.BASE + '/tests/resources/plugin_disabled_sections.yaml', self.tmpdir + '/plugin.yaml')
+        with open(self.tmpdir + '/plugin.yaml', 'a') as f:
+            f.write('\nnot_installed:\n    plugin_name: no_such_plugin\n')
+        self.sh = MockSmartHome()
+        self.plugins = self.sh.with_plugins_from(self.tmpdir + '/plugin')
+        self.controller = PluginsConfigController(_FakeModule(self.sh))
+        self.controller.plugins = self.plugins
+
+    def test_section_of_a_missing_plugin_does_not_break_the_list(self):
+        sections = json.loads(self.controller.read())['plugin_config']
+
+        self.assertIn('lone_enabled', sections)
+        self.assertIsNone(sections['not_installed']['_meta'])
+        self.assertEqual({'de': '', 'en': ''}, sections['not_installed']['_description'])
+        self.assertFalse(sections['not_installed']['_loaded'])

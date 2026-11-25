@@ -42,14 +42,13 @@ They can be used the following way: To call eg. **enable_logic(name)**, use the 
     logics.enable_logic(name)
 
 
-:Note: Do not use the functions or variables of the main smarthome object any more. They are deprecated. Use the methods of the class **Logics** instead.
-
 :Note: This library is part of the core of SmartHomeNG. Regular plugins should not need to use this API.  It is manily implemented for plugins near to the core like **backend** or **blockly**!
 
 """
 
 import logging
 import os
+import shutil
 
 from collections import OrderedDict
 
@@ -61,7 +60,7 @@ import lib.shyaml as shyaml
 from lib.utils import Utils
 
 from lib.constants import PLUGIN_PARSE_LOGIC
-from lib.constants import YAML_FILE, DIR_LOGICS, DIR_ETC, BASE_LOGIC, BASE_ADMIN, BASE_LOGIC_GROUPS
+from lib.constants import DIR_LOGICS, DIR_ETC, DIR_TPL, BASE_LOGIC, BASE_ADMIN, BASE_LOGIC_GROUPS, YAML_FILE
 
 from lib.item import Items
 from lib.plugin import Plugins
@@ -82,7 +81,6 @@ class Logics:
     plugins = None
     scheduler = None
 
-    _config_type = None
     _logicname_prefix = 'logics.'  # prefix for scheduler names
 
     _groups = {}
@@ -203,7 +201,8 @@ class Logics:
         Load logic group definitions from etc/logic_groups.yaml.
         If that file does not yet exist, migrate the group definitions from
         etc/admin.yaml (legacy location) and write logic_groups.yaml so the
-        migration only happens once.
+        migration only happens once. Without an admin.yaml (new installation)
+        logic_groups.yaml is created from templates/logic_groups.yaml.
 
         After a successful migration, admin.yaml is renamed to admin.yaml.bak
         (overwriting any pre-existing backup) so that the migration can never
@@ -228,9 +227,22 @@ class Logics:
                 return {}
             return dict(groups_conf)
 
+        admconf_filename = self._sh.get_config_file(BASE_ADMIN)
+
+        # --- new installation: start with the groups of the template ---
+        if not os.path.isfile(admconf_filename):
+            template_filename = os.path.join(self._sh.get_config_dir(DIR_TPL), BASE_LOGIC_GROUPS + YAML_FILE)
+            if os.path.isfile(template_filename):
+                try:
+                    shutil.copy2(template_filename, groups_filename)
+                    logger.info('Logics._load_groups: created etc/logic_groups.yaml from the template')
+                    groups_conf = shyaml.yaml_load_roundtrip(groups_filename)
+                    return dict(groups_conf) if groups_conf else {}
+                except OSError as e:
+                    logger.warning(f'Logics._load_groups: could not create logic_groups.yaml from the template: {e}')
+
         # --- first-run migration from admin.yaml ---
         logger.info('Logics._load_groups: logic_groups.yaml not found – migrating from admin.yaml')
-        admconf_filename = self._sh.get_config_file(BASE_ADMIN)
         groups = {}
         try:
             _admin_conf = shyaml.yaml_load_roundtrip(admconf_filename)
@@ -269,12 +281,9 @@ class Logics:
         """
         logger.debug('Reading Logics from {}.*'.format(filename))
         config = lib.config.parse_basename(filename, configtype='logics')
-        if config != {}:
-            self._config_type = YAML_FILE
-
-            for name in config:
-                if 'filename' in config[name]:
-                    config[name]['pathname'] = directory + config[name]['filename']
+        for name in config:
+            if 'filename' in config[name]:
+                config[name]['pathname'] = directory + config[name]['filename']
 
         return config
 
@@ -293,7 +302,6 @@ class Logics:
         else:
             return False
         # plugin hook
-        #        for plugin in self._sh._plugins:
         for plugin in self.plugins.return_plugins():
             if hasattr(plugin, PLUGIN_PARSE_LOGIC):
                 update = plugin.parse_logic(logic)
@@ -304,7 +312,6 @@ class Logics:
             if isinstance(logic.watch_item, str):
                 logic.watch_item = [logic.watch_item]
             for entry in logic.watch_item:
-                #                for item in self._sh.match_items(entry):
                 for item in self.items.match_items(entry):
                     item.add_logic_trigger(logic)
         return True
@@ -652,7 +659,6 @@ class Logics:
                 mylogic.watch_item = [mylogic.watch_item]
             for entry in mylogic.watch_item:
                 # item hook
-                #                for item in self._sh.match_items(entry):
                 for item in self.items.match_items(entry):
                     try:
                         item.remove_logic_trigger(mylogic)
@@ -767,21 +773,6 @@ class Logics:
             logic_list.append(logic)
         return logic_list
 
-    def return_config_type(self):
-        """
-        Return the used config type
-
-        After initialization this function returns '.yaml' if the logic configuration file in /etc could be
-        read, otherwise None.
-
-        To use the following functions for reading and manipulating the logic configuration, the
-        configuration file **has to be** in YAML format. Otherwise the functions will not work/return empty results.
-
-        :return: '.yaml' or None
-        :rtype: str or None
-        """
-        return self._config_type
-
     def read_config_section(self, section):
         """
         Read a section from /etc/logic.yaml
@@ -798,10 +789,6 @@ class Logics:
         :return: config_list: list of configuration entries. Each entry of this list is a list with three string entries: ['key', 'value', 'comment']
         :rtype: list of lists
         """
-        if self.return_config_type() != YAML_FILE:
-            logger.error('read_config_section: Editing of configuration only possible with new (yaml) config format')
-            return False
-
         # load /etc/logic.yaml
         _conf = shyaml.yaml_load_roundtrip(self._logic_conf)
 
@@ -891,10 +878,6 @@ class Logics:
         """
         if section == '':
             logger.error('update_config_section: No section name specified. Not updatind logics configuration.')
-            return False
-
-        if self.return_config_type() != YAML_FILE:
-            logger.error('update_config_section: Editing of configuration only possible with new (yaml) config format')
             return False
 
         # load /etc/logic.yaml
@@ -1395,7 +1378,6 @@ class Logic:
 
         This method is called by the scheduler
         """
-        #        self._last_run = self._sh.now()
         self._last_run = self.shtime.now()
 
     def trigger(self, by='Logic', source=None, value=None, dest=None, dt=None):

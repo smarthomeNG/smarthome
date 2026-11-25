@@ -9,9 +9,9 @@
 .. index:: Visualisierung mit smartVISU
 .. index:: smartVISU; Visualisierung mit smartVISU
 
-############################
-Visualisierung mit smartVISU
-############################
+###############################################
+Visualisierung mit smartVISU :greensup:`Update`
+###############################################
 
 
 =========
@@ -39,12 +39,11 @@ Das **smartvisu** Plugin unterstützt smartVISU ab v2.8 und bietet folgende Funk
     - structure definition file ...
 
 
-===========================
-Generierung der Visu Seiten
-===========================
+==============================================
+Generierung der Visu Seiten :greensup:`Update`
+==============================================
 
 Die Generierung der Visu Seiten erfolgt (wenn sie konfiguriert ist) beim Start von SmartHomeNG durch ein Plugin.
-Mit der Version 1.8 von SmartHomeNG gibt es hier einige Neuerungen.
 
 .. hint::
 
@@ -56,7 +55,7 @@ Mit der Version 1.8 von SmartHomeNG gibt es hier einige Neuerungen.
    :hidden:
    :titlesonly:
 
-   changes_in_1.8
+   konfiguration_smartvisu
    automatic_generation
    features
    navigation_structure
@@ -75,7 +74,7 @@ Mit der Version 1.8 von SmartHomeNG gibt es hier einige Neuerungen.
 Optionale Definition der Navigationsstruktur
 ============================================
 
-Ab SmartHomeNG v1.8 ist es möglich an zentraler Stelle die Struktur der Navigation zu definieren. Diese
+Es ist möglich an zentraler Stelle die Struktur der Navigation zu definieren. Diese
 zentralen Definitionen haben Vorrang vor der Struktur, die sich durch die Abarbeitung des Item-Trees ergibt.
 
 Weitergehende Informationen sind unter :doc:`/visualisierung/automatic_generation` im Abschnitt

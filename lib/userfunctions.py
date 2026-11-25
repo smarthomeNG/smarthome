@@ -180,6 +180,27 @@ def reload_all():
         return result
 
 
+def get_userlibs():
+    """
+    Return the userfunction modules that are loaded
+
+    :return: one dict per module with 'name', 'version' and 'description', sorted by name
+    """
+    result = []
+    for name in sorted(_user_modules):
+        mod = globals().get(name)
+        if mod is None:
+            continue
+        result.append(
+            {
+                'name': name,
+                'version': getattr(mod, '_VERSION', '?.?.?'),
+                'description': getattr(mod, '_DESCRIPTION', '?'),
+            }
+        )
+    return result
+
+
 def list_userlib_files():
 
     for lib in _user_modules:

@@ -28,7 +28,7 @@ import collections
 from lib.utils import Utils
 from lib.utils import Version
 import lib.shyaml as shyaml
-from lib.constants import YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS, DIR_PLUGINS, DIR_MODULES
+from lib.constants import YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS, DIR_PLUGINS, DIR_MODULES, PLUGIN_TYPES
 from lib.model.sdp.globals import SDP_VERSION
 
 META_MODULE_PARAMETER_SECTION = 'parameters'
@@ -317,7 +317,25 @@ class Metadata:
         else:
             self.addon_metadata = None
 
+        if self._addon_type == 'plugin':
+            self._check_plugin_type()
+
         return
+
+    def _check_plugin_type(self):
+        """
+        Log a warning if the ``type`` in the ``plugin:`` section of the metadata is missing or not in ``PLUGIN_TYPES``
+        """
+        if self.addon_metadata is None:
+            return
+        plugin_type = self.addon_metadata.get('type')
+        if not plugin_type:
+            logger.warning(self._log_premsg + f"no 'type' set in plugin.yaml, valid values are {list(PLUGIN_TYPES)}")
+        elif plugin_type not in PLUGIN_TYPES:
+            logger.warning(
+                self._log_premsg
+                + f"invalid 'type' '{plugin_type}' in plugin.yaml, valid values are {list(PLUGIN_TYPES)}"
+            )
 
     def get_global_plugin_parameters(self):
 

@@ -307,16 +307,7 @@ class Shpypi:
         req_dict = {}
         if plugin_conf is not None:
             for plugin_instance in plugin_conf:
-                plugin_name = plugin_conf[plugin_instance].get('plugin_name', None)
-                class_path = plugin_conf[plugin_instance].get('class_path', None)
-                plugin = ''
-                if class_path:
-                    if class_path.startswith('plugins.'):
-                        sp = class_path.split('.')
-                        if len(sp) == 2:
-                            plugin = sp[1]
-                if plugin == '' and plugin_name:
-                    plugin = plugin_name
+                plugin = plugin_conf[plugin_instance].get('plugin_name', None) or ''
 
                 filename = os.path.join(plugins_dir, plugin, 'requirements.txt')
 
@@ -929,7 +920,7 @@ class Shpypi:
             )
 
         if reads >= max_tries:
-            self.logger.info("get_package_releases_data: pypi.org returned no data for package {package['name']}")
+            self.logger.info(f'get_package_releases_data: pypi.org returned no data for package {package["name"]}')
         return
 
     def _build_sortstring(self, package):

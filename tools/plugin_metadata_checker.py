@@ -29,10 +29,11 @@ of the plugins on the .../plugins folder.
 The result is printed to stdout
 """
 
+import ast
 import os
 import argparse
 
-VERSION = '1.8.3'
+VERSION = '1.10.0'
 
 start_dir = os.getcwd()
 
@@ -44,6 +45,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, '..')
 sys.path.insert(0, '../lib')
 import shyaml
+from lib.constants import PLUGIN_STATES, PLUGIN_TYPES
 
 
 type_unclassified = 'unclassified'
@@ -59,7 +61,6 @@ plugin_sections = [
 MISSING_TEXT = 'Missing'
 
 # valid values of the 'state' attribute in the plugin metadata
-PLUGIN_STATES = ['develop', 'development', 'ready', 'qa-passed', 'deprecated']
 
 # ==================================================================================
 #   Functions of the tool
@@ -90,22 +91,32 @@ def get_local_pluginlist(pluginsdirectory=None):
     return sorted(plglist)
 
 
-def get_plugintype(plgName):
+#: base classes of plugins (SmartPlugin and its subclasses in lib/model)
+PLUGIN_BASE_CLASSES = frozenset({'SmartPlugin', 'MqttPlugin', 'SmartDevicePlugin'})
 
+
+def get_plugintype(plgName):
+    """
+    Return 'Smart' if a class in the plugin's ``__init__.py`` derives from one of PLUGIN_BASE_CLASSES,
+    'Classic' if none does, 'None' if the file is missing.
+    """
     fn = './' + plgName + '/__init__.py'
     try:
         with open(fn, 'r') as myfile:
             code = myfile.read()
     except OSError:
         return 'None'
-    if (
-        (code.find('(SmartPlugin') == -1)
-        and (code.find('( SmartPlugin') == -1)
-        and (code.find('(MqttPlugin') == -1)
-        and (code.find('( MqttPlugin') == -1)
-    ):
+    try:
+        tree = ast.parse(code)
+    except SyntaxError:
         return 'Classic'
-    return 'Smart'
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef):
+            for base in node.bases:
+                name = base.attr if isinstance(base, ast.Attribute) else getattr(base, 'id', None)
+                if name in PLUGIN_BASE_CLASSES:
+                    return 'Smart'
+    return 'Classic'
 
 
 def readMetadata(metaplugin, plugins_local):
@@ -698,13 +709,7 @@ def print_errorcount(checkname, errors, warnings, hints):
 
 
 def check_metadata(
-    plg,
-    with_description,
-    check_quiet=False,
-    only_inc=False,
-    list_classic=False,
-    pluginsdirectory=None,
-    suppress_summery=False,
+    plg, with_description, check_quiet=False, only_inc=False, pluginsdirectory=None, suppress_summery=False
 ):
 
     global errors, warnings, hints, quiet
@@ -749,25 +754,36 @@ def check_metadata(
                 "Add 'classname:' to the plugin section and set it to the name of the Python class that implements the plugin",
             )
 
-        if metadata['plugin'].get('type', None) is None:
-            disp_warning('No plugin type set', "Add 'type:' to the plugin section")
+        plugin_type = metadata['plugin'].get('type', None)
+        if not plugin_type:
+            disp_error(
+                'No plugin type set',
+                f"Add 'type:' to the plugin section and set it to one of the following values {list(PLUGIN_TYPES)}",
+            )
+        elif plugin_type not in PLUGIN_TYPES:
+            disp_error(
+                f"Invalid plugin type '{plugin_type}'",
+                f"Set 'type:' in the plugin section to one of the following values {list(PLUGIN_TYPES)}",
+            )
         if metadata['plugin'].get('maintainer', None) is None:
             disp_warning('The maintainer of the plugin is not documented', "Add 'maintainer:' to the plugin section")
 
-    if plg_type != 'classic' and not list_classic:
+    if plg_type == 'classic':
+        disp_error('Plugin is not derived from SmartPlugin (classic plugins are not supported)')
+    else:
         if metadata.get('plugin', None) is None:
             disp_error("No section 'plugin' in metadata found")
         else:
             if metadata['plugin'].get('state', None) is None:
                 disp_error(
                     'No development state given for the plugin',
-                    f"Add 'state:' to the plugin section and set it to one of the following values {PLUGIN_STATES}",
+                    f"Add 'state:' to the plugin section and set it to one of the following values {list(PLUGIN_STATES)}",
                     "The state'qa-passed' should only be set by the shNG core team",
                 )
             elif metadata['plugin'].get('state', None) not in [*PLUGIN_STATES, '-']:
                 disp_error(
                     'An invalid development state is given for the plugin',
-                    f"Set'state:' to one of the followind valid values {PLUGIN_STATES}",
+                    f"Set 'state:' to one of the following valid values {list(PLUGIN_STATES)}",
                     "The state'qa-passed' should only be set by the shNG core team",
                 )
 
@@ -924,7 +940,7 @@ def check_metadata(
     if metadata.get('plugin', None) is not None:
         state = metadata['plugin'].get('state', '-')
 
-    if (plg_type == 'classic' and list_classic) or (plg_type != 'classic' and not list_classic):
+    if plg_type != 'classic':
         #    global errors, warnings, hints
         if errors == 0 and warnings == 0 and hints == 0:
             res = 'OK'
@@ -950,7 +966,7 @@ def check_metadata(
     return
 
 
-def check_plglist(option, list_classic=False):
+def check_plglist(option):
     option = option.strip().lower()
     header_displayed = False
     plgcount = 0
@@ -1038,18 +1054,14 @@ def check_plglist(option, list_classic=False):
                 list_formatted(ul, ul, ul, ul, ul, ul, ul, '', '')
                 header_displayed = True
 
-            check_metadata(plg, False, check_quiet=True, only_inc=(option == 'inc'), list_classic=list_classic)
+            check_metadata(plg, False, check_quiet=True, only_inc=(option == 'inc'))
             if option == 'inc' and (errors > 0 or warnings > 0 or hints > 0):
-                if ((not list_classic) and (plgtype.lower() != 'classic')) or (
-                    list_classic and (plgtype.lower() == 'classic')
-                ):
+                if plgtype.lower() != 'classic':
                     plgcount += 1
                     if plg.startswith('priv_'):
                         priv_plgcount += 1
             elif option != 'inc':
-                if ((not list_classic) and (plgtype.lower() != 'classic')) or (
-                    list_classic and (plgtype.lower() == 'classic')
-                ):
+                if plgtype.lower() != 'classic':
                     plgcount += 1
                     if plg.startswith('priv_'):
                         priv_plgcount += 1
@@ -1109,9 +1121,6 @@ if __name__ == '__main__':
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         '-la', '--list_all', action='store_true', default=False, help='list plugin information of all plugins'
-    )
-    group.add_argument(
-        '-lcl', '--list_classic', action='store_true', default=False, help='list plugin information of classic plugins'
     )
     group.add_argument(
         '-lsm', '--list_smart', action='store_true', default=False, help='list plugin information of smart plugins'
@@ -1178,8 +1187,6 @@ if __name__ == '__main__':
             list_plugins('all', list_versions=list_versions)
         elif args.list_all:
             list_plugins('all')
-        elif args.list_classic:
-            list_plugins('classic')
         elif args.list_smart:
             list_plugins('smart')
         elif args.list_inc:
@@ -1195,6 +1202,7 @@ if __name__ == '__main__':
             list_plugins('state', 'ready')
             list_plugins('state', 'develop')
             list_plugins('state', 'deprecated')
+            list_plugins('state', 'defunct')
             list_plugins('state', 'other')
 
         elif args.disp_plugin:
@@ -1209,10 +1217,9 @@ if __name__ == '__main__':
         elif args.check_list:
             check_plglist('all')
         elif args.check_clist:
-            check_plglist('compl', list_classic=False)
+            check_plglist('compl')
         elif args.check_ilist:
-            check_plglist('inc', list_classic=True)
-            check_plglist('inc', list_classic=False)
+            check_plglist('inc')
         else:
             parser.print_help()
             print()

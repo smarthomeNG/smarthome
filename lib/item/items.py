@@ -46,8 +46,6 @@ They can be used the following way: To call eg. **get_toplevel_items()**, use th
     tl_items = sh_items.get_toplevel_items()
 
 
-:Note: Do not use the functions or variables of the main smarthome object any more. They are deprecated. Use the methods of the class **Items** instead.
-
 :Note: This library is part of the core of SmartHomeNG. Regular plugins should not need to use this API.  It is manily implemented for plugins near to the core like **backend** and the core itself!
 
 """
@@ -69,11 +67,13 @@ import lib.shyaml as shyaml
 from lib.constants import (
     ITEM_DEFAULTS,
     KEY_EVAL_TRIGGER,
+    KEY_INSTANCE,
     KEY_TRIGGER,
     PLUGIN_PARSE_ITEM,
     PLUGIN_REMOVE_ITEM,
     PLUGIN_RENAME_ITEM,
 )
+from lib.item._internal._instance import inheriting_descendants, refresh_inherited_instance
 from lib.item._internal._lifecycle import _detach_from_other_items_triggers, _remove_scheduler_jobs, _stop_fading
 from lib.item._internal._parsing import check_item_name_collision
 from lib.item._internal._pathresolution import get_absolutepath, split_destitem_from_value
@@ -231,7 +231,9 @@ class Items:
         _items_instance = self
         self.structs = Structs(self._sh)
 
-        self._sh._ignore_item_collision = getattr(self._sh, '_ignore_item_collision', 'False') == 'True'
+        self._sh._ignore_item_collision = lib.utils.Utils.to_bool(
+            getattr(self._sh, '_ignore_item_collision', False), False
+        )
 
     # -----------------------------------------------------------------------------------------
     #   Following (static) method of the class Items implement the API for Items in SmartHomeNG
@@ -619,7 +621,7 @@ class Items:
             files, changed = self._yaml_batch_files, self._yaml_batch_changed
             self._yaml_batch_files = self._yaml_batch_changed = None
             for filename in changed:
-                files[filename].save()
+                self._write_yaml_file(files[filename], filename)
 
     def _write_to_yaml_file(self, filename, path, config):
         """
@@ -636,9 +638,28 @@ class Items:
                             is defined there as an attribute with a value
         """
         yf = self._open_yaml(filename)
-        if not yf.setvalue(path, config):
+        if not self._set_mapping_in_place(yf, path, config):
             raise ValueError(f"Item '{path}' cannot be persisted to '{filename}.yaml': an ancestor is not an item")
         self._save_yaml_file(yf, filename)
+
+    @staticmethod
+    def _set_mapping_in_place(yf, path, config):
+        """
+        Set the mapping at *path* in the loaded yamlfile *yf* to *config*. An existing mapping is
+        edited in place - keys missing from *config* are removed, the others assigned - so the
+        remaining keys keep their position, inline comments and following blank lines. Without an
+        existing mapping at *path* this is ``yf.setvalue()``.
+
+        :return: False if an ancestor of *path* is not an item, True otherwise
+        """
+        existing = yf.getnode(path)
+        if not isinstance(existing, dict):
+            return yf.setvalue(path, config)
+        for key in [key for key in existing if key not in config]:
+            del existing[key]
+        for key, value in config.items():
+            existing[key] = value
+        return True
 
     def _rename_target_filename(self, item, new_parent_obj, new_is_top_level, filename):
         """
@@ -688,7 +709,27 @@ class Items:
         if self._yaml_batch_files is not None and self._yaml_batch_files.get(filename) is yf:
             self._yaml_batch_changed.add(filename)
         else:
-            yf.save()
+            self._write_yaml_file(yf, filename)
+
+    def _write_yaml_file(self, yf, filename):
+        """Write *yf* to ``items_dir/<filename>.yaml``; a live item stored as a null node becomes an empty item first."""
+        self._null_item_nodes_to_empty(yf.data, '', filename)
+        yf.save()
+
+    def _null_item_nodes_to_empty(self, node, prefix, filename):
+        """
+        Replace, in the mapping *node* (the item at *prefix*, '' for the file root), every key that is a live
+        item but holds null by an empty mapping: the loader reads a null node as no item at all.
+        """
+        if not isinstance(node, dict):
+            return
+        for key, value in node.items():
+            path = f'{prefix}.{key}' if prefix else str(key)
+            if value is None and self.return_item(path) is not None:
+                self.logger.warning(f"Item '{path}' was a null node in '{filename}.yaml', saved as an empty item")
+                node[key] = type(node)()
+            else:
+                self._null_item_nodes_to_empty(value, path, filename)
 
     def _remove_yaml_node(self, yf, filename, path):
         """
@@ -699,7 +740,7 @@ class Items:
         parent = path.rpartition('.')[0]
         while parent:
             node = yf.getnode(parent)
-            if node is not None and (not isinstance(node, dict) or node):
+            if not isinstance(node, dict) or node:
                 return
             owner = self.return_item(parent)
             if owner is not None and owner._filename == filename:
@@ -785,6 +826,65 @@ class Items:
         self.__item_dict[path] = item
 
     @_exclusive_item_operation
+    def _plugins_remove_item(self, item):
+        """
+        Call plugin.remove_item() of every loaded plugin for *item*; a failing plugin is logged and skipped
+
+        :param item: the item whose plugin bindings are undone
+        """
+        for plugin in item.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_REMOVE_ITEM):
+                try:
+                    plugin.remove_item(item)
+                except Exception as e:
+                    self.logger.warning(
+                        f"Plugin '{plugin}' remove_item() failed for edit of item '{item.property.path}': {e}"
+                    )
+
+    def _plugins_parse_item(self, item):
+        """
+        Call plugin.parse_item() of every loaded plugin for *item* and register the returned update triggers
+
+        A failing plugin is logged and skipped.
+
+        :param item: the item to bind to the plugins
+        """
+        for plugin in item.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_PARSE_ITEM):
+                update = None
+                try:
+                    update = plugin.parse_item(item)
+                except Exception as e:
+                    self.logger.warning(
+                        f"Plugin '{plugin}' parse_item() failed for edit of item '{item.property.path}': {e}"
+                    )
+                if update:
+                    try:
+                        plugin.add_item(item, updating=True)
+                    except Exception:
+                        pass
+                    item.add_method_trigger(update)
+
+    def _refresh_inherited_instances(self, item, old_instance, notify_plugins):
+        """
+        Pass a changed effective ``instance`` of an edited item on to the descendants that inherit it
+
+        The plugin bindings of each affected descendant are redone, because the plugins read their bare
+        attributes through the item's ``instance``.
+
+        :param item: the item that was edited
+        :param old_instance: effective ``instance`` of *item* before the edit
+        :param notify_plugins: False skips the plugin calls, as in edit_item()
+        """
+        if item.conf.get(KEY_INSTANCE) == old_instance:
+            return
+        for child in inheriting_descendants(item):
+            if notify_plugins:
+                self._plugins_remove_item(child)
+            refresh_inherited_instance(child)
+            if notify_plugins:
+                self._plugins_parse_item(child)
+
     def edit_item(self, item, config, notify_plugins=True):
         """
         Edit an existing item's attributes at runtime, in place — preserves
@@ -904,15 +1004,9 @@ class Items:
         try:
             if notify_plugins:
                 # Undo old plugin bindings before re-parsing
-                for plugin in item.plugins.return_plugins():
-                    if hasattr(plugin, PLUGIN_REMOVE_ITEM):
-                        try:
-                            plugin.remove_item(item)
-                        except Exception as e:
-                            self.logger.warning(
-                                f"Plugin '{plugin}' remove_item() failed for edit of item '{item.property.path}': {e}"
-                            )
+                self._plugins_remove_item(item)
 
+            old_instance = item.conf.get(KEY_INSTANCE)
             item._apply_config(config)
 
             # Re-wire based on the NEW config (eval/trigger/hysteresis_input
@@ -924,21 +1018,9 @@ class Items:
             if notify_plugins:
                 # Rebind to plugins per the NEW config — mirrors the same loop
                 # Item.__init__ runs inline for a freshly constructed item.
-                for plugin in item.plugins.return_plugins():
-                    if hasattr(plugin, PLUGIN_PARSE_ITEM):
-                        update = None
-                        try:
-                            update = plugin.parse_item(item)
-                        except Exception as e:
-                            self.logger.warning(
-                                f"Plugin '{plugin}' parse_item() failed for edit of item '{item.property.path}': {e}"
-                            )
-                        if update:
-                            try:
-                                plugin.add_item(item, updating=True)
-                            except Exception:
-                                pass
-                            item.add_method_trigger(update)
+                self._plugins_parse_item(item)
+
+            self._refresh_inherited_instances(item, old_instance, notify_plugins)
         finally:
             for plugin in paused_plugins:
                 if not plugin.alive:
@@ -2029,6 +2111,9 @@ class Items:
                     return {key: value for key, value in existing.items() if not isinstance(value, dict)}
 
         config = dict(item.conf)
+        config.pop(KEY_INSTANCE, None)
+        if item._own_instance is not None:
+            config[KEY_INSTANCE] = list(item._own_instance)
         config['type'] = item._type
         if item._eval:
             config['eval'] = item._eval

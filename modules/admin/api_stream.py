@@ -39,10 +39,8 @@ SERIES_POLL_INTERVAL = 1.0  # generator wakeup cadence for checking due series p
 
 class StreamController(RESTResource):
     """
-    Server-Sent-Events replacement for the legacy websocket ``/adm`` push
-    protocol (see ``modules/websocket/admin.py``): live item value changes
-    and live series (history) polling, addressed to a REST client instead
-    of a persistent websocket.
+    Server-Sent-Events push for the admin UI: live item value changes
+    and live series (history) polling, addressed to a REST client.
 
     ``GET /api/stream/token`` mints a short-lived, single-use token (JWT
     auth via the normal Authorization header). ``GET /api/stream?token=..``
@@ -76,8 +74,7 @@ class StreamController(RESTResource):
         if id == 'token':
             token_valid, error_text = self.REST_test_jwt_token()
             if not token_valid:
-                cherrypy.response.status = 401
-                return json.dumps({'result': 'error', 'description': error_text})
+                raise cherrypy.HTTPError(401, error_text)
             return json.dumps({'token': self._mint_stream_token()})
 
         token = params.get('token', '')

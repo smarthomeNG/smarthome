@@ -7,9 +7,9 @@
 .. role:: blacksup
 
 
-=========================
-Plugins :bluesup:`Update`
-=========================
+==========================
+Plugins :greensup:`Update`
+==========================
 
 Informationen über das Schreiben von Plugins und wie sie in SmartHomeNG eingebunden werden, können in diesem
 Abschnitt und den links in der Navigation verlinkten Seiten gefunden werden.

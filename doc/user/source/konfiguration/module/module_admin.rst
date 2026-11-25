@@ -5,10 +5,11 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-============
-Module admin
-============
+===============================
+Module admin :greensup:`Update`
+===============================
 
 Dieses Modul erlaubt es SmartHomeNG über einen Webbrowser zu konfigurieren. Voraussetzung ist, dass auch das Modul
 http geladen und konfiguriert ist.
@@ -33,8 +34,6 @@ Datei *etc/module.yaml*
        # login_autorenew: True
        # itemtree_fullpath: True
        # itemtree_searchstart: 2
-       # websocket_host: smarthomeng.local
-       # websocket_port: 2424
        # log_chunksize: 1000
        # developer_mode: False
        # rest_dispatch_force_exception: False
@@ -42,6 +41,7 @@ Datei *etc/module.yaml*
        # dark_mode: False
        # resource_graph_period: '24h'
        # start_page: dashboard
+       # cors_origins: []
 
 
 .. note::
@@ -65,16 +65,11 @@ Datei *etc/module.yaml*
 | itemtree_searchstart          | **Optional**: Anzahl Zeichen die eingegeben sein muss, damit die Suche im Itemtree startet.    |
 |                               | Standardmäßig wird nach der Eingabe des zweiten Zeichens mit der Suche begonnen.               |
 +-------------------------------+------------------------------------------------------------------------------------------------+
-| websocket_host                | **VERALTET**: IP Adresse für den websocket Zugriff - bitte im Websocket-Modul konfigurieren.   |
-+-------------------------------+------------------------------------------------------------------------------------------------+
-| websocket_port                | **VERALTET**: Port der für den Websocket Zugriff verwendet wird - bitte im Websocket-Modul     |
-|                               | konfigurieren.                                                                                 |
-+-------------------------------+------------------------------------------------------------------------------------------------+
 | log_chunksize                 | **Optional**: Größe der gelesenen Blöcke bei der Anzeige großer Logdateien.                    |
 +-------------------------------+------------------------------------------------------------------------------------------------+
 | developer_mode                | **Optional**: Entwickler Modus aktivieren (Ist für das Core Entwickler Team gedacht).          |
 +-------------------------------+------------------------------------------------------------------------------------------------+
-| rest_dispatch_force_exception | **Optional**: Sollen WARNINGs aus REST_dispatch_execute als EXECPTION geloggt werden?          |
+| rest_dispatch_force_exception | **Optional**: Sollen WARNINGs aus REST_dispatch_execute als EXCEPTION geloggt werden?          |
 +-------------------------------+------------------------------------------------------------------------------------------------+
 | click_dropdown_header         | **Optional**: Click auf Kopfeintrag von Dropdown Menüs erlauben.                               |
 +-------------------------------+------------------------------------------------------------------------------------------------+
@@ -86,5 +81,11 @@ Datei *etc/module.yaml*
 +-------------------------------+------------------------------------------------------------------------------------------------+
 | start_page                    | **Optional**: Seite, die nach dem Login im Administrations-Interface angezeigt wird. Standard  |
 |                               | ist **dashboard**.                                                                             |
++-------------------------------+------------------------------------------------------------------------------------------------+
+| cors_origins                  | **Optional**: Liste von Origins (z.B. ``http://localhost:4200``), die die REST API aus einem   |
+|                               | Browser aufrufen dürfen, zusätzlich zum Admin Interface selbst. Standard ist eine leere Liste: |
+|                               | Die API sendet dann keine CORS-Header, und Browser geben ihre Antworten nur an das Admin       |
+|                               | Interface weiter. Für die Entwicklung mit ``ng serve`` ist kein Eintrag nötig, solange der     |
+|                               | Proxy aus ``proxy.conf.js`` verwendet wird.                                                    |
 +-------------------------------+------------------------------------------------------------------------------------------------+
 

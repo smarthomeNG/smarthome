@@ -17,8 +17,8 @@ Verfügung stehenden Itemstruktur-Templates angezeigt werden.
 .. index:: Items; Itemtree
 .. index:: Items; Item Baum
 
-Item Baum
-=========
+Item Baum :greensup:`Update`
+============================
 
 Hier kann die Baum-Struktur der geladenen Items angezeigt werden. Außerdem können die Eigenschaften und Attribute eines
 ausgewählten Items angezeigt und bearbeitet werden.
@@ -46,11 +46,18 @@ In den rechts angezeigten Item Informationen kann der Wert des Items live angepa
 .. index:: Items; Item kopieren
 .. index:: Items; Item löschen
 
-Item erstellen, bearbeiten, umbenennen, kopieren und löschen
----------------------------------------------------------------
+Item erstellen, bearbeiten, umbenennen, kopieren und löschen :greensup:`Update`
+-------------------------------------------------------------------------------
 
 Über das Aktionen-Menü in den Item Informationen (bzw. die Buttons oberhalb des Item Baums) können Items direkt
 über die Admin-Oberfläche angelegt, bearbeitet, umbenannt/verschoben, kopiert und gelöscht werden.
+
+Die Änderungen werden in die YAML Datei geschrieben, in der das Item definiert ist. Kommentare und Leerzeilen in
+dieser Datei bleiben dabei erhalten. Ein Item, dessen Definition auf mehrere Dateien verteilt ist, wird in allen
+betroffenen Dateien angepasst. Gecachte Werte (Attribut ``cache``) bleiben beim Umbenennen erhalten.
+
+Es kann immer nur eine dieser Aktionen gleichzeitig ausgeführt werden. Läuft bereits eine Aktion (z.B. aus einem
+zweiten Browser-Fenster), wird eine weitere abgelehnt und kann nach Abschluss der ersten erneut ausgelöst werden.
 
 Item erstellen
 ~~~~~~~~~~~~~~~

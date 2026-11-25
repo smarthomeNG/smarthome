@@ -6,9 +6,9 @@
 .. role:: greensup
 .. role:: redsup
 
-=============================
-Virtuelle Python Environments
-=============================
+================================================
+Virtuelle Python Environments :greensup:`Update`
+================================================
 
 Virtual Environments sind isolierte und unabhängige Umgebungen, die den Code und die Abhängigkeiten eines Projekts
 enthalten. Mit virtuellen Environments kann man parallel Umgebungen schaffen, in denen zum Beispiel Python Packages in
@@ -145,8 +145,8 @@ werden. Entscheidend ist nur, dass SmartHomeNG mit dem ``python3`` aus diesem En
 ``source <Verzeichnis>/bin/activate`` oder mit vollem Pfad ``<Verzeichnis>/bin/python3 bin/smarthome.py``).
 
 Beim ersten Start legt SmartHomeNG fehlende Konfigurationsdateien (``smarthome.yaml``, ``logging.yaml``,
-``plugin.yaml``, ``module.yaml``, ``logic.yaml``, ``admin.yaml``, ``holidays.yaml``) im Verzeichnis ``etc``
-aus den Vorlagen ``templates/*.default`` an.
+``plugin.yaml``, ``module.yaml``, ``logic.yaml``, ``holidays.yaml``, ``logic_groups.yaml``) im Verzeichnis ``etc``
+aus den Vorlagen im Verzeichnis ``templates`` an.
 
 |
 

@@ -184,7 +184,7 @@ class TestRunningTasks(_TaskTestCase):
 
 
 class TestRuntimeWarnings(_TaskTestCase):
-    def test_logic_warns_at_runtime_warn_and_each_doubling_with_stack(self):
+    def test_logic_warns_at_runtime_warn_and_each_doubling(self):
         self._run_hanging_logic('slow', runtime_warn=5)
         [running] = self.sched.get_running_tasks()
 
@@ -192,13 +192,36 @@ class TestRuntimeWarnings(_TaskTestCase):
             self.sched._check_task_runtimes(now=running.started + 4.9)
         with self.assertLogs('logics.slow', 'WARNING') as logs:
             self.sched._check_task_runtimes(now=_elapsed(running, 5))
+        self.assertEqual(len(logs.output), 1)
         self.assertIn('running for 5 s', logs.output[0])
-        self.assertIn('logic.release.wait(5)', logs.output[0])
         with self.assertNoLogs('logics.slow', 'WARNING'):
             self.sched._check_task_runtimes(now=running.started + 9.9)
         with self.assertLogs('logics.slow', 'WARNING') as logs:
             self.sched._check_task_runtimes(now=_elapsed(running, 10))
         self.assertIn('running for 10 s', logs.output[0])
+
+    def test_warning_carries_no_stack_and_debug_logs_it_separately(self):
+        self._run_hanging_logic('slow', runtime_warn=5)
+        [running] = self.sched.get_running_tasks()
+
+        with self.assertLogs('logics.slow', 'DEBUG') as logs:
+            self.sched._check_task_runtimes(now=_elapsed(running, 5))
+
+        warning, stack = logs.records
+        self.assertEqual(('WARNING', 'DEBUG'), (warning.levelname, stack.levelname))
+        self.assertNotIn('logic.release.wait(5)', warning.getMessage())
+        self.assertIn('running for 5 s', stack.getMessage())
+        self.assertIn('logic.release.wait(5)', stack.getMessage())
+
+    def test_stack_is_not_collected_while_debug_is_off(self):
+        self._run_hanging_logic('slow', runtime_warn=5)
+        [running] = self.sched.get_running_tasks()
+
+        with patch.object(self.sched, 'get_task_stack') as get_task_stack:
+            with self.assertLogs('logics.slow', 'WARNING'):
+                self.sched._check_task_runtimes(now=_elapsed(running, 5))
+
+        get_task_stack.assert_not_called()
 
     def test_skipped_thresholds_produce_one_warning_and_next_one_after_highest(self):
         self._run_hanging_logic('slow', runtime_warn=5)

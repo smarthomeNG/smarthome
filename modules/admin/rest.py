@@ -23,12 +23,29 @@
 
 
 import json
+import os
+
 import cherrypy
 import logging
 import jwt
 
 from dataclasses import dataclass, field
 from typing import Any, List, Optional
+
+
+def contained_path(base_dir: str, name: str) -> str:
+    """
+    Return the path of ``name`` below ``base_dir`` for a file name taken from a request.
+
+    Subdirectories are allowed; symlinks are not resolved.
+
+    :raises cherrypy.HTTPError: 400 if ``name`` is absolute or ``..`` leads outside ``base_dir``
+    """
+    base = os.path.abspath(base_dir)
+    path = os.path.abspath(os.path.join(base, name))
+    if os.path.commonpath([base, path]) != base:
+        raise cherrypy.HTTPError(400, 'invalid file name')
+    return path
 
 
 @dataclass
@@ -296,24 +313,28 @@ class RESTResource:
     logger = logging.getLogger('REST')
     # injected by Admin.__init__; None makes verification fail closed until then
     jwt_secret = None
+    #: origins other than the admin interface's own that may call the API from a browser (admin: cors_origins)
+    cors_origins: frozenset[str] = frozenset()
 
     def set_response_headers(self, *vpath):
         """
-        Set http response headers for CORS support
+        Set the CORS response headers for a request from an origin listed in cors_origins
 
-        :param vpath: unused (kept for the commented-out debug logging
-                       below); accepts any number of segments since
-                       default() calls this as set_response_headers(*vpath),
-                       and vpath can have more than one element for a
-                       sub-resource URL (e.g. /api/items/<path>/references).
+        Requests from the admin interface itself are same-origin and need no CORS headers; for any other
+        origin the browser keeps the response from the calling page.
+
+        :param vpath: unused; accepts any number of segments since default() calls this as
+                      set_response_headers(*vpath), and vpath can have more than one element for a
+                      sub-resource URL (e.g. /api/items/<path>/references).
         """
-        #        if vpath != 'status':
-        #            self.logger.notice(f"set_response_headers ({vpath=}): request headers: {cherrypy.request.headers}")
-        cherrypy.response.headers['Access-Control-Allow-Headers'] = '*'
-        # cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
-        origin = cherrypy.request.headers.get('Origin', '*')
+        origin = cherrypy.request.headers.get('Origin')
+        if not origin or origin not in self.cors_origins:
+            return
         cherrypy.response.headers['Access-Control-Allow-Origin'] = origin
         cherrypy.response.headers['Access-Control-Allow-Credentials'] = 'true'
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+        cherrypy.response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        cherrypy.response.headers['Vary'] = 'Origin'
 
     #        if vpath != 'status':
     #            self.logger.notice(f"set_response_headers: response headers for: {cherrypy.response.headers}")
@@ -398,7 +419,7 @@ class RESTResource:
         This is the single place authentication_needed/public_root are enforced - every
         dispatch path that ends up calling an @expose_resource method must go through it.
 
-        :return: None if the call may proceed, otherwise a JSON error response to return to the client
+        :raises cherrypy.HTTPError: 401 if the method needs authentication and the request has no valid token
         """
         public_root = False
         if root:
@@ -413,9 +434,7 @@ class RESTResource:
                 token_valid, error_text = self.REST_test_jwt_token()
                 if not token_valid:
                     self.logger.info(f'REST_check_auth(): Authentication failed for {str(m).split()[2]}')
-                    response = {'result': 'error', 'description': error_text}
-                    return json.dumps(response)
-        return None
+                    raise cherrypy.HTTPError(401, error_text)
 
     def REST_dispatch_execute(self, m, method, root, resource, **params):
         """
@@ -425,11 +444,10 @@ class RESTResource:
         exception is returned to the client as a 200 JSON body {'result': 'error', 'description': ...}.
 
         :return: m's return value, a JSON error response, or None if m is not an exposed resource method
+        :raises cherrypy.HTTPError: 401 if m needs authentication and the request has no valid token
         """
         if m and getattr(m, 'expose_resource', False):
-            auth_error = self.REST_check_auth(m, root)
-            if auth_error is not None:
-                return auth_error
+            self.REST_check_auth(m, root)
 
             try:
                 return m(resource, **params)
@@ -521,9 +539,7 @@ class RESTResource:
             method = getattr(self, a, None)
             # self.logger.notice(f"dir(method): {dir(method)}")
             if method and getattr(method, 'expose_resource', False):
-                auth_error = self.REST_check_auth(method, False)
-                if auth_error is not None:
-                    return auth_error
+                self.REST_check_auth(method, False)
                 return method(resource, *vpath, **params)
             else:
                 # path component was specified but doesn't
@@ -564,7 +580,7 @@ class RESTResource:
         """
         Handle OPTIONS requests
         """
-        self.logger.notice('RESTResource.options for class {self.__class__.__name__}')
+        self.logger.notice(f'RESTResource.options for class {self.__class__.__name__}')
 
         return json.dumps(False)
 

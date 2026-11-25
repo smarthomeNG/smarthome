@@ -1,6 +1,8 @@
-=======
-Plugins
-=======
+.. role:: greensup
+
+==========================
+Plugins :greensup:`Update`
+==========================
 
 Das Grundsystem von SmartHomeNG kann durch den Einsatz von Plugins erweitert werden. Ein Plugin
 ist ein Zusatzmodul in einem Unterverzeichnis unterhalb des Verzeichnisses ``plugins``.
@@ -33,8 +35,7 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 | Parameter        | Bedeutung                                                                           |
 +==================+=====================================================================================+
 | plugin_name      | Der Kurzname des Plugins, das eingebunden werden soll (Name des Verzeichnisses      |
-|                  | im ``../plugins`` Verzeichnis). Statt des Parameters **plugin_name** konnten bisher |
-|                  | auch die Parameter **class_name** und **class_path** angegeben werden.              |
+|                  | im ``../plugins`` Verzeichnis).                                                     |
 |                  |                                                                                     |
 |                  | **WICHTIG**: Bitte darauf achten, dass der Plugin Name Case-sensitive ist und der   |
 |                  | Schreibweise des Verzeichnisnamens des Plugin entsprechen muss.                     |
@@ -43,31 +44,18 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 |                  | geladen, die Konfiguration bleibt jedoch erhalten und die Verwendung von Item-      |
 |                  | Attributen dieses Plugins in den Itemkonfigurationen erzeugt keine Warnungen im Log.|
 +------------------+-------------------------------------------------------------------------------------+
-| class_name       | **DEPRECATED**: Name der Klasse in der Plugin Datei. Was hier einzutragen ist,      |
-|                  | steht in der Dokumentation zum jeweiligen Plugin. Stattdessen ist die               |
-|                  | Konfiguration über den Parameter **plugin_name** vorzunehmen.                       |
-+------------------+-------------------------------------------------------------------------------------+
-| class_path       | **DEPRECATED**: Pfad zur Plugin Datei. Was hier einzutragen ist, steht in der       |
-|                  | Dokumentation zum jeweiligen Plugin. Stattdessen ist die Konfiguration  über den    |
-|                  | Parameter **plugin_name** vorzunehmen.                                              |
-+------------------+-------------------------------------------------------------------------------------+
 | plugin_version   | Optional: Wenn im Plugin Repository mehrere Versionen eines Plugins zur Verfügung   |
 |                  | stehen, kann über diesen Parameter eine andere als die neueste Version des Plugins  |
 |                  | geladen werden. Dazu muss die Versionsnummer des Plugins angegeben werden.          |
 |                  | (z.B.  **plugin_version: 1.4.9**)                                                   |
 +------------------+-------------------------------------------------------------------------------------+
-| instance         | **DEPRECATED** Optional: Dieser Parameter muss nur verwendet werden, wenn mehrere   |
-|                  | Instanzen des selben Plugins geladen werden sollen. Das Plugin selbst muss dazu     |
-|                  | **Multiinstance**-fähig sein. Damit die Items der richtigen Plugin-Instanz          |
-|                  | izugeordnet werden, muss in der jeweiligen Item Definition der Name des Plugin-     |
-|                  | spezifische Attributes um die Angabe der Instanz ergänzt werden. Also z.B.: Statt   |
-|                  | **avm_data_type: uptime** muss **avm_data_type@<instance>: uptime** geschrieben     |
-|                  | werden.                                                                             |
-|                  | Zukünftig wird bei mehrfacher Einbindung desselben Plugins der Bezeichner des       |
-|                  | Abschnitts in der ``plugin.yaml`` als Instanzbezeichner verwendet werden.           |
+| instance         | Optional: Nur der Wert **default** wird ausgewertet. Er legt fest, dass diese       |
+|                  | Instanz den leeren Instanzbezeichner erhält (für Item-Attribute ohne                |
+|                  | Instanzangabe).                                                                     |
 +------------------+-------------------------------------------------------------------------------------+
-| default_instance | Optional: Kann zukünftig festlegen, welche Instanz von mehreren den leeren Instanz- |
-|                  | bezeichner erhält (für Item-Attribute ohne Instanzangabe)                           |
+| default_instance | Optional: Legt fest, welche Instanz von mehreren den leeren Instanzbezeichner       |
+|                  | erhält (für Item-Attribute ohne Instanzangabe). Die Angabe des Parameters genügt,   |
+|                  | z.B. **default_instance: true**.                                                    |
 +------------------+-------------------------------------------------------------------------------------+
 | webif_pagelength | Optional: Anzahl an Tabellenreihen, die im Plugin Webinterface standardmäßig        |
 |                  | pro Seite angezeigt werden sollen. Bei **-1** werden alle Einträge auf einer Seite  |
@@ -80,8 +68,11 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 
 .. note::
 
-    Die zukünftigen Konfigurationsmöglichkeiten für Multiinstanz-Plugins können jetzt schon aktiviert
-    werden, wenn in der ``etc/smarthome.yaml`` der Eintrag **legacy_instances: false** angegeben wird.
+    Wird dasselbe Plugin mehrfach eingebunden, ist der Name des jeweiligen Abschnitts in der ``plugin.yaml``
+    der Instanzbezeichner. Item-Attribute werden dann um diesen Bezeichner ergänzt, also z.B.
+    **avm_data_type@<abschnittsname>: uptime**. Mit **legacy_instances: true** in der ``etc/smarthome.yaml``
+    gilt wieder das bis SmartHomeNG 1.12 übliche Verfahren, bei dem der Instanzname aus dem Parameter
+    **instance** gelesen wird.
 
 
 Die weiteren Einträge sind Plugin spezifisch. Welche Parameter ein Plugin kennt ist auch der
@@ -93,8 +84,8 @@ Ein **#** wirkt wie auch bei den Konfigurationsdateien der Items als Beginn eine
 
 
 
-Multi-Instance Fähigkeit
-========================
+Multi-Instance Fähigkeit :greensup:`Update`
+===========================================
 
 Es gibt Plugins, die so geschrieben sind, dass von ihnen mehrere Instanzen parallel geladen werden
 können.
@@ -104,19 +95,17 @@ beachten. Dann wird ein solches Plugin konfiguriert wie alle andern Plugins auch
 
 Wenn mehrere Instanzen eines Plugins konfiguriert werden, muss in der Konfiguration der Items
 eine Information hinterlegt werden, auf welche Instanz des Plugins sich das Item bezieht. Dazu
-**muss** jeder Instanz ein eindeutiger Name gegeben werden. Das erfolgt in der ``etc/plugin.yaml``
-dadurch, dass jeder Instanz ein Parameter **instance** hinzugefügt wird:
+**muss** jeder Instanz ein eindeutiger Name gegeben werden. Das ist der Name des Abschnitts in der
+``etc/plugin.yaml``:
 
 .. code:: yaml
 
-   fritzbox_1:
+   fb6360:
        plugin_name: avm
-       instance: fb6360
        ...
 
-   fritzbox_2:
+   fb7490:
        plugin_name: avm
-       instance: fb7490
        ...
 
 
@@ -129,12 +118,37 @@ Außerdem muss jedem Item die Information mitgegeben werden, auf welche Instanz 
            type: str
            avm_data_type@fb7490: wan_connection_status
 
+Items ohne Instanzangabe gehören zu der Instanz, die den leeren Instanzbezeichner hat. Welche das ist,
+wird mit dem Parameter **default_instance** (oder **instance: default**) festgelegt.
+
 
 Wenn ein Item mehrere Attribute nutzt, die das Plugin zur Verfügung stellt, ist als Grundregel
 jedes Attribut mit der **@<instance>** zu ergänzen.
 
 Es kann sein, dass die Ergänzung eines einzelnen Attributes reicht. Das ist dann in der Doku
 des jeweiligen Plugins beschrieben.
+
+Statt jedes Attribut zu ergänzen, kann im Item das Attribut **instance** mit dem Namen des Abschnitts angegeben
+werden. Es gilt für das Item und alle darunter liegenden Items, solange sie kein eigenes **instance** setzen:
+
+.. code:: yaml
+
+   wan:
+       instance: fb7490
+       connection_status:
+           type: str
+           avm_data_type: wan_connection_status    # gilt als avm_data_type@fb7490
+
+- Ein Attribut ohne ``@<instance>`` gehört dann zu der genannten Instanz und nicht mehr zur Standard-Instanz.
+- Mit ``instance: default`` wird wieder die Standard-Instanz verwendet.
+- Items, die Attribute mehrerer Plugins mit benannten Instanzen nutzen, geben eine Liste an:
+  ``instance: [fb7490, broker1]``. Jedes Plugin nutzt den Eintrag, der zu einem seiner Abschnitte passt.
+  Plugins, zu denen kein Eintrag passt, ändern ihr Verhalten nicht.
+- Ein Attribut mit ``@<instance>`` oder ``@*`` hat immer Vorrang. Ein Attribut mit ``@<abschnittsname>`` passt auf die
+  Instanz dieses Abschnitts, auch wenn diese die Standard-Instanz ist.
+- Nennt ``instance`` keinen Abschnitt der ``plugin.yaml``, wird beim Laden des Items eine Warnung ausgegeben.
+- Mit ``legacy_instances: true`` wird ``instance`` nur beim Einsetzen von structs ausgewertet.
+- Die Referenz steht unter :doc:`instance </referenz/items/standard_attribute/instance>`.
 
 
 

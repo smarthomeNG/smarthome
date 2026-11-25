@@ -52,6 +52,17 @@ class TestMqttPluginItemValuesIsInstanceSpecific(unittest.TestCase):
         self.assertNotIn('some.item', p2._item_values)
 
 
+class TestMqttPluginWithoutMqttModule(unittest.TestCase):
+    def test_init_marks_plugin_incomplete(self):
+        with patch('lib.model.mqttplugin.Modules') as mock_modules:
+            mock_modules.get_instance.return_value.get_module.return_value = None
+            from lib.model.mqttplugin import MqttPlugin
+
+            plugin = MqttPlugin()
+
+        self.assertFalse(plugin._init_complete)
+
+
 class _StubItem:
     """Minimal item exposing what _update_item_values() reads."""
 

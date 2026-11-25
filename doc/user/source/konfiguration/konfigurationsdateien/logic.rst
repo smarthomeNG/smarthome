@@ -25,6 +25,6 @@ der Wert des Items `watch_item` ändert.
 
 .. note::
 
-   Ab SmartHomeNG v1.6 können Logiken vollständig im Admin Interface erstellt und konfiguriert werden.
+   Logiken können vollständig im Admin Interface erstellt und konfiguriert werden.
 
 Details zur Konfiguration von Logiken finden sich :doc:`hier <../logiken>` .

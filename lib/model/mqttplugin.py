@@ -94,7 +94,7 @@ class MqttPlugin(SmartPlugin):
         if self.mod_mqtt is None:
             self.logger.error("Module 'mqtt' not loaded. The plugin is not starting")
             self._init_complete = False
-            return False
+            return
 
         self._subscribed_topics_lock = threading.Lock()
         self._subscribed_topics = {}  # subscribed topics (a dict of dicts)

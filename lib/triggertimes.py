@@ -59,9 +59,6 @@ They can be used the following way: To call eg. **get_toplevel_items()**, use th
     from lib.triggertimes import TriggerTimes
     sh_triggertimes = TriggerTimes.get_instance()
 
-:Note: Do not use the functions or variables of the main smarthome object any more. They are deprecated.
-    Use the methods of the class **TriggerTimes** instead.
-
 :Note: This library is part of the core of SmartHomeNG. Regular plugins should not need to use this API. 
     It is mainly implemented for plugins near to the core like **scheduler** and the core itself!
 """
@@ -947,7 +944,7 @@ class Skytime(TriggerTime):
                                     )
                                 except Exception:
                                     logger.error(
-                                        'Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]'
+                                        f'Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]'
                                     )
                                     return get_invalid_time()
                                 if dmin > eventtime:
@@ -961,7 +958,7 @@ class Skytime(TriggerTime):
                                     logger.debug(f'searchtime={searchtime}, eventtime={eventtime}, dmax={dmax}')
                                 except Exception:
                                     logger.error(
-                                        'Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]'
+                                        f'Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]'
                                     )
                                     return get_invalid_time()
 

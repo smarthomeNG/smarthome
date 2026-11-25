@@ -5,12 +5,12 @@
 .. role:: greensup
 
 Relative Item Referenzen :greensup:`Update`
-#############################################
+###########################################
 
 Damit können in **eval** und in **eval_trigger** Attributen von Items andere Items referenziert
 werden ohne den vollständigen Item-Pfad anzugeben. Das ist besonders hilfreich, wenn man Item
 Strukturen hat, die man mehrfach kopieren möchte, da man dann die entsprechenden **eval** und
-**eval_trigger** Einträge nicht jedes mal anpassen muss. Auch die mit Release 1.4 hinzukommenden
+**eval_trigger** Einträge nicht jedes mal anpassen muss. Auch die
 Item Attribute **on_update** und **on_change** unterstützen die relative Item Referenzierung.
 
 Relative Referenzen vermindern auch die Fehleranfälligkeit, da man Items, die auf höheren Ebenen
@@ -125,7 +125,7 @@ Attribute folgendermaßen aussehen:
 
 
 Verhalten beim Kopieren von Items :redsup:`neu`
-=================================================
+===============================================
 
 Da relative Referenzen von der Position des referenzierenden Items im Item-Baum abhängen, können sie
 beim Kopieren eines Items (siehe :doc:`Item kopieren </admin/items>`) nicht wie absolute Referenzen

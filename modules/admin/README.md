@@ -62,7 +62,11 @@ header.
 
 ### AUTH API — login and token renewal
 
-- `POST /api/authenticate/user` — log in with SHA-512-hashed credentials, get a JWT. *No auth required.*
+- `POST /api/authenticate/user` — log in with username and password, get a JWT (HTTP 401 for a wrong user
+  name or password). *No auth required.*
+
+A request to an endpoint that needs authentication without a valid JWT gets HTTP 401 with
+`WWW-Authenticate: Bearer` and a JSON body `{"error": ..., "status": "401"}`.
 - `PUT /api/authenticate/renew` — renew the current JWT before it expires.
 
 ### CONFIG API — read/write etc/smarthome.yaml and etc/module.yaml sections
@@ -178,13 +182,11 @@ of that type, or read/write one with `?filename=`), plus the special cases `logg
 
 - `GET /api/system/info` — CPU/memory/disk stats for the System Overview page.
 
-### WebSocket API — live item values and time-series charts
+### STREAM API — live item values and time-series charts
 
-Separate from the REST API above: `ws(s)://{host}:{ws_port}/adm`, handled by the
-`websocket` module's admin protocol (`modules/websocket/admin.py`), documented in
-{doc}`websocket_admingui_requests`. Used for live item
-value monitoring and the System Overview page's resource-usage graphs. No JWT is used on
-this channel.
+Server-Sent-Events (`modules/admin/api_stream.py`): `GET /api/stream/token` mints a short-lived,
+single-use token (JWT auth), `GET /api/stream?token=..` opens the event stream. Used for live item
+value monitoring and the System Overview page's resource-usage graphs.
 
 ##
 
@@ -197,7 +199,7 @@ this channel.
 self.classname = self.__class__.__name__
 
 try:
-    self.mod_admin = self._sh.get_module('admin')
+    self.mod_admin = self._sh.modules.get_module('admin')
 except:
     self.mod_admin = None
     

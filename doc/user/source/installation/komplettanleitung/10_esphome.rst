@@ -4,9 +4,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-===============================
-ESPHome Dashboard :redsup:`new`
-===============================
+=================
+ESPHome Dashboard
+=================
 
 Wenn ESPHome Devices mit SmartHomeNG verwendet werden sollen, kann es hilfreich sein das ESPHome Dashboard auf dem
 Rechner zu installieren, auf dem SmartHomeNG läuft.

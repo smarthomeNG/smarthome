@@ -72,7 +72,7 @@ from lib.model.smartdeviceplugin import SmartDevicePlugin, Standalone
 class epson(SmartDevicePlugin):
     """Device class for Epson projectors."""
 
-    PLUGIN_VERSION = '1.0.0'
+    PLUGIN_VERSION = '2.0.0'
 
     TRANSPORTS = (TransportRule(CONN_SER_ASYNC, requires='serialport'),)
     COMMAND_CLASS = SDPCommandParseStr

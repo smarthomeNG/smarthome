@@ -3,17 +3,15 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
 
-Properties eines Items
-======================
+Properties eines Items :greensup:`Update`
+=========================================
 
 Jedes definierte Item bietet die folgenden Properties an, die unter anderem in **eval** Ausdrücken
 genutzt werden können. Alle Properties sind zumindest lesend (r/o) zugreifbar. Einige Properties können
 auch beschrieben (r/w) werden.
-
-Die Property ``remark`` ist **ab SmartHomeNG v1.12** verfügbar.
-
 
 Properties werden in Logiken und eval-Ausdrücken folgendermaßen abgerufen:
 
@@ -154,7 +152,6 @@ Werte für Properties, die auch geschrieben werden können (z.B. in Logiken), we
 | <dynamic property>   | r/o        | str      | Als dynamische Properties werden die plugin-spezifischen Attribute unter-    |
 |                      |            |          | stützt. So kann z.B. aus der smartVISU auf die KNX Sendeadresse eines Items  |
 |                      |            |          | **schaltaktor** zugegriffen werden: **schaltaktor.property.knx_send**        |
-|                      |            |          | Dyn. Properties sind erst in SmartHomeNG Releases nach v1.6.1 implementiert. |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 
 Der folgende Beispiel eval Ausdruck sorgt dafür, dass ein Item den zugewiesenen Wert nur dann übernimmt,

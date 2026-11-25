@@ -9,6 +9,7 @@ imported or executed.
 """
 
 import ast
+import fnmatch
 import argparse
 import enum
 import io
@@ -25,6 +26,7 @@ from collections.abc import Callable
 from typing import NamedTuple, TypeAlias, TypedDict
 
 from ruamel import yaml
+from ruamel.yaml import YAML
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -62,11 +64,13 @@ class Surface:
     plugin_metadata_globs: list[str] = field(default_factory=list)  # plugin.yaml files of addons
     cli_file: str | None = None  # script defining the command line with argparse
     websocket_file: str | None = None  # websocket protocol handler dispatching on `command == '<name>'`
+    # '<module>:<Class>.<member>' fnmatch patterns of public members that are internal to the core
+    internal_members: list[str] = field(default_factory=list)
 
     @classmethod
     def load(cls, path: Path) -> 'Surface':
         """Read a surface declaration (YAML mapping of the field names above)."""
-        declared = yaml.safe_load(path.read_text(encoding='utf-8')) or {}
+        declared = YAML(typ='safe', pure=True).load(path.read_text(encoding='utf-8')) or {}
         unknown = set(declared) - set(cls.__dataclass_fields__)
         if unknown:
             raise ValueError(f'{path}: unknown surface keys {sorted(unknown)}')
@@ -255,7 +259,9 @@ def snapshot(root: Path, surface: Surface) -> Snapshot:
                         snap[f'constant:{module}:{target.id}'] = _literal(node.value)
     for key in classes:
         for member, signature in _effective_members(key, classes).items():
-            snap[f'member:{key[0]}:{key[1]}.{member}'] = signature
+            name = f'{key[0]}:{key[1]}.{member}'
+            if not any(fnmatch.fnmatchcase(name, pattern) for pattern in surface.internal_members):
+                snap[f'member:{name}'] = signature
     _collect_declared(root, surface.parameter_globs, 'parameters', 'parameter', snap)
     _collect_declared(root, surface.item_attribute_globs, 'item_attributes', 'item_attribute', snap)
     _collect_plugin_metadata(root, surface.plugin_metadata_globs, snap)
@@ -267,7 +273,7 @@ def snapshot(root: Path, surface: Surface) -> Snapshot:
 def _collect_declared(root: Path, globs: list[str], section: str, kind: str, snap: Snapshot) -> None:
     """Record the entries of a metadata section (`parameters:`, `item_attributes:`) of YAML files."""
     for path in sorted({p for pattern in globs for p in root.glob(pattern)}):
-        declared = (yaml.safe_load(path.read_text(encoding='utf-8')) or {}).get(section) or {}
+        declared = (YAML(typ='safe', pure=True).load(path.read_text(encoding='utf-8')) or {}).get(section) or {}
         for name, spec in declared.items():
             snap[f'{kind}:{path.parent.name}:{name}'] = _parameter(spec if isinstance(spec, dict) else {})
 
@@ -428,7 +434,7 @@ def _plugin_function(spec: dict[str, JsonValue]) -> PluginFunction:
 def _collect_plugin_metadata(root: Path, globs: list[str], snap: Snapshot) -> None:
     """Record what plugin.yaml files declare: config, item attributes, logic parameters, functions, structs, bounds."""
     for path in sorted({p for pattern in globs for p in root.glob(pattern)}):
-        data = yaml.safe_load(path.read_text(encoding='utf-8')) or {}
+        data = YAML(typ='safe', pure=True).load(path.read_text(encoding='utf-8')) or {}
         plugin = path.parent.name
         for section, kind in _PLUGIN_SPEC_SECTIONS.items():
             for name, spec in _section(data, section).items():

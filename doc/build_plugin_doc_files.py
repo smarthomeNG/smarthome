@@ -580,7 +580,7 @@ def write_type_files(
                 desc += ['', f'{texts["pver"][language]}: {bold(plg["py_maxversion"])}']
             if plg.get('sh_maxversion'):
                 desc += ['', f'{texts["sver"][language]}: {bold(plg["sh_maxversion"])}']
-            if plg.get('state', '').lower() in ['deprecated', 'develop']:
+            if plg.get('state', '').lower() in ['deprecated', 'defunct', 'develop']:
                 desc += ['', f'{texts["stat"][language]}: {bold(plg["state"])}']
 
             fh.write(
@@ -712,6 +712,12 @@ def write_configfile(plg: dict, configfile_dir: str, language: str = 'de'):
         fh.write(
             f'**ACHTUNG**: Dieses Plugin ist als {plgstate} gekennzeichnet. Es wird empfohlen auf eine \
                  Nachfolgelösung umzusteigen.\n'
+        )
+    if plgstate == 'defunct':
+        fh.write('\n')
+        fh.write(
+            f'**ACHTUNG**: Dieses Plugin ist als {plgstate} gekennzeichnet. Es funktioniert nicht mehr und wird mit \
+                 dem nächsten Release entfernt.\n'
         )
     if plgstate == 'develop':
         fh.write('\n')

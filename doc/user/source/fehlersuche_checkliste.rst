@@ -2,12 +2,13 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
 
 .. index:: Fehlersuche; Checkliste
 
-Checkliste für die Fehlersuche
-==============================
+Checkliste für die Fehlersuche :greensup:`Update`
+=================================================
 
 Wenn etwas nach erfolgter Installation nicht funktioniert, kann anhand folgender Punkte geprüft
 werden, was nicht klappt. Hilfe gibt es auch im `Supportforum im KNX-User-Forum <https://knx-user-forum.de/forum/supportforen/smarthome-py>`_
@@ -17,7 +18,7 @@ sollen, dann müsst ihr Informationen beisteuern:
 * Debug Ausgabe anhängen, mindestens bis das Problem ersichtlich geloggt wird. (Dazu SmartHome.py mit
   der Option **-d** starten)
 * Error und Warnings soweit möglich bereits vorher beseitigen
-* evtl. die ``etc/plugin.conf`` und die items mit denen Euer Problem zusammenhängt
+* evtl. die ``etc/plugin.yaml`` und die items mit denen Euer Problem zusammenhängt
 * Wichtig ist auch u.U. die verwendete Hardware (VM oder Raspi 1, 2, 3) das Betriebssystem
   (Raspbian, Ubuntu x.y, Debian x.y) und ob eibd oder knxd genutzt werden.
 
@@ -233,7 +234,7 @@ Nach erfolgreichem Aufbau der Verbindung dann **help** eingeben.
    Trying 127.0.1.1...
    Connected to smarthome.local.
    Escape character is '^]'.
-   SmartHomeNG v1.4.0
+   SmartHomeNG v2.0.0  -  cli plugin v1.8.3
    Enter 'help' for a list of available commands.
    CLI > help
    h: alias for help
@@ -321,7 +322,7 @@ In Putty bitte folgende Settings beachten, damit der Zugriff auf das CLI Plugin 
 Session:
 
 - Connection type -> RAW wählen (nicht Telnet!)
-- Host Namen des Servers eintragen, Port 2323 (oder wie er in der plugin.conf konfiguriert ist)<
+- Host Namen des Servers eintragen, Port 2323 (oder wie er in der ``etc/plugin.yaml`` konfiguriert ist)
 
 Terminal:
 

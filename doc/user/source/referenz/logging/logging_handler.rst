@@ -39,11 +39,11 @@ Benutzung des Handlers
 ----------------------
 
 In der Datei ``etc/logging.yaml`` wird der Handler als Ersatz für **TimedRotatingFileHandler** eingesetzt.
-Dort wo im Abschnitt ``handler:`` bisher der Handler **TimedRotatingFileHandler** konfiguriert ist:
+Dort wo im Abschnitt ``handlers:`` bisher der Handler **TimedRotatingFileHandler** konfiguriert ist:
 
 .. code-block:: yaml
 
-    handler:
+    handlers:
         shng_warnings_file:
             class: logging.handlers.TimedRotatingFileHandler
             formatter: shng_simple
@@ -58,7 +58,7 @@ wird anstelle des ``class:`` Attributes der Handler **ShngTimedRotatingFileHandl
 
 .. code-block:: yaml
 
-    handler:
+    handlers:
         shng_warnings_file:
             (): lib.log.ShngTimedRotatingFileHandler
             formatter: shng_simple
@@ -83,8 +83,7 @@ Mögliche Angaben für ``when:`` sind:
 DateTimeRotatingFileHandler
 ===========================
 
-Dieser Handler ermöglicht wie das operationlog und datalog Plugin, die Logdateien
-entsprechend der aktuellen Uhrzeit zu benennen. Gleich wie beim oben beschriebenen
+Dieser Handler ermöglicht, die Logdateien entsprechend der aktuellen Uhrzeit zu benennen. Gleich wie beim oben beschriebenen
 ShngTimedRotatingFileHandler kann angegeben werden, in welchem zeitlichen Abstand
 eine neue Datei erstellt werden soll und wieviele Backup-Versionen erhalten bleiben.
 Dabei sind zusätzlich mögliche Angaben für ``when:``:
@@ -115,7 +114,7 @@ Hinweis: Ist {hour} nicht Bestandteil des Dateinamens, wird die selbe Datei für
 
 .. code-block:: yaml
 
-    handler:
+    handlers:
         csv_file:
             (): lib.log.DateTimeRotatingFileHandler
             formatter: shng_simple
@@ -135,7 +134,7 @@ Das folgende Beispiel erstellt im Log-Ordner alle 10 Minuten eine Datei namens
 
 .. code-block:: yaml
 
-    handler:
+    handlers:
         txt_file:
             (): lib.log.DateTimeRotatingFileHandler
             formatter: shng_simple
@@ -148,26 +147,26 @@ Das folgende Beispiel erstellt im Log-Ordner alle 10 Minuten eine Datei namens
 ShngMemLogHandler
 =================
 
-In SmartHomeNG ist seit je her standardmäßig ein Memory Log konfiguriert. Dieses Memory Log ist bisher
-völlig losgelöst vom Python Logging System. Das memory Log trägt den Namen 'env.core.log' und wird dazu verwendet
+In SmartHomeNG ist standardmäßig ein Memory Log konfiguriert, das Einträge ab dem Level WARNING aufnimmt. Das
+Memory Log trägt den Namen 'env.core.log' und wird dazu verwendet
 in der smartVISU auf der Konfigurationsseite unter 'SmartHomeNG' Log Einträge anzuzeigen. Das Memory Log
 'env.core.log' kann auch mit Hilfe des **cli** Plugins angezeigt werden.
 
-Weitere Memory Logs (die bisher mit dem **memlog** Plugin angelegt werden konnten/mussten) können in der smartVISU
-mit Hilfe der Widgets **status.log** und des **cli** Plugins angezeigt werden.
+Weitere Memory Logs können in der smartVISU mit Hilfe der Widgets **status.log** und des **cli** Plugins angezeigt
+werden.
 
-Mit Hilfe des **ShngMemLogHandler** können nun normale Log Einträge, die über das Standard Python Logging erzeugt
+Mit Hilfe des **ShngMemLogHandler** können normale Log Einträge, die über das Standard Python Logging erzeugt
 werden, in ein Memory Log geloggt werden. Der **ShngMemLogHandler** legt dazu ein entsprechendes Memory Log an
 und der Handler wird in den konfigurierten Loggern als (zusätzlicher) Logger konfiguriert.
 
 Benutzung des Handlers
 ----------------------
 
-In der Datei ``etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt ``handler:`` konfiguriert.
+In der Datei ``etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt ``handlers:`` konfiguriert.
 
 .. code-block:: yaml
 
-    handler:
+    handlers:
         memory_heizung:
             (): lib.log.ShngMemLogHandler
             logname: mem_heiz
@@ -176,7 +175,7 @@ In der Datei ``etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt ``
             cache: True
 
 
-**ShngMemLogHandler** hat vier Parameter:
+**ShngMemLogHandler** hat fünf Parameter:
 
     - ``logname:`` - Legt den Namen fest, unter dem das Memory Log aus der smartVISU oder dem **cli** Plugin
       angesprochen werden kann.
@@ -184,6 +183,8 @@ In der Datei ``etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt ``
       gelöscht wird.
     - ``level:`` - Legt den minimalen Log Level fest, der in das Memory Log geschrieben wird
     - ``cache:`` - Ist dieser Parameter True, werden die Einträge im cache Ordner gesichert und beim Neustart geladen
+    - ``mapping:`` - Liste mit den Namen der Felder eines Eintrags in der Reihenfolge Zeit, Thread, Level und Meldung
+      (Standard: ``[time, thread, level, message]``). Andere Namen können nicht mit ``cache: True`` kombiniert werden.
 
 |
 

@@ -107,7 +107,6 @@ class LogicsController(RESTResource):
 
         if self.plugins is None:
             self.plugins = Plugins.get_instance()
-        self.yaml_updates = self.logics.return_config_type() == '.yaml'
 
         # find out if blockly plugin is loaded
         if self.blockly_plugin_loaded is None:

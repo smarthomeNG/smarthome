@@ -57,9 +57,10 @@ class TestLoggersReadRequiresAuth(unittest.TestCase):
         # would fail with an AttributeError-flavored error response instead
         # of the specific 'Unauthorized' one - distinguishing "auth rejected"
         # from "read() ran and crashed" without needing to mock read() away.
-        result = self.controller.default()
+        with self.assertRaises(cherrypy.HTTPError) as raised:
+            self.controller.default()
 
-        self.assertIn('"description": "Unauthorized"', result)
+        self.assertEqual(401, raised.exception.status)
 
 
 if __name__ == '__main__':

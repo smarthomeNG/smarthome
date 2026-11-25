@@ -1,0 +1,28 @@
+literal: |
+    line 1
+      indented line 2
+    line 3
+literal_strip: |-
+    no trailing newline
+literal_keep: |+
+    keep
+
+folded: >
+    folded text
+    continues here
+
+    new paragraph
+folded_strip: >-
+    folded no newline
+indent_indicator: |2
+      two extra spaces
+eval: "sh.item.a() if sh.item.b() > 5 else 'x'"
+single: 'it''s'
+double_escapes: "tab\there\nnewline \u00e4"
+long_plain: this is a very long plain scalar that goes on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on
+long_quoted: 'this is a very long single quoted scalar that goes on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on and on'
+key with spaces: v
+'quoted key': v
+"dq key": v
+dotted.key: v
+umlaut_ä: Grüße 😀

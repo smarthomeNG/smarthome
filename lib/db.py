@@ -130,6 +130,11 @@ class Database:
     'transaction()' - context manager: run several statements as one commit/rollback unit, using lock()/release() internally
     'verify()' - check database connection and reconnect if required
     'connected()' - check if database is connected
+    'is_connection_error()' - check if an exception means the connection was lost
+    'version()' - return the version of the database engine
+    'current_journal_mode()' - return the journal mode of a SQLite database (e.g. 'wal')
+    'lock_holder_description()' - describe the thread holding the database lock (for log messages)
+    'last_verify_reason()' - return why the last attempt of the latest verify() call failed
 
 
     The SQL statements executed may have placeholders and parameters which
@@ -309,11 +314,13 @@ class Database:
 
         self._params = {}
 
-        # Deprecated, remove with 1.7 or 1.8
-        if isinstance(connect, str):
-            connect = [p.strip() for p in connect.split('|')]
+        if isinstance(connect, str) and connect.strip():
+            self.logger.error(
+                f"Database [{self._name}]: 'connect' must be a list of 'key:value' entries or a dict, not a string"
+            )
+            return
 
-        # -> but keep list of ordered dict as "default" returned by yaml parser!
+        # list of ordered dict is the "default" returned by yaml parser
         if isinstance(connect, list):
             if isinstance(connect[0], str):
                 for arg in connect:

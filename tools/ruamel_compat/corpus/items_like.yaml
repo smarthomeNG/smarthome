@@ -1,0 +1,38 @@
+# Wohnzimmer
+wohnzimmer:
+    name: Wohnzimmer
+
+    licht:
+        type: bool
+        visu_acl: rw
+        enforce_updates: yes
+        cache: on
+        initial_value: off
+        knx_dpt: 1
+        knx_send: 1/1/1
+        knx_listen:
+          - 1/1/2
+          - 1/1/3
+        autotimer: 10m = 0
+        crontab:
+          - 0 5 * * = 1
+          - sunrise+30m = 0
+        cycle: 60 = 1
+        on_change:
+          - wohnzimmer.licht.status = value
+        eval: sh.wohnzimmer.licht() if value != sh.wohnzimmer.licht() else None
+        eval_trigger: wohnzimmer.schalter
+
+        status:
+            type: bool
+
+    rolladen:
+        struct: stateengine.general
+        uzsu:
+            type: dict
+            uzsu_item: ..
+            cache: True
+            initial_value: {'active': True, 'list': [{'time': '08:30', 'value': 1, 'active': True, 'rrule': 'FREQ=WEEKLY;BYDAY=MO,TU'}]}
+        zeit: 08:30
+        zeit2: 8:30
+        sw_version: 1.10

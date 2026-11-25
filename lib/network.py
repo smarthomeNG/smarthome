@@ -95,23 +95,33 @@ class Network(object):
         return 'IPv6' if family == socket.AF_INET6 else 'IPv4'
 
     @staticmethod
-    def ping(ip):
+    def ping(ip, timeout=2):
         """
         Try to ICMP ping a host using external OS utilities. IPv4 only.
 
+        The ping process is killed after *timeout* seconds and the host counts as offline.
+
         :param ip: IPv4 address as a string
+        :param timeout: Seconds to wait for the answer
+
         :type ip: string
+        :type timeout: float
 
         :return: True if a reachable, false otherwise.
         :rtype: bool
         """
         logger = logging.getLogger(__name__)
-        if subprocess.call(['ping', '-c', '1', ip], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0:
-            logger.debug(f'Ping: {ip} is online')
-            return True
-        else:
-            logger.debug(f'Ping: {ip} is offline')
-            return False
+        try:
+            online = (
+                subprocess.call(
+                    ['ping', '-c', '1', ip], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, timeout=timeout
+                )
+                == 0
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            online = False
+        logger.debug(f'Ping: {ip} is {"online" if online else "offline"}')
+        return online
 
     @staticmethod
     def ping_port(ip, port=80):
@@ -432,7 +442,7 @@ class Http(object):
             self.logger.warning(f'{self._id} download error: {Network.clean_uri(url, self._hide_login)}')
             return False
 
-    def get_binary(self, url=None, params=None):
+    def get_binary(self, url=None, params=None, auth=None, timeout=None, verify=True, require_ok=False):
         """
         Launch a GET request and return answer as raw binary data or None on error.
 
@@ -440,14 +450,27 @@ class Http(object):
 
         :param url: Optional URL to fetch from. Default is to use baseurl given to constructor.
         :param params: Optional dict of parameters to add to URL query string.
+        :param auth: Optional authentication object or (user, password) tuple
+        :param timeout: Optional timeout in seconds. Default is the timeout given to constructor.
+        :param verify: Set to false to ignore SSL certificate verification errors (for self-signed for example)
+        :param require_ok: Return None (and log a warning) unless the HTTP status code is 200
 
         :type url: str
         :type params: dict
+        :type auth: HTTPBasicAuth | HTTPDigestAuth | tuple | ...
+        :type timeout: int
+        :type verify: bool
+        :type require_ok: bool
 
-        :return: Answer as raw binary objector None on whatever error occured
+        :return: Answer as raw binary object or None on whatever error occured
         :rtype: bytes | None
         """
-        if self.__get(url=url, params=params):
+        if self.__get(url=url, params=params, timeout=timeout, verify=verify, auth=auth):
+            if require_ok and self._response.status_code != 200:
+                self.logger.warning(
+                    f'{self._id} problem fetching {Network.clean_uri(self._response.url, self._hide_login)}: {self.response_status()}'
+                )
+                return None
             return self._response.content
         return None
 
@@ -1674,7 +1697,7 @@ class Udp_server(object):
         Run the asyncio loop in a separate thread to not block the Udp_server.start() method.
         """
         self._is_listening = True
-        self.logger.debug('{self._id} listening thread set is_listening to True')
+        self.logger.debug(f'{self._id} listening thread set is_listening to True')
         asyncio.set_event_loop(self.__loop)
         try:
             self.__loop.run_forever()

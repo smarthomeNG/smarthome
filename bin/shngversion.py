@@ -126,10 +126,13 @@ from lib.utils import Version
 # Update auf 1.12.2.2  wg. Kennzeichnung für sh_minversion
 
 # Update auf 2.0.0-dev.1 wg. Umstellung auf Semantic Versioning (siehe doc/dev/public_api.md)
+# Update auf 2.0.0-dev.2 wg. Kennzeichnung für sh_minversion der Plugins, die den 2.0 Core brauchen
 
-shNG_version = '2.1.0-dev.0'
-shNG_branch = 'develop'
-shNG_releasedate = '10. Juli 2026'
+# Update auf 2.0.0     wg. Release
+
+shNG_version = '2.0.0'
+shNG_branch = 'master'
+shNG_releasedate = '25. November 2026'
 
 # ---------------------------------------------------------------------------------
 FileBASE = None

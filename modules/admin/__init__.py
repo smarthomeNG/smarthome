@@ -61,7 +61,7 @@ suburl = 'admin'
 
 
 class Admin(Module):
-    version = '1.11.0'
+    version = '2.0.0'
     longname = 'Admin module for SmartHomeNG'
     _port = 0
 
@@ -118,6 +118,7 @@ class Admin(Module):
             self.dark_mode = self._parameters['dark_mode']
             self.resource_graph_period = self._parameters['resource_graph_period']
             self.start_page = self._parameters['start_page']
+            RESTResource.cors_origins = frozenset(self._parameters['cors_origins'] or [])
         except Exception:
             self.logger.critical(
                 "Module '{}': Inconsistent module (invalid metadata definition)".format(self._shortname)
@@ -125,36 +126,8 @@ class Admin(Module):
             self._init_complete = False
             return
 
-        # Deprecation: websocket_host/websocket_port belong to the websocket module,
-        # not to the admin module.  Warn users who still have them in admin config.
-        _dep_host = self._parameters.get('websocket_host')
-        _dep_port = self._parameters.get('websocket_port')
-        _default_ws_port = 2424
-        if _dep_host:
-            self.logger.warning(
-                "Module '{}': Parameter 'websocket_host' is DEPRECATED in the admin module. "
-                "Configure it in the websocket module instead. The websocket module's value will be used.".format(
-                    self._shortname
-                )
-            )
-        if _dep_port is not None and _dep_port != _default_ws_port:
-            self.logger.warning(
-                "Module '{}': Parameter 'websocket_port' is DEPRECATED in the admin module. "
-                "Configure it in the websocket module instead. The websocket module's value will be used.".format(
-                    self._shortname
-                )
-            )
-
-        # Stash deprecated fallback values so start() can use them if the
-        # websocket module is genuinely absent.  The authoritative lookup is
-        # deferred to start() because module __init__ methods run before any
-        # module's start() is called, so get_module('websocket') always returns
-        # None here even when the websocket module is properly configured.
-        self._ws_dep_host = _dep_host or None
-        self._ws_dep_port = str(_dep_port) if _dep_port else str(_default_ws_port)
-        self._ws_default_port = str(_default_ws_port)
         self.websocket_host = None
-        self.websocket_port = str(_default_ws_port)
+        self.websocket_port = '2424'
 
         mysuburl = ''
         if suburl != '':
@@ -163,7 +136,9 @@ class Admin(Module):
         self._port = self.mod_http._port
         # self.logger.warning('port = {}'.format(self._port))
         self.shng_url_root = 'http://' + ip + ':' + str(self._port)  # for links mto plugin webinterfaces
-        self.url_root = self.shng_url_root + mysuburl
+        # path of the admin interface on this server, for links from pages served by the same server
+        self.url_path = mysuburl
+        self.url_root = self.shng_url_root + self.url_path
         self.api_url_root = self.shng_url_root + 'api'
 
     def _load_or_create_jwt_secret(self):
@@ -227,13 +202,7 @@ class Admin(Module):
                 if ws_ip and ws_ip not in ('0.0.0.0', '::', ''):
                     self.websocket_host = ws_ip
             else:
-                self.logger.warning(
-                    "Module '{}': Websocket module not found; falling back to admin module parameters.".format(
-                        self._shortname
-                    )
-                )
-                self.websocket_host = self._ws_dep_host
-                self.websocket_port = self._ws_dep_port
+                self.logger.warning("Module '{}': Websocket module not found.".format(self._shortname))
         except Exception as e:
             self.logger.warning("Module '{}': Could not read websocket module config: {}".format(self._shortname, e))
 
@@ -442,6 +411,8 @@ class Admin(Module):
         """
         cherrypy.response.headers['Content-Type'] = 'application/json'
         errno = status.split()[0]
+        if errno == '401':
+            cherrypy.response.headers['WWW-Authenticate'] = 'Bearer'
         body = {'error': message, 'status': errno}
         if self._showtraceback and errno == '500':
             body['traceback'] = traceback

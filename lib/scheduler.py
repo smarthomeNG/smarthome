@@ -172,6 +172,31 @@ class RunningTask:
         return self.runtime_warn > 0 and self.runtime >= self.runtime_warn
 
 
+@dataclasses.dataclass(frozen=True)
+class SchedulerEntry:
+    """
+    Snapshot of an entry registered with the scheduler, as returned by :meth:`Scheduler.get_entries`.
+
+    :ivar name: scheduler name, e.g. ``logics.<name>``, ``items.<path>`` or ``plugins.<plugin>.<name>``
+    :ivar obj: the object the scheduler calls (a Logic, an Item or a method)
+    :ivar prio: priority, 1 is the most important
+    :ivar active: False while the entry is paused
+    :ivar next: time of the next run, None if none is scheduled
+    :ivar cycle: ``{seconds: value}`` of the cycle, None if the entry has no cycle
+    :ivar cron: ``{crontab expression: value}``, None if the entry has no crontab
+    :ivar value: value handed to the called object
+    """
+
+    name: str
+    obj: object
+    prio: int
+    active: bool
+    next: datetime.datetime | None
+    cycle: dict | None
+    cron: dict | None
+    value: object
+
+
 class _TaskRegistry:
     """Thread-safe registry of the tasks currently running on scheduler worker threads, keyed by thread ident."""
 
@@ -514,6 +539,28 @@ class Scheduler(threading.Thread):
         """
         return self._running.snapshot()
 
+    def get_entries(self) -> list[SchedulerEntry]:
+        """
+        Get the entries registered with the scheduler
+
+        :return: snapshots taken under the scheduler lock, ordered by name; later changes to the scheduler do not
+            affect them
+        """
+        with self._lock:
+            return [
+                SchedulerEntry(
+                    name=name,
+                    obj=job['obj'],
+                    prio=job['prio'],
+                    active=job['active'],
+                    next=job['next'],
+                    cycle=dict(job['cycle']) if isinstance(job['cycle'], dict) else None,
+                    cron=dict(job['cron']) if isinstance(job['cron'], dict) else None,
+                    value=job['value'],
+                )
+                for name, job in sorted(self._scheduler.items())
+            ]
+
     def get_task_stack(self, thread_ident: int) -> list[str] | None:
         """
         Get the current call stack of a running task
@@ -559,19 +606,20 @@ class Scheduler(threading.Thread):
         """
         Check running tasks against their runtime thresholds.
 
-        Logs a warning with the current stack for each task that passed its next runtime_warn
-        threshold, and requests cancellation of each logic that passed its runtime_cancel.
+        Logs a warning for each task that passed its next runtime_warn threshold, followed by its current stack
+        at DEBUG level, and requests cancellation of each logic that passed its runtime_cancel.
 
         :param now: ``time.monotonic()`` value to check against, defaults to the current one
         """
         if now is None:
             now = time.monotonic()
         for task in self._running.due_warnings(now):
-            stack = ''.join(self.get_task_stack(task.thread_ident) or ['(not available)\n'])
-            self._task_logger(task).warning(
-                f'{task.name} ({task.task_type}) running for {now - task.started:.0f} s '
-                f'(runtime_warn {task.runtime_warn:g} s, thread {task.thread_ident}), current stack:\n{stack}'
-            )
+            task_logger = self._task_logger(task)
+            runtime = f'{task.name} ({task.task_type}) running for {now - task.started:.0f} s'
+            task_logger.warning(f'{runtime} (runtime_warn {task.runtime_warn:g} s, thread {task.thread_ident})')
+            if task_logger.isEnabledFor(logging.DEBUG):
+                stack = ''.join(self.get_task_stack(task.thread_ident) or ['(not available)\n'])
+                task_logger.debug(f'{runtime}, current stack:\n{stack}')
         for task in self._running.due_cancels(now):
             self._task_logger(task).warning(
                 f'{task.name} ({task.task_type}) exceeded runtime_cancel {task.runtime_cancel:g} s, cancelling'
@@ -774,36 +822,23 @@ class Scheduler(threading.Thread):
         a smartplugin instance. If there is an instance name of the calling smartplugin then the instance name of that
         calling smartplugin is appended to the name
 
+        Only the frame of that caller is looked at (``sys._getframe(2)``), since this runs on every trigger, i.e. on
+        every item change that triggers a logic or an eval.
+
         :param name: the name of a scheduler entry
-        :param from_smartplugin:
+        :param from_smartplugin: True if the call comes from a SmartPlugin method that has added the instance name
         :return: returns either the name or name combined with instance name
         """
-        try:
-            stack = inspect.stack()
-        except IndexError:
+        if from_smartplugin:
             return name
-        except Exception as e:
-            logger.exception(f"check_caller('{name}') *1: Exception in inspect.stack(): {e}")
-
         try:
-            obj = stack[2][0].f_locals['self']
-        except KeyError:
+            caller = sys._getframe(2).f_locals.get('self')
+        except ValueError:
             return name
-        except Exception as e:
-            pass
-            logger.exception(f"check_caller('{name}') *2: Exception in inspect.stack(): {e}")
-
-        try:
-            if isinstance(obj, SmartPlugin):
-                iname = obj.get_instance_name()
-                if iname != '':
-                    #                    if not (iname).startswith(self._pluginname_prefix):
-                    if not from_smartplugin:
-                        if not str(name).endswith('_' + iname):
-                            name = name + '_' + obj.get_instance_name()
-        except Exception as e:
-            pass
-            logger.exception(f"check_caller('{name}') *3: Exception in inspect.stack(): {e}")
+        if isinstance(caller, SmartPlugin):
+            iname = caller.get_instance_name()
+            if iname != '' and not str(name).endswith('_' + iname):
+                name = name + '_' + iname
         return name
 
     def return_next(self, name, from_smartplugin=False):

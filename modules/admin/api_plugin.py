@@ -32,9 +32,25 @@ from lib.module import Modules
 from lib.plugin import Plugins
 from lib.metadata import Metadata
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import KEY_CLASS_PATH, KEY_INSTANCE, YAML_FILE, DIR_PLUGINS
+from lib.constants import KEY_INSTANCE, YAML_FILE, DIR_PLUGINS
 
 from .rest import ApiDoc, ApiParam, RESTResource
+
+
+BACKUP_FILENAME = 'plugin_before_admin_config.yaml'
+
+
+def ensure_plugin_yaml_backup(config_filename: str, logger) -> None:
+    """
+    Copy ``etc/plugin.yaml`` to ``etc/plugin_before_admin_config.yaml`` once, before the admin API first touches it
+
+    :param config_filename: path of the plugin configuration file
+    :param logger: logger for the notice about the created copy
+    """
+    backup = os.path.join(os.path.dirname(config_filename), BACKUP_FILENAME)
+    if not os.path.isfile(backup):
+        shutil.copy2(config_filename, backup)
+        logger.warning('Created a backup copy of plugin.yaml ({})'.format(backup))
 
 
 class PluginController(RESTResource):
@@ -73,23 +89,6 @@ class PluginController(RESTResource):
             return None
         return params
 
-    def test_for_old_config(self, config_filename):
-        # make it 'readonly', if plugin.conf is used
-        result = not (os.path.splitext(config_filename)[1].lower() == '.yaml')
-
-        _etc_dir = os.path.dirname(config_filename)
-        if not result:
-            # for beta-testing: create a backup of ../etc/plugin.yaml
-            if not os.path.isfile(os.path.join(_etc_dir, 'plugin_before_admin_config.yaml')):
-                shutil.copy2(config_filename, os.path.join(_etc_dir, 'plugin_before_admin_config.yaml'))
-                self.logger.warning(
-                    'Created a backup copy of plugin.yaml ({})'.format(
-                        os.path.join(_etc_dir, 'plugin_before_admin_config.yaml')
-                    )
-                )
-
-        return result
-
     def get_config_filename(self):
 
         if self.plugins is None:
@@ -109,7 +108,7 @@ class PluginController(RESTResource):
         config_filename = self.get_config_filename()
 
         info = {}
-        info['_readonly'] = self.test_for_old_config(config_filename)
+        ensure_plugin_yaml_backup(config_filename, self.logger)
 
         # get path to plugin configuration file, without extension
         _conf = lib.config.parse_basename(os.path.splitext(config_filename)[0], configtype='plugin')
@@ -130,7 +129,7 @@ class PluginController(RESTResource):
     read.expose_resource = True
     read.api_doc = [
         ApiDoc(
-            summary='Single plugin config section + `_readonly` legacy-format flag',
+            summary='Single plugin config section',
             method='get',
             path='/plugin/{pluginSection}',
             tags=['plugin'],
@@ -181,39 +180,36 @@ class PluginController(RESTResource):
 
         config_filename = self.get_config_filename()
 
-        if self.test_for_old_config(config_filename):
-            # make it 'readonly', if plugin.conf is used
-            response = {'result': 'error', 'description': 'Updateing .CONF files is not supported'}
+        ensure_plugin_yaml_backup(config_filename, self.logger)
+        response = {}
+        plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
+        sect = plugin_conf.get(id)
+        colliding_section = None if sect is not None else self._find_legacy_instance_collision(id, plugin_conf)
+        if sect is not None:
+            response = {'result': 'error', 'description': "Configuration section '{}' already exists".format(id)}
+        elif colliding_section is not None:
+            response = {
+                'result': 'error',
+                'description': "Configuration name '{}' collides with the instance name already used by section '{}'".format(
+                    id, colliding_section
+                ),
+            }
         else:
-            response = {}
-            plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
-            sect = plugin_conf.get(id)
-            colliding_section = None if sect is not None else self._find_legacy_instance_collision(id, plugin_conf)
-            if sect is not None:
-                response = {'result': 'error', 'description': "Configuration section '{}' already exists".format(id)}
-            elif colliding_section is not None:
-                response = {
-                    'result': 'error',
-                    'description': "Configuration name '{}' collides with the instance name already used by section '{}'".format(
-                        id, colliding_section
-                    ),
-                }
-            else:
-                config = params.get('config', {})
-                # If another section already configures the same plugin_name, this
-                # is a multi-instance setup - set instance to the new section name.
-                # id is already guaranteed unique (checked above), so this can't
-                # collide with any sibling's instance name, whether that sibling
-                # has an explicit instance set or not.
-                new_plugin_name = config.get('plugin_name')
-                if new_plugin_name is not None and any(
-                    isinstance(existing, dict) and existing.get('plugin_name') == new_plugin_name
-                    for existing in plugin_conf.values()
-                ):
-                    config[KEY_INSTANCE] = id
-                plugin_conf[id] = config
-                shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
-                response = {'result': 'ok'}
+            config = params.get('config', {})
+            # If another section already configures the same plugin_name, this
+            # is a multi-instance setup - set instance to the new section name.
+            # id is already guaranteed unique (checked above), so this can't
+            # collide with any sibling's instance name, whether that sibling
+            # has an explicit instance set or not.
+            new_plugin_name = config.get('plugin_name')
+            if new_plugin_name is not None and any(
+                isinstance(existing, dict) and existing.get('plugin_name') == new_plugin_name
+                for existing in plugin_conf.values()
+            ):
+                config[KEY_INSTANCE] = id
+            plugin_conf[id] = config
+            shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
+            response = {'result': 'ok'}
 
         self.logger.info('PluginController(): add(): response = {}'.format(response))
         return json.dumps(response)
@@ -263,8 +259,7 @@ class PluginController(RESTResource):
         :return: True if the section was disabled and has been enabled, False if nothing changed
         """
         config_filename = self.get_config_filename()
-        if self.test_for_old_config(config_filename):
-            return False
+        ensure_plugin_yaml_backup(config_filename, self.logger)
         plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
         sect = plugin_conf.get(id)
         if sect is None or Plugins._is_section_enabled(sect):
@@ -346,25 +341,19 @@ class PluginController(RESTResource):
 
             config_filename = self.get_config_filename()
 
-            if self.test_for_old_config(config_filename):
-                # make it 'readonly', if plugin.conf is used
-                response = {'result': 'error', 'description': 'Updateing .CONF files is not supported'}
+            ensure_plugin_yaml_backup(config_filename, self.logger)
+            response = {}
+            plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
+            sect = plugin_conf.get(id)
+            if sect is None:
+                response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(id)}
             else:
-                response = {}
-                plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
-                sect = plugin_conf.get(id)
-                if sect is None:
-                    response = {
-                        'result': 'error',
-                        'description': "Configuration section '{}' does not exist".format(id),
-                    }
-                else:
-                    self.logger.debug('update: params = {}'.format(params))
-                    if params.get('config', {}).get('plugin_enabled', None):
-                        del params['config']['plugin_enabled']
-                    plugin_conf[id] = params.get('config', {})
-                    shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
-                    response = {'result': 'ok'}
+                self.logger.debug('update: params = {}'.format(params))
+                if params.get('config', {}).get('plugin_enabled', None):
+                    del params['config']['plugin_enabled']
+                plugin_conf[id] = params.get('config', {})
+                shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
+                response = {'result': 'ok'}
         elif action in ['start', 'stop']:
             response = self.handle_plugin_action(id, action)
         elif action in ['load', 'unload', 'reload']:
@@ -411,18 +400,15 @@ class PluginController(RESTResource):
 
         config_filename = self.get_config_filename()
 
-        if self.test_for_old_config(config_filename):
-            # make it 'readonly', if plugin.conf is used
-            response = {'result': 'error', 'description': 'Updateing .CONF files is not supported'}
+        ensure_plugin_yaml_backup(config_filename, self.logger)
+        response = {}
+        plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
+        sect = plugin_conf.pop(id, None)
+        if sect is None:
+            response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(id)}
         else:
-            response = {}
-            plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
-            sect = plugin_conf.pop(id, None)
-            if sect is None:
-                response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(id)}
-            else:
-                shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
-                response = {'result': 'ok'}
+            shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
+            response = {'result': 'ok'}
 
         self.logger.info('PluginController(): delete(): response = {}'.format(response))
         return json.dumps(response)

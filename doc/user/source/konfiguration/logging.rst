@@ -15,12 +15,12 @@ oder wie wichtig ein bestimmter Logeintrag ist.
 Innerhalb des Kerns von SmartHomeNG finden sich zum Beispiel Einträge im Programm mit dem Log Level **NOTICE**,
 die in einer Logdatei dann im Ergebnis so aufgezeichnet werden:
 
-``2021-04-16  21:56:31 NOTICE   lib.smarthome     --------------------   Init SmartHomeNG 1.8.2c.4e0938c2.develop   --------------------``
+``2026-11-25  21:56:31 NOTICE   lib.smarthome       --------------------   Init SmartHomeNG 2.0.0+4e0938c2.master   --------------------``
 
 Das ist als Information zu sehen, um bei Problemen Hilfe zu erhalten. Es deutet hier nichts auf Fehler oder Probleme hin.
 Ein anderer Logging Befehl im Core mit dem Log Level **WARNING** erzeugt hingehen folgendes:
 
-``2021-04-16  21:56:32 WARNING  lib.module        Not loading module Mqtt from section 'mqtt': Module is disabled``
+``2026-11-25  21:56:32 WARNING  lib.module          Not loading module Mqtt from section 'mqtt': Module is disabled``
 
 Das ist als Warnung gedacht, um darauf hinzuweisen, dass ein Modul nicht geladen wird und in dieser Folge eventuell
 weitere Fehler oder Probleme auftauchen könnten. Steigerungen von Warnungen sind Log Level **ERROR** oder **CRITICAL**.
@@ -86,13 +86,15 @@ Auf der Seite `Python Logging <https://docs.python.org/3.6/library/logging.html#
 sind die Konfigurationsmöglichkeiten detailliert beschrieben.
 
 SmartHomeNG lädt beim Start die Konfiguration des Logging aus der Datei ``etc/logging.yaml``. Ist diese Datei nicht vorhanden,
-so versucht SmartHomeNG, die Datei ``etc/logging.yaml.default`` nach ``etc/logging.yaml`` zu kopieren und dann daraus
-die Konfiguration des Loggings zu laden.
+so kopiert SmartHomeNG die Vorlage ``templates/logging.yaml.default`` nach ``etc/logging.yaml`` und lädt dann daraus
+die Konfiguration des Loggings. Enthält die ``etc/logging.yaml`` eine Konfiguration, die nicht verarbeitet werden kann,
+startet SmartHomeNG mit der Konfiguration aus der Vorlage und meldet das auf der Konsole.
 
 Wenn bei der Konfiguration des Loggings etwas schief geht, kann also jederzeit die Datei ``etc/logging.yaml`` gelöscht oder
-besser umbenannt werden und wird dann beim nächsten Neustart durch den Inhalt der ``etc/logging.yaml.default`` frisch bereitgestellt.
+besser umbenannt werden und wird dann beim nächsten Neustart durch den Inhalt der ``templates/logging.yaml.default``
+frisch bereitgestellt.
 
-Ein Beispiel für ``etc/logging.yaml.default`` im Folgenden:
+Die Vorlage ``templates/logging.yaml.default`` im Folgenden:
 
 .. literalinclude:: ../../../../templates/logging.yaml.default
    :caption: etc/logging.yaml
@@ -184,17 +186,8 @@ Plugin und Logik Entwicklung
 
 Für die Entwickler von Plugins:
 
-Früher musste in Plugins ein Logger in der Form
-
-.. code-block:: python
-
-   import logging
-   self.logger = logging.getLogger(__name__)
-
-
-in der `__init__` Methode instanziert werden. Das ist inzwischen nicht mehr notwendig. Die SmartPlugin
-Klasse erzeugt den Logger inzwischen selbst. Ein **import logging** ist nicht mehr notwendig und die
-Initialisierung des Loggers in der `__init__` Methode sollte auch weggelassen werden.
+Die SmartPlugin Klasse erzeugt den Logger selbst. Ein **import logging** und die Initialisierung des Loggers in der
+`__init__` Methode sind nicht notwendig und sollten weggelassen werden.
 
 Der Logger kann/muss in der ``etc/logging.yaml`` konfiguriert werden. Der Name des Loggers ist ``plugins.<Name des Plugins>``.
 
@@ -225,7 +218,7 @@ Name ist und nicht der Name des Python Skriptes.
 Logging der Veränderung von Items
 ---------------------------------
 
-Ab Version 1.5 von SmartHomeNG erfolgt die Konfiguration des Loggings der Veränderung von Item Werten über
+Die Konfiguration des Loggings der Veränderung von Item Werten erfolgt über
 Standard Item Attribute, wie es :doc:`bei den Standardattributen </referenz/items/standard_attribute/log_change>`
 beschrieben ist.
 

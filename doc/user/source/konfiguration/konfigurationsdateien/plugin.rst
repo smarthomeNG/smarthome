@@ -46,8 +46,9 @@ Name des Plugin-Verzeichnisses unterhalb von ``plugins``
 
 .. note::
 
-    Sollte es notwendig werden ein Plugin außerhalb des Verzeichnisses ``../plugins`` zu speichern,
-    kann dieses Plugin (wie früher) über ``class_path:`` referenziert werden.
+    Eigene Plugins, die nicht Teil des Plugin-Repositories sind, werden ebenfalls im Verzeichnis ``plugins``
+    abgelegt. Es hat sich bewährt, ihrem Verzeichnisnamen das Präfix ``priv_`` voranzustellen (``plugin_name: priv_meinplugin``).
+    Die früher möglichen Parameter ``class_name`` und ``class_path`` werden nicht mehr unterstützt.
 
 
 Nutzung einer älteren Version eines Plugins

@@ -25,7 +25,6 @@ import logging
 import os
 
 import lib.db
-from lib.model.smartplugin import SmartPlugin
 from lib.plugin import Plugins
 
 from .rest import ApiDoc, RESTResource
@@ -56,7 +55,7 @@ class DatabaseController(RESTResource):
         if self.plugins is None:
             return None
         for x in self.plugins.return_plugins():
-            if isinstance(x, SmartPlugin) and x.get_shortname() == 'database':
+            if x.get_shortname() == 'database':
                 return x
         return None
 

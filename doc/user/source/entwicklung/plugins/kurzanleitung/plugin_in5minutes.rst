@@ -1,7 +1,9 @@
 
-=====================================
-In wenigen Minuten zum eigenen Plugin
-=====================================
+.. role:: greensup
+
+========================================================
+In wenigen Minuten zum eigenen Plugin :greensup:`Update`
+========================================================
 
 
 Plugins sind Erweiterungen von SmartHomeNG mit zusätzlichen Funktionen. Sie sind in Python geschrieben.
@@ -55,7 +57,7 @@ abgelegt werden.
 
 .. hint::
 
-   Das in früheren Versionen verwendete ``README``-Format für die Dokumentation von Plugins ist veraltet.
+   Das ``README``-Format für die Dokumentation von Plugins ist veraltet.
    Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen.
    Die restliche Dokumentation sollte nur noch im ``user_doc``-Format erfolgen.
 

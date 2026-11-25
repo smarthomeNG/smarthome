@@ -25,7 +25,7 @@ Logik:
 
    logger.info(trigger)
 
-   source_item = sh.return_item(trigger['source'])
+   source_item = sh.items.return_item(trigger['source'])
    prio = trigger['value']
    logger.debug("Trigger Item for Priority Logic: {0}, Value: {1}".format(source_item,prio))
 

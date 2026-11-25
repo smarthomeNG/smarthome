@@ -46,7 +46,7 @@ from lib.scheduler import Scheduler
 
 
 class Mqtt(Module):
-    version = '1.8.0'
+    version = '1.8.1'
     longname = 'MQTT module for SmartHomeNG'
 
     __plugif_CallbackTopics = {}  # for plugin interface

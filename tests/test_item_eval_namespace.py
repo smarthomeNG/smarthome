@@ -143,6 +143,20 @@ class TestMakeEvalEnvKeys(_Base):
     def test_has_env(self):
         self.assertIn('env', self.ns)
 
+    def test_has_utils(self):
+        from lib.utils import Utils
+
+        self.assertIs(self.ns['Utils'], Utils)
+
+    def test_has_network(self):
+        from lib.network import Network
+
+        self.assertIs(self.ns['Network'], Network)
+
+    def test_utils_and_network_are_usable_in_an_expression(self):
+        self.assertEqual(eval('Utils.dewpoint(20, 50)', self.ns), 9.26)
+        self.assertTrue(callable(eval('Network.ping', self.ns)))
+
     def test_has_value(self):
         self.assertIn('value', self.ns)
         self.assertEqual(self.ns['value'], 7)

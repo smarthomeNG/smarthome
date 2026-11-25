@@ -179,7 +179,7 @@ class Characterizer:
     def items(self) -> list:
         """All items of the plugin's item tree, sorted by path, without excluded items."""
         return sorted(
-            (i for i in self.rig.sh.return_items() if i.property.path not in self.excluded),
+            (i for i in self.rig.sh.items.return_items() if i.property.path not in self.excluded),
             key=lambda i: i.property.path,
         )
 

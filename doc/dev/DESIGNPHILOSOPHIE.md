@@ -59,13 +59,16 @@ Ausdrucksfreiheit entschieden.
 
 **Einschränkung seit Ende Juni 2026:** Für den Spezialfall Umbenennen gilt „nicht automatisch nachführbar"
 nicht mehr uneingeschränkt. `Items.rename_item()` durchsucht per `find_references()` andere Items nach
-Text-Treffern in `eval`/`on_change`/`on_update`/`trigger`/`hysteresis_input`/`cycle`/`autotimer` und ersetzt
-sie automatisch (grenzsicherer Text-Ersatz, kein Live-Baum-Abgleich – über die Admin-API und damit auch aus
-shngadmins Umbenennen/Verschieben-Dialog erreichbar). Das ist weiterhin keine strukturierte Verknüpfung,
-sondern Textmustererkennung ohne Vollständigkeitsgarantie: berechnete oder zusammengesetzte Referenzen
-werden nicht gefunden (so `find_references()`s eigener Docstring). Für jede andere Änderung an einem Item
-(insbesondere Löschen) bleibt es bei der reinen Review-Hilfe `find_references()`/`remove_references()` ohne
-automatische Anpassung – absichtlich nicht in `remove_item()` verdrahtet.
+Text-Treffern in `eval`/`on_change`/`on_update` (Ausdrücke und `dest =`-Ziele)/`trigger`/`hysteresis_input`/
+`hysteresis_*_threshold`/`cycle`/`autotimer` und ersetzt sie automatisch (grenzsicherer Text-Ersatz, kein
+Live-Baum-Abgleich – über die Admin-API und damit auch aus shngadmins Umbenennen/Verschieben-Dialog
+erreichbar). Das ist weiterhin keine strukturierte Verknüpfung, sondern Textmustererkennung ohne
+Vollständigkeitsgarantie: berechnete oder zusammengesetzte Referenzen werden nicht gefunden (so
+`find_references()`s eigener Docstring). Beim Löschen bietet `Items.remove_references()` eine
+Aufräumhilfe: Sie entfernt eindeutige Referenzen (Einträge in `trigger`/`on_change`/`on_update`, `hysteresis_input`,
+den kompletten `eval`), meldet mehrdeutige zurück und ändert sie nicht. Sie ist über einen eigenen
+Admin-API-Aufruf erreichbar und absichtlich nicht in `remove_item()` verdrahtet. Alles darüber hinaus
+(sowie jede andere Änderung an einem Item) bleibt beim Anwender.
 
 ---
 
@@ -148,7 +151,8 @@ Am meisten profitiert, wer
   als Code formuliert statt über eine grafische Regel-Oberfläche.
 - Konfiguration lieber als Text (YAML) pflegt als über eine UI – wobei das Umbenennen eines Items seit Ende
   Juni 2026 einen Teil der Referenzpflege automatisch übernimmt (textbasiert, bester Versuch, siehe oben);
-  für alle anderen Änderungen (insbesondere Löschen) bleibt die Konsistenzprüfung beim Anwender.
+  beim Löschen räumt `remove_references()` nur eindeutige Referenzen auf, die übrige Konsistenzprüfung
+  bleibt beim Anwender.
 - den Item-Baum eines laufenden Systems direkt untersuchen möchte, etwa über den `--interactive`-REPL-Modus
   – ein Debugging-Zugriff, den ein mehrprozessiges System mit Message-Bus in dieser Form nicht bietet.
 - auf einfacher, ressourcenarmer Hardware (z. B. Raspberry Pi) betreiben möchte, ohne separaten Datenbank-

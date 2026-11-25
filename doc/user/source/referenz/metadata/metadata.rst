@@ -4,11 +4,12 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
 
-=========
-Metadaten
-=========
+============================
+Metadaten :greensup:`Update`
+============================
 
 Im folgenden ist die Struktur der Metadaten beschrieben, die für Module und Plugins genutzt werden.
 
@@ -26,8 +27,8 @@ Für Module werden die folgenden Abschnitte in der Metadaten Datei ``module.yaml
    /referenz/metadata/parameters
 
 
-Metadaten für Plugins
----------------------
+Metadaten für Plugins :greensup:`Update`
+----------------------------------------
 
 Für Plugins werden die folgenden Abschnitte in der Metadaten Datei ``plugin.yaml`` des jeweiligen Plugins genutzt:
 

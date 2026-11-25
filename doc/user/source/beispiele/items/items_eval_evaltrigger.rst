@@ -277,7 +277,7 @@ Dieser errechnete Wert wird dann als Dauer für den **autotimer** verwendet.
 
 .. note::
 
-   Ab SmartHomeNG v1.7 gibt es hierfür eine Funktion, die in eval Attributen und Logiken verwendet werden kann:
+   Hierfür gibt es eine Funktion, die in eval Attributen und Logiken verwendet werden kann:
    **shtime.time_since()** ermöglicht auch die Rückgabe in anderen Einheiten/Formaten als Sekunden.
 
    Zur Verwendung der Funktionen bitte im Abschnitt Referenz/Logiken unter :doc:`Feiertage, Daten und Zeiten </referenz/smarthomeng/feiertage_datum_zeit>`

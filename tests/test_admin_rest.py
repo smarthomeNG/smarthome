@@ -62,6 +62,45 @@ class TestSetResponseHeaders(unittest.TestCase):
         self.resource.set_response_headers('d.aussentemperatur.fahrenheit', 'references')  # must not raise
 
 
+class TestCorsAllowlist(unittest.TestCase):
+    """CORS headers are only sent for origins listed in the admin parameter cors_origins."""
+
+    def headers_for(self, origin, allowed):
+        request = MagicMock()
+        request.headers = {'Origin': origin} if origin else {}
+        response = MagicMock()
+        response.headers = {}
+        with (
+            patch.object(cherrypy, 'request', request),
+            patch.object(cherrypy, 'response', response),
+            patch.object(RESTResource, 'cors_origins', frozenset(allowed)),
+        ):
+            RESTResource().set_response_headers()
+        return response.headers
+
+    def test_foreign_origin_gets_no_cors_headers(self):
+        headers = self.headers_for('http://evil.example', [])
+
+        self.assertNotIn('Access-Control-Allow-Origin', headers)
+        self.assertNotIn('Access-Control-Allow-Credentials', headers)
+
+    def test_request_without_origin_gets_no_cors_headers(self):
+        self.assertNotIn('Access-Control-Allow-Origin', self.headers_for(None, ['http://localhost:4200']))
+
+    def test_listed_origin_is_allowed(self):
+        headers = self.headers_for('http://localhost:4200', ['http://localhost:4200'])
+
+        self.assertEqual('http://localhost:4200', headers['Access-Control-Allow-Origin'])
+        self.assertEqual('true', headers['Access-Control-Allow-Credentials'])
+        self.assertIn('Authorization', headers['Access-Control-Allow-Headers'])
+        self.assertEqual('Origin', headers['Vary'])
+
+    def test_no_wildcard_headers(self):
+        headers = self.headers_for('http://localhost:4200', ['http://localhost:4200'])
+
+        self.assertNotIn('*', headers['Access-Control-Allow-Headers'])
+
+
 class TestSubResourceActionAuthEnforcement(unittest.TestCase):
     """
     /api/<resource>/<action> (e.g. /api/items/<path>/rename) is dispatched by
@@ -91,10 +130,20 @@ class TestSubResourceActionAuthEnforcement(unittest.TestCase):
         self.addCleanup(lambda: [p.stop() for p in self._patches])
 
     def test_sub_resource_action_rejects_missing_token(self):
-        result = self.resource.default('some.item.path', 'rename')
+        with self.assertRaises(cherrypy.HTTPError) as raised:
+            self.resource.default('some.item.path', 'rename')
 
+        self.assertEqual(401, raised.exception.status)
         self.assertFalse(hasattr(self.resource, 'called_with'), 'rename() must not run without a valid token')
-        self.assertEqual(json.loads(result)['result'], 'error')
+
+    def test_expired_token_is_rejected(self):
+        token = jwt.encode({'name': 'tester', 'exp': 1}, self.resource.jwt_secret, algorithm='HS256')
+        cherrypy.request.headers['Authorization'] = f'Bearer {token}'
+
+        with self.assertRaises(cherrypy.HTTPError) as raised:
+            self.resource.default('some.item.path', 'rename')
+
+        self.assertEqual(401, raised.exception.status)
 
     def test_sub_resource_action_allows_valid_token(self):
         token = jwt.encode({'name': 'tester'}, self.resource.jwt_secret, algorithm='HS256')

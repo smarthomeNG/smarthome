@@ -31,9 +31,9 @@ Definierte Methoden des Logikobjekts:
 | ``logic.last_run()`` | Diese Methode liefert den letzten Lauf dieser Logik (vor aktuellen Lauf).                              |
 +----------------------+--------------------------------------------------------------------------------------------------------+
 | ``logic.disable()``  | Konfigurierte Logiken sind standardmäßig aktiv und werden entsprechend der Konfiguration ausgeführt.   |
-|                      | Diese Methode deaktiviert die Logik, sodass deren Ausführung unterbunden wird. (Ab SmartHomeNG v1.3)   |
+|                      | Diese Methode deaktiviert die Logik, sodass deren Ausführung unterbunden wird.                         |
 +----------------------+--------------------------------------------------------------------------------------------------------+
-| ``logic.enable()``   | Eine bereits deaktivierte Logik kann mit dieser Methode wieder aktiviert werden. (Ab SmartHomeNG v1.3) |
+| ``logic.enable()``   | Eine bereits deaktivierte Logik kann mit dieser Methode wieder aktiviert werden.                       |
 +----------------------+--------------------------------------------------------------------------------------------------------+
 
 

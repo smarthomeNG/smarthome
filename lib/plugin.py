@@ -116,6 +116,9 @@ class Plugins:
 
     _plugindict = {}
 
+    #: honour ``class_name``/``class_path`` of a plugin.yaml section (set by tests to load fixture plugins)
+    _allow_class_override = False
+
     def __init__(self, smarthome, configfile: str):
         self._sh = smarthome
         self._configfile = configfile
@@ -137,6 +140,7 @@ class Plugins:
         smarthome._plugin_conf = self._plugin_conf_filename  # type: ignore
 
         self._plugins_count = {}
+        self._section_names: set[str] = set()
         self.threads_early = []
         self.threads_late = []
 
@@ -193,7 +197,7 @@ class Plugins:
         if plugin_name != '':
             meta = Metadata(self._sh, (plugin_name + plugin_version).replace('.', os.sep), 'plugin')
         else:
-            classpath = plg_conf.get(KEY_CLASS_PATH, '')
+            classpath = self._class_override(plg_conf)[1]
             if classpath != '':
                 plugin_name = classpath.split('.')[len(classpath.split('.')) - 1].lower()
                 if plugin_name.startswith('_pv'):
@@ -201,9 +205,7 @@ class Plugins:
                 logger.debug(f"Plugins __init__: pluginname = '{plugin_name}', classpath '{classpath}'")
                 meta = Metadata(self._sh, plugin_name, 'plugin', (classpath + plugin_version).replace('.', os.sep))
             else:
-                logger.error(
-                    f"Plugin configuration section '{plg_section}': Neither 'plugin_name' nor '{KEY_CLASS_PATH}' are defined."
-                )
+                logger.error(f"Plugin configuration section '{plg_section}': 'plugin_name' is not defined.")
                 meta = Metadata(self._sh, plugin_name, 'plugin', classpath)
         return (plugin_name + plugin_version, meta)
 
@@ -239,7 +241,7 @@ class Plugins:
         :return: classname, classpass
         :rtype: str, str
         """
-        classname = plg_conf.get(KEY_CLASS_NAME, '')
+        classname, override_path = self._class_override(plg_conf)
         plugin_version = ''
         if plugin_name == '':
             plugin_version = plg_conf.get('plugin_version', '').lower()
@@ -248,14 +250,12 @@ class Plugins:
 
         if classname == '':
             classname = self.meta.get_string('classname')
-        try:
-            classpath = plg_conf[KEY_CLASS_PATH]
-        except Exception:
-            if plugin_name == '':
-                classpath = ''
-            else:
-                classpath = DIR_PLUGINS + '.' + plugin_name
-        #        logger.warning("_get_classname_and_classpath: plugin_name = {}, classpath = {}, classname = {}".format(plugin_name, classpath, classname))
+        if override_path != '':
+            classpath = override_path
+        elif plugin_name == '':
+            classpath = ''
+        else:
+            classpath = DIR_PLUGINS + '.' + plugin_name
         return (classname, classpath + plugin_version)
 
     @classmethod
@@ -290,7 +290,7 @@ class Plugins:
         for thread in self._threads + self.threads_early + self.threads_late:
             plugin = thread.plugin
             section = conf.get(thread.name)
-            if not isinstance(plugin, SmartPlugin) or section is None or plugin.get_instance_name():
+            if section is None or plugin.get_instance_name():
                 continue
             name = self._section_plugin_name(section)
             new = self._plugins_count.get(name, 0)
@@ -314,20 +314,38 @@ class Plugins:
         conf = lib.config.parse_basename(self._configfile, configtype='plugin')
         old_count = self._plugins_count
         self._plugins_count = self._count_plugin_usage(conf)
+        self._section_names = set(conf)
         notices = self._unnamed_instance_notices(old_count, conf)
         for notice in notices:
             logger.warning(notice)
         return PluginConfigRefresh(conf, notices)
 
-    @staticmethod
-    def _section_plugin_name(plg_conf: dict) -> str:
+    def get_section_names(self) -> set[str]:
         """
-        Return the plugin name of a plugin.yaml section (falls back to ``class_name`` for legacy configurations)
+        Return the names of all sections of the plugin configuration, including disabled ones
+        """
+        return set(self._section_names)
+
+    @classmethod
+    def _class_override(cls, plg_conf: dict) -> tuple[str, str]:
+        """
+        Return ``(class_name, class_path)`` of a plugin.yaml section; both are empty unless overriding is allowed
 
         :param plg_conf: loaded section of the plugin.yaml
-        :return: plugin name, or 'unknown' if the section defines neither ``plugin_name`` nor ``class_name``
         """
-        return plg_conf.get('plugin_name', plg_conf.get('class_name', 'unknown'))
+        if not cls._allow_class_override:
+            return '', ''
+        return plg_conf.get(KEY_CLASS_NAME, ''), plg_conf.get(KEY_CLASS_PATH, '')
+
+    @classmethod
+    def _section_plugin_name(cls, plg_conf: dict) -> str:
+        """
+        Return the plugin name of a plugin.yaml section
+
+        :param plg_conf: loaded section of the plugin.yaml
+        :return: plugin name, or 'unknown' if the section does not define ``plugin_name``
+        """
+        return plg_conf.get('plugin_name') or cls._class_override(plg_conf)[0] or 'unknown'
 
     @staticmethod
     def _is_section_enabled(plg_conf: dict) -> bool:
@@ -393,24 +411,19 @@ class Plugins:
         :return: True, if plugin is already loaded
         :rtype: bool
         """
-        # give a warning if either a classic plugin uses the same class twice
-        # or if a SmartPlugin uses the same class and instance twice (due to a copy & paste error)
+        # give a warning if a plugin uses the same class and instance twice (due to a copy & paste error)
         duplicate = False
         for p in self._plugins:
-            if isinstance(p, SmartPlugin):
-                if p.get_instance_name() == instance:
-                    for t in self._threads:
-                        if t.plugin == p:
-                            if t.plugin.__class__.__name__ == classname:
-                                duplicate = True
-                                prev_plugin = t._name
-                                logger.warning(
-                                    f"Plugin section '{plugin}' uses same class '{p.__class__.__name__}' and instance '{'default' if instance == '' else instance}' as plugin section '{prev_plugin}'"
-                                )
-                                break
-
-            elif p.__class__.__name__ == classname:
-                logger.warning(f'Multiple classic plugin instances of class "{classname}" detected')
+            if p.get_instance_name() == instance:
+                for t in self._threads:
+                    if t.plugin == p:
+                        if t.plugin.__class__.__name__ == classname:
+                            duplicate = True
+                            prev_plugin = t._name
+                            logger.warning(
+                                f"Plugin section '{plugin}' uses same class '{p.__class__.__name__}' and instance '{'default' if instance == '' else instance}' as plugin section '{prev_plugin}'"
+                            )
+                            break
         return duplicate
 
     def __iter__(self):
@@ -543,6 +556,10 @@ class Plugins:
         return True if plugin was loaded successfully, False if not (even if disabled)
         """
         logger.debug(f'Attempting to load plugin "{conf.get("plugin_name", "(unknown)")}" from section {configname}')
+        if not self._allow_class_override and (KEY_CLASS_NAME in conf or KEY_CLASS_PATH in conf):
+            logger.warning(
+                f"Plugin section '{configname}': '{KEY_CLASS_NAME}' and '{KEY_CLASS_PATH}' are not supported any more and are ignored, use 'plugin_name'"
+            )
         plugin_name, self.meta = self._get_pluginname_and_metadata(configname, conf)
         self._sh.shng_status['details'] = plugin_name  # Namen des Plugins übertragen
 
@@ -583,9 +600,9 @@ class Plugins:
             if (classname == '') and (classpath == ''):
                 logger.error(f'Plugins, section {configname}: plugin_name is not defined')
             elif classname == '':
-                logger.error(f'Plugins, section {configname}: class_name is not defined')
+                logger.error(f'Plugins, section {configname}: classname is not defined in the metadata')
             elif classpath == '':
-                logger.error(f'Plugins, section {configname}: class_path is not defined')
+                logger.error(f'Plugins, section {configname}: plugin_name is not defined')
             else:
                 args = self._get_conf_args(conf)
                 instance = self._get_instancename(configname, conf).lower()
@@ -748,7 +765,7 @@ class Plugins:
             del myplugin
 
             try:
-                logger.warning(f'myplugin refcnt nach del    = {PyObject.from_address(myplugin_address).refcnt}')
+                logger.debug(f'myplugin refcnt nach del    = {PyObject.from_address(myplugin_address).refcnt}')
             except Exception:
                 pass
 
@@ -926,11 +943,32 @@ class Plugins:
         return order
 
     @staticmethod
+    def _runtime_nodes(tree: ast.AST):
+        """
+        Yields the nodes of `tree` like ast.walk(), without the bodies of
+        `if TYPE_CHECKING:` / `if typing.TYPE_CHECKING:` blocks (their else
+        branches run and are kept).
+        """
+        pending = [tree]
+        while pending:
+            node = pending.pop()
+            yield node
+            if isinstance(node, ast.If):
+                test = node.test
+                name = test.id if isinstance(test, ast.Name) else test.attr if isinstance(test, ast.Attribute) else None
+                if name == 'TYPE_CHECKING':
+                    pending.extend(node.orelse)
+                    continue
+            pending.extend(ast.iter_child_nodes(node))
+
+    @staticmethod
     def _module_local_dependencies(name: str, candidates: set) -> set:
         """
         Statically parses module `name`'s own import statements and returns
         which members of `candidates` it imports from (directly or as a
         submodule) - i.e. which of them must be reloaded before it.
+
+        Imports below `if TYPE_CHECKING:` never run and are no dependencies.
         """
         module = sys.modules.get(name)
         if module is None:
@@ -942,7 +980,7 @@ class Plugins:
 
         package = module.__package__ or ''
         dependencies = set()
-        for node in ast.walk(tree):
+        for node in Plugins._runtime_nodes(tree):
             targets = []
             if isinstance(node, ast.ImportFrom):
                 if node.level > 0:
@@ -967,27 +1005,20 @@ class Plugins:
     def start(self):
         logger.info('Start plugins')
         for plugin in self._threads:
-            try:
-                instance = plugin.get_implementation().get_instance_name()
-                if instance != '':
-                    instance = ", instance '" + instance + "'"
-                logger.debug(f"Starting plugin '{plugin.get_implementation().get_shortname()}'{instance}")
-            except Exception:
-                logger.debug(f"Starting classic-plugin from section '{plugin.name}'")
+            instance = plugin.get_implementation().get_instance_name()
+            if instance != '':
+                instance = ", instance '" + instance + "'"
+            logger.debug(f"Starting plugin '{plugin.get_implementation().get_shortname()}'{instance}")
             plugin.start()
         logger.info('Start of plugins finished')
 
     def stop(self):
         logger.info('Stop plugins')
         for plugin in list(reversed(self._threads)):
-            instance = ''
-            try:
-                instance = plugin.get_implementation().get_instance_name()
-                if instance != '':
-                    instance = ", instance '" + instance + "'"
-                logger.debug(f"Stopping plugin '{plugin.get_implementation().get_shortname()}'{instance}")
-            except Exception:
-                logger.debug(f"Stopping classic-plugin from section '{plugin.name}'")
+            instance = plugin.get_implementation().get_instance_name()
+            if instance != '':
+                instance = ", instance '" + instance + "'"
+            logger.debug(f"Stopping plugin '{plugin.get_implementation().get_shortname()}'{instance}")
             try:
                 plugin.stop()
             except Exception as e:
@@ -1031,6 +1062,21 @@ class Plugins:
                 return thread
 
 
+def _log_removal_state(meta: Metadata, plg_section: str, plugin_name: str) -> None:
+    """Log a warning if the metadata marks the plugin as deprecated or defunct (both are removed with the release after this one)."""
+    state = meta.get_string('state')
+    if state == 'deprecated':
+        logger.warning(
+            f"Plugin '{plugin_name}' (section '{plg_section}') is deprecated and will be removed with the next "
+            'release. Consider to use a replacement instead'
+        )
+    elif state == 'defunct':
+        logger.warning(
+            f"Plugin '{plugin_name}' (section '{plg_section}') is defunct: it does not work anymore and will be "
+            'removed with the next release. Remove it from the plugin configuration'
+        )
+
+
 class PluginWrapper(threading.Thread):
     """
     Wrapper class for loading plugins
@@ -1071,7 +1117,7 @@ class PluginWrapper(threading.Thread):
         self._sh = smarthome
         self._init_complete = False
         self.meta = meta
-        # Load an instance of the plugin
+        _log_removal_state(meta, plg_section, classpath.split('.')[1])
 
         module = None
 
@@ -1097,6 +1143,13 @@ class PluginWrapper(threading.Thread):
             )
             return
 
+        if not (isinstance(cls, type) and issubclass(cls, SmartPlugin)):
+            logger.error(
+                f"Plugin '{plg_section}': class '{classname}' is not derived from SmartPlugin (classic plugins are not supported)"
+            )
+            logger.error(f"Plugin '{plg_section}' initialization failed, plugin not loaded")
+            return
+
         try:
             # exec("self.plugin = {0}.{1}.__new__({0}.{1})".format(classpath, classname))
             self.plugin = cls.__new__(cls)
@@ -1110,48 +1163,30 @@ class PluginWrapper(threading.Thread):
             'plugin', classpath.replace('.', '/'), 'plugin/' + classpath.split('.')[1]
         )
 
-        if self.meta.get_string('state') == 'deprecated':
-            logger.warning(
-                f"Plugin '{classpath.split('.')[1]}' (section '{plg_section}') is deprecated. Consider to use a replacement instead"
-            )
-
         # initialize attributes of the newly created plugin object instance
-        if isinstance(self.get_implementation(), SmartPlugin):
-            # SmartPlugin
-            self.get_implementation()._configfilename = configfile
-            self.get_implementation()._set_configname(plg_section)
-            self.get_implementation()._set_shortname(str(classpath).split('.')[1])
-            self.get_implementation()._classpath = classpath
-            self.get_implementation()._set_classname(classname)
-            if self.get_implementation().ALLOW_MULTIINSTANCE is None:
-                self.get_implementation().ALLOW_MULTIINSTANCE = self.meta.get_bool('multi_instance')
-            if instance != '':
-                logger.debug(f'set plugin {plg_section} instance to {instance}')
-                self.get_implementation()._set_instance_name(instance)
+        self.get_implementation()._configfilename = configfile
+        self.get_implementation()._set_configname(plg_section)
+        self.get_implementation()._set_shortname(str(classpath).split('.')[1])
+        self.get_implementation()._classpath = classpath
+        self.get_implementation()._set_classname(classname)
+        if self.get_implementation().ALLOW_MULTIINSTANCE is None:
+            self.get_implementation().ALLOW_MULTIINSTANCE = self.meta.get_bool('multi_instance')
+        if instance != '':
+            logger.debug(f'set plugin {plg_section} instance to {instance}')
+            self.get_implementation()._set_instance_name(instance)
 
-            # Customized logger instance for plugin to append name of plugin instance to log text
-            global _SH
-            _SH = self._sh
-            self.get_implementation().logger = PluginLoggingAdapter(
-                logging.getLogger(classpath), {'plugininstance': self.get_implementation().get_loginstance()}
-            )
-            self.get_implementation()._set_sh(smarthome)
-            self.get_implementation()._set_plugin_dir(
-                os.path.join(
-                    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), classpath.replace('.', os.sep)
-                )
-            )
-            self.get_implementation()._plgtype = self.meta.get_string('type')
-            self.get_implementation().metadata = self.meta
-        else:
-            # classic plugin
-            self.get_implementation()._configfilename = configfile
-            self.get_implementation()._configname = plg_section
-            self.get_implementation()._shortname = str(classpath).split('.')[1]
-            self.get_implementation()._classpath = classpath
-            self.get_implementation()._classname = classname
-            self.get_implementation()._plgtype = ''
-
+        # Customized logger instance for plugin to append name of plugin instance to log text
+        global _SH
+        _SH = self._sh
+        self.get_implementation().logger = PluginLoggingAdapter(
+            logging.getLogger(classpath), {'plugininstance': self.get_implementation().get_loginstance()}
+        )
+        self.get_implementation()._set_sh(smarthome)
+        self.get_implementation()._set_plugin_dir(
+            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), classpath.replace('.', os.sep))
+        )
+        self.get_implementation()._plgtype = self.meta.get_string('type')
+        self.get_implementation().metadata = self.meta
         self.get_implementation()._itemlist = []
 
         # get arguments defined in __init__ of plugin's class to self.args
@@ -1186,9 +1221,7 @@ class PluginWrapper(threading.Thread):
             # just warn for now while the 3rd-party plugin fleet gets audited;
             # TODO/FIXME: once that audit is done, uncomment the line below to
             # actually refuse to run plugins that fail this check.
-            if isinstance(self.get_implementation(), SmartPlugin) and not getattr(
-                self.get_implementation(), '_smartplugin_super_init_done', False
-            ):
+            if not getattr(self.get_implementation(), '_smartplugin_super_init_done', False):
                 logger.warning(
                     f"Plugin '{classpath.split('.')[1]}' (section '{plg_section}') does not call "
                     f'super().__init__() from its own __init__() method - it is running on shared '
@@ -1196,13 +1229,6 @@ class PluginWrapper(threading.Thread):
                     f'data between plugin instances. Please fix the plugin.'
                 )
                 # self.get_implementation()._init_complete = False
-
-            # set level to make logger appear in internal list of loggers (if not configured by logging.yaml)
-            try:  # skip classic plugins
-                if self.get_implementation().logger.level == 0:
-                    self.get_implementation().logger.setLevel('WARNING')
-            except Exception:
-                pass
 
         # set the initialization complete status for the wrapper instance
         self._init_complete = self.get_implementation()._init_complete
@@ -1233,28 +1259,23 @@ class PluginWrapper(threading.Thread):
                 code_version = self.get_implementation().PLUGIN_VERSION
             except Exception:
                 code_version = None  # if plugin code without version
-            if isinstance(self.get_implementation(), SmartPlugin):
-                if self.meta.test_version(code_version):
-                    # set version in plugin instance (if not defined in code)
-                    if code_version is None:
-                        self.get_implementation().PLUGIN_VERSION = self.meta.get_version()
-                    # set multiinstance in plugin instance (if not defined in code)
-                    try:
-                        self.get_implementation().ALLOW_MULTIINSTANCE
-                    except Exception:
-                        # logger.warning(f'self.meta.get_bool('multi_instance') = {self.meta.get_bool('multi_instance')}')
-                        self.get_implementation().ALLOW_MULTIINSTANCE = self.meta.get_bool('multi_instance')
-                        # logger.warning(f'get_implementation().ALLOW_MULTIINSTANCE = {self.get_implementation().ALLOW_MULTIINSTANCE}')
-                    if not self.get_implementation()._set_multi_instance_capable(self.meta.get_bool('multi_instance')):
-                        logger.error(
-                            f"Plugins: Loaded plugin '{plg_section}' ALLOW_MULTIINSTANCE differs between metadata ({self.meta.get_bool('multi_instance')}) and Python code ({self.get_implementation().ALLOW_MULTIINSTANCE})"
-                        )
-                    logger.debug(
-                        f"Plugins: Loaded plugin '{plg_section}' (class '{str(self.get_implementation().__class__.__name__)}') v{self.meta.get_version()}: {self.meta.get_mlstring('description')}"
+            if self.meta.test_version(code_version):
+                # set version in plugin instance (if not defined in code)
+                if code_version is None:
+                    self.get_implementation().PLUGIN_VERSION = self.meta.get_version()
+                # set multiinstance in plugin instance (if not defined in code)
+                try:
+                    self.get_implementation().ALLOW_MULTIINSTANCE
+                except Exception:
+                    # logger.warning(f'self.meta.get_bool('multi_instance') = {self.meta.get_bool('multi_instance')}')
+                    self.get_implementation().ALLOW_MULTIINSTANCE = self.meta.get_bool('multi_instance')
+                    # logger.warning(f'get_implementation().ALLOW_MULTIINSTANCE = {self.get_implementation().ALLOW_MULTIINSTANCE}')
+                if not self.get_implementation()._set_multi_instance_capable(self.meta.get_bool('multi_instance')):
+                    logger.error(
+                        f"Plugins: Loaded plugin '{plg_section}' ALLOW_MULTIINSTANCE differs between metadata ({self.meta.get_bool('multi_instance')}) and Python code ({self.get_implementation().ALLOW_MULTIINSTANCE})"
                     )
-            else:
                 logger.debug(
-                    f"Plugins: Loaded classic-plugin '{plg_section}' (class '{str(self.get_implementation().__class__.__name__)}')"
+                    f"Plugins: Loaded plugin '{plg_section}' (class '{str(self.get_implementation().__class__.__name__)}') v{self.meta.get_version()}: {self.meta.get_mlstring('description')}"
                 )
             if instance != '':
                 logger.debug(f'set plugin {plg_section} instance to {instance}')
@@ -1330,24 +1351,34 @@ class PluginLoggingAdapter(logging.LoggerAdapter):
         return
 
     def notice(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.NOTICE_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level NOTICE."""
+        self._log_custom_level(_SH.logs.NOTICE_level, msg, args, kwargs)
 
     def develop(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.DEVELOP_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level DEVELOP."""
+        self._log_custom_level(_SH.logs.DEVELOP_level, msg, args, kwargs)
 
     def dbghigh(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.DBGHIGH_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level DBGHIGH."""
+        self._log_custom_level(_SH.logs.DBGHIGH_level, msg, args, kwargs)
 
     def dbgmed(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.DBGMED_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level DBGMED."""
+        self._log_custom_level(_SH.logs.DBGMED_level, msg, args, kwargs)
 
     def dbglow(self, msg, *args, **kwargs):
-        self.logger.log(_SH.logs.DBGLOW_level, f'{self.extra["plugininstance"]}{msg}', *args, **kwargs)
-        return
+        """Log ``msg`` at level DBGLOW."""
+        self._log_custom_level(_SH.logs.DBGLOW_level, msg, args, kwargs)
+
+    def _log_custom_level(self, level: int, msg, args: tuple, kwargs: dict) -> None:
+        """
+        Log through ``LoggerAdapter.log()`` like the standard levels, so ``process()`` adds prefix and extra.
+
+        The record names the caller of the level method: ``stacklevel`` skips this helper and
+        that method (logging's own frames are never counted).
+        """
+        kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + 2
+        self.log(level, msg, *args, **kwargs)
 
     def process(self, msg, kwargs):
         kwargs['extra'] = self.extra

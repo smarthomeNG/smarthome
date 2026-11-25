@@ -62,6 +62,8 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None, source
     * ``math``    — Python ``math`` module
     * ``uf``      — loaded user-functions (``lib.userfunctions``)
     * ``env``     — ``lib.env`` (environment/platform info)
+    * ``Utils``   — ``lib.utils.Utils`` (conversion and calculation helpers)
+    * ``Network`` — ``lib.network.Network`` (network helpers, e.g. ``Network.ping(host)``)
     * ``value``   — the trigger value passed to the current eval call
     * ``datetime`` — Python ``datetime`` module (documented in examples)
     * ``time``    — Python ``time`` module (documented in item.py comment)
@@ -90,6 +92,8 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None, source
     import datetime
     import lib.userfunctions as uf
     from lib.item.items import Items
+    from lib.network import Network
+    from lib.utils import Utils
 
     return {
         # ── documented public API ──────────────────────────────────────────
@@ -99,6 +103,8 @@ def _make_eval_env(item, value=None, caller=None, source=None, dest=None, source
         'math': math,
         'uf': uf,
         'env': lib.env,
+        'Utils': Utils,
+        'Network': Network,
         # ── trigger call parameters ───────────────────────────────────────
         'value': value,
         'caller': caller,
@@ -127,6 +133,9 @@ def run_eval(item, value=None, caller='Eval', source=None, dest=None, source_det
     Called from Item.__run_eval() which is passed to the scheduler as a
     callable.  All scheduler bookkeeping stays in the Item method; this
     function contains only the evaluation logic.
+
+    ``source_details`` is set only by eval_trigger runs, so it also tells them apart from a
+    write to the item itself: see ``triggered`` of ``Item._update_item()``.
     """
     if caller.lower().startswith('admin:'):
         caller = caller[6:] + ':admin'
@@ -170,7 +179,7 @@ def run_eval(item, value=None, caller='Eval', source=None, dest=None, source_det
                 )  # COMPAT-SHIM
                 if cond is _EVAL_FAILED:  # COMPAT-SHIM
                     raise _ce  # COMPAT-SHIM
-            logger.warning(
+            logger.debug(
                 f"Item '{item._path}': Condition result '{cond}' evaluating trigger condition {item._trigger_condition}"
             )
         except Exception as e:
@@ -247,7 +256,7 @@ def run_eval(item, value=None, caller='Eval', source=None, dest=None, source_det
         if value is None:
             logger.debug(f'Item {item._path}: evaluating {item._eval} returns None')
         else:
-            item._update_item(value, caller, source, dest)
+            item._update_item(value, caller, source, dest, triggered=source_details is not None)
 
 
 # ---------------------------------------------------------------------------

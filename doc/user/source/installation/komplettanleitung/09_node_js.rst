@@ -3,10 +3,11 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
-=========================
-Node.js :bluesup:`Update`
-=========================
+==========================
+Node.js :greensup:`Update`
+==========================
 
 Einige Software Pakete, die zusätzlich installiert werden um z.B. das Zigbee2Mqtt Gateway, das MobileAlerts
 Gateway oder das ``matter`` Plugin zu unterstützen, benötigen node.js. Deshalb wird für diejenigen, die es

@@ -13,6 +13,8 @@ Logs.configure_debug_logging():
 
 SmartHome.init_logging():
   - MODE 'debug' ignores a broken logging.yaml
+  - a logging.yaml that dictConfig rejects falls back to templates/logging.yaml.default
+  - SmartHomeNG stops if the template is rejected, too
 """
 
 import logging
@@ -142,14 +144,30 @@ class TestInitLoggingDebugMode(_LoggingStateGuard):
         vardir.set_var_dir(os.path.join(self._tmp.name, 'var'))
         self.addCleanup(vardir.set_var_dir, None)
 
-    def init_logging(self, mode):
+    def init_logging(self, mode, conf_file=None, templates_dir=None):
         import lib.smarthome
 
         logs = self.make_logs()
-        logs._sh.get_config_file.return_value = self.broken_yaml
+        logs._sh.get_config_file.return_value = conf_file or self.broken_yaml
         logs._sh.get_config_dir.return_value = self._tmp.name
-        stub = SimpleNamespace(logs=logs, _log_conf_basename='logging')
+        stub = SimpleNamespace(logs=logs, _log_conf_basename='logging', _templates_dir=templates_dir)
         return lib.smarthome.SmartHome.init_logging(stub, 'logging', mode), logs
+
+    def write_file(self, path, content):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        return path
+
+    def make_rejected_and_template(self, template_content):
+        # valid yaml, but dictConfig() fails because of the unknown handler class
+        rejected = self.write_file(
+            os.path.join(self._tmp.name, 'etc', 'logging.yaml'),
+            'version: 1\nhandlers:\n  bad:\n    class: no.such.Handler\nloggers: {}\nroot:\n  handlers: [bad]\n',
+        )
+        templates_dir = os.path.join(self._tmp.name, 'templates')
+        self.write_file(os.path.join(templates_dir, 'logging.yaml.default'), template_content)
+        return rejected, templates_dir
 
     def test_debug_mode_ignores_broken_logging_yaml(self):
         result, logs = self.init_logging('debug')
@@ -158,6 +176,35 @@ class TestInitLoggingDebugMode(_LoggingStateGuard):
         self.assertIs(result, True)
         self.assertFalse(logs.uses_logging_yaml)
         self.assertIn('broken-yaml-marker', self.read_logfile())
+
+    def test_rejected_logging_yaml_falls_back_to_template(self):
+        os.makedirs(os.path.dirname(self.logfile), exist_ok=True)
+        template = (
+            'version: 1\n'
+            'disable_existing_loggers: false\n'
+            'handlers:\n'
+            '  tmplfile:\n'
+            '    class: logging.FileHandler\n'
+            f'    filename: {self.logfile}\n'
+            'loggers: {}\n'
+            'root:\n'
+            '  level: INFO\n'
+            '  handlers: [tmplfile]\n'
+        )
+        rejected, templates_dir = self.make_rejected_and_template(template)
+
+        self.init_logging('default', conf_file=rejected, templates_dir=templates_dir)
+
+        logging.getLogger('').warning('template-marker')
+        self.assertIn('template-marker', self.read_logfile())
+
+    def test_rejected_template_stops_smarthomeng(self):
+        rejected, templates_dir = self.make_rejected_and_template(
+            'version: 1\nhandlers:\n  bad:\n    class: no.such.Handler\nloggers: {}\nroot:\n  handlers: [bad]\n'
+        )
+
+        with self.assertRaises(SystemExit):
+            self.init_logging('default', conf_file=rejected, templates_dir=templates_dir)
 
 
 if __name__ == '__main__':

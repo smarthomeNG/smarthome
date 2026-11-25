@@ -3,7 +3,7 @@
 .. index:: Datenbank Migrations Tool
 .. index:: Tools; Datenbank Migrations Tool
 
-db_migrate.py :redsup:`Neu`
+db_migrate.py :redsup:`neu`
 ===========================
 
 Dieses Skript migriert das Schema des database Plugins (Tabellen ``item``/``log``) zwischen

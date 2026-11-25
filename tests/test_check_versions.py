@@ -62,6 +62,49 @@ class TestBumpArithmetic(unittest.TestCase):
         self.assertEqual('major', self.tool.required_bump([C(L.MAJOR, 'k', 'removed')], '1.0.0'))
 
 
+class TestMisreadVersionBounds(unittest.TestCase):
+    def setUp(self):
+        self.tool = load_tool()
+
+    def misread(self, plugin_section):
+        found = self.tool.misread_version_bounds('plugin:\n' + textwrap.indent(plugin_section, '    '))
+        return [(b.key, b.written, b.read_as) for b in found]
+
+    def test_unquoted_bound_with_trailing_zero_is_misread(self):
+        self.assertEqual([('py_minversion', '3.10', '3.1')], self.misread('py_minversion: 3.10\n'))
+        self.assertEqual([('sh_maxversion', '1.10', '1.1')], self.misread('sh_maxversion: 1.10  # comment\n'))
+
+    def test_every_bound_key_is_checked(self):
+        keys = [f'{p}_{m}version' for p in ('sh', 'py', 'sdp') for m in ('min', 'max')]
+        found = self.misread(''.join(f'{key}: 1.20\n' for key in keys))
+        self.assertEqual(keys, [key for key, _, _ in found])
+
+    def test_unquoted_bound_read_as_written_is_fine(self):
+        self.assertEqual([], self.misread('py_minversion: 3.11\nsh_minversion: 1.8\npy_maxversion: 3.9\n'))
+        self.assertEqual([], self.misread('sdp_minversion: 2.0\nsh_maxversion: 2\n'))
+
+    def test_quoted_absent_empty_and_dotted_bounds_are_fine(self):
+        self.assertEqual([], self.misread('py_minversion: \'3.10\'\nsh_minversion: "1.10"\n'))
+        self.assertEqual([], self.misread("version: '1.0.0'\n"))
+        self.assertEqual([], self.misread('py_maxversion:\nsh_minversion: 1.10.0\n'))
+
+    def test_only_the_plugin_section_is_checked(self):
+        self.assertEqual([], self.tool.misread_version_bounds("plugin:\n    version: '1.0.0'\npy_minversion: 3.10\n"))
+
+    def test_yaml_1_1_rules_apply_as_for_the_readers(self):
+        text = '%YAML 1.1\n---\nplugin:\n    sh_minversion: 1_10\n    py_minversion: 3.10\n'
+        found = [(b.key, b.written, b.read_as) for b in self.tool.misread_version_bounds(text)]
+        self.assertEqual([('sh_minversion', '1_10', '110'), ('py_minversion', '3.10', '3.1')], found)
+
+    def test_duplicate_keys_elsewhere_do_not_stop_the_check(self):
+        text = 'plugin:\n    py_minversion: 3.10\nparameters:\n    a: 1\n    a: 2\n'
+        self.assertEqual(['py_minversion'], [b.key for b in self.tool.misread_version_bounds(text)])
+
+    def test_unparsable_yaml_reports_nothing(self):
+        self.assertEqual([], self.tool.misread_version_bounds('plugin: [\n'))
+        self.assertEqual([], self.tool.misread_version_bounds(''))
+
+
 class GitRepoTestCase(unittest.TestCase):
     """Creates a git repository in a temp dir and commits file sets to it."""
 
@@ -226,6 +269,16 @@ class TestPluginChecks(GitRepoTestCase):
         findings = self.check(base)
         self.assertEqual([], self.errors(findings))
         self.assertEqual(['warning'], [f.severity for f in findings])
+
+    def test_misread_version_bound_is_a_warning(self):
+        base = self.commit({'README': 'x\n'})
+        self.commit(self.plugin('1.0.0', '    py_minversion: 3.10\n'))
+        findings = self.check(base)
+        self.assertEqual([], self.errors(findings))
+        self.assertEqual(
+            [('warning', "py_minversion 3.10 is read as 3.1, quote it: py_minversion: '3.10'")],
+            [(f.severity, f.message) for f in findings],
+        )
 
     def test_skipped_plugin_only_warns(self):
         base = self.commit(self.plugin('1.0.0', 'parameters:\n    host: {type: str}\n'))

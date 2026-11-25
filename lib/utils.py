@@ -29,9 +29,14 @@ New helper-functions are going to be implemented in this library.
 
 import logging
 
+import math
 import sys
 import re
+import base64
+import functools
 import hashlib
+import hmac
+import secrets
 import ipaddress
 import socket
 import subprocess
@@ -39,6 +44,52 @@ import subprocess
 logger = logging.getLogger(__name__)
 
 TIMEFRAME_REGEX = re.compile(r'^(\d+)([ihdwmy]?)$', re.VERBOSE | re.IGNORECASE)
+
+
+PASSWORD_HASH_ALGORITHM = 'pbkdf2_sha256'
+#: salted hash of a legacy sha512 hash (Utils.wrap_legacy_password_hash()): the sha512 hex digest is the PBKDF2 input
+WRAPPED_HASH_ALGORITHM = 'pbkdf2_sha256_sha512'
+PASSWORD_HASH_ITERATIONS = 600_000
+
+
+def _b64encode(data: bytes) -> str:
+    """Return ``data`` as base64 text without padding."""
+    return base64.b64encode(data).decode('ascii').rstrip('=')
+
+
+def _b64decode(text: str) -> bytes:
+    """Decode base64 text written by _b64encode()."""
+    return base64.b64decode(text + '=' * (-len(text) % 4), validate=True)
+
+
+def _parse_salted_hash(value: str) -> tuple[str, int, bytes, bytes] | None:
+    """
+    Return (algorithm, iterations, salt, digest) of a hash created by Utils.hash_password() or
+    Utils.wrap_legacy_password_hash(), None for anything else.
+    """
+    if not isinstance(value, str):
+        return None
+    parts = value.split('$')
+    if len(parts) != 4 or parts[0] not in (PASSWORD_HASH_ALGORITHM, WRAPPED_HASH_ALGORITHM) or not parts[1].isdigit():
+        return None
+    try:
+        return parts[0], int(parts[1]), _b64decode(parts[2]), _b64decode(parts[3])
+    except ValueError:
+        return None
+
+
+def _salted_hash(algorithm: str, secret: str) -> str:
+    """Return the salted hash of ``secret`` in the format ``<algorithm>$<iterations>$<salt>$<digest>``."""
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac('sha256', secret.encode(), salt, PASSWORD_HASH_ITERATIONS)
+    return '$'.join((algorithm, str(PASSWORD_HASH_ITERATIONS), _b64encode(salt), _b64encode(digest)))
+
+
+@functools.lru_cache(maxsize=64)
+def _pbkdf2_matches(password: str, iterations: int, salt: bytes, digest: bytes) -> bool:
+    """Return True if ``password`` derives to ``digest``."""
+    derived = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, iterations, dklen=len(digest))
+    return hmac.compare_digest(derived, digest)
 
 
 class Utils(object):
@@ -409,20 +460,74 @@ class Utils(object):
         return ''.join(format(b, '02x') for b in hashfunc.digest())
 
     @staticmethod
+    def hash_password(plaintext: str) -> str:
+        """
+        Create a salted hash of a password for the configuration (e.g. ``hashed_password`` of the http module)
+
+        The format is ``pbkdf2_sha256$<iterations>$<salt>$<digest>`` (salt and digest base64 encoded),
+        so the work factor can be raised later without invalidating existing hashes.
+
+        :param plaintext: password, must not be empty
+
+        :return: salted password hash
+        """
+        if not plaintext:
+            raise ValueError('an empty password cannot be hashed')
+        return _salted_hash(PASSWORD_HASH_ALGORITHM, plaintext)
+
+    @staticmethod
+    def generate_token(nbytes: int = 32) -> str:
+        """
+        Create a random secret, e.g. a bearer token or a password that is stored in plain text in the configuration
+
+        :param nbytes: number of random bytes, at least 16 (default 32 = 256 bit)
+
+        :return: URL-safe base64 text (characters ``A-Z a-z 0-9 - _``, no padding)
+        """
+        if nbytes < 16:
+            raise ValueError('a token needs at least 16 random bytes')
+        return secrets.token_urlsafe(nbytes)
+
+    @staticmethod
+    def wrap_legacy_password_hash(legacy_hash: str) -> str:
+        """
+        Turn an unsalted sha512 password hash into a salted one without knowing the password
+
+        The result has the format ``pbkdf2_sha256_sha512$<iterations>$<salt>$<digest>``: the PBKDF2 input is the
+        legacy hash, so check_hashed_password() derives it from the sha512 hash of the password to check.
+
+        :param legacy_hash: sha512 hash as created by create_hash() (128 hex characters, any case)
+
+        :return: salted password hash
+        """
+        if not Utils.is_legacy_password_hash(legacy_hash):
+            raise ValueError('not an unsalted sha512 password hash')
+        return _salted_hash(WRAPPED_HASH_ALGORITHM, legacy_hash.lower())
+
+    @staticmethod
     def is_hash(value: str) -> bool:
         """
-        Check if value is a valid hash (currently sha512) value
+        Check if value is a password hash: a salted hash (hash_password(), wrap_legacy_password_hash()) or a
+        legacy sha512 hash
 
         :param value: value to check
 
-        :return: True: given value can be a sha512 hash, False: given value can not be a sha512 hash
+        :return: True: given value is a password hash, False: given value is no password hash
         """
+        return _parse_salted_hash(value) is not None or Utils.is_legacy_password_hash(value)
 
-        # a valid sha512 hash is a 128 charcter long string value
-        if value is None or not isinstance(value, str) or len(value) != 128:
+    @staticmethod
+    def is_legacy_password_hash(value: str) -> bool:
+        """
+        Check if value is an unsalted sha512 hash (128 hex characters), the password hash format before v2.0
+
+        Such hashes are still accepted, but should be replaced by one created with hash_password() or
+        wrap_legacy_password_hash().
+
+        :param value: value to check
+        """
+        if not isinstance(value, str) or len(value) != 128:
             return False
-
-        # and its a hexedecimal value
         try:
             int(value, 16)
             return True
@@ -435,6 +540,9 @@ class Utils(object):
         Check if given plaintext password matches the hashed password
         An empty password is always rejected
 
+        Salted hashes (hash_password(), wrap_legacy_password_hash()) and legacy sha512 hashes are accepted. Results for salted hashes
+        are cached, since the key derivation is deliberately slow and http basic auth checks every request.
+
         :param pwd_to_check: plaintext password to check
         :param hashed_pwd: hashed password
 
@@ -445,9 +553,14 @@ class Utils(object):
             # No password given -> return "not matching"
             return False
 
-        # todo: check pwd_to_check for minimum length? <- msinn: not here, password policy at a central point
-
-        return Utils.create_hash(pwd_to_check) == hashed_pwd.lower()
+        parsed = _parse_salted_hash(hashed_pwd)
+        if parsed is not None:
+            algorithm, iterations, salt, digest = parsed
+            secret = Utils.create_hash(pwd_to_check) if algorithm == WRAPPED_HASH_ALGORITHM else pwd_to_check
+            return _pbkdf2_matches(secret, iterations, salt, digest)
+        if Utils.is_legacy_password_hash(hashed_pwd):
+            return hmac.compare_digest(Utils.create_hash(pwd_to_check), hashed_pwd.lower())
+        return False
 
     @staticmethod
     def strip_quotes(string: str) -> str:
@@ -569,25 +682,60 @@ class Utils(object):
         return str(type(var))[8:-2]
 
     @staticmethod
+    def dewpoint(t: float, rf: float) -> float:
+        """
+        Return the dew point (Magnus formula)
+
+        :param t: temperature in degrees Celsius
+        :param rf: relative humidity in percent (0 < rf <= 100)
+
+        :return: dew point in degrees Celsius, rounded to two decimals
+        """
+        log = math.log((rf + 0.01) / 100)  # + 0.01 to 'cast' float
+        return round((241.2 * log + 4222.03716 * t / (241.2 + t)) / (17.5043 - log - 17.5043 * t / (241.2 + t)), 2)
+
+    @staticmethod
+    def rel2abs(t: float, rf: float) -> float:
+        """
+        Return the absolute humidity from the relative humidity and the temperature
+
+        :param t: temperature in degrees Celsius
+        :param rf: relative humidity in percent, or as a fraction (values up to 1)
+
+        :return: absolute humidity in g/m3
+        """
+        t += 273.15
+        if rf > 1:
+            rf /= 100
+        sat = 611.0 * math.exp(-2.5e6 * 18.0160 / 8.31432e3 * (1.0 / t - 1.0 / 273.16))
+        mix = 18.0160 / 28.9660 * rf * sat / (100000 - rf * sat)
+        rhov = 100000 / (287.0 * (1 - mix) + 462.0 * mix) / t
+        return mix * rhov * 1000
+
+    @staticmethod
+    def abs2rel(t: float, ah: float) -> float:
+        """
+        Return the relative humidity from the absolute humidity and the temperature
+
+        :param t: temperature in degrees Celsius
+        :param ah: absolute humidity
+
+        :return: relative humidity in percent
+        """
+        T = t + 273.15
+        ah = ah / 1000
+        sat_p = math.exp(77.3450 + 0.0057 * T - 7235 / T) / math.pow(T, 8.2)
+        sat_density = 0.0022 * sat_p / T
+        return ah / sat_density * 100
+
+    @staticmethod
     def execute_subprocess(commandline, wait=True):
         """
-        Executes a subprocess via a shell and returns the output written to stdout by this process as a string
+        Executes a subprocess via a shell and returns the output written to stdout and stderr
+
+        :return: tuple (stdout, stderr) as strings
         """
-        # call date command
-        p = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-
-        # Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
-        # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
-        # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
-        (result, err) = p.communicate()
-        #    logger.warning("get_process_info: commandline='{}', result='{}', err='{}'".format(command, result, err))
-
-        #    print("result="+str(result))
-        #    print("err="+str(err))
-        if wait:
-            # Wait for date to terminate. Get return returncode
-            p.wait()
-        return (str(result, encoding='utf-8', errors='strict'), str(err, encoding='utf-8', errors='strict'))
+        return _run_shell(commandline, wait, subprocess.PIPE)
 
 
 # --------------------------------------------------------------------------------------------
@@ -813,15 +961,24 @@ def get_python_version():
 def execute_subprocess(commandline, wait=True):
     """
     Executes a subprocess via a shell and returns the output written to stdout by this process as a string
+
+    The output to stderr is not captured.
     """
-    p = subprocess.Popen(commandline, stdout=subprocess.PIPE, shell=True)
-    # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
-    # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
-    (result, err) = p.communicate()
+    return _run_shell(commandline, wait, None)[0]
+
+
+def _run_shell(commandline, wait, stderr):
+    """
+    Run ``commandline`` through the shell and return its decoded (stdout, stderr).
+
+    :param wait: wait for the process to terminate after its output has been read
+    :param stderr: subprocess.PIPE to capture stderr, None to leave it to the parent
+    """
+    p = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=stderr, shell=True)
+    result, err = p.communicate()
     if wait:
-        ## Wait for date to terminate. Get return returncode ##
         p.wait()
-    return str(result, encoding='utf-8', errors='strict')
+    return str(result, encoding='utf-8', errors='strict'), str(err or b'', encoding='utf-8', errors='strict')
 
 
 def running_virtual():

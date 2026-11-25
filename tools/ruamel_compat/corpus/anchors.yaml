@@ -1,0 +1,13 @@
+defaults: &defaults
+    type: num
+    cache: True
+item1:
+    <<: *defaults
+    knx_dpt: 9
+item2:
+    <<: *defaults
+    type: bool
+list_anchor: &l
+    - a
+    - b
+uses_list: *l

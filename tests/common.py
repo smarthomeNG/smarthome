@@ -22,7 +22,7 @@ def register_shng_log_levels():
     This helper is idempotent — safe to call multiple times or from
     multiple test modules.
     """
-    _levels = [(31, 'NOTICE'), (13, 'DBGHIGH'), (12, 'DBGMED'), (11, 'DBGLOW'), (9, 'DEVELOP')]
+    _levels = [(29, 'NOTICE'), (13, 'DBGHIGH'), (12, 'DBGMED'), (11, 'DBGLOW'), (9, 'DEVELOP')]
     for level, name in _levels:
         if not hasattr(logging.getLoggerClass(), name.lower()):
 

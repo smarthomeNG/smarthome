@@ -8,10 +8,11 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-===========
-Module http
-===========
+==============================
+Module http :greensup:`Update`
+==============================
 
 Der vom Module http zur Verfügung gestellte Webserver wird genutzt um die Admin GUI zur Verfügung zu stellen.
 
@@ -82,11 +83,14 @@ Datei *etc/module.yaml*
 |                         | ist, ist der Zugriff auf die Webinterfaces ohne Anmeldung möglich.                                   |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | hashed_password         | **Optional**: Das Passwort für die Basis-Authentifizierung an Webinterfaces als Hash-Wert. Kann      |
-|                         | anstelle von**password** verwendet werden, wenn kein Klartext-Passwort in der                        |
-|                         | Konfigurationsdatei haben möchten. Wenn weder **password** als auch **hashed_password** angegeben    |
-|                         | werden, ist die Basisauthentifizierung deaktiviert. Derzeit ist **hashed_password** der              |
-|                         | SHA-512-Hash-Wert des Passworts. Um den Hash für das Passwort zu erstellen, kann die Funktion        |
-|                         | **Passwort-Hash erzeugen** auf der Seite **Dienste** im Backend verwendet werden.                    |
+|                         | anstelle von **password** verwendet werden, wenn kein Klartext-Passwort in der Konfigurationsdatei   |
+|                         | stehen soll. Wenn weder **password** noch **hashed_password** angegeben werden, ist die              |
+|                         | Basisauthentifizierung deaktiviert. **hashed_password** ist ein gesalzener PBKDF2-Hash               |
+|                         | (``pbkdf2_sha256$...``). Um ihn zu erstellen, kann die Funktion **Passwort-Hash erzeugen** auf der   |
+|                         | Seite **Dienste** im Backend oder ``tools/hash_password.py`` verwendet werden. Ungesalzene           |
+|                         | SHA-512-Hashes älterer Versionen werden weiter akzeptiert; ``tools/upgrade_check.py --fix --only     |
+|                         | password-hash`` wandelt sie in gesalzene Hashes (``pbkdf2_sha256_sha512$...``) um, das Passwort      |
+|                         | bleibt dasselbe.                                                                                     |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | service_user            | **Optional**: Der Benutzername mit dem man sich zur Nutzung der Webservices authentifizieren muss.   |
 |                         | Der Standardwert ist **serviceuser**                                                                 |
@@ -96,12 +100,10 @@ Datei *etc/module.yaml*
 |                         | Hashed-Service-Passwort) gesetzt ist,ist der Zugriff auf die Webservices ohne Anmeldung möglich.     |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | service_hashed_password | **Optional**: Das Passwort für die Basis-Authentifizierung an Webservices als Hash-Wert. Kann        |
-|                         | anstelle von**service_password** verwendet werden, wenn kein Klartext-Passwort in der                |
-|                         | Konfigurationsdatei haben möchten. Wenn weder **service_password** als auch                          |
-|                         | **service_hashed_password** angegeben werden, ist die Basisauthentifizierung deaktiviert. Derzeit    |
-|                         | ist **service_hashed_password** der SHA-512-Hash-Wert des Service-Passworts. Um den Hash für         |
-|                         | das Passwort zu erstellen, kann die Funktion **Passwort-Hash erzeugen** auf der Seite                |
-|                         | **Dienste** im Backend verwendet werden.                                                             |
+|                         | anstelle von **service_password** verwendet werden, wenn kein Klartext-Passwort in der               |
+|                         | Konfigurationsdatei stehen soll. Wenn weder **service_password** noch **service_hashed_password**    |
+|                         | angegeben werden, ist die Basisauthentifizierung deaktiviert. Das Format entspricht                  |
+|                         | **hashed_password**.                                                                                 |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | ip                      | Optional: IP Adresse auf der das http Modul aktiv sein soll - muss normalerweise nicht angegeben     |
 |                         | werden.                                                                                              |

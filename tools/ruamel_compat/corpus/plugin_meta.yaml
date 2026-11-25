@@ -1,0 +1,41 @@
+# Metadata for the plugin
+plugin:
+    # Global plugin attributes
+    type: interface
+    description:
+        de: 'Kurze Beschreibung'
+        en: 'Short description'
+    version: 1.2.3
+    sh_minversion: '2.0.0-dev.2'
+    py_minversion: '3.11'
+    restartable: yes
+
+parameters:
+    host:
+        type: ip
+        mandatory: true
+        description:
+            de: >
+                Mehrzeilige Beschreibung, die gefaltet wird
+                und über zwei Zeilen geht.
+
+                Zweiter Absatz.
+            en: |
+                Literal description
+                  with indentation
+
+                and a paragraph.
+        valid_list:
+          - a
+          - b
+        default: ''
+
+item_attributes:
+    my_attr:
+        type: list(str)
+        description:
+            de: "Attribut mit \"Anführungszeichen\""
+            en: 'Attribute'
+
+logic_parameters: NONE
+plugin_functions: NONE

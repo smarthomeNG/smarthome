@@ -26,6 +26,7 @@ import unittest
 import logging
 import shutil
 import os
+import tempfile
 
 from lib.model.smartplugin import SmartPlugin
 from lib.logic import Logics
@@ -172,3 +173,21 @@ class TestLogics(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
+
+
+class TestLogicsWithoutConfigFile(unittest.TestCase):
+    """The logic configuration can be created through the API when no logic.yaml exists yet."""
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self._tmp = tempfile.TemporaryDirectory(prefix='SHNG_logics.')
+        self.addCleanup(self._tmp.cleanup)
+        self.logics = Logics(self.sh, os.path.join(self._tmp.name, 'logic'), self.sh._env_logic_conf_basename)
+        self.logics._logic_conf = os.path.join(self._tmp.name, 'logic.yaml')
+
+    def test_first_section_can_be_written_and_read(self):
+        entries = [['filename', 'first.py', 'comment'], ['crontab', 'init = Init', 'comment']]
+
+        self.logics.update_config_section(True, 'first', entries)
+
+        self.assertEqual(entries, self.logics.read_config_section('first'))

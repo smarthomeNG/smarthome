@@ -3,10 +3,11 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
-======================
-smartVISU installieren
-======================
+=========================================
+smartVISU installieren :greensup:`Update`
+=========================================
 
 Die SmartVISU ist eine Sammlung von HTML-Dateien und PHP Skripten die es ermöglicht Items vom SmartHomeNG
 anzuzeigen. Im Wesentlichen wird dazu PHP und ein Webserver benötigt: Aktuell können unter anderem
@@ -121,7 +122,7 @@ Bitte auf den **Punkt** am Ende des **git clone** Kommandos achten!
     Dies gilt auch für Docker-Umgebungen.
 
 Für den ordnungsgemäßen Betrieb der SmartVISU in Verbindung mit mit SmartHomeNG müssen noch das Plugin **smartvisu** und das **Websocket-Modul** konfiguriert werden.
-Beide sind in der **plugin.yaml.default** und **module.yaml.default** bereits vorkonfiguriert
+Beide sind in den Vorlagen **templates/plugin.yaml.default** und **templates/module.yaml.default** bereits vorkonfiguriert
 und werden beim ersten Start nach einer frischen Installation in die Einstellungen
 übernommen.
 

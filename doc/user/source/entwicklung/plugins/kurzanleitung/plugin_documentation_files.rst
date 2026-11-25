@@ -5,7 +5,7 @@ Es gibt eine Dokumentations-Datei die für ein Plugin erstellt werden kann (und 
 
 .. hint::
 
-    Das in früheren Versionen verwendete ``README.md``-Format für die Dokumentation von Plugins ist veraltet.
+    Das ``README.md``-Format für die Dokumentation von Plugins ist veraltet.
     Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen. Die
     restliche Dokumentation sollte nur noch im ``user_doc.rst``-Format erfolgen.
 

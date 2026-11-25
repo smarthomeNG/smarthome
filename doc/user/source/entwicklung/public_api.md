@@ -1,4 +1,7 @@
-# SmartHomeNG: Öffentliche API und Versionierung
+```{role} redsup
+```
+
+# SmartHomeNG: Öffentliche API und Versionierung {redsup}`neu`
 
 SmartHomeNG folgt ab Version **2.0.0** dem [Semantic Versioning 2.0.0](https://semver.org/lang/de/).
 Dieses Dokument legt fest, was zur öffentlichen API gehört, wie Versionsnummern zu lesen sind und
@@ -20,7 +23,7 @@ im Verzeichnis `lib/`. Bei Klassen zählen auch die Signaturen von `__init__` un
 | Plugin-Basisklassen | `lib/model/*.py` (u. a. `SmartPlugin`, `MqttPlugin`), `lib/model/sdp/*.py` (`SmartDevicePlugin`, SDP) |
 | Items | `lib/item/*.py` (`Item`, `Items`) |
 | Kern und Infrastruktur | `lib/smarthome.py`, `lib/plugin.py`, `lib/module.py`, `lib/logic.py`, `lib/scheduler.py`, `lib/config.py`, `lib/metadata.py`, `lib/constants.py` |
-| Hilfsklassen | `lib/utils.py`, `lib/tools.py`, `lib/shtime.py`, `lib/network.py`, `lib/db.py`, `lib/shyaml.py`, `lib/log.py`, `lib/translation.py`, `lib/orb.py`, `lib/triggertimes.py` |
+| Hilfsklassen | `lib/utils.py`, `lib/shtime.py`, `lib/network.py`, `lib/db.py`, `lib/shyaml.py`, `lib/log.py`, `lib/translation.py`, `lib/orb.py`, `lib/triggertimes.py` |
 
 ### 2. Konfiguration für Anwender
 
@@ -73,6 +76,7 @@ Veröffentlichungen vor 2.0.0 werden nicht nachträglich eingeordnet.
 |---|---|
 | Entfernter oder umbenannter öffentlicher Name; geänderte Signatur, die bestehende Aufrufer bricht; geänderter Parametertyp; neuer Pflichtparameter; eingeschränkte zulässige Werte (`valid_*`); entfernte Kommandozeilen-Option oder entferntes Websocket-Kommando | **Major** |
 | Erhöhte `sh_minversion` eines Plugins oder Moduls | **Major** |
+| Geänderter Standardwert eines in einer `module.yaml` deklarierten Konfigurationsparameters (einschließlich der Kernparameter der `smarthome.yaml`) | **Major** |
 | Erhöhte `py_minversion` (Python-Versionen werden gemäß dem Python-EOL-Zeitplan aufgegeben und in den Release Notes angekündigt) | **Minor** |
 | Neuer öffentlicher Name, neuer optionaler Parameter, neue Kommandozeilen-Option, neues Websocket-Kommando oder erweiterte zulässige Werte (`valid_*`) | **Minor** |
 | Fehlerbehebung, interne Änderung, Dokumentation | **Patch** |

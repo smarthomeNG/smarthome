@@ -27,6 +27,9 @@ list is [`tools/api_surface.yaml`](../../tools/api_surface.yaml); this document 
 
 - Names starting with an underscore, and modules whose file name starts with an underscore
   (e.g. `lib/item/_internal/`).
+- Public members listed under `internal_members` in `tools/api_surface.yaml`: core startup and
+  shutdown (`SmartHome.start`, `init_logging`, ...), the plugin loader, logging configuration,
+  struct loading and `Metadata`. They are public for the core and the admin interface, not for addons.
 - The admin REST API and the admin websocket protocol. Their only client is the first-party
   shngadmin.
 - Web interface assets and templates, `tools/`, `tests/`, log message texts.
@@ -37,7 +40,7 @@ list is [`tools/api_surface.yaml`](../../tools/api_surface.yaml); this document 
 
 | Component | Scheme |
 |---|---|
-| Core | `X.Y.Z`; `develop` carries a pre-release `X.Y.Z-dev.N` until the release; `release.sh` sets `-dev.0` (no change since the release, only the bump) right after a release, and `N` is raised by hand when a plugin needs a specific development state *(decided)* |
+| Core | `X.Y.Z`; `develop` carries a pre-release `X.Y.Z-dev.N` until the release; `release.sh post` (the maintainer's release script, kept outside this repository) sets `-dev.0` (no change since the release, only the bump) right after a release, and `N` is raised by hand when a plugin needs a specific development state *(decided)* |
 | Plugins, modules | `X.Y.Z` in `plugin.yaml`/`module.yaml`, identical to `PLUGIN_VERSION` in the code |
 | SmartDevicePlugin | `SDP_VERSION`, gated by `sdp_minversion` in `plugin.yaml` |
 
@@ -53,6 +56,7 @@ Build metadata after `+` (commit, branch) is informative and ignored when compar
 |---|---|
 | Removed or renamed public name; changed signature that breaks existing callers; changed parameter type; new mandatory parameter; narrowed `valid_*`; removed command line flag or websocket command | **major** |
 | Raised `sh_minversion` of a plugin or module *(decided)* | **major** |
+| Changed default value of a configuration parameter declared in a `module.yaml` (including the core parameters of `smarthome.yaml`) *(decided)* | **major** |
 | Raised `py_minversion` *(decided)* - Python versions are dropped on the Python EOL schedule, announced in the release notes | **minor** |
 | New public name, optional parameter, command line flag, websocket command, or widened `valid_*` | **minor** |
 | Bug fix, internal change, documentation | **patch** |
@@ -61,6 +65,12 @@ While a component is below 1.0.0 nothing forces a major bump *(decided)*.
 
 *(proposed)* Deprecate in a minor release (logged warning, documented in the release notes), remove
 in the next major release.
+
+Plugins *(decided)*: a plugin with `state: deprecated` (replaced by something else) or `state: defunct`
+(does not work anymore, e.g. its library supports no Python version SmartHomeNG runs on) is still
+loaded with a logged warning and removed from the plugins repository with the minor or major release
+that follows the first release shipping it in that state (e.g. defunct in 2.0, removed in 2.1), so users
+get one release to adjust their configuration.
 
 Releases before 2.0.0 are not reclassified.
 

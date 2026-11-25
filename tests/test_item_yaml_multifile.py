@@ -130,6 +130,29 @@ class TestRenameWithChildrenInOtherFiles(_MultiFileBase):
         self.assertEqual(self._live_types(), load_item_types(self.tmpdir.name))
 
 
+class TestRemovingTheLastChild(_MultiFileBase):
+    """The parent of a moved or removed last child stays an item, in the live tree and after a reload."""
+
+    def setUp(self):
+        super().setUp()
+        self.sh = MockSmartHome()
+        self.sh._items_dir = self.tmpdir.name
+        self.sh._created_items_file = 'created'
+        self.items = self.sh.items
+        self.items.create_item('a', {}, filename='fa')
+        self.items.create_item('a.b', {'type': 'num'}, filename='fa')
+
+    def test_moving_the_last_child_away_keeps_the_parent_after_a_reload(self):
+        self.items.rename_item(self.items.return_item('a.b'), 'c')
+
+        self.assertEqual(['a', 'c'], load_item_paths(self.tmpdir.name))
+
+    def test_removing_the_last_child_keeps_the_parent_after_a_reload(self):
+        self.items.remove_item(self.items.return_item('a.b'))
+
+        self.assertEqual(['a'], load_item_paths(self.tmpdir.name))
+
+
 class TestEmptiedContainerBranches(_MultiFileBase):
     """A file only holds ancestors of a moved or removed item as containers; those go with it, unless an item is defined there."""
 
@@ -168,6 +191,36 @@ class TestEmptiedContainerBranches(_MultiFileBase):
         self.items.rename_item(self.items.return_item('p.c'), 't.c')
 
         self.assertEqual({'d'}, set(self._file_data('fb')['p']))
+
+
+class TestNullItemNodeGate(_MultiFileBase):
+    """A file written by the core never holds a live item as a null node, whatever state the file was in before."""
+
+    def setUp(self):
+        super().setUp()
+        self.sh = MockSmartHome()
+        self.sh._items_dir = self.tmpdir.name
+        self.sh._created_items_file = 'created'
+        self.items = self.sh.items
+        self.items.create_item('a', {'type': 'num'}, filename='fa')
+        self.items.create_item('a.b', {'type': 'num'}, filename='fa')
+        self.write_file('fa', 'a:\n    type: num\n    b:\n')
+
+    def _file_data(self, name):
+        with open(os.path.join(self.tmpdir.name, name + '.yaml')) as fh:
+            return YAML(typ='safe').load(fh)
+
+    def test_saving_a_file_turns_a_null_item_node_into_an_empty_item(self):
+        self.items.create_item('a.c', {'type': 'num'}, filename='fa')
+
+        self.assertEqual({}, self._file_data('fa')['a']['b'])
+
+    def test_null_attribute_values_are_left_alone(self):
+        self.write_file('fa', 'a:\n    type: num\n    name:\n    b:\n')
+
+        self.items.create_item('a.c', {'type': 'num'}, filename='fa')
+
+        self.assertIsNone(self._file_data('fa')['a']['name'])
 
 
 if __name__ == '__main__':

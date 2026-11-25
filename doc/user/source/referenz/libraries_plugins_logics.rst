@@ -16,5 +16,4 @@ Der Aufruf der darin bereitgestellten Funktionen ist im Folgenden beschrieben:
    /lib/network
    /lib/orb
    /lib/env
-   /lib/tools
    /lib/utils

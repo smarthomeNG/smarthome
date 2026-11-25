@@ -26,10 +26,11 @@ import json
 import cherrypy
 
 import lib.shyaml as shyaml
+from lib.log import iter_log_entries
 from lib.utils import Utils
 from lib.constants import DIR_ETC, BASE_LOG
 import jwt
-from .rest import ApiDoc, ApiParam, RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource, contained_path
 
 
 class LogsController(RESTResource):
@@ -109,50 +110,16 @@ class LogsController(RESTResource):
         return logfiles
 
     @staticmethod
-    def _iter_log_entries(path):
+    def _entry_text(entry):
         """
-        Yield ``(raw_line_no, entry_text)`` for every logical log entry in the
-        file at *path*, merging traceback continuation lines into the entry
-        they belong to: a line starting with ``'Traceback'``, and every
-        following indented (``'  '``-prefixed) line up to and including the
-        first non-indented line after it, is appended to the *previous*
-        entry rather than starting a new one - same convention the reader
-        has always used, just applied consistently across the whole file in
-        one pass instead of being re-derived per chunk request.
+        Return a log entry as shown in the admin UI: spaces replaced by NBSP, traceback lines marked with ``'> '``.
 
-        *raw_line_no* is the 1-based physical file line number of the last
-        raw line consumed by that entry (a running total, not an index) -
-        this is what lets callers compute true chunk/line offsets without
-        assuming a fixed number of raw lines per logical entry, which breaks
-        as soon as any entry spans more than one physical line.
-
-        :param path: Path of the logfile to read
-        :type path: str
-
-        :return: generator of (raw_line_no, entry_text) pairs, in file order
-        :rtype: Iterator[tuple[int, str]]
+        :param entry: logical log entry
+        :type entry: lib.log.LogEntry
+        :rtype: str
         """
-        with open(path, 'r', encoding='UTF-8') as lfile:
-            raw_line_no = 0
-            entry_text = None
-            entry_end_line = 0
-            appending = False
-            for line in lfile:
-                raw_line_no += 1
-                if line.startswith('Traceback'):
-                    appending = True
-                if appending and entry_text is not None:
-                    entry_text += '> ' + line.replace(' ', chr(160))
-                    entry_end_line = raw_line_no
-                    if (not line.startswith('Traceback')) and (not line.startswith('  ')):
-                        appending = False
-                    continue
-                if entry_text is not None:
-                    yield entry_end_line, entry_text
-                entry_text = line.replace(' ', chr(160))
-                entry_end_line = raw_line_no
-            if entry_text is not None:
-                yield entry_end_line, entry_text
+        first, *continuation = (line.replace(' ', chr(160)) for line in entry.lines)
+        return first + ''.join('> ' + line for line in continuation)
 
     # ======================================================================
     #  GET /api/logs
@@ -191,23 +158,12 @@ class LogsController(RESTResource):
             if not (fn.startswith('.')):
                 if os.path.isfile(os.path.join(self.log_dir, fn)):
                     self.files.append(fn)
-        # get names of logs (from filenames enting with '.log')
-        logs = self.get_logs()
         if id is None:
             # get list of existing logs and name of default log
             logs = self.get_logs_with_files()
             return json.dumps({'logs': logs, 'default': self.root_logname})
 
-        # Deactivated 2026-07-20 to check whether anything still depends on it: shngadmin's
-        # log-display.component.ts already gets each log's rotated-file list from the bulk
-        # GET /api/logs/ response (get_logs_with_files() above embeds it) and never calls
-        # this branch separately. If nothing breaks, remove for good.
-        # if id in logs:
-        #     # get filenames available for the specified log (if log is specified without extension)
-        #     logfiles = self.get_files_of_log(id)
-        #     return json.dumps(sorted(logfiles))
-
-        logfile_path = os.path.join(self.log_dir, id)
+        logfile_path = contained_path(self.log_dir, id)
         if os.path.isfile(logfile_path):
             # return content of the logfile specified in id, if file is found
 
@@ -218,7 +174,7 @@ class LogsController(RESTResource):
             # can no longer be derived from chunksize*index once any entry
             # in an earlier chunk spanned more than one physical line (a
             # traceback), so counting is done directly instead of assumed.
-            entries = list(self._iter_log_entries(logfile_path))
+            entries = [(entry.end_line, self._entry_text(entry)) for entry in iter_log_entries(logfile_path)]
             total_entries = len(entries)
             chunks_total = max(1, -(-total_entries // self.chunksize))  # ceil div
 
@@ -261,35 +217,27 @@ class LogsController(RESTResource):
         ApiDoc(summary='List of available log files', method='get', path='/logs/', tags=['logs']),
         ApiDoc(
             summary=(
-                "One chunk of a log file's content. The per-log-name rotated-file-list "
-                'variant of this path was deactivated 2026-07-20 (see the commented-out '
-                'branch above) - only real filenames on disk are served now.'
-            ),
-            method='get',
-            path='/logs/{filename}',
-            tags=['logs'],
-            params=[
-                ApiParam(name='filename', location='path', required=True),
-                ApiParam(
-                    name='chunk',
-                    type='integer',
-                    default=1,
-                    description='1 = first chunk; 0 is the server convention for "last chunk".',
-                ),
-            ],
-        ),
-        ApiDoc(
-            summary=(
-                "Tail of an in-memory log (e.g. 'env.core.log', the root WARNING+ buffer). "
-                'Matched by name against registered memory logs before falling back to the '
-                'file lookup above.'
+                "Newest entries of an in-memory log (e.g. 'env.core.log', the root WARNING+ buffer) "
+                "or one chunk of a log file's content. {name} is matched against the registered "
+                'memory logs first, then against the files in the log directory.'
             ),
             method='get',
             path='/logs/{name}',
             tags=['logs'],
             params=[
-                ApiParam(name='name', location='path', required=True),
-                ApiParam(name='count', type='integer', default=10, description='Number of newest entries to return.'),
+                ApiParam(name='name', location='path', required=True, description='Memory log name or log file name.'),
+                ApiParam(
+                    name='chunk',
+                    type='integer',
+                    default=1,
+                    description='Log files only: 1 = first chunk; 0 is the server convention for "last chunk".',
+                ),
+                ApiParam(
+                    name='count',
+                    type='integer',
+                    default=10,
+                    description='Memory logs only: number of newest entries to return.',
+                ),
             ],
         ),
     ]
