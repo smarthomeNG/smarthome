@@ -1,6 +1,6 @@
-=============================
-Release 2.0.0 - xx. xxx 2026
-=============================
+=================================
+Release 2.0.0 - 25. November 2026
+=================================
 
 Dieses Release ist ein Major-Release. Neben vielen neuen Features im Core von SmartHomeNG und in den Plugins sind
 Funktionen entfernt, die seit längerem als veraltet gekennzeichnet waren. Vor dem Update bitte den Abschnitt
@@ -14,10 +14,10 @@ Funktionen entfernt, die seit längerem als veraltet gekennzeichnet waren. Vor d
 
         Diese Release Notes sind ein Arbeitsstand des **develop** Branches.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 15. November 2026
-           ('merge develop into prerelease')
-         - Berücksichtigt sind Commits im plugins Repository bis inkl. 15. November 2026
-           ('enocean, tankerkoenig: version bumps for the changes merged from develop')
+         - Berücksichtigt sind Commits im smarthome Repository bis inkl. 25. November 2026
+           ('update release docs')
+         - Berücksichtigt sind Commits im plugins Repository bis inkl. 25. November 2026
+           ('Merge branch 'develop' into prerelease')
 
 
 Überblick
