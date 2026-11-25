@@ -1347,6 +1347,7 @@ class Tcp_server(object):
         self.__server = None
         self.__listening_thread = None
         self.__running = True
+        self.__lifecycle_lock = threading.Lock()  # start() and close() must not overlap
 
         # Test if host is an ip address or a host name
         self._id = f'({self.name if self.name else "TCP_Server"}_{self._host}:{self._port})'
@@ -1381,6 +1382,13 @@ class Tcp_server(object):
 
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
+        """
+        with self.__lifecycle_lock:
+            return self.__start()
+
+    def __start(self):
+        """
+        Create the event loop and the server and start the listening thread; see start().
         """
         if self._is_listening:
             return False
@@ -1523,6 +1531,15 @@ class Tcp_server(object):
     def close(self):
         """
         Close running listening socket.
+
+        Waits for a start() running in another thread and returns when the listening thread has ended.
+        """
+        with self.__lifecycle_lock:
+            self.__close()
+
+    def __close(self):
+        """
+        Stop the event loop and join the listening thread; see close().
         """
         self.logger.info(f'{self._id} shutting down listening socket')
         asyncio.set_event_loop(self.__loop)
@@ -1534,8 +1551,6 @@ class Tcp_server(object):
             self.logger.info(f'{self._id} still has {active_connections} active connection(s), cleaning up')
         self.__running = False
         self.__loop.call_soon_threadsafe(self.__loop.stop)
-        while self.__loop.is_running():
-            pass
         with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
