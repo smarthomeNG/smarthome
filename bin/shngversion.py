@@ -130,8 +130,8 @@ from lib.utils import Version
 
 # Update auf 2.0.0     wg. Release
 
-shNG_version = '2.0.0'
-shNG_branch = 'master'
+shNG_version = '2.1.0-dev.0'
+shNG_branch = 'develop'
 shNG_releasedate = '25. November 2026'
 
 # ---------------------------------------------------------------------------------
