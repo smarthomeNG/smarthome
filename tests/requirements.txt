@@ -33,6 +33,10 @@ pytest>=3.6.0
 # against both backends, so it's needed here to get full coverage in CI/dev.
 skyfield>=1.49,<2.0.0
 
+# used by tests/test_sdp_serial_reply.py (lib.model.sdp serial connection, imported lazily
+# and not part of the core requirements)
+pyserial>=3.4.0
+
 # used by tests/mock/core.py:
 #python-dateutil
 
@@ -54,9 +58,6 @@ skyfield>=1.49,<2.0.0
 # with Python docstring conventions
 #pydocstyle>=1.0.0
 
-# the following needs to be exactly the same as in requirements/base.txt
-# otherwise inconsistent requirements will occur in Tox/Testing
-ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
-ruamel.yaml>=0.15.0,<=0.15.74;python_version=='3.7'
-ruamel.yaml>=0.15.78,<=0.16.8;python_version>='3.8'
+# same range as in lib/requirements.txt
+ruamel.yaml>=0.16.7,<0.20
 

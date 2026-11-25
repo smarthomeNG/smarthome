@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 850" font-family="Helvetica, Arial, sans-serif">
+  <rect width="900" height="850" fill="#f9f9f9"/>
+
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L9,3.5 z" fill="#555"/>
+    </marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/>
+    </marker>
+  </defs>
+
+  <text x="450.0" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Item Value Change — update_item()</text>
+  <rect x="220.0" y="44" width="340" height="40" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="390.0" y="62" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">Item value changes</text>
+  <text x="390.0" y="77" text-anchor="middle" font-size="9.5" fill="#555">SmartHomeNG calls update_item(item, caller, source, dest)</text>
+  <line x1="390.0" y1="84" x2="390.0" y2="108" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="260.0" y="110" width="260" height="30" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="390.0" y="128.5" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#9c6e00">self.alive?</text>
+  <line x1="390.0" y1="140" x2="390.0" y2="164" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="520.0" y1="125" x2="710" y2="125" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="710" y="108" width="130" height="34" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="775.0" y="126" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#555555">not alive</text>
+  <text x="775.0" y="141" text-anchor="middle" font-size="8.5" fill="#555">return</text>
+  <rect x="190.0" y="166" width="400" height="34" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="390.0" y="186.5" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#9c6e00">database_acl (default "rw")</text>
+  <line x1="390.0" y1="200" x2="390.0" y2="224" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="590.0" y1="187" x2="710" y2="187" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="710" y="165" width="130" height="44" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="775.0" y="183" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#555555">acl != 'rw'</text>
+  <text x="775.0" y="198" text-anchor="middle" font-size="8.5" fill="#555">skip write</text>
+  <text x="775.0" y="212" text-anchor="middle" font-size="8.5" fill="#555">(debug log)</text>
+  <rect x="130.0" y="226" width="520" height="56" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="390.0" y="244" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">Compute duration retroactively</text>
+  <text x="390.0" y="259" text-anchor="middle" font-size="9" fill="#555">start=prev_change(), end=last_change()</text>
+  <text x="390.0" y="273" text-anchor="middle" font-size="9" fill="#555">end-start &lt; 0 (clock jumped back) → clamp to 0, warn</text>
+  <line x1="390.0" y1="282" x2="390.0" y2="306" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="90.0" y="308" width="600" height="66" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="390.0" y="326" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">Reactive database_invalid_after check</text>
+  <text x="390.0" y="341" text-anchor="middle" font-size="8.5" fill="#555">if item has invalid_after configured and</text>
+  <text x="390.0" y="355" text-anchor="middle" font-size="8.5" fill="#555">last_update − prev_update &gt; threshold, and no gap already open:</text>
+  <text x="390.0" y="369" text-anchor="middle" font-size="8.5" fill="#555">_mark_item_invalid(caller='database_invalid_after', at=prev_update+threshold)</text>
+  <line x1="390.0" y1="374" x2="390.0" y2="398" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="190.0" y="400" width="400" height="34" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="390.0" y="420.3333333333333" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">Gap detection: last entry open + QUALITY_NO_DATA?</text>
+  <line x1="390.0" y1="434" x2="390.0" y2="458" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="590.0" y1="417" x2="640" y2="417" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="640" y="392" width="200" height="92" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="740.0" y="410" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#1e7e34">in_gap → implicit re-validation</text>
+  <text x="740.0" y="425" text-anchor="middle" font-size="8.5" fill="#555">close_open(item, end)</text>
+  <text x="740.0" y="439" text-anchor="middle" font-size="8.5" fill="#555">push valid BufferEntry(end, None, value)</text>
+  <text x="740.0" y="453" text-anchor="middle" font-size="8.5" fill="#555">return  (skips step 1b)</text>
+  <rect x="220.0" y="460" width="340" height="30" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="390.0" y="478.3333333333333" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">has_open_valid = last.duration is None</text>
+  <line x1="300.0" y1="490" x2="220.0" y2="520" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="480.0" y1="490" x2="560.0" y2="520" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="220.0" y="508" text-anchor="middle" font-size="9" fill="#888">yes</text>
+  <text x="565.0" y="508" text-anchor="middle" font-size="9" fill="#888">no</text>
+  <rect x="50.0" y="522" width="300" height="56" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="200.0" y="540" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">1a) Extend current entry</text>
+  <text x="200.0" y="555" text-anchor="middle" font-size="9" fill="#555">set_last_duration(item, end-start)</text>
+  <rect x="430.0" y="522" width="300" height="78" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="540" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">1b) Close previous value entry</text>
+  <text x="580.0" y="555" text-anchor="middle" font-size="8.5" fill="#555">database:init &amp; Init:Initial_Value →</text>
+  <text x="580.0" y="569" text-anchor="middle" font-size="8.5" fill="#555">skip (avoid polluting DB with the</text>
+  <text x="580.0" y="583" text-anchor="middle" font-size="8.5" fill="#555">item's boot-time default)</text>
+  <rect x="430.0" y="606" width="300" height="34" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="580.0" y="624" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#2a5db0">else: push prev_value entry</text>
+  <text x="580.0" y="639" text-anchor="middle" font-size="8.5" fill="#555">BufferEntry(start, end-start, prev_value)</text>
+  <line x1="580.0" y1="600" x2="580.0" y2="606" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="200.0" y1="578" x2="390.0" y2="664" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="580.0" y1="640" x2="390.0" y2="664" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="170.0" y="666" width="440" height="44" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="390.0" y="684" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#1e7e34">2) Push current value, duration=None</text>
+  <text x="390.0" y="699" text-anchor="middle" font-size="8.5" fill="#555">BufferEntry(end, None, value=item()) — stays open until</text>
+  <text x="390.0" y="713" text-anchor="middle" font-size="8.5" fill="#555">next change or the dump cycle closes it</text>
+  <line x1="390.0" y1="710" x2="390.0" y2="734" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="130.0" y="736" width="520" height="40" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="390.0" y="754" text-anchor="middle" font-size="10" font-weight="bold" fill="#555555">Entry sits in the in-memory buffer</text>
+  <text x="390.0" y="769" text-anchor="middle" font-size="9" fill="#555">written to SQL by _dump() — see the Dump Cycle diagram</text>
+  <text x="450.0" y="800" text-anchor="middle" font-size="9.5" fill="#888">Note: db_mark_invalid()/db_mark_valid() (item.db_mark_invalid(), item.db_mark_valid()) inject the same</text>
+  <text x="450.0" y="816" text-anchor="middle" font-size="9.5" fill="#888">no-data-gap machinery directly, bypassing update_item() entirely — see the Data Invalidity diagram.</text>
+</svg>

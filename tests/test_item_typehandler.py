@@ -25,10 +25,14 @@ Caller passthrough:
   - list.append / dict.update carry caller into item history
 """
 
+import copy
 import logging
 import os
 import sys
+import threading
+import time
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -433,6 +437,55 @@ class TestItemCallDictAccess(_Base):
 
     def test_call_missing_key_default_zero_returns_zero(self):
         self.assertEqual(self.di(key='missing', default=0), 0)
+
+
+# ===========================================================================
+# Concurrency: read-modify-write mutating methods must not lose updates
+# ===========================================================================
+#
+# insert/pop/extend/delete/remove (list) and delete/pop/popitem/update (dict)
+# deepcopy the current value, mutate the copy, then hand the result to
+# Item.__call__() for the actual (locked) assignment. Without a lock around
+# the whole read-modify-write, two threads calling these concurrently can
+# both read the same starting value and one write clobbers the other.
+#
+# copy.deepcopy is patched to sleep briefly so two threads released from a
+# Barrier at the same instant reliably overlap inside the critical section
+# if it isn't actually locked - making the race deterministic to test for,
+# rather than a rare timing-dependent flake.
+
+
+class TestListExtendConcurrency(_Base):
+    def setUp(self):
+        super().setUp()
+        self.li = _item(self.sh, 'li', 'list')
+        self.li([])
+
+    def _run_concurrently(self, values):
+        original_deepcopy = copy.deepcopy
+
+        def slow_deepcopy(*args, **kwargs):
+            result = original_deepcopy(*args, **kwargs)
+            time.sleep(0.05)
+            return result
+
+        barrier = threading.Barrier(len(values))
+
+        def worker(value):
+            barrier.wait()
+            self.li.list.extend([value])
+
+        with patch('lib.item._internal._typehandler.copy.deepcopy', side_effect=slow_deepcopy):
+            threads = [threading.Thread(target=worker, args=(v,)) for v in values]
+            for t in threads:
+                t.start()
+            for t in threads:
+                t.join()
+
+    def test_concurrent_extend_does_not_lose_updates(self):
+        self._run_concurrently([1, 2])
+
+        self.assertEqual(sorted(self.li()), [1, 2])
 
 
 if __name__ == '__main__':

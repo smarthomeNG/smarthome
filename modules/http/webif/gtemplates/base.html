@@ -1,11 +1,44 @@
 {% import "macros.html" as macros %}
 {% block doc -%}
 <!DOCTYPE html>
-<html{% block html_attribs %}{% endblock html_attribs %}>
+<html data-bs-theme="{{ 'dark' if dark_mode_default else 'light' }}"{% block html_attribs %}{% endblock html_attribs %}>
 {%- block html %}
   <head>
     {%- block head %}
     <title>{% block title %}{% endblock title %}</title>
+
+    {#- Applies the theme before any stylesheet paints, to avoid a flash of the wrong theme.
+        Precedence mirrors shngadmin's ThemeService.resolveDarkMode() (theme.service.ts) exactly -
+        keep the two in sync if that logic ever changes. #}
+    <script>
+      (function () {
+        function preference() {
+          try {
+            var raw = localStorage.getItem('shngadmin_prefs');
+            return raw ? JSON.parse(raw).themePreference : undefined;
+          } catch (e) {
+            return undefined;
+          }
+        }
+        function resolveDark() {
+          var pref = preference();
+          if (pref === 'dark') return true;
+          if (pref === 'light') return false;
+          if (window.matchMedia) return matchMedia('(prefers-color-scheme: dark)').matches;
+          return {{ 'true' if dark_mode_default else 'false' }};
+        }
+        function apply() {
+          document.documentElement.setAttribute('data-bs-theme', resolveDark() ? 'dark' : 'light');
+        }
+        apply();
+        if (window.matchMedia) {
+          matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+            var pref = preference();
+            if (pref !== 'dark' && pref !== 'light') apply();
+          });
+        }
+      })();
+    </script>
 	<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1.3, minimum-scale=1" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />

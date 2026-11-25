@@ -7,8 +7,8 @@
 .. role:: redsup
 
 
-Referenz :bluesup:`Update`
-==========================
+Referenz :greensup:`Update`
+===========================
 
 Hier entsteht nach und nach eine Referenz in der Details zu einzelnenen Themen von SmartHomeNG nachgelesen werden
 können.

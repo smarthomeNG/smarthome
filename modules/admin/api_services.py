@@ -28,7 +28,8 @@ import json
 import cherrypy
 
 from lib.item import Items
-from .rest import RESTResource
+from lib.utils import Utils
+from .rest import ApiDoc, ApiParam, RESTResource
 
 import bin.shngversion
 from lib.item_conversion import convert_yaml as convert_yaml
@@ -57,11 +58,13 @@ class ServicesController(RESTResource):
         self.etc_dir = self._sh.get_config_dir(DIR_ETC)  # not used?
         self.modules_dir = self._sh.get_config_dir(DIR_ETC)  # not used?
 
-    def get_body(self, text=False):
+    def get_body(self, text=False, log_body=True):
         """
         Get content body of received request header
 
-        :return:
+        :param text: return the body as text instead of parsed JSON
+        :param log_body: log the raw body at DEBUG (off for bodies containing secrets)
+        :return: body, None if it cannot be decoded
         """
         cl = cherrypy.request.headers.get('Content-Length', 0)
         if cl == 0:
@@ -69,7 +72,8 @@ class ServicesController(RESTResource):
             # return 'Bad request'
             raise cherrypy.HTTPError(status=411)
         rawbody = cherrypy.request.body.read(int(cl))
-        self.logger.debug('ServicesController(): get_body(): rawbody = {}'.format(rawbody))
+        if log_body:
+            self.logger.debug('ServicesController(): get_body(): rawbody = {}'.format(rawbody))
         try:
             if text:
                 params = rawbody.decode('utf-8')
@@ -94,6 +98,16 @@ class ServicesController(RESTResource):
     # ======================================================================
     #  eval_syntax_checker
     #
+    # SECURITY NOTE: this intentionally runs eval() on the caller-supplied
+    # expression with the full sh/items/shtime/env/math/uf namespace in scope,
+    # and is reachable by any authenticated admin API client (PUT
+    # /api/services/evalcheck). This is accepted risk, not an oversight: an
+    # authenticated admin can already reach equivalent arbitrary Python
+    # execution via an item's `eval:` config attribute, so this endpoint does
+    # not cross a new privilege boundary under the current all-authenticated-
+    # users-are-admin trust model. If a lower-privilege authenticated role is
+    # ever introduced (see the unused 'admin' JWT claim in api_auth.py), this
+    # endpoint must require it.
     def eval_syntax_checker(self, eval_code, relative_to):
         expanded_code = ''
 
@@ -174,7 +188,7 @@ class ServicesController(RESTResource):
         return check_result
 
     # ======================================================================
-    #  /api/server/evalcheck
+    #  /api/services/evalcheck
     #
     def evalcheck(self):
         """
@@ -201,7 +215,45 @@ class ServicesController(RESTResource):
             return json.dumps({'expression': expanded_code, 'result': str(eval_result), 'type': result_type})
 
     # ======================================================================
-    #  /api/server/yamlcheck
+    #  /api/services/hashpassword
+    #
+    def hashpassword(self):
+        """
+        Create a salted hash of the password in the request body (text) for the http module's configuration
+
+        :return: JSON with 'hash'
+        """
+        password = self.get_body(text=True, log_body=False)
+        if not password:
+            raise cherrypy.HTTPError(status=400)
+        return json.dumps({'hash': Utils.hash_password(password)})
+
+    # ====  /api/services/generatesecret  ===================================
+    def generatesecret(self):
+        """
+        Create a random secret (256 bit, URL-safe base64) for a configuration value that is stored in plain text
+
+        :return: JSON with 'secret'
+        """
+        return json.dumps({'secret': Utils.generate_token()})
+
+    # ======================================================================
+    #  /api/services/checkpassword
+    #
+    def checkpassword(self):
+        """
+        Check a password against a password hash (salted or legacy sha512), both given in the JSON body
+
+        :return: JSON with 'match' (bool)
+        """
+        params = self.get_body(text=False, log_body=False)
+        if not isinstance(params, dict):
+            raise cherrypy.HTTPError(status=400)
+        match = Utils.check_hashed_password(params.get('password', ''), params.get('hash', ''))
+        return json.dumps({'match': match})
+
+    # ======================================================================
+    #  /api/services/yamlcheck
     #
     def yamlcheck(self):
         """
@@ -218,7 +270,7 @@ class ServicesController(RESTResource):
         return self.yaml_syntax_checker(params)
 
     # ======================================================================
-    #  /api/server/yamlconvert
+    #  /api/services/yamlconvert
     #
     def yamlconvert(self):
         """
@@ -242,7 +294,7 @@ class ServicesController(RESTResource):
 
         if self._sh.shng_status['code'] == 20:
             # {'code': 20, 'text': 'Running'}
-            cache_path = os.path.join(self.base_dir, 'var', 'cache')
+            cache_path = os.path.join(self._sh.get_vardir(), 'cache')
             onlyfiles = [f for f in os.listdir(cache_path) if os.path.isfile(os.path.join(cache_path, f))]
 
             for file in onlyfiles:
@@ -284,7 +336,7 @@ class ServicesController(RESTResource):
         response = {'result': 'error', 'description': "cache file '" + filename + "' not found"}
         for filename in filenames:
             if len(filename) > 0:
-                file_path = os.path.join(self.base_dir, 'var', 'cache', filename)
+                file_path = os.path.join(self._sh.get_vardir(), 'cache', filename)
                 if os.path.isfile(file_path):
                     self.logger.info("cachefile_delete: cachefile '{}' deleted".format(file_path))
                     os.remove(file_path)
@@ -306,6 +358,14 @@ class ServicesController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='List orphaned cache files (present on disk but not referenced by any item)',
+            method='get',
+            path='/services/cachecheck/',
+            tags=['services'],
+        )
+    ]
 
     def update(self, id='', filename=''):
         """
@@ -321,8 +381,60 @@ class ServicesController(RESTResource):
             return self.yamlconvert()
         elif id == 'cachefile_delete':
             return self.cachefile_delete(filename)
+        elif id == 'hashpassword':
+            return self.hashpassword()
+        elif id == 'checkpassword':
+            return self.checkpassword()
+        elif id == 'generatesecret':
+            return self.generatesecret()
 
         return None
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary='Validate a Python eval:-style expression',
+            method='put',
+            path='/services/evalcheck/',
+            tags=['services'],
+        ),
+        ApiDoc(summary='Validate raw YAML text', method='put', path='/services/yamlcheck/', tags=['services']),
+        ApiDoc(
+            summary='Convert arbitrary config text to YAML',
+            method='put',
+            path='/services/yamlconvert/',
+            tags=['services'],
+        ),
+        ApiDoc(
+            summary='Delete one cache file',
+            method='put',
+            path='/services/cachefile_delete',
+            tags=['services'],
+            params=[ApiParam(name='filename', required=True)],
+        ),
+        ApiDoc(
+            summary='Create a salted password hash for hashed_password in etc/module.yaml',
+            method='put',
+            path='/services/hashpassword/',
+            tags=['services'],
+            request_body='text/plain',
+            response_example='{"hash": "pbkdf2_sha256$600000$<salt>$<digest>"}',
+        ),
+        ApiDoc(
+            summary='Check a password against a password hash',
+            method='put',
+            path='/services/checkpassword/',
+            tags=['services'],
+            request_body='application/json',
+            request_example='{"password": "<password>", "hash": "<hash>"}',
+            response_example='{"match": true}',
+        ),
+        ApiDoc(
+            summary='Create a random secret (256 bit) for a plain-text configuration value, e.g. a bearer token',
+            method='put',
+            path='/services/generatesecret/',
+            tags=['services'],
+            response_example='{"secret": "<43 characters A-Z a-z 0-9 - _>"}',
+        ),
+    ]

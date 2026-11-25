@@ -3,15 +3,140 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-==================================
-Update von einer älteren Version
-==================================
+===================================================
+Update von einer älteren Version :greensup:`Update`
+===================================================
 
 Es kann verschiedene Szenarien geben von denen aus man ein Update machen möchte. Es gibt unterschiedliche Ansätze
 wenn es sich um eine Virtuelle Maschine handelt oder wenn ein Raspberry Pi upgedated werden soll. Es gibt hier
 leider nicht **die** Methode. Leider gibt es derzeit auch keine vollständige Systemübergreifende Backup Methode.
 Es ist also ein wenig ein Stückwerk.
+
+Für das Update auf SmartHomeNG v2.0 gelten zusätzlich die Hinweise im folgenden Abschnitt.
+
+
+.. _update_auf_2_0:
+
+Update auf SmartHomeNG v2.0 :redsup:`neu`
+=========================================
+
+SmartHomeNG v2.0 ist ein Major-Release: Funktionen, die seit längerem als veraltet gekennzeichnet waren, sind
+entfernt, und einige Voreinstellungen sind geändert. Eine bestehende Installation läuft deshalb nach dem Update nicht
+unbedingt ohne Anpassung weiter. Die meisten Anpassungen erledigt das Tool
+:doc:`upgrade_check.py </tools/tools_upgrade_check>`. Die vollständige Liste der Änderungen steht in den
+:ref:`Release Notes <releasenotes_2_0_0_update>`.
+
+Was sich ändert
+---------------
+
+* **Python**: SmartHomeNG v2.0 startet nur mit Python 3.11 oder neuer (siehe
+  :ref:`Python-Versionen <python_versionen>`).
+
+* **Verzeichnisse**: ``items``, ``logics``, ``scenes``, ``structs`` und ``functions`` liegen jetzt unterhalb von
+  ``etc``. SmartHomeNG verschiebt vorhandene Verzeichnisse beim ersten Start selbst dorthin. Eigene Skripte, Backups
+  oder Freigaben, die auf die alten Pfade zugreifen, müssen angepasst werden.
+
+* **Mehrfach eingebundene Plugins**: Der Name des Abschnitts in der ``etc/plugin.yaml`` ist jetzt der Name der
+  Instanz, ``instance:`` wird dort nicht mehr ausgewertet. Das Item-Attribut ``instance`` wird an untergeordnete
+  Items vererbt. Die ``etc/plugin.yaml`` und die betroffenen Items müssen dazu passen.
+
+* **Logiken und eval-Ausdrücke**: Die veralteten Methoden des ``sh``-Objekts (z.B. ``sh.return_item()``,
+  ``sh.now()``) und ``sh.tools`` gibt es nicht mehr, sie müssen durch die aktuellen ersetzt werden (z.B.
+  ``sh.items.return_item()``, ``sh.shtime.now()``).
+
+* **Mehrzeilige Werte in Item- und Struct-Dateien**: Ist ein Wert über mehrere Zeilen geschrieben, werden die Zeilen
+  jetzt mit einem Leerzeichen zusammengesetzt, bisher ohne. Solche Stellen müssen geprüft werden.
+
+* **Dateien im .conf-Format** werden nicht mehr gelesen. Sie lassen sich mit
+  :doc:`conf_to_yaml_converter.py </tools/tools_conf_to_yaml_converter>` umwandeln.
+
+* **Plugins denon, epson, kodi, lms, oppo, pioneer und viessmann**: Einige Parameter in der ``etc/plugin.yaml`` sind
+  entfallen oder umbenannt (siehe Release Notes und die Dokumentation des jeweiligen Plugins).
+
+Schritt für Schritt
+-------------------
+
+Die Schritte ergänzen die allgemeine :ref:`Vorgehensweise <update_vorgehensweise>` weiter unten, dort sind die
+einzelnen Befehle beschrieben.
+
+1. **Python-Version prüfen** (``python3 --version``): mindestens 3.11. Bei einer älteren Version zuerst das
+   `Betriebssystemupdate`_ durchführen.
+
+2. **Sichern**: die Konfiguration (Admin-GUI, Seite **Dienste**, oder wie unter
+   :doc:`/konfiguration/konfiguration_backup_restore` beschrieben) und die Daten aus ``var`` (Datenbank, Cache).
+
+3. **SmartHomeNG beenden**. Läuft SmartHomeNG als Dienst, den Dienst vorher abschalten.
+
+4. **Core und Plugins aktualisieren**, und zwar beide: Plugins, die den Core 2.0 benötigen, laden mit einem älteren
+   Core nicht.
+
+5. **Konfiguration prüfen und anpassen**, bevor SmartHomeNG v2.0 zum ersten Mal gestartet wird:
+
+   .. code:: bash
+
+       /usr/local/smarthome$ python3 tools/upgrade_check.py
+
+   Das Tool listet die Stellen auf, die angepasst werden müssen, und verändert dabei nichts. Die mit ``[fixable]``
+   gekennzeichneten Stellen ändert es mit der Option ``--fix`` selbst. Jede geänderte Datei wird vorher nach
+   ``etc/upgrade_check_backup/<Zeitstempel>/`` kopiert:
+
+   .. code:: bash
+
+       /usr/local/smarthome$ python3 tools/upgrade_check.py --fix
+
+   Was das Tool danach noch meldet (z.B. mehrzeilige Werte oder Dateien im .conf-Format), muss von Hand geprüft und
+   angepasst werden.
+
+   Das Tool muss mit dem Python gestartet werden, mit dem auch SmartHomeNG läuft (ein Virtual Environment vorher
+   aktivieren). Meldet es ``ruamel.yaml is not installed``, fehlt in dieser Python-Umgebung das Paket ``ruamel.yaml``,
+   z.B. nach einem Betriebssystemupdate. Es lässt sich mit ``pip3 install "ruamel.yaml>=0.16.7,<0.20"`` installieren.
+
+6. **SmartHomeNG von Hand in der Konsole starten**, nicht über den Dienst:
+
+   .. code:: bash
+
+       /usr/local/smarthome$ python3 bin/smarthome.py
+
+   Beim ersten Start installiert SmartHomeNG die benötigten Bibliotheken und verschiebt die Verzeichnisse ``items``,
+   ``logics``, ``scenes``, ``structs`` und ``functions`` nach ``etc``.
+
+   .. attention::
+
+      Liegt im Zielverzeichnis bereits eine Datei mit demselben Namen (z.B. ``items/licht.yaml`` und
+      ``etc/items/licht.yaml``), verschiebt SmartHomeNG diese Datei nicht. Es listet die betroffenen Dateien in der
+      Konsole auf und beendet sich mit dem Exit-Code 255. Die Meldung steht nicht im Log von SmartHomeNG. Die übrigen
+      Dateien sind zu diesem Zeitpunkt schon verschoben. Die genannten Dateien müssen von Hand verschoben oder
+      gelöscht werden, danach kann SmartHomeNG erneut gestartet werden.
+
+7. **Logs prüfen**: Fehler und Warnungen in ``var/log`` bzw. in der Admin-GUI ansehen. Läuft alles, den Dienst wieder
+   in Betrieb nehmen.
+
+Bisheriges Verhalten vorübergehend beibehalten
+----------------------------------------------
+
+Wer die Umstellung der Verzeichnisse oder der Instanznamen nicht sofort durchführen kann, kann dafür das bisherige
+Verhalten übergangsweise beibehalten. Dazu in der ``etc/smarthome.yaml`` eintragen:
+
+.. code:: yaml
+
+    config_etc: false          # Verzeichnisse bleiben im Hauptverzeichnis
+    legacy_instances: true     # Instanznamen aus 'instance:', keine Vererbung des Item-Attributs instance
+
+Die Einträge müssen **vor dem ersten Start** von SmartHomeNG v2.0 gesetzt sein: Ohne ``config_etc: false`` werden die
+Verzeichnisse beim ersten Start verschoben. Beide Schalter sind nur als Übergang gedacht. Alle anderen Änderungen
+gelten unabhängig davon.
+
+Plugins
+-------
+
+Die Plugins darksky, deebot_ozmo, harmony, roomba_980 und zwave funktionieren nicht mehr, die Plugins influxdb und
+influxdb2 sind veraltet. Ersatz und Alternativen nennen die
+:ref:`Release Notes <releasenotes_2_0_0_outdated_plugins>`.
+
+
+.. _update_vorgehensweise:
 
 Vorgehensweise
 ==============
@@ -101,26 +226,26 @@ Jede SmartHomeNG Version erhöht die Anforderungen an die benötigte Python Vers
 :doc:`/installation/anforderungen` daher sollte vor dem Update von SmarthomeNG
 das Betriebssystem aktualisiert werden.
 
-Bei **Linux** Systemen ist damit ein Distributionsupgrade gemeint. Für die aktuelle SmartHomeNG 1.9 also zum Beispiel
-ein Upgrade auf Debian Bullseye (11.3). Welche Debian Version welche Python Version mitbringt,
-kann im `Debian Wiki <https://wiki.debian.org/Python>`__ nachgelesen werden.
+Bei **Linux** Systemen ist damit ein Distributionsupgrade gemeint, z.B. ein Upgrade auf Debian 13 (Trixie). Welche
+Debian Version welche Python Version mitbringt, kann im `Debian Wiki <https://wiki.debian.org/Python>`__
+nachgelesen werden.
 
 Zusätzlich müssen noch die in der Komplettanleitung :doc:`/installation/komplettanleitung/03_smarthomeng`
 unter *zusätzliche Linux Pakete installieren* angegebenen Pakete installiert werden.
 
-Für Windows bietet sich eine manuelle Installation von Python 3.9 in der letzten Revision an.
+Für Windows bietet sich eine manuelle Installation der letzten Revision einer der aktuell unterstützten Python
+Versionen an - siehe die Übersicht unter :doc:`/installation/anforderungen`.
 
-SmartHomeNG 1.8 oder höher wird benötigte Python Bibliotheken selbständig beim ersten Programmstart installieren.
+SmartHomeNG wird benötigte Python Bibliotheken selbständig beim ersten Programmstart installieren.
 
-Versionsdetails
-===============
+Varianten des Updates
+=====================
 
-Update von SmarthomeNG ab v1.6 und höher
--------------------------------------------
+Update durch Neuinstallation
+----------------------------
 
-Wenn von einer Version v1.6 oder höher ein Update durchgeführt werden soll, gibt es eine neue Möglichkeit. Statt
-ein Update durchzuführen, kann bestehende die Konfiguration gesichert werden, eine Neuinstallation durchgeführt werden
-und anschließend die gesicherte Konfiguration eingespielt werden. Das vereinfacht auch das Update, wenn man das
+Statt ein Update durchzuführen, kann die bestehende Konfiguration gesichert werden, eine Neuinstallation durchgeführt
+werden und anschließend die gesicherte Konfiguration eingespielt werden. Das vereinfacht auch das Update, wenn man das
 Raspberry Pi Image verwendet.
 
 Wie das Sichern und Wiederherstellen der Konfiguration funktioniert, ist auf der Seite
@@ -135,8 +260,8 @@ Wie das Sichern und Wiederherstellen der Konfiguration funktioniert, ist auf der
     Sollen diese Daten gesichert werden, so muß SmartHomeNG zuerst beendet und danach die gewünschten Dateie manuell gesichert werden.
 
 
-Update von SmarthomeNG ab v1.1 und höher
--------------------------------------------
+Update mit git
+--------------
 
 Wenn man SmarthomeNG laut der Komplettanleitung :doc:`/installation/komplettanleitung/03_smarthomeng`
 (mithilfe "git clone [...]") installiert hat, in das Verzeichnis "smarthome" wechseln und anschliessend
@@ -189,36 +314,33 @@ der Plugins ermittelt. Dies Skript wird aufgerufen mit:
 
 .. note::
 
-   Ab SmartHomeNG v1.6 werden, falls dieser Schritt ausgelassen wird,
-   die Requirements beim Start von SmartHomeNG bestimmt.
+   Falls dieser Schritt ausgelassen wird, werden die Requirements beim Start von SmartHomeNG bestimmt.
    Dabei werden die Packages bestimmt, die vom Core und von den konfigurierten
    Plugins benötigt werden. Sind die Requirements
    nicht erfüllt, beendet sich SmartHomeNG mit einem entsprechenden Eintrag im Log.
 
 
+.. attention::
+
+    Auf aktuellen Betriebssystemen (Debian ab Version 12/Bookworm, Ubuntu ab 23.04, ...) markiert Python die
+    System-Installation als *externally managed* (`PEP 668 <https://peps.python.org/pep-0668/>`_) - ``pip install``
+    schlägt dort fehl, egal ob mit oder ohne ``sudo`` bzw. ``--user``. Die Installation von Python Bibliotheken für
+    SmartHomeNG **muss** deshalb in einem virtuellen Environment erfolgen. Wie ein virtuelles Environment angelegt
+    und aktiviert wird, ist unter :doc:`/referenz/python/virtual_environments` beschrieben - dieser Schritt sollte
+    vor den folgenden ``pip3 install`` Kommandos durchgeführt werden.
+
 Vom Programmkern benötigte Bibliotheken herunterladen und installieren mit:
 
    .. code-block:: bash
 
-       pip3 install -r requirements/base.txt --user
+       pip3 install -r requirements/base.txt
 
 Und dann für jedes Plugin einzeln die benötigten Bibliotheken herunterladen
 und installieren mit:
 
    .. code-block:: bash
 
-       pip3 install -r plugins/<pluginname>/requirements.txt --user
-
-
-.. attention::
-
-    In früheren Beschreibungen wurde die globale Installation von Python Packages mit dem sudo Kommando
-    beschrieben:
-
-       sudo pip3 install -r requirements/base.txt
-
-    Dieses funktioniert unter Debian Buster **NICHT** mehr. Zumindest unter Buster **muss** die Installation
-    für den entsprechenden User mit **--user** erfolgen (wie oben beschrieben).
+       pip3 install -r plugins/<pluginname>/requirements.txt
 
 
 Zum Abschluss dann SmarthomeNG starten. Um zu prüfen, ob sich vielleicht
@@ -240,129 +362,11 @@ ist beschrieben, welche Schritte dafür bei Verwendung von systemd
 durchgeführt werden müssen.
 
 
-
-Upgrade von Smarthome.py
--------------------------
-
-Das letzte Release von Smarthome.py wurde am 14. November 2013 veröffentlicht.
-Zu der Zeit war *Debian Wheezy* (7.x) gerade ein halbes Jahr alt, *systemd* war
-in den Kinderschuhen und den eibd (Vorgänger von knxd) mußte man sich selbst kopieren und übersetzen.
-Es gibt daher in vielen Bereichen etliche Entwicklungsschübe die es rechtfertigen
-eine vollständige Neuinstallation vorzuschlagen. Trotzdem sollte es möglich sein,
-relativ problemlos auf SmartHomeNG umzusteigen.
-
-.. note::
-
-    Wichtig ist zu wissen, das sich die Struktur der Datenbank geändert hat und daher
-    **eine existierende SQLite Datenbank nicht weiterverwendet werden kann**.
-
-Vorgehensweise
-~~~~~~~~~~~~~~
-
-Da nicht mehr viele User eine Umstellung vornehmen müssen und die Entwickler lange schon
-auf SmartHomeNG umgestiegen sind, ist die folgende Beschreibung eventuell nicht ganz vollständig
-oder gegebenenfalls nicht exakt genug. Bei Fragen steht der gitter chat oder das Forum
-zur Verfügung.
-Die Vorgehensweise beim Upgrade ist prinzipiell folgende:
-
-- Unter Linux automatischen Start von Smarthome.py abschalten
-- Smarthome.py selbst beenden falls noch nicht geschehen
-- Das komplette Smarthome.py Verzeichnis ``/usr/local/smarthome/`` **auf einem anderen Rechner** sichern.
-- Betriebssystem neu aufsetzen und Installation von SmartHomeNG gemäß Komplettanleitung :doc:`/installation/komplettanleitung/03_smarthomeng`
-  durchführen. SmartHomeNG sollte gestartet und via Admin Interface geprüft werden ob es fehlerfrei startet.
-- Die im vorletzten Schritt gesicherte Installation von Smarthome.py kann nun zurückgesichert werden,
-  z.B. an ``/usr/local/smarthome.old``. Somit stehen die alten Konfigurationsdateien zur Verfügung für die Übernahme.
-
-Plugins
-~~~~~~~
-
-Wenn das neue SmartHomeNG grundsätzlich startet, können **zunächst die Plugins** übernommen werden.
-Es bietet sich an die Plugins entweder
-
-- über das Admin Interface hinzuzufügen und zu konfigurieren wobei eine parallel im Texteditor
-  geöffnete ``/usr/local/smarthome.old/etc/plugins.conf`` als Referenz für die richtigen Werte ideal ist
-
-oder manuell
-
-- über das Admin Interface unter **Dienste --> CONF-YAML Konverter** den
-  Inhalt der ``/usr/local/smarthome.old/etc/plugins.conf`` in yaml Format umwandeln und
-  das Ergebnis an die Datei ``/usr/local/smarthome/etc/plugins.yaml`` anhängen bzw. einarbeiten.
-  Dabei muss natürlich selbst auf Doppelungen und die Einrückebene geachtet werden.
-
-Nun sollte ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden.
-Das kann entweder über das Admin Interface geschehen oder es muss in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
-geschaut werden.
-
-Eine falsche Konfiguration kann nach dem Neustart auch via Admin Interface angepasst werden.
-Wenn keine weiteren Fehler auftreten können die Items übernommen werden.
-
-Konfiguration
-~~~~~~~~~~~~~
-
-Je nach Struktur der Konfiguration ist deren Übernahme etwas mehr oder weniger aufwändig.
-
-Wenn schon die Konfiguration mit **-e**, **--config-etc** oder der Einstellung **config_etc: true** in der ``etc/smarthome.yaml`` vorgenommen wurde, ist es simpel. Ansonsten muss etwas mehr Aufwand getrieben werden.
-
-.. tab-set::
-
-   .. tab-item:: Konfiguration in `etc`
-
-      Das alte ``etc``-Verzeichnis kann im Normalfall 1:1 in den neuen Verzeichnisbaum übernommen
-      werden. Da von SmartHomeNG dort keine Dateien mehr mitgeliefert werden, können auch alte
-      Backup- und Default-Dateien (z.B. ``etc/smarthome.yaml.default`` und ``etc/smarthome.yaml.bak``)
-      bedenkenlos gelöscht werden.
-
-      Es empfiehlt sich, eine Kopie des gesamten ``etc``-Verzeichnisses samt Unterverzeichnissen aufzuheben, bis die neue Installation fehlerfrei läuft.
-
-      Sofern noch einzelne Konfigurationen im alten **conf**-Format vorliegen, sollte das Konvertertool
-      gestartet werden (siehe Anleitung im nächsten Abschnitt).
-
-   .. tab-item:: Konfiguration in einzelnen Verzeichnissen
-
-      **Items**
-      
-      Die empfohlene Vorgehensweise für die Übernahme der Items besteht aus den Schritten
-
-      - kopieren der Dateien mit den Definitionen der Items aus der alten Installation ``/usr/local/smarthome.old/items/``
-        in das Verzeichnis ``/usr/local/smarthome/items/`` der neuen Installation.
-      - starten des Konvertierungstools:
-
-        .. code-block:: bash
-
-            /usr/local/smarthome$ python3 tools/conf_to_yaml_converter.py
-
-        Bei erfolgreichem Durchlauf des Konverters ist jetzt für jede ``*.conf`` Datei eine passende ``*.yaml`` Datei erstellt worden.
-        Wenn das überprüft wurde können die ``*.conf`` Dateien nun aus ``/usr/local/smarthome/items/`` gelöscht werden.
-
-      Nun sollte wiederum ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden.
-      Das kann entweder über das Admin Interface geschehen oder es muss in
-      ``/usr/local/smarthome/var/log/smarthome-warnings.log`` geschaut werden.
-
-      **Logiken**
-
-      Die empfohlene Vorgehensweise für die Übernahme der Logiken besteht aus den Schritten
-
-      - kopieren der Dateien mit den Definitionen der Logiken aus der alten Installation ``/usr/local/smarthome.old/logics/``
-        in das Verzeichnis ``/usr/local/smarthome/logics/`` der neuen Installation.
-
-      - über das Admin Interface unter Dienste --> CONF-YAML Konverter den Inhalt der ``/usr/local/smarthome.old/etc/logics.conf``
-        in yaml Format umwandeln und das Ergebnis an die Datei ``/usr/local/smarthome/etc/logics.yaml`` anhängen bzw. einarbeiten.
-        Dabei muss natürlich selbst auf Doppelungen und die Einrückebene geachtet werden.
-
-      Nun sollte wiederum ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden.
-      Das kann entweder über das Admin Interface geschehen oder es muss in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
-      geschaut werden.
-
-      **Szenen, Userfunctions und Strukturen**
-
-      Analog zu den Logiken werden auch die Verzeichnisse ``scenes``, ``functions`` und ``structs`` migriert.
-
-
 Konvertierung von \*.conf-Dateien
 ==================================
 
 Möchte man vom alten ``*.conf`` Format der Konfigurationsdateien
-(die ab Version 1.12 nicht weiter unterstützt werden) auf das neue
+(das nicht mehr unterstützt wird) auf das
 ``*.yaml`` Format umschwenken, so kann der im Verzeichnis ``tools``
 bereitgestellte Konverter ``conf_to_yaml_converter.py`` genutzt werden
 um das automatisch zu tun.

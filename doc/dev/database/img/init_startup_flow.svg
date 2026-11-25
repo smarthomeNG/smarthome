@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 1260" font-family="Helvetica, Arial, sans-serif">
+  <rect width="860" height="1260" fill="#f9f9f9"/>
+
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L9,3.5 z" fill="#555"/>
+    </marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/>
+    </marker>
+  </defs>
+
+  <text x="430.0" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Plugin Startup — __init__() → _initialize_db() → run()</text>
+  <rect x="270.0" y="44" width="320" height="40" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="430.0" y="62" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">SmartHomeNG loads the plugin</text>
+  <text x="430.0" y="77" text-anchor="middle" font-size="9.5" fill="#555">calls Database.__init__(sh)</text>
+  <line x1="430.0" y1="84" x2="430.0" y2="108" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="240.0" y="110" width="380" height="34" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="430.0" y="128" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">Resolve driver alias</text>
+  <text x="430.0" y="143" text-anchor="middle" font-size="9" fill="#555">_resolve_driver_alias() / _resolve_postgres_driver_alias()</text>
+  <line x1="430.0" y1="144" x2="430.0" y2="168" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="210.0" y="170" width="440" height="44" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="430.0" y="188" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">Construct self._db = lib.db.Database(...)</text>
+  <text x="430.0" y="203" text-anchor="middle" font-size="9.5" fill="#555">DB-API module import + paramstyle detection</text>
+  <line x1="430.0" y1="214" x2="430.0" y2="238" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="650.0" y1="192" x2="800" y2="192" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="650" y="168" width="150" height="48" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="725.0" y="186" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#b31412">not api_initialized</text>
+  <text x="725.0" y="201" text-anchor="middle" font-size="8.5" fill="#555">log error,</text>
+  <text x="725.0" y="215" text-anchor="middle" font-size="8.5" fill="#555">_init_complete=False, return</text>
+  <rect x="170.0" y="240" width="520" height="38" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="430.0" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="#555555">sqlite3 + ':memory:'/blank database guard</text>
+  <text x="430.0" y="273" text-anchor="middle" font-size="8.5" fill="#555">rejects the two-independent-connections footgun (see §5)</text>
+  <line x1="430.0" y1="278" x2="430.0" y2="302" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="690.0" y1="259" x2="800" y2="259" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="650" y="235" width="150" height="48" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="725.0" y="253" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#b31412">in-memory sqlite3</text>
+  <text x="725.0" y="268" text-anchor="middle" font-size="8.5" fill="#555">critical log,</text>
+  <text x="725.0" y="282" text-anchor="middle" font-size="8.5" fill="#555">_init_complete=False, return</text>
+  <rect x="210.0" y="304" width="440" height="44" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="430.0" y="322" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">Construct self._db_maint (2nd connection)</text>
+  <text x="430.0" y="337" text-anchor="middle" font-size="9.5" fill="#555">same driver, independent socket/handle</text>
+  <line x1="430.0" y1="348" x2="430.0" y2="372" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="650.0" y1="326" x2="800" y2="326" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="650" y="302" width="150" height="48" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="725.0" y="320" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#b31412">not api_initialized</text>
+  <text x="725.0" y="335" text-anchor="middle" font-size="8.5" fill="#555">log error,</text>
+  <text x="725.0" y="349" text-anchor="middle" font-size="8.5" fill="#555">_init_complete=False, return</text>
+  <rect x="130.0" y="374" width="600" height="36" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="430.0" y="392" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e7e34">_db_initialized = _db_maint_initialized = _db_broken = False</text>
+  <text x="430.0" y="407" text-anchor="middle" font-size="8.5" fill="#555">set up front — always exist even if a later step below fails</text>
+  <line x1="430.0" y1="410" x2="430.0" y2="434" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="50" y="436" width="760" height="360" rx="5" fill="#ffffff" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="430.0" y="454" text-anchor="middle" font-size="12" font-weight="bold" fill="#2a5db0">_initialize_db()</text>
+  <text x="430.0" y="469" text-anchor="middle" font-size="9" fill="#555">called here from __init__(), and again — self-healing — from run(), _dump(), id(), _query()</text>
+  <rect x="80" y="486" width="220" height="34" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="190.0" y="504" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">self._db_broken?</text>
+  <text x="190.0" y="519" text-anchor="middle" font-size="8.5" fill="#555">yes → return False immediately</text>
+  <line x1="190" y1="520" x2="190" y2="544" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="80" y="546" width="220" height="56" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="190.0" y="564" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">Connect main DB</text>
+  <text x="190.0" y="579" text-anchor="middle" font-size="8.5" fill="#555">throttled: max 1 attempt / 20s</text>
+  <text x="190.0" y="593" text-anchor="middle" font-size="8.5" fill="#555">(last_connect_time)</text>
+  <line x1="190" y1="602" x2="190" y2="626" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="80" y="628" width="220" height="68" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="190.0" y="646" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">setup() schema</text>
+  <text x="190.0" y="661" text-anchor="middle" font-size="8" fill="#555">if timescale_hypertable &amp; psycopg:</text>
+  <text x="190.0" y="675" text-anchor="middle" font-size="8" fill="#555">  _enable_timescale_hypertable()</text>
+  <text x="190.0" y="689" text-anchor="middle" font-size="8" fill="#555">if timescale_compress &amp; psycopg: _enable_timescale_compression()</text>
+  <line x1="190" y1="696" x2="190" y2="720" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="80" y="722" width="220" height="30" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="190.0" y="740.3333333333334" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e7e34">_db_initialized = True</text>
+  <line x1="300" y1="570" x2="345" y2="511" stroke="#555" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <text x="302" y="502" font-size="8.5" fill="#888">on failure</text>
+  <rect x="345" y="486" width="220" height="50" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="455.0" y="504" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#b31412">except DatabaseSetupError</text>
+  <text x="455.0" y="519" text-anchor="middle" font-size="8.5" fill="#555">_mark_db_broken(e)</text>
+  <text x="455.0" y="533" text-anchor="middle" font-size="8.5" fill="#555">return False  (permanent)</text>
+  <line x1="300" y1="660" x2="345" y2="590" stroke="#555" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <rect x="345" y="546" width="220" height="92" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="455.0" y="564" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#b31412">except Exception (else)</text>
+  <text x="455.0" y="579" text-anchor="middle" font-size="8.5" fill="#555">sqlite3 → critical log,</text>
+  <text x="455.0" y="593" text-anchor="middle" font-size="8.5" fill="#555">self._sh.restart(), exit(0)</text>
+  <text x="455.0" y="607" text-anchor="middle" font-size="8.5" fill="#555">other driver → critical log,</text>
+  <text x="455.0" y="621" text-anchor="middle" font-size="8.5" fill="#555">return False (retry next cycle)</text>
+  <rect x="580" y="486" width="220" height="56" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="690.0" y="504" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">Connect maint DB</text>
+  <text x="690.0" y="519" text-anchor="middle" font-size="8.5" fill="#555">throttled: max 1 attempt / 20s</text>
+  <text x="690.0" y="533" text-anchor="middle" font-size="8.5" fill="#555">(last_maint_connect_time)</text>
+  <line x1="690" y1="542" x2="690" y2="566" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="580" y="568" width="220" height="44" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="690.0" y="586" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">setup() schema</text>
+  <text x="690.0" y="601" text-anchor="middle" font-size="8.5" fill="#555">(maintenance connection)</text>
+  <line x1="690" y1="612" x2="690" y2="636" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="580" y="638" width="220" height="30" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="690.0" y="656.1666666666666" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#1e7e34">_db_maint_initialized = True</text>
+  <line x1="800" y1="590" x2="730" y2="694" stroke="#555" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <text x="735" y="650" font-size="8.5" fill="#888">on failure</text>
+  <rect x="580" y="696" width="220" height="78" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="690.0" y="714" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#b31412">except (either error)</text>
+  <text x="690.0" y="729" text-anchor="middle" font-size="8.5" fill="#555">DatabaseSetupError → _mark_db_broken(e)</text>
+  <text x="690.0" y="743" text-anchor="middle" font-size="8.5" fill="#555">sqlite3 → restart() + exit(0)</text>
+  <text x="690.0" y="757" text-anchor="middle" font-size="8.5" fill="#555">else → critical log, return False</text>
+  <line x1="190" y1="752" x2="190" y2="780" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="80" y="806" width="740" height="30" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="450.0" y="824.5" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#1e7e34">return True  — both connections live and schema current</text>
+  <line x1="430.0" y1="836" x2="430.0" y2="878" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="130.0" y="861" text-anchor="middle" font-size="9" fill="#888">later, once the framework starts the plugin</text>
+  <rect x="170.0" y="880" width="520" height="38" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="430.0" y="898" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">run(): _initialize_db()</text>
+  <text x="430.0" y="913" text-anchor="middle" font-size="9" fill="#555">self-heal if the __init__()-time attempt above failed</text>
+  <line x1="430.0" y1="918" x2="430.0" y2="942" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="170.0" y="944" width="520" height="30" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="430.0" y="962.5" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#1e7e34">self.alive = True</text>
+  <line x1="430.0" y1="974" x2="430.0" y2="998" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="130.0" y="1000" width="600" height="40" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="430.0" y="1018" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">if psycopg driver &amp; _db_initialized:</text>
+  <text x="430.0" y="1033" text-anchor="middle" font-size="8.5" fill="#555">_reconcile_native_retention_reality()  — detect drift vs. config</text>
+  <line x1="430.0" y1="1040" x2="430.0" y2="1064" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="130.0" y="1066" width="600" height="54" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="430.0" y="1084" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">if timescale_native_aggregation &amp; psycopg &amp; _db_initialized:</text>
+  <text x="430.0" y="1099" text-anchor="middle" font-size="8.5" fill="#555">_enable_timescale_native_aggregation()</text>
+  <text x="430.0" y="1113" text-anchor="middle" font-size="8.5" fill="#555">if timescale_native_retention: _enable_timescale_native_retention()</text>
+  <line x1="430.0" y1="1120" x2="430.0" y2="1144" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="170.0" y="1146" width="520" height="34" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="430.0" y="1164" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">build_orphanlist(True)</text>
+  <text x="430.0" y="1179" text-anchor="middle" font-size="8.5" fill="#555">retried from _dump() if this attempt fails — §3</text>
+  <line x1="430.0" y1="1180" x2="430.0" y2="1204" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="110.0" y="1206" width="640" height="34" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="430.0" y="1224" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#1e7e34">_start_schedulers()</text>
+  <text x="430.0" y="1239" text-anchor="middle" font-size="8.5" fill="#555">Buffer dump always; Remove old unless native aggregation; Check invalid items if configured</text>
+</svg>

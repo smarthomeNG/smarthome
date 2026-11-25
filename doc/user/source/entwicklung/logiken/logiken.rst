@@ -7,9 +7,9 @@
 .. role:: blacksup
 
 
-=====================================
-Logiken :bluesup:`under construction`
-=====================================
+=======
+Logiken
+=======
 
 Eine Logik besteht aus einem Python Skript sowie einer Reihe von Parametern die den Aufruf (das Triggern) der Logik
 steuern. Eine Logik kann während der Laufzeit von SmartHomeNG geladen und entladen werden. Dadurch sind Veränderungen

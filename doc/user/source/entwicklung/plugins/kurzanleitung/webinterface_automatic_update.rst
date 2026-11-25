@@ -2,11 +2,12 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
 
 
-Automatische Updates der Daten im Webinterface :redsup:`new`
-============================================================
+Automatische Updates der Daten im Webinterface :greensup:`Update`
+=================================================================
 
 Um die Daten im Webinterface zu aktualisieren, sendet die Webseite periodische AJAX-Anfragen
 an das Plugin und verarbeitet die zurückgelieferten Informationen,
@@ -59,10 +60,11 @@ Die Klasse ``WebInterface`` im Plugin Code muss so erweitert werden, dass sie di
             if dataSet is None:
                 # get the new data
                 data = {}
-                data['fromip'] = 'fromip': self.plugin.fromip)
+                data['fromip'] = self.plugin.fromip
 
                 data['item'] = {}
                 for i in self.plugin.items:
+                    data['item'][i] = {}
                     data['item'][i]['value'] = self.plugin.getitemvalue(i)
 
                 # return it as json the the web page
@@ -220,6 +222,17 @@ Die Parameter der shngInsertText-Funktion sind dabei wie folgt:
 #. (optional) Wenn das Element aus Parameter 0 in einer dataTable ist, muss die ID der Tabelle mitgegeben werden
 
 #. (optional) Möchte man beim Ändern eines Werts einen Highlight-Effekt, kann die Dauer in Sekunden angegeben werden
+
+#. (optional) ``true``, wenn der Wert HTML-Markup ist, das dargestellt werden soll (Standard: ``false``)
+
+.. important::
+
+    Der Wert wird standardmäßig als Text eingefügt: enthaltenes Markup wird wörtlich angezeigt und nie
+    interpretiert. Das 5. Argument ``true`` ist nur für Markup gedacht, das das Webinterface selbst
+    erzeugt (Icons, Links, Buttons). Werte aus Items, von Geräten oder anderen externen Quellen dürfen nicht
+    als HTML eingefügt werden - sie könnten sonst Script im Browser des Admins ausführen. Werte werden
+    unmaskiert an die Seite geschickt; ein vom Plugin bereits HTML-maskierter Wert (``&amp;``, ``&lt;``)
+    würde mit sichtbaren Entities angezeigt.
 
 
 .. code-block:: html+jinja

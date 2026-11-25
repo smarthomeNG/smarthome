@@ -161,6 +161,30 @@ class TestYamlLoadFromString(unittest.TestCase):
 # ===========================================================================
 
 
+class TestYamlComposeFromString(unittest.TestCase):
+    def test_scalar_nodes_keep_text_and_quoting(self):
+        root = shyaml.yaml_compose_fromstring("a: 3.10\nb: '3.10'\n")
+        (_, plain), (_, quoted) = root.value
+        self.assertEqual(('3.10', None), (plain.value, plain.style))
+        self.assertEqual(('3.10', "'"), (quoted.value, quoted.style))
+
+    def test_text_with_yaml_directive(self):
+        root = shyaml.yaml_compose_fromstring('%YAML 1.1\n---\nroom:\n    cache: yes\n')
+
+        key_node, value_node = root.value[0]
+        self.assertEqual('room', key_node.value)
+        self.assertEqual('yes', value_node.value[0][1].value)
+
+    def test_empty_document_is_none(self):
+        self.assertIsNone(shyaml.yaml_compose_fromstring(''))
+
+    def test_invalid_yaml_raises(self):
+        from ruamel.yaml import YAMLError
+
+        with self.assertRaises(YAMLError):
+            shyaml.yaml_compose_fromstring('a: [\n')
+
+
 class TestYamlSave(unittest.TestCase):
     def test_save_and_reload(self):
         f = tempfile.NamedTemporaryFile(suffix='.yaml', delete=False)
@@ -219,6 +243,167 @@ class TestYamlRoundtrip(unittest.TestCase):
 # ===========================================================================
 # Path helpers: setInDict, get_parent, get_key
 # ===========================================================================
+
+
+DUPLICATE_KEY_YAML = textwrap.dedent("""\
+    kino:
+        ps3:
+            enter:
+                lirc_key: kreuz
+            left:
+                lirc_key: left
+            enter:
+                lirc_key: return
+""")
+
+
+class TestDuplicateKeys(unittest.TestCase):
+    """A key defined twice in one mapping is reported with its real line numbers."""
+
+    def _write_tmpfile(self, content):
+        f = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8')
+        f.write(content)
+        f.close()
+        self.addCleanup(os.unlink, f.name)
+        return f.name
+
+    def test_yaml_load_warns_naming_key_and_lines(self):
+        path = self._write_tmpfile(DUPLICATE_KEY_YAML)
+        with self.assertLogs('lib.shyaml', 'WARNING') as logs:
+            result = shyaml.yaml_load(path, ordered=True)
+        text = '\n'.join(logs.output)
+        self.assertIn('"enter"', text)
+        self.assertIn('line 7', text)
+        self.assertIn('line 3', text)
+        self.assertNotIn('line 13', text)
+        self.assertEqual(result['kino']['ps3']['enter']['lirc_key'], 'return')
+
+    def test_yaml_load_unordered_rejects_duplicates_with_real_lines(self):
+        path = self._write_tmpfile(DUPLICATE_KEY_YAML)
+        with self.assertLogs('lib.shyaml', 'ERROR') as logs:
+            result = shyaml.yaml_load(path)
+        self.assertIsNone(result)
+        text = '\n'.join(logs.output)
+        self.assertIn('"enter"', text)
+        self.assertIn('line 7', text)
+        self.assertNotIn('line 13', text)
+
+    def test_yaml_load_fromstring_warns_with_unscaled_lines(self):
+        with self.assertLogs('lib.shyaml', 'WARNING') as logs:
+            shyaml.yaml_load_fromstring(DUPLICATE_KEY_YAML, ordered=True)
+        text = '\n'.join(logs.output)
+        self.assertIn('line 7', text)
+        self.assertIn('line 3', text)
+
+    def test_no_warning_for_unique_keys(self):
+        path = self._write_tmpfile('a:\n    x: 1\nb:\n    x: 2\n')
+        with self.assertNoLogs('lib.shyaml', 'WARNING'):
+            shyaml.yaml_load(path, ordered=True)
+
+    def test_no_warning_for_key_overriding_a_merge(self):
+        path = self._write_tmpfile('base: &b\n    a: 1\nx:\n    <<: *b\n    a: 2\n')
+        with self.assertNoLogs('lib.shyaml', 'WARNING'):
+            result = shyaml.yaml_load(path)
+        self.assertEqual(result['x']['a'], 2)
+
+    def test_roundtrip_error_has_key_and_real_line_numbers(self):
+        path = self._write_tmpfile(DUPLICATE_KEY_YAML)
+        with self.assertLogs('lib.shyaml', 'ERROR') as logs:
+            with self.assertRaises(Exception) as ctx:
+                shyaml.yaml_load_roundtrip(path, raise_on_error=True)
+        for text in (str(ctx.exception), '\n'.join(logs.output)):
+            self.assertIn('"enter"', text)
+            self.assertIn('line 7', text)
+            self.assertNotIn('line 13', text)
+
+
+class TestRoundtripFidelity(unittest.TestCase):
+    """Loading and saving a file changes nothing but the edited values."""
+
+    def _write_tmpfile(self, content):
+        f = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8')
+        f.write(content)
+        f.close()
+        self.addCleanup(os.unlink, f.name)
+        return f.name
+
+    def _save_unchanged(self, content):
+        path = self._write_tmpfile(content)
+        shyaml.yaml_save_roundtrip(path, shyaml.yaml_load_roundtrip(path, raise_on_error=True))
+        with open(path, encoding='utf-8') as f:
+            return path, f.read()
+
+    def test_unchanged_file_is_written_back_as_it_was(self):
+        content = textwrap.dedent("""\
+            # header comment
+
+            room:
+                # comment before a key
+                light:
+                    type: bool  # inline comment
+                    visu_acl: 'rw'
+                    knx_listen:
+                    -   1/1/1
+                    -   1/1/2
+
+                temp:
+                    type: num
+        """)
+        self.assertEqual(content, self._save_unchanged(content)[1])
+
+    def test_edit_changes_only_the_edited_line(self):
+        content = 'a:\n    # keep me\n    b: 1\n    c: two\n'
+        path = self._write_tmpfile(content)
+        data = shyaml.yaml_load_roundtrip(path, raise_on_error=True)
+        data['a']['b'] = 2
+        shyaml.yaml_save_roundtrip(path, data)
+        with open(path, encoding='utf-8') as f:
+            self.assertEqual('a:\n    # keep me\n    b: 2\n    c: two\n', f.read())
+
+    def test_block_scalars_are_read_unchanged(self):
+        path = self._write_tmpfile('literal: |\n    line 1\n    line 2\nfolded: >\n    one\n    two\n')
+        for data in (shyaml.yaml_load(path), shyaml.yaml_load_roundtrip(path)):
+            self.assertEqual('line 1\nline 2\n', data['literal'])
+            self.assertEqual('one two\n', data['folded'])
+
+    def test_yaml_version_of_the_file_is_kept(self):
+        path, text = self._save_unchanged('%YAML 1.1\n---\na: yes\nb: 1\n')
+        self.assertTrue(text.startswith('%YAML 1.1'))
+        self.assertIs(True, shyaml.yaml_load(path)['a'])
+
+        path, text = self._save_unchanged('a: yes\nb: 1\n')
+        self.assertNotIn('%YAML', text)
+        self.assertEqual('yes', shyaml.yaml_load(path)['a'])
+
+    def test_comments_between_directive_and_document_start_are_kept(self):
+        content = '%YAML 1.1\n# vim: set expandtab\n---\n\na:\n    b: 1\n'
+        self.assertEqual(content, self._save_unchanged(content)[1])
+        content = '\n%YAML 1.1\n# vim: set expandtab\n---\na: 1\n'
+        self.assertEqual(content, self._save_unchanged(content)[1])
+
+    def test_data_is_written_in_shng_style(self):
+        self.assertEqual('a:\n    l:\n    -   x\n', shyaml.yaml_dump_roundtrip({'a': {'l': ['x']}}))
+
+    def test_numbers_with_leading_zeros_keep_their_value(self):
+        path, _ = self._save_unchanged('a: 010\nb: 0123\nphone: 0049123456\n')
+        data = shyaml.yaml_load(path)
+        self.assertEqual({'a': 10, 'b': 123, 'phone': 49123456}, data)
+
+    def test_new_file_has_no_yaml_directive(self):
+        path = self._write_tmpfile('')
+        data = shyaml.get_emptynode()
+        data['a'] = 'on'
+        shyaml.yaml_save_roundtrip(path, data)
+        with open(path, encoding='utf-8') as f:
+            text = f.read()
+        self.assertNotIn('%YAML', text)
+        self.assertEqual('on', shyaml.yaml_load(path)['a'])
+
+    def test_parse_error_reports_the_real_line(self):
+        path = self._write_tmpfile('a: 1\nb: 2\nc: [unclosed\n')
+        with self.assertLogs('lib.shyaml', 'ERROR') as logs:
+            shyaml.yaml_load(path)
+        self.assertIn('line 3', '\n'.join(logs.output))
 
 
 class TestPathHelpers(unittest.TestCase):
@@ -315,8 +500,79 @@ class TestYamlfileClass(unittest.TestCase):
         yf2.load()
         self.assertEqual(yf2.getvalue('key'), 'modified')
 
+    def test_setvalue_none_removes_top_level_key(self):
+        path = self._make_file("""
+            first: 1
+            second: 2
+        """)
+        yf = shyaml.yamlfile(path)
+        yf.load()
+        yf.setvalue('first', None)
+        self.assertIsNone(yf.getvalue('first'))
+        self.assertEqual(yf.getvalue('second'), 2)
+
+    def test_setvalue_none_removes_top_level_key_persists_after_save(self):
+        path = self._make_file('first: 1\nsecond: 2\n')
+        yf = shyaml.yamlfile(path)
+        yf.load()
+        yf.setvalue('first', None)
+        yf.save()
+        yf2 = shyaml.yamlfile(path)
+        yf2.load()
+        self.assertIsNone(yf2.getvalue('first'))
+        self.assertEqual(yf2.getvalue('second'), 2)
+
+    def test_setvalue_none_removes_nested_key(self):
+        path = self._make_file("""
+            parent:
+                child: 1
+                sibling: 2
+        """)
+        yf = shyaml.yamlfile(path)
+        yf.load()
+        yf.setvalue('parent.child', None)
+        self.assertIsNone(yf.getvalue('parent.child'))
+        self.assertEqual(yf.getvalue('parent.sibling'), 2)
+
+    def test_setvalue_after_loading_null_root(self):
+        # A file whose only top-level key was removed (setvalue(path, None)'s
+        # "cleanup empty parent" branch) ends up with a literal `null` root.
+        # Loading that must not leave self.data as None, or every subsequent
+        # setvalue() silently no-ops (TypeError swallowed in setInDict).
+        path = self._make_file('null\n')
+        yf = shyaml.yamlfile(path)
+        yf.load()
+        yf.setvalue('new', {'type': 'num'})
+        yf.save()
+
+        yf2 = shyaml.yamlfile(path)
+        yf2.load()
+        self.assertEqual(yf2.getnode('new'), {'type': 'num'})
+
+    def test_setvalue_creates_missing_ancestors(self):
+        path = self._make_file('existing: yes\n')
+        yf = shyaml.yamlfile(path)
+        yf.load()
+
+        self.assertTrue(yf.setvalue('a.b.c', {'type': 'num'}))
+        yf.save()
+
+        yf2 = shyaml.yamlfile(path)
+        yf2.load()
+        self.assertEqual(yf2.getnode('a.b.c'), {'type': 'num'})
+        self.assertEqual(yf2.getvalue('existing'), 'yes')
+
+    def test_setvalue_below_a_leaf_fails_and_keeps_the_leaf(self):
+        path = self._make_file('a:\n    type: num\n')
+        yf = shyaml.yamlfile(path)
+        yf.load()
+
+        self.assertFalse(yf.setvalue('a.type.x', 1))
+        self.assertFalse(yf.setvalue('a.type.x.y', 1))
+        self.assertEqual(yf.getvalue('a.type'), 'num')
+
     def test_setleafvalue_creates_branch_and_leaf(self):
-        # setvalue requires the parent branch to exist; setleafvalue creates it.
+        # setleafvalue creates the branch of the leaf and the leaf.
         path = self._make_file('existing: yes\n')
         yf = shyaml.yamlfile(path)
         yf.load()

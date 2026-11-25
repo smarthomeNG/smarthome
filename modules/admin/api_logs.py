@@ -26,10 +26,11 @@ import json
 import cherrypy
 
 import lib.shyaml as shyaml
+from lib.log import iter_log_entries
 from lib.utils import Utils
 from lib.constants import DIR_ETC, BASE_LOG
 import jwt
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource, contained_path
 
 
 class LogsController(RESTResource):
@@ -42,7 +43,7 @@ class LogsController(RESTResource):
         )
 
         self.etc_dir = self._sh.get_config_dir(DIR_ETC)
-        self.log_dir = os.path.join(self.base_dir, 'var', 'log')
+        self.log_dir = os.path.join(self._sh.get_vardir(), 'log')
 
         self.logging_conf = shyaml.yaml_load(self._sh.get_config_file(BASE_LOG))
 
@@ -108,10 +109,22 @@ class LogsController(RESTResource):
                 logfiles.append([fn, size])
         return logfiles
 
+    @staticmethod
+    def _entry_text(entry):
+        """
+        Return a log entry as shown in the admin UI: spaces replaced by NBSP, traceback lines marked with ``'> '``.
+
+        :param entry: logical log entry
+        :type entry: lib.log.LogEntry
+        :rtype: str
+        """
+        first, *continuation = (line.replace(' ', chr(160)) for line in entry.lines)
+        return first + ''.join('> ' + line for line in continuation)
+
     # ======================================================================
     #  GET /api/logs
     #
-    def read(self, id=None, chunk='1'):
+    def read(self, id=None, chunk='1', count='10'):
         """
         Handle GET requests for logs API
         """
@@ -122,6 +135,22 @@ class LogsController(RESTResource):
         else:
             chunk = 1
 
+        # id may name an in-memory log (e.g. 'env.core.log', the root
+        # WARNING+ buffer from lib.log.ShngMemLogHandler) instead of a file
+        # on disk. These are already maintained incrementally at log-emit
+        # time, so serving them is just a deque read, no file I/O - checked
+        # before the file-directory scan below, which touches disk (and on
+        # a bare checkout with no var/log/ yet, e.g. a fresh CI runner,
+        # would raise before ever reaching this branch otherwise).
+        if id is not None:
+            memlogs = self._sh.logs.return_logs()
+            if id in memlogs:
+                if Utils.is_int(count):
+                    count = int(count)
+                else:
+                    count = 10
+                return json.dumps({'name': id, 'entries': memlogs[id].export(count)}, default=str)
+
         # get names of files in log directory
         wrkl = sorted(os.listdir(self.log_dir))
         self.files = []
@@ -129,74 +158,54 @@ class LogsController(RESTResource):
             if not (fn.startswith('.')):
                 if os.path.isfile(os.path.join(self.log_dir, fn)):
                     self.files.append(fn)
-        # get names of logs (from filenames enting with '.log')
-        logs = self.get_logs()
         if id is None:
             # get list of existing logs and name of default log
             logs = self.get_logs_with_files()
             return json.dumps({'logs': logs, 'default': self.root_logname})
 
-        if id in logs:
-            # get filenames available for the specified log (if log is specified without extension)
-            logfiles = self.get_files_of_log(id)
-            return json.dumps(sorted(logfiles))
-
-        if os.path.isfile(os.path.join(self.log_dir, id)):
+        logfile_path = contained_path(self.log_dir, id)
+        if os.path.isfile(logfile_path):
             # return content of the logfile specified in id, if file is found
-            chunk_read = 0
-            if chunk > 0:
-                chunk_read = chunk - 1
-            skiplines = self.chunksize * (chunk - 1)
-            if skiplines < 0:
-                skiplines = 0
-            skipcount = 0
 
-            # read logfile
-            with open(os.path.join(self.log_dir, id), 'r', encoding='UTF-8') as lfile:
-                append_to_previous_line = False
-                loglines = []
-                lastchunk = True
-                # read lines of logfile
-                for line in lfile:
-                    if (skiplines > 0) and (skipcount < skiplines):
-                        # skip line, if not reading first chunk
-                        skipcount += 1
-                    else:
-                        if len(loglines) < self.chunksize:
-                            if line.startswith('Traceback'):
-                                append_to_previous_line = True
-                            if append_to_previous_line:
-                                # append to previous log line
-                                loglines[len(loglines) - 1] += '> ' + line.replace(' ', chr(160))
-                                if (not line.startswith('Traceback')) and (not line.startswith('  ')):
-                                    # last line of multiline traceback reached
-                                    append_to_previous_line = False
-                            else:
-                                # append new log line
-                                loglines.append(line.replace(' ', chr(160)))
-                        else:
-                            # chunk length reached, but there is another line
-                            lastchunk = False
-                            if chunk != 0:
-                                break
-                            else:
-                                chunk_read += 1
-                                # skip forward till last chunk is read
-                                loglines = []
-                                loglines.append(line.replace(' ', chr(160)))
-                                if chunk == 0:
-                                    lastchunk = True
+            # Full-file scan, every request: entries[i] = (raw_line_no, text)
+            # for the i-th logical entry, raw_line_no being that entry's last
+            # physical line. This is what makes 'chunks' (total page count)
+            # and true raw-line offsets possible - a chunk's raw line span
+            # can no longer be derived from chunksize*index once any entry
+            # in an earlier chunk spanned more than one physical line (a
+            # traceback), so counting is done directly instead of assumed.
+            entries = [(entry.end_line, self._entry_text(entry)) for entry in iter_log_entries(logfile_path)]
+            total_entries = len(entries)
+            chunks_total = max(1, -(-total_entries // self.chunksize))  # ceil div
 
-                chunk_read += 1
-            # return content
-            first_chunk_line = (chunk_read - 1) * self.chunksize  # zero based
+            if chunk == 0:
+                # sentinel: caller wants the last (possibly partial) chunk
+                chunk_no = chunks_total
+            elif chunk < 1:
+                chunk_no = 1
+            else:
+                chunk_no = chunk
+
+            start_index = (chunk_no - 1) * self.chunksize
+            end_index = start_index + self.chunksize
+            window = entries[start_index:end_index]
+            loglines = [text for _raw_line_no, text in window]
+
+            # Raw line the previous chunk ended on, clamped to the file's
+            # actual last entry for an out-of-range chunk request (avoids
+            # indexing past the end instead of mirroring it).
+            prev_entry_index = min(start_index, total_entries)
+            prev_end_raw_line = entries[prev_entry_index - 1][0] if prev_entry_index > 0 else 0
+            last_raw_line = window[-1][0] if window else prev_end_raw_line
+
             result = {}
             result['file'] = id
-            result['filesize'] = round(os.path.getsize(os.path.join(self.log_dir, id)) / 1024, 1)
-            result['chunk'] = chunk_read
+            result['filesize'] = round(os.path.getsize(logfile_path) / 1024, 1)
+            result['chunk'] = chunk_no
             result['chunksize'] = self.chunksize
-            result['lastchunk'] = lastchunk
-            result['lines'] = [first_chunk_line + 1, first_chunk_line + len(loglines)]
+            result['chunks'] = chunks_total
+            result['lastchunk'] = chunk_no >= chunks_total
+            result['lines'] = [prev_end_raw_line + 1, last_raw_line]
             result['loglines'] = loglines
             return json.dumps(result)
 
@@ -204,3 +213,31 @@ class LogsController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(summary='List of available log files', method='get', path='/logs/', tags=['logs']),
+        ApiDoc(
+            summary=(
+                "Newest entries of an in-memory log (e.g. 'env.core.log', the root WARNING+ buffer) "
+                "or one chunk of a log file's content. {name} is matched against the registered "
+                'memory logs first, then against the files in the log directory.'
+            ),
+            method='get',
+            path='/logs/{name}',
+            tags=['logs'],
+            params=[
+                ApiParam(name='name', location='path', required=True, description='Memory log name or log file name.'),
+                ApiParam(
+                    name='chunk',
+                    type='integer',
+                    default=1,
+                    description='Log files only: 1 = first chunk; 0 is the server convention for "last chunk".',
+                ),
+                ApiParam(
+                    name='count',
+                    type='integer',
+                    default=10,
+                    description='Memory logs only: number of newest entries to return.',
+                ),
+            ],
+        ),
+    ]

@@ -26,8 +26,12 @@ import datetime
 import logging
 import os
 import sys
+import tempfile
+import types
 import unittest
 from unittest.mock import MagicMock, patch
+
+from ruamel.yaml import YAML
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -37,6 +41,9 @@ common.register_shng_log_levels()
 
 import lib.log as _log_module
 from lib.log import Logs, Log, EnglishLocale
+
+
+setUpModule, tearDownModule = common.logs_instance_fixtures()
 
 
 # ---------------------------------------------------------------------------
@@ -52,6 +59,23 @@ def _make_logs():
     logs._logs = {}
     logs.logging_levels = {}
     return logs
+
+
+class TestSaveLoggingConfigVersion(unittest.TestCase):
+    def test_saved_shng_version_keeps_the_prerelease_and_drops_build_metadata_and_prefix(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, 'logging.yaml')
+            _log_module.logs_instance = None
+            sh = types.SimpleNamespace(
+                version='v2.0.0-dev.1+abc1234.develop',
+                get_config_file=lambda base: path,
+                return_event_listeners=lambda: [],
+            )
+            logs = Logs(sh)
+            logs.save_logging_config({'version': 1})
+            with open(path, encoding='utf-8') as f:
+                saved = YAML(typ='safe', pure=True).load(f)
+        self.assertEqual('2.0.0-dev.1', saved['shng_version'])
 
 
 # ===========================================================================
@@ -79,6 +103,39 @@ class TestAddLoggingLevel(unittest.TestCase):
     def test_level_constant_added_to_logging_module(self):
         self.logs.add_logging_level('TESTLEVEL96', 96)
         self.assertEqual(logging.TESTLEVEL96, 96)
+
+    def test_logger_method_records_its_caller_location(self):
+        self.logs.add_logging_level('TESTLEVEL95', 95)
+        logger = logging.getLogger('tests.log.caller')
+
+        with self.assertLogs(logger, 95) as logs:
+            logger.testlevel95('msg')
+            expected_line = sys._getframe().f_lineno - 1
+
+        record = logs.records[0]
+        self.assertEqual(record.funcName, 'test_logger_method_records_its_caller_location')
+        self.assertEqual(record.filename, os.path.basename(__file__))
+        self.assertEqual(record.lineno, expected_line)
+
+    def test_logger_method_honours_explicit_stacklevel(self):
+        self.logs.add_logging_level('TESTLEVEL94', 94)
+        logger = logging.getLogger('tests.log.caller')
+
+        def helper():
+            logger.testlevel94('msg', stacklevel=2)
+
+        with self.assertLogs(logger, 94) as logs:
+            helper()
+
+        self.assertEqual(logs.records[0].funcName, 'test_logger_method_honours_explicit_stacklevel')
+
+    def test_module_function_records_its_caller_location(self):
+        self.logs.add_logging_level('TESTLEVEL93', 93)
+
+        with self.assertLogs(level=93) as logs:
+            logging.testlevel93('msg')
+
+        self.assertEqual(logs.records[0].funcName, 'test_module_function_records_its_caller_location')
 
 
 # ===========================================================================
@@ -203,6 +260,8 @@ class TestLogLast(unittest.TestCase):
     def setUp(self):
         self.log = _make_log()
         self.log._sh.return_event_listeners.return_value = []
+        # add() uses appendleft, so entries are added oldest-first here and
+        # msg4 (added last) ends up newest, at index 0
         for i in range(5):
             self.log.add((i, '', '', f'msg{i}'))
 
@@ -210,15 +269,20 @@ class TestLogLast(unittest.TestCase):
         result = self.log.last(3)
         self.assertEqual(len(result), 3)
 
-    def test_last_returns_oldest_n(self):
-        # last() returns the last N items of list(self), which are the oldest
+    def test_last_returns_newest_n(self):
+        # regression test: last() used to return list(self)[-number:], the
+        # OLDEST surviving entries, contradicting its own docstring and its
+        # sibling export(), which correctly uses [:number] on the same deque
         result = self.log.last(1)
-        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0][3], 'msg4')
 
-    def test_last_zero_returns_full_list(self):
-        # last(0): list(self)[-0:] == list(self)[0:] → the entire deque
+    def test_last_returns_newest_n_in_order(self):
+        result = self.log.last(3)
+        self.assertEqual([entry[3] for entry in result], ['msg4', 'msg3', 'msg2'])
+
+    def test_last_zero_returns_empty_list(self):
         result = self.log.last(0)
-        self.assertEqual(len(result), 5)
+        self.assertEqual(len(result), 0)
 
 
 class TestLogExport(unittest.TestCase):

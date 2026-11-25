@@ -45,7 +45,8 @@ if __name__ == '__main__':
     # itself is the script being executed.
     sys.path.insert(0, _BASE_DIR)
 
-from lib.constants import DIR_CACHE, DIR_VAR
+from lib.constants import DIR_CACHE
+from lib.vardir import get_var_dir
 from lib.shtime import Shtime
 
 logger = logging.getLogger(__name__)
@@ -269,11 +270,8 @@ class _SkyfieldBackend(_OrbBackend):
 
     @staticmethod
     def _data_dir():
-        # var/cache/ is shng's established location for runtime-downloaded/
-        # regenerable data that should never be committed to the repo. Fixed
-        # relative to shng's own install location - no dependency on a live
-        # Shtime/smarthome instance, and no fallback to the user's home dir.
-        return os.path.join(_BASE_DIR, DIR_VAR, DIR_CACHE, 'skyfield-data')
+        # needs no live Shtime/smarthome instance and never falls back to the user's home dir
+        return os.path.join(get_var_dir(), DIR_CACHE, 'skyfield-data')
 
     def _body(self, body):
         self._ensure_loaded()
@@ -417,9 +415,9 @@ class _SkyfieldCachedBackend(_SkyfieldBackend):
         # searched - bisecting the list is only valid evidence of "no event here"
         # for queries that fall inside it. A query outside [start, end] must
         # trigger a fresh search instead of trusting whatever the list happens to
-        # contain nearby (see test_sun_rise_matches_across_several_dates in
-        # tests/test_orb.py for the bug this fixes: a query earlier than the
-        # cache's start could otherwise bisect straight to a much later entry).
+        # contain nearby - see test_sun_rise_matches_across_several_dates in
+        # tests/test_orb.py (a query earlier than the cache's start could
+        # otherwise bisect straight to a much later entry).
         self._rise_cache = {}
         self._set_cache = {}
         self._transit_cache = {}
@@ -539,6 +537,37 @@ if ephem is not None:
 if Loader is not None:
     _BACKENDS['skyfield'] = _SkyfieldBackend
     _BACKENDS['skyfield-cached'] = _SkyfieldCachedBackend
+
+
+_FALLBACK_ORDER = ('ephem', 'skyfield')
+
+
+def resolve_backend(name: str) -> str | None:
+    """
+    Map a configured backend name to one that is registered in ``_BACKENDS``.
+
+    A configured backend that is registered is always returned unchanged, even if its
+    data still has to be fetched on first use. A backend that is not registered
+    (package not installed, or unknown name) is replaced by the first registered one
+    of ``_FALLBACK_ORDER``, with a warning.
+
+    :param name: backend name from the configuration
+    :return: name of a registered backend, or None if no backend is available at all
+    """
+    if name in _BACKENDS:
+        return name
+    if name.startswith('skyfield') and Loader is None:
+        reason = "skyfield is not installed (run 'tools/fetch_skyfield_data.py' once to install it)"
+    elif name == 'ephem':
+        reason = 'ephem is not installed'
+    else:
+        reason = 'unknown backend'
+    for fallback in _FALLBACK_ORDER:
+        if fallback in _BACKENDS:
+            logger.warning(f"Ephemeris backend '{name}' not usable: {reason}. Falling back to '{fallback}'.")
+            return fallback
+    logger.warning(f"Ephemeris backend '{name}' not usable: {reason}, and no other backend is installed.")
+    return None
 
 
 class Orb:

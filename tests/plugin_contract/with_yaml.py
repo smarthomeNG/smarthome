@@ -173,10 +173,15 @@ class YamlPluginContractTest(unittest.TestCase):
         return self._yaml().get('plugin', {})
 
     def _parameters_section(self) -> dict:
-        return self._yaml().get('parameters', {}) or {}
+        # 'NONE' is lib.metadata's own documented sentinel for "section intentionally
+        # empty" (see lib/metadata.py Metadata.parameters == 'NONE' etc.), distinct from
+        # omitting the key or writing an empty mapping - normalize all three to {}.
+        section = self._yaml().get('parameters', {})
+        return {} if section in (None, 'NONE') else section
 
     def _item_attributes_section(self) -> dict:
-        return self._yaml().get('item_attributes', {}) or {}
+        section = self._yaml().get('item_attributes', {})
+        return {} if section in (None, 'NONE') else section
 
     def _make_plugin(self):
         if self.PLUGIN_CLASS is None:

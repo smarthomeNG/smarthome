@@ -26,7 +26,6 @@ import janus
 import threading
 import decimal
 
-import sys
 import socket
 import logging
 from datetime import date, datetime
@@ -80,13 +79,8 @@ class Protocol:
         self.loop = loop
         # self.client_address = ws_server.client_address
 
-        python_version = str(sys.version_info[0]) + '.' + str(sys.version_info[1])
-        if python_version == '3.7':
-            self.loop.create_task(self.update_visu())
-            self.loop.create_task(self.update_all_series())
-        else:
-            self.loop.create_task(self.update_visu(), name='update_visu')
-            self.loop.create_task(self.update_all_series(), name='update_all_series')
+        self.loop.create_task(self.update_visu(), name='update_visu')
+        self.loop.create_task(self.update_all_series(), name='update_all_series')
 
         self.logger.dbghigh('start_global_tasks: create_task(s) for update_visu() and update_all_series()')
         return
@@ -216,6 +210,11 @@ class Protocol:
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
                 self.logger.dbgmed(f"{self.build_log_info(client_addr)} sent '{data}'")
                 answer = {'error': 'unhandled command'}
+                # keep in sync with the reassignment at the end of the try block below --
+                # this default must always be valid, since a handler raising before reaching
+                # that reassignment must not leave reply undefined (the fallback send and the
+                # except block below both reference reply)
+                reply = json.dumps(answer, default=self.json_serial)
 
                 try:
                     if command == 'item':
@@ -228,11 +227,11 @@ class Protocol:
                                 item_acl = item.conf.get('acl', None)
                             if item_acl is None:
                                 item_acl = self.sv_acl
-                            if item_acl != 'ro':
+                            if item_acl == 'rw':
                                 item(value, self.sv_clients[client_addr]['sw'], client_ip)
                             else:
                                 self.logger.warning(
-                                    f'Client {self.build_log_info(client_addr)} want to update read only item: {path}'
+                                    f'Client {self.build_log_info(client_addr)} want to update non-writable item: {path}'
                                 )
                         else:
                             self.logger.warning(
@@ -347,7 +346,7 @@ class Protocol:
                         )
 
                     else:
-                        self.logger.error("unsupported event: '{}'", data)
+                        self.logger.error(f"unsupported event: '{data}'")
                     reply = json.dumps(answer, default=self.json_serial)
                 except Exception as e:
                     self.logger.exception(f'visu_protocol Exception {e}')
@@ -480,7 +479,7 @@ class Protocol:
                     )
 
             else:
-                self.logger.warning('Client {self.build_log_info(client_addr)} requested invalid item: {path}')
+                self.logger.warning(f'Client {self.build_log_info(client_addr)} requested invalid item: {path}')
         self.logger.debug(
             f'json_parse: send to {self.build_log_info(client_addr)}: { ({"cmd": "item", "items": items}) }'
         )
@@ -997,7 +996,7 @@ class Protocol:
         """
         self.logger.info(f'Client {self.build_log_info(client_addr)} requested a list of defined items.')
         myitems = []
-        for i in self._sh.return_items():
+        for i in self.items.return_items():
             include = False
             #            if i.get('visu_acl', '').lower() != 'no':
             if (path == '') and ('.' not in i._path):

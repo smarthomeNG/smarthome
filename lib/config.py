@@ -35,7 +35,7 @@ import os
 
 from lib.utils import Utils
 import lib.shyaml as shyaml
-from lib.constants import YAML_FILE
+from lib.constants import INSTANCE_DEFAULT, YAML_FILE
 
 logger = logging.getLogger(__name__)
 
@@ -52,8 +52,7 @@ def parse_basename(basename, configtype=''):
     """
     Load and parse a single configuration and merge it to the configuration tree
     The configuration is only specified by the basename.
-    At the moment it looks for a .yaml file or a .conf file
-    .yaml files take preference
+    The configuration is read from the .yaml file.
 
     :param basename: Name of the configuration
     :param configtype: Optional string with config type (only used for log output)
@@ -67,6 +66,10 @@ def parse_basename(basename, configtype=''):
     if config == {}:
         if configtype == 'module':
             logger.warning(f"No valid file '{basename}{YAML_FILE}' found with {configtype} configuration")
+        elif configtype == 'plugin':
+            logger.warning(
+                f"No plugins configured: no valid file '{basename}{YAML_FILE}' found with plugin configuration"
+            )
         elif configtype != 'logics':
             logger.error(f"No valid file '{basename}.*' found with {configtype} configuration")
     return config
@@ -76,8 +79,7 @@ def parse_itemsdir(itemsdir, item_conf, addfilenames=False, struct_dict: dict | 
     """
     Load and parse item configurations and merge it to the configuration tree
     The configuration is only specified by the name of the directory.
-    At the moment it looks for .yaml files and a .conf files
-    Both filetypes are read, even if they have the same basename
+    All .yaml files in the directory are read.
 
     :param itemsdir:      Name of folder containing the configuration files
     :param item_conf:     Optional OrderedDict tree, into which the configuration should be merged
@@ -332,7 +334,7 @@ def merge(source, destination, source_name='', dest_name='', filename='', add=No
         True
     """
 
-    if source.get('_filename', '') == 'test_struct.yaml':
+    if source.get('_filename', '') == 'test_struct':
         logger.info(
             f'merge {source.get("_filename", "")}: source={dict(source)}, destination={dict(destination)}, source_name={source_name}, dest_name={dest_name}'
         )
@@ -358,6 +360,8 @@ def merge(source, destination, source_name='', dest_name='', filename='', add=No
                                 f'merge: call merge_structlists - key={key}, value={value}, destination.get(key, None)={destination.get(key, None)}'
                             )
                         destination[key] = merge_structlists(destination[key], value, key)
+                elif value in (None, 'None') and isinstance(destination.get(key), collections.OrderedDict):
+                    pass  # a null node never replaces the subtree another file defined
                 else:
                     # convert to string and remove newlines from multiline attributes
                     destination[key] = str(value).replace('\n', '')
@@ -759,11 +763,13 @@ def add_struct_to_item_template(path, struct_name, template, struct_dict, instan
 def replace_struct_instance(path, subtree, instance):
     """
     Replace the constant string '@instance' in attribute names with the real instance
-    (or remove the constant string '@instance', if the struct has no instace reference)
+
+    The constant string is removed instead if the instance is empty, ``default`` or a list: the attribute
+    then is bound through the ``instance`` the item inherits.
 
     :param path:
     :param subtree:
-    :param instance:
+    :param instance: instance name, or a list of instance names
     :return:
     """
     keys = list(subtree.keys())
@@ -773,7 +779,7 @@ def replace_struct_instance(path, subtree, instance):
         if Utils.get_type(subtree[key]) == 'collections.OrderedDict':
             replace_struct_instance(path, subtree[key], instance)
         if key.endswith('@instance'):
-            if instance == '':
+            if not isinstance(instance, str) or instance in ('', INSTANCE_DEFAULT):
                 newkey = key[:-9]
             else:
                 newkey = key[:-9] + '@' + instance
@@ -871,6 +877,8 @@ def _add_filenames_to_config(items, filename, level=0):
 
     This function calls itself recurselively
     """
+    if filename.endswith(YAML_FILE):
+        filename = filename[: -len(YAML_FILE)]
     for attr, value in items.items():
         if isinstance(value, dict):
             child_path = dict(value)

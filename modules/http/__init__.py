@@ -20,6 +20,8 @@
 #########################################################################
 
 
+import datetime
+import ipaddress
 import logging
 import os
 import time
@@ -28,6 +30,10 @@ from collections import OrderedDict
 
 import cherrypy
 from jinja2 import Environment, FileSystemLoader
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.x509.oid import NameOID
 
 from lib.utils import Utils
 from lib.model.module import Module
@@ -61,7 +67,7 @@ class CherryPyFilter(logging.Filter):
 
 
 class Http(Module):
-    version = '1.7.2'
+    version = '1.8.0'
     _shortname = ''
     _longname = 'CherryPy http module for SmartHomeNG'
 
@@ -159,6 +165,13 @@ class Http(Module):
             if self._port == self._tls_port:
                 self.logger.error("'tls_port' can't be the same value as 'port' - https not activated")
                 self._use_tls = False
+            elif not os.path.isfile(self._cert_file) and not os.path.isfile(self._privkey_file):
+                # neither file present - generate a self-signed certificate unique to this installation
+                try:
+                    self._generate_self_signed_cert(self._cert_file, self._privkey_file)
+                except Exception as e:
+                    self.logger.error('Could not generate self-signed certificate - https not activated: {}'.format(e))
+                    self._use_tls = False
             elif not os.path.isfile(self._cert_file):
                 self.logger.error("Certificate '{}' is not installed - https not activated".format(self._cert_name))
                 self._use_tls = False
@@ -174,18 +187,10 @@ class Http(Module):
         # Check user information and fill _user_dict
         self._user_dict = {}
 
-        if self._is_set(self._password) and self._is_set(self._hashed_password):
-            self.logger.warning(
-                "http: Webinterfaces: Both 'password' and 'hashed_password' given. Ignoring 'password' and using 'hashed_password'!"
-            )
-            self._password = None
-
-        if self._is_set(self._password) and (not self._is_set(self._hashed_password)):
-            self.logger.warning(
-                "http: Webinterfaces: Giving plaintext password in configuration is insecure. Consider using 'hashed_password' instead!"
-            )
-            self._hashed_password = Utils.create_hash(self._password)
-            self._password = None
+        self._hashed_password = self._resolve_password_hash(
+            'Webinterfaces', 'password', self._password, 'hashed_password', self._hashed_password
+        )
+        self._password = None
 
         self._basic_auth = self._is_set(self._hashed_password)
         self._user_dict[self._user] = {
@@ -197,18 +202,14 @@ class Http(Module):
         # Check service-user information and fill _serviceuser_dict
         self._serviceuser_dict = {}
 
-        if self._is_set(self._service_password) and self._is_set(self._service_hashed_password):
-            self.logger.warning(
-                "http: Services: Both 'service_password' and 'service_hashed_password' given. Ignoring 'service_password' and using 'service_hashed_password'!"
-            )
-            self._service_password = None
-
-        if self._is_set(self._service_password) and (not self._is_set(self._service_hashed_password)):
-            self.logger.warning(
-                "http: Services: Giving plaintext service_password in configuration is insecure. Consider using 'service_hashed_password' instead!"
-            )
-            self._service_hashed_password = Utils.create_hash(self._service_password)
-            self._service_password = None
+        self._service_hashed_password = self._resolve_password_hash(
+            'Services',
+            'service_password',
+            self._service_password,
+            'service_hashed_password',
+            self._service_hashed_password,
+        )
+        self._service_password = None
 
         self._service_basic_auth = self._is_set(self._service_hashed_password)
         self._serviceuser_dict[self._service_user] = {
@@ -365,11 +366,7 @@ class Http(Module):
             '/static': {'tools.staticdir.on': True, 'tools.staticdir.dir': 'static'},
         }
         self.logger.info("Module http: config dict: '{}'".format(config))
-        self.logger.info(
-            " - user '{}', password '{}', hashed_password '{}'".format(
-                self._user, self._password, self._hashed_password
-            )
-        )
+        self.logger.info(f" - user '{self._user}', password set: {self._basic_auth}")
 
         if self._showpluginlist:
             # Register the plugin-list as a cherrypy app
@@ -428,6 +425,65 @@ class Http(Module):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             return s.connect_ex((self._ip, port)) == 0
 
+    def _generate_self_signed_cert(self, cert_file, privkey_file):
+        """
+        Generate a self-signed TLS certificate and private key unique to this
+        installation and write them to the given paths.
+
+        Called only when neither file is present. No certificate or key material
+        ships in the source: a certificate baked into the repo would be identical
+        (and its private key public) on every installation, which lets anyone
+        holding the source decrypt or impersonate any instance - TLS in name only.
+        A per-installation certificate still triggers a browser's
+        untrusted-certificate warning on first visit (accepted once), but protects
+        the connection against passive eavesdropping from then on.
+
+        :param cert_file: path to write the PEM-encoded certificate to
+        :param privkey_file: path to write the PEM-encoded private key to
+        """
+        hostname = self.get_local_hostname()
+        local_ip = self.get_local_ip_address()
+
+        key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+
+        name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, hostname)])
+        san_entries = [x509.DNSName(hostname), x509.DNSName('localhost')]
+        for candidate_ip in {local_ip, '127.0.0.1'}:
+            try:
+                san_entries.append(x509.IPAddress(ipaddress.ip_address(candidate_ip)))
+            except ValueError:
+                pass
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        cert = (
+            x509.CertificateBuilder()
+            .subject_name(name)
+            .issuer_name(name)
+            .public_key(key.public_key())
+            .serial_number(x509.random_serial_number())
+            .not_valid_before(now - datetime.timedelta(days=1))
+            .not_valid_after(now + datetime.timedelta(days=3650))
+            .add_extension(x509.SubjectAlternativeName(san_entries), critical=False)
+            .sign(key, hashes.SHA256())
+        )
+
+        with open(cert_file, 'wb') as f:
+            f.write(cert.public_bytes(serialization.Encoding.PEM))
+
+        fd = os.open(privkey_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, 'wb') as f:
+            f.write(
+                key.private_bytes(
+                    encoding=serialization.Encoding.PEM,
+                    format=serialization.PrivateFormat.PKCS8,
+                    encryption_algorithm=serialization.NoEncryption(),
+                )
+            )
+
+        self.logger.notice(
+            "Module 'http': Generated self-signed TLS certificate '{}' for this installation".format(cert_file)
+        )
+
     def _is_set(self, password):
         """
         Check if a password is set
@@ -436,6 +492,35 @@ class Http(Module):
         :rtype: bool
         """
         return password is not None and password != ''
+
+    def _resolve_password_hash(self, area, password_param, password, hash_param, hashed_password):
+        """
+        Return the password hash to check logins of ``area`` against (unset if no password is configured).
+
+        A plaintext password is hashed (``hash_param`` wins if both are set); a warning is logged for a
+        plaintext password and for a legacy (unsalted sha512) hash.
+
+        :param area: 'Webinterfaces' or 'Services', for the log messages
+        :param password_param: name of the plaintext password parameter
+        :param password: value of the plaintext password parameter
+        :param hash_param: name of the hashed password parameter
+        :param hashed_password: value of the hashed password parameter
+        """
+        if self._is_set(password) and self._is_set(hashed_password):
+            self.logger.warning(
+                f"http: {area}: Both '{password_param}' and '{hash_param}' given. Ignoring '{password_param}' and using '{hash_param}'!"
+            )
+        elif self._is_set(password):
+            self.logger.warning(
+                f"http: {area}: Giving plaintext {password_param} in configuration is insecure. Consider using '{hash_param}' instead!"
+            )
+            return Utils.hash_password(password)
+        if Utils.is_legacy_password_hash(hashed_password):
+            self.logger.warning(
+                f"http: {area}: '{hash_param}' is an unsalted sha512 hash. Convert it with "
+                "'tools/upgrade_check.py --fix --only password-hash' (the password stays the same)"
+            )
+        return hashed_password
 
     def get_user_dict(self):
         """
@@ -463,17 +548,10 @@ class Http(Module):
         :param password:
         :return:
         """
-        pwd_hash = Utils.create_hash(password)
-        # self.logger.warning("realm: {}, username: {}, password: {}, self._password: {}, self._hashed_password: {}".format(realm, username, password, self._password, self._hashed_password))
-        # self.logger.warning("pwd_hash: {}, self._user_dict: {}".format(pwd_hash, self._user_dict))
-
         user = self._user_dict.get(username, None)
         if user is None:
             return False
-        user_pwd_hash = user.get('password_hash', '')
-        pwd_hash = Utils.create_hash(password)
-
-        return pwd_hash == user_pwd_hash
+        return Utils.check_hashed_password(password, user.get('password_hash', ''))
 
     def validate_service_password(self, realm, username, password):
         """ """

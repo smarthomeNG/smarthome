@@ -2,7 +2,7 @@
 module:
     # Global plugin attributes
     classname: Mqtt
-    version: 1.8.0
+    version: 1.8.1
     sh_minversion: 1.6a
 #   sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)
     description:
@@ -116,8 +116,8 @@ parameters:
         gui_type: yes_no
         default: False
         description:
-            de: 'Ermöglicht das Monitoring einiger Broker Werte durch das Web Interfase.'
-            en: 'Enables monitoring some broker data through the web interface.'
+            de: 'Ermöglicht das Monitoring einiger Broker Werte durch das Web Interface des MQTT Plugins.'
+            en: "Enables monitoring some broker data through the MQTT plugin's web interface."
 
     qos:
         type: int

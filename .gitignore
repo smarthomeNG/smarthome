@@ -102,3 +102,5 @@ Thumbs.db
 # ignore all root *.toml except pyproject.toml (ruff / build config)
 /*.toml
 !/pyproject.toml
+
+/dev/matter

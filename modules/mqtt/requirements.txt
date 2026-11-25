@@ -1,2 +1,3 @@
 # modules: mqtt
 paho-mqtt>=1.2.2
+jmespath

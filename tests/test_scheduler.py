@@ -26,6 +26,8 @@ import threading
 import unittest
 from unittest.mock import MagicMock, patch
 
+from dateutil import tz as dateutil_tz
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import tests.common as common
@@ -33,6 +35,7 @@ import tests.common as common
 common.register_shng_log_levels()
 
 from lib.scheduler import _PriorityQueue, Scheduler
+from lib.shtime import Shtime
 import lib.scheduler as _scheduler_module
 
 
@@ -165,6 +168,7 @@ def _make_scheduler():
     now = datetime.datetime(2024, 6, 21, 12, 0, 0, tzinfo=datetime.timezone.utc)
     shtime = MagicMock()
     shtime.now.return_value = now
+    shtime.add_seconds.side_effect = Shtime.add_seconds  # _next_time() delegates the addition to this
 
     # Mock items
     items = MagicMock()
@@ -339,6 +343,61 @@ class TestSchedulerJobRegistration(unittest.TestCase):
         self.assertIsNone(result)
 
 
+class TestSchedulerEntries(unittest.TestCase):
+    """get_entries() snapshots; Scheduler._scheduler is class-level, so each test starts from an empty registry."""
+
+    def setUp(self):
+        self.sched, self.now = _make_scheduler()
+        self.sched._scheduler.clear()
+        self.addCleanup(self.sched._scheduler.clear)
+
+    def test_get_entries_empty_without_jobs(self):
+        self.assertEqual(self.sched.get_entries(), [])
+
+    def test_get_entries_describes_every_job_ordered_by_name(self):
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        explicit_next = self.now + datetime.timedelta(minutes=5)
+        self.sched.add('zeta', obj, cycle=60, offset=60, prio=2, value=7)
+        self.sched.add('alpha', obj, cron='0 * * * *', next=explicit_next)
+        entries = self.sched.get_entries()
+        self.assertEqual([entry.name for entry in entries], ['alpha', 'zeta'])
+        alpha, zeta = entries
+        self.assertEqual(alpha.next, explicit_next)
+        self.assertEqual(alpha.cron, {'0 * * * *': None})
+        self.assertIsNone(alpha.cycle)
+        self.assertEqual(zeta.cycle, {60: 7})
+        self.assertIsNone(zeta.cron)
+        self.assertEqual(zeta.next, self.now + datetime.timedelta(seconds=60))
+        self.assertEqual(zeta.prio, 2)
+        self.assertEqual(zeta.value, 7)
+        self.assertTrue(zeta.active)
+        self.assertIs(zeta.obj, obj)
+
+    def test_get_entries_is_a_snapshot(self):
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched.add('job', obj, cycle=60, offset=60)
+        before = self.sched.get_entries()[0]
+        self.sched.change('job', active=False)
+        self.sched.remove('job')
+        self.assertTrue(before.active)
+        self.assertEqual(self.sched.get_entries(), [])
+
+    def test_get_entries_waits_for_the_scheduler_lock(self):
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched.add('job', obj, cycle=60)
+        result = []
+        with self.sched._lock:
+            reader = threading.Thread(target=lambda: result.append(self.sched.get_entries()))
+            reader.start()
+            reader.join(timeout=0.2)
+            self.assertTrue(reader.is_alive(), 'get_entries() must not read while the lock is held')
+        reader.join(timeout=2)
+        self.assertEqual([entry.name for entry in result[0]], ['job'])
+
+
 class TestSchedulerNextTimeCalculation(unittest.TestCase):
     """Verify _next_time() computes correct fire times for cycle-based jobs."""
 
@@ -454,6 +513,171 @@ class TestSchedulerNextTimeCalculation(unittest.TestCase):
         self.sched._scheduler['multi_cron']['obj'].__class__.__name__ = 'function'
         self.sched._next_time('multi_cron')
         self.assertEqual(self.sched._scheduler['multi_cron']['next'], soon)
+
+
+class TestSchedulerDstTransition(unittest.TestCase):
+    """Regression tests for a cycle scheduler stalling across a DST
+    fall-back (and the mirror-image rapid-refire risk at spring-forward):
+    plain `aware_datetime + timedelta` does wall-clock field arithmetic,
+    silently gaining/losing the transition hour when the interval crosses
+    it. Uses a real Europe/Berlin tzinfo (not the UTC-only fixture the
+    other tests in this file use) since UTC has no DST transitions to
+    reproduce the bug against.
+    """
+
+    BERLIN = dateutil_tz.gettz('Europe/Berlin')
+    FALL_BACK_2026 = datetime.datetime(
+        2026, 10, 25, 2, 55, 0, tzinfo=BERLIN, fold=0
+    )  # 65 real minutes before 03:00 CET
+    SPRING_FORWARD_2026 = datetime.datetime(2026, 3, 29, 1, 55, 0, tzinfo=BERLIN, fold=0)  # 02:00-03:00 doesn't exist
+
+    def setUp(self):
+        self.sched, _ = _make_scheduler()
+
+    @staticmethod
+    def _real_elapsed_seconds(before, after):
+        return (after.astimezone(datetime.timezone.utc) - before.astimezone(datetime.timezone.utc)).total_seconds()
+
+    def test_next_time_cycle_survives_fall_back(self):
+        # Matches the bug report exactly: cycle: 300, sitting at 02:55 CEST.
+        self.sched.shtime.now.return_value = self.FALL_BACK_2026
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched._scheduler['rtr'] = {
+            'prio': 3,
+            'obj': obj,
+            'source': '??',
+            'cron': None,
+            'cycle': {300: None},
+            'value': None,
+            'next': None,
+            'active': True,
+        }
+        self.sched._next_time('rtr', offset=300)
+        next_time = self.sched._scheduler['rtr']['next']
+        self.assertEqual(300.0, self._real_elapsed_seconds(self.FALL_BACK_2026, next_time))
+
+    def test_next_time_cycle_survives_spring_forward(self):
+        self.sched.shtime.now.return_value = self.SPRING_FORWARD_2026
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched._scheduler['rtr'] = {
+            'prio': 3,
+            'obj': obj,
+            'source': '??',
+            'cron': None,
+            'cycle': {300: None},
+            'value': None,
+            'next': None,
+            'active': True,
+        }
+        self.sched._next_time('rtr', offset=300)
+        next_time = self.sched._scheduler['rtr']['next']
+        self.assertEqual(300.0, self._real_elapsed_seconds(self.SPRING_FORWARD_2026, next_time))
+
+    def test_due_check_compares_real_elapsed_time_not_wall_clock_fields(self):
+        """Locks in the `.timestamp()`-based comparison contract shared by
+        run()'s cycle due-check and _triggerq due-check (both were a bare
+        `<=`/`<`): two aware datetimes sharing the same tzinfo object
+        compare on raw field values (ignoring fold), so this pair -
+        next_time genuinely 5 real minutes *ahead* of now - would wrongly
+        read as already due under a bare operator. run() isn't unit-tested
+        directly (never-started thread, per this file's own strategy
+        above), so this pins the comparison expression it must use."""
+        next_time = datetime.datetime(2026, 10, 25, 2, 0, 0, tzinfo=self.BERLIN, fold=1)  # UTC 01:00:00
+        now = datetime.datetime(2026, 10, 25, 2, 55, 0, tzinfo=self.BERLIN, fold=0)  # UTC 00:55:00 - 5 real min earlier
+        self.assertFalse(next_time.timestamp() <= now.timestamp())
+        self.assertTrue(next_time <= now, 'characterizes the bare-<= pitfall this fix avoids')
+
+    def test_cron_tiebreak_picks_the_really_sooner_candidate(self):
+        # cycle offset 300s from 02:55 CEST correctly lands on 02:00+01:00
+        # (fold=1, UTC 01:00:00) via _add_seconds(). cron's candidate below
+        # is naive-field-later (02:59) but really 1 minute *earlier* in UTC
+        # (00:59:00) - a bare `ct < next_time` would keep the cycle result;
+        # the real elapsed comparison must pick cron instead.
+        cron_ct = datetime.datetime(2026, 10, 25, 2, 59, 0, tzinfo=self.BERLIN, fold=0)  # UTC 00:59:00
+        self.sched.shtime.now.return_value = self.FALL_BACK_2026
+        self.sched.crontabs.get_next.return_value = cron_ct
+        obj = MagicMock()
+        obj.__class__.__name__ = 'function'
+        self.sched._scheduler['both'] = {
+            'prio': 3,
+            'obj': obj,
+            'source': '??',
+            'cron': {'* * * * *': None},
+            'cycle': {300: None},
+            'value': None,
+            'next': None,
+            'active': True,
+        }
+        self.sched._next_time('both', offset=300)
+        self.assertEqual(cron_ct, self.sched._scheduler['both']['next'])
+        self.assertEqual('cron', self.sched._scheduler['both']['source']['source'])
+
+
+class TestUpdateItemLocking(unittest.TestCase):
+    """
+    Regression test: update_item() is registered as an item method-trigger,
+    so it runs synchronously on whatever thread changes the watched item -
+    not the scheduler's own thread. It must mutate self._scheduler[name]
+    ('cycle', 'value', and via _next_time() also 'next') under self._lock,
+    like add()/remove()/change() and run()'s own iteration - otherwise a
+    concurrent run() iteration or another update_item() call for the same
+    entry could interleave with it. Verifies the whole method (including
+    the trailing _next_time() call) runs under self._lock.
+    """
+
+    def setUp(self):
+        self.sched, self.now = _make_scheduler()
+
+        job_obj = MagicMock()
+        job_obj.__class__.__name__ = 'function'
+        job_obj.get_attr_time.return_value = 10
+        job_obj.get_attr_value.return_value = 'A'
+        self.sched._scheduler['job1'] = {
+            'prio': 3,
+            'obj': job_obj,
+            'source': '??',
+            'cron': None,
+            'cycle': 5,
+            'value': None,
+            'next': None,
+            'active': True,
+        }
+        self.sched._cycle_items['watched'] = {'job1'}
+
+        self.watched_item = MagicMock()
+        self.watched_item.property.path = 'watched'
+
+    def test_update_item_holds_lock_for_its_duration(self):
+        lock_was_held = threading.Event()
+        proceed = threading.Event()
+        original_next_time = self.sched._next_time
+
+        def slow_next_time(name, offset=None):
+            # by the time _next_time() runs, update_item() should already
+            # hold self._lock - pause here (still "inside" update_item()'s
+            # call) and let the main thread try to acquire it meanwhile
+            lock_was_held.set()
+            proceed.wait(timeout=2)
+            return original_next_time(name, offset)
+
+        with patch.object(self.sched, '_next_time', side_effect=slow_next_time):
+            t = threading.Thread(target=self.sched.update_item, args=(self.watched_item,))
+            t.start()
+            self.assertTrue(lock_was_held.wait(timeout=2), 'update_item() never reached _next_time()')
+
+            # update_item() should still be running (and, if fixed, holding
+            # self._lock) at this point - a short-timeout acquire from this
+            # thread must fail while it does
+            acquired = self.sched._lock.acquire(timeout=0.2)
+            if acquired:
+                self.sched._lock.release()
+
+            proceed.set()
+            t.join(timeout=2)
+
+        self.assertFalse(acquired, 'update_item() must hold self._lock for its entire duration')
 
 
 if __name__ == '__main__':

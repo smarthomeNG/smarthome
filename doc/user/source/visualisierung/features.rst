@@ -5,8 +5,8 @@
 .. role:: greensup
 .. role:: blacksup
 
-Features der Generierung
-========================
+Features der Generierung :greensup:`Update`
+===========================================
 
 
 .. index:: smartVISU Autogenerierung; Zusätzliche Infos in der Navigation anzeigen
@@ -49,13 +49,8 @@ Am Beispiel der Küche zeigt die folgende Konfiguration, wie die zusätzlichen I
             sv_nav_aside: "{{ basic.print('m_kochen.ist', 'wohnung.kochen.heizung.ist', '°') }}"
             sv_nav_aside2: "{{ basic.symbol('m_kochen_kaffee2', 'wohnung.kochen.kaffeeautomat.status', '', 'scene_coffee_maker_automatic.svg',  [2,3],'',['icon0','icon1']) }} {{ basic.symbol('m_kochen_heizen', 'wohnung.kochen.heizung.heizen', '', 'sani_heating.svg', 1, '', 'icon1') }}"
 
-Wie in den bisherigen Releases:
-
 - ``sv_page`` zeigt an, dass [wohnung.kochen] ein Raum ist und für diesen ein Navigationseintrag und eine Seite generiert werden soll.
 - ``sv_img`` gibt an, welches Icon in der Navigation und auf der Seite angezeigt werden soll.
-
-Neu:
-
 - ``sv_nav_aside`` spezifiziert, was an der Seite in der oberen Zeile angezeigt werden soll. In diesem Fall ist das
   die aktuelle Raumtemperatur.
 - ``sv_nav_aside2`` spezifiziert,was an der Seite in der unteren Zeile angezeigt werden soll. In diesem Fall ist
@@ -175,21 +170,19 @@ werden soll, so muss ``sv_page: cat_separator`` angegeben werden.
 Unterschiedliche Visu-Styles
 ----------------------------
 
-Zusätzlich zum von bisherigen Releases unterstützen Standard-Style, wird der Style **black**
-unterstützt.
+Neben dem Standard-Style wird der Style **black** unterstützt.
 
 Das folgende Beispiel zeigt die Möglichkeiten zur Auswahl des Styles der
 für smartVISU generierten Seiten.
 
-Bisher wurden Blöcke generiert, die so aussahen (Style \‘Standard\’):
+Im Style \‘Standard\’ sehen die Blöcke so aus:
 
 .. figure:: assets/style_std1.jpg
    :alt: Style Standard
 
    Style Standard
 
-In der aktuellen Version ist es möglich, die Blöcke in folgender Optik
-generieren zu lassen (Style ‘Black’):
+Im Style ‘Black’ sehen die Blöcke so aus:
 
 .. figure:: assets/style_blk.jpg
    :alt: Style Black
@@ -197,7 +190,7 @@ generieren zu lassen (Style ‘Black’):
    Style Black
 
 Dieses ist eine Visu-weite Einstellung, die in der Datei
-/etc/plugin.conf vorgenommen wird. Dort kann ``visu_style: std``
+``etc/plugin.yaml`` vorgenommen wird. Dort kann ``visu_style: std``
 oder ``visu_style: blk`` eingetragen werden.
 
 Eine vollständige Seite im Style **Black** sieht z.B. folgendermaßen aus:
@@ -213,21 +206,14 @@ Eine vollständige Seite im Style **Black** sieht z.B. folgendermaßen aus:
 Unterschiedliche Blockgrößen
 ----------------------------
 
-Die Blöcke in denen Widgets angezeigt werden, hatten in den bisherigen Releases eine fest
-definierte (Mindest-)Größe. Jetzt stehen drei unterschiedliche Mindestgrößen zur Verfügung.
-
 Die smartVISU unterstützt Blöcke mit drei unterschiedlichen Größen.
 Gemeint ist hierbei die Mindestgröße des Blocks. Wenn in dem Block
 Widgets platziert werden, die mit dem Platz nicht auskommen, wird der
 Block automatisch höher. Die Blockhöhen unterscheiden sich in etwa um
 die Höhe der Heading-Zeile.
 
-In den bisherigen Releases von smarthome.py/SmartHomeNG wurden beim
-automatischen generieren von smartVISU Seiten immer Blöcke der Größe
-**2** (mittel) verwendet.
-
-Im aktuellen Release können auch Blöcke der Größen **1** (groß) und
-**3** (klein) in die Seiten generiert werden.
+In die Seiten können Blöcke der Größen **1** (groß), **2** (mittel) und
+**3** (klein) generiert werden.
 
 Dieses kann als Item-Attribut ``sv_blocksize`` festgelegt werden.
 
@@ -258,15 +244,9 @@ angegeben, so wird der Default-Wert **2** benutzt.
 Unterschiedliche Blocktypen
 ---------------------------
 
-Die Blöcke in denen Widgets angezeigt werden, hatten in den bisherigen Releases einen festen
-Typ. Nun ist ein Typ **Dual** hinzugekommen.
-
-Die smartVISU unterstützt Blöcke zusätzlich zu den Standard-Blöcken auch
-Blöcke mit “2 Seiten”, die in den bisherigen Releases von
-smarthome.py/SmartHomeNG nicht unterstützt wurden.
-
-Im aktuellen Release können auch diese Dual-Blöcke in der automatischen
-Seitengenerierung verwendet werden.
+Die smartVISU unterstützt zusätzlich zu den Standard-Blöcken auch Blöcke mit “2 Seiten”
+(Typ **Dual**). Auch diese Dual-Blöcke können in der automatischen Seitengenerierung
+verwendet werden.
 
 Hier ein Beispiel, wie ein solcher DualBlock aussehen kann:
 
@@ -338,15 +318,22 @@ die gewünschten Modifikationen vornehmen.
    Alternativ kann die generierte Seite erneut kopiert werden und die Änderungen können dort eingearbeitet werden,
    wie dieses ursprünglich erfolgt ist.
 
-|
 
-.. toctree::
-   :maxdepth: 5
-   :hidden:
-   :titlesonly:
+.. index:: smartVISU Autogenerierung; Anpassung von Stilen in generierten Seiten
 
-   deprecated_widgets
-   top_navigation
+Anpassung von Stilen in generierten Seiten :redsup:`neu`
+--------------------------------------------------------
 
-|
+Das smartisu Plugin speichert bis einschhließlich Version 1.9.0 (SmartHomeNG v1.12.x) die Vorlagen zur Seitengenerierung 
+im smartVISU-Ordner ./dropins. Ab Version 1.9.1 (im auf SmartHomeNG v1.12.2 folgenden Release) wird dazu der 
+Ordner ./dropins/shtemplates verwendet. Setzt man in der Konfiguration des Plugins den
+Parameter ``overwrite_templates: False``, dann werden diese Vorlagen nicht vom Plugin überschrieben und man kann individuelle 
+Änderungen vornehmen, die beim nächsten Neustart von SmartHomeNG in die erstellten Seiten übernommen werden. 
+
+Eigene Änderungen und Ergänzungen an den Stilregeln kann man in einer CSS-Datei im Ordner ./dropins ablegen. Diese kann einen 
+beliebigen Namen haben, wobei der Name "visu.css" üblich ist und in der Doku, sowie in den meisten Forenbeiträgen verwendet wird. 
+In v1.9.0 bringt das smartvisu-Plugin eine eigene visu.css mit und man muss selbst dafür sorgen, dass die eigenen Änderungen
+nicht überschrieben wurden. Ab v1.9.1 ist dieser Konflikt beseitigt. Die vom Plugin gelieferte Datei heißt "shstyles.css"
+und eigene Änderungen können wieder in der visu.css abgelegt werden.
+
 

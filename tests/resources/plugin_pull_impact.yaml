@@ -1,0 +1,9 @@
+# Fixture for tests/test_api_server_pull.py's TestPullImpact: one plugin configured twice.
+
+wol_a:
+    plugin_name: wol
+    instance: wol_a
+
+wol_b:
+    plugin_name: wol
+    instance: wol_b

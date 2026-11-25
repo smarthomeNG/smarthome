@@ -2,10 +2,10 @@
 .. role:: bluesup
 .. role:: redsup
 
-.. index:: structs; struct.yaml
+.. index:: structs; global_structs.yaml
 
-global_struct.yaml
-==================
+global_structs.yaml
+===================
 
 In dieser Konfigurationsdatei können eigene Item-Strukturen angelegt werden, die über das **struct** Attribut als
 Template verwendet werden können.

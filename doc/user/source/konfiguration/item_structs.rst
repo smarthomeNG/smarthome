@@ -6,13 +6,13 @@
 .. role:: greensup
 
 
-============================================
-structs (Item Strukturen) :greensup:`Update`
-============================================
+=========================
+structs (Item Strukturen)
+=========================
 
 
-Überblick :greensup:`Update`
-============================
+Überblick
+=========
 
 SmartHomeNG unterstützt Item-Struktur-Templates, mit denen sich wiederholende Itemstrukturen einfach realisieren lassen.
 Die Anwendung erfolgt mit Hilfe des **struct**-Attributes mit dem jeweiligen Namen des Item-Templates. Dies wird bei dem Item definiert,
@@ -50,10 +50,10 @@ die Template Strukturen in der Reihenfolge angewendet, in der sie in der Liste a
             - ....
 
 
-Vererbte Attribute :redsup:`new`
---------------------------------
+Vererbte Attribute
+------------------
 
-Seit SmartHomeNG 1.12 gibt es die Möglichkeit, Item-Attribute an alle Items in einer Template-Struktur zu vererben. 
+Item-Attribute können an alle Items in einer Template-Struktur vererbt werden. 
 Häufige Anwendungsfälle können z.B. Item-Attribute wie **database: init**, **cache: yes** oder **enforce_updates: true** sein.
 
 Für die Vererbung müssen die Attribute als Kind-Elemente des Struktur-Namens angegeben werden:
@@ -78,7 +78,7 @@ der Struktur `mein_wetter2` das Item-Attribut **cache: true** erhalten.
 
     2. Beachte den Doppelpunkt hinter dem Namen der Struktur - dies ist für die Angabe der Item-Attribute zwingend notwendig,
        ansonsten kann die yaml-Datei nicht gelesen werden. Wenn keine Item-Attribute vererbt werden sollen, darf dort hingegen
-       - wie bisher - kein Doppelpunkt stehen.
+       kein Doppelpunkt stehen.
 
 
 struct-Templates in Plugins
@@ -89,7 +89,7 @@ Anwendung
 
 Das folgende Beispiel verdeutlicht das Vorgehen am Wettervorhersage-Plugin **darksky**:
 
-Bisher musste man in den Items einen ganzen Teilbaum selbst eintragen (hier unter **aussen.mein_wetter**):
+Ohne Template muss man in den Items einen ganzen Teilbaum selbst eintragen (hier unter **aussen.mein_wetter**):
 
 .. code-block:: yaml
 
@@ -112,9 +112,9 @@ Bisher musste man in den Items einen ganzen Teilbaum selbst eintragen (hier unte
             ...
 
 
-Das Plugin **darksky** bringt nun ein Template mit dem Namen **weather** mit, welcher mit **darksky.weather** angesprochen werden kann.
+Das Plugin **darksky** bringt ein Template mit dem Namen **weather** mit, welcher mit **darksky.weather** angesprochen werden kann.
 
-Um nun die ganzen Items für die Wettervorhersage anzulegen, muss nur noch für das Item **mein_wetter** das Attribut **struct** gesetzt werden:
+Um die ganzen Items für die Wettervorhersage anzulegen, muss nur noch für das Item **mein_wetter** das Attribut **struct** gesetzt werden:
 
 .. code-block:: yaml
     :caption: items/item.yaml
@@ -169,8 +169,10 @@ In der Definition der Items bestehen zwei Möglichkeiten einer **struct** die **
             struct: darksky.weather
             instance: summer_residence
 
-Diese Angabe (**instance: \<instance>**) wird dann auf alle Items übertragen, die durch das Template hinzugefügt wurden.
-Das kann man auch in der Administrationsoberfläche sehen.
+Diese Angabe (**instance: \<instance>**) ersetzt den Platzhalter **@instance** in den Attributen des Templates.
+Außerdem gilt **instance** für alle Items, die durch das Template hinzugefügt wurden (siehe
+:doc:`Plugins <plugins>`). Bei einer Liste von Instanzen oder bei ``default`` wird **@instance** entfernt; das
+Attribut wird dann über das geerbte **instance** der Instanz zugeordnet.
 
 
 2. Die **instance** kann direkt im **struct** Attribut mit angegeben werden:
@@ -187,8 +189,7 @@ Das kann man auch in der Administrationsoberfläche sehen.
 
 .. note::
 
-    Wenn man eigene Items, in den Teilbaum der durch das Template hinzugefügt wurde, einfügen will, muss man für diese
-    selbst hinzugefügten Items natürlich das Attribut **instance** angeben.
+    Items, die in den Teilbaum des Templates eingefügt werden, erben **instance** vom übergeordneten Item.
 
 
 
@@ -368,8 +369,8 @@ werden die Listen zusammengefügt. Die Reihenfolge der Listeneinträge wird durc
 Attributdefinitionen eingelesen werden.
 
 
-Teilweises Einbinden von structs (partial struct inclusion) :redsup:`new`
-=========================================================================
+Teilweises Einbinden von structs (partial struct inclusion)
+===========================================================
 
 Normalerweise wird beim Verwenden des **struct**-Attributs die gesamte Struktur des Templates eingebunden.
 Es ist jedoch möglich, nur einen Teil einer Struktur einzubinden, indem der Pfad zum gewünschten Teilbaum
@@ -411,7 +412,7 @@ nur in Item-Definitionen:
         struct: kodi.master.bar   # nur den 'bar'-Teilbaum von kodi.master einbinden
 
 Fehlermeldungen
-~~~~~~~~~~~~~~~
+---------------
 
 Wenn ein Teilpfad angegeben wird, der nicht existiert, gibt SmartHomeNG eine aussagekräftige Fehlermeldung aus:
 

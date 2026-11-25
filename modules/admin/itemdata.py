@@ -25,8 +25,6 @@ import html
 import json
 import ast
 
-import cherrypy
-
 import lib.config
 from lib.item import Items
 
@@ -44,7 +42,6 @@ class ItemData:
     #    ITEMS  -  Old Interface methods (from backend)
     # -----------------------------------------------------------------------------------
 
-    @cherrypy.expose
     def items_json(self, mode='tree'):
         """
         returns a list of items as json structure
@@ -115,7 +112,6 @@ class ItemData:
             self.logger.error(f"escape_complex_value: cannot handle value = '{wrk}'")
             return ''
 
-    @cherrypy.expose
     def item_detail_json_html(self, item_path):
         """
         returns the details of an item as json structure
@@ -152,9 +148,8 @@ class ItemData:
                 prev_value = html.escape(prev_value)
                 last_value = html.escape(last_value)
 
-            description = item.property.description
-            if description is None:
-                description = ''
+            description = item.property.description or ''
+            remark = item.property.remark or ''
 
             # cycle = ''
             crontab = ''
@@ -254,6 +249,7 @@ class ItemData:
                 'path': item.property.path,
                 'name': item.property.name,
                 'description': description,
+                'remark': remark,
                 'type': item.property.type,
                 'value': value,
                 'change_age': item.property.last_change_age,
@@ -296,6 +292,12 @@ class ItemData:
                 #                         'logics': json.dumps(logics),
                 #                         'triggers': json.dumps(triggers),
                 'config': dict(item_conf_sorted),
+                # Complete attribute set (core + generic), safe to PATCH
+                # straight back via PATCH /api/items/{path} — unlike
+                # 'config' above (item.conf only, generic/plugin attrs),
+                # which omits core attributes like type/eval/trigger
+                # entirely and would silently reset them if resubmitted.
+                'editable_config': self.items.current_config_for_edit(item),
                 'logics': logics,
                 'triggers': triggers,
                 'filename': str(item._filename),
@@ -326,32 +328,6 @@ class ItemData:
             return
 
     # -----------------------------------------------------------------------------------
-
-    @cherrypy.expose
-    def item_change_value_html(self, item_path, value):
-        """
-        Is called by items.html when an item value has been changed
-        """
-        if self.items is None:
-            self.items = Items.get_instance()
-        self.logger.info("item_change_value_html: item '{}' set to value '{}'".format(item_path, value))
-        try:
-            item = self.items.return_item(item_path)
-        except Exception as e:
-            self.logger.error(
-                "item_change_value_html: item '{}' set to value '{}' - Exception {}".format(item_path, value, e)
-            )
-            return
-        if 'num' in item.type():
-            if '.' in value or ',' in value:
-                value = float(value)
-            else:
-                if value == '':
-                    value = 0
-                value = int(value)
-        item(value, caller='admin')
-
-        return
 
     def disp_str(self, val):
         s = str(val)

@@ -49,6 +49,7 @@ common.register_shng_log_levels()
 from tests.mock.core import MockSmartHome
 from tests.plugin_contract._mockitem import MockItem
 from tests.plugin_contract.base import make_plugin_instance
+from lib.model.sdp.declarations import TransportRule
 from lib.model.smartdeviceplugin import SmartDevicePlugin
 from lib.model.sdp.globals import (
     ITEM_ATTR_COMMAND,
@@ -60,6 +61,18 @@ from lib.model.sdp.globals import (
     CMD_ATTR_ITEM_TYPE,
     CONN_NULL,
 )
+
+
+def _on_null_transport(plugin_class: type) -> type:
+    """``plugin_class``, or for a plugin declaring TRANSPORTS a subclass that only uses the null transport."""
+    if not getattr(plugin_class, 'TRANSPORTS', ()):
+        return plugin_class
+    return type(
+        plugin_class.__name__,
+        (plugin_class,),
+        {'TRANSPORTS': (TransportRule(CONN_NULL),), '__module__': plugin_class.__module__},
+    )
+
 
 # Valid shng item types (subset; the important ones for SDP)
 _VALID_ITEM_TYPES = frozenset({'bool', 'num', 'str', 'list', 'dict', 'foo', 'scene'})
@@ -111,7 +124,7 @@ class SdpPluginContractTest(unittest.TestCase):
     def setUp(self):
         if self.PLUGIN_CLASS is None:
             self.skipTest('PLUGIN_CLASS not set')
-        # Inject CONN_NULL so no real connection is attempted.  Store the merged
+        # Plugins with TRANSPORTS run on the null transport, others get conn_type CONN_NULL.  Store the merged
         # params back as the effective PLUGIN_INIT_PARAMS for this test run so
         # that BasePluginContractTest.setUp picks them up when it creates the plugin.
         _params = dict(self.PLUGIN_INIT_PARAMS)
@@ -119,7 +132,7 @@ class SdpPluginContractTest(unittest.TestCase):
         self._sdp_effective_params = _params
         self.sh = MockSmartHome()
         try:
-            self.plugin = make_plugin_instance(self.PLUGIN_CLASS, self.sh, _params)
+            self.plugin = make_plugin_instance(_on_null_transport(self.PLUGIN_CLASS), self.sh, _params)
         except Exception as exc:
             self.skipTest(f'Plugin could not be instantiated: {exc}')
         # Plugin is ready; let cooperative setUp run (BasePluginContractTest will
@@ -164,13 +177,18 @@ class SdpPluginContractTest(unittest.TestCase):
         # If we get here without exception, the import succeeded
 
     def test_all_commands_have_opcode_or_read_cmd(self):
-        """Every leaf command must have at least an opcode or read_cmd key."""
+        """Every command with a device operation has an opcode, read_cmd or write_cmd; pseudo commands have none."""
         raw = self._get_commands()
         if not raw:
             self.skipTest('No commands dict found')
         flat = _flatten_commands(raw)
-        missing = [path for path, defn in flat.items() if CMD_ATTR_OPCODE not in defn and 'read_cmd' not in defn]
-        self.assertFalse(missing, 'Commands without opcode or read_cmd:\n  ' + '\n  '.join(missing))
+        missing = [
+            path
+            for path, defn in flat.items()
+            if (defn.get(CMD_ATTR_READ) or defn.get(CMD_ATTR_WRITE))
+            and not any(key in defn for key in (CMD_ATTR_OPCODE, 'read_cmd', 'write_cmd'))
+        ]
+        self.assertFalse(missing, 'Commands without opcode, read_cmd or write_cmd:\n  ' + '\n  '.join(missing))
 
     def test_command_item_types_are_valid(self):
         """Every command's item_type (if declared) must be a valid shng type."""
@@ -223,7 +241,7 @@ class SdpPluginContractTest(unittest.TestCase):
             with self.subTest(attr_set=attr_set):
                 params = dict(self.PLUGIN_INIT_PARAMS)
                 params.setdefault('conn_type', CONN_NULL)
-                plugin = make_plugin_instance(self.PLUGIN_CLASS, MockSmartHome(), params)
+                plugin = make_plugin_instance(_on_null_transport(self.PLUGIN_CLASS), MockSmartHome(), params)
                 item = self._make_item(f'sdp.set.{i}', conf=dict(attr_set))
                 plugin.parse_item(item)
                 self.assertIn(

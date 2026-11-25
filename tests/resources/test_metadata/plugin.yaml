@@ -1,0 +1,36 @@
+# Metadata for the plugin (test fixture for get_itemdefinition() tests)
+plugin:
+    type: system
+    description:
+        de: 'Test-Plugin für Metadata-Tests'
+        en: 'Test plugin for metadata tests'
+    description_long:
+        en: 'First line\n
+            second line\n
+            third line'
+    version: 1.0.0
+    sh_minversion: '1.3a'
+    classname: test_metadata
+
+item_attributes:
+    with_validlist:
+        type: str
+        valid_list:
+            - foo
+            - bar
+        description:
+            de: 'Attribut mit valid_list'
+            en: 'Attribute with valid_list'
+
+    without_validlist:
+        type: str
+        description:
+            de: 'Attribut ohne valid_list'
+            en: 'Attribute without valid_list'
+
+    with_escaped_newline:
+        type: str
+        default: 'a\nb'
+        description:
+            en: 'one\n
+                two'

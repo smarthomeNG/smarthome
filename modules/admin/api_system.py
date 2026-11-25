@@ -35,7 +35,8 @@ import json
 import cherrypy
 
 import bin.shngversion as shngversion
-from .rest import RESTResource
+from . import daemons
+from .rest import ApiDoc, RESTResource
 
 # import bin.shngversion
 import lib.daemon
@@ -44,35 +45,6 @@ from lib.shpypi import Shpypi
 from lib.shtime import Shtime
 from lib.utils import Utils
 from lib.constants import DIR_ETC, DIR_MODULES
-
-
-# ======================================================================
-#  Functions to be moved to utils
-#
-def get_process_info(command, wait=True, append_error=False):
-    """
-    returns output from executing a given command via the shell.
-    """
-    ## get subprocess module
-    import subprocess
-
-    ## call date command ##
-    if append_error:
-        p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    else:
-        p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
-
-    # Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
-    # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
-    # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
-    (result, err) = p.communicate()
-    #    logger.warning("get_process_info: command='{}', result='{}', err='{}'".format(command, result, err))
-
-    if wait:
-        ## Wait for date to terminate. Get return returncode ##
-        p.wait()
-
-    return str(result, encoding='utf-8', errors='strict')
 
 
 # ======================================================================
@@ -138,10 +110,10 @@ class SystemController(RESTResource):
             user = os.getlogin()
 
         if os.name != 'nt':
-            space = os.statvfs(self._sh.base_dir)
+            space = os.statvfs(self._sh.get_basedir())
             freespace = space.f_frsize * space.f_bavail / 1024 / 1024
         else:
-            space = psutil.disk_usage(self._sh.base_dir)
+            space = psutil.disk_usage(self._sh.get_basedir())
             freespace = space.free / 1024 / 1024
 
         rt = Shtime.get_instance().runtime_as_dict()
@@ -191,10 +163,10 @@ class SystemController(RESTResource):
         response['tznameDST'] = str(self.module.shtime.tznameDST())
 
         # Dienste
-        response['daemon_knx'] = self.get_knx_daemon()
-        response['daemon_ow'] = self.get_1wire_daemon()
-        response['daemon_mqtt'] = self.get_mqtt_daemon()
-        response['daemon_node_red'] = self.get_node_red_daemon()
+        response['daemon_knx'] = daemons.knx_daemon()
+        response['daemon_ow'] = daemons.onewire_daemon()
+        response['daemon_mqtt'] = daemons.mqtt_daemon()
+        response['daemon_node_red'] = daemons.node_red_daemon()
 
         # Python
         response['pyversion'] = pyversion
@@ -206,7 +178,10 @@ class SystemController(RESTResource):
             response['pid'] = str(os.getpid())
 
         # SmartHomeNG
-        response['sh_dir'] = self._sh.base_dir
+        response['sh_dir'] = self._sh.get_basedir()
+        response['help_local_available'] = os.path.isfile(
+            os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html', 'index.html')
+        )
         response['core_branch'] = shngversion.get_shng_branch()
         response['sh_vers'] = shngversion.get_shng_version()
         response['sh_desc'] = shngversion.get_shng_description()
@@ -247,116 +222,6 @@ class SystemController(RESTResource):
         self.logger.info('SystemController.info(): response = {}'.format(response))
         return json.dumps(response)
 
-    def get_knx_daemon(self):
-        """
-        Tests it knxd or eibd are running
-        """
-        # knxd_service = get_process_info("systemctl status knxd.service")
-        # smarthome_service = get_process_info("systemctl status smarthome.service")
-        # knxd_socket = get_process_info("systemctl status knxd.socket")
-
-        daemon = 'SERVICES.INACTIVE'
-        if os.name != 'nt':
-            if get_process_info('ps cax|grep eibd') != '':
-                daemon = 'eibd'
-            if get_process_info('ps cax|grep knxd') != '':
-                if daemon != 'SERVICES.INACTIVE':
-                    daemon += ' and knxd'
-                else:
-                    daemon = 'knxd'
-                    # get version of installed knx daemon (knxd v0.14.30 outputs version to stderr instead of stdout)
-                    wrk = get_process_info('knxd -l?V|grep knxd', append_error=True)
-                    wrk = wrk.split()
-                    wrk = wrk[1].split(':')
-                    if wrk != []:
-                        daemon += ' v' + wrk[0]
-        return daemon
-
-    def get_1wire_daemon(self):
-        """
-        Tests it 1wire are running
-        """
-        daemon = 'SERVICES.INACTIVE'
-        if os.name != 'nt':
-            if get_process_info('ps cax|grep owserver') != '':
-                daemon = 'owserver'
-                # get version of installed owserver
-                wrk = get_process_info("owserver -V|grep 'owserver version'", append_error=True)
-                wrk = wrk.split()
-                if wrk != []:
-                    daemon += ' v' + wrk[2]
-        return daemon
-
-    def get_mqtt_daemon(self):
-        """
-        Tests it 1wire are running
-        """
-        daemon = 'SERVICES.INACTIVE'
-        if os.name != 'nt':
-            # test id mqtt broker is running
-            if get_process_info('ps cax|grep mosquitto') != '':
-                daemon = 'mosquitto'
-                # get version of installed mosquitto broker
-                wrk = get_process_info('/usr/sbin/mosquitto -h|grep version')
-                wrk = wrk.split()
-                if wrk != []:
-                    daemon += ' v' + wrk[2]
-        return daemon
-
-    def get_node_red_daemon(self):
-        """
-        Tests it 1wire are running
-        """
-        daemon = 'SERVICES.INACTIVE'
-        if os.name != 'nt':
-            if get_process_info('ps cax|grep node-red') != '':
-                daemon = 'node-red'
-                # get version of installed node-red
-                wrk = get_process_info('node-red --help|grep Node-RED')
-                wrk = wrk.split()
-                if wrk != []:
-                    daemon += ' ' + wrk[1]
-        return daemon
-
-    # ======================================================================
-    #  /api/system/status
-    #
-    # def status(self):
-    #     """
-    #     return status of SmartHomeNG server software
-    #
-    #     :return: status dict
-    #     """
-    #     try:
-    #         response = self._sh.shng_status
-    #     except:
-    #         response = {'code': -1, 'text': 'unknown'}
-    #
-    #     # self.logger.debug("ServerController.index(): /{} - response '{}'".format(id, response))
-    #     return json.dumps(response)
-
-    # # ======================================================================
-    # #  /api/server/restart
-    # #
-    # def restart(self):
-    #     """
-    #     restart the SmartHomneNG server software
-    #
-    #     :return: status dict
-    #     """
-    #     self.logger.info("ServerController.restart()")
-    #
-    #     status = self._sh.shng_status
-    #     if status['code'] == 20:
-    #         self._sh.restart('admin interface')
-    #         response = {'result': 'ok'}
-    #     else:
-    #         response = {'result': 'error', 'text': "SmartHomeNG is not in state 'running'"}
-    #
-    #     self.logger.info("ServerController.update(): /{} - response '{}'".format(id, response))
-    #     return json.dumps(response)
-    #
-    #
     # ======================================================================
     #  GET /api/system/
     #
@@ -368,8 +233,6 @@ class SystemController(RESTResource):
 
         if id is None:
             return self.root()
-        # elif id == 'status':
-        #     return self.status()
         elif id == 'info':
             return self.info()
 
@@ -377,18 +240,11 @@ class SystemController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
-    # read.public_root = True
-
-    def update(self, id='', level=None):
-        """
-        Handle PUT requests for server API
-        """
-        self.logger.info(f"ServerController.update('{id}'), level='{level}'")
-
-        # if id == 'restart':
-        #     return self.restart()
-
-        return None
-
-    # update.expose_resource = True
-    # update.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='CPU/memory/disk stats for the System Overview page',
+            method='get',
+            path='/system/info',
+            tags=['system'],
+        )
+    ]

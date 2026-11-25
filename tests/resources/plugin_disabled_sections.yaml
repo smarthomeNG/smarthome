@@ -1,0 +1,14 @@
+# Fixture for tests/test_plugin_instance_count.py: several sections share one
+# plugin_name, some of them disabled. Both scenarios use the same cycle fixture
+# plugin under the 'wol' metadata (see plugin_reload.yaml).
+
+lone_enabled:
+    plugin_name: wol
+    class_path: tests.fixture_reload_cycle_plugin
+    class_name: CyclePlugin
+
+lone_disabled:
+    plugin_name: wol
+    class_path: tests.fixture_reload_cycle_plugin
+    class_name: CyclePlugin
+    plugin_enabled: false

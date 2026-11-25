@@ -20,8 +20,10 @@
 #########################################################################
 
 
+import json
 import os
 import logging
+import secrets
 import cherrypy
 
 from lib.utils import Utils
@@ -30,16 +32,14 @@ from lib.model.module import Module
 from lib.module import Modules
 from lib.shtime import Shtime
 
-from .systemdata import SystemData
-from .itemdata import ItemData
-from .plugindata import PluginData
-
+from .pullimpact import PendingReloads
 from .rest import RESTResource
 
 from .api_server import *
 from .api_auth import *
 
 from .api_config import *
+from .api_database import *
 from .api_files import *
 from .api_items import *
 from .api_functions import *
@@ -48,6 +48,7 @@ from .api_logs import *
 from .api_scenes import *
 from .api_sched import *
 from .api_services import *
+from .api_stream import *
 from .api_system import *
 from .api_threads import *
 
@@ -60,7 +61,7 @@ suburl = 'admin'
 
 
 class Admin(Module):
-    version = '1.9.0'
+    version = '2.0.0'
     longname = 'Admin module for SmartHomeNG'
     _port = 0
 
@@ -81,9 +82,12 @@ class Admin(Module):
 
         self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, str(self._parameters)))
 
+        self.pending_plugin_reloads = PendingReloads()
+
         # for authentication
-        self.send_hash = 'shNG0160$'
-        self.jwt_secret = 'SmartHomeNG$0815'
+        self.jwt_secret = self._load_or_create_jwt_secret()
+        # most controllers verify against this class default instead of an instance copy
+        RESTResource.jwt_secret = self.jwt_secret
 
         try:
             self.mod_http = Modules.get_instance().get_module(
@@ -105,13 +109,16 @@ class Admin(Module):
         try:
             self.login_expiration = self._parameters['login_expiration']
             self.login_autorenew = self._parameters['login_autorenew']
-            self.pypi_timeout = self._parameters['pypi_timeout']
             self.itemtree_fullpath = self._parameters['itemtree_fullpath']
             self.itemtree_searchstart = self._parameters['itemtree_searchstart']
             self.log_chunksize = self._parameters['log_chunksize']
             self.developer_mode = self._parameters['developer_mode']
             self.rest_dispatch_force_exception = self._parameters['rest_dispatch_force_exception']
             self.click_dropdown_header = self._parameters['click_dropdown_header']
+            self.dark_mode = self._parameters['dark_mode']
+            self.resource_graph_period = self._parameters['resource_graph_period']
+            self.start_page = self._parameters['start_page']
+            RESTResource.cors_origins = frozenset(self._parameters['cors_origins'] or [])
         except Exception:
             self.logger.critical(
                 "Module '{}': Inconsistent module (invalid metadata definition)".format(self._shortname)
@@ -119,36 +126,8 @@ class Admin(Module):
             self._init_complete = False
             return
 
-        # Deprecation: websocket_host/websocket_port belong to the websocket module,
-        # not to the admin module.  Warn users who still have them in admin config.
-        _dep_host = self._parameters.get('websocket_host')
-        _dep_port = self._parameters.get('websocket_port')
-        _default_ws_port = 2424
-        if _dep_host:
-            self.logger.warning(
-                "Module '{}': Parameter 'websocket_host' is DEPRECATED in the admin module. "
-                "Configure it in the websocket module instead. The websocket module's value will be used.".format(
-                    self._shortname
-                )
-            )
-        if _dep_port is not None and _dep_port != _default_ws_port:
-            self.logger.warning(
-                "Module '{}': Parameter 'websocket_port' is DEPRECATED in the admin module. "
-                "Configure it in the websocket module instead. The websocket module's value will be used.".format(
-                    self._shortname
-                )
-            )
-
-        # Stash deprecated fallback values so start() can use them if the
-        # websocket module is genuinely absent.  The authoritative lookup is
-        # deferred to start() because module __init__ methods run before any
-        # module's start() is called, so get_module('websocket') always returns
-        # None here even when the websocket module is properly configured.
-        self._ws_dep_host = _dep_host or None
-        self._ws_dep_port = str(_dep_port) if _dep_port else str(_default_ws_port)
-        self._ws_default_port = str(_default_ws_port)
         self.websocket_host = None
-        self.websocket_port = str(_default_ws_port)
+        self.websocket_port = '2424'
 
         mysuburl = ''
         if suburl != '':
@@ -157,8 +136,49 @@ class Admin(Module):
         self._port = self.mod_http._port
         # self.logger.warning('port = {}'.format(self._port))
         self.shng_url_root = 'http://' + ip + ':' + str(self._port)  # for links mto plugin webinterfaces
-        self.url_root = self.shng_url_root + mysuburl
+        # path of the admin interface on this server, for links from pages served by the same server
+        self.url_path = mysuburl
+        self.url_root = self.shng_url_root + self.url_path
         self.api_url_root = self.shng_url_root + 'api'
+
+    def _load_or_create_jwt_secret(self):
+        """
+        Load this installation's JWT signing secret for the admin API, generating
+        and persisting a new random one on first run.
+
+        The secret has to survive restarts (issued tokens stay valid for
+        ``login_expiration`` hours), but must stay unique per installation and
+        never appear in the source tree. It is kept in ``var/admin/``, not
+        ``etc/``: unlike ``etc/``, ``var/`` isn't config users copy into forum
+        posts or their own repos when asking for help.
+
+        :return: secret to sign/verify admin API JWTs with
+        :rtype: str
+        """
+        secret_dir = os.path.join(self._sh.get_vardir(), 'admin')
+        secret_file = os.path.join(secret_dir, 'jwt_secret')
+
+        try:
+            with open(secret_file, 'r') as f:
+                secret = f.read().strip()
+            if secret:
+                return secret
+        except FileNotFoundError:
+            pass
+        except OSError as e:
+            self.logger.warning(
+                "Module '{}': Could not read jwt secret file '{}': {}".format(self._shortname, secret_file, e)
+            )
+
+        secret = secrets.token_urlsafe(32)
+        os.makedirs(secret_dir, exist_ok=True)
+        fd = os.open(secret_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, 'w') as f:
+            f.write(secret)
+        self.logger.notice(
+            "Module '{}': Generated a new admin API jwt secret, stored in '{}'".format(self._shortname, secret_file)
+        )
+        return secret
 
     def start(self):
         """
@@ -182,13 +202,7 @@ class Admin(Module):
                 if ws_ip and ws_ip not in ('0.0.0.0', '::', ''):
                     self.websocket_host = ws_ip
             else:
-                self.logger.warning(
-                    "Module '{}': Websocket module not found; falling back to admin module parameters.".format(
-                        self._shortname
-                    )
-                )
-                self.websocket_host = self._ws_dep_host
-                self.websocket_port = self._ws_dep_port
+                self.logger.warning("Module '{}': Websocket module not found.".format(self._shortname))
         except Exception as e:
             self.logger.warning("Module '{}': Could not read websocket module config: {}".format(self._shortname, e))
 
@@ -220,12 +234,13 @@ class Admin(Module):
                 'tools.expires.on': True,
                 'tools.expires.secs': 6,
                 'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-                'error_page.404': self._error_page,
-                'error_page.400': self._error_page,
-                'error_page.401': self._error_page,
-                'error_page.405': self._error_page,
-                'error_page.411': self._error_page,
-                'error_page.500': self._error_page,
+                'error_page.404': self._error_page_json,
+                'error_page.400': self._error_page_json,
+                'error_page.401': self._error_page_json,
+                'error_page.405': self._error_page_json,
+                'error_page.409': self._error_page_json,
+                'error_page.411': self._error_page_json,
+                'error_page.500': self._error_page_json,
             }
         }
 
@@ -262,6 +277,19 @@ class Admin(Module):
             cherrypy.tree.apps[''].config['/3rdpartylicenses.txt'] = {
                 'tools.staticfile.on': True,
                 'tools.staticfile.filename': license_file,
+            }
+
+        # Local user documentation (doc/user/build/html), if it's been
+        # built for this install — self._sh.get_basedir() so this works on
+        # any install rather than a fixed path. api_system.py's info()
+        # reports whether this exists, so the frontend can offer a "local
+        # help" link only when it does.
+        help_dir = os.path.join(self._sh.get_basedir(), 'doc', 'user', 'build', 'html')
+        if os.path.isfile(os.path.join(help_dir, 'index.html')) and '' in cherrypy.tree.apps:
+            cherrypy.tree.apps[''].config['/help'] = {
+                'tools.staticdir.on': True,
+                'tools.staticdir.dir': help_dir,
+                'tools.staticdir.index': 'index.html',
             }
 
     def stop(self):
@@ -358,6 +386,38 @@ class Admin(Module):
 
         return result
 
+    def _error_page_json(self, status, message, traceback, version):
+        """
+        JSON error body for the /api tree, used in place of _error_page()'s
+        HTML.  The shngadmin frontend reads the message via
+        ``err.error.error`` (see e.g. ItemTreeComponent) — until this
+        existed, that field was always undefined for every API error
+        (the response body was an HTML page, not JSON), silently breaking
+        every error-message-driven flow (cycle/collision wording,
+        offering to auto-create missing parent items on rename, etc.) —
+        callers always fell through to a generic fallback string instead.
+
+        :param status: error number and description, e.g. "400 Bad Request"
+        :param message: detailed error description
+        :param traceback: traceback that lead to the error
+        :param version: CherryPy version
+        :type status: str
+        :type message: str
+        :type traceback: str
+        :type version: str
+
+        :return: JSON-encoded error body
+        :rtype: str
+        """
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        errno = status.split()[0]
+        if errno == '401':
+            cherrypy.response.headers['WWW-Authenticate'] = 'Bearer'
+        body = {'error': message, 'status': errno}
+        if self._showtraceback and errno == '500':
+            body['traceback'] = traceback
+        return json.dumps(body)
+
     def _spa_index(self, status, message, traceback, version):
         cherrypy.response.status = 200
         cherrypy.response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
@@ -373,18 +433,23 @@ def translate(s):
     return s
 
 
-class WebInterface(SystemData, ItemData, PluginData):
+class WebInterface:
+    """
+    Serves the built Angular shngadmin frontend's static assets at the admin
+    suburl. Used to mix in SystemData/ItemData/PluginData, a set of
+    unauthenticated pre-REST JSON/HTML endpoints (items_json,
+    item_change_value_html, plugin_set_config_html, systeminfo_json,
+    pypi_json, ...) fully superseded once shngadmin migrated to the
+    JWT-authenticated REST API (WebApi below); removed since nothing called
+    them anymore.
+    """
+
     def __init__(self, webif_dir, module, shng_url_root, url_root):
         self._sh = module._sh
         self.logger = logging.getLogger(__name__)
         self.module = module
-        self.pypi_timeout = module.pypi_timeout
         self.shng_url_root = shng_url_root
         self.url_root = url_root
-
-        SystemData.__init__(self, self._sh)
-        ItemData.__init__(self)
-        PluginData.__init__(self)
 
         return
 
@@ -416,6 +481,7 @@ class WebApi(RESTResource):
         self.authenticate = AuthController(self.module)
 
         self.config = ConfigController(self.module)
+        self.database = DatabaseController(self.module)
         self.files = FilesController(self.module)
         self.items = ItemsController(self.module)
         self.items.list = ItemsListController(self.module)
@@ -436,6 +502,7 @@ class WebApi(RESTResource):
         self.schedulers = SchedulersController(self.module)
         self.server = ServerController(self.module)
         self.services = ServicesController(self.module)
+        self.stream = StreamController(self.module)
         self.system = SystemController(self.module)
         self.threads = ThreadsController(self.module)
 

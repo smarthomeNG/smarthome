@@ -69,9 +69,9 @@ from datetime import datetime
 from pathlib import Path
 
 try:
-    import yaml
+    from ruamel.yaml import YAML
 except ImportError:
-    print('ERROR: PyYAML is required to run this script (pip install pyyaml)', file=sys.stderr)
+    print('ERROR: ruamel.yaml is required to run this script (pip install ruamel.yaml)', file=sys.stderr)
     sys.exit(1)
 
 
@@ -193,7 +193,7 @@ def discover_python_versions(shng_repo: Path) -> list[str]:
         text = f.read()
 
     try:
-        data = yaml.safe_load(text)
+        data = YAML(typ='safe').load(text)
         for job in data.get('jobs', {}).values():
             versions = job.get('strategy', {}).get('matrix', {}).get('python-version')
             if versions:
@@ -442,7 +442,9 @@ def write_minimal_logging_yaml(etc_dir: Path):
         'root': {'level': 'WARNING', 'handlers': ['console', 'shng_warnings_file']},
     }
     with open(etc_dir / 'logging.yaml', 'w') as f:
-        yaml.safe_dump(config, f, sort_keys=False)
+        writer = YAML()
+        writer.default_flow_style = False
+        writer.dump(config, f)
 
 
 def write_minimal_smarthome_yaml(etc_dir: Path):
@@ -455,7 +457,9 @@ def write_plugin_yaml(etc_dir: Path, entries: dict):
         if not entries:
             f.write('# no plugins enabled\n')
         else:
-            yaml.safe_dump(entries, f, sort_keys=False)
+            writer = YAML()
+            writer.default_flow_style = False
+            writer.dump(entries, f)
 
 
 def prepare_etc(shng_dir: Path, plugin_entries: dict | None = None):
@@ -549,7 +553,7 @@ def compute_dummy_params_for_plugin(plugin_dir: Path) -> dict:
     if not yaml_path.is_file():
         return {}
     with open(yaml_path) as f:
-        data = yaml.safe_load(f) or {}
+        data = YAML(typ='safe').load(f) or {}
     params = data.get('parameters')
     if not params or params == 'NONE':
         return {}
@@ -570,7 +574,7 @@ def plugin_py_version_bounds(plugin_dir: Path) -> tuple[str | None, str | None]:
     if not yaml_path.is_file():
         return None, None
     with open(yaml_path) as f:
-        data = yaml.safe_load(f) or {}
+        data = YAML(typ='safe').load(f) or {}
     meta = data.get('plugin', {})
     return meta.get('py_minversion'), meta.get('py_maxversion')
 

@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+# vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+"""
+Tests for Admin._error_page_json() (modules/admin/__init__.py) — the
+JSON error body wired into the /api tree's error_page.* hooks.
+
+Every /api/* error (400/401/404/405/411/500) must go through this JSON
+path, not _error_page()'s HTML: the shngadmin frontend reads error text
+via ``err.error.error`` (an HttpErrorResponse's parsed JSON body), which
+is undefined against an HTML response.
+"""
+
+import json
+import os
+import sys
+import unittest
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+import tests.common as common
+
+common.register_shng_log_levels()
+
+import cherrypy
+
+from modules.admin import Admin
+
+
+class _FakeAdmin:
+    """Stand-in for an Admin instance — _error_page_json() only reads
+    self._showtraceback, so nothing heavier is needed."""
+
+    def __init__(self, showtraceback=False):
+        self._showtraceback = showtraceback
+
+
+class TestErrorPageJson(unittest.TestCase):
+    def test_returns_json_with_the_error_message(self):
+        result = Admin._error_page_json(_FakeAdmin(), '400 Bad Request', 'name collision', 'tb', '18')
+
+        self.assertEqual(json.loads(result), {'error': 'name collision', 'status': '400'})
+
+    def test_401_asks_for_a_bearer_token(self):
+        cherrypy.response.headers.pop('WWW-Authenticate', None)
+
+        Admin._error_page_json(_FakeAdmin(), '401 Unauthorized', 'Unauthorized', 'tb', '18')
+
+        self.assertEqual('Bearer', cherrypy.response.headers.get('WWW-Authenticate'))
+
+    def test_sets_json_content_type(self):
+        Admin._error_page_json(_FakeAdmin(), '400 Bad Request', 'name collision', 'tb', '18')
+
+        self.assertEqual(cherrypy.response.headers.get('Content-Type'), 'application/json')
+
+    def test_omits_traceback_by_default(self):
+        result = Admin._error_page_json(_FakeAdmin(), '500 Internal Server Error', 'boom', 'the traceback', '18')
+
+        self.assertNotIn('traceback', json.loads(result))
+
+    def test_includes_traceback_for_500_when_showtraceback_is_enabled(self):
+        result = Admin._error_page_json(
+            _FakeAdmin(showtraceback=True), '500 Internal Server Error', 'boom', 'the traceback', '18'
+        )
+
+        self.assertEqual(json.loads(result)['traceback'], 'the traceback')
+
+    def test_omits_traceback_for_non_500_even_when_showtraceback_is_enabled(self):
+        result = Admin._error_page_json(
+            _FakeAdmin(showtraceback=True), '400 Bad Request', 'name collision', 'the traceback', '18'
+        )
+
+        self.assertNotIn('traceback', json.loads(result))
+
+
+if __name__ == '__main__':
+    unittest.main()

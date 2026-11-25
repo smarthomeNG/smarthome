@@ -4,9 +4,10 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-Plugin-Metadata :bluesup:`update`
-=================================
+Plugin-Metadata :greensup:`Update`
+==================================
 
 Plugins werden in ``etc/plugin.yaml`` konfiguriert. Die Parameter sind in der ``plugin.yaml`` des jeweiligen Plugins
 beschrieben.
@@ -18,7 +19,7 @@ Ein Plugin besteht aus mindestens zwei Dateien:
 
 .. hint::
 
-   Das in früheren Versionen verwendete ``README``-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen. Die restliche Dokumentation sollte nur noch im ``user_doc``-Format erfolgen.
+   Das ``README``-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen. Die restliche Dokumentation sollte nur noch im ``user_doc``-Format erfolgen.
 
    Soweit möglich, sollten bestehende ``README`` im Rahmen von Aktualisierungen in entsprechende ``user_doc`` überführt werden.
 

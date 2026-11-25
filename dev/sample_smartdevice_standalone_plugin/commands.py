@@ -23,9 +23,9 @@ commands = {
     # provided values are defaults; dicts default to None, but are shown to
     # illustrate valid contents
     'cmd': {
-        # can this command read = request values from the device?
+        # may the value be requested from the device? Items bound to the command receive its values either way
         'read': True,
-        # can this command write = send item values to the device?
+        # may item values be sent to the device? Neither read nor write: pseudo command, filled by the plugin
         'write': False,
         # general / fallback command sequence/string/..., HTTP URL for SDP_Connection_Net_Tcp_Request
         #
@@ -100,6 +100,13 @@ commands = {
         # `playerid` as key in kwargs has it replaced with the playerid value.
         # tuples trigger eval'ing the first item of the tuple and replacing the
         # tuple with the result of the eval.
+        # WARNING: the eval'd expression has the *item's write value* spliced into
+        # it as text before being eval()'d. Only use this on items whose write
+        # source you trust as much as you trust this plugin's own commands.py --
+        # anything that can write the bound item (a logic, a visu widget, an MQTT
+        # topic, another plugin, ...) can inject arbitrary Python into that
+        # expression. Do not bind such a command to an item that can be written
+        # by a source you would not also grant plugin-config-level trust to.
         'params': {'dict': ['or', 'list']},
         # optional, disabled custom value processing for this command
         'custom_disabled': False,

@@ -364,6 +364,14 @@ class TestSplitDurationValueString(unittest.TestCase):
         self.assertEqual(time, '10s')
         self.assertIsNone(val)
 
+    def test_number_is_time_only(self):
+        for number in (60, 2.5):
+            with self.subTest(number=number):
+                time, val, compat = split_duration_value_string(number, COMPAT_DEFAULT)
+                self.assertEqual(time, number)
+                self.assertIsNone(val)
+                self.assertEqual(compat, COMPAT_DEFAULT)
+
     def test_compat_from_default_when_absent(self):
         time, val, compat = split_duration_value_string('10s', 'latest')
         self.assertEqual(compat, 'latest')

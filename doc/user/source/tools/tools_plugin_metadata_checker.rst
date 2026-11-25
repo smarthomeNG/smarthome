@@ -2,6 +2,8 @@
 .. index:: Plugin Metadata; plugin_metadata_checker
 .. index:: Tools; Metadata Checker
 
+.. role:: greensup
+
 plugin_metadata_checker.py
 ==========================
 
@@ -12,14 +14,13 @@ auf inhaltliche Richtigkeit zu überprüfen. Das Tool hat eine ganze Reihe von m
 
    smarthome$ python3 tools/plugin_metadata_checker.py
 
-   plugin_metadata_checker.py v1.7.6 - Checks the care status of plugin metadata
+   plugin_metadata_checker.py v1.10.0 - Checks the care status of plugin metadata
 
    usage: plugin_metadata_checker.py
-                                     [-la | -lcl | -lsm | -lst | -li | -lc | -lip | -lia | -d DISP_PLUGIN | -dd DISPD_PLUGIN | -c CHECK_PLUGIN | -cl | -clc | -cli | -v]
+                                     [-la | -lsm | -lst | -li | -lc | -lip | -lia | -d DISP_PLUGIN | -dd DISPD_PLUGIN | -c CHECK_PLUGIN | -cl | -clc | -cli | -v]
 
-   optional arguments:
+   options:
      -la, --list_all       list plugin information of all plugins
-     -lcl, --list_classic  list plugin information of classic plugins
      -lsm, --list_smart    list plugin information of smart plugins
      -lst, --list_state    list plugin information grouped by plugin state
      -li, --list_inc       list information of plugins with incomplete metadata
@@ -47,7 +48,7 @@ Idealfall sieht das Ergebnis aus wie im folgenden Beispiel beim knx Plugin:
 
    smarthome$ python3 tools/plugin_metadata_checker.py -c knx
 
-   plugin_metadata_checker.py v1.7.6 - Checks the care status of plugin metadata
+   plugin_metadata_checker.py v1.10.0 - Checks the care status of plugin metadata
 
    Check metadata of smart plugin 'knx'
 
@@ -63,7 +64,7 @@ und das Ergebnis sieht ähnlich aus wie beim folgenden Beispiel beim smartvisu P
 
    smarthome$ python3 tools/plugin_metadata_checker.py -c smartvisu
 
-   plugin_metadata_checker.py v1.7.6 - Checks the care status of plugin metadata
+   plugin_metadata_checker.py v1.10.0 - Checks the care status of plugin metadata
 
    Check metadata of smart plugin 'smartvisu'
 

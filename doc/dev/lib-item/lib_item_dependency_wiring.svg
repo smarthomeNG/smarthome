@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L8,4 z" fill="#2980b9"/>
+    </marker>
+    <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L8,4 z" fill="#d68910"/>
+    </marker>
+  </defs>
+
+  <rect width="920" height="460" fill="#f8f9fa" rx="8"/>
+  <text x="460" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Dependency wiring: eval_trigger / hysteresis_input</text>
+
+  <!-- Lane 1 label -->
+  <text x="30" y="66" font-size="12" font-weight="bold" fill="#555">SETUP — once, during init_prerun() (before the tree first runs)</text>
+  <line x1="30" y1="74" x2="890" y2="74" stroke="#ddd" stroke-width="1"/>
+
+  <!-- Item A box -->
+  <rect x="30" y="92" width="230" height="72" rx="6" fill="#fff" stroke="#2980b9" stroke-width="1.8"/>
+  <text x="145" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#2980b9">Item A  (my.calc)</text>
+  <text x="145" y="130" text-anchor="middle" font-size="10" fill="#555">eval: '..sensor + 1'</text>
+  <text x="145" y="145" text-anchor="middle" font-size="10" fill="#555">eval_trigger: [my.sensor]</text>
+  <text x="145" y="158" text-anchor="middle" font-size="9" fill="#999" font-style="italic">declares what it depends on</text>
+
+  <!-- arrow to init_prerun box -->
+  <line x1="260" y1="128" x2="345" y2="128" stroke="#2980b9" stroke-width="1.4" marker-end="url(#arr)"/>
+  <text x="302" y="120" text-anchor="middle" font-size="9" fill="#555">resolves path</text>
+  <text x="302" y="145" text-anchor="middle" font-size="9" fill="#555">to live object</text>
+
+  <!-- init_prerun box -->
+  <rect x="350" y="92" width="220" height="72" rx="6" fill="#fef9e7" stroke="#f39c12" stroke-width="1.6"/>
+  <text x="460" y="114" text-anchor="middle" font-size="11" font-weight="bold" fill="#d68910">init_prerun(item)</text>
+  <text x="460" y="130" text-anchor="middle" font-size="9.5" fill="#7d6608">_internal/_parsing.py</text>
+  <text x="460" y="146" text-anchor="middle" font-size="9.5" fill="#7d6608">appends A to the target's</text>
+  <text x="460" y="158" text-anchor="middle" font-size="9.5" fill="#7d6608">_items_to_trigger list</text>
+
+  <!-- arrow to item B box -->
+  <line x1="570" y1="128" x2="655" y2="128" stroke="#2980b9" stroke-width="1.4" marker-end="url(#arr)"/>
+
+  <!-- Item B box -->
+  <rect x="660" y="92" width="230" height="72" rx="6" fill="#fff" stroke="#2980b9" stroke-width="1.8"/>
+  <text x="775" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#2980b9">Item B  (my.sensor)</text>
+  <text x="775" y="130" text-anchor="middle" font-size="10" fill="#555">_items_to_trigger = [A]</text>
+  <text x="775" y="148" text-anchor="middle" font-size="9" fill="#999" font-style="italic">now knows A depends on it —</text>
+  <text x="775" y="160" text-anchor="middle" font-size="9" fill="#999" font-style="italic">A never has to ask again</text>
+
+  <!-- Lane 2 label -->
+  <text x="30" y="210" font-size="12" font-weight="bold" fill="#555">RUNTIME — every later value change of item B, no re-resolution needed</text>
+  <line x1="30" y1="218" x2="890" y2="218" stroke="#ddd" stroke-width="1"/>
+
+  <!-- Item B updates -->
+  <rect x="30" y="236" width="230" height="66" rx="6" fill="#fff" stroke="#27ae60" stroke-width="1.8"/>
+  <text x="145" y="258" text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">Item B value changes</text>
+  <text x="145" y="276" text-anchor="middle" font-size="9.5" fill="#555">__update() (item.py)</text>
+  <text x="145" y="292" text-anchor="middle" font-size="9.5" fill="#555">walks self._items_to_trigger</text>
+
+  <line x1="260" y1="269" x2="345" y2="269" stroke="#27ae60" stroke-width="1.4" marker-end="url(#arr-orange)"/>
+
+  <!-- scheduler box -->
+  <rect x="350" y="236" width="220" height="66" rx="6" fill="#fef9e7" stroke="#f39c12" stroke-width="1.6"/>
+  <text x="460" y="256" text-anchor="middle" font-size="11" font-weight="bold" fill="#d68910">sh.trigger(...)</text>
+  <text x="460" y="273" text-anchor="middle" font-size="9.5" fill="#7d6608">queues A.run_eval as a new</text>
+  <text x="460" y="288" text-anchor="middle" font-size="9.5" fill="#7d6608">scheduler job — not a direct call</text>
+
+  <line x1="570" y1="269" x2="655" y2="269" stroke="#27ae60" stroke-width="1.4" marker-end="url(#arr-orange)"/>
+
+  <!-- Item A recomputes -->
+  <rect x="660" y="236" width="230" height="66" rx="6" fill="#fff" stroke="#27ae60" stroke-width="1.8"/>
+  <text x="775" y="258" text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">Item A recomputes</text>
+  <text x="775" y="276" text-anchor="middle" font-size="9.5" fill="#555">run_eval() (_internal/_eval.py)</text>
+  <text x="775" y="292" text-anchor="middle" font-size="9.5" fill="#555">re-evaluates A's eval expression</text>
+
+  <!-- Note box -->
+  <rect x="30" y="330" width="860" height="100" rx="6" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="46" y="352" font-size="10.5" fill="#333" font-weight="bold">Why a push list resolved once, not a scan on every update:</text>
+  <text x="46" y="370" font-size="10" fill="#555">An item with a hundred eval-dependents pays the cost of finding them exactly once, at startup — not on every value change.</text>
+  <text x="46" y="386" font-size="10" fill="#555">The scheduler hop (sh.trigger) between B's update and A's recompute matters too: items can form dependency chains, so a plain</text>
+  <text x="46" y="402" font-size="10" fill="#555">recursive call from B into A's eval could grow the call stack indefinitely or recurse into a lock B is already holding.</text>
+  <text x="46" y="418" font-size="10" fill="#555">hysteresis_input works the same way, in reverse, populating _hysteresis_items_to_trigger instead.</text>
+</svg>

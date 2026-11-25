@@ -2,8 +2,8 @@
 module:
     # Global module attributes
     classname: Admin
-    version: 1.9.0
-    sh_minversion: 1.12.0
+    version: 2.0.0
+    sh_minversion: 2.0.0
 #    sh_maxversion: 1.3             # maximum shNG version to use this plugin (leave empty if latest)
     description:
         de: 'Dieses Modul implementiert das Administrationsinterface von SmartHomeNG'
@@ -28,14 +28,6 @@ parameters:
             en: 'Automatically extend an existing login-token'
 #            fr: ""
 
-    pypi_timeout:
-        type: int
-        default: 5
-        description:
-            de: 'Timeout bei der Abfrage der pypi Website'
-            en: 'Timeout for getting data from the pypi website'
-            fr: "Délai d'attente pour obtenir des données du site Web Pypi"
-
     itemtree_fullpath:
         type: bool
         gui_type: yes_no
@@ -52,24 +44,6 @@ parameters:
             de: 'Minimale Anzahl eingegebener Zeichen ab denen die Suche im Item-Tree beginnt'
             en: 'Minimum number of entered characters to start searching the item tree'
             fr: "Nombre minimum de caractères entrés pour démarrer la recherche dans l'arborescence"
-
-    websocket_host:
-        type: ip
-        default: 'None*'
-        description:
-            de: 'VERALTET: IP Adresse für den Websocket Zugriff - bitte im Websocket-Modul konfigurieren'
-            en: 'DEPRECATED: ip address for websocket access - configure in the websocket module instead'
-            fr: "OBSOLÈTE: Adresse IP pour l'accès websocket - à configurer dans le module websocket"
-
-    websocket_port:
-        type: int
-        valid_min: 0
-        valid_max: 65535
-        default: 2424
-        description:
-            de: 'VERALTET: Port für den Websocket Zugriff - bitte im Websocket-Modul konfigurieren'
-            en: 'DEPRECATED: port for websocket access - configure in the websocket module instead'
-            fr: "OBSOLÈTE: Port pour l'accès websocket - à configurer dans le module websocket"
 
     log_chunksize:
         type: int
@@ -95,8 +69,8 @@ parameters:
         gui_type: yes_no
         default: False
         description:
-            de: 'Sollen WARNINGs aus REST_dispatch_execute als EXECPTION geloggt werden?'
-            en: 'Activate developer mode'
+            de: 'Sollen WARNINGs aus REST_dispatch_execute als EXCEPTION geloggt werden?'
+            en: 'Log WARNINGs of REST_dispatch_execute as EXCEPTION?'
 
     click_dropdown_header:
         type: bool
@@ -105,4 +79,41 @@ parameters:
         description:
             de: 'Click auf Kopfeintrag von Dropdown Menüs erlauben'
             en: 'Allow click on header of dropdown menus'
+
+    dark_mode:
+        type: bool
+        gui_type: on_off
+        default: False
+        description:
+            de: 'Dark Mode als Standard für das Administrations-Interface aktivieren (kann pro Browser über den
+                 Schalter in der Navigationsleiste übersteuert werden)'
+            en: 'Activate dark mode as the default for the admin interface (can be overridden per browser via the
+                 toggle in the navigation bar)'
+
+    resource_graph_period:
+        type: str
+        default: '24h'
+        description:
+            de: 'Zeitraum, den die Ressourcen-Graphen (Systemeigenschaften) initial anzeigen, z.B. "1h", "6h", "24h".
+                 Ein kürzerer Zeitraum lässt die Graphen häufiger live aktualisieren, da das Aktualisierungsintervall
+                 an die Anzahl der dargestellten Messpunkte gekoppelt ist.'
+            en: 'Time span initially shown by the resource graphs (System properties), e.g. "1h", "6h", "24h".
+                 A shorter span makes the graphs update live more often, since the update interval is tied to the
+                 number of plotted data points.'
+
+    cors_origins:
+        type: list(str)
+        default: []
+        description:
+            de: 'Origins (z.B. http://localhost:4200), die die REST API aus einem Browser aufrufen dürfen, zusätzlich zum Admin Interface selbst. Ohne Eintrag antwortet die API nur dem Admin Interface.'
+            en: 'Origins (e.g. http://localhost:4200) that may call the REST API from a browser, besides the admin interface itself. Without an entry the API answers only the admin interface.'
+
+    start_page:
+        type: str
+        default: 'dashboard'
+        valid_list: ['dashboard', 'system', 'items', 'logics', 'plugins', 'scenes', 'schedulers', 'services', 'logs']
+        description:
+            de: 'Seite, die nach dem Login im Administrations-Interface angezeigt wird'
+            en: 'Page shown after login in the admin interface'
+            fr: "Page affichée après la connexion dans l'interface d'administration"
 

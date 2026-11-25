@@ -1,0 +1,19 @@
+%YAML 1.1
+---
+# Regression fixture for lib.module.Modules._load_module(): loading a module
+# whose class can't be resolved must not leave a previously-loaded module's
+# instance registered under the new (failing) module's name.
+#
+# 'good' loads first and succeeds. 'broken' points at the same, real,
+# importable module file, but a classname that doesn't exist in it -- this
+# must fail cleanly, not reuse/corrupt 'good's already-loaded instance.
+
+good:
+    class_name: dummy
+    class_path: tests.resources.module_dummy
+    dummy: 'somevalue'
+
+broken:
+    class_name: ThisClassDoesNotExist
+    class_path: tests.resources.module_dummy
+    dummy: 'somevalue'

@@ -20,19 +20,28 @@
 #########################################################################
 
 
+import ast
 import os
 import logging
 import json
 import cherrypy
 
+import lib.shyaml as shyaml
 from lib.item import Items
+from lib.item.items import ItemOperationBusyError
+from lib.utils import Utils
 
 import jwt
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 from .itemdata import ItemData
 
 
 class ItemsController(RESTResource, ItemData):
+    # PATCH isn't in RESTResource's REST_defaults (DELETE/GET/POST/PUT/OPTIONS
+    # only) — add it here rather than there, since this is the only
+    # controller in the admin module that needs it so far.
+    REST_map = {'PATCH': 'edit'}
+
     def __init__(self, module):
         self._sh = module._sh
         self.module = module
@@ -70,6 +79,11 @@ class ItemsController(RESTResource, ItemData):
             self.logger.info('ItemsController GET /api/items/tree')
             return self.items_json('tree')
 
+        if id == 'attributes':
+            # /api/items/attributes  — core item attribute catalog (modules/core/items.yaml)
+            self.logger.info('ItemsController GET /api/items/attributes')
+            return json.dumps(self._core_item_attributes())
+
         if id is not None:
             # /api/items/{item_path}  — returns item detail array (same format as legacy endpoint)
             self.logger.info(f'ItemsController GET /api/items/{id}')
@@ -82,6 +96,57 @@ class ItemsController(RESTResource, ItemData):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(summary='Item struct templates (etc/struct.yaml)', method='get', path='/items/structs', tags=['items']),
+        ApiDoc(summary='Item tree structure', method='get', path='/items/tree', tags=['items']),
+        ApiDoc(
+            summary='Core item-attribute catalog (drives item-edit-dialog form fields)',
+            method='get',
+            path='/items/attributes',
+            tags=['items'],
+        ),
+        ApiDoc(
+            summary='Full detail for one item',
+            method='get',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+        ),
+    ]
+
+    def _core_item_attributes(self):
+        """
+        Read the core item-attribute catalog (modules/core/items.yaml's
+        ``item_attributes:`` section) and shape it for the admin frontend:
+        ``{<name>: {"type": ..., "valid_list": [...], "valid_min": ..., "valid_max": ...}}``
+        — each of ``valid_list``/``valid_min``/``valid_max``/``description`` is
+        omitted (not null) for attributes that don't define it, matching the
+        shape api_plugins.py uses for plugin item attributes.
+
+        :return: dict of attribute name -> {"type": ..., ["valid_list": ...], ["valid_min": ...], ["valid_max": ...]}
+        :rtype: dict
+        """
+        filename = os.path.join(self._sh.get_basedir(), 'modules', 'core', 'items.yaml')
+        data = shyaml.yaml_load(filename, ordered=True) or {}
+        item_attributes = data.get('item_attributes', {}) or {}
+
+        result = {}
+        for name, definition in item_attributes.items():
+            entry = {'type': definition.get('type')}
+            valid_list = definition.get('valid_list')
+            if valid_list is not None:
+                entry['valid_list'] = valid_list
+            valid_min = definition.get('valid_min')
+            if valid_min is not None:
+                entry['valid_min'] = valid_min
+            valid_max = definition.get('valid_max')
+            if valid_max is not None:
+                entry['valid_max'] = valid_max
+            description = definition.get('description')
+            if description is not None:
+                entry['description'] = description
+            result[name] = entry
+        return result
 
     # ======================================================================
     #  PUT /api/items/{item_path}
@@ -118,11 +183,482 @@ class ItemsController(RESTResource, ItemData):
                 else:
                     value = int(value) if value != '' else 0
 
+        if item.type() == 'foo' and isinstance(value, str):
+            value = self._foo_value_from_text(value)
+
         item(value, caller='admin')
         return json.dumps({'result': 'ok'})
 
+    @staticmethod
+    def _foo_value_from_text(text):
+        """
+        Value of a ``foo`` item from the text entered in the admin UI.
+
+        Text that is a literal int, float, bool, list or dict (as the item detail shows it) becomes that
+        value, a quoted string literal becomes the string inside the quotes. Any other text stays a string;
+        ``None`` is not accepted as a literal, as setting an item to None only reads it.
+
+        :param text: entered text
+        :type text: str
+        :return: parsed value or the unchanged text
+        """
+        try:
+            parsed = ast.literal_eval(text.strip())
+        except (ValueError, SyntaxError, MemoryError, RecursionError):
+            return text
+        if isinstance(parsed, (int, float, str, list, dict)):
+            return parsed
+        return text
+
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary="Live-set an item's value",
+            method='put',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example='{"value": "<new value>"}',
+        )
+    ]
+
+    # ======================================================================
+    #  POST /api/items/{item_path}
+    #
+    def add(self, id=None):
+        """
+        Handle POST requests — create a new item at runtime.
+
+        Request body: JSON object with a "config" key (item attribute dict,
+        same shape as a static item definition), and optionally "persist"
+        (bool, default True), "filename" (str, default None — falls back to
+        Items.create_item()'s own default resolution), and
+        "create_missing_parents" (bool, default False).
+
+        If id contains a dot, the part before the last dot is resolved as
+        the parent item. By default it must already exist, or this is a
+        400 — not a silent top-level fallback. Set create_missing_parents
+        to auto-create the whole missing ancestor chain instead (each as an
+        empty item, same persist/filename as the requested item).
+        """
+        if id is None:
+            raise cherrypy.HTTPError(400, 'Item path required')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        body = cherrypy.request.body.read()
+        try:
+            data = json.loads(body)
+            config = data.get('config')
+            persist = data.get('persist', True)
+            filename = data.get('filename')
+            create_missing_parents = data.get('create_missing_parents', False)
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"config": ...}')
+
+        self.logger.info(f'ItemsController POST /api/items/{id}: config={config!r}')
+
+        try:
+            item = self.items.create_item(
+                id, config, persist=persist, filename=filename, create_missing_parents=create_missing_parents
+            )
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
+        if item is None:
+            raise cherrypy.HTTPError(400, f"Item '{id}' was not created — its name collides with an existing attribute")
+        return json.dumps({'result': 'ok'})
+
+    add.expose_resource = True
+    add.authentication_needed = True
+    add.api_doc = [
+        ApiDoc(
+            summary='Create a new item',
+            method='post',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example=(
+                '{"config": {}, "persist": true, "filename": "<optional>", "create_missing_parents": false}'
+            ),
+            description='create_missing_parents auto-creates the whole missing ancestor chain as empty items.',
+        )
+    ]
+
+    # ======================================================================
+    #  PATCH /api/items/{item_path}
+    #
+    def edit(self, id=None):
+        """
+        Handle PATCH requests — edit an existing item's attributes in place.
+
+        Request body: JSON object with a "config" key — the COMPLETE new
+        attribute set (same convention as add()/POST — omitting a key
+        resets it to its default, there is no partial-patch/delete-sentinel
+        scheme). No "persist"/"filename" — editing never moves an item to a
+        different file; it always persists to whatever file it was already
+        defined in.
+
+        Editing an item that other items structurally depend on (via
+        ``trigger:``/``hysteresis_input:``) is allowed — those incoming
+        registrations live on the edited item's own object and survive
+        the edit untouched, since edit_item() mutates in place rather than
+        replacing the object.
+        """
+        if id is None:
+            raise cherrypy.HTTPError(400, 'Item path required')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        body = cherrypy.request.body.read()
+        try:
+            data = json.loads(body)
+            config = data.get('config')
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"config": ...}')
+
+        self.logger.info(f'ItemsController PATCH /api/items/{id}: config={config!r}')
+
+        try:
+            self.items.edit_item(item, config)
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
+        return json.dumps({'result': 'ok'})
+
+    edit.expose_resource = True
+    edit.authentication_needed = True
+    edit.api_doc = [
+        ApiDoc(
+            summary='Edit item config - full replace, not a partial patch despite the verb',
+            method='patch',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example='{"config": {}}',
+        )
+    ]
+
+    # ======================================================================
+    #  DELETE /api/items/{item_path}
+    #
+    def delete(self, id=None, persist=None, recursive=None):
+        """
+        Handle DELETE requests — remove an item at runtime.
+
+        :param persist: Optional query parameter ('true'/'false', default
+                         True if omitted) — whether to also remove the
+                         item's entry from its source yaml file.
+        :param recursive: Optional query parameter ('true'/'false', default
+                         False if omitted) — an item with sub-items is
+                         rejected with a 400 unless this is set, in which
+                         case every sub-item is removed too.
+
+        Deliberately a query parameter, not a JSON request body: DELETE
+        isn't in cherrypy's default `methods_with_bodies`
+        ('POST', 'PUT', 'PATCH'), so cherrypy never runs its normal body
+        wrapping/processing for it — request.body.fp ends up as the raw
+        cheroot KnownLengthRFile, whose read() doesn't accept the
+        (size, fp_out) signature cherrypy's own Entity.read() calls it
+        with, crashing with a TypeError on every DELETE. The query string
+        is parsed unconditionally regardless of method, so it doesn't hit
+        this.
+        """
+        if id is None:
+            raise cherrypy.HTTPError(400, 'Item path required')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        persist_value = True
+        if persist is not None:
+            try:
+                persist_value = Utils.to_bool(persist)
+            except Exception:
+                raise cherrypy.HTTPError(400, "Invalid 'persist' parameter — expected true/false")
+
+        recursive_value = False
+        if recursive is not None:
+            try:
+                recursive_value = Utils.to_bool(recursive)
+            except Exception:
+                raise cherrypy.HTTPError(400, "Invalid 'recursive' parameter — expected true/false")
+
+        self.logger.info(
+            f'ItemsController DELETE /api/items/{id}: persist={persist_value!r} recursive={recursive_value!r}'
+        )
+
+        try:
+            self.items.remove_item(item, persist=persist_value, recursive=recursive_value)
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
+        return json.dumps({'result': 'ok'})
+
+    delete.expose_resource = True
+    delete.authentication_needed = True
+    delete.api_doc = [
+        ApiDoc(
+            summary=(
+                'Delete item. persist/recursive are query params, not a body - CherryPy does not body-process DELETE.'
+            ),
+            method='delete',
+            path='/items/{itemPath}',
+            tags=['items'],
+            params=[
+                ApiParam(name='itemPath', location='path', required=True),
+                ApiParam(name='persist', type='boolean', default=True),
+                ApiParam(name='recursive', type='boolean', default=False),
+            ],
+        )
+    ]
+
+    # ======================================================================
+    #  GET /api/items/{item_path}/references
+    #
+    def references(self, id, *vpath, **params):
+        """
+        Handle GET requests for the /references sub-resource — best-effort
+        list of other items that textually reference this item's path
+        (see Items.find_references()).
+        """
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        self.logger.info(f'ItemsController GET /api/items/{id}/references')
+
+        refs = self.items.find_references(id)
+        result = [
+            {'item': ref_item.property.path, 'attribute': attr, 'value': value, 'unambiguous': unambiguous}
+            for ref_item, attr, value, unambiguous in refs
+        ]
+        return json.dumps(result)
+
+    references.expose_resource = True
+    references.authentication_needed = True
+    references.api_doc = [
+        ApiDoc(
+            summary='List what references this item (used to warn before delete)',
+            method='get',
+            path='/items/{itemPath}/references',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+        )
+    ]
+
+    # ======================================================================
+    #  POST /api/items/{item_path}/remove_references
+    #
+    def remove_references(self, id, *vpath, **params):
+        """
+        Handle POST requests for the /remove_references sub-resource —
+        strip dangling unambiguous references to this item from every
+        other item (see Items.remove_references()). Intended to be
+        called right before deleting this item.
+
+        Sub-resource methods reached via vpath (like this one and
+        references()) aren't verb-gated by RESTResource's dispatcher —
+        only the top-level REST_map/REST_defaults methods are. Since this
+        one is destructive (unlike references(), which is read-only),
+        the method check is enforced explicitly here.
+        """
+        if cherrypy.request.method != 'POST':
+            raise cherrypy.HTTPError(405, 'Method not allowed')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        self.logger.info(f'ItemsController POST /api/items/{id}/remove_references')
+
+        try:
+            result = self.items.remove_references(id)
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
+        return json.dumps(result)
+
+    remove_references.expose_resource = True
+    remove_references.authentication_needed = True
+    remove_references.api_doc = [
+        ApiDoc(
+            summary="Strip other items'/plugins' references to this item, pre-delete",
+            method='post',
+            path='/items/{itemPath}/remove_references',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+        )
+    ]
+
+    # ======================================================================
+    #  POST /api/items/{item_path}/rename
+    #
+    def rename(self, id, *vpath, **params):
+        """
+        Handle POST requests for the /rename sub-resource — rename an
+        item in place, optionally moving it to a new parent (see
+        ~/.claude/handoff/shng-rename-item-design.md).
+
+        Request body: JSON object with a "new_path" key — the COMPLETE
+        new path, not just a leaf name, since a different parent segment
+        triggers a move rather than a plain rename — and an optional
+        "filename" key, an explicit override for which yaml file the
+        moved item's node lands in (only meaningful when persisted).
+
+        Sub-resource methods reached via vpath aren't verb-gated by
+        RESTResource's dispatcher — checked explicitly here, same
+        reasoning as remove_references().
+        """
+        if cherrypy.request.method != 'POST':
+            raise cherrypy.HTTPError(405, 'Method not allowed')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        body = cherrypy.request.body.read()
+        try:
+            data = json.loads(body)
+            new_path = data.get('new_path')
+            filename = data.get('filename')
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"new_path": ...}')
+
+        self.logger.info(f'ItemsController POST /api/items/{id}/rename: new_path={new_path!r}')
+
+        try:
+            _renamed_item, report = self.items.rename_item(item, new_path, filename=filename)
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
+
+        return json.dumps({'result': 'ok', 'new_path': new_path, **report})
+
+    rename.expose_resource = True
+    rename.authentication_needed = True
+    rename.api_doc = [
+        ApiDoc(
+            summary=(
+                'Rename or move an item. A new_path whose parent segment differs from the '
+                'current one triggers a move - same endpoint, no separate move route.'
+            ),
+            method='post',
+            path='/items/{itemPath}/rename',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example='{"new_path": "<path>", "filename": "<optional>"}',
+        )
+    ]
+
+    # ======================================================================
+    #  POST /api/items/{item_path}/copy
+    #
+    def copy(self, id, *vpath, **params):
+        """
+        Handle POST requests for the /copy sub-resource — copy an
+        item's entire subtree to a new path as an independent clone
+        (fresh plugin bindings/value history, no shared identity with
+        the source — see Items.copy_item()).
+
+        Request body: JSON object with a "new_path" key — the COMPLETE
+        new path for the copy — and optional "filename" (target yaml
+        file override, defaults to the source item's own file),
+        "create_missing_parents" (bool, default False), and
+        "include_children" (bool, default True — set False to copy only
+        the item's own attributes, none of its child items).
+
+        Only persisted items can be copied — see Items.copy_item()'s
+        docstring for why.
+
+        Sub-resource methods reached via vpath aren't verb-gated by
+        RESTResource's dispatcher — checked explicitly here, same
+        reasoning as rename()/remove_references().
+        """
+        if cherrypy.request.method != 'POST':
+            raise cherrypy.HTTPError(405, 'Method not allowed')
+
+        if self.items is None:
+            self.items = Items.get_instance()
+
+        item = self.items.return_item(id)
+        if item is None:
+            raise cherrypy.HTTPError(404, f"Item '{id}' not found")
+
+        body = cherrypy.request.body.read()
+        try:
+            data = json.loads(body)
+            new_path = data.get('new_path')
+            filename = data.get('filename')
+            create_missing_parents = data.get('create_missing_parents', False)
+            include_children = data.get('include_children', True)
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            raise cherrypy.HTTPError(400, 'Invalid JSON body — expected {"new_path": ...}')
+
+        self.logger.info(f'ItemsController POST /api/items/{id}/copy: new_path={new_path!r}')
+
+        try:
+            copied_item, report = self.items.copy_item(
+                item,
+                new_path,
+                filename=filename,
+                create_missing_parents=create_missing_parents,
+                include_children=include_children,
+            )
+        except ValueError as e:
+            raise cherrypy.HTTPError(400, str(e))
+        except ItemOperationBusyError as e:
+            raise cherrypy.HTTPError(409, str(e))
+        if copied_item is None:
+            raise cherrypy.HTTPError(
+                400, f"Item '{new_path}' was not created — its name collides with an existing attribute"
+            )
+
+        return json.dumps({'result': 'ok', 'new_path': new_path, **report})
+
+    copy.expose_resource = True
+    copy.authentication_needed = True
+    copy.api_doc = [
+        ApiDoc(
+            summary=(
+                'Copy an item (and its subtree by default). Only persisted items are '
+                "copyable; the copy is written to the source item's own file by default."
+            ),
+            method='post',
+            path='/items/{itemPath}/copy',
+            tags=['items'],
+            params=[ApiParam(name='itemPath', location='path', required=True)],
+            request_body='application/json',
+            request_example='{"new_path": "<path>", "filename": "<optional>", "include_children": true}',
+        )
+    ]
 
 
 class ItemsListController(RESTResource):
@@ -156,3 +692,4 @@ class ItemsListController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [ApiDoc(summary='Flat list of all items', method='get', path='/items/list', tags=['items'])]

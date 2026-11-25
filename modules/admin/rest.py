@@ -23,9 +23,77 @@
 
 
 import json
+import os
+
 import cherrypy
 import logging
 import jwt
+
+from dataclasses import dataclass, field
+from typing import Any, List, Optional
+
+
+def contained_path(base_dir: str, name: str) -> str:
+    """
+    Return the path of ``name`` below ``base_dir`` for a file name taken from a request.
+
+    Subdirectories are allowed; symlinks are not resolved.
+
+    :raises cherrypy.HTTPError: 400 if ``name`` is absolute or ``..`` leads outside ``base_dir``
+    """
+    base = os.path.abspath(base_dir)
+    path = os.path.abspath(os.path.join(base, name))
+    if os.path.commonpath([base, path]) != base:
+        raise cherrypy.HTTPError(400, 'invalid file name')
+    return path
+
+
+@dataclass
+class ApiParam:
+    """
+    One query- or path-parameter of an OpenAPI operation.
+    """
+
+    name: str
+    location: str = 'query'  # 'query' or 'path' - OpenAPI's `in`
+    type: str = 'string'
+    required: bool = False
+    default: Any = None
+    enum: Optional[List[str]] = None
+    description: str = ''
+
+
+@dataclass
+class ApiDoc:
+    """
+    OpenAPI metadata for one operation exposed by a REST method.
+
+    Set as `<method>.api_doc = [ApiDoc(...), ...]` right below that method's
+    existing `expose_resource`/`authentication_needed` assignments - same
+    convention, so a route's behavior and its documentation sit in the same
+    few lines and are far more likely to get updated together. A method that
+    internally dispatches several distinct sub-resources by `id` (e.g.
+    ConfigController.read) lists one ApiDoc per sub-resource.
+
+    tools/build_openapi.py statically collects these into
+    modules/admin/openapi.yaml. That file is generated, not hand-edited -
+    same convention as requirements/*.txt (see lib/shpypi.py). The RAML file
+    this replaced went stale because nothing forced it to change alongside
+    the code; co-locating the metadata with the route it describes is the
+    actual fix, not just a different file format.
+    """
+
+    summary: str
+    method: str  # get | post | put | patch | delete
+    path: str  # relative to /api, with {param} placeholders, e.g. '/items/{itemPath}/rename'
+    auth: bool = True
+    tags: Optional[List[str]] = None
+    params: List[ApiParam] = field(default_factory=list)
+    request_body: Optional[str] = None
+    request_example: Optional[str] = None
+    response_example: Optional[str] = None
+    description: str = ''
+    deprecated: bool = False
 
 
 # """
@@ -243,19 +311,30 @@ class RESTResource:
     REST_children = {}
 
     logger = logging.getLogger('REST')
-    jwt_secret = 'SmartHomeNG$0815'
+    # injected by Admin.__init__; None makes verification fail closed until then
+    jwt_secret = None
+    #: origins other than the admin interface's own that may call the API from a browser (admin: cors_origins)
+    cors_origins: frozenset[str] = frozenset()
 
-    def set_response_headers(self, vpath=''):
+    def set_response_headers(self, *vpath):
         """
-        Set http response headers for CORS support
+        Set the CORS response headers for a request from an origin listed in cors_origins
+
+        Requests from the admin interface itself are same-origin and need no CORS headers; for any other
+        origin the browser keeps the response from the calling page.
+
+        :param vpath: unused; accepts any number of segments since default() calls this as
+                      set_response_headers(*vpath), and vpath can have more than one element for a
+                      sub-resource URL (e.g. /api/items/<path>/references).
         """
-        #        if vpath != 'status':
-        #            self.logger.notice(f"set_response_headers ({vpath=}): request headers: {cherrypy.request.headers}")
-        cherrypy.response.headers['Access-Control-Allow-Headers'] = '*'
-        # cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
-        origin = cherrypy.request.headers.get('Origin', '*')
+        origin = cherrypy.request.headers.get('Origin')
+        if not origin or origin not in self.cors_origins:
+            return
         cherrypy.response.headers['Access-Control-Allow-Origin'] = origin
         cherrypy.response.headers['Access-Control-Allow-Credentials'] = 'true'
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+        cherrypy.response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        cherrypy.response.headers['Vary'] = 'Origin'
 
     #        if vpath != 'status':
     #            self.logger.notice(f"set_response_headers: response headers for: {cherrypy.response.headers}")
@@ -333,29 +412,47 @@ class RESTResource:
 
         return (True, '')
 
+    def REST_check_auth(self, m, root):
+        """
+        Check whether the exposed resource method m may be invoked for the current request.
+
+        This is the single place authentication_needed/public_root are enforced - every
+        dispatch path that ends up calling an @expose_resource method must go through it.
+
+        :raises cherrypy.HTTPError: 401 if the method needs authentication and the request has no valid token
+        """
+        public_root = False
+        if root:
+            public_root = getattr(m, 'public_root', False)
+            self.logger.info(f"REST_check_auth(): public_root = '{public_root}'")
+        if not public_root:
+            auth_needed = getattr(m, 'authentication_needed', False)
+            self.logger.info(
+                f'REST_check_auth(): {("" if auth_needed else "No ")}Authentication needed for {str(m).split()[2]}'
+            )
+            if auth_needed:
+                token_valid, error_text = self.REST_test_jwt_token()
+                if not token_valid:
+                    self.logger.info(f'REST_check_auth(): Authentication failed for {str(m).split()[2]}')
+                    raise cherrypy.HTTPError(401, error_text)
+
     def REST_dispatch_execute(self, m, method, root, resource, **params):
+        """
+        Authenticate and invoke the exposed resource method m.
+
+        cherrypy.HTTPError/HTTPRedirect raised by m propagate to cherrypy with their own status; any other
+        exception is returned to the client as a 200 JSON body {'result': 'error', 'description': ...}.
+
+        :return: m's return value, a JSON error response, or None if m is not an exposed resource method
+        :raises cherrypy.HTTPError: 401 if m needs authentication and the request has no valid token
+        """
         if m and getattr(m, 'expose_resource', False):
-            public_root = False
-            if root:
-                public_root = getattr(m, 'public_root', False)
-                self.logger.info(f"REST_dispatch_execute(): public_root = '{public_root}'")
-            if not public_root:
-                auth_needed = getattr(m, 'authentication_needed', False)
-                self.logger.info(
-                    f'REST_dispatch_execute(): {("" if auth_needed else "No ")}Authentication needed for {method} ({str(m).split()[2]})'
-                )
-                if auth_needed:
-                    # self.logger.info("REST_dispatch: Authentication needed for {} ({})".format(method, str(m).split()[2]))
-                    token_valid, error_text = self.REST_test_jwt_token()
-                    if not token_valid:
-                        self.logger.info(
-                            'REST_dispatch_execute(): Authentication failed for {method} ({str(m).split()[2]})'
-                        )
-                        response = {'result': 'error', 'description': error_text}
-                        return json.dumps(response)
+            self.REST_check_auth(m, root)
 
             try:
                 return m(resource, **params)
+            except (cherrypy.HTTPError, cherrypy.HTTPRedirect):
+                raise
             except Exception as e:
                 if self.module.rest_dispatch_force_exception:
                     self.logger.notice(
@@ -442,6 +539,7 @@ class RESTResource:
             method = getattr(self, a, None)
             # self.logger.notice(f"dir(method): {dir(method)}")
             if method and getattr(method, 'expose_resource', False):
+                self.REST_check_auth(method, False)
                 return method(resource, *vpath, **params)
             else:
                 # path component was specified but doesn't
@@ -482,7 +580,7 @@ class RESTResource:
         """
         Handle OPTIONS requests
         """
-        self.logger.notice('RESTResource.options for class {self.__class__.__name__}')
+        self.logger.notice(f'RESTResource.options for class {self.__class__.__name__}')
 
         return json.dumps(False)
 

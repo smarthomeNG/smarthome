@@ -21,13 +21,17 @@
 #########################################################################
 
 import os
+import re
 import sys
 import subprocess
 import datetime
 
 sys.path.append('..')
 
-import plugins.__init__ as plugin_vers
+try:
+    import plugins.__init__ as plugin_vers
+except ImportError:  # SmartHomeNG can run without a plugins folder
+    plugin_vers = None
 from lib.utils import Version
 
 # Update auf 1.3d   wg. neuer item features on_update, on_change
@@ -118,10 +122,17 @@ from lib.utils import Version
 # Update auf 1.12.1    wg. Release
 # Update auf 1.12.1.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.12.1 Release"
 # Update auf 1.12.2    wg. Release
+# Update auf 1.12.2.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.12.2 Release"
+# Update auf 1.12.2.2  wg. Kennzeichnung für sh_minversion
 
-shNG_version = '1.12.2'
+# Update auf 2.0.0-dev.1 wg. Umstellung auf Semantic Versioning (siehe doc/dev/public_api.md)
+# Update auf 2.0.0-dev.2 wg. Kennzeichnung für sh_minversion der Plugins, die den 2.0 Core brauchen
+
+# Update auf 2.0.0     wg. Release
+
+shNG_version = '2.0.0'
 shNG_branch = 'master'
-shNG_releasedate = '10. Juli 2026'
+shNG_releasedate = '25. November 2026'
 
 # ---------------------------------------------------------------------------------
 FileBASE = None
@@ -140,22 +151,32 @@ def _get_git_data(sub='', printout=False):
     commit_short = ''
     if BASE is not None:
         try:
-            os.chdir(BASE)
+            # git -C <path> runs against that repo without touching this
+            # process's cwd. A shared os.chdir() would be inherently unsafe
+            # here regardless of restoration, since concurrent CherryPy
+            # request threads could interleave; -C has no such race, each
+            # invocation is independent.
             branch = (
-                subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stderr=subprocess.STDOUT)
+                subprocess.check_output(
+                    ['git', '-C', BASE, 'rev-parse', '--abbrev-ref', 'HEAD'], stderr=subprocess.STDOUT
+                )
                 .decode()
                 .strip('\n')
             )
             commit = (
-                subprocess.check_output(['git', 'rev-parse', 'HEAD'], stderr=subprocess.STDOUT).decode().strip('\n')
+                subprocess.check_output(['git', '-C', BASE, 'rev-parse', 'HEAD'], stderr=subprocess.STDOUT)
+                .decode()
+                .strip('\n')
             )
             commit_short = (
-                subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], stderr=subprocess.STDOUT)
+                subprocess.check_output(['git', '-C', BASE, 'rev-parse', '--short', 'HEAD'], stderr=subprocess.STDOUT)
                 .decode()
                 .strip('\n')
             )
             describe = (
-                subprocess.check_output(['git', 'describe', '--all'], stderr=subprocess.STDOUT).decode().strip('\n')
+                subprocess.check_output(['git', '-C', BASE, 'describe', '--all'], stderr=subprocess.STDOUT)
+                .decode()
+                .strip('\n')
             )
         except Exception:
             pass
@@ -173,25 +194,31 @@ def _get_git_data(sub='', printout=False):
 # ---------------------------------------------------------------------------------
 
 
+def build_version(version, *build_parts):
+    """
+    Append semver build metadata (``+part.part``) to a version
+
+    Characters outside of ``[0-9A-Za-z-]`` (e.g. in branch names like ``feature/x``) are replaced by ``-``;
+    empty parts are skipped.
+    """
+    build = '.'.join(re.sub(r'[^0-9A-Za-z-]', '-', part) for part in build_parts if part)
+    return version + '+' + build if build else version
+
+
 def get_shng_main_version():
     return Version.format(shNG_version)
 
 
 def get_shng_plugins_version():
-    plgversion = get_plugins_version().split('-')[0]
-    return Version.format(plgversion)
+    return Version.format(Version.strip_build(get_plugins_version()))
 
 
 def get_shng_version():
     commit, commit_short, branch, describe = _get_git_data()
     VERSION = get_shng_main_version()
-    if branch == 'master':
-        VERSION += '-' + branch + ' (' + commit_short + ')'
-    elif branch == 'manual':
-        VERSION += '-' + shNG_branch + ' (' + branch + ')'
-    else:
-        VERSION += '-' + commit_short + '.' + branch
-    return VERSION
+    if branch == 'manual':
+        return build_version(VERSION, 'manual', shNG_branch)
+    return build_version(VERSION, commit_short, branch)
 
 
 def get_shng_version_date():
@@ -225,18 +252,10 @@ def get_plugins_version():
     except AttributeError:
         PLUGINS_SOURCE_BRANCH = ''
 
-    if branch == 'master':
-        VERSION = Version.format(PLUGINS_VERSION)
-        VERSION += '-' + branch + ' (' + commit_short + ')'
-    elif branch == 'manual':
-        VERSION = Version.format(PLUGINS_VERSION)
-        if PLUGINS_SOURCE_BRANCH != '':
-            VERSION += '-' + PLUGINS_SOURCE_BRANCH
-        VERSION += ' (' + branch + ')'
-    else:
-        VERSION = Version.format(PLUGINS_VERSION)
-        VERSION += '-' + commit_short + '.' + branch
-    return VERSION
+    VERSION = Version.format(PLUGINS_VERSION)
+    if branch == 'manual':
+        return build_version(VERSION, 'manual', PLUGINS_SOURCE_BRANCH)
+    return build_version(VERSION, commit_short, branch)
 
 
 def get_plugins_branch():

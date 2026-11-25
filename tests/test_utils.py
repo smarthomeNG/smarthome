@@ -174,6 +174,17 @@ class LibUtilsTest(unittest.TestCase):
         self.assertTrue(Utils.to_bool(1))
         self.assertTrue(Utils.to_bool(2))
 
+    def test_dewpoint(self):
+        self.assertEqual(9.26, Utils.dewpoint(20, 50))
+        self.assertEqual(-7.91, Utils.dewpoint(-5, 80))
+
+    def test_rel2abs_accepts_percent_and_fraction(self):
+        self.assertAlmostEqual(8.796454578816965, Utils.rel2abs(20, 50))
+        self.assertAlmostEqual(Utils.rel2abs(20, 50), Utils.rel2abs(20, 0.5))
+
+    def test_abs2rel(self):
+        self.assertAlmostEqual(50.27968523497472, Utils.abs2rel(20, Utils.rel2abs(20, 50)))
+
     def test_create_hash(self):
         with self.assertRaises(Exception):
             Utils.create_hash(None)

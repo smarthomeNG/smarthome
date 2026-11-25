@@ -4,11 +4,12 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
 
-======================
-SmartHomeNG (der Core)
-======================
+=========================================
+SmartHomeNG (der Core) :greensup:`Update`
+=========================================
 
 Im folgenden sind einige Informationen zusammengestellt die den Core von SmartHomeNG als ganzes betreffen.
 

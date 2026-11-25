@@ -21,13 +21,14 @@
 
 import logging
 import os
+import re
 import sys
 import collections
 
 from lib.utils import Utils
 from lib.utils import Version
 import lib.shyaml as shyaml
-from lib.constants import YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS, DIR_PLUGINS, DIR_MODULES
+from lib.constants import YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS, DIR_PLUGINS, DIR_MODULES, PLUGIN_TYPES
 from lib.model.sdp.globals import SDP_VERSION
 
 META_MODULE_PARAMETER_SECTION = 'parameters'
@@ -44,6 +45,41 @@ META_STRUCT_SECTION = 'item_structs'
 
 
 logger = logging.getLogger(__name__)
+
+META_DESCRIPTION_KEYS = ('description', 'description_long', 'valid_list_description')
+_ESCAPED_NEWLINE = re.compile(r'\\n[ \t]*\n?')
+
+
+def _normalize_description_newlines(node):
+    """
+    Replace literal backslash-n sequences in description texts with real line breaks
+
+    Single-quoted YAML scalars do not process escapes, so ``'a\\nb'`` is loaded with the
+    two characters backslash and ``n``. The walk converts the strings (also inside
+    language dicts and lists) below the keys in ``META_DESCRIPTION_KEYS``, in place.
+    All other values are left untouched.
+
+    :param node: loaded metadata (dict, list or scalar)
+    :return: the same structure, with normalized descriptions
+    """
+
+    def convert(value):
+        if isinstance(value, str):
+            return _ESCAPED_NEWLINE.sub('\n', value)
+        if isinstance(value, dict):
+            return {k: convert(v) for k, v in value.items()}
+        if isinstance(value, list):
+            return [convert(v) for v in value]
+        return value
+
+    if isinstance(node, dict):
+        for key, value in node.items():
+            node[key] = convert(value) if key in META_DESCRIPTION_KEYS else _normalize_description_newlines(value)
+    elif isinstance(node, list):
+        for i, value in enumerate(node):
+            node[i] = _normalize_description_newlines(value)
+    return node
+
 
 # global variables to take definitions of multiple plugins
 all_itemdefinitions = {}
@@ -90,8 +126,12 @@ class Metadata:
         #        logger.warning(self._log_premsg + "relative_filename = '{}'".format(self.relative_filename))
 
         # read complete definitions from metadata file
-        filename = os.path.join(self._sh.get_basedir(), self.relative_filename)
-        self.meta = shyaml.yaml_load(filename, ordered=True)
+        # sh may be None (e.g. standalone-mode plugin invocation, no shng
+        # instance running at all) - fall back to cwd, which callers in
+        # that situation are already required to keep at the shng base dir
+        basedir = self._sh.get_basedir() if self._sh is not None else '.'
+        filename = os.path.join(basedir, self.relative_filename)
+        self.meta = _normalize_description_newlines(shyaml.yaml_load(filename, ordered=True))
 
         self.parameters = None
         self._paramlist = []
@@ -277,13 +317,34 @@ class Metadata:
         else:
             self.addon_metadata = None
 
+        if self._addon_type == 'plugin':
+            self._check_plugin_type()
+
         return
+
+    def _check_plugin_type(self):
+        """
+        Log a warning if the ``type`` in the ``plugin:`` section of the metadata is missing or not in ``PLUGIN_TYPES``
+        """
+        if self.addon_metadata is None:
+            return
+        plugin_type = self.addon_metadata.get('type')
+        if not plugin_type:
+            logger.warning(self._log_premsg + f"no 'type' set in plugin.yaml, valid values are {list(PLUGIN_TYPES)}")
+        elif plugin_type not in PLUGIN_TYPES:
+            logger.warning(
+                self._log_premsg
+                + f"invalid 'type' '{plugin_type}' in plugin.yaml, valid values are {list(PLUGIN_TYPES)}"
+            )
 
     def get_global_plugin_parameters(self):
 
         result = {}
 
-        if self._sh.modules.get_module('http') is not None:
+        # sh may be None (standalone-mode plugin invocation) - no modules
+        # are loaded at all in that case, so there's no web interface and
+        # nothing to add here
+        if self._sh is not None and self._sh.modules.get_module('http') is not None:
             # only if http module is loaded:
             # global plugin parameter 'webif_pagelength'
             result['webif_pagelength'] = {}
@@ -522,7 +583,7 @@ class Metadata:
         :return: True if the SmartHomeNG version is in the supported range
         :rtype: bool
         """
-        shng_version = Version.format(self._sh.version.split('-')[0])
+        shng_version = Version.format(self._sh.version)
         min_shngversion = Version.format(str(self.get_string('sh_minversion')))
         max_shngversion = Version.format(str(self.get_string('sh_maxversion')))
         mod_version = Version.format(self.get_string('version'))
@@ -680,7 +741,7 @@ class Metadata:
             return Utils.to_bool(value, default='?') != '?'
         elif typ == 'int':
             return Utils.is_int(value)
-        elif typ in ['float', 'num']:
+        elif typ in ['float', 'num', 'timestamp']:
             return Utils.is_float(value)
         elif typ == 'scene':
             if Utils.is_int(value):
@@ -783,7 +844,7 @@ class Metadata:
             result = Utils.to_bool(value)
         elif typ in ['int', 'scene']:
             result = int(value)
-        elif typ in ['float', 'num']:
+        elif typ in ['float', 'num', 'timestamp']:
             result = float(value)
         elif typ in ['str', 'password']:
             result = str(value)
@@ -1062,23 +1123,23 @@ class Metadata:
             return FOO
         if definitions[definition] is None:
             return FOO
-        result = str(definitions.get('type', FOO)).lower()
+        result = str(definitions[definition].get('type', FOO)).lower()
         llen = 0
         if result == 'list':
-            llen = definitions.get('listlen', ['?'])
+            llen = definitions[definition].get('listlen', ['?'])
         return llen
 
     def get_parameter_listlen(self, param):
         """
         Returns the len of a parameter of type list of a parameter
         """
-        return self.get_definition_listlen(param, self.parameters)
+        return self._get_definition_listlen(param, self.parameters)
 
     def get_itemdefinition_listlen(self, definition):
         """
         Returns the len of a parameter of type list of an item attribute definition
         """
-        return self.get_definition_listlen(definition, self.itemdefinitions)
+        return self._get_definition_listlen(definition, self.itemdefinitions)
 
     def _get_definition_type_with_subtype(self, definition, definitions):
         """
@@ -1213,7 +1274,7 @@ class Metadata:
         :rtype: str
         """
         try:
-            result = definitions[definition].get('key')
+            result = definitions[definition].get(key)
         except KeyError:
             result = None
         return result
@@ -1222,15 +1283,15 @@ class Metadata:
         """
         Returns the value for a key of a parameter as a string
         """
-        return self.__get_definitioninfo(param, key, self.parameters)
+        return self._get_definitioninfo(param, key, self.parameters)
 
     def get_itemdefinition(self, definition, key):
         """
         Returns the value for a key of a parameter as a string
         """
-        return self.__get_definitioninfo(definition, key, self.itemdefinitions)
+        return self._get_definitioninfo(definition, key, self.itemdefinitions)
 
-    def check_parameters(self, args):
+    def check_parameters(self, args, source: str = None):
         """
         Checks the values of a dict of configured parameters.
 
@@ -1240,11 +1301,17 @@ class Metadata:
         values in the the datatype of the parameter definition
 
         :param args: Configured parameters with the values
+        :param source: human-readable description of where args came from, used
+            in log messages (e.g. "the command line" for standalone-mode
+            invocation). Defaults to the addon's ``/etc/*.yaml`` config file, which
+            is what args actually is for every other caller.
         :type args: dict of parameter-values (values as string)
+        :type source: str
 
         :return: All defined parameters with values, Flag if all parameters are ok (no mandatory is missing)
         :rtype: dict, bool
         """
+        source = source or f'/etc/{self._addon_type}{YAML_FILE}'
         addon_params = collections.OrderedDict()
         hide_params = collections.OrderedDict()
         if self.meta is None:
@@ -1261,21 +1328,14 @@ class Metadata:
                 if value is None:
                     if self.parameters[param] is not None:
                         if self.parameters[param].get('mandatory'):
-                            logger.error(
-                                self._log_premsg
-                                + "'{}' is mandatory, but was not found in /etc/{}".format(
-                                    param, self._addon_type + YAML_FILE
-                                )
-                            )
+                            logger.error(self._log_premsg + f"'{param}' is mandatory, but was not found in {source}")
                             allparams_ok = False
                         else:
                             addon_params[param] = self.get_parameter_defaultvalue(param)
                             hide_params[param] = Utils.to_bool(self.parameters[param].get('hide'), default=False)
                             logger.info(
                                 self._log_premsg
-                                + "value not found in plugin configuration file for parameter '{}' -> using default value '{}' instead".format(
-                                    param, addon_params[param]
-                                )
+                                + f"value not found in {source} for parameter '{param}' -> using default value '{addon_params[param]}' instead"
                             )
                 #                    logger.warning(self._log_premsg + "'{}' not found in /etc/{}, using default value '{}'".format(param, self._addon_type + YAML_FILE, addon_params[param]))
                 else:
@@ -1287,10 +1347,7 @@ class Metadata:
                             hide_params[param] = None
                         else:
                             hide_params[param] = Utils.to_bool(self.parameters[param].get('hide'), default=False)
-                        logger.debug(
-                            self._log_premsg
-                            + "Found '{}' with value '{}' in /etc/{}".format(param, value, self._addon_type + YAML_FILE)
-                        )
+                        logger.debug(self._log_premsg + f"Found '{param}' with value '{value}' in {source}")
                     else:
                         if self.parameters.get(param) is not None:
                             if bool(self.parameters[param].get('mandatory', False)) is True:

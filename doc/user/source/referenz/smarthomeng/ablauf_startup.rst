@@ -41,7 +41,7 @@ Schritte größer-gleich 10 und kleiner als 20 identifizieren Schritte innerhalb
 
 Das smarthome Objekt wird erzeugt und initialisiert. Dazu werden die grundlegenden Variablen initialisiert.
 Anschließend wird geprüft ob die benötigten Konfigurationsdateien existieren. Falls nicht, werden die
-entsprechenden ``<name>.yaml.default`` Dateien umkopiert.
+entsprechenden Vorlagen ``templates/<name>.yaml.default`` nach ``etc/<name>.yaml`` kopiert.
 
 Es werden die Konfigurationsdateienb ``smarthome.yaml`` und ``logging.yaml`` eingelesen und das Logging wird
 initialisiert.
@@ -118,13 +118,9 @@ Es wird für jedes definierte Item ein Objekt erzeugt. Der Wert des Items wird a
 - evtl. aus den parse_item() Methoden der geladenen Plugins.
   (Das wird z.B. im database Plugin genutzt, falls dort das Item Attribut **database:** auf **init** konfiguriert ist.)
 
-
-14 - Startet: Geladene Items vorbereiten
-----------------------------------------
-
-Es wird für alle geladenen Items die _init_prerun() Methode aufgerufen. Diese erzeugt eval Ausdrücke und Trigger
-vor dem ersten Lauf, falls Spezial-Funktionen (**and**, **or**, **sum**, **avg**, **min** oder **max**) verwendet
-wurden.
+Direkt im Anschluss an die Erzeugung wird für jedes Item die _init_prerun() Methode aufgerufen. Diese erzeugt eval
+Ausdrücke und Trigger vor dem ersten Lauf, falls Spezial-Funktionen (**and**, **or**, **sum**, **avg**, **min** oder
+**max**) verwendet wurden.
 
 Es wird für alle geladenen Items Scheduler gestartet, falls für das Item das Attribut **crontab:** oder **cycle:**
 gesetzt wurde.

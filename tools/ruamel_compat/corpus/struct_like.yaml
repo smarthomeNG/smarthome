@@ -1,0 +1,15 @@
+struct_example:
+    struct:
+        - stateengine.general
+        - stateengine.state_lock
+    rules:
+        se_item_height: ..hoehe
+        se_eval_sun: sh..suntrack()
+        eval: sh...hoehe() if sh...lock() is False else None
+        eval_trigger:
+            - ..hoehe
+            - ...lock
+        on_update: sh.licht.status = 'on' if value else 'off'
+        crontab: init = 0 | 0 0 * * = 1
+        cycle: 300 = 1
+        autotimer: 2m = 0 = compat_1.2

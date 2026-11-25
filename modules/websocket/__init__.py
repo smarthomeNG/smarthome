@@ -28,7 +28,6 @@ import websockets
 import time
 
 import os
-import sys
 import socket
 import logging
 
@@ -39,7 +38,7 @@ from lib.utils import Utils
 
 
 class Websocket(Module):
-    version = '1.1.2'
+    version = '2.0.0'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
@@ -97,6 +96,7 @@ class Websocket(Module):
         self.logger.info(f'certificate .....: key: ../etc/{self.tls_cert} / ../etc/{self.tls_key}')
 
         self.loop = None  # Var to hold the event loop for asyncio
+        self._servers = []  # websockets servers started on the loop
 
         self.initialize_payload_protocols()
         return
@@ -131,14 +131,18 @@ class Websocket(Module):
 
         self.logger.info('Shutting down websocket server(s)...')
         self.loop.call_soon_threadsafe(self.loop.stop)
-        time.sleep(5)
 
         try:
-            self._server_thread.join()
-            self.logger.info('Websocket Server(s): Stopped')
+            # join() blocks until the server thread has closed the servers and drained the loop
+            self._server_thread.join(timeout=10)
+            if self._server_thread.is_alive():
+                self.logger.warning(
+                    f'Websocket Server(s): did not stop within 10s - tasks still alive: {self._alive_task_names()}'
+                )
+            else:
+                self.logger.info('Websocket Server(s): Stopped')
         except Exception as err:
             self.logger.info(f'Stopping websocket error: {err}')
-            pass
         return
 
     def initialize_payload_protocols(self):
@@ -158,11 +162,6 @@ class Websocket(Module):
         from . import smartvisu
 
         self.initialize_payload_protocol(smartvisu.Protocol)
-
-        # parameters and class instance for smartVISU protocol
-        from . import admin
-
-        self.initialize_payload_protocol(admin.Protocol)
 
         return
 
@@ -227,20 +226,10 @@ class Websocket(Module):
         The websocket server itself is using asyncio
         """
         self.loop = asyncio.new_event_loop()
-        python_version = str(sys.version_info[0]) + '.' + str(sys.version_info[1])
-
-        if python_version == '3.6':
-            self.loop.ensure_future(self.ws_server(self.ip, self.port))
-        elif python_version == '3.7':
-            self.loop.create_task(self.ws_server(self.ip, self.port))
-        else:
-            self.loop.create_task(self.ws_server(self.ip, self.port), name='ws_server')
+        self.loop.create_task(self.ws_server(self.ip, self.port), name='ws_server')
         # self.loop.ensure_future(self.ws_server(self.ip, self.port))
         if self.ssl_context is not None:
-            if python_version == '3.7':
-                self.loop.create_task(self.ws_server(self.ip, self.tls_port, self.ssl_context))
-            else:
-                self.loop.create_task(self.ws_server(self.ip, self.tls_port, self.ssl_context), name='wss_server')
+            self.loop.create_task(self.ws_server(self.ip, self.tls_port, self.ssl_context), name='wss_server')
 
             # self.loop.ensure_future(self.ws_server(self.ip, self.tls_port, self.ssl_context))
 
@@ -251,20 +240,63 @@ class Websocket(Module):
         try:
             self.loop.run_forever()
         finally:
-            # self.logger.warning("_ws_server_thread: finally")
             try:
-                self.loop.shutdown_asyncgens()
-                # if python_version >= '3.9':
-                #    self.loop.shutdown_default_executor()
-                # time.sleep(3)
-                # self.logger.notice(f"all_tasks: {self.loop.Task.all_tasks()}")
-                # self.loop.run_until_complete(self.loop.shutdown_asyncgens())
+                self.loop.run_until_complete(self._shutdown_loop())
             except Exception as e:
-                self.logger.warning(f'_ws_server_thread: finally - Exception on loop.shutdown_asyncgens(): {e}')
+                self.logger.warning(f'_ws_server_thread: finally - Exception on shutting down the loop: {e}')
             try:
                 self.loop.close()
             except Exception as e:
                 self.logger.warning(f'_ws_server_thread: finally - Exception on loop.close(): {e}')
+
+    SERVER_CLOSE_TIMEOUT = 5  # seconds the servers get to close their connections gracefully
+    DRAIN_ROUNDS = 5
+
+    def _alive_task_names(self):
+        """
+        Names of the unfinished tasks on the module's event loop (for diagnostics, callable from any thread)
+
+        :return: list of task names
+        """
+        try:
+            return [t.get_name() for t in asyncio.all_tasks(loop=self.loop) if not t.done()]
+        except RuntimeError:
+            return []
+
+    async def _shutdown_loop(self):
+        """
+        Wind down the event loop once it has stopped running
+
+        Closes the listening sockets first, so that no connection is accepted while tasks are
+        being cancelled. Then cancels remaining tasks until none is left and shuts down the
+        async generators.
+        """
+        await self._close_servers()
+        await self._cancel_tasks()
+        await self.loop.shutdown_asyncgens()
+
+    async def _close_servers(self):
+        """Stop listening and close all open connections of the websocket servers, bounded by SERVER_CLOSE_TIMEOUT"""
+        for server in self._servers:
+            server.close()
+        try:
+            await asyncio.wait_for(
+                asyncio.gather(*(server.wait_closed() for server in self._servers)), self.SERVER_CLOSE_TIMEOUT
+            )
+        except asyncio.TimeoutError:
+            self.logger.warning(f'Websocket Server(s): connections not closed within {self.SERVER_CLOSE_TIMEOUT}s')
+
+    async def _cancel_tasks(self):
+        """Cancel all tasks except the calling one and wait for them, repeating for tasks spawned meanwhile"""
+        current = asyncio.current_task()
+        for _ in range(self.DRAIN_ROUNDS):
+            pending = [t for t in asyncio.all_tasks() if t is not current and not t.done()]
+            if not pending:
+                return
+            for task in pending:
+                task.cancel()
+            await asyncio.gather(*pending, return_exceptions=True)
+        self.logger.warning(f'Websocket Server(s): tasks still alive after cancelling: {self._alive_task_names()}')
 
     USERS = set()
 
@@ -275,13 +307,13 @@ class Websocket(Module):
         if ssl_context:
             self.logger.info('Secure websocket server started')
             try:
-                await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context)
+                self._servers.append(await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context))
             except OSError as e:
                 self.logger.error(f'Cannot start secure websocket server - error: {e}')
         else:
             self.logger.info('Websocket server started')
             try:
-                await websockets.serve(self.handle_new_connection, ip, port)
+                self._servers.append(await websockets.serve(self.handle_new_connection, ip, port))
             except OSError as e:
                 self.logger.error(f'Cannot start websocket server - error: {e}')
 

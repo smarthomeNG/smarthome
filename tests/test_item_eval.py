@@ -20,6 +20,7 @@ _init_prerun (trigger wiring):
 _init_run (initial eval):
   constant eval → item gets that value
   bad eval → item value unchanged, no crash
+  value already restored by a plugin (changed_by not 'Init:*') → skipped (#804)
 
 __run_eval:
   constant expression → value set
@@ -253,6 +254,26 @@ class TestInitRun(_EvalBase):
         item = self.sh.items.return_item('eval_constant')
         item._Item__run_eval()
         self.assertEqual(item._value, 42)
+
+    def test_returns_false_when_value_restored_by_plugin(self):
+        # database plugin's 'database: init' restore (issue #804) - must not be re-evaled
+        target = self.sh.items.return_item('target_eval')
+        target.set(99, 'Database', source='DBInit')
+        result = target._init_run()
+        self.assertFalse(result)
+
+    def test_returns_false_when_value_restored_without_source(self):
+        # rrd plugin's item.set(value, 'RRDtool') has no source - must still be skipped
+        target = self.sh.items.return_item('target_eval')
+        target.set(7, 'RRDtool')
+        result = target._init_run()
+        self.assertFalse(result)
+
+    def test_value_retained_when_init_run_skipped(self):
+        target = self.sh.items.return_item('target_eval')
+        target.set(99, 'Database', source='DBInit')
+        target._init_run()
+        self.assertEqual(target._value, 99)  # not overwritten by a skipped _init_run
 
 
 # ===========================================================================

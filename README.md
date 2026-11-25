@@ -87,8 +87,6 @@ new tools.
 
 ## Some more detailed info on the configuration files
 
-As of Version 1.5 the old conf format will still be valid but is removed from the docs since it's been deprecated now for some time.
-
 ### etc/smarthome.yaml
 Upon installation you will need to create this file and specify your location.
 

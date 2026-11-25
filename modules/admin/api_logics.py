@@ -36,7 +36,7 @@ from lib.plugin import Plugins
 from lib.scheduler import Scheduler
 from lib.constants import DIR_ETC, DIR_LOGICS, DIR_TPL, BASE_LOGIC, BASE_LOGIC_GROUPS
 
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
 
 
 class LogicsController(RESTResource):
@@ -107,7 +107,6 @@ class LogicsController(RESTResource):
 
         if self.plugins is None:
             self.plugins = Plugins.get_instance()
-        self.yaml_updates = self.logics.return_config_type() == '.yaml'
 
         # find out if blockly plugin is loaded
         if self.blockly_plugin_loaded is None:
@@ -740,6 +739,25 @@ class LogicsController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='All logics, or the logic-group tree',
+            method='get',
+            path='/logics/',
+            tags=['logics'],
+            params=[ApiParam(name='infotype', enum=['groups'])],
+        ),
+        ApiDoc(
+            summary="One logic's detail, or its runtime status",
+            method='get',
+            path='/logics/{logicName}',
+            tags=['logics'],
+            params=[
+                ApiParam(name='logicName', location='path', required=True),
+                ApiParam(name='infotype', enum=['status']),
+            ],
+        ),
+    ]
 
     def update(self, name='', action='', filename='', newfilename=''):
         """
@@ -783,3 +801,49 @@ class LogicsController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary='Logic lifecycle/state actions, rename, or save its parameters/group',
+            method='put',
+            path='/logics/{logicName}',
+            tags=['logics'],
+            params=[
+                ApiParam(name='logicName', location='path', required=True),
+                ApiParam(
+                    name='action',
+                    required=True,
+                    enum=[
+                        'trigger',
+                        'enable',
+                        'disable',
+                        'load',
+                        'unload',
+                        'reload',
+                        'delete',
+                        'delete_with_code',
+                        'create',
+                        'rename',
+                        'saveparameters',
+                        'savegroup',
+                        'deletegroup',
+                    ],
+                    description=(
+                        'trigger/enable/disable/load/unload/reload/delete/create are the '
+                        "frontend's documented lifecycle actions. delete_with_code is a "
+                        'backend-only, more destructive sibling of delete (also removes the '
+                        '.py file) - deliberately not exposed as a one-click UI action. rename '
+                        'additionally takes filename= (new name) and optionally newfilename=. '
+                        'saveparameters/savegroup/deletegroup are dispatched through this same '
+                        'PUT but act on the parameter section / logic-group config respectively.'
+                    ),
+                ),
+                ApiParam(name='filename'),
+                ApiParam(name='newfilename'),
+            ],
+            request_body='application/json',
+            description=(
+                'Required for action=saveparameters (parameter dict) and action=savegroup '
+                '(group config); empty body otherwise.'
+            ),
+        )
+    ]

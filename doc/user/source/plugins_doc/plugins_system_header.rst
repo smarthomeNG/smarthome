@@ -1,7 +1,9 @@
 
-==============
-System Plugins
-==============
+.. role:: greensup
+
+=================================
+System Plugins :greensup:`Update`
+=================================
 
 .. image:: /_static/img/system.svg
    :width: 200px

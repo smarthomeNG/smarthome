@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 640" font-family="Helvetica, Arial, sans-serif">
+  <rect width="980" height="640" fill="#f9f9f9"/>
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#555"/></marker>
+    <marker id="arr-blue" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#2a5db0"/></marker>
+    <marker id="arr-green" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#1e7e34"/></marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/></marker>
+    <marker id="arr-purple" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#681da8"/></marker>
+    <marker id="arr-yellow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#9c6e00"/></marker>
+  </defs>
+  <text x="490" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">SDP import dependencies</text>
+  <rect x="360" y="50" width="240" height="50" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="480" y="72" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a5db0">smartdeviceplugin</text>
+  <text x="480" y="86" text-anchor="middle" font-size="10" font-weight="normal" fill="#555">SmartDevicePlugin, Standalone</text>
+  <rect x="30" y="50" width="260" height="50" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="160" y="64" text-anchor="middle" font-size="11" font-weight="bold" fill="#3c4043">core</text>
+  <text x="160" y="79" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">smartplugin, plugin, metadata, shtime,</text>
+  <text x="160" y="94" text-anchor="middle" font-size="9" font-weight="normal" fill="#555">item, smarthome, shyaml</text>
+  <path d="M360,75 L292,75" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M20,140 L850,140 L850,520 L20,520 L20,140" fill="none" stroke="#4a86e8" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="30" y="156" text-anchor="start" font-size="10" font-weight="bold" fill="#2a5db0">lib/model/sdp/</text>
+  <path d="M480,100 L480,138" fill="none" stroke="#2a5db0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <text x="488" y="124" text-anchor="start" font-size="9" font-weight="normal" fill="#2a5db0" font-style="italic">imports every module in lib/model/sdp/ except datatypes</text>
+  <rect x="30" y="255" width="88" height="46" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="74" y="274" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">commands</text>
+  <text x="74" y="290" text-anchor="middle" font-size="8" font-weight="normal" fill="#555">SDPCommands</text>
+  <rect x="128" y="335" width="88" height="46" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="172" y="354" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">command</text>
+  <text x="172" y="370" text-anchor="middle" font-size="8" font-weight="normal" fill="#555">SDPCommand…</text>
+  <rect x="226" y="400" width="88" height="46" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="270" y="420" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">datatypes</text>
+  <text x="270" y="434" text-anchor="middle" font-size="8" font-weight="normal" fill="#555">DT_*</text>
+  <rect x="330" y="335" width="88" height="46" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="374" y="354" text-anchor="middle" font-size="10" font-weight="bold" fill="#3c4043">binding</text>
+  <text x="374" y="370" text-anchor="middle" font-size="8" font-weight="normal" fill="#555">CommandRef…</text>
+  <rect x="430" y="400" width="88" height="46" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="474" y="420" text-anchor="middle" font-size="10" font-weight="bold" fill="#3c4043">declarations</text>
+  <text x="474" y="434" text-anchor="middle" font-size="8" font-weight="normal" fill="#555">TransportRule…</text>
+  <rect x="560" y="255" width="88" height="46" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="604" y="274" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e7e34">connection</text>
+  <text x="604" y="290" text-anchor="middle" font-size="8" font-weight="normal" fill="#555">SDPConnection…</text>
+  <rect x="652" y="175" width="88" height="46" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="696" y="194" text-anchor="middle" font-size="10" font-weight="bold" fill="#681da8">protocol</text>
+  <text x="696" y="210" text-anchor="middle" font-size="8" font-weight="normal" fill="#555">SDPProtocol…</text>
+  <rect x="740" y="335" width="88" height="46" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="784" y="354" text-anchor="middle" font-size="10" font-weight="bold" fill="#3c4043">carriers</text>
+  <text x="784" y="370" text-anchor="middle" font-size="8" font-weight="normal" fill="#555">DeviceConfig…</text>
+  <rect x="30" y="470" width="810" height="34" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="435" y="491" text-anchor="middle" font-size="11" font-weight="bold" fill="#3c4043">globals</text>
+  <path d="M74,301 L74,468" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M172,381 L172,468" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M374,381 L374,468" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M784,381 L784,468" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M604,301 L604,468" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M696,221 L696,468" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M100,301 L150,333" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M118,268 L250,268 L250,398" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M200,381 L280,398" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M672,221 L630,253" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M720,221 L770,333" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M648,290 L738,345" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="875" y="255" width="80" height="46" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="915" y="274" text-anchor="middle" font-size="10" font-weight="bold" fill="#3c4043">lib.network</text>
+  <text x="915" y="290" text-anchor="middle" font-size="8" font-weight="normal" fill="#555">Tcp_client</text>
+  <path d="M648,268 L873,268" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="410" y="545" width="140" height="30" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="480" y="564" text-anchor="middle" font-size="10" font-weight="bold" fill="#3c4043">lib.utils</text>
+  <path d="M480,504 L480,543" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M160,100 L160,120 L8,120 L8,487" fill="none" stroke="#d93025" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <path d="M8,487 L28,487" fill="none" stroke="#d93025" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+  <text x="168" y="115" text-anchor="start" font-size="9" font-weight="normal" fill="#a50e0e" font-style="italic">lib.metadata → globals (SDP_VERSION)</text>
+  <text x="30" y="600" text-anchor="start" font-size="9" font-weight="normal" fill="#555" font-style="italic">Not imports: smartdeviceplugin loads &lt;plugin&gt;.commands and &lt;plugin&gt;.datatypes by name (pydoc.locate)</text>
+  <text x="30" y="614" text-anchor="start" font-size="9" font-weight="normal" fill="#555" font-style="italic">and uses the classes the plugin names in PROTOCOL / COMMAND_CLASS / TransportRule(use=...).</text>
+</svg>

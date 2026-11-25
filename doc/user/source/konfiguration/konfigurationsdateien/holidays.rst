@@ -12,7 +12,7 @@ holidays.yaml
 
 .. _`holidays.yaml`:
 
-Ab Version 1.7 unterstützt SmartHomeNG Feiertage. In Logiken und Plugins kann abgefragt werden, ob ein bestimmtes
+SmartHomeNG unterstützt Feiertage. In Logiken und Plugins kann abgefragt werden, ob ein bestimmtes
 Datum ein Feiertag ist und welcher.
 
 Es werden zzt. die Feiertage von 50 Ländern unterstützt. Falls ein Land regional unterschiedliche Feiertage hat,

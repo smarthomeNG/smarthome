@@ -1,0 +1,71 @@
+# Declares which files make up the SmartHomeNG public API. Documented in doc/dev/public_api.md;
+# consumed by tools/api_snapshot.py.
+
+# Python API for addon (plugin/module) authors and logic scripts: public (non-underscore)
+# classes, methods, functions and UPPER_CASE constants of these files.
+python_globs:
+    - lib/model/*.py
+    - lib/model/sdp/*.py
+    - lib/item/*.py
+    - lib/smarthome.py
+    - lib/constants.py
+    - lib/metadata.py
+    - lib/module.py
+    - lib/shtime.py
+    - lib/utils.py
+    - lib/network.py
+    - lib/logic.py
+    - lib/db.py
+    - lib/shyaml.py
+    - lib/config.py
+    - lib/plugin.py
+    - lib/log.py
+    - lib/translation.py
+    - lib/scheduler.py
+    - lib/orb.py
+    - lib/triggertimes.py
+
+# Configuration keys users write into etc/<module>.yaml, declared in each module's module.yaml
+parameter_globs:
+    - modules/*/module.yaml
+
+# Item attributes users put on items (the catalog also drives the admin item editor)
+item_attribute_globs:
+    - modules/core/items.yaml
+
+# Command line flags of the main executable
+cli_file: bin/smarthome.py
+
+# smartVISU websocket protocol: commands accepted and sent
+websocket_file: modules/websocket/smartvisu.py
+
+# Public members that are internal to the core (startup, loader, admin interface): not part of the API,
+# they may change in any release. '<module>:<Class>.<member>', fnmatch patterns allowed.
+internal_members:
+    - lib/smarthome:SmartHome.checkConfigFiles
+    - lib/smarthome:SmartHome.check_migrate_config
+    - lib/smarthome:SmartHome.create_*
+    - lib/smarthome:SmartHome.init_logging
+    - lib/smarthome:SmartHome.initialize_*
+    - lib/smarthome:SmartHome.start
+    - lib/smarthome:SmartHome.stop
+    - lib/scheduler:Scheduler.run
+    - lib/scheduler:Scheduler.stop
+    - lib/scheduler:Scheduler.check_caller
+    - lib/scheduler:Scheduler.get_task_stack
+    - lib/plugin:Plugins.load_plugin
+    - lib/plugin:Plugins.unload_plugin
+    - lib/plugin:Plugins.reload_plugin
+    - lib/plugin:Plugins.start_plugin
+    - lib/plugin:Plugins.refresh_plugin_config
+    - lib/log:Logs.configure_*
+    - lib/log:Logs.*_logging_config*
+    - lib/item/structs:Structs.__init__
+    - lib/item/structs:Structs.add_struct_definition
+    - lib/item/structs:Structs.load_*
+    - lib/item/structs:Structs.merge*
+    - lib/item/structs:Structs.migrate_*
+    - lib/item/structs:Structs.process_struct_node
+    - lib/item/structs:Structs.resolve_structs
+    - lib/item/structs:Structs.traverse_struct
+    - lib/metadata:Metadata.*

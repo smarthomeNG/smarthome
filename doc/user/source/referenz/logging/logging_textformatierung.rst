@@ -57,8 +57,7 @@ die Lesbarkeit des Python Codes deutlich, besonders bei Verwendung vieler Variab
 
 .. tip::
 
-    Da inzwischen die von SmartHomeNG unterstützte Python Version >= 3.6 ist, können **f-Strings** uneingeschränkt in
-    SmartHomeNG genutzt werden.
+    **f-Strings** können uneingeschränkt in SmartHomeNG genutzt werden.
 
     Diese Art der Formatierung wird ausdrücklich empfohlen. Es ist jedoch nicht notwendig, in älterem Code alle
     älteren Formatierungsoptionen zu ersetzen.

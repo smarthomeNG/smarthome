@@ -28,9 +28,31 @@ import cherrypy
 
 from lib.module import Modules
 import lib.shyaml as shyaml
+from lib.utils import Utils
 from lib.constants import DIR_ETC, DIR_MODULES, BASE_SH, BASE_HOLIDAY, BASE_MODULE
 
-from .rest import RESTResource
+from .rest import ApiDoc, ApiParam, RESTResource
+
+
+PASSWORD_PARAMS = (('password', 'hashed_password'), ('service_password', 'service_hashed_password'))
+
+
+def hash_plain_passwords(http_data: dict) -> None:
+    """
+    Replace plaintext passwords in the http section data from the admin frontend by salted hashes.
+
+    A plaintext password is only hashed if no hash is given for it; the plaintext entry is always cleared
+    (None removes the key from etc/module.yaml).
+
+    :param http_data: parameters of the http module as sent by the admin frontend, changed in place
+    """
+    for plain_key, hash_key in PASSWORD_PARAMS:
+        plaintext = http_data.get(plain_key)
+        if not plaintext:
+            continue
+        if not http_data.get(hash_key):
+            http_data[hash_key] = Utils.hash_password(plaintext)
+        http_data[plain_key] = None
 
 
 class ConfigController(RESTResource):
@@ -69,6 +91,32 @@ class ConfigController(RESTResource):
             else:
                 config_dict[key] = update_data[key]
         return
+
+    def apply_live_params(self, saved_conf):
+        """
+        Apply the options of etc/smarthome.yaml flagged ``live: True`` in modules/core/module.yaml
+        to the running core. Options that are not flagged need a restart to take effect.
+
+        An option missing from saved_conf is reset to its default from module.yaml, or unset
+        if it has none.
+
+        :param saved_conf: content of etc/smarthome.yaml as just saved
+        """
+        for name, meta in self.core_conf.get('parameters', {}).items():
+            if not meta.get('live'):
+                continue
+            attr = '_' + name
+            if name in saved_conf:
+                value = saved_conf[name]
+            elif 'default' in meta:
+                value = meta['default']
+            else:
+                if hasattr(self._sh, attr):
+                    delattr(self._sh, attr)
+                continue
+            if meta.get('type') == 'bool':
+                value = Utils.to_bool(value, bool(meta.get('default', False)))
+            setattr(self._sh, attr, value)
 
     # ======================================================================
     #  Read holidays
@@ -220,6 +268,34 @@ class ConfigController(RESTResource):
 
     read.expose_resource = True
     read.authentication_needed = True
+    read.api_doc = [
+        ApiDoc(
+            summary='Get all config sections (common, http, websocket, admin, mqtt) in one call',
+            method='get',
+            path='/config/',
+            tags=['config'],
+        ),
+        ApiDoc(
+            summary='Get a single config section (not currently called by shngadmin - it always fetches everything via GET /config/)',
+            method='get',
+            path='/config/{section}',
+            tags=['config'],
+            params=[
+                ApiParam(
+                    name='section',
+                    location='path',
+                    required=True,
+                    enum=['common', 'http', 'websocket', 'admin', 'mqtt'],
+                )
+            ],
+        ),
+        ApiDoc(
+            summary='Dry-run the etc/ config-directory migration check and report conflicts / files to migrate',
+            method='get',
+            path='/config/check_config_etc/',
+            tags=['config'],
+        ),
+    ]
 
     @cherrypy.expose
     def update(self, id=None):
@@ -237,7 +313,8 @@ class ConfigController(RESTResource):
                 raise cherrypy.HTTPError(status=411)
             rawbody = cherrypy.request.body.read(int(cl))
             data = json.loads(rawbody.decode('utf-8'))
-            self.logger.info('  - update: data = {}'.format(data))
+            hash_plain_passwords(data.get('http', {}).get('data', {}))
+            self.logger.info(f'  - update: sections = {list(data)}')
 
             # update holidays and remove keys from self.core_confdata
             self.update_holidays(data)
@@ -246,6 +323,7 @@ class ConfigController(RESTResource):
             self.core_confdata = shyaml.yaml_load_roundtrip(self._sh.get_config_file(BASE_SH))
             self.update_configdict(self.core_confdata, data, 'common')
             shyaml.yaml_save_roundtrip(self._sh.get_config_file(BASE_SH), self.core_confdata, create_backup=True)
+            self.apply_live_params(self.core_confdata)
 
             # update etc/module.yaml with data from admin frontend
             self.module_confdata = shyaml.yaml_load_roundtrip(self._sh.get_config_file(BASE_MODULE))
@@ -278,7 +356,7 @@ class ConfigController(RESTResource):
                 self.module_confdata['mqtt']['enabled'] = False
             if self.module_confdata['mqtt']['enabled']:
                 self.module_confdata['mqtt'].pop('enabled', None)
-            self.logger.info("Update: ['mqtt'] = {}".format(self.module_confdata['mqtt']))
+            self.logger.info(f"Update: ['mqtt'] keys = {list(self.module_confdata['mqtt'])}")
             self.logger.info('Update: - enabled = {}'.format(self.module_confdata['mqtt'].get('enabled', None)))
             shyaml.yaml_save_roundtrip(self._sh.get_config_file(BASE_MODULE), self.module_confdata, create_backup=True)
 
@@ -290,6 +368,26 @@ class ConfigController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+    update.api_doc = [
+        ApiDoc(
+            summary=(
+                'Save config. Despite the path, this writes the common+http+websocket+admin+mqtt '
+                'sections together in one call, regardless of which of core/common/http/admin/mqtt '
+                'is used - shngadmin always uses `core`.'
+            ),
+            method='put',
+            path='/config/core',
+            tags=['config'],
+            request_body='application/json',
+            description="Full config object, same shape as GET /config/'s response.",
+        ),
+        ApiDoc(
+            summary='(Re-)enable the etc/ config directory after a check_config_etc pass',
+            method='put',
+            path='/config/enable_config_etc/',
+            tags=['config'],
+        ),
+    ]
 
     # ======================================================================
     #  config_etc migration check

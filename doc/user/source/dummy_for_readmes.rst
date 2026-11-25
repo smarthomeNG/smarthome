@@ -37,6 +37,5 @@
    :titlesonly:
    :hidden:
 
-   /modules/admin/websocket_admingui_requests.rst
    /modules/admin/websocket_shng_requests.rst
 

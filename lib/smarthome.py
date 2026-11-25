@@ -24,14 +24,6 @@
 
 __docformat__ = 'reStructuredText'
 
-#########################################################################
-#
-# TO DO:
-# - remove all remarks with old code (that has been moved to lib modules)
-#
-#########################################################################
-
-
 #####################################################################
 # Check Python Version
 #####################################################################
@@ -63,14 +55,20 @@ import subprocess
 import threading
 import time
 import traceback
+import warnings
+
+try:
+    from cryptography.utils import CryptographyDeprecationWarning
+except ImportError:
+    CryptographyDeprecationWarning = None
 
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
-PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
 
 #####################################################################
 # Import SmartHomeNG Modules
 #####################################################################
 import lib.config
+import lib.configdirs
 import lib.daemon
 import lib.item
 import lib.log
@@ -80,8 +78,8 @@ import lib.network
 import lib.plugin
 import lib.scene
 import lib.scheduler
-import lib.tools
 import lib.utils
+import lib.vardir
 import lib.orb
 import lib.backup
 import lib.translation
@@ -139,6 +137,7 @@ class SmartHome:
 
     # for scheduler
     _restart_on_num_workers = 30
+    _runtime_warn = lib.scheduler.DEFAULT_RUNTIME_WARN
 
     BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 
@@ -161,24 +160,32 @@ class SmartHome:
         self.modules = None
         self.__children = []
 
-        self._config_etc = False
-        self._legacy_instances = True
+        self._config_etc = True
+        self._legacy_instances = False
+        self._allow_system_power = False
         self._orb_backend = 'ephem'
+
+        # if set: create items with illegal named and warn, but go on
+        # else: refuse to create items with illegal names
+        self._ignore_item_collision = False
+
+        # default basename (without extension) for the yaml file that
+        # Items.create_item(persist=True) writes runtime-created items to,
+        # when no explicit filename is given. Overridable via
+        # 'created_items_file' in etc/smarthome.yaml (see the config-loading
+        # loop in __init__, which overwrites any self._xxx default found here).
+        self._created_items_file = 'created'
 
     def initialize_dir_vars(self):
         self._base_dir = BASE
-        self.base_dir = self._base_dir  # **base_dir** is deprecated. Use method get_basedir() instead. - for external modules using that var (backend, ...?)
 
         self._etc_dir = os.path.join(self._extern_conf_dir, DIR_ETC)
 
         # self._conf_dir contains the base dir for config folders
-        if self._config_etc:
-            self._conf_dir = self._etc_dir
-        else:
-            self._conf_dir = self._extern_conf_dir
+        self._conf_dir = lib.configdirs.user_conf_dir(self._extern_conf_dir, self._config_etc)
 
         # shng system dirs
-        self._var_dir = os.path.join(self._base_dir, DIR_VAR)
+        self._var_dir = lib.vardir.get_var_dir()
         self._lib_dir = os.path.join(self._base_dir, DIR_LIB)
         self._plugins_dir = os.path.join(self._base_dir, DIR_PLUGINS)
         self._modules_dir = os.path.join(self._base_dir, DIR_MODULES)
@@ -335,13 +342,9 @@ class SmartHome:
         threading.current_thread().name = 'Main'
         self.alive = True
 
-        # import bin.shngversion as shngversion
-        # VERSION = shngversion.get_shng_version()
-        # self.branch = shngversion.get_shng_branch()
-        # self.version = shngversion.get_shng_version()
         self.connections = None
 
-        self._pidfile = PIDFILE
+        self._pidfile = lib.vardir.get_pidfile()
 
         # check config files
         self.checkConfigFiles()
@@ -368,19 +371,14 @@ class SmartHome:
 
         #############################################################
         # check / set legacy_instance option from config file
-        self._legacy_instances = lib.utils.Utils.to_bool(self._legacy_instances, True)
+        self._legacy_instances = lib.utils.Utils.to_bool(self._legacy_instances, False)
+        self._allow_system_power = lib.utils.Utils.to_bool(self._allow_system_power, False)
+        self._threadinfo_export = lib.utils.Utils.to_bool(self._threadinfo_export, False)
 
         #############################################################
         # check / set config_etc option from cmdline or config file
         # re-check / re-set affected directories
-        if config_etc:
-            # manual set from cmdline overrides config file setting
-            self._config_etc = config_etc
-        elif hasattr(self, '_config_etc'):
-            # set by smarthome.yaml
-            self._config_etc = lib.utils.Utils.to_bool(self._config_etc, False)
-
-        # at this point self._config_etc is of type bool
+        self._config_etc = lib.configdirs.resolve_config_etc(config_etc, self._config_etc)
         self.initialize_dir_vars()
         self.create_conf_directories()
         self.check_migrate_config()
@@ -415,15 +413,15 @@ class SmartHome:
         #############################################################
         # Fork process and write pidfile
         if self._mode == 'default':
-            lib.daemon.daemonize(PIDFILE)
+            lib.daemon.daemonize(self._pidfile)
         else:
-            lib.daemon.write_pidfile(os.getpid(), PIDFILE)
+            lib.daemon.write_pidfile(os.getpid(), self._pidfile)
             print(f'MODE = {self._mode}')
             print(f'--------------------   Init SmartHomeNG {self.version}   --------------------')
 
         #############################################################
         # Write startup message to log(s)
-        pid = lib.daemon.read_pidfile(PIDFILE)
+        pid = lib.daemon.read_pidfile(self._pidfile)
         virtual_text = ''
         if lib.utils.running_virtual():
             virtual_text = ' in virtual environment'
@@ -449,6 +447,8 @@ class SmartHome:
 
         if self._extern_conf_dir != BASE:
             self._logger.notice(f'Using config dir {self._extern_conf_dir}')
+        if self._var_dir != os.path.join(BASE, DIR_VAR):
+            self._logger.notice(f'Using var dir {self._var_dir}')
 
         #############################################################
         # Initialize multi-language support
@@ -459,15 +459,7 @@ class SmartHome:
 
         #############################################################
         # Test if plugins are installed
-        if not os.path.isdir(self._plugins_dir):
-            self._logger.critical('Plugin folder does not exist!')
-            self._logger.critical(f"Please create folder '{self._plugins_dir}' and install plugins.")
-            self._logger.critical('Aborting')
-            exit(1)
-        if not os.path.isdir(os.path.join(self._plugins_dir, 'database')):
-            self._logger.critical(f"No plugins found in folder '{self._plugins_dir}'. Please install plugins.")
-            self._logger.critical('Aborting')
-            exit(1)
+        self.check_plugins_installed()
 
         #############################################################
         # test if needed Python packages for configured plugins
@@ -550,10 +542,6 @@ class SmartHome:
                 os.environ['LC_ALL'] = 'en_US.UTF-8'
 
         #############################################################
-        # Link Tools
-        self.tools = lib.tools.Tools()
-
-        #############################################################
         # Link Sun and Moon
         self.sun = False
         self.moon = False
@@ -568,21 +556,15 @@ class SmartHome:
 
         # orb_backend: which ephemeris library lib.orb.Orb uses ('ephem' or 'skyfield').
         # Default set in initialize_vars(), overridden by smarthome.yaml if present.
-        if self._orb_backend not in lib.orb._BACKENDS:
-            if self._orb_backend.startswith('skyfield') and lib.orb.Loader is None:
-                self._logger.warning(
-                    f"Could not find/use ephemeris backend '{self._orb_backend}' - skyfield is not installed. "
-                    f"Run 'tools/fetch_skyfield_data.py' once to install it."
-                )
+        orb_backend = lib.orb.resolve_backend(self._orb_backend)
+        if orb_backend is not None:
+            if not (hasattr(self, '_lon') and hasattr(self, '_lat')):
+                self._logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
             else:
-                self._logger.warning(f"Could not find/use ephemeris backend '{self._orb_backend}'!")
-        elif not (hasattr(self, '_lon') and hasattr(self, '_lat')):
-            self._logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
-        else:
-            self.sun = lib.orb.Orb(
-                'sun', self._lon, self._lat, self._elev, self._sun_neverup_delta, backend=self._orb_backend
-            )
-            self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev, backend=self._orb_backend)
+                self.sun = lib.orb.Orb(
+                    'sun', self._lon, self._lat, self._elev, self._sun_neverup_delta, backend=orb_backend
+                )
+                self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev, backend=orb_backend)
 
     @property
     def lat(self) -> float:
@@ -670,6 +652,19 @@ class SmartHome:
         """
         return self._var_dir
 
+    def resolve_var_path(self, path):
+        """
+        Resolve a path from a plugin parameter to an absolute path, honoring a custom var directory
+
+        Relative paths starting with ``var`` (like the default ``var/knx``) are located below the var directory,
+        other relative paths below the base directory. Absolute paths are returned unchanged.
+
+        :param path: path as given in the plugin configuration
+        :return: absolute path
+        :rtype: str
+        """
+        return lib.vardir.resolve_var_path(path)
+
     def get_config_dir(self, config):
         """
         Function to return a config dir used by SmartHomeNG
@@ -708,34 +703,35 @@ class SmartHome:
 
         return os.path.join(self.get_etcdir(), config + extension)
 
-    def getBaseDir(self):
+    def check_plugins_installed(self) -> bool:
         """
-        Function to return the base directory of the running SmartHomeNG installation
+        Check that the plugins folder exists. SmartHomeNG also runs without plugins, so a missing
+        folder is only reported as a warning.
 
-        **getBaseDir()** is deprecated. Use method get_basedir() instead.
-
-        :return: Base directory as an absolute path
-        :rtype: str
+        :return: True if the plugins folder exists
         """
-        self._deprecated_warning('sh.get_basedir()')
-        return self._base_dir
+        if os.path.isdir(self._plugins_dir):
+            return True
+        self._logger.warning(f"No plugins installed: plugins folder '{self._plugins_dir}' does not exist")
+        return False
 
     def checkConfigFiles(self):
         """
-        This function checks if the needed configuration files exist. It checks for CONF and YAML files.
+        This function checks if the needed configuration files exist.
         If they dont exist, it is checked if a default configuration exist. If so, the default configuration
         is copied to corresponding configuration file.
 
         The check is done for the files that have to exist (with some content) or SmartHomeNG won't start:
 
-        - smarthome.yaml / smarthome.conf
+        - smarthome.yaml
         - logging.yaml
-        - plugin.yaml / plugin.conf
-        - module.yaml / module.conf
-        - logic.yaml / logic.conf
+        - plugin.yaml
+        - module.yaml
+        - logic.yaml
+        - holidays.yaml
 
         """
-        configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'admin', 'smarthome']
+        configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'smarthome']
 
         for c in configs:
             default = os.path.join(self._templates_dir, c + YAML_FILE + DEFAULT_FILE)
@@ -747,30 +743,27 @@ class SmartHome:
     def init_logging(self, conf_basename='', MODE='default'):
         """
         This function initiates the logging for SmartHomeNG.
+
+        In MODE 'debug' (``-d``) the built-in debug configuration is used and ``logging.yaml`` is not read at all.
         """
+        if MODE == 'debug':
+            return self.logs.configure_debug_logging()
+
         if conf_basename == '':
             conf_basename = self._log_conf_basename
         logsetup = self.logs.configure_logging()
 
         if logsetup is not True:
-            conf_basename = self._log_conf_basename + YAML_FILE + '.default'
+            default_conf = os.path.join(self._templates_dir, BASE_LOG + YAML_FILE + DEFAULT_FILE)
             print('       Trying default logging configuration from:')
-            print(f'       {conf_basename}')
+            print(f'       {default_conf}')
             print()
-            if not self.logs.configure_logging('logging.yaml.default'):
+            if self.logs.configure_logging(default_conf) is not True:
                 print('ABORTING')
                 print()
                 exit(1)
             print('Starting with default logging configuration')
 
-        if MODE == 'interactive':  # remove default stream handler
-            logging.getLogger().disabled = True
-        elif MODE == 'verbose':
-            logging.getLogger().setLevel(logging.INFO)
-        elif MODE == 'debug':
-            logging.getLogger().setLevel(logging.DEBUG)
-        elif MODE == 'quiet':
-            logging.getLogger().setLevel(logging.WARNING)
         return logsetup
 
     #################################################################
@@ -786,7 +779,7 @@ class SmartHome:
 
         self.shng_status = {'code': 10, 'text': 'Starting'}
 
-        threading.currentThread().name = 'Main'
+        threading.current_thread().name = 'Main'
 
         #############################################################
         # Prepare TriggerTimes for Scheduler
@@ -914,6 +907,15 @@ class SmartHome:
         """
         This method is used to stop SmartHomeNG and all it's threads
         """
+        if signum is not None:
+            try:
+                source = f' (received {signal.Signals(signum).name})'
+            except ValueError:
+                source = f' (received signal {signum})'
+        else:
+            source = ''
+        self._logger_main.notice(f'--------------------   SmartHomeNG stopping{source}   --------------------')
+
         self.shng_status = {'code': 31, 'text': 'Stopping'}
 
         self.alive = False
@@ -954,17 +956,22 @@ class SmartHome:
                         )
                         header_logged = True
                     self._logger.warning(f'-Thread: {thread.name}, still alive')
-        #            if header_logged:
-        #                self._logger.warning("SmartHomeNG stopped")
-        #        else:
         self._logger_main.notice('--------------------   SmartHomeNG stopped   --------------------')
 
         self.shng_status = {'code': 33, 'text': 'Stopped'}
 
-        lib.daemon.remove_pidfile(PIDFILE)
+        lib.daemon.remove_pidfile(self._pidfile)
 
         logging.shutdown()
-        exit(exitcode)  # default exit code 5 -> for systemctl to restart SmartHomeNG
+        # stop() can be called from any thread (e.g. a web/websocket request
+        # handler when "Restart Core" is triggered from the admin UI, not
+        # just the main-thread signal handler for Ctrl-C). exit() only
+        # raises SystemExit on the calling thread, so if the main thread is
+        # blocked elsewhere (e.g. the interactive console's shell.interact())
+        # it never notices and the process lingers until nudged. All of
+        # SmartHomeNG's own teardown has already completed above, so a hard
+        # process exit here is safe regardless of which thread got here.
+        os._exit(exitcode)  # default exit code 5 -> for systemctl to restart SmartHomeNG
 
     def restart(self, source=''):
         """
@@ -1087,7 +1094,7 @@ class SmartHome:
         self._logger.dbghigh(f'Garbage collector: collected {c} objects.')
 
     def _export_threadinfo(self):
-        filename = os.path.join(self.base_dir, 'var', 'run', 'threadinfo.json')
+        filename = lib.vardir.get_run_file('threadinfo.json')
         if self._threadinfo_export:
             all_threads = []
             for t in threading.enumerate():
@@ -1126,27 +1133,22 @@ class SmartHome:
 
     def _object_refcount(self):
         objects = {}
-        for module in list(sys.modules.values()):
-            for sym in dir(module):
-                # skip deprecation warning on MacOS, these ciphers shouldn't be used anyway
-                if module.__name__ == 'cryptography.hazmat.primitives.asymmetric.ec' and sym.startswith('SECT'):
-                    continue
-                if module.__name__ == 'cryptography.hazmat.primitives.ciphers.algorithms' and sym in [
-                    'SECT233K1',
-                    'Blowfish',
-                    'CAST5',
-                    'IDEA',
-                    'SEED',
-                    'TripleDES',
-                    'ARC4',
-                ]:
-                    continue
-                try:
-                    obj = getattr(module, sym)
-                    if isinstance(obj, type):
-                        objects[obj] = sys.getrefcount(obj)
-                except Exception:
-                    pass
+        with warnings.catch_warnings():
+            # getattr() below touches every symbol of every loaded module,
+            # including deprecated cryptography ciphers/modes (e.g.
+            # Camellia, CFB, CFB8, OFB, ...) - that list keeps growing as
+            # the cryptography package deprecates more of them, so suppress
+            # by category instead of maintaining a name list.
+            if CryptographyDeprecationWarning is not None:
+                warnings.simplefilter('ignore', CryptographyDeprecationWarning)
+            for module in list(sys.modules.values()):
+                for sym in dir(module):
+                    try:
+                        obj = getattr(module, sym)
+                        if isinstance(obj, type):
+                            objects[obj] = sys.getrefcount(obj)
+                    except Exception:
+                        pass
         return objects
 
     #####################################################################
@@ -1190,8 +1192,6 @@ class SmartHome:
                     break
                 called_by += ' -> ' + c_b
 
-        #            called_by = str(sys._getframe(3).f_code.co_name)
-
         if not hasattr(self, 'dep_id_list'):
             self.dep_id_list = []
         id_str = d_func + '|' + in_class + '|' + called_by
@@ -1201,287 +1201,6 @@ class SmartHome:
             )
             self.dep_id_list.append(id_str)
         return
-
-    #####################################################################
-    # THE FOLLOWING METHODS ARE DEPRECATED, remove in 1.12
-    #####################################################################
-
-    # obsolete by utils.
-    def string2bool(self, string):
-        """
-        Returns the boolean value of a string
-
-        DEPRECATED - Use lib.utils.Utils.to_bool(string) instead
-
-        :param string: string to convert
-        :type string: str
-
-        :return: Parameter converted to bool
-        :rtype: bool
-        """
-        self._deprecated_warning('lib.utils.Utils.to_bool(string) function')
-        try:
-            return lib.utils.Utils.to_bool(string)
-        except Exception:
-            return None
-
-    #################################################################
-    # Item Methods
-    #################################################################
-    def add_item(self, path, item):
-        """
-        Function to to add an item to the dictionary of items.
-        If the path does not exist, it is created
-
-        DEPRECATED - Use the Items-API instead
-
-        :param path: Path of the item
-        :param item: The item itself
-        :type path: str
-        :type item: object
-        """
-        self._deprecated_warning('Items-API')
-        return self.items.add_item(path, item)
-
-    def return_item(self, string):
-        """
-        Function to return the item for a given path
-
-        DEPRECATED - Use the Items-API instead
-
-        :param string: Path of the item to return
-        :type string: str
-
-        :return: Item
-        :rtype: object
-        """
-        self._deprecated_warning('Items-API')
-        return self.items.return_item(string)
-
-    def return_items(self):
-        """ "
-        Function to return a list with all items
-
-        DEPRECATED - Use the Items-API instead
-
-        :return: List of all items
-        :rtype: list
-        """
-        self._deprecated_warning('Items-API')
-        return self.items.return_items()
-
-    def match_items(self, regex):
-        """
-        Function to match items against a regular expresseion
-
-        DEPRECATED - Use the Items-API instead
-
-        :param regex: Regular expression to match items against
-        :type regex: str
-
-        :return: List of matching items
-        :rtype: list
-        """
-        self._deprecated_warning('Items-API')
-        return self.items.match_items(regex)
-
-    #        regex, __, attr = regex.partition(':')
-    #        regex = regex.replace('.', '\.').replace('*', '.*') + '$'
-    #        regex = re.compile(regex)
-    #        attr, __, val = attr.partition('[')
-    #        val = val.rstrip(']')
-    #        if attr != '' and val != '':
-    #            return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf and ((type(self.__item_dict[item].conf[attr]) in [list,dict] and val in self.__item_dict[item].conf[attr]) or (val == self.__item_dict[item].conf[attr]))]
-    #        elif attr != '':
-    #            return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf]
-    #        else:
-    #            return [self.__item_dict[item] for item in self.__items if regex.match(item)]
-
-    def find_items(self, conf):
-        """ "
-        Function to find items that match the specified configuration
-
-        DEPRECATED - Use the Items-API instead
-
-        :param conf: Configuration to look for
-        :type conf: str
-
-        :return: list of matching items
-        :rtype: list
-        """
-        self._deprecated_warning('Items-API')
-        return self.items.find_items(conf)
-
-    def find_children(self, parent, conf):
-        """
-        Function to find children with the specified configuration
-
-        DEPRECATED - Use the Items-API instead
-
-        :param parent: parent item on which to start the search
-        :param conf: Configuration to look for
-        :type parent: str
-        :type conf: str
-
-        :return: list or matching child-items
-        :rtype: list
-        """
-        self._deprecated_warning('Items-API')
-        return self.items.find_children(parent, conf)
-
-    #################################################################
-    # Module Methods
-    #################################################################
-    def return_modules(self):
-        """
-        Returns a list with the names of all loaded modules
-
-        DEPRECATED - Use the Modules-API instead
-
-        :return: list of module names
-        :rtype: list
-        """
-        self._deprecated_warning('Modules-API')
-        return self.modules.return_modules()
-
-    def get_module(self, name):
-        """
-        Returns the module object for the module named by the parameter
-        or None, if the named module is not loaded
-
-        DEPRECATED - Use the Modules-API instead
-
-        :param name: Name of the module to return
-        :type name: str
-
-        :return: list of module names
-        :rtype: object
-        """
-        self._deprecated_warning('Modules-API')
-        return self.modules.get_module(name)
-
-    #################################################################
-    # Plugin Methods
-    #################################################################
-    def return_plugins(self):
-        """
-        Returns a list with the instances of all loaded plugins
-
-        DEPRECATED - Use the Plugins-API instead
-
-        :return: list of plugin names
-        :rtype: list
-        """
-
-        self._deprecated_warning('Plugins-API')
-        return self.plugins.return_plugins()
-
-    #################################################################
-    # Logic Methods
-    #################################################################
-    def reload_logics(self, signum=None, frame=None):
-        """
-        Function to reload all logics
-
-        DEPRECATED - Use the Logics-API instead
-        """
-        self._deprecated_warning('Logics-API')
-        self.logics.reload_logics(signum, frame)
-
-    def return_logic(self, name):
-        """
-        Returns (the object of) one loaded logic with given name
-
-        DEPRECATED - Use the Logics-API instead
-
-        :param name: name of the logic to get
-        :type name: str
-
-        :return: object of the logic
-        :rtype: object
-        """
-        self._deprecated_warning('Logics-API')
-        self.logics.return_logic(name)
-
-    def return_logics(self):
-        """
-        Returns a list with the names of all loaded logics
-
-        DEPRECATED - Use the Logics-API instead
-
-        :return: list of logic names
-        :rtype: list
-        """
-        self._deprecated_warning('Logics-API')
-        self.logics.return_logics()
-
-    #################################################################
-    # Time Methods
-    #################################################################
-    def now(self):
-        """
-        Returns the actual time in a timezone aware format
-
-        DEPRECATED - Use the Shtime-API instead
-
-        :return: Actual time for the local timezone
-        :rtype: datetime
-        """
-
-        self._deprecated_warning('Shtime-API')
-        return self.shtime.now()
-
-    def tzinfo(self):
-        """
-        Returns the info about the actual local timezone
-
-        DEPRECATED - Use the Shtime-API instead
-
-        :return: Timezone info
-        :rtype: str
-        """
-
-        self._deprecated_warning('Shtime-API')
-        return self.shtime.tzinfo()
-
-    def utcnow(self):
-        """
-        Returns the actual time in GMT
-
-        DEPRECATED - Use the Shtime-API instead
-
-        :return: Actual time in GMT
-        :rtype: datetime
-        """
-
-        self._deprecated_warning('Shtime-API')
-        return self.shtime.utcnow()
-
-    def utcinfo(self):
-        """
-        Returns the info about the GMT timezone
-
-        DEPRECATED - Use the Shtime-API instead
-
-        :return: Timezone info
-        :rtype: str
-        """
-
-        self._deprecated_warning('Shtime-API')
-        return self.shtime.utcinfo()
-
-    def runtime(self):
-        """
-        Returns the uptime of SmartHomeNG
-
-        DEPRECATED - Use the Shtime-API instead
-
-        :return: Uptime in days, hours, minutes and seconds
-        :rtype: str
-        """
-
-        self._deprecated_warning('Shtime-API')
-        return self.shtime.runtime()
 
     @staticmethod
     def get_instance():

@@ -30,6 +30,7 @@ import logging
 import re
 from copy import deepcopy
 from pydoc import locate
+from collections.abc import Mapping
 from typing import Any
 
 import lib.model.sdp.datatypes as DT
@@ -81,7 +82,16 @@ class SDPCommands(object):
     Furthermore, this could be overwritten if so needed for special extensions.
     """
 
-    def __init__(self, command_obj_class: type[SDPCommand] = SDPCommand, **kwargs):
+    def __init__(
+        self, command_obj_class: type[SDPCommand] = SDPCommand, template_vars: Mapping[str, Any] | None = None, **kwargs
+    ):
+        """
+        Read the commands of the plugin.
+
+        :param command_obj_class: class of the command objects
+        :param template_vars: values for ``{PARAM:...}`` templates, the configuration parameters if not given
+        :param kwargs: configuration parameters, ``plugin_path`` and ``model`` among them
+        """
 
         self.logger = logging.getLogger(__name__)
 
@@ -93,6 +103,7 @@ class SDPCommands(object):
         self._cmd_class = command_obj_class
         self._params = {}
         self._params.update(kwargs)
+        self._template_vars: Mapping[str, Any] = self._params if template_vars is None else template_vars
         self._parsed_commands = {}
 
         self._model: str | None = self._params.get('model', None)
@@ -278,7 +289,7 @@ class SDPCommands(object):
             if cmd in self._commands:
                 # update reply patterns to reflect changed valid_list contents
                 cmd_dict = self._commands[cmd]._cmd_params[CMD_ATTR_ORG_PARAMS]
-                patterns = self._parse_command_reply_patterns(cmd_dict[CMD_ATTR_REPLY_PATTERN], cmd_dict)
+                patterns = self._parse_command_reply_patterns(cmd_dict.get(CMD_ATTR_REPLY_PATTERN, []), cmd_dict)
                 setattr(self._commands[cmd], CMD_ATTR_REPLY_PATTERN, patterns)
 
     def _lookup(self, data: str, table: str, rev: bool = False, ci: bool = True) -> Any:
@@ -447,16 +458,40 @@ class SDPCommands(object):
                         )  # type: ignore
                 else:
                     raise CommandsError('model configuration invalid, "models" is not a dict')
+        # load lookups (e.g. device type tables) before importing commands, since
+        # reply_patterns might need them. This is independent of SDP_standalone:
+        # standalone diagnostics (e.g. viessmann's run_standalone()) rely on
+        # lookups like devicetypes even though full command loading below is
+        # skipped for standalone mode.
+        if hasattr(cmd_module, 'lookups') and isinstance(cmd_module.lookups, dict):  # type: ignore
+            self._parse_lookups(cmd_module.lookups)  # type: ignore
+        else:
+            self.logger.debug('no lookups found')
+
         if hasattr(cmd_module, 'commands') and isinstance(cmd_module.commands, dict) and not SDP_standalone:  # noqa  # type: ignore
             cmds = cmd_module.commands  # type: ignore
             cmdlist = None
             if INDEX_GENERIC in cmds:
                 # if INDEX_GENERIC is present, take all generic commands.from commands dict..
-                cmds = cmd_module.commands[INDEX_GENERIC]  # type: ignore
-                # and add model-specific, if present
-                cmds.update(cmd_module.commands.get(self._model, {}))  # type: ignore
+                # deep-copy: cmd_module is shared across instances, avoids leaking model overrides
+                cmds = deepcopy(cmd_module.commands[INDEX_GENERIC])  # type: ignore
+                # and add model-specific, if present. A model may be defined via commands,
+                # lookups and/or structs alone (e.g. a model that only overrides a lookup
+                # table), so check all three before rejecting an unrecognized model name.
+                if self._model:
+                    known_models = (
+                        set(cmd_module.commands)  # type: ignore
+                        | set(getattr(cmd_module, 'lookups', {}))
+                        | set(getattr(cmd_module, 'structs', {}))
+                    )
+                    known_models.discard(INDEX_GENERIC)
+                    if self._model not in known_models:
+                        raise CommandsError(
+                            f'configured model {self._model} not found in commands.py commands/lookups/structs {sorted(known_models)}'
+                        )
+                update(cmds, cmd_module.commands.get(self._model, {}))  # type: ignore
 
-            elif self._model:
+            elif self._model and hasattr(cmd_module, 'models'):
                 # otherwise, take list of generic and specific commands from models dict
                 cmdlist = cmd_module.models.get(INDEX_GENERIC, []) + cmd_module.models.get(self._model, [])  # type: ignore
                 self.logger.debug(f'found {len(cmd_module.models.get(INDEX_GENERIC, []))} generic commands')  # type: ignore
@@ -465,12 +500,6 @@ class SDPCommands(object):
                         f'found {len(cmd_module.models.get(self._model, []))} commands for model {self._model}'
                     )  # type: ignore
             self._flatten_cmds(cmds)
-
-            # do this before importing commands, because reply_patterns might need lookups
-            if hasattr(cmd_module, 'lookups') and isinstance(cmd_module.lookups, dict):  # type: ignore
-                self._parse_lookups(cmd_module.lookups)  # type: ignore
-            else:
-                self.logger.debug('no lookups found')
 
             # actually import commands
             self._parse_commands(cmds, self._get_cmdlist(cmds, cmdlist))
@@ -491,7 +520,7 @@ class SDPCommands(object):
         """parse command's reply patterns and return parsed patterns as list"""
 
         def get_param(matchobj):
-            returnvalue = self._params.get(matchobj.group(2))
+            returnvalue = self._template_vars.get(matchobj.group(2))
             if returnvalue is None:
                 self.logger.warning(f'Parameter {matchobj.group(2)} does not exist.')
                 returnvalue = ''
@@ -601,6 +630,15 @@ class SDPCommands(object):
             # update with command attributes
             cmd_params.update({arg: cmd_dict[arg] for arg in COMMAND_PARAMS if arg in cmd_dict})
 
+            # cmd_settings is mutated in place below (and later at runtime by
+            # SDPCommand.set_valid_list()). commands.py is a cached module shared by
+            # every plugin instance of this device type, so cmd_dict[CMD_ATTR_CMD_SETTINGS]
+            # (just shallow-copied by the update() above) must be deep-copied here --
+            # otherwise mutating one instance's cmd_settings corrupts every other
+            # instance's command validation state.
+            if CMD_ATTR_CMD_SETTINGS in cmd_params:
+                cmd_params[CMD_ATTR_CMD_SETTINGS] = deepcopy(cmd_params[CMD_ATTR_CMD_SETTINGS])
+
             # store original config for later parsing
             cmd_params[CMD_ATTR_ORG_PARAMS] = deepcopy(cmd_dict)
 
@@ -651,7 +689,9 @@ class SDPCommands(object):
                     f'importing command {cmd} found invalid datatype "{dev_datatype}", replacing with DT_raw. Check function of device'
                 )
                 dt_class = DT.DT_raw
-            self._commands[cmd] = self._cmd_class(cmd, dt_class, **{'cmd': cmd_params, 'plugin': self._params})
+            self._commands[cmd] = self._cmd_class(
+                cmd, dt_class, **{'cmd': cmd_params, 'template_vars': self._template_vars}
+            )
 
             # store in self.parsed_commands for access by webif
             # skip sections only including section settings
@@ -688,7 +728,12 @@ class SDPCommands(object):
         own file format.
         """
         if INDEX_GENERIC in lookups:
-            lu = lookups[INDEX_GENERIC]
+            # lookups comes from the device's commands.py module, which locate()
+            # caches in sys.modules and is therefore shared by every SDPCommands
+            # instance for this device type - deep-copy before merging model
+            # overrides into it below, or one instance's model-specific lookup
+            # entries permanently contaminate every other instance's generic table
+            lu = deepcopy(lookups[INDEX_GENERIC])
             self.logger.debug(f'found {len(lu)} generic lookup table{"" if len(lu) == 1 else "s"}')
 
             if self._model and self._model in lookups:

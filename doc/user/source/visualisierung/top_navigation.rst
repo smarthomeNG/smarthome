@@ -8,11 +8,10 @@
 .. index:: smartVISU; Top Navigation
 
 
-Top Navigation auf Visu Seiten :redsup:`Neu`
-============================================
+Top Navigation auf Visu Seiten
+==============================
 
-Ab SmartHomeNG v1.12 / smartvisu Plugin v1.9 können Seiten mit einer Navigation oben auf der Seite
-(Top Navigation) generiert werden. Im folgenden ist anhand eines Beispiels beschrieben, wie eine Top Navigation
+Es können Seiten mit einer Navigation oben auf der Seite (Top Navigation) generiert werden. Im folgenden ist anhand eines Beispiels beschrieben, wie eine Top Navigation
 konfiguriert wird.
 
 Der Kopf der Beispiel Visu Seite ohne Top Navigation sieht so aus:

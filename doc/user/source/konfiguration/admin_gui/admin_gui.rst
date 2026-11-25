@@ -3,10 +3,11 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
-==========================
-Konfiguration über die GUI
-==========================
+=============================================
+Konfiguration über die GUI :greensup:`Update`
+=============================================
 
 SmartHomeNG kann vollständig über die graphische Oberfläche konfiguriert werden. Für einen Teil der Konfiguration stehen
 Dialoge zur Verfügung, die Erläuterungen zu den einzelnen Einstellungen geben und evtl. vorhandene Standardwerte
@@ -50,8 +51,8 @@ Die Dialoge können nach jeder der 4 Spalten sortiert werden. Dieses ist bei lä
 auffinden eines gesuchten Parameters erleichtert.
 
 
-Editoren für YAML Konfigurationen
-=================================
+Editoren für YAML Konfigurationen :greensup:`Update`
+====================================================
 
 Für die Teile der SmartHomeNG Konfiguration für die keine Konfigurations-Dialoge zur Verfügung stehen (Items, Strukturen,
 Szenen), gibt es auf der jeweiligen Konfigurationsseite der GUI ein Editor mit dem die YAML Konfigurationen bearbeitet

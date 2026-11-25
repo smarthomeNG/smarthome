@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
+"""Print the pid of the running SmartHomeNG instance (option -u: its var directory, as given to smarthome.py -u)."""
 
+import argparse
 import os
 import sys
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-os.chdir('..')
-sys.path.insert(0, './lib')
-base_dir = os.getcwd()
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-pidfile= os.path.join(base_dir,'var','run','smarthome.pid')
+import lib.vardir  # noqa: E402
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('-u', '--var_dir', help='var directory of the instance')
+lib.vardir.set_var_dir(parser.parse_args().var_dir)
+
+pidfile = lib.vardir.get_pidfile()
 if not os.path.isfile(pidfile):
-    print("No instance of SmartHomeNG is running")
+    print('No instance of SmartHomeNG is running')
 else:
     with open(pidfile) as f:
         read_data = f.read()
-    print("The PID of the running instance of SmartHomeNG is {}".format(read_data))
+    print('The PID of the running instance of SmartHomeNG is {}'.format(read_data))

@@ -52,9 +52,15 @@ except Exception:
 from lib.utils import Utils
 from lib.utils import Version
 from lib.constants import YAML_FILE
+from lib.vardir import get_var_dir
 
 
 _shpypi_instance = None  # Pointer to the initialized instance of the Shpypi class (for use by static methods)
+
+
+def is_virtualenv() -> bool:
+    """Return True if the running interpreter is inside a virtual environment."""
+    return sys.prefix != sys.base_prefix
 
 
 class Shpypi:
@@ -301,16 +307,7 @@ class Shpypi:
         req_dict = {}
         if plugin_conf is not None:
             for plugin_instance in plugin_conf:
-                plugin_name = plugin_conf[plugin_instance].get('plugin_name', None)
-                class_path = plugin_conf[plugin_instance].get('class_path', None)
-                plugin = ''
-                if class_path:
-                    if class_path.startswith('plugins.'):
-                        sp = class_path.split('.')
-                        if len(sp) == 2:
-                            plugin = sp[1]
-                if plugin == '' and plugin_name:
-                    plugin = plugin_name
+                plugin = plugin_conf[plugin_instance].get('plugin_name', None) or ''
 
                 filename = os.path.join(plugins_dir, plugin, 'requirements.txt')
 
@@ -403,6 +400,23 @@ class Shpypi:
         stdout, stderr = Utils.execute_subprocess(command_line)
         return
 
+    @staticmethod
+    def build_install_command(pip_command: str, req_filepath: str, in_virtualenv: bool | None = None) -> str:
+        """
+        Build the pip command line to install a requirements file
+
+        pip rejects ``--user`` inside a virtual environment, so it is only added outside of one.
+
+        :param pip_command: pip executable (or command) to call
+        :param req_filepath: requirements file to install
+        :param in_virtualenv: whether to build for a virtual environment; auto-detected if None
+        :return: the command line
+        """
+        if in_virtualenv is None:
+            in_virtualenv = is_virtualenv()
+        user_flag = '' if in_virtualenv else ' --user'
+        return f'{pip_command} install -r {req_filepath}{user_flag} --no-warn-script-location'
+
     def install_requirements(self, req_type, logging=True, pip3_command=None):
         req_type_display = req_type
         if req_type == 'conf_all':
@@ -433,7 +447,7 @@ class Shpypi:
             self.logger.warning(f"Using {msg} PIP: '{pip_command}'")
 
         req_filepath = os.path.join(self._sh_dir, 'requirements', req_type + '.txt')
-        command_line = pip_command + ' install -r ' + req_filepath + ' --user --no-warn-script-location'
+        command_line = self.build_install_command(pip_command, req_filepath)
         if logging:
             self.logger.info('> ' + command_line)
         else:
@@ -444,17 +458,17 @@ class Shpypi:
         # ToDo
         # create_directories is available in lib.smarthome.py but shpypi.py might be started prior to SH object creation
         # thus it is needed to create the var/log directory here
-        os.makedirs(os.path.join(self._sh_dir, 'var'), exist_ok=True)
-        os.makedirs(os.path.join(self._sh_dir, 'var', 'log'), exist_ok=True)
+        log_dir = os.path.join(get_var_dir(), 'log')
+        os.makedirs(log_dir, exist_ok=True)
 
-        pip_log_name = os.path.join(self._sh_dir, 'var', 'log', 'pip3_outout.log')
+        pip_log_name = os.path.join(log_dir, 'pip3_outout.log')
         with open(pip_log_name, 'w', encoding='utf8') as outfile:
             outfile.write(stdout)
         if stderr != '':
-            pip_log_name = os.path.join(self._sh_dir, 'var', 'log', 'pip3_error.log')
+            pip_log_name = os.path.join(log_dir, 'pip3_error.log')
             with open(pip_log_name, 'w', encoding='utf8') as outfile:
                 outfile.write(stderr)
-            if 'virtualenv' in stderr and '--user' in stderr:
+            if '--user' in command_line and 'virtualenv' in stderr and '--user' in stderr:
                 if logging:
                     try:
                         self.logger.notice(
@@ -906,7 +920,7 @@ class Shpypi:
             )
 
         if reads >= max_tries:
-            self.logger.info("get_package_releases_data: pypi.org returned no data for package {package['name']}")
+            self.logger.info(f'get_package_releases_data: pypi.org returned no data for package {package["name"]}')
         return
 
     def _build_sortstring(self, package):
@@ -1188,7 +1202,7 @@ class Requirements_files:
         self._conf_plugin_files = []
         self._conf_plugin_files_label = 'configured plugin '
 
-        self.shng_version = Version.format(version.split('-')[0])
+        self.shng_version = Version.format(version)
         vi = sys.version_info
         self.py_version = Version.format(str(vi[0]) + '.' + str(vi[1]) + '.' + str(vi[2]))
 
@@ -1553,7 +1567,7 @@ class Requirements_files:
         return packagelist_consolidated
 
     def _write_header(self, ofile, filename):
-        pip_statement = 'pip3 install -r ' + filename + ' --user'
+        pip_statement = 'pip3 install -r ' + filename
         pip_statement = pip_statement.ljust(49)
         ofile.write('\n')
         ofile.write('#   +--------------------------------------------------+\n')

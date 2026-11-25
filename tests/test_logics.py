@@ -26,6 +26,7 @@ import unittest
 import logging
 import shutil
 import os
+import tempfile
 
 from lib.model.smartplugin import SmartPlugin
 from lib.logic import Logics
@@ -151,6 +152,42 @@ class TestLogics(unittest.TestCase):
         readback = self.logics.read_config_section('logic_up3')
         self.assertEqual(len(readback), 0)
 
+    def test_07_empty_logic_section_does_not_crash(self):
+        """
+        An empty logic YAML section ('mylogic:' with nothing under it)
+        parses to attributes=None. Logic.__init__() must check `attributes
+        is not None`, not `attributes != 'None'` (the string) - the string
+        comparison is True even when attributes really is None, reaching
+        `for attribute in attributes:` with attributes=None instead of the
+        intended "not configured correctly" error-log branch.
+        """
+        logger.warning('----- Logic Test: test_07_empty_logic_section_does_not_crash')
+        from lib.logic import Logic
+
+        logic = Logic(self.sh, 'empty_test_logic', None, self._logics)
+        self.assertEqual(logic.id(), 'empty_test_logic')
+        # _generate_bytecode() must not have run -- this is exactly the
+        # signal _load_logic() checks via hasattr() to detect a load failure
+        self.assertFalse(hasattr(logic, '_bytecode'))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
+
+
+class TestLogicsWithoutConfigFile(unittest.TestCase):
+    """The logic configuration can be created through the API when no logic.yaml exists yet."""
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self._tmp = tempfile.TemporaryDirectory(prefix='SHNG_logics.')
+        self.addCleanup(self._tmp.cleanup)
+        self.logics = Logics(self.sh, os.path.join(self._tmp.name, 'logic'), self.sh._env_logic_conf_basename)
+        self.logics._logic_conf = os.path.join(self._tmp.name, 'logic.yaml')
+
+    def test_first_section_can_be_written_and_read(self):
+        entries = [['filename', 'first.py', 'comment'], ['crontab', 'init = Init', 'comment']]
+
+        self.logics.update_config_section(True, 'first', entries)
+
+        self.assertEqual(entries, self.logics.read_config_section('first'))

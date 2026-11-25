@@ -1,0 +1,14 @@
+# Metadata for the test-only fixture plugin used by
+# tests/test_plugin_reload.py to exercise get_pluginthread()'s handling of
+# startorder: early/late plugins loaded at runtime (not during bulk startup).
+plugin:
+    type: system
+    description:
+        de: 'Test-Fixture fuer startorder: early'
+        en: 'Test fixture for startorder: early'
+    version: 1.0.0
+    multi_instance: False
+    startorder: early
+    classname: EarlyOrderPlugin
+
+parameters: NONE

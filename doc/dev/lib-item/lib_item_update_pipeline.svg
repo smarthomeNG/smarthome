@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1060" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="10.5">
+  <defs>
+    <marker id="p-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L8,4 z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <rect width="760" height="1060" fill="#f8f9fa" rx="8"/>
+  <text x="380" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">__update() — the value-change pipeline</text>
+
+  <!-- A: entry -->
+  <rect x="230" y="42" width="300" height="50" rx="6" fill="#2980b9" stroke="#1a6496" stroke-width="1.8"/>
+  <text x="380" y="63" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">value arrives at __update()</text>
+  <text x="380" y="80" text-anchor="middle" font-size="9" fill="#dbe9f5">write, eval result, fade step, timer, or scheduler job</text>
+  <line x1="380" y1="92" x2="380" y2="112" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+
+  <!-- B: hysteresis precheck -->
+  <rect x="190" y="114" width="380" height="46" rx="6" fill="#fff" stroke="#999" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <text x="380" y="133" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#555">if hysteresis_input is set:</text>
+  <text x="380" y="149" text-anchor="middle" font-size="9.5" fill="#666">cancel any pending upper/lower threshold timer</text>
+  <line x1="380" y1="160" x2="380" y2="180" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+
+  <!-- C: cast -->
+  <rect x="230" y="182" width="300" height="42" rx="6" fill="#fff" stroke="#2980b9" stroke-width="1.6"/>
+  <text x="380" y="207" text-anchor="middle" font-size="11" fill="#333">cast value to item type — self.cast(value)</text>
+  <line x1="380" y1="224" x2="380" y2="244" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+
+  <!-- Lock group -->
+  <rect x="30" y="246" width="700" height="290" rx="8" fill="#fdfdfd" stroke="#b0b0b0" stroke-width="1.4" stroke-dasharray="7,4"/>
+  <text x="46" y="266" font-size="10" font-weight="bold" fill="#777">under self._lock (threading.Condition)</text>
+
+  <rect x="80" y="278" width="600" height="46" rx="6" fill="#fff" stroke="#999" stroke-width="1.3"/>
+  <text x="380" y="296" text-anchor="middle" font-size="10.5" fill="#333">fading? — stop_fade / continue_fade rules may ignore this value</text>
+  <text x="380" y="312" text-anchor="middle" font-size="9.5" fill="#666">or end the fade early (see fade()/fadejob, _internal/_fade.py)</text>
+  <line x1="380" y1="324" x2="380" y2="344" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+
+  <!-- diamond: changed? -->
+  <polygon points="380,346 500,396 380,446 260,396" fill="#fef9e7" stroke="#f39c12" stroke-width="1.6"/>
+  <text x="380" y="392" text-anchor="middle" font-size="10" font-weight="bold" fill="#7d6608">value changed</text>
+  <text x="380" y="406" text-anchor="middle" font-size="10" font-weight="bold" fill="#7d6608">or enforce_change?</text>
+
+  <!-- No branch -->
+  <line x1="260" y1="396" x2="150" y2="396" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+  <text x="205" y="388" text-anchor="middle" font-size="9" fill="#555">no</text>
+  <rect x="55" y="422" width="220" height="56" rx="6" fill="#fff" stroke="#999" stroke-width="1.3"/>
+  <text x="165" y="440" text-anchor="middle" font-size="9.5" fill="#333">history.record_update_only()</text>
+  <text x="165" y="454" text-anchor="middle" font-size="9" fill="#666">last_update/updated_by advance,</text>
+  <text x="165" y="467" text-anchor="middle" font-size="9" fill="#666">last_change does not</text>
+
+  <!-- Yes branch -->
+  <line x1="500" y1="396" x2="610" y2="396" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+  <text x="555" y="388" text-anchor="middle" font-size="9" fill="#555">yes</text>
+  <rect x="485" y="422" width="230" height="70" rx="6" fill="#fff" stroke="#27ae60" stroke-width="1.5"/>
+  <text x="600" y="440" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#27ae60">_set_value()</text>
+  <text x="600" y="455" text-anchor="middle" font-size="9" fill="#333">stores value, history.record_change(),</text>
+  <text x="600" y="468" text-anchor="middle" font-size="9" fill="#333">log_on_change() if log_change is set</text>
+  <text x="600" y="482" text-anchor="middle" font-size="9" fill="#333">(_internal/_logchange.py)</text>
+
+  <!-- merge lines down out of lock group -->
+  <line x1="165" y1="478" x2="165" y2="520" stroke="#555" stroke-width="1.2"/>
+  <line x1="600" y1="492" x2="600" y2="520" stroke="#555" stroke-width="1.2"/>
+  <line x1="165" y1="520" x2="380" y2="520" stroke="#555" stroke-width="1.2"/>
+  <line x1="600" y1="520" x2="380" y2="520" stroke="#555" stroke-width="1.2"/>
+  <line x1="380" y1="520" x2="380" y2="556" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+
+  <!-- E: run_on_update -->
+  <rect x="200" y="558" width="360" height="44" rx="6" fill="#fff" stroke="#2980b9" stroke-width="1.6"/>
+  <text x="380" y="576" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#333">run_on_update()  —  always, changed or not</text>
+  <text x="380" y="592" text-anchor="middle" font-size="9" fill="#666">_internal/_eval.py</text>
+  <line x1="380" y1="602" x2="380" y2="622" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+
+  <!-- diamond 2 -->
+  <polygon points="380,624 530,674 380,724 230,674" fill="#fef9e7" stroke="#f39c12" stroke-width="1.6"/>
+  <text x="380" y="664" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#7d6608">changed, or enforce_updates,</text>
+  <text x="380" y="678" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#7d6608">or type == 'scene'?</text>
+
+  <!-- No branch bypass, routed right of the notify box (G spans x=90..670) -->
+  <line x1="530" y1="674" x2="705" y2="674" stroke="#555" stroke-width="1.3"/>
+  <text x="600" y="666" text-anchor="middle" font-size="9" fill="#555">no</text>
+  <line x1="705" y1="674" x2="705" y2="878" stroke="#555" stroke-width="1.3"/>
+  <line x1="705" y1="878" x2="400" y2="878" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+
+  <!-- Yes branch to G -->
+  <line x1="380" y1="724" x2="380" y2="744" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+  <text x="392" y="738" font-size="9" fill="#555">yes</text>
+
+  <!-- G box -->
+  <rect x="90" y="746" width="580" height="112" rx="6" fill="#fff" stroke="#27ae60" stroke-width="1.6"/>
+  <text x="380" y="764" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#27ae60">notify consumers, then re-run on_change</text>
+  <text x="130" y="782" font-size="9.5" fill="#333">• plugin update_item methods  (self.__methods_to_trigger)</text>
+  <text x="130" y="797" font-size="9.5" fill="#333">• logic triggers  (self.__logics_to_trigger — optionally gated by a threshold crossing)</text>
+  <text x="130" y="812" font-size="9.5" fill="#333">• schedule dependents' eval/hysteresis re-runs via sh.trigger  (_items_to_trigger / _hysteresis_items_to_trigger)</text>
+  <text x="130" y="827" font-size="9.5" fill="#333">• run_on_change()  (_internal/_eval.py)</text>
+  <text x="380" y="846" text-anchor="middle" font-size="8.5" fill="#888" font-style="italic">see the dependency-wiring diagram for how the schedule step reaches other items</text>
+
+  <!-- merge to H -->
+  <line x1="380" y1="858" x2="380" y2="898" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+
+  <!-- H: cache -->
+  <rect x="170" y="900" width="420" height="46" rx="6" fill="#fff" stroke="#999" stroke-width="1.4"/>
+  <text x="380" y="919" text-anchor="middle" font-size="9.5" fill="#333">changed AND cache configured AND not fading</text>
+  <text x="380" y="934" text-anchor="middle" font-size="9.5" fill="#333">→ cache_write(self._cache, self._value)</text>
+  <line x1="380" y1="946" x2="380" y2="966" stroke="#555" stroke-width="1.3" marker-end="url(#p-arr)"/>
+
+  <!-- I: autotimer -->
+  <rect x="130" y="968" width="500" height="60" rx="6" fill="#fff" stroke="#999" stroke-width="1.4"/>
+  <text x="380" y="986" text-anchor="middle" font-size="9.5" fill="#333">autotimer configured AND caller != 'Autotimer' AND not fading</text>
+  <text x="380" y="1001" text-anchor="middle" font-size="9.5" fill="#333">→ (re)arm timer via item._sh.scheduler.add(...)</text>
+  <text x="380" y="1017" text-anchor="middle" font-size="8.5" fill="#c0392b" font-style="italic">note: NOT gated on "changed" — this check runs every call</text>
+
+  <text x="380" y="1050" text-anchor="middle" font-size="9" fill="#888">return</text>
+</svg>

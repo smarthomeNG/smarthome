@@ -22,13 +22,14 @@ def register_shng_log_levels():
     This helper is idempotent — safe to call multiple times or from
     multiple test modules.
     """
-    _levels = [(31, 'NOTICE'), (13, 'DBGHIGH'), (12, 'DBGMED'), (11, 'DBGLOW'), (9, 'DEVELOP')]
+    _levels = [(29, 'NOTICE'), (13, 'DBGHIGH'), (12, 'DBGMED'), (11, 'DBGLOW'), (9, 'DEVELOP')]
     for level, name in _levels:
         if not hasattr(logging.getLoggerClass(), name.lower()):
 
             def _make_method(lvl):
                 def _method(self, msg, *args, **kwargs):
                     if self.isEnabledFor(lvl):
+                        kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + 1
                         self._log(lvl, msg, args, **kwargs)
 
                 return _method
@@ -36,6 +37,24 @@ def register_shng_log_levels():
             logging.addLevelName(level, name)
             setattr(logging, name, level)
             setattr(logging.getLoggerClass(), name.lower(), _make_method(level))
+
+
+def logs_instance_fixtures():
+    """Return ``(setUpModule, tearDownModule)`` that restore lib.log's global ``logs_instance`` after a test module.
+
+    For modules that replace it with a ``Logs`` built on a mock; later tests would otherwise log through that mock.
+    """
+    import lib.log
+
+    saved = []
+
+    def set_up_module():
+        saved.append(lib.log.logs_instance)
+
+    def tear_down_module():
+        lib.log.logs_instance = saved.pop()
+
+    return set_up_module, tear_down_module
 
 
 @contextlib.contextmanager

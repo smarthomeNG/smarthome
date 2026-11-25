@@ -1,5 +1,7 @@
-Programm Module
-===============
+.. role:: greensup
+
+Programm Module :greensup:`Update`
+==================================
 
 Abgesehen vom Hauptprogramm das in ``bin/smarthome.py`` liegt, nutzt SmartHomeNG noch unterstützende Programm Module
 die sich im Verzeichnis ``lib/`` befinden. Sollte ein Programm Modul Bibliotheken nutzen, die nicht mit der Standard
@@ -12,7 +14,9 @@ Im folgenden eine Beschreibung der Programm Module von SmartHomeNG:
    :maxdepth: 2
    :titlesonly:
 
+   /lib/backup
    /lib/config
+   /lib/configdirs
    /lib/constants
    /lib/daemon
    /lib/item_conversion
@@ -21,7 +25,9 @@ Im folgenden eine Beschreibung der Programm Module von SmartHomeNG:
    /lib/module
    /lib/scene
    /lib/shyaml
+   /lib/syspower
    /lib/translation
+   /lib/vardir
 
 
 Die folgenden Programm Module können ebenfalls für die Plugin Entwicklung verwendet und referenziert werden:
@@ -35,5 +41,4 @@ Die folgenden Programm Module können ebenfalls für die Plugin Entwicklung verw
    /lib/logutils
    /lib/network
    /lib/orb
-   /lib/tools
    /lib/utils

@@ -6,7 +6,7 @@ Grundlegende astronomische Daten werden bereits von den Systemitems bereitgestel
 
 ### Visualisierung (SmartVisu)
 
-`Sonnenaufgang {{ basic.formula('Sonnenaufgang', 'env.location.sunrise', 'time') }}`
+`Sonnenaufgang {{ basic.print('Sonnenaufgang', 'env.location.sunrise', 'time') }}`
 
 Erläuterung:
 

@@ -3,7 +3,10 @@
 # Sphinx has some errors with early releases of up to 8.1.3
 # Sphinx 8.0 drops support for Python 3.9
 # Sphinx 8.2 drops support for Python 3.10
-sphinx>=4,<6
+# Sphinx 8.0's py:module :noindex: support was broken, restored in 8.1 - avoid 8.0 specifically
+# Sphinx 9.0.x needs Python >=3.11, Sphinx 9.1+ needs Python >=3.12
+# Sphinx 9's autodoc was substantially rewritten (own changelog: "incompatible changes in edge cases")
+sphinx>=9,<10
 # Sphinx-RTD-Theme 3.x needs Python >=3.9,<3.13 or above and is compatible with Sphinx 7.x and 8.x
 # Sphinx-RTD-Theme 2.x needs Python >=3.6,< or above and is compatible with Sphinx 6.x and 7.x
 # Sphinx-RTD-Theme 1.x needs Python 3.6 or above and is compatible with Sphinx 5.x only
@@ -23,11 +26,13 @@ sphinx-design
 
 
 # sphinx-autodoc-typehints 3.x needs Python >=3.10,<=3.13 and sphinx>=8.1.3
-# sphinx-autodoc-typehints 1.13.0 needs Python >3.6,<=3.10 
+# sphinx-autodoc-typehints 3.6.0+ raises the sphinx floor to >=9.0.4
+# sphinx-autodoc-typehints 3.9.0+ raises the sphinx floor to >=9.1
+# sphinx-autodoc-typehints 1.13.0 needs Python >3.6,<=3.10
 # sphinx-autodoc-typehints 1.19.0 needs Python >3.6,<=3.11
 # sphinx-autodoc-typehints 2.x needs Python >=3.10,<=3.13
 
-sphinx-autodoc-typehints
+sphinx-autodoc-typehints>=3.6.0
 
 sphinx-treeview
 
@@ -38,6 +43,7 @@ sphinx-treeview
 # at https://myst-parser.readthedocs.io/en/latest/using/intro.html for a primer on MyST
 
 #myst-parser<=0.16.1
+#myst-parser 5.x needs             Sphinx >=8,<10
 #myst-parser 4.x needs Python >3.10,      Sphinx >=7,<9 and Docutils >=0.19,<0.22
 #myst-parser 3.x needs Python >3.8,<3.12, Sphinx >=7,<9 and Docutils >=0.18,<0.22
 #myst-parser 2.x needs Python >3.8,<3.11, Sphinx >=7,<9 and Docutils >=0.16,<0.21

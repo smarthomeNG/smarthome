@@ -29,23 +29,149 @@ import os
 import datetime
 import pickle
 import re
+import sys
 import pytz
 from babel.dates import format_datetime, get_timezone_name
 
 from pathlib import Path
+from typing import Any
 
 import collections
+import dataclasses
+from collections.abc import Iterator
 
 import lib.shyaml as shyaml
-from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG, DIR_ETC, DIR_VAR
+from lib.constants import YAML_FILE, DEFAULT_FILE, BASE_LOG, DIR_ETC
+from lib.utils import Version
+from lib.vardir import get_var_dir, rebase_var_prefix
 
 logs_instance = None
+
+DEBUG_LOGFILE_NAME = 'smarthome-debug.log'
+
+# Logger families of SmartHomeNG itself (as defined in the default logging.yaml)
+SHNG_LOGGER_FAMILIES = ('functions', 'lib', 'lib.smarthome', 'modules', 'plugins', 'logics', 'items')
+
+# Frames to add to ``stacklevel`` so a custom level's wrapper is skipped
+_LEVEL_METHOD_STACKLEVEL_SKIP = 1
+_LEVEL_FUNCTION_STACKLEVEL_SKIP = 1
+
+
+def debug_logging_config(logfile: str | None = None) -> dict[str, Any]:
+    """
+    Build the built-in logging configuration used by ``smarthome.py -d``.
+
+    It does not depend on ``logging.yaml``: all SmartHomeNG loggers (see ``SHNG_LOGGER_FAMILIES``)
+    log at DEBUG, all other loggers (third-party packages) at INFO. Everything goes to stdout and
+    to ``logfile``.
+
+    :param logfile: Path of the debug logfile; defaults to ``log/smarthome-debug.log`` in the var directory
+    :return: configuration dict for ``logging.config.dictConfig``
+    """
+    if logfile is None:
+        logfile = os.path.join(get_var_dir(), 'log', DEBUG_LOGFILE_NAME)
+    handler_names = ['shng_debug_console', 'shng_debug_file']
+    return {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'shng_debug': {
+                'format': '%(asctime)s %(levelname)-8s %(name)-19s %(funcName)-25s ln:%(lineno)-4d %(message)s  ----  %(threadName)-12s',
+                'datefmt': '%Y-%m-%d %H:%M:%S',
+            }
+        },
+        'handlers': {
+            'shng_debug_console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'shng_debug',
+                'level': 'DEBUG',
+                'stream': 'ext://sys.stdout',
+            },
+            'shng_debug_file': {
+                '()': 'lib.log.ShngTimedRotatingFileHandler',
+                'formatter': 'shng_debug',
+                'level': 'DEBUG',
+                'when': 'midnight',
+                'backupCount': 2,
+                'filename': logfile,
+                'encoding': 'utf8',
+            },
+        },
+        'loggers': {name: {'level': 'DEBUG'} for name in SHNG_LOGGER_FAMILIES},
+        'root': {'level': 'INFO', 'handlers': handler_names},
+    }
+
+
+def rebase_handler_filenames(config_dict: dict[str, Any]) -> None:
+    """
+    Re-root the file handlers' relative ``var/...`` filenames of a logging configuration under the var directory.
+
+    Needed because ``logging.yaml`` names its logfiles ``./var/log/...``, which would otherwise ignore ``--var_dir``.
+    Handlers without ``filename`` and filenames not starting with ``var`` are left alone; changes ``config_dict`` in place.
+    """
+    for handler in config_dict.get('handlers', {}).values():
+        filename = handler.get('filename')
+        if isinstance(filename, str):
+            handler['filename'] = rebase_var_prefix(filename)
+
+
+@dataclasses.dataclass(frozen=True)
+class LogEntry:
+    """
+    A logical entry of a logfile: one log record, including the traceback lines that follow it.
+
+    :ivar end_line: 1-based physical line number of the last line of the entry
+    :ivar lines: the physical lines of the entry as read from the file, line terminators included; the first line
+        is the record, the others are its traceback
+    """
+
+    end_line: int
+    lines: tuple[str, ...]
+
+    @property
+    def text(self) -> str:
+        """The physical lines of the entry joined."""
+        return ''.join(self.lines)
+
+
+def iter_log_entries(path: str) -> Iterator[LogEntry]:
+    """
+    Yield the logical entries of the logfile at ``path`` in file order.
+
+    A line starting with ``Traceback``, and every following line indented by two spaces up to and including the
+    first non-indented line after them, belongs to the preceding entry instead of starting a new one. A file
+    starting with a traceback begins its first entry with that line.
+
+    Entries may span several physical lines, so ``LogEntry.end_line`` is the way to map entries to file lines.
+    """
+    with open(path, 'r', encoding='UTF-8') as logfile:
+        lines: list[str] = []
+        end_line = 0
+        appending = False
+        for line_no, line in enumerate(logfile, start=1):
+            if line.startswith('Traceback'):
+                appending = True
+            if appending and lines:
+                lines.append(line)
+                end_line = line_no
+                if not line.startswith('Traceback') and not line.startswith('  '):
+                    appending = False
+                continue
+            if lines:
+                yield LogEntry(end_line, tuple(lines))
+            lines = [line]
+            end_line = line_no
+        if lines:
+            yield LogEntry(end_line, tuple(lines))
 
 
 class Logs:
     _logs = {}
     logging_levels = {}
     root_handler_name = ''
+
+    #: False while the built-in debug configuration (``-d``) is active instead of ``logging.yaml``
+    uses_logging_yaml = True
 
     NOTICE_level = 29
     DBGHIGH_level = 13
@@ -69,17 +195,39 @@ class Logs:
         self._sh = sh
         return
 
-    def configure_logging(self, config_filename=''):
+    def configure_debug_logging(self, logfile: str | None = None) -> bool:
+        """
+        Configure logging with the built-in debug configuration instead of ``logging.yaml``.
 
-        if not config_filename:
-            config_filename = self._sh.get_config_file(BASE_LOG)
-        config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
+        See :func:`debug_logging_config`. The directory of ``logfile`` is created if missing.
 
+        :param logfile: Path of the debug logfile; defaults to ``log/smarthome-debug.log`` in the var directory
+        :return: True on success
+        """
+        config_dict = debug_logging_config(logfile)
+        logfile = config_dict['handlers']['shng_debug_file']['filename']
+        os.makedirs(os.path.dirname(os.path.abspath(logfile)), exist_ok=True)
+        return self.configure_logging(config_dict=config_dict)
+
+    def configure_logging(self, config_filename='', config_dict: dict[str, Any] | None = None):
+        """
+        Configure logging from ``logging.yaml`` (or ``config_filename``), or from ``config_dict`` if given.
+
+        :param config_filename: Name of the logging configuration file; ignored if ``config_dict`` is given
+        :param config_dict: Ready-made ``dictConfig`` dict that replaces the configuration file
+        :return: True on success, the exception if ``dictConfig`` failed
+        """
+        self.uses_logging_yaml = config_dict is None
         if config_dict is None:
-            print()
-            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
-            print()
-            exit(1)
+            if not config_filename:
+                config_filename = self._sh.get_config_file(BASE_LOG)
+            config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
+
+            if config_dict is None:
+                print()
+                print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
+                print()
+                exit(1)
 
         config_dict = self.add_all_handlers_logger(config_dict)
 
@@ -144,6 +292,8 @@ class Logs:
         self.add_logging_level('DBGLOW', self.DBGLOW_level)
         self.add_logging_level('DEVELOP', self.DEVELOP_level)
 
+        rebase_handler_filenames(config_dict)
+
         try:
             logging.config.dictConfig(config_dict)
         except Exception as e:
@@ -176,9 +326,12 @@ class Logs:
 
         def logForLevel(self, message, *args, **kwargs):
             if self.isEnabledFor(value):
+                # skips this wrapper, so the record names its caller's function and line
+                kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + _LEVEL_METHOD_STACKLEVEL_SKIP
                 self._log(value, message, args, **kwargs)
 
         def logToRoot(message, *args, **kwargs):
+            kwargs['stacklevel'] = kwargs.get('stacklevel', 1) + _LEVEL_FUNCTION_STACKLEVEL_SKIP
             logging.log(value, message, *args, **kwargs)
 
         logging.addLevelName(value, description)
@@ -259,7 +412,7 @@ class Logs:
         Save dict to logging.yaml
         """
         if logging_config is not None:
-            logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
+            logging_config['shng_version'] = Version.strip_build(self._sh.version).lstrip('v')
             conf_filename = self._sh.get_config_file(BASE_LOG)
             shyaml.yaml_save_roundtrip(conf_filename, logging_config, create_backup=create_backup)
         return
@@ -278,7 +431,7 @@ class Logs:
         )
 
         if logging_config.get('shng_version', None) is None:
-            logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
+            logging_config['shng_version'] = Version.strip_build(self._sh.version).lstrip('v')
             self.save_logging_config(logging_config, create_backup=True)
 
         return logging_config
@@ -397,7 +550,7 @@ class Log(collections.deque):
 
         :return: List of log entries
         """
-        return list(self)[-number:]
+        return list(self)[:number]
 
     def export(self, number):
         """
@@ -913,9 +1066,7 @@ class ShngMemLogHandler(logging.StreamHandler):
         self._cache = cache
         self._maxlen = maxlen
         # save cache files in var/log/cache directory
-        cache_directory = os.path.join(
-            logs_instance._sh.get_config_dir(DIR_VAR), 'log' + os.path.sep, 'cache' + os.path.sep
-        )
+        cache_directory = os.path.join(logs_instance._sh.get_vardir(), 'log' + os.path.sep, 'cache' + os.path.sep)
         if cache is True:
             if not os.path.isdir(cache_directory):
                 os.makedirs(cache_directory)
@@ -938,7 +1089,8 @@ class ShngMemLogHandler(logging.StreamHandler):
         # logs_instance.logger.info(f"ShngMemLogHandler.emit() #2: self={self}, handlers={logging._handlers.data}")
         try:
             self.format(record)
-            timestamp = datetime.datetime.fromtimestamp(record.created, self._shtime.tzinfo())
+            tzinfo = self._shtime.tzinfo() if self._shtime is not None else datetime.timezone.utc
+            timestamp = datetime.datetime.fromtimestamp(record.created, tzinfo)
             self._log.add([timestamp, record.threadName, record.levelname, record.message])
         except Exception:
             self.handleError(record)

@@ -15,12 +15,14 @@
   <line x1="60" y1="96" x2="280" y2="96" stroke="#dde" stroke-width="1"/>
   <!-- id PK -->
   <rect x="60" y="96" width="220" height="28" fill="#edf3ff"/>
-  <text x="80" y="115" font-size="10" font-weight="bold" fill="#2a5db0">id</text>
-  <text x="170" y="115" text-anchor="middle" font-size="10" fill="#555">INTEGER  PK  AUTO</text>
+  <text x="80" y="112" font-size="10" font-weight="bold" fill="#2a5db0">id</text>
+  <text x="170" y="112" text-anchor="middle" font-size="10" fill="#555">INTEGER  PK  AUTO</text>
+  <text x="170" y="122" text-anchor="middle" font-size="7.5" fill="#888">explicit AUTO_INCREMENT on MySQL/MariaDB (v8)</text>
 
   <line x1="60" y1="124" x2="280" y2="124" stroke="#eee" stroke-width="1"/>
-  <text x="80" y="143" font-size="10" fill="#333">name</text>
-  <text x="170" y="143" text-anchor="middle" font-size="10" fill="#555">VARCHAR(255)</text>
+  <text x="80" y="140" font-size="10" fill="#333">name</text>
+  <text x="170" y="140" text-anchor="middle" font-size="10" fill="#555">VARCHAR(1024)</text>
+  <text x="170" y="150" text-anchor="middle" font-size="7.5" fill="#888">255 + unbounded on sqlite (v9-11 widen MySQL/MariaDB only)</text>
 
   <line x1="60" y1="152" x2="280" y2="152" stroke="#eee" stroke-width="1"/>
   <text x="80" y="171" font-size="10" fill="#333">time</text>
@@ -45,7 +47,7 @@
   <!-- indexes note -->
   <line x1="60" y1="296" x2="280" y2="296" stroke="#dde" stroke-width="1"/>
   <text x="170" y="313" text-anchor="middle" font-size="9" fill="#888">UNIQUE INDEX (id)</text>
-  <text x="170" y="328" text-anchor="middle" font-size="9" fill="#888">INDEX (name)</text>
+  <text x="170" y="328" text-anchor="middle" font-size="9" fill="#888">INDEX (name) — name(191) prefix on MySQL/MariaDB</text>
 
   <!-- ── {log} table ── -->
   <rect x="400" y="50" width="240" height="340" rx="6" fill="#fff" stroke="#34a853" stroke-width="2"/>
@@ -89,7 +91,7 @@
   <!-- val_quality — highlighted as new -->
   <rect x="400" y="292" width="240" height="28" fill="#fff3cd"/>
   <text x="420" y="311" font-size="10" font-weight="bold" fill="#9c6e00">val_quality</text>
-  <text x="530" y="311" text-anchor="middle" font-size="10" fill="#555">TINYINT  DEFAULT 0  ★ new</text>
+  <text x="530" y="311" text-anchor="middle" font-size="10" fill="#555">TINYINT  DEFAULT 0</text>
 
   <!-- indexes note -->
   <line x1="400" y1="320" x2="640" y2="320" stroke="#dde" stroke-width="1"/>
@@ -107,5 +109,5 @@
 
   <!-- val_quality legend -->
   <rect x="60" y="380" width="560" height="30" rx="4" fill="#fff3cd" stroke="#f9ab00" stroke-width="1"/>
-  <text x="340" y="400" text-anchor="middle" font-size="10" fill="#9c6e00">★  val_quality: 0 = valid measurement (default, all legacy rows)  ·  1 = no-data gap (excluded from aggregations)</text>
+  <text x="340" y="400" text-anchor="middle" font-size="10" fill="#9c6e00">val_quality: 0 = valid measurement (default)  ·  1 = no-data gap (all val_* NULL, excluded from aggregations)</text>
 </svg>

@@ -290,7 +290,9 @@ class DT_tuple(Datatype):
 
 class DT_bytes(Datatype):
     def get_send_data(self, data, **kwargs):
-        return bytes(data)
+        if isinstance(data, (bytes, bytearray)):
+            return bytes(data)
+        return bytes(str(data), 'utf-8')
 
     def get_shng_data(self, data, type=None, **kwargs):
         if type is None:
@@ -300,7 +302,9 @@ class DT_bytes(Datatype):
 
 class DT_bytearray(Datatype):
     def get_send_data(self, data, **kwargs):
-        return bytearray(data)
+        if isinstance(data, (bytes, bytearray)):
+            return bytearray(data)
+        return bytearray(str(data), 'utf-8')
 
     def get_shng_data(self, data, type=None, **kwargs):
         if type is None:

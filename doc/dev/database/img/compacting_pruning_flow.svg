@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1780 1174" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1780" height="1174" fill="#f9f9f9"/>
+
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L9,3.5 z" fill="#555"/>
+    </marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/>
+    </marker>
+  </defs>
+
+  <text x="890.0" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Compacting / Pruning — remove_older_than_maxage()</text>
+  <rect x="610.0" y="44" width="560" height="59" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="890.0" y="62" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">Scheduler: every removeold_cycle seconds</text>
+  <text x="890.0" y="77" text-anchor="middle" font-size="9" fill="#555">(registered only when NOT timescale_native_aggregation)</text>
+  <line x1="890.0" y1="103" x2="890.0" y2="125" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="540.0" y="125" width="700" height="32" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="890.0" y="144.33333333333334" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">Guards: lock_remove_older set? DB not connected? another thread already running?</text>
+  <line x1="890.0" y1="157" x2="890.0" y2="179" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="1240.0" y1="141.0" x2="1580" y2="141.0" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="1580" y="111.5" width="140" height="59" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="1650.0" y="129.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#555555">any true</text>
+  <text x="1650.0" y="144.5" text-anchor="middle" font-size="8.5" fill="#555">skip this cycle</text>
+  <rect x="640.0" y="179" width="500" height="32" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="890.0" y="198.33333333333334" text-anchor="middle" font-size="10" font-weight="bold" fill="#555555">if remove_orphan: remove_orphan_items()</text>
+  <line x1="890.0" y1="211" x2="890.0" y2="233" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="570.0" y="233" width="640" height="59" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="890.0" y="251" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">Fill worklist if empty</text>
+  <text x="890.0" y="266" text-anchor="middle" font-size="9" fill="#555">default_maxage==0 → items_with_maxage, else → _handled_items</text>
+  <line x1="890.0" y1="292" x2="890.0" y2="314" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="1210.0" y1="262.5" x2="1580" y2="262.5" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="1580" y="233.0" width="140" height="59" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="1650.0" y="251.0" text-anchor="middle" font-size="9" font-weight="bold" fill="#555555">still empty</text>
+  <text x="1650.0" y="266.0" text-anchor="middle" font-size="8.5" fill="#555">nothing to do</text>
+  <rect x="640.0" y="314" width="500" height="59" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="890.0" y="332" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">item = worklist.pop(0); resolve item_id</text>
+  <text x="890.0" y="347" text-anchor="middle" font-size="8.5" fill="#555">self.id(item, create=False) — no id → log, return</text>
+  <line x1="890.0" y1="373" x2="890.0" y2="395" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="660.0" y="395" width="460" height="32" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="890.0" y="414.5" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#9c6e00">time_end = get_maxage_ts(item)</text>
+  <line x1="890.0" y1="427" x2="890.0" y2="449" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="1120.0" y1="411.0" x2="1550" y2="411.0" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="1550" y="381.5" width="170" height="59" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="1635.0" y="399.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#555555">None</text>
+  <text x="1635.0" y="414.5" text-anchor="middle" font-size="8.5" fill="#555">invalid maxage, return</text>
+  <rect x="660.0" y="449" width="460" height="32" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="890.0" y="468.5" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#9c6e00">action = _maxage_action_for(item)</text>
+  <line x1="890.0" y1="481" x2="890.0" y2="503" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="890.0" y="499" text-anchor="middle" font-size="9.5" fill="#888">action == 'delete'  →  delete path (left)                    action != 'delete'  →  _compact_maxage() (right)</text>
+  <rect x="60.0" y="519" width="560" height="73" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="340.0" y="537" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">database: init  &amp;  deletion would empty the log?</text>
+  <text x="340.0" y="552" text-anchor="middle" font-size="8.5" fill="#555">yes → find new_must_keep_timestamp via readLatestLog(),</text>
+  <text x="340.0" y="566" text-anchor="middle" font-size="8.5" fill="#555">      push time_end back to just before it (preserve last value)</text>
+  <line x1="340.0" y1="592" x2="340.0" y2="614" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="60.0" y="614" width="560" height="32" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="340.0" y="633.3333333333334" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">count = readLogCount(item_id, time_end=timestamp_end-1)</text>
+  <line x1="340.0" y1="646" x2="340.0" y2="668" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="60.0" y="668" width="560" height="32" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="340.0" y="687.5" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#9c6e00">count &gt; max_delete_logentries ?</text>
+  <line x1="340.0" y1="700" x2="340.0" y2="722" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="200.0" y1="700" x2="200.0" y2="716" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="480.0" y1="700" x2="480.0" y2="716" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="200.0" y="712" text-anchor="middle" font-size="9" fill="#888">yes</text>
+  <text x="480.0" y="712" text-anchor="middle" font-size="9" fill="#888">no (elif count)</text>
+  <rect x="70.0" y="722" width="260" height="115" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="200.0" y="740" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">batched delete</text>
+  <text x="200.0" y="755" text-anchor="middle" font-size="8.5" fill="#555">DELETE ... ORDER BY time</text>
+  <text x="200.0" y="769" text-anchor="middle" font-size="8.5" fill="#555">LIMIT max_delete_logentries</text>
+  <text x="200.0" y="783" text-anchor="middle" font-size="8.5" fill="#555">(batched — bounds lock hold</text>
+  <text x="200.0" y="797" text-anchor="middle" font-size="8.5" fill="#555">time on a large backlog)</text>
+  <text x="200.0" y="811" text-anchor="middle" font-size="8.5" fill="#555">re-append item to worklist</text>
+  <rect x="350.0" y="722" width="260" height="101" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="480.0" y="740" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e7e34">direct delete</text>
+  <text x="480.0" y="755" text-anchor="middle" font-size="8.5" fill="#555">deleteLog(item_id,</text>
+  <text x="480.0" y="769" text-anchor="middle" font-size="8.5" fill="#555">time_end=timestamp_end)</text>
+  <text x="480.0" y="783" text-anchor="middle" font-size="8.5" fill="#555">(single delete — the whole</text>
+  <text x="480.0" y="797" text-anchor="middle" font-size="8.5" fill="#555">eligible range fits)</text>
+  <line x1="70.0" y1="837" x2="70.0" y2="857" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="-60.0" y="857" width="260" height="87" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="70.0" y="875" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#b31412">on failure</text>
+  <text x="70.0" y="890" text-anchor="middle" font-size="8.5" fill="#555">TimeoutError / Exception →</text>
+  <text x="70.0" y="904" text-anchor="middle" font-size="8.5" fill="#555">requeue item, return</text>
+  <text x="70.0" y="918" text-anchor="middle" font-size="8.5" fill="#555">(retry next cycle)</text>
+  <rect x="900.0" y="519" width="560" height="32" rx="5" fill="#ffffff" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="1180.0" y="538.5" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#2a5db0">_compact_maxage() loop — while intervals_done &lt; max_aggregate_intervals:</text>
+  <line x1="1180.0" y1="551" x2="1180.0" y2="573" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="910.0" y="573" width="540" height="59" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="1180.0" y="591" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#2a5db0">oldest = LogStore.oldest_time(item_id, exclude_duration=interval_ms)</text>
+  <text x="1180.0" y="606" text-anchor="middle" font-size="8.5" fill="#555">connection error → stalled, break (connection_failed)</text>
+  <line x1="1180.0" y1="632" x2="1180.0" y2="654" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="910.0" y="654" width="540" height="32" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="1180.0" y="673.3333333333334" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">oldest is None,  or  interval_end &gt; cutoff ?</text>
+  <line x1="1180.0" y1="686" x2="1180.0" y2="708" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="1440.0" y1="670.0" x2="1530" y2="670.0" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="1530" y="633.5" width="190" height="73" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="1625.0" y="651.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#555555">yes</text>
+  <text x="1625.0" y="666.5" text-anchor="middle" font-size="8.5" fill="#555">break — nothing left, or</text>
+  <text x="1625.0" y="680.5" text-anchor="middle" font-size="8.5" fill="#555">not old enough yet</text>
+  <rect x="910.0" y="708" width="540" height="73" rx="5" fill="#e8f0fe" stroke="#4a86e8" stroke-width="1.5"/>
+  <text x="1180.0" y="726" text-anchor="middle" font-size="10" font-weight="bold" fill="#2a5db0">Compute this interval's value  (one transaction)</text>
+  <text x="1180.0" y="741" text-anchor="middle" font-size="8.5" fill="#555">edge_value() for first/last, else aggregate() —</text>
+  <text x="1180.0" y="755" text-anchor="middle" font-size="8.5" fill="#555">clipped to interval_end if the current value is still open and live</text>
+  <line x1="1180.0" y1="781" x2="1180.0" y2="803" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="910.0" y="803" width="540" height="32" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="1180.0" y="822.3333333333334" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c6e00">value is None but interval has valid rows?</text>
+  <line x1="1180.0" y1="835" x2="1180.0" y2="857" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="1440.0" y1="819.0" x2="1510" y2="819.0" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="1510" y="782.5" width="210" height="73" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="1615.0" y="800.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#b31412">yes</text>
+  <text x="1615.0" y="815.5" text-anchor="middle" font-size="8.5" fill="#555">warn, stalled=True, break —</text>
+  <text x="1615.0" y="829.5" text-anchor="middle" font-size="8.5" fill="#555">leave this interval raw</text>
+  <rect x="910.0" y="857" width="540" height="73" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="1180.0" y="875" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e7e34">delete_range() then insert() the aggregate row</text>
+  <text x="1180.0" y="890" text-anchor="middle" font-size="8.5" fill="#555">same transaction; delete before insert avoids a</text>
+  <text x="1180.0" y="904" text-anchor="middle" font-size="8.5" fill="#555">timestamp collision with the interval's own raw row</text>
+  <line x1="1180.0" y1="930" x2="1180.0" y2="952" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="1440.0" y1="893.5" x2="1510" y2="893.5" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <rect x="1510" y="864.0" width="210" height="59" rx="5" fill="#fce8e6" stroke="#d93025" stroke-width="1.5"/>
+  <text x="1615.0" y="882.0" text-anchor="middle" font-size="9" font-weight="bold" fill="#b31412">on failure</text>
+  <text x="1615.0" y="897.0" text-anchor="middle" font-size="8.5" fill="#555">connection_failed=True, break</text>
+  <rect x="900.0" y="952" width="560" height="87" rx="5" fill="#e8eaed" stroke="#999999" stroke-width="1.5"/>
+  <text x="1180.0" y="970" text-anchor="middle" font-size="10" font-weight="bold" fill="#555555">After the loop: requeue decision</text>
+  <text x="1180.0" y="985" text-anchor="middle" font-size="8.5" fill="#555">connection_failed → requeue unconditionally</text>
+  <text x="1180.0" y="999" text-anchor="middle" font-size="8.5" fill="#555">else if not stalled and more remains past cutoff → requeue</text>
+  <text x="1180.0" y="1013" text-anchor="middle" font-size="8.5" fill="#555">(a stalled interval blocks everything behind it — no requeue)</text>
+  <line x1="1180.0" y1="1039" x2="1180.0" y2="1039" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="340.0" y1="954" x2="890.0" y2="1069" stroke="#555" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <line x1="1180.0" y1="1039" x2="890.0" y2="1069" stroke="#555" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <rect x="610.0" y="1075" width="560" height="59" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="890.0" y="1093" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#1e7e34">readLogCount(item_id) → update _item_logcount</text>
+  <text x="890.0" y="1108" text-anchor="middle" font-size="9" fill="#555">self._webdata[...]['logcount'] updated too</text>
+</svg>

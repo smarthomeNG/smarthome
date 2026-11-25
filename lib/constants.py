@@ -118,8 +118,12 @@ ATTRIBUTE_SEPARATOR = ';'
 KEY_STRUCT = 'struct'
 KEY_REMARK = 'remark'
 
+# base text attributes that take part in attribute references (``..:attr``, ``{..:attr}``)
+REF_BASE_KEYS = (KEY_NAME, KEY_DESCRIPTION, KEY_REMARK)
+
 # global config params for plugins
 KEY_INSTANCE = 'instance'
+INSTANCE_DEFAULT = 'default'  # value of 'instance' that names the default (unnamed) plugin instance
 KEY_DEFAULT_INSTANCE = 'default_instance'
 KEY_WEBIF_PAGELENGTH = 'webif_pagelength'
 KEY_CLASS_PATH = 'class_path'
@@ -133,6 +137,15 @@ CACHE_FORMAT = CACHE_PICKLE
 PLUGIN_PARSE_ITEM = 'parse_item'
 PLUGIN_PARSE_LOGIC = 'parse_logic'
 PLUGIN_REMOVE_ITEM = 'remove_item'
+PLUGIN_RENAME_ITEM = 'rename_item'
+
+# valid values of the 'type' attribute in the metadata (plugin.yaml) of a plugin
+PLUGIN_TYPES = ('gateway', 'interface', 'protocol', 'system', 'web')
+
+# valid values of the 'state' attribute in the metadata (plugin.yaml) of a plugin
+PLUGIN_STATES = ('develop', 'development', 'ready', 'qa-passed', 'deprecated', 'defunct')
+# states of plugins that are removed with the next minor or major release
+PLUGIN_STATES_TO_BE_REMOVED = ('deprecated', 'defunct')
 
 # file extensions
 YAML_FILE = '.yaml'

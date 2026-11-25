@@ -4,20 +4,20 @@
 .. role:: bluesup
 .. role:: redsup
 
-========================================
-SmartHomeNG als Dienst :bluesup:`update`
-========================================
+======================
+SmartHomeNG als Dienst
+======================
 
 .. contents:: Schritte der Installation
    :local:
 
 |
 
-Einrechten des Dienstes
+Einrichten des Dienstes
 =======================
 
 Um SmartHomeNG auf einer älteren Version als Debian 12 (bookworm) als Dienst zu betreiben muss eine Startup-Datei
-für **systemd** erstellt werden. Für Debiam 12 oder neuer, bitte der Beschreibung im folgenden Abschnitt
+für **systemd** erstellt werden. Für Debian 12 oder neuer, bitte der Beschreibung im folgenden Abschnitt
 (Nutzung eines virtuellen Environments) folgen.
 
 .. warning::

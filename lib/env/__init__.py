@@ -80,7 +80,7 @@ def kn_to_kmh(speed: float) -> float:
         _logger.error("kn_to_kmh: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
-    return speed * _nautical_mile
+    return speed * _nautical_mile / 1000
 
 
 def kmh_to_kn(speed: float) -> float:
@@ -94,7 +94,7 @@ def kmh_to_kn(speed: float) -> float:
         _logger.error("kmh_to_kn: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(speed)}))
         return -1
 
-    return speed / _nautical_mile
+    return speed / (_nautical_mile / 1000)
 
 
 def ms_to_kmh(speed: float) -> float:
@@ -263,7 +263,7 @@ def miles_to_meter(distance):
         _logger.error("miles_to_meter: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(distance)}))
         return -1
 
-    return miles * _mile
+    return distance * _mile
 
 
 def nauticalmiles_to_meter(distance):
@@ -277,7 +277,7 @@ def nauticalmiles_to_meter(distance):
         _logger.error("nauticalmiles_to_meter: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(distance)}))
         return -1
 
-    return miles * _nautical_mile
+    return distance * _nautical_mile
 
 
 def meter_to_miles(distance):
@@ -291,7 +291,7 @@ def meter_to_miles(distance):
         _logger.error("meter_to_miles: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(distance)}))
         return -1
 
-    return meter / _mile
+    return distance / _mile
 
 
 def meter_to_nauticalmiles(distance):
@@ -305,7 +305,7 @@ def meter_to_nauticalmiles(distance):
         _logger.error("meter_to_nauticalmiles: " + translate("Parameter must be of type float or int but is of type {typ}", {'typ': type(distance)}))
         return -1
 
-    return meter / _nautical_mile
+    return distance / _nautical_mile
 
 
 """
@@ -446,10 +446,10 @@ def location_name(lat: Union[float, str], lon: Union[float, str]) -> str:
         else:
             result = ''
 
-    if  json_obj['address'].get('suburb', None) is not None:
-        if result != '':
-            result += ', '
-        result += json_obj['address']['suburb']
+        if json_obj['address'].get('suburb', None) is not None:
+            if result != '':
+                result += ', '
+            result += json_obj['address']['suburb']
 
     LAT_LON = str(lat) + '/' + str(lon)
     LOCATION_NAME = result
@@ -489,6 +489,10 @@ def location_address(lat: Union[float, str], lon: Union[float, str]) -> dict:
         return ''
 
     #self._logger.notice(f"{json_obj['display_name']}")
+
+    if 'address' not in json_obj:
+        _logger.warning(f"location_address: no 'address' in json response '{json_obj}' for request '{request_str}'")
+        return {}
 
     return json_obj['address']
 

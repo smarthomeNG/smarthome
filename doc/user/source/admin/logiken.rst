@@ -2,9 +2,12 @@
 .. index:: Admin GUI; Logiken
 .. index:: Logiken; Admin GUI
 
-=======
-Logiken
-=======
+.. role:: greensup
+.. role:: redsup
+
+==========================
+Logiken :greensup:`Update`
+==========================
 
 Liste der Logiken
 =================
@@ -40,14 +43,24 @@ Auf einem 2. Tab kann eine Liste der Systemlogiken eingesehen werden.
 Logiken können in dieser Ansicht gruppiert werden. Wenn mindestens eine Logik einer Gruppe
 zugeordnet wird, ändert sich die Ansicht von einer flachen Liste, in eine Liste aufklappbarer Gruppen.
 
+.. index:: Logiken; Gruppen
+.. index:: logic_groups.yaml
+
+Die Gruppen werden auf der Seite **Logik Gruppen** verwaltet. Dort können Gruppen angelegt, mit Titel und
+Beschreibung versehen, gelöscht oder in eine andere Gruppe eingegliedert werden; außerdem können Logiken einer Gruppe
+zugeordnet oder aus ihr entfernt werden. Die Definitionen der Gruppen werden in der Datei ``etc/logic_groups.yaml``
+gespeichert, die Zuordnung einer Logik zu ihren Gruppen im Parameter ``logic_groupname`` der Logik in der
+``etc/logic.yaml``. Wird in der ``etc/logic.yaml`` eine Gruppe verwendet, die nicht definiert ist, zeigt die Liste der
+Logiken einen Hinweis mit den betroffenen Gruppennamen an.
+
 .. image:: assets/logics-grouped.jpg
    :class: screenshot
 
 
 |
 
-Logik Editor
-============
+Logik Editor :greensup:`Update`
+===============================
 
 Der Logik Editor ermöglicht es Logiken zu erstellen oder zu ändern, sowie die Parameter zu konfigurieren, welche
 die Ausführung der Logik steuern. Der Logik Editor wird durch einen Klick auf den entsprechenden Dateinamen in
@@ -63,8 +76,8 @@ Das Tab mit dem Code Editor ermöglicht, den Python Code der Logik zu erfassen/z
    :class: screenshot
 
 
-Parameter Editor
-----------------
+Parameter Editor :greensup:`Update`
+-----------------------------------
 
 Das Tab mit den Parametern ermöglicht die Konfiguration der Ausführung der Logik. Hier können verschiedene Trigger
 für die Logik konfiguriert werden.
@@ -81,7 +94,8 @@ Hier kann eine Beschreibung der Logik angegeben werden, die dann in der Liste de
 Gruppe(n)
 ~~~~~~~~~
 
-Wenn mehrere Einträge als Liste eingegeben werden sollen, so sind die Einträge durch ein | Zeichen zu trennen.
+Hier werden die Gruppen ausgewählt, denen die Logik angehört. Nach Eingabe der ersten Zeichen werden die
+definierten Gruppen zur Auswahl angeboten.
 
 
 
@@ -95,6 +109,22 @@ Crontab
 ~~~~~~~
 
 Wenn mehrere Einträge als Liste eingegeben werden sollen, so sind die Einträge durch ein | Zeichen zu trennen.
+
+
+Runtime warning / Runtime cancel :redsup:`neu`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``runtime_warn``: Sekunden, die ein Lauf der Logik dauern darf, bevor eine Warnung in das Log der Logik geschrieben
+wird (danach erneut bei jeder Verdopplung der Laufzeit). Bei leerem Feld gilt ``runtime_warn`` aus
+``smarthome.yaml`` (Standard: 120), ``0`` schaltet die Warnung für diese Logik ab. Für Logiken, die absichtlich lange
+laufen (z.B. mit ``time.sleep``), kann hier ein höherer Wert eingetragen werden.
+
+``runtime_cancel``: Sekunden, nach denen ein Lauf automatisch abgebrochen wird. Bei leerem Feld wird nie automatisch
+abgebrochen.
+
+Beide Parameter werden in ``logic.yaml`` gespeichert, siehe
+:doc:`Standardparameter von Logiken </referenz/logiken/logiken_standardparameter>`. Sie gelten für die geladene Logik
+nach dem Speichern mit Neuladen der Logik.
 
 
 Watch Items

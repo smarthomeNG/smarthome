@@ -16,9 +16,11 @@ for i in sys.path:
     print(i)
 
 import bin.shngversion as shngversion
+from lib.utils import Version
 import plugins as pluginsversion
 
 import datetime
+import logging
 import locale
 
 try:
@@ -61,7 +63,7 @@ templates_path = ['_templates']
 # Markdown Support via MyST
 # without the following, we will get warnings from Parsing old Readme.md as described in
 # https://myst-parser.readthedocs.io/en/latest/using/howto.html#suppress-warnings
-suppress_warnings = ['myst.header']
+suppress_warnings = ['myst.header', 'sphinx_autodoc_typehints.forward_reference']
 
 # Not used any more
 # from recommonmark.parser import CommonMarkParser
@@ -96,7 +98,7 @@ shversion = shngversion.get_shng_main_version()
 # General information about the project.
 # project = u'SmartHomeNG'
 project = 'Dokumentation '
-copyright = '2016-2025 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
+copyright = '2016-2026 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The full version, including alpha/beta/rc tags.
 # release = '1.3a dev (as of 13. October 2017)'  13. October 2017 is replaced by makefile with a date in the form of '2. September 2017'
@@ -122,14 +124,15 @@ else:
     tags.add('develop_branch')
 # release = sphinx_bootstrap_theme.__version__
 
-plgrelease = shngversion.get_shng_plugins_version()
+plgversion = shngversion.get_shng_plugins_version()
+plgrelease = plgversion
 plgbranch = pluginsversion.plugin_branch()
 if plgbranch != 'master':
-    copyright = '2016-2025 SmartHomeNG Team  -  ACHTUNG: Dokumentation zum Develop Branch - Work in Progress'
+    copyright = '2016-2026 SmartHomeNG Team  -  ACHTUNG: Dokumentation zum Develop Branch - Work in Progress'
     plgrelease += ' ' + plgbranch
 version = plgrelease
 
-if plgrelease > shversion:
+if Version.compare(plgversion, shversion, '>'):
     project += plgrelease
 else:
     project += shversion
@@ -163,6 +166,9 @@ exclude_patterns = [
     '**/_pv_*',
     '**/pv_*',
     '**/._*md',
+    '**/.pytest*',
+    '**/node_modules/**',
+    'libsrc/**',
 ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
@@ -191,6 +197,13 @@ pygments_style = 'sphinx'
 def setup(app):
     # deprecated in Sphinx 4: app.add_stylesheet('custom.css')
     app.add_css_file('custom.css')
+    # priority < 200 (searchtools.js's own) so our Scorer override wins the "already defined" check
+    app.add_js_file('search_scorer.js', priority=100)
+
+    # Sphinx logs 'document is referenced in multiple toctrees' at info level, which suppress_warnings can't filter
+    logging.getLogger('sphinx.sphinx.environment').addFilter(
+        lambda record: getattr(record, 'subtype', '') != 'multiple_toc_parents'
+    )
 
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -200,7 +213,7 @@ html_theme = 'sphinx_rtd_theme'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {'collapse_navigation': False, 'display_version': False, 'navigation_depth': 5}
+html_theme_options = {'collapse_navigation': False, 'navigation_depth': 5}
 
 
 # Add any paths that contain custom themes here, relative to this directory.

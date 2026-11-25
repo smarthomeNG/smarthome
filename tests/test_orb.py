@@ -24,6 +24,7 @@ import math
 import sys
 import os
 import unittest
+from unittest import mock
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -45,8 +46,36 @@ try:
 except ImportError:
     HAS_SKYFIELD = False
 
+import lib.orb as orb_module
 from lib.orb import Orb
 from lib.shtime import Shtime
+
+# tests/requirements.txt installs skyfield unconditionally, so every
+# *Skyfield/*SkyfieldCached test class below runs for real - the first
+# Orb(backend='skyfield') call would otherwise trigger _SkyfieldBackend.
+# _ensure_loaded() downloading the full de421.bsp (~17MB) from NASA/NAIF.
+# unittests.yml runs a 5-way Python version matrix in parallel, so a single
+# push/PR fired up to 5 simultaneous downloads of the same file from GitHub
+# Actions' shared IP ranges - enough to get rate-limited/blocked, failing CI
+# for a reason unrelated to the actual code change.
+#
+# Fix: seed _SkyfieldBackend's shared ephemeris/timescale class attributes
+# directly from a small local fixture before any test runs. _ensure_loaded()
+# early-returns once cls._planets is set, so the download path is never
+# reached - no changes needed in lib/orb.py itself, and this never touches a
+# developer's real var/cache/skyfield-data/. _SkyfieldCachedBackend inherits
+# the same class attributes, so this covers both backends.
+if HAS_SKYFIELD:
+    from skyfield.api import load as _skyfield_load
+    from skyfield.api import load_file as _skyfield_load_file
+
+    from lib.orb import _SkyfieldBackend
+
+    _SKYFIELD_FIXTURE = os.path.join(os.path.dirname(__file__), 'resources', 'skyfield', 'de421_excerpt.bsp')
+
+    def setUpModule():
+        _SkyfieldBackend._planets = _skyfield_load_file(_SKYFIELD_FIXTURE)
+        _SkyfieldBackend._ts = _skyfield_load.timescale()
 
 # ---------------------------------------------------------------------------
 # Helper
@@ -89,6 +118,36 @@ def _make_shtime(tz='UTC'):
     st = Shtime(_Sh())
     st.set_tz(tz)
     return st
+
+
+class TestResolveBackend(unittest.TestCase):
+    """lib.orb.resolve_backend(): configured name -> usable backend name (ephem fallback)."""
+
+    def test_registered_backend_returned_unchanged(self):
+        with mock.patch.dict(orb_module._BACKENDS, {'ephem': object, 'skyfield': object}, clear=True):
+            self.assertEqual(orb_module.resolve_backend('skyfield'), 'skyfield')
+
+    def test_unavailable_skyfield_falls_back_to_ephem(self):
+        with mock.patch.dict(orb_module._BACKENDS, {'ephem': object}, clear=True):
+            with self.assertLogs('lib.orb', level='WARNING') as logs:
+                self.assertEqual(orb_module.resolve_backend('skyfield-cached'), 'ephem')
+        self.assertIn('ephem', logs.output[0])
+
+    def test_unavailable_ephem_falls_back_to_skyfield(self):
+        with mock.patch.dict(orb_module._BACKENDS, {'skyfield': object, 'skyfield-cached': object}, clear=True):
+            with self.assertLogs('lib.orb', level='WARNING') as logs:
+                self.assertEqual(orb_module.resolve_backend('ephem'), 'skyfield')
+        self.assertIn('skyfield', logs.output[0])
+
+    def test_unknown_name_falls_back_to_ephem(self):
+        with mock.patch.dict(orb_module._BACKENDS, {'ephem': object}, clear=True):
+            with self.assertLogs('lib.orb', level='WARNING'):
+                self.assertEqual(orb_module.resolve_backend('nonexistent'), 'ephem')
+
+    def test_no_backend_available_returns_none(self):
+        with mock.patch.dict(orb_module._BACKENDS, {}, clear=True):
+            with self.assertLogs('lib.orb', level='WARNING'):
+                self.assertIsNone(orb_module.resolve_backend('skyfield'))
 
 
 @unittest.skipUnless(HAS_EPHEM, 'pyephem not installed')
@@ -312,6 +371,14 @@ class TestMoon(unittest.TestCase):
 
     def setUp(self):
         self.shtime = _make_shtime()
+        # phase()/light() take no dt param - they always compute against
+        # self.shtime.utcnow(), unlike every other method in this suite which
+        # accepts an explicit dt. Freeze it to a fixed date (same convention
+        # as the rest of the suite) rather than the real wall clock: against
+        # the skyfield backend this also keeps the query inside the fixed
+        # date range tests/resources/skyfield/de421_excerpt.bsp covers,
+        # instead of silently regressing as "now" drifts past it.
+        self.shtime.utcnow = lambda: _SUMMER_SOLSTICE
         self.moon = Orb('moon', BERLIN_LON, BERLIN_LAT, BERLIN_ELEV, backend=self.BACKEND)
 
     def test_moon_rise_returns_datetime(self):
@@ -379,9 +446,9 @@ class TestCoordinateConversions(unittest.TestCase):
 class TestCoordinateConversionsUseConfiguredTz(unittest.TestCase):
     """Regression tests: unaware_datetime_to_utc/utc_to_local must use shng's
     configured timezone (self.shtime.tzinfo()), not whatever the OS-level
-    timezone happens to be. force_os_tz creates a genuine mismatch so these
-    actually exercise the bug rather than relying on OS/configured tz happening
-    to agree in the test environment."""
+    timezone happens to be. force_os_tz creates a genuine mismatch so a
+    config/OS tz disagreement is actually exercised, rather than relying on
+    them happening to agree in the test environment."""
 
     def setUp(self):
         self.shtime = _make_shtime('Pacific/Honolulu')
@@ -500,10 +567,10 @@ class TestMoonRiseSetSkyfieldCached(TestMoonRiseSet):
 # ===========================================================================
 # High-latitude (midnight sun / polar night) regression tests
 #
-# Orb.rise()/set() with doff=0 (the default) used to crash with an uncaught
-# ephem.AlwaysUpError/NeverUpError at any location where the sun's plain
-# horizon crossing genuinely does not occur on the given day. _avoid_neverup
-# only clamps non-zero degree offsets, so this path had no protection.
+# Orb.rise()/set() with doff=0 (the default) must not crash with an
+# uncaught ephem.AlwaysUpError/NeverUpError at any location where the
+# sun's plain horizon crossing genuinely does not occur on the given day -
+# _avoid_neverup only clamps non-zero degree offsets.
 #
 # The skyfield variant exercises the *different* mechanism that backend uses
 # to signal "no event": checking the find_risings()/find_settings() events
@@ -571,9 +638,9 @@ class TestHighLatitudeNeverUpSkyfieldCached(TestHighLatitudeNeverUp):
 # ===========================================================================
 # Correctness: the cached backend must agree with the uncached one exactly.
 # The cache batches a whole year of events and bisects into it instead of
-# running a fresh search per call - these tests catch the bug we found while
-# building it (a circumpolar query returning the next *real* event months
-# away instead of None - see _SkyfieldCachedBackend.SAME_CIRCUIT_DAYS).
+# running a fresh search per call - a circumpolar query must return None,
+# not the next *real* event months away
+# (_SkyfieldCachedBackend.SAME_CIRCUIT_DAYS).
 # ===========================================================================
 
 
@@ -631,13 +698,11 @@ class TestSkyfieldCachedMatchesUncached(unittest.TestCase):
         self.assertEqual(self.tromso_sun.set(dt=_SPRING_EQUINOX), self.tromso_sun_cached.set(dt=_SPRING_EQUINOX))
 
     def test_query_at_cache_window_boundary_is_not_a_false_none(self):
-        # Regression test: a query landing exactly at the cached window's end
-        # must not be mistaken for "confirmed no event" - that's just where the
-        # search stopped, not proof nothing exists just beyond it (found via
-        # 1000 sequential daily queries at Berlin - never circumpolar - wrongly
-        # returning None right at each yearly cache-refill boundary). Use a
-        # short CACHE_HORIZON_DAYS to hit the boundary deterministically
-        # without iterating a full year.
+        # A query landing exactly at the cached window's end must not be
+        # mistaken for "confirmed no event" - that's just where the search
+        # stopped, not proof nothing exists just beyond it. Use a short
+        # CACHE_HORIZON_DAYS to hit the boundary deterministically without
+        # iterating a full year.
         self.sun_cached._backend.CACHE_HORIZON_DAYS = 3
         self.sun_cached.rise(dt=_SUMMER_SOLSTICE)  # populates the cache, covered_end = +3 days
         boundary = _SUMMER_SOLSTICE + datetime.timedelta(days=3)

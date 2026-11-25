@@ -57,7 +57,7 @@ import lib.item.item
 import lib.item.items
 import lib.config
 from lib.item.items import Items
-from lib.item._logchange import log_on_change, get_rule, build_standardtext, build_text
+from lib.item._internal._logchange import log_on_change, get_rule, build_standardtext, build_text
 from tests.mock.core import MockSmartHome
 import tests.common as common
 

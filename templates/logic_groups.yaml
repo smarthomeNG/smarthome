@@ -1,5 +1,3 @@
-%YAML 1.1
----
 # Logic group definitions for SmartHomeNG
 # =========================================
 # Each top-level key is the group name (case-sensitive).
@@ -12,8 +10,8 @@
 # etc/logic.yaml via the 'logic_groupname' field on each logic entry,
 # not here.  Use the admin UI (Logics → Groups) to manage membership.
 #
-# This file is automatically created on first start by migrating any
-# group definitions previously stored in etc/admin.yaml.
+# On the first start SmartHomeNG copies this file to etc/logic_groups.yaml.
+# Group definitions of an older installation (etc/admin.yaml) are migrated instead.
 
 Beispiele:
     title: Beispiel Logiken für SmartHomeNG

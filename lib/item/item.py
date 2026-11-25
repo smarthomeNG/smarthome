@@ -109,20 +109,22 @@ from .helpers import (  # noqa - cast_foo methods are accessed via globals()
     cast_timestamp,
     cast_datetime,
 )
-from ._typehandler import TypeHandler, ListHandler, DictHandler, HANDLER_MAP  # noqa: F401
-from ._history import ItemHistory
-from ._logchange import log_on_change
-from ._eval import run_eval, run_on_xxx, run_on_update, run_on_change
-from ._hysteresis import run_hysteresis, get_hysteresis_state, get_hysteresis_data
-from ._pathresolution import (
+from ._internal._typehandler import TypeHandler, ListHandler, DictHandler, HANDLER_MAP  # noqa: F401
+from ._internal._history import ItemHistory
+from ._internal._instance import apply_effective_instance
+from ._internal._logchange import log_on_change
+from ._internal._eval import run_eval, run_on_xxx, run_on_update, run_on_change
+from ._internal._hysteresis import run_hysteresis, get_hysteresis_state, get_hysteresis_data
+from ._internal._pathresolution import (
     get_absolutepath as _get_absolutepath,
     get_stringwithabsolutepathes as _get_stringwithabsolutepathes,
     find_attribute as _find_attribute,
+    find_attribute_with_instance as _find_attribute_with_instance,
     split_destitem_from_value as _split_destitem_from_value,
     expand_relativepathes as _expand_relativepathes,
     get_attr as _get_attr_fn,
 )
-from ._autotimer import (
+from ._internal._autotimer import (
     get_attr_time as _get_attr_time,
     get_attr_value as _get_attr_value,
     get_items_from_string as _get_items_from_string,
@@ -131,12 +133,12 @@ from ._autotimer import (
     item_remove_timer as _item_remove_timer,
     item_autotimer as _item_autotimer,
 )
-from ._casting import (
+from ._internal._casting import (
     castvalue_to_itemtype as _castvalue_to_itemtype,
     cast_duration as _cast_duration,
     run_attribute_eval as _run_attribute_eval_fn,
 )
-from ._triggers import (
+from ._internal._triggers import (
     add_logic_trigger as _add_logic_trigger,
     remove_logic_trigger as _remove_logic_trigger,
     get_logic_triggers as _get_logic_triggers,
@@ -146,7 +148,7 @@ from ._triggers import (
     get_item_triggers as _get_item_triggers,
     get_hysteresis_item_triggers as _get_hysteresis_item_triggers,
 )
-from ._parsing import (
+from ._internal._parsing import (
     parse_eval_attribute as _parse_eval_attribute,
     parse_eval_trigger_list_attribute as _parse_eval_trigger_list_attribute,
     parse_hysteresis_input_attribute as _parse_hysteresis_input_attribute,
@@ -156,18 +158,23 @@ from ._parsing import (
     parse_autotimer_attribute as _parse_autotimer_attribute,
     build_trigger_condition_eval as _build_trigger_condition_eval,
     get_attribute_value as _get_attribute_value_fn,
+    apply_base_text as _apply_base_text,
     build_on_xx_list as _build_on_xx_list_fn,
     init_prerun as _init_prerun_fn,
+    check_item_name_collision as _check_item_name_collision,
 )
-from ._lifecycle import remove as _remove_item
-from ._navigation import return_parent_item as _return_parent_item, is_top_of_item_tree as _is_top_of_item_tree_fn
-from ._stackinfo import (
+from ._internal._lifecycle import remove as _remove_item
+from ._internal._navigation import (
+    return_parent_item as _return_parent_item,
+    is_top_of_item_tree as _is_top_of_item_tree_fn,
+)
+from ._internal._stackinfo import (
     get_class_from_frame as _get_class_from_frame,
     get_calling_item_from_frame as _get_calling_item_from_frame,
     get_stack_info as _get_stack_info,
 )
-from ._fade import fade as _fade
-from ._json import jsonvars as _jsonvars, to_json as _to_json
+from ._internal._fade import fade as _fade
+from ._internal._json import jsonvars as _jsonvars, to_json as _to_json
 
 _items_instance = None
 
@@ -223,12 +230,7 @@ class Item:
             _items_instance = smarthome.items
 
         self._sh = smarthome
-        self._use_conditional_triggers = False
-        try:
-            if self._sh._use_conditional_triggers.lower() == 'true':
-                self._use_conditional_triggers = True
-        except Exception:
-            pass
+        self._use_conditional_triggers = Utils.to_bool(getattr(self._sh, '_use_conditional_triggers', False), False)
 
         self.plugins = Plugins.get_instance()
         self.shtime = Shtime.get_instance()
@@ -240,60 +242,11 @@ class Item:
             self._sh.shng_status['details'] = str(items_count)  # Item Zähler übertragen
 
         self._filename = None
-        self._autotimer_time = None
-        self._autotimer_value = None
-        self._cycle_time = None
-        self._cycle_value = None
-        self._cache = False
-        self.cast = cast_bool
         self.__children = []
         self.conf = {}
-        self._crontab = None
-        self._enforce_updates = False
-        self._enforce_change = False
-
-        self._eval = None  # -> KEY_EVAL
-        self._eval_unexpanded = ''
-        self._eval_trigger = False
-        self._eval_on_trigger_only = False
-        self._trigger = None
-        self._trigger_unexpanded = []
-        self._trigger_condition_raw = []
-        self._trigger_condition = None
-
-        self._hysteresis_state_set = None  # is internally set, when the output value is set (e.g. for initialization)
-        self._hysteresis_input = None
-        self._hysteresis_input_unexpanded = None
-        self._hysteresis_upper_threshold = None
-        self._hysteresis_lower_threshold = None
-        self._hysteresis_upper_timer = None
-        self._hysteresis_lower_timer = None
-        self._hysteresis_upper_timer_active = False
-        self._hysteresis_lower_timer_active = False
-        self._hysteresis_active_timer_ends = None
-        self._hysteresis_items_to_trigger = []
-        self._hysteresis_log = False
-
-        self._on_update = None  # -> KEY_ON_UPDATE eval expression
-        self._on_change = None  # -> KEY_ON_CHANGE eval expression
-        self._on_update_dest_var = None  # -> KEY_ON_UPDATE destination var (list: only filled if '=' syntax is used)
-        self._on_change_dest_var = None  # -> KEY_ON_CHANGE destination var (list: only filled if '=' syntax is used)
-        self._on_update_unexpanded = []  # -> KEY_ON_UPDATE eval expression (with unexpanded item references)
-        self._on_change_unexpanded = []  # -> KEY_ON_CHANGE eval expression (with unexpanded item references)
-        self._on_update_dest_var_unexp = []  # -> KEY_ON_UPDATE destination var (with unexpanded item reference)
-        self._on_change_dest_var_unexp = []  # -> KEY_ON_CHANGE destination var (with unexpanded item reference)
-        self._log_change = None
-        self._log_change_logger = None
-        self._log_level_attrib = 'INFO'
-        self._log_level = None
-        self._log_level_name = None
-        self._log_mapping = {}
-        self._log_rules = {}
-        self._log_rules_cache = {}
-        self._log_text = None
         self._fading = False
-        self._fadingdetails = {}
         self._items_to_trigger = []
+        self._hysteresis_items_to_trigger = []
         self._history = ItemHistory(self.shtime.now())
         self._lock = threading.Condition()
         self.__logics_to_trigger = []
@@ -302,13 +255,8 @@ class Item:
         self.__parent = parent
         self._path = path
         self._sh = smarthome
-        self._threshold = False
-        self._threshold_data = [0, 0, False]
-        self._description = None
         self._type = None
-        self._struct = None
         self._value = None
-        self._remark = None
 
         self.property = Property(self)
         # history
@@ -331,12 +279,6 @@ class Item:
         else:
             self._change_logger = logger.debug
 
-        if not self._sh._ignore_item_collision:
-            if self._path.split('.')[-1] in _items_instance._item_methods:
-                logger.notice(
-                    f'Name of item {self._path} collides with Item class member. Unexpected behaviour might occur, renaming the item is recommended.'
-                )
-
         #############################################################
         # Initialize attribute assignment compatibility
         #############################################################
@@ -357,6 +299,201 @@ class Item:
                 ATTRIB_COMPAT_DEFAULT = ATTRIB_COMPAT_DEFAULT_FALLBACK
 
         self._filename = dict(config.items()).get('_filename', None)
+
+        self._apply_config(config)
+
+        #############################################################
+        # Child Items
+        #############################################################
+        for attr, value in config.items():
+            if isinstance(value, dict):
+                child_path = self._path + '.' + attr
+                if _check_item_name_collision(smarthome, [self], attr, child_path):
+                    continue
+                try:
+                    child = Item(smarthome, self, child_path, value)
+                except Exception as e:
+                    logger.exception('Item {}: problem creating: {}'.format(child_path, e))
+                else:
+                    vars(self)[attr] = child
+                    _items_instance.add_item(child_path, child)
+                    self.__children.append(child)
+
+        #############################################################
+        # Value
+        #############################################################
+        if self._value is None:
+            initial_value = False
+            self._value = ITEM_DEFAULTS[self._type]
+        else:
+            initial_value = True
+        try:
+            self._value = self.cast(self._value)
+            if initial_value:
+                self._history.set_initial_value_caller('Init:Initial_Value')
+                # Write item value to log, if Item has attribute log_change set
+                log_on_change(self, self._value, 'Init', 'Initial_Value', None)
+        except Exception:
+            logger.error('Item {}: value {} does not match type {}.'.format(self._path, self._value, self._type))
+            raise
+        self._history._prev_value = self._history._last_value
+        self._history._last_value = self._value
+
+        #############################################################
+        # Cache
+        #############################################################
+        if self._cache:
+            self._cache = os.path.join(self._sh._cache_dir, self._path)
+            try:
+                cache_time, self._value = cache_read(self._cache, self.shtime.tzinfo())
+                self._value = self.cast(self._value)
+                self._history.set_from_cache(cache_time, 'Init:Cache')
+
+                # Write item value to log, if Item has attribute log_change set
+                log_on_change(self, self._value, self._history.get_last_change_by(), 'Cache', None)
+            except ValueError:
+                logger.warning(f'Item {self._path}: cached value {self._value} does not match type {self._type}')
+            except Exception as e:
+                if str(e).startswith('[Errno 2]'):
+                    logger.info(f'Item {self._path}: No cached value: {e}')
+                else:
+                    if os.stat(self._cache).st_size == 0:
+                        logger.warning(
+                            f'Item {self._path}: Problem reading cache: Filesize is 0 bytes. Deleting invalid cache file'
+                        )
+                        os.remove(self._cache)
+                    else:
+                        logger.warning(f'Item {self._path}: Problem reading cache: {e}')
+
+        #############################################################
+        # Cache write/init
+        #############################################################
+        if self._cache:
+            if not os.path.isfile(self._cache):
+                cache_write(self._cache, self._value)
+                logger.notice(f'Created cache for item {self._cache} in file {self._cache}')
+
+        #############################################################
+        # add list/dict/datetime methods
+        #############################################################
+        if self._type in ['list', 'dict']:
+            # get proper subclass - ListHandler / DictHandler
+            type_class = getattr(self, self._type.capitalize() + 'Handler')
+            # instantiate class
+            obj = type_class(item=self)
+            # create item member <item>.list / <item>.dict
+            setattr(self, self._type, obj)
+            # expose get() directly on dict items so evals can use sh.my.item.get('key')
+            if self._type == 'dict':
+                setattr(self, 'get', obj.get)
+        if self._type == 'timestamp':
+            setattr(self, 'as_dt', self.__ts_as_dt)
+            setattr(self, 'as_str', self.__ts_as_str)
+        if self._type == 'datetime':
+            setattr(self, 'as_ts', self.__dt_as_ts)
+            setattr(self, 'as_str', self.__dt_as_str)
+
+        #############################################################
+        # Plugins
+        #############################################################
+        for plugin in self.plugins.return_plugins():
+            # plugin.xxx = []  # Empty reference list list of items
+            if hasattr(plugin, PLUGIN_PARSE_ITEM):
+                update = plugin.parse_item(self)
+                if update:
+                    try:
+                        plugin.add_item(self, updating=True)
+                    except Exception:
+                        pass
+                    self.add_method_trigger(update)
+
+    def _apply_config(self, config):
+        """
+        Reset config-derived attributes to their construction-time defaults,
+        then parse *config* onto self — the same logic __init__ uses to build
+        a fresh item, factored out so Items.edit_item() can re-run it on an
+        EXISTING object (preserving identity) instead of constructing a new
+        one. __init__ calls this too (see below), so there is one parsing
+        implementation, not two.
+
+        Deliberately does NOT touch, on either call path:
+        - self._value / self._history — preserve current value+history
+          across an edit (explicit ``value:``/``init_value:`` in *config* is
+          still honored below, same as __init__ — this is about not
+          resetting to a default when *config* doesn't mention it)
+        - self._items_to_trigger / _hysteresis_items_to_trigger — other
+          items' incoming trigger/hysteresis registrations onto THIS item;
+          unrelated to this item's own config
+        - self.__children — child items
+        - self._lock — other threads may be waiting on this Condition
+        - self._name / self._path / self.__parent — identity (no rename via
+          edit_item(); self._name does get a config-derived DEFAULT reset
+          below, matching __init__, but the identity fields it derives
+          from — self._path — never change)
+        - self._filename — which YAML file this item persists to; callers
+          decide that separately, it is not part of attribute config
+
+        :param config: Attribute configuration dict (same shape create_item()
+                        and a static item definition use)
+        :type config: dict
+        """
+        self._autotimer_time = None
+        self._autotimer_value = None
+        self._cycle_time = None
+        self._cycle_value = None
+        self._cache = False
+        self.cast = cast_bool
+        self.conf = {}
+        self._base_text = {}
+        self._crontab = None
+        self._enforce_updates = False
+        self._enforce_change = False
+
+        self._eval = None
+        self._eval_unexpanded = ''
+        self._eval_trigger = False
+        self._eval_on_trigger_only = False
+        self._trigger = None
+        self._trigger_unexpanded = []
+        self._trigger_condition_raw = []
+        self._trigger_condition = None
+
+        self._hysteresis_state_set = None
+        self._hysteresis_input = None
+        self._hysteresis_input_unexpanded = None
+        self._hysteresis_upper_threshold = None
+        self._hysteresis_lower_threshold = None
+        self._hysteresis_upper_timer = None
+        self._hysteresis_lower_timer = None
+        self._hysteresis_upper_timer_active = False
+        self._hysteresis_lower_timer_active = False
+        self._hysteresis_active_timer_ends = None
+        self._hysteresis_log = False
+
+        self._on_update = None
+        self._on_change = None
+        self._on_update_dest_var = None
+        self._on_change_dest_var = None
+        self._on_update_unexpanded = []
+        self._on_change_unexpanded = []
+        self._on_update_dest_var_unexp = []
+        self._on_change_dest_var_unexp = []
+        self._log_change = None
+        self._log_change_logger = None
+        self._log_level_attrib = 'INFO'
+        self._log_level = None
+        self._log_level_name = None
+        self._log_mapping = {}
+        self._log_rules = {}
+        self._log_rules_cache = {}
+        self._log_text = None
+        self._fadingdetails = {}
+        self._threshold = False
+        self._threshold_data = [0, 0, False]
+        self._description = None
+        self._struct = None
+        self._remark = None
+        self._name = self._path
 
         #############################################################
         # Item Attribute 'Type'
@@ -528,7 +665,9 @@ class Item:
                     pass
                 elif attr == '_filename':
                     # name of file, which defines this item
-                    # setattr(self, attr, value)    # assignment moved to top (before for loop)
+                    # assignment intentionally skipped here — callers
+                    # (Item.__init__, Items.edit_item()) decide _filename
+                    # separately, see this method's docstring
                     pass
                 else:
                     # ------------------------------------------------------------
@@ -544,19 +683,18 @@ class Item:
                     self.conf[attr] = value
         # end of loop 'for attr, value in config.items()' - handling of all attributes of an item
 
+        _apply_base_text(self, config)
+
         # test for attribute copy within the same item to ensure replace in every definition order of attributes
         for attr in self.conf:
             if str(self.conf[attr]).startswith('.:'):
-                value = self.conf[attr]
-                fromattr = value.split(':')[1]
-                if fromattr in ['', '.']:
-                    fromattr = attr
-                value = self._get_attr(fromattr)
-                self.conf[attr] = value
+                self.conf[attr] = self._get_attribute_value(self.conf[attr], current_attr=attr)
 
         # variable replacement for attributes
         for attr in dict(self.conf):
-            if attr.endswith('_'):
+            # the '_' marker may also precede an '@instance' suffix: 'attr_@instance'
+            name, at, instance = attr.partition('@')
+            if attr.endswith('_') or name.endswith('_'):
                 # Only for attributes which's name ends with an underline
                 attr_value = str(self.conf[attr])
                 while attr_value.find('{') > -1:
@@ -573,13 +711,8 @@ class Item:
                         break
 
                 # store resolved attribute value under name w/o underline
-                attr_new = attr[:-1]
-                if attr_new == 'name':
-                    self._name = attr_value
-                    del self.conf[attr]
-                else:
-                    self.conf[attr_new] = attr_value
-                    del self.conf[attr]
+                self.conf[attr[:-1] if attr.endswith('_') else name[:-1] + at + instance] = attr_value
+                del self.conf[attr]
 
         # Test if attributes are defined in metadata
         for attr in self.conf:
@@ -588,110 +721,10 @@ class Item:
                     self, attr.split('@')[0], self.conf[attr], self._filename
                 )
 
+        # after the metadata check: 'instance' is a core attribute, not a plugin attribute
+        apply_effective_instance(self, config)
+
         self.property.init_dynamic_properties()
-
-        #############################################################
-        # Child Items
-        #############################################################
-        for attr, value in config.items():
-            if isinstance(value, dict):
-                child_path = self._path + '.' + attr
-                try:
-                    child = Item(smarthome, self, child_path, value)
-                except Exception as e:
-                    logger.exception('Item {}: problem creating: {}'.format(child_path, e))
-                else:
-                    vars(self)[attr] = child
-                    _items_instance.add_item(child_path, child)
-                    self.__children.append(child)
-
-        #############################################################
-        # Value
-        #############################################################
-        if self._value is None:
-            initial_value = False
-            self._value = ITEM_DEFAULTS[self._type]
-        else:
-            initial_value = True
-        try:
-            self._value = self.cast(self._value)
-            if initial_value:
-                self._history.set_initial_value_caller('Init:Initial_Value')
-                # Write item value to log, if Item has attribute log_change set
-                log_on_change(self, self._value, 'Init', 'Initial_Value', None)
-        except Exception:
-            logger.error('Item {}: value {} does not match type {}.'.format(self._path, self._value, self._type))
-            raise
-        self._history._prev_value = self._history._last_value
-        self._history._last_value = self._value
-
-        #############################################################
-        # Cache
-        #############################################################
-        if self._cache:
-            self._cache = os.path.join(self._sh._cache_dir, self._path)
-            try:
-                cache_time, self._value = cache_read(self._cache, self.shtime.tzinfo())
-                self._value = self.cast(self._value)
-                self._history.set_from_cache(cache_time, 'Init:Cache')
-
-                # Write item value to log, if Item has attribute log_change set
-                log_on_change(self, self._value, self._history.get_last_change_by(), 'Cache', None)
-            except ValueError:
-                logger.warning(f'Item {self._path}: cached value {self._value} does not match type {self._type}')
-            except Exception as e:
-                if str(e).startswith('[Errno 2]'):
-                    logger.info(f'Item {self._path}: No cached value: {e}')
-                else:
-                    if os.stat(self._cache).st_size == 0:
-                        logger.warning(
-                            f'Item {self._path}: Problem reading cache: Filesize is 0 bytes. Deleting invalid cache file'
-                        )
-                        os.remove(self._cache)
-                    else:
-                        logger.warning(f'Item {self._path}: Problem reading cache: {e}')
-
-        #############################################################
-        # Cache write/init
-        #############################################################
-        if self._cache:
-            if not os.path.isfile(self._cache):
-                cache_write(self._cache, self._value)
-                logger.notice(f'Created cache for item {self._cache} in file {self._cache}')
-
-        #############################################################
-        # add list/dict/datetime methods
-        #############################################################
-        if self._type in ['list', 'dict']:
-            # get proper subclass - ListHandler / DictHandler
-            type_class = getattr(self, self._type.capitalize() + 'Handler')
-            # instantiate class
-            obj = type_class(item=self)
-            # create item member <item>.list / <item>.dict
-            setattr(self, self._type, obj)
-            # expose get() directly on dict items so evals can use sh.my.item.get('key')
-            if self._type == 'dict':
-                setattr(self, 'get', obj.get)
-        if self._type == 'timestamp':
-            setattr(self, 'as_dt', self.__ts_as_dt)
-            setattr(self, 'as_str', self.__ts_as_str)
-        if self._type == 'datetime':
-            setattr(self, 'as_ts', self.__dt_as_ts)
-            setattr(self, 'as_str', self.__dt_as_str)
-
-        #############################################################
-        # Plugins
-        #############################################################
-        for plugin in self.plugins.return_plugins():
-            # plugin.xxx = []  # Empty reference list list of items
-            if hasattr(plugin, PLUGIN_PARSE_ITEM):
-                update = plugin.parse_item(self)
-                if update:
-                    try:
-                        plugin.add_item(self, updating=True)
-                    except Exception:
-                        pass
-                    self.add_method_trigger(update)
 
     def remove(self):
         """Notify plugins of item deletion — delegates to _lifecycle.remove()."""
@@ -708,6 +741,13 @@ class Item:
     def find_attribute(self, attr, default: str = '', level: int = -1, strict: bool = False) -> str:
         """Find attribute value walking up the item tree — delegates to _pathresolution."""
         return _find_attribute(self, attr, default=default, level=level, strict=strict)
+
+    def find_attribute_with_instance(
+        self, attr, default: str = '', level: int = -1, strict: bool = False, plugin=None
+    ) -> str:
+        """Same as find_attribute(), but resolves attr@instance/attr@* per ancestor level when
+        a multi-instance-capable plugin is given — delegates to _pathresolution."""
+        return _find_attribute_with_instance(self, attr, default=default, level=level, strict=strict, plugin=plugin)
 
     def _split_destitem_from_value(self, value):
         """Split 'dest = expr' syntax — delegates to _pathresolution.split_destitem_from_value."""
@@ -1203,10 +1243,16 @@ class Item:
         Run initial eval to set an initial value for the item
 
         Called from Items.load_itemdefinitions
+
+        Skipped if a plugin already assigned a real value during parse_item()
+        (e.g. database/rrd 'init' restore via item.set()) - changed_by no
+        longer starts with 'Init' in that case, so forcing the eval here
+        would recompute from an already-current value (double-counting for
+        accumulator-style evals).
         """
         if self._trigger:
             # Only if item has an eval_trigger
-            if self._eval and not self._cache:
+            if self._eval and not self._cache and self._history.get_last_change_by().startswith('Init'):
                 # Only if item has an eval expression
                 self._sh.trigger(
                     name=self._path,
@@ -1238,9 +1284,9 @@ class Item:
         """Return hysteresis diagnostics dict — delegates to _hysteresis.get_hysteresis_data()"""
         return get_hysteresis_data(self)
 
-    def __run_eval(self, value=None, caller='Eval', source=None, dest=None):
+    def __run_eval(self, value=None, caller='Eval', source=None, dest=None, source_details=None):
         """evaluate the 'eval' entry of the actual item — delegates to _eval.run_eval()"""
-        run_eval(self, value=value, caller=caller, source=source, dest=dest)
+        run_eval(self, value=value, caller=caller, source=source, dest=dest, source_details=source_details)
 
     # New for on_update / on_change
     def _run_on_xxx(self, path, value, on_dest, on_eval, attr='?', caller=None, source=None, dest=None):
@@ -1257,7 +1303,9 @@ class Item:
 
     def __trigger_logics(self, source_details=None):
         source = {'item': self._path, 'details': source_details}
-        for logic in self.__logics_to_trigger:
+        # snapshot: add_logic_trigger()/remove_logic_trigger() (_triggers.py) mutate
+        # this list with no lock, from any thread, concurrently with this iteration
+        for logic in list(self.__logics_to_trigger):
             logic.trigger(by='Item', source=source, value=self._value)
 
     def _set_value(self, value, caller, source=None, dest=None, prev_change=None, last_change=None):
@@ -1299,9 +1347,15 @@ class Item:
             log_on_change(self, value, caller, source, dest)
         return
 
-    def _update_item(self, value, caller='Logic', source=None, dest=None, key=None, index=None):
-        """Public proxy for __update — used by extracted submodules (_eval.py etc.)."""
-        self.__update(value, caller, source, dest, key, index)
+    def _update_item(self, value, caller='Logic', source=None, dest=None, key=None, index=None, triggered=False):
+        """
+        Public proxy for __update — used by extracted submodules (_eval.py etc.).
+
+        :param triggered: the value was derived by an eval_trigger run. Plugins then get the caller
+            with its ``Eval:`` prefix: a plugin compares the caller with its own name to skip
+            echoes, and a derived value is none, even if the plugin wrote the triggering item.
+        """
+        self.__update(value, caller, source, dest, key, index, triggered)
 
     # ------------------------------------------------------------------
     # Proxy properties for name-mangled trigger lists
@@ -1323,7 +1377,7 @@ class Item:
         """Proxy for __parent — used by _navigation.py."""
         return self.__parent
 
-    def __update(self, value, caller='Logic', source=None, dest=None, key=None, index=None):
+    def __update(self, value, caller='Logic', source=None, dest=None, key=None, index=None, triggered=False):
         def check_external_change(entry_type, entry_value):
             matches = []
             for pattern in entry_value:
@@ -1370,79 +1424,73 @@ class Item:
                     pass
                 return
 
-        self._lock.acquire()
-        _changed = False
-        trigger_source_details = self._history.get_last_update_by()
+        with self._lock:
+            _changed = False
 
-        if key is not None and self._type == 'dict':
-            # Update a dict item element or add an element (selected by key)
-            value = self.__set_dictentry(value, key)
-        elif index is not None and self._type == 'list':
-            # Update a list item element (selected by index)
-            value = self.__set_listentry(value, index)
-        if self._fading:
-            stop_fade = self._fadingdetails.get('stop_fade')
-            continue_fade = self._fadingdetails.get('continue_fade')
-            stopping = check_external_change('stop_fade', stop_fade) if stop_fade else [False]
-            continuing = check_external_change('continue_fade', continue_fade) if continue_fade else [True]
-            # If stop_fade is set and there's a match, stop fading immediately
-            if stop_fade and True in stopping:
-                logger.dbghigh(f'Item {self._path}: Stopping fade loop, {caller} matches stop list {stop_fade}')
-                self._fading = False
-                self._lock.notify_all()
+            if key is not None and self._type == 'dict':
+                # Update a dict item element or add an element (selected by key)
+                value = self.__set_dictentry(value, key)
+            elif index is not None and self._type == 'list':
+                # Update a list item element (selected by index)
+                value = self.__set_listentry(value, index)
+            if self._fading:
+                stop_fade = self._fadingdetails.get('stop_fade')
+                continue_fade = self._fadingdetails.get('continue_fade')
+                stopping = check_external_change('stop_fade', stop_fade) if stop_fade else [False]
+                continuing = check_external_change('continue_fade', continue_fade) if continue_fade else [True]
+                # If stop_fade is set and there's a match, stop fading immediately
+                if stop_fade and True in stopping:
+                    logger.dbghigh(f'Item {self._path}: Stopping fade loop, {caller} matches stop list {stop_fade}')
+                    self._fading = False
+                    self._lock.notify_all()
 
-            # If continue_fade is set and there is no match, stop fading immediately
-            elif continue_fade and False not in continuing and caller != 'Fader':
-                logger.dbghigh(
-                    f'Item {self._path}: Stopping fade loop, {caller} matches no value in continue list {continue_fade}'
-                )
-                self._fading = False
-                self._lock.notify_all()
+                # If continue_fade is set and there is no match, stop fading immediately
+                elif continue_fade and False not in continuing and caller != 'Fader':
+                    logger.dbghigh(
+                        f'Item {self._path}: Stopping fade loop, {caller} matches no value in continue list {continue_fade}'
+                    )
+                    self._fading = False
+                    self._lock.notify_all()
 
-            # If nothing is set, stop (original behaviour)
-            elif not continue_fade and not stop_fade and caller != 'Fader':
-                logger.dbghigh(f'Item {self._path}: Stopping fade loop by {caller}, current value {value}')
-                self._fading = False
-                self._lock.notify_all()
+                # If nothing is set, stop (original behaviour)
+                elif not continue_fade and not stop_fade and caller != 'Fader':
+                    logger.dbghigh(f'Item {self._path}: Stopping fade loop by {caller}, current value {value}')
+                    self._fading = False
+                    self._lock.notify_all()
 
-            elif value == self._fadingdetails.get('value'):
-                pass
+                elif value == self._fadingdetails.get('value'):
+                    pass
+                else:
+                    logger.dbghigh(f'Item {self._path}: Ignoring update by {caller} as item is fading')
+                    return
+
+            if value != self._value or self._enforce_change:
+                _changed = True
+                self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
             else:
-                logger.dbghigh(f'Item {self._path}: Ignoring update by {caller} as item is fading')
-                self._lock.release()
-                return
+                self._history.record_update_only(caller, source, self.shtime)
+            trigger_source_details = self._history.get_last_update_by()
 
-        if value != self._value or self._enforce_change:
-            _changed = True
-            self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
-            trigger_source_details = self._history.get_last_change_by()
-        else:
-            self._history.record_update_only(caller, source, self.shtime)
-        self._lock.release()
-
-        # Test for fix for unwanted plugin retrigger in combination with eval expressions
-        # remove existing prefix from caller
         caller_without_prefix = caller
         try:
             if caller.lower().startswith('eval:'):
-                # clean up caller for update_item methods
                 caller_without_prefix = caller[5:]
         except AttributeError:
             pass
-        # END Test for fix for unwanted plugin retrigger in combination with eval expressions
+        plugin_caller = caller if triggered else caller_without_prefix
 
         self.__run_on_update(value, caller=caller, source=source, dest=dest)
 
         if _changed or self._enforce_updates or self._type == 'scene':
             # Trigger methods (update_item methods of plugins)
-            ### Test for fix for unwanted plugin retrigger in combination with eval expressions
-            for method in self.__methods_to_trigger:
+            # snapshot: add_method_trigger()/remove_method_trigger() (_triggers.py) mutate
+            # this list with no lock, from any thread, concurrently with this iteration
+            for method in list(self.__methods_to_trigger):
                 # shortname={method.__self__._shortname} - not every plugin has a var _shortname !!!
                 try:
-                    method(self, caller_without_prefix, source, dest)
+                    method(self, plugin_caller, source, dest)
                 except Exception as e:
                     logger.exception(f'Item {self._path}: problem running {method}: {e}')
-            ### END Test for fix for unwanted plugin retrigger in combination with eval expressions
 
             if self._threshold and self.__logics_to_trigger:
                 if self.__th_crossed and self._value <= self.__th_low:  # cross lower bound
@@ -1456,7 +1504,7 @@ class Item:
             elif self.__logics_to_trigger:
                 self.__trigger_logics(trigger_source_details)
             for item in self._items_to_trigger:
-                args = {'value': value, 'source': self._path}
+                args = {'value': value, 'source': self._path, 'source_details': trigger_source_details}
                 self._sh.trigger(
                     name='items.' + item.property.path,
                     obj=item.__run_eval,
@@ -1572,6 +1620,21 @@ class Item:
         for child in self.__children:
             yield child
 
+    def _remove_child(self, child) -> None:
+        """Remove child from __children — used by _lifecycle.py when child is deleted, and by Items.rename_item() when moving it to a different parent."""
+        try:
+            self.__children.remove(child)
+        except ValueError:
+            pass
+
+    def _append_child(self, child) -> None:
+        """Append child to __children — used by Items._construct_and_link() when child is created, and by Items.rename_item() when moving it under this item."""
+        self.__children.append(child)
+
+    def _reassign_parent(self, new_parent) -> None:
+        """Reassign __parent — used by Items.rename_item() when moving an item to a new parent."""
+        self.__parent = new_parent
+
     def return_parent(self, level: int = 1, strict: bool = False):
         """Return ancestor item at given level — delegates to _navigation.return_parent_item()."""
         return _return_parent_item(self, level=level, strict=strict)
@@ -1606,9 +1669,8 @@ class Item:
             except Exception:
                 pass
             return
-        self._lock.acquire()
-        self._set_value(value, caller, source, dest, prev_change, last_change)
-        self._lock.release()
+        with self._lock:
+            self._set_value(value, caller, source, dest, prev_change, last_change)
         return
 
     def get_children_path(self):

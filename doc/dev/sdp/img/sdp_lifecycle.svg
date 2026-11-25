@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 480" font-family="Helvetica, Arial, sans-serif">
+  <rect width="760" height="480" fill="#f9f9f9"/>
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#555"/></marker>
+    <marker id="arr-blue" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#2a5db0"/></marker>
+    <marker id="arr-green" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#1e7e34"/></marker>
+    <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#d93025"/></marker>
+    <marker id="arr-purple" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#681da8"/></marker>
+    <marker id="arr-yellow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5 z" fill="#9c6e00"/></marker>
+  </defs>
+  <text x="380" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Plugin and connection lifecycle</text>
+  <rect x="40" y="100" width="160" height="60" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="120" y="126" text-anchor="middle" font-size="11" font-weight="bold" fill="#3c4043">initialised</text>
+  <text x="120" y="142" text-anchor="middle" font-size="10" font-weight="normal" fill="#555">alive = False</text>
+  <rect x="300" y="100" width="190" height="60" rx="5" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+  <text x="395" y="126" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e7e34">running, connected</text>
+  <text x="395" y="142" text-anchor="middle" font-size="10" font-weight="normal" fill="#555">alive, not suspended</text>
+  <rect x="300" y="260" width="190" height="60" rx="5" fill="#fef7e0" stroke="#f9ab00" stroke-width="1.5"/>
+  <text x="395" y="286" text-anchor="middle" font-size="11" font-weight="bold" fill="#9c6e00">running, disconnected</text>
+  <text x="395" y="302" text-anchor="middle" font-size="10" font-weight="normal" fill="#555">alive, not suspended</text>
+  <rect x="580" y="260" width="150" height="60" rx="5" fill="#f3e8fd" stroke="#a142f4" stroke-width="1.5"/>
+  <text x="655" y="286" text-anchor="middle" font-size="11" font-weight="bold" fill="#681da8">suspended</text>
+  <text x="655" y="302" text-anchor="middle" font-size="10" font-weight="normal" fill="#555">alive, disconnected</text>
+  <rect x="580" y="100" width="150" height="60" rx="5" fill="#f1f3f4" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="655" y="126" text-anchor="middle" font-size="11" font-weight="bold" fill="#3c4043">stopped</text>
+  <text x="655" y="142" text-anchor="middle" font-size="10" font-weight="normal" fill="#555">alive = False</text>
+  <path d="M200,130 L298,130" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="250" y="70" text-anchor="middle" font-size="9" font-weight="normal" fill="#666" font-style="italic">run()</text>
+  <text x="250" y="82" text-anchor="middle" font-size="9" font-weight="normal" fill="#666" font-style="italic">set_suspend → resume</text>
+  <text x="250" y="94" text-anchor="middle" font-size="9" font-weight="normal" fill="#666" font-style="italic">→ connect()</text>
+  <path d="M360,160 L360,258" fill="none" stroke="#d93025" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <text x="352" y="205" text-anchor="end" font-size="9" font-weight="normal" fill="#d93025" font-style="italic">connection lost</text>
+  <text x="352" y="217" text-anchor="end" font-size="9" font-weight="normal" fill="#d93025" font-style="italic">on_disconnect()</text>
+  <path d="M430,258 L430,162" fill="none" stroke="#1e7e34" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="438" y="205" text-anchor="start" font-size="9" font-weight="normal" fill="#1e7e34" font-style="italic">reconnect</text>
+  <text x="438" y="217" text-anchor="start" font-size="9" font-weight="normal" fill="#1e7e34" font-style="italic">on_connect()</text>
+  <path d="M490,280 L578,280" fill="none" stroke="#681da8" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+  <text x="534" y="252" text-anchor="middle" font-size="9" font-weight="normal" fill="#681da8" font-style="italic">retry_suspend</text>
+  <text x="534" y="264" text-anchor="middle" font-size="9" font-weight="normal" fill="#681da8" font-style="italic">reached → on_abort</text>
+  <path d="M490,150 L610,258" fill="none" stroke="#681da8" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+  <text x="566" y="196" text-anchor="start" font-size="9" font-weight="normal" fill="#681da8" font-style="italic">suspend item /</text>
+  <text x="566" y="208" text-anchor="start" font-size="9" font-weight="normal" fill="#681da8" font-style="italic">set_suspend(True)</text>
+  <path d="M580,305 L492,305" fill="none" stroke="#1e7e34" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="536" y="334" text-anchor="middle" font-size="9" font-weight="normal" fill="#1e7e34" font-style="italic">resume → connect()</text>
+  <path d="M490,115 L578,115" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="534" y="107" text-anchor="middle" font-size="9" font-weight="normal" fill="#666" font-style="italic">stop()</text>
+  <text x="655" y="178" text-anchor="middle" font-size="8" font-weight="normal" fill="#999" font-style="italic">stop() works from any</text>
+  <text x="655" y="189" text-anchor="middle" font-size="8" font-weight="normal" fill="#999" font-style="italic">running state</text>
+  <rect x="40" y="350" width="330" height="115" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="55" y="372" text-anchor="start" font-size="11" font-weight="bold" fill="#1e7e34">on_connect()</text>
+  <text x="55" y="392" text-anchor="start" font-size="10" font-weight="normal" fill="#555">· job read_initial_values after max(delay_initial_read, 1) s</text>
+  <text x="55" y="408" text-anchor="start" font-size="10" font-weight="normal" fill="#555">  (first connect, or every time with resume_initial_read)</text>
+  <text x="55" y="424" text-anchor="start" font-size="10" font-weight="normal" fill="#555">· (re)create cyclic worker, cycle = int(shortest cycle / 2)</text>
+  <text x="55" y="440" text-anchor="start" font-size="10" font-weight="normal" fill="#555">· in plugins: call super().on_connect(by)</text>
+  <rect x="400" y="350" width="330" height="115" rx="5" fill="#ffffff" stroke="#9aa0a6" stroke-width="1.5"/>
+  <text x="415" y="372" text-anchor="start" font-size="11" font-weight="bold" fill="#9c6e00">reconnect and suspend</text>
+  <text x="415" y="392" text-anchor="start" font-size="10" font-weight="normal" fill="#555">· SELF_RECONNECTS transport (TCP client) reconnects itself</text>
+  <text x="415" y="408" text-anchor="start" font-size="10" font-weight="normal" fill="#555">· others: on_disconnect() schedules connect() in 5 s</text>
+  <text x="415" y="424" text-anchor="start" font-size="10" font-weight="normal" fill="#555">· suspend: disconnect, remove jobs, on_suspend()</text>
+  <text x="415" y="440" text-anchor="start" font-size="10" font-weight="normal" fill="#555">· suspended: no send, no receive, no dispatch</text>
+</svg>

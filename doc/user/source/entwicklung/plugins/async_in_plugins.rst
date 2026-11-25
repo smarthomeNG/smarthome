@@ -5,9 +5,9 @@
 .. role:: redsup
 .. role:: bluesup
 
-================================
-AsyncIO in Plugins :redsup:`neu`
-================================
+==================
+AsyncIO in Plugins
+==================
 
 SmartHomeNG ist eine Thread-basierte Anwendung. Mit Version 3.4 kam eine initiale Unterstützung von asynchronem
 In- und Output (asyncio) in Python hinzu. Asyncio ist ein Teil der Standard Bibliothek von Python. Mit den ersten

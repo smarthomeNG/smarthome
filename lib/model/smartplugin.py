@@ -23,6 +23,7 @@
 from lib.model.smartobject import SmartObject
 from lib.shtime import Shtime
 from lib.module import Modules
+from lib.constants import KEY_INSTANCE
 import lib.shyaml as shyaml
 from lib.utils import Utils
 from lib.translation import translate as lib_translate
@@ -31,8 +32,13 @@ import logging
 import os
 import threading
 import asyncio
+import concurrent.futures
+import functools
 import time
-from typing import Coroutine, Any
+from typing import TYPE_CHECKING, Callable, Collection, Coroutine, Any, Iterable, Mapping, MutableMapping
+
+if TYPE_CHECKING:
+    from lib.item.item import Item
 
 
 class SmartPlugin(SmartObject, Utils):
@@ -68,11 +74,19 @@ class SmartPlugin(SmartObject, Utils):
 
     _pluginname_prefix = 'plugins.'
 
-    # these variables _should_ be instance members (not class members) ...
-    # BUT if a plugin fails to call the parent class' __init__(), these are
-    # not present and cause errors.
-    # So - until a proper QA for 3rd party plugins is in place - we define these
-    # as class members to prevent AttributeErrors later on...
+    # TODO/FIXME: these variables _should_ be instance members (not class
+    # members) ... BUT if a plugin fails to call the parent class' __init__(),
+    # these are not present and cause errors. So - until a proper QA for
+    # 3rd party plugins is in place - we define these as class members to
+    # prevent AttributeErrors later on. __init__() below does set proper
+    # instance-level versions for every plugin that *does* call
+    # super().__init__() (the common case), so these class-level defaults
+    # only get shared across instances for plugins that skip it - confirmed
+    # happening today (e.g. miflora, traffic). Same trade-off as
+    # lib/model/mqttplugin.py's _item_values. Revisit once the 3rd-party
+    # plugin fleet has been audited for super().__init__() compliance,
+    # then these can become None sentinels to fail loudly instead of
+    # sharing state.
 
     logger = logging.getLogger(__name__)
 
@@ -147,6 +161,13 @@ class SmartPlugin(SmartObject, Utils):
         self._used_plugin_coro = None  # plugin coro used when calling start_asyncio (to be able to used by a generic 'restart asyncio' method
         self._run_queue = None  # queue to send commends to the main-coro/plugin-coro
 
+        # QA sentinel: only reachable if this __init__() actually ran, i.e. the
+        # plugin's own __init__() correctly called super().__init__(). Checked
+        # by lib/plugin.py's PluginWrapper right after instantiating the
+        # plugin, to detect the "forgot super().__init__()" case that the
+        # class-level mutable defaults above exist to paper over.
+        self._smartplugin_super_init_done = True
+
     #
     # the following methods should be overwritten
     #
@@ -167,14 +188,7 @@ class SmartPlugin(SmartObject, Utils):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
-        # check for pause item
-        if item is self._pause_item:
-            if caller != self.get_shortname():
-                self.logger.debug(f'pause item changed to {item()}')
-                if item() and self.alive:
-                    self.stop()
-                elif not item() and not self.alive:
-                    self.run()
+        if self._handle_pause_item(item, caller):
             return
 
         if not self.alive:
@@ -182,6 +196,27 @@ class SmartPlugin(SmartObject, Utils):
                 f'Received item update for item {item.property.path}, but plugin is not running. Ignoring...'
             )
             return
+
+    def _handle_pause_item(self, item, caller=None) -> bool:
+        """
+        Handle a change of the pause item; changes by this plugin instance are ignored.
+
+        :return: True if ``item`` is the pause item
+        """
+        if item is not self._pause_item:
+            return False
+
+        if caller != self.get_fullname():
+            self.logger.debug(f'pause item changed to {item()}')
+            self.on_pause_item_change(bool(item()))
+        return True
+
+    def on_pause_item_change(self, paused: bool) -> None:
+        """Pause by stop(), resume by run(). Overwrite for other pausing."""
+        if paused and self.alive:
+            self.stop()
+        elif not paused and not self.alive:
+            self.run()
 
     def parse_item(self, item) -> Any:
         """
@@ -354,7 +389,51 @@ class SmartPlugin(SmartObject, Utils):
                 self._item_lookup_dict[mapping].remove(item)
 
         # unregister item update method
-        self.unparse_item(item)
+        try:
+            self.unparse_item(item)
+        except (KeyError, IndexError, ValueError, RuntimeError) as e:
+            self.logger.warning(f'Error on unparsing item {item}: {e}')
+
+        try:
+            item.remove_method_trigger(self.update_item)
+        except Exception:
+            pass
+
+        return True
+
+    def rename_item(self, item, old_path, new_path) -> bool:
+        """
+        Re-key configuration data for an item that was renamed in place
+        (same object, only its path changed — see Items.rename_item()).
+
+        Unlike remove_item()/parse_item(), this does NOT re-parse the
+        item's configuration — it hasn't changed, only the path has — so
+        it is much cheaper than a full remove+re-add cycle. Does NOT
+        pause the plugin itself: Items.rename_item() may call this once
+        per descendant of a renamed subtree, and STOP_ON_ITEM_CHANGE's
+        stop()/run() cycle is expensive on a plugin actually talking to
+        hardware/network — pausing once per descendant would multiply
+        that cost across the whole subtree. Items.rename_item() pauses
+        and resumes each affected plugin itself, once for the whole
+        rename operation, around the entire descendant loop.
+
+        Plugins with their own item-path-keyed storage beyond
+        _plg_item_dict/_pause_item_path (e.g. the database plugin) must
+        override this method.
+
+        :param item: The renamed item (same object, unchanged identity)
+        :param old_path: The item's path before the rename
+        :param new_path: The item's path after the rename
+        :type old_path: str
+        :type new_path: str
+
+        :return: True
+        :rtype: bool
+        """
+        if old_path in self._plg_item_dict:
+            self._plg_item_dict[new_path] = self._plg_item_dict.pop(old_path)
+        if self._pause_item_path == old_path:
+            self._pause_item_path = new_path
 
         return True
 
@@ -415,7 +494,7 @@ class SmartPlugin(SmartObject, Utils):
             item_path = item
         else:
             item_path = item.property.path
-        return self._plg_item_dict[item_path].get('mapping')
+        return self._plg_item_dict.get(item_path, {}).get('mapping')
 
     def get_item_mapping_list(self) -> list:
         """
@@ -430,6 +509,7 @@ class SmartPlugin(SmartObject, Utils):
         :rtype: list
         """
         result = []
+        # create snapshot in cast _plg_item_dict mutates during iteration
         for item_path in list(self._plg_item_dict.keys()):
             result.append([item_path, self._plg_item_dict[item_path].get('mapping')])
         return result
@@ -480,12 +560,14 @@ class SmartPlugin(SmartObject, Utils):
         if mode == '':
             return [
                 item_path
+                # create snapshot in cast _plg_item_dict mutates during iteration
                 for item_path in list(self._plg_item_dict.keys())
                 if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value
             ]
 
         return [
             item_path
+            # create snapshot in cast _plg_item_dict mutates during iteration
             for item_path in list(self._plg_item_dict.keys())
             if self._string_compare(
                 self._plg_item_dict[item_path]['config_data'].get(filter_key, None), filter_value, mode
@@ -511,12 +593,14 @@ class SmartPlugin(SmartObject, Utils):
         if mode == '':
             return [
                 self._plg_item_dict[item_path]['item']
+                # create snapshot in cast _plg_item_dict mutates during iteration
                 for item_path in list(self._plg_item_dict.keys())
                 if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value
             ]
 
         return [
             self._plg_item_dict[item_path]['item']
+            # create snapshot in cast _plg_item_dict mutates during iteration
             for item_path in list(self._plg_item_dict.keys())
             if self._string_compare(
                 self._plg_item_dict[item_path]['config_data'].get(filter_key, None), filter_value, mode
@@ -534,6 +618,30 @@ class SmartPlugin(SmartObject, Utils):
             for item_path in self._plg_item_dict
             if self._plg_item_dict[item_path]['is_updating']
         ]
+
+    def db_invalidate_items(
+        self, items: 'Iterable[Item]', source: str, accept: 'Callable[[Item], bool] | None' = None
+    ) -> None:
+        """
+        Mark items invalid in the database log, so the log records a gap; the item values stay unchanged.
+
+        Only items logged by the database plugin have the ``db_mark_invalid`` function and are marked.
+        Items whose gap is already open are skipped, as repeated marking would split one gap into several.
+
+        Only available in SmartHomeNG versions **v2.0.0 and up**.
+
+        :param items: items to mark
+        :param source: reason for the gap, e.g. ``'connection_lost'``
+        :param accept: if given, only items for which it returns True are marked
+        """
+        for item in items:
+            mark_invalid = getattr(item, 'db_mark_invalid', None)
+            if mark_invalid is None or (accept is not None and not accept(item)):
+                continue
+            is_invalid = getattr(item, 'db_is_invalid', None)
+            if is_invalid is not None and is_invalid():
+                continue
+            mark_invalid(caller=self.get_fullname(), source=source)
 
     def get_items_for_mapping(self, mapping: str) -> list:
         """
@@ -560,18 +668,24 @@ class SmartPlugin(SmartObject, Utils):
         """
         return list(self._item_lookup_dict.keys())
 
-    def unparse_item(self, item) -> bool:
+    ###############################################################################
+    #
+    # the following method can be overwritten
+    #
+    # It is the symmetric counterpart to parse_item() and is called once per item
+    # by remove_item() (which itself must NOT be overwritten, see above). If a
+    # plugin's parse_item() sets up plugin-specific bookkeeping beyond add_item()'s
+    # generic dicts, the matching teardown belongs here — not in remove_item().
+    #    #
+
+    def unparse_item(self, item) -> None:
         """
-        Ensure that changes to <item> are no longer propagated to this plugin
+        Remove user-/plugin-specific bookkeeping of items. Overwrite as needed.
 
         :param item: item to unparse
         :type item: class Item
         """
-        try:
-            item.remove_method_trigger(self.update_item)
-            return True
-        except Exception:
-            return False
+        pass
 
     def get_configname(self) -> str:
         """
@@ -616,6 +730,9 @@ class SmartPlugin(SmartObject, Utils):
     def get_instance_name(self) -> str:
         """
         Returns the name of this instance of the plugin
+
+        The name is empty for the default instance. Item attributes are additionally matched by the name of
+        the ``plugin.yaml`` section (:meth:`get_configname`), whatever the instance name is.
 
         :return: instance name
         :rtype: str
@@ -880,29 +997,90 @@ class SmartPlugin(SmartObject, Utils):
         else:
             return f'{attr}@{self.__instance}'
 
-    def __get_iattr_conf(self, conf: str, attr: str) -> Any:
+    def _sibling_confignames(self) -> set[str]:
+        """
+        Return the plugin.yaml section names of the other loaded instances of this plugin
+
+        :return: section names, empty if the plugin registry is not available
+        """
+        from lib.plugin import Plugins
+
+        plugins = Plugins.get_instance()
+        if plugins is None:
+            return set()
+        return {
+            plugin.get_configname()
+            for plugin in plugins.return_plugins()
+            if isinstance(plugin, SmartPlugin) and plugin is not self and plugin.get_shortname() == self.get_shortname()
+        }
+
+    @staticmethod
+    def __item_instances(conf: Mapping[str, Any]) -> Collection[str]:
+        """
+        Return the section names the item's ``instance`` refers to (empty if the item sets none)
+
+        :param conf: item configuration
+        """
+        return conf[KEY_INSTANCE] if KEY_INSTANCE in conf else ()
+
+    def __item_names_sibling(self, conf: Mapping[str, Any]) -> bool:
+        """
+        Return True if the item's ``instance`` names the section of another instance of this plugin
+
+        :param conf: item configuration
+        """
+        entries = self.__item_instances(conf)
+        return bool(entries) and not self._sibling_confignames().isdisjoint(entries)
+
+    def __get_iattr_conf(self, conf: Mapping[str, Any], attr: str) -> str | None:
         """
         returns item attribute name including instance if required and found
         in item configuration
 
+        Candidates in order of precedence:
+
+        1. ``attr@<instance name>``, or the bare ``attr`` for the default (unnamed) instance, unless the
+           item's ``instance`` names the section of another instance of this plugin
+        2. ``attr@<section name>``
+        3. ``attr@*``
+        4. the bare ``attr`` if the item's ``instance`` names this plugin's section
+
         :param conf: item configuration
         :param attr: attribute name
-        :type conf: str
+        :type conf: Mapping[str, Any]
         :type attr: str
 
         :return: name of item attribute (including instance) or None (if not found)
-        :rtype: str
+        :rtype: str | None
         """
         __attr = self.__get_iattr(attr)
-        if __attr in conf:
+        if __attr in conf and not (self.__instance == '' and self.__item_names_sibling(conf)):
             return __attr
-        elif f'{attr}@*' in conf:
+        if self._configname and f'{attr}@{self._configname}' in conf:
+            return f'{attr}@{self._configname}'
+        if f'{attr}@*' in conf:
             return f'{attr}@*'
+        if attr in conf and self._configname in self.__item_instances(conf):
+            return attr
         return None
 
-    def has_iattr(self, conf: str, attr: str) -> bool:
+    def has_iattr(self, conf: Mapping[str, Any], attr: str) -> bool:
         """
         checks item configuration for an attribute
+
+        The attribute is found under one of the following keys, the first one that exists in *conf* wins:
+
+        1. ``attr@<instance>`` (``attr`` for the default instance), unless the item's ``instance`` names the
+           ``plugin.yaml`` section of another instance of this plugin
+        2. ``attr@<section>``, with the name of the ``plugin.yaml`` section of this plugin instance (see
+           :meth:`get_configname`); this also matches if the plugin is the default instance
+        3. ``attr@*``
+        4. ``attr``, if the item's ``instance`` (own or inherited, see below) names the section of this plugin
+           instance
+
+        The key ``instance`` of the item configuration holds the effective ``instance`` of the item as a list of
+        section names; ``''`` stands for the default instance. SmartHomeNG sets it from the item attribute
+        ``instance`` and the one of the parent item.
 
         :param conf: item configuration
         :param attr: attribute name
@@ -912,9 +1090,11 @@ class SmartPlugin(SmartObject, Utils):
         __attr = self.__get_iattr_conf(conf, attr)
         return __attr is not None
 
-    def get_iattr_value(self, conf: str, attr: str, default=None) -> str:
+    def get_iattr_value(self, conf: Mapping[str, Any], attr: str, default: Any = None) -> Any:
         """
         Returns value for an attribute from item config
+
+        The attribute is looked up as described for :meth:`has_iattr`.
 
         Parameter default is only available in SmartHomeNG versions **v1.10.0 and up**.
 
@@ -927,20 +1107,31 @@ class SmartPlugin(SmartObject, Utils):
         __attr = self.__get_iattr_conf(conf, attr)
         return default if __attr is None else conf[__attr]
 
-    def set_attr_value(self, conf: str, attr: str, value: str) -> None:
+    def set_attr_value(self, conf: MutableMapping[str, Any], attr: str, value: Any) -> None:
         """
         Set value for an attribute in item configuration
 
+        Does nothing if the attribute is not in the configuration. The value is stored under the key the
+        attribute was found under (see :meth:`has_iattr`). If the attribute was found as ``attr@*``, it is
+        stored under this instance's own attribute name instead (``attr@<instance>``, or ``attr`` without an
+        instance, or ``attr@<section>`` if the item's ``instance`` names another section of this plugin); the
+        ``attr@*`` entry is left unchanged, so other instances still read the original value.
+
         :param conf: item configuration
         :param attr: attribute name
-        :param value: value to set the atteibute to
-        :type conf: str
+        :param value: value to set the attribute to
+        :type conf: MutableMapping[str, Any]
         :type attr: str
-        :type value: str
+        :type value: Any
         """
         __attr = self.__get_iattr_conf(conf, attr)
-        if __attr is not None:
-            conf[self.__get_iattr(attr)] = value
+        if __attr is None:
+            return
+        if __attr == f'{attr}@*':
+            __attr = self.__get_iattr(attr)
+            if self.__instance == '' and self._configname and self.__item_names_sibling(conf):
+                __attr = f'{attr}@{self._configname}'
+        conf[__attr] = value
 
     def __new__(cls, *args, **kargs) -> Any:
         """
@@ -1168,7 +1359,6 @@ class SmartPlugin(SmartObject, Utils):
         self.logger.info('Shutting down asyncio loop and thread...')
 
         self.put_command_to_run_queue('STOP')
-        time.sleep(3)
         try:
             self.pluginThread.join()
             self.logger.debug('_asyncio_loop_thread of plugin stopped')
@@ -1176,6 +1366,21 @@ class SmartPlugin(SmartObject, Utils):
             self.logger.notice(f'Error stopping _asyncio_loop_thread: {err}')
             pass
         self._asyncio_state = 'stopped'
+
+    def set_asyncio_executor_names(self, loop: asyncio.AbstractEventLoop) -> None:
+        """
+        Name the default-executor worker threads of an asyncio loop after this plugin
+
+        Workers of the loop's default executor (``run_in_executor(None, ...)``, ``asyncio.to_thread()``,
+        DNS lookups) are named ``plugins.<fullname>.asyncio_<n>`` instead of the anonymous ``asyncio_<n>``.
+        Plugins that create their own eventloop call this once, right after creating it and before
+        anything uses the executor. The loop started by ``start_asyncio()`` is set up automatically.
+
+        :param loop: Eventloop owned by this plugin
+        """
+        loop.set_default_executor(
+            concurrent.futures.ThreadPoolExecutor(thread_name_prefix=f'plugins.{self.get_fullname()}.asyncio')
+        )
 
     def _asyncio_loop_thread(self, plugin_coro: Coroutine) -> None:
         """
@@ -1196,7 +1401,8 @@ class SmartPlugin(SmartObject, Utils):
         :param plugin_coro: Coroutine that should be started in the eventloop of the asyncio-thread
         """
         self.logger.debug('_asyncio main task of plugin started')
-        self._asyncio_loop = asyncio.get_event_loop()
+        self._asyncio_loop = asyncio.get_running_loop()
+        self.set_asyncio_executor_names(self._asyncio_loop)
         task = asyncio.current_task()
         task.set_name('MainTask')
         # Create queue to send termination command to plugin_coro when the plugin should be stopped
@@ -1254,6 +1460,44 @@ class SmartPlugin(SmartObject, Utils):
         #         self.logger.exception(f"run_asyncio_coro: Exception {ex} getting coro result ({coro=}, loop={self._asyncio_loop})")
         return result
 
+    def submit_asyncio_coro(
+        self, coro: Coroutine, on_error: Callable[[BaseException], None] | None = None
+    ) -> concurrent.futures.Future | None:
+        """
+        Schedule a coroutine in the eventloop of the plugin without waiting for its result
+
+        Non-blocking counterpart to run_asyncio_coro() for fire-and-forget work from the
+        thread-operated part of the plugin, e.g. update_item(), where the calling thread (often
+        another plugin's receive thread or a scheduler worker) must not be held up until the
+        device answers. Coroutines submitted from one thread start in submission order.
+
+        :param coro: A coroutine that should be run in the eventloop of the asyncio-thread
+        :param on_error: Called with the exception if the coroutine raises; if omitted, the exception is logged
+
+        :return: A future tracking the coroutine, or None if no eventloop is active (the coroutine is closed then)
+        """
+        if self._asyncio_loop is None:
+            self.logger.error(f"submit_asyncio_coro: Cannot run coro '{coro}' because no eventloop is active")
+            coro.close()
+            return None
+        future = asyncio.run_coroutine_threadsafe(coro, self._asyncio_loop)
+        future.add_done_callback(functools.partial(self._report_submitted_coro_error, on_error))
+        return future
+
+    def _report_submitted_coro_error(
+        self, on_error: Callable[[BaseException], None] | None, future: concurrent.futures.Future
+    ) -> None:
+        """Done-callback for submit_asyncio_coro(): hands a raised exception to on_error, or logs it."""
+        if future.cancelled():
+            return
+        ex = future.exception()
+        if ex is None:
+            return
+        if on_error is not None:
+            on_error(ex)
+        else:
+            self.logger.error(f'submit_asyncio_coro: coroutine raised {ex!r}', exc_info=ex)
+
     async def wait_for_asyncio_termination(self) -> None:
         """
         Wait for the command to stop the plugin_coro
@@ -1278,13 +1522,12 @@ class SmartPlugin(SmartObject, Utils):
         if self._asyncio_loop is not None:
             self.logger.info(f"Writing command '{command}' to run-queue")
             try:
-                # Send a command to plugin_coro
-                asyncio.run_coroutine_threadsafe(self._run_queue.put(command), self._asyncio_loop)
+                # Send a command to plugin_coro and wait until it is enqueued
+                asyncio.run_coroutine_threadsafe(self._run_queue.put(command), self._asyncio_loop).result(timeout=3)
             except Exception as e:
                 self.logger.warning(
                     f"put_command_to_run_queue: Exception '{e}' in _run_queue.put ({self._asyncio_loop=})"
                 )
-            time.sleep(3)
         else:
             self.logger.warning(
                 f"put_command_to_run_queue: Cannot write command '{command}' to run-queue, no active event-loop"
@@ -1371,18 +1614,6 @@ class SmartPlugin(SmartObject, Utils):
 
         return True
 
-    #
-    # deprecated methods, kept in place in case anybody still uses them
-    #
-
-    def _get_itemlist(self):
-        self._sh._deprecated_warning('SmartPlugin.get_items()')
-        return self.get_items()
-
-    def _append_to_itemlist(self, item):
-        self._sh._deprecated_warning('SmartPlugin.add_item()')
-        self.add_item(item)
-
 
 # from lib.module import Modules
 
@@ -1391,9 +1622,16 @@ class SmartPluginWebIf:
     def __init__(self, **kwargs):
         pass
 
-    def init_template_environment(self):
+    def init_template_environment(self, autoescape_templates: Collection[str] = ()):
         """
         Initialize the Jinja2 template engine environment
+
+        HTML autoescaping is opt-in per template name: only the templates listed in
+        *autoescape_templates* (typically the plugin's own, e.g. ``('index.html',)``) escape their
+        output. Global templates such as base_plugin.html stay unescaped, since they render
+        HTML-carrying variables (tab titles, ...) as-is.
+
+        :param autoescape_templates: Names of the templates that autoescape their output
 
         :return: Jinja2 template engine environment
         :rtype: object
@@ -1405,11 +1643,18 @@ class SmartPluginWebIf:
 
         mytemplates = self.plugin.path_join(self.webif_dir, 'templates')
         globaltemplates = self.plugin.mod_http.gtemplates_dir
-        tplenv = Environment(loader=FileSystemLoader([mytemplates, globaltemplates]))
+        escaped = frozenset(autoescape_templates)
+        tplenv = Environment(
+            loader=FileSystemLoader([mytemplates, globaltemplates]), autoescape=lambda name: name in escaped
+        )
 
         tplenv.globals['isfile'] = self.is_staticfile
         tplenv.globals['_'] = self.translate  # use translate method of webinterface class
         tplenv.globals['len'] = len
+        # last-resort dark-mode fallback for browsers without prefers-color-scheme support -
+        # mirrors AppConfigService.darkModeDefault in shngadmin; see base.html's inline theme script
+        mod_admin = Modules.get_instance().get_module('admin')
+        tplenv.globals['dark_mode_default'] = bool(getattr(mod_admin, 'dark_mode', False))
         return tplenv
 
     def is_staticfile(self, path):

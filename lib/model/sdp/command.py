@@ -28,11 +28,13 @@ from __future__ import annotations
 
 import logging
 import re
+from collections.abc import Mapping
 from copy import deepcopy
 from typing import Any
 
 import lib.model.sdp.datatypes as DT
 from lib.model.sdp.globals import (
+    REQUEST_DICT_ARGS,
     CMD_ATTR_PARAMS,
     CMD_STR_VAL_RAW,
     CMD_STR_VAL_UPP,
@@ -95,7 +97,7 @@ class SDPCommand(object):
 
         self.reply_token = []
         self._cmd_params = kwargs['cmd']
-        self._plugin_params = kwargs['plugin']
+        self._template_vars: Mapping[str, Any] = kwargs.get('template_vars', {})
 
         self._apply_kwargs(COMMAND_PARAMS, **(kwargs.get('cmd', {})))
 
@@ -148,7 +150,7 @@ class SDPCommand(object):
         :type args: list | tuple
         """
         for arg in args:
-            if kwargs.get(arg, None):
+            if arg in kwargs:
                 setattr(self, arg, kwargs[arg])
 
     def _check_min_max(self, data: Any, key: str, min: bool = True, force: bool = False) -> Any:
@@ -259,9 +261,12 @@ class SDPCommandStr(SDPCommand):
     (recursively), to enable the following parameters:
 
     - '{OPCODE}' is replaced with the opcode,
-    - '{PARAM:attr}' is replaced with the value of the attr element from the plugin configuration,
+    - '{PARAM:attr}' is replaced with the value of the attr element from the plugin's template_vars,
     - '{VALUE}' is replaced with the given value (converted by DT-class)
     - '{CUSTOM_ATTR1}'..'{CUSTOM_ATTR3}' is replaced by the respective custom attribute
+
+    The data_dict gets ``request_method`` and the request arguments
+    (``headers``, ``data``, ...) from template_vars, parsed the same way.
 
     The returned data is only parsed by the DT_... classes.
     For the DT_json class, the read_data dict can be used to extract a specific
@@ -282,7 +287,6 @@ class SDPCommandStr(SDPCommand):
 
     def get_send_data(self, data: Any, **kwargs) -> dict:
 
-        self._plugin_params.update(kwargs)
         data = self._check_value(data)
 
         if data is None:
@@ -298,10 +302,10 @@ class SDPCommandStr(SDPCommand):
             else:
                 cmd_str = self._parse_str(self.opcode, data, **kwargs)
 
-        data_dict = {}
-        data_dict['payload'] = cmd_str
-        for k in self._plugin_params.keys():
-            data_dict[k] = self._parse_tree(self._plugin_params[k], data, **kwargs)
+        data_dict = {'payload': cmd_str}
+        for key in ('request_method', *REQUEST_DICT_ARGS):
+            if key in self._template_vars:
+                data_dict[key] = self._parse_tree(self._template_vars[key], data, **kwargs)
 
         return data_dict
 
@@ -325,7 +329,7 @@ class SDPCommandStr(SDPCommand):
         """
 
         def get_param(matchobj):
-            returnvalue = self._plugin_params.get(matchobj.group(2))
+            returnvalue = self._template_vars.get(matchobj.group(2))
             if returnvalue is None:
                 returnvalue = ''
                 self.logger.warning(f'Parameter {matchobj.group(2)} does not exist.')
@@ -335,7 +339,7 @@ class SDPCommandStr(SDPCommand):
             if kwargs and 'custom' in kwargs:
                 custom_entry = kwargs['custom'].get(int(matchobj.group(2)))
                 try:
-                    return str(self._plugin_params.get(matchobj.group(3)).get(custom_entry, ''))
+                    return str(self._template_vars.get(matchobj.group(3)).get(custom_entry, ''))
                 except TypeError as e:
                     self.logger.warning(
                         f'Issue getting custom parameter. Plugin parameter must contain an entry like '
@@ -376,16 +380,16 @@ class SDPCommandStr(SDPCommand):
         - recursively _parse_tree for all elements of iterables or
         - return unknown or unparseable elements unchanged
         """
-        if issubclass(node, str):
-            return self._parse_str(node, data, **kwargs)  # type: ignore (type is checked)
-        elif issubclass(node, list):
-            return [self._parse_tree(k, data, **kwargs) for k in node]  # type: ignore
-        elif issubclass(node, tuple):
-            return (self._parse_tree(k, data, **kwargs) for k in node)  # type: ignore
-        elif issubclass(node, dict):
+        if isinstance(node, str):
+            return self._parse_str(node, data, **kwargs)
+        elif isinstance(node, list):
+            return [self._parse_tree(k, data, **kwargs) for k in node]
+        elif isinstance(node, tuple):
+            return (self._parse_tree(k, data, **kwargs) for k in node)
+        elif isinstance(node, dict):
             new_dict = {}
-            for k in node.keys():  # type: ignore
-                new_dict[k] = self._parse_tree(node[k], data, **kwargs)  # type: ignore
+            for k in node.keys():
+                new_dict[k] = self._parse_tree(node[k], data, **kwargs)
             return new_dict
         else:
             return node
@@ -431,7 +435,6 @@ class SDPCommandParseStr(SDPCommandStr):
 
     def get_send_data(self, data: Any, **kwargs) -> dict:
 
-        self._plugin_params.update(kwargs)
         data = self._check_value(data)
 
         if data is None:
@@ -570,6 +573,10 @@ class SDPCommandJSON(SDPCommand):
                 if idx and (1 <= int(idx[1]) <= 3):
                     val = kwargs['custom'][int(idx[1])]
             elif isinstance(val, tuple):
+                # accepted risk: eval() here runs a commands.py-defined expression with the
+                # bound item's write value spliced in. commands.py is plugin/admin-authored,
+                # same trust level as the rest of the plugin config; see the warning in
+                # dev/sample_smartdevice_plugin/commands.py before using this feature.
                 try:
                     expr = str(val[0]).replace('{' + CMD_STR_VALUE + '}', str(data))
                     val = eval(expr)
@@ -578,10 +585,9 @@ class SDPCommandJSON(SDPCommand):
 
             return val
 
-        if not hasattr(self, CMD_ATTR_PARAMS):
+        params = deepcopy(getattr(self, CMD_ATTR_PARAMS, None))
+        if params is None:
             return {}
-
-        params = deepcopy(getattr(self, CMD_ATTR_PARAMS))
 
         if isinstance(params, list):
             # unnamed parameters, list format
@@ -610,11 +616,11 @@ class SDPCommandViessmann(SDPCommand):
     With this class, you can send commands to Viessmann heating systems
 
     The command is sent as 'method', the params-dict is populated from the
-    CMD_ATTR_PARAMS attribute of the command, while the parameter values are
-    taken from the CMD_ATTR_PARAM_VALUES attribute. 'VAL' is replaced with the
+    CMD_ATTR_PARAMS attribute of the command. 'VAL' is replaced with the
     actual item value.
 
-    params and param_value need to be None or lists of the same length.
+    params needs to be a dict of {name: value} pairs, e.g.
+    {'value': 'VAL', 'len': 2, 'mult': 10, 'signed': True}.
     """
 
     def __init__(self, command: str, dt_class: type[DT.Datatype], **kwargs):
@@ -657,30 +663,34 @@ class SDPCommandViessmann(SDPCommand):
 
     def _build_dict(self, data: Any, **kwargs) -> dict:
         """
-        build param array for JSON RPC from provided value and kwargs
+        build param dict from this command's params dict, replacing 'VAL'
+        with the actual item value - see class docstring
 
         :param data: value for the command
         :param kwargs: additional data
         :return: params-dict (or None)
         :rtype: dict
         """
-        params = {}
         if not hasattr(self, CMD_ATTR_PARAMS):
             return {}
 
         cmd_params = getattr(self, CMD_ATTR_PARAMS)
+        if not cmd_params:
+            return {}
 
-        for key in cmd_params:
-            val = cmd_params[key]
+        params = {}
+        for name, val in cmd_params.items():
             if val == 'VAL':
                 val = data
             elif isinstance(val, tuple):
+                # accepted risk: same as SDPCommandJSON._build_dict.check_value above --
+                # see dev/sample_smartdevice_plugin/commands.py for the usage warning.
                 try:
                     expr = str(val[0]).replace('VAL', str(data))
                     val = eval(expr)
                 except Exception as e:
                     raise ValueError(f'invalid data: eval expression {val} with argument {data} raised error: {e}')
 
-            params[key] = val
+            params[name] = val
 
         return params

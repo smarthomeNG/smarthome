@@ -108,4 +108,4 @@ letzte Update vor der aktuellen Triggerung über 10 Sekunden zurück liegt.
 
 .. code-block:: python
 
-  eval: value if sh..self.triggered_by().startswith('admin') and sh..self.update_age() > 10 else None
+  eval: value if sh..self.property.last_trigger_by == 'admin' and sh..self.property.last_update_age > 10 else None

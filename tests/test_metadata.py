@@ -175,5 +175,104 @@ class LibMetadataTest(unittest.TestCase):
         logger.warning('=== End metadata Tests')
 
 
+class GetItemdefinitionTest(unittest.TestCase):
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.meta = Metadata(self.sh, 'test_resources', 'plugin', 'tests.resources.test_metadata')
+
+    def test_returns_valid_list_when_present(self):
+        self.assertEqual(self.meta.get_itemdefinition('with_validlist', 'valid_list'), ['foo', 'bar'])
+
+    def test_returns_none_when_key_absent(self):
+        self.assertIsNone(self.meta.get_itemdefinition('without_validlist', 'valid_list'))
+
+    def test_returns_none_for_unknown_attribute(self):
+        self.assertIsNone(self.meta.get_itemdefinition('does_not_exist', 'valid_list'))
+
+    def test_returns_description_for_any_key_not_just_valid_list(self):
+        description = self.meta.get_itemdefinition('with_validlist', 'description')
+        self.assertIn('de', description)
+        self.assertIn('en', description)
+
+
+class DescriptionNewlineTest(unittest.TestCase):
+    """
+    Single-quoted YAML keeps '\\n' as two literal characters; descriptions
+    are normalized to real line breaks when the metadata is loaded.
+    """
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.meta = Metadata(self.sh, 'test_resources', 'plugin', 'tests.resources.test_metadata')
+
+    def test_mlstring_has_real_newlines(self):
+        self.sh.set_defaultlanguage('en')
+        self.assertEqual(self.meta.get_mlstring('description_long'), 'First line\nsecond line\nthird line')
+
+    def test_raw_meta_description_has_real_newlines(self):
+        self.assertEqual(self.meta.meta['plugin']['description_long']['en'], 'First line\nsecond line\nthird line')
+
+    def test_itemdefinition_description_has_real_newlines(self):
+        description = self.meta.get_itemdefinition('with_escaped_newline', 'description')
+        self.assertEqual(description['en'], 'one\ntwo')
+
+    def test_non_description_values_are_untouched(self):
+        self.assertEqual(self.meta.get_itemdefinition('with_escaped_newline', 'default'), 'a\\nb')
+
+
+class TimestampTypeTest(unittest.TestCase):
+    """
+    META_DATA_TYPES/ITEM_TYPES declare 'timestamp' as a valid type;
+    _convert_valuetotype() and _test_valuetype() must handle it the same as
+    'float'/'num', matching META_DATA_DEFAULTS['timestamp'] == 0.0 in
+    lib/constants.py.
+    """
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.meta = Metadata(self.sh, 'test_resources', 'plugin', 'tests.resources.test_metadata')
+
+    def test_convert_valuetotype_does_not_raise(self):
+        self.assertEqual(self.meta._convert_valuetotype('timestamp', '1234.5'), 1234.5)
+
+    def test_test_valuetype_accepts_numeric_value(self):
+        self.assertTrue(self.meta._test_valuetype('timestamp', '', '1234.5'))
+
+    def test_test_valuetype_rejects_non_numeric_value(self):
+        self.assertFalse(self.meta._test_valuetype('timestamp', '', 'not-a-number'))
+
+
+class ListlenTest(unittest.TestCase):
+    """
+    _get_definition_listlen() must index definitions[definition] (the
+    single definition), not definitions itself (the whole name->definition
+    dict) - matching its sibling _get_definition_subtype()'s existing
+    pattern.
+
+    get_parameter_listlen()/get_itemdefinition_listlen() must call the
+    real, underscore-prefixed _get_definition_listlen().
+    """
+
+    def setUp(self):
+        self.sh = MockSmartHome()
+        self.meta = Metadata(self.sh, 'test_resources', 'plugin', 'tests.resources.test_metadata')
+
+    def test_get_definition_listlen_reads_correct_dict(self):
+        definitions = {'mylist': {'type': 'list', 'listlen': 3}, 'other': {'type': 'str'}}
+        self.assertEqual(self.meta._get_definition_listlen('mylist', definitions), 3)
+
+    def test_get_definition_listlen_non_list_type_returns_zero(self):
+        definitions = {'mylist': {'type': 'str'}}
+        self.assertEqual(self.meta._get_definition_listlen('mylist', definitions), 0)
+
+    def test_get_parameter_listlen_does_not_raise(self):
+        self.meta.parameters = {'mylist': {'type': 'list', 'listlen': 5}}
+        self.assertEqual(self.meta.get_parameter_listlen('mylist'), 5)
+
+    def test_get_itemdefinition_listlen_does_not_raise(self):
+        self.meta.itemdefinitions = {'mylist': {'type': 'list', 'listlen': 2}}
+        self.assertEqual(self.meta.get_itemdefinition_listlen('mylist'), 2)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

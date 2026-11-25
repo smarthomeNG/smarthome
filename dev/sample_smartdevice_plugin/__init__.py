@@ -49,7 +49,9 @@ else:
         builtins.SDP_standalone = False
 # <--
 
-from lib.model.sdp.globals import PLUGIN_ATTR_CONNECTION, CONN_NULL  # import constants you need
+from lib.model.sdp.command import SDPCommandStr  # command class used by the commands.py examples
+from lib.model.sdp.declarations import TransportRule  # set connection transport requirements
+from lib.model.sdp.globals import CONN_NULL, CONN_NET_TCP_CLI, CONN_SER_ASYNC  # import all constants you need
 from lib.model.smartdeviceplugin import SmartDevicePlugin, Standalone  # needed, obviously
 
 if not SDP_standalone:
@@ -69,17 +71,18 @@ class SdpExample(SmartDevicePlugin):
     PLUGIN_VERSION = '0.1.0'  # adjust, must match version in plugin.yaml
     ALLOW_MULTIINSTANCE = True  # set to False if only one instance should run at a time
 
-    def _set_device_defaults(self):
-
-        # you can add initialisations and internal defaults here
-
-        # for demonstation purposes, we want to use the null connection
-        self._parameters[PLUGIN_ATTR_CONNECTION] = CONN_NULL
-        self._use_callbacks = True
-
-        # needed for webif usage
-        if not SDP_standalone:
-            self._webif = WebInterface
+    # device defaults, see SmartDevicePlugin class attributes; remove the ones you don't need
+    # selected in order of listing
+    TRANSPORTS = (
+        TransportRule(CONN_NET_TCP_CLI, requires='host'),
+        TransportRule(CONN_SER_ASYNC, requires='serialport'),
+        TransportRule(CONN_NULL),
+    )
+    PROTOCOL = None  # protocol type or class wrapping the transport, e.g. PROTO_JSONRPC
+    COMMAND_CLASS = SDPCommandStr  # command class or its name, e.g. SDPCommandParseStr; None: SDPCommand
+    LINE_TERMINATED = True  # commands end with the terminator parameter, replies are read up to it
+    JSON_MOVE_KEYS = ()  # JSON-RPC only: data_dict keys moved into the request params, e.g. ('playerid',)
+    CUSTOM_TOKEN = None  # custom commands per device, e.g. CustomTokenSpec(index=1, token_re=..., reply_re=...)
 
     def _post_init(self):
 
@@ -89,12 +92,21 @@ class SdpExample(SmartDevicePlugin):
 
         self._my_property = 'foo'
 
+        # runtime values for {PARAM:name} / {CUSTOM_PARAMn:name} templates in commands.py
+        self.template_vars['CURRENT_ID'] = {}
+
+        # needed for webif usage
+        if not SDP_standalone:
+            self._webif = WebInterface
+
     def on_connect(self, by=None):
         """callback if connection is made."""
+        super().on_connect(by)
         self.logger.info('SdpExample plugin connected')
 
     def on_disconnect(self, by=None):
         """callback if connection is broken."""
+        super().on_disconnect(by)
         self.logger.info('SdpExample plugin disconnected')
 
     # if you want to use the suspend/resume feature, you can overwrite these

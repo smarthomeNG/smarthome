@@ -27,13 +27,12 @@
 #####################################################################
 # Check mimimum Python Version
 #####################################################################
-from hashlib import new
 import sys
 
-if sys.hexversion < 0x03090000:
+if sys.hexversion < 0x030B0000:
     print()
     print(
-        f'Sorry your python interpreter ({sys.version_info[0]}.{sys.version_info[1]}) is too old. Please update to 3.9 or newer.'
+        f'Sorry your python interpreter ({sys.version_info[0]}.{sys.version_info[1]}) is too old. Please update to 3.11 or newer.'
     )
     print()
     exit(1)
@@ -74,7 +73,7 @@ argparser.add_argument('-p', '--pip3_command', help='set path of pip3 command, i
 arggroup.add_argument(
     '-i',
     '--interactive',
-    help='open an interactive shell with tab completion and with verbose logging to the logfile',
+    help='open an interactive shell with tab completion, logging as configured in logging.yaml',
     action='store_true',
 )
 arggroup.add_argument('-l', '--logics', help='reload all logics', action='store_true')
@@ -107,29 +106,25 @@ argparser.add_argument(
     '-c', '--config_dir', help='use external config dir (should contain "etc", "logics" and "items" subdirectories)'
 )
 argparser.add_argument(
+    '-u',
+    '--var_dir',
+    help='use external var dir for cache, logs, pidfile, databases and other runtime data (default: <base>/var)',
+)
+argparser.add_argument(
     '-e',
     '--config_etc',
-    help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory. If config directories exist at SmartHomeNG base dir, they are migrated to etc/<dir>.',
+    help='look for all user-defined config (e.g. "items", "logics", "structs"...) below ./etc directory (default; overrides config_etc: false in smarthome.yaml). If config directories exist at SmartHomeNG base dir, they are migrated to etc/<dir>.',
     default=False,
     action='store_true',
 )
 
 arggroup.add_argument(
-    '-v',
-    '--verbose',
-    help='verbose (info output) logging to the logfile - DEPRECATED use logging-configuration',
-    action='store_true',
-)
-arggroup.add_argument(
     '-d',
     '--debug',
-    help='stay in the foreground with verbose output - DEPRECATED use logging-configuration',
+    help='stay in the foreground and log at debug level to the console and var/log/smarthome-debug.log, ignoring logging.yaml completely',
     action='store_true',
 )
 arggroup.add_argument('-f', '--foreground', help='stay in the foreground', action='store_true')
-arggroup.add_argument(
-    '-q', '--quiet', help='reduce logging to the logfile - DEPRECATED use logging-configuration', action='store_true'
-)
 # When running under pytest, sys.argv contains pytest's own arguments, which
 # argparse would reject with sys.exit(2). Parse an empty arg list in that case
 # so import-time parsing (needed to bootstrap core requirements below) stays safe.
@@ -159,7 +154,11 @@ except ImportError:
 #####################################################################
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 sys.path.insert(0, BASE)
-PIDFILE = os.path.join(BASE, 'var', 'run', 'smarthome.pid')
+
+import lib.vardir
+
+lib.vardir.set_var_dir(args.var_dir)
+PIDFILE = lib.vardir.get_pidfile()
 
 # Only used for Version Check in Plugins to decide if a logger must be explicitly declared
 import bin.shngversion
@@ -262,6 +261,15 @@ if __name__ == '__main__':
         time.sleep(5)
         lib.daemon.kill(PIDFILE, 30, pid0_warning=False)
     elif args.interactive:
+        # Unlike every other mode here, this branch constructs SmartHome() (hence
+        # write_pidfile()) itself, inline, rather than falling through to the
+        # shared check below - so it needs its own copy of that same check, or it
+        # never gets the friendly early message at all, only write_pidfile()'s own
+        # (correct, but less helpful) error once construction is already underway.
+        if lib.daemon.check_sh_is_running(PIDFILE):
+            print('SmartHomeNG already running with pid {}'.format(lib.daemon.read_pidfile(PIDFILE)))
+            print("Run 'smarthome.py -s' to stop it or 'smarthome.py -r' to restart it.")
+            exit(1)
         MODE = 'interactive'
         import code
         import rlcompleter  # noqa
@@ -285,7 +293,26 @@ if __name__ == '__main__':
         _sh_thread = threading.Thread(target=sh.start)
         _sh_thread.start()
 
-        shell = code.InteractiveConsole(locals())
+        class _ConsoleNoExit:
+            """
+            Shadows the console's builtin exit/quit: typing exit()/quit() is
+            the natural first thing to try in any Python REPL, but this
+            console doesn't own SmartHomeNG's lifecycle - the SmartHome
+            instance keeps running in its own (non-daemon) thread regardless.
+            Print a hint instead of letting exit()/quit() raise SystemExit.
+            """
+
+            _msg = 'This console does not stop SmartHomeNG. Use sh.stop() or press Ctrl-C to actually stop it.'
+
+            def __call__(self, *args, **kwargs):
+                print(self._msg)
+
+            def __repr__(self):
+                return self._msg
+
+        _console_exit_shadow = {'exit': _ConsoleNoExit(), 'quit': _ConsoleNoExit()}
+
+        shell = code.InteractiveConsole({**locals(), **_console_exit_shadow})
         console_active = True
         while sh.alive:
             if console_active:
@@ -295,10 +322,10 @@ if __name__ == '__main__':
                     try:
                         sys.stdin = open('/dev/tty', 'r')
                         sys.stdout = open('/dev/tty', 'w')
-                        shell = code.InteractiveConsole(locals())
+                        shell = code.InteractiveConsole({**locals(), **_console_exit_shadow})
                     except OSError:
                         print(
-                            'ERROR: Interactive console lost its controlling terminal; SmartHomeNG keeps running without it.'
+                            'ERROR: Interactive console lost its controlling terminal; SmartHomeNG keeps running without it, press Ctrl-C to stop.'
                         )
                         console_active = False
             else:
@@ -318,11 +345,6 @@ if __name__ == '__main__':
         exit(0)
     elif args.debug:
         MODE = 'debug'
-    elif args.quiet:
-        pass
-    elif args.verbose:
-        MODE = 'verbose'
-        pass
     elif args.foreground:
         MODE = 'foreground'
         pass
@@ -346,7 +368,7 @@ if __name__ == '__main__':
     if lib.daemon.check_sh_is_running(PIDFILE):
         print('SmartHomeNG already running with pid {}'.format(lib.daemon.read_pidfile(PIDFILE)))
         print("Run 'smarthome.py -s' to stop it or 'smarthome.py -r' to restart it.")
-        exit()
+        exit(1)
     if MODE == 'debug':
         lib.daemon.write_pidfile(psutil.Process().pid, PIDFILE)
     # Starting SmartHomeNG

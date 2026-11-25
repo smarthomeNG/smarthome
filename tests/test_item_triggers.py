@@ -28,6 +28,9 @@ Item triggers (eval_trigger wiring):
   fresh item → empty list
   after _init_prerun wiring → target item appears in source's list
 
+use_conditional_triggers (smarthome.yaml):
+  boolean true and string 'true' enable conditional triggers, unset or false disable them
+
 Hysteresis item triggers:
   get_hysteresis_item_triggers → returns _hysteresis_items_to_trigger
   fresh item → empty list
@@ -191,6 +194,20 @@ class TestLogicTriggers(_Base):
         item(42)
         self.assertEqual(fired, [42])
 
+    def test_logic_gets_details_of_same_value_update(self):
+        """source details of an enforce_updates write name that write, also when the value is unchanged."""
+        sources = []
+        item = _item(self.sh, 'a', enforce_updates=True)
+
+        class _Logic:
+            def trigger(self, by, source, value):
+                sources.append(source)
+
+        item(1, 'A', 'x')
+        item.add_logic_trigger(_Logic())
+        item(1, 'B', 'y')
+        self.assertEqual(sources, [{'item': 'a', 'details': 'B:y'}])
+
     def test_logic_not_triggered_after_removal(self):
         fired = []
         item = _item(self.sh, 'a')
@@ -204,6 +221,39 @@ class TestLogicTriggers(_Base):
         item.remove_logic_trigger(logic)
         item(42)
         self.assertEqual(fired, [])
+
+    def test_logic_removed_mid_iteration_does_not_skip_later_logics(self):
+        """
+        __trigger_logics() must iterate a snapshot of
+        self.__logics_to_trigger, not the list directly - same failure mode
+        as test_method_removed_mid_iteration_does_not_skip_later_methods,
+        for the logic-trigger list.
+        """
+        fired = []
+        item = _item(self.sh, 'a')
+
+        class _Logic:
+            def __init__(self, name):
+                self.name = name
+
+            def trigger(self, by, source, value):
+                fired.append(self.name)
+
+        l1, l2, l3, l4 = _Logic('l1'), _Logic('l2'), _Logic('l3'), _Logic('l4')
+
+        class _RemovingLogic(_Logic):
+            def trigger(self, by, source, value):
+                super().trigger(by, source, value)
+                item.remove_logic_trigger(l1)  # removes an already-visited entry
+
+        l2 = _RemovingLogic('l2')
+
+        for logic in (l1, l2, l3, l4):
+            item.add_logic_trigger(logic)
+
+        item(42)
+
+        self.assertEqual(fired, ['l1', 'l2', 'l3', 'l4'])
 
 
 # ===========================================================================
@@ -306,6 +356,41 @@ class TestMethodTriggers(_Base):
         item(42)  # should not raise
         self.assertEqual(item(), 42)
 
+    def test_method_removed_mid_iteration_does_not_skip_later_methods(self):
+        """
+        __update() must iterate a snapshot of self.__methods_to_trigger, not
+        the list directly. Removing an already-visited entry from within a
+        still-running trigger callback (simulating a concurrent
+        remove_method_trigger() call from another thread, e.g. a plugin
+        deregistering during reload) shifts list positions under the
+        for-loop's cursor and silently skips whatever trigger was next in
+        line - plain-list iteration semantics independent of Item: removing
+        an earlier element while iterating skips the element that shifts
+        into the current cursor position.
+        """
+        calls = []
+        item = _item(self.sh, 'a')
+
+        def m1(i, c, s, d):
+            calls.append('m1')
+
+        def m2(i, c, s, d):
+            calls.append('m2')
+            item.remove_method_trigger(m1)  # removes an already-visited entry
+
+        def m3(i, c, s, d):
+            calls.append('m3')
+
+        def m4(i, c, s, d):
+            calls.append('m4')
+
+        for m in (m1, m2, m3, m4):
+            item.add_method_trigger(m)
+
+        item(42)
+
+        self.assertEqual(calls, ['m1', 'm2', 'm3', 'm4'])
+
 
 # ===========================================================================
 # get_item_triggers  (eval_trigger wiring)
@@ -393,6 +478,23 @@ class TestGetHysteresisItemTriggers(_Base):
         sensor._init_prerun()
         plain._init_prerun()
         self.assertNotIn(plain, sensor.get_hysteresis_item_triggers())
+
+
+class TestUseConditionalTriggers(_Base):
+    def test_unset_disables(self):
+        self.assertFalse(_item(self.sh, 'ct_unset')._use_conditional_triggers)
+
+    def test_boolean_true_enables(self):
+        self.sh._use_conditional_triggers = True
+        self.assertTrue(_item(self.sh, 'ct_bool')._use_conditional_triggers)
+
+    def test_string_true_enables(self):
+        self.sh._use_conditional_triggers = 'true'
+        self.assertTrue(_item(self.sh, 'ct_str')._use_conditional_triggers)
+
+    def test_false_disables(self):
+        self.sh._use_conditional_triggers = False
+        self.assertFalse(_item(self.sh, 'ct_false')._use_conditional_triggers)
 
 
 if __name__ == '__main__':

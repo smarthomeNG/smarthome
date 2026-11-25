@@ -6,8 +6,8 @@ compatibility shim (lib/item/_eval.py, lib/item/_eval_compat.py).
 
 These tests form the before/after gate for the eval-namespace refactoring:
   - Every documented name must be reachable inside an item eval expression.
-  - Names that were previously leaked via item.py module globals (datetime,
-    time, …) must be available even after the extraction to _eval.py.
+  - Names available via item.py module globals (datetime, time, …) must
+    remain available after the extraction to _eval.py.
   - The compat shim (_eval_compat.py) must log a deprecation warning and
     still return the correct result for expressions using non-documented
     names; it must return _EVAL_FAILED when both namespaces fail.
@@ -60,9 +60,9 @@ common.register_shng_log_levels()
 import lib.item.item
 import lib.item.items
 from lib.item.items import Items
-from lib.item._eval import _make_eval_env
-from lib.item._eval_compat import _eval_with_legacy_fallback, _EVAL_FAILED
-from lib.item._casting import run_attribute_eval
+from lib.item._internal._eval import _make_eval_env
+from lib.item._internal._eval_compat import _eval_with_legacy_fallback, _EVAL_FAILED
+from lib.item._internal._casting import run_attribute_eval
 from tests.mock.core import MockSmartHome
 
 
@@ -143,6 +143,20 @@ class TestMakeEvalEnvKeys(_Base):
     def test_has_env(self):
         self.assertIn('env', self.ns)
 
+    def test_has_utils(self):
+        from lib.utils import Utils
+
+        self.assertIs(self.ns['Utils'], Utils)
+
+    def test_has_network(self):
+        from lib.network import Network
+
+        self.assertIs(self.ns['Network'], Network)
+
+    def test_utils_and_network_are_usable_in_an_expression(self):
+        self.assertEqual(eval('Utils.dewpoint(20, 50)', self.ns), 9.26)
+        self.assertTrue(callable(eval('Network.ping', self.ns)))
+
     def test_has_value(self):
         self.assertIn('value', self.ns)
         self.assertEqual(self.ns['value'], 7)
@@ -188,6 +202,14 @@ class TestMakeEvalEnvKeys(_Base):
     def test_caller_defaults_to_none(self):
         ns = _make_eval_env(self.item)
         self.assertIsNone(ns['caller'])
+
+    def test_has_source_details(self):
+        ns = _make_eval_env(self.item, source_details='KNX:1.1.4:ga=2/4/0')
+        self.assertEqual(ns['source_details'], 'KNX:1.1.4:ga=2/4/0')
+
+    def test_source_details_defaults_to_none(self):
+        ns = _make_eval_env(self.item)
+        self.assertIsNone(ns['source_details'])
 
 
 # ===========================================================================
@@ -329,7 +351,7 @@ class TestRunEvalItemAccess(_Base):
         captured = []
         i = _item(self.sh, 'item_identity', eval='captured.append(item) or 42')
         # inject 'captured' into the item's run-eval by patching _make_eval_env
-        from lib.item import _eval as eval_mod
+        from lib.item._internal import _eval as eval_mod
 
         orig = eval_mod._make_eval_env
 
@@ -616,6 +638,96 @@ class TestRunEvalCompatIntegration(_Base):
             source(1)
         self.assertEqual(target._value, 'f00')
         self.assertTrue(any('future release' in line for line in cm.output))
+
+
+# ===========================================================================
+# TestBareEvalRunsOnce — bare on_change/on_update must not double-execute
+# ===========================================================================
+
+
+class TestBareEvalRunsOnce(_Base):
+    """
+    Bare (no "dest =") on_change/on_update expressions must only run once:
+    run_on_xxx() must not eval() the expression a second time "for its side
+    effect" when the first eval() (needed to compute dest_value) already
+    ran it - otherwise any bare expression whose result is not None (e.g. a
+    uf. function call returning a status) executes its side effects twice
+    per trigger.
+    """
+
+    def _tracked(self):
+        calls = []
+
+        def tracked(x, caller=None, source=None):
+            # caller/source: bare "expr(...)" calls get ", caller=..., source=..."
+            # appended automatically, so the target function must accept them
+            calls.append(x)
+            return x + 1  # non-None return is what used to trigger the second eval
+
+        return calls, tracked
+
+    def test_bare_on_update_runs_expression_once(self):
+        calls, tracked = self._tracked()
+        import lib.userfunctions as uf
+
+        with patch.object(uf, 'tracked', tracked, create=True):
+            source = _item(self.sh, 'oe_ou_src', on_update='uf.tracked(value)')
+            source(5)
+
+        self.assertEqual(calls, [5])
+
+    def test_bare_on_change_runs_expression_once(self):
+        calls, tracked = self._tracked()
+        import lib.userfunctions as uf
+
+        with patch.object(uf, 'tracked', tracked, create=True):
+            source = _item(self.sh, 'oe_oc_src', on_change='uf.tracked(value)')
+            source(5)
+
+        self.assertEqual(calls, [5])
+
+
+# ── TestEvalTriggerSourceDetails ──────────────────────────────────────────
+
+
+class TestEvalTriggerSourceDetails(_Base):
+    """
+    An eval triggered via eval_trigger gets the triggering update's
+    'caller:source' as ``source_details``, captured when the trigger is
+    queued - later updates of the trigger item before the eval runs do not
+    change it.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.queued = []
+        self.sh.trigger = lambda name, obj=None, by='Logic', source=None, value=None, dest=None, **kw: (
+            self.queued.append((name, obj, by, source, dest, value))
+        )
+        self.pos = _item(self.sh, 'pos')
+        self.watcher = _item(self.sh, 'watcher', itype='str', eval='source_details', eval_trigger='pos')
+        self.pos._init_prerun()
+        self.watcher._init_prerun()
+
+    def _run_queued(self):
+        from lib.scheduler import Scheduler
+
+        queued, self.queued = self.queued, []
+        for task in queued:
+            Scheduler._dispatch_task(None, *task)
+
+    def test_eval_gets_details_of_triggering_update(self):
+        self.pos(55, 'Visu', '192.168.2.10')
+        self._run_queued()
+
+        self.assertEqual(self.watcher(), 'Visu:192.168.2.10')
+
+    def test_later_update_of_trigger_item_does_not_change_details(self):
+        self.pos(55, 'Visu', '192.168.2.10')
+        self.pos(55, 'KNX', '1.1.4:ga=2/4/0')
+        self._run_queued()
+
+        self.assertEqual(self.watcher(), 'Visu:192.168.2.10')
 
 
 if __name__ == '__main__':

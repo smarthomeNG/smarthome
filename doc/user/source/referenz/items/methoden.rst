@@ -7,8 +7,7 @@
 Methoden zum Zugriff auf Items
 ==============================
 
-Die im folgenden beschriebenen Methoden waren ursprünglich Teil des smarthome Objektes ``sh``.
-Die Nutzung des ``sh`` Objektes für Items wird nicht weitergeführt. Es ist besser das Item API wie folgt zu nutzen:
+Die im folgenden beschriebenen Methoden werden über das Item API genutzt:
 
 .. code:: python
 
@@ -90,5 +89,6 @@ Die Suche nach dem ``configattribute`` wird genauso durchgeführt wie in ``find_
 
 .. code:: python
 
-   for item in items.find_children('my_special_attribute'):
+   parentitem = items.return_item('first_floor.bath')
+   for item in items.find_children(parentitem, 'my_special_attribute'):
        logger.info(item.id())
