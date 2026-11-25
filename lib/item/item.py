@@ -175,6 +175,7 @@ from ._internal._stackinfo import (
 )
 from ._internal._fade import fade as _fade
 from ._internal._json import jsonvars as _jsonvars, to_json as _to_json
+from .errors import ItemWriteRejected, WriteRejectReason
 
 _items_instance = None
 
@@ -185,6 +186,15 @@ ATTRIB_COMPAT_DEFAULT = ''
 logger = logging.getLogger(__name__)
 items_count = 0
 _NOTSET = object()  # sentinel: distinguishes "no default given" from default=None
+_REJECTED = object()  # sentinel: the value was dropped by a non-strict write
+
+
+def _shown(value) -> str:
+    """Return *value* as text for a log message, its type name if it cannot be converted."""
+    try:
+        return str(value)
+    except Exception:
+        return f'<{type(value).__name__}>'
 
 
 #####################################################################
@@ -1079,7 +1089,35 @@ class Item:
         """Build trigger condition eval string — delegates to _parsing.build_trigger_condition_eval()."""
         return _build_trigger_condition_eval(self, trigger_condition)
 
-    def __call__(self, value=None, caller='Logic', source=None, dest=None, key=None, index=None, default=_NOTSET):
+    def __call__(
+        self, value=None, caller='Logic', source=None, dest=None, key=None, index=None, default=_NOTSET, strict=False
+    ):
+        """
+        Read the item's value, or write *value* to the item.
+
+        Called without a value (or with ``None``), or on an item without a type, it returns a copy of the
+        value, or the element *key* of a dict item / *index* of a list item (*default* if it is missing).
+
+        With a value it writes: the value is cast to the item type, stored, and the item's triggers
+        (plugins, logics, eval_triggers, on_update/on_change) run. An item with an ``eval`` instead
+        schedules its eval with the value as input, which runs in another thread and writes the result.
+        With *key* or *index* only that element of a dict or list item is replaced; no cast is made.
+
+        A value the item does not accept is dropped and a warning is logged. With *strict* the write
+        raises :class:`~lib.item.errors.ItemWriteRejected` instead. *strict* has no effect on items with
+        an ``eval``, as their write happens later.
+
+        :param value: value to write; ``None`` reads
+        :param caller: name of the writer, recorded as ``last_change_by``/``last_update_by``
+        :param source: detail of the writer (e.g. an item path or a plugin's device), recorded with *caller*
+        :param dest: destination detail, passed on to the triggered plugins
+        :param key: key of the dict element to read or write
+        :param index: index of the list element to read or write; for a write also ``'append'``/``'prepend'``
+        :param default: value returned by a read of a missing *key*/*index*
+        :param strict: raise instead of dropping a value the item does not accept
+        :return: the value on a read, None on a write
+        :raises ItemWriteRejected: on a strict write the item does not accept
+        """
         # return value
         if value is None or self._type is None:
             if key is not None and self._type == 'dict':
@@ -1095,7 +1133,7 @@ class Item:
                 name=self._path + '-eval', obj=self.__run_eval, value=args, by=caller, source=source, dest=dest
             )
         else:
-            self.__update(value, caller, source, dest, key, index)
+            self.__update(value, caller, source, dest, key, index, strict=strict)
 
     def __iter__(self):
         for child in self.__children:
@@ -1377,7 +1415,37 @@ class Item:
         """Proxy for __parent — used by _navigation.py."""
         return self.__parent
 
-    def __update(self, value, caller='Logic', source=None, dest=None, key=None, index=None, triggered=False):
+    def __cast_for_write(self, value, caller, source, strict):
+        """
+        Return *value* cast to the item type, or reject it.
+
+        :return: the cast value, or ``_REJECTED`` if a non-strict write drops it
+        :raises ItemWriteRejected: if a strict write cannot cast it
+        """
+        try:
+            return self.cast(value)
+        except Exception:
+            message = (
+                f'Item {self._path}: value "{_shown(value)}" does not match type {self._type}.'
+                f' Via caller {caller}, source {source}'
+            )
+            self.__reject_write(value, WriteRejectReason.TYPE, message, strict)
+            return _REJECTED
+
+    def __reject_write(self, value, reason, message, strict, log=None):
+        """
+        Drop a written value: raise for a strict write, log *message* otherwise.
+
+        :param log: logger method for a non-strict write, ``logger.warning`` if None
+        :raises ItemWriteRejected: if *strict*
+        """
+        if strict:
+            raise ItemWriteRejected(self._path, value, reason, message)
+        (log or logger.warning)(message)
+
+    def __update(
+        self, value, caller='Logic', source=None, dest=None, key=None, index=None, triggered=False, strict=False
+    ):
         def check_external_change(entry_type, entry_value):
             matches = []
             for pattern in entry_value:
@@ -1394,6 +1462,12 @@ class Item:
                         matches.append(False)  # No match in stop_fade -> keep fading
             return matches
 
+        if key is None and index is None:
+            # don't cast for elements of complex types
+            value = self.__cast_for_write(value, caller, source, strict)
+            if value is _REJECTED:
+                return
+
         # special handling, if item is a hysteresis item (has a hysteresis_input attribute)
         if self._hysteresis_input is not None:
             if self._hysteresis_upper_timer_active:
@@ -1401,28 +1475,15 @@ class Item:
                     logger.notice(f'__update: upper_timer caller={caller}, value={value}')
                 self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-UpTimer')
                 self._hysteresis_upper_timer_active = False
-                self.active_timer_ends = None
+                self._hysteresis_active_timer_ends = None
             if self._hysteresis_lower_timer_active:
                 self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-LoTimer')
                 self._hysteresis_lower_timer_active = False
-                self.active_timer_ends = None
+                self._hysteresis_active_timer_ends = None
                 if self._hysteresis_log:
                     logger.notice(f'__update: lower_timer caller={caller}, value={value}')
             if caller != 'Hysteresis':
                 self._hysteresis_state_set = cast_bool(value)
-
-        if key is None and index is None:
-            # don't cast for elements of complex types
-            try:
-                value = self.cast(value)
-            except Exception:
-                try:
-                    logger.warning(
-                        f'Item {self._path}: value "{value}" does not match type {self._type}. Via caller {caller}, source {source}'
-                    )
-                except Exception:
-                    pass
-                return
 
         with self._lock:
             _changed = False
@@ -1461,7 +1522,8 @@ class Item:
                 elif value == self._fadingdetails.get('value'):
                     pass
                 else:
-                    logger.dbghigh(f'Item {self._path}: Ignoring update by {caller} as item is fading')
+                    message = f'Item {self._path}: Ignoring update by {caller} as item is fading'
+                    self.__reject_write(value, WriteRejectReason.FADING, message, strict, log=logger.dbghigh)
                     return
 
             if value != self._value or self._enforce_change:
@@ -1643,31 +1705,24 @@ class Item:
         """Return True if item has no parent in tree — delegates to _navigation.is_top_of_item_tree()."""
         return _is_top_of_item_tree_fn(self)
 
-    def set(self, value, caller='Logic', source=None, dest=None, prev_change=None, last_change=None):
+    def set(self, value, caller='Logic', source=None, dest=None, prev_change=None, last_change=None, strict=False):
         """
-        Set an Item value and optionally set prev_change and last_change timestamps
+        Set the item's value without running its triggers, optionally with its change timestamps.
 
-        (This method is called eg. by the database plugin to initialize items from the database on start)
+        Used to restore a value, e.g. by the database plugin on start. A value that cannot be cast to the
+        item type is dropped and a warning is logged; with *strict* it raises instead.
 
-        :param value:
-        :param caller:
-        :param source:
-        :param dest:
-        :param prev_change:
-        :param last_change:
-        :return:
+        :param value: value to set, cast to the item type
+        :param caller: name of the writer, recorded as ``last_change_by``/``last_update_by``
+        :param source: detail of the writer, recorded with *caller*
+        :param dest: destination detail, written to the change log
+        :param prev_change: timestamp recorded as ``prev_change``, the previous ``last_change`` if None
+        :param last_change: timestamp recorded as ``last_change``, now if None
+        :param strict: raise instead of dropping a value of the wrong type
+        :raises ItemWriteRejected: on a strict set of a value of the wrong type
         """
-        try:
-            value = self.cast(value)
-        except Exception:
-            try:
-                logger.warning(
-                    'Item {}: value {} does not match type {}. Via {} {}'.format(
-                        self._path, value, self._type, caller, source
-                    )
-                )
-            except Exception:
-                pass
+        value = self.__cast_for_write(value, caller, source, strict)
+        if value is _REJECTED:
             return
         with self._lock:
             self._set_value(value, caller, source, dest, prev_change, last_change)

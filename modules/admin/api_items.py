@@ -28,6 +28,7 @@ import cherrypy
 
 import lib.shyaml as shyaml
 from lib.item import Items
+from lib.item.errors import ItemWriteRejected
 from lib.item.items import ItemOperationBusyError
 from lib.utils import Utils
 
@@ -155,7 +156,10 @@ class ItemsController(RESTResource, ItemData):
         """
         Handle PUT requests — set an item value.
 
-        Request body: JSON object with a "value" key.
+        Request body: JSON object with a "value" key. A num item accepts text with a decimal comma.
+
+        :raises cherrypy.HTTPError: 400 for a broken body, 404 for a missing item, 422 for a value the item
+            does not accept (wrong type, item fading)
         """
         if id is None:
             raise cherrypy.HTTPError(400, 'Item path required')
@@ -176,17 +180,16 @@ class ItemsController(RESTResource, ItemData):
 
         self.logger.info(f'ItemsController PUT /api/items/{id}: value={value!r}')
 
-        if item.type() and 'num' in item.type():
-            if isinstance(value, str):
-                if '.' in value or ',' in value:
-                    value = float(value.replace(',', '.'))
-                else:
-                    value = int(value) if value != '' else 0
+        if item.type() and 'num' in item.type() and isinstance(value, str):
+            value = value.replace(',', '.')
 
         if item.type() == 'foo' and isinstance(value, str):
             value = self._foo_value_from_text(value)
 
-        item(value, caller='admin')
+        try:
+            item(value, caller='admin', strict=True)
+        except ItemWriteRejected as e:
+            raise cherrypy.HTTPError(422, str(e))
         return json.dumps({'result': 'ok'})
 
     @staticmethod

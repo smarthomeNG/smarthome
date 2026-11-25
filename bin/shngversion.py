@@ -119,8 +119,10 @@ from lib.utils import Version
 
 # Update auf 1.12.0    wg. Release
 # Update auf 1.12.0.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.12.0 Release"
+
 # Update auf 1.12.1    wg. Release
 # Update auf 1.12.1.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.12.1 Release"
+
 # Update auf 1.12.2    wg. Release
 # Update auf 1.12.2.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.12.2 Release"
 # Update auf 1.12.2.2  wg. Kennzeichnung für sh_minversion
@@ -129,8 +131,10 @@ from lib.utils import Version
 # Update auf 2.0.0-dev.2 wg. Kennzeichnung für sh_minversion der Plugins, die den 2.0 Core brauchen
 
 # Update auf 2.0.0     wg. Release
+# Update auf 2.1.0-dev.0 wg. Kennzeichnung des Repo Stands als "nach dem v2.0.0 Release"
+# Update auf 2.1.0-dev.1 wg. Kennzeichnung für sh_minversion des mcp Plugins (strict Item-Schreibzugriffe)
 
-shNG_version = '2.1.0-dev.0'
+shNG_version = '2.1.0-dev.1'
 shNG_branch = 'develop'
 shNG_releasedate = '25. November 2026'
 

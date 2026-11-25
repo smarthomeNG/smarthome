@@ -192,6 +192,38 @@ angezeigt.
 
 |
 
+.. index:: Items; strict
+
+Abgelehnte Werte erkennen (strict)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ein Wert, den das Item nicht annimmt, wird verworfen: das Item behält seinen Wert, und eine Warnung wird
+geloggt. Die Zuweisung selbst meldet keinen Fehler. Das ist der Fall, wenn
+
+- der Wert nicht in den Typ des Items umgewandelt werden kann, z.B. ``'abc'`` für ein Item vom Typ ``num``, oder
+- das Item gerade per ``fade()`` überblendet wird und ``stop_fade``/``continue_fade`` dem Aufrufer nicht
+  erlauben, das Überblenden zu beenden (diese Meldung wird nur im Debug-Level ``DBGHIGH`` geloggt).
+
+Mit dem Parameter ``strict=True`` löst die Zuweisung in diesen Fällen stattdessen die Exception
+``ItemWriteRejected`` aus. Sie ist eine ``ValueError``; ihr Attribut ``reason`` nennt den Grund
+(``WriteRejectReason.TYPE`` bzw. ``WriteRejectReason.FADING``):
+
+.. code-block:: python
+   :caption:  logics/sample.py
+
+   from lib.item.errors import ItemWriteRejected
+
+   try:
+       sh.Oma.Papa.Kind(<value>, strict=True)
+   except ItemWriteRejected as e:
+       logger.warning(f'Wert abgelehnt ({e.reason.value}): {e}')
+
+``strict`` gilt auch für ``item.set()``. Bei einem Item mit ``eval`` Attribut hat ``strict`` keine Wirkung: der Wert
+wird dort erst später, in einem anderen Thread, durch das eval berechnet und geschrieben. Beim Schreiben einzelner
+Listen- oder Dict-Elemente (``index``/``key``) wird der Wert nicht umgewandelt und daher auch nicht abgelehnt.
+
+|
+
 Erweiterter Zugriff auf List- und Dict-Items
 --------------------------------------------
 

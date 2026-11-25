@@ -493,6 +493,24 @@ class TestSetValue(_Base):
     def test_str_item_keeps_container_looking_text(self):
         self.assertEqual("{'a': 1}", self._put('str', "{'a': 1}"))
 
+    def test_num_text_with_comma_decimal_sets_a_float(self):
+        self.assertEqual(1.5, self._put('num', '1,5'))
+
+    def test_value_of_the_wrong_type_returns_422_and_keeps_the_value(self):
+        with self.assertRaises(cherrypy.HTTPError) as ctx:
+            self._put('list', 'not a list')
+
+        self.assertEqual(422, ctx.exception.status)
+        self.assertIn('does not match type list', ctx.exception._message)
+        self.assertEqual([], self.sh.items.return_item('target')())
+
+    def test_num_text_that_is_no_number_returns_422_and_keeps_the_value(self):
+        with self.assertRaises(cherrypy.HTTPError) as ctx:
+            self._put('num', 'abc')
+
+        self.assertEqual(422, ctx.exception.status)
+        self.assertEqual(0, self.sh.items.return_item('target')())
+
 
 class TestDelete(_Base):
     def test_delete_removes_item(self):

@@ -59,7 +59,7 @@ import lib.item.item
 import lib.item.items
 import lib.config
 from lib.item.items import Items
-from lib.item._internal._hysteresis import _onoff, _get_hysteresis_state_string
+from lib.item._internal._hysteresis import _onoff, _get_hysteresis_state_string, run_hysteresis
 from tests.mock.core import MockSmartHome
 import tests.common as common
 
@@ -338,6 +338,42 @@ class TestGetHysteresisItemTriggers(_HystBase):
     def test_plain_item_has_empty_trigger_list(self):
         plain = _item(self.sh, 'plain', 'bool')
         self.assertEqual(plain.get_hysteresis_item_triggers(), [])
+
+
+class TestHysteresisTimerEnds(_Base):
+    """A hysteresis output with a 60 s delay on both thresholds."""
+
+    def setUp(self):
+        super().setUp()
+        self.sensor = _item(self.sh, 'sensor_t', value=20)
+        self.output = _item(
+            self.sh,
+            'out_t',
+            'bool',
+            hysteresis_input='sensor_t',
+            hysteresis_upper_threshold='22 ; 60',
+            hysteresis_lower_threshold='18 ; 60',
+        )
+
+    def _data(self):
+        with patch('time.sleep'):
+            return self.output.hysteresis_data()
+
+    def test_running_upper_timer_reports_its_end(self):
+        self.output(False)
+        self.sensor(25)
+        run_hysteresis(self.output, value=25)
+
+        self.assertTrue(self._data()['upper_timer_active'])
+        self.assertIn('active_timer_ends', self._data())
+
+    def test_running_lower_timer_reports_its_end(self):
+        self.output(True)
+        self.sensor(15)
+        run_hysteresis(self.output, value=15)
+
+        self.assertTrue(self._data()['lower_timer_active'])
+        self.assertIn('active_timer_ends', self._data())
 
 
 if __name__ == '__main__':

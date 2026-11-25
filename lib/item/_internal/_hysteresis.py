@@ -133,7 +133,7 @@ def run_hysteresis(item, value=None, caller='Hysteresis', source=None, dest=None
                     timer = 0
                 item._hysteresis_upper_timer_active = True
                 next_time = item.shtime.now() + datetime.timedelta(seconds=timer)
-                item.active_timer_ends = next_time
+                item._hysteresis_active_timer_ends = next_time
                 if item._hysteresis_log:
                     logger.notice(f'__run_hysteresis {item._path}: scheduler.add {item._path}-UpTimer')
                 item._sh.scheduler.add(
