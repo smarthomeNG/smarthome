@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.7**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -53,7 +53,16 @@ Parameter
 
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
-**Keine**
+
+generated_items_file
+====================
+
+
+Datei (im items-Verzeichnis), in der per "JSON → Items"-Button im Webinterface erzeugte Items gespeichert werden.
+
+ - Datentyp: **str**
+ - Standardwert: **mqtt_generated_items.yaml**
+
 
 ==============
 Item Attribute
@@ -96,6 +105,15 @@ Wenn mqtt_retain auf True gesetzt ist, werden MQTT Messages für dieses Item mit
 
 
  - Datentyp: **bool**
+
+
+mqtt_select_in
+==============
+
+
+Das Item erhält nur den vom Ausdruck ausgewählten Teil der empfangenen Payload, z.B. "temp" oder "state.on" oder "sensors[0].value". Die Payload wird unabhängig vom Item-Typ als JSON ausgewertet. Passt der Ausdruck auf nichts (z.B. fehlender Schlüssel), bleibt das Item unverändert. Ein ungültiger Ausdruck wird geloggt und das Item abonniert das Topic nicht. Hat das Item kein eigenes mqtt_topic_in, wird das mqtt_topic_in des nächsten übergeordneten Items verwendet. 
+
+ - Datentyp: **str**
 
 
 mqtt_topic
@@ -188,4 +206,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/mqtt/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

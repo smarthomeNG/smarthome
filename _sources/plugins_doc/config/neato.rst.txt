@@ -270,13 +270,12 @@ Gibt im logfile die verfuebaren Raeume aus
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-map_id
- -  -  -  -  -  - 
+**map_id**
+    Karten ID
 
-Karten ID
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 start_robot(boundary_id, map_id)
@@ -287,21 +286,17 @@ Aktiviert Reinigung
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-boundary_id
- -  -  -  -  -  -  -  -  -  -  - 
+**boundary_id**
+    Zimmer ID (ASCII hex Darstellung)
 
-Zimmer ID (ASCII hex Darstellung)
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**map_id**
+    Karten ID
 
-
-map_id
- -  -  -  -  -  - 
-
-Karten ID
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/neato/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

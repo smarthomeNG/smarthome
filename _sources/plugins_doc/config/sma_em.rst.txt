@@ -85,9 +85,129 @@ sma_em_data_type
 ================
 
 
-Datentyp. Folgende Werte sind möglich: pregard, pregardcounter, psurplus, psurpluscounter, sregard, sregardcounter, ssurplus, ssurpluscounter, qregard, qregardcounter, qsurplus, qsurpluscounter, cosphi, p1regard, p1regardcounter, p1surplus, p1surpluscounter, s1regard, s1regardcounter, s1surplus, s1surpluscounter, q1regard, q1regardcounter, q1surplus, q1surpluscounter, v1, thd1, cosphi1, p2regard, p2regardcounter, p2surplus, p2surpluscounter, s2regard, s2regardcounter, s2surplus, s2surpluscounter, q2regard, q2regardcounter, q2surplus, q2surpluscounter, v2, thd2, cosphi2, p3regard, p3regardcounter, p3surplus, p3surpluscounter, s3regard, s3regardcounter, s3surplus, s3surpluscounter, q3regard, q3regardcounter, q3surplus, q3surpluscounter, v3, thd3, cosphi3.
+Legt fest, welcher Messwert des SMA Energy Meters in das Item geschrieben wird.
 
  - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **cosphi**
+   - **cosphi1**
+   - **cosphi1unit**
+   - **cosphi2**
+   - **cosphi2unit**
+   - **cosphi3**
+   - **cosphi3unit**
+   - **cosphiunit**
+   - **i1**
+   - **i1unit**
+   - **i2**
+   - **i2unit**
+   - **i3**
+   - **i3unit**
+   - **p1consume**
+   - **p1consumecounter**
+   - **p1consumecounterunit**
+   - **p1consumeunit**
+   - **p1supply**
+   - **p1supplycounter**
+   - **p1supplycounterunit**
+   - **p1supplyunit**
+   - **p2consume**
+   - **p2consumecounter**
+   - **p2consumecounterunit**
+   - **p2consumeunit**
+   - **p2supply**
+   - **p2supplycounter**
+   - **p2supplycounterunit**
+   - **p2supplyunit**
+   - **p3consume**
+   - **p3consumecounter**
+   - **p3consumecounterunit**
+   - **p3consumeunit**
+   - **p3supply**
+   - **p3supplycounter**
+   - **p3supplycounterunit**
+   - **p3supplyunit**
+   - **pconsume**
+   - **pconsumecounter**
+   - **pconsumecounterunit**
+   - **pconsumeunit**
+   - **psupply**
+   - **psupplycounter**
+   - **psupplycounterunit**
+   - **psupplyunit**
+   - **q1consume**
+   - **q1consumecounter**
+   - **q1consumecounterunit**
+   - **q1consumeunit**
+   - **q1supply**
+   - **q1supplycounter**
+   - **q1supplycounterunit**
+   - **q1supplyunit**
+   - **q2consume**
+   - **q2consumecounter**
+   - **q2consumecounterunit**
+   - **q2consumeunit**
+   - **q2supply**
+   - **q2supplycounter**
+   - **q2supplycounterunit**
+   - **q2supplyunit**
+   - **q3consume**
+   - **q3consumecounter**
+   - **q3consumecounterunit**
+   - **q3consumeunit**
+   - **q3supply**
+   - **q3supplycounter**
+   - **q3supplycounterunit**
+   - **q3supplyunit**
+   - **qconsume**
+   - **qconsumecounter**
+   - **qconsumecounterunit**
+   - **qconsumeunit**
+   - **qsupply**
+   - **qsupplycounter**
+   - **qsupplycounterunit**
+   - **qsupplyunit**
+   - **s1consume**
+   - **s1consumecounter**
+   - **s1consumecounterunit**
+   - **s1consumeunit**
+   - **s1supply**
+   - **s1supplycounter**
+   - **s1supplycounterunit**
+   - **s1supplyunit**
+   - **s2consume**
+   - **s2consumecounter**
+   - **s2consumecounterunit**
+   - **s2consumeunit**
+   - **s2supply**
+   - **s2supplycounter**
+   - **s2supplycounterunit**
+   - **s2supplyunit**
+   - **s3consume**
+   - **s3consumecounter**
+   - **s3consumecounterunit**
+   - **s3consumeunit**
+   - **s3supply**
+   - **s3supplycounter**
+   - **s3supplycounterunit**
+   - **s3supplyunit**
+   - **sconsume**
+   - **sconsumecounter**
+   - **sconsumecounterunit**
+   - **sconsumeunit**
+   - **speedwire-version**
+   - **ssupply**
+   - **ssupplycounter**
+   - **ssupplycounterunit**
+   - **ssupplyunit**
+   - **u1**
+   - **u1unit**
+   - **u2**
+   - **u2unit**
+   - **u3**
+   - **u3unit**
 
 
 ============
@@ -255,4 +375,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/sma_em/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

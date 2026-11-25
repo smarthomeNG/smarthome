@@ -40,7 +40,6 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.8**
- - Minimum Python Version: **3.7**
 
 Konfiguration
 =============
@@ -73,7 +72,15 @@ Item Attribute
 
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
-**Keine**
+
+bsb_lan
+=======
+
+
+Parameternummer des BSB-LAN-Adapters, die diesem Item zugeordnet wird. Eine vollständige Liste der unterstützten Parameternummern liefert die Web-Oberfläche des BSB-LAN-Adapters unter http://<ip>/K. Je nach Parameter liest oder schreibt das Plugin darüber den Wert des Items; ein schreibgeschützter Parameter wird bei einem Schreibversuch mit einer Fehlermeldung im Log quittiert.
+
+ - Datentyp: **num**
+
 
 ============
 Item-Structs
@@ -102,4 +109,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/bsblan/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

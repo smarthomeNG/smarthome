@@ -37,8 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.10**
- - Minimum Python Version: **3.8**
+ - Minimum SmartHomeNG Version: **1.11**
 
 Konfiguration
 =============
@@ -68,12 +67,12 @@ cycle
 =====
 
 
-Update Zyklus in Sekunden. Wenn der Wert 0 ist, wird keine Abfrage über cycle ausgeführt
+Abfragezyklus in Sekunden: positiv = periodisch, 0 = nur Crontab, -1 = kontinuierlich.
 
  - Datentyp: **int**
  - Standardwert: **300**
 
- - Minimalwert: **0**
+ - Minimalwert: **-1**
 
 host
 ====
@@ -224,6 +223,15 @@ Endian.BIG oder Endian.LITTLE
    - **Endian.LITTLE**
 
 
+modbusPoll
+==========
+
+
+Bei true am Item eine einmalige Abfrage aller Register auslösen (auch mit cycle: 0).
+
+ - Datentyp: **bool**
+
+
 ============
 Item-Structs
 ============
@@ -262,7 +270,7 @@ huawei
                      - :dir:`file` **phase_c** (`num`, ---)
                  - :dir:`folder` **power** (`foo`, ---)
                      - :dir:`file` **active** (`num`, ---)
-                     - :dir:`file` **power_factor** (`num`, ---)
+                     - :dir:`file` **factor** (`num`, ---)
                  - :dir:`folder` **energy** (`foo`, ---)
                      - :dir:`file` **total_active** (`num`, ---)
                      - :dir:`file` **total_reactive** (`num`, ---)
@@ -386,9 +394,6 @@ huawei
                  - :dir:`file` **excess_pv_use_tou** (`num`, ---)
              - :dir:`folder` **pricing** (`foo`, ---)
                  - :dir:`file` **time_of_use_price** (`num`, ---)
-                 - :dir:`file` **luna_price_periods** (`num`, ---)
-                 - :dir:`file` **lg_resu_price_periods** (`num`, ---)
-                 - :dir:`file` **fixed_charging_and_discharging_periods** (`num`, ---)
                  - :dir:`file` **lcoe** (`num`, ---)
          - :dir:`folder` **emma** (`foo`, ---)
              - :dir:`folder` **general** (`foo`, ---)

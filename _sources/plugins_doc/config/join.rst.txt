@@ -115,221 +115,151 @@ send Funktion
 
  - Ergebnistyp der Funktion: 
 
+**Parameter:**
 
-title
- -  -  -  -  - 
+**title**
+    Titel
 
-Titel
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**text**
+    Text
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-text
- -  -  -  - 
+**icon**
+    Icon
 
-Text
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**find**
+    Find
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-icon
- -  -  -  - 
+**smallicon**
+    Smallicon
 
-Icon
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**device_id**
+    Device_id
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-find
- -  -  -  - 
+**device_ids**
+    Device_ids
 
-Find
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**device_name**
+    Device_names
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-smallicon
- -  -  -  -  -  -  -  -  - 
+**url**
+    Url
 
-Smallicon
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**image**
+    Image
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-device_id
- -  -  -  -  -  -  -  -  - 
+**sound**
+    Sound
 
-Device_id
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**group**
+    Group
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-device_ids
- -  -  -  -  -  -  -  -  -  - 
+**clipboard**
+    Clipboard
 
-Device_ids
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**file**
+    File
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-device_name
- -  -  -  -  -  -  -  -  -  -  - 
+**callnumber**
+    Callnumber
 
-Device_names
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**smsnumber**
+    Smsnumber
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-url
- -  -  - 
+**smstext**
+    Smstext
 
-Url
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**mmsfile**
+    Mmsfile
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-image
- -  -  -  -  - 
+**wallpaper**
+    Wallpaper
 
-Image
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**lockwallpaper**
+    Lockwallpaper
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-sound
- -  -  -  -  - 
+**interruptionFilter**
+    InterruptionFilter
 
-Sound
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**mediaVolume**
+    MediaVolume
 
+    - Datentyp: **str**
+    - Standardwert: **None**
 
-group
- -  -  -  -  - 
+**ringVolume**
+    RingVolume
 
-Group
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**alarmVolume**
+    AlarmVolume
 
-
-clipboard
- -  -  -  -  -  -  -  -  - 
-
-Clipboard
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-file
- -  -  -  - 
-
-File
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-callnumber
- -  -  -  -  -  -  -  -  -  - 
-
-Callnumber
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-smsnumber
- -  -  -  -  -  -  -  -  - 
-
-Smsnumber
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-smstext
- -  -  -  -  -  -  - 
-
-Smstext
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-mmsfile
- -  -  -  -  -  -  - 
-
-Mmsfile
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-wallpaper
- -  -  -  -  -  -  -  -  - 
-
-Wallpaper
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-lockwallpaper
- -  -  -  -  -  -  -  -  -  -  -  -  - 
-
-Lockwallpaper
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-interruptionFilter
- -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
-
-InterruptionFilter
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-mediaVolume
- -  -  -  -  -  -  -  -  -  -  - 
-
-MediaVolume
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-ringVolume
- -  -  -  -  -  -  -  -  -  - 
-
-RingVolume
-
- - Datentyp: **str**
- - Standardwert: **None**
-
-
-alarmVolume
- -  -  -  -  -  -  -  -  -  -  - 
-
-AlarmVolume
-
- - Datentyp: **str**
- - Standardwert: **None**
+    - Datentyp: **str**
+    - Standardwert: **None**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

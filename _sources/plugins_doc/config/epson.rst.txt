@@ -39,8 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.5**
- - Minimum Python Version: **3.7**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -106,37 +105,6 @@ Anzahl Datenbits
  - Standardwert: **8**
 
 
-command_class
-=============
-
-
-Klasse für Verarbeitung von Kommandos
-
- - Datentyp: **str**
- - Standardwert: **SDPCommandParseStr**
-
- - Mögliche Werte:
-
-   - **SDPCommand**
-   - **SDPCommandParseStr**
-
-
-conn_type
-=========
-
-
-Verbindungstyp
-
- - Datentyp: **str**
- - Standardwert: **serial_async**
-
- - Mögliche Werte:
-
-   - 
-   - **net_tcp_client**
-   - **serial_async**
-
-
 connect_cycle
 =============
 
@@ -164,6 +132,16 @@ host
 Netzwerkziel/-host
 
  - Datentyp: **str**
+
+
+invalidate_on_disconnect
+========================
+
+
+Items bei Verbindungsverlust im Datenbank-Log als ungültig markieren (Datenlücke)
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
 
 
 model
@@ -270,10 +248,10 @@ timeout
 =======
 
 
-Timeout für Geräteantwort
+Lese-Timeout für serielle Verbindung (Sekunden), begrenzt die Wartezeit beim Schließen der Verbindung
 
  - Datentyp: **num**
- - Standardwert: **3**
+ - Standardwert: **1**
 
 
 ==============
@@ -306,7 +284,7 @@ epson_read
 ==========
 
 
-Item liest/erhält Werte vom Gerät
+Item fordert Werte vom Gerät an (Werte empfängt jedes Item mit Kommando)
 
  - Datentyp: **bool**
 

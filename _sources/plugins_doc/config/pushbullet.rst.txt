@@ -115,37 +115,27 @@ Sendet eine Adresse an Pushbullet.
 
  - Ergebnistyp der Funktion: **str | bool**
 
+**Parameter:**
 
-name
- -  -  -  - 
+**name**
+    Name der Adresse / des Kontakts.
 
-Name der Adresse / des Kontakts.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**address**
+    Adresse.
 
+    - Datentyp: **str**
 
-address
- -  -  -  -  -  -  - 
+**deviceid**
+    (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
-Adresse.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**apikey**
+    (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 
-
-deviceid
- -  -  -  -  -  -  -  - 
-
-(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
-
- - Datentyp: **str**
-
-
-apikey
- -  -  -  -  -  - 
-
-(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 file(filepath, deviceid, apikey, body)
@@ -156,37 +146,27 @@ Sendet eine Datei an Pushbullet.
 
  - Ergebnistyp der Funktion: **str | bool**
 
+**Parameter:**
 
-filepath
- -  -  -  -  -  -  -  - 
+**filepath**
+    Pfad der Datei.
 
-Pfad der Datei.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**deviceid**
+    (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
+    - Datentyp: **str**
 
-deviceid
- -  -  -  -  -  -  -  - 
+**apikey**
+    (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 
-(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**body**
+    Inhalt der Nachricht.
 
-
-apikey
- -  -  -  -  -  - 
-
-(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
-
- - Datentyp: **str**
-
-
-body
- -  -  -  - 
-
-Inhalt der Nachricht.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 link(title, url, deviceid, apikey, body)
@@ -197,45 +177,32 @@ Sendet einen Link an Pushbullet.
 
  - Ergebnistyp der Funktion: **str | bool**
 
+**Parameter:**
 
-title
- -  -  -  -  - 
+**title**
+    Titel des Links.
 
-Titel des Links.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**url**
+    URL des Links.
 
+    - Datentyp: **str**
 
-url
- -  -  - 
+**deviceid**
+    (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
-URL des Links.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**apikey**
+    (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 
+    - Datentyp: **str**
 
-deviceid
- -  -  -  -  -  -  -  - 
+**body**
+    Inhalt der Nachricht.
 
-(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
-
- - Datentyp: **str**
-
-
-apikey
- -  -  -  -  -  - 
-
-(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
-
- - Datentyp: **str**
-
-
-body
- -  -  -  - 
-
-Inhalt der Nachricht.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 list(title, items, deviceid, apikey)
@@ -246,37 +213,27 @@ Sendet eine Liste an Pushbullet.
 
  - Ergebnistyp der Funktion: **str | bool**
 
+**Parameter:**
 
-title
- -  -  -  -  - 
+**title**
+    Titel der Liste.
 
-Titel der Liste.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**items**
+    Items der Liste (als JSON Array).
 
+    - Datentyp: **str**
 
-items
- -  -  -  -  - 
+**deviceid**
+    (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
-Items der Liste (als JSON Array).
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**apikey**
+    (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 
-
-deviceid
- -  -  -  -  -  -  -  - 
-
-(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
-
- - Datentyp: **str**
-
-
-apikey
- -  -  -  -  -  - 
-
-(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 note(title, body, deviceid, apikey)
@@ -287,37 +244,27 @@ Sendet eine Nachricht an Pushbullet.
 
  - Ergebnistyp der Funktion: **str | bool**
 
+**Parameter:**
 
-title
- -  -  -  -  - 
+**title**
+    Titel der Nachricht.
 
-Titel der Nachricht.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**body**
+    Inhalt der Nachricht.
 
+    - Datentyp: **str**
 
-body
- -  -  -  - 
+**deviceid**
+    (optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
 
-Inhalt der Nachricht.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**apikey**
+    (optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
 
-
-deviceid
- -  -  -  -  -  -  -  - 
-
-(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
-apikey
- -  -  -  -  -  - 
-
-(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
-
- - Datentyp: **str**
-
-
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/pushbullet/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

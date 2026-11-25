@@ -39,7 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -170,13 +170,12 @@ Port Status abfragen. True = aktiviert, False = deaktiviert
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-port
- -  -  -  - 
+**port**
+    Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
-Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_port_poe(port)
@@ -187,13 +186,12 @@ Port POE Status abfragen. True = aktiviert, False = deaktiviert
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-port
- -  -  -  - 
+**port**
+    Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
-Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_port_status(port)
@@ -204,13 +202,12 @@ Aktuellen Port Status abfragen. True = in Betrieb, False = Aus
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-port
- -  -  -  - 
+**port**
+    Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
-Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 set_port_enabled(port, state)
@@ -221,21 +218,17 @@ Anschluss aktivieren oder deaktivieren
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-port
- -  -  -  - 
+**port**
+    Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
-Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**state**
+    Gewünschter Aktivierungsstatus (true = aktiviert, false = deaktiviert)
 
-
-state
- -  -  -  -  - 
-
-Gewünschter Aktivierungsstatus (true = aktiviert, false = deaktiviert)
-
- - Datentyp: **bool**
+    - Datentyp: **bool**
 
 
 set_port_poe(port, state)
@@ -246,21 +239,17 @@ Poe Ausgabe für einen bestimmten Anschluss einstellen
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-port
- -  -  -  - 
+**port**
+    Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
 
-Aktueller Name des Anschlusses. Wenn Sie den Switchport umbenannt haben, verwenden Sie den neuen Namen, den Sie ihm gegeben haben!
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**state**
+    Gewünschter POE-Status (true = auto-on, false = off)
 
-
-state
- -  -  -  -  - 
-
-Gewünschter POE-Status (true = auto-on, false = off)
-
- - Datentyp: **bool**
+    - Datentyp: **bool**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

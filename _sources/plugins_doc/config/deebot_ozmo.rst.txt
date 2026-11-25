@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
+**ACHTUNG**: Dieses Plugin ist als defunct gekennzeichnet. Es funktioniert nicht mehr und wird mit                  dem nächsten Release entfernt.
 
 
 
@@ -39,7 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.5**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -250,13 +250,12 @@ Reinigung starten
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-area
- -  -  -  - 
+**area**
+    ID des Raumes der geputzt werden soll
 
-ID des Raumes der geputzt werden soll
-
- - Datentyp: **num**
+    - Datentyp: **num**
 
 
 locate()
@@ -294,13 +293,12 @@ Saugstärke einstellen
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-speed
- -  -  -  -  - 
+**speed**
+    Saugstärke
 
-Saugstärke
-
- - Datentyp: **num**
+    - Datentyp: **num**
 
 
 set_water_level(level)
@@ -311,13 +309,12 @@ Wasser Quantität einstellen
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-level
- -  -  -  -  - 
+**level**
+    Wasser Quanittät
 
-Wasser Quanittät
-
- - Datentyp: **num**
+    - Datentyp: **num**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/deebot_ozmo/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -21,12 +21,12 @@ Anforderungen
 Notwendige Software
 -------------------
 
-Das Python Paket ``rrdtool`` und die entsprechenden Libraries für das Betriebssystem müssen installiert sein. 
+Das Python Paket ``rrdtool-bindings`` und die entsprechenden Libraries für das Betriebssystem müssen installiert sein. 
 Letzteres muss manuell erfolgen:
 
 .. code:: bash
 
-    sudo apt-get install librrd-dev libpython3-dev
+    sudo apt-get install -y gcc librrd-dev python3-dev
 
 Das Python Paket wird über die ``requirements.txt`` automatisch beim Start installiert.
 
@@ -41,7 +41,7 @@ RRD
 - Werte werden nur in bestimmten Abständen aufgezeichnet und nicht dann, wenn eine Änderung eintritt
 
 Datenbank-Plugin
-+ Unterstützung für viele verschiedene Datenbanken wie SQLite, MySQL/MariaDB usw.
++ Unterstützung für viele verschiedene Datenbanken wie SQLite, MySQL/MariaDB, PostgreSQL usw.
 + genaue Protokollierung der Änderungszeiten
 + mehr Analysefunktionalität
 + im SmartHomeNG Kern gut integriert

@@ -60,7 +60,7 @@ Beispiel
 
 .. code-block:: python
 
-    today = sh.now().date()
+    today = sh.shtime.now().date()
 
     # To check a calendar file use one of the following three options:
 	# a) Local file

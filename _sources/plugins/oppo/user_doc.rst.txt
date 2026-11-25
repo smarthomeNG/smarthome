@@ -35,7 +35,7 @@ plugin.yaml
     oppo:
         plugin_name: oppo
         model: UDP-203
-        timeout: 3
+        timeout: 1
         terminator: "\r"
         binary: false
         autoreconnect: true

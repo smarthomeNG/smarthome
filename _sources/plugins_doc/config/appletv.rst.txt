@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.6**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -191,7 +191,7 @@ device
 
 
 .. treeview::
-     - :dir:`folder` **device** (`foo`, OrderedDict([('remark', 'Name of device'), ('type', 'str'), ('visu_acl', 'ro'), ('cache', True), ('appletv@instance', 'name')]))
+     - :dir:`folder` **device** (`foo`, ---)
          - :dir:`file` **remark** (`str`, Name of device)
          - :dir:`file` **ip** (`str`, IP address of device)
          - :dir:`file` **mac** (`str`, MAC address of device)
@@ -206,7 +206,7 @@ playing
 
 .. treeview::
      - :dir:`folder` **playing** (`foo`, ---)
-         - :dir:`folder` **app** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('cache', True), ('appletv@instance', 'playing_app_name')]))
+         - :dir:`folder` **app** (`foo`, ---)
              - :dir:`file` **identifier** (`str`, ---)
              - :dir:`file` **remark** (`str`, ---)
          - :dir:`file` **state** (`num`, ---)

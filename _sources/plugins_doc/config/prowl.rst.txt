@@ -150,59 +150,43 @@ Diese Funktion versendet eine Nachricht an Prowl.
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-event
- -  -  -  -  - 
+**event**
+    Typ des Ereignisses
 
-Typ des Ereignisses
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**description**
+    Beschreibung des Ereignisses
 
+    - Datentyp: **str**
 
-description
- -  -  -  -  -  -  -  -  -  -  - 
+**priority**
+    Es kann eine Priorität (0-2) angegeben werden, um zwischen Ereignissen auf dem Mobile Device zu differenzieren
 
-Beschreibung des Ereignisses
+    - Datentyp: **int**
+    - Standardwert: **None***
+    - Minimalwert: **0**
+    - Maximalwert: **2**
 
- - Datentyp: **str**
+**url**
+    Diese URL wird mit der Notification verbunden
 
+    - Datentyp: **str**
+    - Standardwert: **None***
 
-priority
- -  -  -  -  -  -  -  - 
+**apikey**
+    Hier kann ein individueller apikey angegeben werden
 
-Es kann eine Priorität (0-2) angegeben werden, um zwischen Ereignissen auf dem Mobile Device zu differenzieren
+    - Datentyp: **str**
+    - Standardwert: **None***
 
- - Datentyp: **int**
- - Standardwert: **None***
+**application**
+    Name der sendenden Applikation
 
- - Minimalwert: **0**
- - Maximalwert: **2**
-
-url
- -  -  - 
-
-Diese URL wird mit der Notification verbunden
-
- - Datentyp: **str**
- - Standardwert: **None***
-
-
-apikey
- -  -  -  -  -  - 
-
-Hier kann ein individueller apikey angegeben werden
-
- - Datentyp: **str**
- - Standardwert: **None***
-
-
-application
- -  -  -  -  -  -  -  -  -  -  - 
-
-Name der sendenden Applikation
-
- - Datentyp: **str**
- - Standardwert: **SmartHomeNG**
+    - Datentyp: **str**
+    - Standardwert: **SmartHomeNG**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

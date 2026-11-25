@@ -1,8 +1,10 @@
 
 
-=========================
-*eval* und *eval_trigger*
-=========================
+.. role:: greensup
+
+============================================
+*eval* und *eval_trigger* :greensup:`Update`
+============================================
 
 
 .. index:: Standard-Attribute; eval
@@ -31,11 +33,18 @@ Das Item soll aber die Temperatur in °Celsius speichern.
        eval: (value - 32 ) * 5 / 9  # Aus 68°F werden somit 20°C
 
 Die Auswertung des **eval** Ausdrucks wird gestartet, wenn:
- - dem Item ein neuer Wert zugewiesen wird (siehe Erläuterug im ersten Absatz)
- - sich der Wert des oder der Items aus dem **eval_trigger** ändert (siehe Erläuterug weiter unten)
+ - dem Item ein neuer Wert zugewiesen wird (siehe Erläuterung im ersten Absatz)
+ - sich der Wert des oder der Items aus dem **eval_trigger** ändert (siehe Erläuterung weiter unten)
  - ein **timer** verwendet wird und die angegebene Zeit abgelaufen ist
  - ein **autotimer** verwendet wird und die angegebene Zeit abgelaufen ist
  - ein **crontab** definiert ist und die zeitlichen Angaben zutreffen
+ - SmartHomeNG startet und das Item ein **eval_trigger** Attribut hat (siehe unten)
+
+Beim Start von SmartHomeNG wird der **eval** Ausdruck eines Items mit **eval_trigger** einmal ausgeführt, damit das
+Item einen Anfangswert erhält. Das geschieht nicht, wenn das Item das Attribut **cache** hat, oder wenn ein Plugin dem
+Item beim Einlesen bereits einen Wert zugewiesen hat (z.B. das database Plugin mit ``database: init``). Sonst würde
+der Ausdruck von einem bereits aktuellen Wert aus neu berechnet, was z.B. bei aufsummierenden Ausdrücken den Wert
+verfälscht.
 
 Wenn das Attribut **eval_on_trigger_only** gesetzt ist, wird der **eval** Ausdruck
 nur ausgewertet, wenn ein **eval_trigger** der Auslöser war; in allen anderen
@@ -104,10 +113,19 @@ Beispiel:
 zusätzliche Funktionen in eval Ausdrücken
 -----------------------------------------
 
-Bereits SmartHomeNG v1.3 wird das Python Modul `math <https://docs.python.org/3.4/library/math.html>`__
-bereitgestellt und es können entsprechende Funktionen genutzt werden. Außerdem sind seit SmarthomeNG v1.7 die
-:doc:`Items-API </referenz/logiken/logiken_items>` als **items** (z.B. items.return_item('bla')) und das
-:doc:`shtime Modul </referenz/smarthomeng/feiertage_datum_zeit>` mittels **shtime** (z.B. shtime.now()) verfügbar.
+In **eval** Ausdrücken stehen zusätzlich zu den eingebauten Funktionen von Python die folgenden Namen zur Verfügung:
+
+    - **sh** - das SmartHomeNG Objekt, über das z.B. Items angesprochen werden (``sh.otheritem()``)
+    - **items** - die :doc:`Items-API </referenz/logiken/logiken_items>` (z.B. ``items.return_item('bla')``)
+    - **shtime** - das :doc:`shtime Modul </referenz/smarthomeng/feiertage_datum_zeit>` mit Zeit- und
+      Datumsfunktionen (z.B. ``shtime.now()``)
+    - **math** - das Python Modul `math <https://docs.python.org/3/library/math.html>`__
+    - **datetime** und **time** - die gleichnamigen Python Module
+    - **uf** - die geladenen :doc:`Userfunctions </referenz/userfunctions/userfunctions>`
+    - **env** - die Bibliothek :doc:`lib.env </lib/env>`
+    - **value** - der Wert, der dem Item zugewiesen werden soll
+    - **caller**, **source** und **dest** - Auslöser, Quelle und Ziel der Zuweisung
+    - **source_details** - siehe unten
 
 Beispiel:
 
@@ -117,13 +135,19 @@ Beispiel:
      type: num
      eval: math.ceil(sh.otheritem() / 60.0)
 
-Aktuell stehen zusätzlich zum Python Standard Sprachumfang folgende Packages bzw. SmartHomeNG Libraries zur Nutzung
-zur Vefügung:
+Weitere Python Module müssen im Ausdruck importiert werden, z.B. ``__import__('json').loads(value)``
+(siehe :doc:`eval und eval_trigger Beispiele </beispiele/items/items_eval_evaltrigger>`).
 
-    - **shtime** - die SmartHomeNG Library mit Zeit- und Datumsfunktionen
-    - **items** - die SmartHomeNG Library mit Funktionen zum Umgang mit Items
-    - **math** - das Python Package mit mathematischen Funktionen
-    - **uf** - geladene Userfunctions
+.. note::
+
+    Bisher waren in eval Ausdrücken unbeabsichtigt auch weitere Module erreichbar (z.B. ``os``, ``re``, ``json``).
+    Ausdrücke, die diese Module ohne Import verwenden, werden zur Zeit noch ausgeführt, es wird dabei aber eine
+    Warnung geloggt. Diese Ausnahme entfällt in einem kommenden Release.
+
+Wird das eval durch ein Item aus **eval_trigger** ausgelöst, enthält **source_details** ``<caller>:<source>``
+des Updates, das das eval ausgelöst hat (wie ``trigger['source_details']`` in Logiken). Der Wert wird beim
+Auslösen festgehalten; spätere Updates des auslösenden Items bis zur Ausführung des eval ändern ihn nicht.
+Ohne Auslösung über **eval_trigger** ist **source_details** ``None``.
 
 
 Für **eval** Ausdrücke können auch :doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>`
@@ -219,7 +243,7 @@ einem Stern generalisiert werden. ``temperatur.\*`` bedeutet, dass alle Kinderit
 Evaluieren des Items führen. Oder ``\*.trigger`` sorgt dafür, dass das Item durch alle Kind-Items mit dem
 Namen “trigger” aktualisiert werden kann, also z.B. durch ``temperatur.trigger``, ``Licht.OG.trigger``, etc.
 
-Seit SmartHomeNG v1.3 können für **eval_trigger** auch :doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>` genutzt werden. Dann müssen Bezüge auf andere Items nicht mehr absolut
+Für **eval_trigger** können auch :doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>` genutzt werden. Dann müssen Bezüge auf andere Items nicht mehr absolut
 angegeben werden sondern können sich relative auf andere Items beziehen.
 
 .. note::
@@ -324,7 +348,7 @@ Abfrage des Auslösers eines **eval** Ausdrucks
 Zu dem Zeitpunkt, wo ein **eval** Ausdruck ausgeführt wird, bezieht sich das Property ``last_update_by`` **nicht** auf
 die aktuellste Auslösung des Items, sondern auf das letzte Update davor. Möchte man nun aber abfragen, durch welches
 Item, Plugin oder durch welche Logik die Ausführung des eval Ausdrucks angestoßen wurde,
-muss das seit SmartHomeNG 1.9.1 implementierte Property ``last_trigger_by`` genutzt werden.
+muss das Property ``last_trigger_by`` genutzt werden.
 
 Dabei findet folgender zeitlicher Ablauf statt:
 

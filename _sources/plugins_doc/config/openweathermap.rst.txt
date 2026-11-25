@@ -623,13 +623,12 @@ Gibt die angegebene Windstärke als beschreibeneden Text aus
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-speed_in_bft
- -  -  -  -  -  -  -  -  -  -  -  - 
+**speed_in_bft**
+    Windstärke in bft, integer zwischen 0 und 12
 
-Windstärke in bft, integer zwischen 0 und 12
-
- - Datentyp: **num**
+    - Datentyp: **num**
 
 
 get_beaufort_number(speed_in_mps)
@@ -640,13 +639,12 @@ Berechnet den Beaufort-Wert (0 - 12) aus der Windgeschwindigkeit in m/s
 
  - Ergebnistyp der Funktion: **num**
 
+**Parameter:**
 
-speed_in_mps
- -  -  -  -  -  -  -  -  -  -  -  - 
+**speed_in_mps**
+    Windstärke in m/s
 
-Windstärke in m/s
-
- - Datentyp: **num**
+    - Datentyp: **num**
 
 
 get_raw_data_file(data_source_key)
@@ -657,13 +655,12 @@ Stellt die JSON-Datei der Datenquelle bereit
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-data_source_key
- -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+**data_source_key**
+    Datenquelle
 
-Datenquelle
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_value(owm_matchstring)
@@ -674,13 +671,12 @@ Lädt einen Wert
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-owm_matchstring
- -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+**owm_matchstring**
+    Zum Beispiel /day/0/rain
 
-Zum Beispiel /day/0/rain
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

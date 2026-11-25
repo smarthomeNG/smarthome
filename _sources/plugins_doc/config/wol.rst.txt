@@ -38,7 +38,6 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.8**
- - Minimum Python Version: **3.6**
 
 Konfiguration
 =============
@@ -116,21 +115,17 @@ Sendet ein Datenpaket zum Aufwecken
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-mac_adr
- -  -  -  -  -  -  - 
+**mac_adr**
+    MAC Adresse des per WOL aufzuweckenden Gerätes. Die Trennzeichen für die einzelnen MAC Bestandteile sind beliebig wählbar oder können auch weggelassen werden
 
-MAC Adresse des per WOL aufzuweckenden Gerätes. Die Trennzeichen für die einzelnen MAC Bestandteile sind beliebig wählbar oder können auch weggelassen werden
+    - Datentyp: **mac**
 
- - Datentyp: **mac**
+**ip_adr**
+    Optionales Attribut. Hier kann die IP Adresse des Hosts angegeben werden wenn ein Gerät eines anderen Subnetzes aufgeweckt werden soll 
 
-
-ip_adr
- -  -  -  -  -  - 
-
-Optionales Attribut. Hier kann die IP Adresse des Hosts angegeben werden wenn ein Gerät eines anderen Subnetzes aufgeweckt werden soll 
-
- - Datentyp: **ip4**
+    - Datentyp: **ip4**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

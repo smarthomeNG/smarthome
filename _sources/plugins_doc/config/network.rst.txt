@@ -232,29 +232,22 @@ Senden einer Nachricht über UDP
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-host
- -  -  -  - 
+**host**
+    Host oder IP-Adresse des Zieles
 
-Host oder IP-Adresse des Zieles
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**port**
+    Port auf dem Zielsystem
 
+    - Datentyp: **int**
 
-port
- -  -  -  - 
+**data**
+    Zu übertragende Daten
 
-Port auf dem Zielsystem
-
- - Datentyp: **int**
-
-
-data
- -  -  -  - 
-
-Zu übertragende Daten
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

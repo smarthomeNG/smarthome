@@ -40,3 +40,74 @@ Konfiguration
 
 Diese Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
 unter :doc:`/plugins_doc/config/speech` beschrieben.
+
+Die eigentliche Sprachsteuerung wird nicht über die Item-Konfiguration, sondern über eine separate
+Python-Konfigurationsdatei (Standardname ``speech.py``) festgelegt, die über den Parameter ``config_file``
+eingebunden wird. Eine Beispieldatei liegt im Plugin-Verzeichnis (``plugins/speech/speech.py``) und sollte
+als Ausgangspunkt kopiert werden.
+
+
+Aufbau von speech.py
+=====================
+
+Die Konfigurationsdatei enthält Wortlisten sowie eine Liste ``varParse`` mit den eigentlichen Regeln, nach
+denen ein erkannter Satz einem Item- oder Logik-Aufruf zugeordnet wird.
+
+Eine Wortliste bildet Suchbegriffe auf einen Rückgabewert ab, der später als Platzhalter in ``varParse``
+verwendet wird:
+
+.. code:: python
+
+    varLicht = [
+        ['Licht', ['Licht', 'Lampe', 'Leuchte', 'Beleuchtung']],
+        # ...
+    ]
+
+``varParse`` selbst kombiniert solche Listen zu einer Regel. Jeder Eintrag besteht aus dem Item- bzw.
+Logik-Namen (mit nummerierten Platzhaltern), einer Rückgabe-Textvorlage, den zu durchsuchenden Wortlisten
+sowie optional dem Ziel-Typ ("item", Standard, oder "logic"):
+
+.. code:: python
+
+    varParse = [
+        ["%0%.licht.%1%.schalten", "%y%", [varRaum, varLicht, varSchalten], "OK, wird ausgeführt", 'item'],
+        # ...
+    ]
+
+Die Nummerierung der Platzhalter (``%0%``, ``%1%``, ...) entspricht der Reihenfolge der angegebenen Listen:
+Bei ``[varRaum, varLicht, varSchalten]`` liefert ``%0%`` den Rückgabewert von ``varRaum``, ``%1%`` den von
+``varLicht`` usw. Wird kein Typ angegeben, wird ein Item angenommen; für eine Logik muss ``'logic'``
+angegeben werden.
+
+Die Reihenfolge der Einträge in ``varParse`` bestimmt die Priorität: Es wird immer nur die erste
+zutreffende Regel ausgeführt, alle folgenden werden ignoriert. ``varParse`` muss diesen Namen tragen und
+als letzte Liste in der Datei stehen. Suchbegriffe werden ausschließlich kleingeschrieben ausgewertet.
+
+Der Rückgabewert einer Wortliste kann auch direkt ein Item-Wert sein: Wird als Rückgabewert ``%status%``
+angegeben, wird stattdessen der aktuelle Wert des zugehörigen Items ermittelt und zurückgegeben
+(z.B. um eine Temperatur anzusagen).
+
+Fehlermeldungen für nicht erkannte Befehle werden getrennt davon im Dictionary ``dictError`` der
+Konfigurationsdatei gepflegt; der Aufbau ist dort selbsterklärend.
+
+
+Einrichtung auf dem Smartphone
+===============================
+
+Das Plugin erwartet Sprachbefehle als Text per HTTP-GET von einer Android-App. Getestet ist die Kombination
+aus Tasker und dem AutoVoice-Plugin:
+
+1. In Tasker ein neues Profil anlegen, als Kontext "Event" → "Plugin" → "AutoVoice No Match" wählen.
+2. Als Task "New Task" wählen und einen Namen vergeben, z.B. ``speech_parser``.
+3. Eine Aktion "Variables" → "Variable Set" hinzufügen, Name ``%avcommsEncode``, Wert ``%avcomms()``.
+4. Eine weitere Aktion "Variables" → "Variable Convert" hinzufügen, Name ``%avcommsEncode``, Funktion "URL Encode".
+5. Eine dritte Aktion "Net" → "HTTP Get" hinzufügen, Server:Port z.B. ``http://smarthome.local:2788``, Pfad ``/%avcommsEncode``.
+6. Eine vierte Aktion "Alert" → "Say" hinzufügen, Text ``%HTTPD``.
+
+Danach kann über das Mikrofon-Symbol ein Befehl gesprochen werden, der von smarthome.py als Text empfangen wird.
+Laut Berichten aus dem KNX-User-Forum funktioniert die Einrichtung analog auch mit der App Automagic.
+
+- `Tasker <https://play.google.com/store/apps/details?id=net.dinglisch.android.taskerm>`_
+- `AutoVoice <https://play.google.com/store/apps/details?id=com.joaomgcd.autovoice>`_
+- `AutoVoice Pro <https://play.google.com/store/apps/details?id=com.joaomgcd.autovoice.unlock>`_
+- `Automagic <https://play.google.com/store/apps/details?id=ch.gridvision.ppam.androidautomagic>`_

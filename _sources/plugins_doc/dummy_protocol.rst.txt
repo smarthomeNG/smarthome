@@ -8,5 +8,3 @@
    :titlesonly:
    :hidden:
 
-   /plugins/mqtt/README.md
-   /plugins/xmpp/README.md

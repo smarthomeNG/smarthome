@@ -23,8 +23,6 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
-
 
 
 Beschreibung
@@ -39,8 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.10.0.3**
- - Minimum Python Version: **3.9**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============

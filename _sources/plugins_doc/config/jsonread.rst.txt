@@ -28,7 +28,7 @@ Es handelt sich bei diesem Plugin um ein **web Plugin**.
 Beschreibung
 ============
 
-json Parser Plugin ohne weitere Module
+json Parser Plugin
 
 
 Anforderungen
@@ -37,8 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.4**
- - Minimum Python Version: **3.9**
+ - Minimum SmartHomeNG Version: **1.12**
 
 Konfiguration
 =============
@@ -66,6 +65,16 @@ Das Abfrage-Intervall für die gegebene Datenquelle in Sekunden
 
  - Minimalwert: **0**
 
+jq_syntax
+=========
+
+
+Wenn true (Standard), werden jsonread_filter-Ausdrücke im auch bisher verwendeten jq-Dialekt interpretiert (führender Punkt, ["N"]-Array-Index, select()-Syntax). Wenn false, werden Ausdrücke direkt als native JMESPath-Syntax übergeben — für Nutzer,  die zu JMESPath migrieren oder neu einsteigen und von einer vollständig getesteten Bibliothek profitieren wollen. 
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
 url
 ===
 
@@ -87,7 +96,7 @@ jsonread_filter
 ===============
 
 
-JQ Pfad um innerhalb eines JSON Datensatzes einen Wert auszuwählen. Dieser Wert wird dem Item dann zugewiesen
+JQ Pfad, um innerhalb eines JSON-Datensatzes einen Wert auszuwählen. Dieser Wert wird dem Item dann zugewiesen.
 
  - Datentyp: **str**
 

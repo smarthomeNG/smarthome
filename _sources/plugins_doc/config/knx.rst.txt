@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.0**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -230,7 +230,7 @@ knx_cache
 =========
 
 
-Gruppenadresse für die Initialisierung des Items. Der Wert wird aus dem Cache von KNXD/EIBD gelesen. Wenn kein Cache-Wert vorhanden ist, wird der KNX-Bus nach dem Wert abgefragt. Die Angabe impliziert knx_listen, also muss knx_listen nicht für diese Gruppenadresse angegeben werden.
+Gruppenadresse für die Initialisierung des Items. Der Wert wird aus dem Cache von KNXD/EIBD gelesen. Wenn kein Cache-Wert vorhanden ist, wird der KNX-Bus nach dem Wert abgefragt und die Anfrage nach 2, 5 und 15 Sekunden wiederholt. Voraussetzung ist ein Group Cache im knxd (knxd.ini: cache im Abschnitt [main]). Die Angabe impliziert knx_listen, also muss knx_listen nicht für diese Gruppenadresse angegeben werden.
 
  - Datentyp: **knx_ga**
 
@@ -247,6 +247,30 @@ Dieses Attribut setzt den Typ des KNX-Datenpunktes, der für die Konvertierung d
 
    - **1**
    - **2**
+   - **2001**
+   - **2.001**
+   - **2002**
+   - **2.002**
+   - **2003**
+   - **2.003**
+   - **2004**
+   - **2.004**
+   - **2005**
+   - **2.005**
+   - **2006**
+   - **2.006**
+   - **2007**
+   - **2.007**
+   - **2008**
+   - **2.008**
+   - **2009**
+   - **2.009**
+   - **2010**
+   - **2.010**
+   - **2011**
+   - **2.011**
+   - **2012**
+   - **2.012**
    - **3**
    - **4002**
    - **4.002**
@@ -372,21 +396,17 @@ Diese Funktion codiert Ihre Daten entsprechend dem angegebenen Datenpunkt - Beis
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-data
- -  -  -  - 
+**data**
+    Zu codierende Daten
 
-Zu codierende Daten
+    - Datentyp: **foo**
 
- - Datentyp: **foo**
+**dpt**
+    KNX Datenpunkttyp
 
-
-dpt
- -  -  - 
-
-KNX Datenpunkttyp
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 groupread(ga, cache=False)
@@ -397,22 +417,18 @@ Diese Funktion löst eine Leseanforderung für die angegebene Gruppenadresse aus
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-ga
- -  - 
+**ga**
+    Gruppenadresse von der gelesen werden soll
 
-Gruppenadresse von der gelesen werden soll
+    - Datentyp: **knx_ga**
 
- - Datentyp: **knx_ga**
+**cache**
+    Versuchen den Wert aus dem Cache von KNXD zu lesen?
 
-
-cache
- -  -  -  -  - 
-
-Versuchen den Wert aus dem Cache von KNXD zu lesen?
-
- - Datentyp: **bool**
- - Standardwert: **False**
+    - Datentyp: **bool**
+    - Standardwert: **False**
 
 
 groupwrite(ga, data, dpt)
@@ -423,68 +439,60 @@ Mit dieser Funktion könnten Sie die Daten an die angegebene Gruppenadresse send
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-ga
- -  - 
+**ga**
+    Gruppenadresse an die der Wert gesendet werden soll
 
-Gruppenadresse an die der Wert gesendet werden soll
+    - Datentyp: **knx_ga**
 
- - Datentyp: **knx_ga**
+**data**
+    Zu sendende Daten. Der Datentyp wird durch den Parameter 'dpt' bestimmt.
 
+    - Datentyp: **foo**
 
-data
- -  -  -  - 
+**dpt**
+    KNX Datenpunkttyp
 
-Zu sendende Daten. Der Datentyp wird durch den Parameter 'dpt' bestimmt.
+    - Datentyp: **str**
+    - Mögliche Werte:
 
- - Datentyp: **foo**
-
-
-dpt
- -  -  - 
-
-KNX Datenpunkttyp
-
- - Datentyp: **str**
-
- - Mögliche Werte:
-
-   - **1**
-   - **2**
-   - **3**
-   - **4002**
-   - **4.002**
-   - **5**
-   - **5001**
-   - **5.001**
-   - **5003**
-   - **5.003**
-   - **5999**
-   - **5.999**
-   - **6**
-   - **7**
-   - **8**
-   - **9**
-   - **10**
-   - **11**
-   - **12**
-   - **13**
-   - **14**
-   - **16000**
-   - **16**
-   - **16001**
-   - **16.001**
-   - **17**
-   - **17001**
-   - **17.001**
-   - **18001**
-   - **18.001**
-   - **20**
-   - **24**
-   - **229**
-   - **232**
-   - **251**
-   - **275.100**
+       - **1**
+       - **2**
+       - **3**
+       - **4002**
+       - **4.002**
+       - **5**
+       - **5001**
+       - **5.001**
+       - **5003**
+       - **5.003**
+       - **5999**
+       - **5.999**
+       - **6**
+       - **7**
+       - **8**
+       - **9**
+       - **10**
+       - **11**
+       - **12**
+       - **13**
+       - **14**
+       - **16000**
+       - **16**
+       - **16001**
+       - **16.001**
+       - **17**
+       - **17001**
+       - **17.001**
+       - **18001**
+       - **18.001**
+       - **20**
+       - **24**
+       - **229**
+       - **232**
+       - **251**
+       - **275.100**
 
 
 send_time(time_ga, date_ga)
@@ -495,21 +503,17 @@ Diese Funktion sendet die aktuelle Uhrzeit und/oder das aktuelle Datum an die an
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-time_ga
- -  -  -  -  -  -  - 
+**time_ga**
+    Gruppenadresse an die die Uhrzeit gesendet wird
 
-Gruppenadresse an die die Uhrzeit gesendet wird
+    - Datentyp: **knx_ga**
 
- - Datentyp: **knx_ga**
+**date_ga**
+    Gruppenadresse an die das Datum gesendet wird
 
-
-date_ga
- -  -  -  -  -  -  - 
-
-Gruppenadresse an die das Datum gesendet wird
-
- - Datentyp: **knx_ga**
+    - Datentyp: **knx_ga**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

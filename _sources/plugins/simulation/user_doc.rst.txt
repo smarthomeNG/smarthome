@@ -100,6 +100,35 @@ Das Item stellt ein Widget für die smartvisu bereit. Dieses sieht wie folgt aus
 
 Die png Dateien für die farblichen Leuchten/LED-Anzeigen sind im Ordner **lamps** zu finden.
 
+Für die Einbindung in eine SmartVISU-Seite (ab Version 2.9) kann folgender Code als Vorlage
+verwendet werden, wobei die Item-Namen an die eigene Konfiguration anzupassen sind:
+
+.. code:: html
+
+    <div class="block">
+        <div class="set-2" data-role="collapsible-set" data-theme="c" data-content-theme="a" data-mini="true">
+            <div data-role="collapsible" data-collapsed="false">
+            <h3>Anwesenheitssimulation</h3>
+            <table width=100%>
+                <tr>
+                    <td>{{ basic.symbol('','sim.status','','lamp_sim.svg',['4','0','1','2','3'],'',['#0b0','#A4A4A4','#A4A4A4','#A4A4A4','#A4A4A4']) }}</td>
+                    <td>Aufgenommene Tage<br>{{ basic.print('', 'sim.tank') }}</td>
+                    <td>{{ basic.symbol('','sim.status','','lamp_sim.svg',['0','4','1','2','3'],'',['#A4A4A4','#A4A4A4','#fa3','#f00','#BF00FF']) }}</td>
+                    <td rowspan=3 width="20%">{{ basic.tank('P_tank1', 'sim.tank',0,15,1,'cylinder','#0C0') }}</td>
+                </tr><tr>
+                    <td>{{ basic.stateswitch('', 'sim.control', 'mini', '2', 'audio_play.svg', '', '') }}</td>
+                    <td>{{ basic.stateswitch('', 'sim.control', 'mini', '1', 'audio_stop.svg', '', '') }}</td>
+                    <td>{{ basic.stateswitch('', 'sim.control', 'mini', '3', 'audio_rec.svg', '', '') }}</td>
+                    <td></td>
+                </tr><tr>
+                    <td colspan=3 width="80%">{{basic.print('','sim.message', 'html') }}</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+      </div>
+    </div>
+
 
 Event Datei Format
 ==================
@@ -121,10 +150,6 @@ Statusdiagramm
 
 Das folgende Schaubild zeigt die Statusänderungen abhängig vom Control-Item.
 Der Status wird in das State Item gespeichert.
-### State Diagram
-
-The following state diagram shows the state changes depenging on the control item.
-The state is stored in the state item.
 
 .. image:: assets/state_diagram.png
    :class: screenshot

@@ -116,45 +116,32 @@ Ermittelt Infos zu einer Fahrtroute via Google Directions.
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-origin
- -  -  -  -  -  - 
+**origin**
+    Startpunkt der Route, kann eine Adresse, Geokoordinaten, etc. sein.
 
-Startpunkt der Route, kann eine Adresse, Geokoordinaten, etc. sein.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**destination**
+    Ziel der Route, kann eine Adresse, Geokoordinaten, etc. sein.
 
+    - Datentyp: **str**
 
-destination
- -  -  -  -  -  -  -  -  -  -  - 
+**alternatives**
+    Rückgabe alternativer Routen. Default: False
 
-Ziel der Route, kann eine Adresse, Geokoordinaten, etc. sein.
+    - Datentyp: **bool**
 
- - Datentyp: **str**
+**departure_time**
+    Spezifiziert die gewünschte Abfahrtszeit als Timestamp (Sekunden seit 1.1.1970 UTC). Alternativ kann 'now' für den aktuellen Zeitpunkt gesetzt werden. Default: 'now'.
 
+    - Datentyp: **str**
 
-alternatives
- -  -  -  -  -  -  -  -  -  -  -  - 
+**mode**
+    Travel Mode, mögliche Werte 'driving', 'walking', 'bicycling', 'transit'. Default: 'driving'.
 
-Rückgabe alternativer Routen. Default: False
-
- - Datentyp: **bool**
-
-
-departure_time
- -  -  -  -  -  -  -  -  -  -  -  -  -  - 
-
-Spezifiziert die gewünschte Abfahrtszeit als Timestamp (Sekunden seit 1.1.1970 UTC). Alternativ kann 'now' für den aktuellen Zeitpunkt gesetzt werden. Default: 'now'.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
-mode
- -  -  -  - 
-
-Travel Mode, mögliche Werte 'driving', 'walking', 'bicycling', 'transit'. Default: 'driving'.
-
- - Datentyp: **str**
-
-
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/traffic/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -161,50 +161,37 @@ Es wird ein dictionary mit einem datetime.date Objekt als Key und folgenden Arra
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-ics
- -  -  - 
+**ics**
+    eine lokale Datei, eine mit http://  startende URL oder ein Kalender-Alias aus der Pluginkonfiguration
 
-eine lokale Datei, eine mit http://  startende URL oder ein Kalender-Alias aus der Pluginkonfiguration
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**delta**
+    wieviele zusätzliche Tage analysiert werden sollen.
 
+    - Datentyp: **int**
+    - Standardwert: **1**
 
-delta
- -  -  -  -  - 
+**offset**
+    wann der zu analysierende Zeitrahmen starten soll.
 
-wieviele zusätzliche Tage analysiert werden sollen.
+    - Datentyp: **int**
+    - Standardwert: **0**
 
- - Datentyp: **int**
- - Standardwert: **1**
+**prio**
+    Falls in einem Kalendereintrag Felder mehrfach vorkommen, kann hier bestimmt werden, das wievielte Feld priorisiert werden soll.
 
+    - Datentyp: **int**
+    - Standardwert: **1**
 
-offset
- -  -  -  -  -  - 
+**verify**
+    Bestimmt, ob eine https URL per SSL verifiziert werden soll oder nicht.
 
-wann der zu analysierende Zeitrahmen starten soll.
-
- - Datentyp: **int**
- - Standardwert: **0**
-
-
-prio
- -  -  -  - 
-
-Falls in einem Kalendereintrag Felder mehrfach vorkommen, kann hier bestimmt werden, das wievielte Feld priorisiert werden soll.
-
- - Datentyp: **int**
- - Standardwert: **1**
+    - Datentyp: **bool**
+    - Standardwert: **True**
 
 
-verify
- -  -  -  -  -  - 
-
-Bestimmt, ob eine https URL per SSL verifiziert werden soll oder nicht.
-
- - Datentyp: **bool**
- - Standardwert: **True**
-
-
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/ical/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

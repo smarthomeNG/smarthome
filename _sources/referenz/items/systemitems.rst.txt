@@ -7,9 +7,7 @@ und deren Definition sollte nicht verändert werden. Diese Items werden standard
 ::
 
     env.core.version                    # str: Version von SmarthomeNG
-    env.core.update                     # boolean: ?
-    env.core.upgrade                    # boolean: ?
-    env.core.start                      # foo: Startzeit von SmarthomeNG
+    env.core.start                      # datetime: Startzeit von SmarthomeNG
     env.core.memory                     # num: Arbeitsspeicherauslastung durch SmarthomeNG
     env.core.threads                    # num: Anzahl der Threads
     env.core.garbage                    # num: Garbage

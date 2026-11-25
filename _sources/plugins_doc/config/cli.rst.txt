@@ -58,7 +58,7 @@ hashed_password
 ===============
 
 
-Hash (SHA-512) des Passwortes zum Login. Hashes können durch das Admin Interface erzeugt werden. Wenn kein Passwort verwendet werden soll wird eine Warnung geloggt. Soll dieses Log unterbleiben, muss für diesen Parameter 'none' eingegeben werden.
+Gesalzener Hash des Passwortes zum Login. Hashes können durch das Admin Interface (Dienste) oder tools/hash_password.py erzeugt werden; ungesalzene SHA-512-Hashes älterer Versionen werden weiter akzeptiert. Wenn kein Passwort verwendet werden soll wird eine Warnung geloggt. Soll dieses Log unterbleiben, muss für diesen Parameter 'none' eingegeben werden.
 
  - Datentyp: **str**
 
@@ -138,44 +138,33 @@ sh.cli.commands.add_command(command, function, group, usage)
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-command
- -  -  -  -  -  -  - 
+**command**
+    Name des Kommandos
 
-Name des Kommandos
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**function**
+    Funktion die aufgerufen werden soll, wenn das Kommando eingegeben wird
 
+    - Datentyp: **function**
 
-function
- -  -  -  -  -  -  -  - 
+**group**
+    Kommando Gruppe (item, log, logic, scheduler)
 
-Funktion die aufgerufen werden soll, wenn das Kommando eingegeben wird
+    - Datentyp: **str**
+    - Mögliche Werte:
 
- - Datentyp: **function**
+       - **item**
+       - **log**
+       - **logic**
+       - **scheduler**
 
+**usage**
+    Beschreibung der Kommando-Nutzung
 
-group
- -  -  -  -  - 
-
-Kommando Gruppe (item, log, logic, scheduler)
-
- - Datentyp: **str**
-
- - Mögliche Werte:
-
-   - **item**
-   - **log**
-   - **logic**
-   - **scheduler**
-
-
-usage
- -  -  -  -  - 
-
-Beschreibung der Kommando-Nutzung
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 remove_command(command)
@@ -186,13 +175,12 @@ sh.cli.commands.remove_command(command)
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-command
- -  -  -  -  -  -  - 
+**command**
+    Name des Kommandos
 
-Name des Kommandos
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/cli/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

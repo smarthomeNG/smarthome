@@ -164,6 +164,10 @@ Wenn bei der Prüfung festgestellt wird, dass ein Wert über eine
 Eval-Funktionalität geändert wurde, so wird die Änderung
 zurückverfolgt bis zur ursprünglichen Änderung, die die Eval-Kette
 ausgelöst hat. Diese ursprüngliche Änderung wird dann geprüft.
+Stellt SmartHomeNG im eval ``source_details`` bereit, wird für den ersten Schritt das
+Update verwendet, das das eval ausgelöst hat - auch wenn das auslösende Item bis zur
+Ausführung bereits erneut aktualisiert wurde (z.B. durch eine Statusrückmeldung des Aktors
+auf derselben Gruppenadresse). Ältere Versionen lesen dafür den aktuellen Stand des Items.
 
 Der Wert von ``Caller`` zeigt an, welche Funktionalität das Item
 geändert hat. Der Wert von ``Source`` und ``Additional`` ist Abhängig vom Caller.

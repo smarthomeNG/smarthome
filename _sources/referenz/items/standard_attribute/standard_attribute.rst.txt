@@ -8,6 +8,8 @@
 .. index:: initial_value
 .. index:: Standard-Attribute; value
 .. index:: value
+.. index:: Standard-Attribute; instance
+.. index:: instance
 .. index:: Standard-Attribute; log_change
 .. index:: log_change
 .. index:: Standard-Attribute; log_level
@@ -23,9 +25,10 @@
 
 
 .. role:: bluesup
+.. role:: greensup
 
-Standard Attribute :bluesup:`Update`
-====================================
+Standard Attribute :greensup:`Update`
+=====================================
 
 
 In SmartHomeNG werden eine Reihe von Standard Attributen unterstützt. Diese sind in der folgenden
@@ -38,7 +41,6 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 | **Attribut**               | **Beschreibung**                                                                       |
 +============================+========================================================================================+
 | autotimer                  | setzt den Wert des Items nach einer Zeitspanne auf einen bestimmten Wert.              |
-|                            | Ab SmartHomeNG v1.3 wurden die Konfigurationsmöglichkeiten erweitert                   |
 |                            | (siehe :doc:`autotimer <./autotimer>`).                                                |
 +----------------------------+----------------------------------------------------------------------------------------+
 | cache                      | Wenn das Attribut auf **True** (oder 'Yes') gesetzt wird, dann wird der Wert des Items |
@@ -49,8 +51,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | Beschreibung unten)                                                                    |
 +----------------------------+----------------------------------------------------------------------------------------+
 | cycle                      | Definiert ein regelmäßiges Aufrufen des Items (und damit der verknüpften               |
-|                            | Logik oder Eval-Funktion). Ab SmartHomeNG v1.3 wurden die                              |
-|                            | Konfigurationsmöglichkeiten erweitert  (siehe :doc:`cycle <./cycle>`).                 |
+|                            | Logik oder Eval-Funktion, siehe :doc:`cycle <./cycle>`).                               |
 +----------------------------+----------------------------------------------------------------------------------------+
 | description                | Eine optionale Beschreibung für das Item. Hier können zum Besipiel Bedeutungen der     |
 |                            | Werte des Items erläutert werden. Diese Beschreibung wird in der Admin GUI oberhalb    |
@@ -87,13 +88,17 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | andauern muss, damit der Wert des Items auf False gesetzt wird.                        |
 +----------------------------+----------------------------------------------------------------------------------------+
 | initial_value,             | Ein optionaler Startwert für dieses Item. Es wird empfohlen **initial_value**          |
-| value                      | anstelle des bisherigen Attributnamens **value** zu verwenden.                         |
+| value                      | anstelle des Attributnamens **value** zu verwenden.                                    |
 |                            |                                                                                        |
 |                            | **Achtung**: Wenn in den Item Definitionen ein Wertzuweisung zu einem Item             |
 |                            | vom Typ **dict** erfolgen soll, muss unbedingt darauf geachtet werden, dass            |
 |                            | der angegebene Wert in Anführungszeichen gesetzt wird, damit yaml nicht den            |
 |                            | Wert nicht als Datenstruktur interpretiert.                                            |
 |                            | (Also folgendermaßen: ``initial_value: "{'k1': 'v1', 'k2': 'v2'}"`` )                  |
++----------------------------+----------------------------------------------------------------------------------------+
+| instance                   | Name eines Plugin-Abschnitts (oder Liste von Namen), dessen Instanz für die            |
+|                            | plugin-spezifischen Attribute des Items und aller darunter liegenden Items gilt        |
+|                            | (siehe :doc:`instance <./instance>`).                                                  |
 +----------------------------+----------------------------------------------------------------------------------------+
 | log_change                 | Ermöglicht das Loggen jeder Veränderung des Item-Wertes. **log_change** muss dazu den  |
 |                            | Namen des zu verwendeten Loggers enthalten. In ``logging.yaml`` muss der Logger als    |
@@ -149,8 +154,14 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | die durch einen Doppelpunkt getrennt werden. (z.B. 21.4:25.0)                          |
 |                            | ist. Es kann auch ein einzelner Wert notiert werden.                                   |
 +----------------------------+----------------------------------------------------------------------------------------+
+| trigger                    | Experimentell: Liste von Items, bei deren Auslösung der eval Ausdruck ausgewertet wird |
+|                            | (siehe :doc:`trigger_condition <./trigger_condition>`)                                 |
++----------------------------+----------------------------------------------------------------------------------------+
+| trigger_condition          | Experimentell: Bedingungen, die bei einer Auslösung erfüllt sein müssen, damit der     |
+|                            | eval Ausdruck ausgeführt wird (siehe :doc:`trigger_condition <./trigger_condition>`)   |
++----------------------------+----------------------------------------------------------------------------------------+
 | type                       | Um Werte zu speichern, muss ein Typ vorgegeben werden. Unterstützte Typen              |
-|                            | sind bool, num, str, list, dict, foo, scene                                            |
+|                            | sind bool, num, str, list, dict, foo, scene, datetime, timestamp                       |
 +----------------------------+----------------------------------------------------------------------------------------+
 
 
@@ -165,8 +176,10 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
    enforce_change
    eval
    hysteresis
+   instance
    log_change
    on_update
    struct
+   trigger_condition
    type
 

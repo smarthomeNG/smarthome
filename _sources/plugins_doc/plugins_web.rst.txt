@@ -9,22 +9,30 @@
    /plugins/alexa4p3/user_doc
    /plugins/alexarc4shng/user_doc
    /plugins/darksky/user_doc
+   /plugins/homeconnect/user_doc
    /plugins/ical/user_doc
    /plugins/indego4shng/user_doc
    /plugins/join/user_doc
    /plugins/jsonread/user_doc
    /plugins/mailrcv/user_doc
    /plugins/mailsend/user_doc
+   /plugins/mvg_live/user_doc
+   /plugins/odlinfo/user_doc
    /plugins/openweathermap/user_doc
    /plugins/piratewthr/user_doc
    /plugins/prowl/user_doc
+   /plugins/pushbullet/user_doc
+   /plugins/pushover/user_doc
+   /plugins/slack/user_doc
    /plugins/solarforecast/user_doc
    /plugins/speech/user_doc
    /plugins/tankerkoenig/user_doc
    /plugins/telegram/user_doc
+   /plugins/traffic/user_doc
    /plugins/vacations/user_doc
    /plugins/webpush/user_doc
    /plugins/webservices/user_doc
+   /plugins/wettercom/user_doc
    /plugins/withings_health/user_doc
 
 
@@ -39,7 +47,7 @@
      - Maintainer
      - Tester
    * - :doc:`alexa4p3 <config/alexa4p3>`
-     - v1.0.2
+     - v2.0.0
      - Plugin zur Ansteuerung von SmartHomeNG via Amazon Echo bzw. Alexa
        
        + `alexa4p3 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1021150-amazon-alexa-plugin>`_
@@ -55,7 +63,7 @@
        Juergen
    
    * - :doc:`alexarc4shng <config/alexarc4shng>`
-     - v1.0.4
+     - v1.0.5
      - Plugin zur Steuerung von Amazon Echo Geräten Zugriff via Web-Browser API und Cookie
        
        + `alexarc4shng Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1336416-alexa-text-to-speach>`_
@@ -71,14 +79,14 @@
        psilo
    
    * - :doc:`darksky <config/darksky>`
-     - v1.7.2
+     - v1.7.3
      - Wetterdaten über darksky.net.
        
        + `darksky zusätzliche Infos <https://www.smarthomeng.de/user/plugins/darksky/user_doc.html>`_
        + `darksky Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1244744>`_
        
        
-       Plugin-Status: **deprecated**
+       Plugin-Status: **defunct**
      - psilo909
    
      - onkelandy
@@ -88,7 +96,7 @@
        cannon
    
    * - :doc:`garminconnect <config/garminconnect>`
-     - v1.2.0
+     - v1.2.1
      - Ermöglicht den Abruf von Daten (Statistiken, Pulswerte) aus Garmin Connect.
        
        + `garminconnect zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/garminconnect.html>`_
@@ -113,7 +121,7 @@
      - psilo909
    
    * - :doc:`ical <config/ical>`
-     - v1.6.4
+     - v1.6.5
      - Ermöglicht die Verwendung von Kalendern (ICS)
        
        + `ical Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1352089-support-thread-zum-ical-plugin>`_
@@ -125,7 +133,7 @@
      - ?
    
    * - :doc:`indego4shng <config/indego4shng>`
-     - v4.0.1
+     - v4.0.2
      - Indego Plugin zum Auslesen und steuern von Bosch Indego Mährobotern mit Connect Ausstattung
        
        + `indego4shng zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/indego.html>`_
@@ -140,7 +148,7 @@
        AndreK
    
    * - :doc:`join <config/join>`
-     - v1.4.4
+     - v1.4.5
      - Ermöglicht die Verwendung der Join API (https://joaoapps.com/join/api/)
        
        + `join Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1113523-neues-plugin-join-tts-sms-phonecall-notification-uvm>`_
@@ -150,8 +158,8 @@
      - psilo909
    
    * - :doc:`jsonread <config/jsonread>`
-     - v2.0.0
-     - json Parser Plugin ohne weitere Module
+     - v3.0.0
+     - json Parser Plugin
        
        + `jsonread zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/jsonread.html>`_
        + `jsonread Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/2077534-supportthread-f%C3%BCr-das-jsronread-plugin>`_
@@ -161,7 +169,7 @@
      - bmxp
    
    * - :doc:`mailrcv <config/mailrcv>`
-     - v1.4.2
+     - v1.4.3
      - Empfangen von eMails via imap
        
        |br|
@@ -189,7 +197,7 @@
        Sandman60
    
    * - :doc:`mvg_live <config/mvg_live>`
-     - v1.6.1
+     - v1.6.2
      - Abfrage der Abfahrten in Stationen der Münchner Verkehrsbetriebe (MVG)
        
        + `mvg_live zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/mvg_live.html>`_
@@ -211,7 +219,7 @@
      - Sandman60
    
    * - :doc:`openweathermap <config/openweathermap>`
-     - v1.8.8
+     - v1.8.9
      - Wetterdaten über OpenWeatherMap.
        
        + `openweathermap Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1246998-support-thread-zum-openweathermap-plugin>`_
@@ -235,7 +243,7 @@
      - aschwith
    
    * - :doc:`prowl <config/prowl>`
-     - v1.3.3
+     - v1.3.4
      - Prowl Unterstützung
        
        + `prowl zusätzliche Infos <https://www.smarthomeng.de/user/plugins/prowl/README.html>`_
@@ -246,7 +254,7 @@
      - Morg
    
    * - :doc:`pushbullet <config/pushbullet>`
-     - v1.5.2
+     - v1.5.3
      - Anbindung des Pushbullet Service
        
        + `pushbullet zusätzliche Infos <https://www.smarthomeng.de/developer/plugins/pushbullet/README.html>`_
@@ -261,7 +269,7 @@
        Sandman60
    
    * - :doc:`pushover <config/pushover>`
-     - v1.6.2
+     - v1.6.3
      - Anbindung des Pushover Dienstes
        
        |br|
@@ -271,7 +279,7 @@
      - None
    
    * - :doc:`slack <config/slack>`
-     - v1.0.0
+     - v1.0.1
      - Slack messaging Dienst
        
        |br|
@@ -283,7 +291,7 @@
      - maddinador
    
    * - :doc:`solarforecast <config/solarforecast>`
-     - v1.9.5
+     - v1.9.7
      - Plugin zur Anbindung an eine Web-basierte Solaretragsvorhersage
        
        + `solarforecast Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1842817-support-thread-f%C3%BCr-das-solarforecast-plugin>`_
@@ -297,7 +305,7 @@
        Morg
    
    * - :doc:`speech <config/speech>`
-     - v1.7.0
+     - v1.7.1
      - Sprach Parser
        
        + `speech zusätzliche Infos <https://http://smarthomeng.de/user/plugins/speech/user_doc.html>`_
@@ -310,7 +318,7 @@
      - henfri
    
    * - :doc:`tankerkoenig <config/tankerkoenig>`
-     - v2.0.6
+     - v2.1.0
      - Benzinpreise über die API von Tankerkönig. Bitte sicherstellen, die API nicht zu oft aufzurufen. Bitte Hinweise unter https://creativecommons.tankerkoenig.de/#techInfo beachten!
        
        + `tankerkoenig zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/tankerkoenig.html>`_
@@ -321,7 +329,7 @@
      - Sandman60
    
    * - :doc:`telegram <config/telegram>`
-     - v2.0.3
+     - v3.0.0
      - Anbindung des Telegram Messenger Service
        
        + `telegram Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1548691-support-thread-für-das-telegram-plugin>`_
@@ -335,7 +343,7 @@
      - onkelandy
    
    * - :doc:`traffic <config/traffic>`
-     - v1.5.1
+     - v1.5.2
      - Abfrage der Reisezeit über die kostenlose Google Directions API. Für einen eigenen Key siehe https://developers.google.com/maps/documentation/directions/intro?hl=de#traffic-model.
        
        + `traffic zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/traffic.html>`_
@@ -380,7 +388,7 @@
      - psilo909
    
    * - :doc:`wettercom <config/wettercom>`
-     - v1.4.0
+     - v2.0.0
      - Integration von Wetter.COM
        
        |br|
@@ -392,7 +400,7 @@
        onkelandy
    
    * - :doc:`withings_health <config/withings_health>`
-     - v1.8.4
+     - v1.8.5
      - Anbindung der Nokia Health API mit Oauth2
        
        + `withings_health Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1141179-nokia-health-plugin>`_

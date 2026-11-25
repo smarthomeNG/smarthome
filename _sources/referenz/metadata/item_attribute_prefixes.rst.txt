@@ -22,7 +22,7 @@ Konfiguration in der Admin GUI benutzt.
 
 .. code:: yaml
 
-    item_attributes:
+    item_attribute_prefixes:
         attribute1:
             type: int
             default: 1234

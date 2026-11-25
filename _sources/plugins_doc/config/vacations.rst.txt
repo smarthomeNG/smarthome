@@ -109,21 +109,17 @@ Gibt ein "Vacation" Objekt (siehe https://pypi.org/project/ferien-api/), zu eine
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-date
- -  -  -  - 
+**date**
+    Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
 
-Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**province**
+    Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
 
-
-province
- -  -  -  -  -  -  -  - 
-
-Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_vacation_name(date, province)
@@ -134,21 +130,17 @@ Gibt den Namen der Schulferien zu einem Datum zurück (aktuelles Datum, falls de
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-date
- -  -  -  - 
+**date**
+    Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
 
-Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**province**
+    Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
 
-
-province
- -  -  -  -  -  -  -  - 
-
-Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 is_vacation(date, province)
@@ -159,21 +151,17 @@ Prüft, ob zu einem angegebenen Datum (aktuelles, falls der Parameter leer gelas
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-date
- -  -  -  - 
+**date**
+    Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
 
-Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**province**
+    Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
 
-
-province
- -  -  -  -  -  -  -  - 
-
-Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

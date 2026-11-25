@@ -131,6 +131,23 @@ Siehe hierzu: https://tasmota.github.io/docs/Smart-Meter-Interface/#meter-metric
 
 Vollständige Informationen zur Konfiguration und die Beschreibung der Item-Attribute sind unter **plugin.yaml** zu finden.
 
+Datenlücken bei Ausfall eines Devices
+-------------------------------------
+
+Items, die das ``database``-Plugin loggt, können bei Ausfall eines Devices im Datenbank-Log als ungültig markiert werden
+(Datenlücke, der Item-Wert bleibt unverändert). Die Lücke endet mit dem nächsten vom Device gelieferten Wert. Das ist
+standardmäßig aus und wird über Plugin-Parameter aktiviert:
+
+    * ``invalidate_on_disconnect``: Das Device meldet per LWT "Offline". Ein beim Start wiederholtes (retained) "Offline"
+      löst nichts aus.
+    * ``invalidate_on_timeout``: Das Device hat länger als ``invalidate_timeout_factor`` * ``telemetry_period`` keine
+      Nachricht gesendet. Das erfasst auch Geräte, deren LWT nicht ankommt (z.B. Ausfall des Brokers). Es setzt voraus,
+      dass das Device Telemetrie in ``telemetry_period`` sendet; das Plugin stellt das auf den Devices ein. Für Devices,
+      die das nicht tun, kann die Timeout-Invalidierung pro Item mit ``tasmota_invalidate_on_timeout: false`` ausgeschaltet
+      werden (oder bei Plugin-Standard "aus" mit ``true`` für einzelne Items eingeschaltet).
+
+Nicht markiert werden das ``online``-Item sowie Ereignis-Items (``button``, ``rf_key``).
+
 Bekannte tasmota-Attribute
 --------------------------
 

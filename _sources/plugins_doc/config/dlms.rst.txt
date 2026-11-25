@@ -38,7 +38,6 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.8**
- - Minimum Python Version: **3.6**
 
 Konfiguration
 =============
@@ -197,7 +196,7 @@ dlms_obis_code
 ==============
 
 
-Anweisung welcher Teil einer OBIS Zeile geparst und dem Item zugewiesen werden soll * obis Code ``1-1:1.6.2*01`` * Index * Entweder Wert also 'Value' oder Einheit also 'Unit' * Wert Konvertierungsart      * Z6 (Zeit codiert mit hhmmss),      * Z4 (Zeit codiert mit hhmm),      * D6 (Datum codiert mit YYMMDD),      * ZST10 (Datum und Zeit codiert mit YYMMDDhhmm),      * ZST12 (Datum und Zeit codiert mit YYMMDDhhmmss),      * str eine Zeichenkette      * float eine Fliesskommazahl      * int ein ganze Zahl      * num Numerisch, entweder Ganzzahl oder Fliesskommazahl 
+Anweisung welcher Teil einer OBIS Zeile geparst und dem Item zugewiesen werden soll * obis Code ``1-1:1.6.2*01`` * Index * Entweder Wert also 'Value' oder Einheit also 'Unit' * Wert Konvertierungsart     * Z6 (Zeit codiert mit hhmmss),     * Z4 (Zeit codiert mit hhmm),     * D6 (Datum codiert mit YYMMDD),     * ZST10 (Datum und Zeit codiert mit YYMMDDhhmm),     * ZST12 (Datum und Zeit codiert mit YYMMDDhhmmss),     * str eine Zeichenkette     * float eine Fliesskommazahl     * int ein ganze Zahl     * num Numerisch, entweder Ganzzahl oder Fliesskommazahl 
 
  - Datentyp: **list(4,str,int,str,str)**
 

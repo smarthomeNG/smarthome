@@ -2,13 +2,12 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
 
-==============================
-Webinterface :bluesup:`update`
-==============================
-
-:Note: Diese Dokumentation bezieht sich auf Versionen nach v1.4.2. Sie gilt nicht für Versionen bis inklusive v1.4.2
+===============================
+Webinterface :greensup:`Update`
+===============================
 
 Allgemeines
 ===========

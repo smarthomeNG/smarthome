@@ -205,7 +205,7 @@ auf das passende Unteritem in licht1.automatik.settings.
                 se_item_sollwert_warm: licht1.dimmen.warm.sollwert
                 se_item_sollwert_kalt: licht1.dimmen.kalt.sollwert
                 se_item_wasauchimmer: licht1.irgendeinitem
-                se_template_setvalue: "eval:sh.return_item(se_eval.get_relative_itemid('..settings.{}'.format(
+                se_template_setvalue: "eval:sh.items.return_item(se_eval.get_relative_itemid('..settings.{}'.format(
                                        se_eval.get_variable('current.action_name'))))()"
                 zustand1:
                    name: 'Ein Zustand'

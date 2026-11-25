@@ -8,9 +8,3 @@
    :titlesonly:
    :hidden:
 
-   /plugins/cli/README.md
-   /plugins/database/README.md
-   /plugins/rtr/README.md
-   /plugins/simulation/README.md
-   /plugins/text_display/README.md
-   /plugins/timmy/README.md

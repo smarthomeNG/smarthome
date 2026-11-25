@@ -2,22 +2,23 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
 
 
-Komponenten von Drittanbietern für Webinterfaces
-------------------------------------------------
+Komponenten von Drittanbietern für Webinterfaces :greensup:`Update`
+-------------------------------------------------------------------
 
 SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul aus, welche für erweiterte und komplexere Webinterfaces wie folgt eingebunden werden können:
 
-   * JQuery 3.7.0:
+   * JQuery 4.0.0
 
-     * JS: <script src="/gstatic/js/jquery-3.7.0.min.js"></script>
-   * JQuery UI Core and Effects 1.13.2:
+     * JS: <script src="/gstatic/js/jquery-4.0.0.min.js"></script>
+   * JQuery UI Core and Effects 1.14.2:
 
      * CSS: <link rel="stylesheet" href="/gstatic/css/jquery-ui.min.css" type="text/css"/>
      * JS: <script src="/gstatic/js/jquery-ui.min.js"></script>
-   * Datatables 1.13.5 incl. some plugins and extensions:
+   * Datatables 2.3.7 incl. some plugins and extensions:
 
      * CSS: <link rel="stylesheet" href="/gstatic/datatables/datatables.min.css" type="text/css"/>
      * JS:
@@ -27,21 +28,21 @@ SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul a
        * <script src="/gstatic/datatables/dataTables.pageResize.min.js"></script>
        * <script src="/gstatic/datatables/datetime-moment.min.js"></script>
        * <script src="/gstatic/datatables/moment.min.js"></script>
-   * Bootstrap :
+   * Bootstrap 5.3.8:
 
      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap/css/bootstrap.min.css" type="text/css"/>
      * JS: <script src="/gstatic/bootstrap/js/bootstrap.min.js"></script>
-   * Bootstrap Tree View:
+   * Bootstrap Tree View 1.2.1:
 
-      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-treeview/bootstrap-treeview.css" type="text/css"/>
+      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-treeview/bootstrap-treeview.min.css" type="text/css"/>
       * JS: <script src="/gstatic/bootstrap-treeview/bootstrap-treeview.min.js"></script>
-   * Bootstrap Datepicker v1.9.0:
+   * Bootstrap Datepicker v1.10.0:
 
-      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" type="text/css"/>
+      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-datepicker/css/bootstrap-datepicker.min.css" type="text/css"/>
       * JS:
 
-        * <script src="/gstatic/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-        * <script src="/gstatic/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"></script>
+        * <script src="/gstatic/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        * <script src="/gstatic/bootstrap-datepicker/locales/bootstrap-datepicker.de.min.js"></script>
    * Popper 2.11.8 (Tooltips):
 
       * CSS: <link rel="stylesheet" href="/gstatic/popper.js/popper.css"/>
@@ -49,11 +50,11 @@ SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul a
 
         * <script src="/gstatic/popper.js/popper.min.js"></script>
         * <script src="/gstatic/popper.js/popper_functions.js"></script>
-   * CodeMirror 5.46.0:
+   * CodeMirror 5.65.21:
 
       * CSS: <link rel="stylesheet" href="/gstatic/codemirror/lib/codemirror.css"/>
       * JS: <script src="/gstatic/codemirror/lib/codemirror.js"></script>
-   * Font Awesome 5.15.4:
+   * Font Awesome 7.1.0:
 
       * CSS: <link rel="stylesheet" href="/gstatic/fontawesome/css/all.css" type="text/css"/>
 

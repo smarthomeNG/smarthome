@@ -8,16 +8,3 @@
    :titlesonly:
    :hidden:
 
-   /plugins/alexa4p3/README.md
-   /plugins/homeconnect/README.md
-   /plugins/ical/README.md
-   /plugins/indego4shng/README.md
-   /plugins/mvg_live/README.md
-   /plugins/odlinfo/README.md
-   /plugins/pushbullet/README.md
-   /plugins/pushover/README.md
-   /plugins/slack/README.md
-   /plugins/speech/README.md
-   /plugins/tankerkoenig/README.md
-   /plugins/traffic/README.md
-   /plugins/wettercom/README.md

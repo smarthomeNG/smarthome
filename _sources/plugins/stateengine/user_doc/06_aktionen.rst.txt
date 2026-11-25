@@ -310,7 +310,7 @@ anhand des gerade aktuellen Zustands durch ein eval eruiert:
 
 .. code-block:: yaml
 
-        eval:sh.return_item(se_eval.get_relative_itemid('..settings.{}'.format(se_eval.get_relative_itemvalue('..state_name'))))()
+        eval:sh.items.return_item(se_eval.get_relative_itemid('..settings.{}'.format(se_eval.get_relative_itemvalue('..state_name'))))()
 
 Angenommen, der aktuelle Zustand heißt ``regen``, so wird durch den obigen Code das Item
 auf den Wert aus ``settings.regen`` gesetzt. Ändert sich aber während der Verzögerungszeit (delay)

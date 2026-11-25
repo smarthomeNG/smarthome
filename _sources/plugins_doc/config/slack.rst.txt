@@ -108,37 +108,29 @@ Absetzen einer Messaging-Nachricht an den Slack Workspace
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-channel
- -  -  -  -  -  -  - 
+**channel**
+    Slack-Kanal, in den gepostet wird
 
-Slack-Kanal, in den gepostet wird
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**text**
+    Text der Nachricht
 
+    - Datentyp: **str**
 
-text
- -  -  -  - 
+**color**
+    Typ der Nachricht (=Farbe)
 
-Text der Nachricht
+    - Datentyp: **str**
+    - Standardwert: **normal**
+    - Mögliche Werte:
 
- - Datentyp: **str**
-
-
-color
- -  -  -  -  - 
-
-Typ der Nachricht (=Farbe)
-
- - Datentyp: **str**
- - Standardwert: **normal**
-
- - Mögliche Werte:
-
-   - **normal**
-   - **good**
-   - **warning**
-   - **danger**
+       - **normal**
+       - **good**
+       - **warning**
+       - **danger**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/slack/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

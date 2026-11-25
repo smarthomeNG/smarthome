@@ -5,6 +5,23 @@ Neuerungen der letzten Releases
 
 Hier sind die wichtigsten Neuerungen aus den Letzten Releases:
 
+Neuerungen im Release v1.12.2
+=============================
+
+Hier ist eine Kurzübersicht über größere Neuerungen im aktuellen Release. Eine vollständige Übersicht der Änderungen in
+diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/release>` zu finden.
+
+  - **Core**:
+
+    - lib.orb kann alternativ mit ``pyephem`` oder ``skyfield`` als Backend betrieben werden.
+    - dict-Items können direkt mit ``sh.pfad.zum.item.get('key', <default>)`` aufgerufen werden.
+
+  - **Plugins**:
+
+    - Bugfixes und Code-Bereinigung bei vielen Plugins
+
+|
+
 Neuerungen im Release v1.12.1
 =============================
 
@@ -60,7 +77,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
       gesichert werden, zur Verfügung.
 
     - **Konfiguration unterhalb von etc mit Migration**: Wenn SmartHomeNG mit der Kommandozeilenoption **-e** gestartet
-      wird, sucht es die Konfigurationsverzeichnisse ``items``, ``structs``, ``logics``, ``uf`` und ``scenes``
+      wird, sucht es die Konfigurationsverzeichnisse ``items``, ``structs``, ``logics``, ``functions`` und ``scenes``
       nicht mehr im Stammverzeichnis, sondern unterhalb von ``etc``. Dies ist auch durch die Option
       **config_etc: true** in der ``etc/smarthome.yaml`` möglich.
 
@@ -101,7 +118,7 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
   - **Dokumentation**:
 
     - **Ordner/Dateien**: Vor dem Hintergrund, dass die Konfiguration zukünftig vollständig unterhalb von
-      ``etc`` abgelegt werden soll (Option **-e**/**--config-etc**), werden alle Datei- und Pfadnamen von
+      ``etc`` abgelegt werden soll (Option **-e**/**--config_etc**), werden alle Datei- und Pfadnamen von
       Konfigurationsdateien unterhalb von ``etc`` angegeben. In Ausnahmefällen können z.B. in Beispielen
       nur lokale Dateinamen angegeben werden.
 

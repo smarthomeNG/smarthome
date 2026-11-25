@@ -89,6 +89,24 @@ Konfiguration
             cache: true
 
 
+Tonspur und Untertitel wählen
+=============================
+
+Die Items `control.audio` und `control.subtitle` enthalten den Index der aktuell
+gewählten Tonspur bzw. des aktuellen Untertitels (`control.subtitle` ist `off`, wenn kein
+Untertitel angezeigt wird). Genau diese Werte können auch geschrieben werden:
+
+- `control.audio`: Index der Tonspur, `next` oder `previous`
+- `control.subtitle`: Index des Untertitels, `on`, `off`, `next` oder `previous`
+
+Als Index sind auch Zahlen in einer Zeichenkette (z.B. `'1'`) erlaubt. Namen werden von Kodi nicht akzeptiert.
+
+Für Auswahllisten in einer Visu liefern `info.audio_names` und `info.subtitle_names` die Namen der
+verfügbaren Tonspuren bzw. Untertitel als Liste. Die Position in der Liste ist der Index, der in
+`control.audio` bzw. `control.subtitle` geschrieben wird. Die vollständigen Angaben von Kodi (Sprache, Codec, ...)
+stehen in `info.streams` und `info.subtitles`.
+
+
 Hinweise zu Verbindungen
 ========================
 

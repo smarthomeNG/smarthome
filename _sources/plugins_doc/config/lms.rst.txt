@@ -39,8 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.5**
- - Minimum Python Version: **3.7**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -115,6 +114,16 @@ Netzwerkziel/-host
  - Datentyp: **str**
 
 
+invalidate_on_disconnect
+========================
+
+
+Items bei Verbindungsverlust im Datenbank-Log als ungültig markieren (Datenlücke)
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
 port
 ====
 
@@ -142,6 +151,7 @@ resume_initial_read
 Bei resume vom Plugin erstmaliges Lesen erneut durchführen
 
  - Datentyp: **bool**
+ - Standardwert: **False**
 
 
 retry_cycle
@@ -169,7 +179,7 @@ send_retries
 
 
 Anzahl Sendeversuche
- Kommt keine (passende) Antwort nach dem Senden  eines Commands zurück, wird das Kommando nochmals  gesendet, sofern der Wert über 0 liegt. 
+Kommt keine (passende) Antwort nach dem Senden eines Commands zurück, wird das Kommando nochmals gesendet, sofern der Wert über 0 liegt. 
 
  - Datentyp: **num**
  - Standardwert: **0**
@@ -180,7 +190,7 @@ send_retries_cycle
 
 
 Pause zwischen Durchgängen von Sendeversuchen
- Sind Send Retries aktiv, wird ein Scheduler erstellt,  der im angegebenen Sekundentakt Kommandos erneut sendet,  zu denen keine (passenden) Antworten erhalten wurden. 
+Sind Send Retries aktiv, wird ein Scheduler erstellt, der im angegebenen Sekundentakt Kommandos erneut sendet, zu denen keine (passenden) Antworten erhalten wurden. 
 
  - Datentyp: **num**
  - Standardwert: **1**
@@ -265,7 +275,7 @@ lms_lookup
 ==========
 
 
-Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim  Start einmalig als dict oder list in das Item geschrieben.    Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art  der Tabelle ausgewählt werden:  - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard)  - rev liefert die Tabelle SmartHomeNG -> Gerät  - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben  - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
+Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.  Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art der Tabelle ausgewählt werden: - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard) - rev liefert die Tabelle SmartHomeNG -> Gerät - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
 
  - Datentyp: **str**
 
@@ -274,7 +284,7 @@ lms_read
 ========
 
 
-Item liest/erhält Werte vom Gerät
+Item fordert Werte vom Gerät an (Werte empfängt jedes Item mit Kommando)
 
  - Datentyp: **bool**
 
@@ -472,7 +482,7 @@ ALL
                  - :dir:`file` **modified** (`bool`, ---)
              - :dir:`folder` **info** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
-                 - :dir:`folder` **player** (`foo`, OrderedDict([('type', 'str'), ('lms_command@instance', 'player.info.player.name'), ('lms_read@instance', True), ('lms_write@instance', True), ('lms_read_group@instance', ['ALL', 'ALL.player', 'ALL.player.info', 'ALL.player.info.player'])]))
+                 - :dir:`folder` **player** (`foo`, ---)
                      - :dir:`file` **read** (`bool`, ---)
                      - :dir:`file` **status_subscribe** (`bool`, ---)
                      - :dir:`file` **status** (`str`, ---)
@@ -592,7 +602,7 @@ player
              - :dir:`file` **modified** (`bool`, ---)
          - :dir:`folder` **info** (`foo`, ---)
              - :dir:`file` **read** (`bool`, ---)
-             - :dir:`folder` **player** (`foo`, OrderedDict([('type', 'str'), ('lms_command@instance', 'player.info.player.name'), ('lms_read@instance', True), ('lms_write@instance', True), ('lms_read_group@instance', ['player', 'player.info', 'player.info.player'])]))
+             - :dir:`folder` **player** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
                  - :dir:`file` **status_subscribe** (`bool`, ---)
                  - :dir:`file` **status** (`str`, ---)

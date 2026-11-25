@@ -41,7 +41,7 @@ plugin.yaml
     denon:
         plugin_name: denon
         model: AVR-X6300H
-        timeout: 3
+        timeout: 1
         terminator: "\r"
         binary: false
         autoreconnect: true

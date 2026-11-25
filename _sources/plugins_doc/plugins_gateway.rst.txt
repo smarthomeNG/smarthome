@@ -9,21 +9,27 @@
    /plugins/artnet/user_doc
    /plugins/bose_soundtouch/user_doc
    /plugins/casambi/user_doc
+   /plugins/dashbutton/user_doc
    /plugins/dlms/user_doc
    /plugins/dmx/user_doc
    /plugins/enocean/user_doc
    /plugins/homematic/user_doc
+   /plugins/hue/user_doc
    /plugins/hue2/user_doc
    /plugins/hue3/user_doc
    /plugins/knx/user_doc
    /plugins/lirc/user_doc
+   /plugins/matter/user_doc
    /plugins/mieleathome/user_doc
+   /plugins/milight/user_doc
+   /plugins/mlgw/user_doc
    /plugins/modbus_tcp/user_doc
    /plugins/mpd/user_doc
    /plugins/onewire/user_doc
    /plugins/panasonic_ac/user_doc
    /plugins/raumfeld_ng/user_doc
    /plugins/rcs1000n/user_doc
+   /plugins/rcswitch/user_doc
    /plugins/rpi1wire/user_doc
    /plugins/shelly/user_doc
    /plugins/sml2/user_doc
@@ -34,6 +40,7 @@
    /plugins/vicare/user_doc
    /plugins/viessmann/user_doc
    /plugins/zigbee2mqtt/user_doc
+   /plugins/zwave/user_doc
 
 
 
@@ -59,7 +66,7 @@
      - ohinckel
    
    * - :doc:`beolink <config/beolink>`
-     - v0.8.1
+     - v0.8.2
      - Plugin zur Ansteuerung von Bang & Olufsen Geräten über Beolink (Netlink) (REST API)
        
        |br|
@@ -71,7 +78,7 @@
      - 
    
    * - :doc:`bose_soundtouch <config/bose_soundtouch>`
-     - v1.0.1
+     - v1.0.2
      - Plugin zur Integration von Bose Soundtouch Systemen.
        
        + `bose_soundtouch zusätzliche Infos <https://github.com/smarthomeNG/plugins/tree/master/bose_soundtouch>`_
@@ -82,7 +89,7 @@
      - 
    
    * - :doc:`casambi <config/casambi>`
-     - v1.7.6
+     - v1.7.7
      - Gateway plugin fuer Casambi
        
        + `casambi Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1496182-supportthread-f%C3%BCr-casambi-plugin>`_
@@ -92,7 +99,7 @@
      - macflei
    
    * - :doc:`dashbutton <config/dashbutton>`
-     - v1.3.1
+     - v1.3.2
      - Einbindung von Amazon Dashbuttons
        
        + `dashbutton Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1005266-plugin-amazon-dashbutton>`_
@@ -102,7 +109,7 @@
      - psilo909
    
    * - :doc:`dlms <config/dlms>`
-     - v1.9.5
+     - v1.9.6
      - Unterstützung für Smartmeter, die DLMS (Device Language Message Specification, IEC 62056-21) nutzen und OBIS Codes liefern
        
        + `dlms Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1002464-support-thread-für-dlms-plugin>`_
@@ -123,7 +130,7 @@
      - nobody
    
    * - :doc:`enocean <config/enocean>`
-     - v1.4.2
+     - v1.4.3
      - Anbindung von EnOcean
        
        + `enocean zusätzliche Infos <https://github.com/smarthomeNG/plugins/tree/master/enocean>`_
@@ -134,7 +141,7 @@
      - unknown
    
    * - :doc:`homematic <config/homematic>`
-     - v1.5.2
+     - v1.5.3
      - Ansteuerung von HomeMatic Komponenten über eine HomeMatic CCU2 Zentrale. Es werden HomeMatic und HomeMaticIP Geräte unterstützt.
        
        + `homematic zusätzliche Infos <https://http://smarthomeng.de/user/plugins/homematic/user_doc.html>`_
@@ -145,7 +152,7 @@
      - msinn
    
    * - :doc:`hue <config/hue>`
-     - v1.4.5
+     - v2.0.0
      - Anbindung einer oder mehrerer Philips HUE Bridges
        
        + `hue Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/41379-philips-hue-plugin-neu-v1-0-released>`_
@@ -179,7 +186,7 @@
      - 
    
    * - :doc:`knx <config/knx>`
-     - v1.8.5
+     - v2.0.0
      - Anbindung von KNX Bussystemen via EIBD/KNXD Daemon
        
        + `knx Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1552531-support-thread-zum-knx-plugin>`_
@@ -197,7 +204,7 @@
        brandst
    
    * - :doc:`lirc <config/lirc>`
-     - v1.5.1
+     - v1.5.2
      - Sendet Kommandos an lircd, das wiederum IR-Signale an Geräte mit IR-Schnittstelle versendet
        
        + `lirc Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1149875-neues-plugin-lirc>`_
@@ -208,8 +215,18 @@
    
      - onkelandy
    
+   * - :doc:`matter <config/matter>`
+     - v0.4.0
+     - Matter-Controller-Plugin: Verbindung zu Matter-Geräten.
+       
+       + `matter Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/2102287-neues-plugin-matter>`_
+       
+     - Morg42
+   
+     - Morg42
+   
    * - :doc:`mieleathome <config/mieleathome>`
-     - v1.0.0
+     - v2.0.0
      - Miele@Home-Anbindung
        
        + `mieleathome Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1512798-miele-home-mit-mqtt>`_
@@ -223,7 +240,7 @@
      - 
    
    * - :doc:`milight <config/milight>`
-     - v1.6.1
+     - v1.6.2
      - Unterstützung von MiLight Leuchtmitteln
        
        + `milight zusätzliche Infos <https://http://smarthomeng.de/user/plugins/milight/user_doc.html>`_
@@ -234,7 +251,7 @@
      - sisamiwe
    
    * - :doc:`mlgw <config/mlgw>`
-     - v1.1.2
+     - v1.1.3
      - Bang & Olufsen Masterlink Gateway
        
        |br|
@@ -244,7 +261,7 @@
      - ?
    
    * - :doc:`modbus_tcp <config/modbus_tcp>`
-     - v1.1.0
+     - v2.0.0
      - Plugin zur Geräte-Anbindung über ModBus an SmartHomeNG
        
        + `modbus_tcp Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1154368-einbindung-von-modbus-tcp>`_
@@ -258,7 +275,7 @@
      - onkelandy
    
    * - :doc:`mpd <config/mpd>`
-     - v1.6.1
+     - v2.0.0
      - Music Player Daemon (MPD) Unterstützung
        
        + `mpd zusätzliche Infos <https://www.smarthomeng.de/user/plugins/mpd/README.html>`_
@@ -271,7 +288,7 @@
        knxms
    
    * - :doc:`onewire <config/onewire>`
-     - v1.9.5
+     - v2.0.0
      - 1-Wire Unterstützung über owserver
        
        + `onewire Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1493319-support-thread-zum-onewire-plugin>`_
@@ -297,7 +314,7 @@
      - 
    
    * - :doc:`raumfeld_ng <config/raumfeld_ng>`
-     - v1.5.2
+     - v1.5.3
      - Ansteuerung von Teufel Raumfeld Geräten via Raumserver und NodeRED
        
        + `raumfeld_ng Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1927851>`_
@@ -320,7 +337,7 @@
      - hasenradball
    
    * - :doc:`rcswitch <config/rcswitch>`
-     - v1.2.2
+     - v1.2.3
      - Schalten von 433 MHz Funksteckdosen z.B. für Brennenstuhl RCS 1000 N
        
        + `rcswitch Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/39094-logic-und-howto-für-433mhz-steckdosen>`_
@@ -347,7 +364,7 @@
        ElektroRudi
    
    * - :doc:`shelly <config/shelly>`
-     - v1.8.3
+     - v2.0.0
      - Plugin zur Steuerung von Shelly Devices, welches das MQTT Module von SmartHomeNG zur Kommunikation nutzt.
        
        + `shelly Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1451853-support-thread-für-das-shelly-plugin>`_
@@ -359,7 +376,7 @@
      - msinn
    
    * - :doc:`sml2 <config/sml2>`
-     - v2.0.1
+     - v3.0.0
      - Auslesen von Stromzählern mit SML-Protokoll
        
        + `sml2 zusätzliche Infos <https://www.smarthomeng.de/developer/plugins/smlx/user_doc.html>`_
@@ -383,7 +400,7 @@
        Morg
    
    * - :doc:`sonos <config/sonos>`
-     - v1.8.11
+     - v1.8.12
      - Anbindung von Sonos Lautsprechern
        
        + `sonos zusätzliche Infos <https://github.com/smarthomeNG/plugins/blob/master/sonos/README.md>`_
@@ -394,7 +411,7 @@
      - sisamiwe
    
    * - :doc:`squeezebox <config/squeezebox>`
-     - v1.4.0
+     - v1.4.1
      - Anbindung von Squeezebox Devices (Hard- und Softwareplayer)
        
        + `squeezebox Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/28692-√-neues-plugin-logitech-squeezebox-anregungen>`_
@@ -412,7 +429,7 @@
        brandst
    
    * - :doc:`tasmota <config/tasmota>`
-     - v1.6.1
+     - v2.0.0
      - Plugin zur Steuerung von Switches, die mit Tasmota Firmware ausgestattet sind. Die Kommunikation erfolgt über das MQTT Module von SmartHomeNG.
        
        + `tasmota zusätzliche Infos <https://http://smarthomeng.de/user/plugins/tasmota/user_doc.html>`_
@@ -423,7 +440,7 @@
      - msinn
    
    * - :doc:`vicare <config/vicare>`
-     - v1.9.9
+     - v1.9.10
      - Plugin zur Anbindung an das Viessmann Backend an SmartHomeNG
        
        + `vicare Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1916122-support-thread-f%C3%BCr-das-viessmann-plugin>`_
@@ -435,19 +452,17 @@
      - n/a
    
    * - :doc:`viessmann <config/viessmann>`
-     - v2.0.0
+     - v3.0.0
      - Lesen und Schreiben von Werten einer Viessmann Heizung
        
        |br|
        
-       
-       Plugin-Status: **develop**
      - Morg
    
      - 
    
    * - :doc:`zigbee2mqtt <config/zigbee2mqtt>`
-     - v2.0.2
+     - v3.0.0
      - Plugin zur Steuerung von Geräten, die mit einem Zigbee Gateway mit der Zigbee2MQTT Firmware versehen sind. Die Kommunikation erfolgt über das MQTT Module von SmartHomeNG.
        
        + `zigbee2mqtt Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1856775-support-thread-f%C3%BCr-das-zigbee2mqtt-plugin>`_
@@ -457,7 +472,7 @@
      - Morg
    
    * - :doc:`zwave <config/zwave>`
-     - v1.4.2
+     - v1.4.3
      - Z-Wave Unterstützung
        
        |br|
@@ -465,7 +480,7 @@
        
        maximale Python-Version: **3.8**
        
-       Plugin-Status: **develop**
+       Plugin-Status: **defunct**
      - Thomas Creutz
    
      - 

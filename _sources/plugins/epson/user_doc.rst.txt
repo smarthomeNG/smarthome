@@ -38,7 +38,7 @@ plugin.yaml
     epson:
         plugin_name: epson
         model: TW-5000
-        timeout: 3
+        timeout: 1
         terminator: "\r"
         binary: false
         autoreconnect: true

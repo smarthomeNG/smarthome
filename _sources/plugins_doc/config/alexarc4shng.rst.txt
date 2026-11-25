@@ -168,18 +168,16 @@ Liefert die Alexa-Shopping-Liste als dict-zurück
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-type
- -  -  -  - 
+**type**
+    Art der Liste 'SHOPPING_LIST' oder 'TO_DO'
 
-Art der Liste 'SHOPPING_LIST' oder 'TO_DO'
+    - Datentyp: **str**
+    - Mögliche Werte:
 
- - Datentyp: **str**
-
- - Mögliche Werte:
-
-   - **SHOPPING_LIST**
-   - **TO_DO**
+       - **SHOPPING_LIST**
+       - **TO_DO**
 
 
 send_cmd(dvName, cmdName, mValue)
@@ -190,29 +188,22 @@ Sendet einen Befehl an Alexa. Es können auch Platzhalter genutzt werden. Das Re
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-dvName
- -  -  -  -  -  - 
+**dvName**
+    Name des Alexa Devices.
 
-Name des Alexa Devices.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**cmdName**
+    Name des Befehls, z.b. Text2Speech.
 
+    - Datentyp: **str**
 
-cmdName
- -  -  -  -  -  -  - 
+**mValue**
+    Wert, der gesendet werden soll, numerische Werte ohne Hochkomma als Zahl
 
-Name des Befehls, z.b. Text2Speech.
-
- - Datentyp: **str**
-
-
-mValue
- -  -  -  -  -  - 
-
-Wert, der gesendet werden soll, numerische Werte ohne Hochkomma als Zahl
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

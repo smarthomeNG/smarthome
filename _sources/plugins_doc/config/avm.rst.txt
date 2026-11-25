@@ -490,7 +490,7 @@ aha_general
 
 
 .. treeview::
-     - :dir:`folder` **aha_general** (`foo`, OrderedDict([('type', 'str'), ('avm_data_type@instance', 'device_name'), ('avm_data_cycle@instance', 0)]))
+     - :dir:`folder` **aha_general** (`foo`, ---)
          - :dir:`file` **name** (`str`, ---)
          - :dir:`file` **identifier** (`str`, ---)
          - :dir:`file` **productname** (`str`, ---)
@@ -653,7 +653,7 @@ tam
 
 
 .. treeview::
-     - :dir:`folder` **tam** (`bool`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('avm_data_type@instance', 'tam_name')]))
+     - :dir:`folder` **tam** (`bool`, ---)
          - :dir:`file` **name** (`str`, ---)
          - :dir:`file` **message_number_old** (`num`, ---)
          - :dir:`file` **message_number_new** (`num`, ---)
@@ -743,22 +743,18 @@ Ermittelt ein Array mit dicts aller Einträge der Anrufliste (Attribute 'Id', 'T
 
  - Ergebnistyp der Funktion: **list(dict(str))**
 
+**Parameter:**
 
-filter_incoming
- -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+**filter_incoming**
+    Filter, um nur die Anrufe zu erhalten, die zu einer bestimmten angerufenen Nummer gehÃƒÂ¶ren.
 
-Filter, um nur die Anrufe zu erhalten, die zu einer bestimmten angerufenen Nummer gehÃƒÂ¶ren.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**phonebook_id**
+    ID des Telefonbuchs, in dem nachgeschlagen werden soll.
 
-
-phonebook_id
- -  -  -  -  -  -  -  -  -  -  -  - 
-
-ID des Telefonbuchs, in dem nachgeschlagen werden soll.
-
- - Datentyp: **int**
- - Standardwert: **0**
+    - Datentyp: **int**
+    - Standardwert: **0**
 
 
 get_contact_name_by_phone_number(phone_number, phonebook_id=0)
@@ -769,22 +765,18 @@ Durchsucht das Telefonbuch mit einer (vollständigen) Telefonnummer nach Kontakt
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-phone_number
- -  -  -  -  -  -  -  -  -  -  -  - 
+**phone_number**
+    Vollständige Telefonnummer
 
-Vollständige Telefonnummer
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**phonebook_id**
+    ID des Telefonbuchs, in dem nachgeschlagen werden soll.
 
-
-phonebook_id
- -  -  -  -  -  -  -  -  -  -  -  - 
-
-ID des Telefonbuchs, in dem nachgeschlagen werden soll.
-
- - Datentyp: **int**
- - Standardwert: **0**
+    - Datentyp: **int**
+    - Standardwert: **0**
 
 
 get_deflection(deflection_id)
@@ -795,13 +787,12 @@ Liefert die Details der Rufumleitung der angegebenen ID zurück (Default-ID = 0)
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-deflection_id
- -  -  -  -  -  -  -  -  -  -  -  -  - 
+**deflection_id**
+    Identifikator der abzufragenden Rufumleitung.
 
-Identifikator der abzufragenden Rufumleitung.
-
- - Datentyp: **int**
+    - Datentyp: **int**
 
 
 get_deflections()
@@ -839,13 +830,12 @@ Ermittelt die Informationen zu einem Host an einem angegebenen Index.
 
  - Ergebnistyp der Funktion: **dict(str)**
 
+**Parameter:**
 
-index
- -  -  -  -  - 
+**index**
+    Index
 
-Index
-
- - Datentyp: **int**
+    - Datentyp: **int**
 
 
 get_hosts(only_active)
@@ -856,13 +846,12 @@ Ermittelt ein Array mit den Namen aller verbundener Hosts.
 
  - Ergebnistyp der Funktion: **list(dict(str))**
 
+**Parameter:**
 
-only_active
- -  -  -  -  -  -  -  -  -  -  - 
+**only_active**
+    True, wenn nur aktuell aktive Hosts zurückgegeben werden sollen.
 
-True, wenn nur aktuell aktive Hosts zurückgegeben werden sollen.
-
- - Datentyp: **bool**
+    - Datentyp: **bool**
 
 
 get_hosts_dict(only_active)
@@ -873,13 +862,12 @@ Liefert Informationen aller Hosts als Dictionary
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-only_active
- -  -  -  -  -  -  -  -  -  -  - 
+**only_active**
+    True, wenn nur aktuell aktive Hosts zurückgegeben werden sollen.
 
-True, wenn nur aktuell aktive Hosts zurückgegeben werden sollen.
-
- - Datentyp: **bool**
+    - Datentyp: **bool**
 
 
 get_hosts_list(identifier_list, filter_dict)
@@ -890,21 +878,17 @@ Liefert Informationen gefilterte Information zu den verbundenen Hosts als Array
 
  - Ergebnistyp der Funktion: **list(dict)**
 
+**Parameter:**
 
-identifier_list
- -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+**identifier_list**
+    Liste von Identifiers des Hosts, die zurückgegeben werden sollen; (möglich: 'Index', 'IPAddress', 'MACAddress', 'HostName', 'FriendyName')
 
-Liste von Identifiers des Hosts, die zurückgegeben werden sollen; (möglich: 'Index', 'IPAddress', 'MACAddress', 'HostName', 'FriendyName')
+    - Datentyp: **list**
 
- - Datentyp: **list**
+**filter_dict**
+    Dict von Filtern, für welche die Host-Identifier zurückgegeben werden sollen (bspw: filter={'Active': False} gibt alle nicht-aktiven Host zurück)
 
-
-filter_dict
- -  -  -  -  -  -  -  -  -  -  - 
-
-Dict von Filtern, für welche die Host-Identifier zurückgegeben werden sollen (bspw: filter={'Active': False} gibt alle nicht-aktiven Host zurück)
-
- - Datentyp: **dict**
+    - Datentyp: **dict**
 
 
 get_mesh_topology()
@@ -933,13 +917,12 @@ Gibt den Namen eines Telefons an einem Index zurück. Der zurückgegebene Wert k
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-index
- -  -  -  -  - 
+**index**
+    Index
 
-Index
-
- - Datentyp: **int**
+    - Datentyp: **int**
 
 
 get_phone_numbers_by_name(name, phonebook_id=0)
@@ -950,22 +933,18 @@ Durchsucht das Telefonbuch mit einem Namen nach nach Kontakten und liefert die z
 
  - Ergebnistyp der Funktion: **dict(dict(str))**
 
+**Parameter:**
 
-name
- -  -  -  - 
+**name**
+    Anteiliger oder vollständiger Name des Kontakts.
 
-Anteiliger oder vollständiger Name des Kontakts.
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**phonebook_id**
+    ID des Telefonbuchs, in dem nachgeschlagen werden soll.
 
-
-phonebook_id
- -  -  -  -  -  -  -  -  -  -  -  - 
-
-ID des Telefonbuchs, in dem nachgeschlagen werden soll.
-
- - Datentyp: **int**
- - Standardwert: **0**
+    - Datentyp: **int**
+    - Standardwert: **0**
 
 
 is_host_active(mac_address)
@@ -976,13 +955,12 @@ Prüft, ob eine MAC Adresse auf dem Gerät aktiv ist. Das kann bspw. für die Um
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-mac_address
- -  -  -  -  -  -  -  -  -  -  - 
+**mac_address**
+    MAC Adresse
 
-MAC Adresse
-
- - Datentyp: **mac**
+    - Datentyp: **mac**
 
 
 reboot()
@@ -1011,13 +989,12 @@ Setzt den 'call origin', bspw. vor dem Aufruf von 'start_call'.
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-phone_name
- -  -  -  -  -  -  -  -  -  - 
+**phone_name**
+    Identifikator des Telefons, dass als 'call origin' gesetzt werden soll. bspw. zwei Sterne gefolgt von '610' für ein internes Gerät.
 
-Identifikator des Telefons, dass als 'call origin' gesetzt werden soll. bspw. zwei Sterne gefolgt von '610' für ein internes Gerät.
-
- - Datentyp: **mac**
+    - Datentyp: **mac**
 
 
 set_deflection_enable(deflection_id, enable)
@@ -1028,21 +1005,17 @@ Schaltet die Rufumleitung mit angegebener ID an oder aus.
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-deflection_id
- -  -  -  -  -  -  -  -  -  -  -  -  - 
+**deflection_id**
+    Identifikator der abzufragenden Rufumleitung.
 
-Identifikator der abzufragenden Rufumleitung.
+    - Datentyp: **int**
 
- - Datentyp: **int**
+**enable**
+    An / Aus
 
-
-enable
- -  -  -  -  -  - 
-
-An / Aus
-
- - Datentyp: **bool**
+    - Datentyp: **bool**
 
 
 start_call(phone_number)
@@ -1053,13 +1026,12 @@ Startet einen Anruf an eine übergebene Telefonnummer (intern oder extern).
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-phone_number
- -  -  -  -  -  -  -  -  -  -  -  - 
+**phone_number**
+    Vollständige Telefonnummer, die angerufen werden soll.
 
-Vollständige Telefonnummer, die angerufen werden soll.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 wol(mac_address)
@@ -1070,13 +1042,12 @@ Sendet einen WOL (WakeOnLAN) Befehl an eine MAC Adresse.
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-mac_address
- -  -  -  -  -  -  -  -  -  -  - 
+**mac_address**
+    MAC Adresse
 
-MAC Adresse
-
- - Datentyp: **mac**
+    - Datentyp: **mac**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -186,13 +186,12 @@ Sendet einen vollständingen DMX-Frame
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-values
- -  -  -  -  -  - 
+**values**
+    Wertemenge
 
-Wertemenge
-
- - Datentyp: **list(num)**
+    - Datentyp: **list(num)**
 
 
 send_frame_starting_at(adr, values)
@@ -203,23 +202,19 @@ Sendet einen Satz an DMX Kanalwerten, beginnend bei einer Startadresse
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-adr
- -  -  - 
+**adr**
+    Erster zu adressierender DMX-Kanal
 
-Erster zu adressierender DMX-Kanal
+    - Datentyp: **num**
+    - Minimalwert: **1**
+    - Maximalwert: **512**
 
- - Datentyp: **num**
+**values**
+    Werte die ab dem Startkanal gesetzt werden sollen
 
- - Minimalwert: **1**
- - Maximalwert: **512**
-
-values
- -  -  -  -  -  - 
-
-Werte die ab dem Startkanal gesetzt werden sollen
-
- - Datentyp: **list(num)**
+    - Datentyp: **list(num)**
 
 
 send_single_value(adr, value)
@@ -230,25 +225,21 @@ Sendet einen einzelnen DMX Kanalwert
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-adr
- -  -  - 
+**adr**
+    Zu adressierender DMX-Kanal
 
-Zu adressierender DMX-Kanal
+    - Datentyp: **num**
+    - Minimalwert: **1**
+    - Maximalwert: **512**
 
- - Datentyp: **num**
+**value**
+    Wert auf den der Kanal gesetzt werden soll
 
- - Minimalwert: **1**
- - Maximalwert: **512**
+    - Datentyp: **num**
+    - Minimalwert: **0**
+    - Maximalwert: **255**
 
-value
- -  -  -  -  - 
-
-Wert auf den der Kanal gesetzt werden soll
-
- - Datentyp: **num**
-
- - Minimalwert: **0**
- - Maximalwert: **255**
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

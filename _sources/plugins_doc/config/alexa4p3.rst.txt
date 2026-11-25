@@ -160,6 +160,44 @@ alexa_icon
 Alexa Kategorie/Symbol welche in der Alexa-App angezeigt wird, Standard-Wert SWITCH 
 
  - Datentyp: **str**
+ - Standardwert: **SWITCH**
+
+ - Mögliche Werte:
+
+   - **ACTIVITY_TRIGGER**
+   - **CAMERA**
+   - **COMPUTER**
+   - **CONTACT_SENSOR**
+   - **DOOR**
+   - **DOORBELL**
+   - **EXTERIOR_BLIND**
+   - **FAN**
+   - **GAME_CONSOLE**
+   - **GARAGE_DOOR**
+   - **INTERIOR_BLIND**
+   - **LAPTOP**
+   - **LIGHT**
+   - **MICROWAVE**
+   - **MOBILE_PHONE**
+   - **MOTION_SENSOR**
+   - **MUSIC_SYSTEM**
+   - **NETWORK_HARDWARE**
+   - **OTHER**
+   - **OVEN**
+   - **PHONE**
+   - **SCENE_TRIGGER**
+   - **SCREEN**
+   - **SECURITY_PANEL**
+   - **SMARTLOCK**
+   - **SMARTPLUG**
+   - **SPEAKER**
+   - **STREAMING_DEVICE**
+   - **SWITCH**
+   - **TABLET**
+   - **TEMPERATURE_SENSOR**
+   - **THERMOSTAT**
+   - **TV**
+   - **WEARABLE**
 
 
 alexa_item_range
@@ -270,4 +308,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/alexa4p3/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

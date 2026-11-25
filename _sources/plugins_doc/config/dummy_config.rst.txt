@@ -30,6 +30,7 @@
    dashbutton.rst
    database.rst
    db_addon.rst
+   deebot.rst
    deebot_ozmo.rst
    denon.rst
    dlms.rst
@@ -76,6 +77,7 @@
    luxtronic2.rst
    mailrcv.rst
    mailsend.rst
+   matter.rst
    mieleathome.rst
    miflora.rst
    mikrotik.rst

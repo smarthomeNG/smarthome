@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.10.0.3**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -63,6 +63,37 @@ Vollständiges Topic (Prefix und Topic) zur Kommunikation mit den Tasmota Device
  - Datentyp: **str**
  - Standardwert: **%prefix%/%topic%/**
 
+
+invalidate_on_disconnect
+========================
+
+
+Items eines Devices im Datenbank-Log als ungültig markieren, wenn das Device per LWT "Offline" meldet (Datenlücke)
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+invalidate_on_timeout
+=====================
+
+
+Items eines Devices im Datenbank-Log als ungültig markieren, wenn es länger als invalidate_timeout_factor Telemetrie-Perioden keine Nachricht gesendet hat. Pro Item mit tasmota_invalidate_on_timeout überschreibbar
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+invalidate_timeout_factor
+=========================
+
+
+Faktor auf telemetry_period: so lange darf ein Device schweigen, bevor die Timeout-Invalidierung greift
+
+ - Datentyp: **num**
+ - Standardwert: **2.0**
+
+ - Minimalwert: **1.0**
 
 telemetry_period
 ================
@@ -119,6 +150,15 @@ Nummer der gedrückten Taste im Tasmota Device
 
  - Minimalwert: **1**
  - Maximalwert: **4**
+
+tasmota_invalidate_on_timeout
+=============================
+
+
+Überschreibt den Plugin-Parameter invalidate_on_timeout für dieses Item. Nicht gesetzt: Plugin-Parameter gilt
+
+ - Datentyp: **bool**
+
 
 tasmota_relay
 =============

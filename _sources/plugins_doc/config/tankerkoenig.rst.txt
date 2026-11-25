@@ -77,6 +77,7 @@ details_update_cycle
    - **daily**
    - **weekly**
    - **monthly**
+   - **disabled**
 
 
 price_update_cycle
@@ -88,7 +89,7 @@ price_update_cycle
  - Datentyp: **int**
  - Standardwert: **900**
 
- - Minimalwert: **60**
+ - Minimalwert: **0**
 
 ==============
 Item Attribute
@@ -187,13 +188,12 @@ Diese Funktion gibt Details über eine Tankstelle als DICT mit folgenden Keys zu
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-id
- -  - 
+**id**
+    UUID für die anzufragende Tankstelle.
 
-UUID für die anzufragende Tankstelle.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_petrol_station_detail_reduced(id)
@@ -204,13 +204,12 @@ Diese Funktion gibt Details über eine Tankstelle als DICT mit folgenden Keys zu
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-id
- -  - 
+**id**
+    UUID für die anzufragende Tankstelle.
 
-UUID für die anzufragende Tankstelle.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_petrol_station_prices(ids)
@@ -221,13 +220,12 @@ Gibt ein DICT mit Preisen für ein Array an Tankstellen-IDs zurück. Benutzung w
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-ids
- -  -  - 
+**ids**
+    Array der Tankstellen IDs, für die Preise angefragt werden sollen.
 
-Array der Tankstellen IDs, für die Preise angefragt werden sollen.
-
- - Datentyp: **list(str)**
+    - Datentyp: **list(str)**
 
 
 get_petrol_stations(lat, lon, type, sort, rad)
@@ -238,45 +236,32 @@ Diese Funktion liefert ein DICT mit den Tankstellen im Umkreis.
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-lat
- -  -  - 
+**lat**
+    Breitengrad des Mittelpunkts der Anfrage.
 
-Breitengrad des Mittelpunkts der Anfrage.
+    - Datentyp: **float**
 
- - Datentyp: **float**
+**lon**
+    Längengrad des Mittelpunkts der Anfrage.
 
+    - Datentyp: **float**
 
-lon
- -  -  - 
+**type**
+    Typ des Benzins: 'e5', 'e10', 'diesel' oder 'all'.
 
-Längengrad des Mittelpunkts der Anfrage.
+    - Datentyp: **str**
 
- - Datentyp: **float**
+**sort**
+    Sortierreihenfolge der Ergebnisse, 'price' oder 'dist'.
 
+    - Datentyp: **str**
 
-type
- -  -  -  - 
+**rad**
+    Suchradius in km, Max: 25
 
-Typ des Benzins: 'e5', 'e10', 'diesel' oder 'all'.
-
- - Datentyp: **str**
-
-
-sort
- -  -  -  - 
-
-Sortierreihenfolge der Ergebnisse, 'price' oder 'dist'.
-
- - Datentyp: **str**
+    - Datentyp: **float**
 
 
-rad
- -  -  - 
-
-Suchradius in km, Max: 25
-
- - Datentyp: **float**
-
-
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/tankerkoenig/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

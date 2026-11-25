@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.3**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -152,35 +152,27 @@ Eine Messgae via xmpp senden
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-to
- -  - 
+**to**
+    An wen, z.B. 'skender@haxhimolla.im'
 
-An wen, z.B. 'skender@haxhimolla.im'
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**msgsend**
+    Text der Message, z.B. 'Hello world'
 
+    - Datentyp: **str**
 
-msgsend
- -  -  -  -  -  -  - 
+**mt**
+    Message Typ, kann 'chat' oder 'groupchat' sein
 
-Text der Message, z.B. 'Hello world'
+    - Datentyp: **str**
+    - Standardwert: **chat**
+    - Mögliche Werte:
 
- - Datentyp: **str**
-
-
-mt
- -  - 
-
-Message Typ, kann 'chat' oder 'groupchat' sein
-
- - Datentyp: **str**
- - Standardwert: **chat**
-
- - Mögliche Werte:
-
-   - **chat**
-   - **groupchat**
+       - **chat**
+       - **groupchat**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/xmpp/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -108,3 +108,16 @@ Weitere Tags werden abhängig vom Gerät unterstützt. In den meisten Fällen k�
 auch unbekannte Tags bei direkter Konfiguration verwendet werden.
 
 
+Datenlücken bei Ausfall des Gateways
+------------------------------------
+
+Items, die das ``database``-Plugin loggt, können im Datenbank-Log als ungültig markiert werden, wenn das Gateway über
+``<base_topic>/bridge/state`` "offline" meldet (Datenlücke, der Item-Wert bleibt unverändert). Die Lücke endet mit dem
+nächsten vom Gerät gelieferten Wert. Das ist standardmäßig aus und wird mit dem Plugin-Parameter
+``invalidate_on_disconnect: true`` aktiviert.
+
+- Markiert werden die lesenden Items aller Geräte. Items des Gateways selbst (``z2m_topic: bridge``) und
+  ``z2m_writeonly``-Items werden nicht markiert.
+- Ein beim Start wiederholtes (retained) "offline" löst nichts aus; ebenso nichts, solange das Gateway seit dem Start
+  nicht als "online" gemeldet wurde.
+- Der Ausfall einzelner Geräte (Availability-Topics der Geräte) wird vom Plugin nicht ausgewertet.

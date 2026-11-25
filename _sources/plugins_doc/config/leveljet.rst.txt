@@ -60,14 +60,15 @@ baudrate
 
 Baudrate (default: 19200)
 
- - Datentyp: **str**
+ - Datentyp: **int**
+ - Standardwert: **19200**
 
 
 serialport
 ==========
 
 
-Pfad zu serieller USB Schnittstelle (default: /dev/ttyUSB1)
+Pfad zu serieller USB Schnittstelle (z.B. /dev/ttyUSB1)
 
  - Datentyp: **str**
 
@@ -78,7 +79,8 @@ update_cycle
 
 zyklische Abfrage [sek.) (default: 240)
 
- - Datentyp: **str**
+ - Datentyp: **int**
+ - Standardwert: **240**
 
 
 ==============

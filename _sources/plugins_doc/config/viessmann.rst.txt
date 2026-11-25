@@ -23,8 +23,6 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht sämtliche Funktionen unterstützt oder noch fehlerhaft ist.
-
 
 
 Beschreibung
@@ -39,8 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.5.1**
- - Minimum Python Version: **3.6**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -97,6 +94,16 @@ cycle
  - Standardwert: **30**
 
 
+invalidate_on_disconnect
+========================
+
+
+Items bei Verbindungsverlust im Datenbank-Log als ungültig markieren (Datenlücke)
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
 loop_guard_count
 ================
 
@@ -134,6 +141,16 @@ model
 
  - Datentyp: **foo**
  - Standardwert: **None**
+
+
+p300_init_retries
+=================
+
+
+Anzahl der Versuche für die P300-Initialisierungssequenz, bevor die Verbindung als fehlgeschlagen gilt
+
+ - Datentyp: **num**
+ - Standardwert: **10**
 
 
 serialport
@@ -217,7 +234,7 @@ viess_lookup
 ============
 
 
-Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.   Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art der Tabelle ausgewählt werden: - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard) - rev liefert die Tabelle SmartHomeNG -> Gerät - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben - list liefert die Liste der Namen für SmartHomeNG
+Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.  Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art der Tabelle ausgewählt werden: - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard) - rev liefert die Tabelle SmartHomeNG -> Gerät - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben - list liefert die Liste der Namen für SmartHomeNG
 
  - Datentyp: **str**
 
@@ -226,7 +243,7 @@ viess_read
 ==========
 
 
-Liest/erhält Werte vom Gerät
+Fordert Werte vom Gerät an (Werte empfängt jedes Item mit Kommando)
 
  - Datentyp: **bool**
 
@@ -335,16 +352,16 @@ V200HO1C
          - :dir:`folder` **fehler** (`foo`, ---)
              - :dir:`file` **read** (`bool`, ---)
              - :dir:`file` **sammelstoerung** (`num`, ---)
-             - :dir:`file` **error0** (`num`, ---)
-             - :dir:`file` **error1** (`num`, ---)
-             - :dir:`file` **error2** (`num`, ---)
-             - :dir:`file` **error3** (`num`, ---)
-             - :dir:`file` **error4** (`num`, ---)
-             - :dir:`file` **error5** (`num`, ---)
-             - :dir:`file` **error6** (`num`, ---)
-             - :dir:`file` **error7** (`num`, ---)
-             - :dir:`file` **error8** (`num`, ---)
-             - :dir:`file` **error9** (`num`, ---)
+             - :dir:`file` **error0** (`str`, ---)
+             - :dir:`file` **error1** (`str`, ---)
+             - :dir:`file` **error2** (`str`, ---)
+             - :dir:`file` **error3** (`str`, ---)
+             - :dir:`file` **error4** (`str`, ---)
+             - :dir:`file` **error5** (`str`, ---)
+             - :dir:`file` **error6** (`str`, ---)
+             - :dir:`file` **error7** (`str`, ---)
+             - :dir:`file` **error8** (`str`, ---)
+             - :dir:`file` **error9** (`str`, ---)
          - :dir:`folder` **pumpen** (`foo`, ---)
              - :dir:`file` **read** (`bool`, ---)
              - :dir:`file` **speicherlade** (`bool`, ---)
@@ -430,16 +447,16 @@ V200KO1B
          - :dir:`folder` **fehler** (`foo`, ---)
              - :dir:`file` **read** (`bool`, ---)
              - :dir:`file` **sammelstoerung** (`num`, ---)
-             - :dir:`file` **error0** (`num`, ---)
-             - :dir:`file` **error1** (`num`, ---)
-             - :dir:`file` **error2** (`num`, ---)
-             - :dir:`file` **error3** (`num`, ---)
-             - :dir:`file` **error4** (`num`, ---)
-             - :dir:`file` **error5** (`num`, ---)
-             - :dir:`file` **error6** (`num`, ---)
-             - :dir:`file` **error7** (`num`, ---)
-             - :dir:`file` **error8** (`num`, ---)
-             - :dir:`file` **error9** (`num`, ---)
+             - :dir:`file` **error0** (`str`, ---)
+             - :dir:`file` **error1** (`str`, ---)
+             - :dir:`file` **error2** (`str`, ---)
+             - :dir:`file` **error3** (`str`, ---)
+             - :dir:`file` **error4** (`str`, ---)
+             - :dir:`file` **error5** (`str`, ---)
+             - :dir:`file` **error6** (`str`, ---)
+             - :dir:`file` **error7** (`str`, ---)
+             - :dir:`file` **error8** (`str`, ---)
+             - :dir:`file` **error9** (`str`, ---)
          - :dir:`folder` **pumpen** (`foo`, ---)
              - :dir:`file` **read** (`bool`, ---)
              - :dir:`file` **speicherlade** (`bool`, ---)
@@ -637,16 +654,16 @@ V200KW2
              - :dir:`file` **read** (`bool`, ---)
              - :dir:`file` **sammelstoerung** (`num`, ---)
              - :dir:`file` **brennerstoerung** (`num`, ---)
-             - :dir:`file` **error0** (`num`, ---)
-             - :dir:`file` **error1** (`num`, ---)
-             - :dir:`file` **error2** (`num`, ---)
-             - :dir:`file` **error3** (`num`, ---)
-             - :dir:`file` **error4** (`num`, ---)
-             - :dir:`file` **error5** (`num`, ---)
-             - :dir:`file` **error6** (`num`, ---)
-             - :dir:`file` **error7** (`num`, ---)
-             - :dir:`file` **error8** (`num`, ---)
-             - :dir:`file` **error9** (`num`, ---)
+             - :dir:`file` **error0** (`str`, ---)
+             - :dir:`file` **error1** (`str`, ---)
+             - :dir:`file` **error2** (`str`, ---)
+             - :dir:`file` **error3** (`str`, ---)
+             - :dir:`file` **error4** (`str`, ---)
+             - :dir:`file` **error5** (`str`, ---)
+             - :dir:`file` **error6** (`str`, ---)
+             - :dir:`file` **error7** (`str`, ---)
+             - :dir:`file` **error8** (`str`, ---)
+             - :dir:`file` **error9** (`str`, ---)
          - :dir:`folder` **pumpen** (`foo`, ---)
              - :dir:`file` **read** (`bool`, ---)
              - :dir:`file` **speicherlade** (`bool`, ---)
@@ -853,6 +870,132 @@ V200WO1C
              - :dir:`file` **elektroww12m** (`num`, ---)
 
 
+VScotHO1_200_11
+===============
+
+
+.. treeview::
+     - :dir:`folder` **VScotHO1_200_11** (`foo`, ---)
+         - :dir:`file` **anlagentyp** (`str`, ---)
+         - :dir:`folder` **allgemein** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **temperatur** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **aussentemperatur** (`num`, ---)
+                 - :dir:`file` **aussentemperatur_tp** (`num`, ---)
+                 - :dir:`file` **aussentemperatur_dp** (`num`, ---)
+                 - :dir:`file` **temp_speicher_ladesensor** (`num`, ---)
+                 - :dir:`file` **auslauftemperatur** (`num`, ---)
+                 - :dir:`file` **abgastemperatur** (`num`, ---)
+                 - :dir:`file` **gem_vorlauftemperatur** (`num`, ---)
+             - :dir:`file` **tempkoffset** (`num`, ---)
+             - :dir:`file` **systemtime** (`bool`, ---)
+             - :dir:`file` **anlagenschema** (`str`, ---)
+             - :dir:`file` **ctrlid** (`num`, ---)
+         - :dir:`folder` **kessel** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **kesseltemperatur** (`num`, ---)
+             - :dir:`file` **kesseltemperatur_tp** (`num`, ---)
+             - :dir:`file` **kesselsolltemperatur** (`num`, ---)
+         - :dir:`folder` **fehler** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **sammelstoerung** (`num`, ---)
+             - :dir:`file` **error0** (`str`, ---)
+             - :dir:`file` **error1** (`str`, ---)
+             - :dir:`file` **error2** (`str`, ---)
+             - :dir:`file` **error3** (`str`, ---)
+             - :dir:`file` **error4** (`str`, ---)
+             - :dir:`file` **error5** (`str`, ---)
+             - :dir:`file` **error6** (`str`, ---)
+             - :dir:`file` **error7** (`str`, ---)
+             - :dir:`file` **error8** (`str`, ---)
+             - :dir:`file` **error9** (`str`, ---)
+             - :dir:`file` **fehler01** (`str`, ---)
+             - :dir:`file` **fehler02** (`str`, ---)
+             - :dir:`file` **fehler03** (`str`, ---)
+             - :dir:`file` **fehler04** (`str`, ---)
+             - :dir:`file` **fehler05** (`str`, ---)
+             - :dir:`file` **fehler06** (`str`, ---)
+             - :dir:`file` **fehler07** (`str`, ---)
+             - :dir:`file` **fehler08** (`str`, ---)
+             - :dir:`file` **fehler09** (`str`, ---)
+             - :dir:`file` **fehler10** (`str`, ---)
+             - :dir:`file` **fehler11** (`str`, ---)
+             - :dir:`file` **fehler12** (`str`, ---)
+             - :dir:`file` **fehler13** (`str`, ---)
+             - :dir:`file` **fehler14** (`str`, ---)
+             - :dir:`file` **fehler15** (`str`, ---)
+             - :dir:`file` **fehler16** (`str`, ---)
+             - :dir:`file` **fehler17** (`str`, ---)
+             - :dir:`file` **fehler18** (`str`, ---)
+             - :dir:`file` **fehler19** (`str`, ---)
+             - :dir:`file` **fehler20** (`str`, ---)
+         - :dir:`folder` **pumpen** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **speicherladepumpe** (`bool`, ---)
+             - :dir:`file` **zirkulationspumpe** (`bool`, ---)
+             - :dir:`file` **interne_pumpe** (`bool`, ---)
+             - :dir:`file` **heizkreispumpe_a1m1** (`bool`, ---)
+             - :dir:`file` **heizkreispumpe_a1m1_rpm** (`bool`, ---)
+             - :dir:`file` **relais_status_pumpe_a1m1** (`bool`, ---)
+         - :dir:`folder` **brenner** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **brennerstarts** (`num`, ---)
+             - :dir:`file` **brenner_betriebsstunden** (`num`, ---)
+             - :dir:`file` **brennerstatus_1** (`bool`, ---)
+         - :dir:`folder` **heizkreis** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **a1m1** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`folder` **temperatur** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`folder` **raum** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **raumtemperatur_a1m1** (`num`, ---)
+                         - :dir:`file` **raumtemperatur_soll_normalbetrieb_a1m1** (`num`, ---)
+                         - :dir:`file` **raumtemperatur_soll_red_betrieb_a1m1** (`num`, ---)
+                         - :dir:`file` **raumtemperatur_soll_party_betrieb_a1m1** (`num`, ---)
+                     - :dir:`folder` **vorlauf** (`foo`, ---)
+                         - :dir:`file` **read** (`bool`, ---)
+                         - :dir:`file` **vorlauftemperatur_a1m1** (`num`, ---)
+                         - :dir:`file` **vorlauftemperatur_soll_a1m1** (`num`, ---)
+                         - :dir:`file` **vorlauftemperatur_min_a1m1** (`num`, ---)
+                         - :dir:`file` **vorlauftemperatur_max_a1m1** (`num`, ---)
+                         - :dir:`file` **vorlauftemperatur_erhoehung_soll_a1m1** (`num`, ---)
+                     - :dir:`file` **temperaturgrenze_red_betrieb_a1m1** (`num`, ---)
+                     - :dir:`file` **temperaturgrenze_red_raumtemp_a1m1** (`num`, ---)
+                 - :dir:`folder` **status** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`folder` **aktuelle_betriebsart_a1m1** (`str`, ---)
+                         - :dir:`file` **lookup** (`list`, ---)
+                     - :dir:`file` **betriebsart_a1m1** (`str`, ---)
+                     - :dir:`file` **statusfrost_a1m1** (`num`, ---)
+                     - :dir:`file` **externe_raumsolltemperatur_normal_a1m1** (`num`, ---)
+                     - :dir:`file` **externe_betriebsartenumschaltung_a1m1** (`num`, ---)
+                     - :dir:`file` **speichervorrang_a1m1** (`num`, ---)
+                     - :dir:`file` **frostschutzgrenze_a1m1** (`num`, ---)
+                     - :dir:`file` **heizkreispumpenlogik_a1m1** (`num`, ---)
+                     - :dir:`file` **sparschaltung_a1m1** (`num`, ---)
+                     - :dir:`file` **pumpenstillstandzeit_a1m1** (`num`, ---)
+                 - :dir:`folder` **heizkennlinie** (`foo`, ---)
+                     - :dir:`file` **read** (`bool`, ---)
+                     - :dir:`file` **neigung_heizkennlinie_a1m1** (`num`, ---)
+                     - :dir:`file` **niveau_heizkennlinie_a1m1** (`num`, ---)
+                 - :dir:`file` **partybetrieb_zeitbegrenzung_a1m1** (`num`, ---)
+         - :dir:`folder` **warmwasser** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`file` **warmwasser_temperatur** (`num`, ---)
+             - :dir:`file` **warmwasser_solltemperatur** (`num`, ---)
+             - :dir:`file` **warmwasserpumpennachlauf** (`num`, ---)
+         - :dir:`folder` **ferienprogramm** (`foo`, ---)
+             - :dir:`file` **read** (`bool`, ---)
+             - :dir:`folder` **a1m1** (`foo`, ---)
+                 - :dir:`file` **read** (`bool`, ---)
+                 - :dir:`file` **ferienprogramm_a1m1** (`num`, ---)
+                 - :dir:`file` **ferien_abreisetag_a1m1** (`bool`, ---)
+                 - :dir:`file` **ferien_rückreisetag_a1m1** (`bool`, ---)
+
+
 ===============
 Logik Parameter
 ===============
@@ -871,4 +1014,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/viessmann/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

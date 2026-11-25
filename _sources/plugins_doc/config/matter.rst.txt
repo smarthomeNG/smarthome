@@ -1,0 +1,527 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'matter' Konfiguration
+=============================
+
+
+.. index:: Plugins; matter Konfiguration
+
+.. image:: /plugins/matter/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50%
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **matter** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Matter-Controller-Plugin: Verbindung zu Matter-Geräten.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **2.0.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **matter** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+bridge_control_port
+===================
+
+
+Port, auf dem bridge.js seine WebSocket-Steuer-API anbietet (nur localhost, eigenes Protokoll dieses Plugins). Muss sich zwischen mehreren Instanzen unterscheiden, aus demselben Grund wie bridge_matter_port.
+
+ - Datentyp: **int**
+ - Standardwert: **5561**
+
+
+bridge_discriminator
+====================
+
+
+Kommissionierungs-Diskriminator der Bridge (12 Bit). Fest vergeben, siehe bridge_passcode. Sollte sich zwischen mehreren Instanzen unterscheiden, aus demselben Grund wie bridge_passcode.
+
+ - Datentyp: **int**
+ - Standardwert: **3840**
+
+
+bridge_enabled
+==============
+
+
+Bridge-Rolle (shng-Items für andere Matter-Ökosysteme sichtbar machen) aktivieren.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+bridge_matter_port
+==================
+
+
+Netzwerk-Port, auf dem die Bridge ihre eigene Matter-Fabric anbietet (fuer Kommissionierung durch andere Controller wie Apple Home). Muss sich von server_sidecar_port unterscheiden, sowie zwischen mehreren Instanzen - sonst kollidieren die bridge.js-Prozesse beim Binden des Ports.
+
+ - Datentyp: **int**
+ - Standardwert: **5560**
+
+
+bridge_passcode
+===============
+
+
+Kommissionierungs-Passcode der Bridge. Fest vergeben (v1 hat noch keine Webif-UI fuer eine pro-Kommissionierung generierte Kombination). Sollte sich zwischen mehreren Instanzen unterscheiden - sonst werben zwei Bridges mit identischen Kommissionierungsdaten gleichzeitig im selben LAN, was beim Scannen/Eingeben nicht mehr eindeutig einer bestimmten Instanz zuzuordnen ist.
+
+ - Datentyp: **int**
+ - Standardwert: **20202021**
+
+
+bridge_sidecar_entry
+====================
+
+
+Pfad (relativ zum Plugin-Verzeichnis) zur bridge.js-Datei - dem eigenen @matter/node-Programm des Plugins fuer die Bridge-Rolle (nicht matter-server). Liegt im sidecar/-Verzeichnis, nicht bridge/, da es sich die dortigen Node.js-Abhaengigkeiten mit der Server-Rolle teilt - ein einziges npm install in plugins/matter/sidecar/ deckt beide Rollen ab.
+
+ - Datentyp: **str**
+ - Standardwert: **sidecar/bridge.js**
+
+
+bridge_storage_path
+===================
+
+
+Verzeichnis (relativ zum shng-Arbeitsverzeichnis) fuer die Kommissionierungsdaten der Bridge - eine eigene Matter-Identitaet, getrennt von storage_path (Server-Rolle). Muss sich zwischen mehreren Instanzen unterscheiden, aus demselben Grund wie storage_path.
+
+ - Datentyp: **str**
+ - Standardwert: **var/matter/bridge**
+
+
+bridge_vendor_id
+================
+
+
+Vendor-ID der Bridge (--vendorid-Aequivalent fuer die eigene Geraete-Identitaet, nicht die Fabric wie bei server_fabric_vendor_id). Default 65521 (0xFFF1) ist der von der Matter-Spec reservierte Test-Vendor-Bereich.
+
+ - Datentyp: **int**
+ - Standardwert: **65521**
+
+
+node_binary
+===========
+
+
+Pfad zum Node.js-Binary (muss die von matter-server geforderte Version erfüllen, siehe user_doc.rst)
+
+ - Datentyp: **str**
+ - Standardwert: **node**
+
+
+primary_interface
+=================
+
+
+Netzwerk-Interface fuer lokale Adressen (--primary-interface). Auf Hosts mit mehreren Interfaces auf demselben Subnetz kann die automatische Auswahl ein Interface wählen, über das das Zielgerät nicht erreichbar ist - dann explizit setzen (z.B. en0).
+
+ - Datentyp: **str**
+
+
+server_alias_base_item
+======================
+
+
+Item, unter dem Alias-Definitionen liegen (direkte Kind-Items, jeweils Typ num mit dem aktuellen node_id als Wert - siehe matter_alias). Muss bereits existieren, wird vom Plugin nicht angelegt. Fehlt es, bleibt die Alias-Funktion inaktiv, ohne den Rest des Plugins zu beeinträchtigen. Sollte sich zwischen mehreren Instanzen unterscheiden, falls beide matter_alias nutzen - ein node_id ist nur innerhalb der Fabric der jeweiligen Instanz gueltig, ein geteiltes Basis-Item wuerde Aliase beider Fabrics ununterscheidbar vermischen.
+
+ - Datentyp: **str**
+ - Standardwert: **matter.aliases**
+
+
+server_bluetooth_adapter
+========================
+
+
+HCI-ID des Bluetooth-Adapters (--bluetooth-adapter, z.B. "0" fuer hci0), nicht die MAC-Adresse. Noetig fuer die Erstkommissionierung eines noch nicht vernetzten Matter-over-Thread-Geraets (BLE-basierte Uebergabe der Thread-Zugangsdaten). Leer = matter-servers eigener Default (kein Bluetooth).
+
+ - Datentyp: **str**
+
+
+server_commission_timeout
+=========================
+
+
+Wartezeit (Sekunden) auf die Antwort von matter-server auf einen Kopplungsversuch (commission_with_code). matter-server versucht jede bekannte Netzwerkadresse des Geräts mit bis zu 30s Timeout und plant bis zu 255s für einen Versuch ein. Die Kopplung läuft im Hintergrund, ihr Status wird im Webif laufend aktualisiert.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+server_enable_test_net_dcl
+==========================
+
+
+Testgeräte mit Entwicklungs-Zertifikaten zulassen (--enable-test-net-dcl). NICHT fuer echte Geräte aktivieren.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+server_enabled
+==============
+
+
+Server-Rolle (Kommissionierung/Steuerung echter Matter-Geräte) aktivieren.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+server_fabric_label
+===================
+
+
+Fabric-Label (--default-fabric-label), das andere Controller (z.B. Apple Home, das Fabrics-Webif-Tab) für shngs eigene Fabric anzeigen. Ohne dies wäre matter-servers eigener Default "HomeAssistant" sichtbar.
+
+ - Datentyp: **str**
+ - Standardwert: **SmartHomeNG**
+
+
+server_fabric_vendor_id
+=======================
+
+
+Vendor-ID (--vendorid) für shngs eigene Fabric. Wirkt nur beim allerersten Anlegen der Fabric (in vorhandenen Installationen bereits in den Node-Zertifikaten verankert) - Änderung erfordert Storage-Reset und Neukopplung aller Geräte. Default 65521 (0xFFF1) ist der von der Matter-Spec reservierte Test-Vendor-Bereich; echte Vendor-IDs werden von der CSA vergeben.
+
+ - Datentyp: **int**
+ - Standardwert: **65521**
+
+
+server_generated_items_base
+===========================
+
+
+Basis-Item, unter dem per "Item erstellen"-Button erzeugte Geräte-Items angelegt werden (wird bei Bedarf automatisch angelegt). Sollte sich zwischen mehreren Instanzen unterscheiden - node_ids sind nur innerhalb der Fabric der jeweiligen Instanz eindeutig.
+
+ - Datentyp: **str**
+ - Standardwert: **matter_devices**
+
+
+server_generated_items_file
+===========================
+
+
+Datei (im items-Verzeichnis), in der per "Item erstellen"-Button erzeugte Geräte-Items landen, als Kind-Items unter server_generated_items_base. Datei und Basis-Item werden bei Bedarf automatisch angelegt.
+
+ - Datentyp: **str**
+ - Standardwert: **matter_devices.yaml**
+
+
+server_icd_check_cycle
+======================
+
+
+Intervall (Sekunden) zwischen Prüfungen auf abgelaufene ICD-Geräte (Batterie-/Sleepy-Thread-Geräte, z.B. Tür-/Fensterkontakte). Ein ICD-Gerät meldet sich nur alle IdleModeDuration Sekunden - die Prüfung markiert ein Item als ungültig, sobald es länger als matter_icd_invalid_factor * IdleModeDuration ohne Update ist.
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+server_otbr_rest_url
+====================
+
+
+Basis-URL der REST-API des Thread Border Routers (OTBR), fuer den "Automatisch abrufen"-Button bei den Thread Netzwerk-Zugangsdaten (GET /node/dataset/active). Nur relevant, wenn der Border Router erreichbar ist - Default passt, wenn er auf demselben Host wie shng laeuft. Leer = Button wird nicht angezeigt, Zugangsdaten muessen manuell eingefuegt werden.
+
+ - Datentyp: **str**
+ - Standardwert: **http://localhost:8081**
+
+
+server_sidecar_entry
+====================
+
+
+Pfad (relativ zum Plugin-Verzeichnis) zur matter-server-Einstiegsdatei. matter-server hat kein CLI-Binary, daher wird die Datei direkt mit node ausgeführt.
+
+ - Datentyp: **str**
+ - Standardwert: **sidecar/node_modules/matter-server/dist/esm/MatterServer.js**
+
+
+server_sidecar_port
+===================
+
+
+Port, auf dem der matter-server-Sidecar seine WebSocket-API anbietet (nur localhost). Muss sich zwischen mehreren Instanzen unterscheiden - sonst kollidieren die Sidecar-Prozesse beim Binden des Ports.
+
+ - Datentyp: **int**
+ - Standardwert: **5580**
+
+
+storage_path
+============
+
+
+Verzeichnis (relativ zum shng-Arbeitsverzeichnis) für die Fabric-/Kommissionierungsdaten des Sidecars. Muss sich zwischen mehreren Instanzen unterscheiden - jede Instanz ist eine eigene Fabric, geteilter Storage wuerde die Kommissionierungsdaten der anderen Instanz beschaedigen.
+
+ - Datentyp: **str**
+ - Standardwert: **var/matter**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+matter_alias
+============
+
+
+Alternative zu matter_node: Name einer Alias-Definition unter server_alias_base_item. Löst node_id über die interne Alias-Tabelle des Plugins auf statt fest im Item-Wert - übersteht ein Rekommissionieren (neue node_id) ohne Änderung an diesem oder abhängigen Items, sobald der Alias über das Webif umgeleitet wird.
+
+ - Datentyp: **str**
+
+
+matter_attribute
+================
+
+
+Attribut-ID innerhalb des Clusters. Das Item wird per Subscribe/Report aktuell gehalten (z.B. 0 fuer OnOff.OnOff)
+
+ - Datentyp: **int**
+
+
+matter_available
+================
+
+
+Nur-Lese-Item, das die von matter-server erkannte Erreichbarkeit des Node spiegelt (dieselbe Information wie die "verfuegbar"-Spalte im Webif, hier als echtes Item fuer eigene Logik/Struct/Visu). Braucht nur matter_node, kein Endpoint/Cluster.
+
+ - Datentyp: **bool**
+
+
+matter_cluster
+==============
+
+
+Matter-Cluster-ID (dezimal, z.B. 6 fuer OnOff)
+
+ - Datentyp: **int**
+
+
+matter_command
+==============
+
+
+Kommandoname innerhalb des Clusters, der bei einem Item-Write aufgerufen wird (z.B. toggle, on, off)
+
+ - Datentyp: **str**
+
+
+matter_command_false
+====================
+
+
+Optionales zweites Kommando fuer ein Bool-Item: bei falsy Wert wird dieses statt matter_command aufgerufen (z.B. matter_command=on, matter_command_false=off - ein Item spiegelt und steuert den Zustand statt zweier getrennter Trigger-Items).
+
+ - Datentyp: **str**
+
+
+matter_command_params
+=====================
+
+
+Optionale feste Parameter fuer matter_command. Der Platzhalter "$value" wird durch den geschriebenen Item-Wert ersetzt.
+
+ - Datentyp: **dict**
+
+
+matter_endpoint
+===============
+
+
+Endpoint-Nummer auf dem Matter-Node
+
+ - Datentyp: **int**
+
+
+matter_expose_name
+==================
+
+
+Bridge-Rolle: Anzeigename fuer den anderen Controller. Default: voller Item-Pfad (strukturell eindeutig; remark/Item-Name koennten mehrfach vorkommen und waeren dann in einer flachen Zubehoerliste nicht unterscheidbar). Max. 32 Zeichen (Matter-Spezifikationslimit) - laengere Werte (oder ein zu langer Item-Pfad als Default) lassen das Item unsichtbar fuer die Bridge-Rolle, mit Fehlermeldung im Log.
+
+ - Datentyp: **str**
+
+
+matter_expose_type
+==================
+
+
+Bridge-Rolle: macht dieses Item als Matter-Bridge-Gerät fuer andere Matter-Controller (Apple Home, Google Home, ...) sichtbar. switch = steuerbarer Bool-Aktor (Item-Typ bool), contact = Nur-Lese-Bool-Sensor, z.B. Tuerkontakt (Item-Typ bool), temperature_sensor = Nur-Lese-Zahlensensor in Grad Celsius (Item-Typ num).
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **switch**
+   - **contact**
+   - **temperature_sensor**
+
+
+matter_icd_invalid_factor
+=========================
+
+
+Nur fuer ICD-Geraete (Batterie-/Sleepy-Thread, z.B. Tuer-/Fensterkontakte): ueberschreibt den Standard-Multiplikator (2.5) fuer die Ungueltig-Markierung dieses Items in der Datenbank. Schwelle = Faktor * IdleModeDuration (die vom Geraet selbst gemeldete Melde-Intervall). Vererbt sich wie matter_node an Kind-Items.
+
+ - Datentyp: **num**
+
+
+matter_node
+===========
+
+
+Matter Node-ID des Geräts (wird bei der Kommissionierung vergeben)
+
+ - Datentyp: **int**
+
+
+matter_switch
+=============
+
+
+Kurzform fuer einen Bool-Schalter (z.B. OnOff): Attribut und beide Kommandos werden automatisch aus dem Cluster abgeleitet (siehe clusters.py SWITCH_CLUSTERS). Setzt matter_attribute/matter_command/matter_command_false nicht voraus. Fehlermeldung im Log, falls der Cluster (noch) nicht in der Tabelle steht - dann die low-level Attribute direkt verwenden.
+
+ - Datentyp: **bool**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+battery
+=======
+
+
+.. treeview::
+     - :dir:`folder` **battery** (`foo`, ---)
+         - :dir:`file` **percent** (`num`, Batteriestand in %)
+         - :dir:`file` **voltage** (`num`, Batteriespannung in V)
+
+
+contact
+=======
+
+Kontaktzustand (BooleanState.StateValue)
+
+.. treeview::
+     - :dir:`file` **contact** (`bool`, Kontaktzustand (BooleanState.StateValue))
+
+
+electrical_power_measurement
+============================
+
+
+.. treeview::
+     - :dir:`folder` **electrical_power_measurement** (`foo`, ---)
+         - :dir:`file` **power** (`num`, aktuelle Leistung in W)
+         - :dir:`folder` **voltage** (`num`, aktuelle Spannung in V)
+             - :dir:`file` **hinweis** (`foo`, In eigenen Tests wurde die Spannung nur einmalig beim Verbinden aktualisiert. Obwohl das Gerät die Spannung laufend misst, wird sie über Matter nicht mehr übertragen - z.B. über MQTT sehr wohl.)
+         - :dir:`file` **current** (`num`, aktueller Strom in A)
+
+
+humidity_sensor
+===============
+
+aktuelle relative Luftfeuchtigkeit in %
+
+.. treeview::
+     - :dir:`file` **humidity_sensor** (`num`, aktuelle relative Luftfeuchtigkeit in %)
+
+
+shelly_plug_m_3gen
+==================
+
+
+.. treeview::
+     - :dir:`file` **shelly_plug_m_3gen** (`foo`, ---)
+
+
+shelly_plug_m_3gen_simple
+=========================
+
+
+.. treeview::
+     - :dir:`folder` **shelly_plug_m_3gen_simple** (`foo`, ---)
+         - :dir:`file` **available** (`bool`, Gerät erreichbar)
+
+
+switch
+======
+
+
+.. treeview::
+     - :dir:`folder` **switch** (`bool`, ---)
+         - :dir:`file` **toggle** (`bool`, auf True setzen, um den Schaltzustand zu wechseln)
+
+
+temperature_sensor
+==================
+
+aktuelle Temperatur in °C
+
+.. treeview::
+     - :dir:`file` **temperature_sensor** (`num`, aktuelle Temperatur in °C)
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

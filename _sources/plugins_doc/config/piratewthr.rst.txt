@@ -367,13 +367,12 @@ Gibt das SmartVisu Icon zum übergebenen Pirate-Weather Icon zurück.
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-icon
- -  -  -  - 
+**icon**
+    Icon als String.
 
-Icon als String.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

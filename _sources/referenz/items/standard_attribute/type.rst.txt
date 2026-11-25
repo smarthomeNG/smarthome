@@ -6,8 +6,8 @@
 .. index:: Items; Datentypen
 .. index:: Datentypen
 
-`type` :bluesup:`Update`
-------------------------
+`type`
+------
 
 Das Attribut **type** legt den Datentyp des Items fest. Dadurch wird bestimmt, was für Daten in
 dem Item gespeichert werden können und wie das Item verwendet werden kann.

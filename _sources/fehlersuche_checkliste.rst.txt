@@ -2,12 +2,13 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
 
 .. index:: Fehlersuche; Checkliste
 
-Checkliste für die Fehlersuche
-==============================
+Checkliste für die Fehlersuche :greensup:`Update`
+=================================================
 
 Wenn etwas nach erfolgter Installation nicht funktioniert, kann anhand folgender Punkte geprüft
 werden, was nicht klappt. Hilfe gibt es auch im `Supportforum im KNX-User-Forum <https://knx-user-forum.de/forum/supportforen/smarthome-py>`_
@@ -17,7 +18,7 @@ sollen, dann müsst ihr Informationen beisteuern:
 * Debug Ausgabe anhängen, mindestens bis das Problem ersichtlich geloggt wird. (Dazu SmartHome.py mit
   der Option **-d** starten)
 * Error und Warnings soweit möglich bereits vorher beseitigen
-* evtl. die ``etc/plugin.conf`` und die items mit denen Euer Problem zusammenhängt
+* evtl. die ``etc/plugin.yaml`` und die items mit denen Euer Problem zusammenhängt
 * Wichtig ist auch u.U. die verwendete Hardware (VM oder Raspi 1, 2, 3) das Betriebssystem
   (Raspbian, Ubuntu x.y, Debian x.y) und ob eibd oder knxd genutzt werden.
 
@@ -81,13 +82,19 @@ SmartHomeNG im Debugmodus starten
 ---------------------------------
 
 Eine einfache Möglichkeit Logeinträge bis zum Level DEBUG zu erhalten, ist es SmartHomeNG im Debug Modus zu starten.
-Allerdings werden dabei aus allen Komponenten und Plugins die Logausgaben bis zum Level DEBUG erweitert. Dieses führt
-zu einer sehr großen Anzahl von Log Einträgen und ist deshalb recht unübersichtlich.
+Dabei wird ``logging.yaml`` komplett ignoriert und eine eingebaute Logging-Konfiguration verwendet. Das hilft auch,
+wenn ``logging.yaml`` fehlerhaft ist. Alle Logger von SmartHomeNG (Core, Module, Plugins, Logiken, Items und Funktionen)
+loggen dabei auf Level DEBUG, alle anderen Logger (z.B. von Python-Paketen) auf Level INFO. Die Ausgaben erfolgen auf
+der Konsole und in der Datei ``var/log/smarthome-debug.log``. Dieses führt zu einer sehr großen Anzahl von Log
+Einträgen und ist deshalb recht unübersichtlich.
 
 .. note::
 
-    Vorzuziehen ist eine gezielte Aktivierung der DBUG Ausgaben für einzelne Komponenten oder Plugins. Dieses geschieht
+    Vorzuziehen ist eine gezielte Aktivierung der DEBUG Ausgaben für einzelne Komponenten oder Plugins. Dieses geschieht
     über die Logging Konfiguration in ``/etc/logging.yaml`` bzw. über die GUI des Admin Interfaces.
+
+    Im Debug Modus werden Änderungen an der Logging Konfiguration im Admin Interface zwar gespeichert, aber weder
+    angewendet noch geprüft. Sie wirken erst nach einem Neustart ohne ``-d``.
 
 
 .. code::
@@ -227,7 +234,7 @@ Nach erfolgreichem Aufbau der Verbindung dann **help** eingeben.
    Trying 127.0.1.1...
    Connected to smarthome.local.
    Escape character is '^]'.
-   SmartHomeNG v1.4.0
+   SmartHomeNG v2.0.0  -  cli plugin v1.8.3
    Enter 'help' for a list of available commands.
    CLI > help
    h: alias for help
@@ -271,21 +278,38 @@ werden, was passiert, wenn z.B. auf der Visu ein Button geklickt wird.
 
 Die häufigsten Fehler sind:
 
-+-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
-| Ursache                                 | Fehlerbild                                                         | Behebungsansatz                                 |
-+=========================================+====================================================================+=================================================+
-| Dateiformat der Item-Datei ist          | Beim Start von SmartHomeNG bricht der Einlesevorgang für die Items | Per Telnet verbinden und Items auflisten lassen |
-| nicht im UTF-8 ohne BOM angelegt.       | in der betreffenden Datei ab und die Items werden nicht angelegt.  |                                                 |
-+-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
-| In der Smartvisu werden bei den Widgets | Keine Funktion bei einigen Widgets bzw. merkwürdige Seiteneffekte  | Debug-Ausgabe zeigt zu ändernde Items an,       |
-| doppelte ID vergeben oder Itemname und  |                                                                    | diese auf Plausibilität prüfen                  |
-| ID vertauscht oder aber Leerzeichen     |                                                                    |                                                 |
-| innerhalb der ID oder des Itemnamen.    |                                                                    |                                                 |
-+-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
-| Zugriff auf ein Item ist über die Visu  | Kein Schalten möglich, Werte werden nicht aktualisiert             | visu_acl: rw oder visu: yes fehlt bei einem     |
-| nicht gegeben.                          |                                                                    | Item oder als globales Setting beim Plugin      |
-|                                         |                                                                    | visu_smartvisu                                  |
-+-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Ursache                                 | Fehlerbild                                               | Behebungsansatz                                           |
++=========================================+==========================================================+===========================================================+
+| Item-Datei ist nicht im Format UTF8     | Beim Start von SmartHomeNG bricht der Einlesevorgang     | In der Admin-GUI die Log-Datei anzeigen und Fehler-       |
+| ohne BOM.                               | für die Items in der betreffenden Datei ab und die       | Einträge auswerten.                                       |
+| Fehlerhafte Einrückungen in der         | Items werden nicht angelegt. Keine Reaktion bei          |                                                           |
+| Item-Datei (z.B. Tab statt Leerzeichen) | Bedienung über die Visu                                  |                                                           |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Fehlerhafte IP-Adresse oder Port für    | Fehlermeldung in smartVISU: die Verbindung zu            | IP und Port überprüfen. Als IP muss die echte IP-Adresse  |
+| die Websocket-Verbindung angegeben.     | smarthomeNG kann nicht hergestellt werden.               | des Systems angegeben sein, auf dem SmartHomeNG läuft.    |
+|                                         |                                                          | NICHT "localhost" oder "127.0.0.1"!                       |
+| Hostname nicht bekannt.                 |                                                          | Wenn die Visu mit einem Hostnamen aus dem internen Netz   |
+|                                         |                                                          | aufgerufen wird, muss der Hostname als smartVISU-         |
+|                                         |                                                          | Hostname in der Konfiguration eingetragen sein.           |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| In der smartVISU werden bei den Widgets | Keine Funktion bei einigen Widgets. Wenn in smartVISU    | Debug-Ausgabe zeigt zu ändernde Items an.                 |
+| Itemnamen falsch geschrieben oder mit   | die Option "Aktivitätsanzeige" aktiviert ist, blinkt     | Log-Datei registriert ungültige Item-Abrufe.              |
+| den IDs vertauscht                      | das smartVISU-Logo dauerhaft (ab v3.5) und die Widgets   | smartVISU Cache ausschalten und Browser-Konsole (F12)     |
+|                                         | mit fehlenden Daten werden rot eingerahmt (ab v3.6)      | öffnen. Datenverkehr auf Websocket wird dort angezeigt.   |
+|                                         |                                                          | Ab v3.5 mit Eingabe "io.openItems" die fehlenden Items    |
+|                                         |                                                          | anzeigen.                                                 |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Zugriff auf ein Item ist über die Visu  | Kein Schalten möglich, Werte werden nicht aktualisiert   | visu_acl: rw oder visu: yes fehlt bei einem Item oder als |
+| nicht gegeben.                          |                                                          | globales Setting beim Plugin smartvisu                    |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Zwischengespeicherte Dateien (Cache)    | Änderungen an Visu-Seiten werden nicht übernommen,       | smartVISU Cache löschen. Browser-Cache / Websitedaten     |
+| sind nicht aktuell                      | fehlerhafte Darstellungen                                | löschen                                                   |
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
+| Fehlerhafte Widget-Parametrierung       | Widget funktioniert nicht oder zeigt unplausible         | Templatechecker zeigt Fehler in Parametrierungen an.      |
+|                                         | Daten an.                                                | Widget-Aufruf in Widget-Assistent kopieren und mit        |
+|                                         |                                                          | Hilfestellung die Korrekturen vornehmen und testen.       | 
++-----------------------------------------+----------------------------------------------------------+-----------------------------------------------------------+
 
 
 Zugriff auf SH.py via CLI Plugin aus Windows mit putty oder kitty
@@ -298,7 +322,7 @@ In Putty bitte folgende Settings beachten, damit der Zugriff auf das CLI Plugin 
 Session:
 
 - Connection type -> RAW wählen (nicht Telnet!)
-- Host Namen des Servers eintragen, Port 2323 (oder wie er in der plugin.conf konfiguriert ist)<
+- Host Namen des Servers eintragen, Port 2323 (oder wie er in der ``etc/plugin.yaml`` konfiguriert ist)
 
 Terminal:
 
@@ -309,5 +333,5 @@ Connection - Telnet:
 - Keyboard sends Telnet special commands -> Haken setzen
 - Return key sends Telnet New Line instead of ^M -> Haken entfernen
 
-Mehr Informationen zum CLI Plugin unter: :doc:`./plugins/cli/README`
+Mehr Informationen zum CLI Plugin unter: :doc:`/plugins/cli/user_doc`
 

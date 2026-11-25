@@ -624,7 +624,7 @@ Vorlage Struktur Indego-Mower
                  - :dir:`file` **tn** (`num`, ---)
          - :dir:`folder` **operatingInfo** (`foo`, ---)
              - :dir:`file` **hmiKeys** (`num`, ---)
-             - :dir:`folder` **garden** (`foo`, OrderedDict([('type', 'num'), ('cache', 'on')]))
+             - :dir:`folder` **garden** (`foo`, ---)
                  - :dir:`file` **charge** (`num`, ---)
                  - :dir:`file` **last_mow** (`num`, ---)
                  - :dir:`file` **runtime** (`num`, ---)
@@ -692,29 +692,24 @@ sendet ein Kommando an den Bosch-Server
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-payload
- -  -  -  -  -  -  - 
+**payload**
+    Payload für das zu sendende Kommando
 
-Payload für das zu sendende Kommando
+    - Datentyp: **str**
+    - Standardwert: **{"state":"mow"}**
+    - Mögliche Werte:
 
- - Datentyp: **str**
- - Standardwert: **{"state":"mow"}**
+       - **{"state":"mow"}**
+       - **{"state":"pause"}**
+       - **{"state":"returnToDock"}**
 
- - Mögliche Werte:
+**trigger**
+    Trigger der die Funktion ausgelöst hat
 
-   - **{"state":"mow"}**
-   - **{"state":"pause"}**
-   - **{"state":"returnToDock"}**
-
-
-trigger
- -  -  -  -  -  -  - 
-
-Trigger der die Funktion ausgelöst hat
-
- - Datentyp: **str**
- - Standardwert: **Logic**
+    - Datentyp: **str**
+    - Standardwert: **Logic**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/indego4shng/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

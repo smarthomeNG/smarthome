@@ -11,6 +11,7 @@
    /plugins/philips_tv/user_doc
    /plugins/snmp/user_doc
    /plugins/wol/user_doc
+   /plugins/xmpp/user_doc
 
 
 
@@ -24,7 +25,7 @@
      - Maintainer
      - Tester
    * - :doc:`mqtt <config/mqtt>`
-     - v2.0.6
+     - v3.0.0
      - MQTT Plugin, welches das MQTT Module von SmartHomeNG zur Kommunikation nutzt.
        
        + `mqtt Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1089334-neues-mqtt-plugin>`_
@@ -36,7 +37,7 @@
        onkelandy
    
    * - :doc:`network <config/network>`
-     - v1.6.2
+     - v1.6.3
      - Items über Netzwerkanfragen (UDP/TCP/HTTP GET) ändern und Daten per UDP senden
        
        + `network zusätzliche Infos <https://www.smarthomeng.de/user/plugins_doc/config/network.html>`_
@@ -59,7 +60,7 @@
      - n/a
    
    * - :doc:`snmp <config/snmp>`
-     - v1.6.1
+     - v1.6.2
      - SNMP Queries
        
        + `snmp Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1455436-support-thread-f%C3%BCr-snmp-plugin>`_
@@ -71,7 +72,7 @@
      - 
    
    * - :doc:`wol <config/wol>`
-     - v1.2.0
+     - v1.2.1
      - Wake on LAN
        
        + `wol Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1661427>`_
@@ -81,7 +82,7 @@
      - ohinckel
    
    * - :doc:`xmpp <config/xmpp>`
-     - v1.4.1
+     - v2.0.0
      - Unterstützung des Extensible Messaging and Presence Protocol (XMPP). Unterstützt z.Zt. nur das Senden von Nachrichten.
        
        |br|

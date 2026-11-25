@@ -37,8 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.5**
- - Minimum Python Version: **3.7**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -113,6 +112,16 @@ Netzwerkziel/-host
  - Datentyp: **str**
 
 
+invalidate_on_disconnect
+========================
+
+
+Items bei Verbindungsverlust im Datenbank-Log als ungültig markieren (Datenlücke)
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
 port
 ====
 
@@ -130,6 +139,7 @@ resume_initial_read
 Bei resume vom Plugin erstmaliges Lesen erneut durchführen
 
  - Datentyp: **bool**
+ - Standardwert: **True**
 
 
 retry_cycle
@@ -221,7 +231,7 @@ kodi_read
 =========
 
 
-Item liest/erhält Werte vom Gerät
+Item fordert Werte vom Gerät an (Werte empfängt jedes Item mit Kommando)
 
  - Datentyp: **bool**
 
@@ -294,6 +304,8 @@ ALL
              - :dir:`file` **title** (`str`, ---)
              - :dir:`file` **streams** (`list`, ---)
              - :dir:`file` **subtitles** (`list`, ---)
+             - :dir:`file` **audio_names** (`list`, ---)
+             - :dir:`file` **subtitle_names** (`list`, ---)
              - :dir:`file` **macro** (`bool`, ---)
          - :dir:`folder` **status** (`foo`, ---)
              - :dir:`file` **read** (`bool`, ---)
@@ -355,6 +367,8 @@ info
          - :dir:`file` **title** (`str`, ---)
          - :dir:`file` **streams** (`list`, ---)
          - :dir:`file` **subtitles** (`list`, ---)
+         - :dir:`file` **audio_names** (`list`, ---)
+         - :dir:`file` **subtitle_names** (`list`, ---)
          - :dir:`file` **macro** (`bool`, ---)
 
 

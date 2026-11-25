@@ -282,13 +282,13 @@ Main Data From Robonect HX Module
                  - :dir:`file` **at-version** (`str`, ---)
                  - :dir:`file` **sdk-version** (`str`, ---)
          - :dir:`folder` **remote** (`foo`, ---)
-             - :dir:`folder` **remotestart_1** (`foo`, OrderedDict([('type', 'str'), ('robonect_data_type', 'remotestart_name'), ('robonect_remote_index', 1)]))
+             - :dir:`folder` **remotestart_1** (`foo`, ---)
                  - :dir:`file` **name** (`str`, ---)
                  - :dir:`file` **visible** (`bool`, ---)
                  - :dir:`file` **rstart_path** (`num`, ---)
                  - :dir:`file` **proportion** (`num`, ---)
                  - :dir:`file` **distance** (`num`, ---)
-             - :dir:`folder` **remotestart_2** (`foo`, OrderedDict([('type', 'str'), ('robonect_data_type', 'remotestart_name'), ('robonect_remote_index', 2)]))
+             - :dir:`folder` **remotestart_2** (`foo`, ---)
                  - :dir:`file` **name** (`str`, ---)
                  - :dir:`file` **visible** (`bool`, ---)
                  - :dir:`file` **rstart_path** (`num`, ---)
@@ -414,20 +414,18 @@ Gibt den aktuellen Betriebsmodus des Automowers als String zurück.
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-mode
- -  -  -  - 
+**mode**
+    Betriebsmodus als Integer.
 
-Betriebsmodus als Integer.
+    - Datentyp: **int**
+    - Mögliche Werte:
 
- - Datentyp: **int**
-
- - Mögliche Werte:
-
-   - **1**
-   - **2**
-   - **3**
-   - **4**
+       - **1**
+       - **2**
+       - **3**
+       - **4**
 
 
 get_status()
@@ -447,13 +445,12 @@ Gibt den Status des Rasenmähers als String zurück.
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-status
- -  -  -  -  -  - 
+**status**
+    Status als Integer.
 
-Status als Integer.
-
- - Datentyp: **int**
+    - Datentyp: **int**
 
 
 is_mower_offline()
@@ -473,79 +470,60 @@ Setzt den Betriebsmodus.
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-mode
- -  -  -  - 
+**mode**
+    Betriebsmodus, der gesetzt werden soll ('home','eod','man','auto','job').
 
-Betriebsmodus, der gesetzt werden soll ('home','eod','man','auto','job').
+    - Datentyp: **str**
+    - Mögliche Werte:
 
- - Datentyp: **str**
+       - **home**
+       - **eod**
+       - **man**
+       - **auto**
+       - **job**
 
- - Mögliche Werte:
+**remotestart**
+    Fernstartpunkt, entweder 0 (Standard), 1 (Fernstart 1), oder 2 (Fernstart 2) - nur mit mode=job nutzbar.
 
-   - **home**
-   - **eod**
-   - **man**
-   - **auto**
-   - **job**
+    - Datentyp: **int**
+    - Mögliche Werte:
 
+       - **0**
+       - **1**
+       - **2**
 
-remotestart
- -  -  -  -  -  -  -  -  -  -  - 
+**after**
+    Modus, der nach dem Mähauftrag aktiviert werden soll (Standard: letzter Modus). Mögliche Werte 1,2,3,4 (vor V1.0 Beta 8) oder 'home','eod','man','auto','job' - nur mit mode=job nutzbar.
 
-Fernstartpunkt, entweder 0 (Standard), 1 (Fernstart 1), oder 2 (Fernstart 2) - nur mit mode=job nutzbar.
+    - Datentyp: **str**
+    - Mögliche Werte:
 
- - Datentyp: **int**
+       - **1**
+       - **2**
+       - **3**
+       - **4**
+       - **home**
+       - **eod**
+       - **man**
+       - **auto**
+       - **job**
 
- - Mögliche Werte:
+**start**
+    Startzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt: 0) - nur mit mode=job nutzbar.
 
-   - **0**
-   - **1**
-   - **2**
+    - Datentyp: **str**
 
+**end**
+    Endzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt: +1h) - nur mit mode=job nutzbar.
 
-after
- -  -  -  -  - 
+    - Datentyp: **str**
 
-Modus, der nach dem Mähauftrag aktiviert werden soll (Standard: letzter Modus). Mögliche Werte 1,2,3,4 (vor V1.0 Beta 8) oder 'home','eod','man','auto','job' - nur mit mode=job nutzbar.
+**duration**
+    Zeitdauer des Mähauftrags in Minuten (nur kombiniert mit dem start oder end Parameter)
 
- - Datentyp: **str**
-
- - Mögliche Werte:
-
-   - **1**
-   - **2**
-   - **3**
-   - **4**
-   - **home**
-   - **eod**
-   - **man**
-   - **auto**
-   - **job**
-
-
-start
- -  -  -  -  - 
-
-Startzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt: 0) - nur mit mode=job nutzbar.
-
- - Datentyp: **str**
-
-
-end
- -  -  - 
-
-Endzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt: +1h) - nur mit mode=job nutzbar.
-
- - Datentyp: **str**
-
-
-duration
- -  -  -  -  -  -  -  - 
-
-Zeitdauer des Mähauftrags in Minuten (nur kombiniert mit dem start oder end Parameter)
-
- - Datentyp: **int**
+    - Datentyp: **int**
 
 
 set_name_via_api(name)
@@ -556,13 +534,12 @@ Setzt den Namen des Automowers.
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-name
- -  -  -  - 
+**name**
+    Name, der gesetzt werden soll.
 
-Name, der gesetzt werden soll.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 set_remote_via_api(index, name, distance, visible, proportion)
@@ -573,45 +550,32 @@ Setzt Informationen für den jeweiligen Fernstart.
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-index
- -  -  -  -  - 
+**index**
+    Fernstart-Index (normal 1 oder 2)
 
-Fernstart-Index (normal 1 oder 2)
+    - Datentyp: **int**
 
- - Datentyp: **int**
+**name**
+    Name des Fernstart-Ortes.
 
+    - Datentyp: **str**
 
-name
- -  -  -  - 
+**distance**
+    Fernstartabstand.
 
-Name des Fernstart-Ortes.
+    - Datentyp: **int**
 
- - Datentyp: **str**
+**visible**
+    Fernstart-Punkt sichtbar?
 
+    - Datentyp: **bool**
 
-distance
- -  -  -  -  -  -  -  - 
+**proportion**
+    Häufigkeit in %, die der Fernstartpunkt selektiert werden soll.
 
-Fernstartabstand.
-
- - Datentyp: **int**
-
-
-visible
- -  -  -  -  -  -  - 
-
-Fernstart-Punkt sichtbar?
-
- - Datentyp: **bool**
-
-
-proportion
- -  -  -  -  -  -  -  -  -  - 
-
-Häufigkeit in %, die der Fernstartpunkt selektiert werden soll.
-
- - Datentyp: **int**
+    - Datentyp: **int**
 
 
 set_timer_via_api(index, enabled, start, end, mo, tu, we, th, fr, sa, su)
@@ -622,93 +586,62 @@ Setzt die Informationen für einen Timer.
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-index
- -  -  -  -  - 
+**index**
+    Index des Timers (beginnend bei 1).
 
-Index des Timers (beginnend bei 1).
+    - Datentyp: **int**
 
- - Datentyp: **int**
+**enabled**
+    True: der Timer wird aktiviert, False: deaktiviert.
 
+    - Datentyp: **bool**
 
-enabled
- -  -  -  -  -  -  - 
+**start**
+    Startzeit für den Timer, als String im Format 'HH:MM'.
 
-True: der Timer wird aktiviert, False: deaktiviert.
+    - Datentyp: **str**
 
- - Datentyp: **bool**
+**end**
+    Endzeit für den Timer, als String im Format 'HH:MM'.
 
+    - Datentyp: **str**
 
-start
- -  -  -  -  - 
+**mo**
+    True: Montag aktiviert, False: deaktiviert.
 
-Startzeit für den Timer, als String im Format 'HH:MM'.
+    - Datentyp: **bool**
 
- - Datentyp: **str**
+**tu**
+    True: Dienstag aktiviert, False: deaktiviert.
 
+    - Datentyp: **bool**
 
-end
- -  -  - 
+**we**
+    True: Mittwoch aktiviert, False: deaktiviert.
 
-Endzeit für den Timer, als String im Format 'HH:MM'.
+    - Datentyp: **bool**
 
- - Datentyp: **str**
+**th**
+    True: Donnerstag aktiviert, False: deaktiviert.
 
+    - Datentyp: **bool**
 
-mo
- -  - 
+**fr**
+    True: Freitag aktiviert, False: deaktiviert.
 
-True: Montag aktiviert, False: deaktiviert.
+    - Datentyp: **bool**
 
- - Datentyp: **bool**
+**sa**
+    True: Samstag aktiviert, False: deaktiviert.
 
+    - Datentyp: **bool**
 
-tu
- -  - 
+**su**
+    True: Sonntag aktiviert, False: deaktiviert.
 
-True: Dienstag aktiviert, False: deaktiviert.
-
- - Datentyp: **bool**
-
-
-we
- -  - 
-
-True: Mittwoch aktiviert, False: deaktiviert.
-
- - Datentyp: **bool**
-
-
-th
- -  - 
-
-True: Donnerstag aktiviert, False: deaktiviert.
-
- - Datentyp: **bool**
-
-
-fr
- -  - 
-
-True: Freitag aktiviert, False: deaktiviert.
-
- - Datentyp: **bool**
-
-
-sa
- -  - 
-
-True: Samstag aktiviert, False: deaktiviert.
-
- - Datentyp: **bool**
-
-
-su
- -  - 
-
-True: Sonntag aktiviert, False: deaktiviert.
-
- - Datentyp: **bool**
+    - Datentyp: **bool**
 
 
 start_mower_via_api()
@@ -729,4 +662,4 @@ Stoppt den derzeit gewählten Modus des Automowers über die Web-API.
  - Ergebnistyp der Funktion: **foo**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/robonect/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

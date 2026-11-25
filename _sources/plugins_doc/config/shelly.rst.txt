@@ -39,7 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.5.6**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -72,6 +72,16 @@ gen1debug
 Debug Gen1 devices
 
  - Datentyp: **bool**
+
+
+invalidate_on_disconnect
+========================
+
+
+Items eines Devices im Datenbank-Log als ungültig markieren, wenn der Broker das Device als offline meldet (Datenlücke). Pro Item mit shelly_invalidate_on_disconnect überschreibbar
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
 
 
 ==============
@@ -108,6 +118,15 @@ shelly_id
 ID des Shelly Devices
 
  - Datentyp: **str**
+
+
+shelly_invalidate_on_disconnect
+===============================
+
+
+Überschreibt den Plugin-Parameter invalidate_on_disconnect für dieses Item. Nicht gesetzt: Plugin-Parameter gilt
+
+ - Datentyp: **bool**
 
 
 shelly_list_attrs
@@ -250,6 +269,25 @@ WLAN Steckdose (Zwischenstecker), mit Temperaturmessung
          - :dir:`file` **energy_by_minute** (`num`, ---)
          - :dir:`file` **energy_wh** (`num`, ---)
          - :dir:`file` **energy_kwh** (`num`, ---)
+
+
+shellytrv
+=========
+
+WLAN Heizkörperthermostat (Shelly TRV), nur lesend
+
+.. treeview::
+     - :dir:`folder` **shellytrv** (`num`, WLAN Heizkörperthermostat (Shelly TRV), nur lesend)
+         - :dir:`file` **target_t** (`num`, ---)
+         - :dir:`file` **temperature_offset** (`num`, ---)
+         - :dir:`file` **valve_pos** (`num`, ---)
+         - :dir:`file` **window_open** (`bool`, ---)
+         - :dir:`file` **boost_minutes** (`num`, ---)
+         - :dir:`file` **schedule** (`bool`, ---)
+         - :dir:`file` **schedule_profile** (`num`, ---)
+         - :dir:`file` **battery** (`num`, ---)
+         - :dir:`file` **voltage** (`num`, ---)
+         - :dir:`file` **online** (`bool`, ---)
 
 
 ===============

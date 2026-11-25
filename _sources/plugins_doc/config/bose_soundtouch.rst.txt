@@ -133,27 +133,27 @@ presets
 
 .. treeview::
      - :dir:`folder` **presets** (`foo`, ---)
-         - :dir:`folder` **0** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.0.name')]))
+         - :dir:`folder` **0** (`foo`, ---)
              - :dir:`file` **name** (`str`, ---)
              - :dir:`file` **preset_id** (`num`, ---)
              - :dir:`file` **source** (`str`, ---)
-         - :dir:`folder` **1** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.1.name')]))
+         - :dir:`folder` **1** (`foo`, ---)
              - :dir:`file` **name** (`str`, ---)
              - :dir:`file` **preset_id** (`num`, ---)
              - :dir:`file` **source** (`str`, ---)
-         - :dir:`folder` **2** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.2.name')]))
+         - :dir:`folder` **2** (`foo`, ---)
              - :dir:`file` **name** (`str`, ---)
              - :dir:`file` **preset_id** (`num`, ---)
              - :dir:`file` **source** (`str`, ---)
-         - :dir:`folder` **3** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.3.name')]))
+         - :dir:`folder` **3** (`foo`, ---)
              - :dir:`file` **name** (`str`, ---)
              - :dir:`file` **preset_id** (`num`, ---)
              - :dir:`file` **source** (`str`, ---)
-         - :dir:`folder` **4** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.4.name')]))
+         - :dir:`folder` **4** (`foo`, ---)
              - :dir:`file` **name** (`str`, ---)
              - :dir:`file` **preset_id** (`num`, ---)
              - :dir:`file` **source** (`str`, ---)
-         - :dir:`folder` **5** (`foo`, OrderedDict([('type', 'str'), ('visu_acl', 'ro'), ('bose_soundtouch_action', 'presets.5.name')]))
+         - :dir:`folder` **5** (`foo`, ---)
              - :dir:`file` **name** (`str`, ---)
              - :dir:`file` **preset_id** (`num`, ---)
              - :dir:`file` **source** (`str`, ---)
@@ -202,4 +202,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/bose_soundtouch/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

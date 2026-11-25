@@ -4,9 +4,10 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-Class SmartDevicePlugin
-=======================
+Class SmartDevicePlugin :greensup:`Update`
+==========================================
 
 Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.
 
@@ -139,6 +140,12 @@ Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
 Die einzelnen Attribute der command-Definitionen sind in der Datei `./dev/sample_smartdevice_plugin/commands.py` im
 Detail erklärt.
 
+``read`` und ``write`` beschreiben die Operationen am Gerät: ``read`` erlaubt, den Wert vom Gerät anzufordern (auf
+Anforderung, beim Start, zyklisch oder in Lesegruppen), ``write`` erlaubt, Item-Werte an das Gerät zu senden. Werte
+empfangen dagegen alle Items, die an das Kommando gebunden sind - unabhängig davon, ob der Wert aus einer Antwort,
+einer Meldung des Geräts oder aus dem Plugin-Code stammt. Ein Kommando ohne ``read`` und ohne ``write`` ist ein
+Pseudo-Kommando: es existiert nicht auf dem Gerät und wird nur vom Plugin befüllt.
+
 
 Protokoll
 ---------
@@ -240,6 +247,40 @@ und der Item-Wert **nicht** zurückgesetzt — die Rückkopplungsschleife wird d
 
 Der Guard wird automatisch zurückgesetzt, wenn der Item-Wert sich ändert, die Verbindung zum Gerät
 erfolgreich wiederhergestellt wird, oder das Zeitfenster abläuft ohne weitere Versuche.
+
+
+Datenlücken bei Verbindungsverlust :redsup:`neu`
+------------------------------------------------
+
+Mit dem Parameter ``invalidate_on_disconnect`` markiert das Plugin bei Verbindungsverlust seine Items im
+Datenbank-Log des ``database``-Plugins als ungültig (``item.db_mark_invalid()``). Der Item-Wert selbst bleibt
+unverändert, im Log entsteht eine Datenlücke. Sie endet mit dem nächsten vom Gerät gelieferten Wert; ein
+explizites ``db_mark_valid()`` erfolgt nicht.
+
+.. list-table:: Parameter
+   :header-rows: 1
+
+   * - Parameter (plugin.yaml)
+     - Standardwert
+     - Beschreibung
+   * - ``invalidate_on_disconnect``
+     - ``False``
+     - ``True`` aktiviert die Markierung. Wird der Parameter in der ``plugin.yaml`` des Plugins nicht
+       deklariert, ist die Funktion aus.
+
+Voraussetzungen und Verhalten:
+
+- Es werden nur Items markiert, die das ``database``-Plugin loggt (``database: yes``); alle anderen werden
+  übersprungen.
+- Ausgelöst wird beim Verbindungsverlust (``on_disconnect()``) und beim Abbruch der Verbindungsversuche
+  (``retry_suspend``), unmittelbar bevor das Plugin in den Suspend-Modus wechselt. Ein manuell gesetzter Suspend
+  markiert nichts.
+- Vor der ersten erfolgreichen Verbindung wird nichts markiert.
+- Bereits als ungültig markierte Items werden nicht erneut markiert.
+
+Welche Items markiert werden, bestimmt ``should_invalidate_item(item, by)``. Standardmäßig sind das Items, die
+Gerätedaten empfangen (lesbare Kommandos und Pseudo-Kommandos), nicht aber reine Schreib-Items und das
+Suspend-Item. Ein Plugin kann die Methode überschreiben, um die Auswahl anzupassen.
 
 
 DataTypes

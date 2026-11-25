@@ -38,7 +38,6 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.9.3.5**
- - Minimum Python Version: **3.6**
 
 Konfiguration
 =============
@@ -154,15 +153,6 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
-description
-===========
-
-
-
-
- - Datentyp: 
-
-
 sv_blocksize
 ============
 
@@ -191,7 +181,7 @@ sv_heading_buttons
 ==================
 
 
-
+Definition von Buttons, die als 'Radiobuttons' oben auf der Seite angezeigt werden. 'sv_heading_buttons' ist eine Liste, die drei Listen enthält. Die Länge jeder der drei Listen entspricht der Anzahl der Buttons (2 bis 5) in der Top-Navigation. Die erste Liste enthält den Text der Buttons. Die zweite Liste enthält den jeweiligen Raumnamen zu dem navigiert werden soll. Die dritte Liste enthält die Namen der Icons (ohne Extension).
 
  - Datentyp: **list**
 
@@ -382,21 +372,17 @@ Diese Funktion weist smartVISU Clients an, auf die angegebene Url (Visu Seite) z
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-url
- -  -  - 
+**url**
+    Die URL zu der smartVISU wechseln soll
 
-Die URL zu der smartVISU wechseln soll
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**clientip**
+    Falls angegeben, werden nur Clients (Browser) die auf dem Host mit der angegebenen IP Adresse laufen angewiesen die Seite zu wechseln. 
 
-
-clientip
- -  -  -  -  -  -  -  - 
-
-Falls angegeben, werden nur Clients (Browser) die auf dem Host mit der angegebenen IP Adresse laufen angewiesen die Seite zu wechseln. 
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

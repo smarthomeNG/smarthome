@@ -10,8 +10,7 @@ SmartHomeNG installieren
 ========================
 
 SmartHomeNG ist eine in Python erstellte Anwendung. Daher muss bevor SmartHomeNG genutzt werden kann,
-Python installiert werden. Außerdem muß der git Client installiert werden, um SmartHomeNG von Github
-zu laden und zu installieren.
+Python installiert werden. Außerdem muß der git Client installiert sein, wie im Abschnitt :doc:`01_debian`  beschrieben.
 
 
 .. contents:: Schritte der Installation
@@ -26,7 +25,6 @@ Zunächst müssen einige zusätzliche Pakete installiert werden:
 .. code-block:: bash
 
    sudo apt-get -y install dialog python3 python3-dev python3-setuptools python3-venv build-essential python3-pip
-   sudo apt-get -y install git-core wget unzip
 
 
 SmartHomeNG Quellcode laden
@@ -84,16 +82,17 @@ konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folg
 
    $ python3 bin/smarthome.py
 
-   test_requirements: 'ephem' not installed. Minimum v3.7 needed
-   test_requirements: 'holidays' not installed. Minimum v0.9.11 needed
-   test_requirements: 'psutil' not installed, any version needed
-   test_requirements: 'python-dateutil' not installed. Minimum v2.5.3 needed
-   test_requirements: 'requests' not installed. Minimum v2.20.0 needed
-   test_requirements: 'ruamel.yaml' not installed. Minimum v0.13.7 needed
+   test_requirements: 'ephem' not installed. Minimum v4.2 needed
+   test_requirements: 'python-dateutil' not installed. Minimum v2.9.0 needed
+   test_requirements: 'holidays' not installed. Minimum v0.59 needed
+   test_requirements: 'psutil' not installed. Minimum v6.1.1 needed
+   test_requirements: 'portalocker' not installed. Minimum v3.2.0 needed
+   test_requirements: 'requests' not installed. Minimum v2.31.0 needed
+   test_requirements: 'ruamel.yaml' not installed. Minimum v0.16.7 needed
 
    Installing core requirements for the current user, please wait...
-   Running in a virtualenv environment,
-   installing core requirements only to current virtualenv, please wait...
+   Running in a virtual environment environment,
+   installing core requirements only to current virtual environment, please wait...
 
    core requirements installed
 
@@ -219,10 +218,10 @@ Die Konfiguration kann mit der graphischen Oberfläche (Administrations-Interfac
 Anpassung der Konfigurationsdateien vorgenommen werden. Dieses ist hier im folgenden kurz beschrieben. Eine ausführlichere
 Beschreibung findet sich im Abschnitt :doc:`../../konfiguration/konfiguration` .
 
-Mit der Grundinstallation werden einige Konfigurationsdateien mitgeliefert die den gleichen Namen tragen wie die
-benötigten Dateien aber zusätzlich noch die Endung ``.default``. Wenn SmartHomeNG beim Start eine benötigte
-Konfigurationsdatei sucht, aber noch keine vorhanden ist, so wird eine Kopie von der mitgelieferten ``.default``
-Datei erstellt und diese weiter verwendet. Gelingt dies nicht, so bricht SmartHomeNG beim Start ab.
+Mit der Grundinstallation werden im Verzeichnis ``templates`` Vorlagen für die Konfigurationsdateien mitgeliefert,
+die den gleichen Namen tragen wie die benötigten Dateien, aber zusätzlich noch die Endung ``.default``. Wenn SmartHomeNG
+beim Start eine benötigte Konfigurationsdatei im Verzeichnis ``etc`` sucht, aber noch keine vorhanden ist, so wird
+eine Kopie der mitgelieferten Vorlage erstellt und diese weiter verwendet. Gelingt dies nicht, so bricht SmartHomeNG beim Start ab.
 
 Es werden für einen Systemstart folgende Konfigurationsdateien benötigt:
 
@@ -268,20 +267,14 @@ Die Koordinaten für einen Standort kann man z.B. auf http://www.mapcoordinates.
 
    tz: 'Europe/Berlin'
 
-   # Version 1.5
-   #deprecated_warnings: True
-
-   # Version 1.4
-   #
    # the default_language is used, where multiple languages are supported (de, if not specified)
    #default_language: de
 
-   # Version 1.3
-   # db: Format: <name>:<python-module>, list of database-entries is possible
-   # db:
-   #   - sqlite:sqlite3
-   #   - mysql:pymysql
-   # module_paths = /usr/local/python/lib    # list of path-entries is possible
+   # log warnings, if deprecated functions are called
+   #deprecated_warnings: True
+
+   # additional directory for modules, list of path-entries is possible
+   #module_paths: /usr/local/python/lib
 
 Es bietet sich an, die default-Datei nach smarthome.yaml zu kopieren und die Daten oben auf den eigenen Standort
 anzupassen. Alternativ kann diese Anpassung später über das Admin Interface durchgeführt werden.
@@ -305,17 +298,18 @@ In der ersten Datei findet man nach dem ersten Start von SmartHomeNG etwas Ähnl
 
 .. code-block:: text
 
-    YYYY-MM-dd  hh:mm:ss WARNING  __main__             --------------------   Init SmartHomeNG 1.7   --------------------
-    YYYY-MM-dd  hh:mm:ss WARNING  __main__             Running in Python interpreter 'v3.7.3 final' (pid=????) on linux platform
-    YYYY-MM-dd  hh:mm:ss WARNING  lib.shtime           Nutze Feiertage für Land 'DE', Provinz 'HH', State 'None', 1 benutzerdefinierte Feiertagsdefinition(en) definiert
-    YYYY-MM-dd  hh:mm:ss WARNING  plugins.cli          CLI: You should set a password for this plugin.
+    YYYY-MM-dd  hh:mm:ss NOTICE   lib.smarthome       --------------------   Init SmartHomeNG 2.0.0+4e0938c2.master   --------------------
+    YYYY-MM-dd  hh:mm:ss NOTICE   lib.smarthome       Running in Python interpreter 'v3.13.5 final' in virtual environment, from directory /usr/local/smarthome
+    YYYY-MM-dd  hh:mm:ss NOTICE   lib.smarthome        - operating system 'Debian GNU/Linux 13.2 (trixie)' (pid=????)
+    YYYY-MM-dd  hh:mm:ss NOTICE   lib.smarthome        - on '<CPU>'
+    YYYY-MM-dd  hh:mm:ss WARNING  plugins.cli         CLI: You should set a password for this plugin.
 
 
-Vorne steht Datum und Uhrzeit, dann der Loglevel (ERROR, WARNING, INFO), dann je nach Setup in der Datei logging.yaml
+Vorne steht Datum und Uhrzeit, dann der Loglevel (ERROR, WARNING, NOTICE, INFO), dann je nach Setup in der Datei logging.yaml
 noch Name bzw. Modul oder Thread und ein Meldungstext, der den Logeintrag beschreibt.
 
 Dabei sind im Beispiel ``YYYY-MM-dd hh:mm:ss`` Zeitangaben, die von der aktuellen Startzeit abhängen und ``????`` ist die Prozess-ID anhand derer SmartHomeNG identifiziert werden kann.
-Die ersten beiden Zeile werden immer in dieser Form auftreten, alles weitere hängt von der tatsächlichen Konfiguration ab.
+Die ersten vier Zeilen werden immer in dieser Form auftreten, alles weitere hängt von der tatsächlichen Konfiguration ab.
 
 Sollte ein Plugin konfiguriert werden, das noch weitere Bibliotheken benötigt, so würde SmartHomeNG an dieser Stelle einen kritischen Fehler
 melden und sich beenden.
@@ -343,8 +337,8 @@ plugin.yaml
 
 In der ``plugin.yaml`` stehen die Plugins, die verwendet werden sollen, sowie ihre Konfigurationsparameter.
 
-Wenn keine Datei ``plugin.yaml`` existiert, wird beim ersten Start von SmartHomeNG die mitgelieferte Datei ``plugin.yaml.default``
-kopiert. In dieser Datei ist ein minimaler Set von Plugins konfiguriert, so dass z.B. per Browser oder mit der smartVISU auf die
+Wenn keine Datei ``plugin.yaml`` existiert, wird beim ersten Start von SmartHomeNG die mitgelieferte Datei
+``templates/plugin.yaml.default`` kopiert. In dieser Datei ist ein minimaler Set von Plugins konfiguriert, so dass z.B. per Browser oder mit der smartVISU auf die
 SmartHomeNG Instanz zugegriffen werden kann.
 
 .. code-block:: yaml
@@ -387,7 +381,7 @@ Jedes Plugin kann weitere Abhängigkeiten von Bibliotheken mit sich bringen. Die
 .. code-block:: bash
 
    cd /usr/local/smarthome
-   pip3 install -r plugins/<plugin-name-hier-einsetzen>/requirements.txt --user
+   pip3 install -r plugins/<plugin-name-hier-einsetzen>/requirements.txt
 
 .. note::
 

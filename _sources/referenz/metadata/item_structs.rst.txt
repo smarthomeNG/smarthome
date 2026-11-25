@@ -1,14 +1,15 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
 .. index:: item_structs; Plugin Metadaten
 .. index:: structs; Plugin Metadaten
 .. index:: Plugin Metadaten; item_structs
 .. index:: Plugin Metadaten; structs
 
-item_structs
-------------
+item_structs :greensup:`Update`
+-------------------------------
 
 Der Abschnitt ``item_structs:`` erlaubt die Definition von Struktur Templates, also von Sub-Trees von Items,
 die an verschiedenen Stellen in den Item Tree eingefügt werden können.
@@ -58,7 +59,7 @@ sieht die Konfiguration um die Struktur einzufügen folgendermaßen aus:
 Geschachtelte Strukturen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Beginnend mit SmartHomeNG v1.7 können Struktur Definitionen ineinander verschachtelt werden.
+Struktur Definitionen können ineinander verschachtelt werden.
 
 Wie Items die eine Struktur mit dem ``struct`` Attribut referenzieren, kann auch eine Struktur Definition eine
 eine andere Struktur referenzieren. SmartHomeNG löst alle Struktur Referenzen in Strukturen auf, bevor der
@@ -132,6 +133,11 @@ Das sieht z.B. folgendermaßen aus:
 
 Im geladenen Item (bei Verwendung der Admin GUI), wird ``item3`` dann ein Attribut haben, das
 ``plg_attr1@plg_instance`` benannt ist.
+
+Das Item-Attribut ``instance`` wird von allen Items des eingefügten Teilbaums geerbt (siehe
+:doc:`instance </referenz/items/standard_attribute/instance>`). Wird bei der Verwendung einer Struktur eine Liste von
+Instanzen oder ``default`` angegeben, wird der String ``@instance`` entfernt. Das Attribut wird dann über das geerbte
+``instance`` der richtigen Plugin Instanz zugeordnet. Attribute ohne ``@instance`` verhalten sich genauso.
 
 
 Plugins ohne item-structs

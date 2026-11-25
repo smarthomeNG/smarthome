@@ -23,7 +23,7 @@ an dessen Stelle der Teilbaum eingefügt werden soll, der Name des Templates (de
     myitem:
         struct: kodi.master          # fügt die gesamte Struktur 'kodi.master' ein
 
-**Nur einen Teilbaum einbinden** :redsup:`new`:
+**Nur einen Teilbaum einbinden**:
 
 Es kann auch nur ein Teil einer Struktur eingebunden werden, indem der Pfad zum gewünschten Teilbaum angegeben wird:
 

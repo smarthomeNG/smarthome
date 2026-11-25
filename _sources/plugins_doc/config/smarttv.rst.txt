@@ -8,8 +8,8 @@ Plugin 'smarttv' Konfiguration
 
 .. index:: Plugins; smarttv Konfiguration
 
-.. image:: /_static/img/interface.svg
-   :alt: plugin type logo
+.. image:: /plugins/smarttv/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50%
@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.6**
+ - Minimum SmartHomeNG Version: **1.12**
 
 Konfiguration
 =============
@@ -83,6 +83,36 @@ port
  - Standardwert: **55000**
 
 
+remote_control_app_name
+=======================
+
+
+Name der Anwendungssoftware bzw. App wie sie an den Fernseher übergeben wird
+
+ - Datentyp: **str**
+ - Standardwert: **Python**
+
+
+remote_control_name
+===================
+
+
+Name der Fernbedienung wie sie im Fernseher in der Freigabeliste erscheint
+
+ - Datentyp: **str**
+ - Standardwert: **SmartHomeNG**
+
+
+tv_name
+=======
+
+
+Name des Fernseher Modells
+
+ - Datentyp: **str**
+ - Standardwert: **UE32ES6300**
+
+
 tv_version
 ==========
 
@@ -105,7 +135,7 @@ smarttv
 =======
 
 
-Es gibt zwei Wege das Attribut zu nutzen. * Auf einem Item des Typs `str` mit dem Wert "true": Jeder String der in das Item geschrieben wird, wird an den SmartTV gesendet. * Auf einem Item des Typs `bool` mit dem Wert der zu betätigenden Tasten: Immer wenn das Item auf True gesetzt wird, werden die Tasten an den SmartTV gesendet. Je nach Anwendung sollte über das Setzen von `enforce_updates` nachgedacht werden.
+'Es gibt zwei Wege das Attribut zu nutzen. * Auf einem Item des Typs `str` mit dem Wert "true": Jeder String der in das Item geschrieben wird, wird an den SmartTV gesendet. * Auf einem Item des Typs `bool` mit dem Wert der zu betätigenden Tasten: Immer wenn das Item auf True gesetzt wird, werden die Tasten an den SmartTV gesendet. Je nach Anwendung sollte über das Setzen von `enforce_updates` nachgedacht werden.' 
 
  - Datentyp: **str**
 
@@ -137,4 +167,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/smarttv/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

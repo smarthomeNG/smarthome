@@ -35,14 +35,18 @@ miteinander reden müssen:
    Auf der Konfigurationsseite muss unter I/O-Connection folgendes
    eingetragen sein:
 
-   -  Driver: Smarthome.py
+   -  Driver: SmartHomeNG
    -  Address:
       ``<IP Adresse oder DNS Name der SmartHomeNG Installation>``
    -  Port: 2424
-   -  Realtime: on
+   -  TLS-Port: 2425
 
    Wichtig: Der Eintrag **localhost** als Adresse funktioniert
    **nicht**!
+   
+   Wenn die Visu aus dem internen Netz mit einem Hostnamen aufgerufen
+   wird, muss dieser als "smartVISU Hostname" in der Konfiguration 
+   registriert sein.
 
 FAQ auf der Website von SmartHomeNG
 -----------------------------------

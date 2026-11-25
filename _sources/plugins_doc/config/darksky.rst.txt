@@ -23,7 +23,7 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **web Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+**ACHTUNG**: Dieses Plugin ist als defunct gekennzeichnet. Es funktioniert nicht mehr und wird mit                  dem nächsten Release entfernt.
 
 
 
@@ -1555,13 +1555,12 @@ Gibt das SmartVisu Icon zum übergebenen DarkSky Icon zurück.
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-icon
- -  -  -  - 
+**icon**
+    Icon als String.
 
-Icon als String.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

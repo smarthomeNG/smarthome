@@ -228,38 +228,30 @@ Sendet eine Nachricht an das Enigma2 Device - Beispiel: sh.vusolo2.send_message(
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-messagetext
- -  -  -  -  -  -  -  -  -  -  - 
+**messagetext**
+    Anzuzeigender Text
 
-Anzuzeigender Text
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**messagetype**
+    messagetype bestimmt die Art, wie die Nachricht angezeigt werden soll
 
+    - Datentyp: **int**
+    - Standardwert: **1**
+    - Mögliche Werte:
 
-messagetype
- -  -  -  -  -  -  -  -  -  -  - 
+       - **0**
+       - **1**
+       - **2**
+       - **3**
 
-messagetype bestimmt die Art, wie die Nachricht angezeigt werden soll
+**timeout**
+    Anzeigedauer der Nachricht in Sekunden
 
- - Datentyp: **int**
- - Standardwert: **1**
-
- - Mögliche Werte:
-
-   - **0**
-   - **1**
-   - **2**
-   - **3**
-
-
-timeout
- -  -  -  -  -  -  - 
-
-Anzeigedauer der Nachricht in Sekunden
-
- - Datentyp: **int**
- - Standardwert: **10**
+    - Datentyp: **int**
+    - Standardwert: **10**
 
 
 set_power_state(value)
@@ -270,22 +262,20 @@ Setzt den Power-Status auf einen bestimmten Wert - Beispiel (toggle standby): sh
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-value
- -  -  -  -  - 
+**value**
+    Status in den die Enigma2 Box versetzt werden soll
 
-Status in den die Enigma2 Box versetzt werden soll
+    - Datentyp: **int**
+    - Mögliche Werte:
 
- - Datentyp: **int**
-
- - Mögliche Werte:
-
-   - **0**
-   - **1**
-   - **2**
-   - **3**
-   - **4**
-   - **5**
+       - **0**
+       - **1**
+       - **2**
+       - **3**
+       - **4**
+       - **5**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/enigma2/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -38,7 +38,6 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.10.0.3**
- - Minimum Python Version: **3.8**
 
 Konfiguration
 =============
@@ -561,45 +560,32 @@ Spiel eine URL auf allen Speakern, oder einer Untermenge, ab
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-alert_uri
- -  -  -  -  -  -  -  -  - 
+**alert_uri**
+    URL die Sonos abspielen soll
 
-URL die Sonos abspielen soll
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**speaker_list**
+    Liste mit Speaker Namen, auf denen der Sound abgespielt werden soll
 
+    - Datentyp: **list**
 
-speaker_list
- -  -  -  -  -  -  -  -  -  -  -  - 
+**alert_volume**
+    Volumenlevel (0-100)
 
-Liste mit Speaker Namen, auf denen der Sound abgespielt werden soll
+    - Datentyp: **int**
 
- - Datentyp: **list**
+**alert_duration**
+    Länge der Ansage in Sekunden (wenn 0, dann gleich Tracklänge)
 
+    - Datentyp: **int**
 
-alert_volume
- -  -  -  -  -  -  -  -  -  -  -  - 
+**fade_back**
+    auf True setzen, um den Sound nach der Ansage ansteigen zu lassen
 
-Volumenlevel (0-100)
-
- - Datentyp: **int**
-
-
-alert_duration
- -  -  -  -  -  -  -  -  -  -  -  -  -  - 
-
-Länge der Ansage in Sekunden (wenn 0, dann gleich Tracklänge)
-
- - Datentyp: **int**
-
-
-fade_back
- -  -  -  -  -  -  -  -  - 
-
-auf True setzen, um den Sound nach der Ansage ansteigen zu lassen
-
- - Datentyp: **bool**
+    - Datentyp: **bool**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

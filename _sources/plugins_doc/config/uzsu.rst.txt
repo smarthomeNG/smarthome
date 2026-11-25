@@ -38,7 +38,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.6**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -202,27 +202,22 @@ Abfrage oder Setzen, ob die UZSU aktiv ist oder nicht.
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-activevalue
- -  -  -  -  -  -  -  -  -  -  - 
+**activevalue**
+    Abfragen oder Setzen des UZSU Status
 
-Abfragen oder Setzen des UZSU Status
+    - Datentyp: **foo**
+    - Mögliche Werte:
 
- - Datentyp: **foo**
+       - **None**
+       - **True**
+       - **False**
 
- - Mögliche Werte:
+**item**
+    Das Item-Objekt
 
-   - **None**
-   - **True**
-   - **False**
-
-
-item
- -  -  -  - 
-
-Das Item-Objekt
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 clear(clear, item)
@@ -236,21 +231,17 @@ Löschen der UZSU Einträge eines Items.
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-clear
- -  -  -  -  - 
+**clear**
+    True, um die UZSU Einträge zu löschen.
 
-True, um die UZSU Einträge zu löschen.
+    - Datentyp: **bool**
 
- - Datentyp: **bool**
+**item**
+    Das Item-Objekt
 
-
-item
- -  -  -  - 
-
-Das Item-Objekt
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 interpolation(intpl_type=None, interval=5, backintime=0)
@@ -261,42 +252,34 @@ Abfrage oder Setzen der Interpolationseinstellungen
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-intpl_type
- -  -  -  -  -  -  -  -  -  - 
+**intpl_type**
+    Interpolationstyp
 
-Interpolationstyp
+    - Datentyp: **foo**
+    - Standardwert: **None**
+    - Mögliche Werte:
 
- - Datentyp: **foo**
- - Standardwert: **None**
+       - **None**
+       - **linear**
+       - **cubic**
+       - **none**
 
- - Mögliche Werte:
+**interval**
+    Intervall in Minuten, in dem der interpolierte Wert aktualisiert werden soll
 
-   - **None**
-   - **linear**
-   - **cubic**
-   - **none**
+    - Datentyp: **int**
+    - Standardwert: **5**
+    - Minimalwert: **1**
 
+**backintime**
+    Maximales Alter eines UZSU Eintrags in Minuten, um beim Plugin-Start versäumte Einträge nachzuholen.
 
-interval
- -  -  -  -  -  -  -  - 
+    - Datentyp: **int**
+    - Standardwert: **0**
+    - Minimalwert: **0**
 
-Intervall in Minuten, in dem der interpolierte Wert aktualisiert werden soll
-
- - Datentyp: **int**
- - Standardwert: **5**
-
- - Minimalwert: **1**
-
-backintime
- -  -  -  -  -  -  -  -  -  - 
-
-Maximales Alter eines UZSU Eintrags in Minuten, um beim Plugin-Start versäumte Einträge nachzuholen.
-
- - Datentyp: **int**
- - Standardwert: **0**
-
- - Minimalwert: **0**
 
 itpl(clear=False, item)
 =======================
@@ -309,22 +292,18 @@ Löschen oder Abrufen der internen Interpolationswerte.
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-clear
- -  -  -  -  - 
+**clear**
+    Löschen oder nicht
 
-Löschen oder nicht
+    - Datentyp: **bool**
+    - Standardwert: **False**
 
- - Datentyp: **bool**
- - Standardwert: **False**
+**item**
+    Das Item-Objekt
 
-
-item
- -  -  -  - 
-
-Das Item-Objekt
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 lastvalue(by= 'None', item)
@@ -335,22 +314,18 @@ Abfrage des zuletzt gesetzten/evaluierten Werts. Kann z.B. beim Aktivieren der U
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-by
- -  - 
+**by**
+    Für eine entsprechende Info im Logfile kann hier z.B. der Itemname, der den Wert abruft eingetragen werden
 
-Für eine entsprechende Info im Logfile kann hier z.B. der Itemname, der den Wert abruft eingetragen werden
+    - Datentyp: **str**
+    - Standardwert: **None**
 
- - Datentyp: **str**
- - Standardwert: **None**
+**item**
+    Das Item-Objekt
 
-
-item
- -  -  -  - 
-
-Das Item-Objekt
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 planned(item)
@@ -361,13 +336,12 @@ Abfrage des nächsten Aktualisierungszeitpunkts. Ist keine Aktualisierung geplan
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-item
- -  -  -  - 
+**item**
+    Das Item-Objekt
 
-Das Item-Objekt
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 resume(activevalue, item)
@@ -378,21 +352,17 @@ Fortsetzen der UZSU Evaluierung: Aktivieren des Items und Setzen des zuletzt fes
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-activevalue
- -  -  -  -  -  -  -  -  -  -  - 
+**activevalue**
+    True, um die UZSU fortzusetzen; False, um sie zu pausieren
 
-True, um die UZSU fortzusetzen; False, um sie zu pausieren
+    - Datentyp: **bool**
 
- - Datentyp: **bool**
+**item**
+    Das Item-Objekt
 
-
-item
- -  -  -  - 
-
-Das Item-Objekt
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 set_activetoday(set, item)
@@ -406,21 +376,17 @@ Setzen der activeToday Einträge eines Items.
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-set
- -  -  - 
+**set**
+    True, um die activeToday Einträge zu aktivieren, False um sie zu deaktivieren/zurückzusetzen.
 
-True, um die activeToday Einträge zu aktivieren, False um sie zu deaktivieren/zurückzusetzen.
+    - Datentyp: **bool**
 
- - Datentyp: **bool**
+**item**
+    Das Item-Objekt
 
-
-item
- -  -  -  - 
-
-Das Item-Objekt
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

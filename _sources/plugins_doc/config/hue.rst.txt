@@ -223,11 +223,11 @@ hue_send_group
  - Datentyp: **str**
 
 
-hue_transitiontime
+hue_transitionTime
 ==================
 
 
-
+Zeit in Zehntelsekunden, die die Lampe für den Übergang zu einem neu gesetzten Wert benötigt (Interpolation durch die Bridge selbst). Nur schreibbar. Ohne dieses Attribut gilt der Plugin-Parameter default_transitionTime.
 
  - Datentyp: **num**
 
@@ -259,4 +259,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 Keine Funktionen in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/hue/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -162,37 +162,27 @@ Einen Anruf starten mit einem Kontext und einer optionalen Caller ID
 
  - Ergebnistyp der Funktion: 
 
+**Parameter:**
 
-source
- -  -  -  -  -  - 
+**source**
+    Quelle des Anrufes, z.B. 'SIP/200'
 
-Quelle des Anrufes, z.B. 'SIP/200'
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**dest**
+    Ziel des Anrufes, z.B. '240'
 
+    - Datentyp: **str**
 
-dest
- -  -  -  - 
+**context**
+    Kontext des Anrufes, z.B. 'Tür'
 
-Ziel des Anrufes, z.B. '240'
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**callerid**
+    Optionale Caller ID des Anrufes
 
-
-context
- -  -  -  -  -  -  - 
-
-Kontext des Anrufes, z.B. 'Tür'
-
- - Datentyp: **str**
-
-
-callerid
- -  -  -  -  -  -  -  - 
-
-Optionale Caller ID des Anrufes
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 db_read(key)
@@ -203,13 +193,12 @@ Einen Werte aus der Asterisk Datenbank lesen
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-key
- -  -  - 
+**key**
+    Schlüssel in der Asterisk Datenbank
 
-Schlüssel in der Asterisk Datenbank
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 db_write(key, value)
@@ -220,21 +209,17 @@ Ein Schlüssel/Wertepaar in die Asterisk Datenbank schreiben
 
  - Ergebnistyp der Funktion: 
 
+**Parameter:**
 
-key
- -  -  - 
+**key**
+    Schlüssel in der Asterisk Datenbank
 
-Schlüssel in der Asterisk Datenbank
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**value**
+    Wert in der Asterisk Datenbank
 
-
-value
- -  -  -  -  - 
-
-Wert in der Asterisk Datenbank
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 hangup(device)
@@ -245,13 +230,12 @@ Verbindungen für ein Gerät beenden
 
  - Ergebnistyp der Funktion: 
 
+**Parameter:**
 
-device
- -  -  -  -  -  - 
+**device**
+    Gerätekennung
 
-Gerätekennung
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 mailbox_count(mailbox, context)
@@ -262,21 +246,17 @@ Fragt die Anzahl der Nachrichten einer Mailbox ab, Rückgabewert is ein Tupel (a
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-mailbox
- -  -  -  -  -  -  - 
+**mailbox**
+    Mailbox die abgefragt werden soll
 
-Mailbox die abgefragt werden soll
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**context**
+    Kontext der Mailbox Abfrage
 
-
-context
- -  -  -  -  -  -  - 
-
-Kontext der Mailbox Abfrage
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

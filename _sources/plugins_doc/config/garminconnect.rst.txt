@@ -127,13 +127,12 @@ Gibt die Daten zum Puls an einem Datum zurück (aktuelles Datum, falls der Param
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-date
- -  -  -  - 
+**date**
+    Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
 
-Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_stats(date)
@@ -144,13 +143,12 @@ Gibt die Statistiken von Garmin Connect zu einem Datum zurück. Default, wenn Pa
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-date
- -  -  -  - 
+**date**
+    Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
 
-Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

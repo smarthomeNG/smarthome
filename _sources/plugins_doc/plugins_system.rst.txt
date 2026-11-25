@@ -15,6 +15,7 @@
    /plugins/influxdb/user_doc
    /plugins/influxdb2/user_doc
    /plugins/rrd/user_doc
+   /plugins/rtr/user_doc
    /plugins/rtr2/user_doc
    /plugins/simulation/user_doc
    /plugins/smartvisu/user_doc
@@ -35,7 +36,7 @@
      - Maintainer
      - Tester
    * - :doc:`blockly <config/blockly>`
-     - v1.5.0
+     - v1.5.1
      - Blockly - graphischer Editor für Logiken - Noch in der Entwicklung, nicht für die Nutzung gedacht
        
        |br|
@@ -49,7 +50,7 @@
      - onkelandy
    
    * - :doc:`cli <config/cli>`
-     - v1.8.2
+     - v1.8.3
      - Command Line Interface für SmartHomeNG - Funktioniert mit SmartHomeNG v1.4 und höher
        
        |br|
@@ -65,8 +66,8 @@
        ohinckel
    
    * - :doc:`database <config/database>`
-     - v1.6.15
-     - Database plugin, mit Unterstützung für SQLite 3 und MySQL
+     - v2.0.0
+     - Database plugin, mit Unterstützung für SQLite 3, MySQL/MariaDB und PostgreSQL+TimescaleDB
        
        + `database Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1021844-neues-database-plugin>`_
        
@@ -83,7 +84,7 @@
        aschwith
    
    * - :doc:`db_addon <config/db_addon>`
-     - v1.2.11
+     - v2.0.0
      - Add-On für das database Plugin zur Datenauswertung
        
        + `db_addon Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1848494-support-thread-databaseaddon-plugin>`_
@@ -95,7 +96,7 @@
        onkelandy
    
    * - :doc:`esphome <config/esphome>`
-     - v0.0.2
+     - v0.0.3
      - Plugin zur Anzeige von Informationen von ESPHome Devices
        
        |br|
@@ -107,7 +108,7 @@
      - 
    
    * - :doc:`executor <config/executor>`
-     - v1.2.1
+     - v1.2.2
      - Ausführen von Python Statements im Kontext von SmartHomeNG v1.5 und höher
        
        + `executor zusätzliche Infos <https://www.smarthomeng.de/user/plugins/executor/user_doc.html>`_
@@ -118,7 +119,7 @@
      - onkelandy
    
    * - :doc:`githubplugin <config/githubplugin>`
-     - v1.0.1
+     - v2.0.0
      - Plugin zur Installation von Plugins aus fremden GitHub-Repositories
        
        |br|
@@ -128,11 +129,13 @@
      - 
    
    * - :doc:`influxdb <config/influxdb>`
-     - v1.0.3
+     - v1.0.4
      - Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank
        
        + `influxdb Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1498207-support-thread-f%C3%BCr-influxdb-plugin>`_
        
+       
+       Plugin-Status: **deprecated**
      - Kai Meder
    
      - chrisr79
@@ -140,19 +143,19 @@
        onkelandy
    
    * - :doc:`influxdb2 <config/influxdb2>`
-     - v0.1.0
+     - v0.1.1
      - Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank
        
        + `influxdb2 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1498207-support-thread-für-influxdb-plugin>`_
        
        
-       Plugin-Status: **develop**
+       Plugin-Status: **deprecated**
      - msinn
    
      - msinn
    
    * - :doc:`rrd <config/rrd>`
-     - v1.7.0
+     - v1.7.1
      - Unterstützung für Round Robin Datenbanken (rrdtool)
        
        + `rrd Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/rrd-plugin>`_
@@ -164,7 +167,7 @@
      - nobody
    
    * - :doc:`rtr <config/rtr>`
-     - v1.6.0
+     - v2.0.0
      - Raum Temperatur Regler
        
        + `rtr zusätzliche Infos <https://www.smarthomeng.de/dev/user/plugins/rtr/README.html>`_
@@ -175,7 +178,7 @@
      - bmxp
    
    * - :doc:`rtr2 <config/rtr2>`
-     - v2.2.0
+     - v3.0.0
      - Raum Temperatur Regler v2
        
        + `rtr2 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1586747-support-thread-für-das-rtr2-plugin>`_
@@ -185,7 +188,7 @@
      - msinn
    
    * - :doc:`simulation <config/simulation>`
-     - v1.5.1
+     - v1.5.2
      - Aufnahme und Abspielen von Aktionsreihenfolgen.
        
        + `simulation zusätzliche Infos <https://www.smarthomeng.de/user/plugins/simulation/user_doc.html>`_
@@ -200,7 +203,7 @@
        cmalo
    
    * - :doc:`smartvisu <config/smartvisu>`
-     - v1.9.0
+     - v2.0.0
      - smartVISU Unterstützung: Autogenerierung von Seiten; Widget Handling
        
        + `smartvisu Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1586800-support-thread-für-das-smartvisu-plugin>`_
@@ -212,7 +215,7 @@
        onkelandy
    
    * - :doc:`stateengine <config/stateengine>`
-     - v2.3.0
+     - v3.0.0
      - Zustandsautomat für SmarthomeNG, ehemals AutoBlind
        
        + `stateengine Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1303071-stateengine-plugin-support>`_
@@ -224,7 +227,7 @@
        bmxp
    
    * - :doc:`text_display <config/text_display>`
-     - v1.8.1
+     - v1.8.2
      - Plugin um Text Nachrichten auf Displays (z.B. KNX RTR oder Taster) nacheinander anzuzeigen
        
        + `text_display Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1678358-meldungsplugin-f%C3%BCr-textmeldungen-auf-knx-tastern>`_
@@ -236,7 +239,7 @@
      - jentz1986
    
    * - :doc:`timmy <config/timmy>`
-     - v1.8.1
+     - v1.8.2
      - Plugin für Ein-/Ausschaltverzögerung und Blinken
        
        |br|
@@ -248,7 +251,7 @@
      - jentz1986
    
    * - :doc:`uzsu <config/uzsu>`
-     - v2.1.1
+     - v3.0.0
      - Universelle Zeitschaltuhr
        
        + `uzsu Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1364692-supportthread-für-uzsu-plugin>`_

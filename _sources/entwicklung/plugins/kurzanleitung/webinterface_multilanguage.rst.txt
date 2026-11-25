@@ -4,8 +4,8 @@
 .. role:: bluesup
 
 
-Unterstützung mehrerer Sprachen :redsup:`new`
-=============================================
+Unterstützung mehrerer Sprachen
+===============================
 
 Text kann im Template ``webif/templates/index.html`` als mehrsprachig deklariert werden, so dass die Webseite sich der in der Konfiguration gewählten Sprache anpasst.
 

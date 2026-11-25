@@ -40,7 +40,6 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.10**
- - Minimum Python Version: **3.8**
 
 Konfiguration
 =============
@@ -88,7 +87,7 @@ rrd
 ===
 
 
-Wenn auf 'yes' gesetzt, werden die Werte des Items in die rrd Datenbank geschrieben.  Wenn auf 'init' gesetzt, wird zusätzlich beim Start von SmartHomeNG der Wert aus rrd gelesen.   Wenn für dieses Item ebenfalls ein Attribut 'sqlite' oder 'database' gesetzt ist,  so ist die Wahrscheinlichkeit groß, das eines der Plugins nicht funktioniert. Um dieses Problem zum umgehen kann das Attribut 'rrd_no_series' gesetzt werden. 
+Wenn auf 'yes' gesetzt, werden die Werte des Items in die rrd Datenbank geschrieben.  Wenn auf 'init' gesetzt, wird zusätzlich beim Start von SmartHomeNG der Wert aus rrd gelesen. Wenn für dieses Item ebenfalls ein Attribut 'sqlite' oder 'database' gesetzt ist,  so ist die Wahrscheinlichkeit groß, das eines der Plugins nicht funktioniert. Um dieses Problem zum umgehen kann das Attribut 'rrd_no_series' gesetzt werden. 
 
  - Datentyp: **str**
 

@@ -23,6 +23,8 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **system Plugin**.
 
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
 
 
 Beschreibung
@@ -89,7 +91,7 @@ keyword
 =======
 
 
-Dieser Parameter legt fest, auf welches Item-Attribut das Plugin reaagiert.  (Wenn hier ein anderer Wert als 'influxdb' angegeben wird, können in Zukunft Items nicht über das  graphische Admin-Interface für dieses Plugin konfiguriert werden)
+Dieser Parameter legt fest, auf welches Item-Attribut das Plugin reaagiert. (Wenn hier ein anderer Wert als 'influxdb' angegeben wird, können in Zukunft Items nicht über das graphische Admin-Interface für dieses Plugin konfiguriert werden)
 
  - Datentyp: **str**
  - Standardwert: **influxdb**

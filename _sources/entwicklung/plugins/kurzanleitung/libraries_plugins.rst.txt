@@ -1,5 +1,7 @@
-Programm Module zur Nutzung in Plugins
-======================================
+.. role:: greensup
+
+Programm Module zur Nutzung in Plugins :greensup:`Update`
+=========================================================
 
 Die folgenden Programm Module können ebenfalls für die Plugin Entwicklung verwendet und referenziert werden:
 
@@ -11,5 +13,4 @@ Die folgenden Programm Module können ebenfalls für die Plugin Entwicklung verw
    /lib/logutils
    /lib/network
    /lib/orb
-   /lib/tools
    /lib/utils

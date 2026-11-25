@@ -5,8 +5,8 @@
 
 
 
-Interaktion des Webinterface mit dem Plugin :redsup:`new`
-=========================================================
+Interaktion des Webinterface mit dem Plugin
+===========================================
 
 Wenn nicht nur die jeweils aktuellen Daten des Plugins dargestellt werden sollen, sondern auch Aktionen ausgelöst werden und Ergebnisse in das Webinterface übernommen werden sollen, müssen die dafür notwendigen Routinen zum Senden, Empfangen und Verarbeiten von AJAX-Kommandos implementiert werden.
 

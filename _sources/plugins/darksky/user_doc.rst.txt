@@ -10,8 +10,10 @@ darksky
 
 Wetterdaten von `darksky.net <https://darksky.net>`_ lesen. 
 
-Darksky.net wurde am 31. März 2020 von Apple gekauft. Als Folge davon werden keine weiteren API Schlüssel vergeben 
-und das API ist auch nur noch bis Ende 2021 zugänglich.
+.. attention::
+
+   Das Plugin funktioniert nicht mehr: Apple hat Darksky.net 2020 gekauft und das API am 31. März 2023 abgeschaltet.
+   Ersatz ist das Plugin :doc:`piratewthr </plugins/piratewthr/user_doc>`.
 
 
 Konfiguration

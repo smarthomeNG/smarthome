@@ -142,6 +142,16 @@ Kathrein Kommando
    - **stop**
 
 
+kathreinid
+==========
+
+
+Ordnet das Item einem bestimmten Kathrein-Receiver zu, falls mehrere Geräte über dieselbe Plugin-Instanz angesprochen werden. Ist das Attribut an einem Item nicht gesetzt, gilt der in der Plugin-Konfiguration hinterlegte Parameter kathreinid.
+
+ - Datentyp: **int**
+ - Standardwert: **1**
+
+
 ============
 Item-Structs
 ============
@@ -176,55 +186,53 @@ Ein Kommando an das Kathrein Gerät senden
 
  - Ergebnistyp der Funktion: **none**
 
+**Parameter:**
 
-key
- -  -  - 
+**key**
+    Kommando
 
-Kommando
+    - Datentyp: **str**
+    - Standardwert: **1234**
+    - Mögliche Werte:
 
- - Datentyp: **str**
- - Standardwert: **1234**
-
- - Mögliche Werte:
-
-   - **tvr**
-   - **0**
-   - **1**
-   - **2**
-   - **3**
-   - **4**
-   - **5**
-   - **6**
-   - **7**
-   - **8**
-   - **9**
-   - **menu**
-   - **p+**
-   - **p-**
-   - **mute**
-   - **epg**
-   - **up**
-   - **down**
-   - **right**
-   - **left**
-   - **exit**
-   - **standby**
-   - **text**
-   - **vol+**
-   - **vol-**
-   - **info**
-   - **fav**
-   - **pip**
-   - **opt**
-   - **tvr**
-   - **archiv**
-   - **media**
-   - **fback**
-   - **play**
-   - **fforward**
-   - **pause**
-   - **rec**
-   - **stop**
+       - **tvr**
+       - **0**
+       - **1**
+       - **2**
+       - **3**
+       - **4**
+       - **5**
+       - **6**
+       - **7**
+       - **8**
+       - **9**
+       - **menu**
+       - **p+**
+       - **p-**
+       - **mute**
+       - **epg**
+       - **up**
+       - **down**
+       - **right**
+       - **left**
+       - **exit**
+       - **standby**
+       - **text**
+       - **vol+**
+       - **vol-**
+       - **info**
+       - **fav**
+       - **pip**
+       - **opt**
+       - **tvr**
+       - **archiv**
+       - **media**
+       - **fback**
+       - **play**
+       - **fforward**
+       - **pause**
+       - **rec**
+       - **stop**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/kathrein/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

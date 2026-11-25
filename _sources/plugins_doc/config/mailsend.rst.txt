@@ -155,29 +155,22 @@ Diese Funktion versendet eine eMail - Beispiel: sh.mail('admin@smart.home', 'Tes
 
  - Ergebnistyp der Funktion: **foo**
 
+**Parameter:**
 
-to
- -  - 
+**to**
+    Empfänger der eMail (admin@smart.home)
 
-Empfänger der eMail (admin@smart.home)
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**subject**
+    Betreff der eMail
 
+    - Datentyp: **foo**
 
-subject
- -  -  -  -  -  -  - 
+**message**
+    Nachrichtentext der eMail
 
-Betreff der eMail
-
- - Datentyp: **foo**
-
-
-message
- -  -  -  -  -  -  - 
-
-Nachrichtentext der eMail
-
- - Datentyp: **foo**
+    - Datentyp: **foo**
 
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

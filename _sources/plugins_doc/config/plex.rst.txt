@@ -126,36 +126,28 @@ Nachrichten an Plex senden
 
  - Die Funktion liefert kein Ergebnis
 
+**Parameter:**
 
-title
- -  -  -  -  - 
+**title**
+    Titel der Nachricht
 
-Titel der Nachricht
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**message**
+    Nachrichten-text
 
+    - Datentyp: **str**
 
-message
- -  -  -  -  -  -  - 
+**image**
+    Name des Biled, welches im Nachrichten Dialgo angezeigt werden soll
 
-Nachrichten-text
+    - Datentyp: **str**
+    - Standardwert: **info**
+    - Mögliche Werte:
 
- - Datentyp: **str**
-
-
-image
- -  -  -  -  - 
-
-Name des Biled, welches im Nachrichten Dialgo angezeigt werden soll
-
- - Datentyp: **str**
- - Standardwert: **info**
-
- - Mögliche Werte:
-
-   - **info**
-   - **warning**
-   - **error**
+       - **info**
+       - **warning**
+       - **error**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/plex/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

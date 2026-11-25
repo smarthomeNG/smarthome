@@ -167,21 +167,17 @@ Gibt die selektierten Programme einer Appliance zurück.
 
  - Ergebnistyp der Funktion: **list(str)**
 
+**Parameter:**
 
-ha_id
- -  -  -  -  - 
+**ha_id**
+    ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
-ha_id der Appliance (im Web-Interface des Plugins zu sehen)
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**program_key**
+    program_key des Programms, dessen Optionen zurückgegeben werden sollen (im Web-Interface des Plugins zu sehen)
 
-
-program_key
- -  -  -  -  -  -  -  -  -  -  - 
-
-program_key des Programms, dessen Optionen zurückgegeben werden sollen (im Web-Interface des Plugins zu sehen)
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_programs_active(ha_id)
@@ -192,13 +188,12 @@ Gibt die aktiven Programme einer Appliance zurück.
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-ha_id
- -  -  -  -  - 
+**ha_id**
+    ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
-ha_id der Appliance (im Web-Interface des Plugins zu sehen)
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_programs_available(ha_id)
@@ -209,13 +204,12 @@ Gibt die verfügbaren Programme einer Appliance zurück.
 
  - Ergebnistyp der Funktion: **list(str)**
 
+**Parameter:**
 
-ha_id
- -  -  -  -  - 
+**ha_id**
+    ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
-ha_id der Appliance (im Web-Interface des Plugins zu sehen)
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_programs_selected(ha_id)
@@ -226,13 +220,12 @@ Gibt die selektierten Programme einer Appliance zurück.
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-ha_id
- -  -  -  -  - 
+**ha_id**
+    ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
-ha_id der Appliance (im Web-Interface des Plugins zu sehen)
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_redirect_url()
@@ -252,29 +245,22 @@ Startet das Programm einer Appliance.
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-ha_id
- -  -  -  -  - 
+**ha_id**
+    ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
-ha_id der Appliance (im Web-Interface des Plugins zu sehen)
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**program_key**
+    program_key des Programms, das ausgeführt werden soll (im Web-Interface des Plugins zu sehen)
 
+    - Datentyp: **str**
 
-program_key
- -  -  -  -  -  -  -  -  -  -  - 
+**options**
+    Optionen des Programms, das ausgeführt werden soll (im Web-Interface des Plugins zu sehen)
 
-program_key des Programms, das ausgeführt werden soll (im Web-Interface des Plugins zu sehen)
-
- - Datentyp: **str**
-
-
-options
- -  -  -  -  -  -  - 
-
-Optionen des Programms, das ausgeführt werden soll (im Web-Interface des Plugins zu sehen)
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 stop_program(ha_id, program_key, options)
@@ -285,29 +271,22 @@ Stoppt das Programm einer Appliance.
 
  - Ergebnistyp der Funktion: **str**
 
+**Parameter:**
 
-ha_id
- -  -  -  -  - 
+**ha_id**
+    ha_id der Appliance (im Web-Interface des Plugins zu sehen)
 
-ha_id der Appliance (im Web-Interface des Plugins zu sehen)
+    - Datentyp: **str**
 
- - Datentyp: **str**
+**program_key**
+    program_key des Programms, das gestoppt werden soll (im Web-Interface des Plugins zu sehen)
 
+    - Datentyp: **str**
 
-program_key
- -  -  -  -  -  -  -  -  -  -  - 
+**options**
+    Optionen des Programms, das gestoppt werden soll (im Web-Interface des Plugins zu sehen)
 
-program_key des Programms, das gestoppt werden soll (im Web-Interface des Plugins zu sehen)
-
- - Datentyp: **str**
-
-
-options
- -  -  -  -  -  -  - 
-
-Optionen des Programms, das gestoppt werden soll (im Web-Interface des Plugins zu sehen)
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/homeconnect/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

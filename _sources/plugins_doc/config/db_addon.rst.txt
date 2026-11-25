@@ -37,8 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.3.5**
- - Minimum Python Version: **3.9**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -545,102 +544,76 @@ Liefert für das angegebene Item und die Parameter das Abfrageergebnis zurück
 
  - Ergebnistyp der Funktion: **list**
 
+**Parameter:**
 
-func
- -  -  -  - 
+**func**
+    zu verwendende Abfragefunktion
 
-zu verwendende Abfragefunktion
+    - Datentyp: **str**
+    - Mögliche Werte:
 
- - Datentyp: **str**
+       - **min**
+       - **max**
+       - **sum**
+       - **on**
+       - **integrate**
+       - **sum_max**
+       - **sum_avg**
+       - **sum_min_neg**
+       - **diff_max**
 
- - Mögliche Werte:
+**item**
+    Das Item-Objekt oder die Item_ID der DB
 
-   - **min**
-   - **max**
-   - **sum**
-   - **on**
-   - **integrate**
-   - **sum_max**
-   - **sum_avg**
-   - **sum_min_neg**
-   - **diff_max**
+    - Datentyp: **foo**
 
+**timeframe**
+    Zeitinkrement für die DB-Abfrage
 
-item
- -  -  -  - 
+    - Datentyp: **str**
+    - Mögliche Werte:
 
-Das Item-Objekt oder die Item_ID der DB
+       - **day**
+       - **week**
+       - **month**
+       - **year**
 
- - Datentyp: **foo**
+**start**
+    Zeitlicher Beginn der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenheit
 
+    - Datentyp: **int**
 
-timeframe
- -  -  -  -  -  -  -  -  - 
+**end**
+    Zeitliches Ende der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenheit
 
-Zeitinkrement für die DB-Abfrage
+    - Datentyp: **int**
 
- - Datentyp: **str**
+**count**
+    Anzahl der Zeitinkremente, vom Start in die Vergangenheit abzufragen sind. Alternative zu 'end'
 
- - Mögliche Werte:
+    - Datentyp: **int**
 
-   - **day**
-   - **week**
-   - **month**
-   - **year**
+**group**
+    erste Gruppierung der DB-Abfrage
 
+    - Datentyp: **str**
+    - Mögliche Werte:
 
-start
- -  -  -  -  - 
+       - **day**
+       - **week**
+       - **month**
+       - **year**
 
-Zeitlicher Beginn der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenheit
+**group2**
+    zweite Gruppierung der DB-Abfrage
 
- - Datentyp: **int**
+    - Datentyp: **str**
+    - Mögliche Werte:
 
-
-end
- -  -  - 
-
-Zeitliches Ende der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenheit
-
- - Datentyp: **int**
-
-
-count
- -  -  -  -  - 
-
-Anzahl der Zeitinkremente, vom Start in die Vergangenheit abzufragen sind. Alternative zu 'end'
-
- - Datentyp: **int**
-
-
-group
- -  -  -  -  - 
-
-erste Gruppierung der DB-Abfrage
-
- - Datentyp: **str**
-
- - Mögliche Werte:
-
-   - **day**
-   - **week**
-   - **month**
-   - **year**
-
-
-group2
- -  -  -  -  -  - 
-
-zweite Gruppierung der DB-Abfrage
-
- - Datentyp: **str**
-
- - Mögliche Werte:
-
-   - **day**
-   - **week**
-   - **month**
-   - **year**
+       - **day**
+       - **week**
+       - **month**
+       - **year**
 
 
 suspend()

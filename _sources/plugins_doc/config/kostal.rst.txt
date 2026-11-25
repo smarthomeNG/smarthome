@@ -28,7 +28,7 @@ Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 Beschreibung
 ============
 
-Anbindung eines KOSTAL-Wechselrichters  [KOSTAL](http://www.kostal-solar-electric.com/)    Das Plugin funktioniert aktuell mit den folgenden Inverter Moduln von KOSTAL:   * KOSTAL PIKO 3.0 UI-Version 06.20 (datastructure=json) * KOSTAL PIKO 5.5 UI-Version 05.xx (datastructure=html)   (should work with all KOSTAL PIKO inverters)
+Anbindung eines KOSTAL-Wechselrichters  [KOSTAL](http://www.kostal-solar-electric.com/)  Das Plugin funktioniert aktuell mit den folgenden Inverter Moduln von KOSTAL: * KOSTAL PIKO 3.0 UI-Version 06.20 (datastructure=json) * KOSTAL PIKO 5.5 UI-Version 05.xx (datastructure=html) (should work with all KOSTAL PIKO inverters)
 
 
 Anforderungen
@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.6**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -181,4 +181,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/kostal/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

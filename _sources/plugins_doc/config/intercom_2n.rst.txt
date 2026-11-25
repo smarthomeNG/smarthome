@@ -112,7 +112,90 @@ Item Attribute
 
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
-**Keine**
+
+command_2n
+==========
+
+
+Name des Befehls, am Item, dessen Wert nach Ausführung das Ergebnis des Befehls enthält, oder "execute" an einem Kind-Item, um den Befehl auszulösen. Details siehe Anwenderdokumentation.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **audio_test**
+   - **call_answer**
+   - **call_dial**
+   - **call_hangup**
+   - **call_status**
+   - **camera_caps**
+   - **camera_snapshot**
+   - **config_get**
+   - **config_upload**
+   - **display_caps**
+   - **display_delete_image**
+   - **display_upload_image**
+   - **email_send**
+   - **execute**
+   - **factory_reset**
+   - **firmware_apply**
+   - **firmware_upload**
+   - **io_caps**
+   - **io_control**
+   - **io_status**
+   - **log_caps**
+   - **pcap**
+   - **pcap_restart**
+   - **pcap_stop**
+   - **phone_status**
+   - **switch_caps**
+   - **switch_control**
+   - **switch_status**
+   - **system_info**
+   - **system_restart**
+   - **system_status**
+
+
+event_2n
+========
+
+
+Name des Ereignistyps, am Item, das als Container für das Ereignis dient. Details siehe Anwenderdokumentation.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **AudioLoopTest**
+   - **CallStateChanged**
+   - **CardEntered**
+   - **CardHeld**
+   - **CodeEntered**
+   - **DeviceState**
+   - **DoorOpenTooLong**
+   - **InputChanged**
+   - **KeyPressed**
+   - **KeyReleased**
+   - **LoginBlocked**
+   - **MotionDetected**
+   - **NoiseDetected**
+   - **OutputChanged**
+   - **PairingStateChanged**
+   - **RegistrationStateChanged**
+   - **SwitchStateChanged**
+   - **TamperSwitchActivated**
+   - **UnauthorizedDoorOpen**
+   - **UserAuthenticated**
+
+
+event_data_2n
+=============
+
+
+Name des Datenfelds innerhalb der Ereignis-Nutzdaten, an einem Kind-Item von event_2n. Der Wert dieses Datenfelds wird bei Eintreten des Ereignisses in das Item geschrieben. Details siehe Anwenderdokumentation.
+
+ - Datentyp: **str**
+
 
 ============
 Item-Structs
@@ -141,4 +224,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/intercom_2n/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

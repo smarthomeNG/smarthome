@@ -288,24 +288,20 @@ Prüft, ob die angegebene Leistung für die angegebene Zahl an Stunden voraussic
 
  - Ergebnistyp der Funktion: **bool**
 
+**Parameter:**
 
-power
- -  -  -  -  - 
+**power**
+    Geforderte Leistung in Watt
 
-Geforderte Leistung in Watt
+    - Datentyp: **int**
+    - Minimalwert: **0**
 
- - Datentyp: **int**
+**hours**
+    Geforderte Anzahl an Stunden ab jetzt bzw. der nächsten vollen Stunde
 
- - Minimalwert: **0**
+    - Datentyp: **int**
+    - Standardwert: **2**
+    - Minimalwert: **1**
 
-hours
- -  -  -  -  - 
-
-Geforderte Anzahl an Stunden ab jetzt bzw. der nächsten vollen Stunde
-
- - Datentyp: **int**
- - Standardwert: **2**
-
- - Minimalwert: **1**
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

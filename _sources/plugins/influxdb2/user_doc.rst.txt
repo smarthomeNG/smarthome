@@ -14,6 +14,13 @@ influxdb2
    :scale: 50 %
    :align: left
 
+.. attention::
+
+   Das Plugin ist als ``deprecated`` gekennzeichnet und wird mit Release 2.1 entfernt. Grund ist die komplizierte und
+   unbefriedigende Lizenzsituation von InfluxDB, die auch der Anlass für die TimescaleDB-Unterstützung des
+   database Plugins war. Ersatz ist das Plugin :doc:`database </plugins/database/user_doc>` mit PostgreSQL und der
+   TimescaleDB Extension.
+
 InfluxDB ist ein Open Source Datenbankmanagementsystem (DBMS), speziell für Zeitreihen (engl. time series).
 Es wird von der Firma InfluxData entwickelt und vertrieben.
 

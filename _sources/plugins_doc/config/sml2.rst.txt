@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.4.2**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============

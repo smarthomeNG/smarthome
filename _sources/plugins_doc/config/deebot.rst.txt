@@ -1,0 +1,386 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'deebot' Konfiguration
+=============================
+
+
+.. index:: Plugins; deebot Konfiguration
+
+.. image:: /plugins/deebot/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50%
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **deebot** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Plugin für Ecovacs Deebot Saugroboter über die Ecovacs Cloud
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **2.0.0**
+ - Minimum Python Version: **3.14**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **deebot** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+account
+=======
+
+
+Ecovacs Konto Login (E-Mail-Adresse)
+
+ - Datentyp: **str**
+
+
+country
+=======
+
+
+Land des Ecovacs Kontos als zweistelliger ISO-Code (z.B. DE). Bestimmt den Cloud-Server
+
+ - Datentyp: **str**
+
+
+device
+======
+
+
+Name (Nickname), Gerätename oder ID des Saugroboters. Leer: erster Roboter des Kontos
+
+ - Datentyp: **str**
+
+
+enable_map
+==========
+
+
+Karte als SVG erzeugen (Item map_svg und Web Interface)
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+map_css
+=======
+
+
+CSS-Regeln, die an das Stylesheet der Karte angehängt werden. Standard: durchsichtiger Boden (.u), damit die Karte zum Theme passt. Leer lässt die Farben des Roboters unverändert
+
+ - Datentyp: **str**
+ - Standardwert: **.u{fill: transparent}**
+
+
+map_trace
+=========
+
+
+Reinigungsspur in der Karte zeigen. Ohne Spur wird die Karte deutlich kleiner
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+password
+========
+
+
+Ecovacs Konto Passwort
+
+ - Datentyp: **str**
+
+
+room_names
+==========
+
+
+Eigene Raumnamen, überschreiben die Namen des Roboters. Liste von Einträgen {room: 3, name: Küche}; mit map: <Kartenname oder Karten-ID> gilt ein Eintrag nur für diese Karte, sonst für alle. Namen und IDs der Karten liefert das Item maps
+
+ - Datentyp: **list**
+ - Standardwert: **[]**
+
+
+room_preselect
+==============
+
+
+Im smartVISU Widget vorausgewählte Räume. Liste von Einträgen {room: 3}; map: <Kartenname oder Karten-ID> beschränkt einen Eintrag auf eine Karte, select: false hebt eine allgemeine Vorauswahl auf
+
+ - Datentyp: **list**
+ - Standardwert: **[]**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+deebot
+======
+
+
+Wert oder Funktion des Saugroboters, die das Item liest bzw. steuert
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **state**
+   - **active**
+   - **battery**
+   - **available**
+   - **error_code**
+   - **error_text**
+   - **fan_speed**
+   - **water_amount**
+   - **station_state**
+   - **clean_area**
+   - **clean_time**
+   - **total_area**
+   - **total_time**
+   - **total_cleanings**
+   - **lifespan_air_freshener**
+   - **lifespan_blade**
+   - **lifespan_brush**
+   - **lifespan_cleaning_fluid**
+   - **lifespan_cleaning_solution**
+   - **lifespan_dust_bag**
+   - **lifespan_dust_bucket**
+   - **lifespan_dust_case_heap**
+   - **lifespan_dust_container_filter**
+   - **lifespan_filter**
+   - **lifespan_hand_filter**
+   - **lifespan_heavy_duty_cleaning_solution**
+   - **lifespan_humidify**
+   - **lifespan_humidify_maintenance**
+   - **lifespan_lens_brush**
+   - **lifespan_mop_washing_tray**
+   - **lifespan_round_mop**
+   - **lifespan_sewage_box**
+   - **lifespan_side_brush**
+   - **lifespan_station_filter**
+   - **lifespan_strainer**
+   - **lifespan_trimmer_brush**
+   - **lifespan_unit_care**
+   - **lifespan_uv_sanitizer**
+   - **lifespan_water_sink**
+   - **lifespan_weed_rope**
+   - **position**
+   - **charger_position**
+   - **rooms**
+   - **maps**
+   - **map_svg**
+   - **cmd_start**
+   - **cmd_pause**
+   - **cmd_resume**
+   - **cmd_stop**
+   - **cmd_dock**
+   - **cmd_locate**
+   - **cmd_empty_dustbin**
+   - **cmd_clean_rooms**
+
+
+============
+Item-Structs
+============
+
+
+Das Plugin stellt die folgenden Item-Structs zur Verfügung. Diese Informationen sind aus der `plugin.yaml` entnommen und möglicherweise nicht vollständig.
+
+
+all
+===
+
+Alle Items des Saugroboters
+
+.. treeview::
+     - :dir:`folder` **all** (`foo`, Alle Items des Saugroboters)
+         - :dir:`file` **status** (`foo`, ---)
+         - :dir:`file` **settings** (`foo`, ---)
+         - :dir:`file` **control** (`foo`, ---)
+         - :dir:`file` **statistics** (`foo`, ---)
+         - :dir:`file` **lifespan** (`foo`, ---)
+         - :dir:`file` **map** (`foo`, ---)
+
+
+control
+=======
+
+Steuerung
+
+.. treeview::
+     - :dir:`folder` **control** (`foo`, Steuerung)
+         - :dir:`file` **cmd_start** (`bool`, auf True setzen, um die Reinigung zu starten (pausiert: fortsetzen); setzt sich selbst zurück)
+         - :dir:`file` **cmd_pause** (`bool`, auf True setzen, um die Reinigung zu pausieren; setzt sich selbst zurück)
+         - :dir:`file` **cmd_resume** (`bool`, auf True setzen, um die Reinigung fortzusetzen; setzt sich selbst zurück)
+         - :dir:`file` **cmd_stop** (`bool`, auf True setzen, um die Reinigung zu beenden; setzt sich selbst zurück)
+         - :dir:`file` **cmd_dock** (`bool`, auf True setzen, um zur Ladestation zurückzufahren; setzt sich selbst zurück)
+         - :dir:`file` **cmd_locate** (`bool`, auf True setzen, damit der Roboter einen Ton abspielt; setzt sich selbst zurück)
+         - :dir:`file` **cmd_empty_dustbin** (`bool`, auf True setzen, um den Staubbehälter in der Station zu entleeren; setzt sich selbst zurück)
+         - :dir:`file` **cmd_clean_rooms** (`list`, Liste von Raum-IDs (siehe rooms) schreiben, um diese Räume einmal zu reinigen; setzt sich selbst zurück)
+
+
+lifespan
+========
+
+Verschleissteile (Restlebensdauer in %)
+
+.. treeview::
+     - :dir:`folder` **lifespan** (`foo`, Verschleissteile (Restlebensdauer in %))
+         - :dir:`file` **lifespan_air_freshener** (`num`, Restlebensdauer air freshener in %)
+         - :dir:`file` **lifespan_blade** (`num`, Restlebensdauer blade in %)
+         - :dir:`file` **lifespan_brush** (`num`, Restlebensdauer brush in %)
+         - :dir:`file` **lifespan_cleaning_fluid** (`num`, Restlebensdauer cleaning fluid in %)
+         - :dir:`file` **lifespan_cleaning_solution** (`num`, Restlebensdauer cleaning solution in %)
+         - :dir:`file` **lifespan_dust_bag** (`num`, Restlebensdauer dust bag in %)
+         - :dir:`file` **lifespan_dust_bucket** (`num`, Restlebensdauer dust bucket in %)
+         - :dir:`file` **lifespan_dust_case_heap** (`num`, Restlebensdauer dust case heap in %)
+         - :dir:`file` **lifespan_dust_container_filter** (`num`, Restlebensdauer dust container filter in %)
+         - :dir:`file` **lifespan_filter** (`num`, Restlebensdauer filter in %)
+         - :dir:`file` **lifespan_hand_filter** (`num`, Restlebensdauer hand filter in %)
+         - :dir:`file` **lifespan_heavy_duty_cleaning_solution** (`num`, Restlebensdauer heavy duty cleaning solution in %)
+         - :dir:`file` **lifespan_humidify** (`num`, Restlebensdauer humidify in %)
+         - :dir:`file` **lifespan_humidify_maintenance** (`num`, Restlebensdauer humidify maintenance in %)
+         - :dir:`file` **lifespan_lens_brush** (`num`, Restlebensdauer lens brush in %)
+         - :dir:`file` **lifespan_mop_washing_tray** (`num`, Restlebensdauer mop washing tray in %)
+         - :dir:`file` **lifespan_round_mop** (`num`, Restlebensdauer round mop in %)
+         - :dir:`file` **lifespan_sewage_box** (`num`, Restlebensdauer sewage box in %)
+         - :dir:`file` **lifespan_side_brush** (`num`, Restlebensdauer side brush in %)
+         - :dir:`file` **lifespan_station_filter** (`num`, Restlebensdauer station filter in %)
+         - :dir:`file` **lifespan_strainer** (`num`, Restlebensdauer strainer in %)
+         - :dir:`file` **lifespan_trimmer_brush** (`num`, Restlebensdauer trimmer brush in %)
+         - :dir:`file` **lifespan_unit_care** (`num`, Restlebensdauer unit care in %)
+         - :dir:`file` **lifespan_uv_sanitizer** (`num`, Restlebensdauer uv sanitizer in %)
+         - :dir:`file` **lifespan_water_sink** (`num`, Restlebensdauer water sink in %)
+         - :dir:`file` **lifespan_weed_rope** (`num`, Restlebensdauer weed rope in %)
+
+
+map
+===
+
+Position und Karte
+
+.. treeview::
+     - :dir:`folder` **map** (`foo`, Position und Karte)
+         - :dir:`file` **position** (`dict`, Position des Roboters auf der Karte als {x, y, angle})
+         - :dir:`file` **charger_position** (`dict`, Position der Ladestation auf der Karte als {x, y, angle})
+         - :dir:`file` **rooms** (`list`, Räume der aktuellen Karte als Liste von {id, name, map, preselect}; die ids für clean_rooms())
+         - :dir:`file` **maps** (`list`, Gespeicherte Karten als Liste von {id, name, active, built}; die ids für room_names und room_preselect)
+         - :dir:`file` **map_svg** (`str`, Karte mit Räumen, Spur und Roboter als SVG (groß, nur bei Bedarf einbinden))
+
+
+settings
+========
+
+Einstellungen
+
+.. treeview::
+     - :dir:`folder` **settings** (`foo`, Einstellungen)
+         - :dir:`file` **fan_speed** (`str`, Saugstufe: quiet, normal, max oder max_plus (je nach Modell))
+         - :dir:`file` **water_amount** (`str`, Wassermenge: low, medium oder high (je nach Modell))
+
+
+statistics
+==========
+
+Statistik
+
+.. treeview::
+     - :dir:`folder` **statistics** (`foo`, Statistik)
+         - :dir:`file` **clean_area** (`num`, Fläche der aktuellen/letzten Reinigung in m²)
+         - :dir:`file` **clean_time** (`num`, Dauer der aktuellen/letzten Reinigung in Sekunden)
+         - :dir:`file` **total_area** (`num`, Gesamtfläche aller Reinigungen (Wert wie vom Gerät geliefert))
+         - :dir:`file` **total_time** (`num`, Gesamtdauer aller Reinigungen (Wert wie vom Gerät geliefert))
+         - :dir:`file` **total_cleanings** (`num`, Anzahl aller Reinigungen)
+
+
+status
+======
+
+Status des Saugroboters
+
+.. treeview::
+     - :dir:`folder` **status** (`foo`, Status des Saugroboters)
+         - :dir:`file` **state** (`str`, Zustand: idle, cleaning, returning, docked, error oder paused)
+         - :dir:`file` **active** (`bool`, true, solange der Roboter fährt (cleaning oder returning))
+         - :dir:`file` **battery** (`num`, Akkustand in %)
+         - :dir:`file` **available** (`bool`, true, wenn der Roboter über die Ecovacs Cloud erreichbar ist)
+         - :dir:`file` **error_code** (`num`, Fehlercode des Roboters, 0 = kein Fehler)
+         - :dir:`file` **error_text** (`str`, Fehlerbeschreibung zu error_code)
+         - :dir:`file` **station_state** (`str`, Zustand der Station: idle, emptying_dustbin, washing_mop oder drying_mop)
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+clean_rooms(rooms, count=1)
+===========================
+
+
+Reinigt die angegebenen Räume. Die Raum-IDs liefert das Item mit deebot: rooms
+
+ - Ergebnistyp der Funktion: **bool**
+
+**Parameter:**
+
+**rooms**
+    Liste der Raum-IDs
+
+    - Datentyp: **list**
+
+**count**
+    Anzahl der Reinigungsdurchgänge
+
+    - Datentyp: **int**
+    - Standardwert: **1**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

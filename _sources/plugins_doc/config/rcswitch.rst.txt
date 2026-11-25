@@ -58,7 +58,7 @@ rcswitch_dir
 ============
 
 
-Pfad des rc-Switches - Muss auf das Verzeichnis zeigenm in dem der rcswitch-pi Sende-Befehl gefunden  werden kann.
+Pfad des rc-Switches - Muss auf das Verzeichnis zeigenm in dem der rcswitch-pi Sende-Befehl gefunden werden kann.
 
  - Datentyp: **str**
  - Standardwert: **/usr/local/bin/rcswitch-pi**
@@ -68,7 +68,7 @@ rcswitch_host
 =============
 
 
-IP oder HOSTNAME des rcswitch hosts, falls das System nicht auf dieser SmartHomeNG-Maschine läuft.  Achtung: Auf dem Remote Host muss ein SSH Server installiert sein.
+IP oder HOSTNAME des rcswitch hosts, falls das System nicht auf dieser SmartHomeNG-Maschine läuft. Achtung: Auf dem Remote Host muss ein SSH Server installiert sein.
 
  - Datentyp: **ip**
 
@@ -174,4 +174,4 @@ Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken 
 
 **Keine**
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/rcswitch/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

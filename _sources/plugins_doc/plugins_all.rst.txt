@@ -15,49 +15,77 @@
    /plugins/avm/user_doc
    /plugins/blockly/user_doc
    /plugins/bose_soundtouch/user_doc
+   /plugins/bsblan/user_doc
+   /plugins/buderus/user_doc
    /plugins/byd_bat/user_doc
    /plugins/casambi/user_doc
    /plugins/casambi_bt/user_doc
    /plugins/cli/user_doc
+   /plugins/co2meter/user_doc
+   /plugins/comfoair/user_doc
    /plugins/darksky/user_doc
+   /plugins/dashbutton/user_doc
    /plugins/database/user_doc
    /plugins/db_addon/user_doc
+   /plugins/deebot/user_doc
+   /plugins/deebot_ozmo/user_doc
    /plugins/denon/user_doc
    /plugins/dlms/user_doc
    /plugins/dmx/user_doc
    /plugins/drexelundweiss/user_doc
    /plugins/ebus/user_doc
+   /plugins/enigma2/user_doc
    /plugins/enocean/user_doc
    /plugins/epson/user_doc
+   /plugins/eta_pu/user_doc
    /plugins/executor/user_doc
    /plugins/githubplugin/user_doc
    /plugins/gpio/user_doc
+   /plugins/harmony/user_doc
+   /plugins/helios/user_doc
    /plugins/helios_tcp/user_doc
+   /plugins/homeconnect/user_doc
    /plugins/homematic/user_doc
+   /plugins/hue/user_doc
    /plugins/hue2/user_doc
    /plugins/hue3/user_doc
    /plugins/husky2/user_doc
    /plugins/ical/user_doc
+   /plugins/indego/user_doc
    /plugins/indego4shng/user_doc
    /plugins/influxdb/user_doc
    /plugins/influxdb2/user_doc
+   /plugins/intercom_2n/user_doc
    /plugins/join/user_doc
    /plugins/jsonread/user_doc
    /plugins/jvcproj/user_doc
+   /plugins/kathrein/user_doc
    /plugins/knx/user_doc
    /plugins/kodi/user_doc
+   /plugins/kostal/user_doc
+   /plugins/kostalmodbus/user_doc
+   /plugins/ksemmodbus/user_doc
    /plugins/lirc/user_doc
    /plugins/lms/user_doc
+   /plugins/logo/user_doc
+   /plugins/luxtronic2/user_doc
    /plugins/mailrcv/user_doc
    /plugins/mailsend/user_doc
+   /plugins/matter/user_doc
    /plugins/mieleathome/user_doc
+   /plugins/miflora/user_doc
    /plugins/mikrotik/user_doc
+   /plugins/milight/user_doc
+   /plugins/mlgw/user_doc
    /plugins/modbus_tcp/user_doc
    /plugins/mpd/user_doc
    /plugins/mqtt/user_doc
+   /plugins/mvg_live/user_doc
    /plugins/neato/user_doc
    /plugins/network/user_doc
+   /plugins/nuki/user_doc
    /plugins/nut/user_doc
+   /plugins/odlinfo/user_doc
    /plugins/onewire/user_doc
    /plugins/openweathermap/user_doc
    /plugins/oppo/user_doc
@@ -66,20 +94,33 @@
    /plugins/pioneer/user_doc
    /plugins/piratewthr/user_doc
    /plugins/piusv/user_doc
+   /plugins/plex/user_doc
    /plugins/pluggit/user_doc
    /plugins/prowl/user_doc
+   /plugins/pushbullet/user_doc
+   /plugins/pushover/user_doc
    /plugins/raumfeld_ng/user_doc
    /plugins/rcs1000n/user_doc
+   /plugins/rcswitch/user_doc
    /plugins/resol/user_doc
+   /plugins/robonect/user_doc
+   /plugins/roomba/user_doc
+   /plugins/roomba_980/user_doc
    /plugins/roombapysh/user_doc
    /plugins/rpi1wire/user_doc
    /plugins/rpi_info/user_doc
    /plugins/rrd/user_doc
+   /plugins/rtr/user_doc
    /plugins/rtr2/user_doc
+   /plugins/russound/user_doc
    /plugins/shelly/user_doc
    /plugins/simulation/user_doc
+   /plugins/slack/user_doc
+   /plugins/sma/user_doc
+   /plugins/sma_em/user_doc
    /plugins/sma_mb/user_doc
    /plugins/smartmeter/user_doc
+   /plugins/smarttv/user_doc
    /plugins/smartvisu/user_doc
    /plugins/sml2/user_doc
    /plugins/smlx/user_doc
@@ -91,24 +132,32 @@
    /plugins/speech/user_doc
    /plugins/squeezebox/user_doc
    /plugins/stateengine/user_doc
+   /plugins/systemair/user_doc
    /plugins/tankerkoenig/user_doc
    /plugins/tasmota/user_doc
    /plugins/telegram/user_doc
    /plugins/text_display/user_doc
+   /plugins/thz/user_doc
    /plugins/timmy/user_doc
+   /plugins/traffic/user_doc
+   /plugins/trovis557x/user_doc
    /plugins/unifi/user_doc
    /plugins/uzsu/user_doc
    /plugins/vacations/user_doc
    /plugins/vicare/user_doc
    /plugins/viessmann/user_doc
+   /plugins/volkszaehler/user_doc
    /plugins/webpush/user_doc
    /plugins/webservices/user_doc
+   /plugins/wettercom/user_doc
    /plugins/withings_health/user_doc
    /plugins/wol/user_doc
    /plugins/xiaomi_vac/user_doc
+   /plugins/xmpp/user_doc
    /plugins/yamaha/user_doc
    /plugins/yamahayxc/user_doc
    /plugins/zigbee2mqtt/user_doc
+   /plugins/zwave/user_doc
 
 
 
@@ -122,7 +171,7 @@
      - Maintainer
      - Tester
    * - :doc:`alexa4p3 <config/alexa4p3>`
-     - v1.0.2
+     - v2.0.0
      - Plugin zur Ansteuerung von SmartHomeNG via Amazon Echo bzw. Alexa
        
        + `alexa4p3 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1021150-amazon-alexa-plugin>`_
@@ -139,7 +188,7 @@
        Juergen
    
    * - :doc:`alexarc4shng <config/alexarc4shng>`
-     - v1.0.4
+     - v1.0.5
      - Plugin zur Steuerung von Amazon Echo Geräten Zugriff via Web-Browser API und Cookie
        
        + `alexarc4shng Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1336416-alexa-text-to-speach>`_
@@ -156,7 +205,7 @@
        psilo
    
    * - :doc:`apcups <config/apcups>`
-     - v1.4.0
+     - v1.4.1
      - Unterstützung für smartUPS Geräte der Firma APC
        
        |br|
@@ -167,7 +216,7 @@
      - Sandman60
    
    * - :doc:`appletv <config/appletv>`
-     - v1.6.2
+     - v2.0.0
      - Steuerung eines Apple TV's
        
        + `appletv Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1223483-plugin-apple-tv>`_
@@ -191,7 +240,7 @@
      - ohinckel
    
    * - :doc:`asterisk <config/asterisk>`
-     - v1.4.2
+     - v1.4.3
      - Ansteuerung einer Asterisk Telefonanlage
        
        + `asterisk zusätzliche Infos <https://www.smarthomeng.de/user/plugins/asterisk/README.html>`_
@@ -223,7 +272,7 @@
        bmx
    
    * - :doc:`beolink <config/beolink>`
-     - v0.8.1
+     - v0.8.2
      - Plugin zur Ansteuerung von Bang & Olufsen Geräten über Beolink (Netlink) (REST API)
        
        |br|
@@ -236,7 +285,7 @@
      - 
    
    * - :doc:`blockly <config/blockly>`
-     - v1.5.0
+     - v1.5.1
      - Blockly - graphischer Editor für Logiken - Noch in der Entwicklung, nicht für die Nutzung gedacht
        
        |br|
@@ -251,7 +300,7 @@
      - onkelandy
    
    * - :doc:`bose_soundtouch <config/bose_soundtouch>`
-     - v1.0.1
+     - v1.0.2
      - Plugin zur Integration von Bose Soundtouch Systemen.
        
        + `bose_soundtouch zusätzliche Infos <https://github.com/smarthomeNG/plugins/tree/master/bose_soundtouch>`_
@@ -263,7 +312,7 @@
      - 
    
    * - :doc:`bsblan <config/bsblan>`
-     - v1.0.2
+     - v1.1.0
      - Plugin zur Datenabfrage des BSB-LAN-Adapters
        
        |br|
@@ -276,7 +325,7 @@
      - 
    
    * - :doc:`buderus <config/buderus>`
-     - v1.0.2
+     - v1.0.3
      - Steuerung von Buderus Heizkesseln über ein Logamatic web KM200 Modul (noch in der Entwicklung), **seit SmartHomeNG v1.3**
        
        |br|
@@ -289,7 +338,7 @@
      - ?
    
    * - :doc:`byd_bat <config/byd_bat>`
-     - v0.1.3
+     - v0.2.0
      - Plugin fuer die Anzeige von Daten von BYD Batterien
        
        + `byd_bat Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1886748-support-thread-f%C3%BCr-das-byd-batterie-plugin>`_
@@ -302,7 +351,7 @@
      - Matthias Manhart
    
    * - :doc:`casambi <config/casambi>`
-     - v1.7.6
+     - v1.7.7
      - Gateway plugin fuer Casambi
        
        + `casambi Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1496182-supportthread-f%C3%BCr-casambi-plugin>`_
@@ -313,7 +362,7 @@
      - macflei
    
    * - :doc:`casambi_bt <config/casambi_bt>`
-     - v1.0.0
+     - v1.0.1
      - Interface plugin fuer Casambi lokal via Bluetooth
        
        + `casambi_bt Unterstützung <https://www.knx-user-forum.de/forum/supportforen/smarthome-py/2082021-support-thread-für-das-casambi-bluetooth-plugin>`_
@@ -326,7 +375,7 @@
      - unknown
    
    * - :doc:`cli <config/cli>`
-     - v1.8.2
+     - v1.8.3
      - Command Line Interface für SmartHomeNG - Funktioniert mit SmartHomeNG v1.4 und höher
        
        |br|
@@ -354,7 +403,7 @@
      - ?
    
    * - :doc:`comfoair <config/comfoair>`
-     - v1.3.1
+     - v1.3.2
      - Unterstützung für Zehnder ComfoAir 350 & 500 KWL
        
        + `comfoair zusätzliche Infos <https://github.com/smarthomeNG/smarthome/wiki/Comfoair-Plugin>`_
@@ -366,7 +415,7 @@
      - ohinckel
    
    * - :doc:`darksky <config/darksky>`
-     - v1.7.2
+     - v1.7.3
      - Wetterdaten über darksky.net.
        
        + `darksky zusätzliche Infos <https://www.smarthomeng.de/user/plugins/darksky/user_doc.html>`_
@@ -374,7 +423,7 @@
        
        Plugin Typ: **web**
        
-       Plugin-Status: **deprecated**
+       Plugin-Status: **defunct**
      - psilo909
    
      - onkelandy
@@ -384,7 +433,7 @@
        cannon
    
    * - :doc:`dashbutton <config/dashbutton>`
-     - v1.3.1
+     - v1.3.2
      - Einbindung von Amazon Dashbuttons
        
        + `dashbutton Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1005266-plugin-amazon-dashbutton>`_
@@ -395,8 +444,8 @@
      - psilo909
    
    * - :doc:`database <config/database>`
-     - v1.6.15
-     - Database plugin, mit Unterstützung für SQLite 3 und MySQL
+     - v2.0.0
+     - Database plugin, mit Unterstützung für SQLite 3, MySQL/MariaDB und PostgreSQL+TimescaleDB
        
        + `database Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1021844-neues-database-plugin>`_
        
@@ -414,7 +463,7 @@
        aschwith
    
    * - :doc:`db_addon <config/db_addon>`
-     - v1.2.11
+     - v2.0.0
      - Add-On für das database Plugin zur Datenauswertung
        
        + `db_addon Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1848494-support-thread-databaseaddon-plugin>`_
@@ -426,21 +475,32 @@
    
        onkelandy
    
+   * - :doc:`deebot <config/deebot>`
+     - v1.0.0
+     - Plugin für Ecovacs Deebot Saugroboter über die Ecovacs Cloud
+       
+       |br|
+       
+       Plugin Typ: **interface**
+     - Morg
+   
+     - 
+   
    * - :doc:`deebot_ozmo <config/deebot_ozmo>`
-     - v1.7.2
+     - v2.0.1
      - Plugin für Deebot Ozmo 920 / 950 / 960
        
        |br|
        
        Plugin Typ: **interface**
        
-       Plugin-Status: **develop**
+       Plugin-Status: **defunct**
      - Foxi352
    
      - Foxi352
    
    * - :doc:`denon <config/denon>`
-     - v1.2.0
+     - v2.0.0
      - Denon AV-Receiver
        
        |br|
@@ -453,7 +513,7 @@
      - Morg
    
    * - :doc:`dlms <config/dlms>`
-     - v1.9.5
+     - v1.9.6
      - Unterstützung für Smartmeter, die DLMS (Device Language Message Specification, IEC 62056-21) nutzen und OBIS Codes liefern
        
        + `dlms Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1002464-support-thread-für-dlms-plugin>`_
@@ -476,7 +536,7 @@
      - nobody
    
    * - :doc:`drexelundweiss <config/drexelundweiss>`
-     - v1.5.4
+     - v1.5.5
      - Unterstützt Drexel & Weiss USB Devices
        
        + `drexelundweiss Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/34582-drexel-weiss-plugin>`_
@@ -515,7 +575,7 @@
        msinn
    
    * - :doc:`enocean <config/enocean>`
-     - v1.4.2
+     - v1.4.3
      - Anbindung von EnOcean
        
        + `enocean zusätzliche Infos <https://github.com/smarthomeNG/plugins/tree/master/enocean>`_
@@ -527,7 +587,7 @@
      - unknown
    
    * - :doc:`epson <config/epson>`
-     - v1.0.0
+     - v2.0.0
      - 
        
        |br|
@@ -540,7 +600,7 @@
      - Morg
    
    * - :doc:`esphome <config/esphome>`
-     - v0.0.2
+     - v0.0.3
      - Plugin zur Anzeige von Informationen von ESPHome Devices
        
        |br|
@@ -553,7 +613,7 @@
      - 
    
    * - :doc:`eta_pu <config/eta_pu>`
-     - v1.1.2
+     - v2.0.0
      - Anbindung der REST-Schnittstelle von ETA Heizungen (http://www.eta.co.at)
        
        |br|
@@ -564,7 +624,7 @@
      - psilo909
    
    * - :doc:`executor <config/executor>`
-     - v1.2.1
+     - v1.2.2
      - Ausführen von Python Statements im Kontext von SmartHomeNG v1.5 und höher
        
        + `executor zusätzliche Infos <https://www.smarthomeng.de/user/plugins/executor/user_doc.html>`_
@@ -576,7 +636,7 @@
      - onkelandy
    
    * - :doc:`garminconnect <config/garminconnect>`
-     - v1.2.0
+     - v1.2.1
      - Ermöglicht den Abruf von Daten (Statistiken, Pulswerte) aus Garmin Connect.
        
        + `garminconnect zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/garminconnect.html>`_
@@ -590,7 +650,7 @@
      - psilo909
    
    * - :doc:`githubplugin <config/githubplugin>`
-     - v1.0.1
+     - v2.0.0
      - Plugin zur Installation von Plugins aus fremden GitHub-Repositories
        
        |br|
@@ -618,7 +678,7 @@
        Morg
    
    * - :doc:`harmony <config/harmony>`
-     - v1.4.2
+     - v1.4.3
      - Harmony Hub plugin **seit SmartHomeNG v1.3**
        
        + `harmony zusätzliche Infos <https://github.com/smarthomeNG/plugins/blob/develop/harmony/README.md>`_
@@ -627,12 +687,14 @@
        Plugin Typ: **interface**
        
        maximale Python-Version: **3.9**
+       
+       Plugin-Status: **defunct**
      - pfischi
    
      - pfischi
    
    * - :doc:`helios <config/helios>`
-     - v1.4.3
+     - v1.4.4
      - Plugin zur Helios EC x00 Pro / Vallox xx SE Ansteuerung
        
        + `helios zusätzliche Infos <https://github.com/Tom-Bom-badil/helios/wiki>`_
@@ -644,7 +706,7 @@
      - -
    
    * - :doc:`helios_tcp <config/helios_tcp>`
-     - v1.0.3
+     - v1.0.5
      - Erlaubt die Kommunikation über TCP mit Helios KWL Geräten mit Helios Easy Controls
        
        |br|
@@ -668,7 +730,7 @@
      - psilo909
    
    * - :doc:`homematic <config/homematic>`
-     - v1.5.2
+     - v1.5.3
      - Ansteuerung von HomeMatic Komponenten über eine HomeMatic CCU2 Zentrale. Es werden HomeMatic und HomeMaticIP Geräte unterstützt.
        
        + `homematic zusätzliche Infos <https://http://smarthomeng.de/user/plugins/homematic/user_doc.html>`_
@@ -680,7 +742,7 @@
      - msinn
    
    * - :doc:`hue <config/hue>`
-     - v1.4.5
+     - v2.0.0
      - Anbindung einer oder mehrerer Philips HUE Bridges
        
        + `hue Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/41379-philips-hue-plugin-neu-v1-0-released>`_
@@ -717,7 +779,7 @@
      - 
    
    * - :doc:`husky2 <config/husky2>`
-     - v2.1.1
+     - v3.0.0
      - Husqvarna Automower Plugin (unterstützt das neue API)
        
        + `husky2 zusätzliche Infos <https://smarthomeng.github.io/smarthome/plugins/husky2/user_doc.html>`_
@@ -731,7 +793,7 @@
      - 
    
    * - :doc:`ical <config/ical>`
-     - v1.6.4
+     - v1.6.5
      - Ermöglicht die Verwendung von Kalendern (ICS)
        
        + `ical Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1352089-support-thread-zum-ical-plugin>`_
@@ -744,7 +806,7 @@
      - ?
    
    * - :doc:`indego <config/indego>`
-     - v1.6.1
+     - v1.6.2
      - Indego Plugin zum Auslesen von Bosch Indego Mährobotern mit Connect Ausstattung
        
        + `indego zusätzliche Infos <https://www.smarthomeng.de/user/plugins/indego/README.htm>`_
@@ -758,7 +820,7 @@
      - nobody
    
    * - :doc:`indego4shng <config/indego4shng>`
-     - v4.0.1
+     - v4.0.2
      - Indego Plugin zum Auslesen und steuern von Bosch Indego Mährobotern mit Connect Ausstattung
        
        + `indego4shng zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/indego.html>`_
@@ -774,12 +836,14 @@
        AndreK
    
    * - :doc:`influxdb <config/influxdb>`
-     - v1.0.3
+     - v1.0.4
      - Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank
        
        + `influxdb Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1498207-support-thread-f%C3%BCr-influxdb-plugin>`_
        
        Plugin Typ: **system**
+       
+       Plugin-Status: **deprecated**
      - Kai Meder
    
      - chrisr79
@@ -787,20 +851,20 @@
        onkelandy
    
    * - :doc:`influxdb2 <config/influxdb2>`
-     - v0.1.0
+     - v0.1.1
      - Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank
        
        + `influxdb2 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1498207-support-thread-für-influxdb-plugin>`_
        
        Plugin Typ: **system**
        
-       Plugin-Status: **develop**
+       Plugin-Status: **deprecated**
      - msinn
    
      - msinn
    
    * - :doc:`intercom_2n <config/intercom_2n>`
-     - v1.3.1
+     - v1.4.0
      - Integration von 2N SIP-Türsprechanlagen
        
        + `intercom_2n Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1030539-plugin-2n-intercom>`_
@@ -811,7 +875,7 @@
      - ?
    
    * - :doc:`join <config/join>`
-     - v1.4.4
+     - v1.4.5
      - Ermöglicht die Verwendung der Join API (https://joaoapps.com/join/api/)
        
        + `join Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1113523-neues-plugin-join-tts-sms-phonecall-notification-uvm>`_
@@ -822,8 +886,8 @@
      - psilo909
    
    * - :doc:`jsonread <config/jsonread>`
-     - v2.0.0
-     - json Parser Plugin ohne weitere Module
+     - v3.0.0
+     - json Parser Plugin
        
        + `jsonread zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/jsonread.html>`_
        + `jsonread Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/2077534-supportthread-f%C3%BCr-das-jsronread-plugin>`_
@@ -845,7 +909,7 @@
      - ?
    
    * - :doc:`kathrein <config/kathrein>`
-     - v1.6.1
+     - v1.7.0
      - Plugin zur Ansteuerung von Kathrein Receivern
        
        + `kathrein zusätzliche Infos <https://github.com/smarthomeNG/smarthome/Kathrein/Readme.md>`_
@@ -859,7 +923,7 @@
        waldmeister68
    
    * - :doc:`knx <config/knx>`
-     - v1.8.5
+     - v2.0.0
      - Anbindung von KNX Bussystemen via EIBD/KNXD Daemon
        
        + `knx Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1552531-support-thread-zum-knx-plugin>`_
@@ -878,7 +942,7 @@
        brandst
    
    * - :doc:`kodi <config/kodi>`
-     - v1.7.3
+     - v2.0.0
      - 
        
        |br|
@@ -889,8 +953,8 @@
      - OnkelAndy
    
    * - :doc:`kostal <config/kostal>`
-     - v1.3.3
-     - Anbindung eines KOSTAL-Wechselrichters  [KOSTAL](http://www.kostal-solar-electric.com/)    Das Plugin funktioniert aktuell mit den folgenden Inverter Moduln von KOSTAL:   * KOSTAL PIKO 3.0 UI-Version 06.20 (datastructure=json) * KOSTAL PIKO 5.5 UI-Version 05.xx (datastructure=html)   (should work with all KOSTAL PIKO inverters)
+     - v2.0.0
+     - Anbindung eines KOSTAL-Wechselrichters  [KOSTAL](http://www.kostal-solar-electric.com/)  Das Plugin funktioniert aktuell mit den folgenden Inverter Moduln von KOSTAL: * KOSTAL PIKO 3.0 UI-Version 06.20 (datastructure=json) * KOSTAL PIKO 5.5 UI-Version 05.xx (datastructure=html) (should work with all KOSTAL PIKO inverters)
        
        + `kostal Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1109697-kostal-plugin-piko-wechselrichter>`_
        
@@ -902,7 +966,7 @@
        datenschuft
    
    * - :doc:`kostalmodbus <config/kostalmodbus>`
-     - v1.6.3
+     - v1.6.5
      - Plugin zur Anbindung von einem Kostal Wechselrichter über Modbus an SmartHomeNG
        
        |br|
@@ -917,7 +981,7 @@
      - 
    
    * - :doc:`ksemmodbus <config/ksemmodbus>`
-     - v1.6.3
+     - v1.6.5
      - Plugin zur Anbindung von einem Kostal Smart Energy Meter über Modbus an SmartHomeNG
        
        |br|
@@ -932,7 +996,7 @@
      - 
    
    * - :doc:`leveljet <config/leveljet>`
-     - v1.0.1
+     - v2.0.0
      - Implementiert LevelJET Regenwasser Fuellstandsanzeige (www.projet.de)
        
        |br|
@@ -943,7 +1007,7 @@
      - blobo
    
    * - :doc:`lirc <config/lirc>`
-     - v1.5.1
+     - v1.5.2
      - Sendet Kommandos an lircd, das wiederum IR-Signale an Geräte mit IR-Schnittstelle versendet
        
        + `lirc Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1149875-neues-plugin-lirc>`_
@@ -956,7 +1020,7 @@
      - onkelandy
    
    * - :doc:`lms <config/lms>`
-     - v2.0.0
+     - v3.0.0
      - Logitech Mediaserver
        
        |br|
@@ -969,7 +1033,7 @@
      - Morg
    
    * - :doc:`logo <config/logo>`
-     - v1.2.4
+     - v1.2.5
      - Ansteuerung einer LOGO SPS
        
        + `logo zusätzliche Infos <https://www.smarthomeng.de/dev/user/plugins/logo/README.html>`_
@@ -981,7 +1045,7 @@
      - 
    
    * - :doc:`luxtronic2 <config/luxtronic2>`
-     - v1.3.3
+     - v1.3.4
      - Integration von Systemen die eine Luxtronic-Steuerung haben (z.B Heizungen)
        
        |br|
@@ -992,7 +1056,7 @@
      - ohinckel
    
    * - :doc:`mailrcv <config/mailrcv>`
-     - v1.4.2
+     - v1.4.3
      - Empfangen von eMails via imap
        
        |br|
@@ -1021,8 +1085,19 @@
    
        Sandman60
    
+   * - :doc:`matter <config/matter>`
+     - v0.4.0
+     - Matter-Controller-Plugin: Verbindung zu Matter-Geräten.
+       
+       + `matter Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/2102287-neues-plugin-matter>`_
+       
+       Plugin Typ: **gateway**
+     - Morg42
+   
+     - Morg42
+   
    * - :doc:`mieleathome <config/mieleathome>`
-     - v1.0.0
+     - v2.0.0
      - Miele@Home-Anbindung
        
        + `mieleathome Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1512798-miele-home-mit-mqtt>`_
@@ -1037,7 +1112,7 @@
      - 
    
    * - :doc:`miflora <config/miflora>`
-     - v1.6.2
+     - v1.6.3
      - Auslesen von Xiaomi Mi Flora Pflanzensensoren, **seit SmartHomeNG v1.3**
        
        + `miflora zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/miflora.html>`_
@@ -1049,7 +1124,7 @@
      - Sandman60
    
    * - :doc:`mikrotik <config/mikrotik>`
-     - v1.0.0
+     - v2.0.0
      - Mikrotik RouterOS Switch management
        
        |br|
@@ -1062,7 +1137,7 @@
      - 
    
    * - :doc:`milight <config/milight>`
-     - v1.6.1
+     - v1.6.2
      - Unterstützung von MiLight Leuchtmitteln
        
        + `milight zusätzliche Infos <https://http://smarthomeng.de/user/plugins/milight/user_doc.html>`_
@@ -1074,7 +1149,7 @@
      - sisamiwe
    
    * - :doc:`mlgw <config/mlgw>`
-     - v1.1.2
+     - v1.1.3
      - Bang & Olufsen Masterlink Gateway
        
        |br|
@@ -1085,7 +1160,7 @@
      - ?
    
    * - :doc:`modbus_tcp <config/modbus_tcp>`
-     - v1.1.0
+     - v2.0.0
      - Plugin zur Geräte-Anbindung über ModBus an SmartHomeNG
        
        + `modbus_tcp Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1154368-einbindung-von-modbus-tcp>`_
@@ -1100,7 +1175,7 @@
      - onkelandy
    
    * - :doc:`mpd <config/mpd>`
-     - v1.6.1
+     - v2.0.0
      - Music Player Daemon (MPD) Unterstützung
        
        + `mpd zusätzliche Infos <https://www.smarthomeng.de/user/plugins/mpd/README.html>`_
@@ -1114,7 +1189,7 @@
        knxms
    
    * - :doc:`mqtt <config/mqtt>`
-     - v2.0.6
+     - v3.0.0
      - MQTT Plugin, welches das MQTT Module von SmartHomeNG zur Kommunikation nutzt.
        
        + `mqtt Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1089334-neues-mqtt-plugin>`_
@@ -1127,7 +1202,7 @@
        onkelandy
    
    * - :doc:`mvg_live <config/mvg_live>`
-     - v1.6.1
+     - v1.6.2
      - Abfrage der Abfahrten in Stationen der Münchner Verkehrsbetriebe (MVG)
        
        + `mvg_live zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/mvg_live.html>`_
@@ -1139,7 +1214,7 @@
      - ?
    
    * - :doc:`neato <config/neato>`
-     - v1.6.9
+     - v1.6.10
      - Plugin zur Anbindung von einem Neato/Vorwerk Staubsauger Robotor an SmartHomeNG
        
        + `neato zusätzliche Infos <https://github.com/smarthomeng/plugins/blob/develop/neato/README.md>`_
@@ -1151,7 +1226,7 @@
      - aschwith
    
    * - :doc:`network <config/network>`
-     - v1.6.2
+     - v1.6.3
      - Items über Netzwerkanfragen (UDP/TCP/HTTP GET) ändern und Daten per UDP senden
        
        + `network zusätzliche Infos <https://www.smarthomeng.de/user/plugins_doc/config/network.html>`_
@@ -1164,7 +1239,7 @@
        psilo909
    
    * - :doc:`nuki <config/nuki>`
-     - v1.7.0
+     - v1.7.1
      - Unterstützung für ein NUKI Smart-Lock
        
        + `nuki Unterstützung <https://knx-user-forum.de/node/1052437>`_
@@ -1179,8 +1254,8 @@
      - psilo909
    
    * - :doc:`nut <config/nut>`
-     - v1.3.4
-     - Anbindung an eine UPS über den NUT daemon   Mehr über NUT unter http://networkupstools.org/
+     - v1.3.5
+     - Anbindung an eine UPS über den NUT daemon Mehr über NUT unter http://networkupstools.org/
        
        |br|
        
@@ -1202,7 +1277,7 @@
      - Sandman60
    
    * - :doc:`onewire <config/onewire>`
-     - v1.9.5
+     - v2.0.0
      - 1-Wire Unterstützung über owserver
        
        + `onewire Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1493319-support-thread-zum-onewire-plugin>`_
@@ -1217,7 +1292,7 @@
        chester4444
    
    * - :doc:`openweathermap <config/openweathermap>`
-     - v1.8.8
+     - v1.8.9
      - Wetterdaten über OpenWeatherMap.
        
        + `openweathermap Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1246998-support-thread-zum-openweathermap-plugin>`_
@@ -1232,7 +1307,7 @@
        jentz1986
    
    * - :doc:`oppo <config/oppo>`
-     - v1.0.1
+     - v2.0.0
      - Oppo UHD Player
        
        |br|
@@ -1270,7 +1345,7 @@
      - n/a
    
    * - :doc:`pioneer <config/pioneer>`
-     - v1.0.3
+     - v2.0.0
      - Pioneer AV-Receiver
        
        |br|
@@ -1307,7 +1382,7 @@
      - SergeoLacruz
    
    * - :doc:`plex <config/plex>`
-     - v1.0.1
+     - v1.0.2
      - Erlaubt das Senden von Notifications an Plex Clients (wie RasPlex)
        
        |br|
@@ -1318,18 +1393,20 @@
      - ?
    
    * - :doc:`pluggit <config/pluggit>`
-     - v2.0.6
+     - v2.0.8
      - Anbindung einer KWL Pluggit AP310 über das Modbus-Protokoll.
        
        |br|
        
        Plugin Typ: **interface**
+       
+       Plugin-Status: **develop**
      - Cannon
    
      - 
    
    * - :doc:`prowl <config/prowl>`
-     - v1.3.3
+     - v1.3.4
      - Prowl Unterstützung
        
        + `prowl zusätzliche Infos <https://www.smarthomeng.de/user/plugins/prowl/README.html>`_
@@ -1341,7 +1418,7 @@
      - Morg
    
    * - :doc:`pushbullet <config/pushbullet>`
-     - v1.5.2
+     - v1.5.3
      - Anbindung des Pushbullet Service
        
        + `pushbullet zusätzliche Infos <https://www.smarthomeng.de/developer/plugins/pushbullet/README.html>`_
@@ -1357,7 +1434,7 @@
        Sandman60
    
    * - :doc:`pushover <config/pushover>`
-     - v1.6.2
+     - v1.6.3
      - Anbindung des Pushover Dienstes
        
        |br|
@@ -1368,7 +1445,7 @@
      - None
    
    * - :doc:`raumfeld_ng <config/raumfeld_ng>`
-     - v1.5.2
+     - v1.5.3
      - Ansteuerung von Teufel Raumfeld Geräten via Raumserver und NodeRED
        
        + `raumfeld_ng Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1927851>`_
@@ -1393,7 +1470,7 @@
      - hasenradball
    
    * - :doc:`rcswitch <config/rcswitch>`
-     - v1.2.2
+     - v1.2.3
      - Schalten von 433 MHz Funksteckdosen z.B. für Brennenstuhl RCS 1000 N
        
        + `rcswitch Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/39094-logic-und-howto-für-433mhz-steckdosen>`_
@@ -1404,7 +1481,7 @@
      - hasenradball
    
    * - :doc:`resol <config/resol>`
-     - v1.1.0
+     - v1.1.1
      - Interface fuer Resol VBUS
        
        + `resol zusätzliche Infos <https://github.com/smarthomeNG/plugins/resol/README.md>`_
@@ -1429,7 +1506,7 @@
      - stoepf
    
    * - :doc:`roomba <config/roomba>`
-     - v1.6.0
+     - v1.7.0
      - Anbindung von iRobot Roomba Staubsaugern
        
        + `roomba zusätzliche Infos <https://github.com/smarthomeNG/smarthome/roomba/user_doc.html>`_
@@ -1443,12 +1520,14 @@
      - Sandman60
    
    * - :doc:`roomba_980 <config/roomba_980>`
-     - v1.0.2
+     - v1.0.3
      - Anbindung von iRobot Roomba Staubsaugern der Serie 900
        
        |br|
        
        Plugin Typ: **interface**
+       
+       Plugin-Status: **defunct**
      - Zapfen83
    
      - ?
@@ -1498,7 +1577,7 @@
      - 
    
    * - :doc:`rrd <config/rrd>`
-     - v1.7.0
+     - v1.7.1
      - Unterstützung für Round Robin Datenbanken (rrdtool)
        
        + `rrd Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/rrd-plugin>`_
@@ -1511,7 +1590,7 @@
      - nobody
    
    * - :doc:`rtr <config/rtr>`
-     - v1.6.0
+     - v2.0.0
      - Raum Temperatur Regler
        
        + `rtr zusätzliche Infos <https://www.smarthomeng.de/dev/user/plugins/rtr/README.html>`_
@@ -1523,7 +1602,7 @@
      - bmxp
    
    * - :doc:`rtr2 <config/rtr2>`
-     - v2.2.0
+     - v3.0.0
      - Raum Temperatur Regler v2
        
        + `rtr2 Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1586747-support-thread-für-das-rtr2-plugin>`_
@@ -1534,7 +1613,7 @@
      - msinn
    
    * - :doc:`russound <config/russound>`
-     - v1.7.3
+     - v1.7.4
      - Anbindung von Russound Audio Geräten
        
        + `russound zusätzliche Infos <https://www.smarthomeng.de/developer/plugins/russound/user_doc.html>`_
@@ -1550,7 +1629,7 @@
        fritz
    
    * - :doc:`shelly <config/shelly>`
-     - v1.8.3
+     - v2.0.0
      - Plugin zur Steuerung von Shelly Devices, welches das MQTT Module von SmartHomeNG zur Kommunikation nutzt.
        
        + `shelly Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1451853-support-thread-für-das-shelly-plugin>`_
@@ -1563,7 +1642,7 @@
      - msinn
    
    * - :doc:`simulation <config/simulation>`
-     - v1.5.1
+     - v1.5.2
      - Aufnahme und Abspielen von Aktionsreihenfolgen.
        
        + `simulation zusätzliche Infos <https://www.smarthomeng.de/user/plugins/simulation/user_doc.html>`_
@@ -1579,7 +1658,7 @@
        cmalo
    
    * - :doc:`slack <config/slack>`
-     - v1.0.0
+     - v1.0.1
      - Slack messaging Dienst
        
        |br|
@@ -1592,7 +1671,7 @@
      - maddinador
    
    * - :doc:`sma <config/sma>`
-     - v1.3.2
+     - v1.3.3
      - Unterstützung für SMA Wechselrichter SunnyBoy 5000TL-21, Sunny Tripower 8000TL-10, Sunny Tripower 12000TL-10
        
        + `sma zusätzliche Infos <https://smarthomeng.de/user/plugins_doc/config/sma.html>`_
@@ -1604,7 +1683,7 @@
      - psilo909
    
    * - :doc:`sma_em <config/sma_em>`
-     - v1.6.1
+     - v2.0.0
      - Auslesen des SMA Energy Meter Netzwerk Multicasts
        
        + `sma_em zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/sma_em.html>`_
@@ -1616,7 +1695,7 @@
      - psilo909
    
    * - :doc:`sma_mb <config/sma_mb>`
-     - v1.6.0
+     - v1.6.1
      - Dieses Plugin liest die aktuellen Werte eines SMA-Wechselrichters per SMA Speedwire Feldbus/Modbus aus
        
        + `sma_mb Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/2040103>`_
@@ -1635,14 +1714,12 @@
        sipple
    
    * - :doc:`smartmeter <config/smartmeter>`
-     - v0.9.0
+     - v1.0.0
      - Unterstützung für Smartmeter, die DLMS (Device Language Message Specification, IEC 62056-21) oder SML (Smart Message Language) nutzen und OBIS Codes liefern
        
        |br|
        
        Plugin Typ: **interface**
-       
-       Plugin-Status: **develop**
      - Morg
    
      - bmxp
@@ -1652,18 +1729,18 @@
        sisamiwe
    
    * - :doc:`smarttv <config/smarttv>`
-     - v1.3.3
+     - v2.0.0
      - Dieses Plugin erlaubt es SmartTV Geräte wie z.B. Samsung zu steuern. Es hat zwei Implementierungen (für das alte und das neue API der TVs). Für das neue API muss auf dem TV der Zugriff akzeptiert werden, indem ein Button auf dem TV gedrückt wird, wenn der erste Request eingeht.
        
-       |br|
+       + `smarttv Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/25545-neues-plugin-smarttv-samsung-etc>`_
        
        Plugin Typ: **interface**
-     - ? (2ndsky)
+     - bmxp
    
      - psilo909
    
    * - :doc:`smartvisu <config/smartvisu>`
-     - v1.9.0
+     - v2.0.0
      - smartVISU Unterstützung: Autogenerierung von Seiten; Widget Handling
        
        + `smartvisu Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1586800-support-thread-für-das-smartvisu-plugin>`_
@@ -1676,7 +1753,7 @@
        onkelandy
    
    * - :doc:`sml2 <config/sml2>`
-     - v2.0.1
+     - v3.0.0
      - Auslesen von Stromzählern mit SML-Protokoll
        
        + `sml2 zusätzliche Infos <https://www.smarthomeng.de/developer/plugins/smlx/user_doc.html>`_
@@ -1714,7 +1791,7 @@
      - n/a
    
    * - :doc:`snmp <config/snmp>`
-     - v1.6.1
+     - v1.6.2
      - SNMP Queries
        
        + `snmp Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1455436-support-thread-f%C3%BCr-snmp-plugin>`_
@@ -1727,7 +1804,7 @@
      - 
    
    * - :doc:`solarforecast <config/solarforecast>`
-     - v1.9.5
+     - v1.9.7
      - Plugin zur Anbindung an eine Web-basierte Solaretragsvorhersage
        
        + `solarforecast Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1842817-support-thread-f%C3%BCr-das-solarforecast-plugin>`_
@@ -1742,7 +1819,7 @@
        Morg
    
    * - :doc:`solarlog <config/solarlog>`
-     - v1.6.2
+     - v2.0.0
      - Auslesen der Web-Seite eines SolarLog
        
        + `solarlog zusätzliche Infos <https://http://smarthomeng.de/user/plugins/solarlog/user_doc.html>`_
@@ -1756,7 +1833,7 @@
      - nobody
    
    * - :doc:`sonos <config/sonos>`
-     - v1.8.11
+     - v1.8.12
      - Anbindung von Sonos Lautsprechern
        
        + `sonos zusätzliche Infos <https://github.com/smarthomeNG/plugins/blob/master/sonos/README.md>`_
@@ -1768,7 +1845,7 @@
      - sisamiwe
    
    * - :doc:`speech <config/speech>`
-     - v1.7.0
+     - v1.7.1
      - Sprach Parser
        
        + `speech zusätzliche Infos <https://http://smarthomeng.de/user/plugins/speech/user_doc.html>`_
@@ -1782,7 +1859,7 @@
      - henfri
    
    * - :doc:`squeezebox <config/squeezebox>`
-     - v1.4.0
+     - v1.4.1
      - Anbindung von Squeezebox Devices (Hard- und Softwareplayer)
        
        + `squeezebox Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/28692-√-neues-plugin-logitech-squeezebox-anregungen>`_
@@ -1801,7 +1878,7 @@
        brandst
    
    * - :doc:`stateengine <config/stateengine>`
-     - v2.3.0
+     - v3.0.0
      - Zustandsautomat für SmarthomeNG, ehemals AutoBlind
        
        + `stateengine Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1303071-stateengine-plugin-support>`_
@@ -1814,7 +1891,7 @@
        bmxp
    
    * - :doc:`systemair <config/systemair>`
-     - v1.3.1
+     - v2.0.0
      - Unterstützung für Systemair residential air Geräte über Modbus.
        
        + `systemair Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/939623-systemair-modbus-plugin-zentrale-lüftungsanlage>`_
@@ -1825,7 +1902,7 @@
      - ?
    
    * - :doc:`tankerkoenig <config/tankerkoenig>`
-     - v2.0.6
+     - v2.1.0
      - Benzinpreise über die API von Tankerkönig. Bitte sicherstellen, die API nicht zu oft aufzurufen. Bitte Hinweise unter https://creativecommons.tankerkoenig.de/#techInfo beachten!
        
        + `tankerkoenig zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/tankerkoenig.html>`_
@@ -1837,7 +1914,7 @@
      - Sandman60
    
    * - :doc:`tasmota <config/tasmota>`
-     - v1.6.1
+     - v2.0.0
      - Plugin zur Steuerung von Switches, die mit Tasmota Firmware ausgestattet sind. Die Kommunikation erfolgt über das MQTT Module von SmartHomeNG.
        
        + `tasmota zusätzliche Infos <https://http://smarthomeng.de/user/plugins/tasmota/user_doc.html>`_
@@ -1849,7 +1926,7 @@
      - msinn
    
    * - :doc:`telegram <config/telegram>`
-     - v2.0.3
+     - v3.0.0
      - Anbindung des Telegram Messenger Service
        
        + `telegram Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1548691-support-thread-für-das-telegram-plugin>`_
@@ -1864,7 +1941,7 @@
      - onkelandy
    
    * - :doc:`text_display <config/text_display>`
-     - v1.8.1
+     - v1.8.2
      - Plugin um Text Nachrichten auf Displays (z.B. KNX RTR oder Taster) nacheinander anzuzeigen
        
        + `text_display Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1678358-meldungsplugin-f%C3%BCr-textmeldungen-auf-knx-tastern>`_
@@ -1877,7 +1954,7 @@
      - jentz1986
    
    * - :doc:`thz <config/thz>`
-     - v1.0.0
+     - v2.0.0
      - Abfrage von Tecalor oder Stiebel Eltron Wärmepumpen
        
        + `thz zusätzliche Infos <https://www.smarthomeng.de/user/plugins/thz/README.html>`_
@@ -1893,7 +1970,7 @@
      - arnix
    
    * - :doc:`timmy <config/timmy>`
-     - v1.8.1
+     - v1.8.2
      - Plugin für Ein-/Ausschaltverzögerung und Blinken
        
        |br|
@@ -1906,7 +1983,7 @@
      - jentz1986
    
    * - :doc:`traffic <config/traffic>`
-     - v1.5.1
+     - v1.5.2
      - Abfrage der Reisezeit über die kostenlose Google Directions API. Für einen eigenen Key siehe https://developers.google.com/maps/documentation/directions/intro?hl=de#traffic-model.
        
        + `traffic zusätzliche Infos <https://http://smarthomeng.de/user/plugins_doc/config/traffic.html>`_
@@ -1918,7 +1995,7 @@
      - ?
    
    * - :doc:`trovis557x <config/trovis557x>`
-     - v2.0.0
+     - v2.0.1
      - Plugin zum Auslesen von SAMSON TROVIS 557x Heizungsreglern
        
        + `trovis557x zusätzliche Infos <https://github.com/Tom-Bom-badil/samson_trovis_557x/wiki>`_
@@ -1930,7 +2007,7 @@
      - 
    
    * - :doc:`unifi <config/unifi>`
-     - v1.6.4
+     - v1.6.5
      - Plugin um einige Features von UniFi Controllern auszulesen und fernzusteuern
        
        + `unifi Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1278068-unifi-controller-api-wlan>`_
@@ -1945,7 +2022,7 @@
        psilo909
    
    * - :doc:`uzsu <config/uzsu>`
-     - v2.1.1
+     - v3.0.0
      - Universelle Zeitschaltuhr
        
        + `uzsu Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1364692-supportthread-für-uzsu-plugin>`_
@@ -1982,7 +2059,7 @@
      - 
    
    * - :doc:`vicare <config/vicare>`
-     - v1.9.9
+     - v1.9.10
      - Plugin zur Anbindung an das Viessmann Backend an SmartHomeNG
        
        + `vicare Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1916122-support-thread-f%C3%BCr-das-viessmann-plugin>`_
@@ -1995,20 +2072,18 @@
      - n/a
    
    * - :doc:`viessmann <config/viessmann>`
-     - v2.0.0
+     - v3.0.0
      - Lesen und Schreiben von Werten einer Viessmann Heizung
        
        |br|
        
        Plugin Typ: **gateway**
-       
-       Plugin-Status: **develop**
      - Morg
    
      - 
    
    * - :doc:`volkszaehler <config/volkszaehler>`
-     - v1.6.1
+     - v1.6.2
      - Item Werte bei Änderung an einen Volkszähler Server senden
        
        + `volkszaehler zusätzliche Infos <https://www.smarthomeng.de/user/plugins/volkszaehler/README.html>`_
@@ -2020,7 +2095,7 @@
      - nobody
    
    * - :doc:`waterkotte <config/waterkotte>`
-     - v1.0.0
+     - v2.0.0
      - Anbindung von Waterkotte Wärmepumpen der EcoTouch-Reihe mittels Netzwerk
        
        |br|
@@ -2058,7 +2133,7 @@
      - psilo909
    
    * - :doc:`wettercom <config/wettercom>`
-     - v1.4.0
+     - v2.0.0
      - Integration von Wetter.COM
        
        |br|
@@ -2071,7 +2146,7 @@
        onkelandy
    
    * - :doc:`withings_health <config/withings_health>`
-     - v1.8.4
+     - v1.8.5
      - Anbindung der Nokia Health API mit Oauth2
        
        + `withings_health Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1141179-nokia-health-plugin>`_
@@ -2082,7 +2157,7 @@
      - psilo909
    
    * - :doc:`wol <config/wol>`
-     - v1.2.0
+     - v1.2.1
      - Wake on LAN
        
        + `wol Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1661427>`_
@@ -2093,7 +2168,7 @@
      - ohinckel
    
    * - :doc:`xiaomi_vac <config/xiaomi_vac>`
-     - v1.2.4
+     - v1.2.5
      - Zugriff und Steuern eines Xiaomi Saugroboters. Es wird empfohlen, den Staubsauger mit der neuesten Valetudo Firmware zu bespielen und MQTT anstelle dieses Plugins zu nutzen.
        
        + `xiaomi_vac Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1453597-support-thread-f%C3%BCr-xiaomi-saugroboter-plugin>`_
@@ -2110,7 +2185,7 @@
        onkelandy
    
    * - :doc:`xmpp <config/xmpp>`
-     - v1.4.1
+     - v2.0.0
      - Unterstützung des Extensible Messaging and Presence Protocol (XMPP). Unterstützt z.Zt. nur das Senden von Nachrichten.
        
        |br|
@@ -2121,7 +2196,7 @@
      - ohinckel
    
    * - :doc:`yamaha <config/yamaha>`
-     - v1.0.3
+     - v1.0.4
      - Plugin um Yamaha RX-V und RX-S Receiver via XML API zu kontrollieren
        
        + `yamaha Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/896468-plugin-yamaha>`_
@@ -2132,7 +2207,7 @@
      - None
    
    * - :doc:`yamahayxc <config/yamahayxc>`
-     - v1.0.7
+     - v2.3.1
      - Plugin, um Yamaha MusicCast-Geräte zu kontrollieren
        
        + `yamahayxc Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1174064-plugin-yamaha-musiccast-geräte-neuere-generation>`_
@@ -2143,7 +2218,7 @@
      - Morg
    
    * - :doc:`zigbee2mqtt <config/zigbee2mqtt>`
-     - v2.0.2
+     - v3.0.0
      - Plugin zur Steuerung von Geräten, die mit einem Zigbee Gateway mit der Zigbee2MQTT Firmware versehen sind. Die Kommunikation erfolgt über das MQTT Module von SmartHomeNG.
        
        + `zigbee2mqtt Unterstützung <https://knx-user-forum.de/forum/supportforen/smarthome-py/1856775-support-thread-f%C3%BCr-das-zigbee2mqtt-plugin>`_
@@ -2154,7 +2229,7 @@
      - Morg
    
    * - :doc:`zwave <config/zwave>`
-     - v1.4.2
+     - v1.4.3
      - Z-Wave Unterstützung
        
        |br|
@@ -2163,7 +2238,7 @@
        
        maximale Python-Version: **3.8**
        
-       Plugin-Status: **develop**
+       Plugin-Status: **defunct**
      - Thomas Creutz
    
      - 

@@ -43,7 +43,7 @@ plugin.yaml
     pioneer:
         plugin_name: pioneer
         model: VSX-923
-        timeout: 3
+        timeout: 1
         terminator: "\r"
         binary: false
         baudrate: 9600

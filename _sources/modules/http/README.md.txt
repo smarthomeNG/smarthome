@@ -102,7 +102,7 @@ Amount of items being listed in a web interface table per page by default.
 self.classname = self.__class__.__name__
 
 try:
-    self.mod_http = self._sh.get_module('http')
+    self.mod_http = self._sh.modules.get_module('http')
 except:
     self.mod_http = None
 

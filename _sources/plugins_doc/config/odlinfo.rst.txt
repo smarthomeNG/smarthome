@@ -140,13 +140,12 @@ Gibt ein DICT mit Infos zur einer Messstation zurück. Keys: 'id', 'kenn', 'plz'
 
  - Ergebnistyp der Funktion: **dict**
 
+**Parameter:**
 
-odlinfo_id
- -  -  -  -  -  -  -  -  -  - 
+**odlinfo_id**
+    Array der IDs ('id' oder 'kenn') der Messstationen. Siehe Web-Interface des Plugins oder https://odlinfo.bfs.de/ODL/DE/service/datenschnittstelle/datenschnittstelle_node.html.
 
-Array der IDs ('id' oder 'kenn') der Messstationen. Siehe Web-Interface des Plugins oder https://odlinfo.bfs.de/ODL/DE/service/datenschnittstelle/datenschnittstelle_node.html.
-
- - Datentyp: **str**
+    - Datentyp: **str**
 
 
 get_stations()
@@ -166,13 +165,12 @@ Gibt ein Array von DICTs mit Infos zu Messstationen zurück. Keys: 'id', 'kenn',
 
  - Ergebnistyp der Funktion: **list(dict)**
 
+**Parameter:**
 
-odlinfo_ids
- -  -  -  -  -  -  -  -  -  -  - 
+**odlinfo_ids**
+    Array der IDs ('id' oder 'kenn') der Messstationen. Siehe Web-Interface des Plugins oder https://odlinfo.bfs.de/ODL/DE/service/datenschnittstelle/datenschnittstelle_node.html.
 
-Array der IDs ('id' oder 'kenn') der Messstationen. Siehe Web-Interface des Plugins oder https://odlinfo.bfs.de/ODL/DE/service/datenschnittstelle/datenschnittstelle_node.html.
-
- - Datentyp: **list(str)**
+    - Datentyp: **list(str)**
 
 
 get_update_timestamp()
@@ -184,4 +182,4 @@ Gibt das datetime Objekt zurück, wann die intern im Plugin gecachten Daten zule
  - Ergebnistyp der Funktion: **foo**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/odlinfo/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

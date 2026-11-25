@@ -1,13 +1,14 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
 .. index:: Plugin Metadaten
 .. index:: Metadaten; Plugin
 .. index:: Plugin Metadaten; Globale Metadaten
 
-plugin
-------
+plugin :greensup:`Update`
+-------------------------
 
 Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegriffe:
 
@@ -16,7 +17,7 @@ Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegrif
     # Metadata for the Smart-plugin
     plugin:
         # Global plugin attributes
-        type: web                   # plugin type (gateway, interface, protocol, system, cloud, un-classified)
+        type: web                   # plugin type (gateway, interface, protocol, system, web)
         description:
             de: 'Plugin für ...'
             en: 'Plugin for ...'
@@ -33,7 +34,7 @@ Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegrif
     #    py_minversion: 3.6          # minimum Python version needed for this plugin (leave empty if no special requirement)
     #    py_maxversion:              # maximum Python version to use this plugin (leave empty if no special requirement)
         multi_instance: true        # plugin supports multi instance (if not specified, False is assumed)
-        restartebly: unknown
+        restartable: unknown
     #    startorder: normal          # should only be set on special plugins
         configuration_needed: true  # False: The plugin will be enabled by the Admin GUI without configuration
 
@@ -41,7 +42,7 @@ Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegrif
 
 Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
 
-    - ``type:`` Beschreibt den Typ des Plugins (gültige Werte: ``gateway``, ``interface``, ``protocol``, ``system``, ``web`` oder *leer* für ein nicht klassifiziertes Plugin.
+    - ``type:`` Beschreibt den Typ des Plugins (gültige Werte: ``gateway``, ``interface``, ``protocol``, ``system``, ``web``). Der Eintrag ist verpflichtend; ``plugin_metadata_checker.py`` meldet einen fehlenden oder ungültigen Typ als Fehler.
 
       Die Typen sind wie folgt definiert:
 
@@ -59,7 +60,14 @@ Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
       ``de`` und ``en`` müssen angegeben werden. Weitere Sprachen sind optional.
     - ``maintainer:`` Hier kann angegeben werden, wer das Plugin pflegt und weiterentwickelt
     - ``tester:`` Optional können hier die Nutzer angegeben werden, die sich bereit erklärt haben das Plugin zu testen
-    - ``state:`` Entwicklungs-Status des Plugins (gültige Werte: ``develop``, ``ready``, ``qa-passed``)
+    - ``state:`` Entwicklungs-Status des Plugins (gültige Werte: ``develop``, ``development``, ``ready``, ``qa-passed``,
+      ``deprecated``, ``defunct``).
+      ``deprecated`` kennzeichnet ein Plugin, das durch eine andere Lösung ersetzt ist, ``defunct`` ein Plugin, das
+      nicht mehr lauffähig ist (z.B. weil eine benötigte Bibliothek mit keiner unterstützten Python Version mehr
+      funktioniert). Plugins mit einem dieser beiden Status werden weiterhin geladen, beim Laden wird jedoch eine
+      Warnung ins Log geschrieben. Ein Plugin, das in einem Release mit einem dieser beiden Status ausgeliefert wird,
+      wird mit dem darauf folgenden Minor- oder Major-Release aus dem Plugin Repository entfernt (z.B. ein Plugin, das
+      mit 2.0 als ``defunct`` ausgeliefert wird, mit 2.1). So bleibt Zeit, die Konfiguration anzupassen.
     - ``keywords:`` Liste der Schlüsselwörter die das Plugin beschreiben (durch Leerzeichen getrennt)
     - ``documentation:`` url die auf eine weiterführende Dokumentation verweist (damit sind **nicht** die Dateien
       user_doc.rst oder die veraltete README.md gemeint)

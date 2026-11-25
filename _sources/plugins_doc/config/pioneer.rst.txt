@@ -39,8 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.9.5**
- - Minimum Python Version: **3.7**
+ - Minimum SmartHomeNG Version: **2.0.0**
 
 Konfiguration
 =============
@@ -106,21 +105,6 @@ Anzahl Datenbits
  - Standardwert: **8**
 
 
-conn_type
-=========
-
-
-Verbindungstyp
-
- - Datentyp: **str**
-
- - Mögliche Werte:
-
-   - 
-   - **net_tcp_client**
-   - **serial_async**
-
-
 connect_cycle
 =============
 
@@ -158,6 +142,16 @@ host
 Netzwerkziel/-host
 
  - Datentyp: **str**
+
+
+invalidate_on_disconnect
+========================
+
+
+Items bei Verbindungsverlust im Datenbank-Log als ungültig markieren (Datenlücke)
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
 
 
 model
@@ -215,6 +209,7 @@ resume_initial_read
 Bei resume vom Plugin erstmaliges Lesen erneut durchführen
 
  - Datentyp: **bool**
+ - Standardwert: **False**
 
 
 retry_cycle
@@ -242,7 +237,7 @@ send_retries
 
 
 Anzahl Sendeversuche
- Kommt keine (passende) Antwort nach dem Senden  eines Commands zurück, wird das Kommando nochmals  gesendet, sofern der Wert über 0 liegt. 
+Kommt keine (passende) Antwort nach dem Senden eines Commands zurück, wird das Kommando nochmals gesendet, sofern der Wert über 0 liegt. 
 
  - Datentyp: **num**
  - Standardwert: **0**
@@ -253,7 +248,7 @@ send_retries_cycle
 
 
 Pause zwischen Durchgängen von Sendeversuchen
- Sind Send Retries aktiv, wird ein Scheduler erstellt,  der im angegebenen Sekundentakt Kommandos erneut sendet,  zu denen keine (passenden) Antworten erhalten wurden. 
+Sind Send Retries aktiv, wird ein Scheduler erstellt, der im angegebenen Sekundentakt Kommandos erneut sendet, zu denen keine (passenden) Antworten erhalten wurden. 
 
  - Datentyp: **num**
  - Standardwert: **1**
@@ -302,10 +297,10 @@ timeout
 =======
 
 
-Timeout für Geräteantwort
+Lese-Timeout für serielle Verbindung (Sekunden), begrenzt die Wartezeit beim Schließen der Verbindung
 
  - Datentyp: **num**
- - Standardwert: **3**
+ - Standardwert: **1**
 
 
 ==============
@@ -329,7 +324,7 @@ pioneer_lookup
 ==============
 
 
-Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim  Start einmalig als dict oder list in das Item geschrieben.    Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art  der Tabelle ausgewählt werden:  - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard)  - rev liefert die Tabelle SmartHomeNG -> Gerät  - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben  - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
+Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.  Durch Anhängen von "#<mode>" an den Namen der Tabelle kann die Art der Tabelle ausgewählt werden: - fwd liefert die Tabelle Gerät -> SmartHomeNG (Standard) - rev liefert die Tabelle SmartHomeNG -> Gerät - rci liefert die Tabelle SmarthomeNG -> Gerät in Kleinbuchstaben - list liefert die Liste der Namen für SmartHomeNG (z.B. für Auswahllisten in der Visu)
 
  - Datentyp: **str**
 
@@ -338,7 +333,7 @@ pioneer_read
 ============
 
 
-Item liest/erhält Werte vom Gerät
+Item fordert Werte vom Gerät an (Werte empfängt jedes Item mit Kommando)
 
  - Datentyp: **bool**
 
@@ -411,7 +406,7 @@ ALL
              - :dir:`file` **dimmer** (`num`, 0 = very bright, 1 = bright, 2 = dark, 3 = off)
              - :dir:`file` **sleep** (`num`, 0 = off, 30 = 30 minutes, 60 = 60 minutes, 90 = 90 minutes)
              - :dir:`file` **multizone** (`bool`, ---)
-             - :dir:`folder` **settings** (`foo`, OrderedDict([('type', 'str'), ('pioneer_command@instance', 'general.settings.name'), ('pioneer_read@instance', True), ('pioneer_write@instance', True), ('pioneer_read_group@instance', ['ALL', 'ALL.general', 'ALL.general.settings']), ('pioneer_read_initial@instance', True)]))
+             - :dir:`folder` **settings** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
                  - :dir:`file` **language** (`str`, ---)
                  - :dir:`file` **name** (`str`, ---)
@@ -531,7 +526,7 @@ SC-1223
              - :dir:`file` **dimmer** (`num`, 0 = very bright, 1 = bright, 2 = dark, 3 = off)
              - :dir:`file` **sleep** (`num`, 0 = off, 30 = 30 minutes, 60 = 60 minutes, 90 = 90 minutes)
              - :dir:`file` **multizone** (`bool`, ---)
-             - :dir:`folder` **settings** (`foo`, OrderedDict([('type', 'str'), ('pioneer_command@instance', 'general.settings.name'), ('pioneer_read@instance', True), ('pioneer_write@instance', True), ('pioneer_read_group@instance', ['SC-1223', 'SC-1223.general', 'SC-1223.general.settings']), ('pioneer_read_initial@instance', True)]))
+             - :dir:`folder` **settings** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
                  - :dir:`file` **language** (`str`, ---)
                  - :dir:`file` **name** (`str`, ---)
@@ -664,7 +659,7 @@ SC-2023
              - :dir:`file` **dimmer** (`num`, 0 = very bright, 1 = bright, 2 = dark, 3 = off)
              - :dir:`file` **sleep** (`num`, 0 = off, 30 = 30 minutes, 60 = 60 minutes, 90 = 90 minutes)
              - :dir:`file` **multizone** (`bool`, ---)
-             - :dir:`folder` **settings** (`foo`, OrderedDict([('type', 'str'), ('pioneer_command@instance', 'general.settings.name'), ('pioneer_read@instance', True), ('pioneer_write@instance', True), ('pioneer_read_group@instance', ['SC-2023', 'SC-2023.general', 'SC-2023.general.settings']), ('pioneer_read_initial@instance', True)]))
+             - :dir:`folder` **settings** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
                  - :dir:`file` **language** (`str`, ---)
                  - :dir:`file` **name** (`str`, ---)
@@ -826,7 +821,7 @@ SC-LX57
              - :dir:`folder` **amp** (`str`, 0 = AMP, 1 = THR)
                  - :dir:`file` **lookup** (`list`, ---)
              - :dir:`file` **multizone** (`bool`, ---)
-             - :dir:`folder` **settings** (`foo`, OrderedDict([('type', 'str'), ('pioneer_command@instance', 'general.settings.name'), ('pioneer_read@instance', True), ('pioneer_write@instance', True), ('pioneer_read_group@instance', ['SC-LX57', 'SC-LX57.general', 'SC-LX57.general.settings']), ('pioneer_read_initial@instance', True)]))
+             - :dir:`folder` **settings** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
                  - :dir:`file` **language** (`str`, ---)
                  - :dir:`file` **name** (`str`, ---)
@@ -989,7 +984,7 @@ SC-LX77
              - :dir:`folder` **amp** (`str`, 0 = AMP, 1 = THR)
                  - :dir:`file` **lookup** (`list`, ---)
              - :dir:`file` **multizone** (`bool`, ---)
-             - :dir:`folder` **settings** (`foo`, OrderedDict([('type', 'str'), ('pioneer_command@instance', 'general.settings.name'), ('pioneer_read@instance', True), ('pioneer_write@instance', True), ('pioneer_read_group@instance', ['SC-LX77', 'SC-LX77.general', 'SC-LX77.general.settings']), ('pioneer_read_initial@instance', True)]))
+             - :dir:`folder` **settings** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
                  - :dir:`file` **language** (`str`, ---)
                  - :dir:`file` **name** (`str`, ---)
@@ -1152,7 +1147,7 @@ SC-LX87
              - :dir:`folder` **amp** (`str`, 0 = AMP, 1 = THR)
                  - :dir:`file` **lookup** (`list`, ---)
              - :dir:`file` **multizone** (`bool`, ---)
-             - :dir:`folder` **settings** (`foo`, OrderedDict([('type', 'str'), ('pioneer_command@instance', 'general.settings.name'), ('pioneer_read@instance', True), ('pioneer_write@instance', True), ('pioneer_read_group@instance', ['SC-LX87', 'SC-LX87.general', 'SC-LX87.general.settings']), ('pioneer_read_initial@instance', True)]))
+             - :dir:`folder` **settings** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
                  - :dir:`file` **language** (`str`, ---)
                  - :dir:`file` **name** (`str`, ---)
@@ -1313,7 +1308,7 @@ VSX-1123
              - :dir:`file` **dimmer** (`num`, 0 = very bright, 1 = bright, 2 = dark, 3 = off)
              - :dir:`file` **sleep** (`num`, 0 = off, 30 = 30 minutes, 60 = 60 minutes, 90 = 90 minutes)
              - :dir:`file` **multizone** (`bool`, ---)
-             - :dir:`folder` **settings** (`foo`, OrderedDict([('type', 'str'), ('pioneer_command@instance', 'general.settings.name'), ('pioneer_read@instance', True), ('pioneer_write@instance', True), ('pioneer_read_group@instance', ['VSX-1123', 'VSX-1123.general', 'VSX-1123.general.settings']), ('pioneer_read_initial@instance', True)]))
+             - :dir:`folder` **settings** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
                  - :dir:`file` **language** (`str`, ---)
                  - :dir:`file` **name** (`str`, ---)
@@ -1433,7 +1428,7 @@ VSX-923
              - :dir:`file` **dimmer** (`num`, 0 = very bright, 1 = bright, 2 = dark, 3 = off)
              - :dir:`file` **sleep** (`num`, 0 = off, 30 = 30 minutes, 60 = 60 minutes, 90 = 90 minutes)
              - :dir:`file` **multizone** (`bool`, ---)
-             - :dir:`folder` **settings** (`foo`, OrderedDict([('type', 'str'), ('pioneer_command@instance', 'general.settings.name'), ('pioneer_read@instance', True), ('pioneer_write@instance', True), ('pioneer_read_group@instance', ['VSX-923', 'VSX-923.general', 'VSX-923.general.settings']), ('pioneer_read_initial@instance', True)]))
+             - :dir:`folder` **settings** (`foo`, ---)
                  - :dir:`file` **read** (`bool`, ---)
                  - :dir:`file` **language** (`str`, ---)
                  - :dir:`file` **name** (`str`, ---)
@@ -1553,7 +1548,7 @@ general
          - :dir:`folder` **amp** (`str`, 0 = AMP, 1 = THR)
              - :dir:`file` **lookup** (`list`, ---)
          - :dir:`file` **multizone** (`bool`, ---)
-         - :dir:`folder` **settings** (`foo`, OrderedDict([('type', 'str'), ('pioneer_command@instance', 'general.settings.name'), ('pioneer_read@instance', True), ('pioneer_write@instance', True), ('pioneer_read_group@instance', ['general', 'general.settings']), ('pioneer_read_initial@instance', True)]))
+         - :dir:`folder` **settings** (`foo`, ---)
              - :dir:`file` **read** (`bool`, ---)
              - :dir:`file` **language** (`str`, ---)
              - :dir:`file` **name** (`str`, ---)

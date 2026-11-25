@@ -4,8 +4,8 @@
 
 .. role:: greensup
 
-install-hooks.sh :greensup:`Update`
-====================================
+install-hooks.sh
+================
 
 Das Skript ``tools/install-hooks.sh`` richtet git-Hooks für die SmartHomeNG-Repositories
 Core und/oder Plugins ein. Es fragt interaktiv ab, welche Repositories konfiguriert werden sollen.

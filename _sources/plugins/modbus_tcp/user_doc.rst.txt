@@ -18,9 +18,27 @@ SmarthomeNG plugin, zum Lesen von Register über ModBusTCP
 Anforderungen
 =============
 
-* Python > 3.8
-* pymodbus < 3.10
-* SmarthomeNG >= 1.10
+* Python >= 3.8 (zusätzlich gelten die Anforderungen von SmartHomeNG und pymodbus)
+* pymodbus >= 3.9, < 3.10
+* SmartHomeNG >= 1.11
+
+Version 2.0 verwendet den asyncio-Support von SmartHomeNG. Die synchrone
+Version 1.1.0 ist weiterhin über ``plugin_version: 1.1.0`` auswählbar.
+Für diese alte Version gelten weiterhin deren pymodbus-Anforderungen (< 3.10).
+
+Abfragemodi
+-----------
+
+* ``cycle > 0``: Eine vollständige Abfrage pro Scheduler-Aufruf.
+* ``cycle: 0``: Keine periodische Abfrage; Crontab oder Poll-Item können weiterhin abfragen.
+* ``cycle: -1``: Kontinuierliche Abfragen mit kurzer Pause zwischen Registern.
+
+Die Werte werden nach jeder erfolgreichen Abfrage direkt in die Items geschrieben;
+es gibt keinen separaten Flush-Puffer. Ein boolesches Item mit ``modbusPoll: true``
+löst bei einem externen Wechsel auf true eine vollständige Abfrage aus.
+Vor erneutem Auslösen das Item auf false zurücksetzen. Überlappende Abfragen
+werden übersprungen. Ohne Abfragemodus, Poll-Item oder Schreib-Items wird keine
+TCP-Verbindung geöffnet.
 
 pymodbus
 --------
