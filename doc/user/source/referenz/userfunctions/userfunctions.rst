@@ -7,8 +7,8 @@
 Userfunctions
 =============
 
-Ab Version 1.9 von SmartHomeNG ist die Möglichkeit implementiert, benutzerdefinierte Funktionen (Userfunctions) zu
-schreiben und in eval Statements sowie in Logiken zu verwenden.
+Es ist möglich, benutzerdefinierte Funktionen (Userfunctions) zu schreiben und in eval Statements sowie in Logiken zu
+verwenden.
 
 
 Erstellung und Speicherung
@@ -57,12 +57,12 @@ importiert wird:
 
 .. code::
 
-   2021-10-14  20:07:08 NOTICE   lib.smarthome        --------------------   Init SmartHomeNG 1.8.2d.b81166c3.develop   --------------------
-   2021-10-14  20:07:08 NOTICE   lib.smarthome        Running in Python interpreter 'v3.8.3 final' in virtual environment, from directory /usr/local/shng_dev
-   2021-10-14  20:07:08 NOTICE   lib.smarthome         - on Linux-4.9.0-6-amd64-x86_64-with-glibc2.17 (pid=4584)
-   2021-10-14  20:07:08 NOTICE   lib.smarthome         - Nutze Feiertage für Land 'DE', Provinz 'HH', 1 benutzerdefinierte(r) Feiertag(e) definiert
-   2021-10-14  20:07:11 NOTICE   lib.userfunctions    Importing userfunctions uf.anhalter v0.1.0 - Per Anhalter durch die Galaxis
-   2021-10-14  20:08:25 NOTICE   lib.smarthome        --------------------   SmartHomeNG initialization finished   --------------------
+   2026-11-25  20:07:08 NOTICE   lib.smarthome       --------------------   Init SmartHomeNG 2.0.0+4e0938c2.master   --------------------
+   2026-11-25  20:07:08 NOTICE   lib.smarthome       Running in Python interpreter 'v3.13.5 final' in virtual environment, from directory /usr/local/smarthome
+   2026-11-25  20:07:08 NOTICE   lib.smarthome        - operating system 'Debian GNU/Linux 13.2 (trixie)' (pid=4584)
+   2026-11-25  20:07:08 NOTICE   lib.smarthome        - on '<CPU>'
+   2026-11-25  20:07:11 NOTICE   lib.userfunctions   Userfunctions importiert aus 'anhalter' v0.1.0 - Per Anhalter durch die Galaxis
+   2026-11-25  20:08:25 NOTICE   lib.smarthome       --------------------   SmartHomeNG initialization finished   --------------------
 
 
 Nun kann man die in der Datei definierten Funktionen nutzen.

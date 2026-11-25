@@ -43,8 +43,8 @@ möglich.
 
 |
 
-Zugriff auf ein Listen-Element :redsup:`neu`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Zugriff auf ein Listen-Element
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein Item als Liste konfiguriert ist, kann auf die einzelnen Elemente der Liste über ihre Position zugegriffen
 werden, wobei 0 die erste Position kennzeichnet. Um z.B. auf das dritte Element einer Liste zuzugreifen, ist der
@@ -59,8 +59,8 @@ das vorletzte Element usw.
 
 |
 
-Zugriff auf ein Dict-Element :redsup:`neu`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Zugriff auf ein Dict-Element
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein Item als Dict konfiguriert ist, kann auf die einzelnen Elemente des Dicts über ihren Key zugegriffen
 werden. Um z.B. auf das Element mit dem Key **meinWert** eines Dicts zuzugreifen, ist der Syntax folgender:
@@ -106,8 +106,8 @@ Alle weiteren (namentlich benannten) Parameter dürfen erst danach folgen.
 
 |
 
-Schreiben eines Listen-Elements :redsup:`neu`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Schreiben eines Listen-Elements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein Item als Liste konfiguriert ist, kann auf die einzelnen Elemente der Liste über ihre Position zugegriffen
 werden, wobei 0 die erste Position kennzeichnet. Um z.B. das dritte Element einer Liste zu setzen, ist
@@ -139,8 +139,8 @@ Um einen Wert am Anfang der Liste einzufügen, ist als **index** der String 'pre
 
 |
 
-Schreiben eines Dict-Elements :redsup:`neu`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Schreiben eines Dict-Elements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein Item als Dict konfiguriert ist, kann auf die einzelnen Elemente des Dicts über ihren Key zugegriffen
 werden. Um z.B. auf das Element mit dem Key **myKey** eines Dicts zu setzen, ist der Syntax folgender:
@@ -192,8 +192,8 @@ angezeigt.
 
 |
 
-Erweiterter Zugriff auf List- und Dict-Items :redsup:`neu`
-----------------------------------------------------------
+Erweiterter Zugriff auf List- und Dict-Items
+--------------------------------------------
 
 Mit den Erweiterungen wird der Zugriff auf Items vom Typ `list` oder `dict`
 noch mehr dem "normalen" Handling von Python angepasst.

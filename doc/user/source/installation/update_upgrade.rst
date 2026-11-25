@@ -3,10 +3,11 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-==================================
-Update von einer älteren Version
-==================================
+===================================================
+Update von einer älteren Version :greensup:`Update`
+===================================================
 
 Es kann verschiedene Szenarien geben von denen aus man ein Update machen möchte. Es gibt unterschiedliche Ansätze
 wenn es sich um eine Virtuelle Maschine handelt oder wenn ein Raspberry Pi upgedated werden soll. Es gibt hier
@@ -18,8 +19,8 @@ Für das Update auf SmartHomeNG v2.0 gelten zusätzlich die Hinweise im folgende
 
 .. _update_auf_2_0:
 
-Update auf SmartHomeNG v2.0
-===========================
+Update auf SmartHomeNG v2.0 :redsup:`neu`
+=========================================
 
 SmartHomeNG v2.0 ist ein Major-Release: Funktionen, die seit längerem als veraltet gekennzeichnet waren, sind
 entfernt, und einige Voreinstellungen sind geändert. Eine bestehende Installation läuft deshalb nach dem Update nicht
@@ -235,17 +236,16 @@ unter *zusätzliche Linux Pakete installieren* angegebenen Pakete installiert we
 Für Windows bietet sich eine manuelle Installation der letzten Revision einer der aktuell unterstützten Python
 Versionen an - siehe die Übersicht unter :doc:`/installation/anforderungen`.
 
-SmartHomeNG 1.8 oder höher wird benötigte Python Bibliotheken selbständig beim ersten Programmstart installieren.
+SmartHomeNG wird benötigte Python Bibliotheken selbständig beim ersten Programmstart installieren.
 
-Versionsdetails
-===============
+Varianten des Updates
+=====================
 
-Update von SmarthomeNG ab v1.6 und höher
--------------------------------------------
+Update durch Neuinstallation
+----------------------------
 
-Wenn von einer Version v1.6 oder höher ein Update durchgeführt werden soll, gibt es eine neue Möglichkeit. Statt
-ein Update durchzuführen, kann bestehende die Konfiguration gesichert werden, eine Neuinstallation durchgeführt werden
-und anschließend die gesicherte Konfiguration eingespielt werden. Das vereinfacht auch das Update, wenn man das
+Statt ein Update durchzuführen, kann die bestehende Konfiguration gesichert werden, eine Neuinstallation durchgeführt
+werden und anschließend die gesicherte Konfiguration eingespielt werden. Das vereinfacht auch das Update, wenn man das
 Raspberry Pi Image verwendet.
 
 Wie das Sichern und Wiederherstellen der Konfiguration funktioniert, ist auf der Seite
@@ -260,8 +260,8 @@ Wie das Sichern und Wiederherstellen der Konfiguration funktioniert, ist auf der
     Sollen diese Daten gesichert werden, so muß SmartHomeNG zuerst beendet und danach die gewünschten Dateie manuell gesichert werden.
 
 
-Update von SmarthomeNG ab v1.1 und höher
--------------------------------------------
+Update mit git
+--------------
 
 Wenn man SmarthomeNG laut der Komplettanleitung :doc:`/installation/komplettanleitung/03_smarthomeng`
 (mithilfe "git clone [...]") installiert hat, in das Verzeichnis "smarthome" wechseln und anschliessend
@@ -314,8 +314,7 @@ der Plugins ermittelt. Dies Skript wird aufgerufen mit:
 
 .. note::
 
-   Ab SmartHomeNG v1.6 werden, falls dieser Schritt ausgelassen wird,
-   die Requirements beim Start von SmartHomeNG bestimmt.
+   Falls dieser Schritt ausgelassen wird, werden die Requirements beim Start von SmartHomeNG bestimmt.
    Dabei werden die Packages bestimmt, die vom Core und von den konfigurierten
    Plugins benötigt werden. Sind die Requirements
    nicht erfüllt, beendet sich SmartHomeNG mit einem entsprechenden Eintrag im Log.
@@ -363,129 +362,11 @@ ist beschrieben, welche Schritte dafür bei Verwendung von systemd
 durchgeführt werden müssen.
 
 
-
-Upgrade von Smarthome.py
--------------------------
-
-Das letzte Release von Smarthome.py wurde am 14. November 2013 veröffentlicht.
-Zu der Zeit war *Debian Wheezy* (7.x) gerade ein halbes Jahr alt, *systemd* war
-in den Kinderschuhen und den eibd (Vorgänger von knxd) mußte man sich selbst kopieren und übersetzen.
-Es gibt daher in vielen Bereichen etliche Entwicklungsschübe die es rechtfertigen
-eine vollständige Neuinstallation vorzuschlagen. Trotzdem sollte es möglich sein,
-relativ problemlos auf SmartHomeNG umzusteigen.
-
-.. note::
-
-    Wichtig ist zu wissen, das sich die Struktur der Datenbank geändert hat und daher
-    **eine existierende SQLite Datenbank nicht weiterverwendet werden kann**.
-
-Vorgehensweise
-~~~~~~~~~~~~~~
-
-Da nicht mehr viele User eine Umstellung vornehmen müssen und die Entwickler lange schon
-auf SmartHomeNG umgestiegen sind, ist die folgende Beschreibung eventuell nicht ganz vollständig
-oder gegebenenfalls nicht exakt genug. Bei Fragen steht der gitter chat oder das Forum
-zur Verfügung.
-Die Vorgehensweise beim Upgrade ist prinzipiell folgende:
-
-- Unter Linux automatischen Start von Smarthome.py abschalten
-- Smarthome.py selbst beenden falls noch nicht geschehen
-- Das komplette Smarthome.py Verzeichnis ``/usr/local/smarthome/`` **auf einem anderen Rechner** sichern.
-- Betriebssystem neu aufsetzen und Installation von SmartHomeNG gemäß Komplettanleitung :doc:`/installation/komplettanleitung/03_smarthomeng`
-  durchführen. SmartHomeNG sollte gestartet und via Admin Interface geprüft werden ob es fehlerfrei startet.
-- Die im vorletzten Schritt gesicherte Installation von Smarthome.py kann nun zurückgesichert werden,
-  z.B. an ``/usr/local/smarthome.old``. Somit stehen die alten Konfigurationsdateien zur Verfügung für die Übernahme.
-
-Plugins
-~~~~~~~
-
-Wenn das neue SmartHomeNG grundsätzlich startet, können **zunächst die Plugins** übernommen werden.
-Es bietet sich an die Plugins entweder
-
-- über das Admin Interface hinzuzufügen und zu konfigurieren wobei eine parallel im Texteditor
-  geöffnete ``/usr/local/smarthome.old/etc/plugins.conf`` als Referenz für die richtigen Werte ideal ist
-
-oder manuell
-
-- über das Admin Interface unter **Dienste --> CONF-YAML Konverter** den
-  Inhalt der ``/usr/local/smarthome.old/etc/plugins.conf`` in yaml Format umwandeln und
-  das Ergebnis an die Datei ``/usr/local/smarthome/etc/plugins.yaml`` anhängen bzw. einarbeiten.
-  Dabei muss natürlich selbst auf Doppelungen und die Einrückebene geachtet werden.
-
-Nun sollte ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden.
-Das kann entweder über das Admin Interface geschehen oder es muss in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
-geschaut werden.
-
-Eine falsche Konfiguration kann nach dem Neustart auch via Admin Interface angepasst werden.
-Wenn keine weiteren Fehler auftreten können die Items übernommen werden.
-
-Konfiguration
-~~~~~~~~~~~~~
-
-Je nach Struktur der Konfiguration ist deren Übernahme etwas mehr oder weniger aufwändig.
-
-Wenn schon die Konfiguration mit **-e**, **--config_etc** oder der Einstellung **config_etc: true** in der ``etc/smarthome.yaml`` vorgenommen wurde, ist es simpel. Ansonsten muss etwas mehr Aufwand getrieben werden.
-
-.. tab-set::
-
-   .. tab-item:: Konfiguration in `etc`
-
-      Das alte ``etc``-Verzeichnis kann im Normalfall 1:1 in den neuen Verzeichnisbaum übernommen
-      werden. Da von SmartHomeNG dort keine Dateien mehr mitgeliefert werden, können auch alte
-      Backup- und Default-Dateien (z.B. ``etc/smarthome.yaml.default`` und ``etc/smarthome.yaml.bak``)
-      bedenkenlos gelöscht werden.
-
-      Es empfiehlt sich, eine Kopie des gesamten ``etc``-Verzeichnisses samt Unterverzeichnissen aufzuheben, bis die neue Installation fehlerfrei läuft.
-
-      Sofern noch einzelne Konfigurationen im alten **conf**-Format vorliegen, sollte das Konvertertool
-      gestartet werden (siehe Anleitung im nächsten Abschnitt).
-
-   .. tab-item:: Konfiguration in einzelnen Verzeichnissen
-
-      **Items**
-      
-      Die empfohlene Vorgehensweise für die Übernahme der Items besteht aus den Schritten
-
-      - kopieren der Dateien mit den Definitionen der Items aus der alten Installation ``/usr/local/smarthome.old/items/``
-        in das Verzeichnis ``/usr/local/smarthome/items/`` der neuen Installation.
-      - starten des Konvertierungstools:
-
-        .. code-block:: bash
-
-            /usr/local/smarthome$ python3 tools/conf_to_yaml_converter.py
-
-        Bei erfolgreichem Durchlauf des Konverters ist jetzt für jede ``*.conf`` Datei eine passende ``*.yaml`` Datei erstellt worden.
-        Wenn das überprüft wurde können die ``*.conf`` Dateien nun aus ``/usr/local/smarthome/items/`` gelöscht werden.
-
-      Nun sollte wiederum ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden.
-      Das kann entweder über das Admin Interface geschehen oder es muss in
-      ``/usr/local/smarthome/var/log/smarthome-warnings.log`` geschaut werden.
-
-      **Logiken**
-
-      Die empfohlene Vorgehensweise für die Übernahme der Logiken besteht aus den Schritten
-
-      - kopieren der Dateien mit den Definitionen der Logiken aus der alten Installation ``/usr/local/smarthome.old/logics/``
-        in das Verzeichnis ``/usr/local/smarthome/logics/`` der neuen Installation.
-
-      - über das Admin Interface unter Dienste --> CONF-YAML Konverter den Inhalt der ``/usr/local/smarthome.old/etc/logics.conf``
-        in yaml Format umwandeln und das Ergebnis an die Datei ``/usr/local/smarthome/etc/logics.yaml`` anhängen bzw. einarbeiten.
-        Dabei muss natürlich selbst auf Doppelungen und die Einrückebene geachtet werden.
-
-      Nun sollte wiederum ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden.
-      Das kann entweder über das Admin Interface geschehen oder es muss in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
-      geschaut werden.
-
-      **Szenen, Userfunctions und Strukturen**
-
-      Analog zu den Logiken werden auch die Verzeichnisse ``scenes``, ``functions`` und ``structs`` migriert.
-
-
 Konvertierung von \*.conf-Dateien
 ==================================
 
 Möchte man vom alten ``*.conf`` Format der Konfigurationsdateien
-(die ab Version 1.12 nicht weiter unterstützt werden) auf das neue
+(das nicht mehr unterstützt wird) auf das
 ``*.yaml`` Format umschwenken, so kann der im Verzeichnis ``tools``
 bereitgestellte Konverter ``conf_to_yaml_converter.py`` genutzt werden
 um das automatisch zu tun.

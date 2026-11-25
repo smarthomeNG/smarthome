@@ -2,6 +2,8 @@
 .. index:: Plugin Metadata; plugin_metadata_checker
 .. index:: Tools; Metadata Checker
 
+.. role:: greensup
+
 plugin_metadata_checker.py
 ==========================
 

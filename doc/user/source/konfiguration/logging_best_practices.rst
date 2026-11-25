@@ -170,29 +170,29 @@ enogw Plugins in das Zusatzlog geschrieben.
 Identifizieren von Neustarts im Zusatzlog
 -----------------------------------------
 
-Im Hauptlog werden zwei Zeilen
+Im Hauptlog werden unter anderem die Zeilen
 
-.. code-block:: bash
+.. code-block:: text
 
-   2018-11-10  01:03:23 WARNING  __main__            --------------------   Init SmartHomeNG 1.6   --------------------
-   2018-11-10  01:03:23 WARNING  __main__            Running in Python interpreter 'v3.6.5 final' (pid=18624) on linux platform
+   2026-11-25  01:03:23 NOTICE   lib.smarthome       --------------------   Init SmartHomeNG 2.0.0+4e0938c2.master   --------------------
+   2026-11-25  01:03:23 NOTICE   lib.smarthome       Running in Python interpreter 'v3.13.5 final' in virtual environment, from directory /usr/local/smarthome
 
 bei jedem Start von SmartHomeNG geschrieben, um die Neustarts im Log
-einfacher auffinden zu können. Diese Zeile gibt es im Zusatzlog
-standardmäßig nicht.
+einfacher auffinden zu können.
 
-Wenn man diese Zeile auch im Zusatzlog haben möchte, muss man die
-WARNINGs des main-Loggers auch in das Zusatzlog lenken. Das geschieht
-indem man den logger ``__main__`` folgendermaßen konfiguriert:
+Wenn man diese Zeilen auch im Zusatzlog haben möchte, muss man die
+NOTICEs des Loggers ``lib.smarthome`` auch in das Zusatzlog lenken. Das
+geschieht, indem man diesen Logger folgendermaßen konfiguriert (nicht nötig,
+wenn bereits der übergeordnete Logger ``lib`` in das Zusatzlog schreibt):
 
 .. code-block:: yaml
 
    # Ausschnitt aus etc/logging.yaml
 
    loggers:
-       __main__:
+       lib.smarthome:
            handlers: [shng_details_file]
-           level: WARNING
+           level: NOTICE
 
        plugins.mqtt:
            handlers: [shng_details_file]
@@ -202,24 +202,12 @@ indem man den logger ``__main__`` folgendermaßen konfiguriert:
            handlers: [shng_details_file]
            level: DEBUG
 
-Ein besserer simple-Formatter
------------------------------
+Der Formatter shng_simple
+-------------------------
 
-In der Standardkonfiguration des Loggings wurde von SmartHomeNG wird
-bisher nach Datum und Loglevel der Threadname vor der eigentlichen
-Logmessage ausgegeben:
-
-.. code-block:: yaml
-
-   formatters:
-     simple:
-       format: '%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s'
-       datefmt: '%Y-%m-%d  %H:%M:%S'
-
-Folgende Einstellung (wie oben im Beispiel bereits angegeben) schreibt
-statt des Thread Names (der nicht besonders hilfreich ist), den Python
-Modulnamen in das Log (also z.B.: item, metadata, plugin - jeweils OHNE `lib.` -,
-plugins.knx, etc):
+Folgende Einstellung der Standardkonfiguration schreibt nach Datum und
+Loglevel den Namen des Loggers in das Log (also z.B.: lib.item, plugins.knx,
+etc):
 
 .. code-block:: yaml
 

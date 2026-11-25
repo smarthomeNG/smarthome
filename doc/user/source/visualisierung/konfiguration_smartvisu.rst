@@ -1,9 +1,8 @@
 
-Änderungen ab v1.8
-==================
+Konfiguration von Modul und Plugin
+==================================
 
-Ab SmartHomeNG v1.8 sind für die vollständige smartVISU Unterstützung das **websocket** Modul und
-das **smartvisu** Plugins zu konfigurieren.
+Für die vollständige smartVISU Unterstützung sind das **websocket** Modul und das **smartvisu** Plugin zu konfigurieren.
 
 .. code-block:: yaml
    :caption: Ausschnitt aus ``etc/module.yaml``

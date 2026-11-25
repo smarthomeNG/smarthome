@@ -4,10 +4,11 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
-===========
-Fehlersuche
-===========
+==============================
+Fehlersuche :greensup:`Update`
+==============================
 
 Die folgenden Informationen sollen bei der Fehlersuche helfen.
 Ein guter Startpunkt ist die :doc:`fehlersuche_checkliste`
@@ -24,5 +25,5 @@ Ein guter Startpunkt ist die :doc:`fehlersuche_checkliste`
 Fehlersuche mit der Admin GUI
 =============================
 
-Ab Version 1.6 steht ein umfängliches Administrationsinterface zur Verfügung.
+Es steht ein umfängliches Administrationsinterface zur Verfügung.
 Mehr Informationen zur Administrations-GUI unter: :doc:`./admin/admin`

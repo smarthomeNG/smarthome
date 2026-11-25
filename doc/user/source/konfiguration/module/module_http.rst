@@ -8,10 +8,11 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-===========
-Module http
-===========
+==============================
+Module http :greensup:`Update`
+==============================
 
 Der vom Module http zur Verfügung gestellte Webserver wird genutzt um die Admin GUI zur Verfügung zu stellen.
 

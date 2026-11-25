@@ -1,14 +1,15 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
 .. index:: item_structs; Plugin Metadaten
 .. index:: structs; Plugin Metadaten
 .. index:: Plugin Metadaten; item_structs
 .. index:: Plugin Metadaten; structs
 
-item_structs
-------------
+item_structs :greensup:`Update`
+-------------------------------
 
 Der Abschnitt ``item_structs:`` erlaubt die Definition von Struktur Templates, also von Sub-Trees von Items,
 die an verschiedenen Stellen in den Item Tree eingefügt werden können.
@@ -58,7 +59,7 @@ sieht die Konfiguration um die Struktur einzufügen folgendermaßen aus:
 Geschachtelte Strukturen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Beginnend mit SmartHomeNG v1.7 können Struktur Definitionen ineinander verschachtelt werden.
+Struktur Definitionen können ineinander verschachtelt werden.
 
 Wie Items die eine Struktur mit dem ``struct`` Attribut referenzieren, kann auch eine Struktur Definition eine
 eine andere Struktur referenzieren. SmartHomeNG löst alle Struktur Referenzen in Strukturen auf, bevor der

@@ -7,9 +7,9 @@
 .. index:: Struktur; Logiken
 .. index:: Logiken; Struktur
 
-==========
-Exceptions
-==========
+=============================
+Exceptions :greensup:`Update`
+=============================
 
 Laufzeit Fehler
 ===============
@@ -82,8 +82,8 @@ Falls ein Grund angegeben wird, erfolgt ein Logeintrag mit dem Level INFO, der d
 .. index:: Logiken; TaskCancelled
 .. _logik_exceptions_taskcancelled:
 
-Exception TaskCancelled
-=======================
+Exception TaskCancelled :redsup:`neu`
+=====================================
 
 Wird der Abbruch einer laufenden Logik angefordert, über die :ref:`Threads-Seite der Admin GUI <admin_threads_abbrechen>`
 oder automatisch über den Parameter ``runtime_cancel``, löst SmartHomeNG in der Logik die Exception ``TaskCancelled``

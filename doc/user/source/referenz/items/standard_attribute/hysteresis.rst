@@ -3,9 +3,9 @@
 .. index:: Items; Hysterese
 .. index:: Hysterese
 
-===========================
-Hysterese :bluesup:`Update`
-===========================
+=========
+Hysterese
+=========
 
 Mit Hilfe der drei folgenden Attribute kann eine Hysterese konfiguriert werden.
 

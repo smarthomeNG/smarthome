@@ -3,10 +3,11 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
 
-Konfiguration von Plugins
-=========================
+Konfiguration von Plugins :greensup:`Update`
+============================================
 
 Die Konfiguration der Plugins findet im Menü **Plugins** durch Auswahl von **Konfiguration** statt.
 

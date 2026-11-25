@@ -2,8 +2,10 @@
 .. index:: api_snapshot
 .. index:: Tools; api_snapshot
 
-api_snapshot.py
-===============
+.. role:: redsup
+
+api_snapshot.py :redsup:`neu`
+=============================
 
 Dieses Skript für Entwickler vergleicht die öffentliche API von SmartHomeNG zwischen zwei git-Refs oder Verzeichnissen
 und gibt an, welche Stufe der Versionsnummer (major, minor, patch) die Änderungen nach Semantic Versioning erfordern.

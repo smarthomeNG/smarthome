@@ -1,8 +1,10 @@
 .. index:: smartVISU; Installation von Widgets
 
-========================
-Installation von Widgets
-========================
+.. role:: greensup
+
+===========================================
+Installation von Widgets :greensup:`Update`
+===========================================
 
 
 smartVISU Widget-Handling

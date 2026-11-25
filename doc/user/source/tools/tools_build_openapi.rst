@@ -2,8 +2,10 @@
 .. index:: build_openapi
 .. index:: Tools; build_openapi
 
-build_openapi.py
-================
+.. role:: redsup
+
+build_openapi.py :redsup:`neu`
+==============================
 
 Dieses Skript für Entwickler erzeugt die Beschreibung der REST API des Administrations-Interface
 (``modules/admin/openapi.yaml``, OpenAPI 3.0). Die Beschreibung jeder Route steht als ``ApiDoc`` Metadaten direkt an

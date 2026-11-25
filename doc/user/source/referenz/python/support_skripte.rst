@@ -6,9 +6,9 @@
 .. role:: greensup
 .. role:: redsup
 
-===============================
-Support Skripte für SmartHomeNG
-===============================
+==================================================
+Support Skripte für SmartHomeNG :greensup:`Update`
+==================================================
 
 Für das arbeiten mit virtuellen Python Environments bringt SmartHomeNG zwei Support-Skripte mit. Diese Skripte sind
 im Tools Verzeichnis abgelegt.

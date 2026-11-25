@@ -1,5 +1,5 @@
 ===========================
-Release 1.x - tt. mmm 2020
+Release x.y - tt. mmm yyyy
 ===========================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
@@ -18,34 +18,14 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 Unterstützte Python Versionen
 =============================
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.7 ist Python 3.5.
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release <x.y> ist Python <3.n>.
 (Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
-
-..
-    Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.7 nicht mehr unter älteren Python Versionen läuft,
-    sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
-    Python Versionen nicht mehr zu Buxfixen führen.
-
-    Es werden jedoch zunehmend Features eingesetzt, die erst ab Python 3.5 zur Verfügung stehen.
 
 
 Absolute Minimum Python Version
 ===============================
 
-Die Minimum Python Version in der SmartHomeNG startet wurde auf v3.5 angehoben, da Python 3.4 im Jahr 2019 End-of-Life
-(End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python
-Versionen (3.6 oder 3.7) aufzusetzen.
-
-.. important::
-
-   Mit dem kommenden Release 1.8 werden die unterstützten Python Versionen
-   :doc:`(wie hier beschrieben) </installation/anforderungen>` auf **Python 3.6, 3.7, 3.8** angehoben. Python 3.6
-   hat eine Reihe sehr interessanter Features und Verbesserungen gebracht, die dann in SmartHomeNG genutzt
-   werden können.
-
-   Sollten solche neuen Features in den Core Einzug halten, wird die **Absolute Minimum Python Version** auf 3.6
-   angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
-   werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
+Die Minimum Python Version in der SmartHomeNG startet ist Python <3.m>.
 
 
 Bugfixes in the CORE
@@ -100,57 +80,16 @@ Plugin Updates
 Outdated Plugins
 ----------------
 
-The following plugins were already marked in version v1.6 as *deprecated*. This means that the plugins
+The following plugins were already marked in version <previous version> as *deprecated*. This means that the plugins
 are still working, but are not developed further anymore and are removed from the release of SmartHomeNG
 in the next release. User of these plugins should switch to corresponding succeeding plugins.
 
-* System Plugins
-
-  * sqlite - switch to the **database** plugin
-  * sqlite_visu2_8 - switch to the **database** plugin
-
-* Gateway Plugins
-
-  * tellstick - classic Plugin, not used according to survey in knx-user-forum
-
-* Interface Plugins
-
-  * netio230b - classic plugin, not used according to survey in knx-user-forum
-  * smawb - classic plugin, not used according to survey in knx-user-forum
-
-* Web Plugins
-
-  * alexa - switch to the **alexa4p3** plugin
-  * boxcar - classic Plugin, not used according to survey in knx-user-forum
-  * mail - switch to the **mailsend** and **mailrcv** plugin
-  * openenergymonitor - classic plugin, not used according to survey in knx-user-forum
-  * wunderground - the free API is not provided anymore by Wunderground
+* <Name>: switch to the **<name>** plugin
 
 
-The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because neither user nor tester have been found:
+The following plugins are marked as *deprecated* with SmartHomeNG <x.y>:
 
-* Gateway Plugins
-
-  * ecmd
-  * elro
-  * iaqstick
-  * snom
-  * tellstick
-
-* Interface Plugins
-
-  * easymeter
-  * netio230b
-  * smawb
-  * vr100
-
-* Web Plugins
-
-  * boxcar
-  * nma
-
-Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
-plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
+* <Name>: ...
 
 
 Documentation

@@ -18,7 +18,7 @@ So ist es möglich dass die Klingel mit der Musikanlage und TV spricht,
 und dessen Wiedergabe unterbricht oder bei Abwesenheit eine Nachricht
 per Email verschickt.
 
-Die bisherige developer documentation ist jetzt in den Abschnitten :doc:`Entwicklung <./entwicklung/entwicklung>` und
+Die Entwickler-Dokumentation ist in den Abschnitten :doc:`Entwicklung <./entwicklung/entwicklung>` und
 :doc:`Referenz <./referenz/referenz>` zu finden.
 
 Natürlich lebt dieses Projekt wie alles bei Open Source vom mitmachen. Jeder ist eingeladen im Rahmen

@@ -1,10 +1,11 @@
 :tocdepth: 3
 
 .. role:: redsup
+.. role:: greensup
 
-==========================
-Konfiguration über Dateien
-==========================
+=============================================
+Konfiguration über Dateien :greensup:`Update`
+=============================================
 
 Für die Konfiguration sind die Verzeichnisse ``etc``, ``etc/items``, ``etc/structs``, ``etc/logics``, ``etc/scenes``
 und ``etc/functions`` wichtig.
@@ -172,8 +173,8 @@ aus ``0815`` die Zahl ``815``.
 
 .. _yaml_versionen:
 
-YAML 1.1 und YAML 1.2
-^^^^^^^^^^^^^^^^^^^^^
+YAML 1.1 und YAML 1.2 :redsup:`neu`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 SmartHomeNG liest YAML Dateien nach YAML 1.2. Beginnt eine Datei mit der Zeile ``%YAML 1.1``, wird sie nach YAML 1.1
 gelesen; beim Speichern über die Admin GUI bleibt die Version einer Datei erhalten. Empfohlen wird YAML 1.2: Die
@@ -458,8 +459,8 @@ YAML Dateien können Kommentare enthalten. Kommentare beginnen mit einem #-Zeich
 immer bis zum Ende der Zeile.
 
 
-Konfigurationsdateien
-=====================
+Konfigurationsdateien :greensup:`Update`
+========================================
 
 Auf den folgenden Seiten sind die einzelnen Konfigurationsdateien beschrieben.
 

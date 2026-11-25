@@ -7,8 +7,8 @@
 .. role:: redsup
 .. role:: bluesup
 
-trigger und trigger_condition
-=============================
+trigger und trigger_condition :redsup:`neu`
+===========================================
 
 .. attention::
 

@@ -3,8 +3,8 @@ Warnungen für Deprecated Widgets
 ================================
 
 Ab dem auf v2.9.2 folgenden Release liefert die smartVISU informationen welche Widgets der smartVISU
-als veraltet (deprecated) gekennzeichnet wurden und welche Widgets entfernt wurden. Ab SmartHomeNG v1.8
-können diese Informationen ausgewertet werden und Warnungen geloggt werden falls veraltete order entfernte
+als veraltet (deprecated) gekennzeichnet wurden und welche Widgets entfernt wurden. Diese Informationen
+können ausgewertet werden und Warnungen geloggt werden falls veraltete order entfernte
 Widgets in der automatischen Generierung genutzt werden sollen.
 
 Standardmäßig wird eine Warning bei Verwendung veralteter (deprecated) Widgets erzeugt. Der Log Eintrag

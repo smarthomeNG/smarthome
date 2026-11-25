@@ -13,11 +13,11 @@
 Attribut *log_change*
 =====================
 
-Ab SmartHomeNG v1.5 ermöglicht das Attribut **log_change** das Loggen jeder Veränderung des Item-Wertes. **log_change**
+Das Attribut **log_change** ermöglicht das Loggen jeder Veränderung des Item-Wertes. **log_change**
 muss dazu den Namen des zu verwendeten Loggers enthalten. In ``etc/logging.yaml`` muss der Logger als
 **items.<Name>** konfiguriert sein. Wertänderungen des Items werden dann mit dem Level **INFO** geloggt.
 
-Ab **SmartHomeNG v1.9** kann das Item Logging über die Attribute **log_level** und **log_text** an die eigenen
+Das Item Logging kann über die Attribute **log_level** und **log_text** an die eigenen
 Bedürfnisse angepasst werden.
 
 

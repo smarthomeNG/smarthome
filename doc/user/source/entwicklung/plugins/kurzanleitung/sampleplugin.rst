@@ -5,15 +5,13 @@
 .. role:: redsup
 .. role:: bluesup
 
-Beispielplugin :bluesup:`update`
-================================
+Beispielplugin
+==============
 
 
 Dieser Abschnitt zeigt ein Beispielplugin. Es kann mit oder ohne Webinterface umgesetzt werden.
 
 Das komplette Plugin mit allen Dateien kann auf github unter https://github.com/smarthomeng/smarthome im ``/dev``-Ordner gefunden werden. 
-
-:Note: Diese Dokumentation bezieht sich auf Versionen nach v1.4.2. Sie gilt nicht für Versionen bis inklusive v1.4.2
 
 Auf dieser Seiten finden sich Dateien und Anregungen für neue Plugins. Das Plugin selbst besteht aus einer Datei mit Python-Code (__init__.py), einer Datei mit Metadaten (plugin.yaml) und der Dokumentation (user_doc.rst). Ein Satz Beispieldateien wird weiter unten gezeigt.
 
@@ -71,7 +69,7 @@ Die folgende Datei skizziert den Mindestumfang für die Plugin-Dokumentation.
 
 .. hint::
 
-   Das in früheren Versionen verwendete ``README.md``-Format für die Dokumentation von Plugins ist veraltet.
+   Das ``README.md``-Format für die Dokumentation von Plugins ist veraltet.
    Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen. 
    Die restliche Dokumentation sollte nur noch im ``user_doc.rst``-Format erfolgen.
 

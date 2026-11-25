@@ -4,9 +4,11 @@
 .. index:: Hardware Anforderungen
 .. index:: Software Anforderungen
 
-===============================
-Hard- u. Software Anforderungen
-===============================
+.. role:: greensup
+
+==================================================
+Hard- u. Software Anforderungen :greensup:`Update`
+==================================================
 
 Um SmartHomeNG nutzen zu können, braucht es nicht viel. Für jemanden,
 der erstmalig SmartHomeNG installiert bietet es sich an zum Kennenlernen
@@ -158,9 +160,9 @@ nicht starten.
 Einige Libraries in SmartHomeNG benutzen Bibliotheken, die ein Unix-artiges Betriebssystem voraussetzen
 oder spezielle Hardware erwarten.
 
-Ab SmartHomeNG v1.6 sollte eine Installation unter **MacOS** (BSD Unix) möglich sein.
+Eine Installation unter **MacOS** (BSD Unix) sollte möglich sein.
 
-Ab SmartHomeNG v1.8.2 sollte eine Installation unter **Windows** möglich sein.
+Eine Installation unter **Windows** sollte möglich sein.
 
 
 .. _python_versionen:

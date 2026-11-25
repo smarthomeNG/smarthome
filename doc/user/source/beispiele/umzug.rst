@@ -11,9 +11,9 @@
 
 .. _shng_umziehen:
 
-==================================
-SmartHomeNG umziehen :redsup:`Neu`
-==================================
+=======================================
+SmartHomeNG umziehen :greensup:`Update`
+=======================================
 
 Im folgenden wird ein mögliches Vorgehen beschrieben, um SmartHomeNG auf ein neues System (mit neuem Betriebssystem)
 umzuziehen.

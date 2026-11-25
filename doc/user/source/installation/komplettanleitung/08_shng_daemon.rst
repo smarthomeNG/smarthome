@@ -4,9 +4,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-========================================
-SmartHomeNG als Dienst :bluesup:`update`
-========================================
+======================
+SmartHomeNG als Dienst
+======================
 
 .. contents:: Schritte der Installation
    :local:

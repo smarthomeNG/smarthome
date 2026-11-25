@@ -31,16 +31,15 @@ erforderlich. Diese Dateien werden im yaml Format (Endung '.yaml') erstellt und 
 Szene gesteuert wird.
 
 
-Neuerungen ab SmartHomeNG v1.4
-------------------------------
+Features
+--------
 
-Mit SmartHomeNG v1.4 kommen folgende neue Features hinzu:
+Szenen bieten folgende Möglichkeiten:
 
-- Es werden Konfigurationsdateien im yaml Format unterstützt.
-- Für Szenen Stati können im neuen Dateiformat Namen vergeben werden.
+- Für Szenen Stati können Namen vergeben werden.
 - Der Ziel Item-Pfad einer Szenenaktion kann als relative Referenz angegeben werden.
 - Anstelle eines Wertes kann auch ein **eval** Ausdruck angegeben werden. In diesem Ausdruck sind auch relative Item Referenzen möglich.
-- Für Szenen Aktionen in denen ein absoluter Wert angegeben wird, wird bei Verwendung des neuen Dateiformats das Lernen (analog zu KNX Szenen) unterstützt
+- Für Szenen Aktionen in denen ein absoluter Wert angegeben wird, wird das Lernen (analog zu KNX Szenen) unterstützt
 
 
 Konfiguration im YAML Format
@@ -55,7 +54,7 @@ Keys ``name:`` und ``actions:`` vorhanden.
 
 Mit dem Key **name** wird der Name des Status festgelegt. Ein Name muss nicht zwingend vergeben
 werden, er erhöht jedoch die Verständlichkeit der Szenendefinition und dient der Übersichtlichkeit
-z.B. bei der Anzeige von Szenen im Backend Plugin.
+z.B. bei der Anzeige von Szenen in der Admin GUI.
 
 Mit dem Key **actions** der aus einer Liste von einzelnen Action-Definitionen besteht, wird
 festgelegt, welche Aktionen ausgelöst werden sollen, wenn der entsprechende Status eintritt.
@@ -75,8 +74,6 @@ gesetzt, wenn **value** einen Ausdruck und keinen absoluten  Wert enthält.
 
 Sowohl bei der Angabe des Ziel-Items, als auch im eval-Ausdruck ist die Nutzung relativer Item
 Referenzen möglich.
-
-Die Konfiguration der Szene in den Items erfolgt wie bisher.
 
 .. code-block:: yaml
    :caption: Struktur einer Status Definition

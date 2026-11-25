@@ -4,9 +4,10 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-Plugin-spezifische Attribute
-============================
+Plugin-spezifische Attribute :greensup:`Update`
+===============================================
 
 
 In SmartHomeNG werden außer den Standard Attributen weiter Attribute unterstützt, die von Plugins
@@ -39,8 +40,8 @@ Beispiele für Kürzel, die kennzeichnen zu welchem Plugin die jeweiligen Attrib
 .. index:: Vererbung von Attributen
 .. index:: Items; Vererbung von Attributen
 
-Vererbung von Attributen :bluesup:`update`
-------------------------------------------
+Vererbung von Attributen
+------------------------
 
 Bei einigen Plugins ist es notwendig, bei jedem Item einen Identifier anzugeben. Beispiele sind das
 homematic Plugin und das hue Plugin. Hier ist es hilfreich, den Identifier (z.B. die **hm_address**
@@ -127,8 +128,8 @@ ein :code:`.` (für das aktuelle Item) angegeben (:code:`.:<Attribut>`).
 
 .. _Standard_Attribute_Referenzen:
 
-Referenzen bei name, description und remark
--------------------------------------------
+Referenzen bei name, description und remark :redsup:`neu`
+---------------------------------------------------------
 
 Von den Standard-Attributen können nur **name**, **description** und **remark** Referenzen verwenden. Sie können
 sowohl Ziel einer Referenz sein (:code:`description: ..:.`, :code:`remark: ..:description`), als auch von

@@ -4,9 +4,10 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-Class MqttPlugin
-================
+Class MqttPlugin :greensup:`Update`
+===================================
 
 
 Die Klasse MqttPlugin implementiert die Basisklasse aller SmartPlugins die MQTT nutzen.
@@ -16,8 +17,8 @@ Die vorhandenen Methoden sind im Folgenden beschrieben
 Zusätzlich werden die Methoden der Klasse ``lib.utils.Utils`` vererbt.
 
 
-Teile eines JSON-Payloads an ein Item übergeben
------------------------------------------------
+Teile eines JSON-Payloads an ein Item übergeben :redsup:`neu`
+-------------------------------------------------------------
 
 Sendet ein Gerät mehrere Werte in einem JSON-Payload, kann ``add_subscription()`` mit dem Parameter ``select`` ein
 `JMESPath <https://jmespath.org>`_ Ausdruck übergeben werden. Der Payload wird dann als dict ausgewertet

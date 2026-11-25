@@ -3,10 +3,11 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
-======================
-smartVISU installieren
-======================
+=========================================
+smartVISU installieren :greensup:`Update`
+=========================================
 
 Die SmartVISU ist eine Sammlung von HTML-Dateien und PHP Skripten die es ermöglicht Items vom SmartHomeNG
 anzuzeigen. Im Wesentlichen wird dazu PHP und ein Webserver benötigt: Aktuell können unter anderem

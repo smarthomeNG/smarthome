@@ -4,12 +4,11 @@
 
 .. role:: redsup
 .. role:: bluesup
+.. role:: greensup
 
-=================================================
-Unterstützung mehrerer Sprachen :bluesup:`Update`
-=================================================
-
-:Note: Diese Dokumentation bezieht sich auf Versionen nach v1.4.2. Sie gilt nicht für Versionen bis inklusive v1.4.2
+==================================================
+Unterstützung mehrerer Sprachen :greensup:`Update`
+==================================================
 
 Wörter oder Phrasen können im Webinterface als mehrsprachig deklariert werden, so dass sie abhängig von der in SmartHomeNG eingestellten Sprache automatisch übersetzt werden.
 
@@ -94,8 +93,8 @@ Weitere Sprachen können durch Hinzufügen des Sprachcodes und der jeweiligen Ü
        'Schließen':         {'de': '=', 'en': 'Close', 'fr': 'Fermer'}
 
 
-Platzhalter in Übersetzungen nutzen :redsup:`Neu`
-=================================================
+Platzhalter in Übersetzungen nutzen :greensup:`Update`
+======================================================
 
 In der aktuellen Version von SmartHomeNG ist es möglich, Platzhalter in Übersetzungen zu verwenden.
 Das macht es einfache, vollständige Sätze zu übersetzen, da sich die Struktur des Satzes in unterschiedlichen Sprachen unterscheidet. 

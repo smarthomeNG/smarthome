@@ -6,9 +6,9 @@
 .. role:: greensup
 .. role:: redsup
 
-=============================
-Virtuelle Python Environments
-=============================
+================================================
+Virtuelle Python Environments :greensup:`Update`
+================================================
 
 Virtual Environments sind isolierte und unabhängige Umgebungen, die den Code und die Abhängigkeiten eines Projekts
 enthalten. Mit virtuellen Environments kann man parallel Umgebungen schaffen, in denen zum Beispiel Python Packages in

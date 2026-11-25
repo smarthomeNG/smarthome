@@ -7,8 +7,8 @@
 .. role:: blacksup
 
 
-Entwicklung :bluesup:`Update`
-=============================
+Entwicklung :greensup:`Update`
+==============================
 
 Hier entsteht nach und nach der Teil der Dokumentation, welcher sich mit der Entwicklung von SmartHomeNG befasst.
 

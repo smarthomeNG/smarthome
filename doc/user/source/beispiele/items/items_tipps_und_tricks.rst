@@ -8,9 +8,9 @@
 .. role:: greensup
 .. role:: blacksup
 
-==================================
-Tipps und Tricks :bluesup:`Update`
-==================================
+================
+Tipps und Tricks
+================
 
 
 .. index:: Zeitglied

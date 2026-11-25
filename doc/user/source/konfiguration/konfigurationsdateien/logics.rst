@@ -30,10 +30,7 @@ generierten Python Code (Dateiendung ``.py``).
 
 .. note::
 
-   Ab SmartHomeNG v1.4 können Logiken vollständig in der graphischen Administrationsoberfläche
-   **Backend** erstellt und konfiguriert werden.
-
-   .. image:: ../assets/backend_logik_editor.jpg
+   Logiken können vollständig in der :doc:`Admin GUI </admin/logiken>` erstellt und konfiguriert werden.
 
 
 Für weitere Details zur Konfiguration von Logiken, bitte die Seite :doc:`Logiken </konfiguration/logiken>` im Abschnitt Konfiguration lesen.

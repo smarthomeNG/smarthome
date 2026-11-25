@@ -2,8 +2,10 @@
 .. index:: ruamel_compat
 .. index:: Tools; ruamel_compat
 
-ruamel_compat
-=============
+.. role:: redsup
+
+ruamel_compat :redsup:`neu`
+===========================
 
 Dieses Werkzeug für Entwickler prüft, was eine Version des Python Packages ``ruamel.yaml`` mit den YAML Dateien von
 SmartHomeNG macht, bevor die zulässigen Versionen in ``lib/requirements.txt`` geändert werden. Jede YAML Datei eines

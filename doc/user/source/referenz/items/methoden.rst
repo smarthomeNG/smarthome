@@ -7,8 +7,7 @@
 Methoden zum Zugriff auf Items
 ==============================
 
-Die im folgenden beschriebenen Methoden waren ursprünglich Teil des smarthome Objektes ``sh``.
-Die Nutzung des ``sh`` Objektes für Items wird nicht weitergeführt. Es ist besser das Item API wie folgt zu nutzen:
+Die im folgenden beschriebenen Methoden werden über das Item API genutzt:
 
 .. code:: python
 

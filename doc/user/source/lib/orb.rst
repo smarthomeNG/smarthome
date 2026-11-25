@@ -1,7 +1,7 @@
-lib.orb
--------
-
 .. role:: greensup
+
+lib.orb :greensup:`Update`
+--------------------------
 
 .. automodule:: lib.orb
     :members:

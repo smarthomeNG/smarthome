@@ -2,9 +2,12 @@
 .. index:: Admin GUI; Logiken
 .. index:: Logiken; Admin GUI
 
-=======
-Logiken
-=======
+.. role:: greensup
+.. role:: redsup
+
+==========================
+Logiken :greensup:`Update`
+==========================
 
 Liste der Logiken
 =================
@@ -56,8 +59,8 @@ Logiken einen Hinweis mit den betroffenen Gruppennamen an.
 
 |
 
-Logik Editor
-============
+Logik Editor :greensup:`Update`
+===============================
 
 Der Logik Editor ermöglicht es Logiken zu erstellen oder zu ändern, sowie die Parameter zu konfigurieren, welche
 die Ausführung der Logik steuern. Der Logik Editor wird durch einen Klick auf den entsprechenden Dateinamen in
@@ -73,8 +76,8 @@ Das Tab mit dem Code Editor ermöglicht, den Python Code der Logik zu erfassen/z
    :class: screenshot
 
 
-Parameter Editor
-----------------
+Parameter Editor :greensup:`Update`
+-----------------------------------
 
 Das Tab mit den Parametern ermöglicht die Konfiguration der Ausführung der Logik. Hier können verschiedene Trigger
 für die Logik konfiguriert werden.
@@ -108,8 +111,8 @@ Crontab
 Wenn mehrere Einträge als Liste eingegeben werden sollen, so sind die Einträge durch ein | Zeichen zu trennen.
 
 
-Runtime warning / Runtime cancel
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Runtime warning / Runtime cancel :redsup:`neu`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``runtime_warn``: Sekunden, die ein Lauf der Logik dauern darf, bevor eine Warnung in das Log der Logik geschrieben
 wird (danach erneut bei jeder Verdopplung der Laufzeit). Bei leerem Feld gilt ``runtime_warn`` aus

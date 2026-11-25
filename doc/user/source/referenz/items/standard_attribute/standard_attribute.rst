@@ -25,9 +25,10 @@
 
 
 .. role:: bluesup
+.. role:: greensup
 
-Standard Attribute :bluesup:`Update`
-====================================
+Standard Attribute :greensup:`Update`
+=====================================
 
 
 In SmartHomeNG werden eine Reihe von Standard Attributen unterstützt. Diese sind in der folgenden
@@ -40,7 +41,6 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 | **Attribut**               | **Beschreibung**                                                                       |
 +============================+========================================================================================+
 | autotimer                  | setzt den Wert des Items nach einer Zeitspanne auf einen bestimmten Wert.              |
-|                            | Ab SmartHomeNG v1.3 wurden die Konfigurationsmöglichkeiten erweitert                   |
 |                            | (siehe :doc:`autotimer <./autotimer>`).                                                |
 +----------------------------+----------------------------------------------------------------------------------------+
 | cache                      | Wenn das Attribut auf **True** (oder 'Yes') gesetzt wird, dann wird der Wert des Items |
@@ -51,8 +51,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | Beschreibung unten)                                                                    |
 +----------------------------+----------------------------------------------------------------------------------------+
 | cycle                      | Definiert ein regelmäßiges Aufrufen des Items (und damit der verknüpften               |
-|                            | Logik oder Eval-Funktion). Ab SmartHomeNG v1.3 wurden die                              |
-|                            | Konfigurationsmöglichkeiten erweitert  (siehe :doc:`cycle <./cycle>`).                 |
+|                            | Logik oder Eval-Funktion, siehe :doc:`cycle <./cycle>`).                               |
 +----------------------------+----------------------------------------------------------------------------------------+
 | description                | Eine optionale Beschreibung für das Item. Hier können zum Besipiel Bedeutungen der     |
 |                            | Werte des Items erläutert werden. Diese Beschreibung wird in der Admin GUI oberhalb    |
@@ -89,7 +88,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                            | andauern muss, damit der Wert des Items auf False gesetzt wird.                        |
 +----------------------------+----------------------------------------------------------------------------------------+
 | initial_value,             | Ein optionaler Startwert für dieses Item. Es wird empfohlen **initial_value**          |
-| value                      | anstelle des bisherigen Attributnamens **value** zu verwenden.                         |
+| value                      | anstelle des Attributnamens **value** zu verwenden.                                    |
 |                            |                                                                                        |
 |                            | **Achtung**: Wenn in den Item Definitionen ein Wertzuweisung zu einem Item             |
 |                            | vom Typ **dict** erfolgen soll, muss unbedingt darauf geachtet werden, dass            |

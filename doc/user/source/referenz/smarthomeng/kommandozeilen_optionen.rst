@@ -1,6 +1,8 @@
 
-Kommandozeilen-Optionen
-=======================
+.. role:: greensup
+
+Kommandozeilen-Optionen :greensup:`Update`
+==========================================
 
 smarthome.py kann mit folgenden Kommandozeilen Optionen gestartet werden:
 

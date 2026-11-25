@@ -3,8 +3,8 @@
 
 .. _Plugin_aus_develop:
 
-Ein Plugin aus develop installieren :greensup:`Update`
-======================================================
+Ein Plugin aus develop installieren
+===================================
 
 Falls in Probleme mit einem Plugin auftreten, kann es hilfreich sein eine neuere Version des Plugins aus dem develop
 Branch auf GitHub zu installieren, ohne deshalb die eigene Installation vollständig auf die (nicht notwendigerweise
@@ -35,7 +35,7 @@ Dazu gibt es im Prinzip drei Wege, das Plugin zu installieren:
 
     .. tab-item:: githubplugin
 
-        Das Plugin `githubplugin` ist seit Version 1.11 standardmäßig installiert und kann ohne weitere Konfiguration
+        Das Plugin `githubplugin` ist standardmäßig installiert und kann ohne weitere Konfiguration
         genutzt werden, wenn es in der ``etc/plugin.yaml`` aktiviert wurde. Die Dokumentation des Plugins befindet
         sich in :doc:`Plugins/githubplugin </plugins/githubplugin/user_doc>`.
 

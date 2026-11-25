@@ -64,8 +64,8 @@ nur, wenn das im Browser gespeicherte Token abläuft. Die Lebensdauer des Token 
 .. index:: Hilfe
 .. index:: Admin GUI; Hilfe
 
-Hilfe
------
+Hilfe :redsup:`neu`
+-------------------
 
 Neben dem Abmelde-Button findet sich ein **Hilfe** Eintrag, der die zur aktuell angezeigten Seite passende
 Dokumentation in einem neuen Tab öffnet.
@@ -82,8 +82,8 @@ per GitHub-Workflow ausschließlich aus dem develop-Branch generiert).
 
 .. _dark-mode-section:
 
-Dark Mode
----------
+Dark Mode :redsup:`neu`
+-----------------------
 
 Neben dem Hilfe-Eintrag findet sich ein Schalter, über den zwischen hellem und dunklem Farbschema der
 Administrationsoberfläche wahlweise gewechselt werden kann. Ein Klick öffnet ein Menü mit drei Optionen:

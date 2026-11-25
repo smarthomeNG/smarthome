@@ -1,8 +1,10 @@
 .. index:: upgrade_check.py
 .. index:: Tools; upgrade_check.py
 
-upgrade_check.py
-================
+.. role:: redsup
+
+upgrade_check.py :redsup:`neu`
+==============================
 
 Dieses Skript prüft die Konfiguration einer Installation auf Änderungen, die für SmartHomeNG 2.0 nötig sind, und
 kann die meisten davon selbst durchführen. Ohne die Option ``--fix`` wird nichts verändert. Mit ``--fix`` wird jede

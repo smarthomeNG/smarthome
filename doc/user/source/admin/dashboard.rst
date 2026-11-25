@@ -2,9 +2,11 @@
 .. index:: Admin GUI; Übersicht
 .. index:: Dashboard; Admin GUI
 
-=========
-Übersicht
-=========
+.. role:: redsup
+
+=======================
+Übersicht :redsup:`neu`
+=======================
 
 Die Seite **Übersicht** (Dashboard) ist die Startseite des Administrations-Interface (siehe Parameter ``start_page``
 des :doc:`admin Moduls </konfiguration/module/module_admin>`). Sie fasst den Zustand der SmartHomeNG Installation

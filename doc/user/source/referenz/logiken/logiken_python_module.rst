@@ -60,8 +60,6 @@ werden: Eine Logik verhält sich nicht wie ein Python Modul!
 
 .. important::
 
-    Sollen in der Logik weitere Python Module genutzt werden, so muss bis zu SmartHomeNG v1.9.2 der Import des
-    Moduls innerhalb der Funktion erfolgen, die eine Funktion aus dem zu importierenden Python Modul nutzt.
-
-    Ab der Folgeversion v1.9.3 reicht es, wenn der Import in der Hauptroutine am Anfang der Logik erfolgt.
+    Sollen in der Logik weitere Python Module genutzt werden, reicht es, wenn der Import in der Hauptroutine am
+    Anfang der Logik erfolgt. Das gilt auch für Module, die in Funktionen der Logik genutzt werden.
 

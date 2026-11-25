@@ -2,8 +2,10 @@
 .. index:: Konfiguration; Feiertage
 .. index:: Feiertage
 
-Feiertage
-=========
+.. role:: greensup
+
+Feiertage :greensup:`Update`
+============================
 
 Feiertage werden im Reiter **Allgemein** der Systemkonfiguration konfiguriert. Hierzu stehen die Felder
 

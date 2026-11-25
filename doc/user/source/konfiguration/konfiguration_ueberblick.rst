@@ -1,6 +1,8 @@
 
-Allgemeines zur Konfiguration
-=============================
+.. role:: greensup
+
+Allgemeines zur Konfiguration :greensup:`Update`
+================================================
 
 Die Codebasis von SmartHomeNG ist in der Programmiersprache Python geschrieben. Python ist
 
@@ -137,14 +139,13 @@ Zeitzone als Basis genommen werden soll:
    elev: 36
    tz: Europe/Berlin
 
-   # ab Version 1.3
-   # module_paths = /usr/local/python/lib    # list of path-entries is possible
+   # module_paths: /usr/local/python/lib      # list of path-entries is possible
 
-   # ab Version 1.3: control type casting when assiging values to items
-   # assign_compatibility = latest            # latest or compat_1.2 (compat_1.2 is default for shNG v1.3)
+   # control type casting when assigning values to items
+   # assign_compatibility: latest             # latest (default) or compat_1.2
 
 
-Mit dieser Version können auch zusätzliche Modulpfade konfiguriert werden, in denen Drittanbieter-Bibliotheken
+Es können auch zusätzliche Modulpfade konfiguriert werden, in denen Drittanbieter-Bibliotheken
 abgelegt sind (`module_paths` Einstellung). Somit können Bibliotheken, beispielsweise in Logiken, verwendet
 werden die nicht direkt mit ausgeliefert bzw. installiert werden. Es kann ein oder mehrere absolute Pfade
 angegeben werden.
@@ -171,14 +172,18 @@ Die Datei ``plugin.yaml`` enthält die Konfigurationsanweisungen für alle Plugi
    #   send_time: 600 # update date/time every 600 seconds, default none
    #   time_ga: 1/1/1 # default none
    #   date_ga: 1/1/2 # default none
-   visu:
-       plugin_name: visu_websocket
+   smartvisu:
+       plugin_name: smartvisu
    cli:
        plugin_name: cli
        ip: 0.0.0.0
        update: True
-   sql:
-       plugin_name: sqlite_visu2_8
+   database:
+       plugin_name: database
+       driver: sqlite3
+       connect:
+       -   database:./var/db/smarthomeng.db
+       -   check_same_thread:0
 
 Die weitere Einrichtung und Konfiguration von Plugins ist unter `Plugins <plugins.html>`_ beschrieben.
 

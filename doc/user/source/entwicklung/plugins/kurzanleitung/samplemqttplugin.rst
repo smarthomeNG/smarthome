@@ -13,8 +13,6 @@ Dieser Abschnitt zeigt ein Beispielplugin mit MQTT-Unterstützung. Es kann mit o
 
 Das komplette Plugin mit allen Dateien kann auf github unter https://github.com/smarthomeng/smarthome im ``/dev``-Ordner gefunden werden.
 
-:Note: Diese Dokumentation bezieht sich auf Versionen ab v1.7.0. Sie gilt nicht für Versionen vor v1.7.0
-
 Auf dieser Seiten finden sich Dateien und Anregungen für neue Plugins, die MQTT nutzen. Das Plugin selbst besteht aus einer Datei mit Python-Code (__init__.py), einer Datei mit Metadaten (plugin.yaml) und der Dokumentation (user_doc.rst). Ein Satz Beispieldateien wird weiter unten gezeigt.
 
 Eine formatierte Version der Beispieldokumentation findet sich hier: :doc:`user_doc.rst </dev/sample_mqttplugin/user_doc>`
@@ -72,7 +70,7 @@ Die folgende Datei skizziert den Mindestumfang für die Plugin-Dokumentation.
 
 .. hint::
 
-   Das in früheren Versionen verwendete ``README.md``-Format für die Dokumentation von Plugins ist veraltet.
+   Das ``README.md``-Format für die Dokumentation von Plugins ist veraltet.
    Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen.
    Die restliche Dokumentation sollte nur noch im ``user_doc.rst``-Format erfolgen.
 

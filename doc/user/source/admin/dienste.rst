@@ -2,9 +2,11 @@
 .. index:: Admin GUI; Dienste
 .. index:: Dienste; Admin GUI
 
-=======
-Dienste
-=======
+.. role:: greensup
+
+==========================
+Dienste :greensup:`Update`
+==========================
 
 Auf dem Dienste Tab kann temporär die Sprache von SmartHomeNG umgeschaltet werden. Außerdem ist es möglich, den Core von
 SmartHomeNG neu zu starten oder zu stoppen, den Core und die Plugins aus Git zu aktualisieren, den Rechner auszuschalten

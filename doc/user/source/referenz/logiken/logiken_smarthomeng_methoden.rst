@@ -4,9 +4,11 @@
 .. index:: Logiken; SmartHomeNG Methoden
 
 
-====================
-SmartHomeNG Methoden
-====================
+.. role:: greensup
+
+=======================================
+SmartHomeNG Methoden :greensup:`Update`
+=======================================
 
 .. include:: /referenz/smarthomeng/feiertage_datum_zeit.rst
 

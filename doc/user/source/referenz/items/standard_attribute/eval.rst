@@ -1,8 +1,10 @@
 
 
-=========================
-*eval* und *eval_trigger*
-=========================
+.. role:: greensup
+
+============================================
+*eval* und *eval_trigger* :greensup:`Update`
+============================================
 
 
 .. index:: Standard-Attribute; eval
@@ -241,7 +243,7 @@ einem Stern generalisiert werden. ``temperatur.\*`` bedeutet, dass alle Kinderit
 Evaluieren des Items führen. Oder ``\*.trigger`` sorgt dafür, dass das Item durch alle Kind-Items mit dem
 Namen “trigger” aktualisiert werden kann, also z.B. durch ``temperatur.trigger``, ``Licht.OG.trigger``, etc.
 
-Seit SmartHomeNG v1.3 können für **eval_trigger** auch :doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>` genutzt werden. Dann müssen Bezüge auf andere Items nicht mehr absolut
+Für **eval_trigger** können auch :doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>` genutzt werden. Dann müssen Bezüge auf andere Items nicht mehr absolut
 angegeben werden sondern können sich relative auf andere Items beziehen.
 
 .. note::
@@ -346,7 +348,7 @@ Abfrage des Auslösers eines **eval** Ausdrucks
 Zu dem Zeitpunkt, wo ein **eval** Ausdruck ausgeführt wird, bezieht sich das Property ``last_update_by`` **nicht** auf
 die aktuellste Auslösung des Items, sondern auf das letzte Update davor. Möchte man nun aber abfragen, durch welches
 Item, Plugin oder durch welche Logik die Ausführung des eval Ausdrucks angestoßen wurde,
-muss das seit SmartHomeNG 1.9.1 implementierte Property ``last_trigger_by`` genutzt werden.
+muss das Property ``last_trigger_by`` genutzt werden.
 
 Dabei findet folgender zeitlicher Ablauf statt:
 

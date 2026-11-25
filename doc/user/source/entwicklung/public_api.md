@@ -1,4 +1,7 @@
-# SmartHomeNG: Öffentliche API und Versionierung
+```{role} redsup
+```
+
+# SmartHomeNG: Öffentliche API und Versionierung {redsup}`neu`
 
 SmartHomeNG folgt ab Version **2.0.0** dem [Semantic Versioning 2.0.0](https://semver.org/lang/de/).
 Dieses Dokument legt fest, was zur öffentlichen API gehört, wie Versionsnummern zu lesen sind und

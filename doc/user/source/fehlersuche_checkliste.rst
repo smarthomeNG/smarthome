@@ -2,12 +2,13 @@
 
 .. role:: bluesup
 .. role:: redsup
+.. role:: greensup
 
 
 .. index:: Fehlersuche; Checkliste
 
-Checkliste für die Fehlersuche
-==============================
+Checkliste für die Fehlersuche :greensup:`Update`
+=================================================
 
 Wenn etwas nach erfolgter Installation nicht funktioniert, kann anhand folgender Punkte geprüft
 werden, was nicht klappt. Hilfe gibt es auch im `Supportforum im KNX-User-Forum <https://knx-user-forum.de/forum/supportforen/smarthome-py>`_
@@ -233,7 +234,7 @@ Nach erfolgreichem Aufbau der Verbindung dann **help** eingeben.
    Trying 127.0.1.1...
    Connected to smarthome.local.
    Escape character is '^]'.
-   SmartHomeNG v1.4.0
+   SmartHomeNG v2.0.0  -  cli plugin v1.8.3
    Enter 'help' for a list of available commands.
    CLI > help
    h: alias for help

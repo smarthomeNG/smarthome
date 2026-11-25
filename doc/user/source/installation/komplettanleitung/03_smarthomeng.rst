@@ -267,20 +267,14 @@ Die Koordinaten für einen Standort kann man z.B. auf http://www.mapcoordinates.
 
    tz: 'Europe/Berlin'
 
-   # Version 1.5
-   #deprecated_warnings: True
-
-   # Version 1.4
-   #
    # the default_language is used, where multiple languages are supported (de, if not specified)
    #default_language: de
 
-   # Version 1.3
-   # db: Format: <name>:<python-module>, list of database-entries is possible
-   # db:
-   #   - sqlite:sqlite3
-   #   - mysql:pymysql
-   # module_paths = /usr/local/python/lib    # list of path-entries is possible
+   # log warnings, if deprecated functions are called
+   #deprecated_warnings: True
+
+   # additional directory for modules, list of path-entries is possible
+   #module_paths: /usr/local/python/lib
 
 Es bietet sich an, die default-Datei nach smarthome.yaml zu kopieren und die Daten oben auf den eigenen Standort
 anzupassen. Alternativ kann diese Anpassung später über das Admin Interface durchgeführt werden.
@@ -304,17 +298,18 @@ In der ersten Datei findet man nach dem ersten Start von SmartHomeNG etwas Ähnl
 
 .. code-block:: text
 
-    YYYY-MM-dd  hh:mm:ss WARNING  __main__             --------------------   Init SmartHomeNG 1.7   --------------------
-    YYYY-MM-dd  hh:mm:ss WARNING  __main__             Running in Python interpreter 'v3.7.3 final' (pid=????) on linux platform
-    YYYY-MM-dd  hh:mm:ss WARNING  lib.shtime           Nutze Feiertage für Land 'DE', Provinz 'HH', State 'None', 1 benutzerdefinierte Feiertagsdefinition(en) definiert
-    YYYY-MM-dd  hh:mm:ss WARNING  plugins.cli          CLI: You should set a password for this plugin.
+    YYYY-MM-dd  hh:mm:ss NOTICE   lib.smarthome       --------------------   Init SmartHomeNG 2.0.0+4e0938c2.master   --------------------
+    YYYY-MM-dd  hh:mm:ss NOTICE   lib.smarthome       Running in Python interpreter 'v3.13.5 final' in virtual environment, from directory /usr/local/smarthome
+    YYYY-MM-dd  hh:mm:ss NOTICE   lib.smarthome        - operating system 'Debian GNU/Linux 13.2 (trixie)' (pid=????)
+    YYYY-MM-dd  hh:mm:ss NOTICE   lib.smarthome        - on '<CPU>'
+    YYYY-MM-dd  hh:mm:ss WARNING  plugins.cli         CLI: You should set a password for this plugin.
 
 
-Vorne steht Datum und Uhrzeit, dann der Loglevel (ERROR, WARNING, INFO), dann je nach Setup in der Datei logging.yaml
+Vorne steht Datum und Uhrzeit, dann der Loglevel (ERROR, WARNING, NOTICE, INFO), dann je nach Setup in der Datei logging.yaml
 noch Name bzw. Modul oder Thread und ein Meldungstext, der den Logeintrag beschreibt.
 
 Dabei sind im Beispiel ``YYYY-MM-dd hh:mm:ss`` Zeitangaben, die von der aktuellen Startzeit abhängen und ``????`` ist die Prozess-ID anhand derer SmartHomeNG identifiziert werden kann.
-Die ersten beiden Zeile werden immer in dieser Form auftreten, alles weitere hängt von der tatsächlichen Konfiguration ab.
+Die ersten vier Zeilen werden immer in dieser Form auftreten, alles weitere hängt von der tatsächlichen Konfiguration ab.
 
 Sollte ein Plugin konfiguriert werden, das noch weitere Bibliotheken benötigt, so würde SmartHomeNG an dieser Stelle einen kritischen Fehler
 melden und sich beenden.
