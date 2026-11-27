@@ -26,6 +26,7 @@ import tests.common as common
 
 common.register_shng_log_levels()
 
+from modules.websocket import Websocket
 from modules.websocket.smartvisu import Protocol as SmartvisuProtocol
 from tests.test_websocket_item_write_acl import _FakeWebsocket
 
@@ -36,6 +37,7 @@ def _make_protocol(protocol_class, acl_attr, clients_attr):
     setattr(proto, acl_attr, 'deny')
     setattr(proto, clients_attr, {})
     proto.client_address = lambda ws: f'{ws.remote_address[0]}:{ws.remote_address[1]}'
+    proto.is_secure = Websocket.is_secure
     proto._sh = MagicMock()
     proto._sh.return_event_listeners.return_value = []
     proto.update_visulog = MagicMock()

@@ -70,6 +70,7 @@ class Protocol:
         self._sh = ws_server._sh
 
         self.client_address = ws_server.client_address
+        self.is_secure = ws_server.is_secure
         # self.get_users = partial(ws_server.get_payload_users, self.protocol_path)
 
         return
@@ -202,12 +203,11 @@ class Protocol:
         # if not self.janus_queue:
         #    self.janus_queue = janus.Queue()
 
+        protocol = 'wss' if self.is_secure(websocket) else 'ws '
         try:
             async for message in websocket:
                 data = json.loads(message)
                 command = data.get('cmd', '')
-                protocol = 'wss' if websocket.secure else 'ws '
-                # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
                 self.logger.dbgmed(f"{self.build_log_info(client_addr)} sent '{data}'")
                 answer = {'error': 'unhandled command'}
                 # keep in sync with the reassignment at the end of the try block below --
@@ -1114,7 +1114,7 @@ class Protocol:
             infos['ip'] = ip
             infos['port'] = port
             websocket = self.sv_clients[client_addr]['websocket']
-            infos['protocol'] = 'wss' if websocket.secure else 'ws'
+            infos['protocol'] = 'wss' if self.is_secure(websocket) else 'ws'
             infos['proto'] = self.sv_clients[client_addr].get('proto', '')
             infos['sw'] = self.sv_clients[client_addr].get('sw', '')
             infos['swversion'] = self.sv_clients[client_addr].get('ver', '')

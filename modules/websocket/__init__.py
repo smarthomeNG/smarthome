@@ -382,17 +382,17 @@ class Websocket(Module):
         """
         if not websocket.remote_address:
             self.logger.info(
-                f'USER {action}: {"with SSL connection"} - local port: {websocket.port} - path: {websocket.path}'
+                f'USER {action}: {"with SSL connection"} - local port: {self.local_port(websocket)} - path: {websocket.path}'
             )
         else:
             self.logger.info(
-                f'USER {action}: {self.client_address(websocket)} - local port: {websocket.port} - path: {websocket.path}'
+                f'USER {action}: {self.client_address(websocket)} - local port: {self.local_port(websocket)} - path: {websocket.path}'
             )
 
         self.logger.dbghigh(f'Connected USERS: {len(self.USERS)}')
         for u in self.USERS:
             self.logger.dbghigh(
-                f'- user: {self.client_address(u)}    path: {u.path}    secure: {u.secure}    port: {u.port}'
+                f'- user: {self.client_address(u)}    path: {u.path}    secure: {self.is_secure(u)}    port: {self.local_port(u)}'
             )
         return
 
@@ -400,6 +400,18 @@ class Websocket(Module):
         if websocket.remote_address is None:
             return 'unknown (wss)'
         return websocket.remote_address[0] + ':' + str(websocket.remote_address[1])
+
+    @staticmethod
+    def local_port(websocket) -> int | None:
+        """Server port of a connection; None while the TCP connection isn't established."""
+        address = websocket.local_address
+        return None if address is None else address[1]
+
+    @staticmethod
+    def is_secure(websocket) -> bool:
+        """True if the connection runs over TLS (wss://)."""
+        transport = getattr(websocket, 'transport', None)
+        return transport is not None and transport.get_extra_info('sslcontext') is not None
 
     def get_payload_users(self, protocol_path):
         # get USERS, that use this protocol

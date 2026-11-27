@@ -119,7 +119,9 @@ class TestSubResourceActionAuthEnforcement(unittest.TestCase):
 
     def setUp(self):
         self.resource = self._Resource()
-        self.resource.jwt_secret = 'test-secret'  # RESTResource's own default is None (see modules/admin/rest.py)
+        self.resource.jwt_secret = (
+            'test-secret-of-at-least-32-bytes'  # RESTResource's own default is None (see modules/admin/rest.py)
+        )
         request = MagicMock()
         request.headers = {'Origin': 'http://example.test'}
         response = MagicMock()
