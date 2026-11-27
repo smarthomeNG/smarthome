@@ -10,6 +10,8 @@ import lib.config
 
 import lib.item
 import lib.log
+import lib.logic
+import lib.metadata
 import lib.plugin
 from lib.shtime import Shtime
 from lib.module import Modules
@@ -74,6 +76,24 @@ class MockScheduler:
         self, name, obj=None, by='Logic', source=None, value=None, dest=None, prio=3, dt=None, from_smartplugin=False
     ):
         logger.warning('MockScheduler (trigger): {}, by={}, value={}'.format(name, by, value))
+
+
+def reset_items_class_state():
+    """Empty the item registry that ``lib.item.Items`` keeps in class attributes, shared by every instance."""
+    items_class = lib.item.items.Items
+    items_class._Items__items = []
+    items_class._Items__item_dict = {}
+    items_class._children = []
+    items_class.plugin_attributes = {}
+    items_class.plugin_attribute_prefixes = {}
+    items_class.plugin_prefixes_tuple = None
+
+
+def reset_attribute_definitions():
+    """Empty the item attribute definitions ``lib.metadata`` collects module-wide from the loaded plugins."""
+    lib.metadata.all_itemdefinitions.clear()
+    lib.metadata.all_itemprefixdefinitions.clear()
+    lib.metadata.all_prefixes_tuple = None
 
 
 class MockSmartHome:
@@ -195,11 +215,13 @@ class MockSmartHome:
         #        self.scheduler = lib.scheduler.Scheduler(self)
         if self.modules is None:
             self.with_modules_from(self._module_conf_basename)
+        lib.logic._logics_instance = None
         if self.items is None:
             try:
                 lib.item.items._items_instance = None
             except AttributeError:
                 lib.item._items_instance = None
+            reset_items_class_state()
             self.items = lib.item.Items(self)
         if self.plugins is None:
             self.with_plugins_from(self._plugin_conf_basename)
@@ -328,6 +350,7 @@ class MockSmartHome:
         logger.warning('MockSmartHome (trigger): {}'.format(str(obj)))
 
     def with_plugins_from(self, conf):
+        reset_attribute_definitions()
         lib.plugin._plugins_instance = None
         lib.plugin.Plugins._plugins = []
         lib.plugin.Plugins._threads = []
