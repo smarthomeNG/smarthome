@@ -380,7 +380,8 @@
     "DELETE_FAILED": "Could not delete item",
     "ALERT": {
       "NOT NUMERIC": "ERROR: The entered value is not numeric!",
-      "INVALID SCENE NUMBER": "ERROR: Scene numbers have to be between 0 and 63!"
+      "INVALID SCENE NUMBER": "ERROR: Scene numbers have to be between 0 and 63!",
+      "VALUE REJECTED": "ERROR: The item did not accept the value!"
     },
     "STRUCT_TEMPLATES": "Item-Structure Templates",
     "STRUCT_CONFIGFILE": "Item-Structure Configuration"

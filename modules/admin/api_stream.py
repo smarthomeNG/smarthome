@@ -65,10 +65,14 @@ class StreamController(RESTResource):
         self._streams = {}
         self._stream_tokens = {}
 
-    # GET /api/stream/token, GET /api/stream?token=<t>
-    def read(self, id=None, **params):
+    def _ensure_items(self):
+        """Bind ``self.items`` to the Items instance, which doesn't exist yet when the admin module is constructed."""
         if self.items is None:
             self.items = Items.get_instance()
+
+    # GET /api/stream/token, GET /api/stream?token=<t>
+    def read(self, id=None, **params):
+        self._ensure_items()
         self.set_response_headers()
 
         if id == 'token':
@@ -109,8 +113,20 @@ class StreamController(RESTResource):
 
     # PATCH /api/stream/{connectionId}
     def edit(self, resource, **params):
-        if self.items is None:
-            self.items = Items.get_instance()
+        """
+        Apply a subscription patch to the stream connection *resource*.
+
+        Removals run before additions. ``addItems`` paths that resolve to no
+        item are not subscribed and come back in ``unknownItems``, so the client
+        can drop them. While ``sh.item_load_complete`` is False, ``addItems``
+        paths are kept as pending instead and ``unknownItems`` stays empty; the
+        stream subscribes them once loading is done (see
+        :meth:`_resolve_pending_items`).
+
+        :return: JSON ``{"result": "ok", "unknownItems": [<path>, ...]}``
+        :raises cherrypy.HTTPError: 404 for an unknown connection id, 400 for an invalid JSON body
+        """
+        self._ensure_items()
         connection_id = resource
         with self._lock:
             entry = self._streams.get(connection_id)
@@ -123,17 +139,22 @@ class StreamController(RESTResource):
         except json.JSONDecodeError as e:
             raise cherrypy.HTTPError(400, f'Invalid JSON body: {e}')
 
+        items_loaded = self._sh.item_load_complete
+        unknown_items = []
         with self._lock:
             for path in data.get('removeItems', []) or []:
                 self._remove_item_subscription(entry, path)
             for path in data.get('addItems', []) or []:
-                self._add_item_subscription(entry, path)
+                if not items_loaded:
+                    entry['pending_items'].add(path)
+                elif not self._add_item_subscription(entry, path):
+                    unknown_items.append(path)
             for sid in data.get('removeSeries', []) or []:
                 self._remove_series_subscription(entry, sid)
             for spec in data.get('addSeries', []) or []:
                 self._add_series_subscription(entry, spec)
 
-        return json.dumps({'result': 'ok'})
+        return json.dumps({'result': 'ok', 'unknownItems': unknown_items})
 
     edit.expose_resource = True
     edit.authentication_needed = True
@@ -144,12 +165,17 @@ class StreamController(RESTResource):
             path='/stream/{connectionId}',
             tags=['stream'],
             params=[ApiParam(name='connectionId', location='path', required=True)],
+            description='addItems paths that name no item are skipped and returned in unknownItems. '
+            'While item definitions are still loading, addItems are kept pending (unknownItems stays empty) '
+            'and subscribed once loading is done; still-unknown paths are then pushed as an SSE '
+            '\'unknownItems\' event ({"type": "unknownItems", "paths": [...]}).',
             request_body='SubscriptionPatch',
             request_example=(
                 '{"addItems": ["item.path"], "removeItems": [], '
                 '"addSeries": [{"sid": "s1", "item": "item.path", "series": "avg", '
                 '"start": "48h", "end": "now", "count": 10}], "removeSeries": []}'
             ),
+            response_example='{"result": "ok", "unknownItems": ["no.such.item"]}',
         )
     ]
 
@@ -197,6 +223,7 @@ class StreamController(RESTResource):
         return True
 
     def _remove_item_subscription(self, entry, path):
+        entry['pending_items'].discard(path)
         info = entry['triggers'].pop(path, None)
         if info is None:
             return
@@ -205,6 +232,27 @@ class StreamController(RESTResource):
             item.remove_method_trigger(cb)
         except ValueError:
             pass
+
+    def _resolve_pending_items(self, connection_id):
+        """
+        Subscribe the paths *connection_id* requested before item definitions were loaded.
+
+        No-op until ``sh.item_load_complete`` is True. Paths that still name no
+        item are sent to the client as one ``unknownItems`` event
+        (``{"type": "unknownItems", "paths": [...]}``).
+        """
+        if not self._sh.item_load_complete:
+            return
+        with self._lock:
+            entry = self._streams.get(connection_id)
+            if entry is None or not entry['pending_items']:
+                return
+            self._ensure_items()
+            pending = sorted(entry['pending_items'])
+            entry['pending_items'].clear()
+            unknown = [path for path in pending if not self._add_item_subscription(entry, path)]
+            if unknown:
+                entry['queue'].put({'type': 'unknownItems', 'paths': unknown})
 
     def _add_series_subscription(self, entry, spec):
         sid = spec.get('sid')
@@ -254,6 +302,17 @@ class StreamController(RESTResource):
             q.put({'type': 'series', 'sid': sid, 'series': reply.get('series')})
 
     # The SSE connection itself
+    @staticmethod
+    def _new_entry():
+        """
+        Return the bookkeeping for one SSE connection.
+
+        ``queue`` holds events for the client, ``triggers`` maps item path to
+        ``(item, callback)``, ``series`` maps sid to its poll parameters,
+        ``pending_items`` holds paths requested before item definitions were loaded.
+        """
+        return {'queue': queue.Queue(), 'triggers': {}, 'series': {}, 'pending_items': set()}
+
     def _format_event(self, event_type, data):
         return f'event: {event_type}\ndata: {json.dumps(data, default=str)}\n\n'
 
@@ -279,9 +338,10 @@ class StreamController(RESTResource):
         cherrypy.response.stream = True
 
         connection_id = str(uuid.uuid4())
-        q = queue.Queue()
+        entry = self._new_entry()
+        q = entry['queue']
         with self._lock:
-            self._streams[connection_id] = {'queue': q, 'triggers': {}, 'series': {}}
+            self._streams[connection_id] = entry
         self.logger.info(f'Stream {connection_id}: opened')
 
         def _generate():
@@ -294,6 +354,7 @@ class StreamController(RESTResource):
                         yield self._format_event(event['type'], event)
                     except queue.Empty:
                         pass
+                    self._resolve_pending_items(connection_id)
                     self._poll_due_series(connection_id, q)
             finally:
                 self._cleanup_stream(connection_id)

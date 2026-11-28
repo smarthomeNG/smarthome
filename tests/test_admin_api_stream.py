@@ -15,7 +15,11 @@ Item subscriptions: add registers a real method trigger, remove
 Series subscriptions: add/remove bookkeeping, due-series polling enqueues
     the expected event shape and advances next_poll.
 edit(): PATCH applies add/removeItems and add/removeSeries; unknown
-    connection id raises 404.
+    connection id raises 404; addItems paths naming no item come back in
+    unknownItems, but only once item definitions are loaded.
+Startup subscriptions: addItems received before item definitions are loaded
+    stay pending, get subscribed once loading is done, and still-unknown
+    paths are pushed as an unknownItems event.
 """
 
 import json
@@ -65,6 +69,7 @@ class _Base(unittest.TestCase):
     def setUp(self):
         _reset()
         self.sh = MockSmartHome()
+        self.sh.item_load_complete = True
         module = MagicMock()
         module._sh = self.sh
         module.shtime = self.sh.shtime
@@ -80,6 +85,15 @@ class _Base(unittest.TestCase):
         request = MagicMock()
         request.body = body
         return patch.object(cherrypy, 'request', request)
+
+    def _edit(self, data, connection_id='conn-1'):
+        """PATCH *data* onto *connection_id* (created if missing); return the decoded response."""
+        self.controller._streams.setdefault(connection_id, StreamController._new_entry())
+        with self._post_body(data):
+            return json.loads(self.controller.edit(connection_id))
+
+    def _edit_add_items(self, paths):
+        return self._edit({'addItems': paths})
 
 
 class TestStreamTokens(_Base):
@@ -102,7 +116,7 @@ class TestStreamTokens(_Base):
 class TestItemSubscriptions(_Base):
     def setUp(self):
         super().setUp()
-        self.entry = {'queue': __import__('queue').Queue(), 'triggers': {}, 'series': {}}
+        self.entry = StreamController._new_entry()
 
     def test_add_subscription_registers_a_method_trigger(self):
         item = _item(self.sh, 'a')
@@ -142,7 +156,7 @@ class TestItemSubscriptions(_Base):
 class TestSeriesSubscriptions(_Base):
     def setUp(self):
         super().setUp()
-        self.entry = {'queue': __import__('queue').Queue(), 'triggers': {}, 'series': {}}
+        self.entry = StreamController._new_entry()
 
     def test_add_series_subscription_stores_params(self):
         self.controller._add_series_subscription(
@@ -207,7 +221,7 @@ class TestLazyItemsResolution(_Base):
         self.controller.items = None
         item = _item(self.sh, 'a')
         connection_id = 'conn-1'
-        self.controller._streams[connection_id] = {'queue': __import__('queue').Queue(), 'triggers': {}, 'series': {}}
+        self.controller._streams[connection_id] = StreamController._new_entry()
 
         with self._post_body({'addItems': ['a']}):
             self.controller.edit(connection_id)
@@ -225,7 +239,7 @@ class TestEdit(_Base):
         item_a = _item(self.sh, 'a')
         item_b = _item(self.sh, 'b')
         connection_id = 'conn-1'
-        entry = {'queue': __import__('queue').Queue(), 'triggers': {}, 'series': {}}
+        entry = StreamController._new_entry()
         self.controller._streams[connection_id] = entry
         self.controller._add_item_subscription(entry, 'a')
 
@@ -240,7 +254,8 @@ class TestEdit(_Base):
 
     def test_edit_applies_add_and_remove_series(self):
         connection_id = 'conn-1'
-        entry = {'queue': __import__('queue').Queue(), 'triggers': {}, 'series': {'old': {}}}
+        entry = StreamController._new_entry()
+        entry['series']['old'] = {}
         self.controller._streams[connection_id] = entry
 
         with self._post_body(
@@ -253,6 +268,69 @@ class TestEdit(_Base):
 
         self.assertNotIn('old', entry['series'])
         self.assertIn('new', entry['series'])
+
+    def test_edit_reports_unknown_items_once_items_are_loaded(self):
+        _item(self.sh, 'a')
+
+        result = self._edit_add_items(['a', 'gone.item'])
+
+        self.assertEqual(result['result'], 'ok')
+        self.assertEqual(result['unknownItems'], ['gone.item'])
+
+    def test_edit_reports_no_unknown_items_before_items_are_loaded(self):
+        self.sh.item_load_complete = False
+
+        result = self._edit_add_items(['not.loaded.yet'])
+
+        self.assertEqual(result['unknownItems'], [])
+
+
+class TestStartupSubscriptions(_Base):
+    """addItems that arrive before item definitions are loaded are kept and retried once loading is done."""
+
+    def setUp(self):
+        super().setUp()
+        self.sh.item_load_complete = False
+
+    def _finish_item_loading(self, *paths):
+        items = [_item(self.sh, path) for path in paths]
+        self.sh.item_load_complete = True
+        self.controller._resolve_pending_items('conn-1')
+        return items
+
+    def test_subscription_made_during_startup_is_registered_once_items_load(self):
+        self._edit_add_items(['a'])
+
+        (item,) = self._finish_item_loading('a')
+
+        self.assertEqual(len(item.get_method_triggers()), 1)
+
+    def test_pending_path_still_unknown_after_loading_is_sent_as_event(self):
+        self._edit_add_items(['a', 'gone.item'])
+
+        self._finish_item_loading('a')
+
+        event = self.controller._streams['conn-1']['queue'].get_nowait()
+        self.assertEqual(event, {'type': 'unknownItems', 'paths': ['gone.item']})
+
+    def test_pending_path_removed_before_loading_is_not_subscribed(self):
+        self._edit_add_items(['a'])
+        self._edit({'removeItems': ['a']})
+
+        (item,) = self._finish_item_loading('a')
+
+        self.assertEqual(item.get_method_triggers(), [])
+
+    def test_pending_paths_wait_while_items_are_still_loading(self):
+        self._edit_add_items(['a'])
+        item = _item(self.sh, 'a')
+
+        self.controller._resolve_pending_items('conn-1')
+        self.assertEqual(item.get_method_triggers(), [])
+
+        self.sh.item_load_complete = True
+        self.controller._resolve_pending_items('conn-1')
+        self.assertEqual(len(item.get_method_triggers()), 1)
 
 
 if __name__ == '__main__':

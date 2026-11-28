@@ -380,7 +380,8 @@
     "DELETE_FAILED": "Item konnte nicht gelöscht werden",
     "ALERT": {
       "NOT NUMERIC": "FEHLER: Der eingegebene Wert ist nicht numerisch!",
-      "INVALID SCENE NUMBER": "FEHLER: Szenen Nummern müssen zwischen 0 und 63 liegen!"
+      "INVALID SCENE NUMBER": "FEHLER: Szenen Nummern müssen zwischen 0 und 63 liegen!",
+      "VALUE REJECTED": "FEHLER: Das Item hat den Wert nicht angenommen!"
     },
     "STRUCT_TEMPLATES": "Item-Struktur Templates",
     "STRUCT_CONFIGFILE": "Item-Struktur Konfiguration"

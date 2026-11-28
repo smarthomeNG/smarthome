@@ -364,7 +364,8 @@
     "DELETE_FAILED": "Impossible de supprimer l'item",
     "ALERT": {
       "NOT NUMERIC": "ERREUR: La valeur entrée n'est pas numérique!",
-      "INVALID SCENE NUMBER": "ERREUR: Les numéros de scènes doivent être compris entre 0 er 63!"
+      "INVALID SCENE NUMBER": "ERREUR: Les numéros de scènes doivent être compris entre 0 er 63!",
+      "VALUE REJECTED": "ERREUR: L'item n'a pas accepté la valeur!"
     },
     "STRUCT_TEMPLATES": "Structure d'objets: modèles",
     "STRUCT_CONFIGFILE": "Configuration de la structure d'objets"
