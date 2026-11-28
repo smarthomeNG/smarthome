@@ -139,6 +139,9 @@ global_translations:
     "Error importing userfunctions from '{module}': {error}":
         'de': "Fehler beim importieren von Userfunctions aus '{module}': {error}"
         'en': '='
+    "Userfunctions '{module}' not imported: the name is reserved by the userfunctions library, rename the file":
+        'de': "Userfunctions '{module}' nicht importiert: Der Name ist von der Userfunctions-Bibliothek belegt, Datei umbenennen"
+        'en': '='
     "Error reloading userfunctions '{module}': Module is not loaded, trying to newly import userfunctions '{module}' instead":
         'de': "Fehler beim Reload von Userfunctions '{module}': Modul ist nicht geladen, versuche stattdessen Userfunctions '{module}' neu zu importieren"
         'en': '='

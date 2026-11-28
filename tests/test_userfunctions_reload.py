@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 """
-Regression test for lib.userfunctions.reload().
+Tests for lib.userfunctions: importing, reloading and listing user modules.
 
-reload() must resolve the module the same way import_user_module() does -
-via a dict-style globals()['{m}'] lookup, not
-exec(f'importlib.reload({userlib})') with the module name spliced in as a
-bare identifier. Any userfunctions filename that isn't a valid Python
-identifier (e.g. contains a hyphen, a common and legal filename character)
-breaks the bare-identifier form (a hyphenated name like 'my-functions'
-parses as the subtraction `my - functions`), so the "module not loaded,
-try importing it" fallback must still trigger correctly.
+User module names need not be Python identifiers (e.g. ``hyphen-mod``), and a
+user module whose name collides with a global of lib.userfunctions is refused.
 """
 
+import copy
 import importlib
 import os
 import sys
@@ -30,22 +25,14 @@ import lib.userfunctions as uf
 
 class TestUserfunctionsReload(unittest.TestCase):
     def setUp(self):
-        # lib.userfunctions is a module-global-state library (not a class) --
-        # save everything reload()/init_lib() touch so tests don't leak into
-        # each other or into any other test file that happens to import it.
-        self._saved = {
-            '_uf_subdir': uf._uf_subdir,
-            '_func_dir': uf._func_dir,
-            '_sh': uf._sh,
-            '_user_modules': list(uf._user_modules),
-        }
+        # state and exported user modules both live in uf's globals: snapshot all of it
+        self._saved_globals = {k: copy.copy(v) if isinstance(v, (list, dict)) else v for k, v in vars(uf).items()}
 
         self._tmpdir = tempfile.TemporaryDirectory()
         base_dir = self._tmpdir.name
-        functions_dir = os.path.join(base_dir, 'functions')
-        os.makedirs(functions_dir)
-        with open(os.path.join(functions_dir, 'hyphen-mod.py'), 'w') as f:
-            f.write("_VERSION = '1.0'\n_DESCRIPTION = 'test'\nVALUE = 1\n")
+        self._functions_dir = os.path.join(base_dir, 'functions')
+        os.makedirs(self._functions_dir)
+        self._write_uf('hyphen-mod', "_VERSION = '1.0'\n_DESCRIPTION = 'test'\nVALUE = 1\n")
 
         sys.path.insert(0, base_dir)
         self._sys_path_entry = base_dir
@@ -53,12 +40,24 @@ class TestUserfunctionsReload(unittest.TestCase):
         uf.init_lib(shng_base_dir=base_dir)
 
     def tearDown(self):
-        for key, value in self._saved.items():
-            setattr(uf, key, value)
+        namespace = vars(uf)
+        namespace.clear()
+        namespace.update(self._saved_globals)
         sys.path.remove(self._sys_path_entry)
-        for modname in ('functions.hyphen-mod', 'functions'):
-            sys.modules.pop(modname, None)
+        for modname in [m for m in sys.modules if m == 'functions' or m.startswith('functions.')]:
+            sys.modules.pop(modname)
         self._tmpdir.cleanup()
+
+    def _write_uf(self, name, source):
+        """Write ``functions/<name>.py`` with *source*, mtime pushed forward so importlib sees the change."""
+        path = os.path.join(self._functions_dir, name + '.py')
+        exists = os.path.exists(path)
+        with open(path, 'w') as f:
+            f.write(source)
+        if exists:
+            future = os.path.getmtime(path) + 5
+            os.utime(path, (future, future))
+        return path
 
     def test_get_userlibs_lists_loaded_modules(self):
         self.assertEqual([{'name': 'hyphen-mod', 'version': '1.0', 'description': 'test'}], uf.get_userlibs())
@@ -68,32 +67,47 @@ class TestUserfunctionsReload(unittest.TestCase):
         self.assertTrue(uf.reload('hyphen-mod'))
 
     def test_reload_hyphenated_module_actually_reimports(self):
-        # bump VALUE on disk, reload, confirm the module object was really
-        # re-executed (not just reporting success without doing anything).
-        # Force the mtime forward: importlib's source cache validates by
-        # mtime+size, and a same-tick rewrite (write, immediately reload,
-        # both within one filesystem mtime-granularity window) can leave it
-        # not noticing the file changed at all - a general reload() timing
-        # quirk, unrelated to hyphenated names, not something under test
-        # here.
-        functions_dir = os.path.join(self._tmpdir.name, 'functions')
-        path = os.path.join(functions_dir, 'hyphen-mod.py')
-        with open(path, 'w') as f:
-            f.write("_VERSION = '1.0'\n_DESCRIPTION = 'test'\nVALUE = 2\n")
-        future = os.path.getmtime(path) + 5
-        os.utime(path, (future, future))
+        # importlib's source cache validates by mtime+size; _write_uf pushes the mtime forward.
+        self._write_uf('hyphen-mod', "_VERSION = '1.0'\n_DESCRIPTION = 'test'\nVALUE = 2\n")
 
         self.assertTrue(uf.reload('hyphen-mod'))
         mod = importlib.import_module('functions.hyphen-mod')
         self.assertEqual(mod.VALUE, 2)
 
-    def test_reload_falls_back_to_import_when_not_actually_loaded(self):
-        # simulate "known to _user_modules but never actually imported"
-        # (e.g. a prior import failure) -- must fall back to import, not
-        # silently do nothing / crash. uf.__dict__ is the same dict
-        # globals() returns from code running inside lib.userfunctions.
-        del uf.__dict__['hyphen-mod']
-        self.assertTrue(uf.reload('hyphen-mod'))
+    def test_reload_imports_module_whose_initial_import_failed(self):
+        self._write_uf('late', 'VALUE = (\n')
+        with self.assertLogs('lib.userfunctions', level='ERROR'):
+            uf.init_lib(shng_base_dir=self._tmpdir.name)
+        self._write_uf('late', 'VALUE = 1\n')
+        self.assertTrue(uf.reload('late'))
+        self.assertEqual(uf.late.VALUE, 1)
+
+    def test_reload_imports_module_added_at_runtime(self):
+        self._write_uf('added', 'VALUE = 3\n')
+        self.assertTrue(uf.reload('added'))
+        self.assertEqual(uf.added.VALUE, 3)
+        self.assertIn('added', [lib['name'] for lib in uf.get_userlibs()])
+
+    def _write_colliding_uf(self, name):
+        """Write a user module named *name* that leaves a marker file when executed; return the marker path."""
+        marker = os.path.join(self._tmpdir.name, name + '.executed')
+        self._write_uf(name, f"open({marker!r}, 'w').close()\n")
+        return marker
+
+    def test_module_shadowing_library_global_is_refused(self):
+        marker = self._write_colliding_uf('os')
+        with self.assertLogs('lib.userfunctions', level='ERROR'):
+            self.assertFalse(uf.import_user_module('os'))
+        self.assertIs(uf.os, os)
+        self.assertFalse(os.path.exists(marker))
+
+    def test_refused_module_is_neither_listed_nor_reloadable(self):
+        self._write_colliding_uf('os')
+        with self.assertLogs('lib.userfunctions', level='ERROR'):
+            uf.init_lib(shng_base_dir=self._tmpdir.name)
+        self.assertEqual(['hyphen-mod'], [lib['name'] for lib in uf.get_userlibs()])
+        with self.assertLogs('lib.userfunctions', level='ERROR'):
+            self.assertFalse(uf.reload('os'))
 
 
 if __name__ == '__main__':

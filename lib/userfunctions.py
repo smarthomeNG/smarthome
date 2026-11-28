@@ -25,6 +25,7 @@ This library imports modules with user-functions to be used in eval statements a
 
 import os
 import logging
+from types import ModuleType
 
 from lib.translation import translate
 from lib.constants import DIR_UF
@@ -37,11 +38,19 @@ _uf_subdir = DIR_UF
 _func_dir = None
 _sh = None
 _user_modules = []
+_loaded: dict[str, ModuleType] = {}
+"""Successfully imported user modules by name; also exported as attributes of this module (``uf.<name>``)."""
 
 
 def import_user_module(m):
     """
-    Import a module with userfunctions
+    Import a module with userfunctions and export it as ``uf.<m>``.
+
+    User modules share this module's namespace with the library's own globals
+    (``os``, ``reload``, ``init_lib``, ...). A module whose name is already taken
+    by such a global is refused before its code runs, so it can't replace
+    library internals; names of previously imported user modules may be
+    imported again.
 
     :param m: name of module to import from <shng_base_dir>/functions
 
@@ -50,36 +59,32 @@ def import_user_module(m):
     modulename = _uf_subdir + '.' + m
     import importlib
 
+    if m in globals() and m not in _loaded:
+        _logger.error(
+            translate(
+                "Userfunctions '{module}' not imported: the name is reserved by the userfunctions library, rename the file",
+                {'module': m},
+            )
+        )
+        return False
+
     try:
         mod = importlib.import_module(modulename)
     except Exception as e:
         _logger.error(translate("Error importing userfunctions from '{module}': {error}", {'module': m, 'error': e}))
         return False
-    else:
-        globals()[m] = mod
 
-        global _uf_version
-        _uf_version = '?.?.?'
-        try:
-            _uf_version = mod._VERSION
-        except AttributeError:
-            mod._VERSION = _uf_version
-
-        global _uf_description
-        _uf_description = '?'
-        try:
-            _uf_description = mod._DESCRIPTION
-        except AttributeError:
-            mod._DESCRIPTION = _uf_description
-
-        _logger.notice(
-            translate(
-                "Imported userfunctions from '{module}' v{version} - {description}",
-                {'module': m, 'version': _uf_version, 'description': _uf_description},
-            )
+    _loaded[m] = mod
+    globals()[m] = mod
+    mod._VERSION = version = getattr(mod, '_VERSION', '?.?.?')
+    mod._DESCRIPTION = description = getattr(mod, '_DESCRIPTION', '?')
+    _logger.notice(
+        translate(
+            "Imported userfunctions from '{module}' v{version} - {description}",
+            {'module': m, 'version': version, 'description': description},
         )
-
-        return True
+    )
+    return True
 
 
 def init_lib(shng_base_dir=None, sh=None):
@@ -133,7 +138,7 @@ def reload(userlib):
 
     if userlib in _user_modules:
         try:
-            importlib.reload(globals()[userlib])
+            importlib.reload(_loaded[userlib])
         except KeyError:
             _logger.warning(
                 translate(
@@ -186,19 +191,10 @@ def get_userlibs():
 
     :return: one dict per module with 'name', 'version' and 'description', sorted by name
     """
-    result = []
-    for name in sorted(_user_modules):
-        mod = globals().get(name)
-        if mod is None:
-            continue
-        result.append(
-            {
-                'name': name,
-                'version': getattr(mod, '_VERSION', '?.?.?'),
-                'description': getattr(mod, '_DESCRIPTION', '?'),
-            }
-        )
-    return result
+    return [
+        {'name': name, 'version': mod._VERSION, 'description': mod._DESCRIPTION}
+        for name, mod in sorted(_loaded.items())
+    ]
 
 
 def list_userlib_files():
